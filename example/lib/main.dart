@@ -1,58 +1,91 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'dart:async';
-
-import 'package:flutter/services.dart';
-import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:hmssdk_flutter_example/common/constant.dart';
+import 'package:hmssdk_flutter_example/meeting/meeting_page.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(HMSExampleApp());
 }
 
-class MyApp extends StatefulWidget {
-  @override
-  _MyAppState createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  String _platformVersion = 'Unknown';
-
-  @override
-  void initState() {
-    super.initState();
-    initPlatformState();
-  }
-
-  // Platform messages are asynchronous, so we initialize in an async method.
-  Future<void> initPlatformState() async {
-    String platformVersion;
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    // We also handle the message potentially returning null.
-    try {
-      platformVersion =
-          await HmssdkFlutter.platformVersion ?? 'Unknown platform version';
-    } on PlatformException {
-      platformVersion = 'Failed to get platform version.';
-    }
-
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
-    if (!mounted) return;
-
-    setState(() {
-      _platformVersion = platformVersion;
-    });
-  }
+class HMSExampleApp extends StatelessWidget {
+  const HMSExampleApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Plugin example app'),
-        ),
-        body: Center(
-          child: Text('Running on: $_platformVersion\n'),
+      home: HomePage(),
+    );
+  }
+}
+
+class HomePage extends StatefulWidget {
+  const HomePage({Key? key}) : super(key: key);
+
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  TextEditingController roomIdController =
+      TextEditingController(text: Constant.defaultRoomID);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('100MS'),
+        actions: [
+          IconButton(onPressed: () {}, icon: Icon(CupertinoIcons.settings))
+        ],
+      ),
+      body: Center(
+        child: Container(
+          padding: EdgeInsets.all(16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text('Join a meeting'),
+              SizedBox(
+                height: 8,
+              ),
+              TextField(
+                controller: roomIdController,
+                decoration: InputDecoration(
+                    hintText: 'Enter RoomId e.g. 60cb411533afe',
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(16)))),
+              ),
+              SizedBox(
+                height: 16,
+              ),
+              ElevatedButton(
+                  style: ButtonStyle(
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16.0),
+                  ))),
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (_) =>
+                            MeetingPage(roomId: roomIdController.text)));
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(16.0),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(16))),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.video_call_outlined),
+                        SizedBox(
+                          width: 16,
+                        ),
+                        Text('Join meeting')
+                      ],
+                    ),
+                  ))
+            ],
+          ),
         ),
       ),
     );
