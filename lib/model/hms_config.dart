@@ -4,7 +4,7 @@ class HMSConfig {
   final String roomId;
   final String authToken;
   final String? metaData;
-  final String? endpoint;
+  final String? endPoint;
   final bool shouldSkipPIIEvents;
 
   HMSConfig(
@@ -13,6 +13,18 @@ class HMSConfig {
       required this.roomId,
       required this.authToken,
       this.metaData,
-      this.endpoint,
+      this.endPoint,
       this.shouldSkipPIIEvents = false});
+
+  Map<String, dynamic> getJson() {
+    return {
+      'user_name': userName,
+      'user_id': userId,
+      'room_id': roomId,
+      'auth_token': authToken,
+      'meta_data': metaData,
+      'should_skip_pii_events': shouldSkipPIIEvents,
+      'end_point': endPoint
+    };
+  }
 }

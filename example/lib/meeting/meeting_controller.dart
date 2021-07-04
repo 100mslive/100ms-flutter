@@ -1,7 +1,8 @@
-import 'package:hmssdk_flutter_example/common/constant.dart';
+import 'package:hmssdk_flutter/model/hms_config.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
-import 'package:hmssdk_flutter_example/model/hms_config.dart';
+import 'package:hmssdk_flutter_example/meeting/hms_sdk_interactor.dart';
 import 'package:hmssdk_flutter_example/service/room_service.dart';
+import 'package:uuid/uuid.dart';
 
 class MeetingController {
   final String roomId;
@@ -14,9 +15,11 @@ class MeetingController {
   void startMeeting() async {
     String token = await RoomService().getToken(user: user, room: roomId);
     HMSConfig hmsConfig = HMSConfig(
-        userId: user,
+        userId: Uuid().v1(),
         roomId: roomId,
         authToken: token,
-        endpoint: Constant.getTokenURL);
+        // endPoint: Constant.getTokenURL,
+        userName: 'Flutter user');
+    HMSSDKInteractor(config: hmsConfig).setup();
   }
 }
