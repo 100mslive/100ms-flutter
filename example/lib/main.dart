@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hmssdk_flutter_example/common/constant.dart';
+import 'package:hmssdk_flutter_example/common/ui/organisms/user_name_dialog_organism.dart';
+import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_page.dart';
 
 void main() {
@@ -64,10 +66,16 @@ class _HomePageState extends State<HomePage> {
                           RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16.0),
                   ))),
-                  onPressed: () {
+                  onPressed: () async {
+                    String user = await showDialog(
+                        context: context,
+                        builder: (_) => UserNameDialogOrganism());
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (_) =>
-                            MeetingPage(roomId: roomIdController.text)));
+                        builder: (_) => MeetingPage(
+                              roomId: roomIdController.text,
+                              user: user,
+                              flow: MeetingFlow.join,
+                            )));
                   },
                   child: Container(
                     padding: const EdgeInsets.all(16.0),

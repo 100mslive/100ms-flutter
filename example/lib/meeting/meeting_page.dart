@@ -1,11 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_controller.dart';
 
 class MeetingPage extends StatefulWidget {
   final String roomId;
+  final MeetingFlow flow;
+  final String user;
 
-  const MeetingPage({Key? key, required this.roomId}) : super(key: key);
+  const MeetingPage(
+      {Key? key, required this.roomId, required this.flow, required this.user})
+      : super(key: key);
 
   @override
   _MeetingPageState createState() => _MeetingPageState();
@@ -13,9 +18,11 @@ class MeetingPage extends StatefulWidget {
 
 class _MeetingPageState extends State<MeetingPage> {
   late MeetingController meetingController;
+
   @override
   void initState() {
-    meetingController = MeetingController(roomId: widget.roomId);
+    meetingController = MeetingController(
+        roomId: widget.roomId, flow: widget.flow, user: widget.user);
     super.initState();
   }
 
@@ -30,7 +37,9 @@ class _MeetingPageState extends State<MeetingPage> {
             icon: Icon(Icons.volume_up),
           ),
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              meetingController.startMeeting();
+            },
             icon: Icon(Icons.sync),
           ),
           IconButton(
@@ -40,7 +49,14 @@ class _MeetingPageState extends State<MeetingPage> {
         ],
       ),
       body: Center(
-        child: CupertinoActivityIndicator(),
+        child: Column(
+          children: [
+            Text(widget.user),
+            Text(widget.flow.toString()),
+            Text(widget.roomId),
+            CupertinoActivityIndicator(),
+          ],
+        ),
       ),
     );
   }
