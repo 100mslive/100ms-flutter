@@ -1,9 +1,9 @@
 # 100 ms Flutter sdk
 
- [x] Join Meeting
- [x] Leave Meeting
- [x] Show peers with Audio/Video
- [ ] More features to be added
+1. [x] Join Meeting
+2. [x] Leave Meeting
+3. [ ] Show peers with Audio/Video
+4. [ ] More features to be added
 
  ## How to run project
 
