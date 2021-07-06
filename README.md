@@ -1,15 +1,14 @@
-# untitled
+# 100 ms Flutter sdk
 
-A new Flutter project.
+ [x] Join Meeting
+ [x] Leave Meeting
+ [x] Show peers with Audio/Video
+ [ ] More features to be added
 
-## Getting Started
+ ## How to run project
 
-This project is a starting point for a Flutter
-[plug-in package](https://flutter.dev/developing-packages/),
-a specialized package that includes platform-specific implementation code for
-Android and/or iOS.
+ 1. flutter pub get
+ 2. flutter build ios
+ 3. flutter run
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
 
