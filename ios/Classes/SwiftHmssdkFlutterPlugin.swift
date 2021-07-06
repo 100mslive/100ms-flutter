@@ -11,39 +11,47 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     }
     public func on(join room: HMSRoom) {
         print("On Join Room")
-        channel.invokeMethod("join_room", arguments: "")
+        channel.invokeMethod("on_join_room", arguments: "")
     }
     
     public func on(room: HMSRoom, update: HMSRoomUpdate) {
-        channel.invokeMethod("update_room", arguments: "")
+        print("On Update Room")
+        channel.invokeMethod("on_update_room", arguments: "")
     }
     
     public func on(peer: HMSPeer, update: HMSPeerUpdate) {
-        channel.invokeMethod("peer_update", arguments: "")
+        print("On Join Room")
+        channel.invokeMethod("on_peer_update", arguments: "")
     }
     
     public func on(track: HMSTrack, update: HMSTrackUpdate, for peer: HMSPeer) {
-        channel.invokeMethod("track_update", arguments: "")
+        print("On Track Update")
+        channel.invokeMethod("on_track_update", arguments: "")
     }
     
     public func on(error: HMSError) {
-        channel.invokeMethod("error", arguments: "")
+        print("On Error")
+        channel.invokeMethod("on_error", arguments: "")
     }
     
     public func on(message: HMSMessage) {
-        channel.invokeMethod("message", arguments: "")
+        print("On Message")
+        channel.invokeMethod("on_message", arguments: "")
     }
     
     public func on(updated speakers: [HMSSpeaker]) {
-        channel.invokeMethod("update_speaker", arguments: "")
+        print("On Update Speaker")
+        channel.invokeMethod("on_update_speaker", arguments: "")
     }
     
     public func onReconnecting() {
-        channel.invokeMethod("re_connecting", arguments: "")
+        print("on Reconnecting")
+        channel.invokeMethod("on_re_connecting", arguments: "")
     }
     
     public func onReconnected() {
-        channel.invokeMethod("on_reconnected", arguments: "")
+        print("on Reconnected")
+        channel.invokeMethod("on_re_connected", arguments: "")
     }
     
     internal var hmsSDK: HMSSDK?
@@ -57,7 +65,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
     switch call.method {
     case "join_meeting": joinMeeting(call:call,result:result)
-        
+    case "leave_meeting":leaveMeeting(result: result)
     default:
         result(FlutterMethodNotImplemented)
     }
@@ -71,13 +79,18 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             roomID: arguments["room_id"] as? String ?? "",
             authToken: arguments["auth_token"] as? String ?? "",
             shouldSkipPIIEvents: arguments["should_skip_pii_events"] as? Bool ?? false
-        
         )
         
         
         hmsSDK = HMSSDK.build()
         
         hmsSDK?.join(config: config, delegate: self)
+        result("joining meeting in ios")
+    }
+    
+    func leaveMeeting(result:FlutterResult){
+        hmsSDK?.leave();
+        result("Leaving meeting")
     }
 
     

@@ -8,6 +8,7 @@ class MeetingController {
   final String roomId;
   final String user;
   final MeetingFlow flow;
+  HMSSDKInteractor? _hmssdkInteractor;
 
   MeetingController(
       {required this.roomId, required this.user, required this.flow});
@@ -20,6 +21,10 @@ class MeetingController {
         authToken: token,
         // endPoint: Constant.getTokenURL,
         userName: 'Flutter user');
-    HMSSDKInteractor(config: hmsConfig).setup();
+    _hmssdkInteractor = HMSSDKInteractor(config: hmsConfig)..setup();
+  }
+
+  void endMeeting() {
+    _hmssdkInteractor?.leaveMeeting();
   }
 }

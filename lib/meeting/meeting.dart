@@ -3,8 +3,16 @@ import 'package:hmssdk_flutter/model/hms_config.dart';
 import 'package:hmssdk_flutter/service/platform_service.dart';
 
 class HMSMeeting {
-  void startMeeting({required HMSConfig config}) {
-    PlatformService.invokeMethod(PlatformMethods.joinMeeting,
+  Future<void> startMeeting({required HMSConfig config}) async {
+    return await PlatformService.invokeMethod(PlatformMethod.joinMeeting,
         arguments: config.getJson());
+  }
+
+  void startListening() {
+    PlatformService.listenToPlatformCalls();
+  }
+
+  Future<void> leaveMeeting() async {
+    return await PlatformService.invokeMethod(PlatformMethod.leaveMeeting);
   }
 }

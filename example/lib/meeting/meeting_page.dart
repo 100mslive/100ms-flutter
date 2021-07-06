@@ -43,7 +43,9 @@ class _MeetingPageState extends State<MeetingPage> {
             icon: Icon(Icons.sync),
           ),
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              meetingController.endMeeting();
+            },
             icon: Icon(Icons.close),
           )
         ],
