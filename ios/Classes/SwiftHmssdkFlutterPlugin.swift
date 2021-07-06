@@ -3,47 +3,54 @@ import UIKit
 import HMSSDK
 
 public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListener {
+    
+    let channel:FlutterMethodChannel
+    
+    public  init(channel:FlutterMethodChannel) {
+        self.channel=channel
+    }
     public func on(join room: HMSRoom) {
         print("On Join Room")
+        channel.invokeMethod("join_room", arguments: "")
     }
     
     public func on(room: HMSRoom, update: HMSRoomUpdate) {
-        print("On update Room")
+        channel.invokeMethod("update_room", arguments: "")
     }
     
     public func on(peer: HMSPeer, update: HMSPeerUpdate) {
-        print("On Update Peer")
+        channel.invokeMethod("peer_update", arguments: "")
     }
     
     public func on(track: HMSTrack, update: HMSTrackUpdate, for peer: HMSPeer) {
-        print("On Track update")
+        channel.invokeMethod("track_update", arguments: "")
     }
     
     public func on(error: HMSError) {
-        print("On error")
+        channel.invokeMethod("error", arguments: "")
     }
     
     public func on(message: HMSMessage) {
-        print("On Message")
+        channel.invokeMethod("message", arguments: "")
     }
     
     public func on(updated speakers: [HMSSpeaker]) {
-        print("On update speaker")
+        channel.invokeMethod("update_speaker", arguments: "")
     }
     
     public func onReconnecting() {
-        print("On Re connecting")
+        channel.invokeMethod("re_connecting", arguments: "")
     }
     
     public func onReconnected() {
-        print("On reconnection")
+        channel.invokeMethod("on_reconnected", arguments: "")
     }
     
     internal var hmsSDK: HMSSDK?
 
   public static func register(with registrar: FlutterPluginRegistrar) {
     let channel = FlutterMethodChannel(name: "hmssdk_flutter", binaryMessenger: registrar.messenger())
-    let instance = SwiftHmssdkFlutterPlugin()
+    let instance = SwiftHmssdkFlutterPlugin(channel: channel)
     registrar.addMethodCallDelegate(instance, channel: channel)
   }
 
