@@ -13,7 +13,7 @@ class MeetingController {
   MeetingController(
       {required this.roomId, required this.user, required this.flow});
 
-  void startMeeting() async {
+  Future<Stream> startMeeting() async {
     String token = await RoomService().getToken(user: user, room: roomId);
     HMSConfig hmsConfig = HMSConfig(
         userId: Uuid().v1(),
@@ -21,7 +21,8 @@ class MeetingController {
         authToken: token,
         // endPoint: Constant.getTokenURL,
         userName: 'Flutter user');
-    _hmssdkInteractor = HMSSDKInteractor(config: hmsConfig)..setup();
+    _hmssdkInteractor = HMSSDKInteractor(config: hmsConfig);
+    return _hmssdkInteractor!.setup();
   }
 
   void endMeeting() {

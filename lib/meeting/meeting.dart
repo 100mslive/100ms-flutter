@@ -8,8 +8,8 @@ class HMSMeeting {
         arguments: config.getJson());
   }
 
-  void startListening() {
-    PlatformService.listenToPlatformCalls();
+  Stream startListening() {
+    return PlatformService.listenToPlatformCalls();
   }
 
   Future<void> leaveMeeting() async {

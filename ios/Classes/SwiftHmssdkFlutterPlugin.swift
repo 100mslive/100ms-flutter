@@ -2,16 +2,34 @@ import Flutter
 import UIKit
 import HMSSDK
 
-public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListener {
+public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListener,FlutterStreamHandler {
+
+
     
     let channel:FlutterMethodChannel
+    let meetingEventChannel:FlutterEventChannel
     
-    public  init(channel:FlutterMethodChannel) {
+    public  init(channel:FlutterMethodChannel,meetingEventChannel:FlutterEventChannel) {
         self.channel=channel
+        self.meetingEventChannel=meetingEventChannel
     }
+    
     public func on(join room: HMSRoom) {
         print("On Join Room")
         channel.invokeMethod("on_join_room", arguments: "")
+   
+    }
+    
+    
+    public func onListen(withArguments arguments: Any?, eventSink events: @escaping FlutterEventSink) -> FlutterError? {
+ 
+        print(events)
+        return nil
+    }
+    
+    public func onCancel(withArguments arguments: Any?) -> FlutterError? {
+        print("on flutter error")
+       return nil
     }
     
     public func on(room: HMSRoom, update: HMSRoomUpdate) {
@@ -42,6 +60,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     public func on(updated speakers: [HMSSpeaker]) {
         print("On Update Speaker")
         channel.invokeMethod("on_update_speaker", arguments: "")
+//        eventSink!("on_join_room")
     }
     
     public func onReconnecting() {
@@ -58,7 +77,8 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
   public static func register(with registrar: FlutterPluginRegistrar) {
     let channel = FlutterMethodChannel(name: "hmssdk_flutter", binaryMessenger: registrar.messenger())
-    let instance = SwiftHmssdkFlutterPlugin(channel: channel)
+    let eventChannel = FlutterEventChannel(name: "meeting_event_channel", binaryMessenger: registrar.messenger())
+    let instance = SwiftHmssdkFlutterPlugin(channel: channel,meetingEventChannel: eventChannel)
     registrar.addMethodCallDelegate(instance, channel: channel)
   }
 
@@ -85,6 +105,8 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         hmsSDK = HMSSDK.build()
         
         hmsSDK?.join(config: config, delegate: self)
+        meetingEventChannel.setStreamHandler(self)
+
         result("joining meeting in ios")
     }
     

@@ -13,9 +13,9 @@ class HMSSDKInteractor {
     _meeting = HMSMeeting();
   }
 
-  Future<void> setup() async {
+  Future<Stream> setup() async {
     await _meeting.startMeeting(config: this.config);
-    _meeting.startListening();
+    return _meeting.startListening();
   }
 
   Future<void> leaveMeeting() async {

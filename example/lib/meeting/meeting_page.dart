@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
@@ -18,6 +20,7 @@ class MeetingPage extends StatefulWidget {
 
 class _MeetingPageState extends State<MeetingPage> {
   late MeetingController meetingController;
+  Stream? controller;
 
   @override
   void initState() {
@@ -37,8 +40,9 @@ class _MeetingPageState extends State<MeetingPage> {
             icon: Icon(Icons.volume_up),
           ),
           IconButton(
-            onPressed: () {
-              meetingController.startMeeting();
+            onPressed: () async {
+              controller = await meetingController.startMeeting();
+              setState(() {});
             },
             icon: Icon(Icons.sync),
           ),
@@ -57,6 +61,13 @@ class _MeetingPageState extends State<MeetingPage> {
             Text(widget.flow.toString()),
             Text(widget.roomId),
             CupertinoActivityIndicator(),
+            controller != null
+                ? StreamBuilder(
+                    stream: controller,
+                    builder: (context, data) {
+                      return Text(data.toString());
+                    })
+                : Text("NO controller")
           ],
         ),
       ),
