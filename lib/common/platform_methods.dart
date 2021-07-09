@@ -10,7 +10,8 @@ enum PlatformMethod {
   onMessage,
   onUpdateSpeaker,
   onReconnecting,
-  onReconnected
+  onReconnected,
+  unknown
 }
 
 extension PlatformMethodValues on PlatformMethod {
@@ -41,10 +42,12 @@ extension PlatformMethodValues on PlatformMethod {
         return 'on_re_connecting';
       case PlatformMethod.onReconnected:
         return 'on_re_connected';
+      case PlatformMethod.unknown:
+        return 'unknown';
     }
   }
 
-  static PlatformMethod? getMethodFromName(String name) {
+  static PlatformMethod getMethodFromName(String name) {
     switch (name) {
       case 'join_meeting':
         return PlatformMethod.joinMeeting;
@@ -70,6 +73,8 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.onReconnecting;
       case 'on_re_connected':
         return PlatformMethod.onReconnected;
+      default:
+        return PlatformMethod.unknown;
     }
   }
 }

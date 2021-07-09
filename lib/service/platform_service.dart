@@ -16,8 +16,39 @@ class PlatformService {
     return result;
   }
 
-  static Stream listenToPlatformCalls() {
-    return _meetingEventChannel.receiveBroadcastStream();
+  static Stream<PlatformMethod> listenToPlatformCalls() {
+    return _meetingEventChannel
+        .receiveBroadcastStream()
+        .map<PlatformMethod>((event) {
+      PlatformMethod method = PlatformMethodValues.getMethodFromName(event);
+      switch (PlatformMethodValues.getMethodFromName(event)) {
+        case PlatformMethod.joinMeeting:
+          return method;
+        case PlatformMethod.leaveMeeting:
+          return method;
+        case PlatformMethod.onJoinRoom:
+          return method;
+        case PlatformMethod.onUpdateRoom:
+          return method;
+        case PlatformMethod.onPeerUpdate:
+          return method;
+        case PlatformMethod.onTrackUpdate:
+          return method;
+        case PlatformMethod.onError:
+          return method;
+        case PlatformMethod.onMessage:
+          return method;
+        case PlatformMethod.onUpdateSpeaker:
+          return method;
+        case PlatformMethod.onReconnecting:
+          return method;
+        case PlatformMethod.onReconnected:
+          return method;
+        default:
+          return method;
+      }
+      return method;
+    });
 
     // _channel.setMethodCallHandler((call) async {
     //   print(call.method);

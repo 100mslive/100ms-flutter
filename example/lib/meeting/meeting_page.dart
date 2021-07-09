@@ -1,9 +1,9 @@
-import 'dart:async';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_controller.dart';
+import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 
 class MeetingPage extends StatefulWidget {
   final String roomId;
@@ -19,15 +19,19 @@ class MeetingPage extends StatefulWidget {
 }
 
 class _MeetingPageState extends State<MeetingPage> {
-  late MeetingController meetingController;
-  Stream? controller;
+  late MeetingStore _meetingStore;
 
   @override
   void initState() {
-    meetingController = MeetingController(
+    _meetingStore = MeetingStore();
+    MeetingController meetingController = MeetingController(
         roomId: widget.roomId, flow: widget.flow, user: widget.user);
+    _meetingStore.meetingController = meetingController;
     super.initState();
+    initMeeting();
   }
+
+  void initMeeting() async {}
 
   @override
   Widget build(BuildContext context) {
@@ -36,21 +40,24 @@ class _MeetingPageState extends State<MeetingPage> {
         title: Text(widget.roomId),
         actions: [
           IconButton(
-            onPressed: () {},
-            icon: Icon(Icons.volume_up),
+            onPressed: () {
+              _meetingStore.toggleSpeaker();
+            },
+            icon: Icon(_meetingStore.isSpeakerOn
+                ? Icons.volume_up
+                : Icons.volume_down),
           ),
           IconButton(
             onPressed: () async {
-              controller = await meetingController.startMeeting();
-              setState(() {});
+              //TODO:: switch camera
             },
-            icon: Icon(Icons.sync),
+            icon: Icon(Icons.switch_camera),
           ),
           IconButton(
             onPressed: () {
-              meetingController.endMeeting();
+              // meetingController.endMeeting();
             },
-            icon: Icon(Icons.close),
+            icon: Icon(CupertinoIcons.settings),
           )
         ],
       ),
@@ -60,16 +67,40 @@ class _MeetingPageState extends State<MeetingPage> {
             Text(widget.user),
             Text(widget.flow.toString()),
             Text(widget.roomId),
-            CupertinoActivityIndicator(),
-            controller != null
-                ? StreamBuilder(
-                    stream: controller,
+            Observer(builder: (_) {
+              if (_meetingStore.isMeetingStarted) {
+                return StreamBuilder(
+                    stream: _meetingStore.controller,
                     builder: (context, data) {
                       return Text(data.toString());
-                    })
-                : Text("NO controller")
+                    });
+              } else {
+                return CupertinoActivityIndicator();
+              }
+            })
           ],
         ),
+      ),
+      bottomNavigationBar: Observer(
+        builder: (_) {
+          if (_meetingStore.isMeetingStarted) {
+            return BottomNavigationBar(
+              items: [
+                BottomNavigationBarItem(icon: Icon(Icons.videocam)),
+                BottomNavigationBarItem(icon: Icon(Icons.mic)),
+                BottomNavigationBarItem(icon: Icon(Icons.chat_bubble)),
+                BottomNavigationBarItem(icon: Icon(Icons.call_end)),
+              ],
+              onTap: (index) {
+                if (index == 3) {
+                  _meetingStore.meetingController.leaveMeeting();
+                }
+              },
+            );
+          } else {
+            return Text('Please wait while we connect you!');
+          }
+        },
       ),
     );
   }

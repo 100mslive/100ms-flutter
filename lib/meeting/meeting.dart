@@ -8,7 +8,7 @@ class HMSMeeting {
         arguments: config.getJson());
   }
 
-  Stream startListening() {
+  Stream<PlatformMethod> startListening() {
     return PlatformService.listenToPlatformCalls();
   }
 

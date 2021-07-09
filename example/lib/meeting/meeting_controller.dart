@@ -25,7 +25,7 @@ class MeetingController {
     return _hmssdkInteractor!.setup();
   }
 
-  void endMeeting() {
+  void leaveMeeting() {
     _hmssdkInteractor?.leaveMeeting();
   }
 }
