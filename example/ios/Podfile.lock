@@ -1,0 +1,51 @@
+PODS:
+  - AFNetworking (4.0.1):
+    - AFNetworking/NSURLSession (= 4.0.1)
+    - AFNetworking/Reachability (= 4.0.1)
+    - AFNetworking/Security (= 4.0.1)
+    - AFNetworking/Serialization (= 4.0.1)
+    - AFNetworking/UIKit (= 4.0.1)
+  - AFNetworking/NSURLSession (4.0.1):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/Reachability (4.0.1)
+  - AFNetworking/Security (4.0.1)
+  - AFNetworking/Serialization (4.0.1)
+  - AFNetworking/UIKit (4.0.1):
+    - AFNetworking/NSURLSession
+  - Flutter (1.0.0)
+  - GoogleWebRTC (1.1.31999)
+  - HMSSDK (0.0.5):
+    - GoogleWebRTC (= 1.1.31999)
+  - hmssdk_flutter (0.0.1):
+    - AFNetworking
+    - Flutter
+    - HMSSDK
+
+DEPENDENCIES:
+  - Flutter (from `Flutter`)
+  - hmssdk_flutter (from `.symlinks/plugins/hmssdk_flutter/ios`)
+
+SPEC REPOS:
+  trunk:
+    - AFNetworking
+    - GoogleWebRTC
+    - HMSSDK
+
+EXTERNAL SOURCES:
+  Flutter:
+    :path: Flutter
+  hmssdk_flutter:
+    :path: ".symlinks/plugins/hmssdk_flutter/ios"
+
+SPEC CHECKSUMS:
+  AFNetworking: 7864c38297c79aaca1500c33288e429c3451fdce
+  Flutter: 434fef37c0980e73bb6479ef766c45957d4b510c
+  GoogleWebRTC: b39a78c4f5cc6b0323415b9233db03a2faa7b0f0
+  HMSSDK: 1973076e4870dc495a5ebb27236b61651d193436
+  hmssdk_flutter: 1fb382ae38aa866fc016cad0afd3d52e97aab8fe
+
+PODFILE CHECKSUM: fe0e1ee7f3d1f7d00b11b474b62dd62134535aea
+
+COCOAPODS: 1.10.1
