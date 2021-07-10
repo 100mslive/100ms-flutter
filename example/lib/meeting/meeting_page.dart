@@ -31,7 +31,9 @@ class _MeetingPageState extends State<MeetingPage> {
     initMeeting();
   }
 
-  void initMeeting() async {}
+  void initMeeting() {
+    _meetingStore.startMeeting();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,14 +41,15 @@ class _MeetingPageState extends State<MeetingPage> {
       appBar: AppBar(
         title: Text(widget.roomId),
         actions: [
-          IconButton(
-            onPressed: () {
-              _meetingStore.toggleSpeaker();
-            },
-            icon: Icon(_meetingStore.isSpeakerOn
-                ? Icons.volume_up
-                : Icons.volume_down),
-          ),
+          Observer(
+              builder: (_) => IconButton(
+                    onPressed: () {
+                      _meetingStore.toggleSpeaker();
+                    },
+                    icon: Icon(_meetingStore.isSpeakerOn
+                        ? Icons.volume_up
+                        : Icons.volume_off),
+                  )),
           IconButton(
             onPressed: () async {
               //TODO:: switch camera
@@ -54,9 +57,7 @@ class _MeetingPageState extends State<MeetingPage> {
             icon: Icon(Icons.switch_camera),
           ),
           IconButton(
-            onPressed: () {
-              // meetingController.endMeeting();
-            },
+            onPressed: () {},
             icon: Icon(CupertinoIcons.settings),
           )
         ],
@@ -84,18 +85,52 @@ class _MeetingPageState extends State<MeetingPage> {
       bottomNavigationBar: Observer(
         builder: (_) {
           if (_meetingStore.isMeetingStarted) {
-            return BottomNavigationBar(
-              items: [
-                BottomNavigationBarItem(icon: Icon(Icons.videocam)),
-                BottomNavigationBarItem(icon: Icon(Icons.mic)),
-                BottomNavigationBarItem(icon: Icon(Icons.chat_bubble)),
-                BottomNavigationBarItem(icon: Icon(Icons.call_end)),
+            return Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Container(
+                  padding: EdgeInsets.all(16),
+                  child: Observer(builder: (context) {
+                    return IconButton(
+                        tooltip: 'Video',
+                        onPressed: () {
+                          _meetingStore.toggleVideo();
+                        },
+                        icon: Icon(_meetingStore.isVideoOn
+                            ? Icons.videocam
+                            : Icons.videocam_off));
+                  }),
+                ),
+                Container(
+                  padding: EdgeInsets.all(16),
+                  child: Observer(builder: (context) {
+                    return IconButton(
+                        tooltip: 'Audio',
+                        onPressed: () {
+                          _meetingStore.toggleAudio();
+                        },
+                        icon: Icon(
+                            _meetingStore.isMicOn ? Icons.mic : Icons.mic_off));
+                  }),
+                ),
+                Container(
+                  padding: EdgeInsets.all(16),
+                  child: IconButton(
+                      tooltip: 'Chat',
+                      onPressed: () {},
+                      icon: Icon(Icons.chat_bubble)),
+                ),
+                Container(
+                  padding: EdgeInsets.all(16),
+                  child: IconButton(
+                      tooltip: 'Leave',
+                      onPressed: () {
+                        _meetingStore.meetingController.leaveMeeting();
+                        Navigator.pop(context);
+                      },
+                      icon: Icon(Icons.call_end)),
+                ),
               ],
-              onTap: (index) {
-                if (index == 3) {
-                  _meetingStore.meetingController.leaveMeeting();
-                }
-              },
             );
           } else {
             return Text('Please wait while we connect you!');

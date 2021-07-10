@@ -47,7 +47,6 @@ class PlatformService {
         default:
           return method;
       }
-      return method;
     });
 
     // _channel.setMethodCallHandler((call) async {

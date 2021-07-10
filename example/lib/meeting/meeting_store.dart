@@ -7,10 +7,14 @@ class MeetingStore = MeetingStoreBase with _$MeetingStore;
 
 abstract class MeetingStoreBase with Store {
   @observable
-  bool isSpeakerOn = false;
+  bool isSpeakerOn = true;
 
   @observable
   bool isMeetingStarted = false;
+  @observable
+  bool isVideoOn = false;
+  @observable
+  bool isMicOn = false;
 
   late MeetingController meetingController;
 
@@ -19,6 +23,16 @@ abstract class MeetingStoreBase with Store {
   @action
   void toggleSpeaker() {
     isSpeakerOn = !isSpeakerOn;
+  }
+
+  @action
+  void toggleVideo() {
+    isVideoOn = !isVideoOn;
+  }
+
+  @action
+  void toggleAudio() {
+    isMicOn = !isMicOn;
   }
 
   @action
