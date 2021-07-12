@@ -16,4 +16,9 @@ class HMSMeeting {
   Future<void> leaveMeeting() async {
     return await PlatformService.invokeMethod(PlatformMethod.leaveMeeting);
   }
+
+  Future<void> switchAudio({bool isOn = false}) async {
+    return await PlatformService.invokeMethod(PlatformMethod.switchAudio,
+        arguments: {'is_on': isOn});
+  }
 }

@@ -130,6 +130,15 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         eventSink!(data)
     }
     
+    func switchAudio(call: FlutterMethodCall,result:FlutterResult) {
+        let arguments = call.arguments as! Dictionary<String, AnyObject>
+        print(arguments)
+        if let peer = hmsSDK?.localPeer, let audioTrack = peer.audioTrack as? HMSLocalAudioTrack {
+            audioTrack.setMute( arguments["is_on"] as? Bool ?? false)
+        }
+        result("audio_changed")
+    }
+    
     internal var hmsSDK: HMSSDK?
 
   public static func register(with registrar: FlutterPluginRegistrar) {
@@ -144,6 +153,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     switch call.method {
     case "join_meeting": joinMeeting(call:call,result:result)
     case "leave_meeting":leaveMeeting(result: result)
+    case "switch_audio":switchAudio(call: call , result: result)
     default:
         result(FlutterMethodNotImplemented)
     }

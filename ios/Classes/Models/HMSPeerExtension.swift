@@ -22,6 +22,7 @@ class  HMSPeerExtension{
         
         return dict
     }
+  
     
     static func getValueOfHMSPeerUpdate (update:HMSPeerUpdate)->String{
         switch update {

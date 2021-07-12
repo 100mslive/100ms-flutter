@@ -18,14 +18,14 @@ abstract class MeetingStoreBase with Store {
   @observable
   bool isVideoOn = false;
   @observable
-  bool isMicOn = false;
+  bool isMicOn = true;
 
   late MeetingController meetingController;
 
   Stream<PlatformMethodResponse>? controller;
 
   @observable
-  List<HMSPeer> peers = [];
+  List<HMSPeer> peers = ObservableList.of([]);
 
   @action
   void toggleSpeaker() {
@@ -38,8 +38,9 @@ abstract class MeetingStoreBase with Store {
   }
 
   @action
-  void toggleAudio() {
-    isMicOn = !isMicOn;
+  Future<void> toggleAudio() async {
+    await meetingController.switchAudio(isOn: isMicOn);
+    isMicOn = true;
   }
 
   @action
@@ -49,6 +50,7 @@ abstract class MeetingStoreBase with Store {
     listenToController();
   }
 
+  @action
   void listenToController() {
     controller?.listen((event) {
       if (event.method == PlatformMethod.onPeerUpdate) {
@@ -66,10 +68,10 @@ abstract class MeetingStoreBase with Store {
         break;
 
       case HMSPeerUpdate.peerLeft:
-        peers.remove(peer);
+        peers.removeWhere((eachPeer) => eachPeer.peerId == peer.peerId);
         break;
       case HMSPeerUpdate.peerKnocked:
-        peers.remove(peer);
+        peers.removeWhere((eachPeer) => eachPeer.peerId == peer.peerId);
         break;
       case HMSPeerUpdate.audioToggled:
         print('Peer audio toggled');
