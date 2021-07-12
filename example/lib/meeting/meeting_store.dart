@@ -1,3 +1,6 @@
+import 'package:hmssdk_flutter/common/platform_methods.dart';
+import 'package:hmssdk_flutter/model/hms_peer.dart';
+import 'package:hmssdk_flutter/model/platform_method_response.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_controller.dart';
 import 'package:mobx/mobx.dart';
 
@@ -18,7 +21,10 @@ abstract class MeetingStoreBase with Store {
 
   late MeetingController meetingController;
 
-  Stream? controller;
+  Stream<PlatformMethodResponse>? controller;
+
+  @observable
+  List<HMSPeer> peers = [];
 
   @action
   void toggleSpeaker() {
@@ -39,5 +45,14 @@ abstract class MeetingStoreBase with Store {
   Future<void> startMeeting() async {
     controller = await meetingController.startMeeting();
     isMeetingStarted = true;
+    listenToController();
+  }
+
+  void listenToController() {
+    controller?.listen((event) {
+      if (event.method == PlatformMethod.onPeerUpdate) {
+        peers.add(HMSPeer.fromMap(event.data));
+      }
+    });
   }
 }

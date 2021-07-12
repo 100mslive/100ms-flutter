@@ -32,7 +32,7 @@ class _UserNameDialogOrganismState extends State<UserNameDialogOrganism> {
         ElevatedButton(
           child: Text('Cancel'),
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.pop(context, '');
           },
         ),
         ElevatedButton(
