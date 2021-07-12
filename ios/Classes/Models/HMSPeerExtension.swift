@@ -9,16 +9,40 @@ import Foundation
 import HMSSDK
 
 class  HMSPeerExtension{
-   static func toDictionary (peer:HMSPeer)-> Dictionary<String,Any?>{
+    static func toDictionary (peer:HMSPeer,update:HMSPeerUpdate)-> Dictionary<String,Any?>{
         let dict:[String:Any?] = [
             "peer_id":peer.peerID,
             "name":peer.name,
             "is_local":peer.isLocal,
             "role":peer.role,
             "customer_description":peer.customerDescription,
-            "customer_user_id":peer.customerUserID
+            "customer_user_id":peer.customerUserID,
+            "status":getValueOfHMSPeerUpdate(update:update)
         ]
         
         return dict
+    }
+    
+    static func getValueOfHMSPeerUpdate (update:HMSPeerUpdate)->String{
+        switch update {
+        
+         
+        case .peerJoined:
+            return "peerJoined"
+        case .peerLeft:
+            return "peerLeft"
+        case .peerKnocked:
+            return "peerKnocked"
+        case .audioToggled:
+            return "audioToggled"
+        case .videoToggled:
+            return "videoToggled"
+        case .roleUpdated:
+            return "roleUpdated"
+        case .defaultUpdate:
+            return "defaultUpdate"
+        @unknown default:
+            return "defaultUpdate"
+        }
     }
 }

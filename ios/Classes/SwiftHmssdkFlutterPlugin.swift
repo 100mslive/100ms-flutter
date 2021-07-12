@@ -55,7 +55,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
         let data:[String:Any]=[
             "event_name":"on_peer_update",
-            "data": HMSPeerExtension.toDictionary(peer: peer)
+            "data": HMSPeerExtension.toDictionary(peer: peer,update: update)
         ]
         eventSink!(data)
     }

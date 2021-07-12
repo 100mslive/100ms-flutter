@@ -19,7 +19,6 @@ extension PlatformMethodValues on PlatformMethod {
     switch (method) {
       case PlatformMethod.joinMeeting:
         return 'join_meeting';
-
       case PlatformMethod.leaveMeeting:
         return 'leave_meeting';
       case PlatformMethod.onLeaveMeeting:

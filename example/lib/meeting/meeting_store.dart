@@ -1,4 +1,5 @@
 import 'package:hmssdk_flutter/common/platform_methods.dart';
+import 'package:hmssdk_flutter/enum/hms_peer_update.dart';
 import 'package:hmssdk_flutter/model/hms_peer.dart';
 import 'package:hmssdk_flutter/model/platform_method_response.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_controller.dart';
@@ -51,8 +52,39 @@ abstract class MeetingStoreBase with Store {
   void listenToController() {
     controller?.listen((event) {
       if (event.method == PlatformMethod.onPeerUpdate) {
-        peers.add(HMSPeer.fromMap(event.data));
+        HMSPeer peer = HMSPeer.fromMap(event.data);
+        peerOperation(peer);
       }
     });
+  }
+
+  @action
+  void peerOperation(HMSPeer peer) {
+    switch (peer.update) {
+      case HMSPeerUpdate.peerJoined:
+        peers.add(peer);
+        break;
+
+      case HMSPeerUpdate.peerLeft:
+        peers.remove(peer);
+        break;
+      case HMSPeerUpdate.peerKnocked:
+        peers.remove(peer);
+        break;
+      case HMSPeerUpdate.audioToggled:
+        print('Peer audio toggled');
+        break;
+      case HMSPeerUpdate.videoToggled:
+        print('Peer video toggled');
+        break;
+      case HMSPeerUpdate.roleUpdated:
+        peers[peers.indexOf(peer)] = peer;
+        break;
+      case HMSPeerUpdate.defaultUpdate:
+        print("Some default update or untouched case");
+        break;
+      default:
+        print("Some default update or untouched case");
+    }
   }
 }
