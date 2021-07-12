@@ -2,7 +2,7 @@
 
 1. [x] Join Meeting
 2. [x] Leave Meeting
-3. [ ] Show peers with Audio/Video
+3. [ ] Show peers with Audio/Video [Ongoing]
 4. [ ] More features to be added
 
  ## How to run project
