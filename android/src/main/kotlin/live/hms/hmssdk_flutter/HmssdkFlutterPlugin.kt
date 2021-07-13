@@ -1,35 +1,167 @@
 package live.hms.hmssdk_flutter
 
+import android.app.Activity
 import androidx.annotation.NonNull
+import io.flutter.Log
 
 import io.flutter.embedding.engine.plugins.FlutterPlugin
+import io.flutter.embedding.engine.plugins.activity.ActivityAware
+import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
+import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import live.hms.video.error.HMSException
+import live.hms.video.media.tracks.HMSTrack
+import live.hms.video.sdk.HMSSDK
+import live.hms.video.sdk.HMSUpdateListener
+import live.hms.video.sdk.models.HMSConfig
+import live.hms.video.sdk.models.HMSMessage
+import live.hms.video.sdk.models.HMSPeer
+import live.hms.video.sdk.models.HMSRoom
+import live.hms.video.sdk.models.enums.HMSPeerUpdate
+import live.hms.video.sdk.models.enums.HMSRoomUpdate
+import live.hms.video.sdk.models.enums.HMSTrackUpdate
 
 /** HmssdkFlutterPlugin */
-class HmssdkFlutterPlugin: FlutterPlugin, MethodCallHandler {
-  /// The MethodChannel that will the communication between Flutter and native Android
-  ///
-  /// This local reference serves to register the plugin with the Flutter Engine and unregister it
-  /// when the Flutter Engine is detached from the Activity
+class HmssdkFlutterPlugin: FlutterPlugin, MethodCallHandler, HMSUpdateListener,ActivityAware,EventChannel.StreamHandler {
   private lateinit var channel : MethodChannel
+  private lateinit var meetingEventChannel: EventChannel
+  private var eventSink: EventChannel.EventSink? = null
+  private lateinit var activity: Activity
+  private lateinit var hmssdk: HMSSDK
 
   override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
-    channel = MethodChannel(flutterPluginBinding.binaryMessenger, "hmssdk_flutter")
-    channel.setMethodCallHandler(this)
+    this.channel = MethodChannel(flutterPluginBinding.binaryMessenger, "hmssdk_flutter")
+    this.meetingEventChannel= EventChannel(flutterPluginBinding.binaryMessenger,"meeting_event_channel")
+    this.meetingEventChannel.setStreamHandler(this)
+    this.channel.setMethodCallHandler(this)
   }
 
   override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
-    if (call.method == "getPlatformVersion") {
-      result.success("Android ${android.os.Build.VERSION.RELEASE}")
-    } else {
-      result.notImplemented()
+
+    when(call.method){
+      "getPlatformVersion"->{
+        result.success("Android ${android.os.Build.VERSION.RELEASE}")
+      }
+      "join_meeting"->{
+        joinMeeting(call)
+        result.success("joining meeting in android")
+      }
+      "leave_meeting"->{
+        leaveMeeting()
+        result.success("Leaving meeting")
+      }
+      else->{
+        result.notImplemented()
+      }
     }
+
   }
 
   override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
     channel.setMethodCallHandler(null)
+    meetingEventChannel.setStreamHandler(null)
+  }
+
+
+
+  override fun onError(error: HMSException) {
+    CoroutineScope(Dispatchers.Main).launch {
+      eventSink!!.success("on_error")
+    }
+  }
+
+  override fun onJoin(room: HMSRoom) {
+    Log.i("OnJoin",room.toString()+"HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHAAA")
+
+    CoroutineScope(Dispatchers.Main).launch {
+      eventSink!!.success("on_join_room")
+    }
+  }
+
+  override fun onMessageReceived(message: HMSMessage) {
+    CoroutineScope(Dispatchers.Main).launch {
+      eventSink!!.success("on_message")
+    }
+  }
+
+  override fun onPeerUpdate(type: HMSPeerUpdate, peer: HMSPeer) {
+    CoroutineScope(Dispatchers.Main).launch {
+      eventSink!!.success("on_peer_room")
+    }
+  }
+
+  override fun onRoomUpdate(type: HMSRoomUpdate, hmsRoom: HMSRoom) {
+    CoroutineScope(Dispatchers.Main).launch {
+      eventSink!!.success("on_update_room")
+    }
+  }
+
+  override fun onTrackUpdate(type: HMSTrackUpdate, track: HMSTrack, peer: HMSPeer) {
+    CoroutineScope(Dispatchers.Main).launch {
+      eventSink!!.success("on_track_update")
+    }
+  }
+
+  override fun onReconnected() {
+    super.onReconnected()
+    CoroutineScope(Dispatchers.Main).launch {
+      eventSink!!.success("on_re_connected")
+    }
+  }
+
+  override fun onReconnecting(error: HMSException) {
+    super.onReconnecting(error)
+    CoroutineScope(Dispatchers.Main).launch {
+      eventSink!!.success("on_re_connecting")
+    }
+  }
+
+  override fun onAttachedToActivity(binding: ActivityPluginBinding) {
+    this.activity=binding.activity
+    this.hmssdk=HMSSDK.Builder(this.activity).build()
+  }
+
+  override fun onDetachedFromActivityForConfigChanges() {
+
+  }
+
+  override fun onReattachedToActivityForConfigChanges(binding: ActivityPluginBinding) {
+    this.activity=binding.activity
+  }
+
+  override fun onDetachedFromActivity() {
+
+  }
+
+  fun joinMeeting(@NonNull call: MethodCall){
+    val userName=call.argument<String>("user_name")
+    val authToken= call.argument<String>("auth_token")
+    val shouldSkipPiiEvents=call.argument<Boolean>("should_skip_pii_events")
+    Log.i("userName",authToken!!)
+    val hmsConfig= HMSConfig(userName = userName!!,authtoken = authToken!!)
+    hmssdk.join(hmsConfig,this)
+    meetingEventChannel.setStreamHandler(this)
+
+  }
+
+  fun leaveMeeting(){
+    if (hmssdk!=null)
+      hmssdk.leave()
+    else
+      Log.e("error","not initialized")
+  }
+
+  override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
+    this.eventSink=events
+  }
+
+  override fun onCancel(arguments: Any?) {
+    this.eventSink=null
   }
 }
