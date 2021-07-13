@@ -40,7 +40,7 @@ abstract class MeetingStoreBase with Store {
   @action
   Future<void> toggleAudio() async {
     await meetingController.switchAudio(isOn: isMicOn);
-    isMicOn = true;
+    isMicOn = !isMicOn;
   }
 
   @action

@@ -10,6 +10,7 @@ import HMSSDK
 
 class  HMSPeerExtension{
     static func toDictionary (peer:HMSPeer,update:HMSPeerUpdate)-> Dictionary<String,Any?>{
+   
         let dict:[String:Any?] = [
             "peer_id":peer.peerID,
             "name":peer.name,
@@ -17,7 +18,13 @@ class  HMSPeerExtension{
             "role":peer.role,
             "customer_description":peer.customerDescription,
             "customer_user_id":peer.customerUserID,
-            "status":getValueOfHMSPeerUpdate(update:update)
+            "status":getValueOfHMSPeerUpdate(update:update),
+            "audio_track":[
+                "track_id":peer.audioTrack?.trackId ?? "",
+                "track_kind":peer.audioTrack?.kind ?? "",
+                "track_source":peer.audioTrack?.source ?? "",
+                "track_description":peer.audioTrack?.trackDescription ?? ""
+            ]
         ]
         
         return dict
