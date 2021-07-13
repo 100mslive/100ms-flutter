@@ -71,40 +71,74 @@ class HmssdkFlutterPlugin: FlutterPlugin, MethodCallHandler, HMSUpdateListener,A
 
 
   override fun onError(error: HMSException) {
+
+    val args=HashMap<String,Any>()
+    args.put("event_name","on_error")
+    val args1=HashMap<String,Any>()
+    args1.put("name","arun")
+    args.put("data",args1)
     CoroutineScope(Dispatchers.Main).launch {
-      eventSink!!.success("on_error")
+      eventSink!!.success(args)
     }
   }
 
   override fun onJoin(room: HMSRoom) {
     Log.i("OnJoin",room.toString()+"HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHAAA")
-
+    val args=HashMap<String,Any>()
+    args.put("event_name","on_join_room")
+    val args1=HashMap<String,Any>()
+    args1.put("name",room.name)
+    args.put("data",args1)
     CoroutineScope(Dispatchers.Main).launch {
-      eventSink!!.success("on_join_room")
+      eventSink!!.success(args)
     }
   }
 
   override fun onMessageReceived(message: HMSMessage) {
+
+    val args=HashMap<String,Any>()
+    args.put("event_name","on_message")
+    val args1=HashMap<String,Any>()
+    args1.put("name","arun")
+    args.put("data",args1)
+
     CoroutineScope(Dispatchers.Main).launch {
-      eventSink!!.success("on_message")
+      eventSink!!.success(args)
     }
   }
 
   override fun onPeerUpdate(type: HMSPeerUpdate, peer: HMSPeer) {
+
+    val args=HashMap<String,Any>()
+    args.put("event_name","on_peer_update")
+    args.put("data",HMSPeerExtension.toDictionary(peer,type))
+
     CoroutineScope(Dispatchers.Main).launch {
-      eventSink!!.success("on_peer_room")
+      eventSink!!.success(args)
     }
   }
 
   override fun onRoomUpdate(type: HMSRoomUpdate, hmsRoom: HMSRoom) {
+    val args=HashMap<String,Any>()
+    args.put("event_name","on_update_room")
+    args.put("data",hmsRoom.name)
+
     CoroutineScope(Dispatchers.Main).launch {
-      eventSink!!.success("on_update_room")
+      eventSink!!.success(args)
     }
   }
 
   override fun onTrackUpdate(type: HMSTrackUpdate, track: HMSTrack, peer: HMSPeer) {
+
+    val args=HashMap<String,Any>()
+    args.put("event_name","on_track_update")
+
+    val args1=HashMap<String,Any>()
+    args1.put("name",peer.name)
+    args.put("data",args1)
+
     CoroutineScope(Dispatchers.Main).launch {
-      eventSink!!.success("on_track_update")
+      eventSink!!.success(args)
     }
   }
 

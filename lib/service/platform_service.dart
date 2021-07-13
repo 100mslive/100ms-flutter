@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:hmssdk_flutter/common/platform_methods.dart';
 import 'package:hmssdk_flutter/model/platform_method_response.dart';
@@ -21,6 +22,7 @@ class PlatformService {
     return _meetingEventChannel
         .receiveBroadcastStream()
         .map<PlatformMethodResponse>((event) {
+          debugPrint(event['event_name'].toString()+"AAAAAAAAAAHHHHHHRRRROOOONNNNN");
       PlatformMethod method =
           PlatformMethodValues.getMethodFromName(event['event_name']);
       Map<String, dynamic>? data = {};
@@ -29,6 +31,7 @@ class PlatformService {
           data[key.toString()] = value;
         });
       }
+      debugPrint("DATA"+data.toString()+"AAAAAAAAAAAAHHHHHHHHHHHHRRRRRRRRRRRRRRRRRRRRROOOOOOOOOOOOOOOOOONNNNNNNNNNN");
       PlatformMethodResponse response =
           PlatformMethodResponse(method: method, data: data, response: event);
       if (method == PlatformMethod.unknown) {
@@ -62,45 +65,5 @@ class PlatformService {
       }
     });
 
-    // _channel.setMethodCallHandler((call) async {
-    //   print(call.method);
-    //   switch (PlatformMethodValues.getMethodFromName(call.method)) {
-    //     case PlatformMethod.joinMeeting:
-    //       print(call.method);
-    //       return call.method;
-    //     case PlatformMethod.leaveMeeting:
-    //       print(call.method);
-    //       return call.method;
-    //     case PlatformMethod.onJoinRoom:
-    //       print(call.method);
-    //       return call.method;
-    //     case PlatformMethod.onUpdateRoom:
-    //       print(call.method);
-    //       return call.method;
-    //     case PlatformMethod.onPeerUpdate:
-    //       print(call.method);
-    //       return call.method;
-    //     case PlatformMethod.onTrackUpdate:
-    //       print(call.method);
-    //       return call.method;
-    //     case PlatformMethod.onError:
-    //       print(call.method);
-    //       return call.method;
-    //     case PlatformMethod.onMessage:
-    //       print(call.method);
-    //       return call.method;
-    //     case PlatformMethod.onUpdateSpeaker:
-    //       print(call.method);
-    //       return call.method;
-    //     case PlatformMethod.onReconnecting:
-    //       print(call.method);
-    //       return call.method;
-    //     case PlatformMethod.onReconnected:
-    //       print(call.method);
-    //       return call.method;
-    //     default:
-    //       print('No method found');
-    //   }
-    // });
   }
 }
