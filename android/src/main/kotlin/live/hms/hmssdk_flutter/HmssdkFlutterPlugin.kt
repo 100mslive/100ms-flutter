@@ -144,15 +144,20 @@ class HmssdkFlutterPlugin: FlutterPlugin, MethodCallHandler, HMSUpdateListener,A
 
   override fun onReconnected() {
     super.onReconnected()
+    val args=HashMap<String,Any>()
+    args.put("event_name","on_re_connected")
     CoroutineScope(Dispatchers.Main).launch {
-      eventSink!!.success("on_re_connected")
+      eventSink!!.success(args)
     }
   }
 
   override fun onReconnecting(error: HMSException) {
     super.onReconnecting(error)
+
+    val args=HashMap<String,Any>()
+    args.put("event_name","on_re_connecting")
     CoroutineScope(Dispatchers.Main).launch {
-      eventSink!!.success("on_re_connecting")
+      eventSink!!.success(args)
     }
   }
 

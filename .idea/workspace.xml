@@ -29,12 +29,14 @@
     </select>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f6635374-520c-494c-ae8d-73b820655433" name="Default Changelist" comment="added">
-      <change afterPath="$PROJECT_DIR$/android/src/main/kotlin/live/hms/hmssdk_flutter/HMSPeerExtension.kt" afterDir="false" />
+    <list default="true" id="f6635374-520c-494c-ae8d-73b820655433" name="Default Changelist" comment="passed data into eventSink">
+      <change afterPath="$PROJECT_DIR$/example/lib/common/ui/organisms/peer_item_organism.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/android/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/src/main/kotlin/live/hms/hmssdk_flutter/HMSPeerExtension.kt" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/kotlin/live/hms/hmssdk_flutter/HMSPeerExtension.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/android/src/main/kotlin/live/hms/hmssdk_flutter/HmssdkFlutterPlugin.kt" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/kotlin/live/hms/hmssdk_flutter/HmssdkFlutterPlugin.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/service/platform_service.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/service/platform_service.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/lib/meeting/meeting_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/meeting/meeting_page.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/lib/meeting/meeting_store.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/meeting/meeting_store.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/model/hms_peer.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/model/hms_peer.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -50,6 +52,7 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Kotlin Script" />
+        <option value="Dart File" />
       </list>
     </option>
   </component>
@@ -110,7 +113,14 @@
       <option name="project" value="LOCAL" />
       <updated>1626171833756</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="passed data into eventSink">
+      <created>1626175919392</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1626175919392</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -152,29 +162,34 @@
     <MESSAGE value="added event channel" />
     <MESSAGE value="updated README.md" />
     <MESSAGE value="added" />
-    <option name="LAST_COMMIT_MESSAGE" value="added" />
+    <MESSAGE value="passed data into eventSink" />
+    <option name="LAST_COMMIT_MESSAGE" value="passed data into eventSink" />
   </component>
   <component name="WindowStateProjectService">
-    <state width="1869" height="695" key="GridCell.Tab.0.bottom" timestamp="1626175635021">
+    <state x="718" y="167" key="#com.intellij.ide.util.MemberChooser" timestamp="1626199215869">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="718" y="167" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1626199215869" />
+    <state width="1869" height="330" key="GridCell.Tab.0.bottom" timestamp="1626202002658">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="1398" height="489" key="GridCell.Tab.0.bottom/0.0.1440.900@0.0.1440.900" timestamp="1625190703001" />
-    <state width="1869" height="695" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1626175635021" />
-    <state width="1869" height="695" key="GridCell.Tab.0.center" timestamp="1626175635021">
+    <state width="1869" height="330" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1626202002658" />
+    <state width="1869" height="330" key="GridCell.Tab.0.center" timestamp="1626202002658">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="1398" height="489" key="GridCell.Tab.0.center/0.0.1440.900@0.0.1440.900" timestamp="1625190703000" />
-    <state width="1869" height="695" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1626175635021" />
-    <state width="1869" height="695" key="GridCell.Tab.0.left" timestamp="1626175635021">
+    <state width="1869" height="330" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1626202002658" />
+    <state width="1869" height="330" key="GridCell.Tab.0.left" timestamp="1626202002658">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="1398" height="489" key="GridCell.Tab.0.left/0.0.1440.900@0.0.1440.900" timestamp="1625190703000" />
-    <state width="1869" height="695" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1626175635021" />
-    <state width="1869" height="695" key="GridCell.Tab.0.right" timestamp="1626175635021">
+    <state width="1869" height="330" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1626202002658" />
+    <state width="1869" height="330" key="GridCell.Tab.0.right" timestamp="1626202002658">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="1398" height="489" key="GridCell.Tab.0.right/0.0.1440.900@0.0.1440.900" timestamp="1625190703000" />
-    <state width="1869" height="695" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1626175635021" />
+    <state width="1869" height="330" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1626202002658" />
     <state width="1398" height="489" key="GridCell.Tab.1.bottom" timestamp="1625190702999">
       <screen x="0" y="0" width="1440" height="900" />
     </state>

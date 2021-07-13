@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:hmssdk_flutter/common/platform_methods.dart';
 import 'package:hmssdk_flutter/enum/hms_peer_update.dart';
 import 'package:hmssdk_flutter/model/hms_peer.dart';
@@ -43,6 +44,21 @@ abstract class MeetingStoreBase with Store {
   }
 
   @action
+  void removePeer(HMSPeer peer){
+    peers.remove(peer);
+  }
+
+  @action
+  void addPeer(HMSPeer peer){
+    peers.add(peer);
+  }
+
+  @action
+  void onRoleUpdated(int index,HMSPeer peer){
+    peers[index]=peer;
+  }
+
+  @action
   Future<void> startMeeting() async {
     controller = await meetingController.startMeeting();
     isMeetingStarted = true;
@@ -52,7 +68,9 @@ abstract class MeetingStoreBase with Store {
   void listenToController() {
     controller?.listen((event) {
       if (event.method == PlatformMethod.onPeerUpdate) {
+        debugPrint("onPeerUpdate AAAAAAAAAAAAAAAAAAAAAAAAAAAHHHHHHHHHHHHHHHHHHHRORRRRRRRRRRRRRRROoooooooon"+event.data['status'].toString());
         HMSPeer peer = HMSPeer.fromMap(event.data);
+        debugPrint("onPeerUpdate"+peer.toString()+" AAAAAAAAAAAAAAAAAAAAAAAAAAAHHHHHHHHHHHHHHHHHHHRORRRRRRRRRRRRRRROoooooooon");
         peerOperation(peer);
       }
     });
@@ -62,14 +80,16 @@ abstract class MeetingStoreBase with Store {
   void peerOperation(HMSPeer peer) {
     switch (peer.update) {
       case HMSPeerUpdate.peerJoined:
-        peers.add(peer);
+        debugPrint("peerJoined");
+        addPeer(peer);
         break;
 
       case HMSPeerUpdate.peerLeft:
-        peers.remove(peer);
+        debugPrint("peerLeft");
+        removePeer(peer);
         break;
       case HMSPeerUpdate.peerKnocked:
-        peers.remove(peer);
+        removePeer(peer);
         break;
       case HMSPeerUpdate.audioToggled:
         print('Peer audio toggled');
@@ -79,6 +99,7 @@ abstract class MeetingStoreBase with Store {
         break;
       case HMSPeerUpdate.roleUpdated:
         peers[peers.indexOf(peer)] = peer;
+        onRoleUpdated(peers.indexOf(peer), peer);
         break;
       case HMSPeerUpdate.defaultUpdate:
         print("Some default update or untouched case");
@@ -86,5 +107,6 @@ abstract class MeetingStoreBase with Store {
       default:
         print("Some default update or untouched case");
     }
+    debugPrint(peers.length.toString()+"AAAAAHHHHHHHHHHRRRRRRRRRRROOOOOOOOOOOOOOONNNNNNNNNN");
   }
 }
