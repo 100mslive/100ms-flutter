@@ -48,13 +48,13 @@ class _MeetingPageState extends State<MeetingPage> {
         actions: [
           Observer(
               builder: (_) => IconButton(
-                onPressed: () {
-                  _meetingStore.toggleSpeaker();
-                },
-                icon: Icon(_meetingStore.isSpeakerOn
-                    ? Icons.volume_up
-                    : Icons.volume_off),
-              )),
+                    onPressed: () {
+                      _meetingStore.toggleSpeaker();
+                    },
+                    icon: Icon(_meetingStore.isSpeakerOn
+                        ? Icons.volume_up
+                        : Icons.volume_off),
+                  )),
           IconButton(
             onPressed: () async {
               //TODO:: switch camera
@@ -104,7 +104,7 @@ class _MeetingPageState extends State<MeetingPage> {
                         crossAxisCount: 3),
                     children: List.generate(
                         _meetingStore.peers.length,
-                            (index) =>
+                        (index) =>
                             PeerItemOrganism(peer: _meetingStore.peers[index])),
                   );
                 },

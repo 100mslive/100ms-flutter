@@ -26,7 +26,8 @@ abstract class MeetingStoreBase with Store {
   Stream<PlatformMethodResponse>? controller;
 
   @observable
-  List<HMSPeer> peers = [];
+  ObservableList<HMSPeer> _peer = ObservableList<HMSPeer>();
+  ObservableList<HMSPeer> get peers=>_peer;
 
   @action
   void toggleSpeaker() {
