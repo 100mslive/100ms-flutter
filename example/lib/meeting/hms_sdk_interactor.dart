@@ -26,4 +26,8 @@ class HMSSDKInteractor {
   Future<void> switchAudio({bool isOn = false}) async {
     return await _meeting.switchAudio(isOn: isOn);
   }
+
+  Future<void> switchVideo({bool isOn = false}) async {
+    return await _meeting.switchVideo(isOn: isOn);
+  }
 }

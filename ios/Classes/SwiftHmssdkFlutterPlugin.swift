@@ -139,6 +139,24 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         result("audio_changed")
     }
     
+    func switchVideo(call: FlutterMethodCall,result:FlutterResult) {
+        let arguments = call.arguments as! Dictionary<String, AnyObject>
+        if let peer = hmsSDK?.localPeer, let videoTrack = peer.videoTrack as? HMSLocalVideoTrack {
+            let isOn:Bool = arguments["is_on"] as? Bool ?? false
+            print(videoTrack.settings)
+            if isOn{
+//                videoTrack.startCapturing()
+
+            }else{
+//                videoTrack.stopCapturing()
+
+            }
+            
+            
+         }
+        result("video_changed")
+    }
+    
     internal var hmsSDK: HMSSDK?
 
   public static func register(with registrar: FlutterPluginRegistrar) {
@@ -154,6 +172,8 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     case "join_meeting": joinMeeting(call:call,result:result)
     case "leave_meeting":leaveMeeting(result: result)
     case "switch_audio":switchAudio(call: call , result: result)
+    case "switch_video":switchVideo(call: call , result: result)
+
     default:
         result(FlutterMethodNotImplemented)
     }

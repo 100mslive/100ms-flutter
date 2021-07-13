@@ -21,4 +21,9 @@ class HMSMeeting {
     return await PlatformService.invokeMethod(PlatformMethod.switchAudio,
         arguments: {'is_on': isOn});
   }
+
+  Future<void> switchVideo({bool isOn = false}) async {
+    return await PlatformService.invokeMethod(PlatformMethod.switchVideo,
+        arguments: {'is_on': isOn});
+  }
 }

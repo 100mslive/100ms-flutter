@@ -33,7 +33,8 @@ abstract class MeetingStoreBase with Store {
   }
 
   @action
-  void toggleVideo() {
+  Future<void> toggleVideo() async {
+    await meetingController.switchVideo(isOn: isVideoOn);
     isVideoOn = !isVideoOn;
   }
 
