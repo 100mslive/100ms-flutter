@@ -56,6 +56,12 @@ class HmssdkFlutterPlugin: FlutterPlugin, MethodCallHandler, HMSUpdateListener,A
         leaveMeeting()
         result.success("Leaving meeting")
       }
+      "switch_audio"->{
+        switchAudio(call,result)
+      }
+      "switch_video"->{
+        switchVideo(call,result)
+      }
       else->{
         result.notImplemented()
       }
@@ -92,6 +98,7 @@ class HmssdkFlutterPlugin: FlutterPlugin, MethodCallHandler, HMSUpdateListener,A
     CoroutineScope(Dispatchers.Main).launch {
       eventSink!!.success(args)
     }
+
   }
 
   override fun onMessageReceived(message: HMSMessage) {
@@ -194,6 +201,22 @@ class HmssdkFlutterPlugin: FlutterPlugin, MethodCallHandler, HMSUpdateListener,A
       hmssdk.leave()
     else
       Log.e("error","not initialized")
+  }
+
+  fun switchAudio(call: MethodCall,result: Result){
+    val argsIsOn=call.argument<Boolean>("is_on")
+    val peer=hmssdk.getLocalPeer()
+    val audioTrack=peer.audioTrack
+    audioTrack!!.setMute(argsIsOn!!)
+    result.success("audio_changed")
+  }
+
+  fun switchVideo(call: MethodCall,result: Result){
+    val argsIsOn=call.argument<Boolean>("is_on")
+    val peer=hmssdk.getLocalPeer()
+    val videoTrack=peer.videoTrack
+    videoTrack!!.setMute(argsIsOn!!)
+    result.success("video_changed")
   }
 
   override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {

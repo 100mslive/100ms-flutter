@@ -82,7 +82,6 @@ abstract class MeetingStoreBase with Store {
       case HMSPeerUpdate.peerJoined:
         addPeer(peer);
         break;
-
       case HMSPeerUpdate.peerLeft:
         removePeer(peer);
         break;

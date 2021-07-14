@@ -15,6 +15,7 @@ class HMSPeerExtension {
             args.put("customer_description",peer.customerDescription)
             args.put("customer_user_id",peer.customerUserID)
             args.put("status", getValueofHMSPeerUpdate(update))
+            args.put("audio_track", getAudioTrackToDictionary(peer))
             return args
         }
 
@@ -26,6 +27,15 @@ class HMSPeerExtension {
                 HMSPeerUpdate.VIDEO_TOGGLED-> "videoToggled"
                 else-> "defaultUpdate"
             }
+        }
+
+        fun getAudioTrackToDictionary(peer: HMSPeer):HashMap<String,String>{
+            val args=HashMap<String,String>()
+            args.put("track_id",peer.audioTrack!!.trackId)
+            args.put("track_source",peer.audioTrack!!.source)
+            args.put("track_description",peer.audioTrack!!.description)
+            args.put("track_kind",peer.audioTrack!!.type.toString())
+            return args
         }
     }
 }
