@@ -42,7 +42,7 @@ class HMSPeer {
           peerId == other.peerId;
 
   @override
-  int get hashCode => peerId.hashCode;//c65c8fdf-97ab-4537-aed8-4caaa912783d
+  int get hashCode => peerId.hashCode;
 
   factory HMSPeer.fromMap(Map<String, dynamic> map) {
     return HMSPeer(
@@ -55,11 +55,5 @@ class HMSPeer {
         update: HMSPeerUpdateValues.getHMSPeerUpdateFromName(map['status']));
   }
 
-  @override
-  int get hashCode => this.peerId.hashCode;
 
-  @override
-  bool operator ==(Object other) {
-    return super.hashCode == other.hashCode;
-  }
 }
