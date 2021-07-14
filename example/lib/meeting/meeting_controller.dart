@@ -29,4 +29,12 @@ class MeetingController {
   void leaveMeeting() {
     _hmssdkInteractor?.leaveMeeting();
   }
+
+  Future<void> switchAudio({bool isOn = false}) async {
+    return await _hmssdkInteractor?.switchAudio(isOn: isOn);
+  }
+
+  Future<void> switchVideo({bool isOn = false}) async {
+    return await _hmssdkInteractor?.switchVideo(isOn: isOn);
+  }
 }

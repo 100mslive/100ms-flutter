@@ -54,4 +54,12 @@ class HMSPeer {
         customerUserId: map['customer_user_id'],
         update: HMSPeerUpdateValues.getHMSPeerUpdateFromName(map['status']));
   }
+
+  @override
+  int get hashCode => this.peerId.hashCode;
+
+  @override
+  bool operator ==(Object other) {
+    return super.hashCode == other.hashCode;
+  }
 }

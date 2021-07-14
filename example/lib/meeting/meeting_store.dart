@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:hmssdk_flutter/common/platform_methods.dart';
 import 'package:hmssdk_flutter/enum/hms_peer_update.dart';
 import 'package:hmssdk_flutter/model/hms_peer.dart';
@@ -19,15 +18,14 @@ abstract class MeetingStoreBase with Store {
   @observable
   bool isVideoOn = false;
   @observable
-  bool isMicOn = false;
+  bool isMicOn = true;
 
   late MeetingController meetingController;
 
   Stream<PlatformMethodResponse>? controller;
 
   @observable
-  ObservableList<HMSPeer> _peer = ObservableList<HMSPeer>();
-  ObservableList<HMSPeer> get peers=>_peer;
+  List<HMSPeer> peers = ObservableList.of([]);
 
   @action
   void toggleSpeaker() {
@@ -35,12 +33,14 @@ abstract class MeetingStoreBase with Store {
   }
 
   @action
-  void toggleVideo() {
+  Future<void> toggleVideo() async {
+    await meetingController.switchVideo(isOn: isVideoOn);
     isVideoOn = !isVideoOn;
   }
 
   @action
-  void toggleAudio() {
+  Future<void> toggleAudio() async {
+    await meetingController.switchAudio(isOn: isMicOn);
     isMicOn = !isMicOn;
   }
 
@@ -66,12 +66,11 @@ abstract class MeetingStoreBase with Store {
     listenToController();
   }
 
+  @action
   void listenToController() {
     controller?.listen((event) {
       if (event.method == PlatformMethod.onPeerUpdate) {
-        debugPrint("onPeerUpdate AAAAAAAAAAAAAAAAAAAAAAAAAAAHHHHHHHHHHHHHHHHHHHRORRRRRRRRRRRRRRROoooooooon"+event.data['status'].toString());
         HMSPeer peer = HMSPeer.fromMap(event.data);
-        debugPrint("onPeerUpdate"+peer.toString()+" AAAAAAAAAAAAAAAAAAAAAAAAAAAHHHHHHHHHHHHHHHHHHHRORRRRRRRRRRRRRRROoooooooon");
         peerOperation(peer);
       }
     });
@@ -81,12 +80,10 @@ abstract class MeetingStoreBase with Store {
   void peerOperation(HMSPeer peer) {
     switch (peer.update) {
       case HMSPeerUpdate.peerJoined:
-        debugPrint("peerJoined");
         addPeer(peer);
         break;
 
       case HMSPeerUpdate.peerLeft:
-        debugPrint("peerLeft");
         removePeer(peer);
         break;
       case HMSPeerUpdate.peerKnocked:
@@ -99,8 +96,7 @@ abstract class MeetingStoreBase with Store {
         print('Peer video toggled');
         break;
       case HMSPeerUpdate.roleUpdated:
-
-        onRoleUpdated(peers.indexOf(peer), peer);
+        peers[peers.indexOf(peer)] = peer;
         break;
       case HMSPeerUpdate.defaultUpdate:
         print("Some default update or untouched case");
@@ -108,6 +104,5 @@ abstract class MeetingStoreBase with Store {
       default:
         print("Some default update or untouched case");
     }
-    debugPrint(peers.length.toString()+"AAAAAHHHHHHHHHHRRRRRRRRRRROOOOOOOOOOOOOOONNNNNNNNNN");
   }
 }

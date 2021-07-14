@@ -10,14 +10,14 @@ class PeerItemOrganism extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(16),
-      margin: EdgeInsets.only(left: 5),
+      margin: EdgeInsets.all(16),
       decoration: BoxDecoration(
           border: Border.all(color: Colors.green),
           borderRadius: BorderRadius.all(Radius.circular(16))),
       child: Column(
         children: [
           Text(peer.role ?? '[Undefined Role]'),
-          Text(peer.customerUserId!),
+          Text(peer.name),
           Text(peer.customerDescription ?? '[Undefined Description]'),
         ],
       ),
