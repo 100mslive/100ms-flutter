@@ -7,9 +7,9 @@ extension HMSTrackKindValue on HMSTrackKind {
         return HMSTrackKind.kHMSTrackKindAudio;
       case 'kHMSTrackKindVideo':
         return HMSTrackKind.kHMSTrackKindVideo;
-      case 'Audio':
+      case 'AUDIO':
         return HMSTrackKind.kHMSTrackKindAudio;
-      case 'Video':
+      case 'VIDEO':
         return HMSTrackKind.kHMSTrackKindVideo;
       default:
         return HMSTrackKind.unknown;
