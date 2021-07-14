@@ -22,18 +22,17 @@
     <select>
       <path>
         <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
-        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
-        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
-        <item name="BRANCH:origin/vivek-feature-peers" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="BRANCH:ahron-feature-peers" type="e8cecc67:BranchNodeDescriptor" />
       </path>
     </select>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f6635374-520c-494c-ae8d-73b820655433" name="Default Changelist" comment="fixed peers list bugs">
+    <list default="true" id="f6635374-520c-494c-ae8d-73b820655433" name="Default Changelist" comment="added mute and video">
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_14-07-2021_07_05_PM__Default_Changelist_.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_14-07-2021_07_05_PM__Default_Changelist_1.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/lib/common/ui/organisms/peer_item_organism.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/common/ui/organisms/peer_item_organism.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/lib/meeting/meeting_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/meeting/meeting_page.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/lib/meeting/meeting_store.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/meeting/meeting_store.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/android/build.gradle" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -56,12 +55,17 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="vivek-feature-peers" />
+        <entry key="$PROJECT_DIR$" value="ahron-android-project" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <option name="RESET_MODE" value="HARD" />
     <option name="UPDATE_TYPE" value="REBASE" />
+  </component>
+  <component name="GithubProjectSettings">
+    <option name="CREATE_PULL_REQUEST_DEFAULT_BRANCH" value="vivek-feature-peers" />
+    <option name="CREATE_PULL_REQUEST_DEFAULT_REPO_USER" value="100mslive" />
+    <option name="CREATE_PULL_REQUEST_DEFAULT_REPO_NAME" value="100ms-flutter" />
   </component>
   <component name="ProjectId" id="1uisHeD1SXcZbYI5wFmOOyu7wQ7" />
   <component name="ProjectViewState">
@@ -131,7 +135,21 @@
       <option name="project" value="LOCAL" />
       <updated>1626203710630</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="added hashcode and equals operator in hmspeer.dart">
+      <created>1626272641417</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1626272641417</updated>
+    </task>
+    <task id="LOCAL-00008" summary="added mute and video">
+      <created>1626294522908</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1626294522908</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -176,33 +194,39 @@
     <MESSAGE value="passed data into eventSink" />
     <MESSAGE value="fixed peers list bug&#10;peers.remove problem" />
     <MESSAGE value="fixed peers list bugs" />
-    <option name="LAST_COMMIT_MESSAGE" value="fixed peers list bugs" />
+    <MESSAGE value="added hashcode and equals operator in hmspeer.dart" />
+    <MESSAGE value="added mute and video" />
+    <option name="LAST_COMMIT_MESSAGE" value="added mute and video" />
   </component>
   <component name="WindowStateProjectService">
     <state x="718" y="167" key="#com.intellij.ide.util.MemberChooser" timestamp="1626199215869">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="718" y="167" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1626199215869" />
-    <state width="1869" height="330" key="GridCell.Tab.0.bottom" timestamp="1626204519107">
+    <state x="693" y="366" key="Github.CreatePullRequestDialog" timestamp="1626272036981">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="693" y="366" key="Github.CreatePullRequestDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1626272036981" />
+    <state width="1869" height="330" key="GridCell.Tab.0.bottom" timestamp="1626283426923">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="1398" height="489" key="GridCell.Tab.0.bottom/0.0.1440.900@0.0.1440.900" timestamp="1625190703001" />
-    <state width="1869" height="330" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1626204519107" />
-    <state width="1869" height="330" key="GridCell.Tab.0.center" timestamp="1626204519107">
+    <state width="1869" height="330" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1626283426923" />
+    <state width="1869" height="330" key="GridCell.Tab.0.center" timestamp="1626283426922">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="1398" height="489" key="GridCell.Tab.0.center/0.0.1440.900@0.0.1440.900" timestamp="1625190703000" />
-    <state width="1869" height="330" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1626204519107" />
-    <state width="1869" height="330" key="GridCell.Tab.0.left" timestamp="1626204519107">
+    <state width="1869" height="330" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1626283426922" />
+    <state width="1869" height="330" key="GridCell.Tab.0.left" timestamp="1626283426922">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="1398" height="489" key="GridCell.Tab.0.left/0.0.1440.900@0.0.1440.900" timestamp="1625190703000" />
-    <state width="1869" height="330" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1626204519107" />
-    <state width="1869" height="330" key="GridCell.Tab.0.right" timestamp="1626204519107">
+    <state width="1869" height="330" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1626283426922" />
+    <state width="1869" height="330" key="GridCell.Tab.0.right" timestamp="1626283426922">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="1398" height="489" key="GridCell.Tab.0.right/0.0.1440.900@0.0.1440.900" timestamp="1625190703000" />
-    <state width="1869" height="330" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1626204519107" />
+    <state width="1869" height="330" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1626283426922" />
     <state width="1398" height="489" key="GridCell.Tab.1.bottom" timestamp="1625190702999">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
@@ -219,6 +243,14 @@
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state width="1398" height="489" key="GridCell.Tab.1.right/0.0.1440.900@0.0.1440.900" timestamp="1625190702999" />
+    <state x="0" y="86" width="1920" height="869" key="MergeDialog" timestamp="1626271996936">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="0" y="86" width="1920" height="869" key="MergeDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1626271996936" />
+    <state x="510" y="226" key="MultipleFileMergeDialog" timestamp="1626272006330">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="510" y="226" key="MultipleFileMergeDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1626272006330" />
     <state x="691" y="175" key="RollbackChangesDialog" timestamp="1626075713302">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -227,17 +259,25 @@
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="572" y="367" key="VCS.ChangelistChooser/0.0.1440.900@0.0.1440.900" timestamp="1625300183450" />
-    <state x="452" y="189" key="Vcs.Push.Dialog.v2" timestamp="1626203715093">
+    <state x="452" y="189" key="Vcs.Push.Dialog.v2" timestamp="1626294545672">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="452" y="189" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1626203715093" />
+    <state x="452" y="189" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1626294545672" />
     <state x="736" y="416" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1626101451259">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="736" y="416" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1920.1040@0.0.1920.1040" timestamp="1626101451259" />
+    <state x="505" y="167" key="git4idea.branch.GitSmartOperationDialog" timestamp="1626271542676">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="505" y="167" key="git4idea.branch.GitSmartOperationDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1626271542676" />
     <state x="453" y="131" key="new project wizard" timestamp="1626158261246">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="453" y="131" key="new project wizard/0.0.1920.1040@0.0.1920.1040" timestamp="1626158261246" />
+    <state x="539" y="5" width="840" height="1034" key="search.everywhere.popup" timestamp="1626284263933">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="539" y="5" width="840" height="1034" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1626284263933" />
   </component>
 </project>

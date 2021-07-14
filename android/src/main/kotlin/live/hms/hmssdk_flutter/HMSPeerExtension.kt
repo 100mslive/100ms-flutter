@@ -34,7 +34,7 @@ class HMSPeerExtension {
             args.put("track_id",peer.audioTrack!!.trackId)
             args.put("track_source",peer.audioTrack!!.source)
             args.put("track_description",peer.audioTrack!!.description)
-            args.put("track_kind",peer.audioTrack!!.type.toString())
+            args.put("track_kind",peer.audioTrack!!.type.toString().uppercase())
             return args
         }
     }
