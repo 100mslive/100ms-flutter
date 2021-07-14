@@ -99,7 +99,7 @@ abstract class MeetingStoreBase with Store {
         print('Peer video toggled');
         break;
       case HMSPeerUpdate.roleUpdated:
-        peers[peers.indexOf(peer)] = peer;
+
         onRoleUpdated(peers.indexOf(peer), peer);
         break;
       case HMSPeerUpdate.defaultUpdate:
