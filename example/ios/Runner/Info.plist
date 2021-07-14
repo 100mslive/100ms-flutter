@@ -22,7 +22,6 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-
 	<key>NSCameraUsageDescription</key>
 	<string>100ms needs access to Camera to enable high quality video conferencing.</string>
 	<key>NSLocalNetworkUsageDescription</key>
