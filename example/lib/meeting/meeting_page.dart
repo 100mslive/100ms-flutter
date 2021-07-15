@@ -1,9 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:hmssdk_flutter/common/platform_methods.dart';
+import 'package:hmssdk_flutter/model/platform_method_response.dart';
+import 'package:hmssdk_flutter_example/common/ui/organisms/peer_item_organism.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_controller.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
+import 'package:mobx/mobx.dart';
 
 class MeetingPage extends StatefulWidget {
   final String roomId;
@@ -29,6 +33,7 @@ class _MeetingPageState extends State<MeetingPage> {
     _meetingStore.meetingController = meetingController;
     super.initState();
     initMeeting();
+    reaction((_) => _meetingStore.peers, (__) => print(__));
   }
 
   void initMeeting() {
@@ -70,15 +75,41 @@ class _MeetingPageState extends State<MeetingPage> {
             Text(widget.roomId),
             Observer(builder: (_) {
               if (_meetingStore.isMeetingStarted) {
-                return StreamBuilder(
+                return StreamBuilder<PlatformMethodResponse>(
                     stream: _meetingStore.controller,
                     builder: (context, data) {
-                      return Text(data.toString());
+                      // print(data.data!.method.toString());
+                      if (data.data == null) return Text("Null data");
+                      if (data.data!.method == PlatformMethod.onPeerUpdate) {
+                        print('peer update');
+                      }
+                      String data1 = data.data!.data.toString();
+                      return Text(data1);
                     });
               } else {
                 return CupertinoActivityIndicator();
               }
-            })
+            }),
+            Observer(
+                builder: (_) =>
+                    Text('${_meetingStore.peers.length} are peers here')),
+            Flexible(
+              child: Observer(
+                builder: (_) {
+                  if (!_meetingStore.isMeetingStarted) return SizedBox();
+                  if (_meetingStore.peers.isEmpty)
+                    return Text('Waiting for other to join!');
+                  return GridView(
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3),
+                    children: List.generate(
+                        _meetingStore.peers.length,
+                        (index) =>
+                            PeerItemOrganism(peer: _meetingStore.peers[index])),
+                  );
+                },
+              ),
+            )
           ],
         ),
       ),

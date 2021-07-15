@@ -1,4 +1,5 @@
 import 'package:hmssdk_flutter/model/hms_config.dart';
+import 'package:hmssdk_flutter/model/platform_method_response.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
 import 'package:hmssdk_flutter_example/meeting/hms_sdk_interactor.dart';
 import 'package:hmssdk_flutter_example/service/room_service.dart';
@@ -13,7 +14,7 @@ class MeetingController {
   MeetingController(
       {required this.roomId, required this.user, required this.flow});
 
-  Future<Stream> startMeeting() async {
+  Future<Stream<PlatformMethodResponse>> startMeeting() async {
     String token = await RoomService().getToken(user: user, room: roomId);
     HMSConfig hmsConfig = HMSConfig(
         userId: Uuid().v1(),
@@ -27,5 +28,13 @@ class MeetingController {
 
   void leaveMeeting() {
     _hmssdkInteractor?.leaveMeeting();
+  }
+
+  Future<void> switchAudio({bool isOn = false}) async {
+    return await _hmssdkInteractor?.switchAudio(isOn: isOn);
+  }
+
+  Future<void> switchVideo({bool isOn = false}) async {
+    return await _hmssdkInteractor?.switchVideo(isOn: isOn);
   }
 }

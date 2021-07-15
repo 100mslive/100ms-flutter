@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/services.dart';
 import 'package:hmssdk_flutter/common/platform_methods.dart';
+import 'package:hmssdk_flutter/model/platform_method_response.dart';
 
 class PlatformService {
   static const MethodChannel _channel = const MethodChannel('hmssdk_flutter');
@@ -16,36 +17,48 @@ class PlatformService {
     return result;
   }
 
-  static Stream<PlatformMethod> listenToPlatformCalls() {
+  static Stream<PlatformMethodResponse> listenToPlatformCalls() {
     return _meetingEventChannel
         .receiveBroadcastStream()
-        .map<PlatformMethod>((event) {
-      PlatformMethod method = PlatformMethodValues.getMethodFromName(event);
-      switch (PlatformMethodValues.getMethodFromName(event)) {
+        .map<PlatformMethodResponse>((event) {
+      PlatformMethod method =
+          PlatformMethodValues.getMethodFromName(event['event_name']);
+      Map<String, dynamic>? data = {};
+      if (event is Map && event['data'] is Map) {
+        (event['data'] as Map).forEach((key, value) {
+          data[key.toString()] = value;
+        });
+      }
+      PlatformMethodResponse response =
+          PlatformMethodResponse(method: method, data: data, response: event);
+      if (method == PlatformMethod.unknown) {
+        print(event);
+      }
+      switch (response.method) {
         case PlatformMethod.joinMeeting:
-          return method;
+          return response;
         case PlatformMethod.leaveMeeting:
-          return method;
+          return response;
         case PlatformMethod.onJoinRoom:
-          return method;
+          return response;
         case PlatformMethod.onUpdateRoom:
-          return method;
+          return response;
         case PlatformMethod.onPeerUpdate:
-          return method;
+          return response;
         case PlatformMethod.onTrackUpdate:
-          return method;
+          return response;
         case PlatformMethod.onError:
-          return method;
+          return response;
         case PlatformMethod.onMessage:
-          return method;
+          return response;
         case PlatformMethod.onUpdateSpeaker:
-          return method;
+          return response;
         case PlatformMethod.onReconnecting:
-          return method;
+          return response;
         case PlatformMethod.onReconnected:
-          return method;
+          return response;
         default:
-          return method;
+          return response;
       }
     });
 
