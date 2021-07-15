@@ -55,8 +55,6 @@ class  HMSPeerExtension{
     
     static func getValueOfHMSPeerUpdate (update:HMSPeerUpdate)->String{
         switch update {
-        
-         
         case .peerJoined:
             return "peerJoined"
         case .peerLeft:
