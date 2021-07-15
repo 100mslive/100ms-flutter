@@ -15,12 +15,7 @@ class  HMSPeerExtension{
         
         if(peer.auxiliaryTracks != nil){
             for eachTrack:HMSTrack in peer.auxiliaryTracks!{
-                auxilaryTracks.insert([
-                    "track_id":eachTrack.trackId,
-                    "track_kind":eachTrack.kind ,
-                    "track_source":eachTrack.source,
-                    "track_description":eachTrack.trackDescription
-                ],at: auxilaryTracks.count)
+                    auxilaryTracks.insert(HMSTrackExtension.toDictionary(track: eachTrack),at: auxilaryTracks.count)
             }
         }
         
@@ -34,29 +29,18 @@ class  HMSPeerExtension{
             "customer_description":peer.customerDescription,
             "customer_user_id":peer.customerUserID,
             "status":getValueOfHMSPeerUpdate(update:update),
-            "audio_track":[
-                "track_id":peer.audioTrack?.trackId ?? "",
-                "track_kind":peer.audioTrack?.kind ?? "",
-                "track_source":peer.audioTrack?.source ?? "",
-                "track_description":peer.audioTrack?.trackDescription ?? ""
-            ],
-//            "video_track":[
-//                "track_id":peer.videoTrack?.trackId ?? "",
-//                "track_kind":peer.videoTrack?.kind ?? "",
-//                "track_source":peer.videoTrack?.source ?? "",
-//                "track_description":peer.videoTrack?.trackDescription ?? ""
-//            ],
-//            "auxilary_tracks":auxilaryTracks
+            "audio_track":HMSTrackExtension.toDictionary(track:peer.audioTrack),
+            "video_track":HMSTrackExtension.toDictionary(track:peer.videoTrack),
+            "auxilary_tracks":auxilaryTracks
         ]
         
         return dict
     }
   
     
+    
     static func getValueOfHMSPeerUpdate (update:HMSPeerUpdate)->String{
         switch update {
-        
-         
         case .peerJoined:
             return "peerJoined"
         case .peerLeft:

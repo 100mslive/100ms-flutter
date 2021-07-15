@@ -16,7 +16,7 @@ class PeerItemOrganism extends StatelessWidget {
           borderRadius: BorderRadius.all(Radius.circular(16))),
       child: Column(
         children: [
-          Text(peer.role ?? '[Undefined Role]'),
+          Text(peer.role?.name ?? '[Undefined Role]'),
           Text(peer.name),
           Text(peer.customerDescription ?? '[Undefined Description]'),
         ],

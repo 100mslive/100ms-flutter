@@ -145,11 +145,11 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         if let peer = hmsSDK?.localPeer, let videoTrack = peer.videoTrack as? HMSLocalVideoTrack {
             let isOn:Bool = arguments["is_on"] as? Bool ?? false
             print(videoTrack.settings)
-            if isOn{
-//                videoTrack.startCapturing()
+            if isOn {
+                videoTrack.stopCapturing()
 
             }else{
-//                videoTrack.stopCapturing()
+                videoTrack.startCapturing()
 
             }
             

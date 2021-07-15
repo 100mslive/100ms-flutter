@@ -1,15 +1,15 @@
 import 'package:hmssdk_flutter/enum/hms_peer_update.dart';
 import 'package:hmssdk_flutter/model/hms_audio_track.dart';
+import 'package:hmssdk_flutter/model/hms_role.dart';
 import 'package:hmssdk_flutter/model/hms_track.dart';
 import 'package:hmssdk_flutter/model/hms_video_track.dart';
-
 
 // TODO: Need to update models with HMSSDK v0.0.6
 class HMSPeer {
   final String peerId;
   final String name;
   final bool isLocal;
-  final String? role;
+  final HMSRole? role;
   final String? customerUserId;
   final String? customerDescription;
   final HMSAudioTrack? audioTrack;
@@ -35,7 +35,7 @@ class HMSPeer {
         peerId: map['peer_id'],
         name: map['name'],
         isLocal: map['is_local'],
-        role: map['role'],
+        role: HMSRole.fromMap(map['role']),
         customerDescription: map['customer_description'],
         customerUserId: map['customer_user_id'],
         update: HMSPeerUpdateValues.getHMSPeerUpdateFromName(map['status']));
