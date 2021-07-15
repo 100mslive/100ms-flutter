@@ -58,6 +58,7 @@ class _MeetingPageState extends State<MeetingPage> {
           IconButton(
             onPressed: () async {
               //TODO:: switch camera
+              _meetingStore.toggleCamera();
             },
             icon: Icon(Icons.switch_camera),
           ),

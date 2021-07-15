@@ -26,4 +26,10 @@ class HMSMeeting {
     return await PlatformService.invokeMethod(PlatformMethod.switchVideo,
         arguments: {'is_on': isOn});
   }
+
+  Future<void> switchCamera() async {
+    return await PlatformService.invokeMethod(
+      PlatformMethod.switchCamera,
+    );
+  }
 }
