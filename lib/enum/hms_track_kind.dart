@@ -1,4 +1,4 @@
-enum HMSTrackKind { kHMSTrackKindAudio, kHMSTrackKindVideo, unknown }
+enum HMSTrackKind { kHMSTrackKindAudio, kHMSTrackKindVideo, unknown}
 
 extension HMSTrackKindValue on HMSTrackKind {
   static HMSTrackKind getHMSTrackKindFromName(String name) {
@@ -6,6 +6,10 @@ extension HMSTrackKindValue on HMSTrackKind {
       case 'kHMSTrackKindAudio':
         return HMSTrackKind.kHMSTrackKindAudio;
       case 'kHMSTrackKindVideo':
+        return HMSTrackKind.kHMSTrackKindVideo;
+      case 'AUDIO':
+        return HMSTrackKind.kHMSTrackKindAudio;
+      case 'VIDEO':
         return HMSTrackKind.kHMSTrackKindVideo;
       default:
         return HMSTrackKind.unknown;

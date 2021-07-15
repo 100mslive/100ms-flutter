@@ -30,6 +30,16 @@ class HMSPeer {
     this.update = HMSPeerUpdate.defaultUpdate,
   });
 
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is HMSPeer &&
+          runtimeType == other.runtimeType &&
+          peerId == other.peerId;
+
+  @override
+  int get hashCode => peerId.hashCode;
+
   factory HMSPeer.fromMap(Map<String, dynamic> map) {
     return HMSPeer(
         peerId: map['peer_id'],
@@ -42,10 +52,8 @@ class HMSPeer {
   }
 
   @override
-  int get hashCode => this.peerId.hashCode;
-
-  @override
-  bool operator ==(Object other) {
-    return super.hashCode == other.hashCode;
+  String toString() {
+    return 'HMSPeer{peerId: $peerId, name: $name, isLocal: $isLocal, role: $role, customerUserId: $customerUserId, customerDescription: $customerDescription, audioTrack: $audioTrack, videoTrack: $videoTrack, auxiliaryTracks: $auxiliaryTracks, update: $update}';
   }
+
 }
