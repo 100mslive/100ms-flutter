@@ -11,11 +11,26 @@ import HMSSDK
 class  HMSPeerExtension{
     static func toDictionary (peer:HMSPeer,update:HMSPeerUpdate)-> Dictionary<String,Any?>{
    
+        var auxilaryTracks:[Dictionary<String, Any?>]=[]
+        
+        if(peer.auxiliaryTracks != nil){
+            for eachTrack:HMSTrack in peer.auxiliaryTracks!{
+                auxilaryTracks.insert([
+                    "track_id":eachTrack.trackId,
+                    "track_kind":eachTrack.kind ,
+                    "track_source":eachTrack.source,
+                    "track_description":eachTrack.trackDescription
+                ],at: auxilaryTracks.count)
+            }
+        }
+        
+        
+        
         let dict:[String:Any?] = [
             "peer_id":peer.peerID,
             "name":peer.name,
             "is_local":peer.isLocal,
-            "role":peer.role,
+            "role":HMSRoleExtension.toDictionary(role:peer.role!),
             "customer_description":peer.customerDescription,
             "customer_user_id":peer.customerUserID,
             "status":getValueOfHMSPeerUpdate(update:update),
@@ -24,7 +39,14 @@ class  HMSPeerExtension{
                 "track_kind":peer.audioTrack?.kind ?? "",
                 "track_source":peer.audioTrack?.source ?? "",
                 "track_description":peer.audioTrack?.trackDescription ?? ""
-            ]
+            ],
+//            "video_track":[
+//                "track_id":peer.videoTrack?.trackId ?? "",
+//                "track_kind":peer.videoTrack?.kind ?? "",
+//                "track_source":peer.videoTrack?.source ?? "",
+//                "track_description":peer.videoTrack?.trackDescription ?? ""
+//            ],
+//            "auxilary_tracks":auxilaryTracks
         ]
         
         return dict

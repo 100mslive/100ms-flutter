@@ -56,6 +56,7 @@ class HmssdkFlutterPlugin: FlutterPlugin, MethodCallHandler, HMSUpdateListener,A
         leaveMeeting()
         result.success("Leaving meeting")
       }
+
       "switch_audio"->{
         switchAudio(call,result)
       }
@@ -77,6 +78,7 @@ class HmssdkFlutterPlugin: FlutterPlugin, MethodCallHandler, HMSUpdateListener,A
 
 
   override fun onError(error: HMSException) {
+
 
     val args=HashMap<String,Any>()
     args.put("event_name","on_error")
@@ -116,6 +118,7 @@ class HmssdkFlutterPlugin: FlutterPlugin, MethodCallHandler, HMSUpdateListener,A
 
   override fun onPeerUpdate(type: HMSPeerUpdate, peer: HMSPeer) {
 
+
     val args=HashMap<String,Any>()
     args.put("event_name","on_peer_update")
     args.put("data",HMSPeerExtension.toDictionary(peer,type))
@@ -126,6 +129,7 @@ class HmssdkFlutterPlugin: FlutterPlugin, MethodCallHandler, HMSUpdateListener,A
   }
 
   override fun onRoomUpdate(type: HMSRoomUpdate, hmsRoom: HMSRoom) {
+
     val args=HashMap<String,Any>()
     args.put("event_name","on_update_room")
     args.put("data",hmsRoom.name)
@@ -136,6 +140,7 @@ class HmssdkFlutterPlugin: FlutterPlugin, MethodCallHandler, HMSUpdateListener,A
   }
 
   override fun onTrackUpdate(type: HMSTrackUpdate, track: HMSTrack, peer: HMSPeer) {
+
 
     val args=HashMap<String,Any>()
     args.put("event_name","on_track_update")
@@ -151,6 +156,7 @@ class HmssdkFlutterPlugin: FlutterPlugin, MethodCallHandler, HMSUpdateListener,A
 
   override fun onReconnected() {
     super.onReconnected()
+
     val args=HashMap<String,Any>()
     args.put("event_name","on_re_connected")
     CoroutineScope(Dispatchers.Main).launch {

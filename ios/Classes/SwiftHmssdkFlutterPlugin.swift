@@ -24,7 +24,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                 "name":"Vivek"
             ]
         ]
-        eventSink!(data)
+        eventSink?(data)
     }
     
     
@@ -47,7 +47,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                 "name":"Vivek"
             ]
         ]
-        eventSink!(data)
+        eventSink?(data)
     }
     
     public func on(peer: HMSPeer, update: HMSPeerUpdate) {
@@ -57,7 +57,8 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             "event_name":"on_peer_update",
             "data": HMSPeerExtension.toDictionary(peer: peer,update: update)
         ]
-        eventSink!(data)
+        print(data)
+        eventSink?(data)
     }
     
     public func on(track: HMSTrack, update: HMSTrackUpdate, for peer: HMSPeer) {
@@ -69,7 +70,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                 "name":"Vivek"
             ]
         ]
-        eventSink!(data)
+        eventSink?(data)
     }
     
     public func on(error: HMSError) {
@@ -81,7 +82,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                 "name":"Vivek"
             ]
         ]
-        eventSink!(data)
+        eventSink?(data)
     }
     
     public func on(message: HMSMessage) {
@@ -93,7 +94,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                 "name":"Vivek"
             ]
         ]
-        eventSink!(data)
+        eventSink?(data)
     }
     
     public func on(updated speakers: [HMSSpeaker]) {
@@ -104,7 +105,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                 "name":"Vivek"
             ]
         ]
-        eventSink!(data)
+        eventSink?(data)
     }
     
     public func onReconnecting() {
@@ -116,7 +117,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                 "name":"Vivek"
             ]
         ]
-        eventSink!(data)
+        eventSink?(data)
     }
     
     public func onReconnected() {
@@ -127,7 +128,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                 "name":"Vivek"
             ]
         ]
-        eventSink!(data)
+        eventSink?(data)
     }
     
     func switchAudio(call: FlutterMethodCall,result:FlutterResult) {
