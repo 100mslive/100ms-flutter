@@ -55,5 +55,4 @@ class HMSPeer {
   String toString() {
     return 'HMSPeer{peerId: $peerId, name: $name, isLocal: $isLocal, role: $role, customerUserId: $customerUserId, customerDescription: $customerDescription, audioTrack: $audioTrack, videoTrack: $videoTrack, auxiliaryTracks: $auxiliaryTracks, update: $update}';
   }
-
 }
