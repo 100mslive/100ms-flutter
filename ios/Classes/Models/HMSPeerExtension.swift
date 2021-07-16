@@ -12,28 +12,39 @@ class  HMSPeerExtension{
     static func toDictionary (peer:HMSPeer,update:HMSPeerUpdate)-> Dictionary<String,Any?>{
    
         var auxilaryTracks:[Dictionary<String, Any?>]=[]
+      
+        //TODO:: remove !
+       
+
         
-        if(peer.auxiliaryTracks != nil){
-            for eachTrack:HMSTrack in peer.auxiliaryTracks!{
+        var dict:[String:Any?] = [
+            "peer_id":peer.peerID,
+            "name":peer.name,
+            "is_local":peer.isLocal,
+            "customer_description":peer.customerDescription,
+            "customer_user_id":peer.customerUserID,
+            "status":getValueOfHMSPeerUpdate(update:update),
+            "auxilary_tracks":auxilaryTracks
+        ]
+        
+        if let role = peer.role{
+            dict["role"]=HMSRoleExtension.toDictionary(role:role)
+        }
+        if let audioTrack = peer.audioTrack{
+            dict["audio_track"]=HMSTrackExtension.toDictionary(track:audioTrack)
+        }
+        
+        if let videoTrack = peer.videoTrack{
+            dict["video_track"]=HMSTrackExtension.toDictionary(track:videoTrack)
+        }
+        
+        if let tracks = peer.auxiliaryTracks {
+            for eachTrack:HMSTrack in tracks{
                     auxilaryTracks.insert(HMSTrackExtension.toDictionary(track: eachTrack),at: auxilaryTracks.count)
             }
         }
         
-        
-        
-        let dict:[String:Any?] = [
-            "peer_id":peer.peerID,
-            "name":peer.name,
-            "is_local":peer.isLocal,
-            "role":HMSRoleExtension.toDictionary(role:peer.role!),
-            "customer_description":peer.customerDescription,
-            "customer_user_id":peer.customerUserID,
-            "status":getValueOfHMSPeerUpdate(update:update),
-            "audio_track":HMSTrackExtension.toDictionary(track:peer.audioTrack),
-            "video_track":HMSTrackExtension.toDictionary(track:peer.videoTrack),
-            "auxilary_tracks":auxilaryTracks
-        ]
-        
+      
         return dict
     }
   

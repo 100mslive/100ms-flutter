@@ -13,18 +13,16 @@ class  HMSTrackExtension{
         
         var dict:[String:Any?]=[:]
         
-        if(track != nil){
-        dict=[
-            "track_id":track?.trackId,
-            "track_kind":getKindInString(kind:track?.kind),
-            "track_source":getSourceInString(source:track?.source),
-            "track_description":track?.trackDescription]
-    }
+        if let tempTrack = track{
+            dict=[
+                "track_id":tempTrack.trackId,
+                "track_kind":getKindInString(kind:tempTrack.kind),
+                "track_source":getSourceInString(source:tempTrack.source),
+                "track_description":tempTrack.trackDescription]
+        }
         return dict
     }
     static func getKindInString(kind:HMSTrackKind?)->String{
-        
-        
         switch kind {
         case .audio:
             return "kHMSTrackKindAudio"
@@ -39,7 +37,6 @@ class  HMSTrackExtension{
     
     static func getSourceInString(source:HMSTrackSource?)->String{
         switch source {
-        
         case .regular:
             return "kHMSTrackSourceRegular"
         case .screen:
