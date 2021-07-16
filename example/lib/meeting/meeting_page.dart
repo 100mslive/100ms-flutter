@@ -5,6 +5,7 @@ import 'package:hmssdk_flutter/common/platform_methods.dart';
 import 'package:hmssdk_flutter/model/platform_method_response.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/peer_item_organism.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
+import 'package:hmssdk_flutter_example/main.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_controller.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:mobx/mobx.dart';
@@ -58,6 +59,7 @@ class _MeetingPageState extends State<MeetingPage> {
           IconButton(
             onPressed: () async {
               //TODO:: switch camera
+              _meetingStore.toggleCamera();
             },
             icon: Icon(Icons.switch_camera),
           ),
@@ -157,7 +159,7 @@ class _MeetingPageState extends State<MeetingPage> {
                       tooltip: 'Leave',
                       onPressed: () {
                         _meetingStore.meetingController.leaveMeeting();
-                        Navigator.pop(context);
+                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (ctx)=>HomePage()));
                       },
                       icon: Icon(Icons.call_end)),
                 ),

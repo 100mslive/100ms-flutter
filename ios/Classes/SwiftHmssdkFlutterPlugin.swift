@@ -145,11 +145,11 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         if let peer = hmsSDK?.localPeer, let videoTrack = peer.videoTrack as? HMSLocalVideoTrack {
             let isOn:Bool = arguments["is_on"] as? Bool ?? false
             print(videoTrack.settings)
-            if isOn{
-//                videoTrack.startCapturing()
+            if isOn {
+                videoTrack.stopCapturing()
 
             }else{
-//                videoTrack.stopCapturing()
+                videoTrack.startCapturing()
 
             }
             
@@ -157,6 +157,14 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
          }
         result("video_changed")
     }
+    
+    func switchCamera(result:FlutterResult) {
+        if let peer = hmsSDK?.localPeer, let videoTrack = peer.videoTrack as? HMSLocalVideoTrack {
+            videoTrack.switchCamera()
+         }
+        result("camera_changed")
+    }
+    
     
     internal var hmsSDK: HMSSDK?
 
@@ -170,10 +178,11 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
     switch call.method {
-    case "join_meeting": joinMeeting(call:call,result:result)
+    case "join_meeting":joinMeeting(call:call,result:result)
     case "leave_meeting":leaveMeeting(result: result)
     case "switch_audio":switchAudio(call: call , result: result)
     case "switch_video":switchVideo(call: call , result: result)
+    case "switch_camera":switchCamera(result: result)
 
     default:
         result(FlutterMethodNotImplemented)

@@ -37,4 +37,8 @@ class MeetingController {
   Future<void> switchVideo({bool isOn = false}) async {
     return await _hmssdkInteractor?.switchVideo(isOn: isOn);
   }
+
+  Future<void> switchCamera() async {
+    return await _hmssdkInteractor?.switchCamera();
+  }
 }

@@ -16,7 +16,7 @@ abstract class MeetingStoreBase with Store {
   @observable
   bool isMeetingStarted = false;
   @observable
-  bool isVideoOn = false;
+  bool isVideoOn = true;
   @observable
   bool isMicOn = true;
 
@@ -39,9 +39,29 @@ abstract class MeetingStoreBase with Store {
   }
 
   @action
+  Future<void> toggleCamera() async {
+    await meetingController.switchCamera();
+  }
+
+  @action
   Future<void> toggleAudio() async {
     await meetingController.switchAudio(isOn: isMicOn);
     isMicOn = !isMicOn;
+  }
+
+  @action
+  void removePeer(HMSPeer peer){
+    peers.remove(peer);
+  }
+
+  @action
+  void addPeer(HMSPeer peer){
+    peers.add(peer);
+  }
+
+  @action
+  void onRoleUpdated(int index,HMSPeer peer){
+    peers[index]=peer;
   }
 
   @action
@@ -65,14 +85,13 @@ abstract class MeetingStoreBase with Store {
   void peerOperation(HMSPeer peer) {
     switch (peer.update) {
       case HMSPeerUpdate.peerJoined:
-        peers.add(peer);
+        addPeer(peer);
         break;
-
       case HMSPeerUpdate.peerLeft:
-        peers.removeWhere((eachPeer) => eachPeer.peerId == peer.peerId);
+        removePeer(peer);
         break;
       case HMSPeerUpdate.peerKnocked:
-        peers.removeWhere((eachPeer) => eachPeer.peerId == peer.peerId);
+        removePeer(peer);
         break;
       case HMSPeerUpdate.audioToggled:
         print('Peer audio toggled');
