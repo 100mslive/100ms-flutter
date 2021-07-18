@@ -49,4 +49,21 @@ class  HMSTrackExtension{
             return ""
         }
     }
+    static func getTrackUpdateInString(trackUpdate:HMSTrackUpdate?)->String{
+        switch trackUpdate {
+    
+        case .trackAdded :return "trackAdded"
+        case.trackDegraded: return "trackDegraded"
+        case .trackDescriptionChanged: return "trackDescriptionChanged"
+        case .trackMuted: return "trackMuted"
+        case .trackRemoved: return "trackRemoved"
+        case .trackRestored: return "trackRestored"
+        case .trackUnmuted: return "trackUnmuted"
+        
+        case .none:
+            return ""
+        @unknown default:
+            return ""
+        }
+    }
 }

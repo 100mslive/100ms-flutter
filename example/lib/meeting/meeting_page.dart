@@ -103,7 +103,7 @@ class _MeetingPageState extends State<MeetingPage> {
                     return Text('Waiting for other to join!');
                   return GridView(
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3),
+                        crossAxisCount: 2),
                     children: List.generate(
                         _meetingStore.peers.length,
                         (index) =>
@@ -159,7 +159,8 @@ class _MeetingPageState extends State<MeetingPage> {
                       tooltip: 'Leave',
                       onPressed: () {
                         _meetingStore.meetingController.leaveMeeting();
-                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (ctx)=>HomePage()));
+                        Navigator.pushReplacement(context,
+                            MaterialPageRoute(builder: (ctx) => HomePage()));
                       },
                       icon: Icon(Icons.call_end)),
                 ),

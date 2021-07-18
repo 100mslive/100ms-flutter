@@ -1,4 +1,3 @@
-import 'package:hmssdk_flutter/enum/hms_peer_update.dart';
 import 'package:hmssdk_flutter/model/hms_audio_track.dart';
 import 'package:hmssdk_flutter/model/hms_role.dart';
 import 'package:hmssdk_flutter/model/hms_track.dart';
@@ -15,7 +14,6 @@ class HMSPeer {
   final HMSAudioTrack? audioTrack;
   final HMSVideoTrack? videoTrack;
   final List<HMSTrack>? auxiliaryTracks;
-  final HMSPeerUpdate? update;
 
   HMSPeer({
     required this.peerId,
@@ -27,7 +25,6 @@ class HMSPeer {
     this.audioTrack,
     this.videoTrack,
     this.auxiliaryTracks,
-    this.update = HMSPeerUpdate.defaultUpdate,
   });
 
   @override
@@ -40,19 +37,19 @@ class HMSPeer {
   @override
   int get hashCode => peerId.hashCode;
 
-  factory HMSPeer.fromMap(Map<String, dynamic> map) {
+  factory HMSPeer.fromMap(Map map) {
     return HMSPeer(
-        peerId: map['peer_id'],
-        name: map['name'],
-        isLocal: map['is_local'],
-        role: HMSRole.fromMap(map['role']),
-        customerDescription: map['customer_description'],
-        customerUserId: map['customer_user_id'],
-        update: HMSPeerUpdateValues.getHMSPeerUpdateFromName(map['status']));
+      peerId: map['peer_id'],
+      name: map['name'],
+      isLocal: map['is_local'],
+      role: HMSRole.fromMap(map['role']),
+      customerDescription: map['customer_description'],
+      customerUserId: map['customer_user_id'],
+    );
   }
 
   @override
   String toString() {
-    return 'HMSPeer{peerId: $peerId, name: $name, isLocal: $isLocal, role: $role, customerUserId: $customerUserId, customerDescription: $customerDescription, audioTrack: $audioTrack, videoTrack: $videoTrack, auxiliaryTracks: $auxiliaryTracks, update: $update}';
+    return 'HMSPeer{peerId: $peerId, name: $name, isLocal: $isLocal, role: $role, customerUserId: $customerUserId, customerDescription: $customerDescription, audioTrack: $audioTrack, videoTrack: $videoTrack, auxiliaryTracks: $auxiliaryTracks}';
   }
 }

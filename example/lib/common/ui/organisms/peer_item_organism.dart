@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hmssdk_flutter/model/hms_peer.dart';
+import 'package:hmssdk_flutter/ui/meeting/video_view.dart';
 
 class PeerItemOrganism extends StatelessWidget {
   final HMSPeer peer;
@@ -19,6 +20,17 @@ class PeerItemOrganism extends StatelessWidget {
           Text(peer.role?.name ?? '[Undefined Role]'),
           Text(peer.name),
           Text(peer.customerDescription ?? '[Undefined Description]'),
+          Expanded(child: LayoutBuilder(
+            builder: (context, constraints) {
+              return VideoView(
+                peer: peer,
+                args: {
+                  'height': constraints.maxHeight,
+                  'width': constraints.maxWidth,
+                },
+              );
+            },
+          ))
         ],
       ),
     );

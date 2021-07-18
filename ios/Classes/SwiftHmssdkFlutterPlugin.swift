@@ -5,7 +5,6 @@ import HMSSDK
 public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListener,FlutterStreamHandler {
 
 
-    
     let channel:FlutterMethodChannel
     let meetingEventChannel:FlutterEventChannel
     var eventSink:FlutterEventSink?
@@ -55,22 +54,47 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
         let data:[String:Any]=[
             "event_name":"on_peer_update",
-            "data": HMSPeerExtension.toDictionary(peer: peer,update: update)
+            "data":[
+                "peer":HMSPeerExtension.toDictionary(peer: peer),
+                "update": HMSPeerExtension.getValueOfHMSPeerUpdate(update: update)
+            ]
+            
         ]
         print(data)
         eventSink?(data)
     }
     
     public func on(track: HMSTrack, update: HMSTrackUpdate, for peer: HMSPeer) {
+        
         print("On Track Update")
 
         let data:[String:Any]=[
             "event_name":"on_track_update",
             "data":[
-                "name":"Vivek"
+                "peer":HMSPeerExtension.toDictionary(peer: peer),
+                "update":HMSTrackExtension.getTrackUpdateInString(trackUpdate: update),
+                "track":HMSTrackExtension.toDictionary(track: track)
             ]
         ]
         eventSink?(data)
+    }
+    
+    public func getPeerById(id:String,isLocal:Bool) -> HMSPeer?{
+        if isLocal{
+            if  let peer:HMSLocalPeer = hmsSDK?.localPeer{
+                return peer
+
+            }
+        }else{
+            if let peers:[HMSRemotePeer] = hmsSDK?.remotePeers{
+                for peer in peers {
+                    if(peer.peerID == id){
+                        return peer
+                    }
+                }
+            }
+        }
+        return nil
     }
     
     public func on(error: HMSError) {
@@ -171,7 +195,13 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
   public static func register(with registrar: FlutterPluginRegistrar) {
     let channel = FlutterMethodChannel(name: "hmssdk_flutter", binaryMessenger: registrar.messenger())
     let eventChannel = FlutterEventChannel(name: "meeting_event_channel", binaryMessenger: registrar.messenger())
+   
     let instance = SwiftHmssdkFlutterPlugin(channel: channel,meetingEventChannel: eventChannel)
+    
+    
+     let videoViewFactory:HMSVideoViewFactory = HMSVideoViewFactory(messenger: registrar.messenger(),plugin: instance)
+     registrar.register(videoViewFactory, withId: "HMSVideoView")
+    
     eventChannel.setStreamHandler(instance)
     registrar.addMethodCallDelegate(instance, channel: channel)
   }
@@ -183,7 +213,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     case "switch_audio":switchAudio(call: call , result: result)
     case "switch_video":switchVideo(call: call , result: result)
     case "switch_camera":switchCamera(result: result)
-
+    
     default:
         result(FlutterMethodNotImplemented)
     }

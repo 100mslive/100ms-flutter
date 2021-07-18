@@ -9,21 +9,16 @@ import Foundation
 import HMSSDK
 
 class  HMSPeerExtension{
-    static func toDictionary (peer:HMSPeer,update:HMSPeerUpdate)-> Dictionary<String,Any?>{
+    static func toDictionary (peer:HMSPeer)-> Dictionary<String,Any?>{
    
         var auxilaryTracks:[Dictionary<String, Any?>]=[]
-      
-        //TODO:: remove !
-       
-
-        
+              
         var dict:[String:Any?] = [
             "peer_id":peer.peerID,
             "name":peer.name,
             "is_local":peer.isLocal,
             "customer_description":peer.customerDescription,
             "customer_user_id":peer.customerUserID,
-            "status":getValueOfHMSPeerUpdate(update:update),
             "auxilary_tracks":auxilaryTracks
         ]
         
