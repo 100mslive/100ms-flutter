@@ -31,10 +31,12 @@ class HMSPeerExtension {
 
         fun getAudioTrackToDictionary(peer: HMSPeer):HashMap<String,String>{
             val args=HashMap<String,String>()
-            args.put("track_id",peer.audioTrack!!.trackId)
-            args.put("track_source",peer.audioTrack!!.source)
-            args.put("track_description",peer.audioTrack!!.description)
-            args.put("track_kind",peer.audioTrack!!.type.toString().uppercase())
+            if(peer.audioTrack!=null) {
+                args.put("track_id", peer.audioTrack!!.trackId)
+                args.put("track_source", peer.audioTrack!!.source)
+                args.put("track_description", peer.audioTrack!!.description)
+                args.put("track_kind", peer.audioTrack!!.type.toString().uppercase())
+            }
             return args
         }
     }

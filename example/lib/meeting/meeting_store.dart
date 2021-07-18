@@ -16,7 +16,7 @@ abstract class MeetingStoreBase with Store {
   @observable
   bool isMeetingStarted = false;
   @observable
-  bool isVideoOn = false;
+  bool isVideoOn = true;
   @observable
   bool isMicOn = true;
 

@@ -21,7 +21,7 @@ class MeetingController {
         roomId: roomId,
         authToken: token,
         // endPoint: Constant.getTokenURL,
-        userName: 'Flutter user');
+        userName: user);
     _hmssdkInteractor = HMSSDKInteractor(config: hmsConfig);
     return _hmssdkInteractor!.setup();
   }
