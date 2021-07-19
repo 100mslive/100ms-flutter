@@ -13,6 +13,7 @@ enum PlatformMethod {
   onReconnected,
   switchAudio,
   switchVideo,
+  switchCamera,
   unknown
 }
 
@@ -47,6 +48,8 @@ extension PlatformMethodValues on PlatformMethod {
         return 'switch_audio';
       case PlatformMethod.switchVideo:
         return 'switch_video';
+      case PlatformMethod.switchCamera:
+        return 'switch_camera';
       case PlatformMethod.unknown:
         return 'unknown';
     }
@@ -82,6 +85,8 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.switchAudio;
       case 'switch_video':
         return PlatformMethod.switchVideo;
+      case 'switch_camera':
+        return PlatformMethod.switchCamera;
       default:
         return PlatformMethod.unknown;
     }

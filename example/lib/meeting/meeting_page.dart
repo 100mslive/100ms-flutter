@@ -59,6 +59,7 @@ class _MeetingPageState extends State<MeetingPage> {
           IconButton(
             onPressed: () async {
               //TODO:: switch camera
+              _meetingStore.toggleCamera();
             },
             icon: Icon(Icons.switch_camera),
           ),
@@ -102,7 +103,7 @@ class _MeetingPageState extends State<MeetingPage> {
                     return Text('Waiting for other to join!');
                   return GridView(
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3),
+                        crossAxisCount: 2),
                     children: List.generate(
                         _meetingStore.peers.length,
                         (index) =>

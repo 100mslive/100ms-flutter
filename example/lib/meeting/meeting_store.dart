@@ -77,6 +77,11 @@ abstract class MeetingStoreBase with Store {
   }
 
   @action
+  Future<void> toggleCamera() async {
+    await meetingController.switchCamera();
+  }
+
+  @action
   void peerOperation(HMSPeer peer) {
     switch (peer.update) {
       case HMSPeerUpdate.peerJoined:
