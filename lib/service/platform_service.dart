@@ -12,6 +12,7 @@ class PlatformService {
 
   static Future<dynamic> invokeMethod(PlatformMethod method,
       {Map? arguments}) async {
+    debugPrint("invokeMethod");
     var result = await _channel.invokeMethod(
         PlatformMethodValues.getName(method), arguments);
     print(result);
@@ -25,6 +26,7 @@ class PlatformService {
           debugPrint(event['event_name'].toString()+"AAAAAAAAAAHHHHHHRRRROOOONNNNN");
       PlatformMethod method =
           PlatformMethodValues.getMethodFromName(event['event_name']);
+          debugPrint(method.toString()+"AAAAAAAAAAHHHHHHRRRROOOONNNNN");
       Map<String, dynamic>? data = {};
       if (event is Map && event['data'] is Map) {
         (event['data'] as Map).forEach((key, value) {

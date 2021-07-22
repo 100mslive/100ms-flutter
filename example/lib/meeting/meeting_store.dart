@@ -1,9 +1,13 @@
+import 'package:flutter/cupertino.dart';
 import 'package:hmssdk_flutter/common/platform_methods.dart';
 import 'package:hmssdk_flutter/enum/hms_peer_update.dart';
 import 'package:hmssdk_flutter/model/hms_peer.dart';
+import 'package:hmssdk_flutter/model/hms_track.dart';
 import 'package:hmssdk_flutter/model/platform_method_response.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_controller.dart';
 import 'package:mobx/mobx.dart';
+import 'package:hmssdk_flutter/exceptions/hms_exception.dart';
+import 'package:hmssdk_flutter/enum/hms_track_update.dart';
 
 part 'meeting_store.g.dart';
 
@@ -12,7 +16,8 @@ class MeetingStore = MeetingStoreBase with _$MeetingStore;
 abstract class MeetingStoreBase with Store {
   @observable
   bool isSpeakerOn = true;
-
+  @observable
+  HMSException? message;
   @observable
   bool isMeetingStarted = false;
   @observable
@@ -46,12 +51,22 @@ abstract class MeetingStoreBase with Store {
 
   @action
   void removePeer(HMSPeer peer){
-    peers.remove(peer);
+
+    if(peers.contains(peer)){
+
+      debugPrint("removePeer "+peers.remove(peer).toString());
+    }
+
   }
 
   @action
   void addPeer(HMSPeer peer){
-    peers.add(peer);
+
+    if(!peers.contains(peer)){
+      peers.add(peer);
+      debugPrint("addPeer "+peer.toString());
+    }
+
   }
 
   @action
@@ -69,11 +84,31 @@ abstract class MeetingStoreBase with Store {
   @action
   void listenToController() {
     controller?.listen((event) {
+      debugPrint(event.data.toString()+"listenToController");
       if (event.method == PlatformMethod.onPeerUpdate) {
-        HMSPeer peer = HMSPeer.fromMap(event.data);
-        peerOperation(peer);
+        debugPrint(event.data.toString());
+        HMSPeer peer = HMSPeer.fromMap(event.data['peer']);
+        HMSPeerUpdate update =
+        HMSPeerUpdateValues.getHMSPeerUpdateFromName(event.data['update']);
+        peerOperation(peer,update);
+      }
+      else if(event.method == PlatformMethod.onError){
+        HMSException exception= HMSException.fromMap(event.data);
+        debugPrint(exception.toString());
+        changeException(exception);
+      }
+      else if (event.method == PlatformMethod.onTrackUpdate) {
+        HMSPeer? peer = event.data['peer']!=null?HMSPeer.fromMap(event.data['peer']):null;
+        HMSTrackUpdate update = HMSTrackUpdateValues.getHMSTrackUpdateFromName(
+            event.data['update']);
+        peerOperationWithTrack(peer!, update);
       }
     });
+  }
+
+  @action
+  void changeException(HMSException exception){
+    message=exception;
   }
 
   @action
@@ -82,8 +117,8 @@ abstract class MeetingStoreBase with Store {
   }
 
   @action
-  void peerOperation(HMSPeer peer) {
-    switch (peer.update) {
+  void peerOperation(HMSPeer peer,HMSPeerUpdate update) {
+    switch (update) {
       case HMSPeerUpdate.peerJoined:
         addPeer(peer);
         break;
@@ -103,6 +138,38 @@ abstract class MeetingStoreBase with Store {
         peers[peers.indexOf(peer)] = peer;
         break;
       case HMSPeerUpdate.defaultUpdate:
+        print("Some default update or untouched case");
+        break;
+      default:
+        print("Some default update or untouched case");
+    }
+  }
+
+  @action
+  void peerOperationWithTrack(HMSPeer peer, HMSTrackUpdate update) {
+    switch (update) {
+      case HMSTrackUpdate.trackAdded:
+        addPeer(peer);
+        break;
+      case HMSTrackUpdate.trackRemoved:
+        removePeer(peer);
+        break;
+      case HMSTrackUpdate.trackMuted:
+        print('Muted');
+        break;
+      case HMSTrackUpdate.trackUnMuted:
+        print('UnMuted');
+        break;
+      case HMSTrackUpdate.trackDescriptionChanged:
+        print('trackDescriptionChanged');
+        break;
+      case HMSTrackUpdate.trackDegraded:
+        print('trackDegraded');
+        break;
+      case HMSTrackUpdate.trackRestored:
+        print('trackRestored');
+        break;
+      case HMSTrackUpdate.defaultUpdate:
         print("Some default update or untouched case");
         break;
       default:

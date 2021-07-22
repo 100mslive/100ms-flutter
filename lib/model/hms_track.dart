@@ -2,10 +2,13 @@ import 'package:hmssdk_flutter/enum/hms_track_kind.dart';
 import 'package:hmssdk_flutter/enum/hms_track_source.dart';
 
 abstract class HMSTrack {
-  abstract final String trackID;
-  abstract final HMSTrackKind kind;
-  abstract final HMSTrackSource source;
-  abstract final String trackDescription;
+  final String trackID;
+  final HMSTrackKind kind;
+  final HMSTrackSource source;
 
-  bool isMute();
+  HMSTrack(this.trackID, this.kind, this.source, this.trackDescription);
+
+  final String trackDescription;
+
+  Future<bool> isMute();
 }
