@@ -9,27 +9,41 @@ import Foundation
 import HMSSDK
 
 class  HMSPeerExtension{
-    static func toDictionary (peer:HMSPeer,update:HMSPeerUpdate)-> Dictionary<String,Any?>{
+    static func toDictionary (peer:HMSPeer)-> Dictionary<String,Any?>{
    
-        let dict:[String:Any?] = [
+        var auxilaryTracks:[Dictionary<String, Any?>]=[]
+              
+        var dict:[String:Any?] = [
             "peer_id":peer.peerID,
             "name":peer.name,
             "is_local":peer.isLocal,
-            "role":peer.role,
             "customer_description":peer.customerDescription,
             "customer_user_id":peer.customerUserID,
-            "status":getValueOfHMSPeerUpdate(update:update),
-            "audio_track":[
-                "track_id":peer.audioTrack?.trackId ?? "",
-                "track_kind":peer.audioTrack?.kind ?? "",
-                "track_source":peer.audioTrack?.source ?? "",
-                "track_description":peer.audioTrack?.trackDescription ?? ""
-            ]
+            "auxilary_tracks":auxilaryTracks
         ]
         
+        if let role = peer.role{
+            dict["role"]=HMSRoleExtension.toDictionary(role:role)
+        }
+        if let audioTrack = peer.audioTrack{
+            dict["audio_track"]=HMSTrackExtension.toDictionary(track:audioTrack)
+        }
+        
+        if let videoTrack = peer.videoTrack{
+            dict["video_track"]=HMSTrackExtension.toDictionary(track:videoTrack)
+        }
+        
+        if let tracks = peer.auxiliaryTracks {
+            for eachTrack:HMSTrack in tracks{
+                    auxilaryTracks.insert(HMSTrackExtension.toDictionary(track: eachTrack),at: auxilaryTracks.count)
+            }
+        }
+        
+      
         return dict
     }
   
+    
     
     static func getValueOfHMSPeerUpdate (update:HMSPeerUpdate)->String{
         switch update {

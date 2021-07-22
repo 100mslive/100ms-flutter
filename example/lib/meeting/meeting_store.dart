@@ -1,13 +1,11 @@
-import 'package:flutter/cupertino.dart';
 import 'package:hmssdk_flutter/common/platform_methods.dart';
 import 'package:hmssdk_flutter/enum/hms_peer_update.dart';
+import 'package:hmssdk_flutter/enum/hms_track_update.dart';
 import 'package:hmssdk_flutter/model/hms_peer.dart';
 import 'package:hmssdk_flutter/model/hms_track.dart';
 import 'package:hmssdk_flutter/model/platform_method_response.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_controller.dart';
 import 'package:mobx/mobx.dart';
-import 'package:hmssdk_flutter/exceptions/hms_exception.dart';
-import 'package:hmssdk_flutter/enum/hms_track_update.dart';
 
 part 'meeting_store.g.dart';
 
@@ -16,8 +14,7 @@ class MeetingStore = MeetingStoreBase with _$MeetingStore;
 abstract class MeetingStoreBase with Store {
   @observable
   bool isSpeakerOn = true;
-  @observable
-  HMSException? message;
+
   @observable
   bool isMeetingStarted = false;
   @observable
@@ -32,6 +29,9 @@ abstract class MeetingStoreBase with Store {
   @observable
   List<HMSPeer> peers = ObservableList.of([]);
 
+  @observable
+  List<HMSTrack> tracks = ObservableList.of([]);
+
   @action
   void toggleSpeaker() {
     isSpeakerOn = !isSpeakerOn;
@@ -44,34 +44,61 @@ abstract class MeetingStoreBase with Store {
   }
 
   @action
+  Future<void> toggleCamera() async {
+    await meetingController.switchCamera();
+  }
+
+  @action
   Future<void> toggleAudio() async {
     await meetingController.switchAudio(isOn: isMicOn);
     isMicOn = !isMicOn;
   }
 
   @action
-  void removePeer(HMSPeer peer){
-
-    if(peers.contains(peer)){
-
-      debugPrint("removePeer "+peers.remove(peer).toString());
-    }
-
+  void removePeer(HMSPeer peer) {
+    peers.remove(peer);
+    removeTrackWithPeerId(peer.peerId);
   }
 
   @action
-  void addPeer(HMSPeer peer){
+  void addPeer(HMSPeer peer) {
+    if (!peers.contains(peer)) peers.add(peer);
+  }
 
-    if(!peers.contains(peer)){
-      peers.add(peer);
-      debugPrint("addPeer "+peer.toString());
-    }
+  // @action
+  // void removeTrack(HMSTrack? track, String? peerId) {
+  //   if (track != null) {
+  //     tracks
+  //         .removeWhere((element) => element.peer?.peerId == track.peer?.peerId);
+  //   }
+  //   if (peerId != null)
+  //     tracks.removeWhere((element) => element.peer?.peerId == peerId);
+  // }
 
+  @action
+  void removeTrackWithTrackId(String trackId) {
+    tracks
+        .remove(tracks.firstWhere((eachTrack) => eachTrack.trackId == trackId));
   }
 
   @action
-  void onRoleUpdated(int index,HMSPeer peer){
-    peers[index]=peer;
+  void removeTrackWithPeerId(String peerId) {
+    tracks.removeWhere((eachTrack) => eachTrack.peer?.peerId == peerId);
+  }
+
+  @action
+  void addTrack(HMSTrack track) {
+    if (!tracks.contains(track))
+      tracks.add(track);
+    else {
+      removeTrackWithTrackId(track.trackId);
+      addTrack(track);
+    }
+  }
+
+  @action
+  void onRoleUpdated(int index, HMSPeer peer) {
+    peers[index] = peer;
   }
 
   @action
@@ -84,49 +111,37 @@ abstract class MeetingStoreBase with Store {
   @action
   void listenToController() {
     controller?.listen((event) {
-      debugPrint(event.data.toString()+"listenToController");
       if (event.method == PlatformMethod.onPeerUpdate) {
-        debugPrint(event.data.toString());
         HMSPeer peer = HMSPeer.fromMap(event.data['peer']);
         HMSPeerUpdate update =
-        HMSPeerUpdateValues.getHMSPeerUpdateFromName(event.data['update']);
-        peerOperation(peer,update);
-      }
-      else if(event.method == PlatformMethod.onError){
-        HMSException exception= HMSException.fromMap(event.data);
-        debugPrint(exception.toString());
-        changeException(exception);
-      }
-      else if (event.method == PlatformMethod.onTrackUpdate) {
-        HMSPeer? peer = event.data['peer']!=null?HMSPeer.fromMap(event.data['peer']):null;
+            HMSPeerUpdateValues.getHMSPeerUpdateFromName(event.data['update']);
+        peerOperation(peer, update);
+      } else if (event.method == PlatformMethod.onTrackUpdate) {
+        print('track update');
+        HMSPeer peer = HMSPeer.fromMap(event.data['peer']);
         HMSTrackUpdate update = HMSTrackUpdateValues.getHMSTrackUpdateFromName(
             event.data['update']);
-        peerOperationWithTrack(peer!, update);
+        HMSTrack track = HMSTrack.fromMap(event.data['track'], peer);
+
+        peerOperationWithTrack(peer, update, track);
       }
     });
   }
 
   @action
-  void changeException(HMSException exception){
-    message=exception;
-  }
-
-  @action
-  Future<void> toggleCamera() async {
-    await meetingController.switchCamera();
-  }
-
-  @action
-  void peerOperation(HMSPeer peer,HMSPeerUpdate update) {
+  void peerOperation(HMSPeer peer, HMSPeerUpdate update) {
     switch (update) {
       case HMSPeerUpdate.peerJoined:
+        print('peer joined');
         addPeer(peer);
         break;
       case HMSPeerUpdate.peerLeft:
+        print('peer left');
         removePeer(peer);
+
         break;
       case HMSPeerUpdate.peerKnocked:
-        removePeer(peer);
+        // removePeer(peer);
         break;
       case HMSPeerUpdate.audioToggled:
         print('Peer audio toggled');
@@ -146,13 +161,14 @@ abstract class MeetingStoreBase with Store {
   }
 
   @action
-  void peerOperationWithTrack(HMSPeer peer, HMSTrackUpdate update) {
+  void peerOperationWithTrack(
+      HMSPeer peer, HMSTrackUpdate update, HMSTrack track) {
     switch (update) {
       case HMSTrackUpdate.trackAdded:
-        addPeer(peer);
+        addTrack(track);
         break;
       case HMSTrackUpdate.trackRemoved:
-        removePeer(peer);
+        removeTrackWithTrackId(track.trackId);
         break;
       case HMSTrackUpdate.trackMuted:
         print('Muted');

@@ -5,7 +5,6 @@ import HMSSDK
 public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListener,FlutterStreamHandler {
 
 
-    
     let channel:FlutterMethodChannel
     let meetingEventChannel:FlutterEventChannel
     var eventSink:FlutterEventSink?
@@ -24,7 +23,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                 "name":"Vivek"
             ]
         ]
-        eventSink!(data)
+        eventSink?(data)
     }
     
     
@@ -47,7 +46,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                 "name":"Vivek"
             ]
         ]
-        eventSink!(data)
+        eventSink?(data)
     }
     
     public func on(peer: HMSPeer, update: HMSPeerUpdate) {
@@ -55,22 +54,49 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
         let data:[String:Any]=[
             "event_name":"on_peer_update",
-            "data": HMSPeerExtension.toDictionary(peer: peer,update: update)
+            "data":[
+                "peer":HMSPeerExtension.toDictionary(peer: peer),
+                "update": HMSPeerExtension.getValueOfHMSPeerUpdate(update: update)
+            ]
+            
         ]
-        eventSink!(data)
+        print(data)
+        eventSink?(data)
     }
     
     public func on(track: HMSTrack, update: HMSTrackUpdate, for peer: HMSPeer) {
+        
         print("On Track Update")
 
         let data:[String:Any]=[
             "event_name":"on_track_update",
             "data":[
-                "name":"Vivek"
+                "peer":HMSPeerExtension.toDictionary(peer: peer),
+                "update":HMSTrackExtension.getTrackUpdateInString(trackUpdate: update),
+                "track":HMSTrackExtension.toDictionary(track: track)
             ]
         ]
-        eventSink!(data)
+        eventSink?(data)
     }
+    
+    public func getPeerById(peerId:String,isLocal:Bool) -> HMSPeer?{
+        if isLocal{
+            if  let peer:HMSLocalPeer = hmsSDK?.localPeer{
+                return peer
+            }
+        }else{
+            if let peers:[HMSRemotePeer] = hmsSDK?.remotePeers{
+                for peer in peers {
+                    if(peer.peerID == peerId){
+                        return peer
+                    }
+                }
+            }
+        }
+        return nil
+    }
+    
+   
     
     public func on(error: HMSError) {
         print("On Error")
@@ -81,7 +107,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                 "name":"Vivek"
             ]
         ]
-        eventSink!(data)
+        eventSink?(data)
     }
     
     public func on(message: HMSMessage) {
@@ -93,7 +119,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                 "name":"Vivek"
             ]
         ]
-        eventSink!(data)
+        eventSink?(data)
     }
     
     public func on(updated speakers: [HMSSpeaker]) {
@@ -104,7 +130,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                 "name":"Vivek"
             ]
         ]
-        eventSink!(data)
+        eventSink?(data)
     }
     
     public func onReconnecting() {
@@ -116,7 +142,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                 "name":"Vivek"
             ]
         ]
-        eventSink!(data)
+        eventSink?(data)
     }
     
     public func onReconnected() {
@@ -127,7 +153,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                 "name":"Vivek"
             ]
         ]
-        eventSink!(data)
+        eventSink?(data)
     }
     
     func switchAudio(call: FlutterMethodCall,result:FlutterResult) {
@@ -144,11 +170,11 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         if let peer = hmsSDK?.localPeer, let videoTrack = peer.videoTrack as? HMSLocalVideoTrack {
             let isOn:Bool = arguments["is_on"] as? Bool ?? false
             print(videoTrack.settings)
-            if isOn{
-//                videoTrack.startCapturing()
+            if isOn {
+                videoTrack.stopCapturing()
 
             }else{
-//                videoTrack.stopCapturing()
+                videoTrack.startCapturing()
 
             }
             
@@ -157,23 +183,38 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         result("video_changed")
     }
     
+    func switchCamera(result:FlutterResult) {
+        if let peer = hmsSDK?.localPeer, let videoTrack = peer.videoTrack as? HMSLocalVideoTrack {
+            videoTrack.switchCamera()
+         }
+        result("camera_changed")
+    }
+    
+    
     internal var hmsSDK: HMSSDK?
 
   public static func register(with registrar: FlutterPluginRegistrar) {
     let channel = FlutterMethodChannel(name: "hmssdk_flutter", binaryMessenger: registrar.messenger())
     let eventChannel = FlutterEventChannel(name: "meeting_event_channel", binaryMessenger: registrar.messenger())
+   
     let instance = SwiftHmssdkFlutterPlugin(channel: channel,meetingEventChannel: eventChannel)
+    
+    
+     let videoViewFactory:HMSVideoViewFactory = HMSVideoViewFactory(messenger: registrar.messenger(),plugin: instance)
+     registrar.register(videoViewFactory, withId: "HMSVideoView")
+    
     eventChannel.setStreamHandler(instance)
     registrar.addMethodCallDelegate(instance, channel: channel)
   }
 
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
     switch call.method {
-    case "join_meeting": joinMeeting(call:call,result:result)
+    case "join_meeting":joinMeeting(call:call,result:result)
     case "leave_meeting":leaveMeeting(result: result)
     case "switch_audio":switchAudio(call: call , result: result)
     case "switch_video":switchVideo(call: call , result: result)
-
+    case "switch_camera":switchCamera(result: result)
+    
     default:
         result(FlutterMethodNotImplemented)
     }

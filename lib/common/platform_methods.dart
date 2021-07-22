@@ -14,8 +14,6 @@ enum PlatformMethod {
   switchAudio,
   switchVideo,
   switchCamera,
-  isAudioMute,
-  isVideoMute,
   unknown
 }
 
@@ -52,10 +50,6 @@ extension PlatformMethodValues on PlatformMethod {
         return 'switch_video';
       case PlatformMethod.switchCamera:
         return 'switch_camera';
-      case PlatformMethod.isAudioMute:
-        return 'is_audio_mute';
-      case PlatformMethod.isVideoMute:
-        return 'is_video_mute';
       case PlatformMethod.unknown:
         return 'unknown';
     }

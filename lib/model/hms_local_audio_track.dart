@@ -1,12 +1,13 @@
 import 'package:hmssdk_flutter/enum/hms_track_kind.dart';
 import 'package:hmssdk_flutter/enum/hms_track_source.dart';
-import 'package:hmssdk_flutter/model/hms_track.dart';
+import 'package:hmssdk_flutter/model/hms_audio_track.dart';
+import 'package:hmssdk_flutter/model/hms_audio_track_setting.dart';
 
-class HMSVideoTrack extends HMSTrack {
-  final bool isDegraded;
+class HMSLocalAudioTrack extends HMSAudioTrack {
+  final HMSAudioTrackSetting setting;
 
-  HMSVideoTrack(
-      {this.isDegraded = false,
+  HMSLocalAudioTrack(
+      {required this.setting,
       required HMSTrackKind kind,
       required HMSTrackSource source,
       required String trackId,
@@ -18,9 +19,7 @@ class HMSVideoTrack extends HMSTrack {
           trackId: trackId,
         );
 
-  @override
-  bool isMute() {
-    //TODO:: make platform call
-    return false;
+  void setMute() {
+    //TODO:: call platform method
   }
 }

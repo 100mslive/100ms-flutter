@@ -8,8 +8,9 @@
  ## How to run project
 
  1. flutter pub get
- 2. flutter run build_runner build --delete-conflicting-outputs 
+ 2. flutter packages pub run build_runner build --delete-conflicting-outputs
  3. flutter build ios
  4. flutter run
 
 
+  
