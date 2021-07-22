@@ -79,16 +79,15 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         eventSink?(data)
     }
     
-    public func getPeerById(id:String,isLocal:Bool) -> HMSPeer?{
+    public func getPeerById(peerId:String,isLocal:Bool) -> HMSPeer?{
         if isLocal{
             if  let peer:HMSLocalPeer = hmsSDK?.localPeer{
                 return peer
-
             }
         }else{
             if let peers:[HMSRemotePeer] = hmsSDK?.remotePeers{
                 for peer in peers {
-                    if(peer.peerID == id){
+                    if(peer.peerID == peerId){
                         return peer
                     }
                 }
@@ -96,6 +95,8 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         }
         return nil
     }
+    
+   
     
     public func on(error: HMSError) {
         print("On Error")

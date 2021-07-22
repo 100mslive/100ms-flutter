@@ -25,14 +25,5 @@ class HMSRole {
         generalPermissions: map['general_permissions'],
         internalPlugins: map['internal_plugins'],
         externalPlugins: map['external_plugins']);
-    /*
-     "name":role.name,
-            "publish_settings":"role.publishSettings",
-            "subscribe_settings":"role.subscribeSettings",
-            "priority":role.priority,
-            "general_permissions":"role.generalPermissions",
-            "internal_plugins":"role.internalPlugins",
-            "external_plugins":"role.externalPlugins",
-    */
   }
 }

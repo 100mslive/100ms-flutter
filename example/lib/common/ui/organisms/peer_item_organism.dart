@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:hmssdk_flutter/model/hms_peer.dart';
+import 'package:hmssdk_flutter/model/hms_track.dart';
 import 'package:hmssdk_flutter/ui/meeting/video_view.dart';
 
 class PeerItemOrganism extends StatelessWidget {
-  final HMSPeer peer;
+  final HMSTrack track;
 
-  const PeerItemOrganism({Key? key, required this.peer}) : super(key: key);
+  const PeerItemOrganism({Key? key, required this.track}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -17,13 +17,13 @@ class PeerItemOrganism extends StatelessWidget {
           borderRadius: BorderRadius.all(Radius.circular(16))),
       child: Column(
         children: [
-          Text(peer.role?.name ?? '[Undefined Role]'),
-          Text(peer.name),
-          Text(peer.customerDescription ?? '[Undefined Description]'),
+          Text(track.peer?.role?.name ?? '[Undefined Role]'),
+          Text(track.peer?.name ?? '[Undefined Name]'),
+          Text(track.peer?.customerDescription ?? '[Undefined Description]'),
           Expanded(child: LayoutBuilder(
             builder: (context, constraints) {
               return VideoView(
-                peer: peer,
+                track: track,
                 args: {
                   'height': constraints.maxHeight,
                   'width': constraints.maxWidth,
