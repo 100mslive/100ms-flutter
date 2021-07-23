@@ -79,12 +79,19 @@ class HMSVideoViewWidget: NSObject,FlutterPlatformView {
         
        else if let auxilaryTracks = peer?.auxiliaryTracks{
             let tempTrack = auxilaryTracks.first(where: {$0.trackId == self.trackId})
+            
             if let track = tempTrack {
-                print("Auxilary found with id: \(track)")
-                let uiLable:UILabel = UILabel()
-                uiLable.text = "Auxilary Track"
-                _view.addSubview(uiLable)
-                print("attaching auxilary track")
+                if let videoTrack = track as? HMSVideoTrack{
+                    videoView.setVideoTrack(videoTrack)
+                    _view.addSubview(videoView)
+                    print("attaching video track")
+                    return
+                }
+//                print("Auxilary found with id: \(track)")
+//                let uiLable:UILabel = UILabel()
+//                uiLable.text = "Auxilary Track"
+//                _view.addSubview(uiLable)
+//                print("attaching auxilary track")
                 return
             }
         }
