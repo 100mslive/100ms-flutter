@@ -4,6 +4,7 @@ import 'package:hmssdk_flutter_example/common/constant.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/user_name_dialog_organism.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_page.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 void main() {
   runApp(HMSExampleApp());
@@ -30,6 +31,18 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   TextEditingController roomIdController =
       TextEditingController(text: Constant.defaultRoomID);
+
+  void getPermissions() async{
+    await Permission.camera.request();
+    await Permission.microphone.request();
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getPermissions();
+  }
 
   @override
   Widget build(BuildContext context) {

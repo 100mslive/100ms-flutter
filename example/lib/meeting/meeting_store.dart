@@ -1,6 +1,8 @@
 import 'package:hmssdk_flutter/common/platform_methods.dart';
 import 'package:hmssdk_flutter/enum/hms_peer_update.dart';
+import 'package:hmssdk_flutter/enum/hms_track_update.dart';
 import 'package:hmssdk_flutter/model/hms_peer.dart';
+import 'package:hmssdk_flutter/model/hms_track.dart';
 import 'package:hmssdk_flutter/model/platform_method_response.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_controller.dart';
 import 'package:mobx/mobx.dart';
@@ -16,7 +18,7 @@ abstract class MeetingStoreBase with Store {
   @observable
   bool isMeetingStarted = false;
   @observable
-  bool isVideoOn = false;
+  bool isVideoOn = true;
   @observable
   bool isMicOn = true;
 
@@ -26,6 +28,9 @@ abstract class MeetingStoreBase with Store {
 
   @observable
   List<HMSPeer> peers = ObservableList.of([]);
+
+  @observable
+  List<HMSTrack> tracks = ObservableList.of([]);
 
   @action
   void toggleSpeaker() {
@@ -39,9 +44,61 @@ abstract class MeetingStoreBase with Store {
   }
 
   @action
+  Future<void> toggleCamera() async {
+    await meetingController.switchCamera();
+  }
+
+  @action
   Future<void> toggleAudio() async {
     await meetingController.switchAudio(isOn: isMicOn);
     isMicOn = !isMicOn;
+  }
+
+  @action
+  void removePeer(HMSPeer peer) {
+    peers.remove(peer);
+    removeTrackWithPeerId(peer.peerId);
+  }
+
+  @action
+  void addPeer(HMSPeer peer) {
+    if (!peers.contains(peer)) peers.add(peer);
+  }
+
+  // @action
+  // void removeTrack(HMSTrack? track, String? peerId) {
+  //   if (track != null) {
+  //     tracks
+  //         .removeWhere((element) => element.peer?.peerId == track.peer?.peerId);
+  //   }
+  //   if (peerId != null)
+  //     tracks.removeWhere((element) => element.peer?.peerId == peerId);
+  // }
+
+  @action
+  void removeTrackWithTrackId(String trackId) {
+    tracks
+        .remove(tracks.firstWhere((eachTrack) => eachTrack.trackId == trackId));
+  }
+
+  @action
+  void removeTrackWithPeerId(String peerId) {
+    tracks.removeWhere((eachTrack) => eachTrack.peer?.peerId == peerId);
+  }
+
+  @action
+  void addTrack(HMSTrack track) {
+    if (!tracks.contains(track))
+      tracks.add(track);
+    else {
+      removeTrackWithTrackId(track.trackId);
+      addTrack(track);
+    }
+  }
+
+  @action
+  void onRoleUpdated(int index, HMSPeer peer) {
+    peers[index] = peer;
   }
 
   @action
@@ -55,24 +112,36 @@ abstract class MeetingStoreBase with Store {
   void listenToController() {
     controller?.listen((event) {
       if (event.method == PlatformMethod.onPeerUpdate) {
-        HMSPeer peer = HMSPeer.fromMap(event.data);
-        peerOperation(peer);
+        HMSPeer peer = HMSPeer.fromMap(event.data['peer']);
+        HMSPeerUpdate update =
+            HMSPeerUpdateValues.getHMSPeerUpdateFromName(event.data['update']);
+        peerOperation(peer, update);
+      } else if (event.method == PlatformMethod.onTrackUpdate) {
+        print('track update');
+        HMSPeer peer = HMSPeer.fromMap(event.data['peer']);
+        HMSTrackUpdate update = HMSTrackUpdateValues.getHMSTrackUpdateFromName(
+            event.data['update']);
+        HMSTrack track = HMSTrack.fromMap(event.data['track'], peer);
+
+        peerOperationWithTrack(peer, update, track);
       }
     });
   }
 
   @action
-  void peerOperation(HMSPeer peer) {
-    switch (peer.update) {
+  void peerOperation(HMSPeer peer, HMSPeerUpdate update) {
+    switch (update) {
       case HMSPeerUpdate.peerJoined:
-        peers.add(peer);
+        print('peer joined');
+        addPeer(peer);
         break;
-
       case HMSPeerUpdate.peerLeft:
-        peers.removeWhere((eachPeer) => eachPeer.peerId == peer.peerId);
+        print('peer left');
+        removePeer(peer);
+
         break;
       case HMSPeerUpdate.peerKnocked:
-        peers.removeWhere((eachPeer) => eachPeer.peerId == peer.peerId);
+        // removePeer(peer);
         break;
       case HMSPeerUpdate.audioToggled:
         print('Peer audio toggled');
@@ -84,6 +153,39 @@ abstract class MeetingStoreBase with Store {
         peers[peers.indexOf(peer)] = peer;
         break;
       case HMSPeerUpdate.defaultUpdate:
+        print("Some default update or untouched case");
+        break;
+      default:
+        print("Some default update or untouched case");
+    }
+  }
+
+  @action
+  void peerOperationWithTrack(
+      HMSPeer peer, HMSTrackUpdate update, HMSTrack track) {
+    switch (update) {
+      case HMSTrackUpdate.trackAdded:
+        addTrack(track);
+        break;
+      case HMSTrackUpdate.trackRemoved:
+        removeTrackWithTrackId(track.trackId);
+        break;
+      case HMSTrackUpdate.trackMuted:
+        print('Muted');
+        break;
+      case HMSTrackUpdate.trackUnMuted:
+        print('UnMuted');
+        break;
+      case HMSTrackUpdate.trackDescriptionChanged:
+        print('trackDescriptionChanged');
+        break;
+      case HMSTrackUpdate.trackDegraded:
+        print('trackDegraded');
+        break;
+      case HMSTrackUpdate.trackRestored:
+        print('trackRestored');
+        break;
+      case HMSTrackUpdate.defaultUpdate:
         print("Some default update or untouched case");
         break;
       default:

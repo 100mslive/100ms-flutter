@@ -9,54 +9,44 @@ import Foundation
 import HMSSDK
 
 class  HMSPeerExtension{
-    static func toDictionary (peer:HMSPeer,update:HMSPeerUpdate)-> Dictionary<String,Any?>{
+    static func toDictionary (peer:HMSPeer)-> Dictionary<String,Any?>{
    
         var auxilaryTracks:[Dictionary<String, Any?>]=[]
-        
-        if(peer.auxiliaryTracks != nil){
-            for eachTrack:HMSTrack in peer.auxiliaryTracks!{
-                auxilaryTracks.insert([
-                    "track_id":eachTrack.trackId,
-                    "track_kind":eachTrack.kind ,
-                    "track_source":eachTrack.source,
-                    "track_description":eachTrack.trackDescription
-                ],at: auxilaryTracks.count)
-            }
-        }
-        
-        
-        
-        let dict:[String:Any?] = [
+              
+        var dict:[String:Any?] = [
             "peer_id":peer.peerID,
             "name":peer.name,
             "is_local":peer.isLocal,
-            "role":HMSRoleExtension.toDictionary(role:peer.role!),
             "customer_description":peer.customerDescription,
             "customer_user_id":peer.customerUserID,
-            "status":getValueOfHMSPeerUpdate(update:update),
-            "audio_track":[
-                "track_id":peer.audioTrack?.trackId ?? "",
-                "track_kind":peer.audioTrack?.kind ?? "",
-                "track_source":peer.audioTrack?.source ?? "",
-                "track_description":peer.audioTrack?.trackDescription ?? ""
-            ],
-//            "video_track":[
-//                "track_id":peer.videoTrack?.trackId ?? "",
-//                "track_kind":peer.videoTrack?.kind ?? "",
-//                "track_source":peer.videoTrack?.source ?? "",
-//                "track_description":peer.videoTrack?.trackDescription ?? ""
-//            ],
-//            "auxilary_tracks":auxilaryTracks
+            "auxilary_tracks":auxilaryTracks
         ]
         
+        if let role = peer.role{
+            dict["role"]=HMSRoleExtension.toDictionary(role:role)
+        }
+        if let audioTrack = peer.audioTrack{
+            dict["audio_track"]=HMSTrackExtension.toDictionary(track:audioTrack)
+        }
+        
+        if let videoTrack = peer.videoTrack{
+            dict["video_track"]=HMSTrackExtension.toDictionary(track:videoTrack)
+        }
+        
+        if let tracks = peer.auxiliaryTracks {
+            for eachTrack:HMSTrack in tracks{
+                    auxilaryTracks.insert(HMSTrackExtension.toDictionary(track: eachTrack),at: auxilaryTracks.count)
+            }
+        }
+        
+      
         return dict
     }
   
     
+    
     static func getValueOfHMSPeerUpdate (update:HMSPeerUpdate)->String{
         switch update {
-        
-         
         case .peerJoined:
             return "peerJoined"
         case .peerLeft:

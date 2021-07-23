@@ -21,7 +21,6 @@ class HMSRoleExtension{
             "general_permissions":"role.generalPermissions",
             "internal_plugins":"role.internalPlugins",
             "external_plugins":"role.externalPlugins",
-            
         ]
         
         return dict

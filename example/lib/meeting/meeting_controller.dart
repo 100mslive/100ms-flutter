@@ -21,7 +21,7 @@ class MeetingController {
         roomId: roomId,
         authToken: token,
         // endPoint: Constant.getTokenURL,
-        userName: 'Flutter user');
+        userName: user);
     _hmssdkInteractor = HMSSDKInteractor(config: hmsConfig);
     return _hmssdkInteractor!.setup();
   }
@@ -36,5 +36,9 @@ class MeetingController {
 
   Future<void> switchVideo({bool isOn = false}) async {
     return await _hmssdkInteractor?.switchVideo(isOn: isOn);
+  }
+
+  Future<void> switchCamera() async {
+    return await _hmssdkInteractor?.switchCamera();
   }
 }

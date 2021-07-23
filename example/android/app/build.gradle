@@ -59,4 +59,5 @@ dependencies {
 
     implementation 'org.webrtc:google-webrtc:1.0.32006'
     implementation 'com.github.100mslive:android-sdk:2.0.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
 }

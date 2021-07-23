@@ -23,12 +23,26 @@
       <path>
         <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
         <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
-        <item name="BRANCH:main" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="BRANCH:ahron-feature-peers" type="e8cecc67:BranchNodeDescriptor" />
       </path>
     </select>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f6635374-520c-494c-ae8d-73b820655433" name="Default Changelist" comment="" />
+    <list default="true" id="f6635374-520c-494c-ae8d-73b820655433" name="Default Changelist" comment="fixed bugs">
+      <change afterPath="$PROJECT_DIR$/android/src/main/kotlin/live/hms/hmssdk_flutter/views/HMSVideoView.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/android/src/main/kotlin/live/hms/hmssdk_flutter/views/HMSVideoViewFactory.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/android/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/AndroidManifest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/src/main/kotlin/live/hms/hmssdk_flutter/HmssdkFlutterPlugin.kt" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/kotlin/live/hms/hmssdk_flutter/HmssdkFlutterPlugin.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/lib/common/ui/organisms/peer_item_organism.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/common/ui/organisms/peer_item_organism.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/lib/meeting/hms_sdk_interactor.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/meeting/hms_sdk_interactor.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/lib/meeting/meeting_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/meeting/meeting_controller.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/lib/meeting/meeting_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/meeting/meeting_page.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/lib/meeting/meeting_store.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/meeting/meeting_store.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/common/platform_methods.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/common/platform_methods.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/meeting/meeting.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/meeting/meeting.dart" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -39,14 +53,28 @@
       <option value="directory" />
     </option>
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Kotlin Script" />
+        <option value="Dart File" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="master" />
+        <entry key="$PROJECT_DIR$" value="ahron-feature-peers" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <option name="RESET_MODE" value="HARD" />
+    <option name="UPDATE_TYPE" value="REBASE" />
+  </component>
+  <component name="GithubProjectSettings">
+    <option name="CREATE_PULL_REQUEST_DEFAULT_BRANCH" value="vivek-feature-peers" />
+    <option name="CREATE_PULL_REQUEST_DEFAULT_REPO_USER" value="100mslive" />
+    <option name="CREATE_PULL_REQUEST_DEFAULT_REPO_NAME" value="100ms-flutter" />
   </component>
   <component name="ProjectId" id="1uisHeD1SXcZbYI5wFmOOyu7wQ7" />
   <component name="ProjectViewState">
@@ -56,8 +84,13 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="dart.analysis.tool.window.visible" value="false" />
     <property name="io.flutter.reload.alreadyRun" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/android/src/main/kotlin/live/hms/hmssdk_flutter" />
     <property name="show.migrate.to.gradle.popup" value="false" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\user\anaconda3\100ms-flutter\android\src\main\kotlin\live\hms\hmssdk_flutter" />
+    </key>
   </component>
   <component name="RunManager">
     <configuration name="main.dart" type="FlutterRunConfigurationType" factoryName="Flutter">
@@ -74,7 +107,82 @@
       <option name="presentableId" value="Default" />
       <updated>1625159660317</updated>
     </task>
+    <task id="LOCAL-00001" summary="added event channel">
+      <created>1626101145084</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1626101145084</updated>
+    </task>
+    <task id="LOCAL-00002" summary="updated README.md">
+      <created>1626102016944</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1626102016944</updated>
+    </task>
+    <task id="LOCAL-00003" summary="added">
+      <created>1626171833756</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1626171833756</updated>
+    </task>
+    <task id="LOCAL-00004" summary="passed data into eventSink">
+      <created>1626175919392</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1626175919392</updated>
+    </task>
+    <task id="LOCAL-00005" summary="fixed peers list bug&#10;peers.remove problem">
+      <created>1626202221133</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1626202221133</updated>
+    </task>
+    <task id="LOCAL-00006" summary="fixed peers list bugs">
+      <created>1626203710630</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1626203710630</updated>
+    </task>
+    <task id="LOCAL-00007" summary="added hashcode and equals operator in hmspeer.dart">
+      <created>1626272641417</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1626272641417</updated>
+    </task>
+    <task id="LOCAL-00008" summary="added mute and video">
+      <created>1626294522908</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1626294522908</updated>
+    </task>
+    <task id="LOCAL-00009" summary="fixed bugs">
+      <created>1626606937995</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1626606937995</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
+  </component>
+  <component name="Vcs.Log.History.Properties">
+    <option name="SHOW_OTHER_BRANCHES" value="true" />
+    <option name="COLUMN_ORDER">
+      <list>
+        <option value="0" />
+        <option value="2" />
+        <option value="3" />
+        <option value="1" />
+      </list>
+    </option>
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
@@ -87,7 +195,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="main" />
+                        <option value="ahron-feature-peers" />
                       </list>
                     </value>
                   </entry>
@@ -100,23 +208,51 @@
     </option>
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="added event channel" />
+    <MESSAGE value="updated README.md" />
+    <MESSAGE value="added" />
+    <MESSAGE value="passed data into eventSink" />
+    <MESSAGE value="fixed peers list bug&#10;peers.remove problem" />
+    <MESSAGE value="fixed peers list bugs" />
+    <MESSAGE value="added hashcode and equals operator in hmspeer.dart" />
+    <MESSAGE value="added mute and video" />
+    <MESSAGE value="fixed bugs" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed bugs" />
+  </component>
   <component name="WindowStateProjectService">
-    <state width="1398" height="489" key="GridCell.Tab.0.bottom" timestamp="1625190703001">
-      <screen x="0" y="0" width="1440" height="900" />
+    <state x="718" y="167" key="#com.intellij.ide.util.MemberChooser" timestamp="1626199215869">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="718" y="167" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1626199215869" />
+    <state x="741" y="248" key="AndroidProcessChooserDialog" timestamp="1626689776859">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="741" y="248" key="AndroidProcessChooserDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1626689776859" />
+    <state x="693" y="366" key="Github.CreatePullRequestDialog" timestamp="1626272036981">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="693" y="366" key="Github.CreatePullRequestDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1626272036981" />
+    <state width="1869" height="585" key="GridCell.Tab.0.bottom" timestamp="1626710531048">
+      <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="1398" height="489" key="GridCell.Tab.0.bottom/0.0.1440.900@0.0.1440.900" timestamp="1625190703001" />
-    <state width="1398" height="489" key="GridCell.Tab.0.center" timestamp="1625190703000">
-      <screen x="0" y="0" width="1440" height="900" />
+    <state width="1869" height="585" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1626710531048" />
+    <state width="1869" height="585" key="GridCell.Tab.0.center" timestamp="1626710531048">
+      <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="1398" height="489" key="GridCell.Tab.0.center/0.0.1440.900@0.0.1440.900" timestamp="1625190703000" />
-    <state width="1398" height="489" key="GridCell.Tab.0.left" timestamp="1625190703000">
-      <screen x="0" y="0" width="1440" height="900" />
+    <state width="1869" height="585" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1626710531048" />
+    <state width="1869" height="585" key="GridCell.Tab.0.left" timestamp="1626710531047">
+      <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="1398" height="489" key="GridCell.Tab.0.left/0.0.1440.900@0.0.1440.900" timestamp="1625190703000" />
-    <state width="1398" height="489" key="GridCell.Tab.0.right" timestamp="1625190703000">
-      <screen x="0" y="0" width="1440" height="900" />
+    <state width="1869" height="585" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1626710531047" />
+    <state width="1869" height="585" key="GridCell.Tab.0.right" timestamp="1626710531048">
+      <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="1398" height="489" key="GridCell.Tab.0.right/0.0.1440.900@0.0.1440.900" timestamp="1625190703000" />
+    <state width="1869" height="585" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1626710531048" />
     <state width="1398" height="489" key="GridCell.Tab.1.bottom" timestamp="1625190702999">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
@@ -133,9 +269,61 @@
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state width="1398" height="489" key="GridCell.Tab.1.right/0.0.1440.900@0.0.1440.900" timestamp="1625190702999" />
+    <state x="0" y="86" width="1920" height="869" key="MergeDialog" timestamp="1626271996936">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="0" y="86" width="1920" height="869" key="MergeDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1626271996936" />
+    <state x="510" y="226" key="MultipleFileMergeDialog" timestamp="1626272006330">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="510" y="226" key="MultipleFileMergeDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1626272006330" />
+    <state x="691" y="175" key="RollbackChangesDialog" timestamp="1626075713302">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="691" y="175" key="RollbackChangesDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1626075713302" />
     <state x="572" y="367" key="VCS.ChangelistChooser" timestamp="1625300183450">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="572" y="367" key="VCS.ChangelistChooser/0.0.1440.900@0.0.1440.900" timestamp="1625300183450" />
+    <state x="452" y="189" key="Vcs.Push.Dialog.v2" timestamp="1626294545672">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="452" y="189" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1626294545672" />
+    <state x="736" y="416" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1626101451259">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="736" y="416" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1920.1040@0.0.1920.1040" timestamp="1626101451259" />
+    <state x="505" y="167" key="git4idea.branch.GitSmartOperationDialog" timestamp="1626271542676">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="505" y="167" key="git4idea.branch.GitSmartOperationDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1626271542676" />
+    <state x="453" y="131" key="new project wizard" timestamp="1626617267236">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="453" y="131" key="new project wizard/0.0.1920.1040@0.0.1920.1040" timestamp="1626617267236" />
+    <state x="532" y="237" key="run.anything.popup" timestamp="1626607870152">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="532" y="237" key="run.anything.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1626607870152" />
+    <state x="539" y="5" width="840" height="1034" key="search.everywhere.popup" timestamp="1626284263933">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="539" y="5" width="840" height="1034" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1626284263933" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/android/src/main/kotlin/live/hms/hmssdk_flutter/HmssdkFlutterPlugin.kt</url>
+          <line>261</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/android/src/main/kotlin/live/hms/hmssdk_flutter/HmssdkFlutterPlugin.kt</url>
+          <line>161</line>
+          <option name="timeStamp" value="4" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

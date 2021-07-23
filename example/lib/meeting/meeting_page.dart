@@ -2,9 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:hmssdk_flutter/common/platform_methods.dart';
+import 'package:hmssdk_flutter/enum/hms_track_kind.dart';
+import 'package:hmssdk_flutter/model/hms_track.dart';
 import 'package:hmssdk_flutter/model/platform_method_response.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/peer_item_organism.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
+import 'package:hmssdk_flutter_example/main.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_controller.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:mobx/mobx.dart';
@@ -58,6 +61,7 @@ class _MeetingPageState extends State<MeetingPage> {
           IconButton(
             onPressed: () async {
               //TODO:: switch camera
+              _meetingStore.toggleCamera();
             },
             icon: Icon(Icons.switch_camera),
           ),
@@ -91,21 +95,24 @@ class _MeetingPageState extends State<MeetingPage> {
               }
             }),
             Observer(
-                builder: (_) =>
-                    Text('${_meetingStore.peers.length} are peers here')),
+                builder: (_) => Text('Peers:${_meetingStore.peers.length}')),
             Flexible(
               child: Observer(
                 builder: (_) {
                   if (!_meetingStore.isMeetingStarted) return SizedBox();
-                  if (_meetingStore.peers.isEmpty)
+                  if (_meetingStore.tracks.isEmpty)
                     return Text('Waiting for other to join!');
+                  List<HMSTrack> filteredList = _meetingStore.tracks
+                      .where((element) =>
+                          element.kind != HMSTrackKind.kHMSTrackKindAudio)
+                      .toList();
                   return GridView(
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3),
+                        crossAxisCount: 2),
                     children: List.generate(
-                        _meetingStore.peers.length,
+                        filteredList.length,
                         (index) =>
-                            PeerItemOrganism(peer: _meetingStore.peers[index])),
+                            PeerItemOrganism(track: filteredList[index])),
                   );
                 },
               ),
@@ -157,7 +164,8 @@ class _MeetingPageState extends State<MeetingPage> {
                       tooltip: 'Leave',
                       onPressed: () {
                         _meetingStore.meetingController.leaveMeeting();
-                        Navigator.pop(context);
+                        Navigator.pushReplacement(context,
+                            MaterialPageRoute(builder: (ctx) => HomePage()));
                       },
                       icon: Icon(Icons.call_end)),
                 ),
