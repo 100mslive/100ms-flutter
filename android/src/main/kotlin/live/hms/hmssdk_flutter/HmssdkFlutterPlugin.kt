@@ -80,6 +80,14 @@ class HmssdkFlutterPlugin: FlutterPlugin, MethodCallHandler, HMSUpdateListener,A
       "is_audio_mute"->{
         result.success(isAudioMute(call))
       }
+      "stop_capturing"->{
+        stopCapturing()
+        result.success("stop_capturing")
+      }
+      "start_capturing"->{
+        startCapturing()
+        result.success("start_capturing")
+      }
       else->{
         result.notImplemented()
       }
@@ -164,7 +172,7 @@ class HmssdkFlutterPlugin: FlutterPlugin, MethodCallHandler, HMSUpdateListener,A
 
 
     args.put("data",HMSTrackUpdateExtension.toDictionary(peer,track,type))
-    Log.i("onTrackUpdate",track.toString())
+    Log.i("onTrackUpdate",peer.toString())
 
 
  //   val hmsVideoViewWidget=hmsVideoFactory.hmsVideoViewWidget
@@ -260,6 +268,19 @@ class HmssdkFlutterPlugin: FlutterPlugin, MethodCallHandler, HMSUpdateListener,A
     result.success("video_changed")
   }
 
+  fun stopCapturing(){
+    val peer=hmssdk.getLocalPeer()
+    val videoTrack=peer?.videoTrack
+    videoTrack!!.setMute(true)
+  }
+
+  fun startCapturing(){
+    val peer=hmssdk.getLocalPeer()
+    val videoTrack=peer?.videoTrack
+    videoTrack!!.setMute(false)
+
+  }
+
   fun switchCamera(){
     val peer=hmssdk.getLocalPeer()
     val videoTrack=peer?.videoTrack
@@ -291,15 +312,15 @@ class HmssdkFlutterPlugin: FlutterPlugin, MethodCallHandler, HMSUpdateListener,A
   }
 
   fun isVideoMute(call: MethodCall):Boolean{
-    val peerId=call.argument<String>("peerId")
-    val isLocal=call.argument<Boolean>("isLocal")
+    val peerId=call.argument<String>("peer_id")
+    val isLocal=call.argument<Boolean>("is_local")
     val peer= getPeerById(peerId!!,isLocal!!) ?: return false
     return peer!!.videoTrack!!.isMute
   }
 
   fun isAudioMute(call: MethodCall):Boolean{
-    val peerId=call.argument<String>("peerId")
-    val isLocal=call.argument<Boolean>("isLocal")
+    val peerId=call.argument<String>("peer_id")
+    val isLocal=call.argument<Boolean>("is_local")
     val peer= getPeerById(peerId!!,isLocal!!) ?: return false
     return peer!!.audioTrack!!.isMute
   }

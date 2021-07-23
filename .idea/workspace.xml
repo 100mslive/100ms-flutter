@@ -22,26 +22,36 @@
     <select>
       <path>
         <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
-        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
-        <item name="BRANCH:ahron-feature-peers" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="BRANCH:origin/ahron-video-rendering-temp" type="e8cecc67:BranchNodeDescriptor" />
       </path>
     </select>
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f6635374-520c-494c-ae8d-73b820655433" name="Default Changelist" comment="fixed bugs">
-      <change afterPath="$PROJECT_DIR$/android/src/main/kotlin/live/hms/hmssdk_flutter/views/HMSVideoView.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/android/src/main/kotlin/live/hms/hmssdk_flutter/views/HMSVideoViewFactory.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/android/src/main/res/layout/hms_video_view.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/model/hms_remote_audio_track.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/model/hms_remote_video_track.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_14-07-2021_07_05_PM__Default_Changelist_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_14-07-2021_07_05_PM__Default_Changelist_1.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Merge_at_14-07-2021_07_35_PM__Default_Changelist_.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/android/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/AndroidManifest.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/android/src/main/kotlin/live/hms/hmssdk_flutter/HmssdkFlutterPlugin.kt" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/kotlin/live/hms/hmssdk_flutter/HmssdkFlutterPlugin.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/lib/common/ui/organisms/peer_item_organism.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/common/ui/organisms/peer_item_organism.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/lib/meeting/hms_sdk_interactor.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/meeting/hms_sdk_interactor.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/lib/meeting/meeting_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/meeting/meeting_controller.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/lib/meeting/meeting_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/meeting/meeting_page.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/lib/meeting/meeting_store.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/meeting/meeting_store.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/src/main/kotlin/live/hms/hmssdk_flutter/views/HMSVideoViewFactory.kt" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/kotlin/live/hms/hmssdk_flutter/views/HMSVideoViewFactory.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/common/platform_methods.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/common/platform_methods.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/meeting/meeting.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/meeting/meeting.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/model/hms_audio_track.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/model/hms_audio_track.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/model/hms_error.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/model/hms_error.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/model/hms_local_video_track.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/model/hms_local_video_track.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/model/hms_peer.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/model/hms_peer.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/model/hms_role.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/model/hms_role.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/model/hms_speaker.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/model/hms_speaker.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/model/hms_track.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/model/hms_track.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/model/hms_track_setting.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/model/hms_track_setting.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/model/hms_video_track.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/model/hms_video_track.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/model/role_change_request.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/model/role_change_request.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/service/platform_service.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/service/platform_service.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/meeting/video_view.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/meeting/video_view.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -64,7 +74,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="ahron-feature-peers" />
+        <entry key="$PROJECT_DIR$" value="main" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -84,7 +94,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="dart.analysis.tool.window.visible" value="false" />
     <property name="io.flutter.reload.alreadyRun" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/android/src/main/kotlin/live/hms/hmssdk_flutter" />
+    <property name="last_opened_file_path" value="D:/100ms-flutter" />
     <property name="show.migrate.to.gradle.popup" value="false" />
   </component>
   <component name="RecentsManager">
@@ -195,7 +205,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="ahron-feature-peers" />
+                        <option value="origin/ahron-video-rendering-temp" />
                       </list>
                     </value>
                   </entry>
@@ -221,38 +231,42 @@
     <option name="LAST_COMMIT_MESSAGE" value="fixed bugs" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="718" y="167" key="#com.intellij.ide.util.MemberChooser" timestamp="1626199215869">
+    <state x="718" y="167" key="#com.intellij.ide.util.MemberChooser" timestamp="1627040861196">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="718" y="167" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1626199215869" />
+    <state x="718" y="167" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1627040861196" />
     <state x="741" y="248" key="AndroidProcessChooserDialog" timestamp="1626689776859">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="741" y="248" key="AndroidProcessChooserDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1626689776859" />
+    <state x="687" y="217" key="FileChooserDialogImpl" timestamp="1627037158224">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="687" y="217" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1627037158224" />
     <state x="693" y="366" key="Github.CreatePullRequestDialog" timestamp="1626272036981">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="693" y="366" key="Github.CreatePullRequestDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1626272036981" />
-    <state width="1869" height="585" key="GridCell.Tab.0.bottom" timestamp="1626710531048">
+    <state width="1869" height="614" key="GridCell.Tab.0.bottom" timestamp="1627041668448">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="1398" height="489" key="GridCell.Tab.0.bottom/0.0.1440.900@0.0.1440.900" timestamp="1625190703001" />
-    <state width="1869" height="585" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1626710531048" />
-    <state width="1869" height="585" key="GridCell.Tab.0.center" timestamp="1626710531048">
+    <state width="1869" height="614" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1627041668448" />
+    <state width="1869" height="614" key="GridCell.Tab.0.center" timestamp="1627041668448">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="1398" height="489" key="GridCell.Tab.0.center/0.0.1440.900@0.0.1440.900" timestamp="1625190703000" />
-    <state width="1869" height="585" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1626710531048" />
-    <state width="1869" height="585" key="GridCell.Tab.0.left" timestamp="1626710531047">
+    <state width="1869" height="614" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1627041668448" />
+    <state width="1869" height="614" key="GridCell.Tab.0.left" timestamp="1627041668448">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="1398" height="489" key="GridCell.Tab.0.left/0.0.1440.900@0.0.1440.900" timestamp="1625190703000" />
-    <state width="1869" height="585" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1626710531047" />
-    <state width="1869" height="585" key="GridCell.Tab.0.right" timestamp="1626710531048">
+    <state width="1869" height="614" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1627041668448" />
+    <state width="1869" height="614" key="GridCell.Tab.0.right" timestamp="1627041668448">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="1398" height="489" key="GridCell.Tab.0.right/0.0.1440.900@0.0.1440.900" timestamp="1625190703000" />
-    <state width="1869" height="585" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1626710531048" />
+    <state width="1869" height="614" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1627041668448" />
     <state width="1398" height="489" key="GridCell.Tab.1.bottom" timestamp="1625190702999">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
@@ -315,12 +329,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="kotlin-line">
           <url>file://$PROJECT_DIR$/android/src/main/kotlin/live/hms/hmssdk_flutter/HmssdkFlutterPlugin.kt</url>
-          <line>261</line>
-          <option name="timeStamp" value="2" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/android/src/main/kotlin/live/hms/hmssdk_flutter/HmssdkFlutterPlugin.kt</url>
-          <line>161</line>
+          <line>169</line>
           <option name="timeStamp" value="4" />
         </line-breakpoint>
       </breakpoints>

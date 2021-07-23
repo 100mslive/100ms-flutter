@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:hmssdk_flutter/model/hms_audio_track.dart';
 import 'package:hmssdk_flutter/model/hms_role.dart';
 import 'package:hmssdk_flutter/model/hms_track.dart';
@@ -39,7 +40,7 @@ class HMSPeer {
 
   factory HMSPeer.fromMap(Map map) {
     //TODO:: parse hms audio and video tracks
-
+    debugPrint(map.toString());
     return HMSPeer(
       peerId: map['peer_id'],
       name: map['name'],

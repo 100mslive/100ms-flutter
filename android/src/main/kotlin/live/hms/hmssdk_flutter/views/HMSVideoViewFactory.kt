@@ -9,7 +9,7 @@ import io.flutter.plugin.platform.PlatformViewFactory
 import live.hms.hmssdk_flutter.HmssdkFlutterPlugin
 import live.hms.video.sdk.models.HMSPeer
 
-class HMSVideoViewWidget(context: Context, id: Int, creationParams: Map<String?, Any?>?,peer:HMSPeer) : PlatformView {
+class HMSVideoViewWidget(context: Context, id: Int, creationParams: Map<String?, Any?>?,peer:HMSPeer,trackId:String) : PlatformView {
     val hmsVideoView: HMSVideoView
 
     override fun getView(): View {
@@ -21,9 +21,11 @@ class HMSVideoViewWidget(context: Context, id: Int, creationParams: Map<String?,
     init {
         hmsVideoView=HMSVideoView(context)
         Log.i("HMSVIdeo",peer.toString())
-        if (peer.videoTrack!=null)
-            hmsVideoView.setVideoTrack(peer)
-
+        peer?.videoTrack.let {
+            if (it?.trackId==trackId){
+                hmsVideoView.setVideoTrack(peer)
+            }
+        }
     }
 }
 
@@ -35,9 +37,10 @@ class HMSVideoViewFactory(val plugin: HmssdkFlutterPlugin) : PlatformViewFactory
         val creationParams = args as Map<String?, Any?>?
         val id=args!!["peer_id"] as String
         val isLocal=args!!["is_local"] as Boolean
+        val trackId=args!!["track_id"] as String
         Log.i("onCreateHMSVideoView", "$isLocal $id")
         Log.i("HMSVideoViewFactory",plugin.getPeerById(id,isLocal)!!.toString())
-        return HMSVideoViewWidget(context, viewId, creationParams,plugin.getPeerById(id,isLocal)!!)
+        return HMSVideoViewWidget(context, viewId, creationParams,plugin.getPeerById(id,isLocal)!!,trackId)
     }
 }
 

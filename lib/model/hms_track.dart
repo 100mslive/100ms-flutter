@@ -9,7 +9,7 @@ class HMSTrack {
   final String trackDescription;
   final HMSPeer? peer;
 
-  bool isMute() {
+  Future<bool> isMute() async{
     return false;
   }
 
@@ -21,7 +21,6 @@ class HMSTrack {
       this.peer});
 
   factory HMSTrack.fromMap(Map map, HMSPeer? peer) {
-    //TODO:: parse hms audio and video tracks
 
     return HMSTrack(
         trackId: map['track_id'],

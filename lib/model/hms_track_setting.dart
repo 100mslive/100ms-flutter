@@ -5,6 +5,21 @@ class HMSTrackSetting {
   final HMSAudioTrackSetting audioTrackSetting;
   final HMSVideoTrackSetting videoTrackSetting;
 
+  factory HMSTrackSetting.fromMap(Map<String, dynamic> map) {
+    return new HMSTrackSetting(
+      audioTrackSetting: map['audioTrackSetting'] as HMSAudioTrackSetting,
+      videoTrackSetting: map['videoTrackSetting'] as HMSVideoTrackSetting,
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    // ignore: unnecessary_cast
+    return {
+      'audioTrackSetting': this.audioTrackSetting,
+      'videoTrackSetting': this.videoTrackSetting,
+    } as Map<String, dynamic>;
+  }
+
   HMSTrackSetting(
       {required this.audioTrackSetting, required this.videoTrackSetting});
 }
