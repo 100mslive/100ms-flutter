@@ -18,6 +18,7 @@ import kotlinx.coroutines.launch
 import live.hms.hmssdk_flutter.views.HMSVideoView
 import live.hms.hmssdk_flutter.views.HMSVideoViewFactory
 import live.hms.hmssdk_flutter.views.HMSVideoViewWidget
+import live.hms.video.connection.HMSDataChannel
 import live.hms.video.error.HMSException
 import live.hms.video.media.tracks.HMSTrack
 import live.hms.video.sdk.HMSSDK

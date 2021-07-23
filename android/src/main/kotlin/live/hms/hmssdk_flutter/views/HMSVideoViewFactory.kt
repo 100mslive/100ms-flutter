@@ -7,9 +7,10 @@ import io.flutter.plugin.platform.PlatformView
 import io.flutter.plugin.common.StandardMessageCodec
 import io.flutter.plugin.platform.PlatformViewFactory
 import live.hms.hmssdk_flutter.HmssdkFlutterPlugin
+import live.hms.video.media.tracks.HMSVideoTrack
 import live.hms.video.sdk.models.HMSPeer
 
-class HMSVideoViewWidget(context: Context, id: Int, creationParams: Map<String?, Any?>?,peer:HMSPeer,trackId:String) : PlatformView {
+class HMSVideoViewWidget(context: Context, id: Int, creationParams: Map<String?, Any?>?,val peer:HMSPeer,val trackId:String) : PlatformView {
     val hmsVideoView: HMSVideoView
 
     override fun getView(): View {
@@ -21,11 +22,32 @@ class HMSVideoViewWidget(context: Context, id: Int, creationParams: Map<String?,
     init {
         hmsVideoView=HMSVideoView(context)
         Log.i("HMSVIdeo",peer.toString())
+        renderVideo()
+    }
+
+    private fun renderVideo(){
+        val tracks=peer?.auxiliaryTracks
+        if (tracks.isNotEmpty()){
+            val track=tracks.first {
+                it.trackId==trackId
+            }
+            Log.i("renderVideo",track.toString())
+            if(track!=null){
+                (track as HMSVideoTrack).addSink(hmsVideoView.surfaceViewRenderer)
+                return
+            }
+        }
+
+
         peer?.videoTrack.let {
             if (it?.trackId==trackId){
                 hmsVideoView.setVideoTrack(peer)
+                return
             }
         }
+
+
+
     }
 }
 

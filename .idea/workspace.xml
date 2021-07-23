@@ -29,29 +29,10 @@
     </select>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f6635374-520c-494c-ae8d-73b820655433" name="Default Changelist" comment="fixed bugs">
-      <change afterPath="$PROJECT_DIR$/android/src/main/res/layout/hms_video_view.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/model/hms_remote_audio_track.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/model/hms_remote_video_track.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_14-07-2021_07_05_PM__Default_Changelist_.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_14-07-2021_07_05_PM__Default_Changelist_1.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Merge_at_14-07-2021_07_35_PM__Default_Changelist_.xml" beforeDir="false" />
+    <list default="true" id="f6635374-520c-494c-ae8d-73b820655433" name="Default Changelist" comment="added models according to priority">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/android/src/main/kotlin/live/hms/hmssdk_flutter/HmssdkFlutterPlugin.kt" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/kotlin/live/hms/hmssdk_flutter/HmssdkFlutterPlugin.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/android/src/main/kotlin/live/hms/hmssdk_flutter/views/HMSVideoViewFactory.kt" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/kotlin/live/hms/hmssdk_flutter/views/HMSVideoViewFactory.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/common/platform_methods.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/common/platform_methods.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/model/hms_audio_track.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/model/hms_audio_track.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/model/hms_error.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/model/hms_error.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/model/hms_local_video_track.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/model/hms_local_video_track.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/model/hms_peer.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/model/hms_peer.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/model/hms_role.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/model/hms_role.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/model/hms_speaker.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/model/hms_speaker.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/model/hms_track.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/model/hms_track.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/model/hms_track_setting.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/model/hms_track_setting.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/model/hms_video_track.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/model/hms_video_track.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/model/role_change_request.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/model/role_change_request.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/service/platform_service.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/service/platform_service.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/meeting/video_view.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/meeting/video_view.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -180,7 +161,14 @@
       <option name="project" value="LOCAL" />
       <updated>1626606937995</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="added models according to priority">
+      <created>1627042725312</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1627042725312</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -228,7 +216,8 @@
     <MESSAGE value="added hashcode and equals operator in hmspeer.dart" />
     <MESSAGE value="added mute and video" />
     <MESSAGE value="fixed bugs" />
-    <option name="LAST_COMMIT_MESSAGE" value="fixed bugs" />
+    <MESSAGE value="added models according to priority" />
+    <option name="LAST_COMMIT_MESSAGE" value="added models according to priority" />
   </component>
   <component name="WindowStateProjectService">
     <state x="718" y="167" key="#com.intellij.ide.util.MemberChooser" timestamp="1627040861196">
@@ -247,26 +236,26 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="693" y="366" key="Github.CreatePullRequestDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1626272036981" />
-    <state width="1869" height="614" key="GridCell.Tab.0.bottom" timestamp="1627041668448">
+    <state width="1869" height="614" key="GridCell.Tab.0.bottom" timestamp="1627064997713">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="1398" height="489" key="GridCell.Tab.0.bottom/0.0.1440.900@0.0.1440.900" timestamp="1625190703001" />
-    <state width="1869" height="614" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1627041668448" />
-    <state width="1869" height="614" key="GridCell.Tab.0.center" timestamp="1627041668448">
+    <state width="1869" height="614" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1627064997713" />
+    <state width="1869" height="614" key="GridCell.Tab.0.center" timestamp="1627064997713">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="1398" height="489" key="GridCell.Tab.0.center/0.0.1440.900@0.0.1440.900" timestamp="1625190703000" />
-    <state width="1869" height="614" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1627041668448" />
-    <state width="1869" height="614" key="GridCell.Tab.0.left" timestamp="1627041668448">
+    <state width="1869" height="614" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1627064997713" />
+    <state width="1869" height="614" key="GridCell.Tab.0.left" timestamp="1627064997713">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="1398" height="489" key="GridCell.Tab.0.left/0.0.1440.900@0.0.1440.900" timestamp="1625190703000" />
-    <state width="1869" height="614" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1627041668448" />
-    <state width="1869" height="614" key="GridCell.Tab.0.right" timestamp="1627041668448">
+    <state width="1869" height="614" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1627064997713" />
+    <state width="1869" height="614" key="GridCell.Tab.0.right" timestamp="1627064997713">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="1398" height="489" key="GridCell.Tab.0.right/0.0.1440.900@0.0.1440.900" timestamp="1625190703000" />
-    <state width="1869" height="614" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1627041668448" />
+    <state width="1869" height="614" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1627064997713" />
     <state width="1398" height="489" key="GridCell.Tab.1.bottom" timestamp="1625190702999">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
@@ -299,10 +288,10 @@
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="572" y="367" key="VCS.ChangelistChooser/0.0.1440.900@0.0.1440.900" timestamp="1625300183450" />
-    <state x="452" y="189" key="Vcs.Push.Dialog.v2" timestamp="1626294545672">
+    <state x="452" y="189" key="Vcs.Push.Dialog.v2" timestamp="1627042732548">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="452" y="189" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1626294545672" />
+    <state x="452" y="189" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1627042732548" />
     <state x="736" y="416" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1626101451259">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
