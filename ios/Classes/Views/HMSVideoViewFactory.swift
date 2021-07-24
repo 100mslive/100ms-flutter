@@ -87,20 +87,9 @@ class HMSVideoViewWidget: NSObject,FlutterPlatformView {
                     print("attaching video track")
                     return
                 }
-//                print("Auxilary found with id: \(track)")
-//                let uiLable:UILabel = UILabel()
-//                uiLable.text = "Auxilary Track"
-//                _view.addSubview(uiLable)
-//                print("attaching auxilary track")
                 return
             }
         }
-       else{
-        let uiLable:UILabel = UILabel()
-        uiLable.text = "Nothing found"
-        _view.addSubview(uiLable)
-       }
-       
     }
     
     func view() -> UIView {
