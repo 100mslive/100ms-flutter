@@ -4,4 +4,10 @@ class HMSAudioTrackSetting {
 
   HMSAudioTrackSetting(
       {required this.maxBitrate, required this.trackDescription});
+
+  factory HMSAudioTrackSetting.fromMap(Map map) {
+    return HMSAudioTrackSetting(
+        maxBitrate: map['bit_rate'],
+        trackDescription: map['track_description']);
+  }
 }
