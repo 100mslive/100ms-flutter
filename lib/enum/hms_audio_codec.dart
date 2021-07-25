@@ -1,6 +1,6 @@
 enum HMSAudioCodec { opus, unknown }
 
-extension HMSCodecValues on HMSAudioCodec {
+extension HMSAudioCodecValues on HMSAudioCodec {
   static HMSAudioCodec getHMSCodecFromName(String name) {
     switch (name) {
       case 'opus':
@@ -11,10 +11,10 @@ extension HMSCodecValues on HMSAudioCodec {
     }
   }
 
-  static String getValueFromHMSCodec(HMSAudioCodec hmsAudioCodec) {
+  static String getValueFromHMSAudioCodec(HMSAudioCodec hmsAudioCodec) {
     switch (hmsAudioCodec) {
       case HMSAudioCodec.opus:
-        return 'kHMSCodecH264';
+        return 'opus';
 
       case HMSAudioCodec.unknown:
         return '';
