@@ -1,6 +1,7 @@
 import 'package:hmssdk_flutter/common/platform_methods.dart';
 import 'package:hmssdk_flutter/enum/hms_peer_update.dart';
 import 'package:hmssdk_flutter/enum/hms_track_update.dart';
+import 'package:hmssdk_flutter/exceptions/hms_exception.dart';
 import 'package:hmssdk_flutter/model/hms_peer.dart';
 import 'package:hmssdk_flutter/model/hms_track.dart';
 import 'package:hmssdk_flutter/model/platform_method_response.dart';
@@ -14,6 +15,9 @@ class MeetingStore = MeetingStoreBase with _$MeetingStore;
 abstract class MeetingStoreBase with Store {
   @observable
   bool isSpeakerOn = true;
+
+  @observable
+  HMSException? exception;
 
   @observable
   bool isMeetingStarted = false;
@@ -125,7 +129,19 @@ abstract class MeetingStoreBase with Store {
 
         peerOperationWithTrack(peer, update, track);
       }
+      else if(event.method == PlatformMethod.onError){
+
+
+
+        HMSException exception = HMSException.fromMap(event.data['error']);
+        print(exception.toString()+"event");
+        changeException(exception);
+      }
     });
+  }
+
+  void changeException(HMSException hmsException){
+    this.exception=hmsException;
   }
 
   @action

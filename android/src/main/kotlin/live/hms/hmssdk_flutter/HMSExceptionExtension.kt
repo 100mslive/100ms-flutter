@@ -14,7 +14,9 @@ class HMSExceptionExtension {
             args.put("description",hmsException.description)
             args.put("name",hmsException.name)
             args.put("message",hmsException.message)
-            return args
+            val error=HashMap<String,Any>()
+            error.put("error",args)
+            return error
         }
     }
 }
