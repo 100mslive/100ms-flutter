@@ -10,7 +10,6 @@ import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
 import 'package:hmssdk_flutter_example/main.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_controller.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
-import 'package:mobx/mobx.dart';
 
 class MeetingPage extends StatefulWidget {
   final String roomId;
@@ -36,7 +35,6 @@ class _MeetingPageState extends State<MeetingPage> {
     _meetingStore.meetingController = meetingController;
     super.initState();
     initMeeting();
-    reaction((_) => _meetingStore.peers, (__) => print(__));
   }
 
   void initMeeting() {

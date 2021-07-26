@@ -128,20 +128,16 @@ abstract class MeetingStoreBase with Store {
         HMSTrack track = HMSTrack.fromMap(event.data['track'], peer);
 
         peerOperationWithTrack(peer, update, track);
-      }
-      else if(event.method == PlatformMethod.onError){
-
-
-
+      } else if (event.method == PlatformMethod.onError) {
         HMSException exception = HMSException.fromMap(event.data['error']);
-        print(exception.toString()+"event");
+        print(exception.toString() + "event");
         changeException(exception);
       }
     });
   }
 
-  void changeException(HMSException hmsException){
-    this.exception=hmsException;
+  void changeException(HMSException hmsException) {
+    this.exception = hmsException;
   }
 
   @action
