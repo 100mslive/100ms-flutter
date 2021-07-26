@@ -17,16 +17,14 @@ class HMSRole {
       required this.externalPlugins});
 
   factory HMSRole.fromMap(Map map) {
-    print("HMSROLe ${map}");
-    return new HMSRole(
-      name: map['name'] as String,
-      publishSettings: map['publish_settings'] as String,
-      subscribeSettings: map['subscribe_settings'] as String,
-      priority: map['priority'] as int,
-      generalPermissions: map['general_permissions'] ,
-      internalPlugins: map['internal_plugins'] as String,
-      externalPlugins: map['external_plugins'] as String,
-    );
+    return HMSRole(
+        name: map['name'],
+        publishSettings: map['publish_settings'],
+        subscribeSettings: map['subscribe_settings'],
+        priority: map['priority'],
+        generalPermissions: map['general_permissions'],
+        internalPlugins: map['internal_plugins'],
+        externalPlugins: map['external_plugins']);
   }
 
   Map<String, dynamic> toMap() {

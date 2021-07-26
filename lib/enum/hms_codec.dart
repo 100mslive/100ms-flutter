@@ -13,8 +13,8 @@ extension HMSCodecValues on HMSCodec {
     }
   }
 
-  static String getValueFromHMSCodec(HMSCodec hmsCameraFacing) {
-    switch (hmsCameraFacing) {
+  static String getValueFromHMSCodec(HMSCodec hmsCodec) {
+    switch (hmsCodec) {
       case HMSCodec.kHMSCodecH264:
         return 'kHMSCodecH264';
       case HMSCodec.kHMSCodecVP8:

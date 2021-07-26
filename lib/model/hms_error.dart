@@ -6,7 +6,9 @@ class HMSError {
   final String message;
   String? info;
   String? action;
-  Map<String, dynamic>? params;
+
+  // Map<String, dynamic>? params;
+  Map? params;
 
   HMSError(
       {required this.id,
@@ -43,5 +45,15 @@ class HMSError {
 
   String get localizedDescription => message;
 
-  Map<String, dynamic> get analyticsRepresentation => params ?? {};
+  Map get analyticsRepresentation => params ?? {};
+
+  factory HMSError.fromMap(Map map) {
+    return HMSError(
+        id: map['id'],
+        code: HMSErrorCode.fromMap(map['code']),
+        message: map['message'],
+        action: map['action'],
+        info: map['info'],
+        params: map['params']);
+  }
 }

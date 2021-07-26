@@ -51,6 +51,11 @@ class HMSPeer {
     );
   }
 
+  static List<HMSPeer> fromListOfMap(List<Map> peersMap) {
+    List<HMSPeer> peers = peersMap.map((e) => HMSPeer.fromMap(e)).toList();
+    return peers ?? [];
+  }
+
   @override
   String toString() {
     return 'HMSPeer{peerId: $peerId, name: $name, isLocal: $isLocal, role: $role, customerUserId: $customerUserId, customerDescription: $customerDescription, audioTrack: $audioTrack, videoTrack: $videoTrack, auxiliaryTracks: $auxiliaryTracks}';
