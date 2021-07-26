@@ -53,7 +53,7 @@ class HMSPeer {
 
   static List<HMSPeer> fromListOfMap(List<Map> peersMap) {
     List<HMSPeer> peers = peersMap.map((e) => HMSPeer.fromMap(e)).toList();
-    return peers ?? [];
+    return peers;
   }
 
   @override
