@@ -1,3 +1,7 @@
+import 'package:hmssdk_flutter/model/hms_permissions.dart';
+import 'package:hmssdk_flutter/model/hms_publish_setting.dart';
+import 'package:hmssdk_flutter/model/hms_subscribe_settings.dart';
+
 class HMSRole {
   String name;
   HMSPublishSetting publishSettings;
@@ -10,29 +14,29 @@ class HMSRole {
 
   HMSRole(
       {required this.name,
-      this.publishSettings,
-      this.subscribeSettings,
+      required this.publishSettings,
+      required this.subscribeSettings,
       required this.priority,
-      this.permissions,
-      this.generalPermissions,
-      this.internalPlugins,
-      this.externalPlugins});
+      required this.permissions,
+      required this.generalPermissions,
+      required this.internalPlugins,
+      required this.externalPlugins});
 
   factory HMSRole.fromMap(Map map) {
-\
-    return new HMSRole(
+    return HMSRole(
       name: map['name'] as String,
-      publishSettings: map['publish_settings'] as ,
-      subscribeSettings: map['subscribe_settings'] as String,
+      publishSettings: HMSPublishSetting.fromMap(map['publish_settings']),
+      subscribeSettings:
+          HMSSubscribeSettings.fromMap(map['subscribe_settings']),
       priority: map['priority'] as int,
-      generalPermissions: map['general_permissions'] ,
-      internalPlugins: map['internal_plugins'] as String,
-      externalPlugins: map['external_plugins'] as String,
+      permissions: HMSPermissions.fromMap(map['permissions']),
+      generalPermissions: map['general_permissions'],
+      internalPlugins: map['internal_plugins'],
+      externalPlugins: map['external_plugins'],
     );
   }
 
   Map<String, dynamic> toMap() {
-    // ignore: unnecessary_cast
     return {
       'name': this.name,
       'publishSettings': this.publishSettings,
@@ -41,6 +45,6 @@ class HMSRole {
       'generalPermissions': this.generalPermissions,
       'internalPlugins': this.internalPlugins,
       'externalPlugins': this.externalPlugins,
-    } as Map<String, dynamic>;
+    };
   }
 }
