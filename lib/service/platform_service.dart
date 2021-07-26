@@ -25,7 +25,7 @@ class PlatformService {
         .map<PlatformMethodResponse>((event) {
       PlatformMethod method =
           PlatformMethodValues.getMethodFromName(event['event_name']);
-          debugPrint(method.toString()+"AAAAAAAAAAHHHHHHRRRROOOONNNNN");
+
       Map<String, dynamic>? data = {};
       if (event is Map && event['data'] is Map) {
         (event['data'] as Map).forEach((key, value) {

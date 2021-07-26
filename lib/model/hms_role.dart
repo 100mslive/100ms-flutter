@@ -4,35 +4,34 @@ import 'package:hmssdk_flutter/model/hms_subscribe_settings.dart';
 
 class HMSRole {
   String name;
-  HMSPublishSetting publishSettings;
-  HMSSubscribeSettings subscribeSettings;
-  HMSPermissions permissions;
+  HMSPublishSetting? publishSettings;
+  HMSSubscribeSettings? subscribeSettings;
+  HMSPermissions? permissions;
   int priority;
-  Map generalPermissions;
-  Map internalPlugins;
-  Map externalPlugins;
+  Map? generalPermissions;
+  Map? internalPlugins;
+  Map? externalPlugins;
 
   HMSRole(
       {required this.name,
-      required this.publishSettings,
-      required this.subscribeSettings,
+      this.publishSettings,
+      this.subscribeSettings,
       required this.priority,
-      required this.generalPermissions,
-      required this.internalPlugins,
-      required this.externalPlugins});
-      required this.permissions,
+      this.permissions,
+      this.generalPermissions,
+      this.internalPlugins,
+      this.externalPlugins});
 
   factory HMSRole.fromMap(Map map) {
-    print("HMSROLe ${map}");
-    return new HMSRole(
+    return HMSRole(
       name: map['name'] as String,
-      publishSettings: map['publish_settings'],
-      subscribeSettings: map['subscribe_settings'],
-      permissions: map['permissions'],
+      // publishSettings: map['publish_settings'],
+      // subscribeSettings: map['subscribe_settings'],
+      // permissions: map['permissions'],
       priority: map['priority'] as int,
-      generalPermissions: map['general_permissions'],
-      internalPlugins: map['internal_plugins'] as String,
-      externalPlugins: map['external_plugins'] as String,
+      // generalPermissions: map['general_permissions'],
+      // internalPlugins: map['internal_plugins'],
+      // externalPlugins: map['external_plugins'],
     );
   }
 

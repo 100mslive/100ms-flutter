@@ -46,14 +46,4 @@ class HMSError {
   String get localizedDescription => message;
 
   Map get analyticsRepresentation => params ?? {};
-
-  factory HMSError.fromMap(Map map) {
-    return HMSError(
-        id: map['id'],
-        code: HMSErrorCode.fromMap(map['code']),
-        message: map['message'],
-        action: map['action'],
-        info: map['info'],
-        params: map['params']);
-  }
 }
