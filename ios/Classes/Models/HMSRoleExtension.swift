@@ -15,14 +15,18 @@ class HMSRoleExtension{
         
         let dict:[String:Any?] = [
             "name":role.name,
-            "publish_settings":"role.publishSettings",
-            "subscribe_settings":"role.subscribeSettings",
+            "publish_settings":HMSPublishSettingExtension.toDictionary(publishSettings:role.publishSettings),
+            "subscribe_settings":HMSSubscribeSettingsExtension.toDictionary(subscribeSettings:role.subscribeSettings),
             "priority":role.priority,
-            "general_permissions":"role.generalPermissions",
-            "internal_plugins":"role.internalPlugins",
-            "external_plugins":"role.externalPlugins",
+            "general_permissions":role.generalPermissions,
+            "internal_plugins":role.internalPlugins,
+            "external_plugins":role.externalPlugins,
         ]
         
         return dict
     }
+    
+    
 }
+
+

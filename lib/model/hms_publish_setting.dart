@@ -20,12 +20,14 @@ class HMSPublishSetting {
 
   factory HMSPublishSetting.fromMap(Map map) {
     return HMSPublishSetting(
-        audioSetting: HMSAudioSetting.fromMap(map['audio_setting']),
-        videoSetting: HMSVideoSetting.fromMap(map['video_setting']),
-        screenSetting: HMSVideoSetting.fromMap(map['screen_setting']),
-        audioSimulCast: HMSSimulCastSettings.fromMap(map['audio_simul_cast']),
-        videoSimulCast: HMSSimulCastSettings.fromMap(map['video_simul_cast']),
+        audioSetting: HMSAudioSetting.fromMap(map['audio_setting'] ?? {}),
+        videoSetting: HMSVideoSetting.fromMap(map['video_setting'] ?? {}),
+        screenSetting: HMSVideoSetting.fromMap(map['screen_setting'] ?? {}),
+        audioSimulCast:
+            HMSSimulCastSettings.fromMap(map['audio_simul_cast'] ?? {}),
+        videoSimulCast:
+            HMSSimulCastSettings.fromMap(map['video_simul_cast'] ?? {}),
         screenSimulCast:
-            HMSSimulCastSettings.fromMap(map['screen_simul_cast']));
+            HMSSimulCastSettings.fromMap(map['screen_simul_cast'] ?? {}));
   }
 }

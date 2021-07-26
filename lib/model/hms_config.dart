@@ -18,27 +18,25 @@ class HMSConfig {
 
   factory HMSConfig.fromMap(Map<String, dynamic> map) {
     return new HMSConfig(
-      userName: map['userName'] as String,
-      userId: map['userId'] as String,
-      roomId: map['roomId'] as String,
-      authToken: map['authToken'] as String,
-      metaData: map['metaData'] as String?,
-      endPoint: map['endPoint'] as String?,
-      shouldSkipPIIEvents: map['shouldSkipPIIEvents'] as bool,
+      userName: map['user_name'] as String,
+      userId: map['user_id'] as String,
+      roomId: map['room_id'] as String,
+      authToken: map['auth_token'] as String,
+      metaData: map['meta_data'] as String?,
+      endPoint: map['end_point'] as String?,
+      shouldSkipPIIEvents: map['should_skip_pii_events'] as bool,
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'userName': this.userName,
-      'userId': this.userId,
-      'roomId': this.roomId,
-      'authToken': this.authToken,
-      'metaData': this.metaData,
-      'endPoint': this.endPoint,
-      'shouldSkipPIIEvents': this.shouldSkipPIIEvents,
+      'user_name': userName,
+      'user_id': userId,
+      'room_id': roomId,
+      'auth_token': authToken,
+      'meta_data': metaData,
+      'should_skip_pii_events': shouldSkipPIIEvents,
+      'end_point': endPoint
     };
   }
-
-
 }
