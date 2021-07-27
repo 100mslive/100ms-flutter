@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:hmssdk_flutter/common/platform_methods.dart';
 import 'package:hmssdk_flutter/enum/hms_track_kind.dart';
+import 'package:hmssdk_flutter/enum/hms_track_source.dart';
 import 'package:hmssdk_flutter/model/hms_track.dart';
 import 'package:hmssdk_flutter/model/platform_method_response.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/peer_item_organism.dart';
@@ -94,6 +95,24 @@ class _MeetingPageState extends State<MeetingPage> {
             }),
             Observer(
                 builder: (_) => Text('Peers:${_meetingStore.peers.length}')),
+            Observer(builder: (_) {
+              if (_meetingStore.localPeer != null) {
+                return SizedBox(
+                  width: double.infinity,
+                  height: MediaQuery.of(context).size.height / 2,
+                  child: PeerItemOrganism(
+                    track: HMSTrack(
+                        trackDescription: '',
+                        source: HMSTrackSource.kHMSTrackSourceRegular,
+                        kind: HMSTrackKind.unknown,
+                        trackId: '',
+                        peer: _meetingStore.localPeer),
+                  ),
+                );
+              } else {
+                return Text('No Local peer');
+              }
+            }),
             Flexible(
               child: Observer(
                 builder: (_) {
