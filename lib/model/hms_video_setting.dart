@@ -16,8 +16,8 @@ class HMSVideoSetting {
 
   factory HMSVideoSetting.fromMap(Map map) {
     return HMSVideoSetting(
-        bitRate: map['bit_rate'],
-        codec: HMSVideoCodecValues.getHMSCodecFromName(map['codec']),
+        bitRate: map['bit_rate'] ?? 0,
+        codec: HMSVideoCodecValues.getHMSCodecFromName(map['codec'] ?? ''),
         frameRate: map['frame_rate'],
         width: map['width'],
         height: map['height']);
