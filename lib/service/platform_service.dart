@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:hmssdk_flutter/common/platform_methods.dart';
 import 'package:hmssdk_flutter/model/platform_method_response.dart';
@@ -24,7 +25,7 @@ class PlatformService {
         .map<PlatformMethodResponse>((event) {
       PlatformMethod method =
           PlatformMethodValues.getMethodFromName(event['event_name']);
-          debugPrint(method.toString()+"AAAAAAAAAAHHHHHHRRRROOOONNNNN");
+
       Map<String, dynamic>? data = {};
       if (event is Map && event['data'] is Map) {
         (event['data'] as Map).forEach((key, value) {

@@ -38,16 +38,21 @@ class HMSPeer {
   int get hashCode => peerId.hashCode;
 
   factory HMSPeer.fromMap(Map map) {
-    //TODO:: parse hms audio and video tracks
-
+    HMSRole? role;
+    if (map['role'] != null) role = HMSRole.fromMap(map['role']);
     return HMSPeer(
       peerId: map['peer_id'],
       name: map['name'],
       isLocal: map['is_local'],
-      role: HMSRole.fromMap(map['role']),
+      role: role,
       customerDescription: map['customer_description'],
       customerUserId: map['customer_user_id'],
     );
+  }
+
+  static List<HMSPeer> fromListOfMap(List<Map> peersMap) {
+    List<HMSPeer> peers = peersMap.map((e) => HMSPeer.fromMap(e)).toList();
+    return peers;
   }
 
   @override

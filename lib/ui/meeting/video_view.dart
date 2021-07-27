@@ -21,7 +21,11 @@ class VideoView extends StatelessWidget {
         viewType: 'HMSVideoView',
         onPlatformViewCreated: onPlatformViewCreated,
         creationParamsCodec: StandardMessageCodec(),
-        creationParams: {'peer_id': 'some_id'},
+        creationParams: {
+          'peer_id': track.peer?.peerId,
+          'is_local': track.peer?.isLocal,
+          'track_id': track.trackId
+        }..addAll(args ?? {}),
         gestureRecognizers: {},
       );
     } else if (Platform.isIOS) {

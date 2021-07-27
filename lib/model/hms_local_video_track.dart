@@ -1,7 +1,9 @@
+import 'package:hmssdk_flutter/common/platform_methods.dart';
 import 'package:hmssdk_flutter/enum/hms_track_kind.dart';
 import 'package:hmssdk_flutter/enum/hms_track_source.dart';
 import 'package:hmssdk_flutter/model/hms_video_track.dart';
 import 'package:hmssdk_flutter/model/hms_video_track_setting.dart';
+import 'package:hmssdk_flutter/service/platform_service.dart';
 
 class HMSLocalVideoTrack extends HMSVideoTrack {
   final HMSVideoTrackSetting setting;
@@ -21,15 +23,15 @@ class HMSLocalVideoTrack extends HMSVideoTrack {
           trackId: trackId,
         );
 
-  void startCapturing() {
-    // TODO:: call platform
+  Future<void> startCapturing() async{
+    await PlatformService.invokeMethod(PlatformMethod.startCapturing);
   }
 
-  void stopCapturing() {
-    // TODO:: call platform
+  Future<void> stopCapturing() async{
+    await PlatformService.invokeMethod(PlatformMethod.stopCapturing);
   }
 
-  void switchCamera() {
-    // TODO:: call platform
+  Future<void> switchCamera() async{
+    await PlatformService.invokeMethod(PlatformMethod.switchCamera);
   }
 }
