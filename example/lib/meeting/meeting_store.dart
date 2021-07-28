@@ -145,9 +145,8 @@ abstract class MeetingStoreBase with Store {
       } else if (event.method == PlatformMethod.onError) {
         HMSException exception = HMSException.fromMap(event.data['error']);
         print(exception.toString() + "event");
-        changeException(exception);
-      }
-      else if(event.method == PlatformMethod.onMessage){
+        updateException(exception);
+      } else if (event.method == PlatformMethod.onMessage) {
         //print("onMessageFlutter"+event.data['message']['sender'].toString());
         HMSMessage message=HMSMessage.fromMap(event.data['message']);
         addMessage(message);
@@ -155,7 +154,7 @@ abstract class MeetingStoreBase with Store {
     });
   }
 
-  void changeException(HMSException hmsException) {
+  void updateException(HMSException hmsException) {
     this.exception = hmsException;
   }
 
