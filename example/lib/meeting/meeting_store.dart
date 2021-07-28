@@ -1,17 +1,15 @@
-import 'dart:collection';
+import 'dart:io';
 
-import 'package:flutter/material.dart';
 import 'package:hmssdk_flutter/common/platform_methods.dart';
 import 'package:hmssdk_flutter/enum/hms_peer_update.dart';
 import 'package:hmssdk_flutter/enum/hms_track_update.dart';
 import 'package:hmssdk_flutter/exceptions/hms_exception.dart';
-import 'package:hmssdk_flutter/meeting/meeting.dart';
+import 'package:hmssdk_flutter/model/hms_error.dart';
 import 'package:hmssdk_flutter/model/hms_message.dart';
 import 'package:hmssdk_flutter/model/hms_peer.dart';
 import 'package:hmssdk_flutter/model/hms_track.dart';
 import 'package:hmssdk_flutter/model/platform_method_response.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_controller.dart';
-
 import 'package:mobx/mobx.dart';
 
 part 'meeting_store.g.dart';
@@ -24,7 +22,8 @@ abstract class MeetingStoreBase with Store {
 
   @observable
   HMSException? exception;
-
+  @observable
+  HMSError? error;
 
   @observable
   bool isMeetingStarted = false;
@@ -126,7 +125,7 @@ abstract class MeetingStoreBase with Store {
       if (event.method == PlatformMethod.onPeerUpdate) {
         HMSPeer peer = HMSPeer.fromMap(event.data['peer']);
         HMSPeerUpdate update =
-        HMSPeerUpdateValues.getHMSPeerUpdateFromName(event.data['update']);
+            HMSPeerUpdateValues.getHMSPeerUpdateFromName(event.data['update']);
         if (peer.isLocal) {
           localPeer = peer;
         } else
@@ -143,22 +142,33 @@ abstract class MeetingStoreBase with Store {
         } else
           peerOperationWithTrack(peer, update, track);
       } else if (event.method == PlatformMethod.onError) {
-        HMSException exception = HMSException.fromMap(event.data['error']);
-        print(exception.toString() + "event");
-        updateException(exception);
+        if (Platform.isIOS) {
+          HMSError error = HMSError.fromMap(event.data['error']);
+
+          updateError(error);
+        } else {
+          HMSException exception = HMSException.fromMap(event.data['error']);
+          print(exception.toString() + "event");
+          updateException(exception);
+        }
       } else if (event.method == PlatformMethod.onMessage) {
-        //print("onMessageFlutter"+event.data['message']['sender'].toString());
-        HMSMessage message=HMSMessage.fromMap(event.data['message']);
+        HMSMessage message = HMSMessage.fromMap(event.data['message']);
         addMessage(message);
       }
     });
   }
 
+  @action
   void updateException(HMSException hmsException) {
     this.exception = hmsException;
   }
 
-  void addMessage(HMSMessage message){
+  @action
+  void updateError(HMSError error) {
+    this.error = error;
+  }
+
+  void addMessage(HMSMessage message) {
     this.messages.add(message);
   }
 
@@ -175,7 +185,7 @@ abstract class MeetingStoreBase with Store {
 
         break;
       case HMSPeerUpdate.peerKnocked:
-      // removePeer(peer);
+        // removePeer(peer);
         break;
       case HMSPeerUpdate.audioToggled:
         print('Peer audio toggled');
