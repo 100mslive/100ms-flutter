@@ -4,39 +4,39 @@ import 'package:hmssdk_flutter/model/hms_subscribe_settings.dart';
 
 class HMSRole {
   String name;
-  HMSPublishSetting? publishSettings;
-  HMSSubscribeSettings? subscribeSettings;
-  HMSPermissions? permissions;
+  HMSPublishSetting publishSettings;
+  HMSSubscribeSettings subscribeSettings;
+  HMSPermissions permissions;
   int priority;
-  Map? generalPermissions;
-  Map? internalPlugins;
-  Map? externalPlugins;
+  Map generalPermissions;
+  Map internalPlugins;
+  Map externalPlugins;
 
   HMSRole(
       {required this.name,
-      this.publishSettings,
-      this.subscribeSettings,
-      required this.priority,
-      this.permissions,
-      this.generalPermissions,
-      this.internalPlugins,
-      this.externalPlugins});
+        required this.publishSettings,
+        required this.subscribeSettings,
+        required this.priority,
+        required this.permissions,
+        required this.generalPermissions,
+        required this.internalPlugins,
+        required this.externalPlugins});
 
   factory HMSRole.fromMap(Map map) {
     return HMSRole(
       name: map['name'] as String,
-      // publishSettings: map['publish_settings'],
-      // subscribeSettings: map['subscribe_settings'],
-      // permissions: map['permissions'],
+      publishSettings: HMSPublishSetting.fromMap(map['publish_settings']),
+      subscribeSettings:
+      HMSSubscribeSettings.fromMap(map['subscribe_settings']),
       priority: map['priority'] as int,
-      // generalPermissions: map['general_permissions'],
-      // internalPlugins: map['internal_plugins'],
-      // externalPlugins: map['external_plugins'],
+      permissions: HMSPermissions.fromMap(map['permissions']),
+      generalPermissions: map['general_permissions'],
+      internalPlugins: map['internal_plugins'],
+      externalPlugins: map['external_plugins'],
     );
   }
 
   Map<String, dynamic> toMap() {
-    // ignore: unnecessary_cast
     return {
       'name': this.name,
       'publishSettings': this.publishSettings,
@@ -45,6 +45,6 @@ class HMSRole {
       'generalPermissions': this.generalPermissions,
       'internalPlugins': this.internalPlugins,
       'externalPlugins': this.externalPlugins,
-    } as Map<String, dynamic>;
+    };
   }
 }
