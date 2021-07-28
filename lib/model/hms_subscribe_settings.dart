@@ -1,5 +1,5 @@
 class HMSSubscribeSettings {
-  final List<String>? subcribesToRoles;
+  final List? subcribesToRoles;
   final int maxSubsBitRate;
   final int? maxDisplayTiles;
 

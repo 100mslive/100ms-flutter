@@ -1,11 +1,17 @@
+import 'dart:collection';
+
+import 'package:flutter/material.dart';
 import 'package:hmssdk_flutter/common/platform_methods.dart';
 import 'package:hmssdk_flutter/enum/hms_peer_update.dart';
 import 'package:hmssdk_flutter/enum/hms_track_update.dart';
 import 'package:hmssdk_flutter/exceptions/hms_exception.dart';
+import 'package:hmssdk_flutter/meeting/meeting.dart';
+import 'package:hmssdk_flutter/model/hms_message.dart';
 import 'package:hmssdk_flutter/model/hms_peer.dart';
 import 'package:hmssdk_flutter/model/hms_track.dart';
 import 'package:hmssdk_flutter/model/platform_method_response.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_controller.dart';
+
 import 'package:mobx/mobx.dart';
 
 part 'meeting_store.g.dart';
@@ -18,6 +24,7 @@ abstract class MeetingStoreBase with Store {
 
   @observable
   HMSException? exception;
+
 
   @observable
   bool isMeetingStarted = false;
@@ -34,7 +41,13 @@ abstract class MeetingStoreBase with Store {
   List<HMSPeer> peers = ObservableList.of([]);
 
   @observable
+  HMSPeer? localPeer;
+
+  @observable
   List<HMSTrack> tracks = ObservableList.of([]);
+
+  @observable
+  List<HMSMessage> messages = ObservableList.of([]);
 
   @action
   void toggleSpeaker() {
@@ -68,16 +81,6 @@ abstract class MeetingStoreBase with Store {
   void addPeer(HMSPeer peer) {
     if (!peers.contains(peer)) peers.add(peer);
   }
-
-  // @action
-  // void removeTrack(HMSTrack? track, String? peerId) {
-  //   if (track != null) {
-  //     tracks
-  //         .removeWhere((element) => element.peer?.peerId == track.peer?.peerId);
-  //   }
-  //   if (peerId != null)
-  //     tracks.removeWhere((element) => element.peer?.peerId == peerId);
-  // }
 
   @action
   void removeTrackWithTrackId(String trackId) {
@@ -113,13 +116,21 @@ abstract class MeetingStoreBase with Store {
   }
 
   @action
+  Future<void> sendMessage(String message) async {
+    await meetingController.sendMessage(message);
+  }
+
+  @action
   void listenToController() {
     controller?.listen((event) {
       if (event.method == PlatformMethod.onPeerUpdate) {
         HMSPeer peer = HMSPeer.fromMap(event.data['peer']);
         HMSPeerUpdate update =
-            HMSPeerUpdateValues.getHMSPeerUpdateFromName(event.data['update']);
-        peerOperation(peer, update);
+        HMSPeerUpdateValues.getHMSPeerUpdateFromName(event.data['update']);
+        if (peer.isLocal) {
+          localPeer = peer;
+        } else
+          peerOperation(peer, update);
       } else if (event.method == PlatformMethod.onTrackUpdate) {
         print('track update');
         HMSPeer peer = HMSPeer.fromMap(event.data['peer']);
@@ -127,21 +138,29 @@ abstract class MeetingStoreBase with Store {
             event.data['update']);
         HMSTrack track = HMSTrack.fromMap(event.data['track'], peer);
 
-        peerOperationWithTrack(peer, update, track);
-      }
-      else if(event.method == PlatformMethod.onError){
-
-
-
+        if (peer.isLocal) {
+          localPeer = peer;
+        } else
+          peerOperationWithTrack(peer, update, track);
+      } else if (event.method == PlatformMethod.onError) {
         HMSException exception = HMSException.fromMap(event.data['error']);
-        print(exception.toString()+"event");
+        print(exception.toString() + "event");
         changeException(exception);
+      }
+      else if(event.method == PlatformMethod.onMessage){
+        //print("onMessageFlutter"+event.data['message']['sender'].toString());
+        HMSMessage message=HMSMessage.fromMap(event.data['message']);
+        addMessage(message);
       }
     });
   }
 
-  void changeException(HMSException hmsException){
-    this.exception=hmsException;
+  void changeException(HMSException hmsException) {
+    this.exception = hmsException;
+  }
+
+  void addMessage(HMSMessage message){
+    this.messages.add(message);
   }
 
   @action
@@ -157,7 +176,7 @@ abstract class MeetingStoreBase with Store {
 
         break;
       case HMSPeerUpdate.peerKnocked:
-        // removePeer(peer);
+      // removePeer(peer);
         break;
       case HMSPeerUpdate.audioToggled:
         print('Peer audio toggled');

@@ -103,9 +103,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
         let data:[String:Any]=[
             "event_name":"on_error",
-            "data":[
-                "name":"Vivek"
-            ]
+            "data":HMSErrorExtension.toDictionary(error: error)
         ]
         eventSink?(data)
     }

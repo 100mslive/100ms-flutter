@@ -3,14 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:hmssdk_flutter/common/platform_methods.dart';
 import 'package:hmssdk_flutter/enum/hms_track_kind.dart';
+import 'package:hmssdk_flutter/enum/hms_track_source.dart';
 import 'package:hmssdk_flutter/model/hms_track.dart';
 import 'package:hmssdk_flutter/model/platform_method_response.dart';
+import 'package:hmssdk_flutter_example/common/ui/organisms/chat_bottom_sheet.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/peer_item_organism.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
 import 'package:hmssdk_flutter_example/main.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_controller.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
-import 'package:mobx/mobx.dart';
 
 class MeetingPage extends StatefulWidget {
   final String roomId;
@@ -36,7 +37,6 @@ class _MeetingPageState extends State<MeetingPage> {
     _meetingStore.meetingController = meetingController;
     super.initState();
     initMeeting();
-    reaction((_) => _meetingStore.peers, (__) => print(__));
   }
 
   void initMeeting() {
@@ -74,28 +74,44 @@ class _MeetingPageState extends State<MeetingPage> {
       body: Center(
         child: Column(
           children: [
-            Text(widget.user),
-            Text(widget.flow.toString()),
-            Text(widget.roomId),
+            // Text(widget.user),
+            // Text(widget.flow.toString()),
+            // Text(widget.roomId),
+            // Observer(builder: (_) {
+            //   if (_meetingStore.isMeetingStarted) {
+            //     return StreamBuilder<PlatformMethodResponse>(
+            //         stream: _meetingStore.controller,
+            //         builder: (context, data) {
+            //           // print(data.data!.method.toString());
+            //           if (data.data == null) return Text("Null data");
+            //           if (data.data!.method == PlatformMethod.onPeerUpdate) {
+            //             print('peer update');
+            //           }
+            //           String data1 = data.data!.data.toString();
+            //           return Text(data1);
+            //         });
+            //   } else {
+            //     return CupertinoActivityIndicator();
+            //   }
+            // }),
             Observer(builder: (_) {
-              if (_meetingStore.isMeetingStarted) {
-                return StreamBuilder<PlatformMethodResponse>(
-                    stream: _meetingStore.controller,
-                    builder: (context, data) {
-                      // print(data.data!.method.toString());
-                      if (data.data == null) return Text("Null data");
-                      if (data.data!.method == PlatformMethod.onPeerUpdate) {
-                        print('peer update');
-                      }
-                      String data1 = data.data!.data.toString();
-                      return Text(data1);
-                    });
+              if (_meetingStore.localPeer != null) {
+                return SizedBox(
+                  width: double.infinity,
+                  height: MediaQuery.of(context).size.height / 2,
+                  child: PeerItemOrganism(
+                    track: HMSTrack(
+                        trackDescription: '',
+                        source: HMSTrackSource.kHMSTrackSourceRegular,
+                        kind: HMSTrackKind.unknown,
+                        trackId: '',
+                        peer: _meetingStore.localPeer),
+                  ),
+                );
               } else {
-                return CupertinoActivityIndicator();
+                return Text('No Local peer');
               }
             }),
-            Observer(
-                builder: (_) => Text('Peers:${_meetingStore.peers.length}')),
             Flexible(
               child: Observer(
                 builder: (_) {
@@ -116,7 +132,8 @@ class _MeetingPageState extends State<MeetingPage> {
                   );
                 },
               ),
-            )
+            ),
+
           ],
         ),
       ),
@@ -145,6 +162,7 @@ class _MeetingPageState extends State<MeetingPage> {
                     return IconButton(
                         tooltip: 'Audio',
                         onPressed: () {
+
                           _meetingStore.toggleAudio();
                         },
                         icon: Icon(
@@ -155,7 +173,9 @@ class _MeetingPageState extends State<MeetingPage> {
                   padding: EdgeInsets.all(16),
                   child: IconButton(
                       tooltip: 'Chat',
-                      onPressed: () {},
+                      onPressed: () {
+                        chatMessages(context,_meetingStore);
+                      },
                       icon: Icon(Icons.chat_bubble)),
                 ),
                 Container(

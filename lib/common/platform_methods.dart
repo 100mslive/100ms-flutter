@@ -8,6 +8,7 @@ enum PlatformMethod {
   onTrackUpdate,
   onError,
   onMessage,
+  sendMessage,
   onUpdateSpeaker,
   onReconnecting,
   onReconnected,
@@ -62,6 +63,8 @@ extension PlatformMethodValues on PlatformMethod {
         return 'start_capturing';
       case PlatformMethod.stopCapturing:
         return 'stop_capturing';
+      case PlatformMethod.sendMessage:
+        return 'send_message';
       case PlatformMethod.unknown:
         return 'unknown';
     }
@@ -107,6 +110,8 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.stopCapturing;
       case 'start_capturing':
         return PlatformMethod.startCapturing;
+      case 'send_message':
+        return PlatformMethod.sendMessage;
       default:
         return PlatformMethod.unknown;
     }
