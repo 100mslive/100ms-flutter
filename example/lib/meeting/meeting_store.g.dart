@@ -24,6 +24,21 @@ mixin _$MeetingStore on MeetingStoreBase, Store {
     });
   }
 
+  final _$exceptionAtom = Atom(name: 'MeetingStoreBase.exception');
+
+  @override
+  HMSException? get exception {
+    _$exceptionAtom.reportRead();
+    return super.exception;
+  }
+
+  @override
+  set exception(HMSException? value) {
+    _$exceptionAtom.reportWrite(value, super.exception, () {
+      super.exception = value;
+    });
+  }
+
   final _$isMeetingStartedAtom =
       Atom(name: 'MeetingStoreBase.isMeetingStarted');
 
@@ -85,6 +100,21 @@ mixin _$MeetingStore on MeetingStoreBase, Store {
     });
   }
 
+  final _$localPeerAtom = Atom(name: 'MeetingStoreBase.localPeer');
+
+  @override
+  HMSPeer? get localPeer {
+    _$localPeerAtom.reportRead();
+    return super.localPeer;
+  }
+
+  @override
+  set localPeer(HMSPeer? value) {
+    _$localPeerAtom.reportWrite(value, super.localPeer, () {
+      super.localPeer = value;
+    });
+  }
+
   final _$tracksAtom = Atom(name: 'MeetingStoreBase.tracks');
 
   @override
@@ -97,6 +127,21 @@ mixin _$MeetingStore on MeetingStoreBase, Store {
   set tracks(List<HMSTrack> value) {
     _$tracksAtom.reportWrite(value, super.tracks, () {
       super.tracks = value;
+    });
+  }
+
+  final _$messagesAtom = Atom(name: 'MeetingStoreBase.messages');
+
+  @override
+  List<HMSMessage> get messages {
+    _$messagesAtom.reportRead();
+    return super.messages;
+  }
+
+  @override
+  set messages(List<HMSMessage> value) {
+    _$messagesAtom.reportWrite(value, super.messages, () {
+      super.messages = value;
     });
   }
 
@@ -128,6 +173,13 @@ mixin _$MeetingStore on MeetingStoreBase, Store {
   @override
   Future<void> startMeeting() {
     return _$startMeetingAsyncAction.run(() => super.startMeeting());
+  }
+
+  final _$sendMessageAsyncAction = AsyncAction('MeetingStoreBase.sendMessage');
+
+  @override
+  Future<void> sendMessage(String message) {
+    return _$sendMessageAsyncAction.run(() => super.sendMessage(message));
   }
 
   final _$MeetingStoreBaseActionController =
@@ -248,11 +300,14 @@ mixin _$MeetingStore on MeetingStoreBase, Store {
   String toString() {
     return '''
 isSpeakerOn: ${isSpeakerOn},
+exception: ${exception},
 isMeetingStarted: ${isMeetingStarted},
 isVideoOn: ${isVideoOn},
 isMicOn: ${isMicOn},
 peers: ${peers},
-tracks: ${tracks}
+localPeer: ${localPeer},
+tracks: ${tracks},
+messages: ${messages}
     ''';
   }
 }
