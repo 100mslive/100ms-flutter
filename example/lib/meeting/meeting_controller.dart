@@ -41,4 +41,9 @@ class MeetingController {
   Future<void> switchCamera() async {
     return await _hmssdkInteractor?.switchCamera();
   }
+
+  Future<void> sendMessage(String message) async{
+    return await _hmssdkInteractor?.sendMessage(message);
+  }
+
 }

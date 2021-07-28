@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:hmssdk_flutter/model/hms_audio_track.dart';
 import 'package:hmssdk_flutter/model/hms_role.dart';
 import 'package:hmssdk_flutter/model/hms_track.dart';
@@ -39,13 +38,13 @@ class HMSPeer {
   int get hashCode => peerId.hashCode;
 
   factory HMSPeer.fromMap(Map map) {
-    //TODO:: parse hms audio and video tracks
-    debugPrint(map.toString());
+    HMSRole? role;
+    if (map['role'] != null) role = HMSRole.fromMap(map['role']);
     return HMSPeer(
       peerId: map['peer_id'],
       name: map['name'],
       isLocal: map['is_local'],
-      role: HMSRole.fromMap(map['role']),
+      role: role,
       customerDescription: map['customer_description'],
       customerUserId: map['customer_user_id'],
     );

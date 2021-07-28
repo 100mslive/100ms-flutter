@@ -46,6 +46,4 @@ class HMSError {
   String get localizedDescription => message;
 
   Map get analyticsRepresentation => params ?? {};
-
-
 }
