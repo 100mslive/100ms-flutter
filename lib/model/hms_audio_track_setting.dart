@@ -10,4 +10,8 @@ class HMSAudioTrackSetting {
         maxBitrate: map['bit_rate'],
         trackDescription: map['track_description']);
   }
+
+  Map<String, dynamic> toMap() {
+    return {'bit_rate': maxBitrate, 'track_description': trackDescription};
+  }
 }

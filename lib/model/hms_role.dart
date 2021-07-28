@@ -14,20 +14,19 @@ class HMSRole {
 
   HMSRole(
       {required this.name,
-        required this.publishSettings,
-        required this.subscribeSettings,
-        required this.priority,
-        required this.permissions,
-        required this.generalPermissions,
-        required this.internalPlugins,
-        required this.externalPlugins});
+      required this.publishSettings,
+      required this.subscribeSettings,
+      required this.priority,
+      required this.permissions,
+      required this.generalPermissions,
+      required this.internalPlugins,
+      required this.externalPlugins});
 
   factory HMSRole.fromMap(Map map) {
     return HMSRole(
       name: map['name'] as String,
       publishSettings: HMSPublishSetting.fromMap(map['publish_settings']),
-      subscribeSettings:
-      HMSSubscribeSettings.fromMap(map['subscribe_settings']),
+      subscribeSettings:HMSSubscribeSettings.fromMap(map['subscribe_settings']),
       priority: map['priority'] as int,
       permissions: HMSPermissions.fromMap(map['permissions']),
       generalPermissions: map['general_permissions'],

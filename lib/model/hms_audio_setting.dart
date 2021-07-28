@@ -7,8 +7,9 @@ class HMSAudioSetting {
   HMSAudioSetting({required this.bitRate, required this.codec});
 
   factory HMSAudioSetting.fromMap(Map map) {
+    // TODO:: do not take input when no data is present
     return HMSAudioSetting(
-        bitRate: map['bit_rate'],
-        codec: HMSAudioCodecValues.getHMSCodecFromName(map['codec']));
+        bitRate: map['bit_rate'] ?? 0,
+        codec: HMSAudioCodecValues.getHMSCodecFromName(map['codec'] ?? ''));
   }
 }
