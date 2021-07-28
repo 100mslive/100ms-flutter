@@ -14,7 +14,7 @@ class HMSErrorExtension{
         var dict:Dictionary<String, Any?> = [:]
         dict["id"] = error.id
         dict["message"] = error.message
-        dict["code"] = error.code
+        dict["code"] = getValueOfHMSErrorCode(errorCode:error.code)
  
         if let info = error.info{
             dict["info"] = info
@@ -31,4 +31,8 @@ class HMSErrorExtension{
         return dict
         
     }
+    static func getValueOfHMSErrorCode (errorCode:HMSErrorCode)->String{
+       return "\(errorCode)"
+    }
+    
 }
