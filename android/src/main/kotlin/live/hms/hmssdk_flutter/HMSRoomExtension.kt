@@ -8,14 +8,14 @@ class HMSRoomExtension {
             val hashMap=HashMap<String,Any>()
 
             if (room==null)return null
-            hashMap.put("id",room.roomId )
+            hashMap.put("room_id",room.roomId )
             hashMap.put("name",room.name )
             hashMap.put("hms_local_peer", HMSPeerExtension.toDictionary(room.localPeer)!!)
             val args=ArrayList<Any>()
             room.peerList.map {
                 args.add(HMSPeerExtension.toDictionary(it)!!)
             }
-            hashMap.put("peers",args)
+            hashMap.put("peer_list",args)
             return hashMap
         }
     }

@@ -6,7 +6,7 @@ import 'package:hmssdk_flutter/service/platform_service.dart';
 class HMSMeeting {
   Future<void> startMeeting({required HMSConfig config}) async {
     return await PlatformService.invokeMethod(PlatformMethod.joinMeeting,
-        arguments: config.toJson());
+        arguments: config.getJson());
   }
 
   Stream<PlatformMethodResponse> startListening() {
@@ -31,5 +31,9 @@ class HMSMeeting {
     return await PlatformService.invokeMethod(
       PlatformMethod.switchCamera,
     );
+  }
+
+  Future<void> sendMessage(String message) async{
+    return await PlatformService.invokeMethod(PlatformMethod.sendMessage,arguments: {"message":message});
   }
 }

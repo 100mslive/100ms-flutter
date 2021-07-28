@@ -32,7 +32,7 @@ class _HomePageState extends State<HomePage> {
   TextEditingController roomIdController =
       TextEditingController(text: Constant.defaultRoomID);
 
-  void getPermissions() async{
+  void getPermissions() async {
     await Permission.camera.request();
     await Permission.microphone.request();
   }
@@ -83,12 +83,13 @@ class _HomePageState extends State<HomePage> {
                     String user = await showDialog(
                         context: context,
                         builder: (_) => UserNameDialogOrganism());
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (_) => MeetingPage(
-                              roomId: roomIdController.text,
-                              user: user,
-                              flow: MeetingFlow.join,
-                            )));
+                    if (user.isNotEmpty)
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (_) => MeetingPage(
+                                roomId: roomIdController.text,
+                                user: user,
+                                flow: MeetingFlow.join,
+                              )));
                   },
                   child: Container(
                     padding: const EdgeInsets.all(16.0),

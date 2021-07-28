@@ -1,16 +1,14 @@
 import 'package:hmssdk_flutter/model/hms_peer.dart';
 
-import 'hms_role.dart';
-
 class RoleChangeRequest {
-  final HMSRole? suggestedRole;
-  final HMSPeer? requestedBy;
+  final String suggestedRole;
+  final HMSPeer requestedBy;
   final String token;
 
   factory RoleChangeRequest.fromMap(Map<String, dynamic> map) {
     return new RoleChangeRequest(
-      suggestedRole: map['suggested_role']!=null?HMSRole.fromMap(map['suggested_role']):null,
-      requestedBy: map["requested_by"]!=null?HMSPeer.fromMap(map['requested_by']):null,
+      suggestedRole: map['suggestedRole'] as String,
+      requestedBy: map['requestedBy'] as HMSPeer,
       token: map['token'] as String,
     );
   }
