@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="live.hms.hmssdk_flutter_example">
+    package="live.hms.flutter">
    <application
         android:label="Flutter 100ms"
         android:icon="@mipmap/ic_launcher">
