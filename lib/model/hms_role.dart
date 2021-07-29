@@ -6,7 +6,7 @@ class HMSRole {
   String name;
   HMSPublishSetting publishSettings;
   HMSSubscribeSettings subscribeSettings;
-  HMSPermissions permissions;
+  HMSPermissions? permissions;
   int priority;
   Map generalPermissions;
   Map internalPlugins;
@@ -17,7 +17,7 @@ class HMSRole {
       required this.publishSettings,
       required this.subscribeSettings,
       required this.priority,
-      required this.permissions,
+      this.permissions,
       required this.generalPermissions,
       required this.internalPlugins,
       required this.externalPlugins});
