@@ -36,4 +36,8 @@ class HMSMeeting {
   Future<void> sendMessage(String message) async{
     return await PlatformService.invokeMethod(PlatformMethod.sendMessage,arguments: {"message":message});
   }
+
+  Future<void> previewVideo({required HMSConfig config}) async{
+    return await PlatformService.invokeMethod(PlatformMethod.previewVideo,arguments: config.getJson());
+  }
 }

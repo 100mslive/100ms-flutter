@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hmssdk_flutter_example/common/constant.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/user_name_dialog_organism.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
-import 'package:hmssdk_flutter_example/meeting/meeting_page.dart';
+import 'package:hmssdk_flutter_example/preview/preview.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 void main() {
@@ -85,7 +85,7 @@ class _HomePageState extends State<HomePage> {
                         builder: (_) => UserNameDialogOrganism());
                     if (user.isNotEmpty)
                       Navigator.of(context).push(MaterialPageRoute(
-                          builder: (_) => MeetingPage(
+                          builder: (_) => HMSPreview(
                                 roomId: roomIdController.text,
                                 user: user,
                                 flow: MeetingFlow.join,
