@@ -22,22 +22,15 @@
     <select>
       <path>
         <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
-        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
-        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
-        <item name="BRANCH:origin/ahron-video-rendering-temp" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="BRANCH:ahron-video-rendering-temp" type="e8cecc67:BranchNodeDescriptor" />
       </path>
     </select>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f6635374-520c-494c-ae8d-73b820655433" name="Default Changelist" comment="added 100ms icon">
-      <change afterPath="$PROJECT_DIR$/android/src/main/kotlin/live/hms/hmssdk_flutter/HMSPreviewExtension.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/kotlin/live/hms/hmssdk_flutter/HmssdkFlutterPlugin.kt" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/kotlin/live/hms/hmssdk_flutter/HmssdkFlutterPlugin.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/kotlin/live/hms/hmssdk_flutter/views/HMSVideoViewFactory.kt" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/kotlin/live/hms/hmssdk_flutter/views/HMSVideoViewFactory.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/main.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/common/platform_methods.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/common/platform_methods.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/meeting/meeting.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/meeting/meeting.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/model/hms_role.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/model/hms_role.dart" afterDir="false" />
+    <list default="true" id="f6635374-520c-494c-ae8d-73b820655433" name="Default Changelist" comment="added preview">
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Merge_at_26_07_21__12_23_am__Default_Changelist_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Merge_at_26_07_21__12_23_am__Default_Changelist_.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_25_07_21__11_33_pm__Default_Changelist_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_25_07_21__11_33_pm__Default_Changelist_.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -65,7 +58,6 @@
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <option name="RESET_MODE" value="HARD" />
-    <option name="UPDATE_TYPE" value="REBASE" />
   </component>
   <component name="GithubProjectSettings">
     <option name="CREATE_PULL_REQUEST_DEFAULT_BRANCH" value="vivek-feature-peers" />
@@ -191,7 +183,14 @@
       <option name="project" value="LOCAL" />
       <updated>1627494119938</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="added preview">
+      <created>1627575455170</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1627575455170</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -216,7 +215,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="origin/ahron-video-rendering-temp" />
+                        <option value="ahron-video-rendering-temp" />
                       </list>
                     </value>
                   </entry>
@@ -242,7 +241,8 @@
     <MESSAGE value="added models according to priority" />
     <MESSAGE value="added chat messaging" />
     <MESSAGE value="added 100ms icon" />
-    <option name="LAST_COMMIT_MESSAGE" value="added 100ms icon" />
+    <MESSAGE value="added preview" />
+    <option name="LAST_COMMIT_MESSAGE" value="added preview" />
   </component>
   <component name="WindowStateProjectService">
     <state x="718" y="167" key="#com.intellij.ide.util.MemberChooser" timestamp="1627040861196">
@@ -301,14 +301,14 @@
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state width="1398" height="489" key="GridCell.Tab.1.right/0.0.1440.900@0.0.1440.900" timestamp="1625190702999" />
-    <state x="0" y="86" width="1920" height="869" key="MergeDialog" timestamp="1626271996936">
+    <state x="0" y="86" width="1920" height="869" key="MergeDialog" timestamp="1627575581209">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="0" y="86" width="1920" height="869" key="MergeDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1626271996936" />
-    <state x="510" y="226" key="MultipleFileMergeDialog" timestamp="1626272006330">
+    <state x="0" y="86" width="1920" height="869" key="MergeDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1627575581209" />
+    <state x="510" y="226" key="MultipleFileMergeDialog" timestamp="1627575581215">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="510" y="226" key="MultipleFileMergeDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1626272006330" />
+    <state x="510" y="226" key="MultipleFileMergeDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1627575581215" />
     <state x="691" y="175" key="RollbackChangesDialog" timestamp="1626075713302">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -317,10 +317,10 @@
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="572" y="367" key="VCS.ChangelistChooser/0.0.1440.900@0.0.1440.900" timestamp="1625300183450" />
-    <state x="452" y="189" key="Vcs.Push.Dialog.v2" timestamp="1627494123844">
+    <state x="452" y="189" key="Vcs.Push.Dialog.v2" timestamp="1627575590805">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="452" y="189" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1627494123844" />
+    <state x="452" y="189" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1627575590805" />
     <state x="736" y="416" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1626101451259">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
