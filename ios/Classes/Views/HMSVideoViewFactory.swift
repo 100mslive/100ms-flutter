@@ -68,7 +68,13 @@ class HMSVideoViewWidget: NSObject,FlutterPlatformView {
         
         
         if let videoTrack = peer?.videoTrack{
-            if(videoTrack.trackId == self.trackId){
+            if((peer?.isLocal) != nil){
+                videoView.setVideoTrack(videoTrack)
+                _view.addSubview(videoView)
+                print("attaching video track")
+                return
+            }
+           else if(videoTrack.trackId == self.trackId){
                 videoView.setVideoTrack(videoTrack)
                 _view.addSubview(videoView)
                 print("attaching video track")

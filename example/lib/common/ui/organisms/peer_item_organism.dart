@@ -22,6 +22,8 @@ class PeerItemOrganism extends StatelessWidget {
           Text(track.peer?.customerDescription ?? '[Undefined Description]'),
           Expanded(child: LayoutBuilder(
             builder: (context, constraints) {
+              print(
+                  'height:${constraints.maxHeight} width: ${constraints.maxWidth}');
               return VideoView(
                 track: track,
                 args: {

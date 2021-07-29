@@ -41,6 +41,9 @@ abstract class MeetingStoreBase with Store {
   List<HMSPeer> peers = ObservableList.of([]);
 
   @observable
+  HMSPeer? localPeer;
+
+  @observable
   List<HMSTrack> tracks = ObservableList.of([]);
 
   @observable
@@ -78,16 +81,6 @@ abstract class MeetingStoreBase with Store {
   void addPeer(HMSPeer peer) {
     if (!peers.contains(peer)) peers.add(peer);
   }
-
-  // @action
-  // void removeTrack(HMSTrack? track, String? peerId) {
-  //   if (track != null) {
-  //     tracks
-  //         .removeWhere((element) => element.peer?.peerId == track.peer?.peerId);
-  //   }
-  //   if (peerId != null)
-  //     tracks.removeWhere((element) => element.peer?.peerId == peerId);
-  // }
 
   @action
   void removeTrackWithTrackId(String trackId) {
@@ -134,7 +127,10 @@ abstract class MeetingStoreBase with Store {
         HMSPeer peer = HMSPeer.fromMap(event.data['peer']);
         HMSPeerUpdate update =
         HMSPeerUpdateValues.getHMSPeerUpdateFromName(event.data['update']);
-        peerOperation(peer, update);
+        if (peer.isLocal) {
+          localPeer = peer;
+        } else
+          peerOperation(peer, update);
       } else if (event.method == PlatformMethod.onTrackUpdate) {
         print('track update');
         HMSPeer peer = HMSPeer.fromMap(event.data['peer']);
@@ -142,11 +138,13 @@ abstract class MeetingStoreBase with Store {
             event.data['update']);
         HMSTrack track = HMSTrack.fromMap(event.data['track'], peer);
 
-        peerOperationWithTrack(peer, update, track);
-      }
-      else if(event.method == PlatformMethod.onError){
+        if (peer.isLocal) {
+          localPeer = peer;
+        } else
+          peerOperationWithTrack(peer, update, track);
+      } else if (event.method == PlatformMethod.onError) {
         HMSException exception = HMSException.fromMap(event.data['error']);
-        print(exception.toString()+"event");
+        print(exception.toString() + "event");
         changeException(exception);
       }
       else if(event.method == PlatformMethod.onMessage){
@@ -157,8 +155,8 @@ abstract class MeetingStoreBase with Store {
     });
   }
 
-  void changeException(HMSException hmsException){
-    this.exception=hmsException;
+  void changeException(HMSException hmsException) {
+    this.exception = hmsException;
   }
 
   void addMessage(HMSMessage message){
