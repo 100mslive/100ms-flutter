@@ -24,6 +24,36 @@ mixin _$MeetingStore on MeetingStoreBase, Store {
     });
   }
 
+  final _$exceptionAtom = Atom(name: 'MeetingStoreBase.exception');
+
+  @override
+  HMSException? get exception {
+    _$exceptionAtom.reportRead();
+    return super.exception;
+  }
+
+  @override
+  set exception(HMSException? value) {
+    _$exceptionAtom.reportWrite(value, super.exception, () {
+      super.exception = value;
+    });
+  }
+
+  final _$errorAtom = Atom(name: 'MeetingStoreBase.error');
+
+  @override
+  HMSError? get error {
+    _$errorAtom.reportRead();
+    return super.error;
+  }
+
+  @override
+  set error(HMSError? value) {
+    _$errorAtom.reportWrite(value, super.error, () {
+      super.error = value;
+    });
+  }
+
   final _$isMeetingStartedAtom =
       Atom(name: 'MeetingStoreBase.isMeetingStarted');
 
@@ -85,6 +115,21 @@ mixin _$MeetingStore on MeetingStoreBase, Store {
     });
   }
 
+  final _$localPeerAtom = Atom(name: 'MeetingStoreBase.localPeer');
+
+  @override
+  HMSPeer? get localPeer {
+    _$localPeerAtom.reportRead();
+    return super.localPeer;
+  }
+
+  @override
+  set localPeer(HMSPeer? value) {
+    _$localPeerAtom.reportWrite(value, super.localPeer, () {
+      super.localPeer = value;
+    });
+  }
+
   final _$tracksAtom = Atom(name: 'MeetingStoreBase.tracks');
 
   @override
@@ -97,6 +142,21 @@ mixin _$MeetingStore on MeetingStoreBase, Store {
   set tracks(List<HMSTrack> value) {
     _$tracksAtom.reportWrite(value, super.tracks, () {
       super.tracks = value;
+    });
+  }
+
+  final _$messagesAtom = Atom(name: 'MeetingStoreBase.messages');
+
+  @override
+  List<HMSMessage> get messages {
+    _$messagesAtom.reportRead();
+    return super.messages;
+  }
+
+  @override
+  set messages(List<HMSMessage> value) {
+    _$messagesAtom.reportWrite(value, super.messages, () {
+      super.messages = value;
     });
   }
 
@@ -122,12 +182,18 @@ mixin _$MeetingStore on MeetingStoreBase, Store {
     return _$toggleAudioAsyncAction.run(() => super.toggleAudio());
   }
 
-  final _$startMeetingAsyncAction =
-      AsyncAction('MeetingStoreBase.startMeeting');
+  final _$joinMeetingAsyncAction = AsyncAction('MeetingStoreBase.joinMeeting');
 
   @override
-  Future<void> startMeeting() {
-    return _$startMeetingAsyncAction.run(() => super.startMeeting());
+  Future<void> joinMeeting() {
+    return _$joinMeetingAsyncAction.run(() => super.joinMeeting());
+  }
+
+  final _$sendMessageAsyncAction = AsyncAction('MeetingStoreBase.sendMessage');
+
+  @override
+  Future<void> sendMessage(String message) {
+    return _$sendMessageAsyncAction.run(() => super.sendMessage(message));
   }
 
   final _$MeetingStoreBaseActionController =
@@ -222,6 +288,28 @@ mixin _$MeetingStore on MeetingStoreBase, Store {
   }
 
   @override
+  void updateException(HMSException hmsException) {
+    final _$actionInfo = _$MeetingStoreBaseActionController.startAction(
+        name: 'MeetingStoreBase.updateException');
+    try {
+      return super.updateException(hmsException);
+    } finally {
+      _$MeetingStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void updateError(HMSError error) {
+    final _$actionInfo = _$MeetingStoreBaseActionController.startAction(
+        name: 'MeetingStoreBase.updateError');
+    try {
+      return super.updateError(error);
+    } finally {
+      _$MeetingStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   void peerOperation(HMSPeer peer, HMSPeerUpdate update) {
     final _$actionInfo = _$MeetingStoreBaseActionController.startAction(
         name: 'MeetingStoreBase.peerOperation');
@@ -248,11 +336,15 @@ mixin _$MeetingStore on MeetingStoreBase, Store {
   String toString() {
     return '''
 isSpeakerOn: ${isSpeakerOn},
+exception: ${exception},
+error: ${error},
 isMeetingStarted: ${isMeetingStarted},
 isVideoOn: ${isVideoOn},
 isMicOn: ${isMicOn},
 peers: ${peers},
-tracks: ${tracks}
+localPeer: ${localPeer},
+tracks: ${tracks},
+messages: ${messages}
     ''';
   }
 }

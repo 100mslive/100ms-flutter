@@ -108,8 +108,8 @@ abstract class MeetingStoreBase with Store {
   }
 
   @action
-  Future<void> startMeeting() async {
-    controller = await meetingController.startMeeting();
+  Future<void> joinMeeting() async {
+    controller = await meetingController.joinMeeting();
     isMeetingStarted = true;
     listenToController();
   }
