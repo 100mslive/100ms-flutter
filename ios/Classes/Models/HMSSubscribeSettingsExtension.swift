@@ -13,7 +13,10 @@ class  HMSSubscribeSettingsExtension {
         var dict:Dictionary<String, Any?> = [:]
         dict["subscribe_to_roles"] = subscribeSettings.subscribeToRoles
         dict["max_subs_bit_rate"] = subscribeSettings.maxSubsBitRate
-        dict["max_display_tiles"] = subscribeSettings.maxDisplayTiles
+        
+        if let policy = subscribeSettings.subscribeDegradation {
+            dict["max_display_tiles"] = HMSSubscribeDegradationPolicyExtensin.toDictionary(policy:policy)
+        }
         return dict
     }
 }

@@ -17,15 +17,13 @@ class  HMSPublishSettingExtension {
         dict["video"] = HMSVideoSettingExtension.toDictionary(videoSettings:publishSettings.video)
         dict["screen"] = HMSVideoSettingExtension.toDictionary(videoSettings:publishSettings.screen)
         
-        if let audioSimulCast =  publishSettings.audioSimulcast{
-            dict["audio_simul_cast"] = HMSSimulCastSettingsExtension.toDictionary(simulCastSettings:audioSimulCast)
+
+        if let videoSimulcastLayer:HMSSimulcastSettingsPolicy =  publishSettings.videoSimulcastLayers{
+            dict["video_simul_cast"] = HMSSimulcastSettingsPolicyExtension.toDictionary(simulcastlayerSettingPolicy: videoSimulcastLayer)
         }
-       
-        if let videoSimulcast =  publishSettings.videoSimulcast{
-            dict["video_simul_cast"] = HMSSimulCastSettingsExtension.toDictionary(simulCastSettings: videoSimulcast)
-        }
-        if let screenSimulcast =  publishSettings.audioSimulcast{
-            dict["screen_simul_cast"] = HMSSimulCastSettingsExtension.toDictionary(simulCastSettings:screenSimulcast)
+        
+        if let screenSimulcastLayer:HMSSimulcastSettingsPolicy =  publishSettings.videoSimulcastLayers{
+            dict["screen_simul_cast"] = HMSSimulcastSettingsPolicyExtension.toDictionary(simulcastlayerSettingPolicy: screenSimulcastLayer)
         }
         return dict
     }
