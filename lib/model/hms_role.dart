@@ -45,7 +45,7 @@ class HMSRole {
       'generalPermissions': this.generalPermissions,
       'internalPlugins': this.internalPlugins,
       'externalPlugins': this.externalPlugins,
-      'permissions':permissions
+      'permissions': permissions
     };
   }
 }
