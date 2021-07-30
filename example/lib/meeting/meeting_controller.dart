@@ -14,7 +14,7 @@ class MeetingController {
   MeetingController(
       {required this.roomId, required this.user, required this.flow});
 
-  Future<Stream<PlatformMethodResponse>> startMeeting() async {
+  Future<Stream<PlatformMethodResponse>> joinMeeting() async {
     String token = await RoomService().getToken(user: user, room: roomId);
     HMSConfig hmsConfig = HMSConfig(
         userId: Uuid().v1(),
@@ -42,8 +42,7 @@ class MeetingController {
     return await _hmssdkInteractor?.switchCamera();
   }
 
-  Future<void> sendMessage(String message) async{
+  Future<void> sendMessage(String message) async {
     return await _hmssdkInteractor?.sendMessage(message);
   }
-
 }

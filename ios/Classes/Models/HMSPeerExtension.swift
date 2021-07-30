@@ -19,7 +19,6 @@ class  HMSPeerExtension{
             "is_local":peer.isLocal,
             "customer_description":peer.customerDescription,
             "customer_user_id":peer.customerUserID,
-            "auxilary_tracks":auxilaryTracks
         ]
         
         if let role = peer.role{
@@ -38,6 +37,8 @@ class  HMSPeerExtension{
                     auxilaryTracks.insert(HMSTrackExtension.toDictionary(track: eachTrack),at: auxilaryTracks.count)
             }
         }
+        
+        dict["auxilary_tracks"] = auxilaryTracks
         
       
         return dict

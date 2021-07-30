@@ -39,6 +39,21 @@ mixin _$MeetingStore on MeetingStoreBase, Store {
     });
   }
 
+  final _$errorAtom = Atom(name: 'MeetingStoreBase.error');
+
+  @override
+  HMSError? get error {
+    _$errorAtom.reportRead();
+    return super.error;
+  }
+
+  @override
+  set error(HMSError? value) {
+    _$errorAtom.reportWrite(value, super.error, () {
+      super.error = value;
+    });
+  }
+
   final _$isMeetingStartedAtom =
       Atom(name: 'MeetingStoreBase.isMeetingStarted');
 
@@ -167,12 +182,11 @@ mixin _$MeetingStore on MeetingStoreBase, Store {
     return _$toggleAudioAsyncAction.run(() => super.toggleAudio());
   }
 
-  final _$startMeetingAsyncAction =
-      AsyncAction('MeetingStoreBase.startMeeting');
+  final _$joinMeetingAsyncAction = AsyncAction('MeetingStoreBase.joinMeeting');
 
   @override
-  Future<void> startMeeting() {
-    return _$startMeetingAsyncAction.run(() => super.startMeeting());
+  Future<void> joinMeeting() {
+    return _$joinMeetingAsyncAction.run(() => super.joinMeeting());
   }
 
   final _$sendMessageAsyncAction = AsyncAction('MeetingStoreBase.sendMessage');
@@ -274,6 +288,28 @@ mixin _$MeetingStore on MeetingStoreBase, Store {
   }
 
   @override
+  void updateException(HMSException hmsException) {
+    final _$actionInfo = _$MeetingStoreBaseActionController.startAction(
+        name: 'MeetingStoreBase.updateException');
+    try {
+      return super.updateException(hmsException);
+    } finally {
+      _$MeetingStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void updateError(HMSError error) {
+    final _$actionInfo = _$MeetingStoreBaseActionController.startAction(
+        name: 'MeetingStoreBase.updateError');
+    try {
+      return super.updateError(error);
+    } finally {
+      _$MeetingStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   void peerOperation(HMSPeer peer, HMSPeerUpdate update) {
     final _$actionInfo = _$MeetingStoreBaseActionController.startAction(
         name: 'MeetingStoreBase.peerOperation');
@@ -301,6 +337,7 @@ mixin _$MeetingStore on MeetingStoreBase, Store {
     return '''
 isSpeakerOn: ${isSpeakerOn},
 exception: ${exception},
+error: ${error},
 isMeetingStarted: ${isMeetingStarted},
 isVideoOn: ${isVideoOn},
 isMicOn: ${isMicOn},

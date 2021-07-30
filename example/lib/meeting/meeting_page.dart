@@ -1,11 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:hmssdk_flutter/common/platform_methods.dart';
 import 'package:hmssdk_flutter/enum/hms_track_kind.dart';
 import 'package:hmssdk_flutter/enum/hms_track_source.dart';
 import 'package:hmssdk_flutter/model/hms_track.dart';
-import 'package:hmssdk_flutter/model/platform_method_response.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/chat_bottom_sheet.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/peer_item_organism.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
@@ -40,7 +38,7 @@ class _MeetingPageState extends State<MeetingPage> {
   }
 
   void initMeeting() {
-    _meetingStore.startMeeting();
+    _meetingStore.joinMeeting();
   }
 
   @override
@@ -133,7 +131,6 @@ class _MeetingPageState extends State<MeetingPage> {
                 },
               ),
             ),
-
           ],
         ),
       ),
@@ -162,7 +159,6 @@ class _MeetingPageState extends State<MeetingPage> {
                     return IconButton(
                         tooltip: 'Audio',
                         onPressed: () {
-
                           _meetingStore.toggleAudio();
                         },
                         icon: Icon(
@@ -174,7 +170,7 @@ class _MeetingPageState extends State<MeetingPage> {
                   child: IconButton(
                       tooltip: 'Chat',
                       onPressed: () {
-                        chatMessages(context,_meetingStore);
+                        chatMessages(context, _meetingStore);
                       },
                       icon: Icon(Icons.chat_bubble)),
                 ),
