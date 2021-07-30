@@ -48,8 +48,16 @@ class _HMSPreviewState extends State<HMSPreview> {
       //debugPrint(response+"AAAAAAAAAAAAAAAAAAA");
       this.hmsTrack = HMSTrack.fromMap(
           response['data']['track'], HMSPeer.fromMap(response['data']['peer']));
-
       setState(() {});
+    });
+    listen();
+  }
+
+  listen() {
+    PlatformService.listenToPlatformCalls().listen((event) {
+      if (event.method == PlatformMethod.previewVideo) {
+        print('a');
+      }
     });
   }
 
@@ -90,7 +98,8 @@ class _HMSPreviewState extends State<HMSPreview> {
                         }
                         setState(() {});
                       },
-                      child: Icon(videoOn ? Icons.videocam : Icons.videocam_off),
+                      child:
+                          Icon(videoOn ? Icons.videocam : Icons.videocam_off),
                     ),
                   ),
                   Expanded(
