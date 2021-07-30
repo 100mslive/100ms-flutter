@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hmssdk_flutter_example/common/constant.dart';
@@ -6,8 +9,13 @@ import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_page.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  // await Firebase.initializeApp();
+  // FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(enabled)
   runApp(HMSExampleApp());
+  runZonedGuarded(
+      () => runApp(HMSExampleApp()), FirebaseCrashlytics.instance.recordError);
 }
 
 class HMSExampleApp extends StatelessWidget {
@@ -42,6 +50,8 @@ class _HomePageState extends State<HomePage> {
     // TODO: implement initState
     super.initState();
     getPermissions();
+    FirebaseCrashlytics.instance.crash();
+    FirebaseCrashlytics.instance.log('Crashed by vivek');
   }
 
   @override
