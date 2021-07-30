@@ -26,4 +26,16 @@ class HMSPermissions {
         muteSelective: map['mute_selective'],
         changeRole: map['change_role']);
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'end_room': endRoom,
+      'stop_presentation': stopPresentation,
+      'remove_others': removeOthers,
+      'mute_all': muteAll,
+      'ask_to_un_mute': askToUnMute,
+      'mute_selective': muteSelective,
+      'change_role': changeRole
+    };
+  }
 }
