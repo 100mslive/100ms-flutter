@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -11,9 +12,9 @@ import 'package:permission_handler/permission_handler.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // await Firebase.initializeApp();
-  // FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(enabled)
-  runApp(HMSExampleApp());
+  await Firebase.initializeApp();
+  FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
+
   runZonedGuarded(
       () => runApp(HMSExampleApp()), FirebaseCrashlytics.instance.recordError);
 }
@@ -50,8 +51,6 @@ class _HomePageState extends State<HomePage> {
     // TODO: implement initState
     super.initState();
     getPermissions();
-    FirebaseCrashlytics.instance.crash();
-    FirebaseCrashlytics.instance.log('Crashed by vivek');
   }
 
   @override
