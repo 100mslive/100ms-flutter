@@ -22,15 +22,31 @@
     <select>
       <path>
         <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
-        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
-        <item name="BRANCH:ahron-video-rendering-temp" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="BRANCH:origin/ahron-video-rendering-temp" type="e8cecc67:BranchNodeDescriptor" />
       </path>
     </select>
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f6635374-520c-494c-ae8d-73b820655433" name="Default Changelist" comment="added preview">
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Merge_at_26_07_21__12_23_am__Default_Changelist_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Merge_at_26_07_21__12_23_am__Default_Changelist_.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_25_07_21__11_33_pm__Default_Changelist_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_25_07_21__11_33_pm__Default_Changelist_.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/android/src/main/kotlin/live/hms/hmssdk_flutter/hms_role_components/AudioParamsExtension.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/android/src/main/kotlin/live/hms/hmssdk_flutter/hms_role_components/PermissionParamsExtension.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/android/src/main/kotlin/live/hms/hmssdk_flutter/hms_role_components/PublishParamsExtension.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/android/src/main/kotlin/live/hms/hmssdk_flutter/hms_role_components/SubscribeSettings.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/android/src/main/kotlin/live/hms/hmssdk_flutter/hms_role_components/VideoParamsExtension.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/src/main/kotlin/live/hms/hmssdk_flutter/HMSPeerExtension.kt" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/kotlin/live/hms/hmssdk_flutter/HMSPeerExtension.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/src/main/kotlin/live/hms/hmssdk_flutter/HMSRoleChangedExtension.kt" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/kotlin/live/hms/hmssdk_flutter/HMSRoleChangedExtension.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/src/main/kotlin/live/hms/hmssdk_flutter/HMSRoleExtension.kt" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/kotlin/live/hms/hmssdk_flutter/HMSRoleExtension.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/src/main/kotlin/live/hms/hmssdk_flutter/HMSRoomExtension.kt" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/kotlin/live/hms/hmssdk_flutter/HMSRoomExtension.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/src/main/kotlin/live/hms/hmssdk_flutter/HmssdkFlutterPlugin.kt" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/kotlin/live/hms/hmssdk_flutter/HmssdkFlutterPlugin.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/src/main/kotlin/live/hms/hmssdk_flutter/views/HMSVideoViewFactory.kt" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/kotlin/live/hms/hmssdk_flutter/views/HMSVideoViewFactory.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/lib/meeting/meeting_store.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/meeting/meeting_store.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/lib/meeting/meeting_store.g.dart" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/model/hms_peer.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/model/hms_peer.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/model/hms_role.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/model/hms_role.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/service/platform_service.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/service/platform_service.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -53,7 +69,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="0773f28d11d4512a9b5e82700ae9e507cea4c4ad" />
+        <entry key="$PROJECT_DIR$" value="ahron-video-rendering-temp" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -190,7 +206,21 @@
       <option name="project" value="LOCAL" />
       <updated>1627575455170</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="added preview">
+      <created>1627581495590</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1627581495590</updated>
+    </task>
+    <task id="LOCAL-00015" summary="added preview">
+      <created>1627581629138</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1627581629138</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -215,7 +245,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="ahron-video-rendering-temp" />
+                        <option value="origin/ahron-video-rendering-temp" />
                       </list>
                     </value>
                   </entry>
@@ -249,10 +279,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="718" y="167" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1627040861196" />
-    <state x="624" y="208" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1627562588989">
+    <state x="624" y="208" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1627654689207">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="624" y="208" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1627562588989" />
+    <state x="624" y="208" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1627654689207" />
     <state x="741" y="248" key="AndroidProcessChooserDialog" timestamp="1626689776859">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -265,26 +295,26 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="693" y="366" key="Github.CreatePullRequestDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1626272036981" />
-    <state width="1869" height="675" key="GridCell.Tab.0.bottom" timestamp="1627564462052">
+    <state width="1869" height="506" key="GridCell.Tab.0.bottom" timestamp="1627662814252">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="1398" height="489" key="GridCell.Tab.0.bottom/0.0.1440.900@0.0.1440.900" timestamp="1625190703001" />
-    <state width="1869" height="675" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1627564462052" />
-    <state width="1869" height="675" key="GridCell.Tab.0.center" timestamp="1627564462052">
+    <state width="1869" height="506" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1627662814252" />
+    <state width="1869" height="506" key="GridCell.Tab.0.center" timestamp="1627662814252">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="1398" height="489" key="GridCell.Tab.0.center/0.0.1440.900@0.0.1440.900" timestamp="1625190703000" />
-    <state width="1869" height="675" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1627564462052" />
-    <state width="1869" height="675" key="GridCell.Tab.0.left" timestamp="1627564462052">
+    <state width="1869" height="506" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1627662814252" />
+    <state width="1869" height="506" key="GridCell.Tab.0.left" timestamp="1627662814252">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="1398" height="489" key="GridCell.Tab.0.left/0.0.1440.900@0.0.1440.900" timestamp="1625190703000" />
-    <state width="1869" height="675" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1627564462052" />
-    <state width="1869" height="675" key="GridCell.Tab.0.right" timestamp="1627564462052">
+    <state width="1869" height="506" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1627662814252" />
+    <state width="1869" height="506" key="GridCell.Tab.0.right" timestamp="1627662814252">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="1398" height="489" key="GridCell.Tab.0.right/0.0.1440.900@0.0.1440.900" timestamp="1625190703000" />
-    <state width="1869" height="675" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1627564462052" />
+    <state width="1869" height="506" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1627662814252" />
     <state width="1398" height="489" key="GridCell.Tab.1.bottom" timestamp="1625190702999">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
@@ -317,10 +347,10 @@
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="572" y="367" key="VCS.ChangelistChooser/0.0.1440.900@0.0.1440.900" timestamp="1625300183450" />
-    <state x="452" y="189" key="Vcs.Push.Dialog.v2" timestamp="1627575590805">
+    <state x="452" y="189" key="Vcs.Push.Dialog.v2" timestamp="1627581632733">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="452" y="189" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1627575590805" />
+    <state x="452" y="189" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1627581632733" />
     <state x="736" y="416" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1626101451259">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>

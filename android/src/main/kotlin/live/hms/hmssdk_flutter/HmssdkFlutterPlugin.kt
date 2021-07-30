@@ -128,6 +128,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
         val args=HashMap<String,Any>()
         args.put("event_name","preview_video")
         args.put("data",HMSPreviewExtension.toDictionary(room.localPeer!!,room.localPeer!!.videoTrack!!))
+        Log.i("onPreview", args.get("data").toString())
         CoroutineScope(Dispatchers.Main).launch {
             result!!.success(args)
         }
@@ -135,7 +136,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
     }
 
     override fun onJoin(room: HMSRoom) {
-        //Log.i("OnJoin",room.toString()+"HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHAAA")
+        Log.i("OnJoin",room.toString()+"HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHAAA")
         val args = HashMap<String, Any>()
         args.put("event_name", "on_join_room")
         args.put("data", HMSRoomExtension.toDictionary(room)!!)
@@ -205,6 +206,8 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
 //    else{
 //      Log.i("onTrackUpdate","Track Not Found")
 //    }
+
+        Log.i("onTrackUpdate",args.get("data").toString())
         CoroutineScope(Dispatchers.Main).launch {
             eventSink!!.success(args)
         }

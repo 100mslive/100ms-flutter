@@ -32,6 +32,7 @@ class PlatformService {
           data[key.toString()] = value;
         });
       }
+      print("listenToPlatformCalls ${data.toString()}");
       PlatformMethodResponse response =
           PlatformMethodResponse(method: method, data: data, response: event);
       if (method == PlatformMethod.unknown) {

@@ -40,10 +40,10 @@ class HMSVideoViewWidget(context: Context, id: Int, creationParams: Map<String?,
 
 
         peer?.videoTrack.let {
-            if (it?.trackId==trackId){
+           if (it?.trackId==trackId || peer.isLocal){
                 hmsVideoView.setVideoTrack(peer)
                 return
-            }
+           }
         }
 
 

@@ -1,5 +1,6 @@
 package live.hms.hmssdk_flutter
 
+import android.util.Log
 import live.hms.video.sdk.models.HMSPeer
 import live.hms.video.sdk.models.enums.HMSPeerUpdate
 
@@ -21,7 +22,7 @@ class HMSPeerExtension {
             args.put("audio_track", HMSTrackExtension.toDictionary(peer.audioTrack))
 
             args.put("video_track", HMSTrackExtension.toDictionary(peer.videoTrack))
-
+            Log.i("HMSPEEREXTENSION",args.toString())
 
             return args
         }
