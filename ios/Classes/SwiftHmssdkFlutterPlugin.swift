@@ -173,10 +173,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
             }else{
                 videoTrack.startCapturing()
-
             }
-            
-            
          }
         result("video_changed")
     }
@@ -188,7 +185,39 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         result("camera_changed")
     }
     
+    func previewVideo(call: FlutterMethodCall,result:FlutterResult) {
+        let arguments = call.arguments as! Dictionary<String, AnyObject>
+        let config:HMSConfig = HMSConfig(
+            userName: (arguments["user_name"] as? String) ?? "",
+            authToken: arguments["auth_token"] as? String ?? "",
+        )
+        hmsSDK?.preview(config: config, delegate: self)
+        result("preview initiated")
+    }
     
+    func joinMeeting(call:FlutterMethodCall,result:FlutterResult){
+        let arguments = call.arguments as! Dictionary<String, AnyObject>
+
+        let config:HMSConfig = HMSConfig(
+            userName: (arguments["user_name"] as? String) ?? "",
+            userID: arguments["user_id"] as? String ?? "",
+            roomID: arguments["room_id"] as? String ?? "",
+            authToken: arguments["auth_token"] as? String ?? "",
+            shouldSkipPIIEvents: arguments["should_skip_pii_events"] as? Bool ?? false
+        )
+        
+        
+        hmsSDK = HMSSDK.build()
+        
+        hmsSDK?.join(config: config, delegate: self)
+        meetingEventChannel.setStreamHandler(self)
+        result("joining meeting in ios")
+    }
+    
+    func leaveMeeting(result:FlutterResult){
+        hmsSDK?.leave();
+        result("Leaving meeting")
+    }
     internal var hmsSDK: HMSSDK?
 
   public static func register(with registrar: FlutterPluginRegistrar) {
@@ -212,36 +241,12 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     case "switch_audio":switchAudio(call: call , result: result)
     case "switch_video":switchVideo(call: call , result: result)
     case "switch_camera":switchCamera(result: result)
-    
+    case "preview_video":previewVideo(call:call,result:result)
     default:
         result(FlutterMethodNotImplemented)
     }
   }
-    func joinMeeting(call:FlutterMethodCall,result:FlutterResult){
-        let arguments = call.arguments as! Dictionary<String, AnyObject>
 
-        let config:HMSConfig = HMSConfig(
-            userName: (arguments["user_name"] as? String) ?? "",
-            userID: arguments["user_id"] as? String ?? "",
-            roomID: arguments["room_id"] as? String ?? "",
-            authToken: arguments["auth_token"] as? String ?? "",
-            shouldSkipPIIEvents: arguments["should_skip_pii_events"] as? Bool ?? false
-        )
-        
-        
-        hmsSDK = HMSSDK.build()
-        
-        hmsSDK?.join(config: config, delegate: self)
-        meetingEventChannel.setStreamHandler(self)
-//enable the stream handler
-        
-        result("joining meeting in ios")
-    }
-    
-    func leaveMeeting(result:FlutterResult){
-        hmsSDK?.leave();
-        result("Leaving meeting")
-    }
 
     
     
