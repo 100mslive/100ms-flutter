@@ -5,12 +5,18 @@ class HMSException {
   String action;
   String name;
 
-  HMSException(this.description, this.message,  this.code,
-      this.action, this.name);
+  HMSException(
+      this.description, this.message, this.code, this.action, this.name);
 
   factory HMSException.fromMap(Map map) {
-    return HMSException(map['description'], map['message'],
-        map['code'], map['action'], map['name']);
+    print(1);
+    return HMSException(
+      map['description'],
+      map['message'],
+      map['code'],
+      map['action'],
+      map['name'],
+    );
   }
 
   @override

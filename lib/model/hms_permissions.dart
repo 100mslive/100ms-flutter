@@ -1,20 +1,20 @@
 class HMSPermissions {
-  final bool endRoom;
-  final bool removeOthers;
-  final bool stopPresentation;
-  final bool muteAll;
-  final bool askToUnMute;
-  final bool muteSelective;
-  final bool changeRole;
+  final bool? endRoom;
+  final bool? removeOthers;
+  final bool? stopPresentation;
+  final bool? muteAll;
+  final bool? askToUnMute;
+  final bool? muteSelective;
+  final bool? changeRole;
 
   HMSPermissions(
-      {required this.endRoom,
-      required this.removeOthers,
-      required this.stopPresentation,
-      required this.muteAll,
-      required this.askToUnMute,
-      required this.muteSelective,
-      required this.changeRole});
+      {this.endRoom,
+      this.removeOthers,
+      this.stopPresentation,
+      this.muteAll,
+      this.askToUnMute,
+      this.muteSelective,
+      this.changeRole});
 
   factory HMSPermissions.fromMap(Map map) {
     return HMSPermissions(

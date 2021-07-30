@@ -18,27 +18,25 @@ class HMSError {
       this.action,
       this.params});
 
-  factory HMSError.fromMap(Map<String, dynamic> map) {
-    return new HMSError(
-      id: map['id'] as String,
-      code: map['code'] as HMSErrorCode,
-      message: map['message'] as String,
-      info: map['info'] as String?,
-      action: map['action'] as String?,
-      params: map['params'] as Map<String, dynamic>?,
-    );
+  factory HMSError.fromMap(Map map) {
+    return HMSError(
+        id: map['id'],
+        code: HMSErrorCode.fromMap(map['code']),
+        message: map['message'],
+        action: map['action'],
+        info: map['info'],
+        params: map['params']);
   }
 
   Map<String, dynamic> toMap() {
-    // ignore: unnecessary_cast
     return {
       'id': this.id,
-      'code': this.code,
+      'code': code.errorCode,
       'message': this.message,
       'info': this.info,
       'action': this.action,
       'params': this.params,
-    } as Map<String, dynamic>;
+    };
   }
 
   String get description => message;
