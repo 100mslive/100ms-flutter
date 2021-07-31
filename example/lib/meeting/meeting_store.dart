@@ -174,44 +174,6 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
     await meetingController.sendMessage(message);
   }
 
-  @action
-  void listenToController() {
-    controller?.listen((event) {
-      if (event.method == PlatformMethod.onPeerUpdate) {
-        HMSPeer peer = HMSPeer.fromMap(event.data['peer']);
-        HMSPeerUpdate update =
-            HMSPeerUpdateValues.getHMSPeerUpdateFromName(event.data['update']);
-        if (peer.isLocal) {
-          localPeer = peer;
-        } else
-          peerOperation(peer, update);
-      } else if (event.method == PlatformMethod.onTrackUpdate) {
-        print('track update');
-        HMSPeer peer = HMSPeer.fromMap(event.data['peer']);
-        HMSTrackUpdate update = HMSTrackUpdateValues.getHMSTrackUpdateFromName(
-            event.data['update']);
-        HMSTrack track = HMSTrack.fromMap(event.data['track'], peer);
-
-        if (peer.isLocal) {
-          localPeer = peer;
-        } else
-          peerOperationWithTrack(peer, update, track);
-      } else if (event.method == PlatformMethod.onError) {
-        // if (Platform.isIOS) {
-        //   HMSError error = HMSError.fromMap(event.data['error']);
-        //
-        //   updateError(error);
-        // } else {
-        //   HMSException exception = HMSException.fromMap(event.data['error']);
-        //   print(exception.toString() + "event");
-        //   updateException(exception);
-        // }
-      } else if (event.method == PlatformMethod.onMessage) {
-        HMSMessage message = HMSMessage.fromMap(event.data['message']);
-        addMessage(message);
-      }
-    });
-  }
 
   //
   // @action
@@ -224,7 +186,7 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
     this.error = error;
   }
 
-  void addMessage(HMSMessage message) {
+  void addMessage(HMSMessage message){
     this.messages.add(message);
   }
 
@@ -241,7 +203,7 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
 
         break;
       case HMSPeerUpdate.peerKnocked:
-        // removePeer(peer);
+      // removePeer(peer);
         break;
       case HMSPeerUpdate.audioToggled:
         print('Peer audio toggled');
@@ -291,50 +253,5 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
       default:
         print("Some default update or untouched case");
     }
-  }
-}
-
-class Listener implements HMSUpdateListener {
-  void onJoin({required HMSRoom room}) {
-    print('on join');
-  }
-
-  void onRoomUpdate({required HMSRoom room, required HMSRoomUpdate update}) {
-    print('on room update');
-  }
-
-  void onPeerUpdate({required HMSPeer peer, required HMSPeerUpdate update}) {
-    print('on peer update');
-  }
-
-  void onTrackUpdate(
-      {required HMSTrack track,
-      required HMSTrackUpdate trackUpdate,
-      required HMSPeer peer}) {
-    print('on track update');
-  }
-
-  void onError({required HMSError error}) {
-    print('on error');
-  }
-
-  void onMessage({required HMSMessage message}) {
-    print('on message');
-  }
-
-  void onRoleChangeRequest({required HMSRoleChangeRequest roleChangeRequest}) {
-    print('on role change request');
-  }
-
-  void onUpdateSpeakers({required List<HMSSpeaker> updateSpeakers}) {
-    print('on role speker');
-  }
-
-  void onReconnecting() {
-    print('on reconnecting');
-  }
-
-  void onReconnected() {
-    print('on reconnected');
   }
 }

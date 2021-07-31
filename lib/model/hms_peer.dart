@@ -47,6 +47,7 @@ class HMSPeer {
       role: role,
       customerDescription: map['customer_description'],
       customerUserId: map['customer_user_id'],
+
     );
   }
 

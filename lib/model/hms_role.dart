@@ -4,13 +4,13 @@ import 'package:hmssdk_flutter/model/hms_subscribe_settings.dart';
 
 class HMSRole {
   String name;
-  HMSPublishSetting publishSettings;
-  HMSSubscribeSettings subscribeSettings;
+  HMSPublishSetting? publishSettings;
+  HMSSubscribeSettings? subscribeSettings;
   HMSPermissions? permissions;
   int priority;
-  Map generalPermissions;
-  Map internalPlugins;
-  Map externalPlugins;
+  Map? generalPermissions;
+  Map? internalPlugins;
+  Map? externalPlugins;
 
   HMSRole(
       {required this.name,
@@ -25,14 +25,14 @@ class HMSRole {
   factory HMSRole.fromMap(Map map) {
     return HMSRole(
       name: map['name'] as String,
-      publishSettings: HMSPublishSetting.fromMap(map['publish_settings']),
+      publishSettings: map['publish_settings']!=null?HMSPublishSetting.fromMap(map['publish_settings']):null,
       subscribeSettings:
-          HMSSubscribeSettings.fromMap(map['subscribe_settings']),
+          map['subscribe_settings']!=null?HMSSubscribeSettings.fromMap(map['subscribe_settings']):null,
       priority: map['priority'] as int,
-      permissions: HMSPermissions.fromMap(map['permissions']),
-      generalPermissions: map['general_permissions'],
-      internalPlugins: map['internal_plugins'],
-      externalPlugins: map['external_plugins'],
+      permissions: map['permissions']!=null?HMSPermissions.fromMap(map['permissions']):null,
+      generalPermissions: map['general_permissions']??null,
+      internalPlugins: map['internal_plugins']??null,
+      externalPlugins: map['external_plugins']??null,
     );
   }
 

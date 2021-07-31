@@ -39,57 +39,6 @@ class PlatformService {
     return result;
   }
 
-  static Stream<PlatformMethodResponse> listenToPlatformCalls() {
-    return Stream.periodic(Duration(seconds: 1), (_) {
-      return PlatformMethodResponse(
-          response: {}, method: PlatformMethod.onReconnecting, data: {});
-    });
-    // return _meetingEventChannel
-    //     .receiveBroadcastStream()
-    //     .map<PlatformMethodResponse>((event) {
-    //   PlatformMethod method =
-    //       PlatformMethodValues.getMethodFromName(event['event_name']);
-    //
-    //   Map<String, dynamic>? data = {};
-    //   if (event is Map && event['data'] is Map) {
-    //     (event['data'] as Map).forEach((key, value) {
-    //       data[key.toString()] = value;
-    //     });
-    //   }
-    //   PlatformMethodResponse response =
-    //       PlatformMethodResponse(method: method, data: data, response: event);
-    //   if (method == PlatformMethod.unknown) {
-    //     print(event);
-    //   }
-    //   switch (response.method) {
-    //     case PlatformMethod.joinMeeting:
-    //       return response;
-    //     case PlatformMethod.leaveMeeting:
-    //       return response;
-    //     case PlatformMethod.onJoinRoom:
-    //       return response;
-    //     case PlatformMethod.onUpdateRoom:
-    //       return response;
-    //     case PlatformMethod.onPeerUpdate:
-    //       return response;
-    //     case PlatformMethod.onTrackUpdate:
-    //       return response;
-    //     case PlatformMethod.onError:
-    //       return response;
-    //     case PlatformMethod.onMessage:
-    //       return response;
-    //     case PlatformMethod.onUpdateSpeaker:
-    //       return response;
-    //     case PlatformMethod.onReconnecting:
-    //       return response;
-    //     case PlatformMethod.onReconnected:
-    //       return response;
-    //     default:
-    //       return response;
-    //   }
-    // });
-  }
-
   static void updatesFromPlatform() {
     // _meetingEventChannel.receiveBroadcastStream().listen((event) {
     //   print('bol hello');
@@ -112,16 +61,10 @@ class PlatformService {
         });
       }
       HMSUpdateListenerMethod method =
-          HMSUpdateListenerMethodValues.getMethodFromName(event['event_name']);
+      HMSUpdateListenerMethodValues.getMethodFromName(event['event_name']);
       return HMSUpdateListenerMethodResponse(
           method: method, data: data, response: event);
     }).listen((event) {
-      // Map<String, dynamic>? data = {};
-      // if (event is Map && event['data'] is Map) {
-      //   (event['data'] as Map).forEach((key, value) {
-      //     data[key.toString()] = value;
-      //   });
-      // }
       HMSUpdateListenerMethod method = event.method;
       Map data = event.data;
       switch (method) {
@@ -132,20 +75,20 @@ class PlatformService {
         case HMSUpdateListenerMethod.onUpdateRoom:
           HMSRoom? room = HMSRoom.fromMap(data['room']);
           HMSRoomUpdate? update =
-              HMSRoomUpdateValues.getHMSRoomUpdateFromName(data['update']);
+          HMSRoomUpdateValues.getHMSRoomUpdateFromName(data['update']);
           notifyListeners(method, {'room': room, 'update': update});
           break;
         case HMSUpdateListenerMethod.onPeerUpdate:
           HMSPeer? peer = HMSPeer.fromMap(data['peer']);
           HMSPeerUpdate? update =
-              HMSPeerUpdateValues.getHMSPeerUpdateFromName(data['update']);
+          HMSPeerUpdateValues.getHMSPeerUpdateFromName(data['update']);
           notifyListeners(method, {'peer': peer, 'update': update});
           break;
         case HMSUpdateListenerMethod.onTrackUpdate:
           HMSPeer? peer = HMSPeer.fromMap(event.data['peer']);
           HMSTrack? track = HMSTrack.fromMap(data['track'], peer);
           HMSTrackUpdate? update =
-              HMSTrackUpdateValues.getHMSTrackUpdateFromName(data['update']);
+          HMSTrackUpdateValues.getHMSTrackUpdateFromName(data['update']);
 
           notifyListeners(
               method, {'track': track, 'peer': peer, 'update': update});
@@ -174,21 +117,16 @@ class PlatformService {
           break;
         case HMSUpdateListenerMethod.onRoleChangeRequest:
           HMSRoleChangeRequest roleChangeRequest =
-              HMSRoleChangeRequest.fromMap(data['role_change_request']);
-          notifyListeners(method, {});
+          HMSRoleChangeRequest.fromMap(data['role_change_request']);
+          notifyListeners(method, {
+            'role_change_request':roleChangeRequest
+          });
           break;
         case HMSUpdateListenerMethod.unknown:
           print('Unknown method called');
           break;
       }
     });
-
-    // HMSUpdateListenerMethodResponse response =
-    //     HMSUpdateListenerMethodResponse(
-    //         method: updateMethod, data: data, response: event);
-    // if (updateMethod == HMSUpdateListenerMethod.unknown) {
-    //   print(event);
-    // }
   }
 
   static void notifyListeners(
@@ -219,7 +157,7 @@ class PlatformService {
         break;
       case HMSUpdateListenerMethod.onUpdateSpeaker:
         listeners.forEach(
-            (e) => e.onUpdateSpeakers(updateSpeakers: arguments['speakers']));
+                (e) => e.onUpdateSpeakers(updateSpeakers: arguments['speakers']));
         break;
       case HMSUpdateListenerMethod.onReconnecting:
         listeners.forEach((e) => e.onReconnecting());
