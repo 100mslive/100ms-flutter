@@ -1,16 +1,13 @@
 import 'package:hmssdk_flutter/common/platform_methods.dart';
 import 'package:hmssdk_flutter/model/hms_config.dart';
-import 'package:hmssdk_flutter/model/platform_method_response.dart';
+import 'package:hmssdk_flutter/model/hms_preview_listener.dart';
+import 'package:hmssdk_flutter/model/hms_update_listener.dart';
 import 'package:hmssdk_flutter/service/platform_service.dart';
 
 class HMSMeeting {
   Future<void> startMeeting({required HMSConfig config}) async {
     return await PlatformService.invokeMethod(PlatformMethod.joinMeeting,
         arguments: config.getJson());
-  }
-
-  Stream<PlatformMethodResponse> startListening() {
-    return PlatformService.listenToPlatformCalls();
   }
 
   Future<void> leaveMeeting() async {
@@ -33,11 +30,29 @@ class HMSMeeting {
     );
   }
 
-  Future<void> sendMessage(String message) async{
-    return await PlatformService.invokeMethod(PlatformMethod.sendMessage,arguments: {"message":message});
+  Future<void> sendMessage(String message) async {
+    return await PlatformService.invokeMethod(PlatformMethod.sendMessage,
+        arguments: {"message": message});
   }
 
-  Future<void> previewVideo({required HMSConfig config}) async{
-    return await PlatformService.invokeMethod(PlatformMethod.previewVideo,arguments: config.getJson());
+  Future<void> previewVideo({required HMSConfig config}) async {
+    return await PlatformService.invokeMethod(PlatformMethod.previewVideo,
+        arguments: config.getJson());
+  }
+
+  void addMeetingListener(HMSUpdateListener listener) {
+    PlatformService.addMeetingListener(listener);
+  }
+
+  void removeMeetingListener(HMSUpdateListener listener) {
+    PlatformService.removeMeetingListener(listener);
+  }
+
+  void addPreviewListener(HMSPreviewListener listener) {
+    PlatformService.addPreviewListener(listener);
+  }
+
+  void removePreviewListener(HMSPreviewListener listener) {
+    PlatformService.removePreviewListener(listener);
   }
 }

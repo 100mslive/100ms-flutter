@@ -60,7 +60,6 @@ class _MeetingPageState extends State<MeetingPage> {
                   )),
           IconButton(
             onPressed: () async {
-              //TODO:: switch camera
               _meetingStore.toggleCamera();
             },
             icon: Icon(Icons.switch_camera),
@@ -74,26 +73,6 @@ class _MeetingPageState extends State<MeetingPage> {
       body: Center(
         child: Column(
           children: [
-            // Text(widget.user),
-            // Text(widget.flow.toString()),
-            // Text(widget.roomId),
-            // Observer(builder: (_) {
-            //   if (_meetingStore.isMeetingStarted) {
-            //     return StreamBuilder<PlatformMethodResponse>(
-            //         stream: _meetingStore.controller,
-            //         builder: (context, data) {
-            //           // print(data.data!.method.toString());
-            //           if (data.data == null) return Text("Null data");
-            //           if (data.data!.method == PlatformMethod.onPeerUpdate) {
-            //             print('peer update');
-            //           }
-            //           String data1 = data.data!.data.toString();
-            //           return Text(data1);
-            //         });
-            //   } else {
-            //     return CupertinoActivityIndicator();
-            //   }
-            // }),
             Observer(builder: (_) {
               if (_meetingStore.localPeer != null) {
                 return SizedBox(
@@ -138,60 +117,56 @@ class _MeetingPageState extends State<MeetingPage> {
       ),
       bottomNavigationBar: Observer(
         builder: (_) {
-          if (_meetingStore.isMeetingStarted) {
-            return Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Container(
-                  padding: EdgeInsets.all(16),
-                  child: Observer(builder: (context) {
-                    return IconButton(
-                        tooltip: 'Video',
-                        onPressed: () {
-                          _meetingStore.toggleVideo();
-                        },
-                        icon: Icon(_meetingStore.isVideoOn
-                            ? Icons.videocam
-                            : Icons.videocam_off));
-                  }),
-                ),
-                Container(
-                  padding: EdgeInsets.all(16),
-                  child: Observer(builder: (context) {
-                    return IconButton(
-                        tooltip: 'Audio',
-                        onPressed: () {
-                          _meetingStore.toggleAudio();
-                        },
-                        icon: Icon(
-                            _meetingStore.isMicOn ? Icons.mic : Icons.mic_off));
-                  }),
-                ),
-                Container(
-                  padding: EdgeInsets.all(16),
-                  child: IconButton(
-                      tooltip: 'Chat',
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Container(
+                padding: EdgeInsets.all(16),
+                child: Observer(builder: (context) {
+                  return IconButton(
+                      tooltip: 'Video',
                       onPressed: () {
-                        chatMessages(context, _meetingStore);
+                        _meetingStore.toggleVideo();
                       },
-                      icon: Icon(Icons.chat_bubble)),
-                ),
-                Container(
-                  padding: EdgeInsets.all(16),
-                  child: IconButton(
-                      tooltip: 'Leave',
+                      icon: Icon(_meetingStore.isVideoOn
+                          ? Icons.videocam
+                          : Icons.videocam_off));
+                }),
+              ),
+              Container(
+                padding: EdgeInsets.all(16),
+                child: Observer(builder: (context) {
+                  return IconButton(
+                      tooltip: 'Audio',
                       onPressed: () {
-                        _meetingStore.meetingController.leaveMeeting();
-                        Navigator.pushReplacement(context,
-                            MaterialPageRoute(builder: (ctx) => HomePage()));
+                        _meetingStore.toggleAudio();
                       },
-                      icon: Icon(Icons.call_end)),
-                ),
-              ],
-            );
-          } else {
-            return Text('Please wait while we connect you!');
-          }
+                      icon: Icon(
+                          _meetingStore.isMicOn ? Icons.mic : Icons.mic_off));
+                }),
+              ),
+              Container(
+                padding: EdgeInsets.all(16),
+                child: IconButton(
+                    tooltip: 'Chat',
+                    onPressed: () {
+                      chatMessages(context, _meetingStore);
+                    },
+                    icon: Icon(Icons.chat_bubble)),
+              ),
+              Container(
+                padding: EdgeInsets.all(16),
+                child: IconButton(
+                    tooltip: 'Leave',
+                    onPressed: () {
+                      _meetingStore.meetingController.leaveMeeting();
+                      Navigator.pushReplacement(context,
+                          MaterialPageRoute(builder: (ctx) => HomePage()));
+                    },
+                    icon: Icon(Icons.call_end)),
+              ),
+            ],
+          );
         },
       ),
     );

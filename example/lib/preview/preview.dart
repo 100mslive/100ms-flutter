@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:hmssdk_flutter/common/platform_methods.dart';
 import 'package:hmssdk_flutter/model/hms_config.dart';
 import 'package:hmssdk_flutter/model/hms_peer.dart';
@@ -7,8 +8,8 @@ import 'package:hmssdk_flutter/service/platform_service.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/peer_item_organism.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_page.dart';
-import 'package:hmssdk_flutter_example/service/room_service.dart';
-import 'package:uuid/uuid.dart';
+import 'package:hmssdk_flutter_example/preview/preview_controller.dart';
+import 'package:hmssdk_flutter_example/preview/preview_store.dart';
 
 class HMSPreview extends StatefulWidget {
   final String roomId;
@@ -24,41 +25,20 @@ class HMSPreview extends StatefulWidget {
 }
 
 class _HMSPreviewState extends State<HMSPreview> {
-  HMSTrack? hmsTrack;
+  late PreviewStore _previewStore;
 
   @override
   void initState() {
+    _previewStore = PreviewStore();
+    _previewStore.previewController =
+        PreviewController(roomId: widget.roomId, user: widget.user);
     super.initState();
-    initHMSTrack();
+    initPreview();
   }
 
-  void initHMSTrack() {
-    WidgetsBinding.instance!.addPostFrameCallback((_) async {
-      String token =
-          await RoomService().getToken(user: widget.user, room: widget.roomId);
-      HMSConfig hmsConfig = HMSConfig(
-          userId: Uuid().v1(),
-          roomId: widget.roomId,
-          authToken: token,
-          // endPoint: Constant.getTokenURL,
-          userName: widget.user);
-      var response = await PlatformService.invokeMethod(
-          PlatformMethod.previewVideo,
-          arguments: hmsConfig.getJson());
-      //debugPrint(response+"AAAAAAAAAAAAAAAAAAA");
-      this.hmsTrack = HMSTrack.fromMap(
-          response['data']['track'], HMSPeer.fromMap(response['data']['peer']));
-      setState(() {});
-    });
-    listen();
-  }
-
-  listen() {
-    PlatformService.listenToPlatformCalls().listen((event) {
-      if (event.method == PlatformMethod.previewVideo) {
-        print('a');
-      }
-    });
+  void initPreview() {
+    _previewStore.startListen();
+    _previewStore.startPreview();
   }
 
   bool videoOn = true, audioOn = true;
@@ -72,13 +52,16 @@ class _HMSPreviewState extends State<HMSPreview> {
           width: 500.0,
           child: Column(
             children: [
-              hmsTrack != null
-                  ? Container(
-                      child: PeerItemOrganism(track: hmsTrack!),
-                      height: 400.0,
-                      width: 500.0,
-                    )
-                  : CircularProgressIndicator(),
+              Observer(builder: (_) {
+                if (_previewStore.localTrack != null) {
+                  return Container(
+                    child: PeerItemOrganism(track: _previewStore.localTrack!),
+                    height: 400.0,
+                    width: 500.0,
+                  );
+                }
+                return CircularProgressIndicator();
+              }),
               SizedBox(
                 width: 40.0,
               ),
