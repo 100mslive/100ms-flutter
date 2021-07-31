@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:hmssdk_flutter/model/hms_message.dart';
@@ -38,7 +37,11 @@ class _ChatWidgetState extends State<ChatWidget> {
             color: Colors.blue,
             child: Row(
               children: [
-                Expanded(child: Text("Chat",style: TextStyle(color: Colors.black,fontSize: 30.0),)),
+                Expanded(
+                    child: Text(
+                  "Chat",
+                  style: TextStyle(color: Colors.black, fontSize: 30.0),
+                )),
                 GestureDetector(
                   onTap: () {
                     Navigator.of(context).pop();
@@ -50,8 +53,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                 )
               ],
             ),
-          )
-          ,
+          ),
           Expanded(
             child: Observer(
               builder: (_) {
@@ -70,39 +72,42 @@ class _ChatWidgetState extends State<ChatWidget> {
                             children: [
                               Expanded(
                                 child: Text(
-                                  _meetingStore.messages[index].sender.toString(),
+                                  _meetingStore.messages[index].sender
+                                      .toString(),
                                   style: TextStyle(
                                       fontSize: 10.0,
                                       color: Colors.black,
-                                      fontWeight: FontWeight.w900
-                                  ),
+                                      fontWeight: FontWeight.w900),
                                 ),
                               ),
-                              Text(_meetingStore.messages[index].time.toString(),
+                              Text(
+                                _meetingStore.messages[index].time.toString(),
                                 style: TextStyle(
                                     fontSize: 10.0,
                                     color: Colors.black,
-                                    fontWeight: FontWeight.w900
-                                ),)
+                                    fontWeight: FontWeight.w900),
+                              )
                             ],
                           ),
-                          SizedBox(height: 10.0,),
+                          SizedBox(
+                            height: 10.0,
+                          ),
                           Text(
                             _meetingStore.messages[index].message.toString(),
                             style: TextStyle(
-                              fontSize: 20.0,
-                              color: Colors.black,
-                              fontWeight: FontWeight.w300
-                            ),
+                                fontSize: 20.0,
+                                color: Colors.black,
+                                fontWeight: FontWeight.w300),
                           ),
                         ],
                       ),
                       decoration: BoxDecoration(
-                        border: Border(left: BorderSide(
+                          border: Border(
+                        left: BorderSide(
                           color: Colors.blue,
                           width: 5,
-                        ),)
-                      ),
+                        ),
+                      )),
                     ),
                   ),
                 );
@@ -125,8 +130,8 @@ class _ChatWidgetState extends State<ChatWidget> {
                         enabledBorder: InputBorder.none,
                         errorBorder: InputBorder.none,
                         disabledBorder: InputBorder.none,
-                        contentPadding:
-                        EdgeInsets.only(left: 15, bottom: 11, top: 11, right: 15),
+                        contentPadding: EdgeInsets.only(
+                            left: 15, bottom: 11, top: 11, right: 15),
                         hintText: "Type a Message"),
                   ),
                   width: widthOfScreen - 45.0,
@@ -134,10 +139,11 @@ class _ChatWidgetState extends State<ChatWidget> {
                 GestureDetector(
                   onTap: () {
                     String message = messageTextController.text;
-                    if(message.isEmpty)return;
+                    if (message.isEmpty) return;
                     _meetingStore.sendMessage(message);
-                    DateTime currentTime=DateTime.now();
-                    final DateFormat formatter = DateFormat('yyyy-MM-dd hh:mm a');
+                    DateTime currentTime = DateTime.now();
+                    final DateFormat formatter =
+                        DateFormat('yyyy-MM-dd hh:mm a');
                     _meetingStore.addMessage(HMSMessage(
                         sender: "You",
                         message: message,

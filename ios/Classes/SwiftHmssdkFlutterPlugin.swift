@@ -135,7 +135,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         let data:[String:Any]=[
             "event_name":"on_message",
             "data":[
-                "name":"Vivek"
+                "message": HMSMessageExtension.toDictionary(message: message)
             ]
         ]
         eventSink?(data)
@@ -216,7 +216,6 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             shouldSkipPIIEvents: arguments["should_skip_pii_events"] as? Bool ?? false
         )
         hmsSDK?.preview(config: config, delegate: self)
-//        result("preview initiated")
     }
     
     func joinMeeting(call:FlutterMethodCall,result:FlutterResult){
@@ -229,13 +228,24 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             authToken: arguments["auth_token"] as? String ?? "",
             shouldSkipPIIEvents: arguments["should_skip_pii_events"] as? Bool ?? false
         )
-        
-        
         hmsSDK = HMSSDK.build()
         
         hmsSDK?.join(config: config, delegate: self)
         meetingEventChannel.setStreamHandler(self)
         result("joining meeting in ios")
+    }
+    
+    func sendMessage(call: FlutterMethodCall,result:FlutterResult) {
+        let arguments = call.arguments as! Dictionary<String, AnyObject>
+        let message:HMSMessage = HMSMessage(
+            sender: (arguments["sender"] as? String) ?? "",
+            receiver: arguments["receiver"] as? String ?? "",
+            time:arguments["time"] as? String ?? "",
+            type: arguments["type"] as? String ?? "",
+            message: arguments["message"] as? String ?? ""
+        )
+        hmsSDK?.send(message: message)
+        result("sent message")
     }
     
     func leaveMeeting(result:FlutterResult){
@@ -266,6 +276,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     case "switch_video":switchVideo(call: call , result: result)
     case "switch_camera":switchCamera(result: result)
     case "preview_video":previewVideo(call:call,result:result)
+    case "send_message":sendMessage(call:call,result:result)
     default:
         result(FlutterMethodNotImplemented)
     }

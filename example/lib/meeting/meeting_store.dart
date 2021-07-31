@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:hmssdk_flutter/common/platform_methods.dart';
 import 'package:hmssdk_flutter/enum/hms_peer_update.dart';
 import 'package:hmssdk_flutter/enum/hms_room_update.dart';
@@ -49,11 +47,11 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
   }
 
   void onError({required HMSError error}) {
-    print('on error');
+    updateError(error);
   }
 
   void onMessage({required HMSMessage message}) {
-    print('on message');
+    addMessage(message);
   }
 
   void onRoleChangeRequest({required HMSRoleChangeRequest roleChangeRequest}) {
@@ -80,8 +78,6 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
   @observable
   bool isSpeakerOn = true;
 
-  @observable
-  HMSException? exception;
   @observable
   HMSError? error;
 
@@ -201,15 +197,15 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
         } else
           peerOperationWithTrack(peer, update, track);
       } else if (event.method == PlatformMethod.onError) {
-        if (Platform.isIOS) {
-          HMSError error = HMSError.fromMap(event.data['error']);
-
-          updateError(error);
-        } else {
-          HMSException exception = HMSException.fromMap(event.data['error']);
-          print(exception.toString() + "event");
-          updateException(exception);
-        }
+        // if (Platform.isIOS) {
+        //   HMSError error = HMSError.fromMap(event.data['error']);
+        //
+        //   updateError(error);
+        // } else {
+        //   HMSException exception = HMSException.fromMap(event.data['error']);
+        //   print(exception.toString() + "event");
+        //   updateException(exception);
+        // }
       } else if (event.method == PlatformMethod.onMessage) {
         HMSMessage message = HMSMessage.fromMap(event.data['message']);
         addMessage(message);
@@ -217,10 +213,11 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
     });
   }
 
-  @action
-  void updateException(HMSException hmsException) {
-    this.exception = hmsException;
-  }
+  //
+  // @action
+  // void updateException(HMSException hmsException) {
+  //   this.exception = hmsException;
+  // }
 
   @action
   void updateError(HMSError error) {
