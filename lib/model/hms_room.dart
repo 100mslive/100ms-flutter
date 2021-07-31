@@ -13,10 +13,23 @@ class HMSRoom {
       this.metaData});
 
   factory HMSRoom.fromMap(Map map) {
+    List<HMSPeer> peers = [];
+
+    if (map.containsKey('peers') && map['peers'] is List) {
+      for (var each in (map['peers'] as List)) {
+        try {
+          HMSPeer peer = HMSPeer.fromMap(each);
+          peers.add(peer);
+        } catch (e) {
+          print(e);
+        }
+      }
+    }
+
     return HMSRoom(
         id: map['id'],
         name: map['name'],
-        peers: HMSPeer.fromListOfMap(map['peers'] ?? []),
+        peers: peers,
         metaData: map['meta_data']);
   }
 }

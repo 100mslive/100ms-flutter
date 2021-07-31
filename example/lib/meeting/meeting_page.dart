@@ -33,11 +33,13 @@ class _MeetingPageState extends State<MeetingPage> {
     MeetingController meetingController = MeetingController(
         roomId: widget.roomId, flow: widget.flow, user: widget.user);
     _meetingStore.meetingController = meetingController;
+
     super.initState();
     initMeeting();
   }
 
   void initMeeting() {
+    _meetingStore.startListen();
     _meetingStore.joinMeeting();
   }
 

@@ -50,7 +50,7 @@ class HMSPeer {
     );
   }
 
-  static List<HMSPeer> fromListOfMap(List<Map> peersMap) {
+  static List<HMSPeer> fromListOfMap(List peersMap) {
     List<HMSPeer> peers = peersMap.map((e) => HMSPeer.fromMap(e)).toList();
     return peers;
   }

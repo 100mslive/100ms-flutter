@@ -39,7 +39,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         let data:[String:Any]=[
             "event_name":"on_join_room",
             "data":[
-                "name":"Vivek"
+                "room" : HMSRoomExtension.toDictionary(hmsRoom: room)
             ]
         ]
         eventSink?(data)

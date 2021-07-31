@@ -25,7 +25,7 @@ abstract class HMSUpdateListener {
 
   void onMessage({required HMSMessage message});
 
-  void onRoleChangeRequest({required HMSRoleChangeRequest roleChangeRequest}) {}
+  void onRoleChangeRequest({required HMSRoleChangeRequest roleChangeRequest});
 
   void onUpdateSpeakers({required List<HMSSpeaker> updateSpeakers});
 

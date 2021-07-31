@@ -2,13 +2,19 @@ import 'dart:io';
 
 import 'package:hmssdk_flutter/common/platform_methods.dart';
 import 'package:hmssdk_flutter/enum/hms_peer_update.dart';
+import 'package:hmssdk_flutter/enum/hms_room_update.dart';
 import 'package:hmssdk_flutter/enum/hms_track_update.dart';
 import 'package:hmssdk_flutter/exceptions/hms_exception.dart';
 import 'package:hmssdk_flutter/model/hms_error.dart';
 import 'package:hmssdk_flutter/model/hms_message.dart';
 import 'package:hmssdk_flutter/model/hms_peer.dart';
+import 'package:hmssdk_flutter/model/hms_role_change_request.dart';
+import 'package:hmssdk_flutter/model/hms_room.dart';
+import 'package:hmssdk_flutter/model/hms_speaker.dart';
 import 'package:hmssdk_flutter/model/hms_track.dart';
+import 'package:hmssdk_flutter/model/hms_update_listener.dart';
 import 'package:hmssdk_flutter/model/platform_method_response.dart';
+import 'package:hmssdk_flutter/service/platform_service.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_controller.dart';
 import 'package:mobx/mobx.dart';
 
@@ -16,7 +22,61 @@ part 'meeting_store.g.dart';
 
 class MeetingStore = MeetingStoreBase with _$MeetingStore;
 
-abstract class MeetingStoreBase with Store {
+abstract class MeetingStoreBase with Store implements HMSUpdateListener {
+  void onJoin({required HMSRoom room}) {
+    print('on join');
+  }
+
+  void onRoomUpdate({required HMSRoom room, required HMSRoomUpdate update}) {
+    print('on room update');
+  }
+
+  void onPeerUpdate({required HMSPeer peer, required HMSPeerUpdate update}) {
+    if (peer.isLocal) {
+      localPeer = peer;
+    } else
+      peerOperation(peer, update);
+  }
+
+  void onTrackUpdate(
+      {required HMSTrack track,
+      required HMSTrackUpdate trackUpdate,
+      required HMSPeer peer}) {
+    if (peer.isLocal) {
+      localPeer = peer;
+    } else
+      peerOperationWithTrack(peer, trackUpdate, track);
+  }
+
+  void onError({required HMSError error}) {
+    print('on error');
+  }
+
+  void onMessage({required HMSMessage message}) {
+    print('on message');
+  }
+
+  void onRoleChangeRequest({required HMSRoleChangeRequest roleChangeRequest}) {
+    print('on role change request');
+  }
+
+  void onUpdateSpeakers({required List<HMSSpeaker> updateSpeakers}) {
+    print('on update speaker');
+  }
+
+  void onReconnecting() {
+    print('on reconnecting');
+  }
+
+  void onReconnected() {
+    print('on reconnected');
+  }
+
+  @action
+  void startListen() {
+    PlatformService.addListener(this);
+  }
+
   @observable
   bool isSpeakerOn = true;
 
@@ -111,7 +171,6 @@ abstract class MeetingStoreBase with Store {
   Future<void> joinMeeting() async {
     controller = await meetingController.joinMeeting();
     isMeetingStarted = true;
-    listenToController();
   }
 
   @action
@@ -235,5 +294,50 @@ abstract class MeetingStoreBase with Store {
       default:
         print("Some default update or untouched case");
     }
+  }
+}
+
+class Listener implements HMSUpdateListener {
+  void onJoin({required HMSRoom room}) {
+    print('on join');
+  }
+
+  void onRoomUpdate({required HMSRoom room, required HMSRoomUpdate update}) {
+    print('on room update');
+  }
+
+  void onPeerUpdate({required HMSPeer peer, required HMSPeerUpdate update}) {
+    print('on peer update');
+  }
+
+  void onTrackUpdate(
+      {required HMSTrack track,
+      required HMSTrackUpdate trackUpdate,
+      required HMSPeer peer}) {
+    print('on track update');
+  }
+
+  void onError({required HMSError error}) {
+    print('on error');
+  }
+
+  void onMessage({required HMSMessage message}) {
+    print('on message');
+  }
+
+  void onRoleChangeRequest({required HMSRoleChangeRequest roleChangeRequest}) {
+    print('on role change request');
+  }
+
+  void onUpdateSpeakers({required List<HMSSpeaker> updateSpeakers}) {
+    print('on role speker');
+  }
+
+  void onReconnecting() {
+    print('on reconnecting');
+  }
+
+  void onReconnected() {
+    print('on reconnected');
   }
 }
