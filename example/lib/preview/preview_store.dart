@@ -1,5 +1,6 @@
 import 'package:hmssdk_flutter/enum/hms_track_kind.dart';
 import 'package:hmssdk_flutter/enum/hms_track_source.dart';
+import 'package:hmssdk_flutter/model/hms_error.dart';
 import 'package:hmssdk_flutter/model/hms_preview_listener.dart';
 import 'package:hmssdk_flutter/model/hms_room.dart';
 import 'package:hmssdk_flutter/model/hms_track.dart';
@@ -23,6 +24,11 @@ abstract class PreviewStoreBase with Store implements HMSPreviewListener {
         localTrack = each;
       }
     });
+  }
+
+  @override
+  void onError(HMSError error) {
+    print('on error in preview: $error');
   }
 
   void startListen() {

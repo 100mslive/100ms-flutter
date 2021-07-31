@@ -46,20 +46,21 @@ class MeetingController {
   Future<void> sendMessage(String message) async {
     return await _hmsSdkInteractor?.sendMessage(message);
   }
-  
-    void addMeetingListener(HMSUpdateListener listener) {
-     _hmsSdkInteractor?.addMeetingListener(listener);
+
+  void addMeetingListener(HMSUpdateListener listener) {
+    //TODO:: check why listenrs are not being added
+    _hmsSdkInteractor?.addMeetingListener(listener);
   }
 
   void removeMeetingListener(HMSUpdateListener listener) {
-      _hmsSdkInteractor?.removeMeetingListener(listener);
+    _hmsSdkInteractor?.removeMeetingListener(listener);
   }
 
   void addPreviewListener(HMSPreviewListener listener) {
-      _hmsSdkInteractor?.addPreviewListener(listener);
+    _hmsSdkInteractor?.addPreviewListener(listener);
   }
 
   void removePreviewListener(HMSPreviewListener listener) {
-      _hmsSdkInteractor?.removePreviewListener(listener);
+    _hmsSdkInteractor?.removePreviewListener(listener);
   }
 }

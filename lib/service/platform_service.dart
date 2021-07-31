@@ -21,6 +21,8 @@ class PlatformService {
   static const MethodChannel _channel = const MethodChannel('hmssdk_flutter');
   static const EventChannel _meetingEventChannel =
       const EventChannel('meeting_event_channel');
+  static const EventChannel _previewEventChannel =
+      const EventChannel('preview_event_channel');
   static List<HMSUpdateListener> meetingListeners = [];
   static List<HMSPreviewListener> previewListeners = [];
   static bool isStartedListening = false;
@@ -54,20 +56,8 @@ class PlatformService {
   }
 
   static void updatesFromPlatform() {
-    // _meetingEventChannel.receiveBroadcastStream().listen((event) {
-    //   print('bol hello');
-    // });
-
-    // _meetingEventChannel
-    //     .receiveBroadcastStream()
-    //     .map((event) => event)
-    //     .listen((event) {
-    //   print('bol hello kuster');
-    // });
-
-    _meetingEventChannel
-        .receiveBroadcastStream()
-        .map<HMSUpdateListenerMethodResponse>((event) {
+    _meetingEventChannel.receiveBroadcastStream(
+        {'name': 'meeting'}).map<HMSUpdateListenerMethodResponse>((event) {
       Map<String, dynamic>? data = {};
       if (event is Map && event['data'] is Map) {
         (event['data'] as Map).forEach((key, value) {
@@ -139,6 +129,13 @@ class PlatformService {
           break;
       }
     });
+
+    _previewEventChannel
+        .receiveBroadcastStream({'name': 'preview'})
+        .map((event) => event)
+        .listen((event) {
+          print('received something in previews');
+        });
   }
 
   static void notifyListeners(

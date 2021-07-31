@@ -115,59 +115,55 @@ class _MeetingPageState extends State<MeetingPage> {
           ],
         ),
       ),
-      bottomNavigationBar: Observer(
-        builder: (_) {
-          return Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Container(
-                padding: EdgeInsets.all(16),
-                child: Observer(builder: (context) {
-                  return IconButton(
-                      tooltip: 'Video',
-                      onPressed: () {
-                        _meetingStore.toggleVideo();
-                      },
-                      icon: Icon(_meetingStore.isVideoOn
-                          ? Icons.videocam
-                          : Icons.videocam_off));
-                }),
-              ),
-              Container(
-                padding: EdgeInsets.all(16),
-                child: Observer(builder: (context) {
-                  return IconButton(
-                      tooltip: 'Audio',
-                      onPressed: () {
-                        _meetingStore.toggleAudio();
-                      },
-                      icon: Icon(
-                          _meetingStore.isMicOn ? Icons.mic : Icons.mic_off));
-                }),
-              ),
-              Container(
-                padding: EdgeInsets.all(16),
-                child: IconButton(
-                    tooltip: 'Chat',
-                    onPressed: () {
-                      chatMessages(context, _meetingStore);
-                    },
-                    icon: Icon(Icons.chat_bubble)),
-              ),
-              Container(
-                padding: EdgeInsets.all(16),
-                child: IconButton(
-                    tooltip: 'Leave',
-                    onPressed: () {
-                      _meetingStore.meetingController.leaveMeeting();
-                      Navigator.pushReplacement(context,
-                          MaterialPageRoute(builder: (ctx) => HomePage()));
-                    },
-                    icon: Icon(Icons.call_end)),
-              ),
-            ],
-          );
-        },
+      bottomNavigationBar: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Container(
+            padding: EdgeInsets.all(16),
+            child: Observer(builder: (context) {
+              return IconButton(
+                  tooltip: 'Video',
+                  onPressed: () {
+                    _meetingStore.toggleVideo();
+                  },
+                  icon: Icon(_meetingStore.isVideoOn
+                      ? Icons.videocam
+                      : Icons.videocam_off));
+            }),
+          ),
+          Container(
+            padding: EdgeInsets.all(16),
+            child: Observer(builder: (context) {
+              return IconButton(
+                  tooltip: 'Audio',
+                  onPressed: () {
+                    _meetingStore.toggleAudio();
+                  },
+                  icon:
+                      Icon(_meetingStore.isMicOn ? Icons.mic : Icons.mic_off));
+            }),
+          ),
+          Container(
+            padding: EdgeInsets.all(16),
+            child: IconButton(
+                tooltip: 'Chat',
+                onPressed: () {
+                  chatMessages(context, _meetingStore);
+                },
+                icon: Icon(Icons.chat_bubble)),
+          ),
+          Container(
+            padding: EdgeInsets.all(16),
+            child: IconButton(
+                tooltip: 'Leave',
+                onPressed: () {
+                  _meetingStore.meetingController.leaveMeeting();
+                  Navigator.pushReplacement(
+                      context, MaterialPageRoute(builder: (ctx) => HomePage()));
+                },
+                icon: Icon(Icons.call_end)),
+          ),
+        ],
       ),
     );
   }

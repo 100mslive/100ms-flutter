@@ -6,11 +6,14 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
    
     let channel:FlutterMethodChannel
     let meetingEventChannel:FlutterEventChannel
+    let previewEventChannel:FlutterEventChannel
     var eventSink:FlutterEventSink?
+    var previewSink:FlutterEventSink?
     
-    public  init(channel:FlutterMethodChannel,meetingEventChannel:FlutterEventChannel) {
+    public  init(channel:FlutterMethodChannel,meetingEventChannel:FlutterEventChannel,previewEventChannel:FlutterEventChannel) {
         self.channel=channel
         self.meetingEventChannel=meetingEventChannel
+        self.previewEventChannel=previewEventChannel
     }
     
     public func onPreview(room: HMSRoom, localTracks: [HMSTrack]) {
@@ -30,7 +33,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                 "track":trackDict
             ]
         ]
-        eventSink?(data)
+        previewSink?(data)
     }
     
     public func on(join room: HMSRoom) {
@@ -47,7 +50,17 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     
     
     public func onListen(withArguments arguments: Any?, eventSink events: @escaping FlutterEventSink) -> FlutterError? {
-        self.eventSink = events
+        if let tempArg = arguments as? Dictionary<String, AnyObject>{
+            let name:String =  tempArg["name"] as? String ?? ""
+            if(name == "meeting"){
+                self.eventSink = events
+            }else if(name == "preview"){
+                self.previewSink=events;
+                self.previewSink?("Kya bolti public")
+            }
+        }
+      
+        
         return nil
     }
     
@@ -257,14 +270,16 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
   public static func register(with registrar: FlutterPluginRegistrar) {
     let channel = FlutterMethodChannel(name: "hmssdk_flutter", binaryMessenger: registrar.messenger())
     let eventChannel = FlutterEventChannel(name: "meeting_event_channel", binaryMessenger: registrar.messenger())
-   
-    let instance = SwiftHmssdkFlutterPlugin(channel: channel,meetingEventChannel: eventChannel)
+    let previewChannel = FlutterEventChannel(name: "preview_event_channel", binaryMessenger: registrar.messenger())
+
+    let instance = SwiftHmssdkFlutterPlugin(channel: channel,meetingEventChannel: eventChannel,previewEventChannel: previewChannel)
     
     
      let videoViewFactory:HMSVideoViewFactory = HMSVideoViewFactory(messenger: registrar.messenger(),plugin: instance)
      registrar.register(videoViewFactory, withId: "HMSVideoView")
     
     eventChannel.setStreamHandler(instance)
+    previewChannel.setStreamHandler(instance)
     registrar.addMethodCallDelegate(instance, channel: channel)
   }
 
