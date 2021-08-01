@@ -9,11 +9,12 @@ class HMSSDKInteractor {
   late List<HMSMessage> messages;
   late HMSMeeting _meeting;
 
-  HMSSDKInteractor({required this.config}) {
+  HMSSDKInteractor() {
     _meeting = HMSMeeting();
   }
 
-  Future<void> setup() async {
+  Future<void> joinMeeting({required HMSConfig config}) async {
+    this.config = config;
     await _meeting.startMeeting(config: this.config);
   }
 
@@ -36,8 +37,10 @@ class HMSSDKInteractor {
   Future<void> sendMessage(String message) async {
     return await _meeting.sendMessage(message);
   }
-  Future<void> previewVideo()async{
-   return _meeting.previewVideo(config: config);
+
+  Future<void> previewVideo({required HMSConfig config}) async {
+    this.config = config;
+    return _meeting.previewVideo(config: config);
   }
 
   void addMeetingListener(HMSUpdateListener listener) {
@@ -45,14 +48,14 @@ class HMSSDKInteractor {
   }
 
   void removeMeetingListener(HMSUpdateListener listener) {
-     _meeting.removeMeetingListener(listener);
+    _meeting.removeMeetingListener(listener);
   }
 
   void addPreviewListener(HMSPreviewListener listener) {
-     _meeting.addPreviewListener(listener);
+    _meeting.addPreviewListener(listener);
   }
 
   void removePreviewListener(HMSPreviewListener listener) {
-     _meeting.removePreviewListener(listener);
+    _meeting.removePreviewListener(listener);
   }
 }

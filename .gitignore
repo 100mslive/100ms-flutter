@@ -5,3 +5,5 @@
 .pub/
 
 build/
+
+*.g.dart

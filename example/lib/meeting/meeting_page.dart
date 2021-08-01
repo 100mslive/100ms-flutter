@@ -39,8 +39,8 @@ class _MeetingPageState extends State<MeetingPage> {
   }
 
   void initMeeting() {
-    _meetingStore.startListen();
     _meetingStore.joinMeeting();
+    _meetingStore.startListen();
   }
 
   @override

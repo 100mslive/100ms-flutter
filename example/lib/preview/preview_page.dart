@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:hmssdk_flutter/common/platform_methods.dart';
-import 'package:hmssdk_flutter/model/hms_config.dart';
-import 'package:hmssdk_flutter/model/hms_peer.dart';
-import 'package:hmssdk_flutter/model/hms_track.dart';
 import 'package:hmssdk_flutter/service/platform_service.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/peer_item_organism.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
@@ -11,20 +8,20 @@ import 'package:hmssdk_flutter_example/meeting/meeting_page.dart';
 import 'package:hmssdk_flutter_example/preview/preview_controller.dart';
 import 'package:hmssdk_flutter_example/preview/preview_store.dart';
 
-class HMSPreview extends StatefulWidget {
+class PreviewPage extends StatefulWidget {
   final String roomId;
   final MeetingFlow flow;
   final String user;
 
-  const HMSPreview(
+  const PreviewPage(
       {Key? key, required this.roomId, required this.flow, required this.user})
       : super(key: key);
 
   @override
-  _HMSPreviewState createState() => _HMSPreviewState();
+  _PreviewPageState createState() => _PreviewPageState();
 }
 
-class _HMSPreviewState extends State<HMSPreview> {
+class _PreviewPageState extends State<PreviewPage> {
   late PreviewStore _previewStore;
 
   @override
@@ -86,7 +83,7 @@ class _HMSPreviewState extends State<HMSPreview> {
                     ),
                   ),
                   Expanded(
-                      child: RaisedButton(
+                      child: ElevatedButton(
                     onPressed: () {
                       debugPrint("asdad");
                       Navigator.of(context).pushReplacement(MaterialPageRoute(

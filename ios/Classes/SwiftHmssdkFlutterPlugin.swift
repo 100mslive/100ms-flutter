@@ -17,7 +17,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     }
     
     public func onPreview(room: HMSRoom, localTracks: [HMSTrack]) {
-        print("On Join Room")
+        print("On Preview Room")
         var peerDict : Dictionary<String, Any?> = [:]
         var trackDict : Dictionary<String, Any?> = [:]
         if let tempPeer:HMSPeer = hmsSDK?.localPeer{
@@ -59,8 +59,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                 self.previewSink?("Kya bolti public")
             }
         }
-      
-        
+
         return nil
     }
     

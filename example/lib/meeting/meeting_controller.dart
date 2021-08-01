@@ -10,57 +10,57 @@ class MeetingController {
   final String roomId;
   final String user;
   final MeetingFlow flow;
-  HMSSDKInteractor? _hmsSdkInteractor;
+  HMSSDKInteractor _hmsSdkInteractor;
 
   MeetingController(
-      {required this.roomId, required this.user, required this.flow});
+      {required this.roomId, required this.user, required this.flow})
+      : _hmsSdkInteractor = HMSSDKInteractor();
 
   Future<void> joinMeeting() async {
     String token = await RoomService().getToken(user: user, room: roomId);
-    HMSConfig hmsConfig = HMSConfig(
+    HMSConfig config = HMSConfig(
         userId: Uuid().v1(),
         roomId: roomId,
         authToken: token,
         // endPoint: Constant.getTokenURL,
         userName: user);
-    _hmsSdkInteractor = HMSSDKInteractor(config: hmsConfig);
-    await _hmsSdkInteractor!.setup();
+
+    await _hmsSdkInteractor.joinMeeting(config: config);
   }
 
   void leaveMeeting() {
-    _hmsSdkInteractor?.leaveMeeting();
+    _hmsSdkInteractor.leaveMeeting();
   }
 
   Future<void> switchAudio({bool isOn = false}) async {
-    return await _hmsSdkInteractor?.switchAudio(isOn: isOn);
+    return await _hmsSdkInteractor.switchAudio(isOn: isOn);
   }
 
   Future<void> switchVideo({bool isOn = false}) async {
-    return await _hmsSdkInteractor?.switchVideo(isOn: isOn);
+    return await _hmsSdkInteractor.switchVideo(isOn: isOn);
   }
 
   Future<void> switchCamera() async {
-    return await _hmsSdkInteractor?.switchCamera();
+    return await _hmsSdkInteractor.switchCamera();
   }
 
   Future<void> sendMessage(String message) async {
-    return await _hmsSdkInteractor?.sendMessage(message);
+    return await _hmsSdkInteractor.sendMessage(message);
   }
 
   void addMeetingListener(HMSUpdateListener listener) {
-    //TODO:: check why listenrs are not being added
-    _hmsSdkInteractor?.addMeetingListener(listener);
+    _hmsSdkInteractor.addMeetingListener(listener);
   }
 
   void removeMeetingListener(HMSUpdateListener listener) {
-    _hmsSdkInteractor?.removeMeetingListener(listener);
+    _hmsSdkInteractor.removeMeetingListener(listener);
   }
 
   void addPreviewListener(HMSPreviewListener listener) {
-    _hmsSdkInteractor?.addPreviewListener(listener);
+    _hmsSdkInteractor.addPreviewListener(listener);
   }
 
   void removePreviewListener(HMSPreviewListener listener) {
-    _hmsSdkInteractor?.removePreviewListener(listener);
+    _hmsSdkInteractor.removePreviewListener(listener);
   }
 }
