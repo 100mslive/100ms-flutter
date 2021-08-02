@@ -13,7 +13,7 @@ class  HMSPublishSettingExtension {
     static func toDictionary(publishSettings:HMSPublishSettings)-> Dictionary<String,Any?>{
         var dict:Dictionary<String, Any?> = [:]
         
-        dict["audio"] = HMSAudioSettingExtension.toDictionary(audioSettings:publishSettings.audio)
+        dict["audio"] = HMSAudioSettingsExtension.toDictionary(audioSettings:publishSettings.audio)
         dict["video"] = HMSVideoSettingExtension.toDictionary(videoSettings:publishSettings.video)
         dict["screen"] = HMSVideoSettingExtension.toDictionary(videoSettings:publishSettings.screen)
         

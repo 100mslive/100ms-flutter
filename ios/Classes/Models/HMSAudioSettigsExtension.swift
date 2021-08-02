@@ -8,7 +8,7 @@
 import Foundation
 import HMSSDK
 
-class  HMSAudioSettingExtension {
+class  HMSAudioSettingsExtension {
     static func toDictionary(audioSettings:HMSAudioSettings)-> Dictionary<String,Any?>{
         var dict:Dictionary<String, Any?> = [:]
         dict["bit_rate"]=audioSettings.bitRate
