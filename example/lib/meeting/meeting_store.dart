@@ -9,7 +9,6 @@ import 'package:hmssdk_flutter/model/hms_room.dart';
 import 'package:hmssdk_flutter/model/hms_speaker.dart';
 import 'package:hmssdk_flutter/model/hms_track.dart';
 import 'package:hmssdk_flutter/model/hms_update_listener.dart';
-import 'package:hmssdk_flutter/service/platform_service.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_controller.dart';
 import 'package:mobx/mobx.dart';
 
@@ -131,6 +130,12 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
 
   @override
   void onJoin({required HMSRoom room}) {
+    for (HMSPeer each in room.peers) {
+      if (each.isLocal) {
+        localPeer = each;
+        break;
+      }
+    }
     print('on join');
   }
 
@@ -141,10 +146,10 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
 
   @override
   void onPeerUpdate({required HMSPeer peer, required HMSPeerUpdate update}) {
-    if (peer.isLocal) {
-      localPeer = peer;
-    } else
-      peerOperation(peer, update);
+    // if (peer.isLocal) {
+    //   localPeer = peer;
+    // } else
+    peerOperation(peer, update);
   }
 
   @override
