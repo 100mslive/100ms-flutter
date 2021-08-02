@@ -14,23 +14,22 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         self.channel=channel
         self.meetingEventChannel=meetingEventChannel
         self.previewEventChannel=previewEventChannel
+        hmsSDK=HMSSDK.build()
     }
     
     public func onPreview(room: HMSRoom, localTracks: [HMSTrack]) {
         print("On Preview Room")
-        var peerDict : Dictionary<String, Any?> = [:]
-        var trackDict : Dictionary<String, Any?> = [:]
-        if let tempPeer:HMSPeer = hmsSDK?.localPeer{
-            peerDict = HMSPeerExtension.toDictionary(peer:tempPeer )
+        var tracks:[Dictionary<String, Any?>]=[]
+        
+        for eachTrack in localTracks{
+            tracks.insert(HMSTrackExtension.toDictionary(track: eachTrack), at: tracks.count)
         }
-        if let tempTrack:HMSTrack = hmsSDK?.localPeer?.localVideoTrack(){
-            trackDict = HMSTrackExtension.toDictionary(track: tempTrack )
-        }
+        
         let data:[String:Any]=[
             "event_name":"preview_video",
             "data":[
-                "peer":peerDict,
-                "track":trackDict
+                "room":HMSRoomExtension.toDictionary(hmsRoom: room),
+                "local_tracks":tracks,
             ]
         ]
         previewSink?(data)
@@ -56,7 +55,6 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                 self.eventSink = events
             }else if(name == "preview"){
                 self.previewSink=events;
-                self.previewSink?("Kya bolti public")
             }
         }
 
@@ -227,6 +225,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             authToken: arguments["auth_token"] as? String ?? "",
             shouldSkipPIIEvents: arguments["should_skip_pii_events"] as? Bool ?? false
         )
+     
         hmsSDK?.preview(config: config, delegate: self)
     }
     
@@ -240,8 +239,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             authToken: arguments["auth_token"] as? String ?? "",
             shouldSkipPIIEvents: arguments["should_skip_pii_events"] as? Bool ?? false
         )
-        hmsSDK = HMSSDK.build()
-        
+       
         hmsSDK?.join(config: config, delegate: self)
         meetingEventChannel.setStreamHandler(self)
         result("joining meeting in ios")

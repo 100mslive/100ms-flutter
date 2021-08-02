@@ -126,7 +126,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
         Log.i("onPreview", room.localPeer.toString())
         val args=HashMap<String,Any>()
         args.put("event_name","preview_video")
-        args.put("data",HMSPreviewExtension.toDictionary(room.localPeer!!,room.localPeer!!.videoTrack!!))
+        args.put("data",HMSPreviewExtension.toDictionary(room,localTracks))
         Log.i("onPreview", args.get("data").toString())
         CoroutineScope(Dispatchers.Main).launch {
             result!!.success(args)
