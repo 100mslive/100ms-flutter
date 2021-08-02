@@ -24,21 +24,6 @@ mixin _$MeetingStore on MeetingStoreBase, Store {
     });
   }
 
-  final _$exceptionAtom = Atom(name: 'MeetingStoreBase.exception');
-
-  @override
-  HMSException? get exception {
-    _$exceptionAtom.reportRead();
-    return super.exception;
-  }
-
-  @override
-  set exception(HMSException? value) {
-    _$exceptionAtom.reportWrite(value, super.exception, () {
-      super.exception = value;
-    });
-  }
-
   final _$errorAtom = Atom(name: 'MeetingStoreBase.error');
 
   @override
@@ -200,6 +185,17 @@ mixin _$MeetingStore on MeetingStoreBase, Store {
       ActionController(name: 'MeetingStoreBase');
 
   @override
+  void startListen() {
+    final _$actionInfo = _$MeetingStoreBaseActionController.startAction(
+        name: 'MeetingStoreBase.startListen');
+    try {
+      return super.startListen();
+    } finally {
+      _$MeetingStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   void toggleSpeaker() {
     final _$actionInfo = _$MeetingStoreBaseActionController.startAction(
         name: 'MeetingStoreBase.toggleSpeaker');
@@ -277,28 +273,6 @@ mixin _$MeetingStore on MeetingStoreBase, Store {
   }
 
   @override
-  void listenToController() {
-    final _$actionInfo = _$MeetingStoreBaseActionController.startAction(
-        name: 'MeetingStoreBase.listenToController');
-    try {
-      return super.listenToController();
-    } finally {
-      _$MeetingStoreBaseActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-  void updateException(HMSException hmsException) {
-    final _$actionInfo = _$MeetingStoreBaseActionController.startAction(
-        name: 'MeetingStoreBase.updateException');
-    try {
-      return super.updateException(hmsException);
-    } finally {
-      _$MeetingStoreBaseActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
   void updateError(HMSError error) {
     final _$actionInfo = _$MeetingStoreBaseActionController.startAction(
         name: 'MeetingStoreBase.updateError');
@@ -336,7 +310,6 @@ mixin _$MeetingStore on MeetingStoreBase, Store {
   String toString() {
     return '''
 isSpeakerOn: ${isSpeakerOn},
-exception: ${exception},
 error: ${error},
 isMeetingStarted: ${isMeetingStarted},
 isVideoOn: ${isVideoOn},

@@ -35,7 +35,9 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
     EventChannel.StreamHandler, HMSPreviewListener {
     private lateinit var channel: MethodChannel
     private lateinit var meetingEventChannel: EventChannel
+    private lateinit var previewChannel:EventChannel
     private var eventSink: EventChannel.EventSink? = null
+    private var previewSink: EventChannel.EventSink? = null
     private lateinit var activity: Activity
     lateinit var hmssdk: HMSSDK
     private lateinit var hmsVideoFactory: HMSVideoViewFactory
@@ -44,13 +46,13 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
     override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
         this.channel = MethodChannel(flutterPluginBinding.binaryMessenger, "hmssdk_flutter")
         this.meetingEventChannel = EventChannel(flutterPluginBinding.binaryMessenger, "meeting_event_channel")
-        this.hmsVideoFactory = HMSVideoViewFactory(this)
-        flutterPluginBinding.platformViewRegistry.registerViewFactory(
-            "HMSVideoView",
-            hmsVideoFactory
-        )
+        this.previewChannel= EventChannel(flutterPluginBinding.binaryMessenger, "preview_event_channel")
         this.meetingEventChannel.setStreamHandler(this)
         this.channel.setMethodCallHandler(this)
+        this.previewChannel.setStreamHandler(this)
+        this.hmsVideoFactory = HMSVideoViewFactory(this)
+        flutterPluginBinding.platformViewRegistry.registerViewFactory("HMSVideoView", hmsVideoFactory)
+
     }
 
     override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
@@ -130,7 +132,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
         args.put("data",HMSPreviewExtension.toDictionary(room.localPeer!!,room.localPeer!!.videoTrack!!))
         Log.i("onPreview", args.get("data").toString())
         CoroutineScope(Dispatchers.Main).launch {
-            result!!.success(args)
+            previewSink!!.success(args)
         }
 
     }
@@ -142,7 +144,8 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
         args.put("data", HMSRoomExtension.toDictionary(room)!!)
         Log.i("onJoin", args.get("data").toString())
         CoroutineScope(Dispatchers.Main).launch {
-            eventSink!!.success(args)
+            if(eventSink!=null)
+                eventSink!!.success(args)
         }
 
     }
@@ -154,7 +157,8 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
         args.put("data", HMSMessageExtension.toDictionary(message))
         Log.i("onMessageReceived", args.get("data").toString())
         CoroutineScope(Dispatchers.Main).launch {
-            eventSink!!.success(args)
+            if(eventSink!=null)
+                eventSink!!.success(args)
         }
     }
 
@@ -165,12 +169,9 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
         Log.i("onPeerUpdate", type.toString())
         args.put("data", HMSPeerUpdateExtension.toDictionary(peer, type))
         Log.i("onPeerUpdate", args.get("data").toString())
-//    val hmsVideoViewWidget =HMSVideoView(hmsVideoFactory.context)
-//    if(peer.videoTrack!=null){
-//      peer!!.videoTrack!!.addSink(hmsVideoViewWidget.surfaceViewRenderer)
-//    }
         CoroutineScope(Dispatchers.Main).launch {
-            eventSink!!.success(args)
+            if(eventSink!=null)
+                eventSink!!.success(args)
         }
     }
 
@@ -180,7 +181,8 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
         args.put("data", hmsRoom.name)
 
         CoroutineScope(Dispatchers.Main).launch {
-            eventSink!!.success(args)
+            if(eventSink!=null)
+                eventSink!!.success(args)
         }
     }
 
@@ -209,7 +211,8 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
 
         Log.i("onTrackUpdate",args.get("data").toString())
         CoroutineScope(Dispatchers.Main).launch {
-            eventSink!!.success(args)
+            if(eventSink!=null)
+                eventSink!!.success(args)
         }
 
 
@@ -220,7 +223,8 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
         val args = HashMap<String, Any>()
         args.put("event_name", "on_re_connected")
         CoroutineScope(Dispatchers.Main).launch {
-            eventSink!!.success(args)
+            if(eventSink!=null)
+                eventSink!!.success(args)
         }
     }
 
@@ -230,7 +234,8 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
         val args = HashMap<String, Any>()
         args.put("event_name", "on_re_connecting")
         CoroutineScope(Dispatchers.Main).launch {
-            eventSink!!.success(args)
+            if(eventSink!=null)
+                eventSink!!.success(args)
         }
     }
 
@@ -239,7 +244,8 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
         args.put("event_name", "on_role_change_request")
         args.put("data", HMSRoleChangedExtension.toDictionary(request))
         CoroutineScope(Dispatchers.Main).launch {
-            eventSink!!.success(args)
+            if(eventSink!=null)
+                eventSink!!.success(args)
         }
     }
 
@@ -317,7 +323,18 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
     }
 
     override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
-        this.eventSink = events
+
+        val nameOfEventSink=(arguments as HashMap<String,Any>)["name"]
+        Log.i("onListen EventChannel",nameOfEventSink.toString())
+        if (nameOfEventSink!!.equals("meeting")){
+            this.eventSink = events
+            Log.i("onListen EventChannel","eventSink")
+        }
+        else if (nameOfEventSink!!.equals("preview")){
+            this.previewSink = events
+            Log.i("onListen EventChannel","previewSink")
+        }
+
     }
 
     override fun onCancel(arguments: Any?) {

@@ -1,12 +1,12 @@
 class Constant {
   static String tokenEndpoint =
-      "https://prod-in.100ms.live/hmsapi/vivek.app.100ms.live/";
+      "https://prod-in.100ms.live/hmsapi/internal.app.100ms.live/";
 
   static String tokenQuery = "api/token";
 
   static String getTokenURL = tokenEndpoint + tokenQuery;
 
-  static String defaultRoomID = "6102e2e929b19fbfb7e85ecc";
+  static String defaultRoomID = "60cb4115331afe8818049692";
 
   static String tokenKey = "token";
 
@@ -15,5 +15,5 @@ class Constant {
   static String roomIDKey = "roomID";
 
   static String hostKey = "host";
-  static String defaultRole = 'host';
+  static String defaultRole = 'teacher';
 }

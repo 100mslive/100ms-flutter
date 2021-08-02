@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:collection';
 
 import 'package:flutter/services.dart';
 import 'package:hmssdk_flutter/common/platform_methods.dart';
@@ -74,7 +75,9 @@ class PlatformService {
       Map data = event.data;
       switch (method) {
         case HMSUpdateListenerMethod.onJoinRoom:
-          HMSRoom? room = HMSRoom.fromMap(data['room']);
+          //HashMap hashMap = data["room"] as HashMap;
+          //print("HMSUpdateListenerMethod.onJoinRoom ${(event)}");
+          HMSRoom? room = HMSRoom.fromMap(data["room"]);
           notifyMeetingListeners(method, {'room': room});
           break;
         case HMSUpdateListenerMethod.onUpdateRoom:
@@ -152,7 +155,7 @@ class PlatformService {
       switch (method) {
         case HMSPreviewUpdateListenerMethod.onPreviewVideo:
           HMSPeer? peer = HMSPeer.fromMap(event.data['peer']);
-          HMSTrack? localTrack = HMSTrack.fromMap(data['local_track'], peer);
+          HMSTrack? localTrack = HMSTrack.fromMap(data['track'], peer);
           notifyPreviewListeners(
               method, {'peer': peer, 'local_track': localTrack});
           break;

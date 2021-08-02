@@ -24,12 +24,23 @@
         <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
         <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
         <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
-        <item name="BRANCH:origin/ahron-video-rendering-temp" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="BRANCH:origin/feature-vivek-preview" type="e8cecc67:BranchNodeDescriptor" />
       </path>
     </select>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f6635374-520c-494c-ae8d-73b820655433" name="Default Changelist" comment="fixed video rendering" />
+    <list default="true" id="f6635374-520c-494c-ae8d-73b820655433" name="Default Changelist" comment="fixed video rendering">
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Merge_at_26_07_21__12_23_am__Default_Changelist_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Merge_at_26_07_21__12_23_am__Default_Changelist_.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_25_07_21__11_33_pm__Default_Changelist_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_25_07_21__11_33_pm__Default_Changelist_.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/src/main/kotlin/live/hms/hmssdk_flutter/HMSPeerUpdateExtension.kt" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/kotlin/live/hms/hmssdk_flutter/HMSPeerUpdateExtension.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/src/main/kotlin/live/hms/hmssdk_flutter/HMSRoomExtension.kt" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/kotlin/live/hms/hmssdk_flutter/HMSRoomExtension.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/src/main/kotlin/live/hms/hmssdk_flutter/HmssdkFlutterPlugin.kt" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/kotlin/live/hms/hmssdk_flutter/HmssdkFlutterPlugin.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/lib/common/constant.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/common/constant.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/lib/meeting/meeting_store.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/meeting/meeting_store.g.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/model/hms_room.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/model/hms_room.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/service/platform_service.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/service/platform_service.dart" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -51,7 +62,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="ahron-video-rendering-temp" />
+        <entry key="$PROJECT_DIR$" value="feature-vivek-preview" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -234,7 +245,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="origin/ahron-video-rendering-temp" />
+                        <option value="origin/feature-vivek-preview" />
                       </list>
                     </value>
                   </entry>
@@ -285,26 +296,26 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="693" y="366" key="Github.CreatePullRequestDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1626272036981" />
-    <state width="1869" height="506" key="GridCell.Tab.0.bottom" timestamp="1627663209729">
+    <state width="1869" height="492" key="GridCell.Tab.0.bottom" timestamp="1627892617597">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="1398" height="489" key="GridCell.Tab.0.bottom/0.0.1440.900@0.0.1440.900" timestamp="1625190703001" />
-    <state width="1869" height="506" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1627663209729" />
-    <state width="1869" height="506" key="GridCell.Tab.0.center" timestamp="1627663209729">
+    <state width="1869" height="492" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1627892617597" />
+    <state width="1869" height="492" key="GridCell.Tab.0.center" timestamp="1627892617597">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="1398" height="489" key="GridCell.Tab.0.center/0.0.1440.900@0.0.1440.900" timestamp="1625190703000" />
-    <state width="1869" height="506" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1627663209729" />
-    <state width="1869" height="506" key="GridCell.Tab.0.left" timestamp="1627663209729">
+    <state width="1869" height="492" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1627892617597" />
+    <state width="1869" height="492" key="GridCell.Tab.0.left" timestamp="1627892617597">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="1398" height="489" key="GridCell.Tab.0.left/0.0.1440.900@0.0.1440.900" timestamp="1625190703000" />
-    <state width="1869" height="506" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1627663209729" />
-    <state width="1869" height="506" key="GridCell.Tab.0.right" timestamp="1627663209729">
+    <state width="1869" height="492" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1627892617597" />
+    <state width="1869" height="492" key="GridCell.Tab.0.right" timestamp="1627892617597">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="1398" height="489" key="GridCell.Tab.0.right/0.0.1440.900@0.0.1440.900" timestamp="1625190703000" />
-    <state width="1869" height="506" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1627663209729" />
+    <state width="1869" height="492" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1627892617597" />
     <state width="1398" height="489" key="GridCell.Tab.1.bottom" timestamp="1625190702999">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
