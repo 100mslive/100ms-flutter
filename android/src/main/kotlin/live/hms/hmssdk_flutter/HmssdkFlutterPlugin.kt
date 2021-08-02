@@ -3,7 +3,6 @@ package live.hms.hmssdk_flutter
 import android.app.Activity
 import androidx.annotation.NonNull
 import io.flutter.Log
-
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding

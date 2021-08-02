@@ -122,16 +122,15 @@ abstract class MeetingStoreBase with Store {
   @action
   void listenToController() {
     controller?.listen((event) {
-      debugPrint("listenToController ${event.method.toString()}");
-      debugPrint("listenToController ${event.data.toString()}");
+
       if (event.method == PlatformMethod.onJoinRoom) {
         print('onJoinRoom');
         HMSPeer peer = HMSPeer.fromMap(event.data['hms_local_peer']);
-        debugPrint("Flutter listenToController trackupdate $peer");
+
         localPeer = peer;
       } else if (event.method == PlatformMethod.onPeerUpdate) {
         HMSPeer peer = HMSPeer.fromMap(event.data['peer']);
-        debugPrint("Flutter listenToController $peer");
+
         HMSPeerUpdate update =
             HMSPeerUpdateValues.getHMSPeerUpdateFromName(event.data['update']);
         if (peer.isLocal) {
@@ -144,7 +143,7 @@ abstract class MeetingStoreBase with Store {
         HMSTrackUpdate update = HMSTrackUpdateValues.getHMSTrackUpdateFromName(
             event.data['update']);
         HMSTrack track = HMSTrack.fromMap(event.data['track'], peer);
-        debugPrint("Flutter listenToController trackupdate $peer");
+        
         if (peer.isLocal) {
           localPeer = peer;
         } else

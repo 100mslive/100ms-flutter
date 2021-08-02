@@ -24,12 +24,20 @@
         <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
         <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
         <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
-        <item name="BRANCH:origin/ahron-video-rendering-temp" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="BRANCH:origin/feature-vivek-preview" type="e8cecc67:BranchNodeDescriptor" />
       </path>
     </select>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f6635374-520c-494c-ae8d-73b820655433" name="Default Changelist" comment="fixed video rendering" />
+    <list default="true" id="f6635374-520c-494c-ae8d-73b820655433" name="Default Changelist" comment="fixed video rendering">
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Merge_at_26_07_21,_12_23_am_[Default_Changelist]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Merge_at_26_07_21__12_23_am__Default_Changelist_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_25_07_21,_11_33_pm_[Default_Changelist]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_25_07_21__11_33_pm__Default_Changelist_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/src/main/kotlin/live/hms/hmssdk_flutter/HmssdkFlutterPlugin.kt" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/kotlin/live/hms/hmssdk_flutter/HmssdkFlutterPlugin.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/lib/meeting/meeting_store.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/meeting/meeting_store.dart" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -56,6 +64,7 @@
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <option name="RESET_MODE" value="HARD" />
+    <option name="UPDATE_TYPE" value="REBASE" />
   </component>
   <component name="GithubProjectSettings">
     <option name="CREATE_PULL_REQUEST_DEFAULT_BRANCH" value="vivek-feature-peers" />
@@ -67,6 +76,7 @@
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="Git.Branch.Popup.ShowAllRemotes" value="true" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="dart.analysis.tool.window.visible" value="false" />
     <property name="io.flutter.reload.alreadyRun" value="true" />
@@ -209,7 +219,14 @@
       <option name="project" value="LOCAL" />
       <updated>1627663198326</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="fixed video rendering">
+      <created>1627663247219</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1627663247219</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -234,7 +251,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="origin/ahron-video-rendering-temp" />
+                        <option value="origin/feature-vivek-preview" />
                       </list>
                     </value>
                   </entry>
@@ -281,10 +298,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="687" y="217" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1627037158224" />
-    <state x="693" y="366" key="Github.CreatePullRequestDialog" timestamp="1626272036981">
+    <state x="693" y="366" key="Github.CreatePullRequestDialog" timestamp="1627663562178">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="693" y="366" key="Github.CreatePullRequestDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1626272036981" />
+    <state x="693" y="366" key="Github.CreatePullRequestDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1627663562178" />
     <state width="1869" height="506" key="GridCell.Tab.0.bottom" timestamp="1627663209729">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -337,18 +354,18 @@
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="572" y="367" key="VCS.ChangelistChooser/0.0.1440.900@0.0.1440.900" timestamp="1625300183450" />
-    <state x="452" y="189" key="Vcs.Push.Dialog.v2" timestamp="1627581632733">
+    <state x="452" y="189" key="Vcs.Push.Dialog.v2" timestamp="1627663263985">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="452" y="189" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1627581632733" />
-    <state x="736" y="416" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1626101451259">
+    <state x="452" y="189" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1627663263985" />
+    <state x="736" y="416" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1627883160716">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="736" y="416" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1920.1040@0.0.1920.1040" timestamp="1626101451259" />
-    <state x="505" y="167" key="git4idea.branch.GitSmartOperationDialog" timestamp="1626271542676">
+    <state x="736" y="416" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1920.1040@0.0.1920.1040" timestamp="1627883160716" />
+    <state x="505" y="167" key="git4idea.branch.GitSmartOperationDialog" timestamp="1627883393024">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="505" y="167" key="git4idea.branch.GitSmartOperationDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1626271542676" />
+    <state x="505" y="167" key="git4idea.branch.GitSmartOperationDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1627883393024" />
     <state x="453" y="131" key="new project wizard" timestamp="1626617267236">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
