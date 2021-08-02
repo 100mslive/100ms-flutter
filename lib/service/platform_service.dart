@@ -91,7 +91,7 @@ class PlatformService {
           break;
         case HMSUpdateListenerMethod.onTrackUpdate:
           HMSPeer? peer = HMSPeer.fromMap(event.data['peer']);
-          HMSTrack? track = HMSTrack.fromMap(data['track'], peer);
+          HMSTrack? track = HMSTrack.fromMap(map: data['track'], peer: peer);
           HMSTrackUpdate? update =
               HMSTrackUpdateValues.getHMSTrackUpdateFromName(data['update']);
 
@@ -147,14 +147,14 @@ class PlatformService {
           method: method, data: data, response: event);
     }).listen((event) {
       HMSPreviewUpdateListenerMethod method = event.method;
-      Map data = event.data;
 
       switch (method) {
         case HMSPreviewUpdateListenerMethod.onPreviewVideo:
-          HMSPeer? peer = HMSPeer.fromMap(event.data['peer']);
-          HMSTrack? localTrack = HMSTrack.fromMap(data['local_track'], peer);
+          HMSRoom? room = HMSRoom.fromMap(event.data['room']);
+          List<HMSTrack> tracks = HMSTrack.getHMSTracksFromList(
+              listOfMap: event.data['local_tracks']);
           notifyPreviewListeners(
-              method, {'peer': peer, 'local_track': localTrack});
+              method, {'room': room, 'local_tracks': tracks});
           break;
         case HMSPreviewUpdateListenerMethod.unknown:
           break;
@@ -168,7 +168,7 @@ class PlatformService {
       case HMSPreviewUpdateListenerMethod.onPreviewVideo:
         previewListeners.forEach((e) {
           e.onPreview(
-              peer: arguments['peer'], localTrack: arguments['local_track']);
+              room: arguments['room'], localTracks: arguments['local_tracks']);
         });
         break;
       case HMSPreviewUpdateListenerMethod.unknown:
