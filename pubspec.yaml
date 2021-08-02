@@ -1,7 +1,10 @@
 name: hmssdk_flutter
-description: A new flutter plugin project.
+description: The Flutter package for 100ms SDK.
 version: 0.0.1
-homepage:
+homepage: https://www.100ms.live/
+repository: https://github.com/100mslive/100ms-flutter
+issue_tracker: https://github.com/100mslive/100ms-flutter/issues
+documentation: https://docs.100ms.live/v2/100ms-v2/Basics
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
