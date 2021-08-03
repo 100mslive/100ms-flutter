@@ -40,10 +40,10 @@ class HMSVideoViewWidget(context: Context, id: Int, creationParams: Map<String?,
 
 
         peer?.videoTrack.let {
-            if (it?.trackId==trackId){
+           if (it?.trackId==trackId || peer.isLocal){
                 hmsVideoView.setVideoTrack(peer)
                 return
-            }
+           }
         }
 
 
@@ -61,8 +61,10 @@ class HMSVideoViewFactory(val plugin: HmssdkFlutterPlugin) : PlatformViewFactory
         val isLocal=args!!["is_local"] as Boolean
         val trackId=args!!["track_id"] as String
         Log.i("onCreateHMSVideoView", "$isLocal $id")
-        Log.i("HMSVideoViewFactory",plugin.getPeerById(id,isLocal)!!.toString())
-        return HMSVideoViewWidget(context, viewId, creationParams,plugin.getPeerById(id,isLocal)!!,trackId)
+        Log.i("HMSVideoViewFactory",trackId.toString())
+        val peer = if(isLocal) plugin.getLocalPeer()
+        else plugin.getPeerById(id)!!
+        return HMSVideoViewWidget(context, viewId, creationParams,peer,trackId)
     }
 }
 

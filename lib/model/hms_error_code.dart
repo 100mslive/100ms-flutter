@@ -1,9 +1,9 @@
 class HMSErrorCode {
-  final int errorCode;
+  final String errorCode;
 
   HMSErrorCode({required this.errorCode});
 
-  factory HMSErrorCode.fromMap(Map map) {
-    return HMSErrorCode(errorCode: map['error_code']);
+  factory HMSErrorCode.fromMap(dynamic code) {
+    return HMSErrorCode(errorCode: code.toString());
   }
 }

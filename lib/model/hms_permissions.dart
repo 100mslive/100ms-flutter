@@ -1,20 +1,20 @@
 class HMSPermissions {
-  final bool endRoom;
-  final bool removeOthers;
-  final bool stopPresentation;
-  final bool muteAll;
-  final bool askToUnMute;
-  final bool muteSelective;
-  final bool changeRole;
+  final bool? endRoom;
+  final bool? removeOthers;
+  final bool? stopPresentation;
+  final bool? muteAll;
+  final bool? askToUnMute;
+  final bool? muteSelective;
+  final bool? changeRole;
 
   HMSPermissions(
-      {required this.endRoom,
-      required this.removeOthers,
-      required this.stopPresentation,
-      required this.muteAll,
-      required this.askToUnMute,
-      required this.muteSelective,
-      required this.changeRole});
+      {this.endRoom,
+      this.removeOthers,
+      this.stopPresentation,
+      this.muteAll,
+      this.askToUnMute,
+      this.muteSelective,
+      this.changeRole});
 
   factory HMSPermissions.fromMap(Map map) {
     return HMSPermissions(
@@ -25,5 +25,17 @@ class HMSPermissions {
         askToUnMute: map['ask_to_un_mute'],
         muteSelective: map['mute_selective'],
         changeRole: map['change_role']);
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'end_room': endRoom,
+      'stop_presentation': stopPresentation,
+      'remove_others': removeOthers,
+      'mute_all': muteAll,
+      'ask_to_un_mute': askToUnMute,
+      'mute_selective': muteSelective,
+      'change_role': changeRole
+    };
   }
 }

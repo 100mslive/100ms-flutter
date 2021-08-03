@@ -12,18 +12,10 @@ class  HMSAudioSettingsExtension {
     static func toDictionary(audioSettings:HMSAudioSettings)-> Dictionary<String,Any?>{
         var dict:Dictionary<String, Any?> = [:]
         dict["bit_rate"]=audioSettings.bitRate
-        dict["codec"] = getValueOfHMSAudioCodec(codec:audioSettings.codec)
+        dict["codec"] = audioSettings.codec
         
         return dict
     }
     
-    static func getValueOfHMSAudioCodec (codec:HMSAudioCodec)->String{
-        switch codec {
-        case .opus:
-            return "opus"
-        @unknown default:
-            return "defaultCodec"
-        }
-    }
 }
 

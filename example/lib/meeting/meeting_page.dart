@@ -1,11 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:hmssdk_flutter/common/platform_methods.dart';
 import 'package:hmssdk_flutter/enum/hms_track_kind.dart';
 import 'package:hmssdk_flutter/enum/hms_track_source.dart';
 import 'package:hmssdk_flutter/model/hms_track.dart';
-import 'package:hmssdk_flutter/model/platform_method_response.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/chat_bottom_sheet.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/peer_item_organism.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
@@ -35,12 +33,14 @@ class _MeetingPageState extends State<MeetingPage> {
     MeetingController meetingController = MeetingController(
         roomId: widget.roomId, flow: widget.flow, user: widget.user);
     _meetingStore.meetingController = meetingController;
+
     super.initState();
     initMeeting();
   }
 
   void initMeeting() {
-    _meetingStore.startMeeting();
+    _meetingStore.joinMeeting();
+    _meetingStore.startListen();
   }
 
   @override
@@ -60,7 +60,6 @@ class _MeetingPageState extends State<MeetingPage> {
                   )),
           IconButton(
             onPressed: () async {
-              //TODO:: switch camera
               _meetingStore.toggleCamera();
             },
             icon: Icon(Icons.switch_camera),
@@ -74,26 +73,6 @@ class _MeetingPageState extends State<MeetingPage> {
       body: Center(
         child: Column(
           children: [
-            // Text(widget.user),
-            // Text(widget.flow.toString()),
-            // Text(widget.roomId),
-            // Observer(builder: (_) {
-            //   if (_meetingStore.isMeetingStarted) {
-            //     return StreamBuilder<PlatformMethodResponse>(
-            //         stream: _meetingStore.controller,
-            //         builder: (context, data) {
-            //           // print(data.data!.method.toString());
-            //           if (data.data == null) return Text("Null data");
-            //           if (data.data!.method == PlatformMethod.onPeerUpdate) {
-            //             print('peer update');
-            //           }
-            //           String data1 = data.data!.data.toString();
-            //           return Text(data1);
-            //         });
-            //   } else {
-            //     return CupertinoActivityIndicator();
-            //   }
-            // }),
             Observer(builder: (_) {
               if (_meetingStore.localPeer != null) {
                 return SizedBox(
@@ -133,68 +112,58 @@ class _MeetingPageState extends State<MeetingPage> {
                 },
               ),
             ),
-
           ],
         ),
       ),
-      bottomNavigationBar: Observer(
-        builder: (_) {
-          if (_meetingStore.isMeetingStarted) {
-            return Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Container(
-                  padding: EdgeInsets.all(16),
-                  child: Observer(builder: (context) {
-                    return IconButton(
-                        tooltip: 'Video',
-                        onPressed: () {
-                          _meetingStore.toggleVideo();
-                        },
-                        icon: Icon(_meetingStore.isVideoOn
-                            ? Icons.videocam
-                            : Icons.videocam_off));
-                  }),
-                ),
-                Container(
-                  padding: EdgeInsets.all(16),
-                  child: Observer(builder: (context) {
-                    return IconButton(
-                        tooltip: 'Audio',
-                        onPressed: () {
-
-                          _meetingStore.toggleAudio();
-                        },
-                        icon: Icon(
-                            _meetingStore.isMicOn ? Icons.mic : Icons.mic_off));
-                  }),
-                ),
-                Container(
-                  padding: EdgeInsets.all(16),
-                  child: IconButton(
-                      tooltip: 'Chat',
-                      onPressed: () {
-                        chatMessages(context,_meetingStore);
-                      },
-                      icon: Icon(Icons.chat_bubble)),
-                ),
-                Container(
-                  padding: EdgeInsets.all(16),
-                  child: IconButton(
-                      tooltip: 'Leave',
-                      onPressed: () {
-                        _meetingStore.meetingController.leaveMeeting();
-                        Navigator.pushReplacement(context,
-                            MaterialPageRoute(builder: (ctx) => HomePage()));
-                      },
-                      icon: Icon(Icons.call_end)),
-                ),
-              ],
-            );
-          } else {
-            return Text('Please wait while we connect you!');
-          }
-        },
+      bottomNavigationBar: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Container(
+            padding: EdgeInsets.all(16),
+            child: Observer(builder: (context) {
+              return IconButton(
+                  tooltip: 'Video',
+                  onPressed: () {
+                    _meetingStore.toggleVideo();
+                  },
+                  icon: Icon(_meetingStore.isVideoOn
+                      ? Icons.videocam
+                      : Icons.videocam_off));
+            }),
+          ),
+          Container(
+            padding: EdgeInsets.all(16),
+            child: Observer(builder: (context) {
+              return IconButton(
+                  tooltip: 'Audio',
+                  onPressed: () {
+                    _meetingStore.toggleAudio();
+                  },
+                  icon:
+                      Icon(_meetingStore.isMicOn ? Icons.mic : Icons.mic_off));
+            }),
+          ),
+          Container(
+            padding: EdgeInsets.all(16),
+            child: IconButton(
+                tooltip: 'Chat',
+                onPressed: () {
+                  chatMessages(context, _meetingStore);
+                },
+                icon: Icon(Icons.chat_bubble)),
+          ),
+          Container(
+            padding: EdgeInsets.all(16),
+            child: IconButton(
+                tooltip: 'Leave',
+                onPressed: () {
+                  _meetingStore.meetingController.leaveMeeting();
+                  Navigator.pushReplacement(
+                      context, MaterialPageRoute(builder: (ctx) => HomePage()));
+                },
+                icon: Icon(Icons.call_end)),
+          ),
+        ],
       ),
     );
   }

@@ -15,4 +15,5 @@ class Constant {
   static String roomIDKey = "roomID";
 
   static String hostKey = "host";
+  static String defaultRole = 'host';
 }

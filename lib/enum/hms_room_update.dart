@@ -5,14 +5,14 @@ enum HMSRoomUpdate {
 }
 
 extension HMSRoomUpdateValues on HMSRoomUpdate {
-  static HMSRoomUpdate getHMSCameraFacingFromName(String name) {
+  static HMSRoomUpdate getHMSRoomUpdateFromName(String name) {
     switch (name) {
       default:
         return HMSRoomUpdate.unknown;
     }
   }
 
-  static String getValueFromHMSCameraFacing(HMSRoomUpdate hmsRoomUpdate) {
+  static String getValueFromHMSRoomUpdate(HMSRoomUpdate hmsRoomUpdate) {
     switch (hmsRoomUpdate) {
       case HMSRoomUpdate.HMSRoomUpdateRoomTypeChanged:
         return 'HMSRoomUpdateRoomTypeChanged';
