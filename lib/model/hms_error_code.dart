@@ -3,7 +3,7 @@ class HMSErrorCode {
 
   HMSErrorCode({required this.errorCode});
 
-  factory HMSErrorCode.fromMap(String code) {
-    return HMSErrorCode(errorCode: code);
+  factory HMSErrorCode.fromMap(dynamic code) {
+    return HMSErrorCode(errorCode: code.toString());
   }
 }

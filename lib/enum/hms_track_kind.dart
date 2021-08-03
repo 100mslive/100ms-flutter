@@ -1,4 +1,4 @@
-enum HMSTrackKind { kHMSTrackKindAudio, kHMSTrackKindVideo, unknown}
+enum HMSTrackKind { kHMSTrackKindAudio, kHMSTrackKindVideo, unknown }
 
 extension HMSTrackKindValue on HMSTrackKind {
   static HMSTrackKind getHMSTrackKindFromName(String name) {

@@ -19,6 +19,7 @@ enum PlatformMethod {
   isVideoMute,
   startCapturing,
   stopCapturing,
+  previewVideo,
   unknown
 }
 
@@ -65,6 +66,8 @@ extension PlatformMethodValues on PlatformMethod {
         return 'stop_capturing';
       case PlatformMethod.sendMessage:
         return 'send_message';
+      case PlatformMethod.previewVideo:
+        return 'preview_video';
       case PlatformMethod.unknown:
         return 'unknown';
     }
@@ -112,6 +115,8 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.startCapturing;
       case 'send_message':
         return PlatformMethod.sendMessage;
+      case 'preview_video':
+        return PlatformMethod.previewVideo;
       default:
         return PlatformMethod.unknown;
     }

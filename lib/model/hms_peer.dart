@@ -47,10 +47,11 @@ class HMSPeer {
       role: role,
       customerDescription: map['customer_description'],
       customerUserId: map['customer_user_id'],
+
     );
   }
 
-  static List<HMSPeer> fromListOfMap(List<Map> peersMap) {
+  static List<HMSPeer> fromListOfMap(List peersMap) {
     List<HMSPeer> peers = peersMap.map((e) => HMSPeer.fromMap(e)).toList();
     return peers;
   }

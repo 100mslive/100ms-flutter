@@ -2,16 +2,37 @@ import Flutter
 import UIKit
 import HMSSDK
 
-public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListener,FlutterStreamHandler {
-
-
+public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListener,FlutterStreamHandler,HMSPreviewListener {
+   
     let channel:FlutterMethodChannel
     let meetingEventChannel:FlutterEventChannel
+    let previewEventChannel:FlutterEventChannel
     var eventSink:FlutterEventSink?
+    var previewSink:FlutterEventSink?
     
-    public  init(channel:FlutterMethodChannel,meetingEventChannel:FlutterEventChannel) {
+    public  init(channel:FlutterMethodChannel,meetingEventChannel:FlutterEventChannel,previewEventChannel:FlutterEventChannel) {
         self.channel=channel
         self.meetingEventChannel=meetingEventChannel
+        self.previewEventChannel=previewEventChannel
+        hmsSDK=HMSSDK.build()
+    }
+    
+    public func onPreview(room: HMSRoom, localTracks: [HMSTrack]) {
+        print("On Preview Room")
+        var tracks:[Dictionary<String, Any?>]=[]
+        
+        for eachTrack in localTracks{
+            tracks.insert(HMSTrackExtension.toDictionary(track: eachTrack), at: tracks.count)
+        }
+        
+        let data:[String:Any]=[
+            "event_name":"preview_video",
+            "data":[
+                "room":HMSRoomExtension.toDictionary(hmsRoom: room),
+                "local_tracks":tracks,
+            ]
+        ]
+        previewSink?(data)
     }
     
     public func on(join room: HMSRoom) {
@@ -20,7 +41,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         let data:[String:Any]=[
             "event_name":"on_join_room",
             "data":[
-                "name":"Vivek"
+                "room" : HMSRoomExtension.toDictionary(hmsRoom: room)
             ]
         ]
         eventSink?(data)
@@ -28,7 +49,15 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     
     
     public func onListen(withArguments arguments: Any?, eventSink events: @escaping FlutterEventSink) -> FlutterError? {
-        self.eventSink = events
+        if let tempArg = arguments as? Dictionary<String, AnyObject>{
+            let name:String =  tempArg["name"] as? String ?? ""
+            if(name == "meeting"){
+                self.eventSink = events
+            }else if(name == "preview"){
+                self.previewSink=events;
+            }
+        }
+
         return nil
     }
     
@@ -116,7 +145,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         let data:[String:Any]=[
             "event_name":"on_message",
             "data":[
-                "name":"Vivek"
+                "message": HMSMessageExtension.toDictionary(message: message)
             ]
         ]
         eventSink?(data)
@@ -175,10 +204,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
             }else{
                 videoTrack.startCapturing()
-
             }
-            
-            
          }
         result("video_changed")
     }
@@ -190,35 +216,19 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         result("camera_changed")
     }
     
-    
-    internal var hmsSDK: HMSSDK?
-
-  public static func register(with registrar: FlutterPluginRegistrar) {
-    let channel = FlutterMethodChannel(name: "hmssdk_flutter", binaryMessenger: registrar.messenger())
-    let eventChannel = FlutterEventChannel(name: "meeting_event_channel", binaryMessenger: registrar.messenger())
-   
-    let instance = SwiftHmssdkFlutterPlugin(channel: channel,meetingEventChannel: eventChannel)
-    
-    
-     let videoViewFactory:HMSVideoViewFactory = HMSVideoViewFactory(messenger: registrar.messenger(),plugin: instance)
-     registrar.register(videoViewFactory, withId: "HMSVideoView")
-    
-    eventChannel.setStreamHandler(instance)
-    registrar.addMethodCallDelegate(instance, channel: channel)
-  }
-
-  public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
-    switch call.method {
-    case "join_meeting":joinMeeting(call:call,result:result)
-    case "leave_meeting":leaveMeeting(result: result)
-    case "switch_audio":switchAudio(call: call , result: result)
-    case "switch_video":switchVideo(call: call , result: result)
-    case "switch_camera":switchCamera(result: result)
-    
-    default:
-        result(FlutterMethodNotImplemented)
+    func previewVideo(call: FlutterMethodCall,result:FlutterResult) {
+        let arguments = call.arguments as! Dictionary<String, AnyObject>
+        let config:HMSConfig = HMSConfig(
+            userName: (arguments["user_name"] as? String) ?? "",
+            userID: arguments["user_id"] as? String ?? "",
+            roomID: arguments["room_id"] as? String ?? "",
+            authToken: arguments["auth_token"] as? String ?? "",
+            shouldSkipPIIEvents: arguments["should_skip_pii_events"] as? Bool ?? false
+        )
+     
+        hmsSDK?.preview(config: config, delegate: self)
     }
-  }
+    
     func joinMeeting(call:FlutterMethodCall,result:FlutterResult){
         let arguments = call.arguments as! Dictionary<String, AnyObject>
 
@@ -229,21 +239,61 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             authToken: arguments["auth_token"] as? String ?? "",
             shouldSkipPIIEvents: arguments["should_skip_pii_events"] as? Bool ?? false
         )
-        
-        
-        hmsSDK = HMSSDK.build()
-        
+       
         hmsSDK?.join(config: config, delegate: self)
         meetingEventChannel.setStreamHandler(self)
-//enable the stream handler
-        
         result("joining meeting in ios")
+    }
+    
+    func sendMessage(call: FlutterMethodCall,result:FlutterResult) {
+        let arguments = call.arguments as! Dictionary<String, AnyObject>
+        let message:HMSMessage = HMSMessage(
+            sender: (arguments["sender"] as? String) ?? "",
+            receiver: arguments["receiver"] as? String ?? "",
+            time:arguments["time"] as? String ?? "",
+            type: arguments["type"] as? String ?? "",
+            message: arguments["message"] as? String ?? ""
+        )
+        hmsSDK?.send(message: message)
+        result("sent message")
     }
     
     func leaveMeeting(result:FlutterResult){
         hmsSDK?.leave();
         result("Leaving meeting")
     }
+    internal var hmsSDK: HMSSDK?
+
+  public static func register(with registrar: FlutterPluginRegistrar) {
+    let channel = FlutterMethodChannel(name: "hmssdk_flutter", binaryMessenger: registrar.messenger())
+    let eventChannel = FlutterEventChannel(name: "meeting_event_channel", binaryMessenger: registrar.messenger())
+    let previewChannel = FlutterEventChannel(name: "preview_event_channel", binaryMessenger: registrar.messenger())
+
+    let instance = SwiftHmssdkFlutterPlugin(channel: channel,meetingEventChannel: eventChannel,previewEventChannel: previewChannel)
+    
+    
+     let videoViewFactory:HMSVideoViewFactory = HMSVideoViewFactory(messenger: registrar.messenger(),plugin: instance)
+     registrar.register(videoViewFactory, withId: "HMSVideoView")
+    
+    eventChannel.setStreamHandler(instance)
+    previewChannel.setStreamHandler(instance)
+    registrar.addMethodCallDelegate(instance, channel: channel)
+  }
+
+  public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
+    switch call.method {
+    case "join_meeting":joinMeeting(call:call,result:result)
+    case "leave_meeting":leaveMeeting(result: result)
+    case "switch_audio":switchAudio(call: call , result: result)
+    case "switch_video":switchVideo(call: call , result: result)
+    case "switch_camera":switchCamera(result: result)
+    case "preview_video":previewVideo(call:call,result:result)
+    case "send_message":sendMessage(call:call,result:result)
+    default:
+        result(FlutterMethodNotImplemented)
+    }
+  }
+
 
     
     

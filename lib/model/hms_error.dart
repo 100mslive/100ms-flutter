@@ -1,45 +1,54 @@
 import 'package:hmssdk_flutter/model/hms_error_code.dart';
 
 class HMSError {
-  final String id;
-  final HMSErrorCode code;
+  //id is name in android
+  final String? id;
+  final HMSErrorCode? code;
   final String message;
-  String? info;
-  String? action;
 
-  // Map<String, dynamic>? params;
+  //description is info in android
+  String description;
+  String action;
   Map? params;
 
-  HMSError(
-      {required this.id,
-      required this.code,
-      required this.message,
-      this.info,
-      this.action,
-      this.params});
+  HMSError({
+    this.id,
+    this.code,
+    required this.message,
+    required this.description,
+    required this.action,
+    required this.params,
+  });
 
   factory HMSError.fromMap(Map map) {
+    HMSErrorCode? code;
+
+    if (map.containsKey('code')) {
+      code = HMSErrorCode(errorCode: map['code']);
+    }
+
     return HMSError(
-        id: map['id'],
-        code: HMSErrorCode.fromMap(map['code']),
-        message: map['message'],
-        action: map['action'],
-        info: map['info'],
-        params: map['params']);
+      id: map['id'] ?? map['name'] ?? '',
+      code: code,
+      message: map['message'],
+      action: map['action'],
+      description: map['info'] ?? map['description'] ?? '',
+      params: map['params'],
+    );
   }
 
   Map<String, dynamic> toMap() {
     return {
       'id': this.id,
-      'code': code.errorCode,
+      'name': this.id,
+      'code': code?.errorCode ?? '',
       'message': this.message,
-      'info': this.info,
+      'info': this.description,
+      'description': this.description,
       'action': this.action,
       'params': this.params,
     };
   }
-
-  String get description => message;
 
   String get localizedDescription => message;
 
