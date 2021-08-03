@@ -139,6 +139,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
 
     override fun onJoin(room: HMSRoom) {
         Log.i("OnJoin",room.toString()+"HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHAAA")
+        Log.i("onJoin",hmssdk?.getRoles().toString());
         val args = HashMap<String, Any>()
         args.put("event_name", "on_join_room")
         args.put("data", HMSRoomExtension.toDictionary(room)!!)
@@ -247,6 +248,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
             if(eventSink!=null)
                 eventSink!!.success(args)
         }
+
     }
 
     override fun onAttachedToActivity(binding: ActivityPluginBinding) {

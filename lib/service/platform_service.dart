@@ -72,11 +72,12 @@ class PlatformService {
           method: method, data: data, response: event);
     }).listen((event) {
       HMSUpdateListenerMethod method = event.method;
+      print("HMSUpdateListenerMethod ${event.method}");
       Map data = event.data;
       switch (method) {
         case HMSUpdateListenerMethod.onJoinRoom:
           //HashMap hashMap = data["room"] as HashMap;
-          //print("HMSUpdateListenerMethod.onJoinRoom ${(event)}");
+          print("HMSUpdateListenerMethod.onJoinRoom ${data["room"]}");
           HMSRoom? room = HMSRoom.fromMap(data["room"]);
           notifyMeetingListeners(method, {'room': room});
           break;

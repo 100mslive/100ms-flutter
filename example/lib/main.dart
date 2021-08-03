@@ -80,10 +80,10 @@ class _HomePageState extends State<HomePage> {
                     borderRadius: BorderRadius.circular(16.0),
                   ))),
                   onPressed: () async {
-                    String user = await showDialog(
+                    String? user = await showDialog(
                         context: context,
                         builder: (_) => UserNameDialogOrganism());
-                    if (user.isNotEmpty)
+                    if (user!=null && user.isNotEmpty)
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (_) => PreviewPage(
                                 roomId: roomIdController.text,
