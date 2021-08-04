@@ -6,14 +6,15 @@ import live.hms.video.sdk.models.HMSRoom
 
 class HMSPreviewExtension {
     companion object{
-        fun toDictionary(room:HMSRoom,localTracks: Array<HMSTrack>):HashMap<String,Any>{
+        fun toDictionary(peer: HMSRoom,allTracks:Array<HMSTrack>):HashMap<String,Any>{
             val args=HashMap<String,Any>()
-            args.putAll(HMSRoomExtension.toDictionary(room)!!)
-            val tracks = ArrayList<Any>()
-            localTracks.forEach {
-                tracks.add(HMSTrackExtension.toDictionary(it)!!)
+            args["peer"] = HMSRoomExtension.toDictionary(peer)!!
+            val tracks=ArrayList<Any>()
+
+            for (eachTrack in allTracks) {
+                tracks.add(HMSTrackExtension.toDictionary(eachTrack)!!)
             }
-            args.put("local_tracks",tracks)
+            args["local_tracks"] = tracks
             return  args
         }
     }

@@ -1,4 +1,4 @@
-package live.hms.hmssdk_flutter_example
+package live.hms.flutter
 
 import io.flutter.embedding.android.FlutterActivity
 

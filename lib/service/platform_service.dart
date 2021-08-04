@@ -149,7 +149,7 @@ class PlatformService {
           method: method, data: data, response: event);
     }).listen((event) {
       HMSPreviewUpdateListenerMethod method = event.method;
-      debugPrint(event.method.toString());
+
       switch (method) {
         case HMSPreviewUpdateListenerMethod.onPreviewVideo:
           HMSRoom? room = HMSRoom.fromMap(event.data['room']);

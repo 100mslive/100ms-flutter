@@ -16,7 +16,7 @@ void main() async {
   FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
 
   runZonedGuarded(
-          () => runApp(HMSExampleApp()), FirebaseCrashlytics.instance.recordError);
+      () => runApp(HMSExampleApp()), FirebaseCrashlytics.instance.recordError);
 }
 
 class HMSExampleApp extends StatelessWidget {
@@ -39,7 +39,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   TextEditingController roomIdController =
-  TextEditingController(text: Constant.defaultRoomID);
+      TextEditingController(text: Constant.defaultRoomID);
 
   void getPermissions() async {
     await Permission.camera.request();
@@ -86,8 +86,8 @@ class _HomePageState extends State<HomePage> {
                   style: ButtonStyle(
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16.0),
-                          ))),
+                    borderRadius: BorderRadius.circular(16.0),
+                  ))),
                   onPressed: () async {
                     String user = await showDialog(
                         context: context,
@@ -95,10 +95,10 @@ class _HomePageState extends State<HomePage> {
                     if (user.isNotEmpty)
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (_) => PreviewPage(
-                            roomId: roomIdController.text,
-                            user: user,
-                            flow: MeetingFlow.join,
-                          )));
+                                roomId: roomIdController.text,
+                                user: user,
+                                flow: MeetingFlow.join,
+                              )));
                   },
                   child: Container(
                     padding: const EdgeInsets.all(16.0),

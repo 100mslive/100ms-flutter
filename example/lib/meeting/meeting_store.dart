@@ -129,8 +129,8 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
   }
 
   @action
-  void updateRoleChangeRequest(HMSRoleChangeRequest roleChangeRequest){
-    this.roleChangeRequest=roleChangeRequest;
+  void updateRoleChangeRequest(HMSRoleChangeRequest roleChangeRequest) {
+    this.roleChangeRequest = roleChangeRequest;
   }
 
   void addMessage(HMSMessage message) {
@@ -164,8 +164,8 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
   @override
   void onTrackUpdate(
       {required HMSTrack track,
-        required HMSTrackUpdate trackUpdate,
-        required HMSPeer peer}) {
+      required HMSTrackUpdate trackUpdate,
+      required HMSPeer peer}) {
     if (peer.isLocal) {
       localPeer = peer;
     } else
@@ -216,7 +216,7 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
 
         break;
       case HMSPeerUpdate.peerKnocked:
-      // removePeer(peer);
+        // removePeer(peer);
         break;
       case HMSPeerUpdate.audioToggled:
         print('Peer audio toggled');
