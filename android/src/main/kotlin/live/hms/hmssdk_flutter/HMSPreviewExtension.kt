@@ -8,7 +8,7 @@ class HMSPreviewExtension {
     companion object{
         fun toDictionary(peer: HMSRoom,allTracks:Array<HMSTrack>):HashMap<String,Any>{
             val args=HashMap<String,Any>()
-            args["peer"] = HMSRoomExtension.toDictionary(peer)!!
+            args["room"] = HMSRoomExtension.toDictionary(peer)!!
             val tracks=ArrayList<Any>()
 
             for (eachTrack in allTracks) {

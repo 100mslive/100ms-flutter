@@ -39,9 +39,7 @@ class _MeetingPageState extends State<MeetingPage> {
     _meetingStore.meetingController = meetingController;
     _roleChangerequestDisposer = reaction(
         (_) => _meetingStore.roleChangeRequest,
-        (event) =>{
-              showRoleChangeDialog(event)
-            });
+        (event) => {showRoleChangeDialog(event)});
     super.initState();
     initMeeting();
   }
@@ -51,15 +49,16 @@ class _MeetingPageState extends State<MeetingPage> {
     _meetingStore.startListen();
   }
 
-  void showRoleChangeDialog(event) async{
-    String answer=await showDialog(
+  void showRoleChangeDialog(event) async {
+    String answer = await showDialog(
         context: context,
         builder: (ctx) => RoleChangeDialogOrganism(
-          roleChangeRequest: event as HMSRoleChangeRequest));
-    if(answer=="Ok"){
+            roleChangeRequest: event as HMSRoleChangeRequest));
+    if (answer == "Ok") {
       debugPrint("OK accepted");
       _meetingStore.meetingController.acceptRoleChangeRequest();
-      Scaffold.of(context).showSnackBar(SnackBar(content: Text("Accepted")));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("Accepted")));
     }
   }
 

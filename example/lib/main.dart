@@ -25,6 +25,7 @@ class HMSExampleApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      scaffoldMessengerKey: GlobalKey<ScaffoldMessengerState>(),
       home: HomePage(),
     );
   }
