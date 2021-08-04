@@ -1,0 +1,896 @@
+Index: example/lib/meeting/meeting_store.dart
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import 'dart:collection';\r\n\r\nimport 'package:flutter/material.dart';\r\nimport 'package:hmssdk_flutter/common/platform_methods.dart';\r\nimport 'package:hmssdk_flutter/enum/hms_peer_update.dart';\r\nimport 'package:hmssdk_flutter/enum/hms_track_update.dart';\r\nimport 'package:hmssdk_flutter/exceptions/hms_exception.dart';\r\nimport 'package:hmssdk_flutter/meeting/meeting.dart';\r\nimport 'package:hmssdk_flutter/model/hms_message.dart';\r\nimport 'package:hmssdk_flutter/model/hms_peer.dart';\r\nimport 'package:hmssdk_flutter/model/hms_track.dart';\r\nimport 'package:hmssdk_flutter/model/platform_method_response.dart';\r\nimport 'package:hmssdk_flutter_example/meeting/meeting_controller.dart';\r\n\r\nimport 'package:mobx/mobx.dart';\r\n\r\npart 'meeting_store.g.dart';\r\n\r\nclass MeetingStore = MeetingStoreBase with _$MeetingStore;\r\n\r\nabstract class MeetingStoreBase with Store {\r\n  @observable\r\n  bool isSpeakerOn = true;\r\n\r\n  @observable\r\n  HMSException? exception;\r\n\r\n  @observable\r\n  bool isMeetingStarted = false;\r\n  @observable\r\n  bool isVideoOn = true;\r\n  @observable\r\n  bool isMicOn = true;\r\n\r\n  late MeetingController meetingController;\r\n\r\n  Stream<PlatformMethodResponse>? controller;\r\n\r\n  @observable\r\n  List<HMSPeer> peers = ObservableList.of([]);\r\n\r\n  @observable\r\n  HMSPeer? localPeer;\r\n\r\n  @observable\r\n  List<HMSTrack> tracks = ObservableList.of([]);\r\n\r\n  @observable\r\n  List<HMSMessage> messages = ObservableList.of([]);\r\n\r\n  @action\r\n  void toggleSpeaker() {\r\n    isSpeakerOn = !isSpeakerOn;\r\n  }\r\n\r\n  @action\r\n  Future<void> toggleVideo() async {\r\n    await meetingController.switchVideo(isOn: isVideoOn);\r\n    isVideoOn = !isVideoOn;\r\n  }\r\n\r\n  @action\r\n  Future<void> toggleCamera() async {\r\n    await meetingController.switchCamera();\r\n  }\r\n\r\n  @action\r\n  Future<void> toggleAudio() async {\r\n    await meetingController.switchAudio(isOn: isMicOn);\r\n    isMicOn = !isMicOn;\r\n  }\r\n\r\n  @action\r\n  void removePeer(HMSPeer peer) {\r\n    peers.remove(peer);\r\n    removeTrackWithPeerId(peer.peerId);\r\n  }\r\n\r\n  @action\r\n  void addPeer(HMSPeer peer) {\r\n    if (!peers.contains(peer)) peers.add(peer);\r\n  }\r\n\r\n  @action\r\n  void removeTrackWithTrackId(String trackId) {\r\n    tracks\r\n        .remove(tracks.firstWhere((eachTrack) => eachTrack.trackId == trackId));\r\n  }\r\n\r\n  @action\r\n  void removeTrackWithPeerId(String peerId) {\r\n    tracks.removeWhere((eachTrack) => eachTrack.peer?.peerId == peerId);\r\n  }\r\n\r\n  @action\r\n  void addTrack(HMSTrack track) {\r\n    if (!tracks.contains(track))\r\n      tracks.add(track);\r\n    else {\r\n      removeTrackWithTrackId(track.trackId);\r\n      addTrack(track);\r\n    }\r\n  }\r\n\r\n  @action\r\n  void onRoleUpdated(int index, HMSPeer peer) {\r\n    peers[index] = peer;\r\n  }\r\n\r\n  @action\r\n  Future<void> startMeeting() async {\r\n    controller = await meetingController.startMeeting();\r\n    isMeetingStarted = true;\r\n    listenToController();\r\n  }\r\n\r\n  @action\r\n  Future<void> sendMessage(String message) async {\r\n    await meetingController.sendMessage(message);\r\n  }\r\n\r\n  @action\r\n  void listenToController() {\r\n    controller?.listen((event) {\r\n      debugPrint(\"listenToController ${event.method.toString()}\");\r\n      debugPrint(\"listenToController ${event.data.toString()}\");\r\n      if (event.method == PlatformMethod.onJoinRoom) {\r\n        print('onJoinRoom');\r\n        HMSPeer peer = HMSPeer.fromMap(event.data['hms_local_peer']);\r\n        debugPrint(\"Flutter listenToController trackupdate $peer\");\r\n        localPeer = peer;\r\n      } else if (event.method == PlatformMethod.onPeerUpdate) {\r\n        HMSPeer peer = HMSPeer.fromMap(event.data['peer']);\r\n        debugPrint(\"Flutter listenToController $peer\");\r\n        HMSPeerUpdate update =\r\n            HMSPeerUpdateValues.getHMSPeerUpdateFromName(event.data['update']);\r\n        if (peer.isLocal) {\r\n          localPeer = peer;\r\n        } else\r\n          peerOperation(peer, update);\r\n      } else if (event.method == PlatformMethod.onTrackUpdate) {\r\n        print('track update');\r\n        HMSPeer peer = HMSPeer.fromMap(event.data['peer']);\r\n        HMSTrackUpdate update = HMSTrackUpdateValues.getHMSTrackUpdateFromName(\r\n            event.data['update']);\r\n        HMSTrack track = HMSTrack.fromMap(event.data['track'], peer);\r\n        debugPrint(\"Flutter listenToController trackupdate $peer\");\r\n        if (peer.isLocal) {\r\n          localPeer = peer;\r\n        } else\r\n          peerOperationWithTrack(peer, update, track);\r\n      } else if (event.method == PlatformMethod.onError) {\r\n        HMSException exception = HMSException.fromMap(event.data['error']);\r\n        print(exception.toString() + \"event\");\r\n        changeException(exception);\r\n      } else if (event.method == PlatformMethod.onMessage) {\r\n        //print(\"onMessageFlutter\"+event.data['message']['sender'].toString());\r\n        HMSMessage message = HMSMessage.fromMap(event.data['message']);\r\n        addMessage(message);\r\n      }\r\n    });\r\n  }\r\n\r\n  void changeException(HMSException hmsException) {\r\n    this.exception = hmsException;\r\n  }\r\n\r\n  void addMessage(HMSMessage message) {\r\n    this.messages.add(message);\r\n  }\r\n\r\n  @action\r\n  void peerOperation(HMSPeer peer, HMSPeerUpdate update) {\r\n    switch (update) {\r\n      case HMSPeerUpdate.peerJoined:\r\n        print('peer joined');\r\n        addPeer(peer);\r\n        break;\r\n      case HMSPeerUpdate.peerLeft:\r\n        print('peer left');\r\n        removePeer(peer);\r\n\r\n        break;\r\n      case HMSPeerUpdate.peerKnocked:\r\n        // removePeer(peer);\r\n        break;\r\n      case HMSPeerUpdate.audioToggled:\r\n        print('Peer audio toggled');\r\n        break;\r\n      case HMSPeerUpdate.videoToggled:\r\n        print('Peer video toggled');\r\n        break;\r\n      case HMSPeerUpdate.roleUpdated:\r\n        peers[peers.indexOf(peer)] = peer;\r\n        break;\r\n      case HMSPeerUpdate.defaultUpdate:\r\n        print(\"Some default update or untouched case\");\r\n        break;\r\n      default:\r\n        print(\"Some default update or untouched case\");\r\n    }\r\n  }\r\n\r\n  @action\r\n  void peerOperationWithTrack(\r\n      HMSPeer peer, HMSTrackUpdate update, HMSTrack track) {\r\n    switch (update) {\r\n      case HMSTrackUpdate.trackAdded:\r\n        addTrack(track);\r\n        break;\r\n      case HMSTrackUpdate.trackRemoved:\r\n        removeTrackWithTrackId(track.trackId);\r\n        break;\r\n      case HMSTrackUpdate.trackMuted:\r\n        print('Muted');\r\n        break;\r\n      case HMSTrackUpdate.trackUnMuted:\r\n        print('UnMuted');\r\n        break;\r\n      case HMSTrackUpdate.trackDescriptionChanged:\r\n        print('trackDescriptionChanged');\r\n        break;\r\n      case HMSTrackUpdate.trackDegraded:\r\n        print('trackDegraded');\r\n        break;\r\n      case HMSTrackUpdate.trackRestored:\r\n        print('trackRestored');\r\n        break;\r\n      case HMSTrackUpdate.defaultUpdate:\r\n        print(\"Some default update or untouched case\");\r\n        break;\r\n      default:\r\n        print(\"Some default update or untouched case\");\r\n    }\r\n  }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- example/lib/meeting/meeting_store.dart	(revision 0da9812aabbac1971438935f72bd27dd2956885a)
++++ example/lib/meeting/meeting_store.dart	(date 1627883263800)
+@@ -122,16 +122,15 @@
+   @action
+   void listenToController() {
+     controller?.listen((event) {
+-      debugPrint("listenToController ${event.method.toString()}");
+-      debugPrint("listenToController ${event.data.toString()}");
++
+       if (event.method == PlatformMethod.onJoinRoom) {
+         print('onJoinRoom');
+         HMSPeer peer = HMSPeer.fromMap(event.data['hms_local_peer']);
+-        debugPrint("Flutter listenToController trackupdate $peer");
++
+         localPeer = peer;
+       } else if (event.method == PlatformMethod.onPeerUpdate) {
+         HMSPeer peer = HMSPeer.fromMap(event.data['peer']);
+-        debugPrint("Flutter listenToController $peer");
++
+         HMSPeerUpdate update =
+             HMSPeerUpdateValues.getHMSPeerUpdateFromName(event.data['update']);
+         if (peer.isLocal) {
+@@ -144,7 +143,7 @@
+         HMSTrackUpdate update = HMSTrackUpdateValues.getHMSTrackUpdateFromName(
+             event.data['update']);
+         HMSTrack track = HMSTrack.fromMap(event.data['track'], peer);
+-        debugPrint("Flutter listenToController trackupdate $peer");
++        
+         if (peer.isLocal) {
+           localPeer = peer;
+         } else
+Index: .idea/shelf/Uncommitted_changes_before_Merge_at_26_07_21,_12_23_am_[Default_Changelist]/shelved.patch
+===================================================================
+--- .idea/shelf/Uncommitted_changes_before_Merge_at_26_07_21,_12_23_am_[Default_Changelist]/shelved.patch	(revision 0da9812aabbac1971438935f72bd27dd2956885a)
++++ .idea/shelf/Uncommitted_changes_before_Merge_at_26_07_21,_12_23_am_[Default_Changelist]/shelved.patch	(revision 0da9812aabbac1971438935f72bd27dd2956885a)
+@@ -1,74 +0,0 @@
+-Index: lib/model/hms_role.dart
+-IDEA additional info:
+-Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+-<+>class HMSRole {\n  String name;\n  String publishSettings;\n  String subscribeSettings;\n  int priority;\n  String generalPermissions;\n  String internalPlugins;\n  String externalPlugins;\n\n  HMSRole(\n      {required this.name,\n      required this.publishSettings,\n      required this.subscribeSettings,\n      required this.priority,\n      required this.generalPermissions,\n      required this.internalPlugins,\n      required this.externalPlugins});\n\n  factory HMSRole.fromMap(Map map) {\n    print(\"HMSROLe ${map}\");\n    return new HMSRole(\n      name: map['name'] as String,\n      publishSettings: map['publish_settings'] as String,\n      subscribeSettings: map['subscribe_settings'] as String,\n      priority: map['priority'] as int,\n      generalPermissions: map['general_permissions'] ,\n      internalPlugins: map['internal_plugins'] as String,\n      externalPlugins: map['external_plugins'] as String,\n    );\n  }\n\n  Map<String, dynamic> toMap() {\n    // ignore: unnecessary_cast\n    return {\n      'name': this.name,\n      'publishSettings': this.publishSettings,\n      'subscribeSettings': this.subscribeSettings,\n      'priority': this.priority,\n      'generalPermissions': this.generalPermissions,\n      'internalPlugins': this.internalPlugins,\n      'externalPlugins': this.externalPlugins,\n    } as Map<String, dynamic>;\n  }\n}\n
+-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+-<+>UTF-8
+-===================================================================
+---- lib/model/hms_role.dart	(revision b00a2ea267404241a9bea5a7bade862401580022)
+-+++ lib/model/hms_role.dart	(date 1627239216465)
+-@@ -23,7 +23,7 @@
+-       publishSettings: map['publish_settings'] as String,
+-       subscribeSettings: map['subscribe_settings'] as String,
+-       priority: map['priority'] as int,
+--      generalPermissions: map['general_permissions'] ,
+-+      generalPermissions: map['general_permissions'],
+-       internalPlugins: map['internal_plugins'] as String,
+-       externalPlugins: map['external_plugins'] as String,
+-     );
+-Index: .idea/libraries/Dart_SDK.xml
+-IDEA additional info:
+-Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+-<+><component name=\"libraryTable\">\n  <library name=\"Dart SDK\">\n    <CLASSES>\n      <root url=\"file://$PROJECT_DIR$/../../../../src/flutter/bin/cache/dart-sdk/lib/async\" />\n      <root url=\"file://$PROJECT_DIR$/../../../../src/flutter/bin/cache/dart-sdk/lib/cli\" />\n      <root url=\"file://$PROJECT_DIR$/../../../../src/flutter/bin/cache/dart-sdk/lib/collection\" />\n      <root url=\"file://$PROJECT_DIR$/../../../../src/flutter/bin/cache/dart-sdk/lib/convert\" />\n      <root url=\"file://$PROJECT_DIR$/../../../../src/flutter/bin/cache/dart-sdk/lib/core\" />\n      <root url=\"file://$PROJECT_DIR$/../../../../src/flutter/bin/cache/dart-sdk/lib/developer\" />\n      <root url=\"file://$PROJECT_DIR$/../../../../src/flutter/bin/cache/dart-sdk/lib/ffi\" />\n      <root url=\"file://$PROJECT_DIR$/../../../../src/flutter/bin/cache/dart-sdk/lib/html\" />\n      <root url=\"file://$PROJECT_DIR$/../../../../src/flutter/bin/cache/dart-sdk/lib/indexed_db\" />\n      <root url=\"file://$PROJECT_DIR$/../../../../src/flutter/bin/cache/dart-sdk/lib/io\" />\n      <root url=\"file://$PROJECT_DIR$/../../../../src/flutter/bin/cache/dart-sdk/lib/isolate\" />\n      <root url=\"file://$PROJECT_DIR$/../../../../src/flutter/bin/cache/dart-sdk/lib/js\" />\n      <root url=\"file://$PROJECT_DIR$/../../../../src/flutter/bin/cache/dart-sdk/lib/js_util\" />\n      <root url=\"file://$PROJECT_DIR$/../../../../src/flutter/bin/cache/dart-sdk/lib/math\" />\n      <root url=\"file://$PROJECT_DIR$/../../../../src/flutter/bin/cache/dart-sdk/lib/mirrors\" />\n      <root url=\"file://$PROJECT_DIR$/../../../../src/flutter/bin/cache/dart-sdk/lib/svg\" />\n      <root url=\"file://$PROJECT_DIR$/../../../../src/flutter/bin/cache/dart-sdk/lib/typed_data\" />\n      <root url=\"file://$PROJECT_DIR$/../../../../src/flutter/bin/cache/dart-sdk/lib/web_audio\" />\n      <root url=\"file://$PROJECT_DIR$/../../../../src/flutter/bin/cache/dart-sdk/lib/web_gl\" />\n      <root url=\"file://$PROJECT_DIR$/../../../../src/flutter/bin/cache/dart-sdk/lib/web_sql\" />\n    </CLASSES>\n    <JAVADOC />\n    <SOURCES />\n  </library>\n</component>
+-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+-<+>UTF-8
+-===================================================================
+---- .idea/libraries/Dart_SDK.xml	(revision b00a2ea267404241a9bea5a7bade862401580022)
+-+++ .idea/libraries/Dart_SDK.xml	(date 1627236938069)
+-@@ -1,26 +1,26 @@
+- <component name="libraryTable">
+-   <library name="Dart SDK">
+-     <CLASSES>
+--      <root url="file://$PROJECT_DIR$/../../../../src/flutter/bin/cache/dart-sdk/lib/async" />
+--      <root url="file://$PROJECT_DIR$/../../../../src/flutter/bin/cache/dart-sdk/lib/cli" />
+--      <root url="file://$PROJECT_DIR$/../../../../src/flutter/bin/cache/dart-sdk/lib/collection" />
+--      <root url="file://$PROJECT_DIR$/../../../../src/flutter/bin/cache/dart-sdk/lib/convert" />
+--      <root url="file://$PROJECT_DIR$/../../../../src/flutter/bin/cache/dart-sdk/lib/core" />
+--      <root url="file://$PROJECT_DIR$/../../../../src/flutter/bin/cache/dart-sdk/lib/developer" />
+--      <root url="file://$PROJECT_DIR$/../../../../src/flutter/bin/cache/dart-sdk/lib/ffi" />
+--      <root url="file://$PROJECT_DIR$/../../../../src/flutter/bin/cache/dart-sdk/lib/html" />
+--      <root url="file://$PROJECT_DIR$/../../../../src/flutter/bin/cache/dart-sdk/lib/indexed_db" />
+--      <root url="file://$PROJECT_DIR$/../../../../src/flutter/bin/cache/dart-sdk/lib/io" />
+--      <root url="file://$PROJECT_DIR$/../../../../src/flutter/bin/cache/dart-sdk/lib/isolate" />
+--      <root url="file://$PROJECT_DIR$/../../../../src/flutter/bin/cache/dart-sdk/lib/js" />
+--      <root url="file://$PROJECT_DIR$/../../../../src/flutter/bin/cache/dart-sdk/lib/js_util" />
+--      <root url="file://$PROJECT_DIR$/../../../../src/flutter/bin/cache/dart-sdk/lib/math" />
+--      <root url="file://$PROJECT_DIR$/../../../../src/flutter/bin/cache/dart-sdk/lib/mirrors" />
+--      <root url="file://$PROJECT_DIR$/../../../../src/flutter/bin/cache/dart-sdk/lib/svg" />
+--      <root url="file://$PROJECT_DIR$/../../../../src/flutter/bin/cache/dart-sdk/lib/typed_data" />
+--      <root url="file://$PROJECT_DIR$/../../../../src/flutter/bin/cache/dart-sdk/lib/web_audio" />
+--      <root url="file://$PROJECT_DIR$/../../../../src/flutter/bin/cache/dart-sdk/lib/web_gl" />
+--      <root url="file://$PROJECT_DIR$/../../../../src/flutter/bin/cache/dart-sdk/lib/web_sql" />
+-+      <root url="file://$PROJECT_DIR$/../../../SDK/flutter/bin/cache/dart-sdk/lib/async" />
+-+      <root url="file://$PROJECT_DIR$/../../../SDK/flutter/bin/cache/dart-sdk/lib/cli" />
+-+      <root url="file://$PROJECT_DIR$/../../../SDK/flutter/bin/cache/dart-sdk/lib/collection" />
+-+      <root url="file://$PROJECT_DIR$/../../../SDK/flutter/bin/cache/dart-sdk/lib/convert" />
+-+      <root url="file://$PROJECT_DIR$/../../../SDK/flutter/bin/cache/dart-sdk/lib/core" />
+-+      <root url="file://$PROJECT_DIR$/../../../SDK/flutter/bin/cache/dart-sdk/lib/developer" />
+-+      <root url="file://$PROJECT_DIR$/../../../SDK/flutter/bin/cache/dart-sdk/lib/ffi" />
+-+      <root url="file://$PROJECT_DIR$/../../../SDK/flutter/bin/cache/dart-sdk/lib/html" />
+-+      <root url="file://$PROJECT_DIR$/../../../SDK/flutter/bin/cache/dart-sdk/lib/indexed_db" />
+-+      <root url="file://$PROJECT_DIR$/../../../SDK/flutter/bin/cache/dart-sdk/lib/io" />
+-+      <root url="file://$PROJECT_DIR$/../../../SDK/flutter/bin/cache/dart-sdk/lib/isolate" />
+-+      <root url="file://$PROJECT_DIR$/../../../SDK/flutter/bin/cache/dart-sdk/lib/js" />
+-+      <root url="file://$PROJECT_DIR$/../../../SDK/flutter/bin/cache/dart-sdk/lib/js_util" />
+-+      <root url="file://$PROJECT_DIR$/../../../SDK/flutter/bin/cache/dart-sdk/lib/math" />
+-+      <root url="file://$PROJECT_DIR$/../../../SDK/flutter/bin/cache/dart-sdk/lib/mirrors" />
+-+      <root url="file://$PROJECT_DIR$/../../../SDK/flutter/bin/cache/dart-sdk/lib/svg" />
+-+      <root url="file://$PROJECT_DIR$/../../../SDK/flutter/bin/cache/dart-sdk/lib/typed_data" />
+-+      <root url="file://$PROJECT_DIR$/../../../SDK/flutter/bin/cache/dart-sdk/lib/web_audio" />
+-+      <root url="file://$PROJECT_DIR$/../../../SDK/flutter/bin/cache/dart-sdk/lib/web_gl" />
+-+      <root url="file://$PROJECT_DIR$/../../../SDK/flutter/bin/cache/dart-sdk/lib/web_sql" />
+-     </CLASSES>
+-     <JAVADOC />
+-     <SOURCES />
+Index: .idea/shelf/Uncommitted_changes_before_Update_at_25_07_21__11_33_pm__Default_Changelist_.xml
+===================================================================
+--- .idea/shelf/Uncommitted_changes_before_Update_at_25_07_21__11_33_pm__Default_Changelist_.xml	(revision 0da9812aabbac1971438935f72bd27dd2956885a)
++++ .idea/shelf/Uncommitted_changes_before_Update_at_25_07_21__11_33_pm__Default_Changelist_.xml	(revision 0da9812aabbac1971438935f72bd27dd2956885a)
+@@ -1,4 +0,0 @@
+-<changelist name="Uncommitted_changes_before_Update_at_25_07_21,_11_33_pm_[Default_Changelist]" date="1627236206141" recycled="true" deleted="true">
+-  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_25_07_21,_11_33_pm_[Default_Changelist]/shelved.patch" />
+-  <option name="DESCRIPTION" value="Uncommitted changes before Update at 25/07/21, 11:33 pm [Default Changelist]" />
+-</changelist>
+\ No newline at end of file
+Index: .idea/shelf/Uncommitted_changes_before_Merge_at_26_07_21__12_23_am__Default_Changelist_.xml
+===================================================================
+--- .idea/shelf/Uncommitted_changes_before_Merge_at_26_07_21__12_23_am__Default_Changelist_.xml	(revision 0da9812aabbac1971438935f72bd27dd2956885a)
++++ .idea/shelf/Uncommitted_changes_before_Merge_at_26_07_21__12_23_am__Default_Changelist_.xml	(revision 0da9812aabbac1971438935f72bd27dd2956885a)
+@@ -1,4 +0,0 @@
+-<changelist name="Uncommitted_changes_before_Merge_at_26_07_21,_12_23_am_[Default_Changelist]" date="1627239366687" recycled="true" deleted="true">
+-  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Merge_at_26_07_21,_12_23_am_[Default_Changelist]/shelved.patch" />
+-  <option name="DESCRIPTION" value="Uncommitted changes before Merge at 26/07/21, 12:23 am [Default Changelist]" />
+-</changelist>
+\ No newline at end of file
+Index: .idea/shelf/Uncommitted_changes_before_Update_at_25_07_21,_11_33_pm_[Default_Changelist]/shelved.patch
+===================================================================
+--- .idea/shelf/Uncommitted_changes_before_Update_at_25_07_21,_11_33_pm_[Default_Changelist]/shelved.patch	(revision 0da9812aabbac1971438935f72bd27dd2956885a)
++++ .idea/shelf/Uncommitted_changes_before_Update_at_25_07_21,_11_33_pm_[Default_Changelist]/shelved.patch	(revision 0da9812aabbac1971438935f72bd27dd2956885a)
+@@ -1,651 +0,0 @@
+-Index: example/lib/common/ui/organisms/peer_item_organism.dart
+-IDEA additional info:
+-Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+-<+>import 'package:flutter/material.dart';\nimport 'package:hmssdk_flutter/model/hms_track.dart';\nimport 'package:hmssdk_flutter/ui/meeting/video_view.dart';\n\nclass PeerItemOrganism extends StatelessWidget {\n  final HMSTrack track;\n\n  const PeerItemOrganism({Key? key, required this.track}) : super(key: key);\n\n  @override\n  Widget build(BuildContext context) {\n    return Container(\n      padding: EdgeInsets.all(16),\n      margin: EdgeInsets.all(16),\n      decoration: BoxDecoration(\n          border: Border.all(color: Colors.green),\n          borderRadius: BorderRadius.all(Radius.circular(16))),\n      child: Column(\n        children: [\n          Text(track.peer?.role?.name ?? '[Undefined Role]'),\n          Text(track.peer?.name ?? '[Undefined Name]'),\n          Text(track.peer?.customerDescription ?? '[Undefined Description]'),\n          Expanded(child: LayoutBuilder(\n            builder: (context, constraints) {\n              return VideoView(\n                track: track,\n                args: {\n                  'height': constraints.maxHeight,\n                  'width': constraints.maxWidth,\n                },\n              );\n            },\n          ))\n        ],\n      ),\n    );\n  }\n}\n
+-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+-<+>UTF-8
+-===================================================================
+---- example/lib/common/ui/organisms/peer_item_organism.dart	(revision 0eba86867ceb571a2e9002757cbdc481469ec1d7)
+-+++ example/lib/common/ui/organisms/peer_item_organism.dart	(date 1627063986038)
+-@@ -1,11 +1,14 @@
+- import 'package:flutter/material.dart';
+-+import 'package:hmssdk_flutter/enum/hms_track_source.dart';
+- import 'package:hmssdk_flutter/model/hms_track.dart';
+- import 'package:hmssdk_flutter/ui/meeting/video_view.dart';
+- 
+- class PeerItemOrganism extends StatelessWidget {
+-   final HMSTrack track;
+-+  final Function(HMSTrack)? callBackFunction;
+- 
+--  const PeerItemOrganism({Key? key, required this.track}) : super(key: key);
+-+  const PeerItemOrganism({Key? key, required this.track, this.callBackFunction})
+-+      : super(key: key);
+- 
+-   @override
+-   Widget build(BuildContext context) {
+-@@ -20,17 +23,31 @@
+-           Text(track.peer?.role?.name ?? '[Undefined Role]'),
+-           Text(track.peer?.name ?? '[Undefined Name]'),
+-           Text(track.peer?.customerDescription ?? '[Undefined Description]'),
+--          Expanded(child: LayoutBuilder(
+--            builder: (context, constraints) {
+--              return VideoView(
+--                track: track,
+--                args: {
+--                  'height': constraints.maxHeight,
+--                  'width': constraints.maxWidth,
+--                },
+--              );
+--            },
+--          ))
+-+          Expanded(
+-+            child: Column(
+-+              children: [
+-+                Expanded(
+-+                  child: LayoutBuilder(builder: (context, constraints) {
+-+                    return VideoView(
+-+                      track: track,
+-+                      args: {
+-+                        'height': constraints.maxHeight,
+-+                        'width': constraints.maxWidth,
+-+                      },
+-+                    );
+-+                  }),
+-+                ),
+-+              ],
+-+            ),
+-+          ),
+-+          if (track.source == HMSTrackSource.kHMSTrackSourceScreen)
+-+            ElevatedButton(
+-+                onPressed: () {
+-+                  if (callBackFunction != null) {
+-+                    callBackFunction!(track);
+-+                  }
+-+                },
+-+                child: Text('Full Screen'))
+-         ],
+-       ),
+-     );
+-Index: .idea/shelf/Uncommitted_changes_before_Checkout_at_14-07-2021_07_05_PM__Default_Changelist_1.xml
+-===================================================================
+---- .idea/shelf/Uncommitted_changes_before_Checkout_at_14-07-2021_07_05_PM__Default_Changelist_1.xml	(revision 0eba86867ceb571a2e9002757cbdc481469ec1d7)
+-+++ .idea/shelf/Uncommitted_changes_before_Checkout_at_14-07-2021_07_05_PM__Default_Changelist_1.xml	(revision 0eba86867ceb571a2e9002757cbdc481469ec1d7)
+-@@ -1,4 +0,0 @@
+--<changelist name="Uncommitted_changes_before_Checkout_at_14-07-2021_07_05_PM_[Default_Changelist]1" date="1626269750218" recycled="true" deleted="true">
+--  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_14-07-2021_07_05_PM_[Default_Changelist]1/shelved.patch" />
+--  <option name="DESCRIPTION" value="Uncommitted changes before Checkout at 14-07-2021 07:05 PM [Default Changelist]" />
+--</changelist>
+-\ No newline at end of file
+-Index: .idea/shelf/Uncommitted_changes_before_Merge_at_14-07-2021_07_35_PM__Default_Changelist_.xml
+-===================================================================
+---- .idea/shelf/Uncommitted_changes_before_Merge_at_14-07-2021_07_35_PM__Default_Changelist_.xml	(revision 0eba86867ceb571a2e9002757cbdc481469ec1d7)
+-+++ .idea/shelf/Uncommitted_changes_before_Merge_at_14-07-2021_07_35_PM__Default_Changelist_.xml	(revision 0eba86867ceb571a2e9002757cbdc481469ec1d7)
+-@@ -1,4 +0,0 @@
+--<changelist name="Uncommitted_changes_before_Merge_at_14-07-2021_07_35_PM_[Default_Changelist]" date="1626272008276" recycled="true" deleted="true">
+--  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Merge_at_14-07-2021_07_35_PM_[Default_Changelist]/shelved.patch" />
+--  <option name="DESCRIPTION" value="Uncommitted changes before Merge at 14-07-2021 07:35 PM [Default Changelist]" />
+--</changelist>
+-\ No newline at end of file
+-Index: .idea/shelf/Uncommitted_changes_before_Checkout_at_14-07-2021_07_05_PM__Default_Changelist_.xml
+-===================================================================
+---- .idea/shelf/Uncommitted_changes_before_Checkout_at_14-07-2021_07_05_PM__Default_Changelist_.xml	(revision 0eba86867ceb571a2e9002757cbdc481469ec1d7)
+-+++ .idea/shelf/Uncommitted_changes_before_Checkout_at_14-07-2021_07_05_PM__Default_Changelist_.xml	(revision 0eba86867ceb571a2e9002757cbdc481469ec1d7)
+-@@ -1,4 +0,0 @@
+--<changelist name="Uncommitted_changes_before_Checkout_at_14-07-2021_07_05_PM_[Default_Changelist]" date="1626269735346" recycled="false" toDelete="true">
+--  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_14-07-2021_07_05_PM_[Default_Changelist]/shelved.patch" />
+--  <option name="DESCRIPTION" value="Uncommitted changes before Checkout at 14-07-2021 07:05 PM [Default Changelist]" />
+--</changelist>
+-\ No newline at end of file
+-Index: .idea/workspace.xml
+-IDEA additional info:
+-Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+-<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project version=\"4\">\n  <component name=\"AutoImportSettings\">\n    <option name=\"autoReloadType\" value=\"NONE\" />\n  </component>\n  <component name=\"BranchesTreeState\">\n    <expand>\n      <path>\n        <item name=\"ROOT\" type=\"e8cecc67:BranchNodeDescriptor\" />\n        <item name=\"LOCAL_ROOT\" type=\"e8cecc67:BranchNodeDescriptor\" />\n      </path>\n      <path>\n        <item name=\"ROOT\" type=\"e8cecc67:BranchNodeDescriptor\" />\n        <item name=\"REMOTE_ROOT\" type=\"e8cecc67:BranchNodeDescriptor\" />\n      </path>\n      <path>\n        <item name=\"ROOT\" type=\"e8cecc67:BranchNodeDescriptor\" />\n        <item name=\"REMOTE_ROOT\" type=\"e8cecc67:BranchNodeDescriptor\" />\n        <item name=\"GROUP_NODE:origin\" type=\"e8cecc67:BranchNodeDescriptor\" />\n      </path>\n    </expand>\n    <select>\n      <path>\n        <item name=\"ROOT\" type=\"e8cecc67:BranchNodeDescriptor\" />\n        <item name=\"LOCAL_ROOT\" type=\"e8cecc67:BranchNodeDescriptor\" />\n        <item name=\"BRANCH:ahron-feature-peers\" type=\"e8cecc67:BranchNodeDescriptor\" />\n      </path>\n    </select>\n  </component>\n  <component name=\"ChangeListManager\">\n    <list default=\"true\" id=\"f6635374-520c-494c-ae8d-73b820655433\" name=\"Default Changelist\" comment=\"added mute and video\">\n      <change afterPath=\"$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_14-07-2021_07_05_PM__Default_Changelist_.xml\" afterDir=\"false\" />\n      <change afterPath=\"$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_14-07-2021_07_05_PM__Default_Changelist_1.xml\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/android/build.gradle\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/android/build.gradle\" afterDir=\"false\" />\n    </list>\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\n  </component>\n  <component name=\"ChangesViewManager\">\n    <option name=\"groupingKeys\">\n      <option value=\"directory\" />\n    </option>\n  </component>\n  <component name=\"FileTemplateManagerImpl\">\n    <option name=\"RECENT_TEMPLATES\">\n      <list>\n        <option value=\"Kotlin Script\" />\n        <option value=\"Dart File\" />\n      </list>\n    </option>\n  </component>\n  <component name=\"Git.Settings\">\n    <option name=\"RECENT_BRANCH_BY_REPOSITORY\">\n      <map>\n        <entry key=\"$PROJECT_DIR$\" value=\"ahron-android-project\" />\n      </map>\n    </option>\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\n    <option name=\"RESET_MODE\" value=\"HARD\" />\n    <option name=\"UPDATE_TYPE\" value=\"REBASE\" />\n  </component>\n  <component name=\"GithubProjectSettings\">\n    <option name=\"CREATE_PULL_REQUEST_DEFAULT_BRANCH\" value=\"vivek-feature-peers\" />\n    <option name=\"CREATE_PULL_REQUEST_DEFAULT_REPO_USER\" value=\"100mslive\" />\n    <option name=\"CREATE_PULL_REQUEST_DEFAULT_REPO_NAME\" value=\"100ms-flutter\" />\n  </component>\n  <component name=\"ProjectId\" id=\"1uisHeD1SXcZbYI5wFmOOyu7wQ7\" />\n  <component name=\"ProjectViewState\">\n    <option name=\"showLibraryContents\" value=\"true\" />\n  </component>\n  <component name=\"PropertiesComponent\">\n    <property name=\"RunOnceActivity.OpenProjectViewOnStart\" value=\"true\" />\n    <property name=\"dart.analysis.tool.window.visible\" value=\"false\" />\n    <property name=\"io.flutter.reload.alreadyRun\" value=\"true\" />\n    <property name=\"last_opened_file_path\" value=\"$PROJECT_DIR$\" />\n    <property name=\"show.migrate.to.gradle.popup\" value=\"false\" />\n  </component>\n  <component name=\"RunManager\">\n    <configuration name=\"main.dart\" type=\"FlutterRunConfigurationType\" factoryName=\"Flutter\">\n      <option name=\"filePath\" value=\"$PROJECT_DIR$/example/lib/main.dart\" />\n      <method v=\"2\" />\n    </configuration>\n  </component>\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\n  <component name=\"TaskManager\">\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\n      <changelist id=\"f6635374-520c-494c-ae8d-73b820655433\" name=\"Default Changelist\" comment=\"\" />\n      <created>1625159660317</created>\n      <option name=\"number\" value=\"Default\" />\n      <option name=\"presentableId\" value=\"Default\" />\n      <updated>1625159660317</updated>\n    </task>\n    <task id=\"LOCAL-00001\" summary=\"added event channel\">\n      <created>1626101145084</created>\n      <option name=\"number\" value=\"00001\" />\n      <option name=\"presentableId\" value=\"LOCAL-00001\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1626101145084</updated>\n    </task>\n    <task id=\"LOCAL-00002\" summary=\"updated README.md\">\n      <created>1626102016944</created>\n      <option name=\"number\" value=\"00002\" />\n      <option name=\"presentableId\" value=\"LOCAL-00002\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1626102016944</updated>\n    </task>\n    <task id=\"LOCAL-00003\" summary=\"added\">\n      <created>1626171833756</created>\n      <option name=\"number\" value=\"00003\" />\n      <option name=\"presentableId\" value=\"LOCAL-00003\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1626171833756</updated>\n    </task>\n    <task id=\"LOCAL-00004\" summary=\"passed data into eventSink\">\n      <created>1626175919392</created>\n      <option name=\"number\" value=\"00004\" />\n      <option name=\"presentableId\" value=\"LOCAL-00004\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1626175919392</updated>\n    </task>\n    <task id=\"LOCAL-00005\" summary=\"fixed peers list bug&#10;peers.remove problem\">\n      <created>1626202221133</created>\n      <option name=\"number\" value=\"00005\" />\n      <option name=\"presentableId\" value=\"LOCAL-00005\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1626202221133</updated>\n    </task>\n    <task id=\"LOCAL-00006\" summary=\"fixed peers list bugs\">\n      <created>1626203710630</created>\n      <option name=\"number\" value=\"00006\" />\n      <option name=\"presentableId\" value=\"LOCAL-00006\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1626203710630</updated>\n    </task>\n    <task id=\"LOCAL-00007\" summary=\"added hashcode and equals operator in hmspeer.dart\">\n      <created>1626272641417</created>\n      <option name=\"number\" value=\"00007\" />\n      <option name=\"presentableId\" value=\"LOCAL-00007\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1626272641417</updated>\n    </task>\n    <task id=\"LOCAL-00008\" summary=\"added mute and video\">\n      <created>1626294522908</created>\n      <option name=\"number\" value=\"00008\" />\n      <option name=\"presentableId\" value=\"LOCAL-00008\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1626294522908</updated>\n    </task>\n    <option name=\"localTasksCounter\" value=\"9\" />\n    <servers />\n  </component>\n  <component name=\"Vcs.Log.History.Properties\">\n    <option name=\"SHOW_OTHER_BRANCHES\" value=\"true\" />\n    <option name=\"COLUMN_ORDER\">\n      <list>\n        <option value=\"0\" />\n        <option value=\"2\" />\n        <option value=\"3\" />\n        <option value=\"1\" />\n      </list>\n    </option>\n  </component>\n  <component name=\"Vcs.Log.Tabs.Properties\">\n    <option name=\"TAB_STATES\">\n      <map>\n        <entry key=\"MAIN\">\n          <value>\n            <State>\n              <option name=\"FILTERS\">\n                <map>\n                  <entry key=\"branch\">\n                    <value>\n                      <list>\n                        <option value=\"origin/vivek-feature-peers\" />\n                      </list>\n                    </value>\n                  </entry>\n                </map>\n              </option>\n            </State>\n          </value>\n        </entry>\n      </map>\n    </option>\n    <option name=\"oldMeFiltersMigrated\" value=\"true\" />\n  </component>\n  <component name=\"VcsManagerConfiguration\">\n    <MESSAGE value=\"added event channel\" />\n    <MESSAGE value=\"updated README.md\" />\n    <MESSAGE value=\"added\" />\n    <MESSAGE value=\"passed data into eventSink\" />\n    <MESSAGE value=\"fixed peers list bug&#10;peers.remove problem\" />\n    <MESSAGE value=\"fixed peers list bugs\" />\n    <MESSAGE value=\"added hashcode and equals operator in hmspeer.dart\" />\n    <MESSAGE value=\"added mute and video\" />\n    <option name=\"LAST_COMMIT_MESSAGE\" value=\"added mute and video\" />\n  </component>\n  <component name=\"WindowStateProjectService\">\n    <state x=\"718\" y=\"167\" key=\"#com.intellij.ide.util.MemberChooser\" timestamp=\"1626199215869\">\n      <screen x=\"0\" y=\"0\" width=\"1920\" height=\"1040\" />\n    </state>\n    <state x=\"718\" y=\"167\" key=\"#com.intellij.ide.util.MemberChooser/0.0.1920.1040@0.0.1920.1040\" timestamp=\"1626199215869\" />\n    <state x=\"693\" y=\"366\" key=\"Github.CreatePullRequestDialog\" timestamp=\"1626272036981\">\n      <screen x=\"0\" y=\"0\" width=\"1920\" height=\"1040\" />\n    </state>\n    <state x=\"693\" y=\"366\" key=\"Github.CreatePullRequestDialog/0.0.1920.1040@0.0.1920.1040\" timestamp=\"1626272036981\" />\n    <state width=\"1869\" height=\"330\" key=\"GridCell.Tab.0.bottom\" timestamp=\"1626283426923\">\n      <screen x=\"0\" y=\"0\" width=\"1920\" height=\"1040\" />\n    </state>\n    <state width=\"1398\" height=\"489\" key=\"GridCell.Tab.0.bottom/0.0.1440.900@0.0.1440.900\" timestamp=\"1625190703001\" />\n    <state width=\"1869\" height=\"330\" key=\"GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040\" timestamp=\"1626283426923\" />\n    <state width=\"1869\" height=\"330\" key=\"GridCell.Tab.0.center\" timestamp=\"1626283426922\">\n      <screen x=\"0\" y=\"0\" width=\"1920\" height=\"1040\" />\n    </state>\n    <state width=\"1398\" height=\"489\" key=\"GridCell.Tab.0.center/0.0.1440.900@0.0.1440.900\" timestamp=\"1625190703000\" />\n    <state width=\"1869\" height=\"330\" key=\"GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040\" timestamp=\"1626283426922\" />\n    <state width=\"1869\" height=\"330\" key=\"GridCell.Tab.0.left\" timestamp=\"1626283426922\">\n      <screen x=\"0\" y=\"0\" width=\"1920\" height=\"1040\" />\n    </state>\n    <state width=\"1398\" height=\"489\" key=\"GridCell.Tab.0.left/0.0.1440.900@0.0.1440.900\" timestamp=\"1625190703000\" />\n    <state width=\"1869\" height=\"330\" key=\"GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040\" timestamp=\"1626283426922\" />\n    <state width=\"1869\" height=\"330\" key=\"GridCell.Tab.0.right\" timestamp=\"1626283426922\">\n      <screen x=\"0\" y=\"0\" width=\"1920\" height=\"1040\" />\n    </state>\n    <state width=\"1398\" height=\"489\" key=\"GridCell.Tab.0.right/0.0.1440.900@0.0.1440.900\" timestamp=\"1625190703000\" />\n    <state width=\"1869\" height=\"330\" key=\"GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040\" timestamp=\"1626283426922\" />\n    <state width=\"1398\" height=\"489\" key=\"GridCell.Tab.1.bottom\" timestamp=\"1625190702999\">\n      <screen x=\"0\" y=\"0\" width=\"1440\" height=\"900\" />\n    </state>\n    <state width=\"1398\" height=\"489\" key=\"GridCell.Tab.1.bottom/0.0.1440.900@0.0.1440.900\" timestamp=\"1625190702999\" />\n    <state width=\"1398\" height=\"489\" key=\"GridCell.Tab.1.center\" timestamp=\"1625190702998\">\n      <screen x=\"0\" y=\"0\" width=\"1440\" height=\"900\" />\n    </state>\n    <state width=\"1398\" height=\"489\" key=\"GridCell.Tab.1.center/0.0.1440.900@0.0.1440.900\" timestamp=\"1625190702998\" />\n    <state width=\"1398\" height=\"489\" key=\"GridCell.Tab.1.left\" timestamp=\"1625190702997\">\n      <screen x=\"0\" y=\"0\" width=\"1440\" height=\"900\" />\n    </state>\n    <state width=\"1398\" height=\"489\" key=\"GridCell.Tab.1.left/0.0.1440.900@0.0.1440.900\" timestamp=\"1625190702997\" />\n    <state width=\"1398\" height=\"489\" key=\"GridCell.Tab.1.right\" timestamp=\"1625190702999\">\n      <screen x=\"0\" y=\"0\" width=\"1440\" height=\"900\" />\n    </state>\n    <state width=\"1398\" height=\"489\" key=\"GridCell.Tab.1.right/0.0.1440.900@0.0.1440.900\" timestamp=\"1625190702999\" />\n    <state x=\"0\" y=\"86\" width=\"1920\" height=\"869\" key=\"MergeDialog\" timestamp=\"1626271996936\">\n      <screen x=\"0\" y=\"0\" width=\"1920\" height=\"1040\" />\n    </state>\n    <state x=\"0\" y=\"86\" width=\"1920\" height=\"869\" key=\"MergeDialog/0.0.1920.1040@0.0.1920.1040\" timestamp=\"1626271996936\" />\n    <state x=\"510\" y=\"226\" key=\"MultipleFileMergeDialog\" timestamp=\"1626272006330\">\n      <screen x=\"0\" y=\"0\" width=\"1920\" height=\"1040\" />\n    </state>\n    <state x=\"510\" y=\"226\" key=\"MultipleFileMergeDialog/0.0.1920.1040@0.0.1920.1040\" timestamp=\"1626272006330\" />\n    <state x=\"691\" y=\"175\" key=\"RollbackChangesDialog\" timestamp=\"1626075713302\">\n      <screen x=\"0\" y=\"0\" width=\"1920\" height=\"1040\" />\n    </state>\n    <state x=\"691\" y=\"175\" key=\"RollbackChangesDialog/0.0.1920.1040@0.0.1920.1040\" timestamp=\"1626075713302\" />\n    <state x=\"572\" y=\"367\" key=\"VCS.ChangelistChooser\" timestamp=\"1625300183450\">\n      <screen x=\"0\" y=\"0\" width=\"1440\" height=\"900\" />\n    </state>\n    <state x=\"572\" y=\"367\" key=\"VCS.ChangelistChooser/0.0.1440.900@0.0.1440.900\" timestamp=\"1625300183450\" />\n    <state x=\"452\" y=\"189\" key=\"Vcs.Push.Dialog.v2\" timestamp=\"1626294545672\">\n      <screen x=\"0\" y=\"0\" width=\"1920\" height=\"1040\" />\n    </state>\n    <state x=\"452\" y=\"189\" key=\"Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040\" timestamp=\"1626294545672\" />\n    <state x=\"736\" y=\"416\" key=\"com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2\" timestamp=\"1626101451259\">\n      <screen x=\"0\" y=\"0\" width=\"1920\" height=\"1040\" />\n    </state>\n    <state x=\"736\" y=\"416\" key=\"com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1920.1040@0.0.1920.1040\" timestamp=\"1626101451259\" />\n    <state x=\"505\" y=\"167\" key=\"git4idea.branch.GitSmartOperationDialog\" timestamp=\"1626271542676\">\n      <screen x=\"0\" y=\"0\" width=\"1920\" height=\"1040\" />\n    </state>\n    <state x=\"505\" y=\"167\" key=\"git4idea.branch.GitSmartOperationDialog/0.0.1920.1040@0.0.1920.1040\" timestamp=\"1626271542676\" />\n    <state x=\"453\" y=\"131\" key=\"new project wizard\" timestamp=\"1626158261246\">\n      <screen x=\"0\" y=\"0\" width=\"1920\" height=\"1040\" />\n    </state>\n    <state x=\"453\" y=\"131\" key=\"new project wizard/0.0.1920.1040@0.0.1920.1040\" timestamp=\"1626158261246\" />\n    <state x=\"539\" y=\"5\" width=\"840\" height=\"1034\" key=\"search.everywhere.popup\" timestamp=\"1626284263933\">\n      <screen x=\"0\" y=\"0\" width=\"1920\" height=\"1040\" />\n    </state>\n    <state x=\"539\" y=\"5\" width=\"840\" height=\"1034\" key=\"search.everywhere.popup/0.0.1920.1040@0.0.1920.1040\" timestamp=\"1626284263933\" />\n  </component>\n</project>
+-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+-<+>UTF-8
+-===================================================================
+---- .idea/workspace.xml	(revision 0eba86867ceb571a2e9002757cbdc481469ec1d7)
+-+++ .idea/workspace.xml	(date 1627231637740)
+-@@ -23,16 +23,38 @@
+-       <path>
+-         <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+-         <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+--        <item name="BRANCH:ahron-feature-peers" type="e8cecc67:BranchNodeDescriptor" />
+-+        <item name="BRANCH:feature-vivek-video-rendering" type="e8cecc67:BranchNodeDescriptor" />
+-       </path>
+-     </select>
+-   </component>
+-   <component name="ChangeListManager">
+-     <list default="true" id="f6635374-520c-494c-ae8d-73b820655433" name="Default Changelist" comment="added mute and video">
+--      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_14-07-2021_07_05_PM__Default_Changelist_.xml" afterDir="false" />
+--      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_14-07-2021_07_05_PM__Default_Changelist_1.xml" afterDir="false" />
+-+      <change afterPath="$PROJECT_DIR$/lib/enum/hms_codec.dart" afterDir="false" />
+-+      <change afterPath="$PROJECT_DIR$/lib/enum/hms_video_codec.dart" afterDir="false" />
+-+      <change afterPath="$PROJECT_DIR$/lib/model/hms_audio_setting.dart" afterDir="false" />
+-+      <change afterPath="$PROJECT_DIR$/lib/model/hms_permissions.dart" afterDir="false" />
+-+      <change afterPath="$PROJECT_DIR$/lib/model/hms_publish_setting.dart" afterDir="false" />
+-+      <change afterPath="$PROJECT_DIR$/lib/model/hms_simul_cast_settings.dart" afterDir="false" />
+-+      <change afterPath="$PROJECT_DIR$/lib/model/hms_subscribe_settings.dart" afterDir="false" />
+-+      <change afterPath="$PROJECT_DIR$/lib/model/hms_video_setting.dart" afterDir="false" />
+-+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_SDK.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Dart_SDK.xml" afterDir="false" />
+-+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_14-07-2021_07_05_PM__Default_Changelist_.xml" beforeDir="false" />
+-+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_14-07-2021_07_05_PM__Default_Changelist_1.xml" beforeDir="false" />
+-+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Merge_at_14-07-2021_07_35_PM__Default_Changelist_.xml" beforeDir="false" />
+-       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+--      <change beforePath="$PROJECT_DIR$/android/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/android/build.gradle" afterDir="false" />
+-+      <change beforePath="$PROJECT_DIR$/example/ios/Podfile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/example/ios/Podfile.lock" afterDir="false" />
+-+      <change beforePath="$PROJECT_DIR$/example/ios/Runner.xcodeproj/project.pbxproj" beforeDir="false" afterPath="$PROJECT_DIR$/example/ios/Runner.xcodeproj/project.pbxproj" afterDir="false" />
+-+      <change beforePath="$PROJECT_DIR$/example/lib/common/ui/organisms/peer_item_organism.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/common/ui/organisms/peer_item_organism.dart" afterDir="false" />
+-+      <change beforePath="$PROJECT_DIR$/example/lib/meeting/meeting_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/meeting/meeting_page.dart" afterDir="false" />
+-+      <change beforePath="$PROJECT_DIR$/example/lib/meeting/meeting_store.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/meeting/meeting_store.dart" afterDir="false" />
+-+      <change beforePath="$PROJECT_DIR$/lib/enum/hms_audio_codec.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/enum/hms_audio_codec.dart" afterDir="false" />
+-+      <change beforePath="$PROJECT_DIR$/lib/model/hms_audio_track_setting.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/model/hms_audio_track_setting.dart" afterDir="false" />
+-+      <change beforePath="$PROJECT_DIR$/lib/model/hms_camera_facing.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/enum/hms_camera_facing.dart" afterDir="false" />
+-+      <change beforePath="$PROJECT_DIR$/lib/model/hms_error.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/model/hms_error.dart" afterDir="false" />
+-+      <change beforePath="$PROJECT_DIR$/lib/model/hms_error_code.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/model/hms_error_code.dart" afterDir="false" />
+-+      <change beforePath="$PROJECT_DIR$/lib/model/hms_local_peer.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/model/hms_local_peer.dart" afterDir="false" />
+-+      <change beforePath="$PROJECT_DIR$/lib/model/hms_role.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/model/hms_role.dart" afterDir="false" />
+-+      <change beforePath="$PROJECT_DIR$/lib/model/hms_video_track_setting.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/model/hms_video_track_setting.dart" afterDir="false" />
+-     </list>
+-     <option name="SHOW_DIALOG" value="false" />
+-     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+-@@ -55,7 +77,7 @@
+-   <component name="Git.Settings">
+-     <option name="RECENT_BRANCH_BY_REPOSITORY">
+-       <map>
+--        <entry key="$PROJECT_DIR$" value="ahron-android-project" />
+-+        <entry key="$PROJECT_DIR$" value="vivek-feature-peers" />
+-       </map>
+-     </option>
+-     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+-@@ -75,9 +97,25 @@
+-     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+-     <property name="dart.analysis.tool.window.visible" value="false" />
+-     <property name="io.flutter.reload.alreadyRun" value="true" />
+--    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+-+    <property name="last_opened_file_path" value="$PROJECT_DIR$/lib/enum" />
+-+    <property name="settings.editor.selected.configurable" value="preferences.keymap" />
+-     <property name="show.migrate.to.gradle.popup" value="false" />
+-   </component>
+-+  <component name="RecentsManager">
+-+    <key name="MoveFile.RECENT_KEYS">
+-+      <recent name="$PROJECT_DIR$/lib/enum" />
+-+      <recent name="$PROJECT_DIR$/lib" />
+-+    </key>
+-+    <key name="CopyFile.RECENT_KEYS">
+-+      <recent name="$PROJECT_DIR$/lib/enum" />
+-+      <recent name="$PROJECT_DIR$/lib/model" />
+-+    </key>
+-+  </component>
+-+  <component name="RunAnythingCache">
+-+    <option name="myCommands">
+-+      <command value="abstract class" />
+-+    </option>
+-+  </component>
+-   <component name="RunManager">
+-     <configuration name="main.dart" type="FlutterRunConfigurationType" factoryName="Flutter">
+-       <option name="filePath" value="$PROJECT_DIR$/example/lib/main.dart" />
+-@@ -149,7 +187,42 @@
+-       <option name="project" value="LOCAL" />
+-       <updated>1626294522908</updated>
+-     </task>
+--    <option name="localTasksCounter" value="9" />
+-+    <task id="LOCAL-00009" summary="Video Rendering is happening&#10;&#10;1. added hms_track_update.dart&#10;2. added video_view.dart&#10;3. added HMSVideoViewFactory.swift&#10;4. updated SwiftHmssdkFlutterPlugin.swift with getPeerById&#10;5. Added HMSTrackExtension.swift&#10;6. updated peer_item_organism.dart to consume video_view.dart&#10;7. updated meeting_store.dart to get track update">
+-+      <created>1626621799160</created>
+-+      <option name="number" value="00009" />
+-+      <option name="presentableId" value="LOCAL-00009" />
+-+      <option name="project" value="LOCAL" />
+-+      <updated>1626621799160</updated>
+-+    </task>
+-+    <task id="LOCAL-00010" summary="added track related models">
+-+      <created>1626758472456</created>
+-+      <option name="number" value="00010" />
+-+      <option name="presentableId" value="LOCAL-00010" />
+-+      <option name="project" value="LOCAL" />
+-+      <updated>1626758472457</updated>
+-+    </task>
+-+    <task id="LOCAL-00011" summary="1. Added track id to video view&#10;2. displaying tracks not peers&#10;3. Adding models&#10;- hms_audio_track.dart&#10;- hms_camera_facing.dart&#10;- hms_codec.dart&#10;- hms_error.dart&#10;- hms_error_code.dart&#10;- hms_local_audio_track.dart&#10;- hms_local_peer.dart&#10;- hms_message.dart&#10;- hms_peer.dart&#10;- hms_role.dart&#10;- hms_room.dart&#10;- hms_room_update.dart&#10;- hms_sdk.dart&#10;- hms_speaker.dart&#10;- hms_track.dart&#10;- hms_update_listener.dart&#10;- role_change_request.dart">
+-+      <created>1626970608323</created>
+-+      <option name="number" value="00011" />
+-+      <option name="presentableId" value="LOCAL-00011" />
+-+      <option name="project" value="LOCAL" />
+-+      <updated>1626970608324</updated>
+-+    </task>
+-+    <task id="LOCAL-00012" summary="1. added type cast to HMSVideoViewFactory.swift to show auxilary tracks">
+-+      <created>1627055474961</created>
+-+      <option name="number" value="00012" />
+-+      <option name="presentableId" value="LOCAL-00012" />
+-+      <option name="project" value="LOCAL" />
+-+      <updated>1627055474961</updated>
+-+    </task>
+-+    <task id="LOCAL-00013" summary="Updated hms_room.dart, hms_peer.dart, hms_codec.dart&#10;&#10;Added hms_audio_codec.dart&#10;Updated HMSVideoViewFactory.swift">
+-+      <created>1627135527372</created>
+-+      <option name="number" value="00013" />
+-+      <option name="presentableId" value="LOCAL-00013" />
+-+      <option name="project" value="LOCAL" />
+-+      <updated>1627135527372</updated>
+-+    </task>
+-+    <option name="localTasksCounter" value="14" />
+-     <servers />
+-   </component>
+-   <component name="Vcs.Log.History.Properties">
+-@@ -174,7 +247,7 @@
+-                   <entry key="branch">
+-                     <value>
+-                       <list>
+--                        <option value="origin/vivek-feature-peers" />
+-+                        <option value="feature-vivek-video-rendering" />
+-                       </list>
+-                     </value>
+-                   </entry>
+-@@ -196,53 +269,85 @@
+-     <MESSAGE value="fixed peers list bugs" />
+-     <MESSAGE value="added hashcode and equals operator in hmspeer.dart" />
+-     <MESSAGE value="added mute and video" />
+--    <option name="LAST_COMMIT_MESSAGE" value="added mute and video" />
+-+    <MESSAGE value="Video Rendering is happening&#10;&#10;1. added hms_track_update.dart&#10;2. added video_view.dart&#10;3. added HMSVideoViewFactory.swift&#10;4. updated SwiftHmssdkFlutterPlugin.swift with getPeerById&#10;5. Added HMSTrackExtension.swift&#10;6. updated peer_item_organism.dart to consume video_view.dart&#10;7. updated meeting_store.dart to get track update" />
+-+    <MESSAGE value="added track related models" />
+-+    <MESSAGE value="1. Added track id to video view&#10;2. displaying tracks not peers&#10;3. Adding models&#10;- hms_audio_track.dart&#10;- hms_camera_facing.dart&#10;- hms_codec.dart&#10;- hms_error.dart&#10;- hms_error_code.dart&#10;- hms_local_audio_track.dart&#10;- hms_local_peer.dart&#10;- hms_message.dart&#10;- hms_peer.dart&#10;- hms_role.dart&#10;- hms_room.dart&#10;- hms_room_update.dart&#10;- hms_sdk.dart&#10;- hms_speaker.dart&#10;- hms_track.dart&#10;- hms_update_listener.dart&#10;- role_change_request.dart" />
+-+    <MESSAGE value="1. added type cast to HMSVideoViewFactory.swift to show auxilary tracks" />
+-+    <MESSAGE value="Updated hms_room.dart, hms_peer.dart, hms_codec.dart&#10;&#10;Added hms_audio_codec.dart" />
+-+    <MESSAGE value="Updated hms_room.dart, hms_peer.dart, hms_codec.dart&#10;&#10;Added hms_audio_codec.dart&#10;Updated HMSVideoViewFactory.swift" />
+-+    <option name="LAST_COMMIT_MESSAGE" value="Updated hms_room.dart, hms_peer.dart, hms_codec.dart&#10;&#10;Added hms_audio_codec.dart&#10;Updated HMSVideoViewFactory.swift" />
+-   </component>
+-   <component name="WindowStateProjectService">
+--    <state x="718" y="167" key="#com.intellij.ide.util.MemberChooser" timestamp="1626199215869">
+--      <screen x="0" y="0" width="1920" height="1040" />
+-+    <state x="539" y="145" key="#com.intellij.ide.util.MemberChooser" timestamp="1627062387307">
+-+      <screen x="0" y="0" width="1440" height="900" />
+-     </state>
+-+    <state x="539" y="145" key="#com.intellij.ide.util.MemberChooser/0.0.1440.900/0.-1080.1920.1080@0.0.1440.900" timestamp="1627062387307" />
+-+    <state x="539" y="145" key="#com.intellij.ide.util.MemberChooser/0.0.1440.900@0.0.1440.900" timestamp="1626758420431" />
+-     <state x="718" y="167" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1626199215869" />
+-+    <state x="516" y="200" key="AndroidProcessChooserDialog" timestamp="1626615103985">
+-+      <screen x="0" y="0" width="1440" height="900" />
+-+    </state>
+-+    <state x="516" y="200" key="AndroidProcessChooserDialog/0.0.1440.900/0.-1080.1920.1080@0.0.1440.900" timestamp="1626615103985" />
+-+    <state width="553" height="466" key="DebuggerActiveHint" timestamp="1627063588584">
+-+      <screen x="0" y="0" width="1440" height="900" />
+-+    </state>
+-+    <state width="553" height="466" key="DebuggerActiveHint/0.0.1440.900/0.-1080.1920.1080@0.0.1440.900" timestamp="1627063588584" />
+-     <state x="693" y="366" key="Github.CreatePullRequestDialog" timestamp="1626272036981">
+-       <screen x="0" y="0" width="1920" height="1040" />
+-     </state>
+-     <state x="693" y="366" key="Github.CreatePullRequestDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1626272036981" />
+--    <state width="1869" height="330" key="GridCell.Tab.0.bottom" timestamp="1626283426923">
+--      <screen x="0" y="0" width="1920" height="1040" />
+-+    <state width="1398" height="288" key="GridCell.Tab.0.bottom" timestamp="1627133802289">
+-+      <screen x="0" y="0" width="1440" height="900" />
+-     </state>
+--    <state width="1398" height="489" key="GridCell.Tab.0.bottom/0.0.1440.900@0.0.1440.900" timestamp="1625190703001" />
+-+    <state width="1398" height="475" key="GridCell.Tab.0.bottom/0.0.1440.900/0.-1080.1920.1080@0.0.1440.900" timestamp="1627063719413" />
+-+    <state width="1398" height="288" key="GridCell.Tab.0.bottom/0.0.1440.900@0.0.1440.900" timestamp="1627133802289" />
+-     <state width="1869" height="330" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1626283426923" />
+--    <state width="1869" height="330" key="GridCell.Tab.0.center" timestamp="1626283426922">
+--      <screen x="0" y="0" width="1920" height="1040" />
+-+    <state width="1398" height="287" key="GridCell.Tab.0.bottom/0.25.1440.772/0.-1055.1920.1055@0.25.1440.772" timestamp="1626612514749" />
+-+    <state width="1398" height="288" key="GridCell.Tab.0.center" timestamp="1627133802287">
+-+      <screen x="0" y="0" width="1440" height="900" />
+-     </state>
+--    <state width="1398" height="489" key="GridCell.Tab.0.center/0.0.1440.900@0.0.1440.900" timestamp="1625190703000" />
+-+    <state width="1398" height="475" key="GridCell.Tab.0.center/0.0.1440.900/0.-1080.1920.1080@0.0.1440.900" timestamp="1627063719410" />
+-+    <state width="1398" height="288" key="GridCell.Tab.0.center/0.0.1440.900@0.0.1440.900" timestamp="1627133802287" />
+-     <state width="1869" height="330" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1626283426922" />
+--    <state width="1869" height="330" key="GridCell.Tab.0.left" timestamp="1626283426922">
+--      <screen x="0" y="0" width="1920" height="1040" />
+-+    <state width="1398" height="287" key="GridCell.Tab.0.center/0.25.1440.772/0.-1055.1920.1055@0.25.1440.772" timestamp="1626612514748" />
+-+    <state width="1398" height="288" key="GridCell.Tab.0.left" timestamp="1627133802286">
+-+      <screen x="0" y="0" width="1440" height="900" />
+-     </state>
+--    <state width="1398" height="489" key="GridCell.Tab.0.left/0.0.1440.900@0.0.1440.900" timestamp="1625190703000" />
+-+    <state width="1398" height="475" key="GridCell.Tab.0.left/0.0.1440.900/0.-1080.1920.1080@0.0.1440.900" timestamp="1627063719409" />
+-+    <state width="1398" height="288" key="GridCell.Tab.0.left/0.0.1440.900@0.0.1440.900" timestamp="1627133802286" />
+-     <state width="1869" height="330" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1626283426922" />
+--    <state width="1869" height="330" key="GridCell.Tab.0.right" timestamp="1626283426922">
+--      <screen x="0" y="0" width="1920" height="1040" />
+-+    <state width="1398" height="287" key="GridCell.Tab.0.left/0.25.1440.772/0.-1055.1920.1055@0.25.1440.772" timestamp="1626612514748" />
+-+    <state width="1398" height="288" key="GridCell.Tab.0.right" timestamp="1627133802288">
+-+      <screen x="0" y="0" width="1440" height="900" />
+-     </state>
+--    <state width="1398" height="489" key="GridCell.Tab.0.right/0.0.1440.900@0.0.1440.900" timestamp="1625190703000" />
+-+    <state width="1398" height="475" key="GridCell.Tab.0.right/0.0.1440.900/0.-1080.1920.1080@0.0.1440.900" timestamp="1627063719412" />
+-+    <state width="1398" height="288" key="GridCell.Tab.0.right/0.0.1440.900@0.0.1440.900" timestamp="1627133802288" />
+-     <state width="1869" height="330" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1626283426922" />
+--    <state width="1398" height="489" key="GridCell.Tab.1.bottom" timestamp="1625190702999">
+-+    <state width="1398" height="287" key="GridCell.Tab.0.right/0.25.1440.772/0.-1055.1920.1055@0.25.1440.772" timestamp="1626612514748" />
+-+    <state width="1398" height="475" key="GridCell.Tab.1.bottom" timestamp="1627109084832">
+-       <screen x="0" y="0" width="1440" height="900" />
+-     </state>
+--    <state width="1398" height="489" key="GridCell.Tab.1.bottom/0.0.1440.900@0.0.1440.900" timestamp="1625190702999" />
+--    <state width="1398" height="489" key="GridCell.Tab.1.center" timestamp="1625190702998">
+-+    <state width="1398" height="475" key="GridCell.Tab.1.bottom/0.0.1440.900/0.-1080.1920.1080@0.0.1440.900" timestamp="1627063719408" />
+-+    <state width="1398" height="475" key="GridCell.Tab.1.bottom/0.0.1440.900@0.0.1440.900" timestamp="1627109084832" />
+-+    <state width="1398" height="287" key="GridCell.Tab.1.bottom/0.25.1440.772/0.-1055.1920.1055@0.25.1440.772" timestamp="1626612514905" />
+-+    <state width="1398" height="475" key="GridCell.Tab.1.center" timestamp="1627109084831">
+-       <screen x="0" y="0" width="1440" height="900" />
+-     </state>
+--    <state width="1398" height="489" key="GridCell.Tab.1.center/0.0.1440.900@0.0.1440.900" timestamp="1625190702998" />
+--    <state width="1398" height="489" key="GridCell.Tab.1.left" timestamp="1625190702997">
+-+    <state width="1398" height="475" key="GridCell.Tab.1.center/0.0.1440.900/0.-1080.1920.1080@0.0.1440.900" timestamp="1627063719406" />
+-+    <state width="1398" height="475" key="GridCell.Tab.1.center/0.0.1440.900@0.0.1440.900" timestamp="1627109084831" />
+-+    <state width="1398" height="287" key="GridCell.Tab.1.center/0.25.1440.772/0.-1055.1920.1055@0.25.1440.772" timestamp="1626612514904" />
+-+    <state width="1398" height="475" key="GridCell.Tab.1.left" timestamp="1627109084831">
+-       <screen x="0" y="0" width="1440" height="900" />
+-     </state>
+--    <state width="1398" height="489" key="GridCell.Tab.1.left/0.0.1440.900@0.0.1440.900" timestamp="1625190702997" />
+--    <state width="1398" height="489" key="GridCell.Tab.1.right" timestamp="1625190702999">
+-+    <state width="1398" height="475" key="GridCell.Tab.1.left/0.0.1440.900/0.-1080.1920.1080@0.0.1440.900" timestamp="1627063719403" />
+-+    <state width="1398" height="475" key="GridCell.Tab.1.left/0.0.1440.900@0.0.1440.900" timestamp="1627109084831" />
+-+    <state width="1398" height="287" key="GridCell.Tab.1.left/0.25.1440.772/0.-1055.1920.1055@0.25.1440.772" timestamp="1626612514903" />
+-+    <state width="1398" height="475" key="GridCell.Tab.1.right" timestamp="1627109084832">
+-       <screen x="0" y="0" width="1440" height="900" />
+-     </state>
+--    <state width="1398" height="489" key="GridCell.Tab.1.right/0.0.1440.900@0.0.1440.900" timestamp="1625190702999" />
+-+    <state width="1398" height="475" key="GridCell.Tab.1.right/0.0.1440.900/0.-1080.1920.1080@0.0.1440.900" timestamp="1627063719407" />
+-+    <state width="1398" height="475" key="GridCell.Tab.1.right/0.0.1440.900@0.0.1440.900" timestamp="1627109084832" />
+-+    <state width="1398" height="287" key="GridCell.Tab.1.right/0.25.1440.772/0.-1055.1920.1055@0.25.1440.772" timestamp="1626612514905" />
+-     <state x="0" y="86" width="1920" height="869" key="MergeDialog" timestamp="1626271996936">
+-       <screen x="0" y="0" width="1920" height="1040" />
+-     </state>
+-@@ -255,13 +360,19 @@
+-       <screen x="0" y="0" width="1920" height="1040" />
+-     </state>
+-     <state x="691" y="175" key="RollbackChangesDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1626075713302" />
+-+    <state x="229" y="86" key="SettingsEditor" timestamp="1627224039070">
+-+      <screen x="0" y="0" width="1440" height="900" />
+-+    </state>
+-+    <state x="229" y="86" key="SettingsEditor/0.0.1440.900@0.0.1440.900" timestamp="1627224039070" />
+-     <state x="572" y="367" key="VCS.ChangelistChooser" timestamp="1625300183450">
+-       <screen x="0" y="0" width="1440" height="900" />
+-     </state>
+-     <state x="572" y="367" key="VCS.ChangelistChooser/0.0.1440.900@0.0.1440.900" timestamp="1625300183450" />
+--    <state x="452" y="189" key="Vcs.Push.Dialog.v2" timestamp="1626294545672">
+--      <screen x="0" y="0" width="1920" height="1040" />
+-+    <state x="339" y="164" key="Vcs.Push.Dialog.v2" timestamp="1627121374981">
+-+      <screen x="0" y="0" width="1440" height="900" />
+-     </state>
+-+    <state x="339" y="164" key="Vcs.Push.Dialog.v2/0.0.1440.900/0.-1080.1920.1080@0.0.1440.900" timestamp="1627055483859" />
+-+    <state x="339" y="164" key="Vcs.Push.Dialog.v2/0.0.1440.900@0.0.1440.900" timestamp="1627121374981" />
+-     <state x="452" y="189" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1626294545672" />
+-     <state x="736" y="416" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1626101451259">
+-       <screen x="0" y="0" width="1920" height="1040" />
+-@@ -275,9 +386,15 @@
+-       <screen x="0" y="0" width="1920" height="1040" />
+-     </state>
+-     <state x="453" y="131" key="new project wizard/0.0.1920.1040@0.0.1920.1040" timestamp="1626158261246" />
+--    <state x="539" y="5" width="840" height="1034" key="search.everywhere.popup" timestamp="1626284263933">
+--      <screen x="0" y="0" width="1920" height="1040" />
+-+    <state x="385" y="210" width="670" height="675" key="run.anything.popup" timestamp="1627153833404">
+-+      <screen x="0" y="0" width="1440" height="900" />
+-+    </state>
+-+    <state x="385" y="210" key="run.anything.popup/0.0.1440.900/0.-1080.1920.1080@0.0.1440.900" timestamp="1626615090314" />
+-+    <state x="385" y="210" width="670" height="675" key="run.anything.popup/0.0.1440.900@0.0.1440.900" timestamp="1627153833404" />
+-+    <state x="404" y="4" width="670" height="895" key="search.everywhere.popup" timestamp="1627229048887">
+-+      <screen x="0" y="0" width="1440" height="900" />
+-     </state>
+-+    <state x="404" y="4" width="670" height="895" key="search.everywhere.popup/0.0.1440.900@0.0.1440.900" timestamp="1627229048887" />
+-     <state x="539" y="5" width="840" height="1034" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1626284263933" />
+-   </component>
+- </project>
+-\ No newline at end of file
+-Index: example/ios/Podfile.lock
+-IDEA additional info:
+-Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+-<+>PODS:\n  - Flutter (1.0.0)\n  - GoogleWebRTC (1.1.31999)\n  - HMSSDK (0.0.6):\n    - GoogleWebRTC (= 1.1.31999)\n  - hmssdk_flutter (0.0.1):\n    - Flutter\n    - HMSSDK\n\nDEPENDENCIES:\n  - Flutter (from `Flutter`)\n  - hmssdk_flutter (from `.symlinks/plugins/hmssdk_flutter/ios`)\n\nSPEC REPOS:\n  trunk:\n    - GoogleWebRTC\n    - HMSSDK\n\nEXTERNAL SOURCES:\n  Flutter:\n    :path: Flutter\n  hmssdk_flutter:\n    :path: \".symlinks/plugins/hmssdk_flutter/ios\"\n\nSPEC CHECKSUMS:\n  Flutter: 434fef37c0980e73bb6479ef766c45957d4b510c\n  GoogleWebRTC: b39a78c4f5cc6b0323415b9233db03a2faa7b0f0\n  HMSSDK: c05163e636c434cbce5175d63521171fb125af51\n  hmssdk_flutter: 7746e56926bca98332eefaa2fadce33b18ef200e\n\nPODFILE CHECKSUM: fe0e1ee7f3d1f7d00b11b474b62dd62134535aea\n\nCOCOAPODS: 1.10.1\n
+-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+-<+>UTF-8
+-===================================================================
+---- example/ios/Podfile.lock	(revision 0eba86867ceb571a2e9002757cbdc481469ec1d7)
+-+++ example/ios/Podfile.lock	(date 1626464762620)
+-@@ -6,10 +6,13 @@
+-   - hmssdk_flutter (0.0.1):
+-     - Flutter
+-     - HMSSDK
+-+  - "permission_handler (5.1.0+2)":
+-+    - Flutter
+- 
+- DEPENDENCIES:
+-   - Flutter (from `Flutter`)
+-   - hmssdk_flutter (from `.symlinks/plugins/hmssdk_flutter/ios`)
+-+  - permission_handler (from `.symlinks/plugins/permission_handler/ios`)
+- 
+- SPEC REPOS:
+-   trunk:
+-@@ -21,13 +24,16 @@
+-     :path: Flutter
+-   hmssdk_flutter:
+-     :path: ".symlinks/plugins/hmssdk_flutter/ios"
+-+  permission_handler:
+-+    :path: ".symlinks/plugins/permission_handler/ios"
+- 
+- SPEC CHECKSUMS:
+-   Flutter: 434fef37c0980e73bb6479ef766c45957d4b510c
+-   GoogleWebRTC: b39a78c4f5cc6b0323415b9233db03a2faa7b0f0
+-   HMSSDK: c05163e636c434cbce5175d63521171fb125af51
+-   hmssdk_flutter: 7746e56926bca98332eefaa2fadce33b18ef200e
+-+  permission_handler: ccb20a9fad0ee9b1314a52b70b76b473c5f8dab0
+- 
+--PODFILE CHECKSUM: fe0e1ee7f3d1f7d00b11b474b62dd62134535aea
+-+PODFILE CHECKSUM: 4243bd56b6b40b83d3e32bd65fa10fffb54f8ea7
+- 
+- COCOAPODS: 1.10.1
+-Index: example/lib/meeting/meeting_store.dart
+-IDEA additional info:
+-Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+-<+>import 'package:hmssdk_flutter/common/platform_methods.dart';\nimport 'package:hmssdk_flutter/enum/hms_peer_update.dart';\nimport 'package:hmssdk_flutter/enum/hms_track_update.dart';\nimport 'package:hmssdk_flutter/model/hms_peer.dart';\nimport 'package:hmssdk_flutter/model/hms_track.dart';\nimport 'package:hmssdk_flutter/model/platform_method_response.dart';\nimport 'package:hmssdk_flutter_example/meeting/meeting_controller.dart';\nimport 'package:mobx/mobx.dart';\n\npart 'meeting_store.g.dart';\n\nclass MeetingStore = MeetingStoreBase with _$MeetingStore;\n\nabstract class MeetingStoreBase with Store {\n  @observable\n  bool isSpeakerOn = true;\n\n  @observable\n  bool isMeetingStarted = false;\n  @observable\n  bool isVideoOn = true;\n  @observable\n  bool isMicOn = true;\n\n  late MeetingController meetingController;\n\n  Stream<PlatformMethodResponse>? controller;\n\n  @observable\n  List<HMSPeer> peers = ObservableList.of([]);\n\n  @observable\n  List<HMSTrack> tracks = ObservableList.of([]);\n\n  @action\n  void toggleSpeaker() {\n    isSpeakerOn = !isSpeakerOn;\n  }\n\n  @action\n  Future<void> toggleVideo() async {\n    await meetingController.switchVideo(isOn: isVideoOn);\n    isVideoOn = !isVideoOn;\n  }\n\n  @action\n  Future<void> toggleCamera() async {\n    await meetingController.switchCamera();\n  }\n\n  @action\n  Future<void> toggleAudio() async {\n    await meetingController.switchAudio(isOn: isMicOn);\n    isMicOn = !isMicOn;\n  }\n\n  @action\n  void removePeer(HMSPeer peer) {\n    peers.remove(peer);\n    removeTrackWithPeerId(peer.peerId);\n  }\n\n  @action\n  void addPeer(HMSPeer peer) {\n    if (!peers.contains(peer)) peers.add(peer);\n  }\n\n  // @action\n  // void removeTrack(HMSTrack? track, String? peerId) {\n  //   if (track != null) {\n  //     tracks\n  //         .removeWhere((element) => element.peer?.peerId == track.peer?.peerId);\n  //   }\n  //   if (peerId != null)\n  //     tracks.removeWhere((element) => element.peer?.peerId == peerId);\n  // }\n\n  @action\n  void removeTrackWithTrackId(String trackId) {\n    tracks\n        .remove(tracks.firstWhere((eachTrack) => eachTrack.trackId == trackId));\n  }\n\n  @action\n  void removeTrackWithPeerId(String peerId) {\n    tracks.removeWhere((eachTrack) => eachTrack.peer?.peerId == peerId);\n  }\n\n  @action\n  void addTrack(HMSTrack track) {\n    if (!tracks.contains(track))\n      tracks.add(track);\n    else {\n      removeTrackWithTrackId(track.trackId);\n      addTrack(track);\n    }\n  }\n\n  @action\n  void onRoleUpdated(int index, HMSPeer peer) {\n    peers[index] = peer;\n  }\n\n  @action\n  Future<void> startMeeting() async {\n    controller = await meetingController.startMeeting();\n    isMeetingStarted = true;\n    listenToController();\n  }\n\n  @action\n  void listenToController() {\n    controller?.listen((event) {\n      if (event.method == PlatformMethod.onPeerUpdate) {\n        HMSPeer peer = HMSPeer.fromMap(event.data['peer']);\n        HMSPeerUpdate update =\n            HMSPeerUpdateValues.getHMSPeerUpdateFromName(event.data['update']);\n        peerOperation(peer, update);\n      } else if (event.method == PlatformMethod.onTrackUpdate) {\n        print('track update');\n        HMSPeer peer = HMSPeer.fromMap(event.data['peer']);\n        HMSTrackUpdate update = HMSTrackUpdateValues.getHMSTrackUpdateFromName(\n            event.data['update']);\n        HMSTrack track = HMSTrack.fromMap(event.data['track'], peer);\n\n        peerOperationWithTrack(peer, update, track);\n      }\n    });\n  }\n\n  @action\n  void peerOperation(HMSPeer peer, HMSPeerUpdate update) {\n    switch (update) {\n      case HMSPeerUpdate.peerJoined:\n        print('peer joined');\n        addPeer(peer);\n        break;\n      case HMSPeerUpdate.peerLeft:\n        print('peer left');\n        removePeer(peer);\n\n        break;\n      case HMSPeerUpdate.peerKnocked:\n        // removePeer(peer);\n        break;\n      case HMSPeerUpdate.audioToggled:\n        print('Peer audio toggled');\n        break;\n      case HMSPeerUpdate.videoToggled:\n        print('Peer video toggled');\n        break;\n      case HMSPeerUpdate.roleUpdated:\n        peers[peers.indexOf(peer)] = peer;\n        break;\n      case HMSPeerUpdate.defaultUpdate:\n        print(\"Some default update or untouched case\");\n        break;\n      default:\n        print(\"Some default update or untouched case\");\n    }\n  }\n\n  @action\n  void peerOperationWithTrack(\n      HMSPeer peer, HMSTrackUpdate update, HMSTrack track) {\n    switch (update) {\n      case HMSTrackUpdate.trackAdded:\n        addTrack(track);\n        break;\n      case HMSTrackUpdate.trackRemoved:\n        removeTrackWithTrackId(track.trackId);\n        break;\n      case HMSTrackUpdate.trackMuted:\n        print('Muted');\n        break;\n      case HMSTrackUpdate.trackUnMuted:\n        print('UnMuted');\n        break;\n      case HMSTrackUpdate.trackDescriptionChanged:\n        print('trackDescriptionChanged');\n        break;\n      case HMSTrackUpdate.trackDegraded:\n        print('trackDegraded');\n        break;\n      case HMSTrackUpdate.trackRestored:\n        print('trackRestored');\n        break;\n      case HMSTrackUpdate.defaultUpdate:\n        print(\"Some default update or untouched case\");\n        break;\n      default:\n        print(\"Some default update or untouched case\");\n    }\n  }\n}\n
+-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+-<+>UTF-8
+-===================================================================
+---- example/lib/meeting/meeting_store.dart	(revision 0eba86867ceb571a2e9002757cbdc481469ec1d7)
+-+++ example/lib/meeting/meeting_store.dart	(date 1627063363949)
+-@@ -32,11 +32,19 @@
+-   @observable
+-   List<HMSTrack> tracks = ObservableList.of([]);
+- 
+-+  @observable
+-+  HMSTrack? trackForFullScreen;
+-+
+-   @action
+-   void toggleSpeaker() {
+-     isSpeakerOn = !isSpeakerOn;
+-   }
+- 
+-+  @action
+-+  void updateTrackForFullScreen(HMSTrack track) {
+-+    trackForFullScreen = track;
+-+  }
+-+
+-   @action
+-   Future<void> toggleVideo() async {
+-     await meetingController.switchVideo(isOn: isVideoOn);
+-Index: example/lib/meeting/meeting_page.dart
+-IDEA additional info:
+-Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+-<+>import 'package:flutter/cupertino.dart';\nimport 'package:flutter/material.dart';\nimport 'package:flutter_mobx/flutter_mobx.dart';\nimport 'package:hmssdk_flutter/common/platform_methods.dart';\nimport 'package:hmssdk_flutter/enum/hms_track_kind.dart';\nimport 'package:hmssdk_flutter/model/hms_track.dart';\nimport 'package:hmssdk_flutter/model/platform_method_response.dart';\nimport 'package:hmssdk_flutter_example/common/ui/organisms/peer_item_organism.dart';\nimport 'package:hmssdk_flutter_example/enum/meeting_flow.dart';\nimport 'package:hmssdk_flutter_example/main.dart';\nimport 'package:hmssdk_flutter_example/meeting/meeting_controller.dart';\nimport 'package:hmssdk_flutter_example/meeting/meeting_store.dart';\nimport 'package:mobx/mobx.dart';\n\nclass MeetingPage extends StatefulWidget {\n  final String roomId;\n  final MeetingFlow flow;\n  final String user;\n\n  const MeetingPage(\n      {Key? key, required this.roomId, required this.flow, required this.user})\n      : super(key: key);\n\n  @override\n  _MeetingPageState createState() => _MeetingPageState();\n}\n\nclass _MeetingPageState extends State<MeetingPage> {\n  late MeetingStore _meetingStore;\n\n  @override\n  void initState() {\n    _meetingStore = MeetingStore();\n    MeetingController meetingController = MeetingController(\n        roomId: widget.roomId, flow: widget.flow, user: widget.user);\n    _meetingStore.meetingController = meetingController;\n    super.initState();\n    initMeeting();\n    reaction((_) => _meetingStore.peers, (__) => print(__));\n  }\n\n  void initMeeting() {\n    _meetingStore.startMeeting();\n  }\n\n  @override\n  Widget build(BuildContext context) {\n    return Scaffold(\n      appBar: AppBar(\n        title: Text(widget.roomId),\n        actions: [\n          Observer(\n              builder: (_) => IconButton(\n                    onPressed: () {\n                      _meetingStore.toggleSpeaker();\n                    },\n                    icon: Icon(_meetingStore.isSpeakerOn\n                        ? Icons.volume_up\n                        : Icons.volume_off),\n                  )),\n          IconButton(\n            onPressed: () async {\n              //TODO:: switch camera\n              _meetingStore.toggleCamera();\n            },\n            icon: Icon(Icons.switch_camera),\n          ),\n          IconButton(\n            onPressed: () {},\n            icon: Icon(CupertinoIcons.settings),\n          )\n        ],\n      ),\n      body: Center(\n        child: Column(\n          children: [\n            Text(widget.user),\n            Text(widget.flow.toString()),\n            Text(widget.roomId),\n            Observer(builder: (_) {\n              if (_meetingStore.isMeetingStarted) {\n                return StreamBuilder<PlatformMethodResponse>(\n                    stream: _meetingStore.controller,\n                    builder: (context, data) {\n                      // print(data.data!.method.toString());\n                      if (data.data == null) return Text(\"Null data\");\n                      if (data.data!.method == PlatformMethod.onPeerUpdate) {\n                        print('peer update');\n                      }\n                      String data1 = data.data!.data.toString();\n                      return Text(data1);\n                    });\n              } else {\n                return CupertinoActivityIndicator();\n              }\n            }),\n            Observer(\n                builder: (_) => Text('Peers:${_meetingStore.peers.length}')),\n            Flexible(\n              child: Observer(\n                builder: (_) {\n                  if (!_meetingStore.isMeetingStarted) return SizedBox();\n                  if (_meetingStore.tracks.isEmpty)\n                    return Text('Waiting for other to join!');\n                  List<HMSTrack> filteredList = _meetingStore.tracks\n                      .where((element) =>\n                          element.kind != HMSTrackKind.kHMSTrackKindAudio)\n                      .toList();\n                  return GridView(\n                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(\n                        crossAxisCount: 2),\n                    children: List.generate(\n                        filteredList.length,\n                        (index) =>\n                            PeerItemOrganism(track: filteredList[index])),\n                  );\n                },\n              ),\n            )\n          ],\n        ),\n      ),\n      bottomNavigationBar: Observer(\n        builder: (_) {\n          if (_meetingStore.isMeetingStarted) {\n            return Row(\n              mainAxisAlignment: MainAxisAlignment.spaceEvenly,\n              children: [\n                Container(\n                  padding: EdgeInsets.all(16),\n                  child: Observer(builder: (context) {\n                    return IconButton(\n                        tooltip: 'Video',\n                        onPressed: () {\n                          _meetingStore.toggleVideo();\n                        },\n                        icon: Icon(_meetingStore.isVideoOn\n                            ? Icons.videocam\n                            : Icons.videocam_off));\n                  }),\n                ),\n                Container(\n                  padding: EdgeInsets.all(16),\n                  child: Observer(builder: (context) {\n                    return IconButton(\n                        tooltip: 'Audio',\n                        onPressed: () {\n                          _meetingStore.toggleAudio();\n                        },\n                        icon: Icon(\n                            _meetingStore.isMicOn ? Icons.mic : Icons.mic_off));\n                  }),\n                ),\n                Container(\n                  padding: EdgeInsets.all(16),\n                  child: IconButton(\n                      tooltip: 'Chat',\n                      onPressed: () {},\n                      icon: Icon(Icons.chat_bubble)),\n                ),\n                Container(\n                  padding: EdgeInsets.all(16),\n                  child: IconButton(\n                      tooltip: 'Leave',\n                      onPressed: () {\n                        _meetingStore.meetingController.leaveMeeting();\n                        Navigator.pushReplacement(context,\n                            MaterialPageRoute(builder: (ctx) => HomePage()));\n                      },\n                      icon: Icon(Icons.call_end)),\n                ),\n              ],\n            );\n          } else {\n            return Text('Please wait while we connect you!');\n          }\n        },\n      ),\n    );\n  }\n}\n
+-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+-<+>UTF-8
+-===================================================================
+---- example/lib/meeting/meeting_page.dart	(revision 0eba86867ceb571a2e9002757cbdc481469ec1d7)
+-+++ example/lib/meeting/meeting_page.dart	(date 1627063752219)
+-@@ -43,6 +43,10 @@
+-     _meetingStore.startMeeting();
+-   }
+- 
+-+  void showFullScreen(HMSTrack track) {
+-+    _meetingStore.updateTrackForFullScreen(track);
+-+  }
+-+
+-   @override
+-   Widget build(BuildContext context) {
+-     return Scaffold(
+-@@ -96,26 +100,39 @@
+-             }),
+-             Observer(
+-                 builder: (_) => Text('Peers:${_meetingStore.peers.length}')),
+--            Flexible(
+-+            Expanded(
+-               child: Observer(
+--                builder: (_) {
+--                  if (!_meetingStore.isMeetingStarted) return SizedBox();
+--                  if (_meetingStore.tracks.isEmpty)
+--                    return Text('Waiting for other to join!');
+--                  List<HMSTrack> filteredList = _meetingStore.tracks
+--                      .where((element) =>
+--                          element.kind != HMSTrackKind.kHMSTrackKindAudio)
+--                      .toList();
+--                  return GridView(
+--                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+--                        crossAxisCount: 2),
+--                    children: List.generate(
+--                        filteredList.length,
+--                        (index) =>
+--                            PeerItemOrganism(track: filteredList[index])),
+--                  );
+--                },
+--              ),
+-+                  builder: (_) => _meetingStore.trackForFullScreen == null
+-+                      ? Flexible(
+-+                          child: Observer(
+-+                            builder: (_) {
+-+                              if (!_meetingStore.isMeetingStarted)
+-+                                return SizedBox();
+-+                              if (_meetingStore.tracks.isEmpty)
+-+                                return Text('Waiting for other to join!');
+-+                              List<HMSTrack> filteredList = _meetingStore.tracks
+-+                                  .where((element) =>
+-+                                      element.kind !=
+-+                                      HMSTrackKind.kHMSTrackKindAudio)
+-+                                  .toList();
+-+                              return GridView(
+-+                                gridDelegate:
+-+                                    SliverGridDelegateWithFixedCrossAxisCount(
+-+                                        crossAxisCount: 2),
+-+                                children: List.generate(
+-+                                    filteredList.length,
+-+                                    (index) => PeerItemOrganism(
+-+                                          track: filteredList[index],
+-+                                          callBackFunction: (track) {
+-+                                            showFullScreen(track);
+-+                                          },
+-+                                        )),
+-+                              );
+-+                            },
+-+                          ),
+-+                        )
+-+                      : PeerItemOrganism(
+-+                          track: _meetingStore.trackForFullScreen!)),
+-             )
+-           ],
+-         ),
+-Index: example/ios/Runner.xcodeproj/project.pbxproj
+-IDEA additional info:
+-Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+-<+>// !$*UTF8*$!\n{\n\tarchiveVersion = 1;\n\tclasses = {\n\t};\n\tobjectVersion = 51;\n\tobjects = {\n\n/* Begin PBXBuildFile section */\n\t\t1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */ = {isa = PBXBuildFile; fileRef = 1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */; };\n\t\t282CBC2256DEDBFABA02AD27 /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25A7494E0381C974E82BAB2F /* Pods_Runner.framework */; };\n\t\t3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */; };\n\t\t74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74858FAE1ED2DC5600515810 /* AppDelegate.swift */; };\n\t\t97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };\n\t\t97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };\n\t\t97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };\n/* End PBXBuildFile section */\n\n/* Begin PBXCopyFilesBuildPhase section */\n\t\t9705A1C41CF9048500538489 /* Embed Frameworks */ = {\n\t\t\tisa = PBXCopyFilesBuildPhase;\n\t\t\tbuildActionMask = 2147483647;\n\t\t\tdstPath = \"\";\n\t\t\tdstSubfolderSpec = 10;\n\t\t\tfiles = (\n\t\t\t);\n\t\t\tname = \"Embed Frameworks\";\n\t\t\trunOnlyForDeploymentPostprocessing = 0;\n\t\t};\n/* End PBXCopyFilesBuildPhase section */\n\n/* Begin PBXFileReference section */\n\t\t1498D2321E8E86230040F4C2 /* GeneratedPluginRegistrant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GeneratedPluginRegistrant.h; sourceTree = \"<group>\"; };\n\t\t1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeneratedPluginRegistrant.m; sourceTree = \"<group>\"; };\n\t\t238323F347131537C23069F5 /* Pods-Runner.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = \"Pods-Runner.profile.xcconfig\"; path = \"Target Support Files/Pods-Runner/Pods-Runner.profile.xcconfig\"; sourceTree = \"<group>\"; };\n\t\t25A7494E0381C974E82BAB2F /* Pods_Runner.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Runner.framework; sourceTree = BUILT_PRODUCTS_DIR; };\n\t\t3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = AppFrameworkInfo.plist; path = Flutter/AppFrameworkInfo.plist; sourceTree = \"<group>\"; };\n\t\t41AA5D92A2CC1BB27F1A83DE /* Pods-Runner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = \"Pods-Runner.release.xcconfig\"; path = \"Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig\"; sourceTree = \"<group>\"; };\n\t\t74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = \"Runner-Bridging-Header.h\"; sourceTree = \"<group>\"; };\n\t\t74858FAE1ED2DC5600515810 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = \"<group>\"; };\n\t\t7AFA3C8E1D35360C0083082E /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Release.xcconfig; path = Flutter/Release.xcconfig; sourceTree = \"<group>\"; };\n\t\t89EFF6EE4AAF69984055D76C /* Pods-Runner.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = \"Pods-Runner.debug.xcconfig\"; path = \"Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig\"; sourceTree = \"<group>\"; };\n\t\t9740EEB21CF90195004384FC /* Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Debug.xcconfig; path = Flutter/Debug.xcconfig; sourceTree = \"<group>\"; };\n\t\t9740EEB31CF90195004384FC /* Generated.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Generated.xcconfig; path = Flutter/Generated.xcconfig; sourceTree = \"<group>\"; };\n\t\t97C146EE1CF9000F007C117D /* Runner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Runner.app; sourceTree = BUILT_PRODUCTS_DIR; };\n\t\t97C146FB1CF9000F007C117D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = \"<group>\"; };\n\t\t97C146FD1CF9000F007C117D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = \"<group>\"; };\n\t\t97C147001CF9000F007C117D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = \"<group>\"; };\n\t\t97C147021CF9000F007C117D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = \"<group>\"; };\n\t\tECFB42B6269F435A00A7BDB6 /* Runner.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Runner.entitlements; sourceTree = \"<group>\"; };\n/* End PBXFileReference section */\n\n/* Begin PBXFrameworksBuildPhase section */\n\t\t97C146EB1CF9000F007C117D /* Frameworks */ = {\n\t\t\tisa = PBXFrameworksBuildPhase;\n\t\t\tbuildActionMask = 2147483647;\n\t\t\tfiles = (\n\t\t\t\t282CBC2256DEDBFABA02AD27 /* Pods_Runner.framework in Frameworks */,\n\t\t\t);\n\t\t\trunOnlyForDeploymentPostprocessing = 0;\n\t\t};\n/* End PBXFrameworksBuildPhase section */\n\n/* Begin PBXGroup section */\n\t\t6B91F8981D56ACC93535B1B2 /* Frameworks */ = {\n\t\t\tisa = PBXGroup;\n\t\t\tchildren = (\n\t\t\t\t25A7494E0381C974E82BAB2F /* Pods_Runner.framework */,\n\t\t\t);\n\t\t\tname = Frameworks;\n\t\t\tsourceTree = \"<group>\";\n\t\t};\n\t\t9740EEB11CF90186004384FC /* Flutter */ = {\n\t\t\tisa = PBXGroup;\n\t\t\tchildren = (\n\t\t\t\t3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */,\n\t\t\t\t9740EEB21CF90195004384FC /* Debug.xcconfig */,\n\t\t\t\t7AFA3C8E1D35360C0083082E /* Release.xcconfig */,\n\t\t\t\t9740EEB31CF90195004384FC /* Generated.xcconfig */,\n\t\t\t);\n\t\t\tname = Flutter;\n\t\t\tsourceTree = \"<group>\";\n\t\t};\n\t\t97C146E51CF9000F007C117D = {\n\t\t\tisa = PBXGroup;\n\t\t\tchildren = (\n\t\t\t\t9740EEB11CF90186004384FC /* Flutter */,\n\t\t\t\t97C146F01CF9000F007C117D /* Runner */,\n\t\t\t\t97C146EF1CF9000F007C117D /* Products */,\n\t\t\t\tB2F80193CC408B94D74DE224 /* Pods */,\n\t\t\t\t6B91F8981D56ACC93535B1B2 /* Frameworks */,\n\t\t\t);\n\t\t\tsourceTree = \"<group>\";\n\t\t};\n\t\t97C146EF1CF9000F007C117D /* Products */ = {\n\t\t\tisa = PBXGroup;\n\t\t\tchildren = (\n\t\t\t\t97C146EE1CF9000F007C117D /* Runner.app */,\n\t\t\t);\n\t\t\tname = Products;\n\t\t\tsourceTree = \"<group>\";\n\t\t};\n\t\t97C146F01CF9000F007C117D /* Runner */ = {\n\t\t\tisa = PBXGroup;\n\t\t\tchildren = (\n\t\t\t\tECFB42B6269F435A00A7BDB6 /* Runner.entitlements */,\n\t\t\t\t97C146FA1CF9000F007C117D /* Main.storyboard */,\n\t\t\t\t97C146FD1CF9000F007C117D /* Assets.xcassets */,\n\t\t\t\t97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */,\n\t\t\t\t97C147021CF9000F007C117D /* Info.plist */,\n\t\t\t\t1498D2321E8E86230040F4C2 /* GeneratedPluginRegistrant.h */,\n\t\t\t\t1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */,\n\t\t\t\t74858FAE1ED2DC5600515810 /* AppDelegate.swift */,\n\t\t\t\t74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */,\n\t\t\t);\n\t\t\tpath = Runner;\n\t\t\tsourceTree = \"<group>\";\n\t\t};\n\t\tB2F80193CC408B94D74DE224 /* Pods */ = {\n\t\t\tisa = PBXGroup;\n\t\t\tchildren = (\n\t\t\t\t89EFF6EE4AAF69984055D76C /* Pods-Runner.debug.xcconfig */,\n\t\t\t\t41AA5D92A2CC1BB27F1A83DE /* Pods-Runner.release.xcconfig */,\n\t\t\t\t238323F347131537C23069F5 /* Pods-Runner.profile.xcconfig */,\n\t\t\t);\n\t\t\tpath = Pods;\n\t\t\tsourceTree = \"<group>\";\n\t\t};\n/* End PBXGroup section */\n\n/* Begin PBXNativeTarget section */\n\t\t97C146ED1CF9000F007C117D /* Runner */ = {\n\t\t\tisa = PBXNativeTarget;\n\t\t\tbuildConfigurationList = 97C147051CF9000F007C117D /* Build configuration list for PBXNativeTarget \"Runner\" */;\n\t\t\tbuildPhases = (\n\t\t\t\tD769E267F13386F26EC49DC5 /* [CP] Check Pods Manifest.lock */,\n\t\t\t\t9740EEB61CF901F6004384FC /* Run Script */,\n\t\t\t\t97C146EA1CF9000F007C117D /* Sources */,\n\t\t\t\t97C146EB1CF9000F007C117D /* Frameworks */,\n\t\t\t\t97C146EC1CF9000F007C117D /* Resources */,\n\t\t\t\t9705A1C41CF9048500538489 /* Embed Frameworks */,\n\t\t\t\t3B06AD1E1E4923F5004D2608 /* Thin Binary */,\n\t\t\t\t7B56423DDF1948A38AE2EA10 /* [CP] Embed Pods Frameworks */,\n\t\t\t);\n\t\t\tbuildRules = (\n\t\t\t);\n\t\t\tdependencies = (\n\t\t\t);\n\t\t\tname = Runner;\n\t\t\tproductName = Runner;\n\t\t\tproductReference = 97C146EE1CF9000F007C117D /* Runner.app */;\n\t\t\tproductType = \"com.apple.product-type.application\";\n\t\t};\n/* End PBXNativeTarget section */\n\n/* Begin PBXProject section */\n\t\t97C146E61CF9000F007C117D /* Project object */ = {\n\t\t\tisa = PBXProject;\n\t\t\tattributes = {\n\t\t\t\tLastUpgradeCheck = 1020;\n\t\t\t\tORGANIZATIONNAME = \"\";\n\t\t\t\tTargetAttributes = {\n\t\t\t\t\t97C146ED1CF9000F007C117D = {\n\t\t\t\t\t\tCreatedOnToolsVersion = 7.3.1;\n\t\t\t\t\t\tLastSwiftMigration = 1100;\n\t\t\t\t\t};\n\t\t\t\t};\n\t\t\t};\n\t\t\tbuildConfigurationList = 97C146E91CF9000F007C117D /* Build configuration list for PBXProject \"Runner\" */;\n\t\t\tcompatibilityVersion = \"Xcode 9.3\";\n\t\t\tdevelopmentRegion = en;\n\t\t\thasScannedForEncodings = 0;\n\t\t\tknownRegions = (\n\t\t\t\ten,\n\t\t\t\tBase,\n\t\t\t);\n\t\t\tmainGroup = 97C146E51CF9000F007C117D;\n\t\t\tproductRefGroup = 97C146EF1CF9000F007C117D /* Products */;\n\t\t\tprojectDirPath = \"\";\n\t\t\tprojectRoot = \"\";\n\t\t\ttargets = (\n\t\t\t\t97C146ED1CF9000F007C117D /* Runner */,\n\t\t\t);\n\t\t};\n/* End PBXProject section */\n\n/* Begin PBXResourcesBuildPhase section */\n\t\t97C146EC1CF9000F007C117D /* Resources */ = {\n\t\t\tisa = PBXResourcesBuildPhase;\n\t\t\tbuildActionMask = 2147483647;\n\t\t\tfiles = (\n\t\t\t\t97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */,\n\t\t\t\t3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */,\n\t\t\t\t97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */,\n\t\t\t\t97C146FC1CF9000F007C117D /* Main.storyboard in Resources */,\n\t\t\t);\n\t\t\trunOnlyForDeploymentPostprocessing = 0;\n\t\t};\n/* End PBXResourcesBuildPhase section */\n\n/* Begin PBXShellScriptBuildPhase section */\n\t\t3B06AD1E1E4923F5004D2608 /* Thin Binary */ = {\n\t\t\tisa = PBXShellScriptBuildPhase;\n\t\t\tbuildActionMask = 2147483647;\n\t\t\tfiles = (\n\t\t\t);\n\t\t\tinputPaths = (\n\t\t\t);\n\t\t\tname = \"Thin Binary\";\n\t\t\toutputPaths = (\n\t\t\t);\n\t\t\trunOnlyForDeploymentPostprocessing = 0;\n\t\t\tshellPath = /bin/sh;\n\t\t\tshellScript = \"/bin/sh \\\"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\\\" embed_and_thin\";\n\t\t};\n\t\t7B56423DDF1948A38AE2EA10 /* [CP] Embed Pods Frameworks */ = {\n\t\t\tisa = PBXShellScriptBuildPhase;\n\t\t\tbuildActionMask = 2147483647;\n\t\t\tfiles = (\n\t\t\t);\n\t\t\tinputFileListPaths = (\n\t\t\t\t\"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks-${CONFIGURATION}-input-files.xcfilelist\",\n\t\t\t);\n\t\t\tname = \"[CP] Embed Pods Frameworks\";\n\t\t\toutputFileListPaths = (\n\t\t\t\t\"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks-${CONFIGURATION}-output-files.xcfilelist\",\n\t\t\t);\n\t\t\trunOnlyForDeploymentPostprocessing = 0;\n\t\t\tshellPath = /bin/sh;\n\t\t\tshellScript = \"\\\"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks.sh\\\"\\n\";\n\t\t\tshowEnvVarsInLog = 0;\n\t\t};\n\t\t9740EEB61CF901F6004384FC /* Run Script */ = {\n\t\t\tisa = PBXShellScriptBuildPhase;\n\t\t\tbuildActionMask = 2147483647;\n\t\t\tfiles = (\n\t\t\t);\n\t\t\tinputPaths = (\n\t\t\t);\n\t\t\tname = \"Run Script\";\n\t\t\toutputPaths = (\n\t\t\t);\n\t\t\trunOnlyForDeploymentPostprocessing = 0;\n\t\t\tshellPath = /bin/sh;\n\t\t\tshellScript = \"/bin/sh \\\"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\\\" build\";\n\t\t};\n\t\tD769E267F13386F26EC49DC5 /* [CP] Check Pods Manifest.lock */ = {\n\t\t\tisa = PBXShellScriptBuildPhase;\n\t\t\tbuildActionMask = 2147483647;\n\t\t\tfiles = (\n\t\t\t);\n\t\t\tinputFileListPaths = (\n\t\t\t);\n\t\t\tinputPaths = (\n\t\t\t\t\"${PODS_PODFILE_DIR_PATH}/Podfile.lock\",\n\t\t\t\t\"${PODS_ROOT}/Manifest.lock\",\n\t\t\t);\n\t\t\tname = \"[CP] Check Pods Manifest.lock\";\n\t\t\toutputFileListPaths = (\n\t\t\t);\n\t\t\toutputPaths = (\n\t\t\t\t\"$(DERIVED_FILE_DIR)/Pods-Runner-checkManifestLockResult.txt\",\n\t\t\t);\n\t\t\trunOnlyForDeploymentPostprocessing = 0;\n\t\t\tshellPath = /bin/sh;\n\t\t\tshellScript = \"diff \\\"${PODS_PODFILE_DIR_PATH}/Podfile.lock\\\" \\\"${PODS_ROOT}/Manifest.lock\\\" > /dev/null\\nif [ $? != 0 ] ; then\\n    # print error to STDERR\\n    echo \\\"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\\\" >&2\\n    exit 1\\nfi\\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\\necho \\\"SUCCESS\\\" > \\\"${SCRIPT_OUTPUT_FILE_0}\\\"\\n\";\n\t\t\tshowEnvVarsInLog = 0;\n\t\t};\n/* End PBXShellScriptBuildPhase section */\n\n/* Begin PBXSourcesBuildPhase section */\n\t\t97C146EA1CF9000F007C117D /* Sources */ = {\n\t\t\tisa = PBXSourcesBuildPhase;\n\t\t\tbuildActionMask = 2147483647;\n\t\t\tfiles = (\n\t\t\t\t74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */,\n\t\t\t\t1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */,\n\t\t\t);\n\t\t\trunOnlyForDeploymentPostprocessing = 0;\n\t\t};\n/* End PBXSourcesBuildPhase section */\n\n/* Begin PBXVariantGroup section */\n\t\t97C146FA1CF9000F007C117D /* Main.storyboard */ = {\n\t\t\tisa = PBXVariantGroup;\n\t\t\tchildren = (\n\t\t\t\t97C146FB1CF9000F007C117D /* Base */,\n\t\t\t);\n\t\t\tname = Main.storyboard;\n\t\t\tsourceTree = \"<group>\";\n\t\t};\n\t\t97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */ = {\n\t\t\tisa = PBXVariantGroup;\n\t\t\tchildren = (\n\t\t\t\t97C147001CF9000F007C117D /* Base */,\n\t\t\t);\n\t\t\tname = LaunchScreen.storyboard;\n\t\t\tsourceTree = \"<group>\";\n\t\t};\n/* End PBXVariantGroup section */\n\n/* Begin XCBuildConfiguration section */\n\t\t249021D3217E4FDB00AE95B9 /* Profile */ = {\n\t\t\tisa = XCBuildConfiguration;\n\t\t\tbuildSettings = {\n\t\t\t\tALWAYS_SEARCH_USER_PATHS = NO;\n\t\t\t\tCLANG_ANALYZER_NONNULL = YES;\n\t\t\t\tCLANG_CXX_LANGUAGE_STANDARD = \"gnu++0x\";\n\t\t\t\tCLANG_CXX_LIBRARY = \"libc++\";\n\t\t\t\tCLANG_ENABLE_MODULES = YES;\n\t\t\t\tCLANG_ENABLE_OBJC_ARC = YES;\n\t\t\t\tCLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;\n\t\t\t\tCLANG_WARN_BOOL_CONVERSION = YES;\n\t\t\t\tCLANG_WARN_COMMA = YES;\n\t\t\t\tCLANG_WARN_CONSTANT_CONVERSION = YES;\n\t\t\t\tCLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;\n\t\t\t\tCLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;\n\t\t\t\tCLANG_WARN_EMPTY_BODY = YES;\n\t\t\t\tCLANG_WARN_ENUM_CONVERSION = YES;\n\t\t\t\tCLANG_WARN_INFINITE_RECURSION = YES;\n\t\t\t\tCLANG_WARN_INT_CONVERSION = YES;\n\t\t\t\tCLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;\n\t\t\t\tCLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;\n\t\t\t\tCLANG_WARN_OBJC_LITERAL_CONVERSION = YES;\n\t\t\t\tCLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;\n\t\t\t\tCLANG_WARN_RANGE_LOOP_ANALYSIS = YES;\n\t\t\t\tCLANG_WARN_STRICT_PROTOTYPES = YES;\n\t\t\t\tCLANG_WARN_SUSPICIOUS_MOVE = YES;\n\t\t\t\tCLANG_WARN_UNREACHABLE_CODE = YES;\n\t\t\t\tCLANG_WARN__DUPLICATE_METHOD_MATCH = YES;\n\t\t\t\t\"CODE_SIGN_IDENTITY[sdk=iphoneos*]\" = \"iPhone Developer\";\n\t\t\t\tCOPY_PHASE_STRIP = NO;\n\t\t\t\tDEBUG_INFORMATION_FORMAT = \"dwarf-with-dsym\";\n\t\t\t\tENABLE_NS_ASSERTIONS = NO;\n\t\t\t\tENABLE_STRICT_OBJC_MSGSEND = YES;\n\t\t\t\tGCC_C_LANGUAGE_STANDARD = gnu99;\n\t\t\t\tGCC_NO_COMMON_BLOCKS = YES;\n\t\t\t\tGCC_WARN_64_TO_32_BIT_CONVERSION = YES;\n\t\t\t\tGCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;\n\t\t\t\tGCC_WARN_UNDECLARED_SELECTOR = YES;\n\t\t\t\tGCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;\n\t\t\t\tGCC_WARN_UNUSED_FUNCTION = YES;\n\t\t\t\tGCC_WARN_UNUSED_VARIABLE = YES;\n\t\t\t\tIPHONEOS_DEPLOYMENT_TARGET = 9.0;\n\t\t\t\tMTL_ENABLE_DEBUG_INFO = NO;\n\t\t\t\tSDKROOT = iphoneos;\n\t\t\t\tSUPPORTED_PLATFORMS = iphoneos;\n\t\t\t\tTARGETED_DEVICE_FAMILY = \"1,2\";\n\t\t\t\tVALIDATE_PRODUCT = YES;\n\t\t\t};\n\t\t\tname = Profile;\n\t\t};\n\t\t249021D4217E4FDB00AE95B9 /* Profile */ = {\n\t\t\tisa = XCBuildConfiguration;\n\t\t\tbaseConfigurationReference = 7AFA3C8E1D35360C0083082E /* Release.xcconfig */;\n\t\t\tbuildSettings = {\n\t\t\t\tASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;\n\t\t\t\tCLANG_ENABLE_MODULES = YES;\n\t\t\t\tCODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;\n\t\t\t\tCURRENT_PROJECT_VERSION = \"$(FLUTTER_BUILD_NUMBER)\";\n\t\t\t\tDEVELOPMENT_TEAM = 5N85PP82A9;\n\t\t\t\tENABLE_BITCODE = NO;\n\t\t\t\tINFOPLIST_FILE = Runner/Info.plist;\n\t\t\t\tIPHONEOS_DEPLOYMENT_TARGET = 10.0;\n\t\t\t\tLD_RUNPATH_SEARCH_PATHS = (\n\t\t\t\t\t\"$(inherited)\",\n\t\t\t\t\t\"@executable_path/Frameworks\",\n\t\t\t\t);\n\t\t\t\tPRODUCT_BUNDLE_IDENTIFIER = live.100ms.flutter;\n\t\t\t\tPRODUCT_NAME = \"$(TARGET_NAME)\";\n\t\t\t\tSWIFT_OBJC_BRIDGING_HEADER = \"Runner/Runner-Bridging-Header.h\";\n\t\t\t\tSWIFT_VERSION = 5.0;\n\t\t\t\tTARGETED_DEVICE_FAMILY = \"1,2\";\n\t\t\t\tVERSIONING_SYSTEM = \"apple-generic\";\n\t\t\t};\n\t\t\tname = Profile;\n\t\t};\n\t\t97C147031CF9000F007C117D /* Debug */ = {\n\t\t\tisa = XCBuildConfiguration;\n\t\t\tbuildSettings = {\n\t\t\t\tALWAYS_SEARCH_USER_PATHS = NO;\n\t\t\t\tCLANG_ANALYZER_NONNULL = YES;\n\t\t\t\tCLANG_CXX_LANGUAGE_STANDARD = \"gnu++0x\";\n\t\t\t\tCLANG_CXX_LIBRARY = \"libc++\";\n\t\t\t\tCLANG_ENABLE_MODULES = YES;\n\t\t\t\tCLANG_ENABLE_OBJC_ARC = YES;\n\t\t\t\tCLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;\n\t\t\t\tCLANG_WARN_BOOL_CONVERSION = YES;\n\t\t\t\tCLANG_WARN_COMMA = YES;\n\t\t\t\tCLANG_WARN_CONSTANT_CONVERSION = YES;\n\t\t\t\tCLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;\n\t\t\t\tCLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;\n\t\t\t\tCLANG_WARN_EMPTY_BODY = YES;\n\t\t\t\tCLANG_WARN_ENUM_CONVERSION = YES;\n\t\t\t\tCLANG_WARN_INFINITE_RECURSION = YES;\n\t\t\t\tCLANG_WARN_INT_CONVERSION = YES;\n\t\t\t\tCLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;\n\t\t\t\tCLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;\n\t\t\t\tCLANG_WARN_OBJC_LITERAL_CONVERSION = YES;\n\t\t\t\tCLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;\n\t\t\t\tCLANG_WARN_RANGE_LOOP_ANALYSIS = YES;\n\t\t\t\tCLANG_WARN_STRICT_PROTOTYPES = YES;\n\t\t\t\tCLANG_WARN_SUSPICIOUS_MOVE = YES;\n\t\t\t\tCLANG_WARN_UNREACHABLE_CODE = YES;\n\t\t\t\tCLANG_WARN__DUPLICATE_METHOD_MATCH = YES;\n\t\t\t\t\"CODE_SIGN_IDENTITY[sdk=iphoneos*]\" = \"iPhone Developer\";\n\t\t\t\tCOPY_PHASE_STRIP = NO;\n\t\t\t\tDEBUG_INFORMATION_FORMAT = dwarf;\n\t\t\t\tENABLE_STRICT_OBJC_MSGSEND = YES;\n\t\t\t\tENABLE_TESTABILITY = YES;\n\t\t\t\tGCC_C_LANGUAGE_STANDARD = gnu99;\n\t\t\t\tGCC_DYNAMIC_NO_PIC = NO;\n\t\t\t\tGCC_NO_COMMON_BLOCKS = YES;\n\t\t\t\tGCC_OPTIMIZATION_LEVEL = 0;\n\t\t\t\tGCC_PREPROCESSOR_DEFINITIONS = (\n\t\t\t\t\t\"DEBUG=1\",\n\t\t\t\t\t\"$(inherited)\",\n\t\t\t\t);\n\t\t\t\tGCC_WARN_64_TO_32_BIT_CONVERSION = YES;\n\t\t\t\tGCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;\n\t\t\t\tGCC_WARN_UNDECLARED_SELECTOR = YES;\n\t\t\t\tGCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;\n\t\t\t\tGCC_WARN_UNUSED_FUNCTION = YES;\n\t\t\t\tGCC_WARN_UNUSED_VARIABLE = YES;\n\t\t\t\tIPHONEOS_DEPLOYMENT_TARGET = 9.0;\n\t\t\t\tMTL_ENABLE_DEBUG_INFO = YES;\n\t\t\t\tONLY_ACTIVE_ARCH = YES;\n\t\t\t\tSDKROOT = iphoneos;\n\t\t\t\tTARGETED_DEVICE_FAMILY = \"1,2\";\n\t\t\t};\n\t\t\tname = Debug;\n\t\t};\n\t\t97C147041CF9000F007C117D /* Release */ = {\n\t\t\tisa = XCBuildConfiguration;\n\t\t\tbuildSettings = {\n\t\t\t\tALWAYS_SEARCH_USER_PATHS = NO;\n\t\t\t\tCLANG_ANALYZER_NONNULL = YES;\n\t\t\t\tCLANG_CXX_LANGUAGE_STANDARD = \"gnu++0x\";\n\t\t\t\tCLANG_CXX_LIBRARY = \"libc++\";\n\t\t\t\tCLANG_ENABLE_MODULES = YES;\n\t\t\t\tCLANG_ENABLE_OBJC_ARC = YES;\n\t\t\t\tCLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;\n\t\t\t\tCLANG_WARN_BOOL_CONVERSION = YES;\n\t\t\t\tCLANG_WARN_COMMA = YES;\n\t\t\t\tCLANG_WARN_CONSTANT_CONVERSION = YES;\n\t\t\t\tCLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;\n\t\t\t\tCLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;\n\t\t\t\tCLANG_WARN_EMPTY_BODY = YES;\n\t\t\t\tCLANG_WARN_ENUM_CONVERSION = YES;\n\t\t\t\tCLANG_WARN_INFINITE_RECURSION = YES;\n\t\t\t\tCLANG_WARN_INT_CONVERSION = YES;\n\t\t\t\tCLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;\n\t\t\t\tCLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;\n\t\t\t\tCLANG_WARN_OBJC_LITERAL_CONVERSION = YES;\n\t\t\t\tCLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;\n\t\t\t\tCLANG_WARN_RANGE_LOOP_ANALYSIS = YES;\n\t\t\t\tCLANG_WARN_STRICT_PROTOTYPES = YES;\n\t\t\t\tCLANG_WARN_SUSPICIOUS_MOVE = YES;\n\t\t\t\tCLANG_WARN_UNREACHABLE_CODE = YES;\n\t\t\t\tCLANG_WARN__DUPLICATE_METHOD_MATCH = YES;\n\t\t\t\t\"CODE_SIGN_IDENTITY[sdk=iphoneos*]\" = \"iPhone Developer\";\n\t\t\t\tCOPY_PHASE_STRIP = NO;\n\t\t\t\tDEBUG_INFORMATION_FORMAT = \"dwarf-with-dsym\";\n\t\t\t\tENABLE_NS_ASSERTIONS = NO;\n\t\t\t\tENABLE_STRICT_OBJC_MSGSEND = YES;\n\t\t\t\tGCC_C_LANGUAGE_STANDARD = gnu99;\n\t\t\t\tGCC_NO_COMMON_BLOCKS = YES;\n\t\t\t\tGCC_WARN_64_TO_32_BIT_CONVERSION = YES;\n\t\t\t\tGCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;\n\t\t\t\tGCC_WARN_UNDECLARED_SELECTOR = YES;\n\t\t\t\tGCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;\n\t\t\t\tGCC_WARN_UNUSED_FUNCTION = YES;\n\t\t\t\tGCC_WARN_UNUSED_VARIABLE = YES;\n\t\t\t\tIPHONEOS_DEPLOYMENT_TARGET = 9.0;\n\t\t\t\tMTL_ENABLE_DEBUG_INFO = NO;\n\t\t\t\tSDKROOT = iphoneos;\n\t\t\t\tSUPPORTED_PLATFORMS = iphoneos;\n\t\t\t\tSWIFT_COMPILATION_MODE = wholemodule;\n\t\t\t\tSWIFT_OPTIMIZATION_LEVEL = \"-O\";\n\t\t\t\tTARGETED_DEVICE_FAMILY = \"1,2\";\n\t\t\t\tVALIDATE_PRODUCT = YES;\n\t\t\t};\n\t\t\tname = Release;\n\t\t};\n\t\t97C147061CF9000F007C117D /* Debug */ = {\n\t\t\tisa = XCBuildConfiguration;\n\t\t\tbaseConfigurationReference = 9740EEB21CF90195004384FC /* Debug.xcconfig */;\n\t\t\tbuildSettings = {\n\t\t\t\tASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;\n\t\t\t\tCLANG_ENABLE_MODULES = YES;\n\t\t\t\tCODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;\n\t\t\t\tCURRENT_PROJECT_VERSION = \"$(FLUTTER_BUILD_NUMBER)\";\n\t\t\t\tDEVELOPMENT_TEAM = 5N85PP82A9;\n\t\t\t\tENABLE_BITCODE = NO;\n\t\t\t\tINFOPLIST_FILE = Runner/Info.plist;\n\t\t\t\tIPHONEOS_DEPLOYMENT_TARGET = 10.0;\n\t\t\t\tLD_RUNPATH_SEARCH_PATHS = (\n\t\t\t\t\t\"$(inherited)\",\n\t\t\t\t\t\"@executable_path/Frameworks\",\n\t\t\t\t);\n\t\t\t\tPRODUCT_BUNDLE_IDENTIFIER = live.100ms.flutter;\n\t\t\t\tPRODUCT_NAME = \"$(TARGET_NAME)\";\n\t\t\t\tSWIFT_OBJC_BRIDGING_HEADER = \"Runner/Runner-Bridging-Header.h\";\n\t\t\t\tSWIFT_OPTIMIZATION_LEVEL = \"-Onone\";\n\t\t\t\tSWIFT_VERSION = 5.0;\n\t\t\t\tTARGETED_DEVICE_FAMILY = \"1,2\";\n\t\t\t\tVERSIONING_SYSTEM = \"apple-generic\";\n\t\t\t};\n\t\t\tname = Debug;\n\t\t};\n\t\t97C147071CF9000F007C117D /* Release */ = {\n\t\t\tisa = XCBuildConfiguration;\n\t\t\tbaseConfigurationReference = 7AFA3C8E1D35360C0083082E /* Release.xcconfig */;\n\t\t\tbuildSettings = {\n\t\t\t\tASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;\n\t\t\t\tCLANG_ENABLE_MODULES = YES;\n\t\t\t\tCODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;\n\t\t\t\tCURRENT_PROJECT_VERSION = \"$(FLUTTER_BUILD_NUMBER)\";\n\t\t\t\tDEVELOPMENT_TEAM = 5N85PP82A9;\n\t\t\t\tENABLE_BITCODE = NO;\n\t\t\t\tINFOPLIST_FILE = Runner/Info.plist;\n\t\t\t\tIPHONEOS_DEPLOYMENT_TARGET = 10.0;\n\t\t\t\tLD_RUNPATH_SEARCH_PATHS = (\n\t\t\t\t\t\"$(inherited)\",\n\t\t\t\t\t\"@executable_path/Frameworks\",\n\t\t\t\t);\n\t\t\t\tPRODUCT_BUNDLE_IDENTIFIER = live.100ms.flutter;\n\t\t\t\tPRODUCT_NAME = \"$(TARGET_NAME)\";\n\t\t\t\tSWIFT_OBJC_BRIDGING_HEADER = \"Runner/Runner-Bridging-Header.h\";\n\t\t\t\tSWIFT_VERSION = 5.0;\n\t\t\t\tTARGETED_DEVICE_FAMILY = \"1,2\";\n\t\t\t\tVERSIONING_SYSTEM = \"apple-generic\";\n\t\t\t};\n\t\t\tname = Release;\n\t\t};\n/* End XCBuildConfiguration section */\n\n/* Begin XCConfigurationList section */\n\t\t97C146E91CF9000F007C117D /* Build configuration list for PBXProject \"Runner\" */ = {\n\t\t\tisa = XCConfigurationList;\n\t\t\tbuildConfigurations = (\n\t\t\t\t97C147031CF9000F007C117D /* Debug */,\n\t\t\t\t97C147041CF9000F007C117D /* Release */,\n\t\t\t\t249021D3217E4FDB00AE95B9 /* Profile */,\n\t\t\t);\n\t\t\tdefaultConfigurationIsVisible = 0;\n\t\t\tdefaultConfigurationName = Release;\n\t\t};\n\t\t97C147051CF9000F007C117D /* Build configuration list for PBXNativeTarget \"Runner\" */ = {\n\t\t\tisa = XCConfigurationList;\n\t\t\tbuildConfigurations = (\n\t\t\t\t97C147061CF9000F007C117D /* Debug */,\n\t\t\t\t97C147071CF9000F007C117D /* Release */,\n\t\t\t\t249021D4217E4FDB00AE95B9 /* Profile */,\n\t\t\t);\n\t\t\tdefaultConfigurationIsVisible = 0;\n\t\t\tdefaultConfigurationName = Release;\n\t\t};\n/* End XCConfigurationList section */\n\t};\n\trootObject = 97C146E61CF9000F007C117D /* Project object */;\n}\n
+-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+-<+>UTF-8
+-===================================================================
+---- example/ios/Runner.xcodeproj/project.pbxproj	(revision 0eba86867ceb571a2e9002757cbdc481469ec1d7)
+-+++ example/ios/Runner.xcodeproj/project.pbxproj	(date 1627121667774)
+-@@ -8,12 +8,12 @@
+- 
+- /* Begin PBXBuildFile section */
+- 		1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */ = {isa = PBXBuildFile; fileRef = 1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */; };
+--		282CBC2256DEDBFABA02AD27 /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25A7494E0381C974E82BAB2F /* Pods_Runner.framework */; };
+- 		3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */; };
+- 		74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74858FAE1ED2DC5600515810 /* AppDelegate.swift */; };
+- 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
+- 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
+- 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
+-+		F9171978F6B8539592CE3AE2 /* libPods-Runner.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B93C42CF9A15C5CC243F2B21 /* libPods-Runner.a */; };
+- /* End PBXBuildFile section */
+- 
+- /* Begin PBXCopyFilesBuildPhase section */
+-@@ -33,7 +33,6 @@
+- 		1498D2321E8E86230040F4C2 /* GeneratedPluginRegistrant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GeneratedPluginRegistrant.h; sourceTree = "<group>"; };
+- 		1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeneratedPluginRegistrant.m; sourceTree = "<group>"; };
+- 		238323F347131537C23069F5 /* Pods-Runner.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile.xcconfig"; sourceTree = "<group>"; };
+--		25A7494E0381C974E82BAB2F /* Pods_Runner.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Runner.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+- 		3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = AppFrameworkInfo.plist; path = Flutter/AppFrameworkInfo.plist; sourceTree = "<group>"; };
+- 		41AA5D92A2CC1BB27F1A83DE /* Pods-Runner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"; sourceTree = "<group>"; };
+- 		74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Runner-Bridging-Header.h"; sourceTree = "<group>"; };
+-@@ -47,6 +46,7 @@
+- 		97C146FD1CF9000F007C117D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+- 		97C147001CF9000F007C117D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+- 		97C147021CF9000F007C117D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+-+		B93C42CF9A15C5CC243F2B21 /* libPods-Runner.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Runner.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+- 		ECFB42B6269F435A00A7BDB6 /* Runner.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Runner.entitlements; sourceTree = "<group>"; };
+- /* End PBXFileReference section */
+- 
+-@@ -55,7 +55,7 @@
+- 			isa = PBXFrameworksBuildPhase;
+- 			buildActionMask = 2147483647;
+- 			files = (
+--				282CBC2256DEDBFABA02AD27 /* Pods_Runner.framework in Frameworks */,
+-+				F9171978F6B8539592CE3AE2 /* libPods-Runner.a in Frameworks */,
+- 			);
+- 			runOnlyForDeploymentPostprocessing = 0;
+- 		};
+-@@ -65,7 +65,7 @@
+- 		6B91F8981D56ACC93535B1B2 /* Frameworks */ = {
+- 			isa = PBXGroup;
+- 			children = (
+--				25A7494E0381C974E82BAB2F /* Pods_Runner.framework */,
+-+				B93C42CF9A15C5CC243F2B21 /* libPods-Runner.a */,
+- 			);
+- 			name = Frameworks;
+- 			sourceTree = "<group>";
+-Index: .idea/libraries/Dart_SDK.xml
+-IDEA additional info:
+-Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+-<+><component name=\"libraryTable\">\n  <library name=\"Dart SDK\">\n    <CLASSES>\n      <root url=\"file://$PROJECT_DIR$/../../../../src/flutter/bin/cache/dart-sdk/lib/async\" />\n      <root url=\"file://$PROJECT_DIR$/../../../../src/flutter/bin/cache/dart-sdk/lib/cli\" />\n      <root url=\"file://$PROJECT_DIR$/../../../../src/flutter/bin/cache/dart-sdk/lib/collection\" />\n      <root url=\"file://$PROJECT_DIR$/../../../../src/flutter/bin/cache/dart-sdk/lib/convert\" />\n      <root url=\"file://$PROJECT_DIR$/../../../../src/flutter/bin/cache/dart-sdk/lib/core\" />\n      <root url=\"file://$PROJECT_DIR$/../../../../src/flutter/bin/cache/dart-sdk/lib/developer\" />\n      <root url=\"file://$PROJECT_DIR$/../../../../src/flutter/bin/cache/dart-sdk/lib/ffi\" />\n      <root url=\"file://$PROJECT_DIR$/../../../../src/flutter/bin/cache/dart-sdk/lib/html\" />\n      <root url=\"file://$PROJECT_DIR$/../../../../src/flutter/bin/cache/dart-sdk/lib/indexed_db\" />\n      <root url=\"file://$PROJECT_DIR$/../../../../src/flutter/bin/cache/dart-sdk/lib/io\" />\n      <root url=\"file://$PROJECT_DIR$/../../../../src/flutter/bin/cache/dart-sdk/lib/isolate\" />\n      <root url=\"file://$PROJECT_DIR$/../../../../src/flutter/bin/cache/dart-sdk/lib/js\" />\n      <root url=\"file://$PROJECT_DIR$/../../../../src/flutter/bin/cache/dart-sdk/lib/js_util\" />\n      <root url=\"file://$PROJECT_DIR$/../../../../src/flutter/bin/cache/dart-sdk/lib/math\" />\n      <root url=\"file://$PROJECT_DIR$/../../../../src/flutter/bin/cache/dart-sdk/lib/mirrors\" />\n      <root url=\"file://$PROJECT_DIR$/../../../../src/flutter/bin/cache/dart-sdk/lib/svg\" />\n      <root url=\"file://$PROJECT_DIR$/../../../../src/flutter/bin/cache/dart-sdk/lib/typed_data\" />\n      <root url=\"file://$PROJECT_DIR$/../../../../src/flutter/bin/cache/dart-sdk/lib/web_audio\" />\n      <root url=\"file://$PROJECT_DIR$/../../../../src/flutter/bin/cache/dart-sdk/lib/web_gl\" />\n      <root url=\"file://$PROJECT_DIR$/../../../../src/flutter/bin/cache/dart-sdk/lib/web_sql\" />\n    </CLASSES>\n    <JAVADOC />\n    <SOURCES />\n  </library>\n</component>
+-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+-<+>UTF-8
+-===================================================================
+---- .idea/libraries/Dart_SDK.xml	(revision 0eba86867ceb571a2e9002757cbdc481469ec1d7)
+-+++ .idea/libraries/Dart_SDK.xml	(date 1626464155507)
+-@@ -1,26 +1,26 @@
+- <component name="libraryTable">
+-   <library name="Dart SDK">
+-     <CLASSES>
+--      <root url="file://$PROJECT_DIR$/../../../../src/flutter/bin/cache/dart-sdk/lib/async" />
+--      <root url="file://$PROJECT_DIR$/../../../../src/flutter/bin/cache/dart-sdk/lib/cli" />
+--      <root url="file://$PROJECT_DIR$/../../../../src/flutter/bin/cache/dart-sdk/lib/collection" />
+--      <root url="file://$PROJECT_DIR$/../../../../src/flutter/bin/cache/dart-sdk/lib/convert" />
+--      <root url="file://$PROJECT_DIR$/../../../../src/flutter/bin/cache/dart-sdk/lib/core" />
+--      <root url="file://$PROJECT_DIR$/../../../../src/flutter/bin/cache/dart-sdk/lib/developer" />
+--      <root url="file://$PROJECT_DIR$/../../../../src/flutter/bin/cache/dart-sdk/lib/ffi" />
+--      <root url="file://$PROJECT_DIR$/../../../../src/flutter/bin/cache/dart-sdk/lib/html" />
+--      <root url="file://$PROJECT_DIR$/../../../../src/flutter/bin/cache/dart-sdk/lib/indexed_db" />
+--      <root url="file://$PROJECT_DIR$/../../../../src/flutter/bin/cache/dart-sdk/lib/io" />
+--      <root url="file://$PROJECT_DIR$/../../../../src/flutter/bin/cache/dart-sdk/lib/isolate" />
+--      <root url="file://$PROJECT_DIR$/../../../../src/flutter/bin/cache/dart-sdk/lib/js" />
+--      <root url="file://$PROJECT_DIR$/../../../../src/flutter/bin/cache/dart-sdk/lib/js_util" />
+--      <root url="file://$PROJECT_DIR$/../../../../src/flutter/bin/cache/dart-sdk/lib/math" />
+--      <root url="file://$PROJECT_DIR$/../../../../src/flutter/bin/cache/dart-sdk/lib/mirrors" />
+--      <root url="file://$PROJECT_DIR$/../../../../src/flutter/bin/cache/dart-sdk/lib/svg" />
+--      <root url="file://$PROJECT_DIR$/../../../../src/flutter/bin/cache/dart-sdk/lib/typed_data" />
+--      <root url="file://$PROJECT_DIR$/../../../../src/flutter/bin/cache/dart-sdk/lib/web_audio" />
+--      <root url="file://$PROJECT_DIR$/../../../../src/flutter/bin/cache/dart-sdk/lib/web_gl" />
+--      <root url="file://$PROJECT_DIR$/../../../../src/flutter/bin/cache/dart-sdk/lib/web_sql" />
+-+      <root url="file://$PROJECT_DIR$/../../../SDK/flutter/bin/cache/dart-sdk/lib/async" />
+-+      <root url="file://$PROJECT_DIR$/../../../SDK/flutter/bin/cache/dart-sdk/lib/cli" />
+-+      <root url="file://$PROJECT_DIR$/../../../SDK/flutter/bin/cache/dart-sdk/lib/collection" />
+-+      <root url="file://$PROJECT_DIR$/../../../SDK/flutter/bin/cache/dart-sdk/lib/convert" />
+-+      <root url="file://$PROJECT_DIR$/../../../SDK/flutter/bin/cache/dart-sdk/lib/core" />
+-+      <root url="file://$PROJECT_DIR$/../../../SDK/flutter/bin/cache/dart-sdk/lib/developer" />
+-+      <root url="file://$PROJECT_DIR$/../../../SDK/flutter/bin/cache/dart-sdk/lib/ffi" />
+-+      <root url="file://$PROJECT_DIR$/../../../SDK/flutter/bin/cache/dart-sdk/lib/html" />
+-+      <root url="file://$PROJECT_DIR$/../../../SDK/flutter/bin/cache/dart-sdk/lib/indexed_db" />
+-+      <root url="file://$PROJECT_DIR$/../../../SDK/flutter/bin/cache/dart-sdk/lib/io" />
+-+      <root url="file://$PROJECT_DIR$/../../../SDK/flutter/bin/cache/dart-sdk/lib/isolate" />
+-+      <root url="file://$PROJECT_DIR$/../../../SDK/flutter/bin/cache/dart-sdk/lib/js" />
+-+      <root url="file://$PROJECT_DIR$/../../../SDK/flutter/bin/cache/dart-sdk/lib/js_util" />
+-+      <root url="file://$PROJECT_DIR$/../../../SDK/flutter/bin/cache/dart-sdk/lib/math" />
+-+      <root url="file://$PROJECT_DIR$/../../../SDK/flutter/bin/cache/dart-sdk/lib/mirrors" />
+-+      <root url="file://$PROJECT_DIR$/../../../SDK/flutter/bin/cache/dart-sdk/lib/svg" />
+-+      <root url="file://$PROJECT_DIR$/../../../SDK/flutter/bin/cache/dart-sdk/lib/typed_data" />
+-+      <root url="file://$PROJECT_DIR$/../../../SDK/flutter/bin/cache/dart-sdk/lib/web_audio" />
+-+      <root url="file://$PROJECT_DIR$/../../../SDK/flutter/bin/cache/dart-sdk/lib/web_gl" />
+-+      <root url="file://$PROJECT_DIR$/../../../SDK/flutter/bin/cache/dart-sdk/lib/web_sql" />
+-     </CLASSES>
+-     <JAVADOC />
+-     <SOURCES />
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"AutoImportSettings\">\r\n    <option name=\"autoReloadType\" value=\"NONE\" />\r\n  </component>\r\n  <component name=\"BranchesTreeState\">\r\n    <expand>\r\n      <path>\r\n        <item name=\"ROOT\" type=\"e8cecc67:BranchNodeDescriptor\" />\r\n        <item name=\"LOCAL_ROOT\" type=\"e8cecc67:BranchNodeDescriptor\" />\r\n      </path>\r\n      <path>\r\n        <item name=\"ROOT\" type=\"e8cecc67:BranchNodeDescriptor\" />\r\n        <item name=\"REMOTE_ROOT\" type=\"e8cecc67:BranchNodeDescriptor\" />\r\n      </path>\r\n      <path>\r\n        <item name=\"ROOT\" type=\"e8cecc67:BranchNodeDescriptor\" />\r\n        <item name=\"REMOTE_ROOT\" type=\"e8cecc67:BranchNodeDescriptor\" />\r\n        <item name=\"GROUP_NODE:origin\" type=\"e8cecc67:BranchNodeDescriptor\" />\r\n      </path>\r\n    </expand>\r\n    <select>\r\n      <path>\r\n        <item name=\"ROOT\" type=\"e8cecc67:BranchNodeDescriptor\" />\r\n        <item name=\"REMOTE_ROOT\" type=\"e8cecc67:BranchNodeDescriptor\" />\r\n        <item name=\"GROUP_NODE:origin\" type=\"e8cecc67:BranchNodeDescriptor\" />\r\n        <item name=\"BRANCH:origin/ahron-video-rendering-temp\" type=\"e8cecc67:BranchNodeDescriptor\" />\r\n      </path>\r\n    </select>\r\n  </component>\r\n  <component name=\"ChangeListManager\">\r\n    <list default=\"true\" id=\"f6635374-520c-494c-ae8d-73b820655433\" name=\"Default Changelist\" comment=\"fixed video rendering\" />\r\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\r\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\r\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\r\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\r\n  </component>\r\n  <component name=\"ChangesViewManager\">\r\n    <option name=\"groupingKeys\">\r\n      <option value=\"directory\" />\r\n    </option>\r\n  </component>\r\n  <component name=\"FileTemplateManagerImpl\">\r\n    <option name=\"RECENT_TEMPLATES\">\r\n      <list>\r\n        <option value=\"Kotlin Script\" />\r\n        <option value=\"Dart File\" />\r\n      </list>\r\n    </option>\r\n  </component>\r\n  <component name=\"Git.Settings\">\r\n    <option name=\"RECENT_BRANCH_BY_REPOSITORY\">\r\n      <map>\r\n        <entry key=\"$PROJECT_DIR$\" value=\"ahron-video-rendering-temp\" />\r\n      </map>\r\n    </option>\r\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\r\n    <option name=\"RESET_MODE\" value=\"HARD\" />\r\n  </component>\r\n  <component name=\"GithubProjectSettings\">\r\n    <option name=\"CREATE_PULL_REQUEST_DEFAULT_BRANCH\" value=\"vivek-feature-peers\" />\r\n    <option name=\"CREATE_PULL_REQUEST_DEFAULT_REPO_USER\" value=\"100mslive\" />\r\n    <option name=\"CREATE_PULL_REQUEST_DEFAULT_REPO_NAME\" value=\"100ms-flutter\" />\r\n  </component>\r\n  <component name=\"ProjectId\" id=\"1uisHeD1SXcZbYI5wFmOOyu7wQ7\" />\r\n  <component name=\"ProjectViewState\">\r\n    <option name=\"showLibraryContents\" value=\"true\" />\r\n  </component>\r\n  <component name=\"PropertiesComponent\">\r\n    <property name=\"RunOnceActivity.OpenProjectViewOnStart\" value=\"true\" />\r\n    <property name=\"dart.analysis.tool.window.visible\" value=\"false\" />\r\n    <property name=\"io.flutter.reload.alreadyRun\" value=\"true\" />\r\n    <property name=\"last_opened_file_path\" value=\"$PROJECT_DIR$/example/android/app/src/main/res\" />\r\n    <property name=\"show.migrate.to.gradle.popup\" value=\"false\" />\r\n  </component>\r\n  <component name=\"RecentsManager\">\r\n    <key name=\"CopyFile.RECENT_KEYS\">\r\n      <recent name=\"C:\\Users\\user\\Documents\\100ms-flutter\\example\\android\\app\\src\\main\\res\" />\r\n      <recent name=\"C:\\Users\\user\\Documents\\100ms-flutter\" />\r\n      <recent name=\"C:\\Users\\user\\Documents\\100ms-flutter\\example\" />\r\n      <recent name=\"C:\\Users\\user\\Documents\\100ms-flutter\\android\\src\\main\\kotlin\\live\\hms\" />\r\n      <recent name=\"C:\\Users\\user\\anaconda3\\100ms-flutter\\android\\src\\main\\kotlin\\live\\hms\\hmssdk_flutter\" />\r\n    </key>\r\n  </component>\r\n  <component name=\"RunManager\">\r\n    <configuration name=\"main.dart\" type=\"FlutterRunConfigurationType\" factoryName=\"Flutter\">\r\n      <option name=\"filePath\" value=\"$PROJECT_DIR$/example/lib/main.dart\" />\r\n      <method v=\"2\" />\r\n    </configuration>\r\n  </component>\r\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\r\n  <component name=\"TaskManager\">\r\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\r\n      <changelist id=\"f6635374-520c-494c-ae8d-73b820655433\" name=\"Default Changelist\" comment=\"\" />\r\n      <created>1625159660317</created>\r\n      <option name=\"number\" value=\"Default\" />\r\n      <option name=\"presentableId\" value=\"Default\" />\r\n      <updated>1625159660317</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00001\" summary=\"added event channel\">\r\n      <created>1626101145084</created>\r\n      <option name=\"number\" value=\"00001\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00001\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1626101145084</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00002\" summary=\"updated README.md\">\r\n      <created>1626102016944</created>\r\n      <option name=\"number\" value=\"00002\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00002\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1626102016944</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00003\" summary=\"added\">\r\n      <created>1626171833756</created>\r\n      <option name=\"number\" value=\"00003\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00003\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1626171833756</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00004\" summary=\"passed data into eventSink\">\r\n      <created>1626175919392</created>\r\n      <option name=\"number\" value=\"00004\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00004\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1626175919392</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00005\" summary=\"fixed peers list bug&#10;peers.remove problem\">\r\n      <created>1626202221133</created>\r\n      <option name=\"number\" value=\"00005\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00005\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1626202221133</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00006\" summary=\"fixed peers list bugs\">\r\n      <created>1626203710630</created>\r\n      <option name=\"number\" value=\"00006\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00006\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1626203710630</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00007\" summary=\"added hashcode and equals operator in hmspeer.dart\">\r\n      <created>1626272641417</created>\r\n      <option name=\"number\" value=\"00007\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00007\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1626272641417</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00008\" summary=\"added mute and video\">\r\n      <created>1626294522908</created>\r\n      <option name=\"number\" value=\"00008\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00008\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1626294522908</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00009\" summary=\"fixed bugs\">\r\n      <created>1626606937995</created>\r\n      <option name=\"number\" value=\"00009\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00009\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1626606937995</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00010\" summary=\"added models according to priority\">\r\n      <created>1627042725312</created>\r\n      <option name=\"number\" value=\"00010\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00010\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1627042725312</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00011\" summary=\"added chat messaging\">\r\n      <created>1627476880314</created>\r\n      <option name=\"number\" value=\"00011\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00011\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1627476880314</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00012\" summary=\"added 100ms icon\">\r\n      <created>1627494119938</created>\r\n      <option name=\"number\" value=\"00012\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00012\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1627494119938</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00013\" summary=\"added preview\">\r\n      <created>1627575455170</created>\r\n      <option name=\"number\" value=\"00013\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00013\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1627575455170</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00014\" summary=\"added preview\">\r\n      <created>1627581495590</created>\r\n      <option name=\"number\" value=\"00014\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00014\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1627581495590</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00015\" summary=\"added preview\">\r\n      <created>1627581629138</created>\r\n      <option name=\"number\" value=\"00015\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00015\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1627581629138</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00016\" summary=\"fixed video rendering\">\r\n      <created>1627663198326</created>\r\n      <option name=\"number\" value=\"00016\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00016\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1627663198326</updated>\r\n    </task>\r\n    <option name=\"localTasksCounter\" value=\"17\" />\r\n    <servers />\r\n  </component>\r\n  <component name=\"Vcs.Log.History.Properties\">\r\n    <option name=\"SHOW_OTHER_BRANCHES\" value=\"true\" />\r\n    <option name=\"COLUMN_ORDER\">\r\n      <list>\r\n        <option value=\"0\" />\r\n        <option value=\"2\" />\r\n        <option value=\"3\" />\r\n        <option value=\"1\" />\r\n      </list>\r\n    </option>\r\n  </component>\r\n  <component name=\"Vcs.Log.Tabs.Properties\">\r\n    <option name=\"TAB_STATES\">\r\n      <map>\r\n        <entry key=\"MAIN\">\r\n          <value>\r\n            <State>\r\n              <option name=\"FILTERS\">\r\n                <map>\r\n                  <entry key=\"branch\">\r\n                    <value>\r\n                      <list>\r\n                        <option value=\"origin/ahron-video-rendering-temp\" />\r\n                      </list>\r\n                    </value>\r\n                  </entry>\r\n                </map>\r\n              </option>\r\n            </State>\r\n          </value>\r\n        </entry>\r\n      </map>\r\n    </option>\r\n    <option name=\"oldMeFiltersMigrated\" value=\"true\" />\r\n  </component>\r\n  <component name=\"VcsManagerConfiguration\">\r\n    <MESSAGE value=\"added event channel\" />\r\n    <MESSAGE value=\"updated README.md\" />\r\n    <MESSAGE value=\"added\" />\r\n    <MESSAGE value=\"passed data into eventSink\" />\r\n    <MESSAGE value=\"fixed peers list bug&#10;peers.remove problem\" />\r\n    <MESSAGE value=\"fixed peers list bugs\" />\r\n    <MESSAGE value=\"added hashcode and equals operator in hmspeer.dart\" />\r\n    <MESSAGE value=\"added mute and video\" />\r\n    <MESSAGE value=\"fixed bugs\" />\r\n    <MESSAGE value=\"added models according to priority\" />\r\n    <MESSAGE value=\"added chat messaging\" />\r\n    <MESSAGE value=\"added 100ms icon\" />\r\n    <MESSAGE value=\"added preview\" />\r\n    <MESSAGE value=\"fixed video rendering\" />\r\n    <option name=\"LAST_COMMIT_MESSAGE\" value=\"fixed video rendering\" />\r\n  </component>\r\n  <component name=\"WindowStateProjectService\">\r\n    <state x=\"718\" y=\"167\" key=\"#com.intellij.ide.util.MemberChooser\" timestamp=\"1627040861196\">\r\n      <screen x=\"0\" y=\"0\" width=\"1920\" height=\"1040\" />\r\n    </state>\r\n    <state x=\"718\" y=\"167\" key=\"#com.intellij.ide.util.MemberChooser/0.0.1920.1040@0.0.1920.1040\" timestamp=\"1627040861196\" />\r\n    <state x=\"624\" y=\"208\" key=\"#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog\" timestamp=\"1627654689207\">\r\n      <screen x=\"0\" y=\"0\" width=\"1920\" height=\"1040\" />\r\n    </state>\r\n    <state x=\"624\" y=\"208\" key=\"#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1920.1040@0.0.1920.1040\" timestamp=\"1627654689207\" />\r\n    <state x=\"741\" y=\"248\" key=\"AndroidProcessChooserDialog\" timestamp=\"1626689776859\">\r\n      <screen x=\"0\" y=\"0\" width=\"1920\" height=\"1040\" />\r\n    </state>\r\n    <state x=\"741\" y=\"248\" key=\"AndroidProcessChooserDialog/0.0.1920.1040@0.0.1920.1040\" timestamp=\"1626689776859\" />\r\n    <state x=\"687\" y=\"217\" key=\"FileChooserDialogImpl\" timestamp=\"1627037158224\">\r\n      <screen x=\"0\" y=\"0\" width=\"1920\" height=\"1040\" />\r\n    </state>\r\n    <state x=\"687\" y=\"217\" key=\"FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040\" timestamp=\"1627037158224\" />\r\n    <state x=\"693\" y=\"366\" key=\"Github.CreatePullRequestDialog\" timestamp=\"1626272036981\">\r\n      <screen x=\"0\" y=\"0\" width=\"1920\" height=\"1040\" />\r\n    </state>\r\n    <state x=\"693\" y=\"366\" key=\"Github.CreatePullRequestDialog/0.0.1920.1040@0.0.1920.1040\" timestamp=\"1626272036981\" />\r\n    <state width=\"1869\" height=\"506\" key=\"GridCell.Tab.0.bottom\" timestamp=\"1627663209729\">\r\n      <screen x=\"0\" y=\"0\" width=\"1920\" height=\"1040\" />\r\n    </state>\r\n    <state width=\"1398\" height=\"489\" key=\"GridCell.Tab.0.bottom/0.0.1440.900@0.0.1440.900\" timestamp=\"1625190703001\" />\r\n    <state width=\"1869\" height=\"506\" key=\"GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040\" timestamp=\"1627663209729\" />\r\n    <state width=\"1869\" height=\"506\" key=\"GridCell.Tab.0.center\" timestamp=\"1627663209729\">\r\n      <screen x=\"0\" y=\"0\" width=\"1920\" height=\"1040\" />\r\n    </state>\r\n    <state width=\"1398\" height=\"489\" key=\"GridCell.Tab.0.center/0.0.1440.900@0.0.1440.900\" timestamp=\"1625190703000\" />\r\n    <state width=\"1869\" height=\"506\" key=\"GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040\" timestamp=\"1627663209729\" />\r\n    <state width=\"1869\" height=\"506\" key=\"GridCell.Tab.0.left\" timestamp=\"1627663209729\">\r\n      <screen x=\"0\" y=\"0\" width=\"1920\" height=\"1040\" />\r\n    </state>\r\n    <state width=\"1398\" height=\"489\" key=\"GridCell.Tab.0.left/0.0.1440.900@0.0.1440.900\" timestamp=\"1625190703000\" />\r\n    <state width=\"1869\" height=\"506\" key=\"GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040\" timestamp=\"1627663209729\" />\r\n    <state width=\"1869\" height=\"506\" key=\"GridCell.Tab.0.right\" timestamp=\"1627663209729\">\r\n      <screen x=\"0\" y=\"0\" width=\"1920\" height=\"1040\" />\r\n    </state>\r\n    <state width=\"1398\" height=\"489\" key=\"GridCell.Tab.0.right/0.0.1440.900@0.0.1440.900\" timestamp=\"1625190703000\" />\r\n    <state width=\"1869\" height=\"506\" key=\"GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040\" timestamp=\"1627663209729\" />\r\n    <state width=\"1398\" height=\"489\" key=\"GridCell.Tab.1.bottom\" timestamp=\"1625190702999\">\r\n      <screen x=\"0\" y=\"0\" width=\"1440\" height=\"900\" />\r\n    </state>\r\n    <state width=\"1398\" height=\"489\" key=\"GridCell.Tab.1.bottom/0.0.1440.900@0.0.1440.900\" timestamp=\"1625190702999\" />\r\n    <state width=\"1398\" height=\"489\" key=\"GridCell.Tab.1.center\" timestamp=\"1625190702998\">\r\n      <screen x=\"0\" y=\"0\" width=\"1440\" height=\"900\" />\r\n    </state>\r\n    <state width=\"1398\" height=\"489\" key=\"GridCell.Tab.1.center/0.0.1440.900@0.0.1440.900\" timestamp=\"1625190702998\" />\r\n    <state width=\"1398\" height=\"489\" key=\"GridCell.Tab.1.left\" timestamp=\"1625190702997\">\r\n      <screen x=\"0\" y=\"0\" width=\"1440\" height=\"900\" />\r\n    </state>\r\n    <state width=\"1398\" height=\"489\" key=\"GridCell.Tab.1.left/0.0.1440.900@0.0.1440.900\" timestamp=\"1625190702997\" />\r\n    <state width=\"1398\" height=\"489\" key=\"GridCell.Tab.1.right\" timestamp=\"1625190702999\">\r\n      <screen x=\"0\" y=\"0\" width=\"1440\" height=\"900\" />\r\n    </state>\r\n    <state width=\"1398\" height=\"489\" key=\"GridCell.Tab.1.right/0.0.1440.900@0.0.1440.900\" timestamp=\"1625190702999\" />\r\n    <state x=\"0\" y=\"86\" width=\"1920\" height=\"869\" key=\"MergeDialog\" timestamp=\"1627575581209\">\r\n      <screen x=\"0\" y=\"0\" width=\"1920\" height=\"1040\" />\r\n    </state>\r\n    <state x=\"0\" y=\"86\" width=\"1920\" height=\"869\" key=\"MergeDialog/0.0.1920.1040@0.0.1920.1040\" timestamp=\"1627575581209\" />\r\n    <state x=\"510\" y=\"226\" key=\"MultipleFileMergeDialog\" timestamp=\"1627575581215\">\r\n      <screen x=\"0\" y=\"0\" width=\"1920\" height=\"1040\" />\r\n    </state>\r\n    <state x=\"510\" y=\"226\" key=\"MultipleFileMergeDialog/0.0.1920.1040@0.0.1920.1040\" timestamp=\"1627575581215\" />\r\n    <state x=\"691\" y=\"175\" key=\"RollbackChangesDialog\" timestamp=\"1626075713302\">\r\n      <screen x=\"0\" y=\"0\" width=\"1920\" height=\"1040\" />\r\n    </state>\r\n    <state x=\"691\" y=\"175\" key=\"RollbackChangesDialog/0.0.1920.1040@0.0.1920.1040\" timestamp=\"1626075713302\" />\r\n    <state x=\"572\" y=\"367\" key=\"VCS.ChangelistChooser\" timestamp=\"1625300183450\">\r\n      <screen x=\"0\" y=\"0\" width=\"1440\" height=\"900\" />\r\n    </state>\r\n    <state x=\"572\" y=\"367\" key=\"VCS.ChangelistChooser/0.0.1440.900@0.0.1440.900\" timestamp=\"1625300183450\" />\r\n    <state x=\"452\" y=\"189\" key=\"Vcs.Push.Dialog.v2\" timestamp=\"1627581632733\">\r\n      <screen x=\"0\" y=\"0\" width=\"1920\" height=\"1040\" />\r\n    </state>\r\n    <state x=\"452\" y=\"189\" key=\"Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040\" timestamp=\"1627581632733\" />\r\n    <state x=\"736\" y=\"416\" key=\"com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2\" timestamp=\"1626101451259\">\r\n      <screen x=\"0\" y=\"0\" width=\"1920\" height=\"1040\" />\r\n    </state>\r\n    <state x=\"736\" y=\"416\" key=\"com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1920.1040@0.0.1920.1040\" timestamp=\"1626101451259\" />\r\n    <state x=\"505\" y=\"167\" key=\"git4idea.branch.GitSmartOperationDialog\" timestamp=\"1626271542676\">\r\n      <screen x=\"0\" y=\"0\" width=\"1920\" height=\"1040\" />\r\n    </state>\r\n    <state x=\"505\" y=\"167\" key=\"git4idea.branch.GitSmartOperationDialog/0.0.1920.1040@0.0.1920.1040\" timestamp=\"1626271542676\" />\r\n    <state x=\"453\" y=\"131\" key=\"new project wizard\" timestamp=\"1626617267236\">\r\n      <screen x=\"0\" y=\"0\" width=\"1920\" height=\"1040\" />\r\n    </state>\r\n    <state x=\"453\" y=\"131\" key=\"new project wizard/0.0.1920.1040@0.0.1920.1040\" timestamp=\"1626617267236\" />\r\n    <state x=\"532\" y=\"237\" key=\"run.anything.popup\" timestamp=\"1626607870152\">\r\n      <screen x=\"0\" y=\"0\" width=\"1920\" height=\"1040\" />\r\n    </state>\r\n    <state x=\"532\" y=\"237\" key=\"run.anything.popup/0.0.1920.1040@0.0.1920.1040\" timestamp=\"1626607870152\" />\r\n    <state x=\"539\" y=\"5\" width=\"840\" height=\"1034\" key=\"search.everywhere.popup\" timestamp=\"1626284263933\">\r\n      <screen x=\"0\" y=\"0\" width=\"1920\" height=\"1040\" />\r\n    </state>\r\n    <state x=\"539\" y=\"5\" width=\"840\" height=\"1034\" key=\"search.everywhere.popup/0.0.1920.1040@0.0.1920.1040\" timestamp=\"1626284263933\" />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/workspace.xml	(revision 0da9812aabbac1971438935f72bd27dd2956885a)
++++ .idea/workspace.xml	(date 1627883263834)
+@@ -29,7 +29,11 @@
+     </select>
+   </component>
+   <component name="ChangeListManager">
+-    <list default="true" id="f6635374-520c-494c-ae8d-73b820655433" name="Default Changelist" comment="fixed video rendering" />
++    <list default="true" id="f6635374-520c-494c-ae8d-73b820655433" name="Default Changelist" comment="fixed video rendering">
++      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/android/src/main/kotlin/live/hms/hmssdk_flutter/HmssdkFlutterPlugin.kt" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/kotlin/live/hms/hmssdk_flutter/HmssdkFlutterPlugin.kt" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/example/lib/meeting/meeting_store.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/meeting/meeting_store.dart" afterDir="false" />
++    </list>
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+@@ -56,6 +60,7 @@
+     </option>
+     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+     <option name="RESET_MODE" value="HARD" />
++    <option name="UPDATE_TYPE" value="REBASE" />
+   </component>
+   <component name="GithubProjectSettings">
+     <option name="CREATE_PULL_REQUEST_DEFAULT_BRANCH" value="vivek-feature-peers" />
+@@ -67,6 +72,7 @@
+     <option name="showLibraryContents" value="true" />
+   </component>
+   <component name="PropertiesComponent">
++    <property name="Git.Branch.Popup.ShowAllRemotes" value="true" />
+     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+     <property name="dart.analysis.tool.window.visible" value="false" />
+     <property name="io.flutter.reload.alreadyRun" value="true" />
+@@ -209,7 +215,14 @@
+       <option name="project" value="LOCAL" />
+       <updated>1627663198326</updated>
+     </task>
+-    <option name="localTasksCounter" value="17" />
++    <task id="LOCAL-00017" summary="fixed video rendering">
++      <created>1627663247219</created>
++      <option name="number" value="00017" />
++      <option name="presentableId" value="LOCAL-00017" />
++      <option name="project" value="LOCAL" />
++      <updated>1627663247219</updated>
++    </task>
++    <option name="localTasksCounter" value="18" />
+     <servers />
+   </component>
+   <component name="Vcs.Log.History.Properties">
+@@ -281,10 +294,10 @@
+       <screen x="0" y="0" width="1920" height="1040" />
+     </state>
+     <state x="687" y="217" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1627037158224" />
+-    <state x="693" y="366" key="Github.CreatePullRequestDialog" timestamp="1626272036981">
++    <state x="693" y="366" key="Github.CreatePullRequestDialog" timestamp="1627663562178">
+       <screen x="0" y="0" width="1920" height="1040" />
+     </state>
+-    <state x="693" y="366" key="Github.CreatePullRequestDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1626272036981" />
++    <state x="693" y="366" key="Github.CreatePullRequestDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1627663562178" />
+     <state width="1869" height="506" key="GridCell.Tab.0.bottom" timestamp="1627663209729">
+       <screen x="0" y="0" width="1920" height="1040" />
+     </state>
+@@ -337,14 +350,14 @@
+       <screen x="0" y="0" width="1440" height="900" />
+     </state>
+     <state x="572" y="367" key="VCS.ChangelistChooser/0.0.1440.900@0.0.1440.900" timestamp="1625300183450" />
+-    <state x="452" y="189" key="Vcs.Push.Dialog.v2" timestamp="1627581632733">
++    <state x="452" y="189" key="Vcs.Push.Dialog.v2" timestamp="1627663263985">
+       <screen x="0" y="0" width="1920" height="1040" />
+     </state>
+-    <state x="452" y="189" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1627581632733" />
+-    <state x="736" y="416" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1626101451259">
++    <state x="452" y="189" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1627663263985" />
++    <state x="736" y="416" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1627663495808">
+       <screen x="0" y="0" width="1920" height="1040" />
+     </state>
+-    <state x="736" y="416" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1920.1040@0.0.1920.1040" timestamp="1626101451259" />
++    <state x="736" y="416" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1920.1040@0.0.1920.1040" timestamp="1627663495808" />
+     <state x="505" y="167" key="git4idea.branch.GitSmartOperationDialog" timestamp="1626271542676">
+       <screen x="0" y="0" width="1920" height="1040" />
+     </state>
+Index: android/src/main/kotlin/live/hms/hmssdk_flutter/HmssdkFlutterPlugin.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package live.hms.hmssdk_flutter\r\n\r\nimport android.app.Activity\r\nimport androidx.annotation.NonNull\r\nimport io.flutter.Log\r\n\r\nimport io.flutter.embedding.engine.plugins.FlutterPlugin\r\nimport io.flutter.embedding.engine.plugins.activity.ActivityAware\r\nimport io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding\r\nimport io.flutter.plugin.common.EventChannel\r\nimport io.flutter.plugin.common.MethodCall\r\nimport io.flutter.plugin.common.MethodChannel\r\nimport io.flutter.plugin.common.MethodChannel.MethodCallHandler\r\nimport io.flutter.plugin.common.MethodChannel.Result\r\nimport kotlinx.coroutines.CoroutineScope\r\nimport kotlinx.coroutines.Dispatchers\r\nimport kotlinx.coroutines.launch\r\nimport live.hms.hmssdk_flutter.views.HMSVideoView\r\nimport live.hms.hmssdk_flutter.views.HMSVideoViewFactory\r\nimport live.hms.hmssdk_flutter.views.HMSVideoViewWidget\r\nimport live.hms.video.connection.HMSDataChannel\r\nimport live.hms.video.error.HMSException\r\nimport live.hms.video.media.tracks.HMSTrack\r\nimport live.hms.video.sdk.HMSPreviewListener\r\nimport live.hms.video.sdk.HMSSDK\r\nimport live.hms.video.sdk.HMSUpdateListener\r\nimport live.hms.video.sdk.models.*\r\nimport live.hms.video.sdk.models.enums.HMSPeerUpdate\r\nimport live.hms.video.sdk.models.enums.HMSRoomUpdate\r\nimport live.hms.video.sdk.models.enums.HMSTrackUpdate\r\nimport kotlin.isInitialized\r\n\r\n/** HmssdkFlutterPlugin */\r\nclass HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener, ActivityAware,\r\n    EventChannel.StreamHandler, HMSPreviewListener {\r\n    private lateinit var channel: MethodChannel\r\n    private lateinit var meetingEventChannel: EventChannel\r\n    private var eventSink: EventChannel.EventSink? = null\r\n    private lateinit var activity: Activity\r\n    lateinit var hmssdk: HMSSDK\r\n    private lateinit var hmsVideoFactory: HMSVideoViewFactory\r\n    private var result :Result?=null\r\n\r\n    override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {\r\n        this.channel = MethodChannel(flutterPluginBinding.binaryMessenger, \"hmssdk_flutter\")\r\n        this.meetingEventChannel = EventChannel(flutterPluginBinding.binaryMessenger, \"meeting_event_channel\")\r\n        this.hmsVideoFactory = HMSVideoViewFactory(this)\r\n        flutterPluginBinding.platformViewRegistry.registerViewFactory(\r\n            \"HMSVideoView\",\r\n            hmsVideoFactory\r\n        )\r\n        this.meetingEventChannel.setStreamHandler(this)\r\n        this.channel.setMethodCallHandler(this)\r\n    }\r\n\r\n    override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {\r\n        Log.i(\"onMethodCall\", \"reached\")\r\n        this.result=result\r\n        when(call.method) {\r\n            \"getPlatformVersion\" -> {\r\n                result.success(\"Android ${android.os.Build.VERSION.RELEASE}\")\r\n            }\r\n            \"join_meeting\" -> {\r\n                joinMeeting(call)\r\n                result.success(\"joining meeting in android\")\r\n            }\r\n            \"leave_meeting\" -> {\r\n                leaveMeeting()\r\n                result.success(\"Leaving meeting\")\r\n            }\r\n            \"switch_audio\" -> {\r\n                switchAudio(call, result)\r\n            }\r\n            \"switch_video\" -> {\r\n                switchVideo(call, result)\r\n            }\r\n            \"switch_camera\" -> {\r\n                switchCamera()\r\n                result.success(\"switch_camera\")\r\n            }\r\n            \"is_video_mute\" -> {\r\n                result.success(isVideoMute(call))\r\n            }\r\n            \"is_audio_mute\" -> {\r\n                result.success(isAudioMute(call))\r\n            }\r\n            \"stop_capturing\" -> {\r\n                stopCapturing()\r\n                result.success(\"stop_capturing\")\r\n            }\r\n            \"start_capturing\" -> {\r\n                startCapturing()\r\n                result.success(\"start_capturing\")\r\n            }\r\n            \"send_message\" -> {\r\n                sendMessage(call)\r\n            }\r\n            \"preview_video\" -> {\r\n                previewVideo(call,result)\r\n            }\r\n            else -> {\r\n                result.notImplemented()\r\n            }\r\n        }\r\n\r\n\r\n    }\r\n\r\n    override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {\r\n        channel.setMethodCallHandler(null)\r\n        meetingEventChannel.setStreamHandler(null)\r\n    }\r\n\r\n\r\n    override fun onError(error: HMSException) {\r\n\r\n        val args = HashMap<String, Any>()\r\n        args.put(\"event_name\", \"on_error\")\r\n        args.put(\"data\", HMSExceptionExtension.toDictionary(error)!!)\r\n        Log.i(\"onError\", args.get(\"data\").toString())\r\n        CoroutineScope(Dispatchers.Main).launch {\r\n            eventSink!!.success(args)\r\n        }\r\n    }\r\n\r\n    override fun onPreview(room: HMSRoom, localTracks: Array<HMSTrack>) {\r\n        Log.i(\"onPreview\", room.localPeer.toString())\r\n        val args=HashMap<String,Any>()\r\n        args.put(\"event_name\",\"preview_video\")\r\n        args.put(\"data\",HMSPreviewExtension.toDictionary(room.localPeer!!,room.localPeer!!.videoTrack!!))\r\n        Log.i(\"onPreview\", args.get(\"data\").toString())\r\n        CoroutineScope(Dispatchers.Main).launch {\r\n            result!!.success(args)\r\n        }\r\n\r\n    }\r\n\r\n    override fun onJoin(room: HMSRoom) {\r\n        Log.i(\"OnJoin\",room.toString()+\"HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHAAA\")\r\n        val args = HashMap<String, Any>()\r\n        args.put(\"event_name\", \"on_join_room\")\r\n        args.put(\"data\", HMSRoomExtension.toDictionary(room)!!)\r\n        Log.i(\"onJoin\", args.get(\"data\").toString())\r\n        CoroutineScope(Dispatchers.Main).launch {\r\n            eventSink!!.success(args)\r\n        }\r\n\r\n    }\r\n\r\n    override fun onMessageReceived(message: HMSMessage) {\r\n\r\n        val args = HashMap<String, Any>()\r\n        args.put(\"event_name\", \"on_message\")\r\n        args.put(\"data\", HMSMessageExtension.toDictionary(message))\r\n        Log.i(\"onMessageReceived\", args.get(\"data\").toString())\r\n        CoroutineScope(Dispatchers.Main).launch {\r\n            eventSink!!.success(args)\r\n        }\r\n    }\r\n\r\n    override fun onPeerUpdate(type: HMSPeerUpdate, peer: HMSPeer) {\r\n        peer.auxiliaryTracks\r\n        val args = HashMap<String, Any>()\r\n        args.put(\"event_name\", \"on_peer_update\")\r\n        Log.i(\"onPeerUpdate\", type.toString())\r\n        args.put(\"data\", HMSPeerUpdateExtension.toDictionary(peer, type))\r\n        Log.i(\"onPeerUpdate\", args.get(\"data\").toString())\r\n//    val hmsVideoViewWidget =HMSVideoView(hmsVideoFactory.context)\r\n//    if(peer.videoTrack!=null){\r\n//      peer!!.videoTrack!!.addSink(hmsVideoViewWidget.surfaceViewRenderer)\r\n//    }\r\n        CoroutineScope(Dispatchers.Main).launch {\r\n            eventSink!!.success(args)\r\n        }\r\n    }\r\n\r\n    override fun onRoomUpdate(type: HMSRoomUpdate, hmsRoom: HMSRoom) {\r\n        val args = HashMap<String, Any>()\r\n        args.put(\"event_name\", \"on_update_room\")\r\n        args.put(\"data\", hmsRoom.name)\r\n\r\n        CoroutineScope(Dispatchers.Main).launch {\r\n            eventSink!!.success(args)\r\n        }\r\n    }\r\n\r\n    override fun onTrackUpdate(type: HMSTrackUpdate, track: HMSTrack, peer: HMSPeer) {\r\n\r\n        val args = HashMap<String, Any>()\r\n        args.put(\"event_name\", \"on_track_update\")\r\n\r\n\r\n        args.put(\"data\", HMSTrackUpdateExtension.toDictionary(peer, track, type))\r\n        Log.i(\"onTrackUpdate\", peer.toString())\r\n\r\n\r\n        //   val hmsVideoViewWidget=hmsVideoFactory.hmsVideoViewWidget\r\n\r\n//    if(peer.videoTrack!=null && hmsVideoViewWidget!=null){\r\n//\r\n//      Log.i(\"onTrackUpdate\",hmsVideoFactory.hmsVideoViewWidget!!.hmsVideoView.surfaceViewRenderer.toString())\r\n//      val renderer=hmsVideoFactory.hmsVideoViewWidget!!.hmsVideoView.surfaceViewRenderer\r\n//      peer.videoTrack!!.addSink(renderer)\r\n//      Log.i(\"onTrackUpdate\",\"Track Found\")\r\n//    }\r\n//    else{\r\n//      Log.i(\"onTrackUpdate\",\"Track Not Found\")\r\n//    }\r\n\r\n        Log.i(\"onTrackUpdate\",args.get(\"data\").toString())\r\n        CoroutineScope(Dispatchers.Main).launch {\r\n            eventSink!!.success(args)\r\n        }\r\n\r\n\r\n    }\r\n\r\n    override fun onReconnected() {\r\n        super.onReconnected()\r\n        val args = HashMap<String, Any>()\r\n        args.put(\"event_name\", \"on_re_connected\")\r\n        CoroutineScope(Dispatchers.Main).launch {\r\n            eventSink!!.success(args)\r\n        }\r\n    }\r\n\r\n    override fun onReconnecting(error: HMSException) {\r\n        super.onReconnecting(error)\r\n\r\n        val args = HashMap<String, Any>()\r\n        args.put(\"event_name\", \"on_re_connecting\")\r\n        CoroutineScope(Dispatchers.Main).launch {\r\n            eventSink!!.success(args)\r\n        }\r\n    }\r\n\r\n    override fun onRoleChangeRequest(request: HMSRoleChangeRequest) {\r\n        val args = HashMap<String, Any>()\r\n        args.put(\"event_name\", \"on_role_change_request\")\r\n        args.put(\"data\", HMSRoleChangedExtension.toDictionary(request))\r\n        CoroutineScope(Dispatchers.Main).launch {\r\n            eventSink!!.success(args)\r\n        }\r\n    }\r\n\r\n    override fun onAttachedToActivity(binding: ActivityPluginBinding) {\r\n        this.activity = binding.activity\r\n        this.hmssdk = HMSSDK.Builder(this.activity).build()\r\n    }\r\n\r\n    override fun onDetachedFromActivityForConfigChanges() {\r\n\r\n    }\r\n\r\n    override fun onReattachedToActivityForConfigChanges(binding: ActivityPluginBinding) {\r\n        this.activity = binding.activity\r\n    }\r\n\r\n    override fun onDetachedFromActivity() {\r\n\r\n    }\r\n\r\n    private fun joinMeeting(@NonNull call: MethodCall) {\r\n        val userName = call.argument<String>(\"user_name\")\r\n        val authToken = call.argument<String>(\"auth_token\")\r\n        val shouldSkipPiiEvents = call.argument<Boolean>(\"should_skip_pii_events\")\r\n        Log.i(\"userName\", authToken!!)\r\n        val hmsConfig = HMSConfig(userName = userName!!, authtoken = authToken!!)\r\n        hmssdk.join(hmsConfig, this)\r\n        //hmssdk.preview(hmsConfig,this)\r\n        meetingEventChannel.setStreamHandler(this)\r\n\r\n    }\r\n\r\n    private fun leaveMeeting() {\r\n        if (hmssdk != null)\r\n            hmssdk.leave()\r\n        else\r\n            Log.e(\"error\", \"not initialized\")\r\n    }\r\n\r\n    private fun switchAudio(call: MethodCall, result: Result) {\r\n        val argsIsOn = call.argument<Boolean>(\"is_on\")\r\n        val peer = hmssdk.getLocalPeer()\r\n        val audioTrack = peer?.audioTrack\r\n        audioTrack!!.setMute(argsIsOn!!)\r\n        result.success(\"audio_changed\")\r\n    }\r\n\r\n    private fun switchVideo(call: MethodCall, result: Result) {\r\n        val argsIsOn = call.argument<Boolean>(\"is_on\")\r\n        val peer = hmssdk.getLocalPeer()\r\n        val videoTrack = peer?.videoTrack\r\n        videoTrack!!.setMute(argsIsOn!!)\r\n        result.success(\"video_changed\")\r\n    }\r\n\r\n    private fun stopCapturing() {\r\n        val peer = hmssdk.getLocalPeer()\r\n        val videoTrack = peer?.videoTrack\r\n        videoTrack!!.setMute(true)\r\n    }\r\n\r\n    private fun startCapturing() {\r\n        val peer = hmssdk.getLocalPeer()\r\n        val videoTrack = peer?.videoTrack\r\n        videoTrack!!.setMute(false)\r\n\r\n    }\r\n\r\n    private fun switchCamera() {\r\n        val peer = hmssdk.getLocalPeer()\r\n        val videoTrack = peer?.videoTrack\r\n        CoroutineScope(Dispatchers.Default).launch {\r\n            videoTrack!!.switchCamera()\r\n        }\r\n    }\r\n\r\n    override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {\r\n        this.eventSink = events\r\n    }\r\n\r\n    override fun onCancel(arguments: Any?) {\r\n        this.eventSink = null\r\n    }\r\n\r\n    fun getPeerById(id: String): HMSPeer? {\r\n\r\n            val peers = hmssdk.getRemotePeers()\r\n            peers.forEach {\r\n                if (it.peerID == id) return it\r\n            }\r\n\r\n        return null\r\n    }\r\n\r\n    private fun isVideoMute(call: MethodCall): Boolean {\r\n        val peerId = call.argument<String>(\"peer_id\")\r\n        val isLocal = call.argument<Boolean>(\"is_local\")\r\n        val peer = getLocalPeer() ?: return false\r\n        return peer!!.videoTrack!!.isMute\r\n    }\r\n\r\n    private fun isAudioMute(call: MethodCall): Boolean {\r\n        val peerId = call.argument<String>(\"peer_id\")\r\n        val isLocal = call.argument<Boolean>(\"is_local\")\r\n        val peer = getLocalPeer() ?: return false\r\n        return peer!!.audioTrack!!.isMute\r\n    }\r\n\r\n    private fun sendMessage(call: MethodCall) {\r\n        val message = call.argument<String>(\"message\")\r\n        hmssdk!!.sendMessage(\"chat\", message!!)\r\n    }\r\n\r\n    private fun previewVideo(call: MethodCall,result: Result) {\r\n        val userName = call.argument<String>(\"user_name\")\r\n        val authToken = call.argument<String>(\"auth_token\")\r\n        Log.i(\"previewVideo\",\"$userName  $authToken\")\r\n        val hmsConfig = HMSConfig(userName = userName!!, authtoken = authToken!!)\r\n        hmssdk.preview(hmsConfig, this)\r\n    }\r\n\r\n    fun getLocalPeer(): HMSLocalPeer {\r\n        return hmssdk.getLocalPeer()!!\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- android/src/main/kotlin/live/hms/hmssdk_flutter/HmssdkFlutterPlugin.kt	(revision 0da9812aabbac1971438935f72bd27dd2956885a)
++++ android/src/main/kotlin/live/hms/hmssdk_flutter/HmssdkFlutterPlugin.kt	(date 1627883263925)
+@@ -3,7 +3,6 @@
+ import android.app.Activity
+ import androidx.annotation.NonNull
+ import io.flutter.Log
+-
+ import io.flutter.embedding.engine.plugins.FlutterPlugin
+ import io.flutter.embedding.engine.plugins.activity.ActivityAware
+ import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding

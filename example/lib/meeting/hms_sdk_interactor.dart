@@ -58,4 +58,9 @@ class HMSSDKInteractor {
   void removePreviewListener(HMSPreviewListener listener) {
     _meeting.removePreviewListener(listener);
   }
+
+  void acceptRoleChangeRequest(){
+    _meeting.acceptRoleChangerequest();
+  }
+
 }

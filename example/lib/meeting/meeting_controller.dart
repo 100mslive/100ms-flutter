@@ -63,4 +63,8 @@ class MeetingController {
   void removePreviewListener(HMSPreviewListener listener) {
     _hmsSdkInteractor.removePreviewListener(listener);
   }
+
+  void acceptRoleChangeRequest(){
+    _hmsSdkInteractor.acceptRoleChangeRequest();
+  }
 }

@@ -4,7 +4,7 @@ class HMSRoom {
   final String id;
   final String name;
   final String? metaData;
-  final List<HMSPeer> peers;
+  final List<HMSPeer>? peers;
 
   HMSRoom(
       {required this.id,
@@ -14,7 +14,7 @@ class HMSRoom {
 
   factory HMSRoom.fromMap(Map map) {
     List<HMSPeer> peers = [];
-
+    print("HMSRoom ${map.toString()}");
     if (map.containsKey('peers') && map['peers'] is List) {
       for (var each in (map['peers'] as List)) {
         try {

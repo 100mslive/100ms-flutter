@@ -9,6 +9,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     let previewEventChannel:FlutterEventChannel
     var eventSink:FlutterEventSink?
     var previewSink:FlutterEventSink?
+    var roleChangeRequest:HMSRoleChangeRequest?
     
     public  init(channel:FlutterMethodChannel,meetingEventChannel:FlutterEventChannel,previewEventChannel:FlutterEventChannel) {
         self.channel=channel
@@ -162,6 +163,22 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         eventSink?(data)
     }
     
+    public func on(roleChangeRequest: HMSRoleChangeRequest) {
+        print("On Role Change Request")
+        
+        self.roleChangeRequest=roleChangeRequest
+        
+        let data:[String:Any]=[
+            "event_name":"on_role_change_request",
+            "data":[
+                "role_change_request":[
+                    "requested_by":HMSPeerExtension.toDictionary(peer: roleChangeRequest.requestedBy),
+                    "suggested_role":HMSRoleExtension.toDictionary(role: roleChangeRequest.suggestedRole)
+                ]
+            ]
+        ]
+        eventSink?(data)
+    }
     public func onReconnecting() {
         print("on Reconnecting")
   
@@ -257,6 +274,12 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         hmsSDK?.send(message: message)
         result("sent message")
     }
+    func acceptRoleRequest(call: FlutterMethodCall,result:FlutterResult) {
+        if let role = roleChangeRequest{
+            hmsSDK?.accept(changeRole: role)
+        }
+        result("role_accepted")
+    }
     
     func leaveMeeting(result:FlutterResult){
         hmsSDK?.leave();
@@ -289,13 +312,10 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     case "switch_camera":switchCamera(result: result)
     case "preview_video":previewVideo(call:call,result:result)
     case "send_message":sendMessage(call:call,result:result)
+    case "accept_role_change":acceptRoleRequest(call:call,result:result)
     default:
         result(FlutterMethodNotImplemented)
     }
   }
-
-
-    
-    
 }
 

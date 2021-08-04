@@ -10,7 +10,7 @@ class HMSRoleChangedExtension {
             args.put("suggested_role",HMSRoleExtension.toDictionary(role.suggestedRole)!!)
             args.put("token",role.token)
             val roleChanged=HashMap<String,Any>()
-            roleChanged.put("role_changed",args)
+            roleChanged.put("role_change_request",args)
             return roleChanged
         }
     }

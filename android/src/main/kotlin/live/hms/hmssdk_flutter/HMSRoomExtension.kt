@@ -9,17 +9,22 @@ class HMSRoomExtension {
             val hashMap=HashMap<String,Any>()
 
             if (room==null)return null
-            hashMap.put("room_id",room.roomId )
-            hashMap.put("name",room.name )
-            hashMap.put("hms_local_peer", HMSPeerExtension.toDictionary(room.localPeer)!!)
+            hashMap.put("id",room.roomId )
+            hashMap.put("name",room.name)
+            hashMap.put("meta_data","")
+            //hashMap.put("local_peer", HMSPeerExtension.toDictionary(room.localPeer)!!)
 
             val args=ArrayList<Any>()
-            room.peerList.map {
+            room.peerList.forEach {
                 args.add(HMSPeerExtension.toDictionary(it)!!)
             }
-            hashMap.put("peer_list",args)
+            hashMap.put("peers",args)
             Log.i("HMSROOMEXTENSION",hashMap.toString())
-            return hashMap
+
+            return  hashMap
+//            val roomMap=HashMap<String,Any>()
+//            roomMap.put("room",hashMap)
+//            return roomMap
         }
     }
 }

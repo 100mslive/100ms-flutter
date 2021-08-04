@@ -3,13 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:hmssdk_flutter/enum/hms_track_kind.dart';
 import 'package:hmssdk_flutter/enum/hms_track_source.dart';
+import 'package:hmssdk_flutter/model/hms_role_change_request.dart';
 import 'package:hmssdk_flutter/model/hms_track.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/chat_bottom_sheet.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/peer_item_organism.dart';
+import 'package:hmssdk_flutter_example/common/ui/organisms/role_change_request_dialog.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
 import 'package:hmssdk_flutter_example/main.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_controller.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
+import 'package:mobx/mobx.dart';
 
 class MeetingPage extends StatefulWidget {
   final String roomId;
@@ -26,6 +29,7 @@ class MeetingPage extends StatefulWidget {
 
 class _MeetingPageState extends State<MeetingPage> {
   late MeetingStore _meetingStore;
+  late ReactionDisposer _roleChangerequestDisposer;
 
   @override
   void initState() {
@@ -33,7 +37,9 @@ class _MeetingPageState extends State<MeetingPage> {
     MeetingController meetingController = MeetingController(
         roomId: widget.roomId, flow: widget.flow, user: widget.user);
     _meetingStore.meetingController = meetingController;
-
+    _roleChangerequestDisposer = reaction(
+        (_) => _meetingStore.roleChangeRequest,
+        (event) => {showRoleChangeDialog(event)});
     super.initState();
     initMeeting();
   }
@@ -41,6 +47,26 @@ class _MeetingPageState extends State<MeetingPage> {
   void initMeeting() {
     _meetingStore.joinMeeting();
     _meetingStore.startListen();
+  }
+
+  void showRoleChangeDialog(event) async {
+    String answer = await showDialog(
+        context: context,
+        builder: (ctx) => RoleChangeDialogOrganism(
+            roleChangeRequest: event as HMSRoleChangeRequest));
+    if (answer == "Ok") {
+      debugPrint("OK accepted");
+      _meetingStore.meetingController.acceptRoleChangeRequest();
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("Accepted")));
+    }
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    _roleChangerequestDisposer.reaction.dispose();
+    super.dispose();
   }
 
   @override
