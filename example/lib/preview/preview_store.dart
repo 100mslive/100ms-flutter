@@ -1,6 +1,7 @@
+import 'package:hmssdk_flutter/enum/hms_track_kind.dart';
 import 'package:hmssdk_flutter/model/hms_error.dart';
-import 'package:hmssdk_flutter/model/hms_peer.dart';
 import 'package:hmssdk_flutter/model/hms_preview_listener.dart';
+import 'package:hmssdk_flutter/model/hms_room.dart';
 import 'package:hmssdk_flutter/model/hms_track.dart';
 import 'package:hmssdk_flutter_example/preview/preview_controller.dart';
 import 'package:mobx/mobx.dart';
@@ -13,7 +14,7 @@ abstract class PreviewStoreBase with Store implements HMSPreviewListener {
   late PreviewController previewController;
 
   @observable
-  HMSTrack? localTrack;
+  List<HMSTrack> localTracks = [];
 
   @override
   void onError({required HMSError error}) {
@@ -21,8 +22,14 @@ abstract class PreviewStoreBase with Store implements HMSPreviewListener {
   }
 
   @override
-  void onPreview({required HMSPeer peer, required HMSTrack localTrack}) {
-    this.localTrack = localTrack;
+  void onPreview({required HMSRoom room, required List<HMSTrack> localTracks}) {
+    List<HMSTrack> videoTracks = [];
+    for (var track in localTracks) {
+      if (track.kind == HMSTrackKind.kHMSTrackKindVideo) {
+        videoTracks.add(track);
+      }
+    }
+    this.localTracks = ObservableList.of(videoTracks);
   }
 
   void startListen() {

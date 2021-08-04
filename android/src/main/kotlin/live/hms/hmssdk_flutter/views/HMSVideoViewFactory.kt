@@ -57,14 +57,14 @@ class HMSVideoViewFactory(val plugin: HmssdkFlutterPlugin) : PlatformViewFactory
     override fun create(context: Context, viewId: Int, args: Any?): PlatformView {
 
         val creationParams = args as Map<String?, Any?>?
-        val id=args!!["peer_id"] as String
-        val isLocal=args!!["is_local"] as Boolean
-        val trackId=args!!["track_id"] as String
+        val id=args!!["peer_id"] as? String
+        val isLocal=args!!["is_local"] as? Boolean
+        val trackId=args!!["track_id"] as? String
         Log.i("onCreateHMSVideoView", "$isLocal $id")
         Log.i("HMSVideoViewFactory",trackId.toString())
-        val peer = if(isLocal) plugin.getLocalPeer()
-        else plugin.getPeerById(id)!!
-        return HMSVideoViewWidget(context, viewId, creationParams,peer,trackId)
+        val peer = if(isLocal==null || isLocal!!) plugin.getLocalPeer()
+        else plugin.getPeerById(id!!)!!
+        return HMSVideoViewWidget(context, viewId, creationParams,peer,trackId!!)
     }
 }
 

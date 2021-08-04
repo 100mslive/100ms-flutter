@@ -10,6 +10,7 @@ class PeerItemOrganism extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      key: key,
       padding: EdgeInsets.all(16),
       margin: EdgeInsets.all(16),
       decoration: BoxDecoration(

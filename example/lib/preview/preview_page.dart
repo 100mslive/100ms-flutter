@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:hmssdk_flutter/common/platform_methods.dart';
@@ -49,16 +50,24 @@ class _PreviewPageState extends State<PreviewPage> {
           width: 500.0,
           child: Column(
             children: [
-              Observer(builder: (_) {
-                if (_previewStore.localTrack != null) {
-                  return Container(
-                    child: PeerItemOrganism(track: _previewStore.localTrack!),
-                    height: 400.0,
-                    width: 500.0,
-                  );
-                }
-                return CircularProgressIndicator();
-              }),
+              Flexible(
+                child: Observer(
+                  builder: (_) {
+                    if (_previewStore.localTracks.isEmpty)
+                      return CupertinoActivityIndicator();
+
+                    return GridView(
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 1),
+                      children: List.generate(
+                          _previewStore.localTracks.length,
+                              (index) => PeerItemOrganism(
+                              key: UniqueKey(),
+                              track: _previewStore.localTracks[index])),
+                    );
+                  },
+                ),
+              ),
               SizedBox(
                 width: 40.0,
               ),
@@ -79,33 +88,32 @@ class _PreviewPageState extends State<PreviewPage> {
                         setState(() {});
                       },
                       child:
-                          Icon(videoOn ? Icons.videocam : Icons.videocam_off),
+                      Icon(videoOn ? Icons.videocam : Icons.videocam_off),
                     ),
                   ),
                   Expanded(
                       child: ElevatedButton(
-                    onPressed: () {
-                      debugPrint("asdad");
-                      Navigator.of(context).pushReplacement(MaterialPageRoute(
-                          builder: (_) => MeetingPage(
-                              roomId: widget.roomId,
-                              flow: widget.flow,
-                              user: widget.user)));
-                    },
-                    child: Text("Join now"),
-                  )),
+                        onPressed: () {
+                          Navigator.of(context).pushReplacement(MaterialPageRoute(
+                              builder: (_) => MeetingPage(
+                                  roomId: widget.roomId,
+                                  flow: widget.flow,
+                                  user: widget.user)));
+                        },
+                        child: Text("Join now"),
+                      )),
                   Expanded(
                       child: GestureDetector(
-                    onTap: () async {
-                      await PlatformService.invokeMethod(
-                          PlatformMethod.switchAudio,
-                          arguments: {"is_on": audioOn});
-                      audioOn = !audioOn;
+                        onTap: () async {
+                          await PlatformService.invokeMethod(
+                              PlatformMethod.switchAudio,
+                              arguments: {"is_on": audioOn});
+                          audioOn = !audioOn;
 
-                      setState(() {});
-                    },
-                    child: Icon(audioOn ? Icons.mic : Icons.mic_off),
-                  ))
+                          setState(() {});
+                        },
+                        child: Icon(audioOn ? Icons.mic : Icons.mic_off),
+                      ))
                 ],
               )
             ],
