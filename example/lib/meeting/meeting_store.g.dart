@@ -39,6 +39,22 @@ mixin _$MeetingStore on MeetingStoreBase, Store {
     });
   }
 
+  final _$roleChangeRequestAtom =
+      Atom(name: 'MeetingStoreBase.roleChangeRequest');
+
+  @override
+  HMSRoleChangeRequest? get roleChangeRequest {
+    _$roleChangeRequestAtom.reportRead();
+    return super.roleChangeRequest;
+  }
+
+  @override
+  set roleChangeRequest(HMSRoleChangeRequest? value) {
+    _$roleChangeRequestAtom.reportWrite(value, super.roleChangeRequest, () {
+      super.roleChangeRequest = value;
+    });
+  }
+
   final _$isMeetingStartedAtom =
       Atom(name: 'MeetingStoreBase.isMeetingStarted');
 
@@ -284,6 +300,17 @@ mixin _$MeetingStore on MeetingStoreBase, Store {
   }
 
   @override
+  void updateRoleChangeRequest(HMSRoleChangeRequest roleChangeRequest) {
+    final _$actionInfo = _$MeetingStoreBaseActionController.startAction(
+        name: 'MeetingStoreBase.updateRoleChangeRequest');
+    try {
+      return super.updateRoleChangeRequest(roleChangeRequest);
+    } finally {
+      _$MeetingStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   void peerOperation(HMSPeer peer, HMSPeerUpdate update) {
     final _$actionInfo = _$MeetingStoreBaseActionController.startAction(
         name: 'MeetingStoreBase.peerOperation');
@@ -311,6 +338,7 @@ mixin _$MeetingStore on MeetingStoreBase, Store {
     return '''
 isSpeakerOn: ${isSpeakerOn},
 error: ${error},
+roleChangeRequest: ${roleChangeRequest},
 isMeetingStarted: ${isMeetingStarted},
 isVideoOn: ${isVideoOn},
 isMicOn: ${isMicOn},

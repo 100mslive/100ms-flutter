@@ -30,13 +30,18 @@ class MeetingPage extends StatefulWidget {
 class _MeetingPageState extends State<MeetingPage> {
   late MeetingStore _meetingStore;
   late ReactionDisposer _roleChangerequestDisposer;
+
   @override
   void initState() {
     _meetingStore = MeetingStore();
     MeetingController meetingController = MeetingController(
         roomId: widget.roomId, flow: widget.flow, user: widget.user);
     _meetingStore.meetingController = meetingController;
-    _roleChangerequestDisposer=autorun((_)=>{RoleChangeDialogOrganism(roleChangeRequest: _meetingStore.roleChangeRequest!)});
+    _roleChangerequestDisposer = reaction(
+        (_) => _meetingStore.roleChangeRequest,
+        (event) =>{
+              showRoleChangeDialog(event)
+            });
     super.initState();
     initMeeting();
   }
@@ -44,6 +49,18 @@ class _MeetingPageState extends State<MeetingPage> {
   void initMeeting() {
     _meetingStore.joinMeeting();
     _meetingStore.startListen();
+  }
+
+  void showRoleChangeDialog(event) async{
+    String answer=await showDialog(
+        context: context,
+        builder: (ctx) => RoleChangeDialogOrganism(
+          roleChangeRequest: event as HMSRoleChangeRequest));
+    if(answer=="Ok"){
+      debugPrint("OK accepted");
+      _meetingStore.meetingController.acceptRoleChangeRequest();
+      Scaffold.of(context).showSnackBar(SnackBar(content: Text("Accepted")));
+    }
   }
 
   @override

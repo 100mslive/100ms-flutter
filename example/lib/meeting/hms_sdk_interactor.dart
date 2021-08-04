@@ -59,5 +59,8 @@ class HMSSDKInteractor {
     _meeting.removePreviewListener(listener);
   }
 
+  void acceptRoleChangeRequest(){
+    _meeting.acceptRoleChangerequest();
+  }
 
 }

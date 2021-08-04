@@ -55,4 +55,8 @@ class HMSMeeting {
   void removePreviewListener(HMSPreviewListener listener) {
     PlatformService.removePreviewListener(listener);
   }
+
+  void acceptRoleChangerequest(){
+    PlatformService.invokeMethod(PlatformMethod.acceptRoleChange);
+  }
 }

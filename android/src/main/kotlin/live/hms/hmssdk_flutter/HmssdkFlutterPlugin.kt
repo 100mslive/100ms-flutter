@@ -107,6 +107,10 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
             "preview_video" -> {
                 previewVideo(call, result)
             }
+            "accept_role_change"->{
+                acceptRoleRequest()
+                result!!.success("role_accepted")
+            }
             else -> {
                 result.notImplemented()
             }
@@ -403,8 +407,12 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
         hmssdk.changeRole(peer, roleToChangeTo,false)
     }
 
-    fun acceptRoleRequest(){
-        hmssdk.acceptChangeRole(this.requestChange!!)
+    private fun acceptRoleRequest(){
+        if (this.requestChange!=null){
+            hmssdk.acceptChangeRole(this.requestChange!!)
+            Log.i("acceptRoleRequest","accept")
+        }
+
     }
 
 }
