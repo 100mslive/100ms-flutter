@@ -29,34 +29,11 @@
     </select>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f6635374-520c-494c-ae8d-73b820655433" name="Default Changelist" comment="fixed video rendering">
-      <change afterPath="$PROJECT_DIR$/example/android/app/google-services.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/example/lib/common/ui/organisms/role_change_request_dialog.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/runConfigurations.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Merge_at_26_07_21,_12_23_am_[Default_Changelist]/shelved.patch" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Merge_at_26_07_21__12_23_am__Default_Changelist_.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_25_07_21,_11_33_pm_[Default_Changelist]/shelved.patch" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_25_07_21__11_33_pm__Default_Changelist_.xml" beforeDir="false" />
+    <list default="true" id="f6635374-520c-494c-ae8d-73b820655433" name="Default Changelist" comment="added on roleChangeRequest">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/kotlin/live/hms/hmssdk_flutter/HMSPreviewExtension.kt" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/kotlin/live/hms/hmssdk_flutter/HMSPreviewExtension.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/android/src/main/kotlin/live/hms/hmssdk_flutter/HMSRoleChangedExtension.kt" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/kotlin/live/hms/hmssdk_flutter/HMSRoleChangedExtension.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/kotlin/live/hms/hmssdk_flutter/HmssdkFlutterPlugin.kt" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/kotlin/live/hms/hmssdk_flutter/HmssdkFlutterPlugin.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/kotlin/live/hms/hmssdk_flutter/views/HMSVideoViewFactory.kt" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/kotlin/live/hms/hmssdk_flutter/views/HMSVideoViewFactory.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/android/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/example/android/app/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/android/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/example/android/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/lib/common/constant.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/common/constant.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/lib/common/ui/organisms/peer_item_organism.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/common/ui/organisms/peer_item_organism.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/main.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/lib/meeting/meeting_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/meeting/meeting_page.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/lib/meeting/meeting_store.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/meeting/meeting_store.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/lib/meeting/meeting_store.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/meeting/meeting_store.g.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/lib/preview/preview_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/preview/preview_page.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/lib/preview/preview_store.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/preview/preview_store.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/example/pubspec.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/example/pubspec.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/model/hms_preview_listener.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/model/hms_preview_listener.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/model/hms_track.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/model/hms_track.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/service/platform_service.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/service/platform_service.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/model/hms_message.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/model/hms_message.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/model/hms_role_change_request.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/model/hms_role_change_request.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -238,7 +215,21 @@
       <option name="project" value="LOCAL" />
       <updated>1627663198326</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="working on roleChangeRequest">
+      <created>1628078869400</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1628078869400</updated>
+    </task>
+    <task id="LOCAL-00018" summary="added on roleChangeRequest">
+      <created>1628086646170</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1628086646170</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -291,6 +282,8 @@
     <MESSAGE value="added 100ms icon" />
     <MESSAGE value="added preview" />
     <MESSAGE value="fixed video rendering" />
-    <option name="LAST_COMMIT_MESSAGE" value="fixed video rendering" />
+    <MESSAGE value="working on roleChangeRequest" />
+    <MESSAGE value="added on roleChangeRequest" />
+    <option name="LAST_COMMIT_MESSAGE" value="added on roleChangeRequest" />
   </component>
 </project>
