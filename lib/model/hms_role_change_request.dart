@@ -13,13 +13,13 @@ class HMSRoleChangeRequest {
     HMSPeer? peer;
     HMSRole role;
 
-    if (map.containsKey('peer')) {
-      peer = HMSPeer.fromMap(map['peer']);
+    if (map.containsKey('requested_by')) {
+      peer = HMSPeer.fromMap(map['requested_by']);
     } else {
       throw HMSInSufficientDataException(message: 'No data found for Peer');
     }
-    if (map.containsKey('role')) {
-      role = HMSRole.fromMap(map['role']);
+    if (map.containsKey('suggested_role')) {
+      role = HMSRole.fromMap(map['suggested_role']);
     } else {
       throw HMSInSufficientDataException(message: 'No data found for Role');
     }
