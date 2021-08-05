@@ -61,7 +61,7 @@ class _PreviewPageState extends State<PreviewPage> {
                           crossAxisCount: 1),
                       children: List.generate(
                           _previewStore.localTracks.length,
-                              (index) => PeerItemOrganism(
+                          (index) => PeerItemOrganism(
                               key: UniqueKey(),
                               track: _previewStore.localTracks[index])),
                     );
@@ -88,32 +88,32 @@ class _PreviewPageState extends State<PreviewPage> {
                         setState(() {});
                       },
                       child:
-                      Icon(videoOn ? Icons.videocam : Icons.videocam_off),
+                          Icon(videoOn ? Icons.videocam : Icons.videocam_off),
                     ),
                   ),
                   Expanded(
                       child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context).pushReplacement(MaterialPageRoute(
-                              builder: (_) => MeetingPage(
-                                  roomId: widget.roomId,
-                                  flow: widget.flow,
-                                  user: widget.user)));
-                        },
-                        child: Text("Join now"),
-                      )),
+                    onPressed: () {
+                      Navigator.of(context).pushReplacement(MaterialPageRoute(
+                          builder: (_) => MeetingPage(
+                              roomId: widget.roomId,
+                              flow: widget.flow,
+                              user: widget.user)));
+                    },
+                    child: Text("Join now"),
+                  )),
                   Expanded(
                       child: GestureDetector(
-                        onTap: () async {
-                          await PlatformService.invokeMethod(
-                              PlatformMethod.switchAudio,
-                              arguments: {"is_on": audioOn});
-                          audioOn = !audioOn;
+                    onTap: () async {
+                      await PlatformService.invokeMethod(
+                          PlatformMethod.switchAudio,
+                          arguments: {"is_on": audioOn});
+                      audioOn = !audioOn;
 
-                          setState(() {});
-                        },
-                        child: Icon(audioOn ? Icons.mic : Icons.mic_off),
-                      ))
+                      setState(() {});
+                    },
+                    child: Icon(audioOn ? Icons.mic : Icons.mic_off),
+                  ))
                 ],
               )
             ],

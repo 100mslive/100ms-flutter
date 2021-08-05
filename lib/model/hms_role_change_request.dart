@@ -10,20 +10,21 @@ class HMSRoleChangeRequest {
       {required this.suggestedRole, required this.suggestedBy});
 
   factory HMSRoleChangeRequest.fromMap(Map map) {
-    HMSPeer? peer;
-    HMSRole role;
+    HMSPeer? requestedBy;
+    HMSRole suggestedRole;
 
     if (map.containsKey('requested_by')) {
-      peer = HMSPeer.fromMap(map['requested_by']);
+      requestedBy = HMSPeer.fromMap(map['requested_by']);
     } else {
       throw HMSInSufficientDataException(message: 'No data found for Peer');
     }
     if (map.containsKey('suggested_role')) {
-      role = HMSRole.fromMap(map['suggested_role']);
+      suggestedRole = HMSRole.fromMap(map['suggested_role']);
     } else {
       throw HMSInSufficientDataException(message: 'No data found for Role');
     }
 
-    return HMSRoleChangeRequest(suggestedRole: role, suggestedBy: peer);
+    return HMSRoleChangeRequest(
+        suggestedRole: suggestedRole, suggestedBy: requestedBy);
   }
 }

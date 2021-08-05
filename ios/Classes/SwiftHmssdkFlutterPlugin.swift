@@ -9,28 +9,28 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     let previewEventChannel:FlutterEventChannel
     var eventSink:FlutterEventSink?
     var previewSink:FlutterEventSink?
+    var roleChangeRequest:HMSRoleChangeRequest?
     
     public  init(channel:FlutterMethodChannel,meetingEventChannel:FlutterEventChannel,previewEventChannel:FlutterEventChannel) {
         self.channel=channel
         self.meetingEventChannel=meetingEventChannel
         self.previewEventChannel=previewEventChannel
+        hmsSDK=HMSSDK.build()
     }
     
     public func onPreview(room: HMSRoom, localTracks: [HMSTrack]) {
         print("On Preview Room")
-        var peerDict : Dictionary<String, Any?> = [:]
-        var trackDict : Dictionary<String, Any?> = [:]
-        if let tempPeer:HMSPeer = hmsSDK?.localPeer{
-            peerDict = HMSPeerExtension.toDictionary(peer:tempPeer )
+        var tracks:[Dictionary<String, Any?>]=[]
+        
+        for eachTrack in localTracks{
+            tracks.insert(HMSTrackExtension.toDictionary(track: eachTrack), at: tracks.count)
         }
-        if let tempTrack:HMSTrack = hmsSDK?.localPeer?.localVideoTrack(){
-            trackDict = HMSTrackExtension.toDictionary(track: tempTrack )
-        }
+        
         let data:[String:Any]=[
             "event_name":"preview_video",
             "data":[
-                "peer":peerDict,
-                "track":trackDict
+                "room":HMSRoomExtension.toDictionary(hmsRoom: room),
+                "local_tracks":tracks,
             ]
         ]
         previewSink?(data)
@@ -56,7 +56,6 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                 self.eventSink = events
             }else if(name == "preview"){
                 self.previewSink=events;
-                self.previewSink?("Kya bolti public")
             }
         }
 
@@ -164,6 +163,22 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         eventSink?(data)
     }
     
+    public func on(roleChangeRequest: HMSRoleChangeRequest) {
+        print("On Role Change Request")
+        
+        self.roleChangeRequest=roleChangeRequest
+        
+        let data:[String:Any]=[
+            "event_name":"on_role_change_request",
+            "data":[
+                "role_change_request":[
+                    "requested_by":HMSPeerExtension.toDictionary(peer: roleChangeRequest.requestedBy),
+                    "suggested_role":HMSRoleExtension.toDictionary(role: roleChangeRequest.suggestedRole)
+                ]
+            ]
+        ]
+        eventSink?(data)
+    }
     public func onReconnecting() {
         print("on Reconnecting")
   
@@ -227,6 +242,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             authToken: arguments["auth_token"] as? String ?? "",
             shouldSkipPIIEvents: arguments["should_skip_pii_events"] as? Bool ?? false
         )
+     
         hmsSDK?.preview(config: config, delegate: self)
     }
     
@@ -240,8 +256,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             authToken: arguments["auth_token"] as? String ?? "",
             shouldSkipPIIEvents: arguments["should_skip_pii_events"] as? Bool ?? false
         )
-        hmsSDK = HMSSDK.build()
-        
+       
         hmsSDK?.join(config: config, delegate: self)
         meetingEventChannel.setStreamHandler(self)
         result("joining meeting in ios")
@@ -258,6 +273,12 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         )
         hmsSDK?.send(message: message)
         result("sent message")
+    }
+    func acceptRoleRequest(call: FlutterMethodCall,result:FlutterResult) {
+        if let role = roleChangeRequest{
+            hmsSDK?.accept(changeRole: role)
+        }
+        result("role_accepted")
     }
     
     func leaveMeeting(result:FlutterResult){
@@ -291,13 +312,10 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     case "switch_camera":switchCamera(result: result)
     case "preview_video":previewVideo(call:call,result:result)
     case "send_message":sendMessage(call:call,result:result)
+    case "accept_role_change":acceptRoleRequest(call:call,result:result)
     default:
         result(FlutterMethodNotImplemented)
     }
   }
-
-
-    
-    
 }
 

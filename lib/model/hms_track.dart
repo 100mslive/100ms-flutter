@@ -15,17 +15,17 @@ class HMSTrack {
 
   const HMSTrack(
       {required this.kind,
-        required this.source,
-        required this.trackId,
-        required this.trackDescription,
-        this.peer});
+      required this.source,
+      required this.trackId,
+      required this.trackDescription,
+      this.peer});
 
   factory HMSTrack.fromMap({required Map map, HMSPeer? peer}) {
     return HMSTrack(
         trackId: map['track_id'],
         trackDescription: map['track_description'],
         source:
-        HMSTrackSourceValue.getHMSTrackSourceFromName(map['track_source']),
+            HMSTrackSourceValue.getHMSTrackSourceFromName(map['track_source']),
         kind: HMSTrackKindValue.getHMSTrackKindFromName(map['track_kind']),
         peer: peer);
   }
@@ -44,10 +44,10 @@ class HMSTrack {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-          other is HMSTrack &&
-              runtimeType == other.runtimeType &&
-              trackId == other.trackId &&
-              peer?.peerId == other.peer?.peerId;
+      other is HMSTrack &&
+          runtimeType == other.runtimeType &&
+          trackId == other.trackId &&
+          peer?.peerId == other.peer?.peerId;
 
   @override
   int get hashCode => trackId.hashCode;

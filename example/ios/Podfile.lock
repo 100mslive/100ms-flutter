@@ -6,10 +6,13 @@ PODS:
   - hmssdk_flutter (0.0.1):
     - Flutter
     - HMSSDK
+  - "permission_handler (5.1.0+2)":
+    - Flutter
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
   - hmssdk_flutter (from `.symlinks/plugins/hmssdk_flutter/ios`)
+  - permission_handler (from `.symlinks/plugins/permission_handler/ios`)
 
 SPEC REPOS:
   trunk:
@@ -21,13 +24,16 @@ EXTERNAL SOURCES:
     :path: Flutter
   hmssdk_flutter:
     :path: ".symlinks/plugins/hmssdk_flutter/ios"
+  permission_handler:
+    :path: ".symlinks/plugins/permission_handler/ios"
 
 SPEC CHECKSUMS:
   Flutter: 434fef37c0980e73bb6479ef766c45957d4b510c
   GoogleWebRTC: b39a78c4f5cc6b0323415b9233db03a2faa7b0f0
   HMSSDK: c05163e636c434cbce5175d63521171fb125af51
   hmssdk_flutter: 7746e56926bca98332eefaa2fadce33b18ef200e
+  permission_handler: ccb20a9fad0ee9b1314a52b70b76b473c5f8dab0
 
-PODFILE CHECKSUM: fe0e1ee7f3d1f7d00b11b474b62dd62134535aea
+PODFILE CHECKSUM: 4243bd56b6b40b83d3e32bd65fa10fffb54f8ea7
 
-COCOAPODS: 1.10.1
+COCOAPODS: 1.10.2
