@@ -31,8 +31,6 @@ class PeerItemOrganism extends StatelessWidget {
               children: [
                 Text(peer?.role?.name ?? '[Undefined Role]'),
                 Text(peer?.name ?? '[Undefined Name]'),
-                Text(peer?.customerDescription ??
-                    '[Undefined Description]'),
               ],
             );
           }),
