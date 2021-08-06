@@ -11,7 +11,7 @@ Pod::Spec.new do |s|
                        DESC
   s.homepage         = 'http://100ms.live'
   s.license          = { :file => '../LICENSE' }
-  s.author           = { 'Your Company' => 'vivek@100ms.live' }
+  s.author           = { 'Yogesh Singh' => 'yogesh@100ms.live' }
   s.source           = { :git => 'https://github.com/100mslive/100ms-flutter.git' }
   s.source_files = 'Classes/**/*'
   s.dependency 'Flutter'
