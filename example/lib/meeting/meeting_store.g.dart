@@ -311,6 +311,28 @@ mixin _$MeetingStore on MeetingStoreBase, Store {
   }
 
   @override
+  void addMessage(HMSMessage message) {
+    final _$actionInfo = _$MeetingStoreBaseActionController.startAction(
+        name: 'MeetingStoreBase.addMessage');
+    try {
+      return super.addMessage(message);
+    } finally {
+      _$MeetingStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void updatePeerAt(dynamic peer) {
+    final _$actionInfo = _$MeetingStoreBaseActionController.startAction(
+        name: 'MeetingStoreBase.updatePeerAt');
+    try {
+      return super.updatePeerAt(peer);
+    } finally {
+      _$MeetingStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   void peerOperation(HMSPeer peer, HMSPeerUpdate update) {
     final _$actionInfo = _$MeetingStoreBaseActionController.startAction(
         name: 'MeetingStoreBase.peerOperation');

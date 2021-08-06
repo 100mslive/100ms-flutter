@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:hmssdk_flutter/enum/hms_peer_update.dart';
 import 'package:hmssdk_flutter/enum/hms_room_update.dart';
+import 'package:hmssdk_flutter/enum/hms_track_kind.dart';
 import 'package:hmssdk_flutter/enum/hms_track_update.dart';
 import 'package:hmssdk_flutter/model/hms_error.dart';
 import 'package:hmssdk_flutter/model/hms_message.dart';
@@ -133,8 +134,18 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
     this.roleChangeRequest = roleChangeRequest;
   }
 
+  @action
   void addMessage(HMSMessage message) {
     this.messages.add(message);
+  }
+
+  @action
+  void updatePeerAt(peer){
+    print(peer.toString());
+    int index=this.peers.indexOf(peer);
+    this.peers.removeAt(index);
+    this.peers.insert(index,peer);
+    print(this.peers.toString());
   }
 
   @override
@@ -142,10 +153,11 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
     for (HMSPeer each in room.peers!) {
       if (each.isLocal) {
         localPeer = each;
+        addPeer(localPeer!);
+        print('on join ${localPeer!.peerId}');
         break;
       }
     }
-    print('on join');
   }
 
   @override
@@ -205,6 +217,8 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
 
   @action
   void peerOperation(HMSPeer peer, HMSPeerUpdate update) {
+    print("peerOperation $update");
+    print("peerOperation ${peer.toString()}");
     switch (update) {
       case HMSPeerUpdate.peerJoined:
         print('peer joined');
@@ -225,7 +239,8 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
         print('Peer video toggled');
         break;
       case HMSPeerUpdate.roleUpdated:
-        peers[peers.indexOf(peer)] = peer;
+        print('${peers.indexOf(peer)}');
+        updatePeerAt(peer);
         break;
       case HMSPeerUpdate.defaultUpdate:
         print("Some default update or untouched case");
@@ -240,7 +255,8 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
       HMSPeer peer, HMSTrackUpdate update, HMSTrack track) {
     switch (update) {
       case HMSTrackUpdate.trackAdded:
-        addTrack(track);
+        if(track.kind==HMSTrackKind.kHMSTrackKindVideo)
+          addTrack(track);
         break;
       case HMSTrackUpdate.trackRemoved:
         removeTrackWithTrackId(track.trackId);

@@ -40,7 +40,10 @@ class _RoleChangeDialogOrganismState extends State<RoleChangeDialogOrganism> {
           onPressed: () {
             Navigator.pop(context, 'Ok');
           },
-        )
+        ),
+
+        ),
+
       ],
     );
   }

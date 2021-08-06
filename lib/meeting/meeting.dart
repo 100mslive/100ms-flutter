@@ -59,4 +59,12 @@ class HMSMeeting {
   void acceptRoleChangerequest(){
     PlatformService.invokeMethod(PlatformMethod.acceptRoleChange);
   }
+
+  void stopCapturing(){
+    PlatformService.invokeMethod(PlatformMethod.stopCapturing);
+  }
+
+  void startCapturing(){
+    PlatformService.invokeMethod(PlatformMethod.startCapturing);
+  }
 }

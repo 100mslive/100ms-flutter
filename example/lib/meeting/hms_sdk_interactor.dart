@@ -63,4 +63,12 @@ class HMSSDKInteractor {
     _meeting.acceptRoleChangerequest();
   }
 
+  void stopCapturing(){
+    _meeting.stopCapturing();
+  }
+
+  void startCapturing(){
+    _meeting.startCapturing();
+  }
+
 }

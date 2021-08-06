@@ -22,7 +22,7 @@ class PreviewPage extends StatefulWidget {
   _PreviewPageState createState() => _PreviewPageState();
 }
 
-class _PreviewPageState extends State<PreviewPage> {
+class _PreviewPageState extends State<PreviewPage>{
   late PreviewStore _previewStore;
 
   @override
@@ -122,4 +122,5 @@ class _PreviewPageState extends State<PreviewPage> {
       ),
     );
   }
+
 }

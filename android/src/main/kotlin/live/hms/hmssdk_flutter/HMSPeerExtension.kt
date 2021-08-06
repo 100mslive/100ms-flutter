@@ -18,12 +18,9 @@ class HMSPeerExtension {
             args.put("role",HMSRoleExtension.toDictionary(peer.hmsRole))
             args.put("customer_description",peer.customerDescription)
             args.put("customer_user_id",peer.customerUserID)
-            //args.put("status", getValueofHMSPeerUpdate(update))
-
             args.put("audio_track", HMSTrackExtension.toDictionary(peer.audioTrack))
-
             args.put("video_track", HMSTrackExtension.toDictionary(peer.videoTrack))
-            Log.i("HMSPEEREXTENSION",args.toString())
+
 
             val auxTrackList=ArrayList<Any>()
             peer.auxiliaryTracks.forEach {
@@ -40,6 +37,7 @@ class HMSPeerExtension {
                 HMSPeerUpdate.PEER_LEFT-> "peerLeft"
                 HMSPeerUpdate.AUDIO_TOGGLED-> "audioToggled"
                 HMSPeerUpdate.VIDEO_TOGGLED-> "videoToggled"
+                HMSPeerUpdate.ROLE_CHANGED->"roleUpdated"
                 else-> "defaultUpdate"
             }
         }

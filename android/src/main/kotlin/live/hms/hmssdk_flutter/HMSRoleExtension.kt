@@ -16,7 +16,7 @@ class HMSRoleExtension {
 
             val hashMap=HashMap<String,Any?>()
             if(role==null)return null
-            Log.i("HMSROLE",role.toString()+"AAAAAAAAAAAAAAAAAAA")
+
             hashMap.put("name",role?.name?:"unknown")
             hashMap.put("publish_settings",PublishParamsExtension.toDictionary(role?.publishParams?:null))
             hashMap.put("subscribe_settings",SubscribeSettings.toDictionary(role?.subscribeParams?:null))
@@ -25,7 +25,7 @@ class HMSRoleExtension {
             hashMap.put("internal_plugins",null)
             hashMap.put( "external_plugins",null)
             hashMap.put( "permissions",PermissionParamsExtension.toDictionary(role.permission?:null))
-            Log.i("HMSROLE",hashMap.toString()+"AAAAAAAAAAAAAAAAAAAHHRR")
+
             return hashMap
         }
     }
