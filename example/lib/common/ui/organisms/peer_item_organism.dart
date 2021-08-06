@@ -29,7 +29,7 @@ class PeerItemOrganism extends StatelessWidget {
               peer=meetingStore!.peers.firstWhere((element) { return element.peerId==track.peer!.peerId; });
             return Column(
               children: [
-                Text(peer?.role?.name ?? '[Undefined Role]'),
+                Text(peer?.role?.name ?? ' [Undefined Role] '),
                 Text(peer?.name ?? '[Undefined Name]'),
               ],
             );
