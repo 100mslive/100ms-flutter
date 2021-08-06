@@ -19,29 +19,28 @@ class _RoleChangeDialogOrganismState extends State<RoleChangeDialogOrganism> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text("Change Role request",style: TextStyle(fontSize: 20.0,fontWeight: FontWeight.bold),),
+            Text(
+              "Change Role request",
+              style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+            ),
             Text(widget.roleChangeRequest.suggestedBy.name.toString()),
             Text(widget.roleChangeRequest.suggestedRole.name)
           ],
         ),
       ),
       actions: [
-        Expanded(
-          child: ElevatedButton(
-            child: Text('Cancel'),
-            onPressed: () {
-              Navigator.pop(context, '');
-            },
-          ),
+        ElevatedButton(
+          child: Text('Cancel'),
+          onPressed: () {
+            Navigator.pop(context, '');
+          },
         ),
-        Expanded(
-          child: ElevatedButton(
-            child: Text('Ok'),
-            onPressed: () {
-              Navigator.pop(context, 'Ok');
-            },
-          ),
-        )
+        ElevatedButton(
+          child: Text('Ok'),
+          onPressed: () {
+            Navigator.pop(context, 'Ok');
+          },
+        ),
       ],
     );
   }

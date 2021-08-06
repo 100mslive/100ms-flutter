@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:hmssdk_flutter/model/hms_peer.dart';
 import 'package:hmssdk_flutter/model/hms_track.dart';
 import 'package:hmssdk_flutter/ui/meeting/video_view.dart';
+import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 
 class PeerItemOrganism extends StatelessWidget {
   final HMSTrack track;
+  MeetingStore? meetingStore;
 
-  const PeerItemOrganism({Key? key, required this.track}) : super(key: key);
+  PeerItemOrganism({Key? key, required this.track, this.meetingStore})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -18,9 +23,19 @@ class PeerItemOrganism extends StatelessWidget {
           borderRadius: BorderRadius.all(Radius.circular(16))),
       child: Column(
         children: [
-          Text(track.peer?.role?.name ?? '[Undefined Role]'),
-          Text(track.peer?.name ?? '[Undefined Name]'),
-          Text(track.peer?.customerDescription ?? '[Undefined Description]'),
+          Observer(builder: (_) {
+            HMSPeer? peer;
+            if(meetingStore!=null)
+              peer=meetingStore!.peers.firstWhere((element) { return element.peerId==track.peer!.peerId; });
+            return Column(
+              children: [
+                Text(peer?.role?.name ?? '[Undefined Role]'),
+                Text(peer?.name ?? '[Undefined Name]'),
+                Text(peer?.customerDescription ??
+                    '[Undefined Description]'),
+              ],
+            );
+          }),
           Expanded(child: LayoutBuilder(
             builder: (context, constraints) {
               print(

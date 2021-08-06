@@ -21,10 +21,8 @@ class HMSRoomExtension {
             hashMap.put("peers",args)
             Log.i("HMSROOMEXTENSION",hashMap.toString())
 
-            return  hashMap
-//            val roomMap=HashMap<String,Any>()
-//            roomMap.put("room",hashMap)
-//            return roomMap
+
+           return hashMap
         }
     }
 }

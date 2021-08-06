@@ -67,4 +67,12 @@ class MeetingController {
   void acceptRoleChangeRequest(){
     _hmsSdkInteractor.acceptRoleChangeRequest();
   }
+
+  void stopCapturing(){
+    _hmsSdkInteractor.stopCapturing();
+  }
+
+  void startCapturing(){
+    _hmsSdkInteractor.startCapturing();
+  }
 }

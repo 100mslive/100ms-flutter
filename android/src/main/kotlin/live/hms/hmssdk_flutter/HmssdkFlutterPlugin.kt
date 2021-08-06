@@ -103,13 +103,14 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
             }
             "send_message" -> {
                 sendMessage(call)
+                result.success("sent message")
             }
             "preview_video" -> {
                 previewVideo(call, result)
             }
             "accept_role_change"->{
                 acceptRoleRequest()
-                result!!.success("role_accepted")
+                result.success("role_accepted")
             }
             else -> {
                 result.notImplemented()
@@ -149,20 +150,17 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
     }
 
     override fun onJoin(room: HMSRoom) {
-        Log.i(
-            "OnJoin",
-            room.toString() + "HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHAAA"
-        )
-        Log.i("onJoin", hmssdk?.getRoles().toString());
+        Log.i("onJoin", hmssdk.getRoles().toString());
         val args = HashMap<String, Any>()
         args.put("event_name", "on_join_room")
-        args.put("data", HMSRoomExtension.toDictionary(room)!!)
+        val roomArgs=HashMap<String,Any>()
+        roomArgs.put("room",HMSRoomExtension.toDictionary(room)!!)
+        args.put("data", roomArgs)
         Log.i("onJoin", args.get("data").toString())
         CoroutineScope(Dispatchers.Main).launch {
-            if (eventSink != null)
+            if(eventSink!=null)
                 eventSink!!.success(args)
         }
-
     }
 
     override fun onMessageReceived(message: HMSMessage) {
@@ -172,20 +170,18 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
         args.put("data", HMSMessageExtension.toDictionary(message))
         Log.i("onMessageReceived", args.get("data").toString())
         CoroutineScope(Dispatchers.Main).launch {
-            if (eventSink != null)
-                eventSink!!.success(args)
+            eventSink!!.success(args)
         }
     }
 
     override fun onPeerUpdate(type: HMSPeerUpdate, peer: HMSPeer) {
-        peer.auxiliaryTracks
         val args = HashMap<String, Any>()
         args.put("event_name", "on_peer_update")
-        Log.i("onPeerUpdate", type.toString())
+        Log.i("onPeerUpdate1", type.toString())
         args.put("data", HMSPeerUpdateExtension.toDictionary(peer, type))
-        Log.i("onPeerUpdate", args.get("data").toString())
+        Log.i("onPeerUpdate2", args.get("data").toString())
         CoroutineScope(Dispatchers.Main).launch {
-            if (eventSink != null)
+            if(eventSink!=null)
                 eventSink!!.success(args)
         }
     }
@@ -196,8 +192,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
         args.put("data", hmsRoom.name)
 
         CoroutineScope(Dispatchers.Main).launch {
-            if (eventSink != null)
-                eventSink!!.success(args)
+            eventSink!!.success(args)
         }
     }
 
@@ -210,19 +205,6 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
         args.put("data", HMSTrackUpdateExtension.toDictionary(peer, track, type))
         Log.i("onTrackUpdate", peer.toString())
 
-
-        //   val hmsVideoViewWidget=hmsVideoFactory.hmsVideoViewWidget
-
-//    if(peer.videoTrack!=null && hmsVideoViewWidget!=null){
-//
-//      Log.i("onTrackUpdate",hmsVideoFactory.hmsVideoViewWidget!!.hmsVideoView.surfaceViewRenderer.toString())
-//      val renderer=hmsVideoFactory.hmsVideoViewWidget!!.hmsVideoView.surfaceViewRenderer
-//      peer.videoTrack!!.addSink(renderer)
-//      Log.i("onTrackUpdate","Track Found")
-//    }
-//    else{
-//      Log.i("onTrackUpdate","Track Not Found")
-//    }
 
         Log.i("onTrackUpdate", args.get("data").toString())
         CoroutineScope(Dispatchers.Main).launch {
@@ -238,8 +220,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
         val args = HashMap<String, Any>()
         args.put("event_name", "on_re_connected")
         CoroutineScope(Dispatchers.Main).launch {
-            if (eventSink != null)
-                eventSink!!.success(args)
+            eventSink!!.success(args)
         }
     }
 
@@ -249,8 +230,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
         val args = HashMap<String, Any>()
         args.put("event_name", "on_re_connecting")
         CoroutineScope(Dispatchers.Main).launch {
-            if (eventSink != null)
-                eventSink!!.success(args)
+            eventSink!!.success(args)
         }
     }
 

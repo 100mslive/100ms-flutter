@@ -27,12 +27,13 @@ class MeetingPage extends StatefulWidget {
   _MeetingPageState createState() => _MeetingPageState();
 }
 
-class _MeetingPageState extends State<MeetingPage> {
+class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver{
   late MeetingStore _meetingStore;
   late ReactionDisposer _roleChangerequestDisposer;
 
   @override
   void initState() {
+    WidgetsBinding.instance!.addObserver(this);
     _meetingStore = MeetingStore();
     MeetingController meetingController = MeetingController(
         roomId: widget.roomId, flow: widget.flow, user: widget.user);
@@ -50,10 +51,11 @@ class _MeetingPageState extends State<MeetingPage> {
   }
 
   void showRoleChangeDialog(event) async {
+    event=event as HMSRoleChangeRequest;
     String answer = await showDialog(
         context: context,
         builder: (ctx) => RoleChangeDialogOrganism(
-            roleChangeRequest: event as HMSRoleChangeRequest));
+            roleChangeRequest: event));
     if (answer == "Ok") {
       debugPrint("OK accepted");
       _meetingStore.meetingController.acceptRoleChangeRequest();
@@ -110,7 +112,7 @@ class _MeetingPageState extends State<MeetingPage> {
                         source: HMSTrackSource.kHMSTrackSourceRegular,
                         kind: HMSTrackKind.unknown,
                         trackId: '',
-                        peer: _meetingStore.localPeer),
+                        peer: _meetingStore.localPeer),meetingStore: _meetingStore,
                   ),
                 );
               } else {
@@ -123,17 +125,15 @@ class _MeetingPageState extends State<MeetingPage> {
                   if (!_meetingStore.isMeetingStarted) return SizedBox();
                   if (_meetingStore.tracks.isEmpty)
                     return Text('Waiting for other to join!');
-                  List<HMSTrack> filteredList = _meetingStore.tracks
-                      .where((element) =>
-                          element.kind != HMSTrackKind.kHMSTrackKindAudio)
-                      .toList();
+                  List<HMSTrack> filteredList = _meetingStore.tracks;
+
                   return GridView(
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2),
                     children: List.generate(
                         filteredList.length,
                         (index) =>
-                            PeerItemOrganism(track: filteredList[index])),
+                            PeerItemOrganism(track: filteredList[index],meetingStore: _meetingStore,)),
                   );
                 },
               ),
@@ -193,4 +193,29 @@ class _MeetingPageState extends State<MeetingPage> {
       ),
     );
   }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+
+    super.didChangeAppLifecycleState(state);
+    if(state == AppLifecycleState.resumed){
+      if(_meetingStore.isVideoOn){
+        _meetingStore.meetingController.startCapturing();
+      }
+    }
+
+    else if(state == AppLifecycleState.paused){
+      if(_meetingStore.isVideoOn){
+        _meetingStore.meetingController.stopCapturing();
+      }
+    }
+
+    else if(state == AppLifecycleState.inactive){
+
+      if(_meetingStore.isVideoOn){
+        _meetingStore.meetingController.stopCapturing();
+      }
+    }
+  }
+
 }
