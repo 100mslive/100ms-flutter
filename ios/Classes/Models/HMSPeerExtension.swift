@@ -52,12 +52,6 @@ class  HMSPeerExtension{
             return "peerJoined"
         case .peerLeft:
             return "peerLeft"
-        case .peerKnocked:
-            return "peerKnocked"
-        case .audioToggled:
-            return "audioToggled"
-        case .videoToggled:
-            return "videoToggled"
         case .roleUpdated:
             return "roleUpdated"
         case .defaultUpdate:

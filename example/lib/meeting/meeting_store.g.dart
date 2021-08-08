@@ -161,6 +161,21 @@ mixin _$MeetingStore on MeetingStoreBase, Store {
     });
   }
 
+  final _$trackStatusAtom = Atom(name: 'MeetingStoreBase.trackStatus');
+
+  @override
+  ObservableMap<String, HMSTrackUpdate> get trackStatus {
+    _$trackStatusAtom.reportRead();
+    return super.trackStatus;
+  }
+
+  @override
+  set trackStatus(ObservableMap<String, HMSTrackUpdate> value) {
+    _$trackStatusAtom.reportWrite(value, super.trackStatus, () {
+      super.trackStatus = value;
+    });
+  }
+
   final _$toggleVideoAsyncAction = AsyncAction('MeetingStoreBase.toggleVideo');
 
   @override
@@ -367,7 +382,8 @@ isMicOn: ${isMicOn},
 peers: ${peers},
 localPeer: ${localPeer},
 tracks: ${tracks},
-messages: ${messages}
+messages: ${messages},
+trackStatus: ${trackStatus}
     ''';
   }
 }
