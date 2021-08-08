@@ -8,8 +8,13 @@ import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 class PeerItemOrganism extends StatelessWidget {
   final HMSTrack track;
   MeetingStore? meetingStore;
+  final bool isVideoMuted;
 
-  PeerItemOrganism({Key? key, required this.track, this.meetingStore})
+  PeerItemOrganism(
+      {Key? key,
+      required this.track,
+      this.meetingStore,
+      this.isVideoMuted = true})
       : super(key: key);
 
   @override
@@ -25,8 +30,10 @@ class PeerItemOrganism extends StatelessWidget {
         children: [
           Observer(builder: (_) {
             HMSPeer? peer;
-            if(meetingStore!=null)
-              peer=meetingStore!.peers.firstWhere((element) { return element.peerId==track.peer!.peerId; });
+            if (meetingStore != null)
+              peer = meetingStore!.peers.firstWhere((element) {
+                return element.peerId == track.peer!.peerId;
+              });
             return Column(
               children: [
                 Text(peer?.role?.name ?? ' [Undefined Role] '),
@@ -36,8 +43,13 @@ class PeerItemOrganism extends StatelessWidget {
           }),
           Expanded(child: LayoutBuilder(
             builder: (context, constraints) {
-              print(
-                  'height:${constraints.maxHeight} width: ${constraints.maxWidth}');
+              if (isVideoMuted) {
+                return Container(
+                  child: Text(track.peer?.name.splitMapJoin((RegExp(r' ')),
+                          onMatch: (m) => '${m[0]}') ??
+                      ''),
+                );
+              }
               return VideoView(
                 track: track,
                 args: {

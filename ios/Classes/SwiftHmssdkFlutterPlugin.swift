@@ -217,10 +217,9 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             let isOn:Bool = arguments["is_on"] as? Bool ?? false
             print(videoTrack.settings)
             if isOn {
-                videoTrack.stopCapturing()
-
+                videoTrack.setMute(true)
             }else{
-                videoTrack.startCapturing()
+                videoTrack.setMute(false)
             }
          }
         result("video_changed")

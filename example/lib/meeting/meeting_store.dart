@@ -49,6 +49,9 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
   @observable
   List<HMSMessage> messages = ObservableList.of([]);
 
+  @observable
+  ObservableMap<String, HMSTrackUpdate> trackStatus = ObservableMap.of({});
+
   @action
   void startListen() {
     meetingController.addMeetingListener(this);
@@ -167,9 +170,6 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
 
   @override
   void onPeerUpdate({required HMSPeer peer, required HMSPeerUpdate update}) {
-    // if (peer.isLocal) {
-    //   localPeer = peer;
-    // } else
     peerOperation(peer, update);
   }
 
@@ -178,6 +178,7 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
       {required HMSTrack track,
       required HMSTrackUpdate trackUpdate,
       required HMSPeer peer}) {
+    trackStatus[peer.peerId] = trackUpdate;
     if (peer.isLocal) {
       localPeer = peer;
     } else
@@ -255,8 +256,7 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
       HMSPeer peer, HMSTrackUpdate update, HMSTrack track) {
     switch (update) {
       case HMSTrackUpdate.trackAdded:
-        if(track.kind==HMSTrackKind.kHMSTrackKindVideo)
-          addTrack(track);
+        if (track.kind == HMSTrackKind.kHMSTrackKindVideo) addTrack(track);
         break;
       case HMSTrackUpdate.trackRemoved:
         removeTrackWithTrackId(track.trackId);

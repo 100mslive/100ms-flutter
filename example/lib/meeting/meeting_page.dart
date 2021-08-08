@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:hmssdk_flutter/enum/hms_track_kind.dart';
 import 'package:hmssdk_flutter/enum/hms_track_source.dart';
+import 'package:hmssdk_flutter/enum/hms_track_update.dart';
 import 'package:hmssdk_flutter/model/hms_role_change_request.dart';
 import 'package:hmssdk_flutter/model/hms_track.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/chat_bottom_sheet.dart';
@@ -66,7 +67,6 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver{
 
   @override
   void dispose() {
-    // TODO: implement dispose
     _roleChangerequestDisposer.reaction.dispose();
     super.dispose();
   }
@@ -130,10 +130,15 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver{
                   return GridView(
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2),
-                    children: List.generate(
-                        filteredList.length,
-                        (index) =>
-                            PeerItemOrganism(track: filteredList[index],meetingStore: _meetingStore,)),
+                    children: List.generate(filteredList.length, (index) {
+                      return PeerItemOrganism(
+                          track: filteredList[index],
+                          meetingStore: _meetingStore,
+                          isVideoMuted: (_meetingStore.trackStatus[
+                                      filteredList[index].peer?.peerId] ??
+                                  '') ==
+                              HMSTrackUpdate.trackMuted);
+                    }),
                   );
                 },
               ),
