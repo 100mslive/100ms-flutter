@@ -36,6 +36,10 @@ abstract class PreviewStoreBase with Store implements HMSPreviewListener {
     previewController.startListen(this);
   }
 
+  void removeListen(){
+    previewController.removeListener(this);
+  }
+
   void startPreview() {
     previewController.startPreview();
   }

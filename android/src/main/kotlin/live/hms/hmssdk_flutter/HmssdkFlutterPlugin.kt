@@ -299,13 +299,13 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
     private fun stopCapturing() {
         val peer = hmssdk.getLocalPeer()
         val videoTrack = peer?.videoTrack
-        videoTrack!!.setMute(true)
+        videoTrack?.setMute(true)
     }
 
     private fun startCapturing() {
         val peer = hmssdk.getLocalPeer()
         val videoTrack = peer?.videoTrack
-        videoTrack!!.setMute(false)
+        videoTrack?.setMute(false)
 
     }
 
@@ -335,9 +335,12 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
         this.eventSink = null
     }
 
-    fun getPeerById(id: String): HMSPeer? {
+    fun getPeerById(id: String,local:Boolean): HMSPeer? {
 
-        val peers = hmssdk.getRemotePeers()
+        if (local)return getLocalPeer()
+
+        val peers = hmssdk.getPeers()
+
         peers.forEach {
             if (it.peerID == id) return it
         }
@@ -346,16 +349,16 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
     }
 
     private fun isVideoMute(call: MethodCall): Boolean {
-        val peerId = call.argument<String>("peer_id")
-        val isLocal = call.argument<Boolean>("is_local")
-        val peer = getLocalPeer() ?: return false
+        val peer_id = call.argument<String>("peer_id")
+        val is_local = call.argument<Boolean>("is_local")
+        val peer = getPeerById(peer_id!!,is_local!!)
         return peer!!.videoTrack!!.isMute
     }
 
     private fun isAudioMute(call: MethodCall): Boolean {
-        val peerId = call.argument<String>("peer_id")
-        val isLocal = call.argument<Boolean>("is_local")
-        val peer = getLocalPeer() ?: return false
+        val peer_id = call.argument<String>("peer_id")
+        val is_local = call.argument<Boolean>("is_local")
+        val peer = getPeerById(peer_id!!,is_local!!)
         return peer!!.audioTrack!!.isMute
     }
 
@@ -383,7 +386,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
         val roleToChangeTo: HMSRole = roles.first {
             it.name == roleUWant
         }
-        val peer=getPeerById(peerId!!) as HMSRemotePeer
+        val peer=getPeerById(peerId!!,false) as HMSRemotePeer
         hmssdk.changeRole(peer, roleToChangeTo,false)
     }
 

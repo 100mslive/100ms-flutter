@@ -154,7 +154,7 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
       if (each.isLocal) {
         localPeer = each;
         addPeer(localPeer!);
-        print('on join ${localPeer!.peerId}');
+        print('on join ${localPeer!.peerId} ${peers.length}');
         break;
       }
     }

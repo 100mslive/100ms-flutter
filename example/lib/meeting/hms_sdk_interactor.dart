@@ -1,6 +1,7 @@
 import 'package:hmssdk_flutter/meeting/meeting.dart';
 import 'package:hmssdk_flutter/model/hms_config.dart';
 import 'package:hmssdk_flutter/model/hms_message.dart';
+import 'package:hmssdk_flutter/model/hms_peer.dart';
 import 'package:hmssdk_flutter/model/hms_preview_listener.dart';
 import 'package:hmssdk_flutter/model/hms_update_listener.dart';
 
@@ -71,4 +72,13 @@ class HMSSDKInteractor {
     _meeting.startCapturing();
   }
 
+  Future<bool> isAudioMute(HMSPeer? peer) async{
+    bool isMute=await _meeting.isAudioMute(peer);
+    return isMute;
+  }
+
+  Future<bool> isVideoMute(HMSPeer? peer) async{
+    bool isMute=await _meeting.isVideoMute(peer);
+    return isMute;
+  }
 }
