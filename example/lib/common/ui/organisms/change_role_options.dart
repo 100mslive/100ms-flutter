@@ -22,7 +22,6 @@ class _ChangeRoleOptionDialogState extends State<ChangeRoleOptionDialog> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     forceValue = widget.force;
   }
