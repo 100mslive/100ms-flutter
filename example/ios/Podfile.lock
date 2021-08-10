@@ -98,7 +98,7 @@ PODS:
   - GoogleWebRTC (1.1.31999)
   - HMSSDK (0.0.9):
     - GoogleWebRTC (= 1.1.31999)
-  - hmssdk_flutter (0.0.1):
+  - hmssdk_flutter (0.1.0):
     - Flutter
     - HMSSDK
   - nanopb (2.30908.0):
@@ -164,7 +164,7 @@ SPEC CHECKSUMS:
   GoogleUtilities: eea970f4a389963963bffe8d8fabe43540678b9c
   GoogleWebRTC: b39a78c4f5cc6b0323415b9233db03a2faa7b0f0
   HMSSDK: 624d127d4157d67e15ef4eb8cf0106d667728e6f
-  hmssdk_flutter: de139a18dd6777ecad3e7d03a3d66b9d973771a1
+  hmssdk_flutter: d3d288338a9169414b5057ffba28d6318cf6eaa7
   nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
   permission_handler: ccb20a9fad0ee9b1314a52b70b76b473c5f8dab0
   PromisesObjC: 3113f7f76903778cf4a0586bd1ab89329a0b7b97

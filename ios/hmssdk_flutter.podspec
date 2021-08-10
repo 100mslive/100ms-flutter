@@ -1,11 +1,8 @@
-#
-# To learn more about a Podspec see http://guides.cocoapods.org/syntax/podspec.html.
-# Run `pod lib lint hmssdk_flutter.podspec` to validate before publishing.
-#
+
 Pod::Spec.new do |s|
   s.name             = 'hmssdk_flutter'
-  s.version          = '0.0.1'
-  s.summary          = 'A Flutter Project for 100ms SDK'
+  s.version          = '0.1.0'
+  s.summary          = 'The Flutter plugin for 100ms SDK'
   s.description      = <<-DESC
   A Flutter Project for 100ms SDK.
                        DESC
