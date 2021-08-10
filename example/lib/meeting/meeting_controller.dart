@@ -1,5 +1,6 @@
 import 'package:hmssdk_flutter/model/hms_config.dart';
 import 'package:hmssdk_flutter/model/hms_preview_listener.dart';
+import 'package:hmssdk_flutter/model/hms_role.dart';
 import 'package:hmssdk_flutter/model/hms_update_listener.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
 import 'package:hmssdk_flutter_example/meeting/hms_sdk_interactor.dart';
@@ -64,15 +65,27 @@ class MeetingController {
     _hmsSdkInteractor.removePreviewListener(listener);
   }
 
-  void acceptRoleChangeRequest(){
+  void acceptRoleChangeRequest() {
     _hmsSdkInteractor.acceptRoleChangeRequest();
   }
 
-  void stopCapturing(){
+  void stopCapturing() {
     _hmsSdkInteractor.stopCapturing();
   }
 
-  void startCapturing(){
+  void startCapturing() {
     _hmsSdkInteractor.startCapturing();
+  }
+
+  void changeRole(
+      {required String peerId,
+      required String roleName,
+      bool forceChange = false}) {
+    _hmsSdkInteractor.changeRole(
+        peerId: peerId, roleName: roleName, forceChange: forceChange);
+  }
+
+  Future<List<HMSRole>> getRoles() async {
+    return _hmsSdkInteractor.getRoles();
   }
 }

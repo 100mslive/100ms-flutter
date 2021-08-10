@@ -2,6 +2,7 @@ import 'package:hmssdk_flutter/meeting/meeting.dart';
 import 'package:hmssdk_flutter/model/hms_config.dart';
 import 'package:hmssdk_flutter/model/hms_message.dart';
 import 'package:hmssdk_flutter/model/hms_preview_listener.dart';
+import 'package:hmssdk_flutter/model/hms_role.dart';
 import 'package:hmssdk_flutter/model/hms_update_listener.dart';
 
 class HMSSDKInteractor {
@@ -59,16 +60,27 @@ class HMSSDKInteractor {
     _meeting.removePreviewListener(listener);
   }
 
-  void acceptRoleChangeRequest(){
+  void acceptRoleChangeRequest() {
     _meeting.acceptRoleChangerequest();
   }
 
-  void stopCapturing(){
+  void stopCapturing() {
     _meeting.stopCapturing();
   }
 
-  void startCapturing(){
+  void startCapturing() {
     _meeting.startCapturing();
   }
 
+  void changeRole(
+      {required String peerId,
+      required String roleName,
+      bool forceChange = false}) {
+    _meeting.changeRole(
+        peerId: peerId, roleName: roleName, forceChange: forceChange);
+  }
+
+  Future<List<HMSRole>> getRoles() async {
+    return _meeting.getRoles();
+  }
 }

@@ -21,6 +21,8 @@ enum PlatformMethod {
   stopCapturing,
   previewVideo,
   acceptRoleChange,
+  changeRole,
+  getRoles,
   unknown
 }
 
@@ -71,6 +73,10 @@ extension PlatformMethodValues on PlatformMethod {
         return 'preview_video';
       case PlatformMethod.acceptRoleChange:
         return 'accept_role_change';
+      case PlatformMethod.changeRole:
+        return 'change_role';
+      case PlatformMethod.getRoles:
+        return 'get_roles';
       case PlatformMethod.unknown:
         return 'unknown';
     }
@@ -122,6 +128,10 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.previewVideo;
       case 'accept_role_change':
         return PlatformMethod.acceptRoleChange;
+      case 'change_role':
+        return PlatformMethod.changeRole;
+      case 'get_roles':
+        return PlatformMethod.getRoles;
       default:
         return PlatformMethod.unknown;
     }

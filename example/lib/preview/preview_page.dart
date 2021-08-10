@@ -22,7 +22,7 @@ class PreviewPage extends StatefulWidget {
   _PreviewPageState createState() => _PreviewPageState();
 }
 
-class _PreviewPageState extends State<PreviewPage>{
+class _PreviewPageState extends State<PreviewPage> {
   late PreviewStore _previewStore;
 
   @override
@@ -62,8 +62,10 @@ class _PreviewPageState extends State<PreviewPage>{
                       children: List.generate(
                           _previewStore.localTracks.length,
                           (index) => PeerItemOrganism(
-                              key: UniqueKey(),
-                              track: _previewStore.localTracks[index])),
+                                key: UniqueKey(),
+                                track: _previewStore.localTracks[index],
+                                isVideoMuted: false,
+                              )),
                     );
                   },
                 ),
@@ -122,5 +124,4 @@ class _PreviewPageState extends State<PreviewPage>{
       ),
     );
   }
-
 }

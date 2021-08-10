@@ -6,6 +6,7 @@ import 'package:hmssdk_flutter/enum/hms_track_source.dart';
 import 'package:hmssdk_flutter/enum/hms_track_update.dart';
 import 'package:hmssdk_flutter/model/hms_role_change_request.dart';
 import 'package:hmssdk_flutter/model/hms_track.dart';
+import 'package:hmssdk_flutter_example/common/ui/organisms/change_role_options.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/chat_bottom_sheet.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/peer_item_organism.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/role_change_request_dialog.dart';
@@ -28,7 +29,7 @@ class MeetingPage extends StatefulWidget {
   _MeetingPageState createState() => _MeetingPageState();
 }
 
-class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver{
+class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
   late MeetingStore _meetingStore;
   late ReactionDisposer _roleChangerequestDisposer;
 
@@ -52,11 +53,10 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver{
   }
 
   void showRoleChangeDialog(event) async {
-    event=event as HMSRoleChangeRequest;
+    event = event as HMSRoleChangeRequest;
     String answer = await showDialog(
         context: context,
-        builder: (ctx) => RoleChangeDialogOrganism(
-            roleChangeRequest: event));
+        builder: (ctx) => RoleChangeDialogOrganism(roleChangeRequest: event));
     if (answer == "Ok") {
       debugPrint("OK accepted");
       _meetingStore.meetingController.acceptRoleChangeRequest();
@@ -112,7 +112,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver{
                         source: HMSTrackSource.kHMSTrackSourceRegular,
                         kind: HMSTrackKind.unknown,
                         trackId: '',
-                        peer: _meetingStore.localPeer),meetingStore: _meetingStore,
+                        peer: _meetingStore.localPeer),
                   ),
                 );
               } else {
@@ -131,13 +131,33 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver{
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2),
                     children: List.generate(filteredList.length, (index) {
-                      return PeerItemOrganism(
-                          track: filteredList[index],
-                          meetingStore: _meetingStore,
-                          isVideoMuted: (_meetingStore.trackStatus[
-                                      filteredList[index].peer?.peerId] ??
-                                  '') ==
-                              HMSTrackUpdate.trackMuted);
+                      return InkWell(
+                        onLongPress: () {
+                          showDialog(
+                              context: context,
+                              builder: (_) => ChangeRoleOptionDialog(
+                                    peerName:
+                                        filteredList[index].peer?.name ?? '',
+                                    getRoleFunction: _meetingStore.getRoles(),
+                                    changeRole: (role, forceChange) {
+                                      Navigator.pop(context);
+                                      _meetingStore.changeRole(
+                                          peerId: filteredList[index]
+                                                  .peer
+                                                  ?.peerId ??
+                                              '',
+                                          roleName: role.name,
+                                          forceChange: forceChange);
+                                    },
+                                  ));
+                        },
+                        child: PeerItemOrganism(
+                            track: filteredList[index],
+                            isVideoMuted: (_meetingStore.trackStatus[
+                                        filteredList[index].peer?.peerId] ??
+                                    '') ==
+                                HMSTrackUpdate.trackMuted),
+                      );
                     }),
                   );
                 },
@@ -201,26 +221,19 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver{
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-
     super.didChangeAppLifecycleState(state);
-    if(state == AppLifecycleState.resumed){
-      if(_meetingStore.isVideoOn){
+    if (state == AppLifecycleState.resumed) {
+      if (_meetingStore.isVideoOn) {
         _meetingStore.meetingController.startCapturing();
       }
-    }
-
-    else if(state == AppLifecycleState.paused){
-      if(_meetingStore.isVideoOn){
+    } else if (state == AppLifecycleState.paused) {
+      if (_meetingStore.isVideoOn) {
         _meetingStore.meetingController.stopCapturing();
       }
-    }
-
-    else if(state == AppLifecycleState.inactive){
-
-      if(_meetingStore.isVideoOn){
+    } else if (state == AppLifecycleState.inactive) {
+      if (_meetingStore.isVideoOn) {
         _meetingStore.meetingController.stopCapturing();
       }
     }
   }
-
 }

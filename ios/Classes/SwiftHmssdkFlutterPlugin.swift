@@ -125,6 +125,27 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         }
         return nil
     }
+    public func getRemotePeerById(peerId:String) -> HMSRemotePeer?{
+            if let peers:[HMSRemotePeer] = hmsSDK?.remotePeers{
+                for peer in peers {
+                    if(peer.peerID == peerId){
+                        return peer
+                    }
+                }
+            }
+        return nil
+    }
+    public func getRoleByString(name:String) -> HMSRole?{
+      if let roles = hmsSDK?.roles{
+            for role in roles{
+                if(role.name == name){
+                    return role
+                }
+                
+            }
+        }
+        return nil
+    }
     
    
     
@@ -280,6 +301,29 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         result("role_accepted")
     }
     
+    func changeRole(call: FlutterMethodCall,result:FlutterResult) {
+        let arguments = call.arguments as! Dictionary<String, AnyObject>
+        
+        let forceChange:Bool = arguments["force_change"] as? Bool ?? false
+        let peerId:String = (arguments["peer_id"] as? String) ?? ""
+        let peer:HMSRemotePeer? = getRemotePeerById(peerId: peerId)
+        let role:HMSRole? = getRoleByString(name: (arguments["role_name"] as? String) ?? "")
+        if (peer != nil && role != nil) {
+            hmsSDK?.changeRole(for: peer!, to: role!,force: forceChange)
+        }
+      
+        result("role change requested")
+    }
+    func getRoles(call: FlutterMethodCall,result:FlutterResult){
+        var roleList:[Dictionary<String, Any?>]=[]
+        if  let roles:[HMSRole] = hmsSDK?.roles {
+            for role in roles{
+                roleList.insert(HMSRoleExtension.toDictionary(role: role), at: roleList.count)
+            }
+        }
+        result(["roles":roleList])
+        
+    }
     func leaveMeeting(result:FlutterResult){
         hmsSDK?.leave();
         result("Leaving meeting")
@@ -312,6 +356,8 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     case "preview_video":previewVideo(call:call,result:result)
     case "send_message":sendMessage(call:call,result:result)
     case "accept_role_change":acceptRoleRequest(call:call,result:result)
+    case "change_role":changeRole(call:call,result:result)
+    case "get_roles":getRoles(call:call,result:result)
     default:
         result(FlutterMethodNotImplemented)
     }
