@@ -261,7 +261,6 @@ When you(the local peer) receives a message from others(any remote peer), `  voi
 
 ## ☝️ Pre-requisites
 
-- Android Studio 3.0 or higher
 - Support for Android API level 24 or higher
 - Support for Java 8
 
