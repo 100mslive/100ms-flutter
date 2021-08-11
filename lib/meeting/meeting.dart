@@ -1,6 +1,7 @@
 import 'package:hmssdk_flutter/common/platform_methods.dart';
 import 'package:hmssdk_flutter/model/hms_config.dart';
 import 'package:hmssdk_flutter/model/hms_preview_listener.dart';
+import 'package:hmssdk_flutter/model/hms_role.dart';
 import 'package:hmssdk_flutter/model/hms_update_listener.dart';
 import 'package:hmssdk_flutter/service/platform_service.dart';
 
@@ -56,15 +57,40 @@ class HMSMeeting {
     PlatformService.removePreviewListener(listener);
   }
 
-  void acceptRoleChangerequest(){
+  void acceptRoleChangerequest() {
     PlatformService.invokeMethod(PlatformMethod.acceptRoleChange);
   }
 
-  void stopCapturing(){
+  void stopCapturing() {
     PlatformService.invokeMethod(PlatformMethod.stopCapturing);
   }
 
-  void startCapturing(){
+  void startCapturing() {
     PlatformService.invokeMethod(PlatformMethod.startCapturing);
+  }
+
+  void changeRole(
+      {required String peerId,
+      required String roleName,
+      bool forceChange = false}) {
+    PlatformService.invokeMethod(PlatformMethod.changeRole, arguments: {
+      'peer_id': peerId,
+      'role_name': roleName,
+      'force_change': forceChange
+    });
+  }
+
+  Future<List<HMSRole>> getRoles() async {
+    List<HMSRole> roles = [];
+    var result = await PlatformService.invokeMethod(PlatformMethod.getRoles);
+    if (result is Map && result.containsKey('roles')) {
+      if (result['roles'] is List) {
+        for (var each in (result['roles'] as List)) {
+          HMSRole role = HMSRole.fromMap(each);
+          roles.add(role);
+        }
+      }
+    }
+    return roles;
   }
 }

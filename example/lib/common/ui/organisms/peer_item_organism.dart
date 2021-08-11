@@ -1,20 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:hmssdk_flutter/model/hms_peer.dart';
 import 'package:hmssdk_flutter/model/hms_track.dart';
 import 'package:hmssdk_flutter/ui/meeting/video_view.dart';
-import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 
 class PeerItemOrganism extends StatelessWidget {
   final HMSTrack track;
-  MeetingStore? meetingStore;
   final bool isVideoMuted;
 
-  PeerItemOrganism(
-      {Key? key,
-      required this.track,
-      this.meetingStore,
-      this.isVideoMuted = true})
+  PeerItemOrganism({Key? key, required this.track, this.isVideoMuted = true})
       : super(key: key);
 
   @override
@@ -28,26 +20,18 @@ class PeerItemOrganism extends StatelessWidget {
           borderRadius: BorderRadius.all(Radius.circular(16))),
       child: Column(
         children: [
-          Observer(builder: (_) {
-            HMSPeer? peer;
-            if (meetingStore != null)
-              peer = meetingStore!.peers.firstWhere((element) {
-                return element.peerId == track.peer!.peerId;
-              });
-            return Column(
-              children: [
-                Text(peer?.role?.name ?? ' [Undefined Role] '),
-                Text(peer?.name ?? '[Undefined Name]'),
-              ],
-            );
-          }),
           Expanded(child: LayoutBuilder(
             builder: (context, constraints) {
               if (isVideoMuted) {
+                List<String> parts = track.peer?.name.split(" ") ?? [];
+
+                late String name;
+                if (parts.length == 1)
+                  name = parts.join();
+                else
+                  name = parts.map((e) => e.substring(0, 1)).join();
                 return Container(
-                  child: Text(track.peer?.name.splitMapJoin((RegExp(r' ')),
-                          onMatch: (m) => '${m[0]}') ??
-                      ''),
+                  child: Center(child: CircleAvatar(child: Text(name))),
                 );
               }
               return VideoView(
@@ -58,7 +42,11 @@ class PeerItemOrganism extends StatelessWidget {
                 },
               );
             },
-          ))
+          )),
+          SizedBox(
+            height: 16,
+          ),
+          Text(track.peer?.name ?? '')
         ],
       ),
     );

@@ -6,6 +6,7 @@ import 'package:hmssdk_flutter/enum/hms_track_update.dart';
 import 'package:hmssdk_flutter/model/hms_error.dart';
 import 'package:hmssdk_flutter/model/hms_message.dart';
 import 'package:hmssdk_flutter/model/hms_peer.dart';
+import 'package:hmssdk_flutter/model/hms_role.dart';
 import 'package:hmssdk_flutter/model/hms_role_change_request.dart';
 import 'package:hmssdk_flutter/model/hms_room.dart';
 import 'package:hmssdk_flutter/model/hms_speaker.dart';
@@ -143,11 +144,11 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
   }
 
   @action
-  void updatePeerAt(peer){
+  void updatePeerAt(peer) {
     print(peer.toString());
-    int index=this.peers.indexOf(peer);
+    int index = this.peers.indexOf(peer);
     this.peers.removeAt(index);
-    this.peers.insert(index,peer);
+    this.peers.insert(index, peer);
     print(this.peers.toString());
   }
 
@@ -214,6 +215,18 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
   @override
   void onReconnected() {
     print('on reconnected');
+  }
+
+  void changeRole(
+      {required String peerId,
+      required String roleName,
+      bool forceChange = false}) {
+    meetingController.changeRole(
+        roleName: roleName, peerId: peerId, forceChange: forceChange);
+  }
+
+  Future<List<HMSRole>> getRoles() async {
+    return meetingController.getRoles();
   }
 
   @action

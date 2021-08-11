@@ -108,7 +108,13 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
             "preview_video" -> {
                 previewVideo(call, result)
             }
-            "accept_role_change"->{
+            "change_role" -> {
+                changeRole(call)
+            }
+            "get_roles" -> {
+                getRoles(call, result)
+            }
+            "accept_role_change" -> {
                 acceptRoleRequest()
                 result.success("role_accepted")
             }
@@ -377,18 +383,30 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
     }
 
     fun changeRole(call: MethodCall) {
-        val roleUWant =  call.argument<String>("role")
-        val peerId    =  call.argument<String>("peer_id")
+        val roleUWant = call.argument<String>("role_name")
+        val peerId = call.argument<String>("peer_id")
+        val forceChange = call.argument<Boolean>("force_change")
         val roles = hmssdk.getRoles()
         val roleToChangeTo: HMSRole = roles.first {
             it.name == roleUWant
         }
-        val peer=getPeerById(peerId!!) as HMSRemotePeer
-        hmssdk.changeRole(peer, roleToChangeTo,false)
+        val peer = getPeerById(peerId!!) as HMSRemotePeer
+        hmssdk.changeRole(peer, roleToChangeTo, forceChange ?: false)
     }
 
-    private fun acceptRoleRequest(){
-        if (this.requestChange!=null){
+    fun getRoles(call: MethodCall, result: Result) {
+        val args = HashMap<String, Any?>()
+
+        val roles = ArrayList<Any>()
+        hmssdk.getRoles().forEach { it ->
+            roles.add(HMSRoleExtension.toDictionary(it)!!)
+        }
+        args["roles"] = roles
+        result.success(args)
+    }
+
+    private fun acceptRoleRequest() {
+        if (this.requestChange != null) {
             hmssdk.acceptChangeRole(this.requestChange!!)
             Log.i("acceptRoleRequest","accept")
         }
