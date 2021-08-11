@@ -16,7 +16,7 @@ class HMSSDKInteractor {
 
   Future<void> joinMeeting({required HMSConfig config}) async {
     this.config = config;
-    await _meeting.startMeeting(config: this.config);
+    await _meeting.joinMeeting(config: this.config);
   }
 
   Future<void> leaveMeeting() async {

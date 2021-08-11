@@ -2,13 +2,14 @@
 
 The first version of 100ms Flutter SDK comes power-packed with support for multiple features like -
 
-- Join/Leave Rooms
-- Mute / Unmute Audio / Video
-- Switch Camera
-- Chat
-- Preview Screen
-- Network Switch Support
-- Subscribe Degradation in bad network scenarios
-- Error Handling and much more.
+- `Join/Leave Rooms`
+- `Mute / Unmute Audio / Video`
+- `Switch Camera`
+- `Chat`
+- `Preview Screen`
+- `Network Switch Support`
+- `Subscribe Degradation in bad network scenarios`
+- `Error Handling and much more.`
 
 Take it for a spin! 🥳
+

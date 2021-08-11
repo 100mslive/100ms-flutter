@@ -6,7 +6,7 @@ import 'package:hmssdk_flutter/model/hms_update_listener.dart';
 import 'package:hmssdk_flutter/service/platform_service.dart';
 
 class HMSMeeting {
-  Future<void> startMeeting({required HMSConfig config}) async {
+  Future<void> joinMeeting({required HMSConfig config}) async {
     return await PlatformService.invokeMethod(PlatformMethod.joinMeeting,
         arguments: config.getJson());
   }
