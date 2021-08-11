@@ -1,3 +1,8 @@
+<p align="center" >
+  <a href="https://100ms.live/">
+  <img src="https://github.com/100mslive/100ms-flutter/blob/main/100ms-logo.png" title="100ms logo" float=left>
+</p>
+
 # 100 ms Flutter sdk
 
 1. [x] Join Meeting
@@ -13,4 +18,17 @@
  4. Finally, `flutter run`
 
 
-  
+
+## Permissions
+Add following permissions in iOS Info.plist file
+```
+<key>NSMicrophoneUsageDescription</key>
+<string>{YourAppName} wants to use your microphone</string>
+
+<key>NSCameraUsageDescription</key>
+<string>{YourAppName} wants to use your camera</string>
+
+<key>NSLocalNetworkUsageDescription</key>
+<string>{YourAppName} App wants to use your local network</string>
+```
+
