@@ -102,18 +102,28 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
         child: Column(
           children: [
             Observer(builder: (_) {
+              late bool isVideoMuted;
+              if (_meetingStore.isVideoOn) {
+                isVideoMuted = (_meetingStore
+                            .trackStatus[_meetingStore.localPeer?.peerId] ??
+                        '') ==
+                    HMSTrackUpdate.trackMuted;
+              } else {
+                isVideoMuted = true;
+              }
               if (_meetingStore.localPeer != null) {
                 return SizedBox(
                   width: double.infinity,
                   height: MediaQuery.of(context).size.height / 2,
                   child: PeerItemOrganism(
-                    track: HMSTrack(
+                      track: HMSTrack(
                         trackDescription: '',
                         source: HMSTrackSource.kHMSTrackSourceRegular,
                         kind: HMSTrackKind.unknown,
                         trackId: '',
-                        peer: _meetingStore.localPeer),
-                  ),
+                        peer: _meetingStore.localPeer,
+                      ),
+                      isVideoMuted: isVideoMuted),
                 );
               } else {
                 return Text('No Local peer');
