@@ -1,4 +1,5 @@
 import 'package:hmssdk_flutter/model/hms_config.dart';
+import 'package:hmssdk_flutter/model/hms_peer.dart';
 import 'package:hmssdk_flutter/model/hms_preview_listener.dart';
 import 'package:hmssdk_flutter/model/hms_role.dart';
 import 'package:hmssdk_flutter/model/hms_update_listener.dart';
@@ -87,5 +88,15 @@ class MeetingController {
 
   Future<List<HMSRole>> getRoles() async {
     return _hmsSdkInteractor.getRoles();
+  }
+
+  Future<bool> isAudioMute(HMSPeer? peer) async{
+    bool isMute=await _hmsSdkInteractor.isAudioMute(peer);
+    return isMute;
+  }
+
+  Future<bool> isVideoMute(HMSPeer? peer) async{
+    bool isMute=await _hmsSdkInteractor.isVideoMute(peer);
+    return isMute;
   }
 }

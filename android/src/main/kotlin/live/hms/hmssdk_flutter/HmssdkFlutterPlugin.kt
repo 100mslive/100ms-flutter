@@ -112,7 +112,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
                 changeRole(call)
             }
             "get_roles" -> {
-                getRoles(call, result)
+                getRoles(result)
             }
             "accept_role_change" -> {
                 acceptRoleRequest()
@@ -342,8 +342,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
     }
 
     fun getPeerById(id: String): HMSPeer? {
-
-        val peers = hmssdk.getRemotePeers()
+        val peers = hmssdk.getPeers()
         peers.forEach {
             if (it.peerID == id) return it
         }
@@ -353,15 +352,15 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
 
     private fun isVideoMute(call: MethodCall): Boolean {
         val peerId = call.argument<String>("peer_id")
-        val isLocal = call.argument<Boolean>("is_local")
-        val peer = getLocalPeer() ?: return false
+//        val isLocal = call.argument<Boolean>("is_local")
+        val peer = getPeerById(peerId!!)
         return peer!!.videoTrack!!.isMute
     }
 
     private fun isAudioMute(call: MethodCall): Boolean {
         val peerId = call.argument<String>("peer_id")
-        val isLocal = call.argument<Boolean>("is_local")
-        val peer = getLocalPeer() ?: return false
+//        val isLocal = call.argument<Boolean>("is_local")
+        val peer = getPeerById(peerId!!)
         return peer!!.audioTrack!!.isMute
     }
 
@@ -382,7 +381,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
         return hmssdk.getLocalPeer()!!
     }
 
-    fun changeRole(call: MethodCall) {
+    private fun changeRole(call: MethodCall) {
         val roleUWant = call.argument<String>("role_name")
         val peerId = call.argument<String>("peer_id")
         val forceChange = call.argument<Boolean>("force_change")
@@ -394,11 +393,11 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
         hmssdk.changeRole(peer, roleToChangeTo, forceChange ?: false)
     }
 
-    fun getRoles(call: MethodCall, result: Result) {
+    fun getRoles(result: Result) {
         val args = HashMap<String, Any?>()
 
         val roles = ArrayList<Any>()
-        hmssdk.getRoles().forEach { it ->
+        hmssdk.getRoles().forEach {
             roles.add(HMSRoleExtension.toDictionary(it)!!)
         }
         args["roles"] = roles
@@ -410,7 +409,6 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
             hmssdk.acceptChangeRole(this.requestChange!!)
             Log.i("acceptRoleRequest","accept")
         }
-
     }
 
 }
