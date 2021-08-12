@@ -12,7 +12,7 @@ class MeetingController {
   final String roomId;
   final String user;
   final MeetingFlow flow;
-  HMSSDKInteractor _hmsSdkInteractor;
+  HMSSDKInteractor? _hmsSdkInteractor;
 
   MeetingController(
       {required this.roomId, required this.user, required this.flow})
@@ -27,76 +27,76 @@ class MeetingController {
         // endPoint: Constant.getTokenURL,
         userName: user);
 
-    await _hmsSdkInteractor.joinMeeting(config: config);
+    await _hmsSdkInteractor?.joinMeeting(config: config);
   }
 
   void leaveMeeting() {
-    _hmsSdkInteractor.leaveMeeting();
+    _hmsSdkInteractor?.leaveMeeting();
   }
 
   Future<void> switchAudio({bool isOn = false}) async {
-    return await _hmsSdkInteractor.switchAudio(isOn: isOn);
+    return await _hmsSdkInteractor?.switchAudio(isOn: isOn);
   }
 
   Future<void> switchVideo({bool isOn = false}) async {
-    return await _hmsSdkInteractor.switchVideo(isOn: isOn);
+    return await _hmsSdkInteractor?.switchVideo(isOn: isOn);
   }
 
   Future<void> switchCamera() async {
-    return await _hmsSdkInteractor.switchCamera();
+    return await _hmsSdkInteractor?.switchCamera();
   }
 
   Future<void> sendMessage(String message) async {
-    return await _hmsSdkInteractor.sendMessage(message);
+    return await _hmsSdkInteractor?.sendMessage(message);
   }
 
   void addMeetingListener(HMSUpdateListener listener) {
-    _hmsSdkInteractor.addMeetingListener(listener);
+    _hmsSdkInteractor?.addMeetingListener(listener);
   }
 
   void removeMeetingListener(HMSUpdateListener listener) {
-    _hmsSdkInteractor.removeMeetingListener(listener);
+    _hmsSdkInteractor?.removeMeetingListener(listener);
   }
 
   void addPreviewListener(HMSPreviewListener listener) {
-    _hmsSdkInteractor.addPreviewListener(listener);
+    _hmsSdkInteractor?.addPreviewListener(listener);
   }
 
   void removePreviewListener(HMSPreviewListener listener) {
-    _hmsSdkInteractor.removePreviewListener(listener);
+    _hmsSdkInteractor?.removePreviewListener(listener);
   }
 
   void acceptRoleChangeRequest() {
-    _hmsSdkInteractor.acceptRoleChangeRequest();
+    _hmsSdkInteractor?.acceptRoleChangeRequest();
   }
 
   void stopCapturing() {
-    _hmsSdkInteractor.stopCapturing();
+    _hmsSdkInteractor?.stopCapturing();
   }
 
   void startCapturing() {
-    _hmsSdkInteractor.startCapturing();
+    _hmsSdkInteractor?.startCapturing();
   }
 
   void changeRole(
       {required String peerId,
       required String roleName,
       bool forceChange = false}) {
-    _hmsSdkInteractor.changeRole(
+    _hmsSdkInteractor?.changeRole(
         peerId: peerId, roleName: roleName, forceChange: forceChange);
   }
 
   Future<List<HMSRole>> getRoles() async {
-    return _hmsSdkInteractor.getRoles();
+    return _hmsSdkInteractor!.getRoles();
   }
 
   Future<bool> isAudioMute(HMSPeer? peer) async{
-    bool isMute=await _hmsSdkInteractor.isAudioMute(peer);
+    bool isMute=await _hmsSdkInteractor!.isAudioMute(peer);
     return isMute;
   }
 
   Future<bool> isVideoMute(HMSPeer? peer) async{
-    bool isMute=await _hmsSdkInteractor.isVideoMute(peer);
+    bool isMute=await _hmsSdkInteractor!.isVideoMute(peer);
     return isMute;
   }
 }

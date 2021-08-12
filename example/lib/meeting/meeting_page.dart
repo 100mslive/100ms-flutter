@@ -47,11 +47,19 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
         (event) => {showRoleChangeDialog(event)});
     super.initState();
     initMeeting();
+    checkButtons();
   }
 
   void initMeeting() {
     _meetingStore.joinMeeting();
     _meetingStore.startListen();
+  }
+
+  void checkButtons() async {
+    _meetingStore.isVideoOn =
+    !(await _meetingStore.meetingController.isVideoMute(null));
+    _meetingStore.isMicOn =
+    !(await _meetingStore.meetingController.isAudioMute(null));
   }
 
   void showRoleChangeDialog(event) async {
@@ -107,7 +115,8 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                     )),
             IconButton(
               onPressed: () async {
-                _meetingStore.toggleCamera();
+                if(_meetingStore.isVideoOn)
+                  _meetingStore.toggleCamera();
               },
               icon: Icon(Icons.switch_camera),
             ),

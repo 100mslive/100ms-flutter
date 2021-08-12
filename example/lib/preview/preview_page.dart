@@ -22,11 +22,12 @@ class PreviewPage extends StatefulWidget {
   _PreviewPageState createState() => _PreviewPageState();
 }
 
-class _PreviewPageState extends State<PreviewPage> {
+class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver{
   late PreviewStore _previewStore;
 
   @override
   void initState() {
+    WidgetsBinding.instance!.addObserver(this);
     _previewStore = PreviewStore();
     _previewStore.previewController =
         PreviewController(roomId: widget.roomId, user: widget.user);
@@ -124,4 +125,28 @@ class _PreviewPageState extends State<PreviewPage> {
       ),
     );
   }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+
+    super.didChangeAppLifecycleState(state);
+    if(state == AppLifecycleState.resumed){
+      if(videoOn){
+        _previewStore.previewController.startCapturing();
+      }
+    }
+
+    else if(state == AppLifecycleState.paused){
+      if(videoOn){
+        _previewStore.previewController.stopCapturing();
+      }
+    }
+
+    else if(state == AppLifecycleState.inactive){
+      if(videoOn){
+        _previewStore.previewController.stopCapturing();
+      }
+    }
+  }
+
 }

@@ -342,6 +342,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
     }
 
     fun getPeerById(id: String): HMSPeer? {
+        if(id=="")return  getLocalPeer()
         val peers = hmssdk.getPeers()
         peers.forEach {
             if (it.peerID == id) return it
