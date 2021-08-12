@@ -271,18 +271,14 @@ The Android SDK supports Android API level 21 and higher. It is built for armeab
 ## iOS Integration
 
 ## 🚂 Setup Guide
+
+  1. Sign up on https://dashboard.100ms.live/register & visit the Developer tab to access your credentials.
   
-  1. Host your token generation service [following this guide](https://docs.100ms.live/v2/server-side/Generate-client-side-token)
+  2. Get familiarized with [Tokens & Security here](https://docs.100ms.live/ios/v2/foundation/Security-and-tokens)
 
-  2. Get Access Keys: Sign up on https://dashboard.100ms.live/register & visit the Developer tab to get your access credentials
-
-  3. Generate a server-side token, follow the steps described here - https://docs.100ms.live/v2/server-side/Generate-server-side-token
-
-  4. Create a room, follow the steps described here - https://docs.100ms.live/v2/server-side/Create-room
-
-  5. Generate a client-side token, follow the steps described here - https://docs.100ms.live/v2/server-side/Generate-client-side-token
+  3. Complete the steps in [Auth Token Quick Start Guide](https://docs.100ms.live/ios/v2/guides/Token)
   
-  6. Get the HMSSDK via [pub.dev](https://pub.dev/). Add the `hmssdk_flutter'` to your pubspec.yaml
+  4. Get the HMSSDK via [pub.dev](https://pub.dev/). Add the `hmssdk_flutter'` to your pubspec.yaml
 
 Add following permissions in iOS Info.plist file
 ```
