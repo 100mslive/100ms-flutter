@@ -42,7 +42,6 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
     private lateinit var activity: Activity
     lateinit var hmssdk: HMSSDK
     private lateinit var hmsVideoFactory: HMSVideoViewFactory
-    private var result: Result? = null
     private var requestChange :HMSRoleChangeRequest?= null
 
     override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
@@ -63,8 +62,8 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
     }
 
     override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
-        Log.i("onMethodCall", "reached")
-        this.result = result
+//        Log.i("onMethodCall", "reached")
+
         when (call.method) {
             "getPlatformVersion" -> {
                 result.success("Android ${android.os.Build.VERSION.RELEASE}")
@@ -106,7 +105,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
                 result.success("sent message")
             }
             "preview_video" -> {
-                previewVideo(call, result)
+                previewVideo(call)
             }
             "change_role" -> {
                 changeRole(call)
@@ -270,7 +269,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
     private fun joinMeeting(@NonNull call: MethodCall) {
         val userName = call.argument<String>("user_name")
         val authToken = call.argument<String>("auth_token")
-        val shouldSkipPiiEvents = call.argument<Boolean>("should_skip_pii_events")
+        //val shouldSkipPiiEvents = call.argument<Boolean>("should_skip_pii_events")
         Log.i("userName", authToken!!)
         val hmsConfig = HMSConfig(userName = userName!!, authtoken = authToken!!)
         hmssdk.join(hmsConfig, this)
@@ -327,10 +326,10 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
 
         val nameOfEventSink = (arguments as HashMap<String, Any>)["name"]
         Log.i("onListen EventChannel", nameOfEventSink.toString())
-        if (nameOfEventSink!!.equals("meeting")) {
+        if (nameOfEventSink!! == "meeting") {
             this.eventSink = events
             Log.i("onListen EventChannel", "eventSink")
-        } else if (nameOfEventSink!!.equals("preview")) {
+        } else if (nameOfEventSink == "preview") {
             this.previewSink = events
             Log.i("onListen EventChannel", "previewSink")
         }
@@ -370,7 +369,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
         hmssdk!!.sendMessage("chat", message!!)
     }
 
-    private fun previewVideo(call: MethodCall, result: Result) {
+    private fun previewVideo(call: MethodCall) {
         val userName = call.argument<String>("user_name")
         val authToken = call.argument<String>("auth_token")
         Log.i("previewVideo", "$userName  $authToken")

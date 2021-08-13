@@ -27,7 +27,7 @@ class PeerItemOrganism extends StatelessWidget {
 
                 late String name;
                 if (parts.length == 1)
-                  name = parts.join();
+                  name = parts[0][0];
                 else
                   name = parts.map((e) => e.substring(0, 1)).join();
                 return Container(

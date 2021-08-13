@@ -42,6 +42,11 @@ class HMSTrack {
   }
 
   @override
+  String toString() {
+    return 'HMSTrack{trackId: $trackId, kind: $kind, source: $source, trackDescription: $trackDescription, peer: $peer}';
+  }
+
+  @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is HMSTrack &&

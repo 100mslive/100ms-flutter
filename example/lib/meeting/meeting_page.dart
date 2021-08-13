@@ -57,9 +57,9 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
 
   void checkButtons() async {
     _meetingStore.isVideoOn =
-    !(await _meetingStore.meetingController.isVideoMute(null));
+        !(await _meetingStore.meetingController.isVideoMute(null));
     _meetingStore.isMicOn =
-    !(await _meetingStore.meetingController.isAudioMute(null));
+        !(await _meetingStore.meetingController.isAudioMute(null));
   }
 
   void showRoleChangeDialog(event) async {
@@ -74,22 +74,27 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
           .showSnackBar(SnackBar(content: Text("Accepted")));
     }
   }
-  
+
   Future<dynamic> _onBackPressed() {
     return showDialog(
         context: context,
         builder: (ctx) => AlertDialog(
-          title: Text("Do You Want to leave meeting"),
-          actions: [
-            FlatButton(onPressed: ()=>{
-              _meetingStore.meetingController.leaveMeeting(),
-              Navigator.pop(context,true)
-            }, child: Text("Yes")),
-            FlatButton(onPressed: ()=>Navigator.pop(context,false), child: Text("No")),
-          ],
-        ));
+              title: Text("Do You Want to leave meeting"),
+              actions: [
+                FlatButton(
+                    onPressed: () => {
+                          _meetingStore.meetingController.leaveMeeting(),
+                          Navigator.pop(context, true),
+                          Navigator.pushReplacement(context,
+                              MaterialPageRoute(builder: (ctx) => HomePage()))
+                        },
+                    child: Text("Yes")),
+                FlatButton(
+                    onPressed: () => Navigator.pop(context, false),
+                    child: Text("No")),
+              ],
+            ));
   }
-
 
   @override
   void dispose() {
@@ -115,8 +120,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                     )),
             IconButton(
               onPressed: () async {
-                if(_meetingStore.isVideoOn)
-                  _meetingStore.toggleCamera();
+                if (_meetingStore.isVideoOn) _meetingStore.toggleCamera();
               },
               icon: Icon(Icons.switch_camera),
             ),
@@ -236,8 +240,8 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                     onPressed: () {
                       _meetingStore.toggleAudio();
                     },
-                    icon:
-                        Icon(_meetingStore.isMicOn ? Icons.mic : Icons.mic_off));
+                    icon: Icon(
+                        _meetingStore.isMicOn ? Icons.mic : Icons.mic_off));
               }),
             ),
             Container(
@@ -255,15 +259,15 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                   tooltip: 'Leave',
                   onPressed: () {
                     _meetingStore.meetingController.leaveMeeting();
-                    Navigator.pushReplacement(
-                        context, MaterialPageRoute(builder: (ctx) => HomePage()));
+                    Navigator.pushReplacement(context,
+                        MaterialPageRoute(builder: (ctx) => HomePage()));
                   },
                   icon: Icon(Icons.call_end)),
             ),
           ],
         ),
       ),
-      onWillPop: () async{
+      onWillPop: () async {
         bool ans = await _onBackPressed();
         return ans;
       },
