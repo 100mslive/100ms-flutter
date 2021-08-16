@@ -26,6 +26,7 @@ dependencies:
   firebase_crashlytics: ^2.1.1
   firebase_core: ^1.4.0
   firebase_analytics: ^8.2.0
+  flutter_launcher_icons: ^0.9.1
 
 dev_dependencies:
   flutter_test:
