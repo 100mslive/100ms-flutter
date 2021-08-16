@@ -4,12 +4,14 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:hmssdk_flutter/enum/hms_track_kind.dart';
 import 'package:hmssdk_flutter/enum/hms_track_source.dart';
 import 'package:hmssdk_flutter/enum/hms_track_update.dart';
+import 'package:hmssdk_flutter/model/hms_error.dart';
 import 'package:hmssdk_flutter/model/hms_role_change_request.dart';
 import 'package:hmssdk_flutter/model/hms_track.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/change_role_options.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/chat_bottom_sheet.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/peer_item_organism.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/role_change_request_dialog.dart';
+import 'package:hmssdk_flutter_example/common/utilcomponents/UtilityComponents.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
 import 'package:hmssdk_flutter_example/main.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_controller.dart';
@@ -34,6 +36,7 @@ class MeetingPage extends StatefulWidget {
 class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
   late MeetingStore _meetingStore;
   late ReactionDisposer _roleChangerequestDisposer;
+  late ReactionDisposer _errorDisposer;
 
   @override
   void initState() {
@@ -45,6 +48,21 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
     _roleChangerequestDisposer = reaction(
         (_) => _meetingStore.roleChangeRequest,
         (event) => {showRoleChangeDialog(event)});
+    _errorDisposer = reaction((_) => _meetingStore.error,
+        (event) => {UtilityComponents.showSnackBarWithString((event as HMSError).description,context)});
+    reaction(
+        (_) => _meetingStore.reconnected,
+        (event) => {
+              if ((event as bool) == true)
+                UtilityComponents.showSnackBarWithString("reconnected",context),
+              _meetingStore.reconnected = false
+            });
+    reaction(
+        (_) => _meetingStore.reconnecting,
+        (event) => {
+              if ((event as bool) == true)
+                UtilityComponents.showSnackBarWithString("reconnecting",context),
+            });
     super.initState();
     initMeeting();
     checkButtons();
@@ -70,10 +88,10 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
     if (answer == "Ok") {
       debugPrint("OK accepted");
       _meetingStore.meetingController.acceptRoleChangeRequest();
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text("Accepted")));
+      UtilityComponents.showSnackBarWithString((event as HMSError).description,context);
     }
   }
+
 
   Future<dynamic> _onBackPressed() {
     return showDialog(
@@ -99,6 +117,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
   @override
   void dispose() {
     _roleChangerequestDisposer.reaction.dispose();
+    _errorDisposer.reaction.dispose();
     super.dispose();
   }
 

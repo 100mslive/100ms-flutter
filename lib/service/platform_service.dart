@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:collection';
 
 import 'package:flutter/services.dart';
 import 'package:hmssdk_flutter/common/platform_methods.dart';
@@ -99,7 +100,8 @@ class PlatformService {
               method, {'track': track, 'peer': peer, 'update': update});
           break;
         case HMSUpdateListenerMethod.onError:
-          HMSError error = HMSError.fromMap(data['error']);
+
+          HMSError error = HMSError.fromMap(data['error'] as Map);
           notifyMeetingListeners(method, {'error': error});
           break;
         case HMSUpdateListenerMethod.onMessage:
@@ -156,6 +158,10 @@ class PlatformService {
           notifyPreviewListeners(
               method, {'room': room, 'local_tracks': tracks});
           break;
+        case HMSPreviewUpdateListenerMethod.onError:
+          HMSError? error = HMSError.fromMap(event.data["error"] as Map);
+          notifyPreviewListeners(method, {'error':error});
+          break;
         case HMSPreviewUpdateListenerMethod.unknown:
           break;
       }
@@ -169,6 +175,12 @@ class PlatformService {
         previewListeners.forEach((e) {
           e.onPreview(
               room: arguments['room'], localTracks: arguments['local_tracks']);
+        });
+        break;
+      case HMSPreviewUpdateListenerMethod.onError:
+        previewListeners.forEach((e) {
+          e.onError(
+              error: arguments["error"]);
         });
         break;
       case HMSPreviewUpdateListenerMethod.unknown:

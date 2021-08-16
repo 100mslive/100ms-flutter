@@ -5,15 +5,16 @@
 
 
 [![Documentation](https://img.shields.io/badge/Read-Documentation-blue)](https://docs.100ms.live/)
+[![Discord](https://img.shields.io/badge/Community-Join%20on%20Discord-blue)](https://discord.com/invite/kGdmszyzq2)
 [![Slack](https://img.shields.io/badge/Community-Join%20on%20Slack-blue)](https://join.slack.com/t/100mslive/shared_invite/zt-llwdnz11-vkb2RzptwacwXHO7UeY0CQ)
-[![Discord](https://img.shields.io/badge/Community-Join%20on%20Discord-blue)](https://discord.gg/F8cNgbjSaQ)
 [![Email](https://img.shields.io/badge/Contact-Know%20More-blue)](mailto:founders@100ms.live)
 
-# 100 ms Official Flutter sdk
-
+# 100ms Flutter SDK
 
 Here you will find everything you need to build experiences with video using 100ms iOS SDK. Dive into our SDKs, quick starts, add real-time video, voice, and screen sharing to your web and mobile applications.
 
+Download the Sample iOS app here: https://testflight.apple.com/join/Uhzebmut
+  
 1. [x] Join Meeting
 2. [x] Leave Meeting
 3. [x] Show peers with Audio/Video
@@ -257,7 +258,42 @@ When you(the local peer) receives a message from others(any remote peer), `  voi
  🏃‍♀️ Checkout the sample implementation in the [Example app folder](https://github.com/100mslive/100ms-flutter/tree/main/example).
 
 ```
+
+## 🚂 Setup Guide
+
+1. Sign up on https://dashboard.100ms.live/register & visit the Developer tab to access your credentials.
+
+2. Get familiarized with [Tokens & Security here](https://docs.100ms.live/ios/v2/foundation/Security-and-tokens)
+
+3. Complete the steps in [Auth Token Quick Start Guide](https://docs.100ms.live/ios/v2/guides/Token)
+
+4. Get the HMSSDK via [pub.dev](https://pub.dev/). Add the `hmssdk_flutter'` to your pubspec.yaml
+
+
+
 ## Android Integration
+
+Add following permissions in Android AndroidManifest.xml file
+
+```
+<uses-feature android:name="android.hardware.camera"/>
+
+    <uses-feature android:name="android.hardware.camera.autofocus"/>
+
+    <uses-permission android:name="android.permission.CAMERA"/>
+
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
+
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
+
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+
+    <uses-permission android:name="android.permission.BLUETOOTH"/>
+
+    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+```
 
 ## ☝️ Pre-requisites
 
@@ -270,15 +306,6 @@ The Android SDK supports Android API level 21 and higher. It is built for armeab
 
 ## iOS Integration
 
-## 🚂 Setup Guide
-
-  1. Sign up on https://dashboard.100ms.live/register & visit the Developer tab to access your credentials.
-  
-  2. Get familiarized with [Tokens & Security here](https://docs.100ms.live/ios/v2/foundation/Security-and-tokens)
-
-  3. Complete the steps in [Auth Token Quick Start Guide](https://docs.100ms.live/ios/v2/guides/Token)
-  
-  4. Get the HMSSDK via [pub.dev](https://pub.dev/). Add the `hmssdk_flutter'` to your pubspec.yaml
 
 Add following permissions in iOS Info.plist file
 ```

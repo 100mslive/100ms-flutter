@@ -2,12 +2,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:hmssdk_flutter/common/platform_methods.dart';
+import 'package:hmssdk_flutter/model/hms_error.dart';
 import 'package:hmssdk_flutter/service/platform_service.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/peer_item_organism.dart';
+import 'package:hmssdk_flutter_example/common/utilcomponents/UtilityComponents.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_page.dart';
 import 'package:hmssdk_flutter_example/preview/preview_controller.dart';
 import 'package:hmssdk_flutter_example/preview/preview_store.dart';
+import 'package:mobx/mobx.dart';
 
 class PreviewPage extends StatefulWidget {
   final String roomId;
@@ -33,6 +36,8 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver{
         PreviewController(roomId: widget.roomId, user: widget.user);
     super.initState();
     initPreview();
+    reaction((_) => _previewStore.error,
+            (event) => {UtilityComponents.showSnackBarWithString((event as HMSError).message,context)});
   }
 
   void initPreview() {

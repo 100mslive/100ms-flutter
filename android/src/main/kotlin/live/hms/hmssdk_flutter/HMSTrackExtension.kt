@@ -17,7 +17,7 @@ class HMSTrackExtension {
             return hashMap
         }
 
-        fun getSourceInString(source:String):String{
+        private fun getSourceInString(source:String):String{
             return when(source){
                 "REGULAR"->{
                     "kHMSTrackSourceRegular"
@@ -58,7 +58,7 @@ class HMSTrackExtension {
                 HMSTrackUpdate.TRACK_DESCRIPTION_CHANGED-> "trackDescriptionChanged"
                 HMSTrackUpdate.TRACK_ADDED-> "trackAdded"
                 else->{
-                    ""
+                    "defaultUpdate"
                 }
             }
         }

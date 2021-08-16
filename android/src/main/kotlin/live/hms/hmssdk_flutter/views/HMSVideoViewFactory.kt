@@ -20,7 +20,7 @@ class HMSVideoViewWidget(context: Context, id: Int, creationParams: Map<String?,
     override fun dispose() {}
 
     init {
-        Log.i("HMSVIdeo",peer.toString())
+        //Log.i("HMSVIdeo",peer.toString())
         renderVideo()
     }
 
@@ -30,7 +30,7 @@ class HMSVideoViewWidget(context: Context, id: Int, creationParams: Map<String?,
             val track=tracks.first {
                 it.trackId==trackId
             }
-            Log.i("renderVideo",track.toString())
+            //Log.i("renderVideo",track.toString())
             if(track!=null){
                 (track as HMSVideoTrack).addSink(hmsVideoView.surfaceViewRenderer)
                 return
@@ -59,8 +59,8 @@ class HMSVideoViewFactory(val plugin: HmssdkFlutterPlugin) : PlatformViewFactory
         val id=args!!["peer_id"] as? String
         val isLocal=args!!["is_local"] as? Boolean
         val trackId=args!!["track_id"] as? String
-        Log.i("onCreateHMSVideoView", "$isLocal $id")
-        Log.i("HMSVideoViewFactory",trackId.toString())
+       // Log.i("onCreateHMSVideoView", "$isLocal $id")
+       // Log.i("HMSVideoViewFactory",trackId.toString())
         val peer = if(isLocal==null || isLocal!!) plugin.getLocalPeer()
         else plugin.getPeerById(id!!)!!
         return HMSVideoViewWidget(context, viewId, creationParams,peer,trackId!!)

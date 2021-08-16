@@ -12,17 +12,13 @@ class HMSRoomExtension {
             hashMap.put("id",room.roomId )
             hashMap.put("name",room.name)
             hashMap.put("meta_data","")
-            //hashMap.put("local_peer", HMSPeerExtension.toDictionary(room.localPeer)!!)
 
             val args=ArrayList<Any>()
             room.peerList.forEach {
                 args.add(HMSPeerExtension.toDictionary(it)!!)
             }
             hashMap.put("peers",args)
-            Log.i("HMSROOMEXTENSION",hashMap.toString())
-
-
-           return hashMap
+            return hashMap
         }
     }
 }

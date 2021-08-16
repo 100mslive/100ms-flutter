@@ -94,7 +94,7 @@ class _HomePageState extends State<HomePage> {
                         context: context,
                         builder: (_) => UserNameDialogOrganism());
                     if (user.isNotEmpty)
-                      Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      Navigator.of(context).push(MaterialPageRoute(
                           builder: (_) => PreviewPage(
                                 roomId: roomIdController.text,
                                 user: user,
