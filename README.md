@@ -27,7 +27,7 @@ Here you will find everything you need to build experiences with video using 100
 
  1. In project root, run `flutter pub get`
  2. Change directory to `example` folder, run `flutter packages pub run build_runner build --delete-conflicting-outputs`
- 3. Run either `flutter build ios` OR `flutter build android`
+ 3. Run either `flutter build ios` OR `flutter build apk`
  4. Finally, `flutter run`
 
 ## 🧐 Key Concepts
