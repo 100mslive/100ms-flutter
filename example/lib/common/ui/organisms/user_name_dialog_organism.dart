@@ -23,7 +23,7 @@ class _UserNameDialogOrganismState extends State<UserNameDialogOrganism> {
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(16)),
                   ),
-                  hintText: 'e.g. Vivek'),
+                  hintText: 'Enter your name'),
             ),
           ],
         ),

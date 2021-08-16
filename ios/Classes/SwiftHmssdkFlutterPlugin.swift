@@ -73,7 +73,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         let data:[String:Any]=[
             "event_name":"on_update_room",
             "data":[
-                "name":"Vivek"
+                "name":"On Update Room"
             ]
         ]
         eventSink?(data)
@@ -206,7 +206,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         let data:[String:Any]=[
             "event_name":"on_re_connecting",
             "data":[
-                "name":"Vivek"
+                "name":"on Reconnecting"
             ]
         ]
         eventSink?(data)
@@ -217,7 +217,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         let data:[String:Any]=[
             "event_name":"on_re_connected",
             "data":[
-                "name":"Vivek"
+                "name":"onReconnected"
             ]
         ]
         eventSink?(data)
