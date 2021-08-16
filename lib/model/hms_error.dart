@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:hmssdk_flutter/model/hms_error_code.dart';
 
 class HMSError {
@@ -24,11 +26,11 @@ class HMSError {
     HMSErrorCode? code;
 
     if (map.containsKey('code')) {
-      code = HMSErrorCode(errorCode: map['code']);
+      code = HMSErrorCode(errorCode: map['code'].toString());
     }
 
     return HMSError(
-      id: map['id'] ?? map['name'] ?? '',
+      id: map["id"]??map['name'] ?? '',
       code: code,
       message: map['message'],
       action: map['action'],

@@ -35,6 +35,10 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
   bool isVideoOn = true;
   @observable
   bool isMicOn = true;
+  @observable
+  bool reconnecting=false;
+  @observable
+  bool reconnected=false;
 
   late MeetingController meetingController;
 
@@ -213,12 +217,13 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
 
   @override
   void onReconnecting() {
-    print('on reconnecting');
+    reconnecting=true;
   }
 
   @override
   void onReconnected() {
-    print('on reconnected');
+    reconnecting=false;
+    reconnected=true;
   }
 
   void changeRole(
