@@ -16,6 +16,8 @@ import 'package:hmssdk_flutter_example/meeting/meeting_controller.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:mobx/mobx.dart';
 
+import 'meeting_participants_list.dart';
+
 class MeetingPage extends StatefulWidget {
   final String roomId;
   final MeetingFlow flow;
@@ -45,11 +47,19 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
         (event) => {showRoleChangeDialog(event)});
     super.initState();
     initMeeting();
+    checkButtons();
   }
 
   void initMeeting() {
     _meetingStore.joinMeeting();
     _meetingStore.startListen();
+  }
+
+  void checkButtons() async {
+    _meetingStore.isVideoOn =
+        !(await _meetingStore.meetingController.isVideoMute(null));
+    _meetingStore.isMicOn =
+        !(await _meetingStore.meetingController.isAudioMute(null));
   }
 
   void showRoleChangeDialog(event) async {
@@ -65,6 +75,27 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
     }
   }
 
+  Future<dynamic> _onBackPressed() {
+    return showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+              title: Text("Do You Want to leave meeting"),
+              actions: [
+                FlatButton(
+                    onPressed: () => {
+                          _meetingStore.meetingController.leaveMeeting(),
+                          Navigator.pop(context, true),
+                          Navigator.pushReplacement(context,
+                              MaterialPageRoute(builder: (ctx) => HomePage()))
+                        },
+                    child: Text("Yes")),
+                FlatButton(
+                    onPressed: () => Navigator.pop(context, false),
+                    child: Text("No")),
+              ],
+            ));
+  }
+
   @override
   void dispose() {
     _roleChangerequestDisposer.reaction.dispose();
@@ -73,159 +104,173 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.roomId),
-        actions: [
-          Observer(
-              builder: (_) => IconButton(
-                    onPressed: () {
-                      _meetingStore.toggleSpeaker();
-                    },
-                    icon: Icon(_meetingStore.isSpeakerOn
-                        ? Icons.volume_up
-                        : Icons.volume_off),
-                  )),
-          IconButton(
-            onPressed: () async {
-              _meetingStore.toggleCamera();
-            },
-            icon: Icon(Icons.switch_camera),
-          ),
-          IconButton(
-            onPressed: () {},
-            icon: Icon(CupertinoIcons.settings),
-          )
-        ],
-      ),
-      body: Center(
-        child: Column(
-          children: [
-            Observer(builder: (_) {
-              late bool isVideoMuted;
-              if (_meetingStore.isVideoOn) {
-                isVideoMuted = (_meetingStore
-                            .trackStatus[_meetingStore.localPeer?.peerId] ??
-                        '') ==
-                    HMSTrackUpdate.trackMuted;
-              } else {
-                isVideoMuted = true;
-              }
-              if (_meetingStore.localPeer != null) {
-                return SizedBox(
-                  width: double.infinity,
-                  height: MediaQuery.of(context).size.height / 2,
-                  child: PeerItemOrganism(
-                      track: HMSTrack(
-                        trackDescription: '',
-                        source: HMSTrackSource.kHMSTrackSourceRegular,
-                        kind: HMSTrackKind.unknown,
-                        trackId: '',
-                        peer: _meetingStore.localPeer,
-                      ),
-                      isVideoMuted: isVideoMuted),
+    return WillPopScope(
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(widget.roomId),
+          actions: [
+            Observer(
+                builder: (_) => IconButton(
+                      onPressed: () {
+                        _meetingStore.toggleSpeaker();
+                      },
+                      icon: Icon(_meetingStore.isSpeakerOn
+                          ? Icons.volume_up
+                          : Icons.volume_off),
+                    )),
+            IconButton(
+              onPressed: () async {
+                if (_meetingStore.isVideoOn) _meetingStore.toggleCamera();
+              },
+              icon: Icon(Icons.switch_camera),
+            ),
+            IconButton(
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => ParticipantsList(
+                      meetingStore: _meetingStore,
+                    ),
+                  ),
                 );
-              } else {
-                return Text('No Local peer');
-              }
-            }),
-            Flexible(
-              child: Observer(
-                builder: (_) {
-                  if (!_meetingStore.isMeetingStarted) return SizedBox();
-                  if (_meetingStore.tracks.isEmpty)
-                    return Text('Waiting for other to join!');
-                  List<HMSTrack> filteredList = _meetingStore.tracks;
-
-                  return GridView(
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2),
-                    children: List.generate(filteredList.length, (index) {
-                      return InkWell(
-                        onLongPress: () {
-                          showDialog(
-                              context: context,
-                              builder: (_) => ChangeRoleOptionDialog(
-                                    peerName:
-                                        filteredList[index].peer?.name ?? '',
-                                    getRoleFunction: _meetingStore.getRoles(),
-                                    changeRole: (role, forceChange) {
-                                      Navigator.pop(context);
-                                      _meetingStore.changeRole(
-                                          peerId: filteredList[index]
-                                                  .peer
-                                                  ?.peerId ??
-                                              '',
-                                          roleName: role.name,
-                                          forceChange: forceChange);
-                                    },
-                                  ));
-                        },
-                        child: PeerItemOrganism(
-                            track: filteredList[index],
-                            isVideoMuted: (_meetingStore.trackStatus[
-                                        filteredList[index].peer?.peerId] ??
-                                    '') ==
-                                HMSTrackUpdate.trackMuted),
-                      );
-                    }),
+              },
+              icon: Icon(CupertinoIcons.person_3_fill),
+            )
+          ],
+        ),
+        body: Center(
+          child: Column(
+            children: [
+              Observer(builder: (_) {
+                late bool isVideoMuted;
+                if (_meetingStore.isVideoOn) {
+                  isVideoMuted = (_meetingStore
+                              .trackStatus[_meetingStore.localPeer?.peerId] ??
+                          '') ==
+                      HMSTrackUpdate.trackMuted;
+                } else {
+                  isVideoMuted = true;
+                }
+                if (_meetingStore.localPeer != null) {
+                  return SizedBox(
+                    width: double.infinity,
+                    height: MediaQuery.of(context).size.height / 2,
+                    child: PeerItemOrganism(
+                        track: HMSTrack(
+                          trackDescription: '',
+                          source: HMSTrackSource.kHMSTrackSourceRegular,
+                          kind: HMSTrackKind.unknown,
+                          trackId: '',
+                          peer: _meetingStore.localPeer,
+                        ),
+                        isVideoMuted: isVideoMuted),
                   );
-                },
+                } else {
+                  return Text('No Local peer');
+                }
+              }),
+              Flexible(
+                child: Observer(
+                  builder: (_) {
+                    if (!_meetingStore.isMeetingStarted) return SizedBox();
+                    if (_meetingStore.tracks.isEmpty)
+                      return Text('Waiting for other to join!');
+                    List<HMSTrack> filteredList = _meetingStore.tracks;
+
+                    return GridView(
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2),
+                      children: List.generate(filteredList.length, (index) {
+                        return InkWell(
+                          onLongPress: () {
+                            showDialog(
+                                context: context,
+                                builder: (_) => ChangeRoleOptionDialog(
+                                      peerName:
+                                          filteredList[index].peer?.name ?? '',
+                                      getRoleFunction: _meetingStore.getRoles(),
+                                      changeRole: (role, forceChange) {
+                                        Navigator.pop(context);
+                                        _meetingStore.changeRole(
+                                            peerId: filteredList[index]
+                                                    .peer
+                                                    ?.peerId ??
+                                                '',
+                                            roleName: role.name,
+                                            forceChange: forceChange);
+                                      },
+                                    ));
+                          },
+                          child: PeerItemOrganism(
+                              track: filteredList[index],
+                              isVideoMuted: (_meetingStore.trackStatus[
+                                          filteredList[index].peer?.peerId] ??
+                                      '') ==
+                                  HMSTrackUpdate.trackMuted),
+                        );
+                      }),
+                    );
+                  },
+                ),
               ),
+            ],
+          ),
+        ),
+        bottomNavigationBar: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Container(
+              padding: EdgeInsets.all(16),
+              child: Observer(builder: (context) {
+                return IconButton(
+                    tooltip: 'Video',
+                    onPressed: () {
+                      _meetingStore.toggleVideo();
+                    },
+                    icon: Icon(_meetingStore.isVideoOn
+                        ? Icons.videocam
+                        : Icons.videocam_off));
+              }),
+            ),
+            Container(
+              padding: EdgeInsets.all(16),
+              child: Observer(builder: (context) {
+                return IconButton(
+                    tooltip: 'Audio',
+                    onPressed: () {
+                      _meetingStore.toggleAudio();
+                    },
+                    icon: Icon(
+                        _meetingStore.isMicOn ? Icons.mic : Icons.mic_off));
+              }),
+            ),
+            Container(
+              padding: EdgeInsets.all(16),
+              child: IconButton(
+                  tooltip: 'Chat',
+                  onPressed: () {
+                    chatMessages(context, _meetingStore);
+                  },
+                  icon: Icon(Icons.chat_bubble)),
+            ),
+            Container(
+              padding: EdgeInsets.all(16),
+              child: IconButton(
+                  tooltip: 'Leave',
+                  onPressed: () {
+                    _meetingStore.meetingController.leaveMeeting();
+                    Navigator.pushReplacement(context,
+                        MaterialPageRoute(builder: (ctx) => HomePage()));
+                  },
+                  icon: Icon(Icons.call_end)),
             ),
           ],
         ),
       ),
-      bottomNavigationBar: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Container(
-            padding: EdgeInsets.all(16),
-            child: Observer(builder: (context) {
-              return IconButton(
-                  tooltip: 'Video',
-                  onPressed: () {
-                    _meetingStore.toggleVideo();
-                  },
-                  icon: Icon(_meetingStore.isVideoOn
-                      ? Icons.videocam
-                      : Icons.videocam_off));
-            }),
-          ),
-          Container(
-            padding: EdgeInsets.all(16),
-            child: Observer(builder: (context) {
-              return IconButton(
-                  tooltip: 'Audio',
-                  onPressed: () {
-                    _meetingStore.toggleAudio();
-                  },
-                  icon:
-                      Icon(_meetingStore.isMicOn ? Icons.mic : Icons.mic_off));
-            }),
-          ),
-          Container(
-            padding: EdgeInsets.all(16),
-            child: IconButton(
-                tooltip: 'Chat',
-                onPressed: () {
-                  chatMessages(context, _meetingStore);
-                },
-                icon: Icon(Icons.chat_bubble)),
-          ),
-          Container(
-            padding: EdgeInsets.all(16),
-            child: IconButton(
-                tooltip: 'Leave',
-                onPressed: () {
-                  _meetingStore.meetingController.leaveMeeting();
-                  Navigator.pushReplacement(
-                      context, MaterialPageRoute(builder: (ctx) => HomePage()));
-                },
-                icon: Icon(Icons.call_end)),
-          ),
-        ],
-      ),
+      onWillPop: () async {
+        bool ans = await _onBackPressed();
+        return ans;
+      },
     );
   }
 

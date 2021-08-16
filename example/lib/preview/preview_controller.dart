@@ -7,7 +7,7 @@ import 'package:uuid/uuid.dart';
 class PreviewController {
   final String roomId;
   final String user;
-  HMSSDKInteractor _hmsSdkInteractor;
+  HMSSDKInteractor? _hmsSdkInteractor;
 
   PreviewController({required this.roomId, required this.user})
       : _hmsSdkInteractor = HMSSDKInteractor();
@@ -17,10 +17,18 @@ class PreviewController {
     HMSConfig config = HMSConfig(
         userId: Uuid().v1(), roomId: roomId, authToken: token, userName: user);
 
-    _hmsSdkInteractor.previewVideo(config: config);
+    _hmsSdkInteractor?.previewVideo(config: config);
   }
 
   void startListen(HMSPreviewListener listener) {
-    _hmsSdkInteractor.addPreviewListener(listener);
+    _hmsSdkInteractor?.addPreviewListener(listener);
+  }
+
+  void stopCapturing(){
+    _hmsSdkInteractor?.stopCapturing();
+  }
+
+  void startCapturing(){
+    _hmsSdkInteractor?.startCapturing();
   }
 }

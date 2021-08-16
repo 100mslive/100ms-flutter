@@ -20,7 +20,7 @@ class HMSVideoView(context: Context) : LinearLayout(context,null) {
         surfaceViewRenderer.init(SharedEglContext.context,null)
     }
 
-    fun setVideoTrack(hmsPeer: HMSPeer){
+    fun setVideoTrack(hmsPeer: HMSPeer?){
         if(hmsPeer!=null)
             hmsPeer.videoTrack!!.addSink(surfaceViewRenderer)
     }
