@@ -5,15 +5,16 @@
 
 
 [![Documentation](https://img.shields.io/badge/Read-Documentation-blue)](https://docs.100ms.live/)
+[![Discord](https://img.shields.io/badge/Community-Join%20on%20Discord-blue)](https://discord.com/invite/kGdmszyzq2)
 [![Slack](https://img.shields.io/badge/Community-Join%20on%20Slack-blue)](https://join.slack.com/t/100mslive/shared_invite/zt-llwdnz11-vkb2RzptwacwXHO7UeY0CQ)
-[![Discord](https://img.shields.io/badge/Community-Join%20on%20Discord-blue)](https://discord.gg/F8cNgbjSaQ)
 [![Email](https://img.shields.io/badge/Contact-Know%20More-blue)](mailto:founders@100ms.live)
 
-# 100 ms Official Flutter sdk
-
+# 100ms Flutter SDK
 
 Here you will find everything you need to build experiences with video using 100ms iOS SDK. Dive into our SDKs, quick starts, add real-time video, voice, and screen sharing to your web and mobile applications.
 
+Download the Sample iOS app here: https://testflight.apple.com/join/Uhzebmut
+  
 1. [x] Join Meeting
 2. [x] Leave Meeting
 3. [x] Show peers with Audio/Video
