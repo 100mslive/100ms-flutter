@@ -17,6 +17,8 @@ class HMSVideoView(context: Context) : LinearLayout(context,null) {
         val view=View.inflate(context,R.layout.hms_video_view,this)
 
         surfaceViewRenderer=view.findViewById(R.id.surfaceViewRenderer)
+        surfaceViewRenderer.setEnableHardwareScaler(true)
+        surfaceViewRenderer.setScalingType(RendererCommon.ScalingType.SCALE_ASPECT_FIT)
         surfaceViewRenderer.init(SharedEglContext.context,null)
     }
 
