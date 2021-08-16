@@ -17,14 +17,14 @@ class HMSRoleExtension {
             val hashMap=HashMap<String,Any?>()
             if(role==null)return null
 
-            hashMap.put("name",role?.name?:"unknown")
-            hashMap.put("publish_settings",PublishParamsExtension.toDictionary(role?.publishParams?:null))
-            hashMap.put("subscribe_settings",SubscribeSettings.toDictionary(role?.subscribeParams?:null))
-            hashMap.put("priority", role?.priority!!)
-            hashMap.put("general_permissions",null)
-            hashMap.put("internal_plugins",null)
-            hashMap.put( "external_plugins",null)
-            hashMap.put( "permissions",PermissionParamsExtension.toDictionary(role.permission?:null))
+            hashMap["name"] = role?.name?:"unknown"
+            hashMap["publish_settings"] = PublishParamsExtension.toDictionary(role?.publishParams?:null)
+            hashMap["subscribe_settings"] = SubscribeSettings.toDictionary(role?.subscribeParams?:null)
+            hashMap["priority"] = role?.priority!!
+            hashMap["general_permissions"] = null
+            hashMap["internal_plugins"] = null
+            hashMap["external_plugins"] = null
+            hashMap["permissions"] = PermissionParamsExtension.toDictionary(role.permission?:null)
 
             return hashMap
         }

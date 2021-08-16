@@ -101,6 +101,36 @@ mixin _$MeetingStore on MeetingStoreBase, Store {
     });
   }
 
+  final _$reconnectingAtom = Atom(name: 'MeetingStoreBase.reconnecting');
+
+  @override
+  bool get reconnecting {
+    _$reconnectingAtom.reportRead();
+    return super.reconnecting;
+  }
+
+  @override
+  set reconnecting(bool value) {
+    _$reconnectingAtom.reportWrite(value, super.reconnecting, () {
+      super.reconnecting = value;
+    });
+  }
+
+  final _$reconnectedAtom = Atom(name: 'MeetingStoreBase.reconnected');
+
+  @override
+  bool get reconnected {
+    _$reconnectedAtom.reportRead();
+    return super.reconnected;
+  }
+
+  @override
+  set reconnected(bool value) {
+    _$reconnectedAtom.reportWrite(value, super.reconnected, () {
+      super.reconnected = value;
+    });
+  }
+
   final _$peersAtom = Atom(name: 'MeetingStoreBase.peers');
 
   @override
@@ -379,6 +409,8 @@ roleChangeRequest: ${roleChangeRequest},
 isMeetingStarted: ${isMeetingStarted},
 isVideoOn: ${isVideoOn},
 isMicOn: ${isMicOn},
+reconnecting: ${reconnecting},
+reconnected: ${reconnected},
 peers: ${peers},
 localPeer: ${localPeer},
 tracks: ${tracks},

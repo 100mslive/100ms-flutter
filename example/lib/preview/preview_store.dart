@@ -15,10 +15,13 @@ abstract class PreviewStoreBase with Store implements HMSPreviewListener {
 
   @observable
   List<HMSTrack> localTracks = [];
+  @observable
+  HMSError? error;
 
   @override
   void onError({required HMSError error}) {
-    print(error);
+    print("previewError ${error.toString()}");
+    updateError(error);
   }
 
   @override
@@ -38,5 +41,10 @@ abstract class PreviewStoreBase with Store implements HMSPreviewListener {
 
   void startPreview() {
     previewController.startPreview();
+  }
+
+  @action
+  void updateError(HMSError error){
+    this.error=error;
   }
 }

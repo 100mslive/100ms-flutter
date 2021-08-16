@@ -257,7 +257,42 @@ When you(the local peer) receives a message from others(any remote peer), `  voi
  🏃‍♀️ Checkout the sample implementation in the [Example app folder](https://github.com/100mslive/100ms-flutter/tree/main/example).
 
 ```
+
+## 🚂 Setup Guide
+
+1. Sign up on https://dashboard.100ms.live/register & visit the Developer tab to access your credentials.
+
+2. Get familiarized with [Tokens & Security here](https://docs.100ms.live/ios/v2/foundation/Security-and-tokens)
+
+3. Complete the steps in [Auth Token Quick Start Guide](https://docs.100ms.live/ios/v2/guides/Token)
+
+4. Get the HMSSDK via [pub.dev](https://pub.dev/). Add the `hmssdk_flutter'` to your pubspec.yaml
+
+
+
 ## Android Integration
+
+Add following permissions in Android AndroidManifest.xml file
+
+```
+<uses-feature android:name="android.hardware.camera"/>
+
+    <uses-feature android:name="android.hardware.camera.autofocus"/>
+
+    <uses-permission android:name="android.permission.CAMERA"/>
+
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
+
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
+
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+
+    <uses-permission android:name="android.permission.BLUETOOTH"/>
+
+    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+```
 
 ## ☝️ Pre-requisites
 
@@ -270,15 +305,6 @@ The Android SDK supports Android API level 21 and higher. It is built for armeab
 
 ## iOS Integration
 
-## 🚂 Setup Guide
-
-  1. Sign up on https://dashboard.100ms.live/register & visit the Developer tab to access your credentials.
-  
-  2. Get familiarized with [Tokens & Security here](https://docs.100ms.live/ios/v2/foundation/Security-and-tokens)
-
-  3. Complete the steps in [Auth Token Quick Start Guide](https://docs.100ms.live/ios/v2/guides/Token)
-  
-  4. Get the HMSSDK via [pub.dev](https://pub.dev/). Add the `hmssdk_flutter'` to your pubspec.yaml
 
 Add following permissions in iOS Info.plist file
 ```

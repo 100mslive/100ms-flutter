@@ -7,12 +7,12 @@ class PublishParamsExtension {
     companion object{
         fun toDictionary(publishParams: PublishParams?):HashMap<String,Any?>?{
             val args=HashMap<String,Any?>()
-            Log.i("publishParamsExtensionF",publishParams.toString())
+            //Log.i("publishParamsExtensionF",publishParams.toString())
             if(publishParams==null)return null
             args.put("audio",AudioParamsExtension.toDictionary(publishParams?.audio!!))
             args.put("video",VideoParamsExtension.toDictionary(publishParams?.video!!))
             args.put("screen",VideoParamsExtension.toDictionary(publishParams?.screen!!))
-            Log.i("publishParamsExtensionS",args.toString())
+            //Log.i("publishParamsExtensionS",args.toString())
             return args
         }
     }
