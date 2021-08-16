@@ -178,7 +178,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         let data:[String:Any]=[
             "event_name":"on_update_speaker",
             "data":[
-                "name":"Vivek"
+                "name":"On Update Speaker"
             ]
         ]
         eventSink?(data)
