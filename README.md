@@ -11,19 +11,20 @@
 
 # 100ms Flutter SDK
 
-Here you will find everything you need to build experiences with video using 100ms iOS SDK. Dive into our SDKs, quick starts, add real-time video, voice, and screen sharing to your web and mobile applications.
+Here you will find everything you need to build experiences with video using 100ms iOS/Android SDK. Dive into our SDKs, quick starts, add real-time video, voice, and screen sharing to your web and mobile applications.
 
 Download the Sample iOS app here: https://testflight.apple.com/join/Uhzebmut
   
-1. [x] Join Meeting
-2. [x] Leave Meeting
-3. [x] Show peers with Audio/Video
-4. [x] Change roles for a peer
-5. [x] Mute/Unmute audio
-6. [x] On/Off Video
-7. [x] Switch between front/back cameras
-8. [x] Custom View for video [plug and play]
-
+1. [x] Generating Auth Token
+2. [x] Join Meeting
+3. [x] Leave Meeting
+4. [x] Show peers with Audio/Video
+5. [x] Change roles for a peer
+6. [x] Mute/Unmute audio
+7. [x] On/Off Video
+8. [x] Switch between front/back cameras
+9. [x] Custom View for video [plug and play]
+10. [x] Preview
  ## How to run project
 
  1. In project root, run `flutter pub get`
@@ -38,6 +39,25 @@ Download the Sample iOS app here: https://testflight.apple.com/join/Uhzebmut
 - `Peer` - A peer represents all participants connected to a room. Peers can be "local" or "remote"
 - `Broadcast` - A local peer can send any message/data to all remote peers in the room 
 
+
+## Generating Auth Token
+  
+  Auth Token is used in HMSConfig instance to setup configuration.
+  So you need to make an HTTP request. you can use any package we are using `http` package.
+  You will get your token endpoint at your 100ms dashboard and append `api/token` to that endpoint and make an http post request.
+  
+  Example:
+    ```
+      http.Response response = await http.post(Uri.parse(Constant.getTokenURL),
+              body: {'room_id': room, 'user_id': user, 'role': Constant.defaultRole});
+    ```
+  after generating token parse it using json.
+    ```
+        var body = json.decode(response.body);
+        String token = body['token'];
+    ```
+  You will need this token later explained below.   
+    
 ## ♻️ Setup event listeners
 
 100ms SDK provides callbacks to the client app about any change or update happening in the room after a user has joined by implementing `HMSUpdateListener`. These updates can be used to render the video on screen or to display other info regarding the room.
@@ -158,6 +178,10 @@ To join a room created by following the steps described in the above section, cl
 
 
 ```
+ `userId`: should be unique we are using `Uuid` package to generate one.
+ `roomId`: id of the room which you want to join.
+ `token`:  follow the above step 1 to generate token.
+ `userName`: your name using which you want to join the room.   
 
 ## 🙏 Join a room
 
@@ -258,6 +282,24 @@ When you(the local peer) receives a message from others(any remote peer), `  voi
  🏃‍♀️ Checkout the sample implementation in the [Example app folder](https://github.com/100mslive/100ms-flutter/tree/main/example).
 
 ```
+
+## 🎞 Preview
+  You can use our preview feature to unmute/mute audio/video before joining the room.
+  
+  You can implement your own preview listener using this `abstract class HMSPreviewListener`
+
+``` 
+  abstract class HMSPreviewListener {
+
+    //you will get all error updates here
+    void onError({required HMSError error});
+
+    //here you will get room instance where you are going to join and your own local tracks to render the video by checking the type of trackKind and then using the 
+    //above mentioned VideoView widget
+   void onPreview({required HMSRoom room, required List<HMSTrack> localTracks});
+  }
+```
+
 
 ## 🚂 Setup Guide
 
