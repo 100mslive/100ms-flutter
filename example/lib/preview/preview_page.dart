@@ -25,7 +25,7 @@ class PreviewPage extends StatefulWidget {
   _PreviewPageState createState() => _PreviewPageState();
 }
 
-class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver{
+class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
   late PreviewStore _previewStore;
 
   @override
@@ -36,8 +36,12 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver{
         PreviewController(roomId: widget.roomId, user: widget.user);
     super.initState();
     initPreview();
-    reaction((_) => _previewStore.error,
-            (event) => {UtilityComponents.showSnackBarWithString((event as HMSError).message,context)});
+    reaction(
+        (_) => _previewStore.error,
+        (event) => {
+              UtilityComponents.showSnackBarWithString(
+                  (event as HMSError).message, context)
+            });
   }
 
   void initPreview() {
@@ -133,25 +137,19 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver{
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-
     super.didChangeAppLifecycleState(state);
-    if(state == AppLifecycleState.resumed){
-      if(videoOn){
+    if (state == AppLifecycleState.resumed) {
+      if (videoOn) {
         _previewStore.previewController.startCapturing();
       }
-    }
-
-    else if(state == AppLifecycleState.paused){
-      if(videoOn){
+    } else if (state == AppLifecycleState.paused) {
+      if (videoOn) {
         _previewStore.previewController.stopCapturing();
       }
-    }
-
-    else if(state == AppLifecycleState.inactive){
-      if(videoOn){
+    } else if (state == AppLifecycleState.inactive) {
+      if (videoOn) {
         _previewStore.previewController.stopCapturing();
       }
     }
   }
-
 }

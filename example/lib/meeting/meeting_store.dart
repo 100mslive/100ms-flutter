@@ -36,9 +36,9 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
   @observable
   bool isMicOn = true;
   @observable
-  bool reconnecting=false;
+  bool reconnecting = false;
   @observable
-  bool reconnected=false;
+  bool reconnected = false;
 
   late MeetingController meetingController;
 
@@ -92,7 +92,6 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
 
   @action
   void addPeer(HMSPeer peer) {
-
     if (!peers.contains(peer)) peers.add(peer);
   }
 
@@ -109,8 +108,6 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
 
   @action
   void addTrack(HMSTrack track) {
-
-
     if (!tracks.contains(track))
       tracks.add(track);
     else {
@@ -186,7 +183,7 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
       {required HMSTrack track,
       required HMSTrackUpdate trackUpdate,
       required HMSPeer peer}) {
-    if(track.kind==HMSTrackKind.kHMSTrackKindAudio)return;
+    if (track.kind == HMSTrackKind.kHMSTrackKindAudio) return;
     trackStatus[peer.peerId] = trackUpdate;
     if (peer.isLocal) {
       localPeer = peer;
@@ -217,13 +214,13 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
 
   @override
   void onReconnecting() {
-    reconnecting=true;
+    reconnecting = true;
   }
 
   @override
   void onReconnected() {
-    reconnecting=false;
-    reconnected=true;
+    reconnecting = false;
+    reconnected = true;
   }
 
   void changeRole(
@@ -278,7 +275,6 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
       HMSPeer peer, HMSTrackUpdate update, HMSTrack track) {
     print("onTrackUpdateFlutter ${track.toString()} ${update} update");
     switch (update) {
-
       case HMSTrackUpdate.trackAdded:
         if (track.kind == HMSTrackKind.kHMSTrackKindVideo) addTrack(track);
         break;

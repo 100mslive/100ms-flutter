@@ -95,13 +95,15 @@ class HMSMeeting {
     return roles;
   }
 
-  Future<bool> isAudioMute(HMSPeer? peer) async{
-    bool isMute=await PlatformService.invokeMethod(PlatformMethod.isAudioMute,arguments: {"peer_id":peer?.peerId??""});
+  Future<bool> isAudioMute(HMSPeer? peer) async {
+    bool isMute = await PlatformService.invokeMethod(PlatformMethod.isAudioMute,
+        arguments: {"peer_id": peer?.peerId ?? ""});
     return isMute;
   }
 
-  Future<bool> isVideoMute(HMSPeer? peer) async{
-    bool isMute=await PlatformService.invokeMethod(PlatformMethod.isVideoMute,arguments: {"peer_id":peer?.peerId??""});
+  Future<bool> isVideoMute(HMSPeer? peer) async {
+    bool isMute = await PlatformService.invokeMethod(PlatformMethod.isVideoMute,
+        arguments: {"peer_id": peer?.peerId ?? ""});
     return isMute;
   }
 }

@@ -44,7 +44,7 @@ abstract class PreviewStoreBase with Store implements HMSPreviewListener {
   }
 
   @action
-  void updateError(HMSError error){
-    this.error=error;
+  void updateError(HMSError error) {
+    this.error = error;
   }
 }

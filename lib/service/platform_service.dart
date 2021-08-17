@@ -100,7 +100,6 @@ class PlatformService {
               method, {'track': track, 'peer': peer, 'update': update});
           break;
         case HMSUpdateListenerMethod.onError:
-
           HMSError error = HMSError.fromMap(data['error'] as Map);
           notifyMeetingListeners(method, {'error': error});
           break;
@@ -160,7 +159,7 @@ class PlatformService {
           break;
         case HMSPreviewUpdateListenerMethod.onError:
           HMSError? error = HMSError.fromMap(event.data["error"] as Map);
-          notifyPreviewListeners(method, {'error':error});
+          notifyPreviewListeners(method, {'error': error});
           break;
         case HMSPreviewUpdateListenerMethod.unknown:
           break;
@@ -179,8 +178,7 @@ class PlatformService {
         break;
       case HMSPreviewUpdateListenerMethod.onError:
         previewListeners.forEach((e) {
-          e.onError(
-              error: arguments["error"]);
+          e.onError(error: arguments["error"]);
         });
         break;
       case HMSPreviewUpdateListenerMethod.unknown:

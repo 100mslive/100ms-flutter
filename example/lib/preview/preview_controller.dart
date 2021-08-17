@@ -24,11 +24,11 @@ class PreviewController {
     _hmsSdkInteractor?.addPreviewListener(listener);
   }
 
-  void stopCapturing(){
+  void stopCapturing() {
     _hmsSdkInteractor?.stopCapturing();
   }
 
-  void startCapturing(){
+  void startCapturing() {
     _hmsSdkInteractor?.startCapturing();
   }
 }

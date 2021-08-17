@@ -1,13 +1,13 @@
-<p align="center" >
-  <a href="https://100ms.live/">
-  <img src="https://github.com/100mslive/100ms-flutter/blob/main/100ms-logo.png" title="100ms logo" float=left>
-</p>
+<a href="https://100ms.live/">
+<img src="https://github.com/100mslive/100ms-flutter/blob/develop/100ms.gif" height=256/> 
+<img src="https://github.com/100mslive/100ms-flutter/blob/develop/100ms.svg" title="100ms logo" float=center height=256>
+</a>
 
 [![Pub Version](https://img.shields.io/pub/v/hmssdk_flutter)](https://pub.dev/packages/hmssdk_flutter)
 [![Documentation](https://img.shields.io/badge/Read-Documentation-blue)](https://docs.100ms.live/)
 [![Discord](https://img.shields.io/badge/Community-Join%20on%20Discord-blue)](https://discord.com/invite/kGdmszyzq2)
 [![Slack](https://img.shields.io/badge/Community-Join%20on%20Slack-blue)](https://join.slack.com/t/100mslive/shared_invite/zt-llwdnz11-vkb2RzptwacwXHO7UeY0CQ)
-[![Email](https://img.shields.io/badge/Contact-Know%20More-blue)](mailto:founders@100ms.live)
+[![Register](https://img.shields.io/badge/Contact-Know%20More-blue)](https://dashboard.100ms.live/register)
 
 # 100ms Flutter SDK 🎉
 
@@ -124,7 +124,7 @@ abstract class HMSUpdateListener {
 
   /// This is called every 1 second with list of active speakers
   ///
-  /// ## A HMSSpeaker object contains -
+  ///    A HMSSpeaker object contains -
   ///    - peerId: the peer identifier of HMSPeer who is speaking
   ///    - trackId: the track identifier of HMSTrack which is emitting audio
   ///    - audioLevel: a number within range 1-100 indicating the audio volume
@@ -365,7 +365,3 @@ Add following permissions in iOS Info.plist file
 <key>NSLocalNetworkUsageDescription</key>
 <string>{YourAppName} App wants to use your local network</string>
 ```
-
-## License
-
-MIT

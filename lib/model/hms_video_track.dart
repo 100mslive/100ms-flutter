@@ -23,7 +23,7 @@ class HMSVideoTrack extends HMSTrack {
   @override
   Future<bool> isMute() async {
     //TODO:: make platform call
-    return await PlatformService.invokeMethod(PlatformMethod.isVideoMute,arguments: {"peer_id":peer!.peerId,"is_local":peer!.isLocal});
-
+    return await PlatformService.invokeMethod(PlatformMethod.isVideoMute,
+        arguments: {"peer_id": peer!.peerId, "is_local": peer!.isLocal});
   }
 }
