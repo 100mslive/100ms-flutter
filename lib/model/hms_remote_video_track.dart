@@ -1,5 +1,4 @@
-import 'package:hmssdk_flutter/enum/hms_track_kind.dart';
-import 'package:hmssdk_flutter/enum/hms_track_source.dart';
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter/model/hms_video_track.dart';
 
 import 'hms_video_track_setting.dart';

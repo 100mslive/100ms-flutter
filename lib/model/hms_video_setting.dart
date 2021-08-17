@@ -1,4 +1,4 @@
-import 'package:hmssdk_flutter/enum/hms_video_codec.dart';
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 class HMSVideoSetting {
   final int bitRate;
