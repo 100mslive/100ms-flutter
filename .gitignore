@@ -8,3 +8,5 @@ build/
 
 *.g.dart
 *.idea
+private_key.pepk
+./example/android/app/100msKeyStore
