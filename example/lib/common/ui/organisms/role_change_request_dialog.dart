@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hmssdk_flutter/model/hms_role_change_request.dart';
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 class RoleChangeDialogOrganism extends StatefulWidget {
   final HMSRoleChangeRequest roleChangeRequest;

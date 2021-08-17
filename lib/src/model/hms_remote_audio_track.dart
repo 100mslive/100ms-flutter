@@ -1,6 +1,5 @@
-import 'package:hmssdk_flutter/enum/hms_track_kind.dart';
-import 'package:hmssdk_flutter/enum/hms_track_source.dart';
-import 'package:hmssdk_flutter/model/hms_audio_track.dart';
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+
 import 'hms_audio_track_setting.dart';
 
 class HMSRemoteAudioTrack extends HMSAudioTrack {

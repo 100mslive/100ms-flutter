@@ -1,6 +1,4 @@
-import 'package:hmssdk_flutter/exceptions/hms_in_sufficient_data.dart';
-import 'package:hmssdk_flutter/model/hms_peer.dart';
-import 'package:hmssdk_flutter/model/hms_role.dart';
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 class HMSRoleChangeRequest {
   final HMSRole suggestedRole;

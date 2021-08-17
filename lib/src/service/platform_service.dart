@@ -1,23 +1,8 @@
 import 'dart:async';
-import 'dart:collection';
 
 import 'package:flutter/services.dart';
-import 'package:hmssdk_flutter/common/platform_methods.dart';
-import 'package:hmssdk_flutter/enum/hms_peer_update.dart';
-import 'package:hmssdk_flutter/enum/hms_preview_update_listener_method.dart';
-import 'package:hmssdk_flutter/enum/hms_room_update.dart';
-import 'package:hmssdk_flutter/enum/hms_track_update.dart';
-import 'package:hmssdk_flutter/enum/hms_update_listener_method.dart';
-import 'package:hmssdk_flutter/model/hms_error.dart';
-import 'package:hmssdk_flutter/model/hms_message.dart';
-import 'package:hmssdk_flutter/model/hms_peer.dart';
-import 'package:hmssdk_flutter/model/hms_preview_listener.dart';
-import 'package:hmssdk_flutter/model/hms_role_change_request.dart';
-import 'package:hmssdk_flutter/model/hms_room.dart';
-import 'package:hmssdk_flutter/model/hms_speaker.dart';
-import 'package:hmssdk_flutter/model/hms_track.dart';
-import 'package:hmssdk_flutter/model/hms_update_listener.dart';
-import 'package:hmssdk_flutter/model/platform_method_response.dart';
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:hmssdk_flutter/src/common/platform_methods.dart';
 
 class PlatformService {
   static const MethodChannel _channel = const MethodChannel('hmssdk_flutter');

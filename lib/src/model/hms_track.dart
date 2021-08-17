@@ -1,6 +1,4 @@
-import 'package:hmssdk_flutter/enum/hms_track_kind.dart';
-import 'package:hmssdk_flutter/enum/hms_track_source.dart';
-import 'package:hmssdk_flutter/model/hms_peer.dart';
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 class HMSTrack {
   final String trackId;

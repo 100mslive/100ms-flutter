@@ -2,13 +2,14 @@ import 'dart:io' show Platform;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show StandardMessageCodec;
-import 'package:hmssdk_flutter/model/hms_track.dart';
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
-class VideoView extends StatelessWidget {
+class HMSVideoView extends StatelessWidget {
   final HMSTrack track;
   final Map<String, Object>? args;
 
-  const VideoView({Key? key, required this.track, this.args}) : super(key: key);
+  const HMSVideoView({Key? key, required this.track, this.args})
+      : super(key: key);
 
   void onPlatformViewCreated(int id) {
     print('On PlatformView Created:: id:$id');

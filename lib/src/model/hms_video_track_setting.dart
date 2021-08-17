@@ -1,6 +1,4 @@
-import 'package:hmssdk_flutter/enum/hms_camera_facing.dart';
-import 'package:hmssdk_flutter/enum/hms_codec.dart';
-import 'package:hmssdk_flutter/model/hms_video_resolution.dart';
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 class HMSVideoTrackSetting {
   final HMSCodec codec;

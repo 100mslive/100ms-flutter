@@ -1,5 +1,4 @@
-import 'package:hmssdk_flutter/model/hms_config.dart';
-import 'package:hmssdk_flutter/model/hms_preview_listener.dart';
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/meeting/hms_sdk_interactor.dart';
 import 'package:hmssdk_flutter_example/service/room_service.dart';
 import 'package:uuid/uuid.dart';
@@ -30,5 +29,9 @@ class PreviewController {
 
   void startCapturing() {
     _hmsSdkInteractor?.startCapturing();
+  }
+
+  void switchAudio({bool isOn = false}) {
+    _hmsSdkInteractor?.switchAudio(isOn: isOn);
   }
 }

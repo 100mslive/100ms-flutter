@@ -1,6 +1,4 @@
-import 'dart:collection';
-
-import 'package:hmssdk_flutter/model/hms_error_code.dart';
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 class HMSError {
   //id is name in android

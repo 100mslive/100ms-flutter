@@ -1,4 +1,4 @@
-import 'package:hmssdk_flutter/enum/hms_audio_codec.dart';
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 class HMSAudioSetting {
   final int bitRate;
