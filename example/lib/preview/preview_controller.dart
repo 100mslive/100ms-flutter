@@ -31,4 +31,8 @@ class PreviewController {
   void startCapturing() {
     _hmsSdkInteractor?.startCapturing();
   }
+
+  void switchAudio({bool isOn = false}) {
+    _hmsSdkInteractor?.switchAudio(isOn: isOn);
+  }
 }

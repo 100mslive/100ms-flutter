@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter/model/hms_track.dart';
-import 'package:hmssdk_flutter/ui/meeting/video_view.dart';
 
 class PeerItemOrganism extends StatelessWidget {
   final HMSTrack track;
@@ -34,7 +34,7 @@ class PeerItemOrganism extends StatelessWidget {
                   child: Center(child: CircleAvatar(child: Text(name))),
                 );
               }
-              return VideoView(
+              return HMSVideoView(
                 track: track,
                 args: {
                   'height': constraints.maxHeight,

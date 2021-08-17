@@ -18,6 +18,11 @@ abstract class PreviewStoreBase with Store implements HMSPreviewListener {
   @observable
   HMSError? error;
 
+  @observable
+  bool videoOn = true;
+  @observable
+  bool audioOn = true;
+
   @override
   void onError({required HMSError error}) {
     print("previewError ${error.toString()}");
@@ -41,6 +46,21 @@ abstract class PreviewStoreBase with Store implements HMSPreviewListener {
 
   void startPreview() {
     previewController.startPreview();
+  }
+
+  void startCapturing() {
+    previewController.startCapturing();
+    videoOn = true;
+  }
+
+  void stopCapturing() {
+    previewController.stopCapturing();
+    videoOn = false;
+  }
+
+  void switchAudio() {
+    previewController.switchAudio(isOn: audioOn);
+    audioOn = !audioOn;
   }
 
   @action

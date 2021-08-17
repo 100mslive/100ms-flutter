@@ -1,4 +1,4 @@
-import 'package:hmssdk_flutter/meeting/meeting.dart';
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter/model/hms_config.dart';
 import 'package:hmssdk_flutter/model/hms_message.dart';
 import 'package:hmssdk_flutter/model/hms_peer.dart';
