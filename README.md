@@ -124,7 +124,7 @@ abstract class HMSUpdateListener {
 
   /// This is called every 1 second with list of active speakers
   ///
-  /// ## A HMSSpeaker object contains -
+  ///    A HMSSpeaker object contains -
   ///    - peerId: the peer identifier of HMSPeer who is speaking
   ///    - trackId: the track identifier of HMSTrack which is emitting audio
   ///    - audioLevel: a number within range 1-100 indicating the audio volume
