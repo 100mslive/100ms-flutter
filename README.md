@@ -178,7 +178,6 @@ To join a room created by following the steps described in the above section, cl
          authToken: token,
          userName: userName);
 
-
 ```
  `userId`: should be unique we are using `Uuid` package to generate one.
  `roomId`: id of the room which you want to join.
@@ -254,6 +253,15 @@ Call the leave method on the HMSSDK instance
               );
 
   ```
+
+## Change a Role
+  To change role, you will provide peerId of selected peer and new roleName from roles. If forceChange is true, the system will prompt user for the change. If forceChange is false, user will get a prompt to accept/reject the role.
+  After changeRole is called, HMSUpdateListener's onRoleChangeRequest will be called on selected user's end.
+```
+     meeting.changeRole(
+            peerId: peerId, roleName: roleName, forceChange: forceChange);
+```
+
 ## 📨 Chat Messaging
 You can send a chat or any other kind of message from local peer to all remote peers in the room.
 
@@ -273,7 +281,6 @@ When you(the local peer) receives a message from others(any remote peer), `  voi
         meeting.sendMessage(message);  // meeting is an instance of `HMSMeeting` object
 
   
-
   // receiving messages
   // the object conforming to `HMSUpdateListener` will be invoked with `on(message: HMSMessage)`, add your logic to update Chat UI within this listener
   void onMessage({required HMSMessage message}){
@@ -320,7 +327,7 @@ When you(the local peer) receives a message from others(any remote peer), `  voi
 Add following permissions in Android AndroidManifest.xml file
 
 ```
-<uses-feature android:name="android.hardware.camera"/>
+    <uses-feature android:name="android.hardware.camera"/>
 
     <uses-feature android:name="android.hardware.camera.autofocus"/>
 
@@ -353,14 +360,14 @@ The Android SDK supports Android API level 21 and higher. It is built for armeab
 
 Add following permissions in iOS Info.plist file
 ```
-<key>NSMicrophoneUsageDescription</key>
-<string>{YourAppName} wants to use your microphone</string>
-
-<key>NSCameraUsageDescription</key>
-<string>{YourAppName} wants to use your camera</string>
-
-<key>NSLocalNetworkUsageDescription</key>
-<string>{YourAppName} App wants to use your local network</string>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>{YourAppName} wants to use your microphone</string>
+    
+    <key>NSCameraUsageDescription</key>
+    <string>{YourAppName} wants to use your camera</string>
+    
+    <key>NSLocalNetworkUsageDescription</key>
+    <string>{YourAppName} App wants to use your local network</string>
 ```
 
 ## License
