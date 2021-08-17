@@ -51,11 +51,12 @@ Download the Sample iOS app here: https://testflight.apple.com/join/Uhzebmut
       http.Response response = await http.post(Uri.parse(Constant.getTokenURL),
               body: {'room_id': room, 'user_id': user, 'role': Constant.defaultRole});
     ```
-  after generating token parse it using json and pass it to HMSConfig instance which is explained below.   
+  after generating token parse it using json.
     ```
         var body = json.decode(response.body);
         String token = body['token'];
     ```
+  You will need this token later explained below.   
     
 ## ♻️ Setup event listeners
 
@@ -177,10 +178,10 @@ To join a room created by following the steps described in the above section, cl
 
 
 ```
- userId: should be unique we are using `Uuid` package to generate one.
- roomId: id of the room which you want to join.
- token:  follow the above step 1 to generate token.
- userName: your name using which you want to join the room.   
+ `userId`: should be unique we are using `Uuid` package to generate one.
+ `roomId`: id of the room which you want to join.
+ `token`:  follow the above step 1 to generate token.
+ `userName`: your name using which you want to join the room.   
 
 ## 🙏 Join a room
 
