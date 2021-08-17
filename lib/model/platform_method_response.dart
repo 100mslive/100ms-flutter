@@ -1,6 +1,6 @@
-import 'package:hmssdk_flutter/src/common/platform_methods.dart';
 import 'package:hmssdk_flutter/enum/hms_preview_update_listener_method.dart';
 import 'package:hmssdk_flutter/enum/hms_update_listener_method.dart';
+import 'package:hmssdk_flutter/src/common/platform_methods.dart';
 
 class PlatformMethodResponse {
   final PlatformMethod method;

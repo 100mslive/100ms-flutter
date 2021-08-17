@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/services.dart';
-import 'package:hmssdk_flutter/src/common/platform_methods.dart';
 import 'package:hmssdk_flutter/enum/hms_peer_update.dart';
 import 'package:hmssdk_flutter/enum/hms_preview_update_listener_method.dart';
 import 'package:hmssdk_flutter/enum/hms_room_update.dart';
@@ -17,6 +16,7 @@ import 'package:hmssdk_flutter/model/hms_speaker.dart';
 import 'package:hmssdk_flutter/model/hms_track.dart';
 import 'package:hmssdk_flutter/model/hms_update_listener.dart';
 import 'package:hmssdk_flutter/model/platform_method_response.dart';
+import 'package:hmssdk_flutter/src/common/platform_methods.dart';
 
 class PlatformService {
   static const MethodChannel _channel = const MethodChannel('hmssdk_flutter');

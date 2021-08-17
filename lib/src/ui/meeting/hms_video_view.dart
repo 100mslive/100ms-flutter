@@ -8,7 +8,8 @@ class HMSVideoView extends StatelessWidget {
   final HMSTrack track;
   final Map<String, Object>? args;
 
-  const HMSVideoView({Key? key, required this.track, this.args}) : super(key: key);
+  const HMSVideoView({Key? key, required this.track, this.args})
+      : super(key: key);
 
   void onPlatformViewCreated(int id) {
     print('On PlatformView Created:: id:$id');
