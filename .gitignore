@@ -10,3 +10,4 @@ build/
 *.idea
 private_key.pepk
 ./example/android/app/100msKeyStore
+100msKeyStore
