@@ -1,9 +1,10 @@
-import 'package:hmssdk_flutter/common/platform_methods.dart';
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:hmssdk_flutter/src/common/platform_methods.dart';
 import 'package:hmssdk_flutter/enum/hms_track_kind.dart';
 import 'package:hmssdk_flutter/enum/hms_track_source.dart';
 import 'package:hmssdk_flutter/model/hms_video_track.dart';
 import 'package:hmssdk_flutter/model/hms_video_track_setting.dart';
-import 'package:hmssdk_flutter/service/platform_service.dart';
+import 'package:hmssdk_flutter/src/service/platform_service.dart';
 
 class HMSLocalVideoTrack extends HMSVideoTrack {
   final HMSVideoTrackSetting setting;

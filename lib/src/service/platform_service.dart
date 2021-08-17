@@ -1,8 +1,7 @@
 import 'dart:async';
-import 'dart:collection';
 
 import 'package:flutter/services.dart';
-import 'package:hmssdk_flutter/common/platform_methods.dart';
+import 'package:hmssdk_flutter/src/common/platform_methods.dart';
 import 'package:hmssdk_flutter/enum/hms_peer_update.dart';
 import 'package:hmssdk_flutter/enum/hms_preview_update_listener_method.dart';
 import 'package:hmssdk_flutter/enum/hms_room_update.dart';

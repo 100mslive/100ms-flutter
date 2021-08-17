@@ -1,12 +1,5 @@
-import 'dart:async';
+library hmssdk_flutter;
 
-import 'package:flutter/services.dart';
-
-class HmssdkFlutter {
-  static const MethodChannel _channel = const MethodChannel('hmssdk_flutter');
-
-  static Future<String?> get platformVersion async {
-    final String? version = await _channel.invokeMethod('getPlatformVersion');
-    return version;
-  }
-}
+export 'src/common/platform_methods.dart';
+export 'src/meeting/meeting.dart';
+export 'src/ui/meeting/hms_video_view.dart';

@@ -1,10 +1,11 @@
-import 'package:hmssdk_flutter/common/platform_methods.dart';
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:hmssdk_flutter/src/common/platform_methods.dart';
 import 'package:hmssdk_flutter/model/hms_config.dart';
 import 'package:hmssdk_flutter/model/hms_peer.dart';
 import 'package:hmssdk_flutter/model/hms_preview_listener.dart';
 import 'package:hmssdk_flutter/model/hms_role.dart';
 import 'package:hmssdk_flutter/model/hms_update_listener.dart';
-import 'package:hmssdk_flutter/service/platform_service.dart';
+import 'package:hmssdk_flutter/src/service/platform_service.dart';
 
 class HMSMeeting {
   Future<void> joinMeeting({required HMSConfig config}) async {
