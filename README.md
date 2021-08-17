@@ -11,7 +11,7 @@
 
 # 100ms Flutter SDK
 
-Here you will find everything you need to build experiences with video using 100ms iOS SDK. Dive into our SDKs, quick starts, add real-time video, voice, and screen sharing to your web and mobile applications.
+Here you will find everything you need to build experiences with video using 100ms iOS/Android SDK. Dive into our SDKs, quick starts, add real-time video, voice, and screen sharing to your web and mobile applications.
 
 Download the Sample iOS app here: https://testflight.apple.com/join/Uhzebmut
   
