@@ -14,3 +14,5 @@ export 'src/enum/hms_update_listener_method.dart';
 export 'src/enum/hms_video_codec.dart';
 export 'src/meeting/meeting.dart';
 export 'src/ui/meeting/hms_video_view.dart';
+export 'src/exceptions/hms_in_sufficient_data.dart';
+export 'src/exceptions/hms_exception.dart';
