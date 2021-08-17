@@ -90,13 +90,13 @@ class MeetingController {
     return _hmsSdkInteractor!.getRoles();
   }
 
-  Future<bool> isAudioMute(HMSPeer? peer) async{
-    bool isMute=await _hmsSdkInteractor!.isAudioMute(peer);
+  Future<bool> isAudioMute(HMSPeer? peer) async {
+    bool isMute = await _hmsSdkInteractor!.isAudioMute(peer);
     return isMute;
   }
 
-  Future<bool> isVideoMute(HMSPeer? peer) async{
-    bool isMute=await _hmsSdkInteractor!.isVideoMute(peer);
+  Future<bool> isVideoMute(HMSPeer? peer) async {
+    bool isMute = await _hmsSdkInteractor!.isVideoMute(peer);
     return isMute;
   }
 }

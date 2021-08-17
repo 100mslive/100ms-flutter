@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:hmssdk_flutter/model/hms_peer.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_controller.dart';
@@ -6,23 +5,22 @@ import 'package:hmssdk_flutter_example/meeting/meeting_controller.dart';
 class ParticipantOrganism extends StatefulWidget {
   final HMSPeer peer;
   final MeetingController meetingController;
-  const ParticipantOrganism({Key? key, required this.peer,required this.meetingController}) : super(key: key);
+  const ParticipantOrganism(
+      {Key? key, required this.peer, required this.meetingController})
+      : super(key: key);
 
   @override
   _ParticipantOrganismState createState() => _ParticipantOrganismState();
 }
 
 class _ParticipantOrganismState extends State<ParticipantOrganism> {
-
-  bool isVideoOn=false,isAudioOn=false;
+  bool isVideoOn = false, isAudioOn = false;
 
   @override
   void initState() {
     super.initState();
     checkButtons();
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -33,9 +31,9 @@ class _ParticipantOrganismState extends State<ParticipantOrganism> {
         children: [
           Expanded(
               child: Text(
-                peer.name,
-                style: TextStyle(fontSize: 20.0),
-              )),
+            peer.name,
+            style: TextStyle(fontSize: 20.0),
+          )),
           SizedBox(
             width: 50.0,
           ),
@@ -48,16 +46,17 @@ class _ParticipantOrganismState extends State<ParticipantOrganism> {
           SizedBox(
             width: 50.0,
           ),
-          Expanded(child: Icon(isVideoOn?Icons.videocam:Icons.videocam_off)),
-          Expanded(child: Icon(isAudioOn?Icons.mic:Icons.mic_off)),
+          Expanded(
+              child: Icon(isVideoOn ? Icons.videocam : Icons.videocam_off)),
+          Expanded(child: Icon(isAudioOn ? Icons.mic : Icons.mic_off)),
         ],
       ),
     );
   }
 
-  void checkButtons() async{
-    this.isAudioOn=!(await widget.meetingController.isAudioMute(widget.peer));
-    this.isVideoOn=!(await widget.meetingController.isVideoMute(widget.peer));
+  void checkButtons() async {
+    this.isAudioOn = !(await widget.meetingController.isAudioMute(widget.peer));
+    this.isVideoOn = !(await widget.meetingController.isVideoMute(widget.peer));
     setState(() {});
   }
 }

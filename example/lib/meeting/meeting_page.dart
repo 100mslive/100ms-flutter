@@ -48,20 +48,26 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
     _roleChangerequestDisposer = reaction(
         (_) => _meetingStore.roleChangeRequest,
         (event) => {showRoleChangeDialog(event)});
-    _errorDisposer = reaction((_) => _meetingStore.error,
-        (event) => {UtilityComponents.showSnackBarWithString((event as HMSError).description,context)});
+    _errorDisposer = reaction(
+        (_) => _meetingStore.error,
+        (event) => {
+              UtilityComponents.showSnackBarWithString(
+                  (event as HMSError).description, context)
+            });
     reaction(
         (_) => _meetingStore.reconnected,
         (event) => {
               if ((event as bool) == true)
-                UtilityComponents.showSnackBarWithString("reconnected",context),
+                UtilityComponents.showSnackBarWithString(
+                    "reconnected", context),
               _meetingStore.reconnected = false
             });
     reaction(
         (_) => _meetingStore.reconnecting,
         (event) => {
               if ((event as bool) == true)
-                UtilityComponents.showSnackBarWithString("reconnecting",context),
+                UtilityComponents.showSnackBarWithString(
+                    "reconnecting", context),
             });
     super.initState();
     initMeeting();
@@ -88,10 +94,10 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
     if (answer == "Ok") {
       debugPrint("OK accepted");
       _meetingStore.meetingController.acceptRoleChangeRequest();
-      UtilityComponents.showSnackBarWithString((event as HMSError).description,context);
+      UtilityComponents.showSnackBarWithString(
+          (event as HMSError).description, context);
     }
   }
-
 
   Future<dynamic> _onBackPressed() {
     return showDialog(

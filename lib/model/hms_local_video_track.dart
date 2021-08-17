@@ -23,15 +23,15 @@ class HMSLocalVideoTrack extends HMSVideoTrack {
           trackId: trackId,
         );
 
-  Future<void> startCapturing() async{
+  Future<void> startCapturing() async {
     await PlatformService.invokeMethod(PlatformMethod.startCapturing);
   }
 
-  Future<void> stopCapturing() async{
+  Future<void> stopCapturing() async {
     await PlatformService.invokeMethod(PlatformMethod.stopCapturing);
   }
 
-  Future<void> switchCamera() async{
+  Future<void> switchCamera() async {
     await PlatformService.invokeMethod(PlatformMethod.switchCamera);
   }
 }

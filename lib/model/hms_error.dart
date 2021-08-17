@@ -30,7 +30,7 @@ class HMSError {
     }
 
     return HMSError(
-      id: map["id"]??map['name'] ?? '',
+      id: map["id"] ?? map['name'] ?? '',
       code: code,
       message: map['message'],
       action: map['action'],

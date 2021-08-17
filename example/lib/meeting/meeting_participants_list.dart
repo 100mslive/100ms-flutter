@@ -35,10 +35,10 @@ class _ParticipantsListState extends State<ParticipantsList> {
                       shrinkWrap: true,
                       children: peers
                           .map((peer) => ParticipantOrganism(
-                        peer: peer,
-                        meetingController:
-                        widget.meetingStore.meetingController,
-                      ))
+                                peer: peer,
+                                meetingController:
+                                    widget.meetingStore.meetingController,
+                              ))
                           .toList(),
                     ),
                   );

@@ -1,4 +1,4 @@
-enum HMSPreviewUpdateListenerMethod { onPreviewVideo,onError,unknown }
+enum HMSPreviewUpdateListenerMethod { onPreviewVideo, onError, unknown }
 
 extension HMSPreviewUpdateListenerMethodValues
     on HMSPreviewUpdateListenerMethod {
