@@ -249,6 +249,15 @@ HMSTrack
     );
 
   ```
+
+## Change a Role
+  To change role, you will provide peerId of selected peer and new roleName from roles. If forceChange is true, the system will prompt user for the change. If forceChange is false, user will get a prompt to accept/reject the role.
+  After changeRole is called, HMSUpdateListener's onRoleChangeRequest will be called on selected user's end.
+```
+     meeting.changeRole(
+            peerId: peerId, roleName: roleName, forceChange: forceChange);
+```
+
 ## 📨 Chat Messaging
 You can send a chat or any other kind of message from local peer to all remote peers in the room.
 
