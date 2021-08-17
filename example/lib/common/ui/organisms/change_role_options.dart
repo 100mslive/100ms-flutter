@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hmssdk_flutter/model/hms_role.dart';
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 class ChangeRoleOptionDialog extends StatefulWidget {
   final String peerName;
