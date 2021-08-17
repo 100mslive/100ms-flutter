@@ -2,7 +2,7 @@ import 'dart:io' show Platform;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show StandardMessageCodec;
-import 'package:hmssdk_flutter/model/hms_track.dart';
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 class HMSVideoView extends StatelessWidget {
   final HMSTrack track;

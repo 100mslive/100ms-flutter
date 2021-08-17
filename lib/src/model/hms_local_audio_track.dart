@@ -1,12 +1,9 @@
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-import 'package:hmssdk_flutter/model/hms_audio_track.dart';
 
-import 'hms_audio_track_setting.dart';
-
-class HMSRemoteAudioTrack extends HMSAudioTrack {
+class HMSLocalAudioTrack extends HMSAudioTrack {
   final HMSAudioTrackSetting setting;
 
-  HMSRemoteAudioTrack(
+  HMSLocalAudioTrack(
       {required this.setting,
       required HMSTrackKind kind,
       required HMSTrackSource source,
@@ -19,9 +16,7 @@ class HMSRemoteAudioTrack extends HMSAudioTrack {
           trackId: trackId,
         );
 
-  @override
-  Future<bool> isMute() {
-    // TODO: implement isMute
-    return super.isMute();
+  void setMute() {
+    //TODO:: call platform method
   }
 }

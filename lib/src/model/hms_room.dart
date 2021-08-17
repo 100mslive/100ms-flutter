@@ -1,4 +1,4 @@
-import 'package:hmssdk_flutter/model/hms_peer.dart';
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 class HMSRoom {
   final String id;

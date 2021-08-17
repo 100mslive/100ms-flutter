@@ -1,9 +1,6 @@
-import 'package:hmssdk_flutter/model/hms_audio_track.dart';
-import 'package:hmssdk_flutter/model/hms_role.dart';
-import 'package:hmssdk_flutter/model/hms_track.dart';
-import 'package:hmssdk_flutter/model/hms_video_track.dart';
-
 // TODO: Need to update models with HMSSDK v0.0.6
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+
 class HMSPeer {
   final String peerId;
   final String name;

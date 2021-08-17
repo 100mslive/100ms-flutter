@@ -1,6 +1,4 @@
-import 'package:hmssdk_flutter/model/hms_permissions.dart';
-import 'package:hmssdk_flutter/model/hms_publish_setting.dart';
-import 'package:hmssdk_flutter/model/hms_subscribe_settings.dart';
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 class HMSRole {
   String name;
