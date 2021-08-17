@@ -223,7 +223,7 @@ Call the leave method on the HMSSDK instance
   meeting.stopCapturing()
 
   meeting.switchCamera()
-}
+
 ```
   
 ## 🛤 HMSTracks Explained
