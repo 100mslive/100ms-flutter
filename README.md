@@ -3,7 +3,7 @@
   <img src="https://github.com/100mslive/100ms-flutter/blob/main/100ms-logo.png" title="100ms logo" float=left>
 </p>
 
-
+![Pub Version](https://img.shields.io/pub/v/hmssdk_flutter)
 [![Documentation](https://img.shields.io/badge/Read-Documentation-blue)](https://docs.100ms.live/)
 [![Discord](https://img.shields.io/badge/Community-Join%20on%20Discord-blue)](https://discord.com/invite/kGdmszyzq2)
 [![Slack](https://img.shields.io/badge/Community-Join%20on%20Slack-blue)](https://join.slack.com/t/100mslive/shared_invite/zt-llwdnz11-vkb2RzptwacwXHO7UeY0CQ)
