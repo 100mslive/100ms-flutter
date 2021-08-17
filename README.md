@@ -49,22 +49,25 @@ Here you will find everything you need to build experiences with video using 100
   You will get your token endpoint at your 100ms dashboard and append `api/token` to that endpoint and make an http post request.
   
   Example:
-    ```
-      http.Response response = await http.post(Uri.parse(Constant.getTokenURL),
-              body: {'room_id': room, 'user_id': user, 'role': Constant.defaultRole});
-    ```
+
+  ```dart
+  http.Response response = await http.post(Uri.parse(Constant.getTokenURL),
+          body: {'room_id': room, 'user_id': user, 'role': Constant.defaultRole});
+  ```
+
   after generating token parse it using json.
-    ```
-        var body = json.decode(response.body);
-        String token = body['token'];
-    ```
+
+  ```dart
+  var body = json.decode(response.body);
+  String token = body['token'];
+  ```
   You will need this token later explained below.   
     
 ## ♻️ Setup event listeners
 
 100ms SDK provides callbacks to the client app about any change or update happening in the room after a user has joined by implementing `HMSUpdateListener`. These updates can be used to render the video on screen or to display other info regarding the room.
 
-```
+```dart
 abstract class HMSUpdateListener {
   /// This will be called on a successful JOIN of the room by the user
   ///
@@ -144,7 +147,7 @@ abstract class HMSUpdateListener {
   Application need to listen to the corresponding updates in onPeerUpdate , onTrackUpdate or onRoomUpdate
 
   The following are the different types of updates that are emitted by the SDK - 
-```
+```dart
   HMSPeerUpdate
     case PEER_JOINED A new peer joins the room
     case PEER_LEFT - An existing peer leaves the room
@@ -170,14 +173,12 @@ abstract class HMSUpdateListener {
 
 To join a room created by following the steps described in the above section, clients need to create a `HMSConfig` instance and use that instance to call `join` method of `HMSSDK`
 
-```
-  // Create a new HMSConfig
-     HMSConfig config = HMSConfig(
-         userId: userId,
-         roomId: roomId,
-         authToken: token,
-         userName: userName);
-
+```dart
+// Create a new HMSConfig
+HMSConfig config = HMSConfig( userId: userId,
+                              roomId: roomId,
+                              authToken: token,
+                              userName: userName);
 ```
  `userId`: should be unique we are using `Uuid` package to generate one.
  `roomId`: id of the room which you want to join.
@@ -189,79 +190,65 @@ To join a room created by following the steps described in the above section, cl
 Use the HMSConfig and HMSUpdateListener instances to call the join method on the instance of HMSSDK created above.
 Once Join succeeds, all the callbacks keep coming on every change in the room and the app can react accordingly
 
-```
-  // Basic Usage
-  HMSMeeting meeting = HMSMeeting()
-  meeting.joinMeeting(config: this.config);
-
-  // Advanced Usage
-  Coming soon.
+```dart
+HMSMeeting meeting = HMSMeeting()
+meeting.joinMeeting(config: this.config);
 ```
 
 ## 👋 Leave Room
 
 Call the leave method on the HMSSDK instance
 
-```
-  meeting.leave() // to leave a room
+```dart
+meeting.leave() // to leave a room
 ```
   
 ## 🙊 Mute/Unmute Local Audio
   
-```
-  // Turn on
-  meeting.switchAudio(isOn:true)
-  // Turn off  
-  meeting.switchAudio(isOn:false)
+```dart
+// Turn on
+meeting.switchAudio(isOn:true)
+// Turn off  
+meeting.switchAudio(isOn:false)
 ```
 
 ## 🙈 Mute/Unmute Local Video  
   
-```  
-  meeting.startCapturing()
+```dart  
+meeting.startCapturing()
 
-  meeting.stopCapturing()
+meeting.stopCapturing()
 
-  meeting.switchCamera()
-}
+meeting.switchCamera()
 ```
   
 ## 🛤 HMSTracks Explained
   
 `HMSTrack` is the super-class of all the tracks that are used inside `HMSSDK`. Its hierarchy looks like this -
   
-```
-  HMSTrack
-      - AudioTrack
-          - LocalAudioTrack
-          - RemoteAudioTrack
-      - VideoTrack
-          - LocalVideoTrack
-          - RemoteVideoTrack
+```dart
+HMSTrack
+    - AudioTrack
+        - LocalAudioTrack
+        - RemoteAudioTrack
+    - VideoTrack
+        - LocalVideoTrack
+        - RemoteVideoTrack
 ```
   
 ## 🎞 Display a Track
   To display a video track, first get the `HMSVideoTrack` & pass it on to `HMSVideoView` using `setVideoTrack` function. Ensure to attach the `HMSVideoView` to your UI hierarchy.
 
-  ```
-            VideoView(
-                track: videoTrack,
-                args: {
-                  'height': customHeight,
-                  'width': customWidth,
-                },
-              );
+  ```dart
+  VideoView(
+      track: videoTrack,
+      args: {
+        'height': customHeight,
+        'width': customWidth,
+      },
+    );
 
   ```
-
-## Change a Role
-  To change role, you will provide peerId of selected peer and new roleName from roles. If forceChange is true, the system will prompt user for the change. If forceChange is false, user will get a prompt to accept/reject the role.
-  After changeRole is called, HMSUpdateListener's onRoleChangeRequest will be called on selected user's end.
-```
-     meeting.changeRole(
-            peerId: peerId, roleName: roleName, forceChange: forceChange);
-```
-
 ## 📨 Chat Messaging
 You can send a chat or any other kind of message from local peer to all remote peers in the room.
 
@@ -273,40 +260,40 @@ Then use the `  Future<void> sendMessage(String message)` function on instance o
 
 When you(the local peer) receives a message from others(any remote peer), `  void onMessage({required HMSMessage message})` function of `HMSUpdateListener` is invoked.
   
+```dart
+// following is an example implementation of chat messaging
+
+// to send a broadcast message
+String message = 'Hello World!'
+meeting.sendMessage(message);  // meeting is an instance of `HMSMeeting` object
+
+
+
+// receiving messages
+// the object conforming to `HMSUpdateListener` will be invoked with `on(message: HMSMessage)`, add your logic to update Chat UI within this listener
+void onMessage({required HMSMessage message}){
+    let messageReceived = message.message // extract message payload from `HMSMessage` object that is received
+    // update your Chat UI with the messageReceived
+}
 ```
-  // following is an example implementation of chat messaging
-
-  // to send a broadcast message
-        String message = 'Hello World!'
-        meeting.sendMessage(message);  // meeting is an instance of `HMSMeeting` object
-
-  
-  // receiving messages
-  // the object conforming to `HMSUpdateListener` will be invoked with `on(message: HMSMessage)`, add your logic to update Chat UI within this listener
-  void onMessage({required HMSMessage message}){
-      let messageReceived = message.message // extract message payload from `HMSMessage` object that is received
-      // update your Chat UI with the messageReceived
-  }
 
  🏃‍♀️ Checkout the sample implementation in the [Example app folder](https://github.com/100mslive/100ms-flutter/tree/main/example).
-
-```
 
 ## 🎞 Preview
   You can use our preview feature to unmute/mute audio/video before joining the room.
   
   You can implement your own preview listener using this `abstract class HMSPreviewListener`
 
-``` 
-  abstract class HMSPreviewListener {
+```dart 
+abstract class HMSPreviewListener {
 
-    //you will get all error updates here
-    void onError({required HMSError error});
+  //you will get all error updates here
+  void onError({required HMSError error});
 
-    //here you will get room instance where you are going to join and your own local tracks to render the video by checking the type of trackKind and then using the 
-    //above mentioned VideoView widget
-   void onPreview({required HMSRoom room, required List<HMSTrack> localTracks});
-  }
+  //here you will get room instance where you are going to join and your own local tracks to render the video by checking the type of trackKind and then using the 
+  //above mentioned VideoView widget
+  void onPreview({required HMSRoom room, required List<HMSTrack> localTracks});
+}
 ```
 
 
@@ -326,24 +313,24 @@ When you(the local peer) receives a message from others(any remote peer), `  voi
 
 Add following permissions in Android AndroidManifest.xml file
 
-```
-    <uses-feature android:name="android.hardware.camera"/>
+```xml
+<uses-feature android:name="android.hardware.camera"/>
 
-    <uses-feature android:name="android.hardware.camera.autofocus"/>
+<uses-feature android:name="android.hardware.camera.autofocus"/>
 
-    <uses-permission android:name="android.permission.CAMERA"/>
+<uses-permission android:name="android.permission.CAMERA"/>
 
-    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
+<uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
 
-    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
+<uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
 
-    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+<uses-permission android:name="android.permission.RECORD_AUDIO"/>
 
-    <uses-permission android:name="android.permission.BLUETOOTH"/>
+<uses-permission android:name="android.permission.BLUETOOTH"/>
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+<uses-permission android:name="android.permission.INTERNET"/>
 
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 ```
 
 ## ☝️ Pre-requisites
@@ -359,15 +346,15 @@ The Android SDK supports Android API level 21 and higher. It is built for armeab
 
 
 Add following permissions in iOS Info.plist file
-```
-    <key>NSMicrophoneUsageDescription</key>
-    <string>{YourAppName} wants to use your microphone</string>
-    
-    <key>NSCameraUsageDescription</key>
-    <string>{YourAppName} wants to use your camera</string>
-    
-    <key>NSLocalNetworkUsageDescription</key>
-    <string>{YourAppName} App wants to use your local network</string>
+```xml
+<key>NSMicrophoneUsageDescription</key>
+<string>{YourAppName} wants to use your microphone</string>
+
+<key>NSCameraUsageDescription</key>
+<string>{YourAppName} wants to use your camera</string>
+
+<key>NSLocalNetworkUsageDescription</key>
+<string>{YourAppName} App wants to use your local network</string>
 ```
 
 ## License
