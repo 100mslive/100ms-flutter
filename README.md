@@ -4,9 +4,9 @@
 </a>
 
 [![Pub Version](https://img.shields.io/pub/v/hmssdk_flutter)](https://pub.dev/packages/hmssdk_flutter)
+[![License](https://img.shields.io/github/license/100mslive/100ms-flutter)](https://www.100ms.live/)
 [![Documentation](https://img.shields.io/badge/Read-Documentation-blue)](https://docs.100ms.live/)
 [![Discord](https://img.shields.io/badge/Community-Join%20on%20Discord-blue)](https://discord.com/invite/kGdmszyzq2)
-[![Slack](https://img.shields.io/badge/Community-Join%20on%20Slack-blue)](https://join.slack.com/t/100mslive/shared_invite/zt-llwdnz11-vkb2RzptwacwXHO7UeY0CQ)
 [![Register](https://img.shields.io/badge/Contact-Know%20More-blue)](https://dashboard.100ms.live/register)
 
 # 100ms Flutter SDK 🎉
@@ -17,17 +17,7 @@ Here you will find everything you need to build experiences with video using 100
 
 🤖 Download the Sample Android app here: https://appdistribution.firebase.dev/i/b623e5310929ab70
   
-1. [x] Generating Auth Token
-2. [x] Join Meeting
-3. [x] Leave Meeting
-4. [x] Show peers with Audio/Video
-5. [x] Change roles for a peer
-6. [x] Mute/Unmute audio
-7. [x] On/Off Video
-8. [x] Switch between front/back cameras
-9. [x] Custom View for video [plug and play]
-10. [x] Preview
- ## How to run project
+ ## 🏃‍♀️ How to run the Sample App
 
  1. In project root, run `flutter pub get`
  2. Change directory to `example` folder, run `flutter packages pub run build_runner build --delete-conflicting-outputs`
@@ -247,7 +237,6 @@ HMSTrack
         'width': customWidth,
       },
     );
-
   ```
 
 ## Change a Role
@@ -314,7 +303,7 @@ abstract class HMSPreviewListener {
 
 3. Complete the steps in [Auth Token Quick Start Guide](https://docs.100ms.live/ios/v2/guides/Token)
 
-4. Get the HMSSDK via [pub.dev](https://pub.dev/). Add the `hmssdk_flutter'` to your pubspec.yaml
+4. Get the HMSSDK via [pub.dev](https://pub.dev/). Add the `hmssdk_flutter` to your pubspec.yaml
 
 
 

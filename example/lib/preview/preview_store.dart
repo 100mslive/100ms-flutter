@@ -1,8 +1,4 @@
-import 'package:hmssdk_flutter/enum/hms_track_kind.dart';
-import 'package:hmssdk_flutter/model/hms_error.dart';
-import 'package:hmssdk_flutter/model/hms_preview_listener.dart';
-import 'package:hmssdk_flutter/model/hms_room.dart';
-import 'package:hmssdk_flutter/model/hms_track.dart';
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/preview/preview_controller.dart';
 import 'package:mobx/mobx.dart';
 
@@ -17,6 +13,11 @@ abstract class PreviewStoreBase with Store implements HMSPreviewListener {
   List<HMSTrack> localTracks = [];
   @observable
   HMSError? error;
+
+  @observable
+  bool videoOn = true;
+  @observable
+  bool audioOn = true;
 
   @override
   void onError({required HMSError error}) {
@@ -41,6 +42,21 @@ abstract class PreviewStoreBase with Store implements HMSPreviewListener {
 
   void startPreview() {
     previewController.startPreview();
+  }
+
+  void startCapturing() {
+    previewController.startCapturing();
+    videoOn = true;
+  }
+
+  void stopCapturing() {
+    previewController.stopCapturing();
+    videoOn = false;
+  }
+
+  void switchAudio() {
+    previewController.switchAudio(isOn: audioOn);
+    audioOn = !audioOn;
   }
 
   @action

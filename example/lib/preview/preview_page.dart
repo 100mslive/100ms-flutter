@@ -1,9 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:hmssdk_flutter/common/platform_methods.dart';
-import 'package:hmssdk_flutter/model/hms_error.dart';
-import 'package:hmssdk_flutter/service/platform_service.dart';
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/peer_item_organism.dart';
 import 'package:hmssdk_flutter_example/common/utilcomponents/UtilityComponents.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
@@ -49,8 +47,6 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
     _previewStore.startPreview();
   }
 
-  bool videoOn = true, audioOn = true;
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -88,19 +84,16 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                   Expanded(
                     child: GestureDetector(
                       onTap: () async {
-                        if (videoOn) {
-                          await PlatformService.invokeMethod(
-                              PlatformMethod.stopCapturing);
-                          videoOn = false;
+                        if (_previewStore.videoOn) {
+                          _previewStore.stopCapturing();
                         } else {
-                          await PlatformService.invokeMethod(
-                              PlatformMethod.startCapturing);
-                          videoOn = true;
+                          _previewStore.startCapturing();
                         }
                         setState(() {});
                       },
-                      child:
-                          Icon(videoOn ? Icons.videocam : Icons.videocam_off),
+                      child: Icon(_previewStore.videoOn
+                          ? Icons.videocam
+                          : Icons.videocam_off),
                     ),
                   ),
                   Expanded(
@@ -117,14 +110,11 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                   Expanded(
                       child: GestureDetector(
                     onTap: () async {
-                      await PlatformService.invokeMethod(
-                          PlatformMethod.switchAudio,
-                          arguments: {"is_on": audioOn});
-                      audioOn = !audioOn;
-
+                      _previewStore.switchAudio();
                       setState(() {});
                     },
-                    child: Icon(audioOn ? Icons.mic : Icons.mic_off),
+                    child:
+                        Icon(_previewStore.audioOn ? Icons.mic : Icons.mic_off),
                   ))
                 ],
               )
@@ -139,15 +129,15 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
     if (state == AppLifecycleState.resumed) {
-      if (videoOn) {
+      if (_previewStore.videoOn) {
         _previewStore.previewController.startCapturing();
       }
     } else if (state == AppLifecycleState.paused) {
-      if (videoOn) {
+      if (_previewStore.videoOn) {
         _previewStore.previewController.stopCapturing();
       }
     } else if (state == AppLifecycleState.inactive) {
-      if (videoOn) {
+      if (_previewStore.videoOn) {
         _previewStore.previewController.stopCapturing();
       }
     }
