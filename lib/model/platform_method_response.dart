@@ -1,6 +1,11 @@
+///PlatformMethodResponse contains all the responses sent back from the platform
+///
+/// Check out different responses in [PlatformMethod] enum.
+
 import 'package:hmssdk_flutter/common/platform_methods.dart';
 import 'package:hmssdk_flutter/enum/hms_preview_update_listener_method.dart';
 import 'package:hmssdk_flutter/enum/hms_update_listener_method.dart';
+
 
 class PlatformMethodResponse {
   final PlatformMethod method;

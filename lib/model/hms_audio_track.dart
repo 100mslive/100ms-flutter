@@ -4,6 +4,7 @@ import 'package:hmssdk_flutter/enum/hms_track_source.dart';
 import 'package:hmssdk_flutter/model/hms_track.dart';
 import 'package:hmssdk_flutter/service/platform_service.dart';
 
+///parent of all audio tracks
 class HMSAudioTrack extends HMSTrack {
   HMSAudioTrack(
       {required HMSTrackKind kind,
@@ -17,6 +18,7 @@ class HMSAudioTrack extends HMSTrack {
           trackId: trackId,
         );
 
+  ///returns true if audio is mute
   @override
   Future<bool> isMute() async {
     //TODO:: make platform call

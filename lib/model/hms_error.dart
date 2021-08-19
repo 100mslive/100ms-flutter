@@ -1,14 +1,14 @@
-import 'dart:collection';
 
 import 'package:hmssdk_flutter/model/hms_error_code.dart';
 
+///HMSError will contain the error and related description which you get when onError is called
 class HMSError {
-  //id is name in android
+  ///id is name in android
   final String? id;
   final HMSErrorCode? code;
   final String message;
 
-  //description is info in android
+  ///description is info in android
   String description;
   String action;
   Map? params;

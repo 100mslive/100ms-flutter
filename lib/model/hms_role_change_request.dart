@@ -1,3 +1,8 @@
+///[HMSRoleChangeRequest] contains the info about the role suggested recieved by you
+///
+///you can accept the role change or you can decline it.
+///
+
 import 'package:hmssdk_flutter/exceptions/hms_in_sufficient_data.dart';
 import 'package:hmssdk_flutter/model/hms_peer.dart';
 import 'package:hmssdk_flutter/model/hms_role.dart';

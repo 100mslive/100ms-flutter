@@ -1,5 +1,8 @@
+
+///{@nodoc}
 enum HMSAudioCodec { opus, unknown }
 
+///{@nodoc}
 extension HMSAudioCodecValues on HMSAudioCodec {
   static HMSAudioCodec getHMSCodecFromName(String name) {
     switch (name) {

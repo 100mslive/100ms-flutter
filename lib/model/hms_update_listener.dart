@@ -1,3 +1,13 @@
+
+///HMSUpdateListener listens to all the updates happening inside the room
+///
+/// Just implement this listener and get the updates add as many listeners as you want.
+///
+/// There are 10 callbacks which will be called on different changes in the room.a
+///
+/// Check more down below.
+
+
 import 'package:hmssdk_flutter/enum/hms_peer_update.dart';
 import 'package:hmssdk_flutter/enum/hms_room_update.dart';
 import 'package:hmssdk_flutter/enum/hms_track_update.dart';
@@ -76,7 +86,9 @@ abstract class HMSUpdateListener {
   /// - Parameter speakers: the list of speakers
   void onUpdateSpeakers({required List<HMSSpeaker> updateSpeakers});
 
+  ///when network or some other error happens it will be called
   void onReconnecting();
 
+  ///when you are back in the room after reconnection
   void onReconnected();
 }

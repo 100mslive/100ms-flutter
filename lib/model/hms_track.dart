@@ -1,7 +1,10 @@
+///A track represents either the audio or video that a peer is publishing.
+
 import 'package:hmssdk_flutter/enum/hms_track_kind.dart';
 import 'package:hmssdk_flutter/enum/hms_track_source.dart';
 import 'package:hmssdk_flutter/model/hms_peer.dart';
 
+///Parent of all tracks
 class HMSTrack {
   final String trackId;
   final HMSTrackKind kind;

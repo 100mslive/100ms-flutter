@@ -4,6 +4,7 @@ import 'package:hmssdk_flutter/model/hms_role.dart';
 import 'package:hmssdk_flutter/model/hms_track.dart';
 import 'package:hmssdk_flutter/model/hms_video_track.dart';
 
+///HMSLocalPeer instance of the localPeer means your instance in the room.
 class HMSLocalPeer extends HMSPeer {
   HMSLocalPeer({
     required String peerId,

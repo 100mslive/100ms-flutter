@@ -1,13 +1,27 @@
+///100ms HMSPeer.
+///
+/// To use, import `package:hmssdk_flutter/model/hms_peer.dart`.
+///
+///[HMSPeer] model contains everything about a peer and it's tracks information.
+///
+/// A [peer] is the object returned by 100ms SDKs that contains all information about a user - name, role, video track etc.
+///
+///This library depends only on core Dart libraries and hms_audio_track.dart, hms_role.dart, hms_track.dart, hms_video_track.dart library.
+
 import 'package:hmssdk_flutter/model/hms_audio_track.dart';
 import 'package:hmssdk_flutter/model/hms_role.dart';
 import 'package:hmssdk_flutter/model/hms_track.dart';
 import 'package:hmssdk_flutter/model/hms_video_track.dart';
 
-// TODO: Need to update models with HMSSDK v0.0.6
+
 class HMSPeer {
+  ///id of the peer
   final String peerId;
+  ///name of the peer in the room.
   final String name;
+  ///returns whether peer is local or not.
   final bool isLocal;
+  ///role of the peer in the room.
   final HMSRole? role;
   final String? customerUserId;
   final String? customerDescription;
@@ -27,6 +41,7 @@ class HMSPeer {
     this.auxiliaryTracks,
   });
 
+  ///important to compare using [peerId]
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||

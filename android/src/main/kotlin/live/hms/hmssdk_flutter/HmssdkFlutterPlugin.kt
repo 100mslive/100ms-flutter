@@ -140,6 +140,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
             eventSink!!.success(args)
             previewSink!!.success(args)
         }
+
     }
 
     override fun onPreview(room: HMSRoom, localTracks: Array<HMSTrack>) {
