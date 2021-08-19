@@ -1,3 +1,10 @@
+///VideoView used to render video in ios and android devices
+///
+/// To use,import package:`hmssdk_flutter/ui/meeting/video_view.dart`.
+///
+/// just pass the videotracks of local or remote peer and internally it passes [peer_id], [is_local] and [track_id] to specific views.
+///
+/// if you want to pass height and width you can pass as a map.
 import 'dart:io' show Platform;
 
 import 'package:flutter/material.dart';
@@ -17,6 +24,7 @@ class HMSVideoView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ///AndroidView for android it uses surfaceRenderer provided internally by webrtc.
     if (Platform.isAndroid) {
       return AndroidView(
         viewType: 'HMSVideoView',
@@ -30,6 +38,7 @@ class HMSVideoView extends StatelessWidget {
         gestureRecognizers: {},
       );
     } else if (Platform.isIOS) {
+      ///UiKitView for ios it uses VideoView provided by 100ms ios_sdk internally.
       return UiKitView(
         viewType: 'HMSVideoView',
         onPlatformViewCreated: onPlatformViewCreated,

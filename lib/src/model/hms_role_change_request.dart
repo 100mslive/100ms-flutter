@@ -1,3 +1,7 @@
+///[HMSRoleChangeRequest] contains the info about the role suggested recieved by you
+///
+///you can accept the role change or you can decline it.
+///
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 class HMSRoleChangeRequest {

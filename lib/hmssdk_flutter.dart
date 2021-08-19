@@ -1,3 +1,5 @@
+//HmssdkFlutter connects to ios and android by using channels.
+
 library hmssdk_flutter;
 
 export 'src/common/platform_methods.dart';
