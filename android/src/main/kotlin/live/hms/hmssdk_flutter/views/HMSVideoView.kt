@@ -14,7 +14,7 @@ import org.webrtc.SurfaceViewRenderer
 class HMSVideoView(context: Context) : LinearLayout(context,null) {
     val surfaceViewRenderer:SurfaceViewRenderer
     init {
-        //val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+
         val view=View.inflate(context,R.layout.hms_video_view,this)
 
         surfaceViewRenderer=view.findViewById(R.id.surfaceViewRenderer)
