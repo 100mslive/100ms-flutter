@@ -1,4 +1,3 @@
-
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 ///HMSError will contain the error and related description which you get when onError is called

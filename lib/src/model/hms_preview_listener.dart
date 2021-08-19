@@ -4,6 +4,7 @@
 ///
 /// Check out the [Sample App] how we are using it.
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+
 abstract class HMSPreviewListener {
   ///when an error is caught [onError] will be called
   ///

@@ -7,9 +7,7 @@
 ///   2.Check what actions this role can perform. i.e can it change someone else's current role, end meeting, remove someone from the room. This is can be discovered by checking the permissions property.
 ///
 ///[HMSRole] contains details about the role.
-
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-
 
 class HMSRole {
   String name;

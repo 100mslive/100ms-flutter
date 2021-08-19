@@ -1,5 +1,4 @@
 ///A track represents either the audio or video that a peer is publishing.
-
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 ///Parent of all tracks

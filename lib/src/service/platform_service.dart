@@ -7,9 +7,7 @@
 ///You can add as many as [meeting_event_listeners] and [preview_event_listeners].
 ///
 ///[hmssdk_flutter] will send updates to all the listeners when there is any change in anything.
-
 import 'dart:async';
-import 'dart:collection';
 
 import 'package:flutter/services.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
@@ -22,16 +20,17 @@ class PlatformService {
   ///used to get stream of data from platform side happening in the room.
   static const EventChannel _meetingEventChannel =
       const EventChannel('meeting_event_channel');
+
   ///used to get stream of data from platform side happening in the preview.
   static const EventChannel _previewEventChannel =
       const EventChannel('preview_event_channel');
 
   ///add meeting listeners.
   static List<HMSUpdateListener> meetingListeners = [];
+
   ///add preview listeners.
   static List<HMSPreviewListener> previewListeners = [];
   static bool isStartedListening = false;
-
 
   ///add meetingListener
   static void addMeetingListener(HMSUpdateListener newListener) {

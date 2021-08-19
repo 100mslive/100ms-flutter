@@ -14,6 +14,7 @@ class HMSRoom {
   final String id;
   final String name;
   final String? metaData;
+
   ///[peers] list which are in the room.
   final List<HMSPeer>? peers;
 

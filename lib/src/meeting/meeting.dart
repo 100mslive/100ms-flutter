@@ -3,12 +3,11 @@
 ///Just create instance of [HMSMeeting] and use the functionality which is present.
 ///
 ///All methods related to meeting, preview and their listeners are present here.
-
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter/src/common/platform_methods.dart';
 import 'package:hmssdk_flutter/src/service/platform_service.dart';
-class HMSMeeting {
 
+class HMSMeeting {
   ///join meeting by passing HMSConfig instance to it.
   Future<void> joinMeeting({required HMSConfig config}) async {
     return await PlatformService.invokeMethod(PlatformMethod.joinMeeting,
@@ -47,13 +46,11 @@ class HMSMeeting {
         arguments: {"message": message});
   }
 
-
   ///preview before joining the room pass [HMSConfig].
   Future<void> previewVideo({required HMSConfig config}) async {
     return await PlatformService.invokeMethod(PlatformMethod.previewVideo,
         arguments: config.getJson());
   }
-
 
   ///add MeetingListener it will add all the listeners.
   void addMeetingListener(HMSUpdateListener listener) {
