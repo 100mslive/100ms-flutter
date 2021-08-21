@@ -41,13 +41,9 @@ Jump to a section you're interested in or read top down to get the overview</a>
 <br><br>
 ## Prerequisites
 
-Familiarity with Android Studio and the <a>fundamentals</a> of android apps.
+Familiarity with the <a>fundamentals</a> of flutter apps.
 <br><br>
 
-## Supported Android API Levels
-<br>
-100ms's Android SDK supports Android API level 21 and higher. It is built for armeabi-v7a, arm64-v8a, x86, and x86_64 architectures.
-<br><br>
 
 ### Getting the video call joining link
 <br>
@@ -69,4 +65,13 @@ With your own server for authentication and link generation, the format of the l
 <br>
 
 ### Add SDK dependencies
+Add the `hmssdk_flutter` plugin in dependencies of pubspec.yaml
 
+```dart #pubspec.yaml
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  hmssdk_flutter:
+```
