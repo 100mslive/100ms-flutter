@@ -45,5 +45,5 @@ Any application built using 100ms' SDK has 2 components.
 
 ### Quickstart
 
-If you just want to see 100ms' SDKs in action in under 5 minutes, run one our quickstart app
+If you just want to see 100ms's SDKs in action in under 5 minutes, run one our quickstart app
 

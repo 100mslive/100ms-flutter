@@ -110,4 +110,94 @@ Camera, Recording Audio and Internet permissions are required. Add them to your 
 
 You will also need to request Camera and Record Audio permissions at runtime before you join a call or display a preview. Please follow `Android Documentation` for runtime permissions.
 
+### Join a Video Call
 
+To join a video call, call join method on HMSMeeting with the config settings. To listen the updates, call addMeetingListener on HMSMeeting.
+
+These are some listener's callback functions:
+
+`onJoin` - called when the join was successful and you have entered the room.
+
+* 💡 Audio will be automatically connected, video requires some work on your side.
+
+`onPeerUpdate` - called when a person joins or leaves the call and when their audio/video mutes/unmutes.
+
+`onTrackUpdate` - usually when a person joins the call, the listener will first call `onPeerUpdate` to notify about the join. Subsequently `onTrackUpdate` will be called with their actual video track.
+
+* 💡It's essential that this callback is listened to or you may have peers without video.
+
+```dart
+
+_meeting = HMSMeeting();
+ _meeting.joinMeeting(config: this.config);
+ _meeting.addMeetingListener(listener);
+
+ class AppUpdateListener extends HMSUpdateListener{
+  @override
+  void onError({required HMSError error}) {}
+
+  @override
+  void onJoin({required HMSRoom room}) {}
+
+  @override
+  void onMessage({required HMSMessage message}) {}
+
+  @override
+  void onPeerUpdate({required HMSPeer peer, required HMSPeerUpdate update}) {}
+
+  @override
+  void onReconnected() {}
+
+  @override
+  void onReconnecting() {}
+
+  @override
+  void onRoleChangeRequest({required HMSRoleChangeRequest roleChangeRequest}) {}
+
+  @override
+  void onRoomUpdate({required HMSRoom room, required HMSRoomUpdate update}) {}
+
+  @override
+  void onTrackUpdate({required HMSTrack track, required HMSTrackUpdate trackUpdate, required HMSPeer peer}) {}
+
+  @override
+  void onUpdateSpeakers({required List<HMSSpeaker> updateSpeakers}) {}
+  
+}
+```
+
+### How you know when people join or leave
+The join method takes an interface called `HMSUpdateListener`. It lets you know when peers join and leave the call, mute/unmute their audio and video and lots more.
+
+The `HMSUpdateListener` has a callback to notify about people joining or leaving. It is `onPeerUpdate(type: HMSPeerUpdate, peer: HMSPeer)`.
+
+* 💡HMSPeer is object that represents a person in the call.
+
+<br>
+
+### How to render audio and video
+
+The SDK plays the audio for every person who joins the call. Audio will begin playing when join succeeds. To see the person's video you need to create an instance of HMSVideoView with height and width in arguments.
+
+### Showing Videos
+
+A peer represents one person in the video call.
+
+A peer's video track is in hmsPeer.videoTrack. ScreenShares can be found in auxilary tracks of peer i.e the auxiliary tracks is a list of tracks, one of which can be a ScreenShare if they have chosen to share their screen.
+
+```dart
+peer.auxiliaryTracks
+          ?.where((each) => each.kind == HMSTrackKind.kHMSTrackKindVideo);
+```
+
+## Where to go from here
+
+Checkout the <a href="https://github.com/100mslive/100ms-flutter/tree/main/example">simple version</a> of the project.
+
+Also a full featured <a href="https://github.com/100mslive/100ms-flutter">advanced version</a>.
+
+## Glossary
+- `Room`: When you join a particular video call, all the peers said to be in a video call `room`
+- `Track`: Media. Can be the audio track or the video track.
+- `Peer`: One participant in the video call. Local peers are you, remote peers are others.
+- `Broadcast`: Chat messages are broadcasts.
