@@ -67,7 +67,7 @@ With your own server for authentication and link generation, the format of the l
 ### Add SDK dependencies
 Add the `hmssdk_flutter` plugin in dependencies of pubspec.yaml
 
-```dart #pubspec.yaml
+```dart: #pubspec.yaml
 
 dependencies:
   flutter:
@@ -75,3 +75,39 @@ dependencies:
 
   hmssdk_flutter:
 ```
+
+### Login
+### Request
+
+Here's how to get an auth token with 100ms's demo authentication
+
+1. Sign up to the dashboard.
+2. Get your video call link. It should look like `https://myname.app.100ms.live/meeting/correct-horse-battery`
+Send an http post request to `https://prod-in.100ms.live/hmsapi/get-token`
+3. With the header "subdomain" set to `myname.app.100ms.live` if your link was `https://myname.app.100ms.live/meeting/correct-horse-battery`
+4. For a link of the type `https://myname.app.100ms.live/meeting/correct-horse-battery` The body is json with the format `{"code": "correct-horse-battery", "user_id":"your-customer-id" }` the user_id can be any random string as well and you can create it with `UUID.randomUUID().toString()`
+
+
+<br>
+⚙️ &nbsp;&nbsp; For Production <br>
+<br>
+
+Maybe you won't use links at all. You will need to generate tokens on the backend, and rooms for users. Look up the Token Setup Guide here.
+<br>
+
+### Response
+The 100ms server will respond with an auth token like this <span style="color:blue">`{"token":"some-token-string"}`</span>.
+
+### Android Permissions
+Camera, Recording Audio and Internet permissions are required. Add them to your AndroidManifest.xml.
+
+```xml:
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
+```
+
+You will also need to request Camera and Record Audio permissions at runtime before you join a call or display a preview. Please follow `Android Documentation` for runtime permissions.
+
+
