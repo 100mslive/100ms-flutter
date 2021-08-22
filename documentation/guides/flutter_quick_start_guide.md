@@ -87,14 +87,15 @@ Send an http post request to `https://prod-in.100ms.live/hmsapi/get-token`
 3. With the header "subdomain" set to `myname.app.100ms.live` if your link was `https://myname.app.100ms.live/meeting/correct-horse-battery`
 4. For a link of the type `https://myname.app.100ms.live/meeting/correct-horse-battery` The body is json with the format `{"code": "correct-horse-battery", "user_id":"your-customer-id" }` the user_id can be any random string as well and you can create it with `UUID.randomUUID().toString()`
 
-
 <br>
+
+___
 ⚙️ &nbsp;&nbsp; For Production <br>
-<br>
 
-Maybe you won't use links at all. You will need to generate tokens on the backend, and rooms for users. Look up the Token Setup Guide here.
-<br>
 
+Maybe you won't use links at all. You will need to generate tokens on the backend, and rooms for users. Look up the <a href="https://docs.100ms.live/android/v2/guides/Token">Token Setup Guide</a> here.
+<br>
+___
 ### Response
 The 100ms server will respond with an auth token like this <span style="color:blue">`{"token":"some-token-string"}`</span>.
 
@@ -188,6 +189,45 @@ A peer's video track is in hmsPeer.videoTrack. ScreenShares can be found in auxi
 ```dart
 peer.auxiliaryTracks
           ?.where((each) => each.kind == HMSTrackKind.kHMSTrackKindVideo);
+```
+
+### Mute/UnMute Audio
+
+You can mute/unmute audio by calling switchAudio on HMSMeeting. `isOn` is state variable. If `isOn` is true then audio will unmute and if its false then audio will mute.
+
+```dart:
+
+/// audio unmute
+ _meeting.switchAudio(isOn: true);
+ 
+/// audio mute
+ _meeting.switchAudio(isOn: false);
+
+```
+
+### Mute/UnMute Video
+
+You can mute/unmute video by calling switchVideo on HMSMeeting. `isOn` is state variable. If `isOn` is true then video will turn on and if its false then video will turn off.
+
+```dart:
+
+/// video on
+ _meeting.switchVideo(isOn: true);
+
+/// video off
+ _meeting.switchVideo(isOn: false);
+
+```
+
+
+### Leave a video call
+
+To leave a video call, just call leave on HMSMeeting.
+
+```dart:
+
+ _meeting.leaveMeeting();
+
 ```
 
 ## Where to go from here
