@@ -20,25 +20,15 @@ class HMSVideoView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (viewSize != null) {
-      return _PlatformView(track: track, viewSize: viewSize!);
+    final tempViewSize = viewSize;
+    if (tempViewSize != null) {
+      return _PlatformView(track: track, viewSize: tempViewSize);
     } else
       return LayoutBuilder(builder: (_, constraints) {
         return _PlatformView(
             track: track,
             viewSize: Size(constraints.maxWidth, constraints.maxHeight));
       });
-  }
-}
-
-class Person {
-  String name;
-  String? fullName;
-
-  Person(this.name, {this.fullName});
-
-  void splitFullName() {
-    if (fullName != null) print(fullName!.split(''));
   }
 }
 
