@@ -284,14 +284,14 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     
     func sendMessage(call: FlutterMethodCall,result:FlutterResult) {
         let arguments = call.arguments as! Dictionary<String, AnyObject>
-        let message:HMSMessage = HMSMessage(
-            sender: (arguments["sender"] as? String) ?? "",
-            receiver: arguments["receiver"] as? String ?? "",
-            time:arguments["time"] as? String ?? "",
-            type: arguments["type"] as? String ?? "",
-            message: arguments["message"] as? String ?? ""
-        )
-        hmsSDK?.send(message: message)
+//        let message:HMSMessage = HMSMessage(
+//            sender: (arguments["sender"] as? String) ?? "",
+////            receiver: arguments["receiver"] as? String ?? "",
+//            time:arguments["time"] as? String ?? "",
+////            type: arguments["type"] as? String ?? "",
+//            message: arguments["message"] as? String ?? ""
+//        )
+        hmsSDK?.sendBroadcastMessage(message:  arguments["message"] as? String ?? "")
         result("sent message")
     }
     func acceptRoleRequest(call: FlutterMethodCall,result:FlutterResult) {
