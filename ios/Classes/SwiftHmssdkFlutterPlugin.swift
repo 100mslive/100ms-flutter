@@ -238,12 +238,25 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             let isOn:Bool = arguments["is_on"] as? Bool ?? false
             print(videoTrack.settings)
             if isOn {
-                videoTrack.setMute(true)
+               muteVideo()
             }else{
-                videoTrack.setMute(false)
+                unMuteVideo()
             }
          }
         result("video_changed")
+    }
+    
+    func muteVideo(){
+        if let peer = hmsSDK?.localPeer, let videoTrack = peer.videoTrack as? HMSLocalVideoTrack {
+            print(videoTrack.settings)
+                videoTrack.setMute(true)
+         }
+    }
+    func unMuteVideo(){
+        if let peer = hmsSDK?.localPeer, let videoTrack = peer.videoTrack as? HMSLocalVideoTrack {
+            print(videoTrack.settings)
+                videoTrack.setMute(false)
+         }
     }
     
     func switchCamera(result:FlutterResult) {
@@ -358,6 +371,8 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     case "accept_role_change":acceptRoleRequest(call:call,result:result)
     case "change_role":changeRole(call:call,result:result)
     case "get_roles":getRoles(call:call,result:result)
+    case "start_capturing": unMuteVideo()
+    case "stop_capturing": muteVideo()
     default:
         result(FlutterMethodNotImplemented)
     }
