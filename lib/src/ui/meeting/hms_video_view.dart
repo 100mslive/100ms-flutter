@@ -13,9 +13,30 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 class HMSVideoView extends StatelessWidget {
   final HMSTrack track;
-  final Map<String, Object>? args;
+  final Size? viewSize;
 
-  const HMSVideoView({Key? key, required this.track, this.args})
+  const HMSVideoView({Key? key, required this.track, this.viewSize})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final tempViewSize = viewSize;
+    if (tempViewSize != null) {
+      return _PlatformView(track: track, viewSize: tempViewSize);
+    } else
+      return LayoutBuilder(builder: (_, constraints) {
+        return _PlatformView(
+            track: track,
+            viewSize: Size(constraints.maxWidth, constraints.maxHeight));
+      });
+  }
+}
+
+class _PlatformView extends StatelessWidget {
+  final HMSTrack track;
+  final Size viewSize;
+
+  const _PlatformView({Key? key, required this.track, required this.viewSize})
       : super(key: key);
 
   void onPlatformViewCreated(int id) {
@@ -34,7 +55,10 @@ class HMSVideoView extends StatelessWidget {
           'peer_id': track.peer?.peerId,
           'is_local': track.peer?.isLocal,
           'track_id': track.trackId
-        }..addAll(args ?? {}),
+        }..addAll({
+            'height': viewSize.height,
+            'width': viewSize.width,
+          }),
         gestureRecognizers: {},
       );
     } else if (Platform.isIOS) {
@@ -47,7 +71,10 @@ class HMSVideoView extends StatelessWidget {
           'peer_id': track.peer?.peerId,
           'is_local': track.peer?.isLocal,
           'track_id': track.trackId
-        }..addAll(args ?? {}),
+        }..addAll({
+            'height': viewSize.height,
+            'width': viewSize.width,
+          }),
         gestureRecognizers: {},
       );
     } else {
