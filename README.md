@@ -1,7 +1,7 @@
-<a href="https://100ms.live/">
-<img src="https://github.com/100mslive/100ms-flutter/blob/develop/100ms.gif" height=256/> 
-<img src="https://github.com/100mslive/100ms-flutter/blob/develop/100ms.svg" title="100ms logo" float=center height=256>
-</a>
+<p align="center" >
+  <a href="https://100ms.live/">
+  <img src="https://github.com/100mslive/100ms-flutter/raw/develop/100ms.svg" title="100ms logo" float=left></a>
+</p>
 
 [![Pub Version](https://img.shields.io/pub/v/hmssdk_flutter)](https://pub.dev/packages/hmssdk_flutter)
 [![License](https://img.shields.io/github/license/100mslive/100ms-flutter)](https://www.100ms.live/)

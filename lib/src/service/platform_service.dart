@@ -1,3 +1,12 @@
+///PlatformService helps to connect to android or ios depending on device
+///
+///It has two FlutterEvent Channels one for meetingUpdates and another for preview updates.
+///
+///It has one MethodChannel to use different functionalities present at Android and Ios side.You can check them in PlatformMethod enum.
+///
+///You can add as many as [meeting_event_listeners] and [preview_event_listeners].
+///
+///[hmssdk_flutter] will send updates to all the listeners when there is any change in anything.
 import 'dart:async';
 
 import 'package:flutter/services.dart';
@@ -5,31 +14,45 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter/src/common/platform_methods.dart';
 
 class PlatformService {
+  ///used to pass data to platform using methods
   static const MethodChannel _channel = const MethodChannel('hmssdk_flutter');
+
+  ///used to get stream of data from platform side happening in the room.
   static const EventChannel _meetingEventChannel =
       const EventChannel('meeting_event_channel');
+
+  ///used to get stream of data from platform side happening in the preview.
   static const EventChannel _previewEventChannel =
       const EventChannel('preview_event_channel');
+
+  ///add meeting listeners.
   static List<HMSUpdateListener> meetingListeners = [];
+
+  ///add preview listeners.
   static List<HMSPreviewListener> previewListeners = [];
   static bool isStartedListening = false;
 
+  ///add meetingListener
   static void addMeetingListener(HMSUpdateListener newListener) {
     meetingListeners.add(newListener);
   }
 
+  ///remove meetingListener just pass the listener instance you want to remove.
   static void removeMeetingListener(HMSUpdateListener listener) {
     if (meetingListeners.contains(listener)) meetingListeners.remove(listener);
   }
 
+  ///add previewListener
   static void addPreviewListener(HMSPreviewListener newListener) {
     previewListeners.add(newListener);
   }
 
+  ///remove previewListener just pass the listener instance you want to remove.
   static void removePreviewListener(HMSPreviewListener listener) {
     if (previewListeners.contains(listener)) previewListeners.remove(listener);
   }
 
+  ///used to invoke different methods at platform side and returns something but not neccessarily
   static Future<dynamic> invokeMethod(PlatformMethod method,
       {Map? arguments}) async {
     if (!isStartedListening) {
@@ -42,6 +65,7 @@ class PlatformService {
     return result;
   }
 
+  ///recieves all the meeting updates here as streams
   static void updatesFromPlatform() {
     _meetingEventChannel.receiveBroadcastStream(
         {'name': 'meeting'}).map<HMSUpdateListenerMethodResponse>((event) {
@@ -118,6 +142,7 @@ class PlatformService {
       }
     });
 
+    ///recieves all updates regaring preview as streams
     _previewEventChannel.receiveBroadcastStream({'name': 'preview'}).map<
         HMSPreviewUpdateListenerMethodResponse>((event) {
       Map<String, dynamic>? data = {};
@@ -152,6 +177,7 @@ class PlatformService {
     });
   }
 
+  ///notifying all previewListeners attached about updates
   static void notifyPreviewListeners(
       HMSPreviewUpdateListenerMethod method, Map<String, dynamic> arguments) {
     switch (method) {
@@ -171,6 +197,7 @@ class PlatformService {
     }
   }
 
+  ///notifying all meetingListeners attached about updates
   static void notifyMeetingListeners(
       HMSUpdateListenerMethod method, Map<String, dynamic> arguments) {
     switch (method) {
