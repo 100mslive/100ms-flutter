@@ -12,7 +12,10 @@ import 'package:flutter/services.dart' show StandardMessageCodec;
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 class HMSVideoView extends StatelessWidget {
+  /// [HMSVideoView] will render video using trackId from HMSTrack
   final HMSTrack track;
+
+  /// [HMSVideoView] will use viewSize to get height and width of rendered video. If not passed, it will take whatever size is available to the widget.
   final Size? viewSize;
 
   const HMSVideoView({Key? key, required this.track, this.viewSize})
