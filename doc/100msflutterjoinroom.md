@@ -145,6 +145,11 @@ Now, let's take a look at the listener class you have to implement it
 HMSUpdateListener: a class conforming to HMSUpdateListener interface.
 The methods of HMSUpdateListener are invoked to notify updates happening in the room like a peer joins/leaves, a track got muted/unmutes, etc.
 
+add this `updateListener` instace to 
+```dart
+    PlatformService.addMeetingListener(updateListener);
+```
+
 After calling join your app will be provided an update from the 100ms SDK.
 
 ✅ If successful, the fun onJoin(room: HMSRoom) method of HMSUpdateListener will be invoked with information about the room encapsulated in the HMSRoom object.

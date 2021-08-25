@@ -34,6 +34,16 @@ abstract class HMSPreviewListener {
 }
 ```
 
- This will pass an array of local tracks that you can display to the user (see Render Video and Mute sections for more details).
+This will pass an array of local tracks that you can display to the user (see Render Video and Mute sections for more details).
 
 If however there was some error related to getting the input sources or some preflight check has failed delegate callback will be fired with the HMSError instance you can use to find what went wrong (see Error Handling).
+
+
+add the `previewListener` instance to 
+
+```dart
+    PlatformService.addPreviewListener(previewListener);
+```
+
+
+ 
