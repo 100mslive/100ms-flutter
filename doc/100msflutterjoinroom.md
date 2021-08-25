@@ -63,7 +63,7 @@ now join by passing config object created in previous step.
 
 That's it. You have joined a room successfully. 🥳
 
-Now, let's take a look at the signature of the Join API
+Now, let's take a look at the listener class you have to implement it 
 
  
 ```dart

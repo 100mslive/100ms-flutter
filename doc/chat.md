@@ -14,5 +14,3 @@ You will get updates about message sent by someone in HMSUpdateListener.
 ```dart
     void onMessage({required HMSMessage message});
 ```
-
-There is more to come.....
