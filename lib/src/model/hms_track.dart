@@ -14,9 +14,9 @@ class HMSTrack {
   }
 
   const HMSTrack(
-      {required this.kind,
+      {required this.trackId,
+      required this.kind,
       required this.source,
-      required this.trackId,
       required this.trackDescription,
       this.peer});
 
