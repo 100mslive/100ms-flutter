@@ -1,9 +1,10 @@
 # Error Handling
+
 When you make an API call to access an HMS SDK, the SDK may return error codes. ErrorCodes are returned when a problem that cannot be recovered without app intervention has occurred.
 
 These are returned as `HMSException` in the onError callback of the `HMSUpdateListner`.
 
-Following are the different error codes that are returned by the SDK . Before returning any error code, SDK retries the errors(whichever is possible).
+Following are the different error codes that are returned by the SDK . Before returning any error code, SDK retries the errors (whichever is possible).
 
 | Error Code  | Cause of the error | Action to be taken     |
 |-------------|--------------------|------------------------|

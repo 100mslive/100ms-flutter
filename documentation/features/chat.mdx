@@ -5,12 +5,12 @@ What's a video without being able to send messages to each other too? 100ms supp
 You can see an example of every way of sending messages and interpreting messages in the advanced sample app.
 
 ```dart 
-    HMSMeeting meeting = new HMSMeeting();
-    meeting.sendMessage("HI");
+HMSMeeting meeting = new HMSMeeting();
+meeting.sendMessage("Hi");
 ```
 
-You will get updates about message sent by someone in HMSUpdateListener.
+You will get updates about message sent by someone in `HMSUpdateListener`.
 
 ```dart
-    void onMessage({required HMSMessage message});
+void onMessage({required HMSMessage message});
 ```

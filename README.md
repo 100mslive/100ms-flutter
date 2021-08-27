@@ -5,8 +5,8 @@
 
 [![Pub Version](https://img.shields.io/pub/v/hmssdk_flutter)](https://pub.dev/packages/hmssdk_flutter)
 [![License](https://img.shields.io/github/license/100mslive/100ms-flutter)](https://www.100ms.live/)
-[![Documentation](https://img.shields.io/badge/Read-Documentation-blue)](https://docs.100ms.live/)
-[![Discord](https://img.shields.io/badge/Community-Join%20on%20Discord-blue)](https://discord.com/invite/kGdmszyzq2)
+[![Documentation](https://img.shields.io/badge/Read-Documentation-blue)](https://docs.100ms.live/flutter/foundation/basics)
+[![Discord](https://img.shields.io/badge/Community-Join%20on%20Discord-blue)](https://100ms.live/discord)
 [![Firebase](https://img.shields.io/badge/Download%20Android-Firebase-green)](https://appdistribution.firebase.dev/i/b623e5310929ab70)
 [![TestFlight](https://img.shields.io/badge/Download%20iOS-TestFlight-blue)](https://testflight.apple.com/join/Uhzebmut)
 [![Register](https://img.shields.io/badge/Contact-Know%20More-blue)](https://dashboard.100ms.live/register)
@@ -21,10 +21,76 @@ Here you will find everything you need to build experiences with video using 100
   
  ## 🏃‍♀️ How to run the Sample App
 
+ The Example app can be found [here](https://github.com/100mslive/100ms-flutter/tree/main/example).
+
  1. In project root, run `flutter pub get`
  2. Change directory to `example` folder, run `flutter packages pub run build_runner build --delete-conflicting-outputs`
  3. Run either `flutter build ios` OR `flutter build apk`
  4. Finally, `flutter run`
+
+## 🚂 Setup Guide
+
+1. Sign up on https://dashboard.100ms.live/register & visit the Developer tab to access your credentials.
+
+2. Get familiarized with [Tokens & Security here](https://docs.100ms.live/flutter/foundation/security-and-tokens)
+
+3. Complete the steps in [Auth Token Quick Start Guide](https://docs.100ms.live/flutter/guides/token)
+
+4. Get the HMSSDK via [pub.dev](https://pub.dev/packages/hmssdk_flutter). Add the `hmssdk_flutter` to your pubspec.yaml
+
+
+## ☝️ Pre-requisites
+
+- Support for Android API level 24 or higher
+- Support for Java 8
+- Support for iOS 10 or higher
+- Xcode 12 or higher
+
+## 📱 Supported Devices
+
+The Android SDK supports Android API level 21 and higher. It is built for armeabi-v7a, arm64-v8a, x86, and x86_64 architectures.
+
+iPhone & iPads with iOS version 10 or higher.
+
+## Android Permissions
+
+Add following permissions in Android AndroidManifest.xml file
+
+```xml
+<uses-feature android:name="android.hardware.camera"/>
+
+<uses-feature android:name="android.hardware.camera.autofocus"/>
+
+<uses-permission android:name="android.permission.CAMERA"/>
+
+<uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
+
+<uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
+
+<uses-permission android:name="android.permission.RECORD_AUDIO"/>
+
+<uses-permission android:name="android.permission.BLUETOOTH"/>
+
+<uses-permission android:name="android.permission.INTERNET"/>
+
+<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+```
+
+
+## iOS Permissions
+
+Add following permissions in iOS Info.plist file
+```xml
+<key>NSMicrophoneUsageDescription</key>
+<string>{YourAppName} wants to use your microphone</string>
+
+<key>NSCameraUsageDescription</key>
+<string>{YourAppName} wants to use your camera</string>
+
+<key>NSLocalNetworkUsageDescription</key>
+<string>{YourAppName} App wants to use your local network</string>
+```
+
 
 ## 🧐 Key Concepts
 
@@ -61,18 +127,14 @@ Here you will find everything you need to build experiences with video using 100
 
 ```dart
 abstract class HMSUpdateListener {
+
   /// This will be called on a successful JOIN of the room by the user
   ///
   /// This is the point where applications can stop showing its loading state
   /// - Parameter room: the room which was joined
   void onJoin({required HMSRoom room});
+  
 
-  /// This is called when there is a change in any property of the Room
-  ///
-  /// - Parameters:
-  ///   - room: the room which was joined
-  ///   - update: the triggered update type. Should be used to perform different UI Actions
-  void onRoomUpdate({required HMSRoom room, required HMSRoomUpdate update});
 
   /// This will be called whenever there is an update on an existing peer
   /// or a new peer got added/existing peer is removed.
@@ -82,6 +144,8 @@ abstract class HMSUpdateListener {
   ///   - peer: the peer who joined/left or was updated
   ///   - update: the triggered update type. Should be used to perform different UI Actions
   void onPeerUpdate({required HMSPeer peer, required HMSPeerUpdate update});
+
+
 
   /// This is called when there are updates on an existing track
   /// or a new track got added/existing track is removed
@@ -96,24 +160,16 @@ abstract class HMSUpdateListener {
       required HMSTrackUpdate trackUpdate,
       required HMSPeer peer});
 
-  /// This will be called when there is an error in the system
-  ///
-  /// and SDK has already retried to fix the error
-  /// - Parameter error: the error that occurred
-  void onError({required HMSError error});
+
 
   /// This is called when there is a new broadcast message from any other peer in the room
   ///
   /// This can be used to implement chat is the room
   /// - Parameter message: the received broadcast message
   void onMessage({required HMSMessage message});
-
-  /// This is called when someone asks for change or role
-  ///
-  /// for eg. admin can ask a peer to become host from guest.
-  /// this triggers this call on peer's app
-  void onRoleChangeRequest({required HMSRoleChangeRequest roleChangeRequest});
-
+  
+  
+  
   /// This is called every 1 second with list of active speakers
   ///
   ///    A HMSSpeaker object contains -
@@ -127,8 +183,38 @@ abstract class HMSUpdateListener {
   /// - Parameter speakers: the list of speakers
   void onUpdateSpeakers({required List<HMSSpeaker> updateSpeakers});
 
+
+
+  /// This is called when someone asks for change or role
+  ///
+  /// for eg. admin can ask a peer to become host from guest.
+  /// this triggers this call on peer's app
+  void onRoleChangeRequest({required HMSRoleChangeRequest roleChangeRequest});
+
+
+
+  /// This will be called when there is an error in the system
+  ///
+  /// and SDK has already retried to fix the error
+  /// - Parameter error: the error that occurred
+  void onError({required HMSError error});
+  
+  
+  
+  /// This is called when there is a change in any property of the Room
+  ///
+  /// - Parameters:
+  ///   - room: the room which was joined
+  ///   - update: the triggered update type. Should be used to perform different UI Actions
+  void onRoomUpdate({required HMSRoom room, required HMSRoomUpdate update});
+
+
+
+  /// This is called when SDK detects a network issue and is trying to recover
   void onReconnecting();
 
+
+  /// This is called when SDK successfully recovered from a network issue
   void onReconnected();
 }
 ```
@@ -140,19 +226,19 @@ abstract class HMSUpdateListener {
 
   The following are the different types of updates that are emitted by the SDK - 
 ```dart
-  HMSPeerUpdate
-    case PEER_JOINED A new peer joins the room
-    case PEER_LEFT - An existing peer leaves the room
-    case BECAME_DOMINANT_SPEAKER - A peer becomes a dominant speaker
-    case NO_DOMINANT_SPEAKER - There is silence in the room (No speaker is detected)
-    
-  HMSTrackUpdate
-    case TRACK_ADDED - A new track is added by a remote peer
-    case TRACK_REMOVED - An existing track is removed from a remote peer
-    case TRACK_MUTED - An existing track of a remote peer is muted
-    case TRACK_UNMUTED - An existing track of a remote peer is unmuted
-    case TRACK_DESCRIPTION_CHANGED - The optional description of a track of a remote peer is changed
- ```
+HMSPeerUpdate
+  case PEER_JOINED A new peer joins the room
+  case PEER_LEFT - An existing peer leaves the room
+  case BECAME_DOMINANT_SPEAKER - A peer becomes a dominant speaker
+  case NO_DOMINANT_SPEAKER - There is silence in the room (No speaker is detected)
+
+HMSTrackUpdate
+  case TRACK_ADDED - A new track is added by a remote peer
+  case TRACK_REMOVED - An existing track is removed from a remote peer
+  case TRACK_MUTED - An existing track of a remote peer is muted
+  case TRACK_UNMUTED - An existing track of a remote peer is unmuted
+  case TRACK_DESCRIPTION_CHANGED - The optional description of a track of a remote peer is changed
+```
   
 ## 🛤 How to know the type and source of Track?
 
@@ -172,6 +258,7 @@ HMSConfig config = HMSConfig( userId: userId,
                               authToken: token,
                               userName: userName);
 ```
+
  `userId`: should be unique we are using `Uuid` package to generate one.
  `roomId`: id of the room which you want to join.
  `token`:  follow the above step 1 to generate token.
@@ -200,6 +287,7 @@ meeting.leave() // to leave a room
 ```dart
 // Turn on
 meeting.switchAudio(isOn:true)
+
 // Turn off  
 meeting.switchAudio(isOn:false)
 ```
@@ -231,15 +319,15 @@ HMSTrack
 ## 🎞 Display a Track
   To display a video track, first get the `HMSVideoTrack` & pass it on to `HMSVideoView` using `setVideoTrack` function. Ensure to attach the `HMSVideoView` to your UI hierarchy.
 
-  ```dart
-  VideoView(
-      track: videoTrack,
-      args: {
-        'height': customHeight,
-        'width': customWidth,
-      },
-    );
-  ```
+```dart
+HMSVideoView(
+    track: videoTrack,
+    args: {
+      'height': customHeight,
+      'width': customWidth,
+    },
+  );
+```
 
 ## Change a Role
   To change role, you will provide peerId of selected peer and new roleName from roles. If forceChange is true, the system will prompt user for the change. If forceChange is false, user will get a prompt to accept/reject the role.
@@ -268,7 +356,6 @@ String message = 'Hello World!'
 meeting.sendMessage(message);  // meeting is an instance of `HMSMeeting` object
 
 
-
 // receiving messages
 // the object conforming to `HMSUpdateListener` will be invoked with `on(message: HMSMessage)`, add your logic to update Chat UI within this listener
 void onMessage({required HMSMessage message}){
@@ -294,65 +381,4 @@ abstract class HMSPreviewListener {
   //above mentioned VideoView widget
   void onPreview({required HMSRoom room, required List<HMSTrack> localTracks});
 }
-```
-
-
-## 🚂 Setup Guide
-
-1. Sign up on https://dashboard.100ms.live/register & visit the Developer tab to access your credentials.
-
-2. Get familiarized with [Tokens & Security here](https://docs.100ms.live/ios/v2/foundation/Security-and-tokens)
-
-3. Complete the steps in [Auth Token Quick Start Guide](https://docs.100ms.live/ios/v2/guides/Token)
-
-4. Get the HMSSDK via [pub.dev](https://pub.dev/). Add the `hmssdk_flutter` to your pubspec.yaml
-
-
-
-## Android Integration
-
-Add following permissions in Android AndroidManifest.xml file
-
-```xml
-<uses-feature android:name="android.hardware.camera"/>
-
-<uses-feature android:name="android.hardware.camera.autofocus"/>
-
-<uses-permission android:name="android.permission.CAMERA"/>
-
-<uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
-
-<uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
-
-<uses-permission android:name="android.permission.RECORD_AUDIO"/>
-
-<uses-permission android:name="android.permission.BLUETOOTH"/>
-
-<uses-permission android:name="android.permission.INTERNET"/>
-
-<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-```
-
-## ☝️ Pre-requisites
-
-- Support for Android API level 24 or higher
-- Support for Java 8
-
-## 📱 Supported Devices
-
-The Android SDK supports Android API level 21 and higher. It is built for armeabi-v7a, arm64-v8a, x86, and x86_64 architectures.
-
-## iOS Integration
-
-
-Add following permissions in iOS Info.plist file
-```xml
-<key>NSMicrophoneUsageDescription</key>
-<string>{YourAppName} wants to use your microphone</string>
-
-<key>NSCameraUsageDescription</key>
-<string>{YourAppName} wants to use your camera</string>
-
-<key>NSLocalNetworkUsageDescription</key>
-<string>{YourAppName} App wants to use your local network</string>
 ```
