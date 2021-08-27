@@ -7,9 +7,7 @@ To invoke this API call
 
 ```dart:
 /// meeting is object of HMSMeeting and config is an object of HMSConfig
-
 meeting.previewVideo(config:config);
-
 ```
 
 
