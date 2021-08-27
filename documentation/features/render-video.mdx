@@ -8,14 +8,15 @@ To render video you will use HMSVideoView. To use it we will need few things:
 2. `HMSVideoView` will use viewSize to get height and width of rendered video. If not passed, it will take whatever size is available to the widget.
 
 ## How to get HMSTrack 
+
 HMSTrack is used to render video in HMSVideoView.
 
 And you can get all tracks by listening to `HMSUpdateListener.onTrackUpdate`
 
 Add a check on these tracks to see if they are video tracks or audio tracks.
 
-for eg.
-```dart:
+For example -
+```dart
 /// check if track is video or audio
 
 /// For Audio
@@ -23,44 +24,38 @@ track.kind == HMSTrackKind.kHMSTrackKindAudio
 
 /// For Video
 track.kind == HMSTrackKind.kHMSTrackKindVideo
-
 ```
 
 Now, you can pass video track to `HMSVideoView ` to get you live video on screen.
 
-
 ## Render Video
+
 To Render video you need track and size(optional).
 
-for eg. HMSVideoView with `HMSTrack` and `Size`
+For example - HMSVideoView with `HMSTrack` and `Size`
 
 ```dart
-
 ///  This will render video with trackId present in track and it will have height = 50 and width = 50
 
 HMSVideoView(
   track: track,
   viewSize: Size(50,50),
 );
-
 ```
 
-
-for eg. HMSVideoView with only `HMSTrack`
+For example - HMSVideoView with only `HMSTrack`
 
 ```dart
-
 ///  This will render video with trackId present in track and it will have height and width available to it
 
 HMSVideoView(
   track: track,
   viewSize: Size(50,50),
 );
-
 ```
 
 ## Detach video to conserve bandwidth and cleanup elements
 
-Remove the HMSVideoView from ui and it will not render its video.
+Remove the HMSVideoView from UI and it will not render its video & conserve network bandwidth.
 
-For full example try out our example app <a href="https://github.com/100mslive/100ms-flutter/tree/main/example">here</a>
+For full example try out our [Example app here](https://github.com/100mslive/100ms-flutter/tree/main/example).
