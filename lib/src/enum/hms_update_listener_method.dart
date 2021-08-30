@@ -9,6 +9,7 @@ enum HMSUpdateListenerMethod {
   onReconnecting,
   onReconnected,
   onRoleChangeRequest,
+
   unknown
 }
 

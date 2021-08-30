@@ -8,6 +8,7 @@ class HMSTrackUpdateExtension {
     companion object{
         fun toDictionary(peer:HMSPeer,track:HMSTrack,update: HMSTrackUpdate):HashMap<String,Any>{
             val hashMap=HashMap<String,Any>()
+
             hashMap.put("peer", HMSPeerExtension.toDictionary(peer)!!)
             hashMap.put("track", HMSTrackExtension.toDictionary(track)!!)
             hashMap.put("update", HMSTrackExtension.getTrackUpdateInString(update)!!)

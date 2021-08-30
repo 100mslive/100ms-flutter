@@ -206,8 +206,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                             showDialog(
                                 context: context,
                                 builder: (_) => ChangeRoleOptionDialog(
-                                      peerName:
-                                          filteredList[index].peer?.name ?? '',
+                                      peerName: filteredList[index].peer?.name ?? '',
                                       getRoleFunction: _meetingStore.getRoles(),
                                       changeRole: (role, forceChange) {
                                         Navigator.pop(context);
@@ -219,7 +218,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                             roleName: role.name,
                                             forceChange: forceChange);
                                       },
-                                    ));
+                                ));
                           },
                           child: PeerItemOrganism(
                               track: filteredList[index],

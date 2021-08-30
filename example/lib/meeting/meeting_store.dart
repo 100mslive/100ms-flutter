@@ -195,9 +195,23 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
     updateRoleChangeRequest(roleChangeRequest);
   }
 
+  HMSTrack? previousHighestVideoTrack;
+
   @override
   void onUpdateSpeakers({required List<HMSSpeaker> updateSpeakers}) {
-    print('on update speaker');
+    print('speakersFlutter $updateSpeakers');
+    if(updateSpeakers.length==0)return;
+    if(previousHighestVideoTrack!=null){
+      HMSTrack newPreviousTrack=HMSTrack.copyWith(false, track: previousHighestVideoTrack!);
+      tracks.remove(previousHighestVideoTrack);
+      tracks.add(newPreviousTrack);
+    }
+    HMSSpeaker highestAudioSpeaker=updateSpeakers[0];
+    HMSTrack highestAudioSpeakerVideoTrack=tracks.firstWhere((element) => element.peer!.peerId==highestAudioSpeaker.peerId);
+    HMSTrack newHighestTrack=HMSTrack.copyWith(true, track: highestAudioSpeakerVideoTrack);
+    tracks.remove(highestAudioSpeakerVideoTrack);
+    tracks.insert(0,newHighestTrack);
+    previousHighestVideoTrack=newHighestTrack;
   }
 
   @override

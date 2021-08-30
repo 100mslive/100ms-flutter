@@ -70,11 +70,13 @@ class PlatformService {
     _meetingEventChannel.receiveBroadcastStream(
         {'name': 'meeting'}).map<HMSUpdateListenerMethodResponse>((event) {
       Map<String, dynamic>? data = {};
+      print("flutterdata1 ${event}");
       if (event is Map && event['data'] is Map) {
         (event['data'] as Map).forEach((key, value) {
           data[key.toString()] = value;
         });
       }
+      print("flutterdata2 ${data}");
       HMSUpdateListenerMethod method =
           HMSUpdateListenerMethodValues.getMethodFromName(event['event_name']);
       return HMSUpdateListenerMethodResponse(
@@ -118,10 +120,14 @@ class PlatformService {
           break;
         case HMSUpdateListenerMethod.onUpdateSpeaker:
           List<HMSSpeaker> speakers = [];
+
           if (data.containsKey('speakers') && data['speakers'] is List) {
-            (data['speakers'] as List)
-                .map((e) => speakers.add(HMSSpeaker.fromMap(e)));
+            print("onUpdateSpeakerFluttering ${data["speakers"] is List}");
+            (data['speakers'] as List).forEach((element) {
+              speakers.add(HMSSpeaker.fromMap(element as Map));
+            });
           }
+          print(speakers.length);
           notifyMeetingListeners(method, {'speakers': speakers});
           break;
         case HMSUpdateListenerMethod.onReconnecting:
@@ -226,6 +232,7 @@ class PlatformService {
             .forEach((e) => e.onMessage(message: arguments['message']));
         break;
       case HMSUpdateListenerMethod.onUpdateSpeaker:
+        print("flutterOnUpdateSpeaker ${arguments}");
         meetingListeners.forEach(
             (e) => e.onUpdateSpeakers(updateSpeakers: arguments['speakers']));
         break;

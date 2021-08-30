@@ -4,7 +4,6 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 class PeerItemOrganism extends StatelessWidget {
   final HMSTrack track;
   final bool isVideoMuted;
-
   PeerItemOrganism({Key? key, required this.track, this.isVideoMuted = true})
       : super(key: key);
 
@@ -15,7 +14,7 @@ class PeerItemOrganism extends StatelessWidget {
       padding: EdgeInsets.all(16),
       margin: EdgeInsets.all(16),
       decoration: BoxDecoration(
-          border: Border.all(color: Colors.green),
+          border: Border.all(color: track.isHighestAudio?Colors.blue:Colors.green,width: track.isHighestAudio?3.0:1.0),
           borderRadius: BorderRadius.all(Radius.circular(16))),
       child: Column(
         children: [
