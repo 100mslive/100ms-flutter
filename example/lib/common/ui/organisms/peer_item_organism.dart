@@ -34,10 +34,6 @@ class PeerItemOrganism extends StatelessWidget {
               }
               return HMSVideoView(
                 track: track,
-                args: {
-                  'height': constraints.maxHeight,
-                  'width': constraints.maxWidth,
-                },
               );
             },
           )),
