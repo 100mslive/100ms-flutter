@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="API docs for the isAudioMute method from the HMSMeeting class, for the Dart programming language.">
+  <title>isAudioMute method - HMSMeeting class - hmssdk_flutter library - Dart API</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../../static-assets/github.css?v1">
+  <link rel="stylesheet" href="../../static-assets/styles.css?v1">
+  <link rel="icon" href="../../static-assets/favicon.png?v1">
+
+  
+</head>
+
+
+<body data-base-href="../../"
+      data-using-base-href="false">
+
+<div id="overlay-under-drawer"></div>
+
+<header id="title">
+  <button id="sidenav-left-toggle" type="button">&nbsp;</button>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="../../index.html">hmssdk_flutter</a></li>
+    <li><a href="../../hmssdk_flutter/hmssdk_flutter-library.html">hmssdk_flutter</a></li>
+    <li><a href="../../hmssdk_flutter/HMSMeeting-class.html">HMSMeeting</a></li>
+    <li class="self-crumb">isAudioMute method</li>
+  </ol>
+  <div class="self-name">isAudioMute</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+
+<main>
+
+
+  <div id="dartdoc-main-content" class="main-content">
+      <div>
+<h1><span class="kind-method">isAudioMute</span> method 
+    <a href="https://dart.dev/null-safety" class="feature feature-null-safety" title="Supports the null safety language feature.">Null safety</a>
+</h1></div>
+
+    <section class="multi-line-signature">
+      
+
+<span class="returntype"><a href="https://api.flutter.dev/flutter/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>&gt;</span></span>
+<span class="name ">isAudioMute</span>(<wbr><ol class="parameter-list"><li><span class="parameter" id="isAudioMute-param-peer"><span class="type-annotation"><a href="../../hmssdk_flutter/HMSPeer-class.html">HMSPeer</a>?</span> <span class="parameter-name">peer</span></span></li>
+</ol>)
+
+      
+
+    </section>
+    
+<section class="desc markdown">
+  <p>checks the audio is mute or unmute just pass <code>peer</code></p>
+</section>
+
+
+    
+<section class="summary source-code" id="source">
+  <h2><span>Implementation</span></h2>
+  <pre class="language-dart"><code class="language-dart">Future&lt;bool&gt; isAudioMute(HMSPeer? peer) async {
+  bool isMute = await PlatformService.invokeMethod(PlatformMethod.isAudioMute,
+      arguments: {&quot;peer_id&quot;: peer?.peerId ?? &quot;&quot;});
+  return isMute;
+}</code></pre>
+</section>
+
+
+  </div> <!-- /.main-content -->
+
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+  <li><a href="../../index.html">hmssdk_flutter</a></li>
+  <li><a href="../../hmssdk_flutter/hmssdk_flutter-library.html">hmssdk_flutter</a></li>
+  <li><a href="../../hmssdk_flutter/HMSMeeting-class.html">HMSMeeting</a></li>
+  <li class="self-crumb">isAudioMute method</li>
+</ol>
+
+
+    <h5>HMSMeeting class</h5>
+    <ol>
+
+    <li class="section-title"><a href="../../hmssdk_flutter/HMSMeeting-class.html#constructors">Constructors</a></li>
+    <li><a href="../../hmssdk_flutter/HMSMeeting/HMSMeeting.html">HMSMeeting</a></li>
+
+
+    <li class="section-title inherited">
+      <a href="../../hmssdk_flutter/HMSMeeting-class.html#instance-properties">Properties</a>
+    </li>
+    <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/hashCode.html">hashCode</a></li>
+    <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/runtimeType.html">runtimeType</a></li>
+
+    <li class="section-title"><a href="../../hmssdk_flutter/HMSMeeting-class.html#instance-methods">Methods</a></li>
+    <li><a href="../../hmssdk_flutter/HMSMeeting/acceptRoleChangerequest.html">acceptRoleChangerequest</a></li>
+    <li><a href="../../hmssdk_flutter/HMSMeeting/addMeetingListener.html">addMeetingListener</a></li>
+    <li><a href="../../hmssdk_flutter/HMSMeeting/addPreviewListener.html">addPreviewListener</a></li>
+    <li><a href="../../hmssdk_flutter/HMSMeeting/changeRole.html">changeRole</a></li>
+    <li><a href="../../hmssdk_flutter/HMSMeeting/getRoles.html">getRoles</a></li>
+    <li><a href="../../hmssdk_flutter/HMSMeeting/isAudioMute.html">isAudioMute</a></li>
+    <li><a href="../../hmssdk_flutter/HMSMeeting/isVideoMute.html">isVideoMute</a></li>
+    <li><a href="../../hmssdk_flutter/HMSMeeting/joinMeeting.html">joinMeeting</a></li>
+    <li><a href="../../hmssdk_flutter/HMSMeeting/leaveMeeting.html">leaveMeeting</a></li>
+    <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/noSuchMethod.html">noSuchMethod</a></li>
+    <li><a href="../../hmssdk_flutter/HMSMeeting/previewVideo.html">previewVideo</a></li>
+    <li><a href="../../hmssdk_flutter/HMSMeeting/removeMeetingListener.html">removeMeetingListener</a></li>
+    <li><a href="../../hmssdk_flutter/HMSMeeting/removePreviewListener.html">removePreviewListener</a></li>
+    <li><a href="../../hmssdk_flutter/HMSMeeting/sendMessage.html">sendMessage</a></li>
+    <li><a href="../../hmssdk_flutter/HMSMeeting/startCapturing.html">startCapturing</a></li>
+    <li><a href="../../hmssdk_flutter/HMSMeeting/stopCapturing.html">stopCapturing</a></li>
+    <li><a href="../../hmssdk_flutter/HMSMeeting/switchAudio.html">switchAudio</a></li>
+    <li><a href="../../hmssdk_flutter/HMSMeeting/switchCamera.html">switchCamera</a></li>
+    <li><a href="../../hmssdk_flutter/HMSMeeting/switchVideo.html">switchVideo</a></li>
+    <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/toString.html">toString</a></li>
+
+    <li class="section-title inherited"><a href="../../hmssdk_flutter/HMSMeeting-class.html#operators">Operators</a></li>
+    <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/operator_equals.html">operator ==</a></li>
+
+
+
+
+</ol>
+
+  </div><!--/.sidebar-offcanvas-->
+
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+  </div><!--/.sidebar-offcanvas-->
+
+</main>
+
+<footer>
+  <span class="no-break">
+    hmssdk_flutter
+      0.2.0
+  </span>
+
+  
+</footer>
+
+
+
+<script src="../../static-assets/highlight.pack.js?v1"></script>
+<script src="../../static-assets/script.js?v1"></script>
+
+
+
+</body>
+
+</html>
+
