@@ -27,6 +27,10 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
   bool reconnecting = false;
   @observable
   bool reconnected = false;
+  @observable
+  HMSTrackChangeRequest? hmsTrackChangeRequest;
+
+
 
   late MeetingController meetingController;
 
@@ -200,18 +204,21 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
   @override
   void onUpdateSpeakers({required List<HMSSpeaker> updateSpeakers}) {
     print('speakersFlutter $updateSpeakers');
-    if(updateSpeakers.length==0)return;
-    if(previousHighestVideoTrack!=null){
-      HMSTrack newPreviousTrack=HMSTrack.copyWith(false, track: previousHighestVideoTrack!);
+    if (updateSpeakers.length == 0) return;
+    if (previousHighestVideoTrack != null) {
+      HMSTrack newPreviousTrack =
+          HMSTrack.copyWith(false, track: previousHighestVideoTrack!);
       tracks.remove(previousHighestVideoTrack);
       tracks.add(newPreviousTrack);
     }
-    HMSSpeaker highestAudioSpeaker=updateSpeakers[0];
-    HMSTrack highestAudioSpeakerVideoTrack=tracks.firstWhere((element) => element.peer!.peerId==highestAudioSpeaker.peerId);
-    HMSTrack newHighestTrack=HMSTrack.copyWith(true, track: highestAudioSpeakerVideoTrack);
+    HMSSpeaker highestAudioSpeaker = updateSpeakers[0];
+    HMSTrack highestAudioSpeakerVideoTrack = tracks.firstWhere(
+        (element) => element.peer!.peerId == highestAudioSpeaker.peerId);
+    HMSTrack newHighestTrack =
+        HMSTrack.copyWith(true, track: highestAudioSpeakerVideoTrack);
     tracks.remove(highestAudioSpeakerVideoTrack);
-    tracks.insert(0,newHighestTrack);
-    previousHighestVideoTrack=newHighestTrack;
+    tracks.insert(0, newHighestTrack);
+    previousHighestVideoTrack = newHighestTrack;
   }
 
   @override
@@ -223,6 +230,25 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
   void onReconnected() {
     reconnecting = false;
     reconnected = true;
+  }
+
+  int trackChange=-1;
+  @override
+  void onChangeTrackStateRequest(
+      {required HMSTrackChangeRequest hmsTrackChangeRequest}) {
+
+    int isVideoTrack = hmsTrackChangeRequest.track.kind == HMSTrackKind.kHMSTrackKindVideo ? 1 : 0;
+    trackChange=isVideoTrack;
+    this.hmsTrackChangeRequest=hmsTrackChangeRequest;
+  }
+
+  void changeTracks(){
+    if(trackChange==1){
+      toggleVideo();
+    }
+    else{
+      toggleAudio();
+    }
   }
 
   void changeRole(

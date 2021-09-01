@@ -6,13 +6,13 @@ import 'package:hmssdk_flutter_example/common/ui/organisms/change_role_options.d
 import 'package:hmssdk_flutter_example/common/ui/organisms/chat_bottom_sheet.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/peer_item_organism.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/role_change_request_dialog.dart';
+import 'package:hmssdk_flutter_example/common/ui/organisms/track_change_request_dialog.dart';
 import 'package:hmssdk_flutter_example/common/utilcomponents/UtilityComponents.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
 import 'package:hmssdk_flutter_example/main.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_controller.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:mobx/mobx.dart';
-
 import 'meeting_participants_list.dart';
 
 class MeetingPage extends StatefulWidget {
@@ -30,7 +30,7 @@ class MeetingPage extends StatefulWidget {
 
 class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
   late MeetingStore _meetingStore;
-  late ReactionDisposer _roleChangerequestDisposer;
+  late ReactionDisposer _roleChangerequestDisposer,_trackChangerequestDisposer;
   late ReactionDisposer _errorDisposer;
 
   @override
@@ -43,6 +43,9 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
     _roleChangerequestDisposer = reaction(
         (_) => _meetingStore.roleChangeRequest,
         (event) => {showRoleChangeDialog(event)});
+    _trackChangerequestDisposer = reaction(
+            (_) => _meetingStore.hmsTrackChangeRequest,
+            (event) => {showTrackChangeDialog(event)});
     _errorDisposer = reaction(
         (_) => _meetingStore.error,
         (event) => {
@@ -119,6 +122,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
   void dispose() {
     _roleChangerequestDisposer.reaction.dispose();
     _errorDisposer.reaction.dispose();
+    _trackChangerequestDisposer.reaction.dispose();
     super.dispose();
   }
 
@@ -308,6 +312,17 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
       if (_meetingStore.isVideoOn) {
         _meetingStore.meetingController.stopCapturing();
       }
+    }
+  }
+
+  showTrackChangeDialog(event) async{
+    event = event as HMSTrackChangeRequest;
+    String answer = await showDialog(
+        context: context,
+        builder: (ctx) => TrackChangeDialogOrganism(trackChangeRequest: event));
+    if (answer == "Ok") {
+      debugPrint("OK accepted");
+      _meetingStore.changeTracks();
     }
   }
 }

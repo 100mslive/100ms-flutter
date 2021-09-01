@@ -12,6 +12,7 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter/src/common/platform_methods.dart';
+import 'package:hmssdk_flutter/src/model/hms_track_change_request.dart';
 
 class PlatformService {
   ///used to pass data to platform using methods
@@ -142,6 +143,10 @@ class PlatformService {
           notifyMeetingListeners(
               method, {'role_change_request': roleChangeRequest});
           break;
+        case HMSUpdateListenerMethod.onChangeTrackStateRequest:
+          HMSTrackChangeRequest trackChangeRequest=HMSTrackChangeRequest.fromMap(data['track_change_request']);
+          notifyMeetingListeners(method, {'track_change_request':trackChangeRequest});
+          break;
         case HMSUpdateListenerMethod.unknown:
           print('Unknown method called');
           break;
@@ -245,6 +250,10 @@ class PlatformService {
       case HMSUpdateListenerMethod.onRoleChangeRequest:
         meetingListeners.forEach((e) => e.onRoleChangeRequest(
             roleChangeRequest: arguments['role_change_request']));
+        break;
+      case HMSUpdateListenerMethod.onChangeTrackStateRequest:
+        meetingListeners.forEach((e) => e.onChangeTrackStateRequest(
+            hmsTrackChangeRequest: arguments['track_change_request']));
         break;
       case HMSUpdateListenerMethod.unknown:
         break;

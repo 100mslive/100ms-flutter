@@ -133,6 +133,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
         CoroutineScope(Dispatchers.Main).launch {
             result.success(peersMapList)
         }
+
     }
 
     override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
@@ -141,7 +142,12 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
     }
 
     override fun onChangeTrackStateRequest(details: HMSChangeTrackStateRequest) {
-        TODO("Not yet implemented")
+        val args = HashMap<String,Any>()
+        args.put("event_name","on_change_track_state_request")
+        args.put("data",HMSChangeTrackStateRequestExtension.toDictionary(details)!!)
+        CoroutineScope(Dispatchers.Main).launch {
+            eventSink!!.success(args)
+        }
     }
 
 
@@ -158,13 +164,15 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
 
     }
 
+    override fun onSuccess() {
+        Log.i("onSuccess","success")
+    }
+
     override fun onSuccess(hmsMessage: HMSMessage) {
         Log.i("onSuccessMessage",hmsMessage.message)
     }
 
-    override fun onSuccess() {
 
-    }
 
     override fun onPreview(room: HMSRoom, localTracks: Array<HMSTrack>) {
 //        Log.i("onPreview", room.localPeer.toString())
