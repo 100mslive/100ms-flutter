@@ -71,19 +71,20 @@ class PlatformService {
     _meetingEventChannel.receiveBroadcastStream(
         {'name': 'meeting'}).map<HMSUpdateListenerMethodResponse>((event) {
       Map<String, dynamic>? data = {};
-      print("flutterdata1 ${event}");
+      print("flutterdata2 ${event["event_name"]}");
       if (event is Map && event['data'] is Map) {
         (event['data'] as Map).forEach((key, value) {
           data[key.toString()] = value;
         });
       }
-      print("flutterdata2 ${data}");
+
       HMSUpdateListenerMethod method =
           HMSUpdateListenerMethodValues.getMethodFromName(event['event_name']);
       return HMSUpdateListenerMethodResponse(
           method: method, data: data, response: event);
     }).listen((event) {
       HMSUpdateListenerMethod method = event.method;
+      print("flutterdata1 ${event.method}");
       Map data = event.data;
       switch (method) {
         case HMSUpdateListenerMethod.onJoinRoom:
@@ -144,7 +145,8 @@ class PlatformService {
               method, {'role_change_request': roleChangeRequest});
           break;
         case HMSUpdateListenerMethod.onChangeTrackStateRequest:
-          HMSTrackChangeRequest trackChangeRequest=HMSTrackChangeRequest.fromMap(data['track_change_request']);
+          print("flutter listener ${data}");
+          HMSTrackChangeRequest trackChangeRequest=HMSTrackChangeRequest.fromMap(data['track_change_request'] as Map);
           notifyMeetingListeners(method, {'track_change_request':trackChangeRequest});
           break;
         case HMSUpdateListenerMethod.unknown:

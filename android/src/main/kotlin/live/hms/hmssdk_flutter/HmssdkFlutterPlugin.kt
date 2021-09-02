@@ -145,6 +145,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
         val args = HashMap<String,Any>()
         args.put("event_name","on_change_track_state_request")
         args.put("data",HMSChangeTrackStateRequestExtension.toDictionary(details)!!)
+        Log.i("androiddata1",args.get("event_name").toString())
         CoroutineScope(Dispatchers.Main).launch {
             eventSink!!.success(args)
         }
@@ -242,8 +243,8 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
         Log.i("onTrackUpdate", track.toString())
 
         args.put("data", HMSTrackUpdateExtension.toDictionary(peer, track, type))
-//        Log.i("onTrackUpdate", peer.toString())
-//        Log.i("onTrackUpdate", args.get("data").toString())
+        //Log.i("onTrackUpdate", peer.toString())
+        Log.i("onTrackUpdate", args.get("data").toString())
         CoroutineScope(Dispatchers.Main).launch {
             if (eventSink != null)
                 eventSink!!.success(args)

@@ -10,16 +10,16 @@ class HMSTrackChangeRequest {
   Map<String, dynamic> toMap() {
     return {
       'mute': this.mute,
-      'requestBy': this.requestBy,
+      'requested_by': this.requestBy,
       'track': this.track,
     };
   }
 
-  factory HMSTrackChangeRequest.fromMap(Map<String, dynamic> map) {
+  factory HMSTrackChangeRequest.fromMap(Map map) {
     return HMSTrackChangeRequest(
       mute: map['mute'] as bool,
-      requestBy: map['requestBy'] as HMSPeer,
-      track: map['track'] as HMSTrack,
+      requestBy: HMSPeer.fromMap(map['requested_by']),
+      track: HMSTrack.fromMap(map: map['track']),
     );
   }
 }

@@ -30,7 +30,7 @@ class MeetingPage extends StatefulWidget {
 
 class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
   late MeetingStore _meetingStore;
-  late ReactionDisposer _roleChangerequestDisposer,_trackChangerequestDisposer;
+  late ReactionDisposer _roleChangerequestDisposer, _trackChangerequestDisposer;
   late ReactionDisposer _errorDisposer;
 
   @override
@@ -44,8 +44,8 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
         (_) => _meetingStore.roleChangeRequest,
         (event) => {showRoleChangeDialog(event)});
     _trackChangerequestDisposer = reaction(
-            (_) => _meetingStore.hmsTrackChangeRequest,
-            (event) => {showTrackChangeDialog(event)});
+        (_) => _meetingStore.hmsTrackChangeRequest,
+        (event) => {showTrackChangeDialog(event)});
     _errorDisposer = reaction(
         (_) => _meetingStore.error,
         (event) => {
@@ -166,15 +166,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
           child: Column(
             children: [
               Observer(builder: (_) {
-                late bool isVideoMuted;
-                if (_meetingStore.isVideoOn) {
-                  isVideoMuted = (_meetingStore
-                              .trackStatus[_meetingStore.localPeer?.peerId] ??
-                          '') ==
-                      HMSTrackUpdate.trackMuted;
-                } else {
-                  isVideoMuted = true;
-                }
+
                 if (_meetingStore.localPeer != null) {
                   return SizedBox(
                     width: double.infinity,
@@ -187,7 +179,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                           trackId: '',
                           peer: _meetingStore.localPeer,
                         ),
-                        isVideoMuted: isVideoMuted),
+                        isVideoMuted: !_meetingStore.isVideoOn),
                   );
                 } else {
                   return Text('No Local peer');
@@ -210,7 +202,8 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                             showDialog(
                                 context: context,
                                 builder: (_) => ChangeRoleOptionDialog(
-                                      peerName: filteredList[index].peer?.name ?? '',
+                                      peerName:
+                                          filteredList[index].peer?.name ?? '',
                                       getRoleFunction: _meetingStore.getRoles(),
                                       changeRole: (role, forceChange) {
                                         Navigator.pop(context);
@@ -222,7 +215,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                             roleName: role.name,
                                             forceChange: forceChange);
                                       },
-                                ));
+                                    ));
                           },
                           child: PeerItemOrganism(
                               track: filteredList[index],
@@ -315,7 +308,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
     }
   }
 
-  showTrackChangeDialog(event) async{
+  showTrackChangeDialog(event) async {
     event = event as HMSTrackChangeRequest;
     String answer = await showDialog(
         context: context,

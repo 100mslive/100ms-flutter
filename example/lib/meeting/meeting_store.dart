@@ -61,7 +61,14 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
 
   @action
   Future<void> toggleVideo() async {
+    print("toggleVideo ${isVideoOn}");
     await meetingController.switchVideo(isOn: isVideoOn);
+    // if(isVideoOn){
+    //   meetingController.stopCapturing();
+    // }
+    // else{
+    //   meetingController.startCapturing();
+    // }
     isVideoOn = !isVideoOn;
   }
 
@@ -140,6 +147,11 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
   }
 
   @action
+  void addTrackChangeRequestInstance(HMSTrackChangeRequest hmsTrackChangeRequest){
+    this.hmsTrackChangeRequest=hmsTrackChangeRequest;
+  }
+
+  @action
   void updatePeerAt(peer) {
     print(peer.toString());
     int index = this.peers.indexOf(peer);
@@ -175,10 +187,19 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
       {required HMSTrack track,
       required HMSTrackUpdate trackUpdate,
       required HMSPeer peer}) {
-    if (track.kind == HMSTrackKind.kHMSTrackKindAudio) return;
+    print("onTrackUpdateFlutter");
+    if (track.kind == HMSTrackKind.kHMSTrackKindAudio){
+      if(peer.isLocal && trackUpdate==HMSTrackUpdate.trackMuted){
+        this.isMicOn=false;
+      }
+      return;
+    }
     trackStatus[peer.peerId] = trackUpdate;
     if (peer.isLocal) {
       localPeer = peer;
+      if(trackStatus[peer.peerId]==HMSTrackUpdate.trackMuted){
+        this.isVideoOn=false;
+      }
     } else
       peerOperationWithTrack(peer, trackUpdate, track);
   }
@@ -239,14 +260,16 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
 
     int isVideoTrack = hmsTrackChangeRequest.track.kind == HMSTrackKind.kHMSTrackKindVideo ? 1 : 0;
     trackChange=isVideoTrack;
-    this.hmsTrackChangeRequest=hmsTrackChangeRequest;
+    print("flutteronChangeTrack ${trackChange}");
+    addTrackChangeRequestInstance(hmsTrackChangeRequest);
   }
 
   void changeTracks(){
+    print("flutteronChangeTracks ${trackChange}");
     if(trackChange==1){
       toggleVideo();
     }
-    else{
+    else if(trackChange==0){
       toggleAudio();
     }
   }
