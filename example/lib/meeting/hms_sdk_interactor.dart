@@ -67,6 +67,10 @@ class HMSSDKInteractor {
     _meeting.startCapturing();
   }
 
+  void changeTrackRequest(String peerId,bool mute,bool isVideoTrack){
+    _meeting.changeTrackReuest(peerId, mute, isVideoTrack);
+  }
+
   void changeRole(
       {required String peerId,
       required String roleName,

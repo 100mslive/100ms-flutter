@@ -49,6 +49,9 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
   @observable
   ObservableMap<String, HMSTrackUpdate> trackStatus = ObservableMap.of({});
 
+  @observable
+  ObservableMap<String,HMSTrackUpdate> audioTrackStatus = ObservableMap.of({});
+
   @action
   void startListen() {
     meetingController.addMeetingListener(this);
@@ -96,8 +99,7 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
 
   @action
   void removeTrackWithTrackId(String trackId) {
-    tracks
-        .remove(tracks.firstWhere((eachTrack) => eachTrack.trackId == trackId));
+    tracks.remove(tracks.firstWhere((eachTrack) => eachTrack.trackId == trackId));
   }
 
   @action
@@ -189,6 +191,7 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
       required HMSPeer peer}) {
     print("onTrackUpdateFlutter");
     if (track.kind == HMSTrackKind.kHMSTrackKindAudio){
+      audioTrackStatus[peer.peerId]=trackUpdate;
       if(peer.isLocal && trackUpdate==HMSTrackUpdate.trackMuted){
         this.isMicOn=false;
       }
@@ -200,7 +203,8 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
       if(trackStatus[peer.peerId]==HMSTrackUpdate.trackMuted){
         this.isVideoOn=false;
       }
-    } else
+    }
+    else
       peerOperationWithTrack(peer, trackUpdate, track);
   }
 
@@ -286,6 +290,10 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
     return meetingController.getRoles();
   }
 
+  void changeTrackRequest(String peerId,bool mute,bool isVideoTrack){
+    return meetingController.changeTrackRequest(peerId, mute, isVideoTrack);
+  }
+
   @action
   void peerOperation(HMSPeer peer, HMSPeerUpdate update) {
     print("peerOperation $update");
@@ -348,4 +356,6 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
         print("Some default update or untouched case");
     }
   }
+
+
 }

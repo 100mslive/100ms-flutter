@@ -116,6 +116,9 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
             "get_peers"->{
                 getPeers(result)
             }
+            "on_change_track_state_request"->{
+                changeTrack(call)
+            }
             else -> {
                 result.notImplemented()
             }
@@ -468,6 +471,19 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
                 eventSink!!.success(hashMap)
             }
         }
+    }
+
+    fun changeTrack(call: MethodCall) {
+        val hmsPeerId=call.argument<String>("hms_peer_id")
+        val mute = call.argument<Boolean>("mute")
+        val muteVideoKind = call.argument<Boolean>("mute_video_kind")
+
+        val peer=getPeerById(hmsPeerId!!)
+
+        val track:HMSTrack = if(muteVideoKind==true) peer!!.videoTrack!! else peer!!.audioTrack!!
+
+
+        hmssdk.changeTrackState(track,mute!!,this)
     }
 
 }

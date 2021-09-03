@@ -41,32 +41,35 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
         roomId: widget.roomId, flow: widget.flow, user: widget.user);
     _meetingStore.meetingController = meetingController;
     _roleChangerequestDisposer = reaction(
-        (_) => _meetingStore.roleChangeRequest,
-        (event) => {showRoleChangeDialog(event)});
+            (_) => _meetingStore.roleChangeRequest,
+            (event) => {showRoleChangeDialog(event)});
     _trackChangerequestDisposer = reaction(
-        (_) => _meetingStore.hmsTrackChangeRequest,
-        (event) => {showTrackChangeDialog(event)});
+            (_) => _meetingStore.hmsTrackChangeRequest,
+            (event) => {showTrackChangeDialog(event)});
     _errorDisposer = reaction(
-        (_) => _meetingStore.error,
-        (event) => {
-              UtilityComponents.showSnackBarWithString(
-                  (event as HMSError).description, context)
-            });
+            (_) => _meetingStore.error,
+            (event) =>
+        {
+          UtilityComponents.showSnackBarWithString(
+              (event as HMSError).description, context)
+        });
     reaction(
-        (_) => _meetingStore.reconnected,
-        (event) => {
-              if ((event as bool) == true)
-                UtilityComponents.showSnackBarWithString(
-                    "reconnected", context),
-              _meetingStore.reconnected = false
-            });
+            (_) => _meetingStore.reconnected,
+            (event) =>
+        {
+          if ((event as bool) == true)
+            UtilityComponents.showSnackBarWithString(
+                "reconnected", context),
+          _meetingStore.reconnected = false
+        });
     reaction(
-        (_) => _meetingStore.reconnecting,
-        (event) => {
-              if ((event as bool) == true)
-                UtilityComponents.showSnackBarWithString(
-                    "reconnecting", context),
-            });
+            (_) => _meetingStore.reconnecting,
+            (event) =>
+        {
+          if ((event as bool) == true)
+            UtilityComponents.showSnackBarWithString(
+                "reconnecting", context),
+        });
     super.initState();
     initMeeting();
     checkButtons();
@@ -79,9 +82,9 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
 
   void checkButtons() async {
     _meetingStore.isVideoOn =
-        !(await _meetingStore.meetingController.isVideoMute(null));
+    !(await _meetingStore.meetingController.isVideoMute(null));
     _meetingStore.isMicOn =
-        !(await _meetingStore.meetingController.isAudioMute(null));
+    !(await _meetingStore.meetingController.isAudioMute(null));
   }
 
   void showRoleChangeDialog(event) async {
@@ -100,16 +103,18 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
   Future<dynamic> _onBackPressed() {
     return showDialog(
         context: context,
-        builder: (ctx) => AlertDialog(
+        builder: (ctx) =>
+            AlertDialog(
               title: Text("Do You Want to leave meeting"),
               actions: [
                 FlatButton(
-                    onPressed: () => {
-                          _meetingStore.meetingController.leaveMeeting(),
-                          Navigator.pop(context, true),
-                          Navigator.pushReplacement(context,
-                              MaterialPageRoute(builder: (ctx) => HomePage()))
-                        },
+                    onPressed: () =>
+                    {
+                      _meetingStore.meetingController.leaveMeeting(),
+                      Navigator.pop(context, true),
+                      Navigator.pushReplacement(context,
+                          MaterialPageRoute(builder: (ctx) => HomePage()))
+                    },
                     child: Text("Yes")),
                 FlatButton(
                     onPressed: () => Navigator.pop(context, false),
@@ -134,7 +139,8 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
           title: Text(widget.roomId),
           actions: [
             Observer(
-                builder: (_) => IconButton(
+                builder: (_) =>
+                    IconButton(
                       onPressed: () {
                         _meetingStore.toggleSpeaker();
                       },
@@ -152,9 +158,10 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
               onPressed: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (_) => ParticipantsList(
-                      meetingStore: _meetingStore,
-                    ),
+                    builder: (_) =>
+                        ParticipantsList(
+                          meetingStore: _meetingStore,
+                        ),
                   ),
                 );
               },
@@ -166,11 +173,13 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
           child: Column(
             children: [
               Observer(builder: (_) {
-
                 if (_meetingStore.localPeer != null) {
                   return SizedBox(
                     width: double.infinity,
-                    height: MediaQuery.of(context).size.height / 2,
+                    height: MediaQuery
+                        .of(context)
+                        .size
+                        .height / 2,
                     child: PeerItemOrganism(
                         track: HMSTrack(
                           trackDescription: '',
@@ -201,27 +210,42 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                           onLongPress: () {
                             showDialog(
                                 context: context,
-                                builder: (_) => ChangeRoleOptionDialog(
-                                      peerName:
+                                builder: (_) =>
+                                    Column(
+                                      children: [
+                                        ChangeRoleOptionDialog(
+                                          isAudioMuted:_meetingStore.audioTrackStatus[filteredList[index].peer?.peerId]==HMSTrackUpdate.trackMuted,
+                                          isVideoMuted:_meetingStore.trackStatus[filteredList[index].peer?.peerId]==HMSTrackUpdate.trackMuted,
+                                          peerName:
                                           filteredList[index].peer?.name ?? '',
-                                      getRoleFunction: _meetingStore.getRoles(),
-                                      changeRole: (role, forceChange) {
-                                        Navigator.pop(context);
-                                        _meetingStore.changeRole(
-                                            peerId: filteredList[index]
+                                          getRoleFunction: _meetingStore
+                                              .getRoles(),
+                                          changeRole: (role, forceChange) {
+                                            Navigator.pop(context);
+                                            _meetingStore.changeRole(
+                                                peerId: filteredList[index]
                                                     .peer
                                                     ?.peerId ??
-                                                '',
-                                            roleName: role.name,
-                                            forceChange: forceChange);
-                                      },
+                                                    '',
+                                                roleName: role.name,
+                                                forceChange: forceChange);
+                                          },
+                                          changeTrack: (mute,isVideoTrack){
+                                            Navigator.pop(context);
+                                            _meetingStore.changeTrackRequest(filteredList[index].peer?.peerId??"",mute , isVideoTrack);
+                                          },
+
+                                        ),
+
+
+                                      ],
                                     ));
                           },
                           child: PeerItemOrganism(
                               track: filteredList[index],
                               isVideoMuted: (_meetingStore.trackStatus[
-                                          filteredList[index].peer?.peerId] ??
-                                      '') ==
+                              filteredList[index].peer?.peerId] ??
+                                  '') ==
                                   HMSTrackUpdate.trackMuted),
                         );
                       }),

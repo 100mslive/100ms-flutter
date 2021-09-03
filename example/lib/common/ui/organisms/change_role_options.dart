@@ -6,12 +6,18 @@ class ChangeRoleOptionDialog extends StatefulWidget {
   final Future<List<HMSRole>> getRoleFunction;
   final Function(HMSRole, bool) changeRole;
   final bool force;
-
+  final isVideoMuted;
+  final isAudioMuted;
+  final Function(bool,bool) changeTrack;
   ChangeRoleOptionDialog(
       {required this.peerName,
       required this.getRoleFunction,
       required this.changeRole,
-      this.force = false});
+      this.force = false,
+        this.isVideoMuted,
+        this.isAudioMuted,
+        required this.changeTrack
+      });
 
   @override
   _ChangeRoleOptionDialogState createState() => _ChangeRoleOptionDialogState();
@@ -76,7 +82,45 @@ class _ChangeRoleOptionDialogState extends State<ChangeRoleOptionDialog> {
                           Text('Force change')
                         ],
                       ),
-                    )
+                    ),
+                    SizedBox(
+                      width: 20,
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        widget.changeTrack(!widget.isVideoMuted,true);
+                      },
+                      child: Row(
+                        children: [
+                          Icon(widget.isVideoMuted
+                              ? Icons.videocam
+                              : Icons.videocam_off),
+                          SizedBox(
+                            width: 16,
+                          ),
+                          Text("${widget.isVideoMuted?"Unmute":"Mute"} video")
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      width: 20,
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        widget.changeTrack(!widget.isAudioMuted,false);
+                      },
+                      child: Row(
+                        children: [
+                          Icon(widget.isAudioMuted
+                              ? Icons.mic_sharp
+                              : Icons.mic_off),
+                          SizedBox(
+                            width: 16,
+                          ),
+                          Text("${widget.isAudioMuted?"Unmute":"Mute"} audio")
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               );
