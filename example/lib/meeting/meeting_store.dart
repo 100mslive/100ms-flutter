@@ -370,4 +370,8 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
   void leaveMeeting(){
     meetingController.leaveMeeting();
   }
+
+  void removePeerFromRoom(String peerId){
+    meetingController.removePeer(peerId);
+  }
 }

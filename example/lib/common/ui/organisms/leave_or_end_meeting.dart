@@ -30,7 +30,7 @@ class _LeaveOrEndMeetingDialogOptionState extends State<LeaveOrEndMeetingDialogO
               child: GestureDetector(
                 onTap: () {
                   widget.meetingStore.leaveMeeting();
-                  Navigator.of(context).pop();
+                  Navigator.of(context).pop("leave");
                 },
                 child: Row(
                   children: [
@@ -50,7 +50,7 @@ class _LeaveOrEndMeetingDialogOptionState extends State<LeaveOrEndMeetingDialogO
             GestureDetector(
               onTap: () {
                 widget.meetingStore.endRoom(forceValue);
-                Navigator.of(context).pop();
+                Navigator.of(context).pop("end");
               },
               child: Row(
                 children: [
