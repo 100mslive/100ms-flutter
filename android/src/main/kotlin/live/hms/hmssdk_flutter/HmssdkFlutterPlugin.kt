@@ -119,6 +119,9 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
             "on_change_track_state_request"->{
                 changeTrack(call)
             }
+            "end_room"->{
+                endRoom(call)
+            }
             else -> {
                 result.notImplemented()
             }
@@ -504,7 +507,8 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
     }
 
 
-//    fun endRoom(call: MethodCall){
-//        hmssdk.endRoom()
-//    }
+    fun endRoom(call: MethodCall){
+        val lock=call.argument<Boolean>("lock")
+        hmssdk.endRoom(lock = lock!!,reason = "noise",hmsActionResultListener = this)
+    }
 }

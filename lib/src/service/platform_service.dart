@@ -146,11 +146,20 @@ class PlatformService {
           break;
         case HMSUpdateListenerMethod.onChangeTrackStateRequest:
           print("flutter listener ${data}");
-          HMSTrackChangeRequest trackChangeRequest=HMSTrackChangeRequest.fromMap(data['track_change_request'] as Map);
-          notifyMeetingListeners(method, {'track_change_request':trackChangeRequest});
+          HMSTrackChangeRequest trackChangeRequest =
+              HMSTrackChangeRequest.fromMap(
+                  data['track_change_request'] as Map);
+          notifyMeetingListeners(
+              method, {'track_change_request': trackChangeRequest});
           break;
         case HMSUpdateListenerMethod.unknown:
           print('Unknown method called');
+          break;
+        case HMSUpdateListenerMethod.onRemovedFromRoom:
+          HMSPeerRemovedFromPeer hmsPeerRemovedFromPeer =
+              HMSPeerRemovedFromPeer.fromMap(data['removed_from_room'] as Map);
+          notifyMeetingListeners(
+              method, {'removed_from_room': hmsPeerRemovedFromPeer});
           break;
       }
     });
@@ -258,6 +267,12 @@ class PlatformService {
             hmsTrackChangeRequest: arguments['track_change_request']));
         break;
       case HMSUpdateListenerMethod.unknown:
+        break;
+      case HMSUpdateListenerMethod.onRemovedFromRoom:
+        meetingListeners.forEach((element) {
+          element.onRemovedFromRoom(
+              hmsPeerRemovedFromPeer: arguments['removed_from_room']);
+        });
         break;
     }
   }

@@ -71,6 +71,10 @@ class HMSSDKInteractor {
     _meeting.changeTrackReuest(peerId, mute, isVideoTrack);
   }
 
+  void endRoom(bool lock){
+    _meeting.endRoom(lock);
+  }
+
   void changeRole(
       {required String peerId,
       required String roleName,
