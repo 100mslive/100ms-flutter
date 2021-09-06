@@ -13,7 +13,7 @@ class HMSMessageExtension{
         var dict:[String:Any?]=[:]
         
         dict["message"] = message.message
-        dict["receiver"] = message.receiver
+//        dict["receiver"] = message.receiver
         dict["sender"] = message.sender
         dict["time"] = message.time
         dict["type"] = message.type

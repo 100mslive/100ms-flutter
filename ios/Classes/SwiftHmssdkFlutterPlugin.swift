@@ -238,12 +238,25 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             let isOn:Bool = arguments["is_on"] as? Bool ?? false
             print(videoTrack.settings)
             if isOn {
-                videoTrack.setMute(true)
+               muteVideo()
             }else{
-                videoTrack.setMute(false)
+                unMuteVideo()
             }
          }
         result("video_changed")
+    }
+    
+    func muteVideo(){
+        if let peer = hmsSDK?.localPeer, let videoTrack = peer.videoTrack as? HMSLocalVideoTrack {
+            print(videoTrack.settings)
+                videoTrack.setMute(true)
+         }
+    }
+    func unMuteVideo(){
+        if let peer = hmsSDK?.localPeer, let videoTrack = peer.videoTrack as? HMSLocalVideoTrack {
+            print(videoTrack.settings)
+                videoTrack.setMute(false)
+         }
     }
     
     func switchCamera(result:FlutterResult) {
@@ -284,14 +297,14 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     
     func sendMessage(call: FlutterMethodCall,result:FlutterResult) {
         let arguments = call.arguments as! Dictionary<String, AnyObject>
-        let message:HMSMessage = HMSMessage(
-            sender: (arguments["sender"] as? String) ?? "",
-            receiver: arguments["receiver"] as? String ?? "",
-            time:arguments["time"] as? String ?? "",
-            type: arguments["type"] as? String ?? "",
-            message: arguments["message"] as? String ?? ""
-        )
-        hmsSDK?.send(message: message)
+//        let message:HMSMessage = HMSMessage(
+//            sender: (arguments["sender"] as? String) ?? "",
+////            receiver: arguments["receiver"] as? String ?? "",
+//            time:arguments["time"] as? String ?? "",
+////            type: arguments["type"] as? String ?? "",
+//            message: arguments["message"] as? String ?? ""
+//        )
+        hmsSDK?.sendBroadcastMessage(message:  arguments["message"] as? String ?? "")
         result("sent message")
     }
     func acceptRoleRequest(call: FlutterMethodCall,result:FlutterResult) {
@@ -358,6 +371,8 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     case "accept_role_change":acceptRoleRequest(call:call,result:result)
     case "change_role":changeRole(call:call,result:result)
     case "get_roles":getRoles(call:call,result:result)
+    case "start_capturing": unMuteVideo()
+    case "stop_capturing": muteVideo()
     default:
         result(FlutterMethodNotImplemented)
     }
