@@ -1,12 +1,12 @@
 class Constant {
   static String tokenEndpoint =
-      "https://prod-in.100ms.live/hmsapi/vivek.app.100ms.live/";
+      "https://prod-in.100ms.live/hmsapi/yogi.app.100ms.live/";
 
   static String tokenQuery = "api/token";
 
   static String getTokenURL = tokenEndpoint + tokenQuery;
 
-  static String defaultRoomID = "612f64bcd91703e0375b7ea3";
+  static String defaultRoomID = "6135f762d91703e0375b8038";
 
   static String tokenKey = "token";
 
