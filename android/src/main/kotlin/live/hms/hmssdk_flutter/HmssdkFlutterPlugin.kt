@@ -431,7 +431,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
         val roleToChangeTo: HMSRole = roles.first {
             it.name == roleUWant
         }
-        val peer = getPeerById(peerId!!) as HMSRemotePeer
+        val peer = getPeerById(peerId!!) as HMSPeer
         hmssdk.changeRole(peer, roleToChangeTo, forceChange ?: false,this)
     }
 
