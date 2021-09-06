@@ -27,6 +27,7 @@ class HMSPeer {
   final HMSVideoTrack? videoTrack;
   final List<HMSTrack>? auxiliaryTracks;
 
+
   HMSPeer({
     required this.peerId,
     required this.name,
@@ -37,6 +38,7 @@ class HMSPeer {
     this.audioTrack,
     this.videoTrack,
     this.auxiliaryTracks,
+
   });
 
   ///important to compare using [peerId]

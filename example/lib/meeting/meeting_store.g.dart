@@ -131,6 +131,23 @@ mixin _$MeetingStore on MeetingStoreBase, Store {
     });
   }
 
+  final _$hmsTrackChangeRequestAtom =
+      Atom(name: 'MeetingStoreBase.hmsTrackChangeRequest');
+
+  @override
+  HMSTrackChangeRequest? get hmsTrackChangeRequest {
+    _$hmsTrackChangeRequestAtom.reportRead();
+    return super.hmsTrackChangeRequest;
+  }
+
+  @override
+  set hmsTrackChangeRequest(HMSTrackChangeRequest? value) {
+    _$hmsTrackChangeRequestAtom.reportWrite(value, super.hmsTrackChangeRequest,
+        () {
+      super.hmsTrackChangeRequest = value;
+    });
+  }
+
   final _$peersAtom = Atom(name: 'MeetingStoreBase.peers');
 
   @override
@@ -411,6 +428,7 @@ isVideoOn: ${isVideoOn},
 isMicOn: ${isMicOn},
 reconnecting: ${reconnecting},
 reconnected: ${reconnected},
+hmsTrackChangeRequest: ${hmsTrackChangeRequest},
 peers: ${peers},
 localPeer: ${localPeer},
 tracks: ${tracks},

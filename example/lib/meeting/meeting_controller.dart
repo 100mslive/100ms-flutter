@@ -95,4 +95,8 @@ class MeetingController {
     bool isMute = await _hmsSdkInteractor!.isVideoMute(peer);
     return isMute;
   }
+
+  void changeTrackRequest(String peerId,bool mute,bool isVideoTrack){
+    _hmsSdkInteractor?.changeTrackRequest(peerId, mute, isVideoTrack);
+  }
 }

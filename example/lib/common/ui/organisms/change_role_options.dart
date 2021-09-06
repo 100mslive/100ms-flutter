@@ -6,12 +6,12 @@ class ChangeRoleOptionDialog extends StatefulWidget {
   final Future<List<HMSRole>> getRoleFunction;
   final Function(HMSRole, bool) changeRole;
   final bool force;
-
   ChangeRoleOptionDialog(
       {required this.peerName,
       required this.getRoleFunction,
       required this.changeRole,
-      this.force = false});
+      this.force = false,
+      });
 
   @override
   _ChangeRoleOptionDialogState createState() => _ChangeRoleOptionDialogState();
@@ -76,7 +76,8 @@ class _ChangeRoleOptionDialogState extends State<ChangeRoleOptionDialog> {
                           Text('Force change')
                         ],
                       ),
-                    )
+                    ),
+
                   ],
                 ),
               );

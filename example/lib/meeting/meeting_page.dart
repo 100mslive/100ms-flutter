@@ -2,17 +2,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-import 'package:hmssdk_flutter_example/common/ui/organisms/change_role_options.dart';
+import 'package:hmssdk_flutter_example/common/ui/organisms/change_track_options.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/chat_bottom_sheet.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/peer_item_organism.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/role_change_request_dialog.dart';
-import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
+import 'package:hmssdk_flutter_example/common/ui/organisms/track_change_request_dialog.dart';
+import 'package:hmssdk_flutter_example/common/utilcomponents/UtilityComponents.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
 import 'package:hmssdk_flutter_example/main.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_controller.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:mobx/mobx.dart';
-
 import 'meeting_participants_list.dart';
 
 class MeetingPage extends StatefulWidget {
@@ -30,7 +30,7 @@ class MeetingPage extends StatefulWidget {
 
 class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
   late MeetingStore _meetingStore;
-  late ReactionDisposer _roleChangerequestDisposer;
+  late ReactionDisposer _roleChangerequestDisposer, _trackChangerequestDisposer;
   late ReactionDisposer _errorDisposer;
 
   @override
@@ -42,7 +42,14 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
     _meetingStore.meetingController = meetingController;
     _roleChangerequestDisposer = reaction(
         (_) => _meetingStore.roleChangeRequest,
-        (event) => {showRoleChangeDialog(event)});
+        (event) => {
+              if ((event as HMSRoleChangeRequest).suggestedBy !=
+                  _meetingStore.localPeer)
+                showRoleChangeDialog(event)
+            });
+    _trackChangerequestDisposer = reaction(
+        (_) => _meetingStore.hmsTrackChangeRequest,
+        (event) => {showTrackChangeDialog(event)});
     _errorDisposer = reaction(
         (_) => _meetingStore.error,
         (event) => {
@@ -119,6 +126,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
   void dispose() {
     _roleChangerequestDisposer.reaction.dispose();
     _errorDisposer.reaction.dispose();
+    _trackChangerequestDisposer.reaction.dispose();
     super.dispose();
   }
 
@@ -162,15 +170,6 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
           child: Column(
             children: [
               Observer(builder: (_) {
-                late bool isVideoMuted;
-                if (_meetingStore.isVideoOn) {
-                  isVideoMuted = (_meetingStore
-                              .trackStatus[_meetingStore.localPeer?.peerId] ??
-                          '') ==
-                      HMSTrackUpdate.trackMuted;
-                } else {
-                  isVideoMuted = true;
-                }
                 if (_meetingStore.localPeer != null) {
                   return SizedBox(
                     width: double.infinity,
@@ -183,7 +182,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                           trackId: '',
                           peer: _meetingStore.localPeer,
                         ),
-                        isVideoMuted: isVideoMuted),
+                        isVideoMuted: !_meetingStore.isVideoOn),
                   );
                 } else {
                   return Text('No Local peer');
@@ -205,20 +204,36 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                           onLongPress: () {
                             showDialog(
                                 context: context,
-                                builder: (_) => ChangeRoleOptionDialog(
-                                      peerName:
-                                          filteredList[index].peer?.name ?? '',
-                                      getRoleFunction: _meetingStore.getRoles(),
-                                      changeRole: (role, forceChange) {
-                                        Navigator.pop(context);
-                                        _meetingStore.changeRole(
-                                            peerId: filteredList[index]
-                                                    .peer
-                                                    ?.peerId ??
-                                                '',
-                                            roleName: role.name,
-                                            forceChange: forceChange);
-                                      },
+                                builder: (_) => Column(
+                                      children: [
+                                        ChangeTrackOptionDialog(
+                                          isAudioMuted:
+                                              _meetingStore.audioTrackStatus[
+                                                      filteredList[index]
+                                                          .peer
+                                                          ?.peerId] ==
+                                                  HMSTrackUpdate.trackMuted,
+                                          isVideoMuted:
+                                              _meetingStore.trackStatus[
+                                                      filteredList[index]
+                                                          .peer
+                                                          ?.peerId] ==
+                                                  HMSTrackUpdate.trackMuted,
+                                          peerName:
+                                              filteredList[index].peer?.name ??
+                                                  '',
+                                          changeTrack: (mute, isVideoTrack) {
+                                            Navigator.pop(context);
+                                            _meetingStore.changeTrackRequest(
+                                                filteredList[index]
+                                                        .peer
+                                                        ?.peerId ??
+                                                    "",
+                                                mute,
+                                                isVideoTrack);
+                                          },
+                                        ),
+                                      ],
                                     ));
                           },
                           child: PeerItemOrganism(
@@ -309,6 +324,17 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
       if (_meetingStore.isVideoOn) {
         _meetingStore.meetingController.stopCapturing();
       }
+    }
+  }
+
+  showTrackChangeDialog(event) async {
+    event = event as HMSTrackChangeRequest;
+    String answer = await showDialog(
+        context: context,
+        builder: (ctx) => TrackChangeDialogOrganism(trackChangeRequest: event));
+    if (answer == "Ok") {
+      debugPrint("OK accepted");
+      _meetingStore.changeTracks();
     }
   }
 }

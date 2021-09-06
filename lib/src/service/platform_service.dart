@@ -12,6 +12,7 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter/src/common/platform_methods.dart';
+import 'package:hmssdk_flutter/src/model/hms_track_change_request.dart';
 
 class PlatformService {
   ///used to pass data to platform using methods
@@ -70,17 +71,20 @@ class PlatformService {
     _meetingEventChannel.receiveBroadcastStream(
         {'name': 'meeting'}).map<HMSUpdateListenerMethodResponse>((event) {
       Map<String, dynamic>? data = {};
+      print("flutterdata2 ${event["event_name"]}");
       if (event is Map && event['data'] is Map) {
         (event['data'] as Map).forEach((key, value) {
           data[key.toString()] = value;
         });
       }
+
       HMSUpdateListenerMethod method =
           HMSUpdateListenerMethodValues.getMethodFromName(event['event_name']);
       return HMSUpdateListenerMethodResponse(
           method: method, data: data, response: event);
     }).listen((event) {
       HMSUpdateListenerMethod method = event.method;
+      print("flutterdata1 ${event.method}");
       Map data = event.data;
       switch (method) {
         case HMSUpdateListenerMethod.onJoinRoom:
@@ -118,10 +122,14 @@ class PlatformService {
           break;
         case HMSUpdateListenerMethod.onUpdateSpeaker:
           List<HMSSpeaker> speakers = [];
+
           if (data.containsKey('speakers') && data['speakers'] is List) {
-            (data['speakers'] as List)
-                .map((e) => speakers.add(HMSSpeaker.fromMap(e)));
+            print("onUpdateSpeakerFluttering ${data["speakers"] is List}");
+            (data['speakers'] as List).forEach((element) {
+              speakers.add(HMSSpeaker.fromMap(element as Map));
+            });
           }
+          print(speakers.length);
           notifyMeetingListeners(method, {'speakers': speakers});
           break;
         case HMSUpdateListenerMethod.onReconnecting:
@@ -135,6 +143,11 @@ class PlatformService {
               HMSRoleChangeRequest.fromMap(data['role_change_request']);
           notifyMeetingListeners(
               method, {'role_change_request': roleChangeRequest});
+          break;
+        case HMSUpdateListenerMethod.onChangeTrackStateRequest:
+          print("flutter listener ${data}");
+          HMSTrackChangeRequest trackChangeRequest=HMSTrackChangeRequest.fromMap(data['track_change_request'] as Map);
+          notifyMeetingListeners(method, {'track_change_request':trackChangeRequest});
           break;
         case HMSUpdateListenerMethod.unknown:
           print('Unknown method called');
@@ -226,6 +239,7 @@ class PlatformService {
             .forEach((e) => e.onMessage(message: arguments['message']));
         break;
       case HMSUpdateListenerMethod.onUpdateSpeaker:
+        print("flutterOnUpdateSpeaker ${arguments}");
         meetingListeners.forEach(
             (e) => e.onUpdateSpeakers(updateSpeakers: arguments['speakers']));
         break;
@@ -238,6 +252,10 @@ class PlatformService {
       case HMSUpdateListenerMethod.onRoleChangeRequest:
         meetingListeners.forEach((e) => e.onRoleChangeRequest(
             roleChangeRequest: arguments['role_change_request']));
+        break;
+      case HMSUpdateListenerMethod.onChangeTrackStateRequest:
+        meetingListeners.forEach((e) => e.onChangeTrackStateRequest(
+            hmsTrackChangeRequest: arguments['track_change_request']));
         break;
       case HMSUpdateListenerMethod.unknown:
         break;

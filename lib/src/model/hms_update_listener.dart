@@ -6,6 +6,7 @@
 ///
 /// Check more down below.
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:hmssdk_flutter/src/model/hms_track_change_request.dart';
 
 abstract class HMSUpdateListener {
   /// This will be called on a successful JOIN of the room by the user
@@ -79,4 +80,6 @@ abstract class HMSUpdateListener {
 
   ///when you are back in the room after reconnection
   void onReconnected();
+
+  void onChangeTrackStateRequest({required HMSTrackChangeRequest hmsTrackChangeRequest});
 }

@@ -6,7 +6,7 @@ class Constant {
 
   static String getTokenURL = tokenEndpoint + tokenQuery;
 
-  static String defaultRoomID = "6102e2e929b19fbfb7e85ecc";
+  static String defaultRoomID = "612f64bcd91703e0375b7ea3";
 
   static String tokenKey = "token";
 
@@ -15,5 +15,5 @@ class Constant {
   static String roomIDKey = "roomID";
 
   static String hostKey = "host";
-  static String defaultRole = 'host';
+  static String defaultRole = 'stage';
 }

@@ -46,6 +46,11 @@ class HMSMeeting {
         arguments: {"message": message});
   }
 
+  Future<void> changeTrackReuest(String peerId,bool mute,bool isVideoTrack) async {
+    return await PlatformService.invokeMethod(PlatformMethod.changeTrack,
+        arguments: {"hms_peer_id": peerId,"mute":mute,"mute_video_kind":isVideoTrack});
+  }
+
   ///preview before joining the room pass [HMSConfig].
   Future<void> previewVideo({required HMSConfig config}) async {
     return await PlatformService.invokeMethod(PlatformMethod.previewVideo,
