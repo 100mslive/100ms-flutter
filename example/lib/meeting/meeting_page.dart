@@ -298,8 +298,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                         context: context,
                         builder: (_) => LeaveOrEndMeetingDialogOption(meetingStore: _meetingStore,));
 
-                    Navigator.pushReplacement(context,
-                        MaterialPageRoute(builder: (ctx) => HomePage()));
+                    Navigator.pop(context);
                   },
                   icon: Icon(Icons.call_end)),
             ),

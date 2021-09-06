@@ -6,7 +6,7 @@ class Constant {
 
   static String getTokenURL = tokenEndpoint + tokenQuery;
 
-  static String defaultRoomID = "612f64bcd91703e0375b7ea3";
+  static String defaultRoomID = "6135f762d91703e0375b8038";
 
   static String tokenKey = "token";
 
