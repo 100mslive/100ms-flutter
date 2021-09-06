@@ -75,6 +75,10 @@ class HMSSDKInteractor {
     _meeting.endRoom(lock);
   }
 
+  void removePeer(String peerId){
+    _meeting.removePeer(peerId);
+  }
+
   void changeRole(
       {required String peerId,
       required String roleName,

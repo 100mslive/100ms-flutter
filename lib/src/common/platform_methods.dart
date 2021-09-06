@@ -46,6 +46,7 @@ enum PlatformMethod {
   getRoles,
   changeTrack,
   endRoom,
+  removePeer,
   unknown
 }
 
@@ -104,6 +105,8 @@ extension PlatformMethodValues on PlatformMethod {
         return 'on_change_track_state_request';
       case PlatformMethod.endRoom:
         return 'end_room';
+      case PlatformMethod.removePeer:
+        return 'remove_peer';
       case PlatformMethod.unknown:
         return 'unknown';
     }
@@ -163,6 +166,8 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.changeTrack;
       case 'end_room':
         return PlatformMethod.endRoom;
+      case 'remove_peer':
+        return PlatformMethod.removePeer;
       default:
         return PlatformMethod.unknown;
     }

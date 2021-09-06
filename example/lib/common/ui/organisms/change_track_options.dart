@@ -5,12 +5,13 @@ class ChangeTrackOptionDialog extends StatefulWidget {
   final isVideoMuted;
   final isAudioMuted;
   final Function(bool, bool) changeTrack;
-
+  final Function() removePeer;
   const ChangeTrackOptionDialog({
     required this.isVideoMuted,
     required this.isAudioMuted,
     required this.changeTrack,
     required this.peerName,
+    required this.removePeer
   });
 
   @override
@@ -62,6 +63,23 @@ class _ChangeTrackOptionDialogState extends State<ChangeTrackOptionDialog> {
                     width: 16,
                   ),
                   Text("${widget.isAudioMuted ? "Unmute" : "Mute"} audio")
+                ],
+              ),
+            ),
+            SizedBox(
+              width: 20,
+            ),
+            GestureDetector(
+              onTap: () {
+                widget.removePeer();
+              },
+              child: Row(
+                children: [
+                  Icon(Icons.highlight_remove_outlined),
+                  SizedBox(
+                    width: 16,
+                  ),
+                  Text("Remove Peer")
                 ],
               ),
             ),

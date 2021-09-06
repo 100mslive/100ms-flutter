@@ -233,6 +233,10 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                                 mute,
                                                 isVideoTrack);
                                           },
+                                          removePeer:(){
+                                            Navigator.pop(context);
+                                            _meetingStore.removePeerFromRoom(filteredList[index].peer!.peerId);
+                                          }
                                         ),
                                       ],
                                     ));
@@ -294,11 +298,11 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
               child: IconButton(
                   tooltip: 'Leave Or End',
                   onPressed: () async{
-                    await showDialog(
+                    String ans = await showDialog(
                         context: context,
                         builder: (_) => LeaveOrEndMeetingDialogOption(meetingStore: _meetingStore,));
-
-                    Navigator.pop(context);
+                    if(ans != null && (ans=="leave" || ans=="end"))
+                      Navigator.pop(context);
                   },
                   icon: Icon(Icons.call_end)),
             ),

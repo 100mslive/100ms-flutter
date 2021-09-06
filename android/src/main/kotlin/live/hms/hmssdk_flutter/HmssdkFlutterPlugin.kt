@@ -122,6 +122,9 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
             "end_room"->{
                 endRoom(call)
             }
+            "remove_peer"->{
+                removePeer(call)
+            }
             else -> {
                 result.notImplemented()
             }
@@ -511,4 +514,6 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
         val lock=call.argument<Boolean>("lock")
         hmssdk.endRoom(lock = lock!!,reason = "noise",hmsActionResultListener = this)
     }
+
+
 }

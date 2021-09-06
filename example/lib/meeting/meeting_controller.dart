@@ -103,4 +103,8 @@ class MeetingController {
   void endRoom(bool lock){
     _hmsSdkInteractor?.endRoom(lock);
   }
+
+  void removePeer(String peerId){
+    _hmsSdkInteractor?.removePeer(peerId);
+  }
 }

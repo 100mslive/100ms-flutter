@@ -56,6 +56,11 @@ class HMSMeeting {
         arguments: {"lock": lock});
   }
 
+  Future<void> removePeer(String peerId) async {
+    return await PlatformService.invokeMethod(PlatformMethod.removePeer,
+        arguments: {"peer_id": peerId});
+  }
+
   ///preview before joining the room pass [HMSConfig].
   Future<void> previewVideo({required HMSConfig config}) async {
     return await PlatformService.invokeMethod(PlatformMethod.previewVideo,
