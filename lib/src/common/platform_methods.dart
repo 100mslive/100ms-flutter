@@ -45,6 +45,7 @@ enum PlatformMethod {
   ///get list of roles using this.
   getRoles,
   changeTrack,
+  endRoom,
   unknown
 }
 
@@ -101,6 +102,8 @@ extension PlatformMethodValues on PlatformMethod {
         return 'get_roles';
       case PlatformMethod.changeTrack:
         return 'on_change_track_state_request';
+      case PlatformMethod.endRoom:
+        return 'end_room';
       case PlatformMethod.unknown:
         return 'unknown';
     }
@@ -158,6 +161,8 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.getRoles;
       case 'on_change_track_state_request':
         return PlatformMethod.changeTrack;
+      case 'end_room':
+        return PlatformMethod.endRoom;
       default:
         return PlatformMethod.unknown;
     }

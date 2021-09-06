@@ -99,4 +99,8 @@ class MeetingController {
   void changeTrackRequest(String peerId,bool mute,bool isVideoTrack){
     _hmsSdkInteractor?.changeTrackRequest(peerId, mute, isVideoTrack);
   }
+
+  void endRoom(bool lock){
+    _hmsSdkInteractor?.endRoom(lock);
+  }
 }

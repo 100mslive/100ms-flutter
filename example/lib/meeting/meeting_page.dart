@@ -4,6 +4,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/change_track_options.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/chat_bottom_sheet.dart';
+import 'package:hmssdk_flutter_example/common/ui/organisms/leave_or_end_meeting.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/peer_item_organism.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/role_change_request_dialog.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/track_change_request_dialog.dart';
@@ -291,11 +292,13 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
             Container(
               padding: EdgeInsets.all(16),
               child: IconButton(
-                  tooltip: 'Leave',
-                  onPressed: () {
-                    _meetingStore.meetingController.leaveMeeting();
-                    Navigator.pushReplacement(context,
-                        MaterialPageRoute(builder: (ctx) => HomePage()));
+                  tooltip: 'Leave Or End',
+                  onPressed: () async{
+                    await showDialog(
+                        context: context,
+                        builder: (_) => LeaveOrEndMeetingDialogOption(meetingStore: _meetingStore,));
+
+                    Navigator.pop(context);
                   },
                   icon: Icon(Icons.call_end)),
             ),

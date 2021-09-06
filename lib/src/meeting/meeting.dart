@@ -51,6 +51,11 @@ class HMSMeeting {
         arguments: {"hms_peer_id": peerId,"mute":mute,"mute_video_kind":isVideoTrack});
   }
 
+  Future<void> endRoom(bool lock) async {
+    return await PlatformService.invokeMethod(PlatformMethod.endRoom,
+        arguments: {"lock": lock});
+  }
+
   ///preview before joining the room pass [HMSConfig].
   Future<void> previewVideo({required HMSConfig config}) async {
     return await PlatformService.invokeMethod(PlatformMethod.previewVideo,

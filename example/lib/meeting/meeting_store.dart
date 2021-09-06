@@ -5,6 +5,7 @@ import 'package:mobx/mobx.dart';
 
 part 'meeting_store.g.dart';
 
+
 class MeetingStore = MeetingStoreBase with _$MeetingStore;
 
 abstract class MeetingStoreBase with Store implements HMSUpdateListener {
@@ -278,6 +279,11 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
     }
   }
 
+  @override
+  void onRemovedFromRoom({required HMSPeerRemovedFromPeer hmsPeerRemovedFromPeer}){
+    meetingController.leaveMeeting();
+  }
+
   void changeRole(
       {required String peerId,
       required String roleName,
@@ -357,5 +363,11 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
     }
   }
 
+  void endRoom(bool lock){
+    meetingController.endRoom(lock);
+  }
 
+  void leaveMeeting(){
+    meetingController.leaveMeeting();
+  }
 }
