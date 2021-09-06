@@ -81,10 +81,8 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
   }
 
   void checkButtons() async {
-    _meetingStore.isVideoOn =
-        !(await _meetingStore.meetingController.isVideoMute(null));
-    _meetingStore.isMicOn =
-        !(await _meetingStore.meetingController.isAudioMute(null));
+    _meetingStore.isVideoOn = !(await _meetingStore.meetingController.isVideoMute(null));
+    _meetingStore.isMicOn = !(await _meetingStore.meetingController.isAudioMute(null));
   }
 
   void showRoleChangeDialog(event) async {

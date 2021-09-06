@@ -256,8 +256,18 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
 
     }
 
+    override fun onRemovedFromRoom(notification: HMSRemovedFromRoom) {
+        val args = HashMap<String,Any>()
+        args.put("event_name","on_removed_from_room")
+        args.put("data",HMSRemovedFromRoomExtension.toDictionary(notification)!!)
+
+        CoroutineScope(Dispatchers.Main).launch {
+            eventSink!!.success(args)
+        }
+    }
+
     override fun onReconnected() {
-        super.onReconnected()
+
         val args = HashMap<String, Any>()
         args.put("event_name", "on_re_connected")
         CoroutineScope(Dispatchers.Main).launch {
@@ -266,7 +276,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
     }
 
     override fun onReconnecting(error: HMSException) {
-        super.onReconnecting(error)
+
         val args = HashMap<String, Any>()
         args.put("event_name", "on_re_connecting")
         CoroutineScope(Dispatchers.Main).launch {
@@ -486,4 +496,15 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
         hmssdk.changeTrackState(track,mute!!,this)
     }
 
+    fun removePeer(call: MethodCall){
+        val peerId = call.argument<String>("peer_id")
+
+        val peer = getPeerById(peerId!!) as HMSRemotePeer
+        hmssdk.removePeerRequest(peer = peer,hmsActionResultListener = this,reason = "noise")
+    }
+
+
+//    fun endRoom(call: MethodCall){
+//        hmssdk.endRoom()
+//    }
 }
