@@ -18,6 +18,8 @@ enum PlatformMethod {
   onMessage,
   ///when you want to send a message.
   sendMessage,
+  sendDirectMessage,
+  sendGroupMessage,
   onUpdateSpeaker,
   ///when reconnecting update method is called.
   onReconnecting,
@@ -93,6 +95,10 @@ extension PlatformMethodValues on PlatformMethod {
         return 'stop_capturing';
       case PlatformMethod.sendMessage:
         return 'send_message';
+      case PlatformMethod.sendDirectMessage:
+        return 'send_direct_message';
+      case PlatformMethod.sendGroupMessage:
+        return 'send_group_message';
       case PlatformMethod.previewVideo:
         return 'preview_video';
       case PlatformMethod.acceptRoleChange:
@@ -154,6 +160,10 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.startCapturing;
       case 'send_message':
         return PlatformMethod.sendMessage;
+      case 'send_direct_message':
+        return PlatformMethod.sendDirectMessage;
+      case 'send_group_message':
+        return PlatformMethod.sendGroupMessage;
       case 'preview_video':
         return PlatformMethod.previewVideo;
       case 'accept_role_change':

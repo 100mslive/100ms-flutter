@@ -52,35 +52,41 @@ class _ChangeTrackOptionDialogState extends State<ChangeTrackOptionDialog> {
               width: 20,
             ),
             
-            GestureDetector(
-              onTap: () {
-                widget.changeTrack(!widget.isAudioMuted, false);
-              },
-              child: Row(
-                children: [
-                  Icon(widget.isAudioMuted ? Icons.mic_sharp : Icons.mic_off),
-                  SizedBox(
-                    width: 16,
-                  ),
-                  Text("${widget.isAudioMuted ? "Unmute" : "Mute"} audio")
-                ],
+            Padding(
+              padding: const EdgeInsets.only(bottom: 20.0),
+              child: GestureDetector(
+                onTap: () {
+                  widget.changeTrack(!widget.isAudioMuted, false);
+                },
+                child: Row(
+                  children: [
+                    Icon(widget.isAudioMuted ? Icons.mic_sharp : Icons.mic_off),
+                    SizedBox(
+                      width: 16,
+                    ),
+                    Text("${widget.isAudioMuted ? "Unmute" : "Mute"} audio")
+                  ],
+                ),
               ),
             ),
             SizedBox(
               width: 20,
             ),
-            GestureDetector(
-              onTap: () {
-                widget.removePeer();
-              },
-              child: Row(
-                children: [
-                  Icon(Icons.highlight_remove_outlined),
-                  SizedBox(
-                    width: 16,
-                  ),
-                  Text("Remove Peer")
-                ],
+            Padding(
+              padding: const EdgeInsets.only(bottom: 20.0),
+              child: GestureDetector(
+                onTap: () {
+                  widget.removePeer();
+                },
+                child: Row(
+                  children: [
+                    Icon(Icons.highlight_remove_outlined),
+                    SizedBox(
+                      width: 16,
+                    ),
+                    Text("Remove Peer")
+                  ],
+                ),
               ),
             ),
           ],

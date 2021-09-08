@@ -34,6 +34,14 @@ class HMSSDKInteractor {
     return await _meeting.sendMessage(message);
   }
 
+  Future<void> sendDirectMessage(String message,String peerId) async {
+    return await _meeting.sendDirectMessage(message,peerId);
+  }
+
+  Future<void> sendGroupMessage(String message) async {
+    return await _meeting.sendGroupMessage(message);
+  }
+
   Future<void> previewVideo({required HMSConfig config}) async {
     this.config = config;
     return _meeting.previewVideo(config: config);

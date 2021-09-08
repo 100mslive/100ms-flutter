@@ -17,6 +17,7 @@ class _ChatWidgetState extends State<ChatWidget> {
   late MeetingStore _meetingStore;
   late double widthOfScreen;
   TextEditingController messageTextController = TextEditingController();
+  String valueChoose = "EveryOne";
 
   @override
   void initState() {
@@ -38,10 +39,32 @@ class _ChatWidgetState extends State<ChatWidget> {
             child: Row(
               children: [
                 Expanded(
-                    child: Text(
-                  "Chat",
-                  style: TextStyle(color: Colors.black, fontSize: 30.0),
-                )),
+                  child: Text(
+                    "Chat",
+                    style: TextStyle(color: Colors.black, fontSize: 30.0),
+                  ),
+                ),
+                DropdownButton<String>(
+                  value: valueChoose,
+                  onChanged: (newvalue) {
+                    setState(() {
+                      this.valueChoose = newvalue as String;
+                    });
+                  },
+                  items: [
+                    DropdownMenuItem<String>(
+                      child: Text("EveryOne"),
+                      value: "EveryOne",
+                    ),
+                    ..._meetingStore.peers.map((e) {
+                      return DropdownMenuItem<String>(
+                        child: Text("${e.name}"),
+                        value: e.peerId,
+                      );
+                    }).toList(),
+
+                  ],
+                ),
                 GestureDetector(
                   onTap: () {
                     Navigator.of(context).pop();
@@ -77,6 +100,20 @@ class _ChatWidgetState extends State<ChatWidget> {
                                   style: TextStyle(
                                       fontSize: 10.0,
                                       color: Colors.black,
+                                      fontWeight: FontWeight.w900),
+                                ),
+                              ),
+                              Expanded(
+                                child: Text(
+                                  HMSMessageRecipientValues
+                                      .getValueFromHMSMessageRecipientType(
+                                          _meetingStore
+                                              .messages[index]
+                                              .hmsMessageRecipient!
+                                              .hmsMessageRecipientType),
+                                  style: TextStyle(
+                                      fontSize: 15.0,
+                                      color: Colors.blue,
                                       fontWeight: FontWeight.w900),
                                 ),
                               ),
@@ -140,15 +177,27 @@ class _ChatWidgetState extends State<ChatWidget> {
                   onTap: () {
                     String message = messageTextController.text;
                     if (message.isEmpty) return;
-                    _meetingStore.sendMessage(message);
+                    if (this.valueChoose == "EveryOne")
+                      _meetingStore.sendMessage(message);
+                    else
+                      _meetingStore.sendDirectMessage(
+                          message, this.valueChoose);
                     DateTime currentTime = DateTime.now();
                     final DateFormat formatter =
                         DateFormat('yyyy-MM-dd hh:mm a');
                     _meetingStore.addMessage(HMSMessage(
-                        sender: "You",
-                        message: message,
-                        type: "chat",
-                        time: formatter.format(currentTime)));
+                      sender: "You",
+                      message: message,
+                      type: "chat",
+                      time: formatter.format(currentTime),
+                      hmsMessageRecipient: HMSMessageRecipient(
+                          recipientPeer: null,
+                          recipientRoles: null,
+                          hmsMessageRecipientType:
+                              this.valueChoose == "EveryOne"
+                                  ? HMSMessageRecipientType.BROADCAST
+                                  : HMSMessageRecipientType.PEER),
+                    ));
                     messageTextController.clear();
                   },
                   child: Icon(

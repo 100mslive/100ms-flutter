@@ -97,7 +97,15 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
                 result.success("start_capturing")
             }
             "send_message" -> {
-                sendMessage(call)
+                sendBroadCastMessage(call)
+                result.success("sent message")
+            }
+            "send_direct_message"->{
+                sendDirectMessage(call)
+                result.success("sent message")
+            }
+            "send_group_message"->{
+                sendGroupMessage(call)
                 result.success("sent message")
             }
             "preview_video" -> {
@@ -210,6 +218,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
             if(eventSink!=null)
                 eventSink!!.success(args)
         }
+
     }
 
     override fun onMessageReceived(message: HMSMessage) {
@@ -422,9 +431,24 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
         return peer!!.audioTrack!!.isMute
     }
 
-    private fun sendMessage(call: MethodCall) {
+    private fun sendBroadCastMessage(call: MethodCall) {
         val message = call.argument<String>("message")
         hmssdk?.sendBroadcastMessage( message!!,"chat",this)
+
+    }
+
+    private fun sendDirectMessage(call: MethodCall) {
+        val message = call.argument<String>("message")
+        val peerId  = call.argument<String>("peer_id")
+
+        val peer = getPeerById(peerId!!)
+        hmssdk?.sendDirectMessage( message!!,"chat",peer!!,this)
+
+    }
+
+    private fun sendGroupMessage(call: MethodCall) {
+        val message = call.argument<String>("message")
+        hmssdk?.sendGroupMessage(message!!,"chat",hmssdk.getRoles(),this)
     }
 
     private fun previewVideo(call: MethodCall) {
