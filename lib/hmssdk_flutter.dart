@@ -15,6 +15,7 @@ export 'src/enum/hms_track_source.dart';
 export 'src/enum/hms_track_update.dart';
 export 'src/enum/hms_update_listener_method.dart';
 export 'src/enum/hms_video_codec.dart';
+export 'src/enum/hms_message_recipient_type.dart';
 //EXCEPTIONS
 export 'src/exceptions/hms_exception.dart';
 export 'src/exceptions/hms_in_sufficient_data.dart';
@@ -53,3 +54,4 @@ export 'src/model/platform_method_response.dart';
 export 'src/ui/meeting/hms_video_view.dart';
 export 'src/model/hms_track_change_request.dart';
 export 'src/model/hms_peer_removed_from_room.dart';
+export 'src/model/hms_message_recipient.dart';

@@ -10,6 +10,8 @@
 /// You can use chat feature using this HMSMessage object it will contains each message with other relevant information.
 import 'dart:core';
 
+import 'package:hmssdk_flutter/src/model/hms_message_recipient.dart';
+
 class HMSMessage {
   ///[sender] id basically it is the peerId who is sending message.
   final String sender;
@@ -21,11 +23,13 @@ class HMSMessage {
   ///[time] at which [sender] sent the [message]
   final String time;
 
+  HMSMessageRecipient? hmsMessageRecipient;
   HMSMessage({
     required this.sender,
     required this.message,
     required this.type,
     required this.time,
+    this.hmsMessageRecipient
   });
 
   factory HMSMessage.fromMap(Map map) {
@@ -35,6 +39,7 @@ class HMSMessage {
       message: map['message'] as String,
       type: map['type'] as String,
       time: map['time'] as String,
+      hmsMessageRecipient: HMSMessageRecipient.fromMap(map['hms_message_recipient'] as Map)
     );
   }
 

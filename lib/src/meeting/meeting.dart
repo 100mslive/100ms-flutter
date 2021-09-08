@@ -46,6 +46,16 @@ class HMSMeeting {
         arguments: {"message": message});
   }
 
+  Future<void> sendGroupMessage(String message) async {
+    return await PlatformService.invokeMethod(PlatformMethod.sendGroupMessage,
+        arguments: {"message": message});
+  }
+
+  Future<void> sendDirectMessage(String message,String peerId) async {
+    return await PlatformService.invokeMethod(PlatformMethod.sendDirectMessage,
+        arguments: {"message": message,"peer_id":peerId});
+  }
+
   Future<void> changeTrackReuest(String peerId,bool mute,bool isVideoTrack) async {
     return await PlatformService.invokeMethod(PlatformMethod.changeTrack,
         arguments: {"hms_peer_id": peerId,"mute":mute,"mute_video_kind":isVideoTrack});
