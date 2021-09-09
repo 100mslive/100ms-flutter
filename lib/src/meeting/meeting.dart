@@ -46,9 +46,9 @@ class HMSMeeting {
         arguments: {"message": message});
   }
 
-  Future<void> sendGroupMessage(String message) async {
+  Future<void> sendGroupMessage(String message,String roleName) async {
     return await PlatformService.invokeMethod(PlatformMethod.sendGroupMessage,
-        arguments: {"message": message});
+        arguments: {"message": message,"role_name":roleName});
   }
 
   Future<void> sendDirectMessage(String message,String peerId) async {

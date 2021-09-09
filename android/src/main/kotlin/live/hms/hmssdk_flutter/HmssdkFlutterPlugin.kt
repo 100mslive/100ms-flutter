@@ -447,8 +447,15 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
     }
 
     private fun sendGroupMessage(call: MethodCall) {
+        val roleUWant = call.argument<String>("role_name")
         val message = call.argument<String>("message")
-        hmssdk?.sendGroupMessage(message!!,"chat",hmssdk.getRoles(),this)
+        val roles = hmssdk.getRoles()
+        val roleToChangeTo: HMSRole = roles.first {
+            it.name == roleUWant
+        }
+        val role = ArrayList<HMSRole>()
+        role.add(roleToChangeTo)
+        hmssdk?.sendGroupMessage(message!!,"chat",role,this)
     }
 
     private fun previewVideo(call: MethodCall) {

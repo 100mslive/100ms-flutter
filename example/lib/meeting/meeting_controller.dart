@@ -50,8 +50,8 @@ class MeetingController {
     return await _hmsSdkInteractor?.sendDirectMessage(message,peerId);
   }
 
-  Future<void> sendGroupMessage(String message) async {
-    return await _hmsSdkInteractor?.sendGroupMessage(message);
+  Future<void> sendGroupMessage(String message,String roleName) async {
+    return await _hmsSdkInteractor?.sendGroupMessage(message,roleName);
   }
 
   void addMeetingListener(HMSUpdateListener listener) {

@@ -138,8 +138,8 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
     await meetingController.sendDirectMessage(message,peerId);
   }
 
-  Future<void> sendGroupMessage(String message) async {
-    await meetingController.sendGroupMessage(message);
+  Future<void> sendGroupMessage(String message,String roleName) async {
+    await meetingController.sendGroupMessage(message,roleName);
   }
 
   @action
