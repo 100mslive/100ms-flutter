@@ -54,6 +54,7 @@ class HMSPeer {
 
   factory HMSPeer.fromMap(Map map) {
     HMSRole? role;
+
     if (map['role'] != null) role = HMSRole.fromMap(map['role']);
     return HMSPeer(
       peerId: map['peer_id'],

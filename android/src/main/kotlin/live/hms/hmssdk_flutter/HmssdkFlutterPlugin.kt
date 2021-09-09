@@ -128,10 +128,13 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
                 changeTrack(call)
             }
             "end_room"->{
-                endRoom(call)
+                endRoom(call,result)
             }
             "remove_peer"->{
                 removePeer(call)
+            }
+            "get_local_peer"->{
+                localPeer(result)
             }
             else -> {
                 result.notImplemented()
@@ -520,7 +523,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
         }
     }
 
-    fun changeTrack(call: MethodCall) {
+    private fun changeTrack(call: MethodCall) {
         val hmsPeerId=call.argument<String>("hms_peer_id")
         val mute = call.argument<Boolean>("mute")
         val muteVideoKind = call.argument<Boolean>("mute_video_kind")
@@ -533,7 +536,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
         hmssdk.changeTrackState(track,mute!!,this)
     }
 
-    fun removePeer(call: MethodCall){
+    private fun removePeer(call: MethodCall){
         val peerId = call.argument<String>("peer_id")
 
         val peer = getPeerById(peerId!!) as HMSRemotePeer
@@ -541,10 +544,29 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
     }
 
 
-    fun endRoom(call: MethodCall){
-        val lock=call.argument<Boolean>("lock")
-        hmssdk.endRoom(lock = lock!!,reason = "noise",hmsActionResultListener = this)
+    private fun endRoom(call: MethodCall, result: Result) {
+        if (isAllowedToEndMeeting()) {
+            val lock = call.argument<Boolean>("lock")
+            hmssdk.endRoom(lock = lock!!, reason = "noise", hmsActionResultListener = this)
+            result.success(true)
+        }
+        else
+            result.success(false)
+    }
+    private fun isAllowedToEndMeeting(): Boolean {
+        return hmssdk.getLocalPeer()!!.hmsRole.permission?.endRoom
     }
 
+    fun isAllowedToMuteOthers(): Boolean {
+        return hmssdk.getLocalPeer()!!.hmsRole.permission?.mute
+    }
+
+    fun isAllowedToUnMuteOthers(): Boolean {
+        return hmssdk.getLocalPeer()!!.hmsRole.permission?.unmute
+    }
+
+    fun localPeer(result: Result){
+        result.success(HMSPeerExtension.toDictionary(getLocalPeer()))
+    }
 
 }
