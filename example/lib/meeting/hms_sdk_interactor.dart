@@ -79,8 +79,9 @@ class HMSSDKInteractor {
     _meeting.changeTrackReuest(peerId, mute, isVideoTrack);
   }
 
-  void endRoom(bool lock){
-    _meeting.endRoom(lock);
+  Future<bool> endRoom(bool lock) async{
+    bool ended=await _meeting.endRoom(lock);
+    return ended;
   }
 
   void removePeer(String peerId){
