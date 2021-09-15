@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 
 class LeaveOrEndMeetingDialogOption extends StatefulWidget {
@@ -48,9 +49,12 @@ class _LeaveOrEndMeetingDialogOptionState extends State<LeaveOrEndMeetingDialogO
             ),
 
             GestureDetector(
-              onTap: () {
-                widget.meetingStore.endRoom(forceValue);
-                Navigator.of(context).pop("end");
+              onTap: () async{
+                bool ended=await widget.meetingStore.endRoom(forceValue);
+                if(ended)
+                  Navigator.of(context).pop("end");
+                else
+                  UtilityComponents.showSnackBarWithString("No permission", context);
               },
               child: Row(
                 children: [

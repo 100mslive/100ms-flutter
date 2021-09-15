@@ -49,6 +49,7 @@ enum PlatformMethod {
   changeTrack,
   endRoom,
   removePeer,
+  getLocalPeer,
   unknown
 }
 
@@ -113,6 +114,8 @@ extension PlatformMethodValues on PlatformMethod {
         return 'end_room';
       case PlatformMethod.removePeer:
         return 'remove_peer';
+      case PlatformMethod.getLocalPeer:
+        return 'get_local_peer';
       case PlatformMethod.unknown:
         return 'unknown';
     }
@@ -178,6 +181,8 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.endRoom;
       case 'remove_peer':
         return PlatformMethod.removePeer;
+      case 'get_local_peer':
+        return PlatformMethod.getLocalPeer;
       default:
         return PlatformMethod.unknown;
     }

@@ -1,16 +1,159 @@
 # Chat
 
-What's a video without being able to send messages to each other too? 100ms supports chat for every video/audio room you create.
+What's a video call without being able to send messages to each other too? 100ms supports chat for every video/audio room you create.
 
-You can see an example of every way of sending messages and interpreting messages in the advanced sample app.
+You can see an example of every type of message (of the types below) being sent and displayed in the advanced [sample app](https://github.com/100mslive/100ms-android/).
 
-```dart 
+### Addressing messages
+
+* [Broadcast messages](#sending-broadcast-messages) are sent to Everyone in the chat `meeting.sendBroadcastMessage`.
+
+* [Direct messages](#sending-direct-messages) are sent to a specific person `meeting.sendDirectMessage`.
+
+* [Group messages](#sending-group-messages) are sent to everyone with a particular `HMSRole`. Such as all `hosts` or all `teachers` or all `students` `meeting.sendGroupMessage`.
+    * Learn more about [roles](../foundation/templates-and-roles) and how to create them on the backend.
+
+## Sending Chat Messages
+#
+
+### Sending Broadcast Messages
+
+Want to let everyone in the chat know something? Call `sendBroadcastMessage` on the instance of `HMSMeeting` to send a broadcast.
+
+The parameters are:
+
+1. *message*: The text of the message.
+
+
+
+> 💡 Note that the callback only lets you know if the server has received your request for the message or if there was some error.
+>
+>It does not convey whether the message was delivered to or read by the recipient.
+>
+>Also it's important to make a new callback per message because it will only contain the results of that particular call for sending a message.
+
+
+
+
+```dart
 HMSMeeting meeting = new HMSMeeting();
 meeting.sendMessage("Hi");
 ```
 
-You will get updates about message sent by someone in `HMSUpdateListener`.
+#### Sending Direct Messages
+
+Got secrets to share? Send a message directly to a single person in the chat with a direct message. Call `sendDirectMessage` on an instance of `HMSMeeting`.
+
+The parameters are:
+
+1. *message*: The text of the message.
+2. *peerId*: The `HMSPeer` instance id  who should receive message.
+
+
+> 💡 Note that the callback only lets you know if the server has received your request for the message or if there was some error.
+>
+>It does not convey whether the message was delivered to or read by the recipient.
+>
+>Also it's important to make a new callback per message because it will only contain the results of that particular call for sending a message.
+
+
 
 ```dart
-void onMessage({required HMSMessage message});
+
+    HMSMeeting meeting = new HMSMeeting();
+    meeting.sendDirectMessage(String message,String peerId);
 ```
+
+
+#### Sending Group Messages
+
+Need to call attention to all the hosts? All the teachers? All the developers? Call `sendGroupMessage` on an instance of `HMSMeeting`.
+
+The parameters are:
+
+1. *message*: The text of the message.
+2. *roleName*: The name of the role.
+
+
+> 💡 Note that the callback only lets you know if the server has received your request for the message or if there was some error.
+>
+>It does not convey whether the message was delivered to or read by the recipient.
+>
+>Also it's important to make a new callback per message because it will only contain the results of that particular call for sending a message.
+
+```dart
+
+    HMSMeeting meeting = new Meeting();
+    meeting.sendGroupMessage(String message,String roleName);
+```
+
+### Receiving Chat Messages
+
+When you called `meeting.join(config)` to join a room, the `HMSUpdateListener` implementation that was passed in had the callback `fun onMessageReceived(message: HMSMessage)`.
+
+This where you'll receive new messages as `HMSMessage` during the call. It contains:
+
+```dart
+
+class HMSMessage(
+
+  final String sender;
+  final String message;
+  final String type;
+  final String time;
+  HMSMessageRecipient? hmsMessageRecipient;
+
+  HMSMessage({
+    required this.sender,
+    required this.message,
+    required this.type,
+    required this.time,
+    this.hmsMessageRecipient
+  });
+)
+```
+
+* message: Content of the text message or the text description of the raw message.
+* type: Type of message sent. Default value is `chat`.
+* recipient: The intended recipient(s) of this message as a `HMSMessageRecipient`.
+* serverReceiveTime: timestamp of when the messaging server receives this message. Update the time in your own messages when this comes back from the server in `HMSUpdateListener.onMessageReceived` for accurate ordering of your own messages.
+* sender: The `HMSPeer` who is sending this message.
+
+Identifying Senders:
+
+The sender of a message is always contained in the `sender` field of HMSMessage. This lets you get the name and peer id for any message sender.
+
+Message Body:
+
+The body of the message is in `message` as a String.
+
+Time:
+
+The time the message was sent is contained in `time` as a Java Date.
+
+### Putting together a list of chat messages.
+The UI is completely up to you to decide! You'll also need to hold onto all the received messages if you want to display history.
+
+#### Identifying who the message was for
+
+The HMSMessageRecipient contained in the `recipient` field of `HMSMessage` lets you know who the message was for.
+
+The `HMSMessageRecipient` contains:
+```dart
+class HMSMessageRecipient{
+    HMSPeer? recipientPeer;
+    List<HMSRole>? recipientRoles;
+    HMSMessageRecipientType hmsMessageRecipientType;
+}
+```
+
+recipientPeer: Only contains a peer when a specific single peer is being direct messaged.
+
+recipientRoles: Only contains values when a group message is being sent to many roles.
+
+recipientType: Will be `HMSMessageRecipientType.BROADCAST` for a message being sent to everyone. If this is true, the other two fields will be null and empty respectively.
+
+`HMSMessageRecipientType.PEER` will be set when it's a direct message.
+
+`HMSMessageRecipientType.ROLES` will be set when it's a message to one or many roles.
+
