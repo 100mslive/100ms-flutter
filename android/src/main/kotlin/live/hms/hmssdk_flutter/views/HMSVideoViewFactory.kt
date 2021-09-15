@@ -10,7 +10,7 @@ import live.hms.hmssdk_flutter.HmssdkFlutterPlugin
 import live.hms.video.media.tracks.HMSVideoTrack
 import live.hms.video.sdk.models.HMSPeer
 
-class HMSVideoViewWidget(context: Context, id: Int, creationParams: Map<String?, Any?>?,val peer:HMSPeer?,val trackId:String) : PlatformView {
+class HMSVideoViewWidget(context: Context, id: Int, creationParams: Map<String?, Any?>?,val peer:HMSPeer?,val trackId:String,val  isAux:Boolean) : PlatformView {
     private val hmsVideoView: HMSVideoView = HMSVideoView(context)
 
     override fun getView(): View {
@@ -26,25 +26,26 @@ class HMSVideoViewWidget(context: Context, id: Int, creationParams: Map<String?,
 
     private fun renderVideo(){
         val tracks=peer?.auxiliaryTracks
-        if (tracks!!.isNotEmpty()){
+        if (tracks!!.isNotEmpty() && isAux){
             val track=tracks.first {
                 it.trackId==trackId
             }
-            //Log.i("renderVideo",track.toString())
+            Log.i("renderVideo",track.toString())
             if(track!=null){
                 (track as HMSVideoTrack).addSink(hmsVideoView.surfaceViewRenderer)
                 return
             }
         }
+        else {
 
-
-        peer?.videoTrack.let {
-           if (it?.trackId==trackId || peer!!.isLocal){
-                hmsVideoView.setVideoTrack(peer)
-                return
-           }
+            Log.i("renderVideoTrack", peer!!.peerID)
+            peer?.videoTrack.let {
+                if (it?.trackId == trackId || peer!!.isLocal) {
+                    hmsVideoView.setVideoTrack(peer)
+                    return
+                }
+            }
         }
-
 
 
     }
@@ -59,11 +60,12 @@ class HMSVideoViewFactory(val plugin: HmssdkFlutterPlugin) : PlatformViewFactory
         val id=args!!["peer_id"] as? String
         val isLocal=args!!["is_local"] as? Boolean
         val trackId=args!!["track_id"] as? String
+        val isAuxiliary = args!!["is_aux"] as? Boolean
        // Log.i("onCreateHMSVideoView", "$isLocal $id")
        // Log.i("HMSVideoViewFactory",trackId.toString())
         val peer = if(isLocal==null || isLocal!!) plugin.getLocalPeer()
         else plugin.getPeerById(id!!)!!
-        return HMSVideoViewWidget(context, viewId, creationParams,peer,trackId!!)
+        return HMSVideoViewWidget(context, viewId, creationParams,peer,trackId!!,isAuxiliary!!)
     }
 }
 

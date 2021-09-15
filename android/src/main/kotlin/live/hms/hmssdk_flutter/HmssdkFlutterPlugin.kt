@@ -520,20 +520,16 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
         }
     }
 
-    fun changeTrack(call: MethodCall) {
+    private fun changeTrack(call: MethodCall) {
         val hmsPeerId=call.argument<String>("hms_peer_id")
         val mute = call.argument<Boolean>("mute")
         val muteVideoKind = call.argument<Boolean>("mute_video_kind")
-
         val peer=getPeerById(hmsPeerId!!)
-
         val track:HMSTrack = if(muteVideoKind==true) peer!!.videoTrack!! else peer!!.audioTrack!!
-
-
         hmssdk.changeTrackState(track,mute!!,this)
     }
 
-    fun removePeer(call: MethodCall){
+    private fun removePeer(call: MethodCall){
         val peerId = call.argument<String>("peer_id")
 
         val peer = getPeerById(peerId!!) as HMSRemotePeer
@@ -541,7 +537,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
     }
 
 
-    fun endRoom(call: MethodCall){
+    private fun endRoom(call: MethodCall){
         val lock=call.argument<Boolean>("lock")
         hmssdk.endRoom(lock = lock!!,reason = "noise",hmsActionResultListener = this)
     }

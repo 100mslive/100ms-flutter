@@ -68,23 +68,23 @@ class _ChatWidgetState extends State<ChatWidget> {
                             ),
                             ..._meetingStore.peers.map((e) {
                               return DropdownMenuItem<String>(
-                                child: Text("${e.name}"),
+                                child: Text("${e.name} ${e.isLocal?"(You)":""}"),
                                 value: e.peerId,
                               );
                             }).toList(),
                             ...this
                                 .hmsRoles
-                                .map((e) =>
-                                DropdownMenuItem<String>(
-                                  child: Text("${e.name}"),
-                                  value: e.name,
-                                ))
+                                .map((e) => DropdownMenuItem<String>(
+                                      child: Text("${e.name}"),
+                                      value: e.name,
+                                    ))
                                 .toList()
                           ],
                         );
-                      }
-                      else
-                        return CircularProgressIndicator(color: Colors.black,);
+                      } else
+                        return CircularProgressIndicator(
+                          color: Colors.black,
+                        );
                     }),
                 GestureDetector(
                   onTap: () {
@@ -201,10 +201,11 @@ class _ChatWidgetState extends State<ChatWidget> {
 
                     DateTime currentTime = DateTime.now();
                     final DateFormat formatter =
-                    DateFormat('yyyy-MM-dd hh:mm a');
+                        DateFormat('yyyy-MM-dd hh:mm a');
 
                     List<String> rolesName = <String>[];
-                    for(int i=0;i<hmsRoles.length;i++)rolesName.add(hmsRoles[i].name);
+                    for (int i = 0; i < hmsRoles.length; i++)
+                      rolesName.add(hmsRoles[i].name);
                     print("${this.hmsRoles.toString()} dekte hai");
                     if (this.valueChoose == "EveryOne") {
                       _meetingStore.sendMessage(message);
@@ -217,12 +218,10 @@ class _ChatWidgetState extends State<ChatWidget> {
                             recipientPeer: null,
                             recipientRoles: null,
                             hmsMessageRecipientType:
-                            HMSMessageRecipientType.BROADCAST),
+                                HMSMessageRecipientType.BROADCAST),
                       ));
-                    }
-                    else if(rolesName.contains(this.valueChoose)) {
-                      _meetingStore.sendGroupMessage(
-                          message, this.valueChoose);
+                    } else if (rolesName.contains(this.valueChoose)) {
+                      _meetingStore.sendGroupMessage(message, this.valueChoose);
                       _meetingStore.addMessage(HMSMessage(
                         sender: "You",
                         message: message,
@@ -232,10 +231,10 @@ class _ChatWidgetState extends State<ChatWidget> {
                             recipientPeer: null,
                             recipientRoles: null,
                             hmsMessageRecipientType:
-                            HMSMessageRecipientType.ROLES),
+                                HMSMessageRecipientType.ROLES),
                       ));
-                    }
-                    else if(_meetingStore.localPeer!.peerId!=this.valueChoose) {
+                    } else if (_meetingStore.localPeer!.peerId !=
+                        this.valueChoose) {
                       _meetingStore.sendDirectMessage(
                           message, this.valueChoose);
                       _meetingStore.addMessage(HMSMessage(
@@ -247,7 +246,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                             recipientPeer: null,
                             recipientRoles: null,
                             hmsMessageRecipientType:
-                            HMSMessageRecipientType.PEER),
+                                HMSMessageRecipientType.PEER),
                       ));
                     }
 

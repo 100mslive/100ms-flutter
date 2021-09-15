@@ -42,6 +42,9 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
   HMSPeer? localPeer;
 
   @observable
+  HMSTrack? screenTrack;
+
+  @observable
   List<HMSTrack> tracks = ObservableList.of([]);
 
   @observable
@@ -198,7 +201,7 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
       {required HMSTrack track,
       required HMSTrackUpdate trackUpdate,
       required HMSPeer peer}) {
-    print("onTrackUpdateFlutter");
+    print("onTrackUpdateFlutter ${trackUpdate}");
     if (track.kind == HMSTrackKind.kHMSTrackKindAudio){
       audioTrackStatus[peer.peerId]=trackUpdate;
       if(peer.isLocal && trackUpdate==HMSTrackUpdate.trackMuted){
@@ -206,14 +209,21 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
       }
       return;
     }
-    trackStatus[peer.peerId] = trackUpdate;
+    if(track.source == HMSTrackSource.kHMSTrackSourceScreen){
+      trackStatus[peer.peerId+"Screen"]=trackUpdate;
+      if(trackUpdate==HMSTrackUpdate.trackAdded)
+        screenTrack=track;
+      else
+        screenTrack=null;
+    }
+    else trackStatus[peer.peerId] = track.isMute?HMSTrackUpdate.trackMuted:HMSTrackUpdate.trackUnMuted;
     if (peer.isLocal) {
       localPeer = peer;
       if(trackStatus[peer.peerId]==HMSTrackUpdate.trackMuted){
         this.isVideoOn=false;
       }
     }
-    else
+    if(track.source != HMSTrackSource.kHMSTrackSourceScreen)
       peerOperationWithTrack(peer, trackUpdate, track);
   }
 
