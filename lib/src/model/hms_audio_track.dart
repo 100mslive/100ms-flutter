@@ -8,19 +8,17 @@ class HMSAudioTrack extends HMSTrack {
       {required HMSTrackKind kind,
       required HMSTrackSource source,
       required String trackId,
-      required String trackDescription})
+      required String trackDescription,
+      required bool isMute
+      })
       : super(
           kind: kind,
           source: source,
           trackDescription: trackDescription,
           trackId: trackId,
+          isMute: isMute
         );
 
   ///returns true if audio is mute
-  @override
-  Future<bool> isMute() async {
-    //TODO:: make platform call
-    return await PlatformService.invokeMethod(PlatformMethod.isAudioMute,
-        arguments: {"peer_id": peer!.peerId, "is_local": peer!.isLocal});
-  }
+
 }

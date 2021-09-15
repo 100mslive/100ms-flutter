@@ -139,14 +139,15 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
           title: Text(widget.roomId),
           actions: [
             Observer(
-                builder: (_) => IconButton(
-                      onPressed: () {
-                        _meetingStore.toggleSpeaker();
-                      },
-                      icon: Icon(_meetingStore.isSpeakerOn
-                          ? Icons.volume_up
-                          : Icons.volume_off),
-                    )),
+              builder: (_) => IconButton(
+                onPressed: () {
+                  _meetingStore.toggleSpeaker();
+                },
+                icon: Icon(_meetingStore.isSpeakerOn
+                    ? Icons.volume_up
+                    : Icons.volume_off),
+              ),
+            ),
             IconButton(
               onPressed: () async {
                 if (_meetingStore.isVideoOn) _meetingStore.toggleCamera();
@@ -171,22 +172,15 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
           child: Column(
             children: [
               Observer(builder: (_) {
-                if (_meetingStore.localPeer != null) {
+                if (_meetingStore.screenTrack != null) {
                   return SizedBox(
                     width: double.infinity,
-                    height: MediaQuery.of(context).size.height / 2,
+                    height: MediaQuery.of(context).size.height / 1.7,
                     child: PeerItemOrganism(
-                        track: HMSTrack(
-                          trackDescription: '',
-                          source: HMSTrackSource.kHMSTrackSourceRegular,
-                          kind: HMSTrackKind.unknown,
-                          trackId: '',
-                          peer: _meetingStore.localPeer,
-                        ),
-                        isVideoMuted: !_meetingStore.isVideoOn),
+                        track: _meetingStore.screenTrack!, isVideoMuted: false),
                   );
                 } else {
-                  return Text('No Local peer');
+                  return Text('');
                 }
               }),
               Flexible(
@@ -203,50 +197,75 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                       children: List.generate(filteredList.length, (index) {
                         return InkWell(
                           onLongPress: () {
-                            showDialog(
-                                context: context,
-                                builder: (_) => Column(
-                                      children: [
-                                        ChangeTrackOptionDialog(
-                                          isAudioMuted:
-                                              _meetingStore.audioTrackStatus[
+                            if (!filteredList[index].peer!.isLocal)
+                              showDialog(
+                                  context: context,
+                                  builder: (_) => Column(
+                                        children: [
+                                          ChangeTrackOptionDialog(
+                                              isAudioMuted: _meetingStore
+                                                          .audioTrackStatus[
                                                       filteredList[index]
                                                           .peer
                                                           ?.peerId] ==
                                                   HMSTrackUpdate.trackMuted,
-                                          isVideoMuted:
-                                              _meetingStore.trackStatus[
-                                                      filteredList[index]
-                                                          .peer
-                                                          ?.peerId] ==
-                                                  HMSTrackUpdate.trackMuted,
-                                          peerName:
-                                              filteredList[index].peer?.name ??
+                                              isVideoMuted:
+                                                  _meetingStore.trackStatus[
+                                                          filteredList[index]
+                                                              .peer
+                                                              ?.peerId] ==
+                                                      HMSTrackUpdate.trackMuted,
+                                              peerName: filteredList[index]
+                                                      .peer
+                                                      ?.name ??
                                                   '',
-                                          changeTrack: (mute, isVideoTrack) {
-                                            Navigator.pop(context);
-                                            _meetingStore.changeTrackRequest(
-                                                filteredList[index]
-                                                        .peer
-                                                        ?.peerId ??
-                                                    "",
-                                                mute,
-                                                isVideoTrack);
-                                          },
-                                          removePeer:(){
-                                            Navigator.pop(context);
-                                            _meetingStore.removePeerFromRoom(filteredList[index].peer!.peerId);
-                                          }
-                                        ),
-                                      ],
-                                    ));
+                                              changeTrack:
+                                                  (mute, isVideoTrack) {
+                                                Navigator.pop(context);
+                                                if (filteredList[index]
+                                                        .source !=
+                                                    HMSTrackSource
+                                                        .kHMSTrackSourceScreen)
+                                                  _meetingStore
+                                                      .changeTrackRequest(
+                                                          filteredList[index]
+                                                                  .peer
+                                                                  ?.peerId ??
+                                                              "",
+                                                          mute,
+                                                          isVideoTrack);
+                                              },
+                                              removePeer: () {
+                                                Navigator.pop(context);
+                                                if (filteredList[index]
+                                                        .source !=
+                                                    HMSTrackSource
+                                                        .kHMSTrackSourceScreen)
+                                                  _meetingStore
+                                                      .removePeerFromRoom(
+                                                          filteredList[index]
+                                                              .peer!
+                                                              .peerId);
+                                              }),
+                                        ],
+                                      ));
                           },
                           child: PeerItemOrganism(
                               track: filteredList[index],
-                              isVideoMuted: (_meetingStore.trackStatus[
-                                          filteredList[index].peer?.peerId] ??
-                                      '') ==
-                                  HMSTrackUpdate.trackMuted),
+                              isVideoMuted: _meetingStore.localPeer!.peerId !=
+                                      filteredList[index].peer!.peerId
+                                  ? ((_meetingStore
+                                              .trackStatus[filteredList[index]
+                                                  .peer!
+                                                  .peerId +
+                                              (filteredList[index].source ==
+                                                      HMSTrackSource
+                                                          .kHMSTrackSourceScreen
+                                                  ? "Screen"
+                                                  : "")] ??
+                                          '') ==
+                                      HMSTrackUpdate.trackMuted)
+                                  : !_meetingStore.isVideoOn),
                         );
                       }),
                     );
@@ -297,11 +316,13 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
               padding: EdgeInsets.all(16),
               child: IconButton(
                   tooltip: 'Leave Or End',
-                  onPressed: () async{
+                  onPressed: () async {
                     String ans = await showDialog(
                         context: context,
-                        builder: (_) => LeaveOrEndMeetingDialogOption(meetingStore: _meetingStore,));
-                    if(ans != null && (ans=="leave" || ans=="end"))
+                        builder: (_) => LeaveOrEndMeetingDialogOption(
+                              meetingStore: _meetingStore,
+                            ));
+                    if (ans != null && (ans == "leave" || ans == "end"))
                       Navigator.pop(context);
                   },
                   icon: Icon(Icons.call_end)),

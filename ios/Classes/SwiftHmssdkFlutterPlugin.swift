@@ -295,7 +295,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         result("joining meeting in ios")
     }
     
-    func sendMessage(call: FlutterMethodCall,result:FlutterResult) {
+    func sendBroadcastMessage(call: FlutterMethodCall,result:FlutterResult) {
         let arguments = call.arguments as! Dictionary<String, AnyObject>
 //        let message:HMSMessage = HMSMessage(
 //            sender: (arguments["sender"] as? String) ?? "",
@@ -304,9 +304,37 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 ////            type: arguments["type"] as? String ?? "",
 //            message: arguments["message"] as? String ?? ""
 //        )
-        hmsSDK?.sendBroadcastMessage(message:  arguments["message"] as? String ?? "")
+        hmsSDK?.sendBroadcastMessage(tyep:"chat",message:  arguments["message"] as? String ?? ""){ message, error in
+        }
         result("sent message")
     }
+
+    func sendDirectMessage(call: FlutterMethodCall,result:FlutterResult){
+        let arguments = call.arguments as! Dictionary<String, AnyObject>
+        let message:String = arguments["message"] as? String ?? ""
+        let peerId:String = arguments["peer_id"] as? String ?? ""
+        let peer:HMSRemotePeer? = getRemotePeerById(peerId: peerId)
+        if(peer!=nil)
+            hmssdk.sendDirectMessage(type: "chat", message:message!, peer: peer!) { message, error in
+
+            }
+         result("sent message")
+    }
+
+    func sendGroupMessage(){
+        let arguments = call.arguments as! Dictionary<String, AnyObject>
+        let message:String = arguments["message"] as? String ?? ""
+        let roleUWant:String = arguments["role_name"] as? String ?? ""
+        val roles = hmsSDK.getRoles()
+        val role=roles.first(where:{$0.name==roleUWant})
+        val rolesList=[]
+        rolesList.append(role)
+        hmssdk.sendGroupMessage(type: "chat", message: message!, roles: rolesList) { message, error in
+        }
+    }
+
+
+
     func acceptRoleRequest(call: FlutterMethodCall,result:FlutterResult) {
         if let role = roleChangeRequest{
             hmsSDK?.accept(changeRole: role)
@@ -341,6 +369,43 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         hmsSDK?.leave();
         result("Leaving meeting")
     }
+
+    func endRoom(call: FlutterMethodCall){
+        let arguments = call.arguments as! Dictionary<String, AnyObject>
+        let lock:Bool = arguments["lock"] as? Bool ?? false
+
+        hmsSDK?.endRoom(lock: false, reason: "Meeting is over") { success, error in
+            if (success) {
+                // pop to previous screen
+            }
+        }
+    }
+
+    func removePeer(call: FlutterMethodCall){
+        let arguments = call.arguments as! Dictionary<String, AnyObject>
+        let peerId:Bool = arguments["peer_id"] as? String ?? ""
+        let peer:HMSRemotePeer? = getRemotePeerById(peerId: peerId)
+        hmssdk.removePeer(peer!, reason: "You are violating the community rules.") { success, error in
+        }
+    }
+
+    func changeTrack(call: FlutterMethodCall){
+        let arguments = call.arguments as! Dictionary<String, AnyObject>
+        let hmsPeerId:String = arguments["hms_peer_id"] as? String ?? ""
+        let mute:Bool = arguments["mute"] as? Bool ?? false
+        let muteVideoKind:Bool = arguments["mute_video_kind"] as? Bool ?? false
+
+        let peer:HMSRemotePeer? = getRemotePeerById(peerId: hmsPeerId)
+        let track:HMSTrack = muteVideoKind==true ? peer!.videoTrack : peer!.audioTrack
+        hmssdk.changeTrackState(track,mute!){ success, error in
+            if (success) {
+                // pop to previous screen
+            }
+        }
+    }
+
+
+
     internal var hmsSDK: HMSSDK?
 
   public static func register(with registrar: FlutterPluginRegistrar) {
@@ -367,12 +432,17 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     case "switch_video":switchVideo(call: call , result: result)
     case "switch_camera":switchCamera(result: result)
     case "preview_video":previewVideo(call:call,result:result)
-    case "send_message":sendMessage(call:call,result:result)
+    case "send_message":sendBroadcastMessage(call:call,result:result)
+    case "send_direct_message":sendDirectMessage(call:call,result:result)
+    case "send_group_message": sendGroupMessage(call:call,result:result)
     case "accept_role_change":acceptRoleRequest(call:call,result:result)
     case "change_role":changeRole(call:call,result:result)
     case "get_roles":getRoles(call:call,result:result)
     case "start_capturing": unMuteVideo()
     case "stop_capturing": muteVideo()
+    case "end_room":endRoom(call)
+    case "remove_peer":removePeer(call)
+    case "on_change_track_state_request":changeTrack(call)
     default:
         result(FlutterMethodNotImplemented)
     }

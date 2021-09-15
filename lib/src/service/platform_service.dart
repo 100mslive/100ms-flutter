@@ -71,7 +71,7 @@ class PlatformService {
     _meetingEventChannel.receiveBroadcastStream(
         {'name': 'meeting'}).map<HMSUpdateListenerMethodResponse>((event) {
       Map<String, dynamic>? data = {};
-      print("flutterdata2 ${event["event_name"]}");
+      print("flutterdata2 ${event["event_name"]} ${event["data"]}");
       if (event is Map && event['data'] is Map) {
         (event['data'] as Map).forEach((key, value) {
           data[key.toString()] = value;
@@ -108,7 +108,7 @@ class PlatformService {
           HMSTrack? track = HMSTrack.fromMap(map: data['track'], peer: peer);
           HMSTrackUpdate? update =
               HMSTrackUpdateValues.getHMSTrackUpdateFromName(data['update']);
-
+          print("UpdateTrack ${update}  ${data['update']}");
           notifyMeetingListeners(
               method, {'track': track, 'peer': peer, 'update': update});
           break;

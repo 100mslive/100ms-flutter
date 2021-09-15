@@ -8,12 +8,14 @@ class HMSLocalAudioTrack extends HMSAudioTrack {
       required HMSTrackKind kind,
       required HMSTrackSource source,
       required String trackId,
-      required String trackDescription})
+      required String trackDescription,
+      required bool isMute})
       : super(
           kind: kind,
           source: source,
           trackDescription: trackDescription,
           trackId: trackId,
+          isMute: isMute
         );
 
   void setMute() {

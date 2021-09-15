@@ -11,18 +11,14 @@ class HMSRemoteVideoTrack extends HMSVideoTrack {
       required HMSTrackKind kind,
       required HMSTrackSource source,
       required String trackId,
-      required String trackDescription})
+      required String trackDescription,
+      required bool isMute})
       : super(
-          isDegraded: isDegraded,
-          kind: kind,
-          source: source,
-          trackDescription: trackDescription,
-          trackId: trackId,
-        );
+            isDegraded: isDegraded,
+            kind: kind,
+            source: source,
+            trackDescription: trackDescription,
+            trackId: trackId,
+            isMute: isMute);
 
-  @override
-  Future<bool> isMute() {
-    // TODO: implement isMute
-    return super.isMute();
-  }
 }

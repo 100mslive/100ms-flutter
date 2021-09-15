@@ -9,11 +9,9 @@ class HMSTrack {
   final String trackDescription;
   final HMSPeer? peer;
   final bool isHighestAudio;
+  final bool isMute;
 
 
-  Future<bool> isMute() async {
-    return false;
-  }
 
   const HMSTrack(
       {required this.trackId,
@@ -21,7 +19,8 @@ class HMSTrack {
       required this.source,
       required this.trackDescription,
       this.peer,
-      this.isHighestAudio = false});
+        required this.isMute,
+        this.isHighestAudio = false});
 
   factory HMSTrack.fromMap({required Map map, HMSPeer? peer}) {
     return HMSTrack(
@@ -30,7 +29,9 @@ class HMSTrack {
         source:
             HMSTrackSourceValue.getHMSTrackSourceFromName(map['track_source']),
         kind: HMSTrackKindValue.getHMSTrackKindFromName(map['track_kind']),
-        peer: peer);
+        peer: peer,
+      isMute: map['track_mute']
+    );
   }
 
   factory HMSTrack.copyWith(bool? isHighest, {required HMSTrack track}) {
@@ -40,7 +41,8 @@ class HMSTrack {
         trackId: track.trackId,
         trackDescription: track.trackDescription,
         isHighestAudio: isHighest??track.isHighestAudio,
-        peer: track.peer
+        peer: track.peer,
+        isMute: track.isMute
     );
   }
 

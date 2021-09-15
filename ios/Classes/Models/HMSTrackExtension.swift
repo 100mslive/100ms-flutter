@@ -18,7 +18,8 @@ class  HMSTrackExtension{
                 "track_id":tempTrack.trackId,
                 "track_kind":getKindInString(kind:tempTrack.kind),
                 "track_source":getSourceInString(source:tempTrack.source),
-                "track_description":tempTrack.trackDescription]
+                "track_description":tempTrack.trackDescription],
+                "track_mute" : tempTrack.isMute
         }
         return dict
     }
