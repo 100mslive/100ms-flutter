@@ -129,11 +129,12 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
                 changeTrack(call)
             }
             "end_room"->{
-                endRoom(call)
+                endRoom(call,result)
             }
             "remove_peer"->{
                 removePeer(call)
             }
+
             "mute_all"->{
                 muteAll()
                 result.success("muted_all")
@@ -141,6 +142,10 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
             "un_mute_all"->{
                 unMuteAll()
                 result.success("un_muted_all")
+
+            "get_local_peer"->{
+                localPeer(result)
+
             }
             else -> {
                 result.notImplemented()
@@ -545,12 +550,31 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
         hmssdk.removePeerRequest(peer = peer,hmsActionResultListener = this,reason = "noise")
     }
 
-
-    private fun endRoom(call: MethodCall){
-        val lock=call.argument<Boolean>("lock")
-        hmssdk.endRoom(lock = lock!!,reason = "noise",hmsActionResultListener = this)
+    private fun endRoom(call: MethodCall, result: Result) {
+        if (isAllowedToEndMeeting()) {
+            val lock = call.argument<Boolean>("lock")
+            hmssdk.endRoom(lock = lock!!, reason = "noise", hmsActionResultListener = this)
+            result.success(true)
+        }
+        else
+            result.success(false)
+    }
+    private fun isAllowedToEndMeeting(): Boolean {
+        return hmssdk.getLocalPeer()!!.hmsRole.permission?.endRoom
     }
 
+    fun isAllowedToMuteOthers(): Boolean {
+        return hmssdk.getLocalPeer()!!.hmsRole.permission?.mute
+    }
+
+    fun isAllowedToUnMuteOthers(): Boolean {
+        return hmssdk.getLocalPeer()!!.hmsRole.permission?.unmute
+
+    }
+
+    fun localPeer(result: Result){
+        result.success(HMSPeerExtension.toDictionary(getLocalPeer()))
+    }
 
     private fun muteAll(){
         val peersList = hmssdk.getRemotePeers()

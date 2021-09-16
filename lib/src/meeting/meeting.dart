@@ -61,7 +61,7 @@ class HMSMeeting {
         arguments: {"hms_peer_id": peerId,"mute":mute,"mute_video_kind":isVideoTrack});
   }
 
-  Future<void> endRoom(bool lock) async {
+  Future<bool> endRoom(bool lock) async {
     return await PlatformService.invokeMethod(PlatformMethod.endRoom,
         arguments: {"lock": lock});
   }
@@ -69,6 +69,10 @@ class HMSMeeting {
   Future<void> removePeer(String peerId) async {
     return await PlatformService.invokeMethod(PlatformMethod.removePeer,
         arguments: {"peer_id": peerId});
+  }
+
+  Future<HMSPeer?> getLocalPeer() async{
+    return HMSPeer.fromMap(await PlatformService.invokeMethod(PlatformMethod.removePeer) as Map);
   }
 
   ///preview before joining the room pass [HMSConfig].
