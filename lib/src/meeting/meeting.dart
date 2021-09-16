@@ -152,4 +152,12 @@ class HMSMeeting {
         arguments: {"peer_id": peer?.peerId ?? ""});
     return isMute;
   }
+
+  void muteAll() async{
+    await PlatformService.invokeMethod(PlatformMethod.muteAll);
+  }
+
+  void unMuteAll() async{
+    await PlatformService.invokeMethod(PlatformMethod.unMuteAll);
+  }
 }

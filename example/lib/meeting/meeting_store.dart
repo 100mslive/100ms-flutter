@@ -63,6 +63,13 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
 
   @action
   void toggleSpeaker() {
+    print("toggleSpeaker");
+    if(isSpeakerOn){
+      muteAll();
+    }
+    else{
+      unMuteAll();
+    }
     isSpeakerOn = !isSpeakerOn;
   }
 
@@ -201,8 +208,14 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
       {required HMSTrack track,
       required HMSTrackUpdate trackUpdate,
       required HMSPeer peer}) {
-    print("onTrackUpdateFlutter ${trackUpdate}");
+    print("onTrackUpdateFlutter $trackUpdate");
     if (track.kind == HMSTrackKind.kHMSTrackKindAudio){
+      if(isSpeakerOn){
+        unMuteAll();
+      }
+      else{
+        muteAll();
+      }
       audioTrackStatus[peer.peerId]=trackUpdate;
       if(peer.isLocal && trackUpdate==HMSTrackUpdate.trackMuted){
         this.isMicOn=false;
@@ -261,7 +274,7 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
     HMSTrack newHighestTrack =
         HMSTrack.copyWith(true, track: highestAudioSpeakerVideoTrack);
     tracks.remove(highestAudioSpeakerVideoTrack);
-    tracks.insert(0, newHighestTrack);
+    tracks.add(newHighestTrack);
     previousHighestVideoTrack = newHighestTrack;
   }
 
@@ -356,7 +369,7 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
   @action
   void peerOperationWithTrack(
       HMSPeer peer, HMSTrackUpdate update, HMSTrack track) {
-    print("onTrackUpdateFlutter ${track.toString()} ${update} update");
+    print("onTrackUpdateFlutter $update ${peer.isLocal} update");
     switch (update) {
       case HMSTrackUpdate.trackAdded:
         if (track.kind == HMSTrackKind.kHMSTrackKindVideo) addTrack(track);
@@ -391,5 +404,13 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
 
   void removePeerFromRoom(String peerId){
     meetingController.removePeer(peerId);
+  }
+
+  void muteAll(){
+    meetingController.muteAll();
+  }
+
+  void unMuteAll(){
+    meetingController.unMuteAll();
   }
 }
