@@ -49,6 +49,8 @@ enum PlatformMethod {
   changeTrack,
   endRoom,
   removePeer,
+  muteAll,
+  unMuteAll,
   getLocalPeer,
   unknown
 }
@@ -114,6 +116,11 @@ extension PlatformMethodValues on PlatformMethod {
         return 'end_room';
       case PlatformMethod.removePeer:
         return 'remove_peer';
+
+      case PlatformMethod.muteAll:
+        return 'mute_all';
+      case PlatformMethod.unMuteAll:
+        return 'un_mute_all';
       case PlatformMethod.getLocalPeer:
         return 'get_local_peer';
       case PlatformMethod.unknown:
@@ -181,6 +188,10 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.endRoom;
       case 'remove_peer':
         return PlatformMethod.removePeer;
+      case 'mute_all':
+        return PlatformMethod.muteAll;
+      case 'un_mute_all':
+        return PlatformMethod.unMuteAll;
       case 'get_local_peer':
         return PlatformMethod.getLocalPeer;
       default:

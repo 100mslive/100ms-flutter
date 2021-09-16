@@ -45,6 +45,14 @@ class _HomePageState extends State<HomePage> {
   void getPermissions() async {
     await Permission.camera.request();
     await Permission.microphone.request();
+
+
+    while((await Permission.camera.isDenied)){
+      await Permission.camera.request();
+    }
+    while((await Permission.microphone.isDenied)){
+      await Permission.microphone.request();
+    }
   }
 
   @override

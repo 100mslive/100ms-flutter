@@ -115,4 +115,12 @@ class MeetingController {
   void removePeer(String peerId){
     _hmsSdkInteractor?.removePeer(peerId);
   }
+
+  void unMuteAll(){
+    _hmsSdkInteractor?.unMuteAll();
+  }
+
+  void muteAll(){
+    _hmsSdkInteractor?.muteAll();
+  }
 }

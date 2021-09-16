@@ -109,4 +109,12 @@ class HMSSDKInteractor {
     bool isMute = await _meeting.isVideoMute(peer);
     return isMute;
   }
+
+  void muteAll(){
+    _meeting.muteAll();
+  }
+
+  void unMuteAll(){
+    _meeting.unMuteAll();
+  }
 }
