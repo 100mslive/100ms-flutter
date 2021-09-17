@@ -84,7 +84,7 @@ class _HomePageState extends State<HomePage> {
               TextField(
                 controller: roomIdController,
                 decoration: InputDecoration(
-                    hintText: 'Enter RoomId e.g. 60cb411533afe',
+                    hintText: 'Enter RoomUrl',
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(16)))),
               ),

@@ -5,25 +5,29 @@ import 'package:hmssdk_flutter_example/service/room_service.dart';
 import 'package:uuid/uuid.dart';
 
 class MeetingController {
-  final String roomId;
+  final String roomUrl;
   final String user;
   final MeetingFlow flow;
   HMSSDKInteractor? _hmsSdkInteractor;
 
   MeetingController(
-      {required this.roomId, required this.user, required this.flow})
+      {required this.roomUrl, required this.user, required this.flow})
       : _hmsSdkInteractor = HMSSDKInteractor();
 
-  Future<void> joinMeeting() async {
-    String token = await RoomService().getToken(user: user, room: roomId);
+
+
+  Future<bool> joinMeeting() async {
+    String? token = await RoomService().getToken(user: user, room: roomUrl);
+    if(token==null)return false;
     HMSConfig config = HMSConfig(
         userId: Uuid().v1(),
-        roomId: roomId,
+        roomId: roomUrl,
         authToken: token,
         // endPoint: Constant.getTokenURL,
         userName: user);
 
     await _hmsSdkInteractor?.joinMeeting(config: config);
+    return true;
   }
 
   void leaveMeeting() {
