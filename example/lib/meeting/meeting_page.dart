@@ -39,7 +39,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
     WidgetsBinding.instance!.addObserver(this);
     _meetingStore = MeetingStore();
     MeetingController meetingController = MeetingController(
-        roomId: widget.roomId, flow: widget.flow, user: widget.user);
+        roomUrl: widget.roomId, flow: widget.flow, user: widget.user);
     _meetingStore.meetingController = meetingController;
     _roleChangerequestDisposer = reaction(
         (_) => _meetingStore.roleChangeRequest,
@@ -77,8 +77,12 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
     checkButtons();
   }
 
-  void initMeeting() {
-    _meetingStore.joinMeeting();
+  void initMeeting() async{
+    bool ans=await _meetingStore.joinMeeting();
+    if(!ans){
+      UtilityComponents.showSnackBarWithString("Unable to Join", context);
+      Navigator.of(context).pop();
+    }
     _meetingStore.startListen();
   }
 

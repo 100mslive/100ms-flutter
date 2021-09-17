@@ -42,9 +42,13 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
             });
   }
 
-  void initPreview() {
+  void initPreview() async{
     _previewStore.startListen();
-    _previewStore.startPreview();
+    bool ans=await _previewStore.startPreview();
+    if(ans==false){
+      UtilityComponents.showSnackBarWithString("Unable to preview", context);
+      Navigator.of(context).pop();
+    }
   }
 
   @override

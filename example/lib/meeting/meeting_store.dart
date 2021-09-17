@@ -134,9 +134,11 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
   }
 
   @action
-  Future<void> joinMeeting() async {
-    await meetingController.joinMeeting();
+  Future<bool> joinMeeting() async {
+    bool ans=await meetingController.joinMeeting();
+    if(!ans)return false;
     isMeetingStarted = true;
+    return true;
   }
 
   @action
