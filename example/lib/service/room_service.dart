@@ -13,7 +13,6 @@ class RoomService {
         body: {
           'code': codeAndDomain[1],
           'user_id': user,
-          'role': Constant.defaultRole
         },
         headers: {
           'subdomain': codeAndDomain[0]
