@@ -72,7 +72,7 @@ class PlatformService {
         {'name': 'meeting'}).map<HMSUpdateListenerMethodResponse>((event) {
       Map<String, dynamic>? data = {};
       print("flutterdata2 ${event["event_name"]} ${event["data"]}");
-      if (event is Map && event['data'] is Map) {
+      if (event is Map && event['data']!=null && event['data'] is Map) {
         (event['data'] as Map).forEach((key, value) {
           data[key.toString()] = value;
         });
@@ -86,6 +86,7 @@ class PlatformService {
       HMSUpdateListenerMethod method = event.method;
       print("flutterdata1 ${event.method}");
       Map data = event.data;
+
       switch (method) {
         case HMSUpdateListenerMethod.onJoinRoom:
           HMSRoom? room = HMSRoom.fromMap(data['room']);
@@ -93,12 +94,14 @@ class PlatformService {
           break;
         case HMSUpdateListenerMethod.onUpdateRoom:
           HMSRoom? room = HMSRoom.fromMap(data['room']);
+
           HMSRoomUpdate? update =
               HMSRoomUpdateValues.getHMSRoomUpdateFromName(data['update']);
           notifyMeetingListeners(method, {'room': room, 'update': update});
           break;
         case HMSUpdateListenerMethod.onPeerUpdate:
           HMSPeer? peer = HMSPeer.fromMap(data['peer']);
+          print(data['update']);
           HMSPeerUpdate? update =
               HMSPeerUpdateValues.getHMSPeerUpdateFromName(data['update']);
           notifyMeetingListeners(method, {'peer': peer, 'update': update});

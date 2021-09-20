@@ -237,9 +237,14 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
       if(trackStatus[peer.peerId]==HMSTrackUpdate.trackMuted){
         this.isVideoOn=false;
       }
+
+      tracks.insert(0, track);
+
     }
-    if(track.source != HMSTrackSource.kHMSTrackSourceScreen)
-      peerOperationWithTrack(peer, trackUpdate, track);
+    else {
+      if (track.source != HMSTrackSource.kHMSTrackSourceScreen)
+        peerOperationWithTrack(peer, trackUpdate, track);
+    }
   }
 
   @override
@@ -259,24 +264,36 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
   }
 
   HMSTrack? previousHighestVideoTrack;
-
+  int? previousHighestIndex;
   @override
   void onUpdateSpeakers({required List<HMSSpeaker> updateSpeakers}) {
     print('speakersFlutter $updateSpeakers');
     if (updateSpeakers.length == 0) return;
+    HMSSpeaker highestAudioSpeaker = updateSpeakers[0];
+    int newHighestIndex = tracks.indexWhere((element) => element.peer?.peerId == highestAudioSpeaker.peerId);
+    if(newHighestIndex == -1)return;
+
+
     if (previousHighestVideoTrack != null) {
       HMSTrack newPreviousTrack =
-          HMSTrack.copyWith(false, track: previousHighestVideoTrack!);
-      tracks.remove(previousHighestVideoTrack);
-      tracks.add(newPreviousTrack);
+      HMSTrack.copyWith(false, track: previousHighestVideoTrack!);
+
+      int newPrevHighestIndex = tracks.indexWhere((element) {
+        print(element.peer?.peerId == previousHighestVideoTrack?.peer?.peerId);
+
+        return element.peer?.peerId == previousHighestVideoTrack?.peer?.peerId;
+      });
+      if (newPrevHighestIndex != -1) {
+        tracks.removeAt(newPrevHighestIndex);
+
+        tracks.insert(newPrevHighestIndex, newPreviousTrack);
+      }
     }
-    HMSSpeaker highestAudioSpeaker = updateSpeakers[0];
-    HMSTrack highestAudioSpeakerVideoTrack = tracks.firstWhere(
-        (element) => element.peer!.peerId == highestAudioSpeaker.peerId);
+    HMSTrack highestAudioSpeakerVideoTrack = tracks[newHighestIndex];
     HMSTrack newHighestTrack =
         HMSTrack.copyWith(true, track: highestAudioSpeakerVideoTrack);
-    tracks.remove(highestAudioSpeakerVideoTrack);
-    tracks.add(newHighestTrack);
+    tracks.removeAt(newHighestIndex);
+    tracks.insert(newHighestIndex, newHighestTrack);
     previousHighestVideoTrack = newHighestTrack;
   }
 

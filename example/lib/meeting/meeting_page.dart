@@ -87,10 +87,8 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
   }
 
   void checkButtons() async {
-    _meetingStore.isVideoOn =
-        !(await _meetingStore.meetingController.isVideoMute(null));
-    _meetingStore.isMicOn =
-        !(await _meetingStore.meetingController.isAudioMute(null));
+    _meetingStore.isVideoOn = !(await _meetingStore.meetingController.isVideoMute(null));
+    _meetingStore.isMicOn =   !(await _meetingStore.meetingController.isAudioMute(null));
   }
 
   void showRoleChangeDialog(event) async {
@@ -179,7 +177,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                 if (_meetingStore.screenTrack != null) {
                   return SizedBox(
                     width: double.infinity,
-                    height: MediaQuery.of(context).size.height / 1.7,
+                    height: MediaQuery.of(context).size.height / 2,
                     child: PeerItemOrganism(
                         track: _meetingStore.screenTrack!, isVideoMuted: false),
                   );
@@ -201,7 +199,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                       children: List.generate(filteredList.length, (index) {
                         return InkWell(
                           onLongPress: () {
-                            if (!filteredList[index].peer!.isLocal)
+                            if (!filteredList[index].peer!.isLocal && filteredList[index].source!=HMSTrackSource.kHMSTrackSourceScreen)
                               showDialog(
                                   context: context,
                                   builder: (_) => Column(
@@ -241,10 +239,6 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                               },
                                               removePeer: () {
                                                 Navigator.pop(context);
-                                                if (filteredList[index]
-                                                        .source !=
-                                                    HMSTrackSource
-                                                        .kHMSTrackSourceScreen)
                                                   _meetingStore
                                                       .removePeerFromRoom(
                                                           filteredList[index]
@@ -256,7 +250,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                           },
                           child: PeerItemOrganism(
                               track: filteredList[index],
-                              isVideoMuted: _meetingStore.localPeer!.peerId !=
+                              isVideoMuted: _meetingStore.localPeer?.peerId !=
                                       filteredList[index].peer!.peerId
                                   ? ((_meetingStore
                                               .trackStatus[filteredList[index]

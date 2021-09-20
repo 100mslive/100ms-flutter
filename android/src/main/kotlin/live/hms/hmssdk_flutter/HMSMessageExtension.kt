@@ -5,8 +5,9 @@ import live.hms.video.sdk.models.HMSPeer
 
 class HMSMessageExtension {
     companion object{
-        fun toDictionary(message:HMSMessage):HashMap<String,Any>{
+        fun toDictionary(message:HMSMessage?):HashMap<String,Any>?{
             val args=HashMap<String,Any>()
+            if(message==null)return null
             args.put("message",message.message)
             args.put("time",message.serverReceiveTime.toLocaleString())
             args.put("type",message.type)

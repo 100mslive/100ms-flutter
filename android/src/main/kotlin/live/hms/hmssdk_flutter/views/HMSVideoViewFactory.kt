@@ -25,23 +25,25 @@ class HMSVideoViewWidget(context: Context, id: Int, creationParams: Map<String?,
     }
 
     private fun renderVideo(){
-        val tracks=peer?.auxiliaryTracks
-        if (tracks!!.isNotEmpty() && isAux){
+        if(peer==null)return;
+        val tracks=peer.auxiliaryTracks
+        if (tracks.isNotEmpty() && isAux){
             val track=tracks.first {
                 it.trackId==trackId
             }
-            Log.i("renderVideo",track.toString())
+
             if(track!=null){
-                (track as HMSVideoTrack).addSink(hmsVideoView.surfaceViewRenderer)
+                Log.i("renderVideo",track.toString())
+                hmsVideoView.setVideoTrack((track as HMSVideoTrack))
                 return
             }
         }
         else {
 
-            Log.i("renderVideoTrack", peer!!.peerID)
-            peer?.videoTrack.let {
-                if (it?.trackId == trackId || peer!!.isLocal) {
-                    hmsVideoView.setVideoTrack(peer)
+            Log.i("renderVideoTrack", peer.peerID)
+            peer.videoTrack.let {
+                if (it?.trackId == trackId || peer.isLocal) {
+                    hmsVideoView.setVideoTrack(it)
                     return
                 }
             }

@@ -12,6 +12,7 @@ class PreviewController {
       : _hmsSdkInteractor = HMSSDKInteractor();
 
   Future<bool> startPreview() async {
+
     String? token = await RoomService().getToken(user: user, room: roomId);
     //print("${token} preview");
     if(token==null)return false;

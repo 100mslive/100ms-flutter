@@ -7,10 +7,10 @@ class HMSRemovedFromRoomExtension {
         fun toDictionary(notification:HMSRemovedFromRoom?): HashMap<String, Any?>? {
             val hashMap = HashMap<String,Any?>()
 
-            if(notification!=null)return null
-            hashMap.put("peer_who_removed",HMSPeerExtension.toDictionary(notification?.peerWhoRemoved))
-            hashMap.put("reason",notification?.reason)
-            hashMap.put("room_was_ended",notification?.roomWasEnded)
+            if(notification==null)return null
+            hashMap.put("peer_who_removed",HMSPeerExtension.toDictionary(notification.peerWhoRemoved))
+            hashMap.put("reason",notification.reason)
+            hashMap.put("room_was_ended",notification.roomWasEnded)
 
             val roomMap = HashMap<String,Any?>()
             roomMap.put("removed_from_room",hashMap)
