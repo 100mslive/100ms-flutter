@@ -404,6 +404,34 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         }
     }
 
+    func muteAll(result:FlutterResult){
+        val peerList =hmsSDK?.getRemotePeers()
+        for remotePeer in peerList{
+            remotePeer.audioTrack?.isPlaybackAllowed=false
+            for auxTrack in remotePeer.auxiliaryTracks{
+                if(auxTrack is HMSRemoteAudioTrack){
+                    auxTrack.isPlaybackAllowed=false
+                }
+            }
+        }
+        result("muted all")
+    }
+
+    func unMuteAll(result:FlutterResult){
+        val peerList =hmsSDK?.getRemotePeers()
+        for remotePeer in peerList{
+            remotePeer.audioTrack?.isPlaybackAllowed=true
+            for auxTrack in remotePeer.auxiliaryTracks{
+                if(auxTrack is HMSRemoteAudioTrack){
+                    auxTrack.isPlaybackAllowed=true
+                }
+            }
+        }
+        result("unMutedAll")
+    }
+
+
+
 
 
     internal var hmsSDK: HMSSDK?
@@ -443,6 +471,8 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     case "end_room":endRoom(call)
     case "remove_peer":removePeer(call)
     case "on_change_track_state_request":changeTrack(call)
+    case "mute_all":muteAll(result)
+    case "un_mute_all":unMuteAll(result)
     default:
         result(FlutterMethodNotImplemented)
     }

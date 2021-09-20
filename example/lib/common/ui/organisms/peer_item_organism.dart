@@ -45,6 +45,7 @@ class _PeerItemOrganismState extends State<PeerItemOrganism> {
                   child: Center(child: CircleAvatar(child: Text(name))),
                 );
               }
+
               return HMSVideoView(
                 track: widget.track,
                 isAuxiliaryTrack: widget.track.source==HMSTrackSource.kHMSTrackSourceScreen,
