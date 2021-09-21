@@ -9,6 +9,7 @@ import io.flutter.plugin.platform.PlatformViewFactory
 import live.hms.hmssdk_flutter.HmssdkFlutterPlugin
 import live.hms.video.media.tracks.HMSVideoTrack
 import live.hms.video.sdk.models.HMSPeer
+import org.webrtc.SurfaceViewRenderer
 
 class HMSVideoViewWidget(context: Context, id: Int, creationParams: Map<String?, Any?>?,val peer:HMSPeer?,val trackId:String,val  isAux:Boolean) : PlatformView {
     private val hmsVideoView: HMSVideoView = HMSVideoView(context)
@@ -17,7 +18,18 @@ class HMSVideoViewWidget(context: Context, id: Int, creationParams: Map<String?,
         return hmsVideoView
     }
 
-    override fun dispose() {}
+    override fun dispose() {
+
+        peer?.videoTrack.let {
+            if (it?.trackId == trackId || peer?.isLocal == true) {
+                //peerToRenderer[peer.peerID]=hmsVideoView.surfaceViewRenderer
+//                Log.i("OBJECTCODEOFRENDERER",hmsVideoView.surfaceViewRenderer.hashCode().toString())
+                it?.removeSink(hmsVideoView.surfaceViewRenderer)
+            }
+        }
+        hmsVideoView.surfaceViewRenderer.release()
+        //Log.i("SURFACEDISPOSE","disposed")
+    }
 
     init {
         //Log.i("HMSVIdeo",peer.toString())
@@ -43,6 +55,8 @@ class HMSVideoViewWidget(context: Context, id: Int, creationParams: Map<String?,
             Log.i("renderVideoTrack", peer.peerID)
             peer.videoTrack.let {
                 if (it?.trackId == trackId || peer.isLocal) {
+                    //peerToRenderer[peer.peerID]=hmsVideoView.surfaceViewRenderer
+                   // Log.i("OBJECTCODEOFRENDERER",hmsVideoView.surfaceViewRenderer.hashCode().toString())
                     hmsVideoView.setVideoTrack(it)
                     return
                 }
@@ -54,7 +68,7 @@ class HMSVideoViewWidget(context: Context, id: Int, creationParams: Map<String?,
 }
 
 class HMSVideoViewFactory(val plugin: HmssdkFlutterPlugin) : PlatformViewFactory(StandardMessageCodec.INSTANCE) {
-
+    //val peerIdToRenderer : HashMap<String,SurfaceViewRenderer> = HashMap()
 
     override fun create(context: Context, viewId: Int, args: Any?): PlatformView {
 

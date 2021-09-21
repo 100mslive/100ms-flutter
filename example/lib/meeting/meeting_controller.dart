@@ -17,12 +17,13 @@ class MeetingController {
 
 
   Future<bool> joinMeeting() async {
-    String? token = await RoomService().getToken(user: user, room: roomUrl);
+    List<String?>? token = await RoomService().getToken(user: user, room: roomUrl);
     if(token==null)return false;
     HMSConfig config = HMSConfig(
         userId: Uuid().v1(),
         roomId: roomUrl,
-        authToken: token,
+        authToken: token[0]!,
+        isProdLink: token[1]=="true"?true:false,
         // endPoint: Constant.getTokenURL,
         userName: user);
 

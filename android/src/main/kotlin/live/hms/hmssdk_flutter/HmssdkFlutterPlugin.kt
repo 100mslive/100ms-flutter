@@ -349,11 +349,10 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
         val authToken = call.argument<String>("auth_token")
         //val shouldSkipPiiEvents = call.argument<Boolean>("should_skip_pii_events")
 //        Log.i("userName", authToken!!)
-        val hmsConfig = HMSConfig(
-            userName = userName!!,
-            authtoken = authToken!!,
-            initEndpoint = "https://qa-init.100ms.live/init"
-        )
+        val isProd = call.argument<Boolean>("is_prod")
+        var hmsConfig=HMSConfig(userName = userName!!, authtoken = authToken!!)
+        if(!isProd!!)
+            hmsConfig= HMSConfig(userName = userName, authtoken = authToken,initEndpoint = "https://qa-init.100ms.live/init")
         hmssdk.join(hmsConfig, this)
         meetingEventChannel.setStreamHandler(this)
 
@@ -488,8 +487,11 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
     private fun previewVideo(call: MethodCall) {
         val userName = call.argument<String>("user_name")
         val authToken = call.argument<String>("auth_token")
-//        Log.i("previewVideo", "$userName  $authToken")
-        val hmsConfig = HMSConfig(userName = userName!!, authtoken = authToken!!)
+        val isProd = call.argument<Boolean>("is_prod")
+        Log.i("previewVideo", "$userName $isProd")
+        var hmsConfig=HMSConfig(userName = userName!!, authtoken = authToken!!)
+        if(!isProd!!)
+            hmsConfig= HMSConfig(userName = userName, authtoken = authToken,initEndpoint = "https://qa-init.100ms.live/init")
         hmssdk.preview(hmsConfig, this)
     }
 

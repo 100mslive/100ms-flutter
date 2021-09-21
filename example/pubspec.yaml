@@ -15,6 +15,7 @@ dependencies:
   hmssdk_flutter:
     path: ../
 
+  rect_getter: ^1.0.0
   cupertino_icons: ^1.0.2
   uuid: ^3.0.4
   http: ^0.13.3
