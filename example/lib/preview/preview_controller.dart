@@ -13,11 +13,11 @@ class PreviewController {
 
   Future<bool> startPreview() async {
 
-    String? token = await RoomService().getToken(user: user, room: roomId);
-    //print("${token} preview");
+    List<String?>? token = await RoomService().getToken(user: user, room: roomId);
+    print("${token} preview");
     if(token==null)return false;
     HMSConfig config = HMSConfig(
-        userId: Uuid().v1(), roomId: roomId, authToken: token, userName: user);
+        userId: Uuid().v1(), roomId: roomId, authToken: token[0]!, userName: user,isProdLink: token[1]=="true"?true:false);
 
     _hmsSdkInteractor?.previewVideo(config: config);
     return true;

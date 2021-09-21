@@ -7,7 +7,8 @@ import 'package:mobx/mobx.dart';
 class PeerItemOrganism extends StatefulWidget {
   final HMSTrack track;
   final bool isVideoMuted;
-  PeerItemOrganism({Key? key, required this.track, this.isVideoMuted = true,})
+
+  PeerItemOrganism({Key? key, required this.track, this.isVideoMuted = true})
       : super(key: key);
 
   @override
@@ -15,13 +16,19 @@ class PeerItemOrganism extends StatefulWidget {
 }
 
 class _PeerItemOrganismState extends State<PeerItemOrganism> {
+  GlobalKey key= GlobalKey();
+  @override
+  void initState() {
+    super.initState();
 
+  }
+  
 
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      key: widget.key,
+      key: key,
       padding: EdgeInsets.all(16),
       margin: EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -60,4 +67,6 @@ class _PeerItemOrganismState extends State<PeerItemOrganism> {
       ),
     );
   }
+
+
 }
