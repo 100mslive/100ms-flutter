@@ -147,7 +147,6 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
 
             "get_local_peer"->{
                 localPeer(result)
-
             }
             else -> {
                 result.notImplemented()

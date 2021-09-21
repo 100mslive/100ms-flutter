@@ -499,6 +499,18 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         shouldMute ? result("muted all") : result("unMutedAll")
     }
     
+    func isVideoMute(_ result: FlutterResult) {
+        guard let peer = hmsSDK?.localPeer else { return }
+        
+        result(peer.videoTrack?.isMute() ?? false)
+    }
+    
+    func isAudioMute(_ result: FlutterResult) {
+        guard let peer = hmsSDK?.localPeer else { return }
+        
+        result(peer.audioTrack?.isMute() ?? false)
+    }
+    
     
     public static func register(with registrar: FlutterPluginRegistrar) {
         let channel = FlutterMethodChannel(name: "hmssdk_flutter", binaryMessenger: registrar.messenger())
@@ -518,25 +530,70 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         switch call.method {
-        case "join_meeting":joinMeeting(call:call,result:result)
-        case "leave_meeting":leaveMeeting(result: result)
-        case "switch_audio":switchAudio(call: call , result: result)
-        case "switch_video":switchVideo(call: call , result: result)
-        case "switch_camera":switchCamera(result: result)
-        case "preview_video":previewVideo(call:call,result:result)
-        case "send_message":sendBroadcastMessage(call:call,result:result)
-        case "send_direct_message":sendDirectMessage(call:call,result:result)
-        case "send_group_message": sendGroupMessage(call, result)
-        case "accept_role_change":acceptRoleRequest(call:call,result:result)
-        case "change_role":changeRole(call:call,result:result)
-        case "get_roles":getRoles(call:call,result:result)
-        case "start_capturing": unMuteVideo()
-        case "stop_capturing": muteVideo()
-        case "end_room":endRoom(call)
-        case "remove_peer":removePeer(call)
-        case "on_change_track_state_request":changeTrack(call)
-        case "mute_all":toggleMuteAll(result, shouldMute: true)
-        case "un_mute_all":toggleMuteAll(result, shouldMute: false)
+        
+        case "join_meeting":
+            joinMeeting(call:call,result:result)
+            
+        case "leave_meeting":
+            leaveMeeting(result: result)
+            
+        case "switch_audio":
+            switchAudio(call: call , result: result)
+            
+        case "switch_video":
+            switchVideo(call: call , result: result)
+            
+        case "switch_camera":
+            switchCamera(result: result)
+            
+        case "preview_video":
+            previewVideo(call:call,result:result)
+            
+        case "send_message":
+            sendBroadcastMessage(call:call,result:result)
+            
+        case "send_direct_message":
+            sendDirectMessage(call:call,result:result)
+            
+        case "send_group_message":
+            sendGroupMessage(call, result)
+            
+        case "accept_role_change":
+            acceptRoleRequest(call:call,result:result)
+            
+        case "change_role":
+            changeRole(call:call,result:result)
+            
+        case "get_roles":
+            getRoles(call:call,result:result)
+            
+        case "start_capturing":
+            unMuteVideo()
+            
+        case "stop_capturing":
+            muteVideo()
+            
+        case "end_room":
+            endRoom(call)
+            
+        case "remove_peer":
+            removePeer(call)
+            
+        case "on_change_track_state_request":
+            changeTrack(call)
+            
+        case "mute_all":
+            toggleMuteAll(result, shouldMute: true)
+            
+        case "un_mute_all":
+            toggleMuteAll(result, shouldMute: false)
+            
+        case "is_video_mute":
+            isVideoMute(result)
+            
+        case "is_audio_mute":
+            isAudioMute(result)
+            
         default:
             result(FlutterMethodNotImplemented)
         }
