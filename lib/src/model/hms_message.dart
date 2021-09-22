@@ -15,8 +15,10 @@ import 'package:hmssdk_flutter/src/model/hms_message_recipient.dart';
 class HMSMessage {
   ///[sender] id basically it is the peerId who is sending message.
   final String sender;
+
   ///[message] which you want to send.
   final String message;
+
   ///[type] of the [message]
   final String type;
 
@@ -24,23 +26,21 @@ class HMSMessage {
   final String time;
 
   HMSMessageRecipient? hmsMessageRecipient;
-  HMSMessage({
-    required this.sender,
-    required this.message,
-    required this.type,
-    required this.time,
-    this.hmsMessageRecipient
-  });
+  HMSMessage(
+      {required this.sender,
+      required this.message,
+      required this.type,
+      required this.time,
+      this.hmsMessageRecipient});
 
   factory HMSMessage.fromMap(Map map) {
-    print(map.toString());
     return HMSMessage(
-      sender: map['sender'] as String,
-      message: map['message'] as String,
-      type: map['type'] as String,
-      time: map['time'] as String,
-      hmsMessageRecipient: HMSMessageRecipient.fromMap(map['hms_message_recipient'] as Map)
-    );
+        sender: map['sender'] as String,
+        message: map['message'] as String,
+        type: map['type'] as String,
+        time: map['time'] as String,
+        hmsMessageRecipient:
+            HMSMessageRecipient.fromMap(map['hms_message_recipient'] as Map));
   }
 
   Map<String, dynamic> toMap(Map<String, dynamic> map) {

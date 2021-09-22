@@ -176,11 +176,9 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
 
   @action
   void updatePeerAt(peer) {
-    print(peer.toString());
     int index = this.peers.indexOf(peer);
     this.peers.removeAt(index);
     this.peers.insert(index, peer);
-    print(this.peers.toString());
   }
 
   @override
@@ -370,8 +368,6 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
 
   @action
   void peerOperation(HMSPeer peer, HMSPeerUpdate update) {
-    print("peerOperation $update");
-    print("peerOperation ${peer.toString()}");
     switch (update) {
       case HMSPeerUpdate.peerJoined:
         print('peer joined');

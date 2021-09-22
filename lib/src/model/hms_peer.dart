@@ -29,7 +29,6 @@ class HMSPeer {
   HMSVideoTrack? videoTrack;
   final List<HMSTrack>? auxiliaryTracks;
 
-
   HMSPeer({
     required this.peerId,
     required this.name,
@@ -40,7 +39,6 @@ class HMSPeer {
     this.audioTrack,
     this.videoTrack,
     this.auxiliaryTracks,
-
   });
 
   ///important to compare using [peerId]
@@ -55,19 +53,18 @@ class HMSPeer {
   int get hashCode => peerId.hashCode;
 
   factory HMSPeer.fromMap(Map map) {
-    if(Platform.isAndroid){
-    HMSRole? role;
-    if (map['role'] != null) role = HMSRole.fromMap(map['role']);
-    return HMSPeer(
-      peerId: map['peer_id'],
-      name: map['name'],
-      isLocal: map['is_local'],
-      role: role,
-      customerDescription: map['customer_description'],
-      customerUserId: map['customer_user_id'],
-    );
-    }
-    else{
+    if (Platform.isAndroid) {
+      HMSRole? role;
+      if (map['role'] != null) role = HMSRole.fromMap(map['role']);
+      return HMSPeer(
+        peerId: map['peer_id'],
+        name: map['name'],
+        isLocal: map['is_local'],
+        role: role,
+        customerDescription: map['customer_description'],
+        customerUserId: map['customer_user_id'],
+      );
+    } else {
       HMSRole? role;
 
       if (map['role'] != null) role = HMSRole.fromMap(map['role']);
@@ -100,10 +97,5 @@ class HMSPeer {
   static List<HMSPeer> fromListOfMap(List peersMap) {
     List<HMSPeer> peers = peersMap.map((e) => HMSPeer.fromMap(e)).toList();
     return peers;
-  }
-
-  @override
-  String toString() {
-    return 'HMSPeer{peerId: $peerId, name: $name, isLocal: $isLocal, role: $role, customerUserId: $customerUserId, customerDescription: $customerDescription, audioTrack: $audioTrack, videoTrack: $videoTrack, auxiliaryTracks: $auxiliaryTracks}';
   }
 }

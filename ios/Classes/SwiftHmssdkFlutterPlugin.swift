@@ -14,6 +14,8 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     
     internal var hmsSDK: HMSSDK?
     
+    private var config: HMSConfig?
+    
     public init(channel: FlutterMethodChannel, meetingEventChannel: FlutterEventChannel, previewEventChannel: FlutterEventChannel) {
         self.channel=channel
         self.meetingEventChannel=meetingEventChannel
@@ -267,35 +269,73 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         result("camera_changed")
     }
     
-    func previewVideo(call: FlutterMethodCall,result:FlutterResult) {
+    func previewVideo(call: FlutterMethodCall, result: FlutterResult) {
         let arguments = call.arguments as! Dictionary<String, AnyObject>
-        let isProd =arguments["is_prod"] as? Bool ?? false
-        let authToken =arguments["auth_token"] as? String ?? ""
-        let userName = (arguments["user_name"] as? String) ?? ""
-        let hmsConfig=HMSConfig(userName = userName!!, authtoken = authToken!!)
-        if(!isProd!!)
-            hmsConfig= HMSConfig(userName = userName, authToken = authToken,endPoint = "https://qa-init.100ms.live/init")
-//         let config:HMSConfig = HMSConfig(
-//             userName: (arguments["user_name"] as? String) ?? "",
-//             userID: arguments["user_id"] as? String ?? "",
-//             roomID: arguments["room_id"] as? String ?? "",
-//             authToken: arguments["auth_token"] as? String ?? "",
-//             shouldSkipPIIEvents: arguments["should_skip_pii_events"] as? Bool ?? false
-//         )
         
-        hmsSDK?.preview(config: config, delegate: self)
+        guard let authToken = arguments["auth_token"] as? String,
+              let userName = arguments["user_name"] as? String,
+              let userID = arguments["user_id"] as? String,
+              let roomID = arguments["room_id"] as? String
+        else {
+            print(#function, "Could not show preview, invalid parameters passed!")
+            result("Could not preview")
+            return
+        }
+        
+        let shouldSkipPIIEvents = arguments["should_skip_pii_events"] as? Bool ?? false
+        let metaData = arguments["meta_data"] as? String ?? nil
+        let isProd = arguments["is_prod"] as? Bool ?? true
+        let initEndpoint = isProd ? nil : "https://qa-init.100ms.live/init"
+        
+        config = HMSConfig(userName: userName,
+                           userID: userID,
+                           roomID: roomID,
+                           authToken: authToken,
+                           shouldSkipPIIEvents: shouldSkipPIIEvents,
+                           metaData: metaData,
+                           endpoint: initEndpoint)
+        
+        hmsSDK?.preview(config: config!, delegate: self)
+        
+        result("preview called")
     }
     
-    func joinMeeting(call:FlutterMethodCall,result:FlutterResult){
+    func joinMeeting(call: FlutterMethodCall, result: FlutterResult) {
+        
         let arguments = call.arguments as! Dictionary<String, AnyObject>
-        let isProd =arguments["is_prod"] as? Bool ?? false
-        let authToken =arguments["auth_token"] as? String ?? ""
-        let userName = (arguments["user_name"] as? String) ?? ""
-        let hmsConfig=HMSConfig(userName = userName!!, authtoken = authToken!!)
-        if(!isProd!!)
-            hmsConfig= HMSConfig(userName = userName, authToken = authToken,endPoint = "https://qa-init.100ms.live/init")
-        hmsSDK?.join(config: config, delegate: self)
+        
+        if let config = config {
+            hmsSDK?.join(config: config, delegate: self)
+        } else {
+            
+            guard let authToken = arguments["auth_token"] as? String,
+                  let userName = arguments["user_name"] as? String,
+                  let userID = arguments["user_id"] as? String,
+                  let roomID = arguments["room_id"] as? String
+            else {
+                print(#function, "Could not join room, invalid parameters passed!")
+                result("Could not join room")
+                return
+            }
+            
+            let shouldSkipPIIEvents = arguments["should_skip_pii_events"] as? Bool ?? false
+            let metaData = arguments["meta_data"] as? String ?? nil
+            let isProd = arguments["is_prod"] as? Bool ?? true
+            let initEndpoint = isProd ? nil : "https://qa-init.100ms.live/init"
+            
+            config = HMSConfig(userName: userName,
+                               userID: userID,
+                               roomID: roomID,
+                               authToken: authToken,
+                               shouldSkipPIIEvents: shouldSkipPIIEvents,
+                               metaData: metaData,
+                               endpoint: initEndpoint)
+            
+            hmsSDK?.join(config: config!, delegate: self)
+        }
+        
         meetingEventChannel.setStreamHandler(self)
+        
         result("joining meeting in ios")
     }
     

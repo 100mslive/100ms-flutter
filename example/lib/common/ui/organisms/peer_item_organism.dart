@@ -17,6 +17,9 @@ class PeerItemOrganism extends StatefulWidget {
 
 class _PeerItemOrganismState extends State<PeerItemOrganism> {
   GlobalKey key = GlobalKey();
+
+  String name = "";
+
   @override
   void initState() {
     super.initState();
@@ -40,15 +43,13 @@ class _PeerItemOrganismState extends State<PeerItemOrganism> {
               if (widget.isVideoMuted) {
                 List<String> parts = widget.track.peer?.name.split(" ") ?? [];
 
-                String name="";
                 if (parts.length == 1) {
                   parts[0] += " ";
                   name = parts[0][0] + parts[0][1];
                 }
-                else if(parts.length>=2)
+                else if(parts.length>=2) {
                   name = parts[0][0]+parts[1][0];
-
-                } 
+                }
                 return Container(
                   child: Center(child: CircleAvatar(child: Text(name))),
                 );
