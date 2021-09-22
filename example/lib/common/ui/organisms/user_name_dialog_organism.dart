@@ -18,6 +18,7 @@ class _UserNameDialogOrganismState extends State<UserNameDialogOrganism> {
           mainAxisSize: MainAxisSize.min,
           children: [
             TextField(
+              autofocus: true,
               controller: userNameController,
               decoration: InputDecoration(
                   border: OutlineInputBorder(
