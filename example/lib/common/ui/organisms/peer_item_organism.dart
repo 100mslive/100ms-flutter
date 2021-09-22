@@ -47,13 +47,13 @@ class _PeerItemOrganismState extends State<PeerItemOrganism> {
               if (widget.isVideoMuted) {
                 List<String> parts = widget.track.peer?.name.split(" ") ?? [];
 
-                late String name;
+                String name="";
                 if (parts.length == 1) {
                   parts[0] += " ";
                   name = parts[0][0] + parts[0][1];
                 }
-                else
-                  name = parts.map((e) => e.substring(0, 1)).join();
+                else if(parts.length>=2)
+                  name = parts[0][0]+parts[1][0];
                 return Container(
                   child: Center(child: CircleAvatar(child: Text(name))),
                 );
