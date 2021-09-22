@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_controller.dart';
 import 'package:mobx/mobx.dart';
+import 'package:collection/collection.dart';
 
 part 'meeting_store.g.dart';
 
@@ -250,8 +251,9 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
       if (trackStatus[peer.peerId] == HMSTrackUpdate.trackMuted) {
         this.isVideoOn = false;
       }
-      HMSTrack? existingTrack = tracks.firstWhere((element) => element.trackId == track.trackId);
-      print('existingTrack: ${existingTrack}');
+      HMSTrack? existingTrack =
+          tracks.firstWhere((element) => element.trackId == track.trackId);
+
       if (existingTrack == null) {
         tracks.insert(0, track);
       }

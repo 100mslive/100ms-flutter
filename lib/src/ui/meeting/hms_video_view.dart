@@ -18,19 +18,29 @@ class HMSVideoView extends StatelessWidget {
   /// [HMSVideoView] will use viewSize to get height and width of rendered video. If not passed, it will take whatever size is available to the widget.
   final Size? viewSize;
   final bool isAuxiliaryTrack;
-  const HMSVideoView({Key? key, required this.track, this.viewSize,required this.isAuxiliaryTrack})
+  const HMSVideoView(
+      {Key? key,
+      required this.track,
+      this.viewSize,
+      required this.isAuxiliaryTrack})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final tempViewSize = viewSize;
     if (tempViewSize != null) {
-      return _PlatformView(track: track, viewSize: tempViewSize,isAuxiliaryTrack: this.isAuxiliaryTrack,);
+      return _PlatformView(
+        track: track,
+        viewSize: tempViewSize,
+        isAuxiliaryTrack: this.isAuxiliaryTrack,
+      );
     } else
       return LayoutBuilder(builder: (_, constraints) {
         return _PlatformView(
-            track: track,
-            viewSize: Size(constraints.maxWidth, constraints.maxHeight),isAuxiliaryTrack: this.isAuxiliaryTrack,);
+          track: track,
+          viewSize: Size(constraints.maxWidth, constraints.maxHeight),
+          isAuxiliaryTrack: this.isAuxiliaryTrack,
+        );
       });
   }
 }
@@ -39,7 +49,11 @@ class _PlatformView extends StatelessWidget {
   final HMSTrack track;
   final Size viewSize;
   final bool isAuxiliaryTrack;
-  const _PlatformView({Key? key, required this.track, required this.viewSize,required this.isAuxiliaryTrack})
+  const _PlatformView(
+      {Key? key,
+      required this.track,
+      required this.viewSize,
+      required this.isAuxiliaryTrack})
       : super(key: key);
 
   void onPlatformViewCreated(int id) {
