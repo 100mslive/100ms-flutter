@@ -8,7 +8,9 @@
 import Foundation
 import Flutter
 import HMSSDK
-class  HMSVideoViewFactory: NSObject,FlutterPlatformViewFactory {
+
+class  HMSVideoViewFactory: NSObject, FlutterPlatformViewFactory {
+    
     let messenger: FlutterBinaryMessenger
     let plugin: SwiftHmssdkFlutterPlugin
     
@@ -20,16 +22,15 @@ class  HMSVideoViewFactory: NSObject,FlutterPlatformViewFactory {
     func create(withFrame frame: CGRect, viewIdentifier viewId: Int64, arguments args: Any?) -> FlutterPlatformView {
         
         let arguments = args as! Dictionary<String, AnyObject>
-        var newFrame = frame
+        
         let isLocal = arguments["is_local"] as? Bool ?? true
         let peerId = arguments["peer_id"] as? String ?? ""
         let trackId = arguments["track_id"] as? String ?? ""
         
-        let width = arguments["width"] as? Double ?? 188.0
-        let height = arguments["height"] as? Double ?? 294.0
+        let width = arguments["width"] as? Double ?? frame.size.width
+        let height = arguments["height"] as? Double ?? frame.size.height
         
-        
-        newFrame = CGRect(x: 0, y: 0, width: width, height: height)
+        let newFrame = CGRect(x: 0, y: 0, width: width, height: height)
         
         let peer = plugin.getPeerById(peerId: peerId, isLocal: isLocal)
         return HMSVideoViewWidget(frame: newFrame,
@@ -45,65 +46,57 @@ class  HMSVideoViewFactory: NSObject,FlutterPlatformViewFactory {
     }
 }
 
-class HMSVideoViewWidget: NSObject,FlutterPlatformView {
+
+class HMSVideoViewWidget: NSObject, FlutterPlatformView {
     
-    private var args:Any?
+    private var args: Any?
     var timer = Timer()
-    private var _view:UIView
-    private var peer:HMSPeer?
-    private var trackId:String
-    var count:Int = 0
-    let frame:CGRect
+    private var _view: UIView
+    private var peer: HMSPeer?
+    private var trackId: String
+    var count: Int = 0
+    let frame: CGRect
     
-    init(frame:CGRect,viewIdentifier viewId:Int64, arguments args:Any?, binaryMessenger messenger: FlutterBinaryMessenger, peer:HMSPeer?,trackId:String) {
-        self.args=args
-        self.frame=frame
-        self._view=UIView(frame: frame)
-        self.peer=peer
-        self.trackId=trackId
+    init(frame: CGRect, viewIdentifier viewId: Int64, arguments args: Any?, binaryMessenger messenger: FlutterBinaryMessenger, peer: HMSPeer?, trackId: String) {
+        
+        self.args = args
+        self.frame = frame
+        self._view = UIView(frame: frame)
+        self.peer = peer
+        self.trackId = trackId
         super.init()
         createHMSVideoView()
     }
     
-    func createHMSVideoView(){
+    func createHMSVideoView() {
+        
         let videoView = HMSVideoView(frame: frame)
         
         // Find track using track id
         
-        
-        if let videoTrack = peer?.videoTrack{
-            if((peer?.isLocal) != nil){
+        if let videoTrack = peer?.videoTrack {
+            if videoTrack.trackId == trackId {
                 videoView.setVideoTrack(videoTrack)
                 _view.addSubview(videoView)
-                print("attaching video track")
+                print(#function, "attaching video track")
                 return
             }
-            else if(videoTrack.trackId == self.trackId){
-                videoView.setVideoTrack(videoTrack)
-                _view.addSubview(videoView)
-                print("attaching video track")
-                return
-            }
-            
         }
-        
-        else if let auxilaryTracks = peer?.auxiliaryTracks{
-            let tempTrack = auxilaryTracks.first(where: {$0.trackId == self.trackId})
+        else if let auxilaryTracks = peer?.auxiliaryTracks {
             
-            if let track = tempTrack {
-                if let videoTrack = track as? HMSVideoTrack{
+            if let track = auxilaryTracks.first(where: {$0.trackId == self.trackId}) {
+                if let videoTrack = track as? HMSVideoTrack {
                     videoView.setVideoTrack(videoTrack)
                     _view.addSubview(videoView)
-                    print("attaching video track")
+                    print(#function, "attaching video track")
                     return
                 }
-                return
             }
         }
+        print(#function, "Error: Could not find video track to attach to view")
     }
     
     func view() -> UIView {
         return _view
     }
-    
 }

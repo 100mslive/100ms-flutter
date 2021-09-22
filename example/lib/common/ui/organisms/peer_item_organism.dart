@@ -33,7 +33,7 @@ class _PeerItemOrganismState extends State<PeerItemOrganism> {
       margin: EdgeInsets.all(2),
       decoration: BoxDecoration(
           border: Border.all(
-              color: widget.track.isHighestAudio ? Colors.blue : Colors.green,
+              color: widget.track.isHighestAudio ? Colors.blue : Colors.grey,
               width: widget.track.isHighestAudio ? 3.0 : 1.0),
           borderRadius: BorderRadius.all(Radius.circular(4))),
       child: Column(
@@ -46,9 +46,8 @@ class _PeerItemOrganismState extends State<PeerItemOrganism> {
                 if (parts.length == 1) {
                   parts[0] += " ";
                   name = parts[0][0] + parts[0][1];
-                }
-                else if(parts.length>=2) {
-                  name = parts[0][0]+parts[1][0];
+                } else if (parts.length >= 2) {
+                  name = parts[0][0] + parts[1][0];
                 }
                 return Container(
                   child: Center(child: CircleAvatar(child: Text(name))),
@@ -62,7 +61,7 @@ class _PeerItemOrganismState extends State<PeerItemOrganism> {
             },
           )),
           SizedBox(
-            height: 16,
+            height: 4,
           ),
           Text(
               "${widget.track.peer?.name ?? ''} ${widget.track.peer?.isLocal ?? false ? "(You)" : ""}")
