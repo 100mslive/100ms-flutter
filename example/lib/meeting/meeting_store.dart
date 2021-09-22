@@ -225,7 +225,7 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
       return;
     }
     if(track.source == HMSTrackSource.kHMSTrackSourceScreen){
-      trackStatus[peer.peerId+"Screen"]=trackUpdate;
+      //trackStatus[peer.peerId+"Screen"]=trackUpdate;
       if(trackUpdate==HMSTrackUpdate.trackAdded)
         screenTrack=track;
       else
