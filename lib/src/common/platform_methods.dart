@@ -2,48 +2,67 @@
 enum PlatformMethod {
   ///join meeting using this.
   joinMeeting,
+
   ///leave meeting
   leaveMeeting,
   onLeaveMeeting,
+
   ///when onJoin callback is called
   onJoinRoom,
+
   ///when room is updated.
   onUpdateRoom,
+
   ///when there is any change in peer in a room.
   onPeerUpdate,
+
   ///when there is track updates
   onTrackUpdate,
+
   ///when onError update is called
   onError,
   onMessage,
+
   ///when you want to send a message.
   sendMessage,
   sendDirectMessage,
   sendGroupMessage,
   onUpdateSpeaker,
+
   ///when reconnecting update method is called.
   onReconnecting,
+
   ///when reconnected update method is called.
   onReconnected,
+
   ///switch mic on/off.
   switchAudio,
   switchVideo,
+
   ///switch your camera.
   switchCamera,
+
   ///check whether audio is mute or not.
   isAudioMute,
+
   ///check whether video is mute or not.
   isVideoMute,
+
   ///start capturing your video from your camera.
   startCapturing,
+
   ///stop capturing your video from your camera.
   stopCapturing,
+
   ///get tracks for previewVideo.
   previewVideo,
+
   ///accept role changes suggestedBy any peer.
   acceptRoleChange,
+
   ///change your peer role.
   changeRole,
+
   ///get list of roles using this.
   getRoles,
   changeTrack,
@@ -51,6 +70,7 @@ enum PlatformMethod {
   removePeer,
   muteAll,
   unMuteAll,
+  getLocalPeer,
   unknown
 }
 
@@ -115,10 +135,13 @@ extension PlatformMethodValues on PlatformMethod {
         return 'end_room';
       case PlatformMethod.removePeer:
         return 'remove_peer';
+
       case PlatformMethod.muteAll:
         return 'mute_all';
       case PlatformMethod.unMuteAll:
         return 'un_mute_all';
+      case PlatformMethod.getLocalPeer:
+        return 'get_local_peer';
       case PlatformMethod.unknown:
         return 'unknown';
     }
@@ -188,6 +211,8 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.muteAll;
       case 'un_mute_all':
         return PlatformMethod.unMuteAll;
+      case 'get_local_peer':
+        return PlatformMethod.getLocalPeer;
       default:
         return PlatformMethod.unknown;
     }

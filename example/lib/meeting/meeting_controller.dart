@@ -113,8 +113,8 @@ class MeetingController {
     _hmsSdkInteractor?.changeTrackRequest(peerId, mute, isVideoTrack);
   }
 
-  void endRoom(bool lock){
-    _hmsSdkInteractor?.endRoom(lock);
+  Future<bool> endRoom(bool lock) async{
+     return (await _hmsSdkInteractor?.endRoom(lock))!;
   }
 
   void removePeer(String peerId){

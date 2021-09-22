@@ -18,8 +18,8 @@ class  HMSRoomExtension {
         dict["meta_data"] = hmsRoom.metaData
         dict["name"] = hmsRoom.name
     
-        for peer in hmsRoom.peers{
-            peers.insert(HMSPeerExtension.toDictionary(peer: peer), at: peers.count)
+        for peer in hmsRoom.peers {
+            peers.append(HMSPeerExtension.toDictionary(peer: peer))
         }
         dict["peers"] = peers
         
