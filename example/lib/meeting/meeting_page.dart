@@ -14,7 +14,7 @@ import 'package:hmssdk_flutter_example/main.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_controller.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:mobx/mobx.dart';
-import 'package:rect_getter/rect_getter.dart';
+import 'package:visibility_detector/visibility_detector.dart';
 import 'meeting_participants_list.dart';
 
 class MeetingPage extends StatefulWidget {
@@ -35,8 +35,6 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
   late ReactionDisposer _roleChangerequestDisposer, _trackChangerequestDisposer;
   late ReactionDisposer _errorDisposer;
   late ScrollController _scrollController;
-  var _keys = {};
-  var listViewKey = RectGetter.createGlobalKey();
 
 
   @override
@@ -139,20 +137,6 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
     super.dispose();
   }
 
-  List<int> getVisible() {
-    /// First, get the rect of ListView, and then traver the _keys
-    /// get rect of each item by keys in _keys, and if this rect in the range of ListView's rect,
-    /// add the index into result list.
-    var rect = RectGetter.getRectFromKey(listViewKey);
-    var _items = <int>[];
-    _keys.forEach((index, key) {
-      var itemRect = RectGetter.getRectFromKey(key);
-      if (itemRect != null && !(itemRect.top > rect!.bottom || itemRect.bottom < rect.top)) _items.add(index);
-    });
-
-    /// so all visible item's index are in this _items.
-    return _items;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -220,96 +204,91 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                       return Text('Waiting for other to join!');
                     List<HMSTrack> filteredList = _meetingStore.tracks;
 
-                    return NotificationListener<ScrollUpdateNotification>(
-                      onNotification: (notification) {
-                        print(getVisible());
-                        return false;
-                      },
+                    return GridView.count(
+                      // gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      //     crossAxisCount: 2),
+                      crossAxisCount: 2,
+                      controller: _scrollController,
+                      childAspectRatio: itemWidth/itemHeight,
+                      children: List.generate(filteredList.length, (index) {
+                        return VisibilityDetector(
 
-                      child: RectGetter(
-                        key: listViewKey,
-                        child: GridView.count(
-                          // gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          //     crossAxisCount: 2),
-                          crossAxisCount: 2,
-                          controller: _scrollController,
-                          childAspectRatio: itemWidth/itemHeight,
-                          children: List.generate(filteredList.length, (index) {
-                            _keys[index] = RectGetter.createGlobalKey();
-                            return RectGetter(
-                              key: _keys[index],
-                              child: InkWell(
-                                onLongPress: () {
-                                  if (!filteredList[index].peer!.isLocal && filteredList[index].source!=HMSTrackSource.kHMSTrackSourceScreen)
-                                    showDialog(
-                                        context: context,
-                                        builder: (_) => Column(
-                                              children: [
-                                                ChangeTrackOptionDialog(
-                                                    isAudioMuted: _meetingStore
-                                                                .audioTrackStatus[
+                          onVisibilityChanged: (VisibilityInfo info) {
+                            var visiblePercentage = info.visibleFraction * 100;
+                            String? peerId=filteredList[index].peer?.peerId;
+                            print(_meetingStore.tracks[index].isMute);
+                            if(visiblePercentage<=20){
+
+                              _meetingStore.trackStatus[peerId!]=HMSTrackUpdate.trackMuted;
+                            }
+                            else{
+
+                              _meetingStore.trackStatus[peerId!]=filteredList[index].isMute?HMSTrackUpdate.trackMuted:HMSTrackUpdate.trackUnMuted;
+                            }
+                            debugPrint(
+                                'Widget ${info.key} is ${visiblePercentage}% visible ${index}');
+                          },
+                          key: Key(filteredList[index].peer!.peerId),
+                          child: InkWell(
+                            onLongPress: () {
+                              if (!filteredList[index].peer!.isLocal && filteredList[index].source!=HMSTrackSource.kHMSTrackSourceScreen)
+                                showDialog(
+                                    context: context,
+                                    builder: (_) => Column(
+                                          children: [
+                                            ChangeTrackOptionDialog(
+                                                isAudioMuted: _meetingStore
+                                                            .audioTrackStatus[
+                                                        filteredList[index]
+                                                            .peer
+                                                            ?.peerId] ==
+                                                    HMSTrackUpdate.trackMuted,
+                                                isVideoMuted:
+                                                    _meetingStore.trackStatus[
                                                             filteredList[index]
                                                                 .peer
                                                                 ?.peerId] ==
                                                         HMSTrackUpdate.trackMuted,
-                                                    isVideoMuted:
-                                                        _meetingStore.trackStatus[
-                                                                filteredList[index]
+                                                peerName: filteredList[index]
+                                                        .peer
+                                                        ?.name ??
+                                                    '',
+                                                changeTrack:
+                                                    (mute, isVideoTrack) {
+                                                  Navigator.pop(context);
+                                                  if (filteredList[index]
+                                                          .source !=
+                                                      HMSTrackSource
+                                                          .kHMSTrackSourceScreen)
+                                                    _meetingStore
+                                                        .changeTrackRequest(
+                                                            filteredList[index]
                                                                     .peer
-                                                                    ?.peerId] ==
-                                                            HMSTrackUpdate.trackMuted,
-                                                    peerName: filteredList[index]
-                                                            .peer
-                                                            ?.name ??
-                                                        '',
-                                                    changeTrack:
-                                                        (mute, isVideoTrack) {
-                                                      Navigator.pop(context);
-                                                      if (filteredList[index]
-                                                              .source !=
-                                                          HMSTrackSource
-                                                              .kHMSTrackSourceScreen)
-                                                        _meetingStore
-                                                            .changeTrackRequest(
-                                                                filteredList[index]
-                                                                        .peer
-                                                                        ?.peerId ??
-                                                                    "",
-                                                                mute,
-                                                                isVideoTrack);
-                                                    },
-                                                    removePeer: () {
-                                                      Navigator.pop(context);
-                                                        _meetingStore
-                                                            .removePeerFromRoom(
-                                                                filteredList[index]
-                                                                    .peer!
-                                                                    .peerId);
-                                                    }),
-                                              ],
-                                            ));
-                                },
-                                child: PeerItemOrganism(
-                                    track: filteredList[index],
-                                    isVideoMuted: _meetingStore.localPeer?.peerId !=
-                                            filteredList[index].peer!.peerId
-                                        ? ((_meetingStore
-                                                    .trackStatus[filteredList[index]
-                                                        .peer!
-                                                        .peerId +
-                                                    (filteredList[index].source ==
-                                                            HMSTrackSource
-                                                                .kHMSTrackSourceScreen
-                                                        ? "Screen"
-                                                        : "")] ??
-                                                '') ==
-                                            HMSTrackUpdate.trackMuted)
-                                        : !_meetingStore.isVideoOn),
-                              ),
-                            );
-                          }),
-                        ),
-                      ),
+                                                                    ?.peerId ??
+                                                                "",
+                                                            mute,
+                                                            isVideoTrack);
+                                                },
+                                                removePeer: () {
+                                                  Navigator.pop(context);
+                                                    _meetingStore
+                                                        .removePeerFromRoom(
+                                                            filteredList[index]
+                                                                .peer!
+                                                                .peerId);
+                                                }),
+                                          ],
+                                        ));
+                            },
+                            child: PeerItemOrganism(
+                                track: filteredList[index],
+                                isVideoMuted: _meetingStore.localPeer?.peerId != filteredList[index].peer!.peerId
+                                    ? ((_meetingStore.trackStatus[filteredList[index].peer!.peerId] ?? '') ==
+                                        HMSTrackUpdate.trackMuted)
+                                    : !_meetingStore.isVideoOn),
+                          ),
+                        );
+                      }),
                     );
                   },
                 ),
