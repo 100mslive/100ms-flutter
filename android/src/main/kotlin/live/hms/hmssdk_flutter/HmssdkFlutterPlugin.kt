@@ -59,8 +59,8 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
 
     }
 
-    override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
-//        Log.i("onMethodCall", "reached")
+    override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) =
+        //        Log.i("onMethodCall", "reached")
 
         when (call.method) {
             "getPlatformVersion" -> {
@@ -144,6 +144,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
             "un_mute_all" -> {
                 unMuteAll()
                 result.success("un_muted_all")
+            }
 
             "get_local_peer"->{
                 localPeer(result)
@@ -152,9 +153,6 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
                 result.notImplemented()
             }
         }
-
-
-    }
 
     private fun getPeers(result: Result) {
         val peersList = hmssdk.getPeers()
@@ -588,40 +586,33 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
 
     fun isAllowedToUnMuteOthers(): Boolean {
         return hmssdk.getLocalPeer()!!.hmsRole.permission?.unmute
-
-
-    private fun endRoom(call: MethodCall,result:Result) {
-        val lock = call.argument<Boolean>("lock")
-        hmssdk.endRoom(lock = lock!!, reason = "noise", hmsActionResultListener = this)
-        result.success("ended room")
     }
 
-    fun localPeer(result: Result){
-        result.success(HMSPeerExtension.toDictionary(getLocalPeer()))
-    }
+    private fun localPeer(result: Result) {
+            result.success(HMSPeerExtension.toDictionary(getLocalPeer()))
+        }
 
     private fun muteAll() {
-        val peersList = hmssdk.getRemotePeers()
-        peersList.forEach {
-            it.audioTrack?.isPlaybackAllowed = false
-            it.auxiliaryTracks.forEach {
-                if (it is HMSRemoteAudioTrack) {
-                    it.isPlaybackAllowed = false
+            val peersList = hmssdk.getRemotePeers()
+            peersList.forEach {
+                it.audioTrack?.isPlaybackAllowed = false
+                it.auxiliaryTracks.forEach {
+                    if (it is HMSRemoteAudioTrack) {
+                        it.isPlaybackAllowed = false
+                    }
                 }
             }
         }
-    }
 
     private fun unMuteAll() {
-        val peersList = hmssdk.getRemotePeers()
-        peersList.forEach {
-            it.audioTrack?.isPlaybackAllowed = true
-            it.auxiliaryTracks.forEach {
-                if (it is HMSRemoteAudioTrack) {
-                    it.isPlaybackAllowed = true
+            val peersList = hmssdk.getRemotePeers()
+            peersList.forEach {
+                it.audioTrack?.isPlaybackAllowed = true
+                it.auxiliaryTracks.forEach {
+                    if (it is HMSRemoteAudioTrack) {
+                        it.isPlaybackAllowed = true
+                    }
                 }
             }
         }
-    }
-
 }

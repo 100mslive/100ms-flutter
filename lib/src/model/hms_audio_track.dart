@@ -9,16 +9,26 @@ class HMSAudioTrack extends HMSTrack {
       required HMSTrackSource source,
       required String trackId,
       required String trackDescription,
-      required bool isMute
-      })
+      required bool isMute,
+      required HMSPeer? peer})
       : super(
-          kind: kind,
-          source: source,
-          trackDescription: trackDescription,
-          trackId: trackId,
-          isMute: isMute
-        );
+            kind: kind,
+            source: source,
+            trackDescription: trackDescription,
+            trackId: trackId,
+            isMute: isMute,
+            peer: peer);
 
   ///returns true if audio is mute
 
+  factory HMSAudioTrack.fromMap({required Map map, HMSPeer? peer}) {
+    return HMSAudioTrack(
+        trackId: map['track_id'],
+        trackDescription: map['track_description'],
+        source:
+            HMSTrackSourceValue.getHMSTrackSourceFromName(map['track_source']),
+        kind: HMSTrackKindValue.getHMSTrackKindFromName(map['track_kind']),
+        isMute: map['track_mute'],
+        peer: peer);
+  }
 }

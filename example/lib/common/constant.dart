@@ -2,13 +2,14 @@ class Constant {
   static String prodTokenEndpoint =
       "https://prod-in.100ms.live/hmsapi/get-token";
 
-  static String qaTokenEndPoint="https://qa-in.100ms.live/hmsapi/get-token";
+  static String qaTokenEndPoint = "https://qa-in.100ms.live/hmsapi/get-token";
 
   static String tokenQuery = "api/token";
 
   //static String getTokenURL = tokenEndpoint + tokenQuery;
 
-  static String defaultRoomID = "";
+  static String defaultRoomID =
+      "https://yogi.app.100ms.live/meeting/muggy-ultramarine-fish";
 
   static String tokenKey = "token";
 

@@ -23,10 +23,9 @@ class HMSPeer {
   final HMSRole? role;
   final String? customerUserId;
   final String? customerDescription;
-  final HMSAudioTrack? audioTrack;
-  final HMSVideoTrack? videoTrack;
+  HMSAudioTrack? audioTrack;
+  HMSVideoTrack? videoTrack;
   final List<HMSTrack>? auxiliaryTracks;
-
 
   HMSPeer({
     required this.peerId,
@@ -38,7 +37,6 @@ class HMSPeer {
     this.audioTrack,
     this.videoTrack,
     this.auxiliaryTracks,
-
   });
 
   ///important to compare using [peerId]
@@ -56,7 +54,10 @@ class HMSPeer {
     HMSRole? role;
 
     if (map['role'] != null) role = HMSRole.fromMap(map['role']);
-    return HMSPeer(
+
+    // TODO: add auxiliary tracks
+
+    HMSPeer peer = HMSPeer(
       peerId: map['peer_id'],
       name: map['name'],
       isLocal: map['is_local'],
@@ -64,6 +65,18 @@ class HMSPeer {
       customerDescription: map['customer_description'],
       customerUserId: map['customer_user_id'],
     );
+
+    if (map['audio_track'] != null) {
+      peer.audioTrack =
+          HMSAudioTrack.fromMap(map: map['audio_track']!, peer: peer);
+    }
+
+    if (map['video_track'] != null) {
+      peer.videoTrack =
+          HMSVideoTrack.fromMap(map: map['video_track']!, peer: peer);
+    }
+
+    return peer;
   }
 
   static List<HMSPeer> fromListOfMap(List peersMap) {

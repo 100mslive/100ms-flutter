@@ -11,15 +11,13 @@ class HMSRemoteAudioTrack extends HMSAudioTrack {
       required HMSTrackSource source,
       required String trackId,
       required String trackDescription,
-      required bool isMute
-      })
+      required bool isMute,
+      required HMSPeer? peer})
       : super(
-          kind: kind,
-          source: source,
-          trackDescription: trackDescription,
-          trackId: trackId,
-          isMute: isMute
-        );
-
-
+            kind: kind,
+            source: source,
+            trackDescription: trackDescription,
+            trackId: trackId,
+            isMute: isMute,
+            peer: peer);
 }
