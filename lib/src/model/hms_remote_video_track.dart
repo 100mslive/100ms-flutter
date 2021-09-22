@@ -13,7 +13,7 @@ class HMSRemoteVideoTrack extends HMSVideoTrack {
       required String trackId,
       required String trackDescription,
       required bool isMute,
-      required HMSPeer? peer})
+      HMSPeer? peer})
       : super(
             isDegraded: isDegraded,
             kind: kind,
@@ -21,5 +21,7 @@ class HMSRemoteVideoTrack extends HMSVideoTrack {
             trackDescription: trackDescription,
             trackId: trackId,
             isMute: isMute,
-            peer: peer);
+            peer: peer
+            );
+
 }

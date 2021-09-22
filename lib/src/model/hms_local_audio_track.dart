@@ -10,14 +10,16 @@ class HMSLocalAudioTrack extends HMSAudioTrack {
       required String trackId,
       required String trackDescription,
       required bool isMute,
-      required HMSPeer? peer})
+      HMSPeer? peer
+      })
       : super(
-            kind: kind,
-            source: source,
-            trackDescription: trackDescription,
-            trackId: trackId,
-            isMute: isMute,
-            peer: peer);
+          kind: kind,
+          source: source,
+          trackDescription: trackDescription,
+          trackId: trackId,
+          isMute: isMute,
+          peer: peer
+        );
 
   void setMute() {
     //TODO:: call platform method

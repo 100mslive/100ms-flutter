@@ -10,23 +10,22 @@ class HMSVideoTrack extends HMSTrack {
       required HMSTrackKind kind,
       required HMSTrackSource source,
       required String trackId,
-      required String trackDescription,
-      required bool isMute,
-      required HMSPeer? peer})
+      required String trackDescription,required bool isMute,HMSPeer? peer})
       : super(
-            kind: kind,
-            source: source,
-            trackDescription: trackDescription,
-            trackId: trackId,
-            isMute: isMute,
-            peer: peer);
+          kind: kind,
+          source: source,
+          trackDescription: trackDescription,
+          trackId: trackId,
+          isMute: isMute,
+          peer: peer
+        );
 
   factory HMSVideoTrack.fromMap({required Map map, HMSPeer? peer}) {
     return HMSVideoTrack(
         trackId: map['track_id'],
         trackDescription: map['track_description'],
         source:
-            HMSTrackSourceValue.getHMSTrackSourceFromName(map['track_source']),
+        HMSTrackSourceValue.getHMSTrackSourceFromName(map['track_source']),
         kind: HMSTrackKindValue.getHMSTrackKindFromName(map['track_kind']),
         isMute: map['track_mute'],
         peer: peer);

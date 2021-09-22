@@ -16,31 +16,30 @@ class PeerItemOrganism extends StatefulWidget {
 }
 
 class _PeerItemOrganismState extends State<PeerItemOrganism> {
-  GlobalKey key = GlobalKey();
+  GlobalKey key= GlobalKey();
   @override
   void initState() {
     super.initState();
+
   }
+  
+
 
   @override
   Widget build(BuildContext context) {
-    // var size = MediaQuery.of(context).size;
+    var size = MediaQuery.of(context).size;
 
-    // /*24 is for notification bar on Android*/
-    // final double itemHeight = (size.height - kToolbarHeight - 24) / 2.5;
-    // final double itemWidth = size.width / 2.0;
-
-    // print("size: $itemWidth $itemHeight");
+    /*24 is for notification bar on Android*/
+    final double itemHeight = (size.height - kToolbarHeight - 24) / 2.5;
+    final double itemWidth = size.width / 2;
 
     return Container(
       key: key,
-      padding: EdgeInsets.all(2),
-      margin: EdgeInsets.all(2),
+      padding: EdgeInsets.all(16),
+      margin: EdgeInsets.all(16),
       decoration: BoxDecoration(
-          border: Border.all(
-              color: widget.track.isHighestAudio ? Colors.blue : Colors.green,
-              width: widget.track.isHighestAudio ? 3.0 : 1.0),
-          borderRadius: BorderRadius.all(Radius.circular(4))),
+          border: Border.all(color: widget.track.isHighestAudio?Colors.blue:Colors.green,width: widget.track.isHighestAudio?3.0:1.0),
+          borderRadius: BorderRadius.all(Radius.circular(16))),
       child: Column(
         children: [
           Expanded(child: LayoutBuilder(
@@ -52,7 +51,8 @@ class _PeerItemOrganismState extends State<PeerItemOrganism> {
                 if (parts.length == 1) {
                   parts[0] += " ";
                   name = parts[0][0] + parts[0][1];
-                } else
+                }
+                else
                   name = parts.map((e) => e.substring(0, 1)).join();
                 return Container(
                   child: Center(child: CircleAvatar(child: Text(name))),
@@ -60,18 +60,20 @@ class _PeerItemOrganismState extends State<PeerItemOrganism> {
               }
 
               return HMSVideoView(
-                  track: widget.track,
-                  isAuxiliaryTrack: widget.track.source ==
-                      HMSTrackSource.kHMSTrackSourceScreen);
+                track: widget.track,
+                isAuxiliaryTrack: widget.track.source==HMSTrackSource.kHMSTrackSourceScreen,
+                viewSize: Size(itemWidth,itemHeight),
+              );
             },
           )),
           SizedBox(
             height: 16,
           ),
-          Text(
-              "${widget.track.peer?.name ?? ''} ${widget.track.peer?.isLocal ?? false ? "(You)" : ""}")
+          Text("${widget.track.peer?.name ?? ''} ${widget.track.peer?.isLocal??false?"(You)":""}")
         ],
       ),
     );
   }
+
+
 }
