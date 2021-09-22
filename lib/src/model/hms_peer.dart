@@ -7,6 +7,8 @@
 /// A [peer] is the object returned by 100ms SDKs that contains all information about a user - name, role, video track etc.
 ///
 ///This library depends only on core Dart libraries and hms_audio_track.dart, hms_role.dart, hms_track.dart, hms_video_track.dart library.
+import 'dart:io';
+
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 class HMSPeer {
@@ -23,8 +25,8 @@ class HMSPeer {
   final HMSRole? role;
   final String? customerUserId;
   final String? customerDescription;
-  final HMSAudioTrack? audioTrack;
-  final HMSVideoTrack? videoTrack;
+  HMSAudioTrack? audioTrack;
+  HMSVideoTrack? videoTrack;
   final List<HMSTrack>? auxiliaryTracks;
 
 
@@ -53,6 +55,7 @@ class HMSPeer {
   int get hashCode => peerId.hashCode;
 
   factory HMSPeer.fromMap(Map map) {
+    if(Platform.isAndroid){
     HMSRole? role;
     if (map['role'] != null) role = HMSRole.fromMap(map['role']);
     return HMSPeer(
@@ -63,6 +66,35 @@ class HMSPeer {
       customerDescription: map['customer_description'],
       customerUserId: map['customer_user_id'],
     );
+    }
+    else{
+      HMSRole? role;
+
+      if (map['role'] != null) role = HMSRole.fromMap(map['role']);
+
+      // TODO: add auxiliary tracks
+
+      HMSPeer peer = HMSPeer(
+        peerId: map['peer_id'],
+        name: map['name'],
+        isLocal: map['is_local'],
+        role: role,
+        customerDescription: map['customer_description'],
+        customerUserId: map['customer_user_id'],
+      );
+
+      if (map['audio_track'] != null) {
+        peer.audioTrack =
+            HMSAudioTrack.fromMap(map: map['audio_track']!, peer: peer);
+      }
+
+      if (map['video_track'] != null) {
+        peer.videoTrack =
+            HMSVideoTrack.fromMap(map: map['video_track']!, peer: peer);
+      }
+
+      return peer;
+    }
   }
 
   static List<HMSPeer> fromListOfMap(List peersMap) {

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_controller.dart';
@@ -185,12 +187,30 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
 
   @override
   void onJoin({required HMSRoom room}) {
-    for (HMSPeer each in room.peers!) {
-      if (each.isLocal) {
-        localPeer = each;
-        addPeer(localPeer!);
-        print('on join ${localPeer!.peerId}');
-        break;
+    if(Platform.isAndroid) {
+      for (HMSPeer each in room.peers!) {
+        if (each.isLocal) {
+          localPeer = each;
+          addPeer(localPeer!);
+          print('on join ${localPeer!.peerId}');
+          break;
+        }
+      }
+    }
+    else{
+      for (HMSPeer each in room.peers!) {
+        addPeer(each);
+        if (each.isLocal) {
+          localPeer = each;
+          print('on join ${localPeer!.name}  ${localPeer!.peerId}');
+          if (each.videoTrack != null) {
+            tracks.insert(0, each.videoTrack!);
+          }
+        } else {
+          if (each.videoTrack != null) {
+            tracks.insert(0, each.videoTrack!);
+          }
+        }
       }
     }
   }
@@ -238,7 +258,8 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
         this.isVideoOn=false;
       }
 
-      tracks.insert(0, track);
+      if(Platform.isAndroid)
+        tracks.insert(0, track);
 
     }
     else {

@@ -13,13 +13,14 @@ class HMSLocalVideoTrack extends HMSVideoTrack {
     required String trackId,
     required String trackDescription,
     required bool isMute,
+    HMSPeer? peer
   }) : super(
             isDegraded: isDegraded,
             kind: kind,
             source: source,
             trackDescription: trackDescription,
             trackId: trackId,
-            isMute: isMute);
+            isMute: isMute,peer:peer);
 
   Future<void> startCapturing() async {
     await PlatformService.invokeMethod(PlatformMethod.startCapturing);

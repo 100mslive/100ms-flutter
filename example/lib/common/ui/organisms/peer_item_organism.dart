@@ -27,6 +27,12 @@ class _PeerItemOrganismState extends State<PeerItemOrganism> {
 
   @override
   Widget build(BuildContext context) {
+    var size = MediaQuery.of(context).size;
+
+    /*24 is for notification bar on Android*/
+    final double itemHeight = (size.height - kToolbarHeight - 24) / 2.5;
+    final double itemWidth = size.width / 2;
+
     return Container(
       key: key,
       padding: EdgeInsets.all(16),
@@ -56,6 +62,7 @@ class _PeerItemOrganismState extends State<PeerItemOrganism> {
               return HMSVideoView(
                 track: widget.track,
                 isAuxiliaryTrack: widget.track.source==HMSTrackSource.kHMSTrackSourceScreen,
+                viewSize: Size(itemWidth,itemHeight),
               );
             },
           )),
