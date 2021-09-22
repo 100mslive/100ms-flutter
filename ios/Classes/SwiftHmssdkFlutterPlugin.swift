@@ -269,28 +269,31 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     
     func previewVideo(call: FlutterMethodCall,result:FlutterResult) {
         let arguments = call.arguments as! Dictionary<String, AnyObject>
-        let config:HMSConfig = HMSConfig(
-            userName: (arguments["user_name"] as? String) ?? "",
-            userID: arguments["user_id"] as? String ?? "",
-            roomID: arguments["room_id"] as? String ?? "",
-            authToken: arguments["auth_token"] as? String ?? "",
-            shouldSkipPIIEvents: arguments["should_skip_pii_events"] as? Bool ?? false
-        )
+        let isProd =arguments["is_prod"] as? Bool ?? false
+        let authToken =arguments["auth_token"] as? String ?? ""
+        let userName = (arguments["user_name"] as? String) ?? ""
+        let hmsConfig=HMSConfig(userName = userName!!, authtoken = authToken!!)
+        if(!isProd!!)
+            hmsConfig= HMSConfig(userName = userName, authToken = authToken,endPoint = "https://qa-init.100ms.live/init")
+//         let config:HMSConfig = HMSConfig(
+//             userName: (arguments["user_name"] as? String) ?? "",
+//             userID: arguments["user_id"] as? String ?? "",
+//             roomID: arguments["room_id"] as? String ?? "",
+//             authToken: arguments["auth_token"] as? String ?? "",
+//             shouldSkipPIIEvents: arguments["should_skip_pii_events"] as? Bool ?? false
+//         )
         
         hmsSDK?.preview(config: config, delegate: self)
     }
     
     func joinMeeting(call:FlutterMethodCall,result:FlutterResult){
         let arguments = call.arguments as! Dictionary<String, AnyObject>
-        
-        let config:HMSConfig = HMSConfig(
-            userName: (arguments["user_name"] as? String) ?? "",
-            userID: arguments["user_id"] as? String ?? "",
-            roomID: arguments["room_id"] as? String ?? "",
-            authToken: arguments["auth_token"] as? String ?? "",
-            shouldSkipPIIEvents: arguments["should_skip_pii_events"] as? Bool ?? false
-        )
-        
+        let isProd =arguments["is_prod"] as? Bool ?? false
+        let authToken =arguments["auth_token"] as? String ?? ""
+        let userName = (arguments["user_name"] as? String) ?? ""
+        let hmsConfig=HMSConfig(userName = userName!!, authtoken = authToken!!)
+        if(!isProd!!)
+            hmsConfig= HMSConfig(userName = userName, authToken = authToken,endPoint = "https://qa-init.100ms.live/init")
         hmsSDK?.join(config: config, delegate: self)
         meetingEventChannel.setStreamHandler(self)
         result("joining meeting in ios")
