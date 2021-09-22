@@ -432,8 +432,7 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
   }
 
   Future<bool> endRoom(bool lock) async {
-    bool ended = await meetingController.endRoom(lock);
-    return ended;
+    return await meetingController.endRoom(lock);
   }
 
   void leaveMeeting() {
