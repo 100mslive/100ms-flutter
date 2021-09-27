@@ -2,7 +2,7 @@
 //  HMSPublishSettingsExtension.swift
 //  hmssdk_flutter
 //
-//  Created by Vivek Yadav on 27/07/21.
+//  Copyright © 2021 100ms. All rights reserved.
 //
 
 import Foundation
