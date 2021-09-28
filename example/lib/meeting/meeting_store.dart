@@ -108,7 +108,7 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
 
   @action
   void removeTrackWithTrackId(String trackId) {
-    tracks.remove(tracks.firstWhere((eachTrack) => eachTrack.trackId == trackId));
+    tracks.removeWhere((eachTrack) => eachTrack.trackId == trackId);
   }
 
   @action
@@ -124,7 +124,7 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
     if(track.source == HMSTrackSource.kHMSTrackSourceScreen)
       tracks.insert(0, track);
     else
-      tracks.add(track);
+      tracks.insert(tracks.length, track);
   }
 
   @action
@@ -221,11 +221,8 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
   }
 
   @override
-  void onTrackUpdate(
-      {required HMSTrack track,
-      required HMSTrackUpdate trackUpdate,
-      required HMSPeer peer}) {
-    print("onTrackUpdateFlutter $trackUpdate");
+  void onTrackUpdate({required HMSTrack track, required HMSTrackUpdate trackUpdate, required HMSPeer peer}) {
+    print("onTrackUpdateFlutter $trackUpdate ${peer.isLocal}");
     if (track.kind == HMSTrackKind.kHMSTrackKindAudio) {
       if (isSpeakerOn) {
         unMuteAll();
@@ -238,19 +235,6 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
       }
       return;
     }
-    // if (track.source == HMSTrackSource.kHMSTrackSourceScreen) {
-    //   //trackStatus[peer.peerId+"+"+"Screen"]=trackUpdate;
-    //   // if (trackUpdate == HMSTrackUpdate.trackAdded)
-    //   //   screenTrack = track;
-    //   // else
-    //   //   screenTrack = null;
-    //   if(trackUpdate==HMSTrackUpdate.trackAdded){
-    //     tracks.insert(0, track);
-    //   }
-    //   else{
-    //     tracks.removeAt(0);
-    //   }
-    // } else
     trackStatus[peer.peerId+(track.source == HMSTrackSource.kHMSTrackSourceScreen?"Screen":"")] = track.isMute ? HMSTrackUpdate.trackMuted : HMSTrackUpdate.trackUnMuted;
     if (peer.isLocal) {
       localPeer = peer;
@@ -258,8 +242,18 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
         this.isVideoOn = false;
       }
 
-      if (Platform.isAndroid ) tracks.insert(0, track);
-    } else {
+      if (Platform.isAndroid ) {
+        int screenShareIndex=tracks.indexWhere((element) {
+          return element.source==HMSTrackSource.kHMSTrackSourceScreen;
+        });
+        print("ScreenShare $screenShareIndex");
+        if(screenShareIndex == -1)
+          tracks.insert(0, track);
+        else
+          tracks.insert(1, track);
+      }
+    }
+    else {
         peerOperationWithTrack(peer, trackUpdate, track);
     }
   }
@@ -407,7 +401,7 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
     print("onTrackUpdateFlutter $update ${peer.isLocal} update");
     switch (update) {
       case HMSTrackUpdate.trackAdded:
-        if (track.kind == HMSTrackKind.kHMSTrackKindVideo) addTrack(track);
+        addTrack(track);
         break;
       case HMSTrackUpdate.trackRemoved:
         removeTrackWithTrackId(track.trackId);
