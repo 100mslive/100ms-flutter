@@ -16,6 +16,7 @@ class PreviewController {
         await RoomService().getToken(user: user, room: roomId);
 
     if (token == null) return false;
+    print(token[0]);
     HMSConfig config = HMSConfig(
         userId: Uuid().v1(),
         roomId: roomId,

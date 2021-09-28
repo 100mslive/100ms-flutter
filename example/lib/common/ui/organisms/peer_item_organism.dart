@@ -31,6 +31,7 @@ class _PeerItemOrganismState extends State<PeerItemOrganism> {
       key: key,
       padding: EdgeInsets.all(2),
       margin: EdgeInsets.all(2),
+      height: 200.0,
       decoration: BoxDecoration(
           border: Border.all(
               color: widget.track.isHighestAudio ? Colors.blue : Colors.grey,
