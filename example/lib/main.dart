@@ -9,12 +9,13 @@ import 'package:hmssdk_flutter_example/common/ui/organisms/user_name_dialog_orga
 import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
 import 'package:hmssdk_flutter_example/preview/preview_page.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:wakelock/wakelock.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
-
+  Wakelock.enable();
   runZonedGuarded(
       () => runApp(HMSExampleApp()), FirebaseCrashlytics.instance.recordError);
 }
@@ -45,6 +46,14 @@ class _HomePageState extends State<HomePage> {
   void getPermissions() async {
     await Permission.camera.request();
     await Permission.microphone.request();
+
+
+    while((await Permission.camera.isDenied)){
+      await Permission.camera.request();
+    }
+    while((await Permission.microphone.isDenied)){
+      await Permission.microphone.request();
+    }
   }
 
   @override
@@ -76,7 +85,7 @@ class _HomePageState extends State<HomePage> {
               TextField(
                 controller: roomIdController,
                 decoration: InputDecoration(
-                    hintText: 'Enter RoomId e.g. 60cb411533afe',
+                    hintText: 'Enter RoomUrl',
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(16)))),
               ),

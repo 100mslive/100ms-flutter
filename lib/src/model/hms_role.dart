@@ -17,11 +17,6 @@ class HMSRole {
   int priority;
   Map? generalPermissions;
 
-  @override
-  String toString() {
-    return 'HMSRole{name: $name, priority: $priority}';
-  }
-
   Map? internalPlugins;
   Map? externalPlugins;
 

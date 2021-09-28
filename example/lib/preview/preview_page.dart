@@ -42,29 +42,47 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
             });
   }
 
-  void initPreview() {
+  void initPreview() async {
     _previewStore.startListen();
-    _previewStore.startPreview();
+    bool ans = await _previewStore.startPreview();
+    if (ans == false) {
+      UtilityComponents.showSnackBarWithString("Unable to preview", context);
+      Navigator.of(context).pop();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    var size = MediaQuery.of(context).size;
+
+    /*24 is for notification bar on Android*/
+    final double itemHeight = (size.height - kToolbarHeight - 24);
+    final double itemWidth = size.width;
+
     return SafeArea(
       child: Scaffold(
         body: Container(
-          height: 500.0,
-          width: 500.0,
+          height: itemHeight,
+          width: itemWidth,
           child: Column(
             children: [
               Flexible(
+                fit: FlexFit.tight,
                 child: Observer(
                   builder: (_) {
-                    if (_previewStore.localTracks.isEmpty)
-                      return CupertinoActivityIndicator();
+                    if (_previewStore.localTracks.isEmpty) {
+                      return Column(children: [
+                        CupertinoActivityIndicator(radius: 124),
+                        SizedBox(
+                          height: 64.0,
+                        ),
+                        Text("No preview available") //
+                      ]);
+                    }
 
-                    return GridView(
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 1),
+                    return GridView.count(
+                      crossAxisCount: 1,
+                      childAspectRatio: (itemWidth / itemHeight),
                       children: List.generate(
                           _previewStore.localTracks.length,
                           (index) => PeerItemOrganism(
@@ -77,7 +95,7 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                 ),
               ),
               SizedBox(
-                width: 40.0,
+                height: 16,
               ),
               Row(
                 children: [
@@ -117,6 +135,9 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                         Icon(_previewStore.audioOn ? Icons.mic : Icons.mic_off),
                   ))
                 ],
+              ),
+              SizedBox(
+                height: 16,
               )
             ],
           ),

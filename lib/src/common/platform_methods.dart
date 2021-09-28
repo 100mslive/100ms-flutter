@@ -2,48 +2,75 @@
 enum PlatformMethod {
   ///join meeting using this.
   joinMeeting,
+
   ///leave meeting
   leaveMeeting,
   onLeaveMeeting,
+
   ///when onJoin callback is called
   onJoinRoom,
+
   ///when room is updated.
   onUpdateRoom,
+
   ///when there is any change in peer in a room.
   onPeerUpdate,
+
   ///when there is track updates
   onTrackUpdate,
+
   ///when onError update is called
   onError,
   onMessage,
+
   ///when you want to send a message.
   sendMessage,
+  sendDirectMessage,
+  sendGroupMessage,
   onUpdateSpeaker,
+
   ///when reconnecting update method is called.
   onReconnecting,
+
   ///when reconnected update method is called.
   onReconnected,
+
   ///switch mic on/off.
   switchAudio,
   switchVideo,
+
   ///switch your camera.
   switchCamera,
+
   ///check whether audio is mute or not.
   isAudioMute,
+
   ///check whether video is mute or not.
   isVideoMute,
+
   ///start capturing your video from your camera.
   startCapturing,
+
   ///stop capturing your video from your camera.
   stopCapturing,
+
   ///get tracks for previewVideo.
   previewVideo,
+
   ///accept role changes suggestedBy any peer.
   acceptRoleChange,
+
   ///change your peer role.
   changeRole,
+
   ///get list of roles using this.
   getRoles,
+  changeTrack,
+  endRoom,
+  removePeer,
+  muteAll,
+  unMuteAll,
+  getLocalPeer,
   unknown
 }
 
@@ -90,6 +117,10 @@ extension PlatformMethodValues on PlatformMethod {
         return 'stop_capturing';
       case PlatformMethod.sendMessage:
         return 'send_message';
+      case PlatformMethod.sendDirectMessage:
+        return 'send_direct_message';
+      case PlatformMethod.sendGroupMessage:
+        return 'send_group_message';
       case PlatformMethod.previewVideo:
         return 'preview_video';
       case PlatformMethod.acceptRoleChange:
@@ -98,6 +129,19 @@ extension PlatformMethodValues on PlatformMethod {
         return 'change_role';
       case PlatformMethod.getRoles:
         return 'get_roles';
+      case PlatformMethod.changeTrack:
+        return 'on_change_track_state_request';
+      case PlatformMethod.endRoom:
+        return 'end_room';
+      case PlatformMethod.removePeer:
+        return 'remove_peer';
+
+      case PlatformMethod.muteAll:
+        return 'mute_all';
+      case PlatformMethod.unMuteAll:
+        return 'un_mute_all';
+      case PlatformMethod.getLocalPeer:
+        return 'get_local_peer';
       case PlatformMethod.unknown:
         return 'unknown';
     }
@@ -145,6 +189,10 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.startCapturing;
       case 'send_message':
         return PlatformMethod.sendMessage;
+      case 'send_direct_message':
+        return PlatformMethod.sendDirectMessage;
+      case 'send_group_message':
+        return PlatformMethod.sendGroupMessage;
       case 'preview_video':
         return PlatformMethod.previewVideo;
       case 'accept_role_change':
@@ -153,6 +201,18 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.changeRole;
       case 'get_roles':
         return PlatformMethod.getRoles;
+      case 'on_change_track_state_request':
+        return PlatformMethod.changeTrack;
+      case 'end_room':
+        return PlatformMethod.endRoom;
+      case 'remove_peer':
+        return PlatformMethod.removePeer;
+      case 'mute_all':
+        return PlatformMethod.muteAll;
+      case 'un_mute_all':
+        return PlatformMethod.unMuteAll;
+      case 'get_local_peer':
+        return PlatformMethod.getLocalPeer;
       default:
         return PlatformMethod.unknown;
     }

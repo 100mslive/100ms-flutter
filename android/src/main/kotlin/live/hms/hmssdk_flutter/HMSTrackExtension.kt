@@ -12,8 +12,9 @@ class HMSTrackExtension {
             if(track==null)return null
             hashMap.put("track_id",track.trackId)
             hashMap.put("track_description",track.description)
-            hashMap.put("track_kind", getKindInString(track.type)!!)
+            hashMap.put("track_kind", getKindInString(track.type))
             hashMap.put("track_source", getSourceInString(track.source.uppercase()))
+            hashMap.put("track_mute",track.isMute)
             return hashMap
         }
 
@@ -34,8 +35,8 @@ class HMSTrackExtension {
             }
         }
 
-        private fun getKindInString(type:HMSTrackType?):String?{
-            if(type==null)return null
+        private fun getKindInString(type:HMSTrackType?):String{
+            if(type==null)return ""
             return when(type){
                 HMSTrackType.AUDIO->{
                     "kHMSTrackKindAudio"
@@ -52,7 +53,7 @@ class HMSTrackExtension {
         fun getTrackUpdateInString(hmsTrackUpdate: HMSTrackUpdate?):String?{
             if (hmsTrackUpdate==null)return null
             return when(hmsTrackUpdate){
-                HMSTrackUpdate.TRACK_UNMUTED-> "trackUnmuted"
+                HMSTrackUpdate.TRACK_UNMUTED-> "trackUnMuted"
                 HMSTrackUpdate.TRACK_MUTED-> "trackMuted"
                 HMSTrackUpdate.TRACK_REMOVED-> "trackRemoved"
                 HMSTrackUpdate.TRACK_DESCRIPTION_CHANGED-> "trackDescriptionChanged"

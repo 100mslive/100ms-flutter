@@ -5,25 +5,30 @@ import 'package:hmssdk_flutter_example/service/room_service.dart';
 import 'package:uuid/uuid.dart';
 
 class MeetingController {
-  final String roomId;
+  final String roomUrl;
   final String user;
   final MeetingFlow flow;
   HMSSDKInteractor? _hmsSdkInteractor;
 
   MeetingController(
-      {required this.roomId, required this.user, required this.flow})
+      {required this.roomUrl, required this.user, required this.flow})
       : _hmsSdkInteractor = HMSSDKInteractor();
 
-  Future<void> joinMeeting() async {
-    String token = await RoomService().getToken(user: user, room: roomId);
+
+
+  Future<bool> joinMeeting() async {
+    List<String?>? token = await RoomService().getToken(user: user, room: roomUrl);
+    if(token==null)return false;
     HMSConfig config = HMSConfig(
         userId: Uuid().v1(),
-        roomId: roomId,
-        authToken: token,
+        roomId: roomUrl,
+        authToken: token[0]!,
+        isProdLink: token[1]=="true"?true:false,
         // endPoint: Constant.getTokenURL,
         userName: user);
 
     await _hmsSdkInteractor?.joinMeeting(config: config);
+    return true;
   }
 
   void leaveMeeting() {
@@ -44,6 +49,14 @@ class MeetingController {
 
   Future<void> sendMessage(String message) async {
     return await _hmsSdkInteractor?.sendMessage(message);
+  }
+
+  Future<void> sendDirectMessage(String message,String peerId) async {
+    return await _hmsSdkInteractor?.sendDirectMessage(message,peerId);
+  }
+
+  Future<void> sendGroupMessage(String message,String roleName) async {
+    return await _hmsSdkInteractor?.sendGroupMessage(message,roleName);
   }
 
   void addMeetingListener(HMSUpdateListener listener) {
@@ -94,5 +107,25 @@ class MeetingController {
   Future<bool> isVideoMute(HMSPeer? peer) async {
     bool isMute = await _hmsSdkInteractor!.isVideoMute(peer);
     return isMute;
+  }
+
+  void changeTrackRequest(String peerId,bool mute,bool isVideoTrack){
+    _hmsSdkInteractor?.changeTrackRequest(peerId, mute, isVideoTrack);
+  }
+
+  Future<bool> endRoom(bool lock) async{
+     return (await _hmsSdkInteractor?.endRoom(lock))!;
+  }
+
+  void removePeer(String peerId){
+    _hmsSdkInteractor?.removePeer(peerId);
+  }
+
+  void unMuteAll(){
+    _hmsSdkInteractor?.unMuteAll();
+  }
+
+  void muteAll(){
+    _hmsSdkInteractor?.muteAll();
   }
 }

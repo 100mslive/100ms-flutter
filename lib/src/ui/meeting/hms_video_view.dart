@@ -17,20 +17,30 @@ class HMSVideoView extends StatelessWidget {
 
   /// [HMSVideoView] will use viewSize to get height and width of rendered video. If not passed, it will take whatever size is available to the widget.
   final Size? viewSize;
-
-  const HMSVideoView({Key? key, required this.track, this.viewSize})
+  final bool isAuxiliaryTrack;
+  const HMSVideoView(
+      {Key? key,
+      required this.track,
+      this.viewSize,
+      required this.isAuxiliaryTrack})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final tempViewSize = viewSize;
     if (tempViewSize != null) {
-      return _PlatformView(track: track, viewSize: tempViewSize);
+      return _PlatformView(
+        track: track,
+        viewSize: tempViewSize,
+        isAuxiliaryTrack: this.isAuxiliaryTrack,
+      );
     } else
       return LayoutBuilder(builder: (_, constraints) {
         return _PlatformView(
-            track: track,
-            viewSize: Size(constraints.maxWidth, constraints.maxHeight));
+          track: track,
+          viewSize: Size(constraints.maxWidth, constraints.maxHeight),
+          isAuxiliaryTrack: this.isAuxiliaryTrack,
+        );
       });
   }
 }
@@ -38,8 +48,12 @@ class HMSVideoView extends StatelessWidget {
 class _PlatformView extends StatelessWidget {
   final HMSTrack track;
   final Size viewSize;
-
-  const _PlatformView({Key? key, required this.track, required this.viewSize})
+  final bool isAuxiliaryTrack;
+  const _PlatformView(
+      {Key? key,
+      required this.track,
+      required this.viewSize,
+      required this.isAuxiliaryTrack})
       : super(key: key);
 
   void onPlatformViewCreated(int id) {
@@ -57,7 +71,8 @@ class _PlatformView extends StatelessWidget {
         creationParams: {
           'peer_id': track.peer?.peerId,
           'is_local': track.peer?.isLocal,
-          'track_id': track.trackId
+          'track_id': track.trackId,
+          'is_aux': isAuxiliaryTrack
         }..addAll({
             'height': viewSize.height,
             'width': viewSize.width,

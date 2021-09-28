@@ -1,13 +1,18 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_controller.dart';
+import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
+
+import 'change_role_options.dart';
 
 class ParticipantOrganism extends StatefulWidget {
   final HMSPeer peer;
-  final MeetingController meetingController;
+  final MeetingStore meetingStore;
 
   const ParticipantOrganism(
-      {Key? key, required this.peer, required this.meetingController})
+      {Key? key, required this.peer, required this.meetingStore})
       : super(key: key);
 
   @override
@@ -38,11 +43,37 @@ class _ParticipantOrganismState extends State<ParticipantOrganism> {
           SizedBox(
             width: 50.0,
           ),
-          Expanded(
-            child: (Text(
-              peer.role!.name,
-              style: TextStyle(fontSize: 15.0),
-            )),
+          GestureDetector(
+            onTap: () {
+              showDialog(
+                  context: context,
+                  builder: (_) => ChangeRoleOptionDialog(
+                        peerName: peer.name,
+                        getRoleFunction: widget.meetingStore.getRoles(),
+                        changeRole: (role, forceChange) {
+                          Navigator.pop(context);
+                          widget.meetingStore.changeRole(
+                              peerId: peer.peerId,
+                              roleName: role.name,
+                              forceChange: forceChange);
+                        },
+
+                      ));
+            },
+            child: Container(
+              padding: EdgeInsets.all(10.0),
+              decoration: BoxDecoration(
+                color: Colors.blue,
+                borderRadius: BorderRadius.circular(5.0),
+              ),
+              child: Text(
+                "${peer.role!.name}",
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.bold),
+              ),
+            ),
           ),
           SizedBox(
             width: 50.0,
@@ -56,8 +87,10 @@ class _ParticipantOrganismState extends State<ParticipantOrganism> {
   }
 
   void checkButtons() async {
-    this.isAudioOn = !(await widget.meetingController.isAudioMute(widget.peer));
-    this.isVideoOn = !(await widget.meetingController.isVideoMute(widget.peer));
+    this.isAudioOn =
+        !(await widget.meetingStore.meetingController.isAudioMute(widget.peer));
+    this.isVideoOn =
+        !(await widget.meetingStore.meetingController.isVideoMute(widget.peer));
     setState(() {});
   }
 }

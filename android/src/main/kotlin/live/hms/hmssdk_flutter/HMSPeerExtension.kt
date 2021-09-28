@@ -32,6 +32,7 @@ class HMSPeerExtension {
 
         fun getValueofHMSPeerUpdate(update:HMSPeerUpdate?):String?{
             if(update==null)return null
+
             return when(update){
                 HMSPeerUpdate.PEER_JOINED-> "peerJoined"
                 HMSPeerUpdate.PEER_LEFT-> "peerLeft"

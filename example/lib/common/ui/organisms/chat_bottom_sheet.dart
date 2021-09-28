@@ -16,12 +16,19 @@ class ChatWidget extends StatefulWidget {
 class _ChatWidgetState extends State<ChatWidget> {
   late MeetingStore _meetingStore;
   late double widthOfScreen;
+  late List<HMSRole> hmsRoles;
   TextEditingController messageTextController = TextEditingController();
+  String valueChoose = "EveryOne";
 
   @override
   void initState() {
     super.initState();
     _meetingStore = widget.meetingStore;
+    getRoles();
+  }
+
+  void getRoles() async {
+    hmsRoles = await _meetingStore.getRoles();
   }
 
   @override
@@ -38,10 +45,47 @@ class _ChatWidgetState extends State<ChatWidget> {
             child: Row(
               children: [
                 Expanded(
-                    child: Text(
-                  "Chat",
-                  style: TextStyle(color: Colors.black, fontSize: 30.0),
-                )),
+                  child: Text(
+                    "Chat",
+                    style: TextStyle(color: Colors.black, fontSize: 30.0),
+                  ),
+                ),
+                FutureBuilder(
+                    future: _meetingStore.getRoles(),
+                    builder: (ctx, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.done) {
+                        return DropdownButton<String>(
+                          value: valueChoose,
+                          onChanged: (newvalue) {
+                            setState(() {
+                              this.valueChoose = newvalue as String;
+                            });
+                          },
+                          items: [
+                            DropdownMenuItem<String>(
+                              child: Text("EveryOne"),
+                              value: "EveryOne",
+                            ),
+                            ..._meetingStore.peers.map((e) {
+                              return DropdownMenuItem<String>(
+                                child: Text("${e.name} ${e.isLocal?"(You)":""}"),
+                                value: e.peerId,
+                              );
+                            }).toList(),
+                            ...this
+                                .hmsRoles
+                                .map((e) => DropdownMenuItem<String>(
+                                      child: Text("${e.name}"),
+                                      value: e.name,
+                                    ))
+                                .toList()
+                          ],
+                        );
+                      } else
+                        return CircularProgressIndicator(
+                          color: Colors.black,
+                        );
+                    }),
                 GestureDetector(
                   onTap: () {
                     Navigator.of(context).pop();
@@ -77,6 +121,20 @@ class _ChatWidgetState extends State<ChatWidget> {
                                   style: TextStyle(
                                       fontSize: 10.0,
                                       color: Colors.black,
+                                      fontWeight: FontWeight.w900),
+                                ),
+                              ),
+                              Expanded(
+                                child: Text(
+                                  HMSMessageRecipientValues
+                                      .getValueFromHMSMessageRecipientType(
+                                          _meetingStore
+                                              .messages[index]
+                                              .hmsMessageRecipient!
+                                              .hmsMessageRecipientType),
+                                  style: TextStyle(
+                                      fontSize: 15.0,
+                                      color: Colors.blue,
                                       fontWeight: FontWeight.w900),
                                 ),
                               ),
@@ -140,15 +198,58 @@ class _ChatWidgetState extends State<ChatWidget> {
                   onTap: () {
                     String message = messageTextController.text;
                     if (message.isEmpty) return;
-                    _meetingStore.sendMessage(message);
+
                     DateTime currentTime = DateTime.now();
                     final DateFormat formatter =
                         DateFormat('yyyy-MM-dd hh:mm a');
-                    _meetingStore.addMessage(HMSMessage(
+
+                    List<String> rolesName = <String>[];
+                    for (int i = 0; i < hmsRoles.length; i++)
+                      rolesName.add(hmsRoles[i].name);
+                    print("${this.hmsRoles.toString()} dekte hai");
+                    if (this.valueChoose == "EveryOne") {
+                      _meetingStore.sendMessage(message);
+                      _meetingStore.addMessage(HMSMessage(
                         sender: "You",
                         message: message,
                         type: "chat",
-                        time: formatter.format(currentTime)));
+                        time: formatter.format(currentTime),
+                        hmsMessageRecipient: HMSMessageRecipient(
+                            recipientPeer: null,
+                            recipientRoles: null,
+                            hmsMessageRecipientType:
+                                HMSMessageRecipientType.BROADCAST),
+                      ));
+                    } else if (rolesName.contains(this.valueChoose)) {
+                      _meetingStore.sendGroupMessage(message, this.valueChoose);
+                      _meetingStore.addMessage(HMSMessage(
+                        sender: "You",
+                        message: message,
+                        type: "chat",
+                        time: formatter.format(currentTime),
+                        hmsMessageRecipient: HMSMessageRecipient(
+                            recipientPeer: null,
+                            recipientRoles: null,
+                            hmsMessageRecipientType:
+                                HMSMessageRecipientType.ROLES),
+                      ));
+                    } else if (_meetingStore.localPeer!.peerId !=
+                        this.valueChoose) {
+                      _meetingStore.sendDirectMessage(
+                          message, this.valueChoose);
+                      _meetingStore.addMessage(HMSMessage(
+                        sender: "You",
+                        message: message,
+                        type: "chat",
+                        time: formatter.format(currentTime),
+                        hmsMessageRecipient: HMSMessageRecipient(
+                            recipientPeer: null,
+                            recipientRoles: null,
+                            hmsMessageRecipientType:
+                                HMSMessageRecipientType.PEER),
+                      ));
+                    }
+
                     messageTextController.clear();
                   },
                   child: Icon(

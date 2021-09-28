@@ -2,7 +2,7 @@
 //  HMSPeerExtension.swift
 //  hmssdk_flutter
 //
-//  Created by Vivek Yadav on 11/07/21.
+//  Copyright © 2021 100ms. All rights reserved.
 //
 
 import Foundation
@@ -17,8 +17,8 @@ class  HMSPeerExtension{
             "peer_id":peer.peerID,
             "name":peer.name,
             "is_local":peer.isLocal,
-            "customer_description":peer.customerDescription,
-            "customer_user_id":peer.customerUserID,
+            "customer_description":peer.customerDescription ?? "",
+            "customer_user_id":peer.customerUserID ?? "",
         ]
         
         if let role = peer.role{

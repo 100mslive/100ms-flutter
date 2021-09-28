@@ -4,23 +4,29 @@ import 'package:hmssdk_flutter/src/service/platform_service.dart';
 
 ///parent of all audio tracks
 class HMSAudioTrack extends HMSTrack {
-  HMSAudioTrack(
+    HMSAudioTrack(
       {required HMSTrackKind kind,
-      required HMSTrackSource source,
-      required String trackId,
-      required String trackDescription})
+        required HMSTrackSource source,
+        required String trackId,
+        required String trackDescription,
+        required bool isMute,
+        HMSPeer? peer})
       : super(
-          kind: kind,
-          source: source,
-          trackDescription: trackDescription,
-          trackId: trackId,
-        );
-
+      kind: kind,
+      source: source,
+      trackDescription: trackDescription,
+      trackId: trackId,
+      isMute: isMute,
+      peer: peer);
   ///returns true if audio is mute
-  @override
-  Future<bool> isMute() async {
-    //TODO:: make platform call
-    return await PlatformService.invokeMethod(PlatformMethod.isAudioMute,
-        arguments: {"peer_id": peer!.peerId, "is_local": peer!.isLocal});
+
+  factory HMSAudioTrack.fromMap({required Map map, HMSPeer? peer}) {
+    return HMSAudioTrack(
+        trackId: map['track_id'],
+        trackDescription: map['track_description'],
+        source:HMSTrackSourceValue.getHMSTrackSourceFromName(map['track_source']),
+        kind: HMSTrackKindValue.getHMSTrackKindFromName(map['track_kind']),
+        isMute: map['track_mute'],
+        peer: peer);
   }
 }

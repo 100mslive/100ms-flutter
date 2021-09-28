@@ -18,9 +18,4 @@ class HMSException {
       map['name'],
     );
   }
-
-  @override
-  String toString() {
-    return 'HMSExceptionPeer{description: $description, name: $name, message: $message, code: $code, action: $action, name: $name}';
-  }
 }

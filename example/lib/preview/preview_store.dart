@@ -21,7 +21,6 @@ abstract class PreviewStoreBase with Store implements HMSPreviewListener {
 
   @override
   void onError({required HMSError error}) {
-    print("previewError ${error.toString()}");
     updateError(error);
   }
 
@@ -40,8 +39,8 @@ abstract class PreviewStoreBase with Store implements HMSPreviewListener {
     previewController.startListen(this);
   }
 
-  void startPreview() {
-    previewController.startPreview();
+  Future<bool> startPreview() async {
+    return await previewController.startPreview();
   }
 
   void startCapturing() {

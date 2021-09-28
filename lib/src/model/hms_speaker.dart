@@ -1,13 +1,13 @@
 class HMSSpeaker {
   final String peerId;
   final String trackId;
-  final String audioLevel;
+  final int audioLevel;
 
-  factory HMSSpeaker.fromMap(Map<String, dynamic> map) {
+  factory HMSSpeaker.fromMap(Map map) {
     return new HMSSpeaker(
       peerId: map['peerId'] as String,
       trackId: map['trackId'] as String,
-      audioLevel: map['audioLevel'] as String,
+      audioLevel: map['audioLevel'] as int,
     );
   }
 

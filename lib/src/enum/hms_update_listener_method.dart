@@ -9,6 +9,8 @@ enum HMSUpdateListenerMethod {
   onReconnecting,
   onReconnected,
   onRoleChangeRequest,
+  onChangeTrackStateRequest,
+  onRemovedFromRoom,
   unknown
 }
 
@@ -35,6 +37,10 @@ extension HMSUpdateListenerMethodValues on HMSUpdateListenerMethod {
         return HMSUpdateListenerMethod.onReconnected;
       case 'on_role_change_request':
         return HMSUpdateListenerMethod.onRoleChangeRequest;
+      case 'on_change_track_state_request':
+        return HMSUpdateListenerMethod.onChangeTrackStateRequest;
+      case 'on_removed_from_room':
+        return HMSUpdateListenerMethod.onRemovedFromRoom;
       default:
         return HMSUpdateListenerMethod.unknown;
     }

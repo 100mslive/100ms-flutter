@@ -15,25 +15,23 @@ import io.flutter.plugin.common.MethodChannel.Result
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import live.hms.hmssdk_flutter.views.HMSVideoView
 import live.hms.hmssdk_flutter.views.HMSVideoViewFactory
-import live.hms.hmssdk_flutter.views.HMSVideoViewWidget
-import live.hms.video.connection.HMSDataChannel
 import live.hms.video.error.HMSException
+import live.hms.video.media.tracks.HMSRemoteAudioTrack
 import live.hms.video.media.tracks.HMSTrack
-import live.hms.video.sdk.HMSPreviewListener
-import live.hms.video.sdk.HMSSDK
-import live.hms.video.sdk.HMSUpdateListener
+import live.hms.video.sdk.*
 import live.hms.video.sdk.models.*
 import live.hms.video.sdk.models.enums.HMSPeerUpdate
 import live.hms.video.sdk.models.enums.HMSRoomUpdate
 import live.hms.video.sdk.models.enums.HMSTrackUpdate
 import live.hms.video.sdk.models.role.HMSRole
-import kotlin.isInitialized
+import live.hms.video.sdk.models.trackchangerequest.HMSChangeTrackStateRequest
+
 
 /** HmssdkFlutterPlugin */
 class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener, ActivityAware,
-    EventChannel.StreamHandler, HMSPreviewListener {
+    EventChannel.StreamHandler, HMSPreviewListener, HMSAudioListener, HMSActionResultListener,
+    HMSMessageResultListener {
     private lateinit var channel: MethodChannel
     private lateinit var meetingEventChannel: EventChannel
     private lateinit var previewChannel: EventChannel
@@ -42,7 +40,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
     private lateinit var activity: Activity
     lateinit var hmssdk: HMSSDK
     private lateinit var hmsVideoFactory: HMSVideoViewFactory
-    private var requestChange :HMSRoleChangeRequest?= null
+    private var requestChange: HMSRoleChangeRequest? = null
 
     override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
         this.channel = MethodChannel(flutterPluginBinding.binaryMessenger, "hmssdk_flutter")
@@ -61,8 +59,8 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
 
     }
 
-    override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
-//        Log.i("onMethodCall", "reached")
+    override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) =
+        //        Log.i("onMethodCall", "reached")
 
         when (call.method) {
             "getPlatformVersion" -> {
@@ -100,11 +98,20 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
                 result.success("start_capturing")
             }
             "send_message" -> {
-                sendMessage(call)
+                sendBroadCastMessage(call)
+                result.success("sent message")
+            }
+            "send_direct_message" -> {
+                sendDirectMessage(call)
+                result.success("sent message")
+            }
+            "send_group_message" -> {
+                sendGroupMessage(call)
                 result.success("sent message")
             }
             "preview_video" -> {
                 previewVideo(call)
+                result.success("preview video")
             }
             "change_role" -> {
                 changeRole(call)
@@ -116,11 +123,46 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
                 acceptRoleRequest()
                 result.success("role_accepted")
             }
+            "get_peers" -> {
+                getPeers(result)
+            }
+            "on_change_track_state_request" -> {
+                changeTrack(call)
+            }
+
+            "end_room"->{
+                endRoom(call,result)
+            }
+            "remove_peer" -> {
+                removePeer(call)
+            }
+
+            "mute_all"->{
+                muteAll()
+                result.success("muted_all")
+            }
+            "un_mute_all" -> {
+                unMuteAll()
+                result.success("un_muted_all")
+            }
+
+            "get_local_peer"->{
+                localPeer(result)
+            }
             else -> {
                 result.notImplemented()
             }
         }
 
+    private fun getPeers(result: Result) {
+        val peersList = hmssdk.getPeers()
+        val peersMapList = ArrayList<HashMap<String, Any?>?>()
+        peersList.forEach {
+            peersMapList.add(HMSPeerExtension.toDictionary(it))
+        }
+        CoroutineScope(Dispatchers.Main).launch {
+            result.success(peersMapList)
+        }
 
     }
 
@@ -129,122 +171,157 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
         meetingEventChannel.setStreamHandler(null)
     }
 
+    override fun onChangeTrackStateRequest(details: HMSChangeTrackStateRequest) {
+        val args = HashMap<String, Any?>()
+        args.put("event_name", "on_change_track_state_request")
+        args.put("data", HMSChangeTrackStateRequestExtension.toDictionary(details)!!)
+        Log.i("androiddata1", args.get("event_name").toString())
+        if (args["data"] != null)
+            CoroutineScope(Dispatchers.Main).launch {
+                eventSink?.success(args)
+            }
+    }
+
 
     override fun onError(error: HMSException) {
 
-        val args = HashMap<String, Any>()
+        val args = HashMap<String, Any?>()
         args.put("event_name", "on_error")
-        args.put("data", HMSExceptionExtension.toDictionary(error)!!)
+        args.put("data", HMSExceptionExtension.toDictionary(error))
 //        Log.i("onError", args["data"].toString())
-        CoroutineScope(Dispatchers.Main).launch {
-            eventSink!!.success(args)
-            previewSink!!.success(args)
-        }
+        if (args["data"] != null)
+            CoroutineScope(Dispatchers.Main).launch {
+                eventSink?.success(args)
+                previewSink?.success(args)
+            }
 
     }
 
+    override fun onSuccess() {
+        Log.i("onSuccess", "success")
+    }
+
+    override fun onSuccess(hmsMessage: HMSMessage) {
+        Log.i("onSuccessMessage", hmsMessage.message)
+    }
+
+
     override fun onPreview(room: HMSRoom, localTracks: Array<HMSTrack>) {
 //        Log.i("onPreview", room.localPeer.toString())
-        val args = HashMap<String, Any>()
+        val args = HashMap<String, Any?>()
         args.put("event_name", "preview_video")
         args.put("data", HMSPreviewExtension.toDictionary(room, localTracks))
 //        Log.i("onPreview", args.get("data").toString())
-        CoroutineScope(Dispatchers.Main).launch {
-            previewSink!!.success(args)
-        }
+        if (args["data"] != null)
+            CoroutineScope(Dispatchers.Main).launch {
+                previewSink?.success(args)
+            }
 
     }
 
     override fun onJoin(room: HMSRoom) {
 //        Log.i("onJoin", hmssdk.getRoles().toString());
-        val args = HashMap<String, Any>()
+        hmssdk.addAudioObserver(this)
+        val args = HashMap<String, Any?>()
         args.put("event_name", "on_join_room")
-        val roomArgs=HashMap<String,Any>()
-        roomArgs.put("room",HMSRoomExtension.toDictionary(room)!!)
+        val roomArgs = HashMap<String, Any?>()
+        roomArgs.put("room", HMSRoomExtension.toDictionary(room))
         args.put("data", roomArgs)
 //        Log.i("onJoin", args.get("data").toString())
-        CoroutineScope(Dispatchers.Main).launch {
-            if(eventSink!=null)
-                eventSink!!.success(args)
-        }
+        if (roomArgs["room"] != null)
+            CoroutineScope(Dispatchers.Main).launch {
+                eventSink?.success(args)
+            }
+
     }
 
     override fun onMessageReceived(message: HMSMessage) {
 
-        val args = HashMap<String, Any>()
+        val args = HashMap<String, Any?>()
         args.put("event_name", "on_message")
         args.put("data", HMSMessageExtension.toDictionary(message))
 //        Log.i("onMessageReceived", args.get("data").toString())
-        CoroutineScope(Dispatchers.Main).launch {
-            eventSink!!.success(args)
-        }
+        if (args["data"] != null)
+            CoroutineScope(Dispatchers.Main).launch {
+                eventSink?.success(args)
+            }
     }
 
     override fun onPeerUpdate(type: HMSPeerUpdate, peer: HMSPeer) {
-        val args = HashMap<String, Any>()
+        val args = HashMap<String, Any?>()
         args.put("event_name", "on_peer_update")
-//        Log.i("onPeerUpdate1", type.toString())
+        Log.i("onPeerUpdate1", type.toString())
         args.put("data", HMSPeerUpdateExtension.toDictionary(peer, type))
 //        Log.i("onPeerUpdate2", args.get("data").toString())
-        CoroutineScope(Dispatchers.Main).launch {
-            if(eventSink!=null)
-                eventSink!!.success(args)
-        }
+        if (args["data"] != null)
+            CoroutineScope(Dispatchers.Main).launch {
+                eventSink?.success(args)
+            }
     }
 
     override fun onRoomUpdate(type: HMSRoomUpdate, hmsRoom: HMSRoom) {
-        val args = HashMap<String, Any>()
+        val args = HashMap<String, Any?>()
         args.put("event_name", "on_update_room")
         args.put("data", hmsRoom.name)
-
-        CoroutineScope(Dispatchers.Main).launch {
-            eventSink!!.success(args)
-        }
+        if (args["data"] != null)
+            CoroutineScope(Dispatchers.Main).launch {
+                eventSink?.success(args)
+            }
     }
 
     override fun onTrackUpdate(type: HMSTrackUpdate, track: HMSTrack, peer: HMSPeer) {
-
-        val args = HashMap<String, Any>()
+        val args = HashMap<String, Any?>()
         args.put("event_name", "on_track_update")
-
+        Log.i("onTrackUpdate", track.toString())
 
         args.put("data", HMSTrackUpdateExtension.toDictionary(peer, track, type))
-//        Log.i("onTrackUpdate", peer.toString())
-//        Log.i("onTrackUpdate", args.get("data").toString())
-        CoroutineScope(Dispatchers.Main).launch {
-            if (eventSink != null)
-                eventSink!!.success(args)
-        }
+        //Log.i("onTrackUpdate", peer.toString())
+        //Log.i("onTrackUpdate", args.get("data").toString())
+        if (args["data"] != null)
+            CoroutineScope(Dispatchers.Main).launch {
+                eventSink?.success(args)
+            }
 
 
     }
 
+    override fun onRemovedFromRoom(notification: HMSRemovedFromRoom) {
+        val args = HashMap<String, Any?>()
+        args.put("event_name", "on_removed_from_room")
+        args.put("data", HMSRemovedFromRoomExtension.toDictionary(notification))
+        if (args["data"] != null)
+            CoroutineScope(Dispatchers.Main).launch {
+                eventSink?.success(args)
+            }
+    }
+
     override fun onReconnected() {
-        super.onReconnected()
-        val args = HashMap<String, Any>()
+
+        val args = HashMap<String, Any?>()
         args.put("event_name", "on_re_connected")
         CoroutineScope(Dispatchers.Main).launch {
-            eventSink!!.success(args)
+            eventSink?.success(args)
         }
     }
 
     override fun onReconnecting(error: HMSException) {
-        super.onReconnecting(error)
+
         val args = HashMap<String, Any>()
         args.put("event_name", "on_re_connecting")
         CoroutineScope(Dispatchers.Main).launch {
-            eventSink!!.success(args)
+            eventSink?.success(args)
         }
     }
 
     override fun onRoleChangeRequest(request: HMSRoleChangeRequest) {
-        val args = HashMap<String, Any>()
+        val args = HashMap<String, Any?>()
         args.put("event_name", "on_role_change_request")
         args.put("data", HMSRoleChangedExtension.toDictionary(request))
-        this.requestChange=request
-        CoroutineScope(Dispatchers.Main).launch {
-            eventSink!!.success(args)
-        }
+        this.requestChange = request
+        if (args["data"] != null)
+            CoroutineScope(Dispatchers.Main).launch {
+                eventSink?.success(args)
+            }
     }
 
     override fun onAttachedToActivity(binding: ActivityPluginBinding) {
@@ -269,7 +346,10 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
         val authToken = call.argument<String>("auth_token")
         //val shouldSkipPiiEvents = call.argument<Boolean>("should_skip_pii_events")
 //        Log.i("userName", authToken!!)
-        val hmsConfig = HMSConfig(userName = userName!!, authtoken = authToken!!)
+        val isProd = call.argument<Boolean>("is_prod")
+        var hmsConfig=HMSConfig(userName = userName!!, authtoken = authToken!!)
+        if(!isProd!!)
+            hmsConfig= HMSConfig(userName = userName, authtoken = authToken,initEndpoint = "https://qa-init.100ms.live/init")
         hmssdk.join(hmsConfig, this)
         meetingEventChannel.setStreamHandler(this)
 
@@ -279,8 +359,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
         if (hmssdk != null) {
             hmssdk.leave()
             result.success("left meeting successfully")
-        }
-        else{
+        } else {
             Log.e("error", "not initialized")
             result.success("error in leaving meeting check OnError Update")
         }
@@ -300,7 +379,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
         val argsIsOn = call.argument<Boolean>("is_on")
         val peer = hmssdk.getLocalPeer()
         val videoTrack = peer?.videoTrack
-        if(videoTrack!=null) {
+        if (videoTrack != null) {
             videoTrack.setMute(argsIsOn!!)
             result.success("video_changed")
         }
@@ -346,7 +425,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
     }
 
     fun getPeerById(id: String): HMSPeer? {
-        if(id=="")return  getLocalPeer()
+        if (id == "") return getLocalPeer()
         val peers = hmssdk.getPeers()
         peers.forEach {
             if (it.peerID == id) return it
@@ -358,6 +437,9 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
     private fun isVideoMute(call: MethodCall): Boolean {
         val peerId = call.argument<String>("peer_id")
 //        val isLocal = call.argument<Boolean>("is_local")
+        if(peerId=="null"){
+            return hmssdk.getLocalPeer()?.videoTrack?.isMute!!
+        }
         val peer = getPeerById(peerId!!)
         return peer!!.videoTrack!!.isMute
     }
@@ -365,20 +447,48 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
     private fun isAudioMute(call: MethodCall): Boolean {
         val peerId = call.argument<String>("peer_id")
 //        val isLocal = call.argument<Boolean>("is_local")
+        if(peerId=="null"){
+            return hmssdk.getLocalPeer()?.audioTrack?.isMute!!
+        }
         val peer = getPeerById(peerId!!)
         return peer!!.audioTrack!!.isMute
     }
 
-    private fun sendMessage(call: MethodCall) {
+    private fun sendBroadCastMessage(call: MethodCall) {
         val message = call.argument<String>("message")
-        hmssdk?.sendMessage("chat", message!!)
+        hmssdk?.sendBroadcastMessage(message!!, "chat", this)
+
+    }
+
+    private fun sendDirectMessage(call: MethodCall) {
+        val message = call.argument<String>("message")
+        val peerId = call.argument<String>("peer_id")
+
+        val peer = getPeerById(peerId!!)
+        hmssdk?.sendDirectMessage(message!!, "chat", peer!!, this)
+
+    }
+
+    private fun sendGroupMessage(call: MethodCall) {
+        val roleUWant = call.argument<String>("role_name")
+        val message = call.argument<String>("message")
+        val roles = hmssdk.getRoles()
+        val roleToChangeTo: HMSRole = roles.first {
+            it.name == roleUWant
+        }
+        val role = ArrayList<HMSRole>()
+        role.add(roleToChangeTo)
+        hmssdk?.sendGroupMessage(message!!, "chat", role, this)
     }
 
     private fun previewVideo(call: MethodCall) {
         val userName = call.argument<String>("user_name")
         val authToken = call.argument<String>("auth_token")
-//        Log.i("previewVideo", "$userName  $authToken")
-        val hmsConfig = HMSConfig(userName = userName!!, authtoken = authToken!!)
+        val isProd = call.argument<Boolean>("is_prod")
+        Log.i("previewVideo", "$userName $isProd")
+        var hmsConfig=HMSConfig(userName = userName!!, authtoken = authToken!!)
+        if(!isProd!!)
+            hmsConfig= HMSConfig(userName = userName, authtoken = authToken,initEndpoint = "https://qa-init.100ms.live/init")
         hmssdk.preview(hmsConfig, this)
     }
 
@@ -394,8 +504,8 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
         val roleToChangeTo: HMSRole = roles.first {
             it.name == roleUWant
         }
-        val peer = getPeerById(peerId!!) as HMSRemotePeer
-        hmssdk.changeRole(peer, roleToChangeTo, forceChange ?: false)
+        val peer = getPeerById(peerId!!) as HMSPeer
+        hmssdk.changeRole(peer, roleToChangeTo, forceChange ?: false, this)
     }
 
     private fun getRoles(result: Result) {
@@ -411,9 +521,98 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
 
     private fun acceptRoleRequest() {
         if (this.requestChange != null) {
-            hmssdk.acceptChangeRole(this.requestChange!!)
+            hmssdk.acceptChangeRole(this.requestChange!!, this)
 //            Log.i("acceptRoleRequest","accept")
         }
     }
 
+    override fun onAudioLevelUpdate(speakers: Array<HMSSpeaker>) {
+        val speakersList = ArrayList<HashMap<String, Any?>>()
+        Log.i("onAudioLevelUpdateAndroid1", speakers.size.toString())
+        if (speakers.isNotEmpty()) {
+            speakers.forEach {
+                speakersList.add(HMSSpeakerExtension.toDictionary(it)!!)
+            }
+            val speakersMap = HashMap<String, Any>()
+            speakersMap.put("speakers", speakersList)
+
+            val hashMap = HashMap<String, Any?>()
+            hashMap.put("event_name", "on_update_speaker")
+            hashMap.put("data", speakersMap)
+            Log.i(
+                "onAudioLevelUpdateAndroid2",
+                (hashMap.get("data") as HashMap<String, Any>).get("speakers").toString()
+            )
+            CoroutineScope(Dispatchers.Main).launch {
+                eventSink!!.success(hashMap)
+            }
+        }
+    }
+
+    private fun changeTrack(call: MethodCall) {
+        val hmsPeerId = call.argument<String>("hms_peer_id")
+        val mute = call.argument<Boolean>("mute")
+        val muteVideoKind = call.argument<Boolean>("mute_video_kind")
+        val peer = getPeerById(hmsPeerId!!)
+        val track: HMSTrack =
+            if (muteVideoKind == true) peer!!.videoTrack!! else peer!!.audioTrack!!
+        hmssdk.changeTrackState(track, mute!!, this)
+    }
+
+    private fun removePeer(call: MethodCall) {
+        val peerId = call.argument<String>("peer_id")
+
+        val peer = getPeerById(peerId!!) as HMSRemotePeer
+
+        hmssdk.removePeerRequest(peer = peer, hmsActionResultListener = this, reason = "noise")
+    }
+
+    private fun endRoom(call: MethodCall, result: Result) {
+        if (isAllowedToEndMeeting()) {
+            val lock = call.argument<Boolean>("lock")
+            hmssdk.endRoom(lock = lock!!, reason = "noise", hmsActionResultListener = this)
+            result.success(true)
+        }
+        else
+            result.success(false)
+    }
+    private fun isAllowedToEndMeeting(): Boolean {
+        return hmssdk.getLocalPeer()!!.hmsRole.permission?.endRoom
+    }
+
+    fun isAllowedToMuteOthers(): Boolean {
+        return hmssdk.getLocalPeer()!!.hmsRole.permission?.mute
+    }
+
+    fun isAllowedToUnMuteOthers(): Boolean {
+        return hmssdk.getLocalPeer()!!.hmsRole.permission?.unmute
+    }
+
+    private fun localPeer(result: Result) {
+            result.success(HMSPeerExtension.toDictionary(getLocalPeer()))
+        }
+
+    private fun muteAll() {
+            val peersList = hmssdk.getRemotePeers()
+            peersList.forEach {
+                it.audioTrack?.isPlaybackAllowed = false
+                it.auxiliaryTracks.forEach {
+                    if (it is HMSRemoteAudioTrack) {
+                        it.isPlaybackAllowed = false
+                    }
+                }
+            }
+        }
+
+    private fun unMuteAll() {
+            val peersList = hmssdk.getRemotePeers()
+            peersList.forEach {
+                it.audioTrack?.isPlaybackAllowed = true
+                it.auxiliaryTracks.forEach {
+                    if (it is HMSRemoteAudioTrack) {
+                        it.isPlaybackAllowed = true
+                    }
+                }
+            }
+        }
 }

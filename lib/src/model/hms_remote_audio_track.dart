@@ -10,17 +10,14 @@ class HMSRemoteAudioTrack extends HMSAudioTrack {
       required HMSTrackKind kind,
       required HMSTrackSource source,
       required String trackId,
-      required String trackDescription})
+      required String trackDescription,
+      required bool isMute,
+      HMSPeer? peer})
       : super(
-          kind: kind,
-          source: source,
-          trackDescription: trackDescription,
-          trackId: trackId,
-        );
-
-  @override
-  Future<bool> isMute() {
-    // TODO: implement isMute
-    return super.isMute();
-  }
+            kind: kind,
+            source: source,
+            trackDescription: trackDescription,
+            trackId: trackId,
+            isMute: isMute,
+            peer: peer);
 }
