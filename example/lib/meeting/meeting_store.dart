@@ -108,8 +108,7 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
 
   @action
   void removeTrackWithTrackId(String trackId) {
-    tracks
-        .remove(tracks.firstWhere((eachTrack) => eachTrack.trackId == trackId));
+    tracks.remove(tracks.firstWhere((eachTrack) => eachTrack.trackId == trackId));
   }
 
   @action
@@ -119,12 +118,13 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
 
   @action
   void addTrack(HMSTrack track) {
-    if (!tracks.contains(track))
-      tracks.add(track);
-    else {
+    if (tracks.contains(track))
       removeTrackWithTrackId(track.trackId);
-      addTrack(track);
-    }
+
+    if(track.source == HMSTrackSource.kHMSTrackSourceScreen)
+      tracks.insert(0, track);
+    else
+      tracks.add(track);
   }
 
   @action
@@ -238,25 +238,28 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
       }
       return;
     }
-    if (track.source == HMSTrackSource.kHMSTrackSourceScreen) {
-      //trackStatus[peer.peerId+"Screen"]=trackUpdate;
-      if (trackUpdate == HMSTrackUpdate.trackAdded)
-        screenTrack = track;
-      else
-        screenTrack = null;
-    } else
-      trackStatus[peer.peerId] = track.isMute
-          ? HMSTrackUpdate.trackMuted
-          : HMSTrackUpdate.trackUnMuted;
+    // if (track.source == HMSTrackSource.kHMSTrackSourceScreen) {
+    //   //trackStatus[peer.peerId+"+"+"Screen"]=trackUpdate;
+    //   // if (trackUpdate == HMSTrackUpdate.trackAdded)
+    //   //   screenTrack = track;
+    //   // else
+    //   //   screenTrack = null;
+    //   if(trackUpdate==HMSTrackUpdate.trackAdded){
+    //     tracks.insert(0, track);
+    //   }
+    //   else{
+    //     tracks.removeAt(0);
+    //   }
+    // } else
+    trackStatus[peer.peerId+(track.source == HMSTrackSource.kHMSTrackSourceScreen?"Screen":"")] = track.isMute ? HMSTrackUpdate.trackMuted : HMSTrackUpdate.trackUnMuted;
     if (peer.isLocal) {
       localPeer = peer;
       if (trackStatus[peer.peerId] == HMSTrackUpdate.trackMuted) {
         this.isVideoOn = false;
       }
 
-      if (Platform.isAndroid) tracks.insert(0, track);
+      if (Platform.isAndroid ) tracks.insert(0, track);
     } else {
-      if (track.source != HMSTrackSource.kHMSTrackSourceScreen)
         peerOperationWithTrack(peer, trackUpdate, track);
     }
   }
@@ -279,6 +282,7 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
 
   HMSTrack? previousHighestVideoTrack;
   int? previousHighestIndex;
+
   @override
   void onUpdateSpeakers({required List<HMSSpeaker> updateSpeakers}) {
     print('speakersFlutter $updateSpeakers');
@@ -323,13 +327,11 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
   }
 
   int trackChange = -1;
+
   @override
   void onChangeTrackStateRequest(
       {required HMSTrackChangeRequest hmsTrackChangeRequest}) {
-    int isVideoTrack =
-        hmsTrackChangeRequest.track.kind == HMSTrackKind.kHMSTrackKindVideo
-            ? 1
-            : 0;
+    int isVideoTrack = hmsTrackChangeRequest.track.kind == HMSTrackKind.kHMSTrackKindVideo ? 1 : 0;
     trackChange = isVideoTrack;
     print("flutteronChangeTrack ${trackChange}");
     addTrackChangeRequestInstance(hmsTrackChangeRequest);
