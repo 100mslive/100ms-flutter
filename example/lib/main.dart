@@ -9,12 +9,13 @@ import 'package:hmssdk_flutter_example/common/ui/organisms/user_name_dialog_orga
 import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
 import 'package:hmssdk_flutter_example/preview/preview_page.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:wakelock/wakelock.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
-
+  Wakelock.enable();
   runZonedGuarded(
       () => runApp(HMSExampleApp()), FirebaseCrashlytics.instance.recordError);
 }
