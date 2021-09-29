@@ -250,16 +250,16 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     }
     
     public func on(roleChangeRequest: HMSRoleChangeRequest) {
-        print("On Role Change Request")
+        print(#function, "On Role Change Request: ", roleChangeRequest.suggestedRole.name, roleChangeRequest.requestedBy.name)
         
-        self.roleChangeRequest=roleChangeRequest
+        self.roleChangeRequest = roleChangeRequest
         
-        let data:[String:Any]=[
-            "event_name":"on_role_change_request",
-            "data":[
+        let data: [String:Any] = [
+            "event_name": "on_role_change_request",
+            "data": [
                 "role_change_request":[
-                    "requested_by":HMSPeerExtension.toDictionary(peer: roleChangeRequest.requestedBy),
-                    "suggested_role":HMSRoleExtension.toDictionary(role: roleChangeRequest.suggestedRole)
+                    "requested_by": HMSPeerExtension.toDictionary(peer: roleChangeRequest.requestedBy),
+                    "suggested_role": HMSRoleExtension.toDictionary(role: roleChangeRequest.suggestedRole)
                 ]
             ]
         ]

@@ -35,7 +35,7 @@ class _PeerItemOrganismState extends State<PeerItemOrganism> {
       decoration: BoxDecoration(
           border: Border.all(
               color: widget.track.isHighestAudio ? Colors.blue : Colors.grey,
-              width: widget.track.isHighestAudio ? 3.0 : 1.0),
+              width: widget.track.isHighestAudio ? 4.0 : 1.0),
           borderRadius: BorderRadius.all(Radius.circular(4))),
       child: Column(
         children: [
