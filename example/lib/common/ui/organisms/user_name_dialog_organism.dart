@@ -24,7 +24,7 @@ class _UserNameDialogOrganismState extends State<UserNameDialogOrganism> {
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(16)),
                   ),
-                  hintText: 'Enter your name'),
+                  hintText: 'Enter your Name'),
             ),
           ],
         ),
@@ -37,7 +37,7 @@ class _UserNameDialogOrganismState extends State<UserNameDialogOrganism> {
           },
         ),
         ElevatedButton(
-          child: Text('Ok'),
+          child: Text('OK'),
           onPressed: () {
             Navigator.pop(context, userNameController.text);
           },

@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
-import 'package:mobx/mobx.dart';
 
 class PeerItemOrganism extends StatefulWidget {
   final HMSTrack track;

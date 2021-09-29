@@ -516,8 +516,13 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     }
     
     func acceptRoleRequest(call: FlutterMethodCall,result:FlutterResult) {
-        if let role = roleChangeRequest{
-            hmsSDK?.accept(changeRole: role)
+        if let role = roleChangeRequest {
+            hmsSDK?.accept(changeRole: role, completion: { [weak self] success, error in
+                print(#function, "success: ", success, "error: ", error?.description as Any)
+                if success {
+                    self?.roleChangeRequest = nil
+                }
+            })
         }
         result("role_accepted")
     }

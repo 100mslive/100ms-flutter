@@ -102,7 +102,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
     String answer = await showDialog(
         context: context,
         builder: (ctx) => RoleChangeDialogOrganism(roleChangeRequest: event));
-    if (answer == "Ok") {
+    if (answer == "OK") {
       debugPrint("OK accepted");
       _meetingStore.meetingController.acceptRoleChangeRequest();
       UtilityComponents.showSnackBarWithString(
@@ -114,19 +114,24 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
     return showDialog(
         context: context,
         builder: (ctx) => AlertDialog(
-              title: Text("Do You Want to leave meeting"),
+              title: Text('Leave the Meeting?'),
               actions: [
-                FlatButton(
+                TextButton(
                     onPressed: () => {
                           _meetingStore.meetingController.leaveMeeting(),
                           Navigator.pop(context, true),
                           Navigator.pushReplacement(context,
                               MaterialPageRoute(builder: (ctx) => HomePage()))
                         },
-                    child: Text("Yes")),
-                FlatButton(
+                    child:
+                        Text('Yes', style: TextStyle(height: 1, fontSize: 18))),
+                TextButton(
                     onPressed: () => Navigator.pop(context, false),
-                    child: Text("No")),
+                    child: Text('Cancel',
+                        style: TextStyle(
+                            height: 1,
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold))),
               ],
             ));
   }
@@ -141,12 +146,6 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    var size = MediaQuery.of(context).size;
-
-    /*24 is for notification bar on Android*/
-    final double itemHeight = (size.height - kToolbarHeight - 24) / 2.5;
-    final double itemWidth = size.width / 2;
-
     return WillPopScope(
       child: Scaffold(
         appBar: AppBar(
@@ -154,6 +153,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
           actions: [
             Observer(
               builder: (_) => IconButton(
+                iconSize: 32,
                 onPressed: () {
                   _meetingStore.toggleSpeaker();
                 },
@@ -163,12 +163,14 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
               ),
             ),
             IconButton(
+              iconSize: 32,
               onPressed: () async {
                 if (_meetingStore.isVideoOn) _meetingStore.toggleCamera();
               },
               icon: Icon(Icons.switch_camera),
             ),
             IconButton(
+              iconSize: 32,
               onPressed: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
@@ -218,7 +220,8 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                           _meetingStore.trackStatus[peerId!] =
                               HMSTrackUpdate.trackMuted;
                         } else {
-                          _meetingStore.trackStatus[peerId!] = filteredList[index].isMute
+                          _meetingStore.trackStatus[peerId!] =
+                              filteredList[index].isMute
                                   ? HMSTrackUpdate.trackMuted
                                   : HMSTrackUpdate.trackUnMuted;
                         }
@@ -280,7 +283,15 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                             track: filteredList[index],
                             isVideoMuted: _meetingStore.localPeer?.peerId !=
                                     filteredList[index].peer!.peerId
-                                ? ((_meetingStore.trackStatus[filteredList[index].peer!.peerId + (filteredList[index].source == HMSTrackSource.kHMSTrackSourceScreen?"Screen":"") ] ??
+                                ? ((_meetingStore
+                                            .trackStatus[filteredList[index]
+                                                .peer!
+                                                .peerId +
+                                            (filteredList[index].source ==
+                                                    HMSTrackSource
+                                                        .kHMSTrackSourceScreen
+                                                ? "Screen"
+                                                : "")] ??
                                         '') ==
                                     HMSTrackUpdate.trackMuted)
                                 : !_meetingStore.isVideoOn),
@@ -296,10 +307,11 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Container(
-              padding: EdgeInsets.all(16),
+              padding: EdgeInsets.all(8),
               child: Observer(builder: (context) {
                 return IconButton(
                     tooltip: 'Video',
+                    iconSize: 32,
                     onPressed: () {
                       _meetingStore.toggleVideo();
                     },
@@ -309,10 +321,11 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
               }),
             ),
             Container(
-              padding: EdgeInsets.all(16),
+              padding: EdgeInsets.all(8),
               child: Observer(builder: (context) {
                 return IconButton(
                     tooltip: 'Audio',
+                    iconSize: 32,
                     onPressed: () {
                       _meetingStore.toggleAudio();
                     },
@@ -321,26 +334,27 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
               }),
             ),
             Container(
-              padding: EdgeInsets.all(16),
+              padding: EdgeInsets.all(8),
               child: IconButton(
                   tooltip: 'Chat',
+                  iconSize: 32,
                   onPressed: () {
                     chatMessages(context, _meetingStore);
                   },
                   icon: Icon(Icons.chat_bubble)),
             ),
             Container(
-              padding: EdgeInsets.all(16),
+              padding: EdgeInsets.all(8),
               child: IconButton(
                   tooltip: 'Leave Or End',
+                  iconSize: 32,
                   onPressed: () async {
                     String ans = await showDialog(
                         context: context,
                         builder: (_) => LeaveOrEndMeetingDialogOption(
                               meetingStore: _meetingStore,
                             ));
-                    if (ans != null && (ans == "leave" || ans == "end"))
-                      Navigator.pop(context);
+                    if (ans == 'Leave' || ans == 'End') Navigator.pop(context);
                   },
                   icon: Icon(Icons.call_end)),
             ),
@@ -377,7 +391,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
     String answer = await showDialog(
         context: context,
         builder: (ctx) => TrackChangeDialogOrganism(trackChangeRequest: event));
-    if (answer == "Ok") {
+    if (answer == "OK") {
       debugPrint("OK accepted");
       _meetingStore.changeTracks();
     }
