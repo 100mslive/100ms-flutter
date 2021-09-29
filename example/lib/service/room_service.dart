@@ -23,6 +23,7 @@ class RoomService {
         });
 
     var body = json.decode(response.body);
+    print(body);
     return [body['token'],codeAndDomain[2]];
   }
 

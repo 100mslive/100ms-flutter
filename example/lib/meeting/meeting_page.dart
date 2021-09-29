@@ -218,8 +218,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                           _meetingStore.trackStatus[peerId!] =
                               HMSTrackUpdate.trackMuted;
                         } else {
-                          _meetingStore.trackStatus[peerId!] =
-                              filteredList[index].isMute
+                          _meetingStore.trackStatus[peerId!] = filteredList[index].isMute
                                   ? HMSTrackUpdate.trackMuted
                                   : HMSTrackUpdate.trackUnMuted;
                         }
