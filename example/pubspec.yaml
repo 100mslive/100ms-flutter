@@ -15,6 +15,7 @@ dependencies:
   hmssdk_flutter:
     path: ../
 
+  wakelock: ^0.5.6
   visibility_detector: ^0.2.0
   cupertino_icons: ^1.0.2
   flutter_staggered_grid_view:
