@@ -18,7 +18,7 @@ class _ChatWidgetState extends State<ChatWidget> {
   late double widthOfScreen;
   late List<HMSRole> hmsRoles;
   TextEditingController messageTextController = TextEditingController();
-  String valueChoose = "EveryOne";
+  String valueChoose = "Everyone";
 
   @override
   void initState() {
@@ -63,12 +63,13 @@ class _ChatWidgetState extends State<ChatWidget> {
                           },
                           items: [
                             DropdownMenuItem<String>(
-                              child: Text("EveryOne"),
-                              value: "EveryOne",
+                              child: Text("Everyone"),
+                              value: "Everyone",
                             ),
                             ..._meetingStore.peers.map((e) {
                               return DropdownMenuItem<String>(
-                                child: Text("${e.name} ${e.isLocal?"(You)":""}"),
+                                child: Text(
+                                    "${e.name} ${e.isLocal ? "(You)" : ""}"),
                                 value: e.peerId,
                               );
                             }).toList(),
@@ -207,7 +208,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                     for (int i = 0; i < hmsRoles.length; i++)
                       rolesName.add(hmsRoles[i].name);
                     print("${this.hmsRoles.toString()} dekte hai");
-                    if (this.valueChoose == "EveryOne") {
+                    if (this.valueChoose == "Everyone") {
                       _meetingStore.sendMessage(message);
                       _meetingStore.addMessage(HMSMessage(
                         sender: "You",
