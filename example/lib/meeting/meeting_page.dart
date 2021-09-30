@@ -146,6 +146,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
+    var orientation = MediaQuery.of(context).orientation;
     return WillPopScope(
       child: Scaffold(
         appBar: AppBar(
