@@ -27,6 +27,7 @@ class _PeerItemOrganismState extends State<PeerItemOrganism> {
 
   @override
   Widget build(BuildContext context) {
+    print("isVideoMuted ${widget.isVideoMuted} ${widget.track.source} ${widget.track.peer?.name}");
     return Container(
       key: key,
       padding: EdgeInsets.all(2),
@@ -48,7 +49,7 @@ class _PeerItemOrganismState extends State<PeerItemOrganism> {
                   parts[0] += " ";
                   name = parts[0][0] + parts[0][1];
                 } else if (parts.length >= 2) {
-                  name = parts[0][0] + parts[1][0];
+                  name = parts[0][0] + parts[1]==""?"":parts[1][0];
                 }
                 return Container(
                   child: Center(child: CircleAvatar(child: Text(name))),

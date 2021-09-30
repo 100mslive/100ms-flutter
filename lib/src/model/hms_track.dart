@@ -63,4 +63,9 @@ class HMSTrack {
 
   @override
   int get hashCode => trackId.hashCode;
+
+  @override
+  String toString() {
+    return 'HMSTrack{trackId: $trackId, kind: $kind, source: $source, trackDescription: $trackDescription, peer: ${peer?.name}, isHighestAudio: $isHighestAudio, isMute: $isMute}';
+  }
 }

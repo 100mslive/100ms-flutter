@@ -142,11 +142,11 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-
+    var orientation = MediaQuery.of(context).orientation;
     /*24 is for notification bar on Android*/
     final double itemHeight = (size.height - kToolbarHeight - 24) / 2.5;
     final double itemWidth = size.width / 2;
-
+    print("rebuild");
     return WillPopScope(
       child: Scaffold(
         appBar: AppBar(
@@ -187,6 +187,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
             width: double.infinity,
             child: Observer(
               builder: (_) {
+                print("rebuilding");
                 if (!_meetingStore.isMeetingStarted) return SizedBox();
                 if (_meetingStore.tracks.isEmpty)
                   return Center(child: Text('Waiting for other to join!'));
@@ -204,28 +205,35 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                   HMSTrackSource.kHMSTrackSourceScreen
                               ? 2
                               : 1,
-                          filteredList[index].source ==
-                                  HMSTrackSource.kHMSTrackSourceScreen
-                              ? 3.2
-                              : 1.5)),
+                          filteredList[index].source == HMSTrackSource.kHMSTrackSourceScreen
+                              ? orientation == Orientation.portrait
+                                  ? 3.2
+                                  : 1.5
+                              : orientation == Orientation.portrait
+                                  ? 1.5
+                                  : 0.4)),
                   children: List.generate(filteredList.length, (index) {
                     return VisibilityDetector(
                       onVisibilityChanged: (VisibilityInfo info) {
                         var visiblePercentage = info.visibleFraction * 100;
-                        String? peerId = filteredList[index].peer?.peerId;
-                        print(_meetingStore.tracks[index].isMute);
+                        print(
+                            "$index  ${filteredList[index].peer!.name} lengthofFilteredList");
+                        String trackId = filteredList[index].trackId;
+                        print(filteredList[index].isMute);
                         if (visiblePercentage <= 40) {
-                          _meetingStore.trackStatus[peerId!] =
+                          _meetingStore.trackStatus[trackId] =
                               HMSTrackUpdate.trackMuted;
                         } else {
-                          _meetingStore.trackStatus[peerId!] = filteredList[index].isMute
+                          _meetingStore.trackStatus[trackId] =
+                              filteredList[index].isMute
                                   ? HMSTrackUpdate.trackMuted
                                   : HMSTrackUpdate.trackUnMuted;
+                          print(_meetingStore.trackStatus[trackId]);
                         }
                         debugPrint(
-                            'Widget ${info.key} is ${visiblePercentage}% visible ${index}');
+                            'Widget ${info.key} is ${visiblePercentage}% visible and index is ${index}');
                       },
-                      key: Key(filteredList[index].peer!.peerId),
+                      key: Key(filteredList[index].trackId),
                       child: InkWell(
                         onLongPress: () {
                           if (!filteredList[index].peer!.isLocal &&
@@ -239,14 +247,12 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                             isAudioMuted: _meetingStore
                                                         .audioTrackStatus[
                                                     filteredList[index]
-                                                        .peer
-                                                        ?.peerId] ==
+                                                        .trackId] ==
                                                 HMSTrackUpdate.trackMuted,
                                             isVideoMuted:
                                                 _meetingStore.trackStatus[
                                                         filteredList[index]
-                                                            .peer
-                                                            ?.peerId] ==
+                                                            .trackId] ==
                                                     HMSTrackUpdate.trackMuted,
                                             peerName: filteredList[index]
                                                     .peer
@@ -278,12 +284,11 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                         },
                         child: PeerItemOrganism(
                             track: filteredList[index],
-                            isVideoMuted: _meetingStore.localPeer?.peerId !=
-                                    filteredList[index].peer!.peerId
-                                ? ((_meetingStore.trackStatus[filteredList[index].peer!.peerId + (filteredList[index].source == HMSTrackSource.kHMSTrackSourceScreen?"Screen":"") ] ??
-                                        '') ==
-                                    HMSTrackUpdate.trackMuted)
-                                : !_meetingStore.isVideoOn),
+                            isVideoMuted: filteredList[index].peer!.isLocal
+                                ? !_meetingStore.isVideoOn
+                                : (_meetingStore.trackStatus[
+                                        filteredList[index].trackId]) ==
+                                    HMSTrackUpdate.trackMuted),
                       ),
                     );
                   }),

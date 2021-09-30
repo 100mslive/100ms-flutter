@@ -74,57 +74,59 @@ class _HomePageState extends State<HomePage> {
       body: Center(
         child: Container(
           padding: EdgeInsets.all(16),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text('Join a meeting'),
-              SizedBox(
-                height: 8,
-              ),
-              TextField(
-                controller: roomIdController,
-                decoration: InputDecoration(
-                    hintText: 'Enter RoomUrl',
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(16)))),
-              ),
-              SizedBox(
-                height: 16,
-              ),
-              ElevatedButton(
-                  style: ButtonStyle(
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                          RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16.0),
-                  ))),
-                  onPressed: () async {
-                    String user = await showDialog(
-                        context: context,
-                        builder: (_) => UserNameDialogOrganism());
-                    if (user.isNotEmpty)
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (_) => PreviewPage(
-                                roomId: roomIdController.text,
-                                user: user,
-                                flow: MeetingFlow.join,
-                              )));
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.all(16.0),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(16))),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.video_call_outlined),
-                        SizedBox(
-                          width: 16,
-                        ),
-                        Text('Join meeting')
-                      ],
-                    ),
-                  ))
-            ],
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text('Join a meeting'),
+                SizedBox(
+                  height: 8,
+                ),
+                TextField(
+                  controller: roomIdController,
+                  decoration: InputDecoration(
+                      hintText: 'Enter RoomUrl',
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(16)))),
+                ),
+                SizedBox(
+                  height: 16,
+                ),
+                ElevatedButton(
+                    style: ButtonStyle(
+                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16.0),
+                    ))),
+                    onPressed: () async {
+                      String user = await showDialog(
+                          context: context,
+                          builder: (_) => UserNameDialogOrganism());
+                      if (user.isNotEmpty)
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (_) => PreviewPage(
+                                  roomId: roomIdController.text,
+                                  user: user,
+                                  flow: MeetingFlow.join,
+                                )));
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(16.0),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(16))),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.video_call_outlined),
+                          SizedBox(
+                            width: 16,
+                          ),
+                          Text('Join meeting')
+                        ],
+                      ),
+                    ))
+              ],
+            ),
           ),
         ),
       ),

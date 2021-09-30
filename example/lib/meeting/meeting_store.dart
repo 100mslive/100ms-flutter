@@ -125,6 +125,7 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
       tracks.insert(0, track);
     else
       tracks.insert(tracks.length, track);
+    print("addTrack");
   }
 
   @action
@@ -184,6 +185,7 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
   @override
   void onJoin({required HMSRoom room}) {
     if (Platform.isAndroid) {
+      print("members ${room.peers!.length}");
       for (HMSPeer each in room.peers!) {
         if (each.isLocal) {
           localPeer = each;
@@ -222,23 +224,24 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
 
   @override
   void onTrackUpdate({required HMSTrack track, required HMSTrackUpdate trackUpdate, required HMSPeer peer}) {
-    print("onTrackUpdateFlutter $trackUpdate ${peer.isLocal}");
+    print("onTrackUpdateFlutter $track ${peer.isLocal}");
     if (track.kind == HMSTrackKind.kHMSTrackKindAudio) {
       if (isSpeakerOn) {
         unMuteAll();
       } else {
         muteAll();
       }
-      audioTrackStatus[peer.peerId] = trackUpdate;
+      audioTrackStatus[track.trackId] = trackUpdate;
       if (peer.isLocal && trackUpdate == HMSTrackUpdate.trackMuted) {
         this.isMicOn = false;
       }
       return;
     }
-    trackStatus[peer.peerId+(track.source == HMSTrackSource.kHMSTrackSourceScreen?"Screen":"")] = track.isMute ? HMSTrackUpdate.trackMuted : HMSTrackUpdate.trackUnMuted;
+    trackStatus[track.trackId] = track.isMute ? HMSTrackUpdate.trackMuted : HMSTrackUpdate.trackUnMuted;
+    print("onTrackUpdate ${trackStatus[track.trackId]}");
     if (peer.isLocal) {
       localPeer = peer;
-      if (trackStatus[peer.peerId] == HMSTrackUpdate.trackMuted) {
+      if (trackStatus[track.trackId] == HMSTrackUpdate.trackMuted) {
         this.isVideoOn = false;
       }
 
