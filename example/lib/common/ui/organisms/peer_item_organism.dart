@@ -46,7 +46,12 @@ class _PeerItemOrganismState extends State<PeerItemOrganism> {
                   parts[0] += " ";
                   name = parts[0][0] + parts[0][1];
                 } else if (parts.length >= 2) {
-                  name = parts[0][0] + parts[1]==""?"":parts[1][0];
+                  name = parts[0][0];
+                  if (parts[1] == "" || parts[1] == " ") {
+                    name += parts[0][1];
+                  } else {
+                    name += parts[1][0];
+                  }
                 }
                 return Container(
                   child: Center(child: CircleAvatar(child: Text(name))),
