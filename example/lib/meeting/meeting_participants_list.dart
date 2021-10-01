@@ -21,18 +21,19 @@ class _ParticipantsListState extends State<ParticipantsList> {
       child: Scaffold(
         body: Container(
           height: MediaQuery.of(context).size.height,
-          child: Column(
-            children: [
-              Text(
-                "Participants: ",
-                style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
-              ),
-              Observer(builder: (_) {
-                List<HMSPeer> peers = widget.meetingStore.peers;
-                if (peers.isNotEmpty) {
-                  return SingleChildScrollView(
-                    child: ListView(
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                Text(
+                  "Participants: ",
+                  style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+                ),
+                Observer(builder: (_) {
+                  List<HMSPeer> peers = widget.meetingStore.peers;
+                  if (peers.isNotEmpty) {
+                    return ListView(
                       shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
                       children: peers
                           .map((peer) => ParticipantOrganism(
                                 peer: peer,
@@ -40,13 +41,13 @@ class _ParticipantsListState extends State<ParticipantsList> {
                                     widget.meetingStore,
                               ))
                           .toList(),
-                    ),
-                  );
-                } else {
-                  return Text(("No Participants"));
-                }
-              }),
-            ],
+                    );
+                  } else {
+                    return Text(("No Participants"));
+                  }
+                }),
+              ],
+            ),
           ),
         ),
       ),
