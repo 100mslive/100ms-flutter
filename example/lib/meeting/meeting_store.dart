@@ -239,9 +239,8 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
       }
       return;
     }
+    trackStatus[track.trackId] = HMSTrackUpdate.trackMuted;
 
-    trackStatus[track.trackId] =
-        track.isMute ? HMSTrackUpdate.trackMuted : HMSTrackUpdate.trackUnMuted;
     print("onTrackUpdate ${trackStatus[track.trackId]}");
 
     if (peer.isLocal) {
