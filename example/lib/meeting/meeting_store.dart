@@ -241,7 +241,7 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
     print("onTrackUpdate ${trackStatus[track.trackId]}");
     if (peer.isLocal) {
       localPeer = peer;
-      if (trackStatus[track.trackId] == HMSTrackUpdate.trackMuted) {
+      if (track.isMute) {
         this.isVideoOn = false;
       }
 

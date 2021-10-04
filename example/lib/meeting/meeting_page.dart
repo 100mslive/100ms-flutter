@@ -143,10 +143,11 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     var orientation = MediaQuery.of(context).orientation;
-    /*24 is for notification bar on Android*/
     final double itemHeight = (size.height - kToolbarHeight - 24) / 2.5;
     final double itemWidth = size.width / 2;
-    print("rebuild");
+    final aspectRatio = itemHeight/itemWidth;
+    print(aspectRatio);
+    print("itemHeightWidth");
     return WillPopScope(
       child: Scaffold(
         appBar: AppBar(
@@ -199,19 +200,19 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                   controller: _scrollController,
                   //childAspectRatio: itemWidth / itemHeight,
                   staggeredTiles: List.generate(
-                      filteredList.length,
-                      (int index) => StaggeredTile.count(
-                          filteredList[index].source ==
-                                  HMSTrackSource.kHMSTrackSourceScreen
-                              ? 2
-                              : 1,
-                          filteredList[index].source == HMSTrackSource.kHMSTrackSourceScreen
-                              ? orientation == Orientation.portrait
-                                  ? 3.2
-                                  : 1.5
-                              : orientation == Orientation.portrait
-                                  ? 1.5
-                                  : 0.4)),
+                    filteredList.length,
+                    (int index) => StaggeredTile.count(
+                        filteredList[index].source == HMSTrackSource.kHMSTrackSourceScreen
+                            ? 2
+                            : 1,
+                        filteredList[index].source == HMSTrackSource.kHMSTrackSourceScreen
+                            ? orientation == Orientation.portrait
+                                ? aspectRatio*2+0.1
+                                : aspectRatio*2-0.1
+                            : orientation == Orientation.portrait
+                                ? aspectRatio
+                                : aspectRatio*2-0.1),
+                  ),
                   children: List.generate(filteredList.length, (index) {
                     return VisibilityDetector(
                       onVisibilityChanged: (VisibilityInfo info) {
