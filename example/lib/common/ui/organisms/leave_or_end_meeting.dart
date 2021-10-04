@@ -1,71 +1,70 @@
-
 import 'package:flutter/material.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 
 class LeaveOrEndMeetingDialogOption extends StatefulWidget {
-
   final MeetingStore meetingStore;
   const LeaveOrEndMeetingDialogOption({required this.meetingStore});
 
   @override
-  _LeaveOrEndMeetingDialogOptionState createState() => _LeaveOrEndMeetingDialogOptionState();
+  _LeaveOrEndMeetingDialogOptionState createState() =>
+      _LeaveOrEndMeetingDialogOptionState();
 }
 
-class _LeaveOrEndMeetingDialogOptionState extends State<LeaveOrEndMeetingDialogOption> {
-  bool forceValue=false;
-
-
+class _LeaveOrEndMeetingDialogOptionState
+    extends State<LeaveOrEndMeetingDialogOption> {
+  bool forceValue = false;
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text("leave or End"),
+      title: Text("👋 Leave Meeting",
+          style:
+              TextStyle(height: 1, fontSize: 18, fontWeight: FontWeight.bold)),
       content: Container(
         width: double.infinity,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            SizedBox(
+              height: 16,
+            ),
             Container(
-              padding: EdgeInsets.only(bottom: 20.0),
+              height: 48,
+              padding: EdgeInsets.only(bottom: 16.0),
               child: GestureDetector(
                 onTap: () {
                   widget.meetingStore.leaveMeeting();
-                  Navigator.of(context).pop("leave");
+                  Navigator.of(context).pop('Leave');
                 },
                 child: Row(
                   children: [
-                    Icon(Icons.call_end),
-                    SizedBox(
-                      width: 16,
-                    ),
-                    Text("leave")
+                    Icon(Icons.call_end, size: 32),
+                    SizedBox(width: 8),
+                    Text('Leave', style: TextStyle(height: 1, fontSize: 18))
                   ],
                 ),
               ),
             ),
             SizedBox(
-              width: 20,
+              height: 24,
             ),
-
             GestureDetector(
-              onTap: () async{
-                bool ended=await widget.meetingStore.endRoom(forceValue);
-                if(ended)
-                  Navigator.of(context).pop("end");
+              onTap: () async {
+                bool ended = await widget.meetingStore.endRoom(forceValue);
+                if (ended)
+                  Navigator.of(context).pop('End');
                 else
-                  UtilityComponents.showSnackBarWithString("No permission", context);
+                  UtilityComponents.showSnackBarWithString(
+                      "No permission", context);
               },
               child: Row(
                 children: [
-                  Icon(Icons.cancel_schedule_send),
-                  SizedBox(
-                    width: 16,
-                  ),
-                  Text("end"),
-                  SizedBox(
-                    width: 16,
-                  ),
+                  Icon(Icons.cancel_schedule_send, size: 32),
+                  SizedBox(width: 8),
+                  Text('End Meeting',
+                      style: TextStyle(height: 1, fontSize: 18)),
+                  SizedBox(width: 16),
                   GestureDetector(
                     onTap: () {
                       forceValue = !forceValue;
@@ -76,10 +75,9 @@ class _LeaveOrEndMeetingDialogOptionState extends State<LeaveOrEndMeetingDialogO
                         Icon(forceValue
                             ? Icons.check_box
                             : Icons.check_box_outline_blank),
-                        SizedBox(
-                          width: 16,
-                        ),
-                        Text('Lock Room')
+                        SizedBox(width: 4),
+                        Text('Lock Room',
+                            style: TextStyle(height: 1, fontSize: 18))
                       ],
                     ),
                   ),

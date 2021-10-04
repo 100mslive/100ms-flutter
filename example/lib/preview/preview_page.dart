@@ -109,9 +109,11 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                         }
                         setState(() {});
                       },
-                      child: Icon(_previewStore.videoOn
-                          ? Icons.videocam
-                          : Icons.videocam_off),
+                      child: Icon(
+                          _previewStore.videoOn
+                              ? Icons.videocam
+                              : Icons.videocam_off,
+                          size: 48),
                     ),
                   ),
                   Expanded(
@@ -123,7 +125,10 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                               flow: widget.flow,
                               user: widget.user)));
                     },
-                    child: Text("Join now"),
+                    child: Text(
+                      'Join Now',
+                      style: TextStyle(height: 1, fontSize: 18),
+                    ),
                   )),
                   Expanded(
                       child: GestureDetector(
@@ -131,8 +136,9 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                       _previewStore.switchAudio();
                       setState(() {});
                     },
-                    child:
-                        Icon(_previewStore.audioOn ? Icons.mic : Icons.mic_off),
+                    child: Icon(
+                        _previewStore.audioOn ? Icons.mic : Icons.mic_off,
+                        size: 48),
                   ))
                 ],
               ),

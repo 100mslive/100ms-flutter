@@ -9,12 +9,13 @@ import 'package:hmssdk_flutter_example/common/ui/organisms/user_name_dialog_orga
 import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
 import 'package:hmssdk_flutter_example/preview/preview_page.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:wakelock/wakelock.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
-
+  Wakelock.enable();
   runZonedGuarded(
       () => runApp(HMSExampleApp()), FirebaseCrashlytics.instance.recordError);
 }
@@ -46,11 +47,10 @@ class _HomePageState extends State<HomePage> {
     await Permission.camera.request();
     await Permission.microphone.request();
 
-
-    while((await Permission.camera.isDenied)){
+    while ((await Permission.camera.isDenied)) {
       await Permission.camera.request();
     }
-    while((await Permission.microphone.isDenied)){
+    while ((await Permission.microphone.isDenied)) {
       await Permission.microphone.request();
     }
   }
@@ -66,67 +66,75 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('100MS'),
+        title: Text('100ms'),
         actions: [
           IconButton(onPressed: () {}, icon: Icon(CupertinoIcons.settings))
         ],
       ),
       body: Center(
         child: Container(
-          padding: EdgeInsets.all(16),
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text('Join a meeting'),
-                SizedBox(
-                  height: 8,
+          padding: EdgeInsets.all(8),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text('Join a Meeting',
+                  style: TextStyle(
+                      height: 1, fontSize: 18, fontWeight: FontWeight.bold)),
+              SizedBox(
+                height: 8,
+              ),
+              TextField(
+                controller: roomIdController,
+                decoration: InputDecoration(
+                  hintText: 'Enter RoomUrl',
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(16))),
+                  suffixIcon: IconButton(
+                    onPressed: roomIdController.clear,
+                    icon: Icon(Icons.clear),
+                  ),
                 ),
-                TextField(
-                  controller: roomIdController,
-                  decoration: InputDecoration(
-                      hintText: 'Enter RoomUrl',
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(16)))),
-                ),
-                SizedBox(
-                  height: 16,
-                ),
-                ElevatedButton(
-                    style: ButtonStyle(
-                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                            RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16.0),
-                    ))),
-                    onPressed: () async {
-                      String user = await showDialog(
-                          context: context,
-                          builder: (_) => UserNameDialogOrganism());
-                      if (user.isNotEmpty)
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (_) => PreviewPage(
-                                  roomId: roomIdController.text,
-                                  user: user,
-                                  flow: MeetingFlow.join,
-                                )));
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.all(16.0),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(16))),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.video_call_outlined),
-                          SizedBox(
-                            width: 16,
-                          ),
-                          Text('Join meeting')
-                        ],
-                      ),
-                    ))
-              ],
-            ),
+              ),
+              SizedBox(
+                height: 8,
+              ),
+              ElevatedButton(
+                  style: ButtonStyle(
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16.0),
+                  ))),
+                  onPressed: () async {
+                    String user = await showDialog(
+                        context: context,
+                        builder: (_) => UserNameDialogOrganism());
+                    if (user.isNotEmpty)
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (_) => PreviewPage(
+                                roomId: roomIdController.text,
+                                user: user,
+                                flow: MeetingFlow.join,
+                              )));
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(4.0),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(16))),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.video_call_outlined, size: 32),
+                        SizedBox(
+                          width: 8,
+                        ),
+                        Text(
+                          'Join Meeting',
+                          style: TextStyle(height: 1, fontSize: 18),
+                        )
+                      ],
+                    ),
+                  ))
+            ],
           ),
         ),
       ),
