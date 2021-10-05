@@ -4,6 +4,7 @@ import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 
 class LeaveOrEndMeetingDialogOption extends StatefulWidget {
   final MeetingStore meetingStore;
+
   const LeaveOrEndMeetingDialogOption({required this.meetingStore});
 
   @override
@@ -18,11 +19,11 @@ class _LeaveOrEndMeetingDialogOptionState
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      insetPadding: EdgeInsets.all(5.0),
       title: Text("👋 Leave Meeting",
           style:
               TextStyle(height: 1, fontSize: 18, fontWeight: FontWeight.bold)),
       content: Container(
-        width: double.infinity,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [

@@ -124,7 +124,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                               MaterialPageRoute(builder: (ctx) => HomePage()))
                         },
                     child:
-                        Text('Yes', style: TextStyle(height: 1, fontSize: 18))),
+                        Text('Yes', style: TextStyle(height: 1, fontSize: 24))),
                 TextButton(
                     onPressed: () => Navigator.pop(context, false),
                     child: Text('Cancel',
