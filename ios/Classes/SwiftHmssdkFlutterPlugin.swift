@@ -238,7 +238,6 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     }
     
     public func on(message: HMSMessage) {
-        print("On Message")
         
         let data:[String:Any]=[
             "event_name":"on_message",
@@ -267,15 +266,15 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     }
     
     public func on(changeTrackStateRequest: HMSChangeTrackStateRequest) {
-        
+        print(#function)
     }
     
     public func on(removedFromRoom notification: HMSRemovedFromRoomNotification) {
-        
+        print(#function)
     }
     
     public func onReconnecting() {
-        print("on Reconnecting")
+        print(#function, "on Reconnecting")
         
         let data:[String:Any]=[
             "event_name":"on_re_connecting",
@@ -287,7 +286,8 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     }
     
     public func onReconnected() {
-        print("on Reconnected")
+        print(#function, "on Reconnected")
+        
         let data:[String:Any]=[
             "event_name":"on_re_connected",
             "data":[

@@ -10,6 +10,7 @@ import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
 import 'package:hmssdk_flutter_example/preview/preview_page.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:wakelock/wakelock.dart';
+import 'package:flutter/services.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -57,7 +58,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     getPermissions();
   }
@@ -90,7 +90,14 @@ class _HomePageState extends State<HomePage> {
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(16))),
                   suffixIcon: IconButton(
-                    onPressed: roomIdController.clear,
+                    onPressed: () {
+                      // ignore: unnecessary_statements
+                      roomIdController.clear;
+                      Clipboard.getData(Clipboard.kTextPlain).then((value) {
+                        roomIdController.text =
+                            value?.text ?? Constant.defaultRoomID;
+                      });
+                    },
                     icon: Icon(Icons.clear),
                   ),
                 ),
