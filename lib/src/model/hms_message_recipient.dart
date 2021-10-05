@@ -6,8 +6,10 @@ class HMSMessageRecipient {
   List<HMSRole>? recipientRoles;
   HMSMessageRecipientType hmsMessageRecipientType;
 
-  HMSMessageRecipient({
-    required this.recipientPeer, required this.recipientRoles, required this.hmsMessageRecipientType});
+  HMSMessageRecipient(
+      {required this.recipientPeer,
+      required this.recipientRoles,
+      required this.hmsMessageRecipientType});
 
   Map<String, dynamic> toMap() {
     return {
@@ -18,17 +20,29 @@ class HMSMessageRecipient {
   }
 
   factory HMSMessageRecipient.fromMap(Map map) {
+    HMSPeer? peer;
+    if (map['recipient_peer'] != null) {
+      peer = HMSPeer.fromMap(map['recipient_peer']);
+    }
+
+    List<HMSRole>? roles;
+    if (map['recipient_roles'] != null) {
+      roles = getRoles(map['recipient_roles']);
+    }
+
     return HMSMessageRecipient(
-      recipientPeer: map['recipient_peer']!=null ?  HMSPeer.fromMap(map['recipient_peer'] as Map): null,
-      recipientRoles:map['recipient_roles']!=null ? getRoles(map['recipient_roles'] as List): null,
-      hmsMessageRecipientType: HMSMessageRecipientValues.getHMSMessageRecipientFromName(map['recipient_type']),
+      recipientPeer: peer,
+      recipientRoles: roles,
+      hmsMessageRecipientType:
+          HMSMessageRecipientValues.getHMSMessageRecipientFromName(
+              map['recipient_type']),
     );
   }
 
-  static List<HMSRole> getRoles(List map) {
+  static List<HMSRole> getRoles(List list) {
     List<HMSRole> hmsRole = <HMSRole>[];
-    if(map.length==0)return hmsRole;
-    map.forEach((element) {
+    if (list.length == 0) return hmsRole;
+    list.forEach((element) {
       hmsRole.add(HMSRole.fromMap(element));
     });
     return hmsRole;

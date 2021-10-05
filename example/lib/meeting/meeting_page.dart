@@ -147,6 +147,10 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     var orientation = MediaQuery.of(context).orientation;
+    var size = MediaQuery.of(context).size;
+    final double itemHeight = (size.height - kToolbarHeight - 24) / 2.5;
+    final double itemWidth = size.width / 2;
+    final aspectRatio = itemHeight / itemWidth;
     return WillPopScope(
       child: Scaffold(
         appBar: AppBar(
@@ -202,20 +206,21 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                   controller: _scrollController,
                   //childAspectRatio: itemWidth / itemHeight,
                   staggeredTiles: List.generate(
-                      filteredList.length,
-                      (int index) => StaggeredTile.count(
-                          filteredList[index].source ==
-                                  HMSTrackSource.kHMSTrackSourceScreen
-                              ? 2
-                              : 1,
-                          filteredList[index].source ==
-                                  HMSTrackSource.kHMSTrackSourceScreen
-                              ? orientation == Orientation.portrait
-                                  ? 3.2
-                                  : 1.5
-                              : orientation == Orientation.portrait
-                                  ? 1.5
-                                  : 0.4)),
+                    filteredList.length,
+                    (int index) => StaggeredTile.count(
+                        filteredList[index].source ==
+                                HMSTrackSource.kHMSTrackSourceScreen
+                            ? 2
+                            : 1,
+                        filteredList[index].source ==
+                                HMSTrackSource.kHMSTrackSourceScreen
+                            ? orientation == Orientation.portrait
+                                ? aspectRatio * 2 + 0.1
+                                : aspectRatio * 2 - 0.1
+                            : orientation == Orientation.portrait
+                                ? aspectRatio
+                                : aspectRatio * 2 - 0.1),
+                  ),
                   children: List.generate(filteredList.length, (index) {
                     return VisibilityDetector(
                       onVisibilityChanged: (VisibilityInfo info) {
@@ -239,63 +244,61 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                       },
                       key: Key(filteredList[index].trackId),
                       child: InkWell(
-                          onLongPress: () {
-                            if (!filteredList[index].peer!.isLocal &&
-                                filteredList[index].source !=
-                                    HMSTrackSource.kHMSTrackSourceScreen)
-                              showDialog(
-                                  context: context,
-                                  builder: (_) => Column(
-                                        children: [
-                                          ChangeTrackOptionDialog(
-                                              isAudioMuted: _meetingStore
-                                                          .audioTrackStatus[
-                                                      filteredList[index]
-                                                          .trackId] ==
-                                                  HMSTrackUpdate.trackMuted,
-                                              isVideoMuted:
-                                                  _meetingStore.trackStatus[
-                                                          filteredList[index]
-                                                              .trackId] ==
-                                                      HMSTrackUpdate.trackMuted,
-                                              peerName: filteredList[index]
-                                                      .peer
-                                                      ?.name ??
-                                                  '',
-                                              changeTrack:
-                                                  (mute, isVideoTrack) {
-                                                Navigator.pop(context);
-                                                if (filteredList[index]
-                                                        .source !=
-                                                    HMSTrackSource
-                                                        .kHMSTrackSourceScreen)
-                                                  _meetingStore
-                                                      .changeTrackRequest(
-                                                          filteredList[index]
-                                                                  .peer
-                                                                  ?.peerId ??
-                                                              "",
-                                                          mute,
-                                                          isVideoTrack);
-                                              },
-                                              removePeer: () {
-                                                Navigator.pop(context);
-                                                _meetingStore
-                                                    .removePeerFromRoom(
+                        onLongPress: () {
+                          if (!filteredList[index].peer!.isLocal &&
+                              filteredList[index].source !=
+                                  HMSTrackSource.kHMSTrackSourceScreen)
+                            showDialog(
+                                context: context,
+                                builder: (_) => Column(
+                                      children: [
+                                        ChangeTrackOptionDialog(
+                                            isAudioMuted: _meetingStore
+                                                        .audioTrackStatus[
+                                                    filteredList[index]
+                                                        .trackId] ==
+                                                HMSTrackUpdate.trackMuted,
+                                            isVideoMuted:
+                                                _meetingStore.trackStatus[
                                                         filteredList[index]
-                                                            .peer!
-                                                            .peerId);
-                                              }),
-                                        ],
-                                      ));
-                          },
-                          child: PeerItemOrganism(
-                              track: filteredList[index],
-                              isVideoMuted: filteredList[index].peer!.isLocal
-                                  ? !_meetingStore.isVideoOn
-                                  : (_meetingStore.trackStatus[
-                                          filteredList[index].trackId]) ==
-                                      HMSTrackUpdate.trackMuted)),
+                                                            .trackId] ==
+                                                    HMSTrackUpdate.trackMuted,
+                                            peerName: filteredList[index]
+                                                    .peer
+                                                    ?.name ??
+                                                '',
+                                            changeTrack: (mute, isVideoTrack) {
+                                              Navigator.pop(context);
+                                              if (filteredList[index].source !=
+                                                  HMSTrackSource
+                                                      .kHMSTrackSourceScreen)
+                                                _meetingStore
+                                                    .changeTrackRequest(
+                                                        filteredList[index]
+                                                                .peer
+                                                                ?.peerId ??
+                                                            "",
+                                                        mute,
+                                                        isVideoTrack);
+                                            },
+                                            removePeer: () {
+                                              Navigator.pop(context);
+                                              _meetingStore.removePeerFromRoom(
+                                                  filteredList[index]
+                                                      .peer!
+                                                      .peerId);
+                                            }),
+                                      ],
+                                    ));
+                        },
+                        child: PeerItemOrganism(
+                            track: filteredList[index],
+                            isVideoMuted: filteredList[index].peer!.isLocal
+                                ? !_meetingStore.isVideoOn
+                                : (_meetingStore.trackStatus[
+                                        filteredList[index].trackId]) ==
+                                    HMSTrackUpdate.trackMuted),
+                      ),
                     );
                   }),
                 );
