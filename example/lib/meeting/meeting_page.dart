@@ -143,11 +143,10 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     var orientation = MediaQuery.of(context).orientation;
+    var size = MediaQuery.of(context).size;
     final double itemHeight = (size.height - kToolbarHeight - 24) / 2.5;
     final double itemWidth = size.width / 2;
-    final aspectRatio = itemHeight/itemWidth;
-    print(aspectRatio);
-    print("itemHeightWidth");
+    final aspectRatio = itemHeight / itemWidth;
     return WillPopScope(
       child: Scaffold(
         appBar: AppBar(
@@ -202,16 +201,18 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                   staggeredTiles: List.generate(
                     filteredList.length,
                     (int index) => StaggeredTile.count(
-                        filteredList[index].source == HMSTrackSource.kHMSTrackSourceScreen
+                        filteredList[index].source ==
+                                HMSTrackSource.kHMSTrackSourceScreen
                             ? 2
                             : 1,
-                        filteredList[index].source == HMSTrackSource.kHMSTrackSourceScreen
+                        filteredList[index].source ==
+                                HMSTrackSource.kHMSTrackSourceScreen
                             ? orientation == Orientation.portrait
-                                ? aspectRatio*2+0.1
-                                : aspectRatio*2-0.1
+                                ? aspectRatio * 2 + 0.1
+                                : aspectRatio * 2 - 0.1
                             : orientation == Orientation.portrait
                                 ? aspectRatio
-                                : aspectRatio*2-0.1),
+                                : aspectRatio * 2 - 0.1),
                   ),
                   children: List.generate(filteredList.length, (index) {
                     return VisibilityDetector(

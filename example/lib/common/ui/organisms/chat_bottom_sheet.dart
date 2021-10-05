@@ -211,7 +211,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                     if (this.valueChoose == "Everyone") {
                       _meetingStore.sendMessage(message);
                       _meetingStore.addMessage(HMSMessage(
-                        sender: "You",
+                        sender: _meetingStore.localPeer!,
                         message: message,
                         type: "chat",
                         time: formatter.format(currentTime),
@@ -224,7 +224,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                     } else if (rolesName.contains(this.valueChoose)) {
                       _meetingStore.sendGroupMessage(message, this.valueChoose);
                       _meetingStore.addMessage(HMSMessage(
-                        sender: "You",
+                        sender: _meetingStore.localPeer!,
                         message: message,
                         type: "chat",
                         time: formatter.format(currentTime),
@@ -239,7 +239,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                       _meetingStore.sendDirectMessage(
                           message, this.valueChoose);
                       _meetingStore.addMessage(HMSMessage(
-                        sender: "You",
+                        sender: _meetingStore.localPeer!,
                         message: message,
                         type: "chat",
                         time: formatter.format(currentTime),

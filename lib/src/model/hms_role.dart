@@ -31,18 +31,30 @@ class HMSRole {
       required this.externalPlugins});
 
   factory HMSRole.fromMap(Map map) {
+    String name = map['name'] as String;
+
+    HMSPublishSetting? publishSetting;
+    if (map['publish_settings'] != null) {
+      publishSetting = HMSPublishSetting.fromMap(map['publish_settings']);
+    }
+
+    HMSSubscribeSettings? subscribeSettings;
+    if (map['subscribe_settings'] != null) {
+      subscribeSettings =
+          HMSSubscribeSettings.fromMap(map['subscribe_settings']);
+    }
+
+    HMSPermissions? permissions;
+    if (map['permissions'] != null) {
+      permissions = HMSPermissions.fromMap(map['permissions']);
+    }
+
     return HMSRole(
-      name: map['name'] as String,
-      publishSettings: map['publish_settings'] != null
-          ? HMSPublishSetting.fromMap(map['publish_settings'])
-          : null,
-      subscribeSettings: map['subscribe_settings'] != null
-          ? HMSSubscribeSettings.fromMap(map['subscribe_settings'])
-          : null,
+      name: name,
+      publishSettings: publishSetting,
+      subscribeSettings: subscribeSettings,
       priority: map['priority'] as int,
-      permissions: map['permissions'] != null
-          ? HMSPermissions.fromMap(map['permissions'])
-          : null,
+      permissions: permissions,
       generalPermissions: map['general_permissions'] ?? null,
       internalPlugins: map['internal_plugins'] ?? null,
       externalPlugins: map['external_plugins'] ?? null,
