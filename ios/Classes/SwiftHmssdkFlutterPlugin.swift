@@ -16,12 +16,104 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     
     private var config: HMSConfig?
     
+    
+    // MARK: - Initial Setup
+    
     public init(channel: FlutterMethodChannel, meetingEventChannel: FlutterEventChannel, previewEventChannel: FlutterEventChannel) {
         self.channel=channel
         self.meetingEventChannel=meetingEventChannel
         self.previewEventChannel=previewEventChannel
         hmsSDK=HMSSDK.build()
     }
+    
+    public static func register(with registrar: FlutterPluginRegistrar) {
+        let channel = FlutterMethodChannel(name: "hmssdk_flutter", binaryMessenger: registrar.messenger())
+        let eventChannel = FlutterEventChannel(name: "meeting_event_channel", binaryMessenger: registrar.messenger())
+        let previewChannel = FlutterEventChannel(name: "preview_event_channel", binaryMessenger: registrar.messenger())
+        
+        let instance = SwiftHmssdkFlutterPlugin(channel: channel,meetingEventChannel: eventChannel,previewEventChannel: previewChannel)
+        
+        
+        let videoViewFactory:HMSVideoViewFactory = HMSVideoViewFactory(messenger: registrar.messenger(),plugin: instance)
+        registrar.register(videoViewFactory, withId: "HMSVideoView")
+        
+        eventChannel.setStreamHandler(instance)
+        previewChannel.setStreamHandler(instance)
+        registrar.addMethodCallDelegate(instance, channel: channel)
+    }
+    
+    public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
+        switch call.method {
+        
+        case "join_meeting":
+            joinMeeting(call:call,result:result)
+            
+        case "leave_meeting":
+            leaveMeeting(result: result)
+            
+        case "switch_audio":
+            switchAudio(call: call , result: result)
+            
+        case "switch_video":
+            switchVideo(call: call , result: result)
+            
+        case "switch_camera":
+            switchCamera(result: result)
+            
+        case "preview_video":
+            previewVideo(call:call,result:result)
+            
+        case "send_message":
+            sendBroadcastMessage(call:call,result:result)
+            
+        case "send_direct_message":
+            sendDirectMessage(call:call,result:result)
+            
+        case "send_group_message":
+            sendGroupMessage(call, result)
+            
+        case "accept_role_change":
+            acceptRoleRequest(call:call,result:result)
+            
+        case "change_role":
+            changeRole(call:call,result:result)
+            
+        case "get_roles":
+            getRoles(call:call,result:result)
+            
+        case "start_capturing":
+            unMuteVideo()
+            
+        case "stop_capturing":
+            muteVideo()
+            
+        case "end_room":
+            endRoom(call)
+            
+        case "remove_peer":
+            removePeer(call)
+            
+        case "on_change_track_state_request":
+            changeTrack(call)
+            
+        case "mute_all":
+            toggleMuteAll(result, shouldMute: true)
+            
+        case "un_mute_all":
+            toggleMuteAll(result, shouldMute: false)
+            
+        case "is_video_mute":
+            isVideoMute(result)
+            
+        case "is_audio_mute":
+            isAudioMute(result)
+            
+        default:
+            result(FlutterMethodNotImplemented)
+        }
+    }
+    
+    // MARK: - HMS SDK Delegate Callbacks
     
     public func onPreview(room: HMSRoom, localTracks: [HMSTrack]) {
         print("On Preview Room")
@@ -114,44 +206,6 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         eventSink?(data)
     }
     
-    public func getPeerById(peerId:String,isLocal:Bool) -> HMSPeer?{
-        if isLocal{
-            if  let peer:HMSLocalPeer = hmsSDK?.localPeer{
-                return peer
-            }
-        }else{
-            if let peers:[HMSRemotePeer] = hmsSDK?.remotePeers{
-                for peer in peers {
-                    if(peer.peerID == peerId){
-                        return peer
-                    }
-                }
-            }
-        }
-        return nil
-    }
-    
-    public func getRemotePeerById(peerId: String) -> HMSRemotePeer? {
-        
-        guard let peers = hmsSDK?.remotePeers else { return nil }
-
-        return peers.first { $0.peerID == peerId }
-    }
-    
-    public func getRoleByString(name:String) -> HMSRole?{
-        if let roles = hmsSDK?.roles{
-            for role in roles{
-                if(role.name == name){
-                    return role
-                }
-                
-            }
-        }
-        return nil
-    }
-    
-    
-    
     public func on(error: HMSError) {
         print("On Error")
         
@@ -164,8 +218,26 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         eventSink?(data)
     }
     
+    public func on(updated speakers: [HMSSpeaker]) {
+        logSpeakers(speakers)
+        
+        var speakersDict = [[String: Any]]()
+        for speaker in speakers {
+            speakersDict.append(["peerId": speaker.peer.peerID,
+                                 "trackId": speaker.track.trackId,
+                                 "audioLevel": speaker.level])
+        }
+        
+        let data:[String:Any]=[
+            "event_name": "on_update_speaker",
+            "data": [
+                "speakers": speakersDict
+            ]
+        ]
+        eventSink?(data)
+    }
+    
     public func on(message: HMSMessage) {
-        print("On Message")
         
         let data:[String:Any]=[
             "event_name":"on_message",
@@ -176,35 +248,33 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         eventSink?(data)
     }
     
-    public func on(updated speakers: [HMSSpeaker]) {
-        print("On Update Speaker")
-        let data:[String:Any]=[
-            "event_name":"on_update_speaker",
-            "data":[
-                "name":"On Update Speaker"
-            ]
-        ]
-        eventSink?(data)
-    }
-    
     public func on(roleChangeRequest: HMSRoleChangeRequest) {
-        print("On Role Change Request")
+        print(#function, "On Role Change Request: ", roleChangeRequest.suggestedRole.name, roleChangeRequest.requestedBy.name)
         
-        self.roleChangeRequest=roleChangeRequest
+        self.roleChangeRequest = roleChangeRequest
         
-        let data:[String:Any]=[
-            "event_name":"on_role_change_request",
-            "data":[
+        let data: [String:Any] = [
+            "event_name": "on_role_change_request",
+            "data": [
                 "role_change_request":[
-                    "requested_by":HMSPeerExtension.toDictionary(peer: roleChangeRequest.requestedBy),
-                    "suggested_role":HMSRoleExtension.toDictionary(role: roleChangeRequest.suggestedRole)
+                    "requested_by": HMSPeerExtension.toDictionary(peer: roleChangeRequest.requestedBy),
+                    "suggested_role": HMSRoleExtension.toDictionary(role: roleChangeRequest.suggestedRole)
                 ]
             ]
         ]
         eventSink?(data)
     }
+    
+    public func on(changeTrackStateRequest: HMSChangeTrackStateRequest) {
+        print(#function)
+    }
+    
+    public func on(removedFromRoom notification: HMSRemovedFromRoomNotification) {
+        print(#function)
+    }
+    
     public func onReconnecting() {
-        print("on Reconnecting")
+        print(#function, "on Reconnecting")
         
         let data:[String:Any]=[
             "event_name":"on_re_connecting",
@@ -216,7 +286,8 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     }
     
     public func onReconnected() {
-        print("on Reconnected")
+        print(#function, "on Reconnected")
+        
         let data:[String:Any]=[
             "event_name":"on_re_connected",
             "data":[
@@ -226,48 +297,8 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         eventSink?(data)
     }
     
-    func switchAudio(call: FlutterMethodCall,result:FlutterResult) {
-        let arguments = call.arguments as! Dictionary<String, AnyObject>
-        print(arguments)
-        if let peer = hmsSDK?.localPeer, let audioTrack = peer.audioTrack as? HMSLocalAudioTrack {
-            audioTrack.setMute( arguments["is_on"] as? Bool ?? false)
-        }
-        result("audio_changed")
-    }
     
-    func switchVideo(call: FlutterMethodCall,result:FlutterResult) {
-        let arguments = call.arguments as! Dictionary<String, AnyObject>
-        if let peer = hmsSDK?.localPeer, let videoTrack = peer.videoTrack as? HMSLocalVideoTrack {
-            let isOn:Bool = arguments["is_on"] as? Bool ?? false
-            print(videoTrack.settings)
-            if isOn {
-                muteVideo()
-            }else{
-                unMuteVideo()
-            }
-        }
-        result("video_changed")
-    }
-    
-    func muteVideo(){
-        if let peer = hmsSDK?.localPeer, let videoTrack = peer.videoTrack as? HMSLocalVideoTrack {
-            print(videoTrack.settings)
-            videoTrack.setMute(true)
-        }
-    }
-    func unMuteVideo(){
-        if let peer = hmsSDK?.localPeer, let videoTrack = peer.videoTrack as? HMSLocalVideoTrack {
-            print(videoTrack.settings)
-            videoTrack.setMute(false)
-        }
-    }
-    
-    func switchCamera(result:FlutterResult) {
-        if let peer = hmsSDK?.localPeer, let videoTrack = peer.videoTrack as? HMSLocalVideoTrack {
-            videoTrack.switchCamera()
-        }
-        result("camera_changed")
-    }
+    // MARK: - HMS SDK Actions
     
     func previewVideo(call: FlutterMethodCall, result: FlutterResult) {
         let arguments = call.arguments as! Dictionary<String, AnyObject>
@@ -337,6 +368,54 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         meetingEventChannel.setStreamHandler(self)
         
         result("joining meeting in ios")
+    }
+    
+    func leaveMeeting(result:FlutterResult){
+        hmsSDK?.leave();
+        result("Leaving meeting")
+    }
+    
+    func switchAudio(call: FlutterMethodCall,result:FlutterResult) {
+        let arguments = call.arguments as! Dictionary<String, AnyObject>
+        print(arguments)
+        if let peer = hmsSDK?.localPeer, let audioTrack = peer.audioTrack as? HMSLocalAudioTrack {
+            audioTrack.setMute( arguments["is_on"] as? Bool ?? false)
+        }
+        result("audio_changed")
+    }
+    
+    func switchVideo(call: FlutterMethodCall,result:FlutterResult) {
+        let arguments = call.arguments as! Dictionary<String, AnyObject>
+        if let peer = hmsSDK?.localPeer, let videoTrack = peer.videoTrack as? HMSLocalVideoTrack {
+            let isOn:Bool = arguments["is_on"] as? Bool ?? false
+            print(videoTrack.settings)
+            if isOn {
+                muteVideo()
+            }else{
+                unMuteVideo()
+            }
+        }
+        result("video_changed")
+    }
+    
+    func muteVideo(){
+        if let peer = hmsSDK?.localPeer, let videoTrack = peer.videoTrack as? HMSLocalVideoTrack {
+            print(videoTrack.settings)
+            videoTrack.setMute(true)
+        }
+    }
+    func unMuteVideo(){
+        if let peer = hmsSDK?.localPeer, let videoTrack = peer.videoTrack as? HMSLocalVideoTrack {
+            print(videoTrack.settings)
+            videoTrack.setMute(false)
+        }
+    }
+    
+    func switchCamera(result:FlutterResult) {
+        if let peer = hmsSDK?.localPeer, let videoTrack = peer.videoTrack as? HMSLocalVideoTrack {
+            videoTrack.switchCamera()
+        }
+        result("camera_changed")
     }
     
     func sendBroadcastMessage(call: FlutterMethodCall,result:FlutterResult) {
@@ -410,15 +489,6 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         result("sent group message")
     }
     
-    
-    
-    func acceptRoleRequest(call: FlutterMethodCall,result:FlutterResult) {
-        if let role = roleChangeRequest{
-            hmsSDK?.accept(changeRole: role)
-        }
-        result("role_accepted")
-    }
-    
     func changeRole(call: FlutterMethodCall,result:FlutterResult) {
         let arguments = call.arguments as! Dictionary<String, AnyObject>
         
@@ -432,6 +502,8 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         
         result("role change requested")
     }
+    
+    
     func getRoles(call: FlutterMethodCall,result:FlutterResult){
         var roleList:[Dictionary<String, Any?>]=[]
         if  let roles:[HMSRole] = hmsSDK?.roles {
@@ -442,9 +514,17 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         result(["roles":roleList])
         
     }
-    func leaveMeeting(result:FlutterResult){
-        hmsSDK?.leave();
-        result("Leaving meeting")
+    
+    func acceptRoleRequest(call: FlutterMethodCall,result:FlutterResult) {
+        if let role = roleChangeRequest {
+            hmsSDK?.accept(changeRole: role, completion: { [weak self] success, error in
+                print(#function, "success: ", success, "error: ", error?.description as Any)
+                if success {
+                    self?.roleChangeRequest = nil
+                }
+            })
+        }
+        result("role_accepted")
     }
     
     func endRoom(_ call: FlutterMethodCall){
@@ -522,6 +602,9 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         }
     }
     
+    
+    // MARK: - Helper Functions
+    
     func toggleMuteAll(_ result: FlutterResult, shouldMute: Bool) {
         
         guard let peers = hmsSDK?.remotePeers
@@ -554,92 +637,64 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         result(peer.audioTrack?.isMute() ?? false)
     }
     
-    
-    public static func register(with registrar: FlutterPluginRegistrar) {
-        let channel = FlutterMethodChannel(name: "hmssdk_flutter", binaryMessenger: registrar.messenger())
-        let eventChannel = FlutterEventChannel(name: "meeting_event_channel", binaryMessenger: registrar.messenger())
-        let previewChannel = FlutterEventChannel(name: "preview_event_channel", binaryMessenger: registrar.messenger())
-        
-        let instance = SwiftHmssdkFlutterPlugin(channel: channel,meetingEventChannel: eventChannel,previewEventChannel: previewChannel)
-        
-        
-        let videoViewFactory:HMSVideoViewFactory = HMSVideoViewFactory(messenger: registrar.messenger(),plugin: instance)
-        registrar.register(videoViewFactory, withId: "HMSVideoView")
-        
-        eventChannel.setStreamHandler(instance)
-        previewChannel.setStreamHandler(instance)
-        registrar.addMethodCallDelegate(instance, channel: channel)
+    public func getPeerById(peerId:String,isLocal:Bool) -> HMSPeer?{
+        if isLocal{
+            if  let peer:HMSLocalPeer = hmsSDK?.localPeer{
+                return peer
+            }
+        }else{
+            if let peers:[HMSRemotePeer] = hmsSDK?.remotePeers{
+                for peer in peers {
+                    if(peer.peerID == peerId){
+                        return peer
+                    }
+                }
+            }
+        }
+        return nil
     }
     
-    public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
-        switch call.method {
+    public func getRemotePeerById(peerId: String) -> HMSRemotePeer? {
         
-        case "join_meeting":
-            joinMeeting(call:call,result:result)
-            
-        case "leave_meeting":
-            leaveMeeting(result: result)
-            
-        case "switch_audio":
-            switchAudio(call: call , result: result)
-            
-        case "switch_video":
-            switchVideo(call: call , result: result)
-            
-        case "switch_camera":
-            switchCamera(result: result)
-            
-        case "preview_video":
-            previewVideo(call:call,result:result)
-            
-        case "send_message":
-            sendBroadcastMessage(call:call,result:result)
-            
-        case "send_direct_message":
-            sendDirectMessage(call:call,result:result)
-            
-        case "send_group_message":
-            sendGroupMessage(call, result)
-            
-        case "accept_role_change":
-            acceptRoleRequest(call:call,result:result)
-            
-        case "change_role":
-            changeRole(call:call,result:result)
-            
-        case "get_roles":
-            getRoles(call:call,result:result)
-            
-        case "start_capturing":
-            unMuteVideo()
-            
-        case "stop_capturing":
-            muteVideo()
-            
-        case "end_room":
-            endRoom(call)
-            
-        case "remove_peer":
-            removePeer(call)
-            
-        case "on_change_track_state_request":
-            changeTrack(call)
-            
-        case "mute_all":
-            toggleMuteAll(result, shouldMute: true)
-            
-        case "un_mute_all":
-            toggleMuteAll(result, shouldMute: false)
-            
-        case "is_video_mute":
-            isVideoMute(result)
-            
-        case "is_audio_mute":
-            isAudioMute(result)
-            
-        default:
-            result(FlutterMethodNotImplemented)
+        guard let peers = hmsSDK?.remotePeers else { return nil }
+
+        return peers.first { $0.peerID == peerId }
+    }
+    
+    public func getRoleByString(name:String) -> HMSRole?{
+        if let roles = hmsSDK?.roles{
+            for role in roles{
+                if(role.name == name){
+                    return role
+                }
+                
+            }
         }
+        return nil
+    }
+    
+    func kindString(from kind: HMSTrackKind) -> String {
+        switch kind {
+        case .audio:
+            return "Audio"
+        case .video:
+            return "Video"
+        default:
+            return "Unknown Kind"
+        }
+    }
+    
+    private func logSpeakers(_ speakers: [HMSSpeaker]) {
+        let date = Date()
+        let calendar = Calendar.current
+        let hour = calendar.component(.hour, from: date)
+        let minutes = calendar.component(.minute, from: date)
+        let second = calendar.component(.second, from: date)
+        let dateString = "\(hour):\(minutes):\(second)"
+        
+        print(#function, "Speaker update " + dateString, speakers.map { $0.peer.name },
+              speakers.map { kindString(from: $0.track.kind) },
+              speakers.map { $0.track.source })
     }
 }
 

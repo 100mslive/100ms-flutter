@@ -12,32 +12,31 @@ import live.hms.video.sdk.models.HMSPeer
 import org.webrtc.SurfaceViewRenderer
 
 class HMSVideoViewWidget(context: Context, id: Int, creationParams: Map<String?, Any?>?,val peer:HMSPeer?,val trackId:String,val  isAux:Boolean) : PlatformView {
-    private val hmsVideoView: HMSVideoView = HMSVideoView(context)
 
-    override fun getView(): View {
-        return hmsVideoView
-    }
-
-    override fun dispose() {
-
-        peer?.videoTrack.let {
-            if (it?.trackId == trackId || peer?.isLocal == true) {
-                //peerToRenderer[peer.peerID]=hmsVideoView.surfaceViewRenderer
-//                Log.i("OBJECTCODEOFRENDERER",hmsVideoView.surfaceViewRenderer.hashCode().toString())
-                it?.removeSink(hmsVideoView.surfaceViewRenderer)
-            }
-        }
-        hmsVideoView.surfaceViewRenderer.release()
-        //Log.i("SURFACEDISPOSE","disposed")
+    private val hmsVideoView: HMSVideoView by lazy {
+        Log.i("HMSVideoView","hmsVideoView instance")
+        HMSVideoView(context)
     }
 
     init {
+//        renderVideo()
+        Log.i("HMSVideoView","init")
+    }
+
+    override fun onFlutterViewAttached(flutterView: View) {
+        super.onFlutterViewAttached(flutterView)
+        Log.i("HMSVideoView","onFlutterViewAttached")
         renderVideo()
+    }
+
+    override fun onFlutterViewDetached() {
+        super.onFlutterViewDetached()
+        Log.i("HMSVideoView","onFlutterViewDetached")
     }
 
     private fun renderVideo() {
 
-        if (peer == null) return;
+        if (peer == null) return
 
         val tracks = peer.auxiliaryTracks
         if (tracks.isNotEmpty() && isAux){
@@ -54,10 +53,28 @@ class HMSVideoViewWidget(context: Context, id: Int, creationParams: Map<String?,
             peer.videoTrack.let {
                 if (it?.trackId == trackId || peer.isLocal) {
                     hmsVideoView.setVideoTrack(it)
-                    return
                 }
             }
         }
+    }
+
+    override fun getView(): View {
+        Log.i("HMSVideoView","getView")
+        return hmsVideoView
+    }
+
+    override fun dispose() {
+        Log.i("HMSVideoView","dispose")
+        release()
+    }
+
+    private fun release() {
+        peer?.videoTrack.let {
+            if (it?.trackId == trackId || peer?.isLocal == true) {
+                it?.removeSink(hmsVideoView.surfaceViewRenderer)
+            }
+        }
+        hmsVideoView.surfaceViewRenderer.release()
     }
 }
 
@@ -71,14 +88,10 @@ class HMSVideoViewFactory(val plugin: HmssdkFlutterPlugin) : PlatformViewFactory
         val isLocal=args!!["is_local"] as? Boolean
         val trackId=args!!["track_id"] as? String
         val isAuxiliary = args!!["is_aux"] as? Boolean
-       // Log.i("onCreateHMSVideoView", "$isLocal $id")
-       // Log.i("HMSVideoViewFactory",trackId.toString())
+        // Log.i("onCreateHMSVideoView", "$isLocal $id")
+        // Log.i("HMSVideoViewFactory",trackId.toString())
         val peer = if(isLocal==null || isLocal!!) plugin.getLocalPeer()
         else plugin.getPeerById(id!!)!!
         return HMSVideoViewWidget(context, viewId, creationParams,peer,trackId!!,isAuxiliary!!)
     }
 }
-
-
-
-

@@ -9,7 +9,8 @@ import Foundation
 import HMSSDK
 
 class  HMSPeerExtension{
-    static func toDictionary (peer:HMSPeer)-> Dictionary<String,Any?>{
+    
+    static func toDictionary(peer: HMSPeer) -> Dictionary<String, Any?> {
    
         var auxilaryTracks:[Dictionary<String, Any?>]=[]
               

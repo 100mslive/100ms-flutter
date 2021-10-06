@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
-import 'package:mobx/mobx.dart';
 
 class PeerItemOrganism extends StatefulWidget {
   final HMSTrack track;
@@ -27,6 +24,7 @@ class _PeerItemOrganismState extends State<PeerItemOrganism> {
 
   @override
   Widget build(BuildContext context) {
+    print("isVideoMuted ${widget.isVideoMuted} ${widget.track.source} ${widget.track.peer?.name}");
     return Container(
       key: key,
       padding: EdgeInsets.all(2),
@@ -35,7 +33,7 @@ class _PeerItemOrganismState extends State<PeerItemOrganism> {
       decoration: BoxDecoration(
           border: Border.all(
               color: widget.track.isHighestAudio ? Colors.blue : Colors.grey,
-              width: widget.track.isHighestAudio ? 3.0 : 1.0),
+              width: widget.track.isHighestAudio ? 4.0 : 1.0),
           borderRadius: BorderRadius.all(Radius.circular(4))),
       child: Column(
         children: [
@@ -48,7 +46,12 @@ class _PeerItemOrganismState extends State<PeerItemOrganism> {
                   parts[0] += " ";
                   name = parts[0][0] + parts[0][1];
                 } else if (parts.length >= 2) {
-                  name = parts[0][0] + parts[1][0];
+                  name = parts[0][0];
+                  if (parts[1] == "" || parts[1] == " ") {
+                    name += parts[0][1];
+                  } else {
+                    name += parts[1][0];
+                  }
                 }
                 return Container(
                   child: Center(child: CircleAvatar(child: Text(name))),

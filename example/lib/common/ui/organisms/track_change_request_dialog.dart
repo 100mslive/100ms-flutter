@@ -35,9 +35,9 @@ class _RoleChangeDialogOrganismState extends State<TrackChangeDialogOrganism> {
           },
         ),
         ElevatedButton(
-          child: Text('Ok'),
+          child: Text('OK'),
           onPressed: () {
-            Navigator.pop(context, 'Ok');
+            Navigator.pop(context, 'OK');
           },
         ),
       ],

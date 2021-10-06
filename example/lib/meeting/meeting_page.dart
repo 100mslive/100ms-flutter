@@ -102,7 +102,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
     String answer = await showDialog(
         context: context,
         builder: (ctx) => RoleChangeDialogOrganism(roleChangeRequest: event));
-    if (answer == "Ok") {
+    if (answer == "OK") {
       debugPrint("OK accepted");
       _meetingStore.meetingController.acceptRoleChangeRequest();
       UtilityComponents.showSnackBarWithString(
@@ -114,19 +114,24 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
     return showDialog(
         context: context,
         builder: (ctx) => AlertDialog(
-              title: Text("Do You Want to leave meeting"),
+              title: Text('Leave the Meeting?'),
               actions: [
-                FlatButton(
+                TextButton(
                     onPressed: () => {
                           _meetingStore.meetingController.leaveMeeting(),
                           Navigator.pop(context, true),
                           Navigator.pushReplacement(context,
                               MaterialPageRoute(builder: (ctx) => HomePage()))
                         },
-                    child: Text("Yes")),
-                FlatButton(
+                    child:
+                        Text('Yes', style: TextStyle(height: 1, fontSize: 24))),
+                TextButton(
                     onPressed: () => Navigator.pop(context, false),
-                    child: Text("No")),
+                    child: Text('Cancel',
+                        style: TextStyle(
+                            height: 1,
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold))),
               ],
             ));
   }
@@ -141,12 +146,11 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
+    var orientation = MediaQuery.of(context).orientation;
     var size = MediaQuery.of(context).size;
-
-    /*24 is for notification bar on Android*/
     final double itemHeight = (size.height - kToolbarHeight - 24) / 2.5;
     final double itemWidth = size.width / 2;
-
+    final aspectRatio = itemHeight / itemWidth;
     return WillPopScope(
       child: Scaffold(
         appBar: AppBar(
@@ -154,6 +158,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
           actions: [
             Observer(
               builder: (_) => IconButton(
+                iconSize: 32,
                 onPressed: () {
                   _meetingStore.toggleSpeaker();
                 },
@@ -163,12 +168,14 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
               ),
             ),
             IconButton(
+              iconSize: 32,
               onPressed: () async {
                 if (_meetingStore.isVideoOn) _meetingStore.toggleCamera();
               },
               icon: Icon(Icons.switch_camera),
             ),
             IconButton(
+              iconSize: 32,
               onPressed: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
@@ -187,6 +194,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
             width: double.infinity,
             child: Observer(
               builder: (_) {
+                print("rebuilding");
                 if (!_meetingStore.isMeetingStarted) return SizedBox();
                 if (_meetingStore.tracks.isEmpty)
                   return Center(child: Text('Waiting for other to join!'));
@@ -198,34 +206,43 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                   controller: _scrollController,
                   //childAspectRatio: itemWidth / itemHeight,
                   staggeredTiles: List.generate(
-                      filteredList.length,
-                      (int index) => StaggeredTile.count(
-                          filteredList[index].source ==
-                                  HMSTrackSource.kHMSTrackSourceScreen
-                              ? 2
-                              : 1,
-                          filteredList[index].source ==
-                                  HMSTrackSource.kHMSTrackSourceScreen
-                              ? 3.2
-                              : 1.5)),
+                    filteredList.length,
+                    (int index) => StaggeredTile.count(
+                        filteredList[index].source ==
+                                HMSTrackSource.kHMSTrackSourceScreen
+                            ? 2
+                            : 1,
+                        filteredList[index].source ==
+                                HMSTrackSource.kHMSTrackSourceScreen
+                            ? orientation == Orientation.portrait
+                                ? aspectRatio * 2 + 0.1
+                                : aspectRatio * 2 - 0.1
+                            : orientation == Orientation.portrait
+                                ? aspectRatio
+                                : aspectRatio * 2 - 0.1),
+                  ),
                   children: List.generate(filteredList.length, (index) {
                     return VisibilityDetector(
                       onVisibilityChanged: (VisibilityInfo info) {
                         var visiblePercentage = info.visibleFraction * 100;
-                        String? peerId = filteredList[index].peer?.peerId;
-                        print(_meetingStore.tracks[index].isMute);
+                        print(
+                            "$index  ${filteredList[index].peer!.name} lengthofFilteredList");
+                        String trackId = filteredList[index].trackId;
+                        print(filteredList[index].isMute);
                         if (visiblePercentage <= 40) {
-                          _meetingStore.trackStatus[peerId!] =
+                          _meetingStore.trackStatus[trackId] =
                               HMSTrackUpdate.trackMuted;
                         } else {
-                          _meetingStore.trackStatus[peerId!] = filteredList[index].isMute
+                          _meetingStore.trackStatus[trackId] =
+                              filteredList[index].isMute
                                   ? HMSTrackUpdate.trackMuted
                                   : HMSTrackUpdate.trackUnMuted;
+                          print(_meetingStore.trackStatus[trackId]);
                         }
                         debugPrint(
-                            'Widget ${info.key} is ${visiblePercentage}% visible ${index}');
+                            'Widget ${info.key} is ${visiblePercentage}% visible and index is ${index}');
                       },
-                      key: Key(filteredList[index].peer!.peerId),
+                      key: Key(filteredList[index].trackId),
                       child: InkWell(
                         onLongPress: () {
                           if (!filteredList[index].peer!.isLocal &&
@@ -239,14 +256,12 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                             isAudioMuted: _meetingStore
                                                         .audioTrackStatus[
                                                     filteredList[index]
-                                                        .peer
-                                                        ?.peerId] ==
+                                                        .trackId] ==
                                                 HMSTrackUpdate.trackMuted,
                                             isVideoMuted:
                                                 _meetingStore.trackStatus[
                                                         filteredList[index]
-                                                            .peer
-                                                            ?.peerId] ==
+                                                            .trackId] ==
                                                     HMSTrackUpdate.trackMuted,
                                             peerName: filteredList[index]
                                                     .peer
@@ -278,12 +293,11 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                         },
                         child: PeerItemOrganism(
                             track: filteredList[index],
-                            isVideoMuted: _meetingStore.localPeer?.peerId !=
-                                    filteredList[index].peer!.peerId
-                                ? ((_meetingStore.trackStatus[filteredList[index].peer!.peerId + (filteredList[index].source == HMSTrackSource.kHMSTrackSourceScreen?"Screen":"") ] ??
-                                        '') ==
-                                    HMSTrackUpdate.trackMuted)
-                                : !_meetingStore.isVideoOn),
+                            isVideoMuted: filteredList[index].peer!.isLocal
+                                ? !_meetingStore.isVideoOn
+                                : (_meetingStore.trackStatus[
+                                        filteredList[index].trackId]) ==
+                                    HMSTrackUpdate.trackMuted),
                       ),
                     );
                   }),
@@ -296,10 +310,11 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Container(
-              padding: EdgeInsets.all(16),
+              padding: EdgeInsets.all(8),
               child: Observer(builder: (context) {
                 return IconButton(
                     tooltip: 'Video',
+                    iconSize: 32,
                     onPressed: () {
                       _meetingStore.toggleVideo();
                     },
@@ -309,10 +324,11 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
               }),
             ),
             Container(
-              padding: EdgeInsets.all(16),
+              padding: EdgeInsets.all(8),
               child: Observer(builder: (context) {
                 return IconButton(
                     tooltip: 'Audio',
+                    iconSize: 32,
                     onPressed: () {
                       _meetingStore.toggleAudio();
                     },
@@ -321,26 +337,27 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
               }),
             ),
             Container(
-              padding: EdgeInsets.all(16),
+              padding: EdgeInsets.all(8),
               child: IconButton(
                   tooltip: 'Chat',
+                  iconSize: 32,
                   onPressed: () {
                     chatMessages(context, _meetingStore);
                   },
                   icon: Icon(Icons.chat_bubble)),
             ),
             Container(
-              padding: EdgeInsets.all(16),
+              padding: EdgeInsets.all(8),
               child: IconButton(
                   tooltip: 'Leave Or End',
+                  iconSize: 32,
                   onPressed: () async {
                     String ans = await showDialog(
                         context: context,
                         builder: (_) => LeaveOrEndMeetingDialogOption(
                               meetingStore: _meetingStore,
                             ));
-                    if (ans != null && (ans == "leave" || ans == "end"))
-                      Navigator.pop(context);
+                    if (ans == 'Leave' || ans == 'End') Navigator.pop(context);
                   },
                   icon: Icon(Icons.call_end)),
             ),
@@ -377,7 +394,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
     String answer = await showDialog(
         context: context,
         builder: (ctx) => TrackChangeDialogOrganism(trackChangeRequest: event));
-    if (answer == "Ok") {
+    if (answer == "OK") {
       debugPrint("OK accepted");
       _meetingStore.changeTracks();
     }

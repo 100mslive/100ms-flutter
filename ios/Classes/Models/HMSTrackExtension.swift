@@ -17,7 +17,7 @@ class  HMSTrackExtension{
             dict = [
                 "track_id": tempTrack.trackId,
                 "track_kind": getKindInString(kind:tempTrack.kind),
-                "track_source": getSourceInString(source:tempTrack.source),
+                "track_source": tempTrack.source,
                 "track_description": tempTrack.trackDescription,
                 "track_mute" : tempTrack.isMute()
                 ]
@@ -30,19 +30,6 @@ class  HMSTrackExtension{
             return "kHMSTrackKindAudio"
         case .video:
             return "kHMSTrackKindVideo"
-        @unknown default:
-            return ""
-        }
-    }
-    
-    static func getSourceInString(source: HMSTrackSource) -> String {
-        switch source {
-        case .regular:
-            return "kHMSTrackSourceRegular"
-        case .screen:
-            return "kHMSTrackSourceScreen"
-        case .plugin:
-            return "kHMSTrackSourcePlugin"
         @unknown default:
             return ""
         }
