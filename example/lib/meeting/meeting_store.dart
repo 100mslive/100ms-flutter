@@ -120,11 +120,11 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
   void addTrack(HMSTrack track) {
     if (tracks.contains(track)) removeTrackWithTrackId(track.trackId);
 
-    if (track.source == HMSTrackSource.kHMSTrackSourceScreen)
+    if (track.source == 'SCREEN')
       tracks.insert(0, track);
     else
       tracks.insert(tracks.length, track);
-    print("addTrack");
+    print("addTrack $track");
   }
 
   @action
@@ -251,7 +251,7 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
 
       if (Platform.isAndroid) {
         int screenShareIndex = tracks.indexWhere((element) {
-          return element.source == HMSTrackSource.kHMSTrackSourceScreen;
+          return element.source == 'SCREEN';
         });
         print("ScreenShare $screenShareIndex");
         if (screenShareIndex == -1)

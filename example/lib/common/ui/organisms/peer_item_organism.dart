@@ -24,7 +24,8 @@ class _PeerItemOrganismState extends State<PeerItemOrganism> {
 
   @override
   Widget build(BuildContext context) {
-    print("isVideoMuted ${widget.isVideoMuted} ${widget.track.source} ${widget.track.peer?.name}");
+    print(
+        "isVideoMuted ${widget.isVideoMuted} ${widget.track.source} ${widget.track.peer?.name}");
     return Container(
       key: key,
       padding: EdgeInsets.all(2),
@@ -60,8 +61,7 @@ class _PeerItemOrganismState extends State<PeerItemOrganism> {
 
               return HMSVideoView(
                   track: widget.track,
-                  isAuxiliaryTrack: widget.track.source ==
-                      HMSTrackSource.kHMSTrackSourceScreen);
+                  isAuxiliaryTrack: widget.track.source == 'SCREEN');
             },
           )),
           SizedBox(
