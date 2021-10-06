@@ -15,16 +15,16 @@ class RoomService {
 
     http.Response response = await http.post(endPoint,
         body: {
-          'code': codeAndDomain[1]??"",
+          'code': (codeAndDomain[1]??"").trim(),
           'user_id': user,
         },
         headers: {
-          'subdomain': codeAndDomain[0]??""
+          'subdomain': (codeAndDomain[0]??"").trim()
         });
 
     var body = json.decode(response.body);
     print(body);
-    return [body['token'],codeAndDomain[2]];
+    return [body['token'],codeAndDomain[2]!.trim()];
   }
 
   List<String?>? getCode(String roomUrl) {
