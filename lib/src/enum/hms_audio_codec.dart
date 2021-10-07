@@ -1,4 +1,3 @@
-
 ///{@nodoc}
 enum HMSAudioCodec { opus, unknown }
 

@@ -100,8 +100,9 @@ class _HomePageState extends State<HomePage> {
                 ),
                 ElevatedButton(
                     style: ButtonStyle(
-                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                            RoundedRectangleBorder(
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16.0),
                     ))),
                     onPressed: () async {

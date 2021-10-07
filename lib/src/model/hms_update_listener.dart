@@ -82,7 +82,9 @@ abstract class HMSUpdateListener {
   ///when you are back in the room after reconnection
   void onReconnected();
 
-  void onChangeTrackStateRequest({required HMSTrackChangeRequest hmsTrackChangeRequest});
+  void onChangeTrackStateRequest(
+      {required HMSTrackChangeRequest hmsTrackChangeRequest});
 
-  void onRemovedFromRoom({required HMSPeerRemovedFromPeer hmsPeerRemovedFromPeer});
+  void onRemovedFromRoom(
+      {required HMSPeerRemovedFromPeer hmsPeerRemovedFromPeer});
 }

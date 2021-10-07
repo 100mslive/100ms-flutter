@@ -37,8 +37,7 @@ class _ParticipantsListState extends State<ParticipantsList> {
                       children: peers
                           .map((peer) => ParticipantOrganism(
                                 peer: peer,
-                                meetingStore:
-                                    widget.meetingStore,
+                                meetingStore: widget.meetingStore,
                               ))
                           .toList(),
                     );

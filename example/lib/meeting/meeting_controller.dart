@@ -14,16 +14,15 @@ class MeetingController {
       {required this.roomUrl, required this.user, required this.flow})
       : _hmsSdkInteractor = HMSSDKInteractor();
 
-
-
   Future<bool> joinMeeting() async {
-    List<String?>? token = await RoomService().getToken(user: user, room: roomUrl);
-    if(token==null)return false;
+    List<String?>? token =
+        await RoomService().getToken(user: user, room: roomUrl);
+    if (token == null) return false;
     HMSConfig config = HMSConfig(
         userId: Uuid().v1(),
         roomId: roomUrl,
         authToken: token[0]!,
-        isProdLink: token[1]=="true"?true:false,
+        isProdLink: token[1] == "true" ? true : false,
         // endPoint: Constant.getTokenURL,
         userName: user,setWebRtcLog: true,);
 
@@ -51,12 +50,12 @@ class MeetingController {
     return await _hmsSdkInteractor?.sendMessage(message);
   }
 
-  Future<void> sendDirectMessage(String message,String peerId) async {
-    return await _hmsSdkInteractor?.sendDirectMessage(message,peerId);
+  Future<void> sendDirectMessage(String message, String peerId) async {
+    return await _hmsSdkInteractor?.sendDirectMessage(message, peerId);
   }
 
-  Future<void> sendGroupMessage(String message,String roleName) async {
-    return await _hmsSdkInteractor?.sendGroupMessage(message,roleName);
+  Future<void> sendGroupMessage(String message, String roleName) async {
+    return await _hmsSdkInteractor?.sendGroupMessage(message, roleName);
   }
 
   void addMeetingListener(HMSUpdateListener listener) {
@@ -117,23 +116,23 @@ class MeetingController {
     return isMute;
   }
 
-  void changeTrackRequest(String peerId,bool mute,bool isVideoTrack){
+  void changeTrackRequest(String peerId, bool mute, bool isVideoTrack) {
     _hmsSdkInteractor?.changeTrackRequest(peerId, mute, isVideoTrack);
   }
 
-  Future<bool> endRoom(bool lock) async{
-     return (await _hmsSdkInteractor?.endRoom(lock))!;
+  Future<bool> endRoom(bool lock) async {
+    return (await _hmsSdkInteractor?.endRoom(lock))!;
   }
 
-  void removePeer(String peerId){
+  void removePeer(String peerId) {
     _hmsSdkInteractor?.removePeer(peerId);
   }
 
-  void unMuteAll(){
+  void unMuteAll() {
     _hmsSdkInteractor?.unMuteAll();
   }
 
-  void muteAll(){
+  void muteAll() {
     _hmsSdkInteractor?.muteAll();
   }
 }
