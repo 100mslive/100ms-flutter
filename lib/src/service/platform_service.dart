@@ -72,7 +72,7 @@ class PlatformService {
         {'name': 'meeting'}).map<HMSUpdateListenerMethodResponse>((event) {
       Map<String, dynamic>? data = {};
       print("flutterdata2 ${event["event_name"]} ${event["data"]}");
-      if (event is Map && event['data']!=null && event['data'] is Map) {
+      if (event is Map && event['data'] != null && event['data'] is Map) {
         (event['data'] as Map).forEach((key, value) {
           data[key.toString()] = value;
         });

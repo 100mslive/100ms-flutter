@@ -1,13 +1,14 @@
-
-
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
-class HMSPeerRemovedFromPeer{
+class HMSPeerRemovedFromPeer {
   final HMSPeer peerWhoRemoved;
   final String reason;
   final bool roomWasEnded;
 
-  HMSPeerRemovedFromPeer({required this.peerWhoRemoved,required this.reason,required this.roomWasEnded});
+  HMSPeerRemovedFromPeer(
+      {required this.peerWhoRemoved,
+      required this.reason,
+      required this.roomWasEnded});
 
   Map<String, dynamic> toMap() {
     return {

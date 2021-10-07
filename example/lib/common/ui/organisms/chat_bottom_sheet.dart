@@ -104,7 +104,8 @@ class _ChatWidgetState extends State<ChatWidget> {
               child: Observer(
                 builder: (_) {
                   if (!_meetingStore.isMeetingStarted) return SizedBox();
-                  if (_meetingStore.messages.isEmpty) return Text('No messages');
+                  if (_meetingStore.messages.isEmpty)
+                    return Text('No messages');
                   return ListView(
                     children: List.generate(
                       _meetingStore.messages.length,
@@ -223,7 +224,8 @@ class _ChatWidgetState extends State<ChatWidget> {
                                   HMSMessageRecipientType.BROADCAST),
                         ));
                       } else if (rolesName.contains(this.valueChoose)) {
-                        _meetingStore.sendGroupMessage(message, this.valueChoose);
+                        _meetingStore.sendGroupMessage(
+                            message, this.valueChoose);
                         _meetingStore.addMessage(HMSMessage(
                           sender: _meetingStore.localPeer!,
                           message: message,

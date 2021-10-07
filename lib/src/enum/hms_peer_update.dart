@@ -2,14 +2,19 @@
 enum HMSPeerUpdate {
   ///When new peer joins the room.
   peerJoined,
+
   ///When peer left the room.
   peerLeft,
+
   ///when peer is knocked out by the host.
   peerKnocked,
+
   ///when peer's audio is toggled
   audioToggled,
+
   ///when peer's video is toggled
   videoToggled,
+
   ///when peer's role is changed
   roleUpdated,
   defaultUpdate
