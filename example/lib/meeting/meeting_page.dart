@@ -208,12 +208,8 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                   staggeredTiles: List.generate(
                     filteredList.length,
                     (int index) => StaggeredTile.count(
-                        filteredList[index].source ==
-                                HMSTrackSource.kHMSTrackSourceScreen
-                            ? 2
-                            : 1,
-                        filteredList[index].source ==
-                                HMSTrackSource.kHMSTrackSourceScreen
+                        filteredList[index].source == 'SCREEN' ? 2 : 1,
+                        filteredList[index].source == 'SCREEN'
                             ? orientation == Orientation.portrait
                                 ? aspectRatio * 2 + 0.1
                                 : aspectRatio * 2 - 0.1
@@ -246,8 +242,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                       child: InkWell(
                         onLongPress: () {
                           if (!filteredList[index].peer!.isLocal &&
-                              filteredList[index].source !=
-                                  HMSTrackSource.kHMSTrackSourceScreen)
+                              filteredList[index].source != 'SCREEN')
                             showDialog(
                                 context: context,
                                 builder: (_) => Column(
@@ -270,8 +265,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                             changeTrack: (mute, isVideoTrack) {
                                               Navigator.pop(context);
                                               if (filteredList[index].source !=
-                                                  HMSTrackSource
-                                                      .kHMSTrackSourceScreen)
+                                                  'SCREEN')
                                                 _meetingStore
                                                     .changeTrackRequest(
                                                         filteredList[index]

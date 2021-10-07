@@ -7,23 +7,22 @@
 
 import Foundation
 import HMSSDK
-class  HMSTrackExtension{
+
+class HMSTrackExtension {
     
-    static func toDictionary(track:HMSTrack?)->Dictionary<String,Any?>{
+    static func toDictionary(track: HMSTrack) -> [String: Any] {
         
-        var dict:[String:Any?]=[:]
+        let dict = [
+            "track_id": track.trackId,
+            "track_kind": getKindInString(kind:track.kind),
+            "track_source": track.source.uppercased(),
+            "track_description": track.trackDescription,
+            "track_mute" : track.isMute()
+        ] as [String: Any]
         
-        if let tempTrack = track{
-            dict = [
-                "track_id": tempTrack.trackId,
-                "track_kind": getKindInString(kind:tempTrack.kind),
-                "track_source": tempTrack.source,
-                "track_description": tempTrack.trackDescription,
-                "track_mute" : tempTrack.isMute()
-                ]
-        }
         return dict
     }
+    
     static func getKindInString(kind: HMSTrackKind) -> String {
         switch kind {
         case .audio:
@@ -34,21 +33,18 @@ class  HMSTrackExtension{
             return ""
         }
     }
-                
-    static func getTrackUpdateInString(trackUpdate:HMSTrackUpdate?)->String{
-        switch trackUpdate {
     
+    static func getTrackUpdateInString(trackUpdate: HMSTrackUpdate) -> String {
+        
+        switch trackUpdate {    
         case .trackAdded :return "trackAdded"
-        case.trackDegraded: return "trackDegraded"
+        case .trackDegraded: return "trackDegraded"
         case .trackDescriptionChanged: return "trackDescriptionChanged"
         case .trackMuted: return "trackMuted"
         case .trackRemoved: return "trackRemoved"
         case .trackRestored: return "trackRestored"
         case .trackUnmuted: return "trackUnmuted"
-        
-        case .none:
-            return ""
-        @unknown default:
+        default:
             return ""
         }
     }
