@@ -55,3 +55,5 @@ export 'src/ui/meeting/hms_video_view.dart';
 export 'src/model/hms_track_change_request.dart';
 export 'src/model/hms_peer_removed_from_room.dart';
 export 'src/model/hms_message_recipient.dart';
+export 'src/model/hms_logs_listener.dart';
+export 'src/model/hms_log.dart';

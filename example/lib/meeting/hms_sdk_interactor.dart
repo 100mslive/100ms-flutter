@@ -47,6 +47,14 @@ class HMSSDKInteractor {
     return _meeting.previewVideo(config: config);
   }
 
+  void addLogsListener(HMSLogListener hmsLogListener){
+    _meeting.addLogListener(hmsLogListener);
+  }
+
+  void removeLogsListener(HMSLogListener hmsLogListener){
+    _meeting.removeLogListener(hmsLogListener);
+  }
+
   void addMeetingListener(HMSUpdateListener listener) {
     _meeting.addMeetingListener(listener);
   }

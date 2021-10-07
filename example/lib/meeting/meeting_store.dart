@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_controller.dart';
@@ -7,9 +8,10 @@ import 'package:mobx/mobx.dart';
 
 part 'meeting_store.g.dart';
 
+
 class MeetingStore = MeetingStoreBase with _$MeetingStore;
 
-abstract class MeetingStoreBase with Store implements HMSUpdateListener {
+abstract class MeetingStoreBase with Store implements HMSUpdateListener,HMSLogListener {
   @observable
   bool isSpeakerOn = true;
 
@@ -58,6 +60,13 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
   @action
   void startListen() {
     meetingController.addMeetingListener(this);
+    addLogsListener();
+  }
+
+  @action
+  void removeListener(){
+    meetingController.removeMeetingListener(this);
+    removeLogsListener();
   }
 
   @action
@@ -200,16 +209,21 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
           localPeer = each;
           print('on join ${localPeer!.name}  ${localPeer!.peerId}');
           if (each.videoTrack != null) {
+            trackStatus[each.videoTrack!.trackId]=HMSTrackUpdate.trackMuted;
             tracks.insert(0, each.videoTrack!);
           }
         } else {
           if (each.videoTrack != null) {
+            trackStatus[each.videoTrack!.trackId]=HMSTrackUpdate.trackMuted;
             tracks.insert(0, each.videoTrack!);
           }
         }
       }
     }
   }
+
+
+
 
   @override
   void onRoomUpdate({required HMSRoom room, required HMSRoomUpdate update}) {
@@ -437,6 +451,7 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
 
   void leaveMeeting() {
     meetingController.leaveMeeting();
+    removeListener();
   }
 
   void removePeerFromRoom(String peerId) {
@@ -449,5 +464,19 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
 
   void unMuteAll() {
     meetingController.unMuteAll();
+  }
+
+  @override
+  void onLogMessage({required dynamic HMSLog}){
+    print(HMSLog.toString()+"onLogMessageFlutter");
+    FirebaseCrashlytics.instance.log(HMSLog.toString());
+  }
+
+  void addLogsListener(){
+    meetingController.addLogsListener(this);
+  }
+
+  void removeLogsListener(){
+    meetingController.removeLogsListener(this);
   }
 }
