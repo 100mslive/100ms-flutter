@@ -57,7 +57,6 @@ class _ParticipantOrganismState extends State<ParticipantOrganism> {
                               roleName: role.name,
                               forceChange: forceChange);
                         },
-
                       ));
             },
             child: Container(
