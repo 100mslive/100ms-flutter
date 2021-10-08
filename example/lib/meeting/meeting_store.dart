@@ -73,7 +73,7 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
 
   @action
   Future<void> toggleVideo() async {
-    print("toggleVideo ${isVideoOn}");
+    print("toggleVideo $isVideoOn");
     await meetingController.switchVideo(isOn: isVideoOn);
     // if(isVideoOn){
     //   meetingController.stopCapturing();
@@ -335,12 +335,12 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener {
             ? 1
             : 0;
     trackChange = isVideoTrack;
-    print("flutteronChangeTrack ${trackChange}");
+    print("flutteronChangeTrack $trackChange");
     addTrackChangeRequestInstance(hmsTrackChangeRequest);
   }
 
   void changeTracks() {
-    print("flutteronChangeTracks ${trackChange}");
+    print("flutteronChangeTracks $trackChange");
     if (trackChange == 1) {
       toggleVideo();
     } else if (trackChange == 0) {
