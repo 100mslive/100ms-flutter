@@ -9,9 +9,11 @@ class HMSSDKInteractor {
     _meeting = HMSMeeting();
   }
 
-  Future<void> joinMeeting({required HMSConfig config}) async {
+  Future<void> joinMeeting({required HMSConfig config,required bool isProdLink,required bool setWebRtcLogs}) async {
     this.config = config;
-    await _meeting.joinMeeting(config: this.config);
+    await _meeting.joinMeeting(config: this.config,isProdLink: isProdLink,
+      // endPoint: Constant.getTokenURL,
+      setWebrtcLogs: setWebRtcLogs);
   }
 
   Future<void> leaveMeeting() async {
@@ -42,9 +44,9 @@ class HMSSDKInteractor {
     return await _meeting.sendGroupMessage(message,roleName);
   }
 
-  Future<void> previewVideo({required HMSConfig config}) async {
+  Future<void> previewVideo({required HMSConfig config,required bool isProdLink,required bool setWebRtcLogs}) async {
     this.config = config;
-    return _meeting.previewVideo(config: config);
+    return _meeting.previewVideo(config: config,isProdLink: isProdLink,setWebRtcLogs: setWebRtcLogs);
   }
 
   void addLogsListener(HMSLogListener hmsLogListener){

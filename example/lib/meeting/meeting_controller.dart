@@ -23,11 +23,10 @@ class MeetingController {
         userId: Uuid().v1(),
         roomId: roomUrl,
         authToken: token[0]!,
-        isProdLink: token[1]=="true"?true:false,
-        // endPoint: Constant.getTokenURL,
-        userName: user,setWebRtcLog: true,);
+        userName: user,
+        );
 
-    await _hmsSdkInteractor?.joinMeeting(config: config);
+    await _hmsSdkInteractor?.joinMeeting(config: config,isProdLink: token[1] == "true" ? true : false,setWebRtcLogs: true);
     return true;
   }
 

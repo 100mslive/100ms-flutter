@@ -79,7 +79,6 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                         Text("No preview available") //
                       ]);
                     }
-
                     return GridView.count(
                       crossAxisCount: 1,
                       childAspectRatio: (itemWidth / itemHeight),
@@ -87,6 +86,8 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                           _previewStore.localTracks.length,
                           (index) => PeerItemOrganism(
                                 key: UniqueKey(),
+                                height: itemHeight,
+                                width: itemWidth,
                                 track: _previewStore.localTracks[index],
                                 isVideoMuted: false,
                               )),

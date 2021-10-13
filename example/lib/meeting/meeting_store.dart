@@ -37,7 +37,7 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener,HMSLogLi
   late MeetingController meetingController;
 
   @observable
-  List<HMSPeer> peers = ObservableList.of([]);
+  ObservableList<HMSPeer> peers = ObservableList.of([]);
 
   @observable
   HMSPeer? localPeer;
@@ -46,10 +46,10 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener,HMSLogLi
   HMSTrack? screenTrack;
 
   @observable
-  List<HMSTrack> tracks = ObservableList.of([]);
+  ObservableList<HMSTrack> tracks = ObservableList.of([]);
 
   @observable
-  List<HMSMessage> messages = ObservableList.of([]);
+  ObservableList<HMSMessage> messages = ObservableList.of([]);
 
   @observable
   ObservableMap<String, HMSTrackUpdate> trackStatus = ObservableMap.of({});
@@ -429,8 +429,10 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener,HMSLogLi
         removeTrackWithTrackId(track.trackId);
         break;
       case HMSTrackUpdate.trackMuted:
+        trackStatus[track.trackId] = HMSTrackUpdate.trackMuted;
         break;
       case HMSTrackUpdate.trackUnMuted:
+        trackStatus[track.trackId] = HMSTrackUpdate.trackUnMuted;
         break;
       case HMSTrackUpdate.trackDescriptionChanged:
         break;

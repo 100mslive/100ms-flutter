@@ -8,7 +8,7 @@ class RoomService {
   Future<List<String?>?> getToken({required String user, required String room}) async {
     List<String?> codeAndDomain = getCode(room)??[];
     print(codeAndDomain);
-    if(codeAndDomain==null || codeAndDomain.length==0){
+    if(codeAndDomain.length==0){
       return null;
     }
     Uri endPoint=codeAndDomain[2]=="true"?Uri.parse(Constant.prodTokenEndpoint):Uri.parse(Constant.qaTokenEndPoint);

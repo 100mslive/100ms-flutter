@@ -10,9 +10,10 @@ import 'package:hmssdk_flutter/src/service/platform_service.dart';
 
 class HMSMeeting {
   ///join meeting by passing HMSConfig instance to it.
-  Future<void> joinMeeting({required HMSConfig config}) async {
+  Future<void> joinMeeting({required HMSConfig config,required bool isProdLink,required bool setWebrtcLogs}) async {
     return await PlatformService.invokeMethod(PlatformMethod.joinMeeting,
-        arguments: config.getJson());
+        arguments: {...config.getJson(),'is_prod': isProdLink,
+          'set_web_rtc_log' : setWebrtcLogs});
   }
 
   ///just call this method to leave meeting.
@@ -77,9 +78,10 @@ class HMSMeeting {
   }
 
   ///preview before joining the room pass [HMSConfig].
-  Future<void> previewVideo({required HMSConfig config}) async {
+  Future<void> previewVideo({required HMSConfig config,required bool isProdLink,required bool setWebRtcLogs}) async {
     return await PlatformService.invokeMethod(PlatformMethod.previewVideo,
-        arguments: config.getJson());
+        arguments: {...config.getJson(),'is_prod': isProdLink,
+          'set_web_rtc_log' : setWebRtcLogs});
   }
 
   void addLogListener(HMSLogListener hmsLogListener){
