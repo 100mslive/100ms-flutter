@@ -8,10 +8,11 @@ import 'package:mobx/mobx.dart';
 
 part 'meeting_store.g.dart';
 
-
 class MeetingStore = MeetingStoreBase with _$MeetingStore;
 
-abstract class MeetingStoreBase with Store implements HMSUpdateListener,HMSLogListener {
+abstract class MeetingStoreBase
+    with Store
+    implements HMSUpdateListener, HMSLogListener {
   @observable
   bool isSpeakerOn = true;
 
@@ -60,11 +61,12 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener,HMSLogLi
   @action
   void startListen() {
     meetingController.addMeetingListener(this);
-    addLogsListener();
+    //startHMSLogger(HMSLogLevel.DEBUG, HMSLogLevel.DEBUG);
+    //addLogsListener();
   }
 
   @action
-  void removeListener(){
+  void removeListener() {
     meetingController.removeMeetingListener(this);
     removeLogsListener();
   }
@@ -209,21 +211,18 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener,HMSLogLi
           localPeer = each;
           print('on join ${localPeer!.name}  ${localPeer!.peerId}');
           if (each.videoTrack != null) {
-            trackStatus[each.videoTrack!.trackId]=HMSTrackUpdate.trackMuted;
+            trackStatus[each.videoTrack!.trackId] = HMSTrackUpdate.trackMuted;
             tracks.insert(0, each.videoTrack!);
           }
         } else {
           if (each.videoTrack != null) {
-            trackStatus[each.videoTrack!.trackId]=HMSTrackUpdate.trackMuted;
+            trackStatus[each.videoTrack!.trackId] = HMSTrackUpdate.trackMuted;
             tracks.insert(0, each.videoTrack!);
           }
         }
       }
     }
   }
-
-
-
 
   @override
   void onRoomUpdate({required HMSRoom room, required HMSRoomUpdate update}) {
@@ -302,7 +301,7 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener,HMSLogLi
     if (updateSpeakers.length == 0) return;
     HMSSpeaker highestAudioSpeaker = updateSpeakers[0];
     int newHighestIndex = tracks.indexWhere(
-        (element) => element.peer?.peerId == highestAudioSpeaker.peerId);
+        (element) => element.peer?.peerId == highestAudioSpeaker.peer.peerId);
     if (newHighestIndex == -1) return;
 
     if (previousHighestVideoTrack != null) {
@@ -421,8 +420,13 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener,HMSLogLi
   void peerOperationWithTrack(
       HMSPeer peer, HMSTrackUpdate update, HMSTrack track) {
     print("onTrackUpdateFlutter $update ${peer.isLocal} update");
+
+
     switch (update) {
       case HMSTrackUpdate.trackAdded:
+        trackStatus[track.trackId] = track.isMute
+            ? HMSTrackUpdate.trackMuted
+            : HMSTrackUpdate.trackUnMuted;
         addTrack(track);
         break;
       case HMSTrackUpdate.trackRemoved:
@@ -469,16 +473,28 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener,HMSLogLi
   }
 
   @override
-  void onLogMessage({required dynamic HMSLog}){
-    print(HMSLog.toString()+"onLogMessageFlutter");
+  void onLogMessage({required dynamic HMSLog}) {
+    print(HMSLog.toString() + "onLogMessageFlutter");
     FirebaseCrashlytics.instance.log(HMSLog.toString());
   }
 
-  void addLogsListener(){
+  void startHMSLogger(HMSLogLevel webRtclogLevel, HMSLogLevel logLevel) {
+    meetingController.startHMSLogger(webRtclogLevel, logLevel);
+  }
+
+  void addLogsListener() {
     meetingController.addLogsListener(this);
   }
 
-  void removeLogsListener(){
+  void removeLogsListener() {
     meetingController.removeLogsListener(this);
+  }
+
+  void removeHMSLogger() {
+    meetingController.removeHMSLogger();
+  }
+
+  Future<HMSPeer?> getLocalPeer() async{
+    return await meetingController.getLocalPeer();
   }
 }

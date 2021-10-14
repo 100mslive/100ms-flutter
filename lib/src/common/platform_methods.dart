@@ -71,7 +71,9 @@ enum PlatformMethod {
   muteAll,
   unMuteAll,
   getLocalPeer,
-  unknown
+  unknown,
+  startHMSLogger,
+  removeHMSLogger
 }
 
 extension PlatformMethodValues on PlatformMethod {
@@ -144,6 +146,10 @@ extension PlatformMethodValues on PlatformMethod {
         return 'get_local_peer';
       case PlatformMethod.unknown:
         return 'unknown';
+      case PlatformMethod.startHMSLogger:
+        return "start_hms_logger";
+      case PlatformMethod.removeHMSLogger:
+        return "remove_hms_logger";
     }
   }
 
@@ -213,6 +219,10 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.unMuteAll;
       case 'get_local_peer':
         return PlatformMethod.getLocalPeer;
+      case 'start_hms_logger':
+        return PlatformMethod.startHMSLogger;
+      case 'remove_hms_logger':
+        return PlatformMethod.removeHMSLogger;
       default:
         return PlatformMethod.unknown;
     }

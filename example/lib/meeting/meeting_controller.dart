@@ -66,6 +66,14 @@ class MeetingController {
     _hmsSdkInteractor?.removeMeetingListener(listener);
   }
 
+  void startHMSLogger(HMSLogLevel webRtclogLevel,HMSLogLevel logLevel){
+    _hmsSdkInteractor?.startHMSLogger(webRtclogLevel, logLevel);
+  }
+
+  void removeHMSLogger(){
+    _hmsSdkInteractor?.removeHMSLogger();
+  }
+
   void addLogsListener(HMSLogListener listener) {
     _hmsSdkInteractor?.addLogsListener(listener);
   }
@@ -80,6 +88,10 @@ class MeetingController {
 
   void removePreviewListener(HMSPreviewListener listener) {
     _hmsSdkInteractor?.removePreviewListener(listener);
+  }
+
+  Future<HMSPeer?> getLocalPeer() async{
+    return await _hmsSdkInteractor?.getLocalPeer();
   }
 
   void acceptRoleChangeRequest() {

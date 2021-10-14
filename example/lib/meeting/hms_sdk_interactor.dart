@@ -1,5 +1,6 @@
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
+
 class HMSSDKInteractor {
   late HMSConfig config;
   late List<HMSMessage> messages;
@@ -49,6 +50,14 @@ class HMSSDKInteractor {
     return _meeting.previewVideo(config: config,isProdLink: isProdLink,setWebRtcLogs: setWebRtcLogs);
   }
 
+  void startHMSLogger(HMSLogLevel webRtclogLevel,HMSLogLevel logLevel){
+    _meeting.startHMSLogger(webRtclogLevel, logLevel);
+  }
+
+  void removeHMSLogger(){
+    _meeting.removeHMSLogger();
+  }
+
   void addLogsListener(HMSLogListener hmsLogListener){
     _meeting.addLogListener(hmsLogListener);
   }
@@ -79,6 +88,10 @@ class HMSSDKInteractor {
 
   void stopCapturing() {
     _meeting.stopCapturing();
+  }
+
+  Future<HMSPeer?> getLocalPeer() async{
+    return await _meeting.getLocalPeer();
   }
 
   void startCapturing() {

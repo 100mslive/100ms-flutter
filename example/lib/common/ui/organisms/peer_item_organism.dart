@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 class PeerItemOrganism extends StatefulWidget {
@@ -35,12 +36,13 @@ class _PeerItemOrganismState extends State<PeerItemOrganism> {
   Widget build(BuildContext context) {
     print(
         "isVideoMuted ${widget.isVideoMuted} ${widget.track.source} ${widget.track.peer?.name}");
+
     return Container(
       key: key,
       padding: EdgeInsets.all(2),
       margin: EdgeInsets.all(2),
       height: widget.height + 20,
-      width: widget.width-5.0,
+      width: widget.width - 5.0,
       decoration: BoxDecoration(
           border: Border.all(
               color: widget.track.isHighestAudio ? Colors.blue : Colors.grey,
@@ -50,8 +52,7 @@ class _PeerItemOrganismState extends State<PeerItemOrganism> {
         children: [
           Expanded(child: LayoutBuilder(
             builder: (context, constraints) {
-              if (widget.track.isMute ||
-                  (widget.isLocal && widget.isVideoMuted)) {
+              if ((widget.isVideoMuted)) {
                 List<String> parts = widget.track.peer?.name.split(" ") ?? [];
 
                 if (parts.length == 1) {

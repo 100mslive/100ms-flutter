@@ -5,6 +5,7 @@
 ///All methods related to meeting, preview and their listeners are present here.
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter/src/common/platform_methods.dart';
+import 'package:hmssdk_flutter/src/enum/hms_log_level.dart';
 import 'package:hmssdk_flutter/src/model/hms_logs_listener.dart';
 import 'package:hmssdk_flutter/src/service/platform_service.dart';
 
@@ -74,14 +75,20 @@ class HMSMeeting {
   }
 
   Future<HMSPeer?> getLocalPeer() async{
-    return HMSPeer.fromMap(await PlatformService.invokeMethod(PlatformMethod.removePeer) as Map);
+    return HMSPeer.fromMap(await PlatformService.invokeMethod(PlatformMethod.getLocalPeer) as Map);
   }
 
   ///preview before joining the room pass [HMSConfig].
   Future<void> previewVideo({required HMSConfig config,required bool isProdLink,required bool setWebRtcLogs}) async {
-    return await PlatformService.invokeMethod(PlatformMethod.previewVideo,
-        arguments: {...config.getJson(),'is_prod': isProdLink,
-          'set_web_rtc_log' : setWebRtcLogs});
+    return await PlatformService.invokeMethod(PlatformMethod.previewVideo, arguments: {...config.getJson(),'is_prod': isProdLink, 'set_web_rtc_log' : setWebRtcLogs});
+  }
+
+  void startHMSLogger(HMSLogLevel webRtclogLevel,HMSLogLevel logLevel){
+    PlatformService.invokeMethod(PlatformMethod.startHMSLogger ,arguments: {"web_rtc_log_level":HMSLogLevelValue.getValueFromHMSLogLevel(webRtclogLevel),"log_level": HMSLogLevelValue.getValueFromHMSLogLevel(logLevel)});
+  }
+
+  void removeHMSLogger(){
+    PlatformService.invokeMethod(PlatformMethod.removeHMSLogger);
   }
 
   void addLogListener(HMSLogListener hmsLogListener){
@@ -121,6 +128,8 @@ class HMSMeeting {
   void stopCapturing() {
     PlatformService.invokeMethod(PlatformMethod.stopCapturing);
   }
+
+
 
   ///it will start capturing the local video.
   void startCapturing() {
