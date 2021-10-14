@@ -236,7 +236,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                           print(_meetingStore.trackStatus[trackId]);
                         }
                         debugPrint(
-                            'Widget ${info.key} is ${visiblePercentage}% visible and index is ${index}');
+                            'Widget ${info.key} is $visiblePercentage% visible and index is $index');
                       },
                       key: Key(filteredList[index].trackId),
                       child: InkWell(

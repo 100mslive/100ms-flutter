@@ -1,4 +1,7 @@
-# Chat
+---
+title: Chat
+nav: 7
+---
 
 What's a video call without being able to send messages to each other too? 100ms supports chat for every video/audio room you create.
 
@@ -14,7 +17,7 @@ You can see an example of every type of message (of the types below) being sent 
     * Learn more about [roles](../foundation/templates-and-roles) and how to create them on the backend.
 
 ## Sending Chat Messages
-#
+
 
 ### Sending Broadcast Messages
 
@@ -59,9 +62,8 @@ The parameters are:
 
 
 ```dart
-
-    HMSMeeting meeting = new HMSMeeting();
-    meeting.sendDirectMessage(String message,String peerId);
+HMSMeeting meeting = new HMSMeeting();
+meeting.sendDirectMessage(String message,String peerId);
 ```
 
 
@@ -82,9 +84,8 @@ The parameters are:
 >Also it's important to make a new callback per message because it will only contain the results of that particular call for sending a message.
 
 ```dart
-
-    HMSMeeting meeting = new Meeting();
-    meeting.sendGroupMessage(String message,String roleName);
+HMSMeeting meeting = new Meeting();
+meeting.sendGroupMessage(String message,String roleName);
 ```
 
 ### Receiving Chat Messages
@@ -94,7 +95,6 @@ When you called `meeting.join(config)` to join a room, the `HMSUpdateListener` i
 This where you'll receive new messages as `HMSMessage` during the call. It contains:
 
 ```dart
-
 class HMSMessage(
 
   final String sender;
@@ -139,6 +139,7 @@ The UI is completely up to you to decide! You'll also need to hold onto all the 
 The HMSMessageRecipient contained in the `recipient` field of `HMSMessage` lets you know who the message was for.
 
 The `HMSMessageRecipient` contains:
+
 ```dart
 class HMSMessageRecipient{
     HMSPeer? recipientPeer;
@@ -156,4 +157,3 @@ recipientType: Will be `HMSMessageRecipientType.BROADCAST` for a message being s
 `HMSMessageRecipientType.PEER` will be set when it's a direct message.
 
 `HMSMessageRecipientType.ROLES` will be set when it's a message to one or many roles.
-

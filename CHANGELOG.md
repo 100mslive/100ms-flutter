@@ -1,3 +1,8 @@
+## 0.3.0
+
+- `Corrected crash on using getLocalPeer`
+- `Updated sample app`
+
 ## 0.2.0
 This version of 100ms Flutter SDK comes loaded with bunch of features & improvements like -
 - `Improved low network performance`
@@ -24,4 +29,3 @@ The first version of 100ms Flutter SDK comes power-packed with support for multi
 - `Error Handling and much more.`
 
 Take it for a spin! 🥳
-

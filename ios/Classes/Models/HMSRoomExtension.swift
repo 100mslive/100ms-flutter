@@ -9,21 +9,28 @@ import Foundation
 import HMSSDK
 
 class  HMSRoomExtension {
-    static func toDictionary(hmsRoom:HMSRoom)-> Dictionary<String,Any?>{
+    static func toDictionary(_ room: HMSRoom) -> Dictionary<String,Any?> {
         var dict:Dictionary<String, Any?> = [:]
         
         var peers:[Dictionary<String, Any?>]=[]
         
-        dict["id"] = hmsRoom.id
-        dict["meta_data"] = hmsRoom.metaData
-        dict["name"] = hmsRoom.name
+        if let roomID = room.roomID {
+            dict["id"] = roomID
+        }
+        
+        if let data = room.metaData {
+            dict["meta_data"] = data
+        }
+        
+        if let name = room.name {
+            dict["name"] = name
+        }
     
-        for peer in hmsRoom.peers {
+        for peer in room.peers {
             peers.append(HMSPeerExtension.toDictionary(peer: peer))
         }
         dict["peers"] = peers
         
         return dict
     }
-    
 }

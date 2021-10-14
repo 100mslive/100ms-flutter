@@ -1,6 +1,4 @@
 import 'dart:convert';
-
-import 'package:flutter/material.dart';
 import 'package:hmssdk_flutter_example/common/constant.dart';
 import 'package:http/http.dart' as http;
 
@@ -9,7 +7,7 @@ class RoomService {
       {required String user, required String room}) async {
     List<String?> codeAndDomain = getCode(room) ?? [];
     print(codeAndDomain);
-    if (codeAndDomain == null || codeAndDomain.length == 0) {
+    if (codeAndDomain.length == 0) {
       return null;
     }
     Uri endPoint = codeAndDomain[2] == "true"
@@ -28,9 +26,11 @@ class RoomService {
     return [body['token'], codeAndDomain[2]!.trim()];
   }
 
-  List<String?>? getCode(String roomUrl) {
-    String url = roomUrl;
-    if (url == null) return [];
+  List<String?>? getCode(String? roomUrl) {
+    String? url = roomUrl;
+    if (url == null) {
+      return [];
+    }
     url = url.trim();
     bool isProdM = url.contains(".app.100ms.live/meeting/");
     bool isProdP = url.contains(".app.100ms.live/preview/");
