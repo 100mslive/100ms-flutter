@@ -14,7 +14,7 @@ class  HMSRoomExtension {
         
         var peers:[Dictionary<String, Any?>]=[]
         
-        dict["id"] = hmsRoom.id
+        dict["id"] = hmsRoom.roomID
         dict["meta_data"] = hmsRoom.metaData
         dict["name"] = hmsRoom.name
     

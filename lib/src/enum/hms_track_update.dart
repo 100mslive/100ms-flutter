@@ -2,10 +2,13 @@
 enum HMSTrackUpdate {
   //when a new track is added.
   trackAdded,
+
   ///when track is removed.
   trackRemoved,
+
   ///when track is muted could be audio,video or both.
   trackMuted,
+
   ///when track is unmuted could be audio,video or both.
   trackUnMuted,
   trackDescriptionChanged,

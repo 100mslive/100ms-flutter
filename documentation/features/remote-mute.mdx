@@ -1,5 +1,5 @@
 ---
-title: Remote Mute
+title: Remote Mute/Unmute
 nav: 11
 ---
 
@@ -25,10 +25,7 @@ Similarly the permission to unmute other peers is within `PermissionsParams` `un
 
 Here's how to check whether the local peer has the permission to mute or unmute others. You can do it like this:
 
-
-
 ```dart
-
 HMSMeeting meeting = new Meeting();
 Future<bool> isAllowedToMuteOthers() async{
     return (await meeting.getLocalPeer()).role.permission!.mute;
@@ -40,13 +37,7 @@ Future<bool> isAllowedToUnMuteOthers(){
 
 ```
 
-
-
-
-
-
 `meeting.getLocalPeer()` will not return null as long as you're in a preview or in a meeting. Since you likely won't need to check for permissions if you're not in one it would be ok.
-
 
 
 ### Handling a mute callback
@@ -83,6 +74,4 @@ public void checkTrack(HMSTrackKind track) {
 }
 ```
 
-
-
-Hold onto the information here, show a dialog to the user to ask if they want to accept the change and then apply the settings locally. The same as in a regular user [Mute/Unmute](Mute).
+Hold onto the information here, show a dialog to the user to ask if they want to accept the change and then apply the settings locally. The same as in a regular user [Mute/Unmute](mute).

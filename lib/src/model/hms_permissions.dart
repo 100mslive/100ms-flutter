@@ -7,13 +7,14 @@ class HMSPermissions {
   final bool? changeRoleForce;
   final bool? changeRole;
 
-  HMSPermissions({this.endRoom,
-    this.removeOthers,
-    this.stopPresentation,
-    this.mute,
-    this.unMute,
-    this.changeRoleForce,
-    this.changeRole});
+  HMSPermissions(
+      {this.endRoom,
+      this.removeOthers,
+      this.stopPresentation,
+      this.mute,
+      this.unMute,
+      this.changeRoleForce,
+      this.changeRole});
 
   factory HMSPermissions.fromMap(Map map) {
     return HMSPermissions(
@@ -33,7 +34,7 @@ class HMSPermissions {
       'remove_others': removeOthers,
       'mute': mute,
       'un_mute': unMute,
-      'change_role_force':changeRoleForce,
+      'change_role_force': changeRoleForce,
       'change_role': changeRole
     };
   }

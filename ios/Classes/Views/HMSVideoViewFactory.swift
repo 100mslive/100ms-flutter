@@ -74,23 +74,25 @@ class HMSVideoViewWidget: NSObject, FlutterPlatformView {
         
         // Find track using track id
         
+        if let auxilaryTracks = peer?.auxiliaryTracks {
+            if let track = auxilaryTracks.first(where: {$0.trackId == self.trackId}) {
+                if let videoTrack = track as? HMSVideoTrack {
+                    videoView.videoContentMode = .scaleAspectFit
+                    videoView.setVideoTrack(videoTrack)
+                    _view.addSubview(videoView)
+                    print(#function, "attaching screen track")
+                    return
+                }
+            }
+        }
+        
         if let videoTrack = peer?.videoTrack {
             if videoTrack.trackId == trackId {
+                videoView.videoContentMode = .scaleAspectFill
                 videoView.setVideoTrack(videoTrack)
                 _view.addSubview(videoView)
                 print(#function, "attaching video track")
                 return
-            }
-        }
-        else if let auxilaryTracks = peer?.auxiliaryTracks {
-            
-            if let track = auxilaryTracks.first(where: {$0.trackId == self.trackId}) {
-                if let videoTrack = track as? HMSVideoTrack {
-                    videoView.setVideoTrack(videoTrack)
-                    _view.addSubview(videoView)
-                    print(#function, "attaching video track")
-                    return
-                }
             }
         }
         print(#function, "Error: Could not find video track to attach to view")
