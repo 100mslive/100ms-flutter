@@ -27,6 +27,7 @@ class HMSConfig {
       this.shouldSkipPIIEvents = false,
       });
 
+
   Map<String, dynamic> getJson() {
     return {
       'user_name': userName,

@@ -137,7 +137,6 @@ extension PlatformMethodValues on PlatformMethod {
         return 'end_room';
       case PlatformMethod.removePeer:
         return 'remove_peer';
-
       case PlatformMethod.muteAll:
         return 'mute_all';
       case PlatformMethod.unMuteAll:
