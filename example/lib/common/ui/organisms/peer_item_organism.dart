@@ -34,8 +34,7 @@ class _PeerItemOrganismState extends State<PeerItemOrganism> {
 
   @override
   Widget build(BuildContext context) {
-    print(
-        "isVideoMuted ${widget.isVideoMuted} ${widget.track.source} ${widget.track.peer?.name}");
+    print("isVideoMuted ${widget.isVideoMuted} ${widget.track.source} ${widget.track.peer?.name}");
 
     return Container(
       key: key,

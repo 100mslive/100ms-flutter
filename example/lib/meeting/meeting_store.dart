@@ -252,7 +252,8 @@ abstract class MeetingStoreBase
       }
       return;
     }
-    trackStatus[track.trackId] = HMSTrackUpdate.trackMuted;
+    trackStatus[track.trackId] =
+        track.isMute ? HMSTrackUpdate.trackMuted : HMSTrackUpdate.trackUnMuted;
 
     print("onTrackUpdate ${trackStatus[track.trackId]}");
 
@@ -294,7 +295,7 @@ abstract class MeetingStoreBase
   }
 
   HMSTrack? previousHighestVideoTrack;
-  int? previousHighestIndex;
+  int previousHighestIndex = -1;
 
   @override
   void onUpdateSpeakers({required List<HMSSpeaker> updateSpeakers}) {
@@ -307,16 +308,9 @@ abstract class MeetingStoreBase
     if (previousHighestVideoTrack != null) {
       HMSTrack newPreviousTrack =
           HMSTrack.copyWith(false, track: previousHighestVideoTrack!);
-
-      int newPrevHighestIndex = tracks.indexWhere((element) {
-        print(element.peer?.peerId == previousHighestVideoTrack?.peer?.peerId);
-
-        return element.peer?.peerId == previousHighestVideoTrack?.peer?.peerId;
-      });
-      if (newPrevHighestIndex != -1) {
-        tracks.removeAt(newPrevHighestIndex);
-
-        tracks.insert(newPrevHighestIndex, newPreviousTrack);
+      if (previousHighestIndex != -1) {
+        tracks.removeAt(previousHighestIndex);
+        tracks.insert(previousHighestIndex, newPreviousTrack);
       }
     }
     HMSTrack highestAudioSpeakerVideoTrack = tracks[newHighestIndex];
@@ -325,6 +319,7 @@ abstract class MeetingStoreBase
     tracks.removeAt(newHighestIndex);
     tracks.insert(newHighestIndex, newHighestTrack);
     previousHighestVideoTrack = newHighestTrack;
+    previousHighestIndex = newHighestIndex;
   }
 
   @override
@@ -419,14 +414,10 @@ abstract class MeetingStoreBase
   @action
   void peerOperationWithTrack(
       HMSPeer peer, HMSTrackUpdate update, HMSTrack track) {
-    print("onTrackUpdateFlutter $update ${peer.isLocal} update");
-
+    print("onTrackUpdateFlutter $update ${peer.name} update");
 
     switch (update) {
       case HMSTrackUpdate.trackAdded:
-        trackStatus[track.trackId] = track.isMute
-            ? HMSTrackUpdate.trackMuted
-            : HMSTrackUpdate.trackUnMuted;
         addTrack(track);
         break;
       case HMSTrackUpdate.trackRemoved:
@@ -494,7 +485,7 @@ abstract class MeetingStoreBase
     meetingController.removeHMSLogger();
   }
 
-  Future<HMSPeer?> getLocalPeer() async{
+  Future<HMSPeer?> getLocalPeer() async {
     return await meetingController.getLocalPeer();
   }
 }

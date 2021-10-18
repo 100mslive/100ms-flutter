@@ -9,12 +9,15 @@ import 'package:hmssdk_flutter_example/common/ui/organisms/leave_or_end_meeting.
 import 'package:hmssdk_flutter_example/common/ui/organisms/peer_item_organism.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/role_change_request_dialog.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/track_change_request_dialog.dart';
+import 'package:hmssdk_flutter_example/common/ui/organisms/video_tile.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
 import 'package:hmssdk_flutter_example/main.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_controller.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:mobx/mobx.dart';
+import 'package:provider/src/provider.dart';
+import 'package:should_rebuild/should_rebuild.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 import 'meeting_participants_list.dart';
 
@@ -35,21 +38,19 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
   late MeetingStore _meetingStore;
   late ReactionDisposer _roleChangerequestDisposer, _trackChangerequestDisposer;
   late ReactionDisposer _errorDisposer;
-  late ScrollController _scrollController;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance!.addObserver(this);
-    _scrollController = ScrollController();
-    _meetingStore = MeetingStore();
+    _meetingStore = context.read<MeetingStore>();
     MeetingController meetingController = MeetingController(
         roomUrl: widget.roomId, flow: widget.flow, user: widget.user);
     _meetingStore.meetingController = meetingController;
 
-    _meetingStore.trackStatus.observe((p0) {
-      print("in initmeetingTrackStatus");
-    }, fireImmediately: true);
+    // _meetingStore.trackStatus.observe((p0) {
+    //   print("in initmeetingTrackStatus");
+    // }, fireImmediately: true);
 
     _roleChangerequestDisposer = reaction(
         (_) => _meetingStore.roleChangeRequest,
@@ -202,50 +203,41 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
             child: Observer(
               builder: (_) {
                 print("rebuilding");
+
                 if (!_meetingStore.isMeetingStarted) return SizedBox();
                 if (_meetingStore.tracks.isEmpty)
                   return Center(child: Text('Waiting for other to join!'));
                 List<HMSTrack> filteredList = _meetingStore.tracks;
-
+                print("${filteredList.length} filteredList");
                 return PageView.builder(
                   itemBuilder: (ctx, index) {
-                    return Observer(builder: (_) {
-                      print("rebuilding");
-                      ObservableMap<String, HMSTrackUpdate> map = _meetingStore.trackStatus;
-                      if ((index < filteredList.length && filteredList[index].source != HMSTrackSource.kHMSTrackSourceScreen)) {
-                        return orientation == Orientation.portrait
+                    ObservableMap<String, HMSTrackUpdate> map =
+                        _meetingStore.trackStatus;
+
+                    return (index < filteredList.length &&
+                            filteredList[index].source !=
+                                HMSTrackSource.kHMSTrackSourceScreen)
+                        ? ((orientation == Orientation.portrait)
                             ? Column(
                                 children: [
                                   Row(
                                     children: [
                                       //if (index * 4 < filteredList.length)
-                                      peerItemforIndex(index * 4, filteredList,
-                                          itemHeight, itemWidth, map),
+                                      VideoTile(tileIndex: index * 4, filteredList: filteredList,
+                                          itemHeight: itemHeight,itemWidth: itemWidth,map: map),
                                       //if (index * 4 + 1 < filteredList.length)
-                                      peerItemforIndex(
-                                          index * 4 + 1,
-                                          filteredList,
-                                          itemHeight,
-                                          itemWidth,
-                                          map),
+                                      VideoTile(tileIndex: index * 4 + 1, filteredList: filteredList,
+                                          itemHeight: itemHeight,itemWidth: itemWidth,map: map),
                                     ],
                                   ),
                                   Row(
                                     children: [
                                       //if (index * 4 + 2 < filteredList.length)
-                                      peerItemforIndex(
-                                          index * 4 + 2,
-                                          filteredList,
-                                          itemHeight,
-                                          itemWidth,
-                                          map),
+                                      VideoTile(tileIndex: index * 4 + 2, filteredList: filteredList,
+                                          itemHeight: itemHeight,itemWidth: itemWidth,map: map),
                                       //if (index * 4 + 3 < filteredList.length)
-                                      peerItemforIndex(
-                                          index * 4 + 3,
-                                          filteredList,
-                                          itemHeight,
-                                          itemWidth,
-                                          map),
+                                      VideoTile(tileIndex: index * 4 + 3, filteredList: filteredList,
+                                          itemHeight: itemHeight,itemWidth: itemWidth,map: map),
                                     ],
                                   ),
                                 ],
@@ -254,27 +246,18 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                 children: [
                                   Row(
                                     children: [
-                                      peerItemforIndex(index * 2, filteredList,
-                                          itemHeight * 2 - 50, itemWidth, map),
-                                      peerItemforIndex(
-                                          index * 2 + 1,
-                                          filteredList,
-                                          itemHeight * 2 - 50,
-                                          itemWidth,
-                                          map),
+                                      VideoTile(tileIndex: index * 2, filteredList: filteredList,
+                                          itemHeight: itemHeight*2 - 50,itemWidth: itemWidth,map: map),
+                                      VideoTile(tileIndex: index * 2 + 1, filteredList: filteredList,
+                                          itemHeight: itemHeight,itemWidth: itemWidth,map: map),
                                     ],
                                   ),
                                 ],
-                              );
-                      } else {
-                        return Container(
-                          child: peerItemforIndex(0, filteredList,
-                              itemHeight * 2, itemWidth * 2, map),
-                        );
-                      }
-                    });
-                    print(
-                        "pageIndex ${index} ${(index < filteredList.length && filteredList[index].source != HMSTrackSource.kHMSTrackSourceScreen)}");
+                              ))
+                        : Container(
+                            child: VideoTile(tileIndex: 0, filteredList: filteredList,
+                                itemHeight: itemHeight*2 ,itemWidth: itemWidth*2 ,map: map),
+                          );
                   },
                   itemCount: ((filteredList.length - 1) /
                               ((orientation == Orientation.portrait) ? 4 : 2))
@@ -381,67 +364,5 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
       debugPrint("OK accepted");
       _meetingStore.changeTracks();
     }
-  }
-
-  Widget peerItemforIndex(int index, List<HMSTrack> filteredList, double itemHeight, double itemWidth, Map<String, HMSTrackUpdate> map) {
-    var orientation = MediaQuery.of(context).orientation;
-    if (index > 0 &&
-        filteredList[0].source == HMSTrackSource.kHMSTrackSourceScreen) {
-      int a = index ~/ ((orientation == Orientation.portrait) ? 4 : 2);
-      int b = index % ((orientation == Orientation.portrait) ? 4 : 2);
-
-      index =
-          (a - 1) * ((orientation == Orientation.portrait) ? 4 : 2) + (b + 1);
-      //print("${a} a and b ${b} ${filteredList[index].peer!.name}");
-    }
-
-    if (index >= filteredList.length) return SizedBox();
-    print("$index after rebuildig");
-    return Observer(
-      key: UniqueKey(),
-      builder: (_) => InkWell(
-        onLongPress: () {
-          if (!filteredList[index].peer!.isLocal &&
-              filteredList[index].source !=
-                  HMSTrackSource.kHMSTrackSourceScreen)
-            showDialog(
-                context: context,
-                builder: (_) => Column(
-                      children: [
-                        ChangeTrackOptionDialog(
-                            isAudioMuted: _meetingStore.audioTrackStatus[
-                                    filteredList[index].trackId] ==
-                                HMSTrackUpdate.trackMuted,
-                            isVideoMuted: map[filteredList[index].trackId] ==
-                                HMSTrackUpdate.trackMuted,
-                            peerName: filteredList[index].peer?.name ?? '',
-                            changeTrack: (mute, isVideoTrack) {
-                              Navigator.pop(context);
-                              if (filteredList[index].source !=
-                                  HMSTrackSource.kHMSTrackSourceScreen)
-                                _meetingStore.changeTrackRequest(
-                                    filteredList[index].peer?.peerId ?? "",
-                                    mute,
-                                    isVideoTrack);
-                            },
-                            removePeer: () {
-                              Navigator.pop(context);
-                              _meetingStore.removePeerFromRoom(
-                                  filteredList[index].peer!.peerId);
-                            }),
-                      ],
-                    ));
-        },
-        child: PeerItemOrganism(
-            key: Key(index.toString()),
-            height: itemHeight,
-            width: itemWidth,
-            track: filteredList[index],
-            isVideoMuted: filteredList[index].peer!.isLocal
-                ? !_meetingStore.isVideoOn
-                : (map[filteredList[index].trackId]) ==
-                    HMSTrackUpdate.trackMuted),
-      ),
-    );
   }
 }
