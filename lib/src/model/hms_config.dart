@@ -17,6 +17,8 @@ class HMSConfig {
   final String? endPoint;
   final bool shouldSkipPIIEvents;
   final bool isProdLink;
+  final bool setWebRtcLog;
+
   HMSConfig(
       {this.userName = 'Flutter User',
       required this.userId,
@@ -24,6 +26,7 @@ class HMSConfig {
       required this.authToken,
       this.metaData,
       this.endPoint,
+      required this.setWebRtcLog,
       this.shouldSkipPIIEvents = false,
       required this.isProdLink});
 
@@ -36,7 +39,8 @@ class HMSConfig {
       'meta_data': metaData,
       'should_skip_pii_events': shouldSkipPIIEvents,
       'end_point': endPoint,
-      'is_prod': isProdLink
+      'is_prod': isProdLink,
+      'set_web_rtc_log' : setWebRtcLog
     };
   }
 }

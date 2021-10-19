@@ -5,6 +5,7 @@
 ///All methods related to meeting, preview and their listeners are present here.
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter/src/common/platform_methods.dart';
+import 'package:hmssdk_flutter/src/model/hms_logs_listener.dart';
 import 'package:hmssdk_flutter/src/service/platform_service.dart';
 
 class HMSMeeting {
@@ -85,6 +86,14 @@ class HMSMeeting {
   Future<void> previewVideo({required HMSConfig config}) async {
     return await PlatformService.invokeMethod(PlatformMethod.previewVideo,
         arguments: config.getJson());
+  }
+
+  void addLogListener(HMSLogListener hmsLogListener){
+    PlatformService.addLogsListener(hmsLogListener);
+  }
+
+  void removeLogListener(HMSLogListener hmsLogListener){
+    PlatformService.removeLogsListener(hmsLogListener);
   }
 
   ///add MeetingListener it will add all the listeners.

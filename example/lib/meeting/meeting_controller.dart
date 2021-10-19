@@ -24,7 +24,7 @@ class MeetingController {
         authToken: token[0]!,
         isProdLink: token[1] == "true" ? true : false,
         // endPoint: Constant.getTokenURL,
-        userName: user);
+        userName: user,setWebRtcLog: true,);
 
     await _hmsSdkInteractor?.joinMeeting(config: config);
     return true;
@@ -64,6 +64,14 @@ class MeetingController {
 
   void removeMeetingListener(HMSUpdateListener listener) {
     _hmsSdkInteractor?.removeMeetingListener(listener);
+  }
+
+  void addLogsListener(HMSLogListener listener) {
+    _hmsSdkInteractor?.addLogsListener(listener);
+  }
+
+  void removeLogsListener(HMSLogListener listener) {
+    _hmsSdkInteractor?.removeLogsListener(listener);
   }
 
   void addPreviewListener(HMSPreviewListener listener) {

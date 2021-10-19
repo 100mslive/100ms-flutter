@@ -119,6 +119,7 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                   Expanded(
                       child: ElevatedButton(
                     onPressed: () {
+                      _previewStore.removeListener();
                       Navigator.of(context).pushReplacement(MaterialPageRoute(
                           builder: (_) => MeetingPage(
                               roomId: widget.roomId,
