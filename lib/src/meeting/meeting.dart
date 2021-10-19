@@ -79,7 +79,7 @@ class HMSMeeting {
 
   Future<HMSPeer?> getLocalPeer() async {
     return HMSPeer.fromMap(
-        await PlatformService.invokeMethod(PlatformMethod.removePeer) as Map);
+        await PlatformService.invokeMethod(PlatformMethod.getLocalPeer) as Map);
   }
 
   ///preview before joining the room pass [HMSConfig].

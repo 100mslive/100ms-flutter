@@ -2,7 +2,6 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-import 'package:hmssdk_flutter_example/meeting/meeting_controller.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 
 import 'change_role_options.dart';

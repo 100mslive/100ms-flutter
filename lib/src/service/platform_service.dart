@@ -191,7 +191,7 @@ class PlatformService {
               method, {'role_change_request': roleChangeRequest});
           break;
         case HMSUpdateListenerMethod.onChangeTrackStateRequest:
-          print("flutter listener ${data}");
+          print("flutter listener $data");
           HMSTrackChangeRequest trackChangeRequest =
           HMSTrackChangeRequest.fromMap(
               data['track_change_request'] as Map);
@@ -313,7 +313,7 @@ class PlatformService {
             .forEach((e) => e.onMessage(message: arguments['message']));
         break;
       case HMSUpdateListenerMethod.onUpdateSpeaker:
-        print("flutterOnUpdateSpeaker ${arguments}");
+        print("flutterOnUpdateSpeaker $arguments");
         meetingListeners.forEach(
                 (e) =>
                 e.onUpdateSpeakers(updateSpeakers: arguments['speakers']));

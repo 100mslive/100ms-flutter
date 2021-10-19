@@ -1,6 +1,6 @@
 ---
 title: End Room
-nav: 7
+nav: 13
 ---
 
 Done with talking and it's time to end the video call room for everyone not just yourself? You may be looking to end the room.
@@ -18,17 +18,9 @@ Here's how to check whether the local peer has the permission to end the room:
 Future<bool> isAllowedToEndMeeting() async{
     return (await hmsSDK.getLocalPeer()).role.permission?.endRoom;
 }
-
 ```
 
-
-
 `hmsSdk.getLocalPeer()` will not return null as long as you're in a preview or in a meeting. Since you likely won't need to check for permissions if you're not in one it would be ok.
-
-# End Room
-
-
-Done with talking and it's time to end the video call room for everyone not just yourself? You may be looking to end the room.
 
 ### Ending the Room
 

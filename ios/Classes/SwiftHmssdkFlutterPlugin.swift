@@ -108,6 +108,9 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         case "is_audio_mute":
             isAudioMute(result)
             
+        case "get_local_peer":
+            getLocalPeer(result)
+            
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -126,7 +129,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         let data:[String:Any]=[
             "event_name":"preview_video",
             "data":[
-                "room":HMSRoomExtension.toDictionary(hmsRoom: room),
+                "room":HMSRoomExtension.toDictionary(room),
                 "local_tracks":tracks,
             ]
         ]
@@ -139,7 +142,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         let data:[String:Any]=[
             "event_name":"on_join_room",
             "data":[
-                "room" : HMSRoomExtension.toDictionary(hmsRoom: room)
+                "room" : HMSRoomExtension.toDictionary(room)
             ]
         ]
         eventSink?(data)
@@ -304,9 +307,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         let arguments = call.arguments as! Dictionary<String, AnyObject>
         
         guard let authToken = arguments["auth_token"] as? String,
-              let userName = arguments["user_name"] as? String,
-              let userID = arguments["user_id"] as? String,
-              let roomID = arguments["room_id"] as? String
+              let userName = arguments["user_name"] as? String
         else {
             print(#function, "Could not show preview, invalid parameters passed!")
             result("Could not preview")
@@ -319,8 +320,6 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         let initEndpoint = isProd ? nil : "https://qa-init.100ms.live/init"
         
         config = HMSConfig(userName: userName,
-                           userID: userID,
-                           roomID: roomID,
                            authToken: authToken,
                            shouldSkipPIIEvents: shouldSkipPIIEvents,
                            metaData: metaData,
@@ -340,9 +339,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         } else {
             
             guard let authToken = arguments["auth_token"] as? String,
-                  let userName = arguments["user_name"] as? String,
-                  let userID = arguments["user_id"] as? String,
-                  let roomID = arguments["room_id"] as? String
+                  let userName = arguments["user_name"] as? String
             else {
                 print(#function, "Could not join room, invalid parameters passed!")
                 result("Could not join room")
@@ -355,8 +352,6 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             let initEndpoint = isProd ? nil : "https://qa-init.100ms.live/init"
             
             config = HMSConfig(userName: userName,
-                               userID: userID,
-                               roomID: roomID,
                                authToken: authToken,
                                shouldSkipPIIEvents: shouldSkipPIIEvents,
                                metaData: metaData,
@@ -635,6 +630,11 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         guard let peer = hmsSDK?.localPeer else { return }
         
         result(peer.audioTrack?.isMute() ?? false)
+    }
+
+    func getLocalPeer(_ result: FlutterResult) {
+        guard let localPeer = hmsSDK?.localPeer else { return }
+        result(localPeer)
     }
     
     public func getPeerById(peerId:String,isLocal:Bool) -> HMSPeer?{

@@ -1,5 +1,7 @@
-
-# 100ms SDK Flutter SDK Integration Guide
+---
+title: 100ms Flutter SDK Integration Guide
+nav: 3.0
+---
 
 ## Installing our libraries
 
@@ -19,7 +21,7 @@ dependencies:
 
 Run following in command in terminal.
 
-```sh
+```bash
 flutter pub get
 flutter build apk
 flutter build ios
@@ -50,7 +52,6 @@ Add the entitlements for video, audio and network access to your Info.plist
 <string>Allow access to Camera to network to enable video calling.</string>
 <key>NSMicrophoneUsageDescription</key>
 <string>Allow access to Camera to mic to enable video calling.</string>
-
 ```
 
 You will also need to request Camera and Record Audio permissions at runtime before you join a call or display a preview.
@@ -59,4 +60,3 @@ You will also need to request Camera and Record Audio permissions at runtime bef
 ## Debugging Tools
  
 You can use [Android Studio](https://developer.android.com/studio), [VS Code](https://code.visualstudio.com/) & [Xcode](https://developer.apple.com/xcode/) to develop application with 100ms.
-

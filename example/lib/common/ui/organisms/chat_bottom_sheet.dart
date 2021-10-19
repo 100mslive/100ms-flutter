@@ -5,7 +5,7 @@ import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:intl/intl.dart';
 
 class ChatWidget extends StatefulWidget {
-  MeetingStore meetingStore;
+  final MeetingStore meetingStore;
 
   ChatWidget(this.meetingStore);
 
@@ -34,7 +34,6 @@ class _ChatWidgetState extends State<ChatWidget> {
   @override
   Widget build(BuildContext context) {
     widthOfScreen = MediaQuery.of(context).size.width;
-    var heightOfScreen = MediaQuery.of(context).size.height;
     return Container(
         child: Center(
       child: Container(
