@@ -31,7 +31,7 @@ class _LeaveOrEndMeetingDialogOptionState
               height: 16,
             ),
             Container(
-              height: 48,
+              height: 55,
               padding: EdgeInsets.only(bottom: 16.0),
               child: GestureDetector(
                 onTap: () {

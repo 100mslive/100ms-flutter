@@ -5,7 +5,7 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 class HMSTrack {
   final String trackId;
   final HMSTrackKind kind;
-  final String source;
+  final HMSTrackSource source;
   final String trackDescription;
   final HMSPeer? peer;
   final bool isHighestAudio;
@@ -24,7 +24,7 @@ class HMSTrack {
     return HMSTrack(
         trackId: map['track_id'],
         trackDescription: map['track_description'],
-        source: map['track_source'],
+        source:HMSTrackSourceValue.getHMSTrackSourceFromName(map['track_source']),
         kind: HMSTrackKindValue.getHMSTrackKindFromName(map['track_kind']),
         peer: peer,
         isMute: map['track_mute']);

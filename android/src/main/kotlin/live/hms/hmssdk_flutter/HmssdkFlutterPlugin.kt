@@ -27,6 +27,7 @@ import live.hms.video.sdk.models.enums.HMSTrackUpdate
 import live.hms.video.sdk.models.role.HMSRole
 import live.hms.video.sdk.models.trackchangerequest.HMSChangeTrackStateRequest
 import live.hms.video.utils.HMSLogger
+import java.lang.Exception
 
 
 /** HmssdkFlutterPlugin */
@@ -159,6 +160,13 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
             "get_local_peer" -> {
                 localPeer(result)
             }
+
+            "start_hms_logger"->{
+                startHMSLogger(call)
+            }
+            "remove_hms_logger"->{
+                removeHMSLogger()
+            }
             else -> {
                 result.notImplemented()
             }
@@ -180,6 +188,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
         channel.setMethodCallHandler(null)
         meetingEventChannel.setStreamHandler(null)
         previewChannel.setStreamHandler(null)
+        logsEventChannel.setStreamHandler(null)
     }
 
     override fun onChangeTrackStateRequest(details: HMSChangeTrackStateRequest) {
@@ -199,7 +208,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
         val args = HashMap<String, Any?>()
         args.put("event_name", "on_error")
         args.put("data", HMSExceptionExtension.toDictionary(error))
-//        Log.i("onError", args["data"].toString())
+        Log.i("onError", args["data"].toString())
         if (args["data"] != null)
             CoroutineScope(Dispatchers.Main).launch {
                 eventSink?.success(args)
@@ -229,8 +238,11 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
 
     }
 
+    var hasJoined: Boolean = false
+
     override fun onJoin(room: HMSRoom) {
 //        Log.i("onJoin", hmssdk.getRoles().toString());
+        this.hasJoined = true
         hmssdk.addAudioObserver(this)
         previewChannel.setStreamHandler(null)
         val args = HashMap<String, Any?>()
@@ -355,10 +367,8 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
     private fun joinMeeting(@NonNull call: MethodCall) {
         val userName = call.argument<String>("user_name")
         val authToken = call.argument<String>("auth_token")
-        //val shouldSkipPiiEvents = call.argument<Boolean>("should_skip_pii_events")
-//        Log.i("userName", authToken!!)
         val isProd = call.argument<Boolean>("is_prod")
-        val setWebRtcLog = call.argument<Boolean>("set_web_rtc_log")
+
 
         var hmsConfig = HMSConfig(userName = userName!!, authtoken = authToken!!)
         if (!isProd!!)
@@ -370,20 +380,43 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
 
         hmssdk.join(hmsConfig, this)
 
+    }
 
-        HMSLogger.webRtcLogLevel = if(setWebRtcLog == false) HMSLogger.LogLevel.OFF else HMSLogger.LogLevel.INFO
+    private fun startHMSLogger(call: MethodCall){
+        val setWebRtcLogLevel = call.argument<String>("web_rtc_log_level")
+        val setLogLevel = call.argument<String>("log_level")
+
+        HMSLogger.webRtcLogLevel = when(setWebRtcLogLevel){
+            "verbose"->HMSLogger.LogLevel.VERBOSE
+            "info"->HMSLogger.LogLevel.INFO
+            "warn"->HMSLogger.LogLevel.WARN
+            "error"->HMSLogger.LogLevel.ERROR
+            "debug"->HMSLogger.LogLevel.DEBUG
+            else -> HMSLogger.LogLevel.OFF
+        }
+        HMSLogger.level = when(setLogLevel){
+            "verbose"->HMSLogger.LogLevel.VERBOSE
+            "info"->HMSLogger.LogLevel.INFO
+            "warn"->HMSLogger.LogLevel.WARN
+            "error"->HMSLogger.LogLevel.ERROR
+            "debug"->HMSLogger.LogLevel.DEBUG
+            else -> HMSLogger.LogLevel.OFF
+        }
+
+        Log.i("startHMSLogger","${HMSLogger.webRtcLogLevel}  ${HMSLogger.level}")
         HMSLogger.injectLoggable(this)
     }
 
     private fun leaveMeeting(result: Result) {
-        if (hmssdk != null) {
-            hmssdk.leave()
-            HMSLogger.removeInjectedLoggable()
+        if (!hasJoined)return
+        try {
+            hmssdk?.leave()
+            hasJoined = false
             result.success("left meeting successfully")
-        } else {
-            Log.e("error", "not initialized")
+        } catch (e: Exception) {
             result.success("error in leaving meeting check OnError Update")
         }
+
 
     }
 
@@ -401,7 +434,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
         val peer = hmssdk.getLocalPeer()
         val videoTrack = peer?.videoTrack
         if (videoTrack != null) {
-            videoTrack.setMute(argsIsOn?:false)
+            videoTrack.setMute(argsIsOn ?: false)
             result.success("video_changed")
         }
     }
@@ -461,7 +494,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
         val peerId = call.argument<String>("peer_id")
 //        val isLocal = call.argument<Boolean>("is_local")
         if (peerId == "null") {
-            return hmssdk.getLocalPeer()?.videoTrack?.isMute!!
+            return hmssdk.getLocalPeer()?.videoTrack?.isMute?:false
         }
         val peer = getPeerById(peerId!!)
         return peer!!.videoTrack!!.isMute
@@ -480,7 +513,6 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
     private fun sendBroadCastMessage(call: MethodCall) {
         val message = call.argument<String>("message")
         hmssdk?.sendBroadcastMessage(message!!, "chat", this)
-
     }
 
     private fun sendDirectMessage(call: MethodCall) {
@@ -519,8 +551,8 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
             )
         hmssdk.preview(hmsConfig, this)
 
-        HMSLogger.webRtcLogLevel = if(setWebRtcLog == false) HMSLogger.LogLevel.OFF else HMSLogger.LogLevel.INFO
-        HMSLogger.injectLoggable(this)
+//        HMSLogger.webRtcLogLevel = if(setWebRtcLog == false) HMSLogger.LogLevel.OFF else HMSLogger.LogLevel.INFO
+//        HMSLogger.injectLoggable(this)
     }
 
     fun getLocalPeer(): HMSLocalPeer {
@@ -603,11 +635,16 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
         hmssdk.removePeerRequest(peer = peer, hmsActionResultListener = this, reason = "noise")
     }
 
+    private fun removeHMSLogger(){
+        HMSLogger.removeInjectedLoggable()
+    }
+
     private fun endRoom(call: MethodCall, result: Result) {
-        if (isAllowedToEndMeeting()) {
+        if (isAllowedToEndMeeting() && hasJoined) {
             val lock = call.argument<Boolean>("lock")
             hmssdk.endRoom(lock = lock!!, reason = "noise", hmsActionResultListener = this)
-            HMSLogger.removeInjectedLoggable()
+
+            hasJoined = false
             result.success(true)
         } else
             result.success(false)
@@ -692,13 +729,16 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
         message: String,
         isWebRtCLog: Boolean
     ) {
-        print("${level.name} ${tag} ${message} ${isWebRtCLog} HMSLOGGERTHATILISTENED")
+        //print("${level.name} ${tag} ${message} ${isWebRtCLog} HMSLOGGERTHATILISTENED")
+        if ( isWebRtCLog && level != HMSLogger.webRtcLogLevel )return
+        if(level != HMSLogger.level )return
+
         val args = HashMap<String, Any?>()
         args.put("event_name", "on_logs_update")
         val logArgs = HashMap<String, Any?>()
 
         logArgs["log"] = HMSLogsExtension.toDictionary(level, tag, message, isWebRtCLog)
-        args.put("data", logArgs)
+        args["data"] = logArgs
         CoroutineScope(Dispatchers.Main).launch {
             logsSink?.success(args)
         }

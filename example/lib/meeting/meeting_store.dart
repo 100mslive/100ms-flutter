@@ -8,10 +8,11 @@ import 'package:mobx/mobx.dart';
 
 part 'meeting_store.g.dart';
 
-
 class MeetingStore = MeetingStoreBase with _$MeetingStore;
 
-abstract class MeetingStoreBase with Store implements HMSUpdateListener,HMSLogListener {
+abstract class MeetingStoreBase
+    with Store
+    implements HMSUpdateListener, HMSLogListener {
   @observable
   bool isSpeakerOn = true;
 
@@ -37,7 +38,7 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener,HMSLogLi
   late MeetingController meetingController;
 
   @observable
-  List<HMSPeer> peers = ObservableList.of([]);
+  ObservableList<HMSPeer> peers = ObservableList.of([]);
 
   @observable
   HMSPeer? localPeer;
@@ -46,10 +47,10 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener,HMSLogLi
   HMSTrack? screenTrack;
 
   @observable
-  List<HMSTrack> tracks = ObservableList.of([]);
+  ObservableList<HMSTrack> tracks = ObservableList.of([]);
 
   @observable
-  List<HMSMessage> messages = ObservableList.of([]);
+  ObservableList<HMSMessage> messages = ObservableList.of([]);
 
   @observable
   ObservableMap<String, HMSTrackUpdate> trackStatus = ObservableMap.of({});
@@ -60,11 +61,12 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener,HMSLogLi
   @action
   void startListen() {
     meetingController.addMeetingListener(this);
-    addLogsListener();
+    //startHMSLogger(HMSLogLevel.DEBUG, HMSLogLevel.DEBUG);
+    //addLogsListener();
   }
 
   @action
-  void removeListener(){
+  void removeListener() {
     meetingController.removeMeetingListener(this);
     removeLogsListener();
   }
@@ -209,21 +211,18 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener,HMSLogLi
           localPeer = each;
           print('on join ${localPeer!.name}  ${localPeer!.peerId}');
           if (each.videoTrack != null) {
-            trackStatus[each.videoTrack!.trackId]=HMSTrackUpdate.trackMuted;
+            trackStatus[each.videoTrack!.trackId] = HMSTrackUpdate.trackMuted;
             tracks.insert(0, each.videoTrack!);
           }
         } else {
           if (each.videoTrack != null) {
-            trackStatus[each.videoTrack!.trackId]=HMSTrackUpdate.trackMuted;
+            trackStatus[each.videoTrack!.trackId] = HMSTrackUpdate.trackMuted;
             tracks.insert(0, each.videoTrack!);
           }
         }
       }
     }
   }
-
-
-
 
   @override
   void onRoomUpdate({required HMSRoom room, required HMSRoomUpdate update}) {
@@ -253,7 +252,8 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener,HMSLogLi
       }
       return;
     }
-    trackStatus[track.trackId] = HMSTrackUpdate.trackMuted;
+    trackStatus[track.trackId] =
+        track.isMute ? HMSTrackUpdate.trackMuted : HMSTrackUpdate.trackUnMuted;
 
     print("onTrackUpdate ${trackStatus[track.trackId]}");
 
@@ -295,29 +295,22 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener,HMSLogLi
   }
 
   HMSTrack? previousHighestVideoTrack;
-  int? previousHighestIndex;
+  int previousHighestIndex = -1;
 
   @override
   void onUpdateSpeakers({required List<HMSSpeaker> updateSpeakers}) {
     if (updateSpeakers.length == 0) return;
     HMSSpeaker highestAudioSpeaker = updateSpeakers[0];
     int newHighestIndex = tracks.indexWhere(
-        (element) => element.peer?.peerId == highestAudioSpeaker.peerId);
+        (element) => element.peer?.peerId == highestAudioSpeaker.peer.peerId);
     if (newHighestIndex == -1) return;
 
     if (previousHighestVideoTrack != null) {
       HMSTrack newPreviousTrack =
           HMSTrack.copyWith(false, track: previousHighestVideoTrack!);
-
-      int newPrevHighestIndex = tracks.indexWhere((element) {
-        print(element.peer?.peerId == previousHighestVideoTrack?.peer?.peerId);
-
-        return element.peer?.peerId == previousHighestVideoTrack?.peer?.peerId;
-      });
-      if (newPrevHighestIndex != -1) {
-        tracks.removeAt(newPrevHighestIndex);
-
-        tracks.insert(newPrevHighestIndex, newPreviousTrack);
+      if (previousHighestIndex != -1) {
+        tracks.removeAt(previousHighestIndex);
+        tracks.insert(previousHighestIndex, newPreviousTrack);
       }
     }
     HMSTrack highestAudioSpeakerVideoTrack = tracks[newHighestIndex];
@@ -326,6 +319,7 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener,HMSLogLi
     tracks.removeAt(newHighestIndex);
     tracks.insert(newHighestIndex, newHighestTrack);
     previousHighestVideoTrack = newHighestTrack;
+    previousHighestIndex = newHighestIndex;
   }
 
   @override
@@ -420,7 +414,8 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener,HMSLogLi
   @action
   void peerOperationWithTrack(
       HMSPeer peer, HMSTrackUpdate update, HMSTrack track) {
-    print("onTrackUpdateFlutter $update ${peer.isLocal} update");
+    print("onTrackUpdateFlutter $update ${peer.name} update");
+
     switch (update) {
       case HMSTrackUpdate.trackAdded:
         addTrack(track);
@@ -429,8 +424,10 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener,HMSLogLi
         removeTrackWithTrackId(track.trackId);
         break;
       case HMSTrackUpdate.trackMuted:
+        trackStatus[track.trackId] = HMSTrackUpdate.trackMuted;
         break;
       case HMSTrackUpdate.trackUnMuted:
+        trackStatus[track.trackId] = HMSTrackUpdate.trackUnMuted;
         break;
       case HMSTrackUpdate.trackDescriptionChanged:
         break;
@@ -467,16 +464,28 @@ abstract class MeetingStoreBase with Store implements HMSUpdateListener,HMSLogLi
   }
 
   @override
-  void onLogMessage({required dynamic HMSLog}){
-    print(HMSLog.toString()+"onLogMessageFlutter");
+  void onLogMessage({required dynamic HMSLog}) {
+    print(HMSLog.toString() + "onLogMessageFlutter");
     FirebaseCrashlytics.instance.log(HMSLog.toString());
   }
 
-  void addLogsListener(){
+  void startHMSLogger(HMSLogLevel webRtclogLevel, HMSLogLevel logLevel) {
+    meetingController.startHMSLogger(webRtclogLevel, logLevel);
+  }
+
+  void addLogsListener() {
     meetingController.addLogsListener(this);
   }
 
-  void removeLogsListener(){
+  void removeLogsListener() {
     meetingController.removeLogsListener(this);
+  }
+
+  void removeHMSLogger() {
+    meetingController.removeHMSLogger();
+  }
+
+  Future<HMSPeer?> getLocalPeer() async {
+    return await meetingController.getLocalPeer();
   }
 }

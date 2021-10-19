@@ -5,14 +5,16 @@
 ///All methods related to meeting, preview and their listeners are present here.
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter/src/common/platform_methods.dart';
+import 'package:hmssdk_flutter/src/enum/hms_log_level.dart';
 import 'package:hmssdk_flutter/src/model/hms_logs_listener.dart';
 import 'package:hmssdk_flutter/src/service/platform_service.dart';
 
 class HMSMeeting {
   ///join meeting by passing HMSConfig instance to it.
-  Future<void> joinMeeting({required HMSConfig config}) async {
+  Future<void> joinMeeting({required HMSConfig config,required bool isProdLink,required bool setWebrtcLogs}) async {
     return await PlatformService.invokeMethod(PlatformMethod.joinMeeting,
-        arguments: config.getJson());
+        arguments: {...config.getJson(),'is_prod': isProdLink,
+          'set_web_rtc_log' : setWebrtcLogs});
   }
 
   ///just call this method to leave meeting.
@@ -47,24 +49,19 @@ class HMSMeeting {
         arguments: {"message": message});
   }
 
-  Future<void> sendGroupMessage(String message, String roleName) async {
+  Future<void> sendGroupMessage(String message,String roleName) async {
     return await PlatformService.invokeMethod(PlatformMethod.sendGroupMessage,
-        arguments: {"message": message, "role_name": roleName});
+        arguments: {"message": message,"role_name":roleName});
   }
 
-  Future<void> sendDirectMessage(String message, String peerId) async {
+  Future<void> sendDirectMessage(String message,String peerId) async {
     return await PlatformService.invokeMethod(PlatformMethod.sendDirectMessage,
-        arguments: {"message": message, "peer_id": peerId});
+        arguments: {"message": message,"peer_id":peerId});
   }
 
-  Future<void> changeTrackReuest(
-      String peerId, bool mute, bool isVideoTrack) async {
+  Future<void> changeTrackReuest(String peerId,bool mute,bool isVideoTrack) async {
     return await PlatformService.invokeMethod(PlatformMethod.changeTrack,
-        arguments: {
-          "hms_peer_id": peerId,
-          "mute": mute,
-          "mute_video_kind": isVideoTrack
-        });
+        arguments: {"hms_peer_id": peerId,"mute":mute,"mute_video_kind":isVideoTrack});
   }
 
   Future<bool> endRoom(bool lock) async {
@@ -77,15 +74,21 @@ class HMSMeeting {
         arguments: {"peer_id": peerId});
   }
 
-  Future<HMSPeer?> getLocalPeer() async {
-    return HMSPeer.fromMap(
-        await PlatformService.invokeMethod(PlatformMethod.getLocalPeer) as Map);
+  Future<HMSPeer?> getLocalPeer() async{
+    return HMSPeer.fromMap(await PlatformService.invokeMethod(PlatformMethod.getLocalPeer) as Map);
   }
 
   ///preview before joining the room pass [HMSConfig].
-  Future<void> previewVideo({required HMSConfig config}) async {
-    return await PlatformService.invokeMethod(PlatformMethod.previewVideo,
-        arguments: config.getJson());
+  Future<void> previewVideo({required HMSConfig config,required bool isProdLink,required bool setWebRtcLogs}) async {
+    return await PlatformService.invokeMethod(PlatformMethod.previewVideo, arguments: {...config.getJson(),'is_prod': isProdLink, 'set_web_rtc_log' : setWebRtcLogs});
+  }
+
+  void startHMSLogger(HMSLogLevel webRtclogLevel,HMSLogLevel logLevel){
+    PlatformService.invokeMethod(PlatformMethod.startHMSLogger ,arguments: {"web_rtc_log_level":HMSLogLevelValue.getValueFromHMSLogLevel(webRtclogLevel),"log_level": HMSLogLevelValue.getValueFromHMSLogLevel(logLevel)});
+  }
+
+  void removeHMSLogger(){
+    PlatformService.invokeMethod(PlatformMethod.removeHMSLogger);
   }
 
   void addLogListener(HMSLogListener hmsLogListener){
@@ -126,6 +129,8 @@ class HMSMeeting {
     PlatformService.invokeMethod(PlatformMethod.stopCapturing);
   }
 
+
+
   ///it will start capturing the local video.
   void startCapturing() {
     PlatformService.invokeMethod(PlatformMethod.startCapturing);
@@ -161,22 +166,22 @@ class HMSMeeting {
   ///checks the audio is mute or unmute just pass [peer]
   Future<bool> isAudioMute(HMSPeer? peer) async {
     bool isMute = await PlatformService.invokeMethod(PlatformMethod.isAudioMute,
-        arguments: {"peer_id": peer != null ? peer.peerId : "null"});
+        arguments: {"peer_id": peer!=null?peer.peerId:"null"});
     return isMute;
   }
 
   ///checks the video is mute or unmute just pass [peer]
   Future<bool> isVideoMute(HMSPeer? peer) async {
     bool isMute = await PlatformService.invokeMethod(PlatformMethod.isVideoMute,
-        arguments: {"peer_id": peer != null ? peer.peerId : "null"});
+        arguments: {"peer_id": peer!=null?peer.peerId:"null"});
     return isMute;
   }
 
-  void muteAll() async {
+  void muteAll() async{
     await PlatformService.invokeMethod(PlatformMethod.muteAll);
   }
 
-  void unMuteAll() async {
+  void unMuteAll() async{
     await PlatformService.invokeMethod(PlatformMethod.unMuteAll);
   }
 }

@@ -25,9 +25,9 @@ class PreviewController {
         roomId: roomId,
         authToken: token[0]!,
         userName: user,
-        isProdLink: token[1] == "true" ? true : false,setWebRtcLog: true);
+        );
 
-    _hmsSdkInteractor?.previewVideo(config: config);
+    _hmsSdkInteractor?.previewVideo(config: config,isProdLink: token[1] == "true" ? true : false,setWebRtcLogs: true);
     return true;
   }
 

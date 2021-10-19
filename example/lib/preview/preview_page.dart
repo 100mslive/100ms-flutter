@@ -6,9 +6,11 @@ import 'package:hmssdk_flutter_example/common/ui/organisms/peer_item_organism.da
 import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_page.dart';
+import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:hmssdk_flutter_example/preview/preview_controller.dart';
 import 'package:hmssdk_flutter_example/preview/preview_store.dart';
 import 'package:mobx/mobx.dart';
+import 'package:provider/provider.dart';
 
 class PreviewPage extends StatefulWidget {
   final String roomId;
@@ -79,7 +81,6 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                         Text("No preview available") //
                       ]);
                     }
-
                     return GridView.count(
                       crossAxisCount: 1,
                       childAspectRatio: (itemWidth / itemHeight),
@@ -87,6 +88,8 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                           _previewStore.localTracks.length,
                           (index) => PeerItemOrganism(
                                 key: UniqueKey(),
+                                height: itemHeight,
+                                width: itemWidth,
                                 track: _previewStore.localTracks[index],
                                 isVideoMuted: false,
                               )),
@@ -121,10 +124,14 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                     onPressed: () {
                       _previewStore.removeListener();
                       Navigator.of(context).pushReplacement(MaterialPageRoute(
-                          builder: (_) => MeetingPage(
-                              roomId: widget.roomId,
-                              flow: widget.flow,
-                              user: widget.user)));
+                          builder: (_) =>
+                              Provider<MeetingStore>(
+                                create: (_)=>MeetingStore(),
+                            child: MeetingPage(
+                                roomId: widget.roomId,
+                                flow: widget.flow,
+                                user: widget.user),
+                          )));
                     },
                     child: Text(
                       'Join Now',
