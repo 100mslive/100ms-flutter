@@ -140,7 +140,7 @@ class PlatformService {
           notifyMeetingListeners(method, {'room': room});
           break;
         case HMSUpdateListenerMethod.onUpdateRoom:
-          HMSRoom? room = HMSRoom.fromMap(data['room']);
+          HMSRoom? room = data['room']!=null?HMSRoom.fromMap(data['room']):null;
 
           HMSRoomUpdate? update =
           HMSRoomUpdateValues.getHMSRoomUpdateFromName(data['update']);
@@ -174,7 +174,7 @@ class PlatformService {
           List<HMSSpeaker> speakers = [];
 
           if (data.containsKey('speakers') && data['speakers'] is List) {
-            print("onUpdateSpeakerFluttering ${data["speakers"] is List}");
+            print("onUpdateSpeakerFluttering ${data["speakers"][0]}");
             (data['speakers'] as List).forEach((element) {
               speakers.add(HMSSpeaker.fromMap(element as Map));
             });

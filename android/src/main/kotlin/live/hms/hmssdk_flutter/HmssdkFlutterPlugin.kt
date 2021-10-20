@@ -600,6 +600,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
         if (speakers.isNotEmpty()) {
             speakers.forEach {
                 speakersList.add(HMSSpeakerExtension.toDictionary(it)!!)
+
             }
             val speakersMap = HashMap<String, Any>()
             speakersMap.put("speakers", speakersList)

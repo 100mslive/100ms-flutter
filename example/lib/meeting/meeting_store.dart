@@ -301,6 +301,7 @@ abstract class MeetingStoreBase
   void onUpdateSpeakers({required List<HMSSpeaker> updateSpeakers}) {
     if (updateSpeakers.length == 0) return;
     HMSSpeaker highestAudioSpeaker = updateSpeakers[0];
+    print("onUpdateSpeakerFlutter ${highestAudioSpeaker.peer.name}");
     int newHighestIndex = tracks.indexWhere(
         (element) => element.peer?.peerId == highestAudioSpeaker.peer.peerId);
     if (newHighestIndex == -1) return;
