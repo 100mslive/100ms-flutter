@@ -8,7 +8,7 @@ class HMSRemoteAudioTrack extends HMSAudioTrack {
   HMSRemoteAudioTrack(
       {required this.setting,
       required HMSTrackKind kind,
-      required String source,
+      required HMSTrackSource source,
       required String trackId,
       required String trackDescription,
       required bool isMute,
