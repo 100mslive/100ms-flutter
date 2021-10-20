@@ -14,8 +14,7 @@ class PreviewController {
       : _hmsSdkInteractor = HMSSDKInteractor();
 
   Future<bool> startPreview() async {
-    List<String?>? token =
-        await RoomService().getToken(user: user, room: roomId);
+    List<String?>? token = await RoomService().getToken(user: user, room: roomId);
 
     if (token == null) return false;
     FirebaseCrashlytics.instance.setUserIdentifier(token[0]!);
