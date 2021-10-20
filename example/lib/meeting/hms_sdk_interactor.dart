@@ -37,12 +37,12 @@ class HMSSDKInteractor {
     return await _meeting.sendMessage(message);
   }
 
-  Future<void> sendDirectMessage(String message,String peerId) async {
-    return await _meeting.sendDirectMessage(message,peerId);
+  Future<void> sendDirectMessage(String message, String peerId) async {
+    return await _meeting.sendDirectMessage(message, peerId);
   }
 
-  Future<void> sendGroupMessage(String message,String roleName) async {
-    return await _meeting.sendGroupMessage(message,roleName);
+  Future<void> sendGroupMessage(String message, String roleName) async {
+    return await _meeting.sendGroupMessage(message, roleName);
   }
 
   Future<void> previewVideo({required HMSConfig config,required bool isProdLink,required bool setWebRtcLogs}) async {
@@ -98,16 +98,16 @@ class HMSSDKInteractor {
     _meeting.startCapturing();
   }
 
-  void changeTrackRequest(String peerId,bool mute,bool isVideoTrack){
+  void changeTrackRequest(String peerId, bool mute, bool isVideoTrack) {
     _meeting.changeTrackReuest(peerId, mute, isVideoTrack);
   }
 
-  Future<bool> endRoom(bool lock) async{
-    bool ended=await _meeting.endRoom(lock);
+  Future<bool> endRoom(bool lock) async {
+    bool ended = await _meeting.endRoom(lock);
     return ended;
   }
 
-  void removePeer(String peerId){
+  void removePeer(String peerId) {
     _meeting.removePeer(peerId);
   }
 
@@ -133,11 +133,11 @@ class HMSSDKInteractor {
     return isMute;
   }
 
-  void muteAll(){
+  void muteAll() {
     _meeting.muteAll();
   }
 
-  void unMuteAll(){
+  void unMuteAll() {
     _meeting.unMuteAll();
   }
 }

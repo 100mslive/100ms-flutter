@@ -11,18 +11,14 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 class HMSRoom {
   ///[id] of the room
-  final String id;
-  final String name;
-  final String? metaData;
+  String? id;
+  String? name;
+  String? metaData;
 
   ///[peers] list which are in the room.
   final List<HMSPeer>? peers;
 
-  HMSRoom(
-      {required this.id,
-      required this.name,
-      required this.peers,
-      this.metaData});
+  HMSRoom({this.id, this.name, required this.peers, this.metaData});
 
   factory HMSRoom.fromMap(Map map) {
     List<HMSPeer> peers = [];

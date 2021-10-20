@@ -5,7 +5,7 @@ import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:intl/intl.dart';
 
 class ChatWidget extends StatefulWidget {
-  MeetingStore meetingStore;
+  final MeetingStore meetingStore;
 
   ChatWidget(this.meetingStore);
 
@@ -34,7 +34,6 @@ class _ChatWidgetState extends State<ChatWidget> {
   @override
   Widget build(BuildContext context) {
     widthOfScreen = MediaQuery.of(context).size.width;
-    var heightOfScreen = MediaQuery.of(context).size.height;
     return Container(
         child: Center(
       child: Container(
@@ -104,7 +103,8 @@ class _ChatWidgetState extends State<ChatWidget> {
               child: Observer(
                 builder: (_) {
                   if (!_meetingStore.isMeetingStarted) return SizedBox();
-                  if (_meetingStore.messages.isEmpty) return Text('No messages');
+                  if (_meetingStore.messages.isEmpty)
+                    return Text('No messages');
                   return ListView(
                     children: List.generate(
                       _meetingStore.messages.length,
@@ -222,7 +222,8 @@ class _ChatWidgetState extends State<ChatWidget> {
                                   HMSMessageRecipientType.BROADCAST),
                         ));
                       } else if (rolesName.contains(this.valueChoose)) {
-                        _meetingStore.sendGroupMessage(message, this.valueChoose);
+                        _meetingStore.sendGroupMessage(
+                            message, this.valueChoose);
                         _meetingStore.addMessage(HMSMessage(
                           sender: _meetingStore.localPeer!,
                           message: message,

@@ -84,7 +84,7 @@ abstract class MeetingStoreBase
 
   @action
   Future<void> toggleVideo() async {
-    print("toggleVideo ${isVideoOn}");
+    print("toggleVideo $isVideoOn");
     await meetingController.switchVideo(isOn: isVideoOn);
     // if(isVideoOn){
     //   meetingController.stopCapturing();
@@ -131,11 +131,11 @@ abstract class MeetingStoreBase
   void addTrack(HMSTrack track) {
     if (tracks.contains(track)) removeTrackWithTrackId(track.trackId);
 
-    if (track.source == HMSTrackSource.kHMSTrackSourceScreen)
+    if (track.source == 'SCREEN')
       tracks.insert(0, track);
     else
       tracks.insert(tracks.length, track);
-    print("addTrack");
+    print("addTrack $track");
   }
 
   @action
@@ -265,7 +265,7 @@ abstract class MeetingStoreBase
 
       if (Platform.isAndroid) {
         int screenShareIndex = tracks.indexWhere((element) {
-          return element.source == HMSTrackSource.kHMSTrackSourceScreen;
+          return element.source == 'SCREEN';
         });
         print("ScreenShare $screenShareIndex");
         if (screenShareIndex == -1)
@@ -344,12 +344,12 @@ abstract class MeetingStoreBase
             ? 1
             : 0;
     trackChange = isVideoTrack;
-    print("flutteronChangeTrack ${trackChange}");
+    print("flutteronChangeTrack $trackChange");
     addTrackChangeRequestInstance(hmsTrackChangeRequest);
   }
 
   void changeTracks() {
-    print("flutteronChangeTracks ${trackChange}");
+    print("flutteronChangeTracks $trackChange");
     if (trackChange == 1) {
       toggleVideo();
     } else if (trackChange == 0) {

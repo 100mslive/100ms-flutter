@@ -5,7 +5,8 @@ class HMSTrackChangeRequest {
   HMSPeer requestBy;
   HMSTrack track;
 
-  HMSTrackChangeRequest({required this.mute,required this.requestBy,required this.track});
+  HMSTrackChangeRequest(
+      {required this.mute, required this.requestBy, required this.track});
 
   Map<String, dynamic> toMap() {
     return {

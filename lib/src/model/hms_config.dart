@@ -24,8 +24,7 @@ class HMSConfig {
       required this.authToken,
       this.metaData,
       this.endPoint,
-      this.shouldSkipPIIEvents = false,
-      });
+      this.shouldSkipPIIEvents = false});
 
   Map<String, dynamic> getJson() {
     return {
@@ -35,7 +34,7 @@ class HMSConfig {
       'auth_token': authToken,
       'meta_data': metaData,
       'should_skip_pii_events': shouldSkipPIIEvents,
-      'end_point': endPoint,
+      'end_point': endPoint
     };
   }
 }
