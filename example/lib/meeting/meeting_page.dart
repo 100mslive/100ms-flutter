@@ -205,29 +205,47 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                 List<HMSTrack> filteredList = _meetingStore.tracks;
                 return PageView.builder(
                   itemBuilder: (ctx, index) {
-                    ObservableMap<String, HMSTrackUpdate> map = _meetingStore.trackStatus;
-                    return (index < filteredList.length && filteredList[index].source != "SCREEN")
+                    ObservableMap<String, HMSTrackUpdate> map =
+                        _meetingStore.trackStatus;
+                    return (index < filteredList.length &&
+                            filteredList[index].source != "SCREEN")
                         ? ((orientation == Orientation.portrait)
                             ? Column(
                                 children: [
                                   Row(
                                     children: [
                                       //if (index * 4 < filteredList.length)
-                                      VideoTile(tileIndex: index * 4, filteredList: filteredList,
-                                          itemHeight: itemHeight,itemWidth: itemWidth,map: map),
+                                      VideoTile(
+                                          tileIndex: index * 4,
+                                          filteredList: filteredList,
+                                          itemHeight: itemHeight,
+                                          itemWidth: itemWidth,
+                                          map: map),
                                       //if (index * 4 + 1 < filteredList.length)
-                                      VideoTile(tileIndex: index * 4 + 1, filteredList: filteredList,
-                                          itemHeight: itemHeight,itemWidth: itemWidth,map: map),
+                                      VideoTile(
+                                          tileIndex: index * 4 + 1,
+                                          filteredList: filteredList,
+                                          itemHeight: itemHeight,
+                                          itemWidth: itemWidth,
+                                          map: map),
                                     ],
                                   ),
                                   Row(
                                     children: [
                                       //if (index * 4 + 2 < filteredList.length)
-                                      VideoTile(tileIndex: index * 4 + 2, filteredList: filteredList,
-                                          itemHeight: itemHeight,itemWidth: itemWidth,map: map),
+                                      VideoTile(
+                                          tileIndex: index * 4 + 2,
+                                          filteredList: filteredList,
+                                          itemHeight: itemHeight,
+                                          itemWidth: itemWidth,
+                                          map: map),
                                       //if (index * 4 + 3 < filteredList.length)
-                                      VideoTile(tileIndex: index * 4 + 3, filteredList: filteredList,
-                                          itemHeight: itemHeight,itemWidth: itemWidth,map: map),
+                                      VideoTile(
+                                          tileIndex: index * 4 + 3,
+                                          filteredList: filteredList,
+                                          itemHeight: itemHeight,
+                                          itemWidth: itemWidth,
+                                          map: map),
                                     ],
                                   ),
                                 ],
@@ -236,26 +254,36 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                 children: [
                                   Row(
                                     children: [
-                                      VideoTile(tileIndex: index * 2, filteredList: filteredList,
-                                          itemHeight: itemHeight*2 - 50,itemWidth: itemWidth,map: map),
-                                      VideoTile(tileIndex: index * 2 + 1, filteredList: filteredList,
-                                          itemHeight: itemHeight,itemWidth: itemWidth,map: map),
+                                      VideoTile(
+                                          tileIndex: index * 2,
+                                          filteredList: filteredList,
+                                          itemHeight: itemHeight * 2 - 50,
+                                          itemWidth: itemWidth,
+                                          map: map),
+                                      VideoTile(
+                                          tileIndex: index * 2 + 1,
+                                          filteredList: filteredList,
+                                          itemHeight: itemHeight,
+                                          itemWidth: itemWidth,
+                                          map: map),
                                     ],
                                   ),
                                 ],
                               ))
                         : Container(
-                            child: VideoTile(tileIndex: 0, filteredList: filteredList,
-                                itemHeight: itemHeight*2 ,itemWidth: itemWidth*2 ,map: map),
+                            child: VideoTile(
+                                tileIndex: 0,
+                                filteredList: filteredList,
+                                itemHeight: itemHeight * 2,
+                                itemWidth: itemWidth * 2,
+                                map: map),
                           );
                   },
                   itemCount: ((filteredList.length - 1) /
                               ((orientation == Orientation.portrait) ? 4 : 2))
                           .floor() +
                       1 +
-                      ((filteredList[0].source != "SCREEN")
-                          ? 0
-                          : 1),
+                      ((filteredList[0].source != "SCREEN") ? 0 : 1),
                 );
               },
             ),

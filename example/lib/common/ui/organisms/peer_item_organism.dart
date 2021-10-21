@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 class PeerItemOrganism extends StatefulWidget {
@@ -34,7 +33,8 @@ class _PeerItemOrganismState extends State<PeerItemOrganism> {
 
   @override
   Widget build(BuildContext context) {
-    print("isVideoMuted ${widget.isVideoMuted} ${widget.track.source} ${widget.track.peer?.name}");
+    print(
+        "isVideoMuted ${widget.isVideoMuted} ${widget.track.source} ${widget.track.peer?.name}");
 
     return Container(
       key: key,
@@ -77,8 +77,7 @@ class _PeerItemOrganismState extends State<PeerItemOrganism> {
                 width: widget.width - 5,
                 child: HMSVideoView(
                     track: widget.track,
-                    isAuxiliaryTrack: widget.track.source ==
-                        "SCREEN"),
+                    isAuxiliaryTrack: widget.track.source == "SCREEN"),
               );
             },
           )),

@@ -23,14 +23,14 @@ class PlatformService {
 
   ///used to get stream of data from platform side happening in the room.
   static const EventChannel _meetingEventChannel =
-  const EventChannel('meeting_event_channel');
+      const EventChannel('meeting_event_channel');
 
   ///used to get stream of data from platform side happening in the preview.
   static const EventChannel _previewEventChannel =
-  const EventChannel('preview_event_channel');
+      const EventChannel('preview_event_channel');
 
   static const EventChannel _logsEventChannel =
-  const EventChannel("logs_event_channel");
+      const EventChannel("logs_event_channel");
 
   ///add meeting listeners.
   static List<HMSUpdateListener> meetingListeners = [];
@@ -61,11 +61,12 @@ class PlatformService {
     if (previewListeners.contains(listener)) previewListeners.remove(listener);
   }
 
-  static void startHMSLogger(HMSLogLevel webRtclogLevel,HMSLogLevel logLevel){
+  static void startHMSLogger(
+      HMSLogLevel webRtclogLevel, HMSLogLevel logLevel) {}
 
-  }
-
-  static void addLogsListener(HMSLogListener hmsLogListener,) {
+  static void addLogsListener(
+    HMSLogListener hmsLogListener,
+  ) {
     logsListeners.add(hmsLogListener);
   }
 
@@ -98,13 +99,14 @@ class PlatformService {
       }
 
       HMSLogsUpdateListenerMethod method =
-      HMSLogsUpdateListenerMethodValues.getMethodFromName(event['event_name']);
+          HMSLogsUpdateListenerMethodValues.getMethodFromName(
+              event['event_name']);
       return HMSLogsUpdateListenerMethodResponse(
           method: method, data: data, response: event);
     }).listen((event) {
       HMSLogsUpdateListenerMethod method = event.method;
       print("flutterdata1 ${event.method}");
-      Map<String,dynamic> data = event.data;
+      Map<String, dynamic> data = event.data;
 
       switch (method) {
         case HMSLogsUpdateListenerMethod.onLogsUpdate:
@@ -126,7 +128,7 @@ class PlatformService {
       }
 
       HMSUpdateListenerMethod method =
-      HMSUpdateListenerMethodValues.getMethodFromName(event['event_name']);
+          HMSUpdateListenerMethodValues.getMethodFromName(event['event_name']);
       return HMSUpdateListenerMethodResponse(
           method: method, data: data, response: event);
     }).listen((event) {
@@ -140,25 +142,26 @@ class PlatformService {
           notifyMeetingListeners(method, {'room': room});
           break;
         case HMSUpdateListenerMethod.onUpdateRoom:
-          HMSRoom? room = data['room']!=null?HMSRoom.fromMap(data['room']):null;
+          HMSRoom? room =
+              data['room'] != null ? HMSRoom.fromMap(data['room']) : null;
 
           HMSRoomUpdate? update =
-          HMSRoomUpdateValues.getHMSRoomUpdateFromName(data['update']);
+              HMSRoomUpdateValues.getHMSRoomUpdateFromName(data['update']);
           notifyMeetingListeners(method, {'room': room, 'update': update});
           break;
         case HMSUpdateListenerMethod.onPeerUpdate:
           HMSPeer? peer = HMSPeer.fromMap(data['peer']);
           print(data['update']);
           HMSPeerUpdate? update =
-          HMSPeerUpdateValues.getHMSPeerUpdateFromName(data['update']);
+              HMSPeerUpdateValues.getHMSPeerUpdateFromName(data['update']);
           notifyMeetingListeners(method, {'peer': peer, 'update': update});
           break;
         case HMSUpdateListenerMethod.onTrackUpdate:
           HMSPeer? peer = HMSPeer.fromMap(event.data['peer']);
           HMSTrack? track = HMSTrack.fromMap(map: data['track'], peer: peer);
           HMSTrackUpdate? update =
-          HMSTrackUpdateValues.getHMSTrackUpdateFromName(data['update']);
-          print("UpdateTrack ${update}  ${data['update']}");
+              HMSTrackUpdateValues.getHMSTrackUpdateFromName(data['update']);
+          print("UpdateTrack $update  ${data['update']}");
           notifyMeetingListeners(
               method, {'track': track, 'peer': peer, 'update': update});
           break;
@@ -188,15 +191,15 @@ class PlatformService {
           break;
         case HMSUpdateListenerMethod.onRoleChangeRequest:
           HMSRoleChangeRequest roleChangeRequest =
-          HMSRoleChangeRequest.fromMap(data['role_change_request']);
+              HMSRoleChangeRequest.fromMap(data['role_change_request']);
           notifyMeetingListeners(
               method, {'role_change_request': roleChangeRequest});
           break;
         case HMSUpdateListenerMethod.onChangeTrackStateRequest:
-          print("flutter listener ${data}");
+          print("flutter listener $data");
           HMSTrackChangeRequest trackChangeRequest =
-          HMSTrackChangeRequest.fromMap(
-              data['track_change_request'] as Map);
+              HMSTrackChangeRequest.fromMap(
+                  data['track_change_request'] as Map);
           notifyMeetingListeners(
               method, {'track_change_request': trackChangeRequest});
           break;
@@ -205,7 +208,7 @@ class PlatformService {
           break;
         case HMSUpdateListenerMethod.onRemovedFromRoom:
           HMSPeerRemovedFromPeer hmsPeerRemovedFromPeer =
-          HMSPeerRemovedFromPeer.fromMap(data['removed_from_room'] as Map);
+              HMSPeerRemovedFromPeer.fromMap(data['removed_from_room'] as Map);
           notifyMeetingListeners(
               method, {'removed_from_room': hmsPeerRemovedFromPeer});
           break;
@@ -222,8 +225,8 @@ class PlatformService {
         });
       }
       HMSPreviewUpdateListenerMethod method =
-      HMSPreviewUpdateListenerMethodValues.getMethodFromName(
-          event['event_name']);
+          HMSPreviewUpdateListenerMethodValues.getMethodFromName(
+              event['event_name']);
       return HMSPreviewUpdateListenerMethodResponse(
           method: method, data: data, response: event);
     }).listen((event) {
@@ -247,11 +250,11 @@ class PlatformService {
     });
   }
 
-  static void notifyLogsUpdateListeners(HMSLogsUpdateListenerMethod method,
-      Map<String, dynamic> arguments) {
+  static void notifyLogsUpdateListeners(
+      HMSLogsUpdateListenerMethod method, Map<String, dynamic> arguments) {
     switch (method) {
       case HMSLogsUpdateListenerMethod.onLogsUpdate:
-        print("${arguments} argumentsLogsUpdateListeners");
+        print("$arguments argumentsLogsUpdateListeners");
         logsListeners.forEach((element) {
           HMSLog hmsLog = HMSLog.fromMap(arguments);
           element.onLogMessage(HMSLog: hmsLog);
@@ -262,10 +265,9 @@ class PlatformService {
     }
   }
 
-
   ///notifying all previewListeners attached about updates
-  static void notifyPreviewListeners(HMSPreviewUpdateListenerMethod method,
-      Map<String, dynamic> arguments) {
+  static void notifyPreviewListeners(
+      HMSPreviewUpdateListenerMethod method, Map<String, dynamic> arguments) {
     switch (method) {
       case HMSPreviewUpdateListenerMethod.onPreviewVideo:
         previewListeners.forEach((e) {
@@ -284,28 +286,25 @@ class PlatformService {
   }
 
   ///notifying all meetingListeners attached about updates
-  static void notifyMeetingListeners(HMSUpdateListenerMethod method,
-      Map<String, dynamic> arguments) {
+  static void notifyMeetingListeners(
+      HMSUpdateListenerMethod method, Map<String, dynamic> arguments) {
     switch (method) {
       case HMSUpdateListenerMethod.onJoinRoom:
         meetingListeners.forEach((e) => e.onJoin(room: arguments['room']));
         break;
       case HMSUpdateListenerMethod.onUpdateRoom:
-        meetingListeners.forEach((e) =>
-            e.onRoomUpdate(
-                room: arguments['room'], update: arguments['update']));
+        meetingListeners.forEach((e) => e.onRoomUpdate(
+            room: arguments['room'], update: arguments['update']));
         break;
       case HMSUpdateListenerMethod.onPeerUpdate:
-        meetingListeners.forEach((e) =>
-            e.onPeerUpdate(
-                peer: arguments['peer'], update: arguments['update']));
+        meetingListeners.forEach((e) => e.onPeerUpdate(
+            peer: arguments['peer'], update: arguments['update']));
         break;
       case HMSUpdateListenerMethod.onTrackUpdate:
-        meetingListeners.forEach((e) =>
-            e.onTrackUpdate(
-                track: arguments['track'],
-                trackUpdate: arguments['update'],
-                peer: arguments['peer']));
+        meetingListeners.forEach((e) => e.onTrackUpdate(
+            track: arguments['track'],
+            trackUpdate: arguments['update'],
+            peer: arguments['peer']));
         break;
       case HMSUpdateListenerMethod.onError:
         meetingListeners.forEach((e) => e.onError(error: arguments['error']));
@@ -315,10 +314,9 @@ class PlatformService {
             .forEach((e) => e.onMessage(message: arguments['message']));
         break;
       case HMSUpdateListenerMethod.onUpdateSpeaker:
-        print("flutterOnUpdateSpeaker ${arguments}");
+        print("flutterOnUpdateSpeaker $arguments");
         meetingListeners.forEach(
-                (e) =>
-                e.onUpdateSpeakers(updateSpeakers: arguments['speakers']));
+            (e) => e.onUpdateSpeakers(updateSpeakers: arguments['speakers']));
         break;
       case HMSUpdateListenerMethod.onReconnecting:
         meetingListeners.forEach((e) => e.onReconnecting());
@@ -327,14 +325,12 @@ class PlatformService {
         meetingListeners.forEach((e) => e.onReconnected());
         break;
       case HMSUpdateListenerMethod.onRoleChangeRequest:
-        meetingListeners.forEach((e) =>
-            e.onRoleChangeRequest(
-                roleChangeRequest: arguments['role_change_request']));
+        meetingListeners.forEach((e) => e.onRoleChangeRequest(
+            roleChangeRequest: arguments['role_change_request']));
         break;
       case HMSUpdateListenerMethod.onChangeTrackStateRequest:
-        meetingListeners.forEach((e) =>
-            e.onChangeTrackStateRequest(
-                hmsTrackChangeRequest: arguments['track_change_request']));
+        meetingListeners.forEach((e) => e.onChangeTrackStateRequest(
+            hmsTrackChangeRequest: arguments['track_change_request']));
         break;
       case HMSUpdateListenerMethod.unknown:
         break;

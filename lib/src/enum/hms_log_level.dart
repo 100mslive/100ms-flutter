@@ -1,5 +1,4 @@
-
-enum HMSLogLevel{
+enum HMSLogLevel {
   VERBOSE,
 
   DEBUG,
@@ -18,16 +17,20 @@ enum HMSLogLevel{
 extension HMSLogLevelValue on HMSLogLevel {
   static HMSLogLevel getHMSTrackKindFromName(String name) {
     switch (name) {
-    ///IOS
+
+      ///IOS
       case 'verbose':
         return HMSLogLevel.VERBOSE;
-    ///IOS
+
+      ///IOS
       case 'debug':
         return HMSLogLevel.DEBUG;
-    ///Android
+
+      ///Android
       case 'info':
         return HMSLogLevel.INFO;
-    ///Android
+
+      ///Android
       case 'warn':
         return HMSLogLevel.WARN;
       case 'error':

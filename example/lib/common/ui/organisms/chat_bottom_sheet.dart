@@ -118,7 +118,9 @@ class _ChatWidgetState extends State<ChatWidget> {
                               children: [
                                 Expanded(
                                   child: Text(
-                                    _meetingStore.messages[index].sender?.name??"",
+                                    _meetingStore
+                                            .messages[index].sender?.name ??
+                                        "",
                                     style: TextStyle(
                                         fontSize: 10.0,
                                         color: Colors.black,
