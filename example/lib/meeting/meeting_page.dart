@@ -203,15 +203,10 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                 if (_meetingStore.tracks.isEmpty)
                   return Center(child: Text('Waiting for other to join!'));
                 List<HMSTrack> filteredList = _meetingStore.tracks;
-                print("${filteredList.length} filteredList");
                 return PageView.builder(
                   itemBuilder: (ctx, index) {
-                    ObservableMap<String, HMSTrackUpdate> map =
-                        _meetingStore.trackStatus;
-
-                    return (index < filteredList.length &&
-                            filteredList[index].source !=
-                                HMSTrackSource.kHMSTrackSourceScreen)
+                    ObservableMap<String, HMSTrackUpdate> map = _meetingStore.trackStatus;
+                    return (index < filteredList.length && filteredList[index].source != "SCREEN")
                         ? ((orientation == Orientation.portrait)
                             ? Column(
                                 children: [
@@ -258,8 +253,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                               ((orientation == Orientation.portrait) ? 4 : 2))
                           .floor() +
                       1 +
-                      ((filteredList[0].source !=
-                              HMSTrackSource.kHMSTrackSourceScreen)
+                      ((filteredList[0].source != "SCREEN")
                           ? 0
                           : 1),
                 );

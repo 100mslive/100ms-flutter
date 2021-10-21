@@ -9,7 +9,7 @@ class HMSLocalVideoTrack extends HMSVideoTrack {
       {required this.setting,
       required bool isDegraded,
       required HMSTrackKind kind,
-      required HMSTrackSource source,
+      required String source,
       required String trackId,
       required String trackDescription,
       required bool isMute,

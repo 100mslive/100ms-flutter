@@ -78,7 +78,7 @@ class _PeerItemOrganismState extends State<PeerItemOrganism> {
                 child: HMSVideoView(
                     track: widget.track,
                     isAuxiliaryTrack: widget.track.source ==
-                        HMSTrackSource.kHMSTrackSourceScreen),
+                        "SCREEN"),
               );
             },
           )),

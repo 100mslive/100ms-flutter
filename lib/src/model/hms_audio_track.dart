@@ -4,7 +4,7 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 class HMSAudioTrack extends HMSTrack {
   HMSAudioTrack(
       {required HMSTrackKind kind,
-      required HMSTrackSource source,
+      required String source,
       required String trackId,
       required String trackDescription,
       required bool isMute,

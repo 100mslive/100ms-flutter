@@ -6,7 +6,7 @@ class HMSVideoTrack extends HMSTrack {
   HMSVideoTrack(
       {this.isDegraded = false,
       required HMSTrackKind kind,
-      required HMSTrackSource source,
+      required String source,
       required String trackId,
       required String trackDescription,
       required bool isMute,
@@ -23,7 +23,7 @@ class HMSVideoTrack extends HMSTrack {
     return HMSVideoTrack(
         trackId: map['track_id'],
         trackDescription: map['track_description'],
-        source: HMSTrackSourceValue.getHMSTrackSourceFromName(map['track_source']),
+        source: (map['track_source']),
         kind: HMSTrackKindValue.getHMSTrackKindFromName(map['track_kind']),
         isMute: map['track_mute'],
         peer: peer);
