@@ -1,12 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-import 'package:hmssdk_flutter_example/common/ui/organisms/change_track_options.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/chat_bottom_sheet.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/leave_or_end_meeting.dart';
-import 'package:hmssdk_flutter_example/common/ui/organisms/peer_item_organism.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/role_change_request_dialog.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/track_change_request_dialog.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/video_tile.dart';
@@ -17,8 +14,6 @@ import 'package:hmssdk_flutter_example/meeting/meeting_controller.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:mobx/mobx.dart';
 import 'package:provider/src/provider.dart';
-import 'package:should_rebuild/should_rebuild.dart';
-import 'package:visibility_detector/visibility_detector.dart';
 import 'meeting_participants_list.dart';
 
 class MeetingPage extends StatefulWidget {
@@ -208,15 +203,10 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                 if (_meetingStore.tracks.isEmpty)
                   return Center(child: Text('Waiting for other to join!'));
                 List<HMSTrack> filteredList = _meetingStore.tracks;
-                print("${filteredList.length} filteredList");
                 return PageView.builder(
                   itemBuilder: (ctx, index) {
-                    ObservableMap<String, HMSTrackUpdate> map =
-                        _meetingStore.trackStatus;
-
-                    return (index < filteredList.length &&
-                            filteredList[index].source !=
-                                HMSTrackSource.kHMSTrackSourceScreen)
+                    ObservableMap<String, HMSTrackUpdate> map = _meetingStore.trackStatus;
+                    return (index < filteredList.length && filteredList[index].source != "SCREEN")
                         ? ((orientation == Orientation.portrait)
                             ? Column(
                                 children: [
@@ -263,8 +253,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                               ((orientation == Orientation.portrait) ? 4 : 2))
                           .floor() +
                       1 +
-                      ((filteredList[0].source !=
-                              HMSTrackSource.kHMSTrackSourceScreen)
+                      ((filteredList[0].source != "SCREEN")
                           ? 0
                           : 1),
                 );

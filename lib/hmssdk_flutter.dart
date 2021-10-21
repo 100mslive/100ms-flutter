@@ -11,7 +11,6 @@ export 'src/enum/hms_peer_update.dart';
 export 'src/enum/hms_preview_update_listener_method.dart';
 export 'src/enum/hms_room_update.dart';
 export 'src/enum/hms_track_kind.dart';
-export 'src/enum/hms_track_source.dart';
 export 'src/enum/hms_track_update.dart';
 export 'src/enum/hms_update_listener_method.dart';
 export 'src/enum/hms_video_codec.dart';

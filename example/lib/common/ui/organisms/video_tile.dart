@@ -28,7 +28,7 @@ class VideoTile extends StatelessWidget {
     MeetingStore _meetingStore = context.read<MeetingStore>();
     int index = tileIndex;
     if (index > 0 &&
-        filteredList[0].source == HMSTrackSource.kHMSTrackSourceScreen) {
+        filteredList[0].source == "SCREEN") {
       int a = index ~/ ((orientation == Orientation.portrait) ? 4 : 2);
       int b = index % ((orientation == Orientation.portrait) ? 4 : 2);
 
@@ -61,7 +61,7 @@ class VideoTile extends StatelessWidget {
         onLongPress: () {
           if (!filteredList[index].peer!.isLocal &&
               filteredList[index].source !=
-                  HMSTrackSource.kHMSTrackSourceScreen)
+                  "SCREEN")
             showDialog(
                 context: context,
                 builder: (_) => Column(
@@ -76,7 +76,7 @@ class VideoTile extends StatelessWidget {
                         changeTrack: (mute, isVideoTrack) {
                           Navigator.pop(context);
                           if (filteredList[index].source !=
-                              HMSTrackSource.kHMSTrackSourceScreen)
+                              "SCREEN")
                             _meetingStore.changeTrackRequest(
                                 filteredList[index].peer?.peerId ?? "",
                                 mute,

@@ -9,6 +9,7 @@ class HMSSpeakerExtension {
             val hashMap = HashMap<String,Any?>()
             if(speaker==null)return null
             hashMap.put("audioLevel",speaker.level)
+            Log.i("onAudioSpeakerAndroid",(speaker.hmsTrack).toString())
             hashMap.put("track",HMSTrackExtension.toDictionary(speaker.hmsTrack))
             hashMap.put("peer",HMSPeerExtension.toDictionary(speaker.peer))
             return hashMap
