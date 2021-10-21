@@ -172,9 +172,7 @@ class PlatformService {
           break;
         case HMSUpdateListenerMethod.onUpdateSpeaker:
           List<HMSSpeaker> speakers = [];
-
           if (data.containsKey('speakers') && data['speakers'] is List) {
-            print("onUpdateSpeakerFluttering ${data["speakers"][0]}");
             (data['speakers'] as List).forEach((element) {
               speakers.add(HMSSpeaker.fromMap(element as Map));
             });
