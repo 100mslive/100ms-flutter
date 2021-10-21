@@ -147,4 +147,13 @@ class MeetingController {
   void muteAll(){
     _hmsSdkInteractor?.muteAll();
   }
+
+  Future<HMSException?> startRtmpOrRecording(HMSRecordingConfig hmsRecordingConfig) async{
+    return await _hmsSdkInteractor!.startRtmpOrRecording(hmsRecordingConfig);
+  }
+
+  Future<HMSException?> stopRtmpAndRecording() async{
+    return await _hmsSdkInteractor!.stopRtmpAndRecording();
+  }
+
 }

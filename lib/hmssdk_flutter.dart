@@ -25,6 +25,7 @@ export 'src/model/hms_audio_setting.dart';
 export 'src/model/hms_audio_track.dart';
 export 'src/model/hms_audio_track_setting.dart';
 export 'src/model/hms_config.dart';
+export 'src/model/hms_recording_config.dart';
 export 'src/model/hms_error.dart';
 export 'src/model/hms_error_code.dart';
 export 'src/model/hms_local_audio_track.dart';

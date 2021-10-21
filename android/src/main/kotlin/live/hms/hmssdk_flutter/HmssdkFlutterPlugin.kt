@@ -167,6 +167,15 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
             "remove_hms_logger"->{
                 removeHMSLogger()
             }
+            "change_track_state_for_role"->{
+                changeTrackStateForRole(call,result)
+            }
+            "start_rtmp_or_recording"->{
+                startRtmpOrRecording(call,result)
+            }
+            "stop_rtmp_and_recording"->{
+                stopRtmpAndRecording(result)
+            }
             else -> {
                 result.notImplemented()
             }
@@ -696,30 +705,42 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
     private fun startRtmpOrRecording(call: MethodCall, result: Result) {
         val meetingUrl = call.argument<String>("meeting_url")
         val toRecord = call.argument<Boolean>("to_record")
-        val listOfRtmpUrls = call.argument<List<String>>("rtmp_urls")
+        val listOfRtmpUrls : List<String> = call.argument<List<String>>("rtmp_urls")?:listOf()
         hmssdk.startRtmpOrRecording(
-            HMSRecordingConfig(meetingUrl!!, listOfRtmpUrls!!, toRecord!!),
+            HMSRecordingConfig(meetingUrl!!, listOfRtmpUrls, toRecord!!),
             object : HMSActionResultListener {
 
                 override fun onSuccess() {
-                    result.success("started successfully")
+                    Log.i("startRTMPORRECORDING","SUCCESS")
+                    CoroutineScope(Dispatchers.Main).launch {
+                        result.success(null)
+                    }
                 }
 
                 override fun onError(error: HMSException) {
-                    result.success("on error: ${error.description}")
+                    Log.i("startRTMPORRECORDING","ERROR ${error.description}  ${error.code}")
+                    CoroutineScope(Dispatchers.Main).launch {
+                        result.success(HMSExceptionExtension.toDictionary(error))
+                    }
                 }
             })
     }
 
-    private fun stopRtmpOrRecording(result: Result) {
+    private fun stopRtmpAndRecording(result: Result) {
         hmssdk.stopRtmpAndRecording(object : HMSActionResultListener {
 
             override fun onSuccess() {
-                result.success("started successfully")
+                Log.i("startRTMPORRECORDING","SUCCESS")
+                CoroutineScope(Dispatchers.Main).launch {
+                    result.success(null)
+                }
             }
 
             override fun onError(error: HMSException) {
-                result.success("on error: ${error.description}")
+                Log.i("startRTMPORRECORDING","ERROR ${error.description}  ${error.code}")
+                CoroutineScope(Dispatchers.Main).launch {
+                    result.success(HMSExceptionExtension.toDictionary(error))
+                }
             }
         })
     }
@@ -743,6 +764,32 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
         CoroutineScope(Dispatchers.Main).launch {
             logsSink?.success(args)
         }
+    }
+
+    private fun changeTrackStateForRole(call: MethodCall,result: Result){
+        val mute = call.argument<Boolean>("mute")
+        val type = call.argument<String>("type")
+        val source = call.argument<String>("source")
+        val roles:List<String>? = call.argument<List<String>>("roles")
+
+        val realRoles = hmssdk.getRoles().filter { roles?.contains(it.name)!! }
+
+        hmssdk.changeTrackState(mute = mute!!,type = HMSTrackExtension.getStringFromKind(type),source = source,roles=realRoles,object : HMSActionResultListener {
+
+            override fun onSuccess() {
+                Log.i("startRTMPORRECORDING","SUCCESS")
+                CoroutineScope(Dispatchers.Main).launch {
+                    result.success(null)
+                }
+            }
+
+            override fun onError(error: HMSException) {
+                Log.i("startRTMPORRECORDING","ERROR ${error.description}  ${error.code}")
+                CoroutineScope(Dispatchers.Main).launch {
+                    result.success(HMSExceptionExtension.toDictionary(error))
+                }
+            }
+        })
 
     }
 }

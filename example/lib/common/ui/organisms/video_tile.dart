@@ -75,8 +75,7 @@ class VideoTile extends StatelessWidget {
                         peerName: filteredList[index].peer?.name ?? '',
                         changeTrack: (mute, isVideoTrack) {
                           Navigator.pop(context);
-                          if (filteredList[index].source !=
-                              "SCREEN")
+                          if (filteredList[index].source != "SCREEN")
                             _meetingStore.changeTrackRequest(
                                 filteredList[index].peer?.peerId ?? "",
                                 mute,

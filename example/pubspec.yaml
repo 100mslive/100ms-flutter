@@ -33,6 +33,7 @@ dependencies:
   firebase_analytics: ^8.2.0
   flutter_launcher_icons: ^0.9.1
 
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

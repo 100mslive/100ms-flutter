@@ -34,6 +34,22 @@ class HMSTrackExtension {
             }
         }
 
+         fun getStringFromKind(type:String?) : HMSTrackType?{
+            if(type == null)return null
+
+            return when(type){
+                "kHMSTrackKindAudio"->{
+                    HMSTrackType.AUDIO
+                }
+                "kHMSTrackKindVideo"->{
+                    HMSTrackType.VIDEO
+                }
+                else->{
+                    null
+                }
+            }
+        }
+
         fun getTrackUpdateInString(hmsTrackUpdate: HMSTrackUpdate?):String?{
             if (hmsTrackUpdate==null)return null
             return when(hmsTrackUpdate){

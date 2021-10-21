@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:hmssdk_flutter_example/common/constant.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/chat_bottom_sheet.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/leave_or_end_meeting.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/role_change_request_dialog.dart';
@@ -72,12 +73,26 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
               _meetingStore.reconnected = false
             });
     reaction(
+        (_) => _meetingStore.isRoomEnded,
+        (event) => {
+              if ((event as bool) == true) Navigator.of(context).pop(),
+              _meetingStore.isRoomEnded = false
+            });
+    reaction(
         (_) => _meetingStore.reconnecting,
         (event) => {
               if ((event as bool) == true)
                 UtilityComponents.showSnackBarWithString(
                     "reconnecting", context),
             });
+
+    reaction(
+            (_) => _meetingStore.hmsException,
+            (event) => {
+          if ((event as HMSException?) !=null)
+            UtilityComponents.showSnackBarWithString(
+                event?.description, context),
+        });
     super.initState();
     initMeeting();
     checkButtons();
@@ -160,6 +175,25 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
           title: Text(widget.roomId),
           actions: [
             Observer(
+                builder: (_) => IconButton(
+                      onPressed: () {
+                        if(_meetingStore.isRecordingStarted){
+                          _meetingStore.stopRtmpAndRecording();
+                        }
+                        else{
+                          print("${Constant.meetingUrl} meetingUrl");
+                          _meetingStore.startRtmpOrRecording(Constant.meetingUrl, true, null);
+                        }
+                      },
+                      icon: Icon(
+                        Icons.circle,
+                        color: _meetingStore.isRecordingStarted
+                            ? Colors.red
+                            : Colors.grey,
+                        size: 32.0,
+                      ),
+                    )),
+            Observer(
               builder: (_) => IconButton(
                 iconSize: 32,
                 onPressed: () {
@@ -203,31 +237,50 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                 if (_meetingStore.tracks.isEmpty)
                   return Center(child: Text('Waiting for other to join!'));
                 List<HMSTrack> filteredList = _meetingStore.tracks;
+                print("${filteredList.length} filteredListLength");
                 return PageView.builder(
                   itemBuilder: (ctx, index) {
-                    ObservableMap<String, HMSTrackUpdate> map = _meetingStore.trackStatus;
-                    return (index < filteredList.length && filteredList[index].source != "SCREEN")
+                    ObservableMap<String, HMSTrackUpdate> map =
+                        _meetingStore.trackStatus;
+                    return (index < filteredList.length &&
+                            filteredList[index].source != "SCREEN")
                         ? ((orientation == Orientation.portrait)
                             ? Column(
                                 children: [
                                   Row(
                                     children: [
                                       //if (index * 4 < filteredList.length)
-                                      VideoTile(tileIndex: index * 4, filteredList: filteredList,
-                                          itemHeight: itemHeight,itemWidth: itemWidth,map: map),
+                                      VideoTile(
+                                          tileIndex: index * 4,
+                                          filteredList: filteredList,
+                                          itemHeight: itemHeight,
+                                          itemWidth: itemWidth,
+                                          map: map),
                                       //if (index * 4 + 1 < filteredList.length)
-                                      VideoTile(tileIndex: index * 4 + 1, filteredList: filteredList,
-                                          itemHeight: itemHeight,itemWidth: itemWidth,map: map),
+                                      VideoTile(
+                                          tileIndex: index * 4 + 1,
+                                          filteredList: filteredList,
+                                          itemHeight: itemHeight,
+                                          itemWidth: itemWidth,
+                                          map: map),
                                     ],
                                   ),
                                   Row(
                                     children: [
                                       //if (index * 4 + 2 < filteredList.length)
-                                      VideoTile(tileIndex: index * 4 + 2, filteredList: filteredList,
-                                          itemHeight: itemHeight,itemWidth: itemWidth,map: map),
+                                      VideoTile(
+                                          tileIndex: index * 4 + 2,
+                                          filteredList: filteredList,
+                                          itemHeight: itemHeight,
+                                          itemWidth: itemWidth,
+                                          map: map),
                                       //if (index * 4 + 3 < filteredList.length)
-                                      VideoTile(tileIndex: index * 4 + 3, filteredList: filteredList,
-                                          itemHeight: itemHeight,itemWidth: itemWidth,map: map),
+                                      VideoTile(
+                                          tileIndex: index * 4 + 3,
+                                          filteredList: filteredList,
+                                          itemHeight: itemHeight,
+                                          itemWidth: itemWidth,
+                                          map: map),
                                     ],
                                   ),
                                 ],
@@ -236,26 +289,36 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                 children: [
                                   Row(
                                     children: [
-                                      VideoTile(tileIndex: index * 2, filteredList: filteredList,
-                                          itemHeight: itemHeight*2 - 50,itemWidth: itemWidth,map: map),
-                                      VideoTile(tileIndex: index * 2 + 1, filteredList: filteredList,
-                                          itemHeight: itemHeight,itemWidth: itemWidth,map: map),
+                                      VideoTile(
+                                          tileIndex: index * 2,
+                                          filteredList: filteredList,
+                                          itemHeight: itemHeight * 2 - 50,
+                                          itemWidth: itemWidth,
+                                          map: map),
+                                      VideoTile(
+                                          tileIndex: index * 2 + 1,
+                                          filteredList: filteredList,
+                                          itemHeight: itemHeight,
+                                          itemWidth: itemWidth,
+                                          map: map),
                                     ],
                                   ),
                                 ],
                               ))
                         : Container(
-                            child: VideoTile(tileIndex: 0, filteredList: filteredList,
-                                itemHeight: itemHeight*2 ,itemWidth: itemWidth*2 ,map: map),
+                            child: VideoTile(
+                                tileIndex: 0,
+                                filteredList: filteredList,
+                                itemHeight: itemHeight * 2,
+                                itemWidth: itemWidth * 2,
+                                map: map),
                           );
                   },
                   itemCount: ((filteredList.length - 1) /
                               ((orientation == Orientation.portrait) ? 4 : 2))
                           .floor() +
                       1 +
-                      ((filteredList[0].source != "SCREEN")
-                          ? 0
-                          : 1),
+                      ((filteredList[0].source != "SCREEN") ? 0 : 1),
                 );
               },
             ),

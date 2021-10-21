@@ -140,4 +140,13 @@ class HMSSDKInteractor {
   void unMuteAll() {
     _meeting.unMuteAll();
   }
+
+  Future<HMSException?> startRtmpOrRecording(HMSRecordingConfig hmsRecordingConfig) async{
+    return await _meeting.startRtmpOrRecording(hmsRecordingConfig);
+  }
+
+  Future<HMSException?> stopRtmpAndRecording() async{
+    return await _meeting.stopRtmpAndRecording();
+  }
+
 }

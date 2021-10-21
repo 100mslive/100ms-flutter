@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 
 class RoomService {
   Future<List<String?>?> getToken({required String user, required String room}) async {
+    Constant.meetingUrl = room;
     List<String?> codeAndDomain = getCode(room)??[];
     print(codeAndDomain);
     if(codeAndDomain.length==0){
