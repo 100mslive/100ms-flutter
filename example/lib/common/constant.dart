@@ -6,8 +6,6 @@ class Constant {
 
   static String tokenQuery = "api/token";
 
-  //static String getTokenURL = tokenEndpoint + tokenQuery;
-
   static String defaultRoomID =
       "https://yogi.app.100ms.live/meeting/muggy-ultramarine-fish";
 

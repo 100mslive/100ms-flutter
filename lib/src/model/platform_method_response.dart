@@ -32,7 +32,7 @@ class HMSPreviewUpdateListenerMethodResponse {
       {required this.method, required this.data, required this.response});
 }
 
-class HMSLogsUpdateListenerMethodResponse{
+class HMSLogsUpdateListenerMethodResponse {
   final HMSLogsUpdateListenerMethod method;
   final Map<String, dynamic> data;
   final dynamic response;

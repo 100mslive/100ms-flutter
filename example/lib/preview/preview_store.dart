@@ -7,7 +7,9 @@ part 'preview_store.g.dart';
 
 class PreviewStore = PreviewStoreBase with _$PreviewStore;
 
-abstract class PreviewStoreBase with Store implements HMSPreviewListener,HMSLogListener {
+abstract class PreviewStoreBase
+    with Store
+    implements HMSPreviewListener, HMSLogListener {
   late PreviewController previewController;
 
   @observable
@@ -41,7 +43,7 @@ abstract class PreviewStoreBase with Store implements HMSPreviewListener,HMSLogL
     addLogsListener();
   }
 
-  void removeListener(){
+  void removeListener() {
     previewController.removeListener(this);
     removeLogsListener();
   }
@@ -71,16 +73,16 @@ abstract class PreviewStoreBase with Store implements HMSPreviewListener,HMSLogL
   }
 
   @override
-  void onLogMessage({required dynamic HMSLog}){
-    print(HMSLog.toString()+"onLogMessageFlutter");
+  void onLogMessage({required dynamic HMSLog}) {
+    print(HMSLog.toString() + "onLogMessageFlutter");
     FirebaseCrashlytics.instance.log(HMSLog.toString());
   }
 
-  void addLogsListener(){
+  void addLogsListener() {
     previewController.addLogsListener(this);
   }
 
-  void removeLogsListener(){
+  void removeLogsListener() {
     previewController.removeLogsListener(this);
   }
 }
