@@ -1,3 +1,9 @@
+## 0.4.0
+- `Updated Messaging APIs`
+- `Added audio level, peer & track object in HMSSpeaker`
+- `Updated track source type to string`
+- `Updated sample app`
+
 ## 0.3.0
 
 - `Corrected crash on using getLocalPeer`
