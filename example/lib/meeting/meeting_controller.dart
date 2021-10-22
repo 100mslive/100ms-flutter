@@ -19,14 +19,16 @@ class MeetingController {
         await RoomService().getToken(user: user, room: roomUrl);
     if (token == null) return false;
     HMSConfig config = HMSConfig(
-        userId: Uuid().v1(),
-        roomId: roomUrl,
-        authToken: token[0]!,
-        isProdLink: token[1] == "true" ? true : false,
-        // endPoint: Constant.getTokenURL,
-        userName: user);
+      userId: Uuid().v1(),
+      roomId: roomUrl,
+      authToken: token[0]!,
+      userName: user,
+    );
 
-    await _hmsSdkInteractor?.joinMeeting(config: config);
+    await _hmsSdkInteractor?.joinMeeting(
+        config: config,
+        isProdLink: token[1] == "true" ? true : false,
+        setWebRtcLogs: true);
     return true;
   }
 
@@ -66,12 +68,32 @@ class MeetingController {
     _hmsSdkInteractor?.removeMeetingListener(listener);
   }
 
+  void startHMSLogger(HMSLogLevel webRtclogLevel, HMSLogLevel logLevel) {
+    _hmsSdkInteractor?.startHMSLogger(webRtclogLevel, logLevel);
+  }
+
+  void removeHMSLogger() {
+    _hmsSdkInteractor?.removeHMSLogger();
+  }
+
+  void addLogsListener(HMSLogListener listener) {
+    _hmsSdkInteractor?.addLogsListener(listener);
+  }
+
+  void removeLogsListener(HMSLogListener listener) {
+    _hmsSdkInteractor?.removeLogsListener(listener);
+  }
+
   void addPreviewListener(HMSPreviewListener listener) {
     _hmsSdkInteractor?.addPreviewListener(listener);
   }
 
   void removePreviewListener(HMSPreviewListener listener) {
     _hmsSdkInteractor?.removePreviewListener(listener);
+  }
+
+  Future<HMSPeer?> getLocalPeer() async {
+    return await _hmsSdkInteractor?.getLocalPeer();
   }
 
   void acceptRoleChangeRequest() {

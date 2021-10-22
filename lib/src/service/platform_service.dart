@@ -12,6 +12,9 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter/src/common/platform_methods.dart';
+import 'package:hmssdk_flutter/src/enum/hms_logs_update_listener.dart';
+import 'package:hmssdk_flutter/src/model/hms_log.dart';
+import 'package:hmssdk_flutter/src/model/hms_logs_listener.dart';
 import 'package:hmssdk_flutter/src/model/hms_track_change_request.dart';
 
 class PlatformService {
@@ -26,8 +29,13 @@ class PlatformService {
   static const EventChannel _previewEventChannel =
       const EventChannel('preview_event_channel');
 
+  static const EventChannel _logsEventChannel =
+      const EventChannel("logs_event_channel");
+
   ///add meeting listeners.
   static List<HMSUpdateListener> meetingListeners = [];
+
+  static List<HMSLogListener> logsListeners = [];
 
   ///add preview listeners.
   static List<HMSPreviewListener> previewListeners = [];
@@ -53,6 +61,19 @@ class PlatformService {
     if (previewListeners.contains(listener)) previewListeners.remove(listener);
   }
 
+  static void startHMSLogger(
+      HMSLogLevel webRtclogLevel, HMSLogLevel logLevel) {}
+
+  static void addLogsListener(
+    HMSLogListener hmsLogListener,
+  ) {
+    logsListeners.add(hmsLogListener);
+  }
+
+  static void removeLogsListener(HMSLogListener hmsLogListener) {
+    logsListeners.remove(hmsLogListener);
+  }
+
   ///used to invoke different methods at platform side and returns something but not neccessarily
   static Future<dynamic> invokeMethod(PlatformMethod method,
       {Map? arguments}) async {
@@ -68,6 +89,34 @@ class PlatformService {
 
   ///recieves all the meeting updates here as streams
   static void updatesFromPlatform() {
+    _logsEventChannel.receiveBroadcastStream({'name': 'logs'}).map((event) {
+      print(event.toString() + 'LOGSCHANNEL');
+      Map<String, dynamic>? data = {};
+      if (event is Map && event['data'] != null && event['data'] is Map) {
+        (event['data'] as Map).forEach((key, value) {
+          data[key.toString()] = value;
+        });
+      }
+
+      HMSLogsUpdateListenerMethod method =
+          HMSLogsUpdateListenerMethodValues.getMethodFromName(
+              event['event_name']);
+      return HMSLogsUpdateListenerMethodResponse(
+          method: method, data: data, response: event);
+    }).listen((event) {
+      HMSLogsUpdateListenerMethod method = event.method;
+      print("flutterdata1 ${event.method}");
+      Map<String, dynamic> data = event.data;
+
+      switch (method) {
+        case HMSLogsUpdateListenerMethod.onLogsUpdate:
+          notifyLogsUpdateListeners(method, data);
+          break;
+        case HMSLogsUpdateListenerMethod.unknown:
+          break;
+      }
+    });
+
     _meetingEventChannel.receiveBroadcastStream(
         {'name': 'meeting'}).map<HMSUpdateListenerMethodResponse>((event) {
       Map<String, dynamic>? data = {};
@@ -93,7 +142,8 @@ class PlatformService {
           notifyMeetingListeners(method, {'room': room});
           break;
         case HMSUpdateListenerMethod.onUpdateRoom:
-          HMSRoom? room = HMSRoom.fromMap(data['room']);
+          HMSRoom? room =
+              data['room'] != null ? HMSRoom.fromMap(data['room']) : null;
 
           HMSRoomUpdate? update =
               HMSRoomUpdateValues.getHMSRoomUpdateFromName(data['update']);
@@ -125,9 +175,7 @@ class PlatformService {
           break;
         case HMSUpdateListenerMethod.onUpdateSpeaker:
           List<HMSSpeaker> speakers = [];
-
           if (data.containsKey('speakers') && data['speakers'] is List) {
-            print("onUpdateSpeakerFluttering ${data["speakers"] is List}");
             (data['speakers'] as List).forEach((element) {
               speakers.add(HMSSpeaker.fromMap(element as Map));
             });
@@ -200,6 +248,21 @@ class PlatformService {
           break;
       }
     });
+  }
+
+  static void notifyLogsUpdateListeners(
+      HMSLogsUpdateListenerMethod method, Map<String, dynamic> arguments) {
+    switch (method) {
+      case HMSLogsUpdateListenerMethod.onLogsUpdate:
+        print("$arguments argumentsLogsUpdateListeners");
+        logsListeners.forEach((element) {
+          HMSLog hmsLog = HMSLog.fromMap(arguments);
+          element.onLogMessage(HMSLog: hmsLog);
+        });
+        break;
+      case HMSLogsUpdateListenerMethod.unknown:
+        break;
+    }
   }
 
   ///notifying all previewListeners attached about updates

@@ -4,8 +4,17 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 class PeerItemOrganism extends StatefulWidget {
   final HMSTrack track;
   final bool isVideoMuted;
+  final double height;
+  final double width;
+  final bool isLocal;
 
-  PeerItemOrganism({Key? key, required this.track, this.isVideoMuted = true})
+  PeerItemOrganism(
+      {Key? key,
+      required this.track,
+      this.isVideoMuted = true,
+      this.height = 200.0,
+      this.width = 200.0,
+      this.isLocal = false})
       : super(key: key);
 
   @override
@@ -26,11 +35,13 @@ class _PeerItemOrganismState extends State<PeerItemOrganism> {
   Widget build(BuildContext context) {
     print(
         "isVideoMuted ${widget.isVideoMuted} ${widget.track.source} ${widget.track.peer?.name}");
+
     return Container(
       key: key,
       padding: EdgeInsets.all(2),
       margin: EdgeInsets.all(2),
-      height: 200.0,
+      height: widget.height + 20,
+      width: widget.width - 5.0,
       decoration: BoxDecoration(
           border: Border.all(
               color: widget.track.isHighestAudio ? Colors.blue : Colors.grey,
@@ -40,7 +51,7 @@ class _PeerItemOrganismState extends State<PeerItemOrganism> {
         children: [
           Expanded(child: LayoutBuilder(
             builder: (context, constraints) {
-              if (widget.isVideoMuted) {
+              if ((widget.isVideoMuted)) {
                 List<String> parts = widget.track.peer?.name.split(" ") ?? [];
 
                 if (parts.length == 1) {
@@ -55,13 +66,19 @@ class _PeerItemOrganismState extends State<PeerItemOrganism> {
                   }
                 }
                 return Container(
+                  height: widget.height + 100,
+                  width: widget.width - 5,
                   child: Center(child: CircleAvatar(child: Text(name))),
                 );
               }
 
-              return HMSVideoView(
-                  track: widget.track,
-                  isAuxiliaryTrack: widget.track.source == 'SCREEN');
+              return Container(
+                height: widget.height + 100,
+                width: widget.width - 5,
+                child: HMSVideoView(
+                    track: widget.track,
+                    isAuxiliaryTrack: widget.track.source == "SCREEN"),
+              );
             },
           )),
           SizedBox(

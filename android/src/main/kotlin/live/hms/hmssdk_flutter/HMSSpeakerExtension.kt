@@ -8,8 +8,8 @@ class HMSSpeakerExtension {
             val hashMap = HashMap<String,Any?>()
             if(speaker==null)return null
             hashMap.put("audioLevel",speaker.level)
-            hashMap.put("trackId",speaker.trackId)
-            hashMap.put("peerId",if(speaker.peer!=null)speaker.peer!!.peerID else "")
+            hashMap.put("track",HMSTrackExtension.toDictionary(speaker.hmsTrack))
+            hashMap.put("peer",HMSPeerExtension.toDictionary(speaker.peer))
             return hashMap
         }
     }

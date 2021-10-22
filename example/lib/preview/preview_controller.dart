@@ -1,3 +1,4 @@
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/meeting/hms_sdk_interactor.dart';
 import 'package:hmssdk_flutter_example/service/room_service.dart';
@@ -16,20 +17,28 @@ class PreviewController {
         await RoomService().getToken(user: user, room: roomId);
 
     if (token == null) return false;
+    FirebaseCrashlytics.instance.setUserIdentifier(token[0]!);
 
     HMSConfig config = HMSConfig(
-        userId: Uuid().v1(),
-        roomId: roomId,
-        authToken: token[0]!,
-        userName: user,
-        isProdLink: token[1] == "true" ? true : false);
+      userId: Uuid().v1(),
+      roomId: roomId,
+      authToken: token[0]!,
+      userName: user,
+    );
 
-    _hmsSdkInteractor?.previewVideo(config: config);
+    _hmsSdkInteractor?.previewVideo(
+        config: config,
+        isProdLink: token[1] == "true" ? true : false,
+        setWebRtcLogs: true);
     return true;
   }
 
   void startListen(HMSPreviewListener listener) {
     _hmsSdkInteractor?.addPreviewListener(listener);
+  }
+
+  void removeListener(HMSPreviewListener listener) {
+    _hmsSdkInteractor?.removePreviewListener(listener);
   }
 
   void stopCapturing() {
@@ -42,5 +51,13 @@ class PreviewController {
 
   void switchAudio({bool isOn = false}) {
     _hmsSdkInteractor?.switchAudio(isOn: isOn);
+  }
+
+  void addLogsListener(HMSLogListener hmsLogListener) {
+    _hmsSdkInteractor?.addLogsListener(hmsLogListener);
+  }
+
+  void removeLogsListener(HMSLogListener hmsLogListener) {
+    _hmsSdkInteractor?.removeLogsListener(hmsLogListener);
   }
 }

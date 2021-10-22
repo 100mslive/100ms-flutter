@@ -23,7 +23,7 @@ class HMSVideoTrack extends HMSTrack {
     return HMSVideoTrack(
         trackId: map['track_id'],
         trackDescription: map['track_description'],
-        source: map['track_source'],
+        source: (map['track_source']),
         kind: HMSTrackKindValue.getHMSTrackKindFromName(map['track_kind']),
         isMute: map['track_mute'],
         peer: peer);

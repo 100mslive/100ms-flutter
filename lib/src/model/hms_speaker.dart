@@ -1,12 +1,14 @@
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+
 class HMSSpeaker {
-  final String peerId;
-  final String trackId;
+  final HMSPeer peer;
+  final HMSTrack? track;
   final int audioLevel;
 
   factory HMSSpeaker.fromMap(Map map) {
     return new HMSSpeaker(
-      peerId: map['peerId'] as String,
-      trackId: map['trackId'] as String,
+      peer: HMSPeer.fromMap(map['peer']),
+      track: map["track"] == null ? null : HMSTrack.fromMap(map: map['track']),
       audioLevel: map['audioLevel'] as int,
     );
   }
@@ -14,12 +16,15 @@ class HMSSpeaker {
   Map<String, dynamic> toMap() {
     // ignore: unnecessary_cast
     return {
-      'peerId': this.peerId,
-      'trackId': this.trackId,
+      'peer': this.peer,
+      'track': this.track,
       'audioLevel': this.audioLevel,
     } as Map<String, dynamic>;
   }
 
-  HMSSpeaker(
-      {required this.peerId, required this.trackId, required this.audioLevel});
+  HMSSpeaker({
+    required this.peer,
+    required this.track,
+    required this.audioLevel,
+  });
 }
