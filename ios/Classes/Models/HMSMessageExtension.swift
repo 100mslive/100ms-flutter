@@ -21,6 +21,6 @@ class HMSMessageExtension{
         
         dict["hms_message_recipient"] = HMSMessageRecipientExtension.toDictionary(receipient: message.recipient)
         
-        return ["message": dict]
+        return dict
     }
 }
