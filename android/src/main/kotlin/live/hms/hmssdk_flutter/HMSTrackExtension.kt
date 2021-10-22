@@ -1,6 +1,5 @@
 package live.hms.hmssdk_flutter
 
-import android.util.Log
 import live.hms.video.media.tracks.HMSTrack
 import live.hms.video.media.tracks.HMSTrackType
 import live.hms.video.sdk.models.enums.HMSTrackUpdate
@@ -14,7 +13,6 @@ class HMSTrackExtension {
             hashMap["track_description"] = track.description
             hashMap["track_kind"] = getKindInString(track.type)
             hashMap["track_source"] = track.source.uppercase()
-            Log.i("checkingTrackSource",track.source.uppercase())
             hashMap.put("track_mute",track.isMute)
             return hashMap
         }
