@@ -124,14 +124,13 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                     onPressed: () {
                       _previewStore.removeListener();
                       Navigator.of(context).pushReplacement(MaterialPageRoute(
-                          builder: (_) =>
-                              Provider<MeetingStore>(
-                                create: (_)=>MeetingStore(),
-                            child: MeetingPage(
-                                roomId: widget.roomId,
-                                flow: widget.flow,
-                                user: widget.user),
-                          )));
+                          builder: (_) => Provider<MeetingStore>(
+                                create: (_) => MeetingStore(),
+                                child: MeetingPage(
+                                    roomId: widget.roomId,
+                                    flow: widget.flow,
+                                    user: widget.user),
+                              )));
                     },
                     child: Text(
                       'Join Now',

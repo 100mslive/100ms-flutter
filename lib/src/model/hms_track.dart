@@ -24,7 +24,7 @@ class HMSTrack {
     return HMSTrack(
         trackId: map['track_id'],
         trackDescription: map['track_description'],
-        source:map['track_source'],
+        source: map['track_source'],
         kind: HMSTrackKindValue.getHMSTrackKindFromName(map['track_kind']),
         peer: peer,
         isMute: map['track_mute']);

@@ -1,7 +1,6 @@
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/meeting/hms_sdk_interactor.dart';
-import 'package:hmssdk_flutter_example/preview/preview_store.dart';
 import 'package:hmssdk_flutter_example/service/room_service.dart';
 import 'package:uuid/uuid.dart';
 
@@ -14,19 +13,23 @@ class PreviewController {
       : _hmsSdkInteractor = HMSSDKInteractor();
 
   Future<bool> startPreview() async {
-    List<String?>? token = await RoomService().getToken(user: user, room: roomId);
+    List<String?>? token =
+        await RoomService().getToken(user: user, room: roomId);
 
     if (token == null) return false;
     FirebaseCrashlytics.instance.setUserIdentifier(token[0]!);
 
     HMSConfig config = HMSConfig(
-        userId: Uuid().v1(),
-        roomId: roomId,
-        authToken: token[0]!,
-        userName: user,
-        );
+      userId: Uuid().v1(),
+      roomId: roomId,
+      authToken: token[0]!,
+      userName: user,
+    );
 
-    _hmsSdkInteractor?.previewVideo(config: config,isProdLink: token[1] == "true" ? true : false,setWebRtcLogs: true);
+    _hmsSdkInteractor?.previewVideo(
+        config: config,
+        isProdLink: token[1] == "true" ? true : false,
+        setWebRtcLogs: true);
     return true;
   }
 
@@ -34,7 +37,7 @@ class PreviewController {
     _hmsSdkInteractor?.addPreviewListener(listener);
   }
 
-  void removeListener(HMSPreviewListener listener){
+  void removeListener(HMSPreviewListener listener) {
     _hmsSdkInteractor?.removePreviewListener(listener);
   }
 
@@ -54,7 +57,7 @@ class PreviewController {
     _hmsSdkInteractor?.addLogsListener(hmsLogListener);
   }
 
-  void removeLogsListener(HMSLogListener hmsLogListener){
+  void removeLogsListener(HMSLogListener hmsLogListener) {
     _hmsSdkInteractor?.removeLogsListener(hmsLogListener);
   }
 }
