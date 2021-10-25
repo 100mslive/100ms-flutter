@@ -11,11 +11,11 @@ import live.hms.video.media.tracks.HMSVideoTrack
 import live.hms.video.sdk.models.HMSPeer
 import org.webrtc.SurfaceViewRenderer
 
-class HMSVideoViewWidget(context: Context, id: Int, creationParams: Map<String?, Any?>?,val peer:HMSPeer?,val trackId:String,val  isAux:Boolean) : PlatformView {
+class HMSVideoViewWidget(context: Context, id: Int, creationParams: Map<String?, Any?>?,val peer:HMSPeer?,val trackId:String,val  isAux:Boolean,val setMirror:Boolean) : PlatformView {
 
     private val hmsVideoView: HMSVideoView by lazy {
         Log.i("HMSVideoView","hmsVideoView instance")
-        HMSVideoView(context)
+        HMSVideoView(context,setMirror)
     }
 
     init {
@@ -86,12 +86,13 @@ class HMSVideoViewFactory(val plugin: HmssdkFlutterPlugin) : PlatformViewFactory
         val creationParams = args as Map<String?, Any?>?
         val id=args!!["peer_id"] as? String
         val isLocal=args!!["is_local"] as? Boolean
+        val setMirror=args!!["set_mirror"] as? Boolean
         val trackId=args!!["track_id"] as? String
         val isAuxiliary = args!!["is_aux"] as? Boolean
-        // Log.i("onCreateHMSVideoView", "$isLocal $id")
+        Log.i("onCreateHMSVideoView", "$setMirror")
         // Log.i("HMSVideoViewFactory",trackId.toString())
         val peer = if(isLocal==null || isLocal!!) plugin.getLocalPeer()
         else plugin.getPeerById(id!!)!!
-        return HMSVideoViewWidget(context, viewId, creationParams,peer,trackId!!,isAuxiliary!!)
+        return HMSVideoViewWidget(context, viewId, creationParams,peer,trackId!!,isAuxiliary!!,setMirror!!)
     }
 }

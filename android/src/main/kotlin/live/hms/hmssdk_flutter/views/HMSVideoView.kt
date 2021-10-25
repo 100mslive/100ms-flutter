@@ -16,7 +16,7 @@ import org.webrtc.EglBase
 import org.webrtc.RendererCommon
 import org.webrtc.SurfaceViewRenderer
 
-class HMSVideoView(context: Context) : ConstraintLayout(context, null) {
+class HMSVideoView(context: Context,setMirror:Boolean) : ConstraintLayout(context, null) {
     val surfaceViewRenderer: SurfaceViewRenderer
 
     init {
@@ -25,7 +25,9 @@ class HMSVideoView(context: Context) : ConstraintLayout(context, null) {
 
         surfaceViewRenderer = view.findViewById(R.id.surfaceViewRenderer)
         surfaceViewRenderer.setEnableHardwareScaler(true)
-        surfaceViewRenderer.setScalingType(RendererCommon.ScalingType.SCALE_ASPECT_FILL)
+        Log.i("HMSVideoViewAndroid",setMirror.toString())
+        surfaceViewRenderer.setMirror(setMirror)
+        surfaceViewRenderer.setScalingType(RendererCommon.ScalingType.SCALE_ASPECT_FIT)
         surfaceViewRenderer.init(SharedEglContext.context, null)
     }
 

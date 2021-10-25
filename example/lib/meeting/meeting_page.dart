@@ -44,9 +44,6 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
         roomUrl: widget.roomId, flow: widget.flow, user: widget.user);
     _meetingStore.meetingController = meetingController;
 
-    // _meetingStore.trackStatus.observe((p0) {
-    //   print("in initmeetingTrackStatus");
-    // }, fireImmediately: true);
 
     _roleChangerequestDisposer = reaction(
         (_) => _meetingStore.roleChangeRequest,

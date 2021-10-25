@@ -124,30 +124,33 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                     onPressed: () {
                       _previewStore.removeListener();
                       Navigator.of(context).pushReplacement(MaterialPageRoute(
-                          builder: (_) =>
-                              Provider<MeetingStore>(
-                                create: (_)=>MeetingStore(),
-                            child: MeetingPage(
-                                roomId: widget.roomId,
-                                flow: widget.flow,
-                                user: widget.user),
-                          )));
+                          builder: (_) => Provider<MeetingStore>(
+                                create: (_) => MeetingStore(),
+                                child: MeetingPage(
+                                    roomId: widget.roomId,
+                                    flow: widget.flow,
+                                    user: widget.user),
+                              )));
                     },
                     child: Text(
                       'Join Now',
                       style: TextStyle(height: 1, fontSize: 18),
                     ),
                   )),
-                  Expanded(
-                      child: GestureDetector(
-                    onTap: () async {
-                      _previewStore.switchAudio();
-                      setState(() {});
-                    },
-                    child: Icon(
-                        _previewStore.audioOn ? Icons.mic : Icons.mic_off,
-                        size: 48),
-                  ))
+                  Observer(
+                    builder: (context) {
+                      return Expanded(
+                          child: GestureDetector(
+                        onTap: () async {
+                          _previewStore.switchAudio();
+                          setState(() {});
+                        },
+                        child: Icon(
+                            _previewStore.audioOn ? Icons.mic : Icons.mic_off,
+                            size: 48),
+                      ));
+                    }
+                  )
                 ],
               ),
               SizedBox(
