@@ -12,6 +12,7 @@ import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
 import 'package:hmssdk_flutter_example/main.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_controller.dart';
+import 'package:hmssdk_flutter_example/meeting/meeting_page_ui.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:mobx/mobx.dart';
 import 'package:provider/src/provider.dart';
@@ -32,36 +33,53 @@ class MeetingPage extends StatefulWidget {
 
 class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
   late MeetingStore _meetingStore;
-  late ReactionDisposer _roleChangerequestDisposer, _trackChangerequestDisposer;
-  late ReactionDisposer _errorDisposer;
+  late ReactionDisposer _roleChangerequestDisposer,
+      _hmsExceptionDisposer,
+      _trackChangerequestDisposer,
+      _reconnectingDisposer;
+  late ReactionDisposer _errorDisposer,
+      _recordingDisposer,
+      _reconnectedDisposer,
+      _roomEndedDisposer;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance!.addObserver(this);
     _meetingStore = context.read<MeetingStore>();
-    MeetingController meetingController = MeetingController(
-        roomUrl: widget.roomId, flow: widget.flow, user: widget.user);
+    MeetingController meetingController = MeetingController(roomUrl: widget.roomId, flow: widget.flow, user: widget.user);
     _meetingStore.meetingController = meetingController;
+    allListeners();
+    super.initState();
+    initMeeting();
+    checkButtons();
+  }
 
-
+  void allListeners() {
     _roleChangerequestDisposer = reaction(
         (_) => _meetingStore.roleChangeRequest,
         (event) => {
               if ((event as HMSRoleChangeRequest).suggestedBy !=
                   _meetingStore.localPeer)
-                showRoleChangeDialog(event)
+                UtilityComponents.showRoleChangeDialog(event, context)
             });
     _trackChangerequestDisposer = reaction(
         (_) => _meetingStore.hmsTrackChangeRequest,
-        (event) => {showTrackChangeDialog(event)});
+        (event) => {UtilityComponents.showTrackChangeDialog(event, context)});
     _errorDisposer = reaction(
         (_) => _meetingStore.error,
         (event) => {
               UtilityComponents.showSnackBarWithString(
                   (event as HMSError).description, context)
             });
-    reaction(
+    _recordingDisposer = reaction(
+        (_) => _meetingStore.isRecordingStarted,
+        (event) => {
+              UtilityComponents.showSnackBarWithString(
+                  event == true ? "Recording Started" : "Recording Stopped",
+                  context)
+            });
+    _reconnectedDisposer = reaction(
         (_) => _meetingStore.reconnected,
         (event) => {
               if ((event as bool) == true)
@@ -69,13 +87,13 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                     "reconnected", context),
               _meetingStore.reconnected = false
             });
-    reaction(
+    _roomEndedDisposer = reaction(
         (_) => _meetingStore.isRoomEnded,
         (event) => {
               if ((event as bool) == true) Navigator.of(context).pop(),
               _meetingStore.isRoomEnded = false
             });
-    reaction(
+    _reconnectingDisposer = reaction(
         (_) => _meetingStore.reconnecting,
         (event) => {
               if ((event as bool) == true)
@@ -83,16 +101,13 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                     "reconnecting", context),
             });
 
-    reaction(
-            (_) => _meetingStore.hmsException,
-            (event) => {
-          if ((event as HMSException?) !=null)
-            UtilityComponents.showSnackBarWithString(
-                event?.description, context),
-        });
-    super.initState();
-    initMeeting();
-    checkButtons();
+    _hmsExceptionDisposer = reaction(
+        (_) => _meetingStore.hmsException,
+        (event) => {
+              if ((event as HMSException?) != null)
+                UtilityComponents.showSnackBarWithString(
+                    event?.description, context),
+            });
   }
 
   void initMeeting() async {
@@ -111,51 +126,21 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
         !(await _meetingStore.meetingController.isAudioMute(null));
   }
 
-  void showRoleChangeDialog(event) async {
-    event = event as HMSRoleChangeRequest;
-    String answer = await showDialog(
-        context: context,
-        builder: (ctx) => RoleChangeDialogOrganism(roleChangeRequest: event));
-    if (answer == "OK") {
-      debugPrint("OK accepted");
-      _meetingStore.meetingController.acceptRoleChangeRequest();
-      UtilityComponents.showSnackBarWithString(
-          (event as HMSError).description, context);
-    }
-  }
-
-  Future<dynamic> _onBackPressed() {
-    return showDialog(
-        context: context,
-        builder: (ctx) => AlertDialog(
-              title: Text('Leave the Meeting?'),
-              actions: [
-                TextButton(
-                    onPressed: () => {
-                          _meetingStore.meetingController.leaveMeeting(),
-                          Navigator.pop(context, true),
-                          Navigator.pushReplacement(context,
-                              MaterialPageRoute(builder: (ctx) => HomePage()))
-                        },
-                    child:
-                        Text('Yes', style: TextStyle(height: 1, fontSize: 24))),
-                TextButton(
-                    onPressed: () => Navigator.pop(context, false),
-                    child: Text('Cancel',
-                        style: TextStyle(
-                            height: 1,
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold))),
-              ],
-            ));
-  }
-
   @override
   void dispose() {
+    disposeAllListeners();
+    super.dispose();
+  }
+
+  void disposeAllListeners() {
     _roleChangerequestDisposer.reaction.dispose();
     _errorDisposer.reaction.dispose();
     _trackChangerequestDisposer.reaction.dispose();
-    super.dispose();
+    _recordingDisposer.reaction.dispose();
+    _roomEndedDisposer.reaction.dispose();
+    _reconnectedDisposer.reaction.dispose();
+    _reconnectingDisposer.reaction.dispose();
+    _hmsExceptionDisposer.reaction.dispose();
   }
 
   @override
@@ -174,12 +159,12 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
             Observer(
                 builder: (_) => IconButton(
                       onPressed: () {
-                        if(_meetingStore.isRecordingStarted){
+                        if (_meetingStore.isRecordingStarted) {
                           _meetingStore.stopRtmpAndRecording();
-                        }
-                        else{
+                        } else {
                           print("${Constant.meetingUrl} meetingUrl");
-                          _meetingStore.startRtmpOrRecording(Constant.meetingUrl, true, null);
+                          _meetingStore.startRtmpOrRecording(
+                              Constant.meetingUrl, true, null);
                         }
                       },
                       icon: Icon(
@@ -237,79 +222,14 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                 print("${filteredList.length} filteredListLength");
                 return PageView.builder(
                   itemBuilder: (ctx, index) {
-                    ObservableMap<String, HMSTrackUpdate> map =
-                        _meetingStore.trackStatus;
-                    return (index < filteredList.length &&
-                            filteredList[index].source != "SCREEN")
-                        ? ((orientation == Orientation.portrait)
-                            ? Column(
-                                children: [
-                                  Row(
-                                    children: [
-                                      //if (index * 4 < filteredList.length)
-                                      VideoTile(
-                                          tileIndex: index * 4,
-                                          filteredList: filteredList,
-                                          itemHeight: itemHeight,
-                                          itemWidth: itemWidth,
-                                          map: map),
-                                      //if (index * 4 + 1 < filteredList.length)
-                                      VideoTile(
-                                          tileIndex: index * 4 + 1,
-                                          filteredList: filteredList,
-                                          itemHeight: itemHeight,
-                                          itemWidth: itemWidth,
-                                          map: map),
-                                    ],
-                                  ),
-                                  Row(
-                                    children: [
-                                      //if (index * 4 + 2 < filteredList.length)
-                                      VideoTile(
-                                          tileIndex: index * 4 + 2,
-                                          filteredList: filteredList,
-                                          itemHeight: itemHeight,
-                                          itemWidth: itemWidth,
-                                          map: map),
-                                      //if (index * 4 + 3 < filteredList.length)
-                                      VideoTile(
-                                          tileIndex: index * 4 + 3,
-                                          filteredList: filteredList,
-                                          itemHeight: itemHeight,
-                                          itemWidth: itemWidth,
-                                          map: map),
-                                    ],
-                                  ),
-                                ],
-                              )
-                            : Column(
-                                children: [
-                                  Row(
-                                    children: [
-                                      VideoTile(
-                                          tileIndex: index * 2,
-                                          filteredList: filteredList,
-                                          itemHeight: itemHeight * 2 - 50,
-                                          itemWidth: itemWidth,
-                                          map: map),
-                                      VideoTile(
-                                          tileIndex: index * 2 + 1,
-                                          filteredList: filteredList,
-                                          itemHeight: itemHeight,
-                                          itemWidth: itemWidth,
-                                          map: map),
-                                    ],
-                                  ),
-                                ],
-                              ))
-                        : Container(
-                            child: VideoTile(
-                                tileIndex: 0,
-                                filteredList: filteredList,
-                                itemHeight: itemHeight * 2,
-                                itemWidth: itemWidth * 2,
-                                map: map),
-                          );
+                    ObservableMap<String, HMSTrackUpdate> map = _meetingStore.trackStatus;
+                    return MeetingPageUI(
+                        index: index,
+                        filteredList: filteredList,
+                        orientation: orientation,
+                        itemWidth: itemWidth,
+                        itemHeight: itemHeight,
+                        map: map);
                   },
                   itemCount: ((filteredList.length - 1) /
                               ((orientation == Orientation.portrait) ? 4 : 2))
@@ -380,7 +300,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
         ),
       ),
       onWillPop: () async {
-        bool ans = await _onBackPressed();
+        bool ans = await UtilityComponents.onBackPressed(context);
         return ans;
       },
     );
@@ -401,17 +321,6 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
       if (_meetingStore.isVideoOn) {
         _meetingStore.meetingController.stopCapturing();
       }
-    }
-  }
-
-  showTrackChangeDialog(event) async {
-    event = event as HMSTrackChangeRequest;
-    String answer = await showDialog(
-        context: context,
-        builder: (ctx) => TrackChangeDialogOrganism(trackChangeRequest: event));
-    if (answer == "OK") {
-      debugPrint("OK accepted");
-      _meetingStore.changeTracks();
     }
   }
 }

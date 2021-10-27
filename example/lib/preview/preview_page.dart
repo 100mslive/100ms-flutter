@@ -56,7 +56,6 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-
     /*24 is for notification bar on Android*/
     final double itemHeight = (size.height - kToolbarHeight - 24);
     final double itemWidth = size.width;
@@ -143,7 +142,6 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                           child: GestureDetector(
                         onTap: () async {
                           _previewStore.switchAudio();
-                          setState(() {});
                         },
                         child: Icon(
                             _previewStore.audioOn ? Icons.mic : Icons.mic_off,

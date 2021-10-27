@@ -371,8 +371,8 @@ abstract class MeetingStoreBase
   @override
   void onRemovedFromRoom(
       {required HMSPeerRemovedFromPeer hmsPeerRemovedFromPeer}) {
-    meetingController.leaveMeeting();
-    isRoomEnded = true;
+    leaveMeeting();
+
   }
 
   void changeRole(
@@ -456,11 +456,14 @@ abstract class MeetingStoreBase
   }
 
   Future<bool> endRoom(bool lock) async {
-    return await meetingController.endRoom(lock);
+    bool room = await meetingController.endRoom(lock);
+    if(room == true)isRoomEnded = true;
+    return room;
   }
 
   void leaveMeeting() {
     meetingController.leaveMeeting();
+    isRoomEnded = true;
     removeListener();
   }
 
