@@ -42,6 +42,8 @@ abstract class MeetingStoreBase
 
   @observable
   HMSTrackChangeRequest? hmsTrackChangeRequest;
+  @observable
+  List<HMSRole> roles= [];
 
   late MeetingController meetingController;
 
@@ -201,7 +203,7 @@ abstract class MeetingStoreBase
   }
 
   @override
-  void onJoin({required HMSRoom room}) {
+  void onJoin({required HMSRoom room}) async{
     if (Platform.isAndroid) {
       print("members ${room.peers!.length}");
       for (HMSPeer each in room.peers!) {
@@ -230,6 +232,7 @@ abstract class MeetingStoreBase
         }
       }
     }
+    roles = await getRoles();
   }
 
   @override
@@ -366,9 +369,10 @@ abstract class MeetingStoreBase
   }
 
   @override
-  void onRemovedFromRoom({required HMSPeerRemovedFromPeer hmsPeerRemovedFromPeer}) {
-    meetingController.leaveMeeting();
-    isRoomEnded = true;
+  void onRemovedFromRoom(
+      {required HMSPeerRemovedFromPeer hmsPeerRemovedFromPeer}) {
+    leaveMeeting();
+
   }
 
   void changeRole(
@@ -452,11 +456,14 @@ abstract class MeetingStoreBase
   }
 
   Future<bool> endRoom(bool lock) async {
-    return await meetingController.endRoom(lock);
+    bool room = await meetingController.endRoom(lock);
+    if(room == true)isRoomEnded = true;
+    return room;
   }
 
   void leaveMeeting() {
     meetingController.leaveMeeting();
+    isRoomEnded = true;
     removeListener();
   }
 
@@ -498,14 +505,26 @@ abstract class MeetingStoreBase
     return await meetingController.getLocalPeer();
   }
 
-  void startRtmpOrRecording(String meetingUrl,bool toRecord,List<String>? rtmpUrls) async{
-    HMSRecordingConfig hmsRecordingConfig = new HMSRecordingConfig(meetingUrl: meetingUrl, toRecord: toRecord,rtmpUrls: rtmpUrls);
-    hmsException = await meetingController.startRtmpOrRecording(hmsRecordingConfig);
-    if(hmsException==null)isRecordingStarted = true;
+  void startRtmpOrRecording(
+      String meetingUrl, bool toRecord, List<String>? rtmpUrls) async {
+    HMSRecordingConfig hmsRecordingConfig = new HMSRecordingConfig(
+        meetingUrl: meetingUrl, toRecord: toRecord, rtmpUrls: rtmpUrls);
+    hmsException =
+        await meetingController.startRtmpOrRecording(hmsRecordingConfig);
+    if (hmsException == null || hmsException?.code == 400) {
+      isRecordingStarted = true;
+      return;
+    }
+
+    print("${hmsException?.toString()} HMSEXCEPTION  ${isRecordingStarted}");
   }
 
-  void stopRtmpAndRecording() async{
+  void stopRtmpAndRecording() async {
     hmsException = (await meetingController.stopRtmpAndRecording());
-    if(hmsException == null)isRecordingStarted = false;
+    if (hmsException == null) {
+      isRecordingStarted = false;
+      return;
+    }
+    print("${hmsException?.toString()} HMSEXCEPTION ${isRecordingStarted}");
   }
 }
