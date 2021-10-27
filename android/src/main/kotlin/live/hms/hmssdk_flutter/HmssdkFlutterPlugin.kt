@@ -777,14 +777,14 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
         hmssdk.changeTrackState(mute = mute!!,type = HMSTrackExtension.getStringFromKind(type),source = source,roles=realRoles,object : HMSActionResultListener {
 
             override fun onSuccess() {
-                Log.i("startRTMPORRECORDING","SUCCESS")
+                Log.i("changeTrackStateForRole","SUCCESS")
                 CoroutineScope(Dispatchers.Main).launch {
                     result.success(null)
                 }
             }
 
             override fun onError(error: HMSException) {
-                Log.i("startRTMPORRECORDING","ERROR ${error.description}  ${error.code}")
+                Log.i("changeTrackStateForRole","ERROR ${error.description}  ${error.code}")
                 CoroutineScope(Dispatchers.Main).launch {
                     result.success(HMSExceptionExtension.toDictionary(error))
                 }

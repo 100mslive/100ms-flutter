@@ -27,7 +27,7 @@ class HMSVideoView(context: Context,setMirror:Boolean) : ConstraintLayout(contex
         surfaceViewRenderer.setEnableHardwareScaler(true)
         Log.i("HMSVideoViewAndroid",setMirror.toString())
         surfaceViewRenderer.setMirror(setMirror)
-        surfaceViewRenderer.setScalingType(RendererCommon.ScalingType.SCALE_ASPECT_FIT)
+        surfaceViewRenderer.setScalingType(RendererCommon.ScalingType.SCALE_ASPECT_FILL)
         surfaceViewRenderer.init(SharedEglContext.context, null)
     }
 

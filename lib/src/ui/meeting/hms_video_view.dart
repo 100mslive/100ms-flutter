@@ -97,7 +97,8 @@ class _PlatformView extends StatelessWidget {
         creationParams: {
           'peer_id': track.peer?.peerId,
           'is_local': track.peer?.isLocal,
-          'track_id': track.trackId
+          'track_id': track.trackId,
+          'set_mirror':setMirror
         }..addAll({
             'height': viewSize.height,
             'width': viewSize.width,
