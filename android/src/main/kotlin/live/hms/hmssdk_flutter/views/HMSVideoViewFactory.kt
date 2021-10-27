@@ -14,24 +14,19 @@ import org.webrtc.SurfaceViewRenderer
 class HMSVideoViewWidget(context: Context, id: Int, creationParams: Map<String?, Any?>?,val peer:HMSPeer?,val trackId:String,val  isAux:Boolean) : PlatformView {
 
     private val hmsVideoView: HMSVideoView by lazy {
-        Log.i("HMSVideoView","hmsVideoView instance")
         HMSVideoView(context)
     }
 
     init {
-//        renderVideo()
-        Log.i("HMSVideoView","init")
     }
 
     override fun onFlutterViewAttached(flutterView: View) {
         super.onFlutterViewAttached(flutterView)
-        Log.i("HMSVideoView","onFlutterViewAttached")
         renderVideo()
     }
 
     override fun onFlutterViewDetached() {
         super.onFlutterViewDetached()
-        Log.i("HMSVideoView","onFlutterViewDetached")
     }
 
     private fun renderVideo() {
@@ -59,12 +54,10 @@ class HMSVideoViewWidget(context: Context, id: Int, creationParams: Map<String?,
     }
 
     override fun getView(): View {
-        Log.i("HMSVideoView","getView")
         return hmsVideoView
     }
 
     override fun dispose() {
-        Log.i("HMSVideoView","dispose")
         release()
     }
 
@@ -79,7 +72,6 @@ class HMSVideoViewWidget(context: Context, id: Int, creationParams: Map<String?,
 }
 
 class HMSVideoViewFactory(val plugin: HmssdkFlutterPlugin) : PlatformViewFactory(StandardMessageCodec.INSTANCE) {
-    //val peerIdToRenderer : HashMap<String,SurfaceViewRenderer> = HashMap()
 
     override fun create(context: Context, viewId: Int, args: Any?): PlatformView {
 
@@ -88,8 +80,6 @@ class HMSVideoViewFactory(val plugin: HmssdkFlutterPlugin) : PlatformViewFactory
         val isLocal=args!!["is_local"] as? Boolean
         val trackId=args!!["track_id"] as? String
         val isAuxiliary = args!!["is_aux"] as? Boolean
-        // Log.i("onCreateHMSVideoView", "$isLocal $id")
-        // Log.i("HMSVideoViewFactory",trackId.toString())
         val peer = if(isLocal==null || isLocal!!) plugin.getLocalPeer()
         else plugin.getPeerById(id!!)!!
         return HMSVideoViewWidget(context, viewId, creationParams,peer,trackId!!,isAuxiliary!!)
