@@ -97,6 +97,7 @@ class VideoTile extends StatelessWidget {
                   return oldWidget.track != newWidget.track || oldWidget.isVideoMuted!=newWidget.isVideoMuted || oldWidget.track.isHighestAudio != newWidget.track.isHighestAudio;
                 },
                 child: PeerItemOrganism(
+                    setMirror: !filteredList[index].peer!.isLocal,
                     key: Key(index.toString()),
                     height: itemHeight,
                     width: itemWidth,
