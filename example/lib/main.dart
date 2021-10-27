@@ -9,6 +9,7 @@ import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
 import 'package:hmssdk_flutter_example/preview/preview_page.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:wakelock/wakelock.dart';
+import 'package:input_history_text_field/input_history_text_field.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -79,21 +80,19 @@ class _HomePageState extends State<HomePage> {
               children: [
                 Text('Join a Meeting',
                     style: TextStyle(
-                        height: 1, fontSize: 18, fontWeight: FontWeight.bold)),
+                        height: 1, fontSize: 24, fontWeight: FontWeight.bold)),
                 SizedBox(
                   height: 8,
                 ),
-                TextField(
-                  controller: roomIdController,
+                InputHistoryTextField(
+                  historyKey: "key-01",
+                  textEditingController: roomIdController,
+                  enableOpacityGradient: true,
+                  autofocus: true,
                   decoration: InputDecoration(
-                    hintText: 'Enter RoomUrl',
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(16))),
-                    suffixIcon: IconButton(
-                      onPressed: roomIdController.clear,
-                      icon: Icon(Icons.clear),
-                    ),
-                  ),
+                      hintText: 'Enter Room URL',
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(16)))),
                 ),
                 SizedBox(
                   height: 8,
@@ -124,14 +123,12 @@ class _HomePageState extends State<HomePage> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.video_call_outlined, size: 32),
+                          Icon(Icons.video_call_outlined, size: 48),
                           SizedBox(
                             width: 8,
                           ),
-                          Text(
-                            'Join Meeting',
-                            style: TextStyle(height: 1, fontSize: 18),
-                          )
+                          Text('Join Meeting',
+                              style: TextStyle(height: 1, fontSize: 24))
                         ],
                       ),
                     ))
