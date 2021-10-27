@@ -206,4 +206,20 @@ class HMSMeeting {
   void unMuteAll() async {
     await PlatformService.invokeMethod(PlatformMethod.unMuteAll);
   }
+
+  Future<bool> changeTrackStateForRole(bool mute,String type,String source,List<String> roles) async{
+    return await PlatformService.invokeMethod(PlatformMethod.changeTrackStateForRole,arguments: {"mute":mute,"type":type,"source":source,"roles":roles});
+  }
+
+  Future<HMSException?> startRtmpOrRecording(HMSRecordingConfig hmsRecordingConfig) async{
+    Map? hmsException = await PlatformService.invokeMethod(PlatformMethod.startRtmpOrRecording,arguments: hmsRecordingConfig.getJson()) as Map?;
+    if(hmsException==null)return null;
+    return HMSException.fromMap(hmsException);
+  }
+
+  Future<HMSException?> stopRtmpAndRecording() async{
+    Map<String,dynamic>? hmsException = await PlatformService.invokeMethod(PlatformMethod.stopRtmpAndRecording);
+    if(hmsException==null)return null;
+    return HMSException.fromMap(hmsException);
+  }
 }

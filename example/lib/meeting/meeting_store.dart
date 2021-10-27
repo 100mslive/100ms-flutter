@@ -20,6 +20,9 @@ abstract class MeetingStoreBase
   HMSError? error;
 
   @observable
+  HMSException? hmsException;
+
+  @observable
   HMSRoleChangeRequest? roleChangeRequest;
 
   @observable
@@ -32,6 +35,11 @@ abstract class MeetingStoreBase
   bool reconnecting = false;
   @observable
   bool reconnected = false;
+  @observable
+  bool isRoomEnded = false;
+  @observable
+  bool isRecordingStarted = false;
+
   @observable
   HMSTrackChangeRequest? hmsTrackChangeRequest;
 
@@ -358,9 +366,9 @@ abstract class MeetingStoreBase
   }
 
   @override
-  void onRemovedFromRoom(
-      {required HMSPeerRemovedFromPeer hmsPeerRemovedFromPeer}) {
+  void onRemovedFromRoom({required HMSPeerRemovedFromPeer hmsPeerRemovedFromPeer}) {
     meetingController.leaveMeeting();
+    isRoomEnded = true;
   }
 
   void changeRole(
@@ -488,5 +496,16 @@ abstract class MeetingStoreBase
 
   Future<HMSPeer?> getLocalPeer() async {
     return await meetingController.getLocalPeer();
+  }
+
+  void startRtmpOrRecording(String meetingUrl,bool toRecord,List<String>? rtmpUrls) async{
+    HMSRecordingConfig hmsRecordingConfig = new HMSRecordingConfig(meetingUrl: meetingUrl, toRecord: toRecord,rtmpUrls: rtmpUrls);
+    hmsException = await meetingController.startRtmpOrRecording(hmsRecordingConfig);
+    if(hmsException==null)isRecordingStarted = true;
+  }
+
+  void stopRtmpAndRecording() async{
+    hmsException = (await meetingController.stopRtmpAndRecording());
+    if(hmsException == null)isRecordingStarted = false;
   }
 }

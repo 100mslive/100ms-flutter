@@ -9,7 +9,7 @@ class HMSException {
       this.description, this.message, this.code, this.action, this.name);
 
   factory HMSException.fromMap(Map map) {
-    print(1);
+    map = map["error"];
     return HMSException(
       map['description'],
       map['message'],
@@ -17,5 +17,10 @@ class HMSException {
       map['action'],
       map['name'],
     );
+  }
+
+  @override
+  String toString() {
+    return 'HMSException{description: $description, message: $message, code: $code, action: $action, name: $name}';
   }
 }

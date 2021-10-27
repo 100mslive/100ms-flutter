@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:hmssdk_flutter_example/common/constant.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/chat_bottom_sheet.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/leave_or_end_meeting.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/role_change_request_dialog.dart';
@@ -72,12 +73,26 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
               _meetingStore.reconnected = false
             });
     reaction(
+        (_) => _meetingStore.isRoomEnded,
+        (event) => {
+              if ((event as bool) == true) Navigator.of(context).pop(),
+              _meetingStore.isRoomEnded = false
+            });
+    reaction(
         (_) => _meetingStore.reconnecting,
         (event) => {
               if ((event as bool) == true)
                 UtilityComponents.showSnackBarWithString(
                     "reconnecting", context),
             });
+
+    reaction(
+            (_) => _meetingStore.hmsException,
+            (event) => {
+          if ((event as HMSException?) !=null)
+            UtilityComponents.showSnackBarWithString(
+                event?.description, context),
+        });
     super.initState();
     initMeeting();
     checkButtons();
@@ -160,6 +175,25 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
           title: Text(widget.roomId),
           actions: [
             Observer(
+                builder: (_) => IconButton(
+                      onPressed: () {
+                        if(_meetingStore.isRecordingStarted){
+                          _meetingStore.stopRtmpAndRecording();
+                        }
+                        else{
+                          print("${Constant.meetingUrl} meetingUrl");
+                          _meetingStore.startRtmpOrRecording(Constant.meetingUrl, true, null);
+                        }
+                      },
+                      icon: Icon(
+                        Icons.circle,
+                        color: _meetingStore.isRecordingStarted
+                            ? Colors.red
+                            : Colors.grey,
+                        size: 32.0,
+                      ),
+                    )),
+            Observer(
               builder: (_) => IconButton(
                 iconSize: 32,
                 onPressed: () {
@@ -203,6 +237,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                 if (_meetingStore.tracks.isEmpty)
                   return Center(child: Text('Waiting for other to join!'));
                 List<HMSTrack> filteredList = _meetingStore.tracks;
+                print("${filteredList.length} filteredListLength");
                 return PageView.builder(
                   itemBuilder: (ctx, index) {
                     ObservableMap<String, HMSTrackUpdate> map =

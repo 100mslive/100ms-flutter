@@ -75,6 +75,7 @@ class _PeerItemOrganismState extends State<PeerItemOrganism> {
               return Container(
                 height: widget.height + 100,
                 width: widget.width - 5,
+                padding: EdgeInsets.all(5.0),
                 child: HMSVideoView(
                     track: widget.track,
                     isAuxiliaryTrack: widget.track.source == "SCREEN"),

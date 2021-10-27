@@ -4,7 +4,6 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:intl/intl.dart';
 
-
 class ChatWidget extends StatefulWidget {
   final MeetingStore meetingStore;
 
@@ -38,8 +37,8 @@ class _ChatWidgetState extends State<ChatWidget> {
     return FractionallySizedBox(
       heightFactor: 0.8,
       child: Container(
-          margin: EdgeInsets.only(
-              bottom: MediaQuery.of(context).viewInsets.bottom),
+          margin:
+              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
           child: Center(
             child: Container(
               child: Column(
@@ -53,46 +52,45 @@ class _ChatWidgetState extends State<ChatWidget> {
                         Expanded(
                           child: Text(
                             "Chat",
-                            style: TextStyle(color: Colors.black, fontSize: 30.0),
+                            style:
+                                TextStyle(color: Colors.black, fontSize: 30.0),
                           ),
                         ),
-                        FutureBuilder(
-                            future: _meetingStore.getRoles(),
-                            builder: (ctx, snapshot) {
-                              if (snapshot.connectionState == ConnectionState.done) {
-                                return DropdownButton<String>(
-                                  value: valueChoose,
-                                  onChanged: (newvalue) {
-                                    setState(() {
-                                      this.valueChoose = newvalue as String;
-                                    });
-                                  },
-                                  items: [
-                                    DropdownMenuItem<String>(
-                                      child: Text("Everyone"),
-                                      value: "Everyone",
-                                    ),
-                                    ..._meetingStore.peers.map((e) {
-                                      return DropdownMenuItem<String>(
-                                        child: Text(
-                                            "${e.name} ${e.isLocal ? "(You)" : ""}"),
-                                        value: e.peerId,
-                                      );
-                                    }).toList(),
-                                    ...this
-                                        .hmsRoles
-                                        .map((e) => DropdownMenuItem<String>(
-                                      child: Text("${e.name}"),
-                                      value: e.name,
-                                    ))
-                                        .toList()
-                                  ],
-                                );
-                              } else
-                                return CircularProgressIndicator(
-                                  color: Colors.black,
-                                );
-                            }),
+                        Observer(builder: (ctx) {
+                          List<HMSRole> roles = _meetingStore.roles;
+                          if (roles.length > 0) {
+                            return DropdownButton<String>(
+                              value: valueChoose,
+                              onChanged: (newvalue) {
+                                setState(() {
+                                  this.valueChoose = newvalue as String;
+                                });
+                              },
+                              items: [
+                                DropdownMenuItem<String>(
+                                  child: Text("Everyone"),
+                                  value: "Everyone",
+                                ),
+                                ..._meetingStore.peers.map((e) {
+                                  return DropdownMenuItem<String>(
+                                    child: Text(
+                                        "${e.name} ${e.isLocal ? "(You)" : ""}"),
+                                    value: e.peerId,
+                                  );
+                                }).toList(),
+                                ...roles
+                                    .map((e) => DropdownMenuItem<String>(
+                                          child: Text("${e.name}"),
+                                          value: e.name,
+                                        ))
+                                    .toList()
+                              ],
+                            );
+                          } else
+                            return CircularProgressIndicator(
+                              color: Colors.black,
+                            );
+                        }),
                         GestureDetector(
                           onTap: () {
                             Navigator.of(context).pop();
@@ -114,7 +112,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                         return ListView(
                           children: List.generate(
                             _meetingStore.messages.length,
-                                (index) => Container(
+                            (index) => Container(
                               padding: EdgeInsets.all(5.0),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -124,7 +122,9 @@ class _ChatWidgetState extends State<ChatWidget> {
                                     children: [
                                       Expanded(
                                         child: Text(
-                                          _meetingStore.messages[index].sender?.name??"",
+                                          _meetingStore.messages[index].sender
+                                                  ?.name ??
+                                              "",
                                           style: TextStyle(
                                               fontSize: 10.0,
                                               color: Colors.black,
@@ -135,10 +135,10 @@ class _ChatWidgetState extends State<ChatWidget> {
                                         child: Text(
                                           HMSMessageRecipientValues
                                               .getValueFromHMSMessageRecipientType(
-                                              _meetingStore
-                                                  .messages[index]
-                                                  .hmsMessageRecipient!
-                                                  .hmsMessageRecipientType),
+                                                  _meetingStore
+                                                      .messages[index]
+                                                      .hmsMessageRecipient!
+                                                      .hmsMessageRecipientType),
                                           style: TextStyle(
                                               fontSize: 15.0,
                                               color: Colors.blue,
@@ -146,7 +146,8 @@ class _ChatWidgetState extends State<ChatWidget> {
                                         ),
                                       ),
                                       Text(
-                                        _meetingStore.messages[index].time.toString(),
+                                        _meetingStore.messages[index].time
+                                            .toString(),
                                         style: TextStyle(
                                             fontSize: 10.0,
                                             color: Colors.black,
@@ -158,7 +159,8 @@ class _ChatWidgetState extends State<ChatWidget> {
                                     height: 10.0,
                                   ),
                                   Text(
-                                    _meetingStore.messages[index].message.toString(),
+                                    _meetingStore.messages[index].message
+                                        .toString(),
                                     style: TextStyle(
                                         fontSize: 12.0,
                                         color: Colors.black,
@@ -168,11 +170,11 @@ class _ChatWidgetState extends State<ChatWidget> {
                               ),
                               decoration: BoxDecoration(
                                   border: Border(
-                                    left: BorderSide(
-                                      color: Colors.blue,
-                                      width: 5,
-                                    ),
-                                  )),
+                                left: BorderSide(
+                                  color: Colors.blue,
+                                  width: 5,
+                                ),
+                              )),
                             ),
                           ),
                         );
@@ -208,7 +210,7 @@ class _ChatWidgetState extends State<ChatWidget> {
 
                             DateTime currentTime = DateTime.now();
                             final DateFormat formatter =
-                            DateFormat('yyyy-MM-dd hh:mm a');
+                                DateFormat('yyyy-MM-dd hh:mm a');
 
                             List<String> rolesName = <String>[];
                             for (int i = 0; i < hmsRoles.length; i++)
@@ -225,7 +227,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                                     recipientPeer: null,
                                     recipientRoles: null,
                                     hmsMessageRecipientType:
-                                    HMSMessageRecipientType.BROADCAST),
+                                        HMSMessageRecipientType.BROADCAST),
                               ));
                             } else if (rolesName.contains(this.valueChoose)) {
                               _meetingStore.sendGroupMessage(
@@ -239,7 +241,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                                     recipientPeer: null,
                                     recipientRoles: null,
                                     hmsMessageRecipientType:
-                                    HMSMessageRecipientType.ROLES),
+                                        HMSMessageRecipientType.ROLES),
                               ));
                             } else if (_meetingStore.localPeer!.peerId !=
                                 this.valueChoose) {
@@ -254,7 +256,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                                     recipientPeer: null,
                                     recipientRoles: null,
                                     hmsMessageRecipientType:
-                                    HMSMessageRecipientType.PEER),
+                                        HMSMessageRecipientType.PEER),
                               ));
                             }
 
@@ -278,5 +280,7 @@ class _ChatWidgetState extends State<ChatWidget> {
 
 void chatMessages(BuildContext context, MeetingStore meetingStore) {
   showModalBottomSheet(
-      context: context, builder: (ctx) => ChatWidget(meetingStore),isScrollControlled:true);
+      context: context,
+      builder: (ctx) => ChatWidget(meetingStore),
+      isScrollControlled: true);
 }
