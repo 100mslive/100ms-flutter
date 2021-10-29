@@ -1,7 +1,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'hmssdk_flutter'
-  s.version          = '0.4.0'
+  s.version          = '0.5.0'
   s.summary          = 'The Flutter plugin for 100ms SDK'
   s.description      = <<-DESC
   A Flutter Project for 100ms SDK.

@@ -42,10 +42,10 @@ PODS:
     - FirebaseCoreDiagnostics (~> 8.0)
     - GoogleUtilities/Environment (~> 7.4)
     - GoogleUtilities/Logger (~> 7.4)
-  - FirebaseCoreDiagnostics (8.8.0):
-    - GoogleDataTransport (~> 9.0)
-    - GoogleUtilities/Environment (~> 7.4)
-    - GoogleUtilities/Logger (~> 7.4)
+  - FirebaseCoreDiagnostics (8.9.0):
+    - GoogleDataTransport (~> 9.1)
+    - GoogleUtilities/Environment (~> 7.6)
+    - GoogleUtilities/Logger (~> 7.6)
     - nanopb (~> 2.30908.0)
   - FirebaseCrashlytics (8.8.0):
     - FirebaseCore (~> 8.0)
@@ -54,10 +54,10 @@ PODS:
     - GoogleUtilities/Environment (~> 7.4)
     - nanopb (~> 2.30908.0)
     - PromisesObjC (< 3.0, >= 1.2)
-  - FirebaseInstallations (8.8.0):
+  - FirebaseInstallations (8.9.0):
     - FirebaseCore (~> 8.0)
-    - GoogleUtilities/Environment (~> 7.4)
-    - GoogleUtilities/UserDefaults (~> 7.4)
+    - GoogleUtilities/Environment (~> 7.6)
+    - GoogleUtilities/UserDefaults (~> 7.6)
     - PromisesObjC (< 3.0, >= 1.2)
   - Flutter (1.0.0)
   - GoogleAppMeasurement (8.8.0):
@@ -103,9 +103,9 @@ PODS:
     - GoogleUtilities/Logger
   - GoogleUtilities/UserDefaults (7.6.0):
     - GoogleUtilities/Logger
-  - HMSSDK (0.1.5):
+  - HMSSDK (0.1.6):
     - HMSWebRTC (= 1.0.4516)
-  - hmssdk_flutter (0.4.0):
+  - hmssdk_flutter (0.5.0):
     - Flutter
     - HMSSDK
   - HMSWebRTC (1.0.4516)
@@ -173,15 +173,15 @@ SPEC CHECKSUMS:
   firebase_crashlytics: 5e4c7b5695a7ffe144a55dacfddebbf8eb36028a
   FirebaseAnalytics: 5506ea8b867d8423485a84b4cd612d279f7b0b8a
   FirebaseCore: 98b29e3828f0a53651c363937a7f7d92a19f1ba2
-  FirebaseCoreDiagnostics: fe77f42da6329d6d83d21fd9d621a6b704413bfc
+  FirebaseCoreDiagnostics: 5daa63f1c1409d981a2d5007daa100b36eac6a34
   FirebaseCrashlytics: 3660c045c8e45cc4276110562a0ef44cf43c8157
-  FirebaseInstallations: 2563cb18a723ef9c6ef18318a49519b75dce613c
+  FirebaseInstallations: caa7c8e0d3e2345b8829d2fa9ca1b4dfbf2fcc85
   Flutter: 50d75fe2f02b26cc09d224853bb45737f8b3214a
   GoogleAppMeasurement: 5ba1164e3c844ba84272555e916d0a6d3d977e91
   GoogleDataTransport: 629c20a4d363167143f30ea78320d5a7eb8bd940
   GoogleUtilities: 684ee790a24f73ebb2d1d966e9711c203f2a4237
-  HMSSDK: 5ad51730d9313c4fd6805e5a3a4e529820270472
-  hmssdk_flutter: d154419fc067a055d6ee28eba5faef07f0487061
+  HMSSDK: c6481d5ba2d38fbc3c5ea8821986224ac4b796fb
+  hmssdk_flutter: 598d4d488960e4d3fec1d4e25ed4fb878941df50
   HMSWebRTC: 0dbcff2b03adf79ce6f1129e541af5dc342ed88f
   nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
   permission_handler: ccb20a9fad0ee9b1314a52b70b76b473c5f8dab0
