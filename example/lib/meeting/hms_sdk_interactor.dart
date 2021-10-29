@@ -43,9 +43,9 @@ class HMSSDKInteractor {
     return await _meeting.sendGroupMessage(message, roleName);
   }
 
-  Future<void> previewVideo({required HMSConfig config,required bool isProdLink,required bool setWebRtcLogs}) async {
+  Future<void> previewVideo({required HMSConfig config}) async {
     this.config = config;
-    return _meeting.previewVideo(config: config,isProdLink: isProdLink,setWebRtcLogs: setWebRtcLogs);
+    return _meeting.previewVideo(config: config);
   }
 
   void startHMSLogger(HMSLogLevel webRtclogLevel,HMSLogLevel logLevel){

@@ -28,8 +28,7 @@ class PreviewController {
 
     _hmsSdkInteractor?.previewVideo(
         config: config,
-        isProdLink: token[1] == "true" ? true : false,
-        setWebRtcLogs: true);
+    );
     return true;
   }
 

@@ -86,15 +86,17 @@ class HMSMeeting {
   }
 
   ///preview before joining the room pass [HMSConfig].
-  Future<void> previewVideo(
-      {required HMSConfig config,
-      required bool isProdLink,
-      required bool setWebRtcLogs}) async {
+  Future<void> previewVideo({
+    required HMSConfig config,
+  }) async {
+
+    bool isProdLink = true;
+    if(config.endPoint != null)isProdLink = false;
+
     return await PlatformService.invokeMethod(PlatformMethod.previewVideo,
         arguments: {
           ...config.getJson(),
           'is_prod': isProdLink,
-          'set_web_rtc_log': setWebRtcLogs
         });
   }
 
