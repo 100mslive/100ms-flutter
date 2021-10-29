@@ -24,7 +24,7 @@ class PreviewController {
         userId: Uuid().v1(),
         authToken: token[0]!,
         userName: user,
-        endPoint: token[1] == "true" ? null : "https://qa-init.100ms.live/init");
+        endPoint: token[1] == "true" ? "" : "https://qa-init.100ms.live/init");
 
     _hmsSdkInteractor?.previewVideo(
         config: config,

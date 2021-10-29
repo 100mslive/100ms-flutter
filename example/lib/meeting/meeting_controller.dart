@@ -23,7 +23,7 @@ class MeetingController {
         userId: Uuid().v1(),
         authToken: token[0]!,
         userName: user,
-        endPoint: token[1] == "true"?null:"https://qa-init.100ms.live/init"
+        endPoint: token[1] == "true"?"":"https://qa-init.100ms.live/init"
         );
 
     await _hmsSdkInteractor?.joinMeeting(config: config);

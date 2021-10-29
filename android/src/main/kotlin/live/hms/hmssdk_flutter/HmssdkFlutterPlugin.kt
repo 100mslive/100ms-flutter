@@ -379,12 +379,13 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
         val userName = call.argument<String>("user_name")
         val authToken = call.argument<String>("auth_token")
         val isProd = call.argument<Boolean>("is_prod")
+        val endPoint = call.argument<String>("end_point")
         var hmsConfig = HMSConfig(userName = userName!!, authtoken = authToken!!)
-        if (!isProd!!)
+        if (!isProd!! && endPoint!!.isEmpty())
             hmsConfig = HMSConfig(
                 userName = userName,
                 authtoken = authToken,
-                initEndpoint = "https://qa-init.100ms.live/init"
+                initEndpoint = endPoint.trim()
             )
 
         hmssdk.join(hmsConfig, this)
@@ -549,14 +550,15 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
         val userName = call.argument<String>("user_name")
         val authToken = call.argument<String>("auth_token")
         val isProd = call.argument<Boolean>("is_prod")
-        val setWebRtcLog = call.argument<Boolean>("set_web_rtc_log")
+        val endPoint = call.argument<String>("end_point")
+        Log.i("PreviewVideoAndroid","EndPoint ${endPoint}  ${isProd}")
         HMSLogger.i("previewVideo", "$userName $isProd")
         var hmsConfig = HMSConfig(userName = userName!!, authtoken = authToken!!)
-        if (!isProd!!)
+        if (!isProd!! && endPoint!!.isNotEmpty())
             hmsConfig = HMSConfig(
                 userName = userName,
                 authtoken = authToken,
-                initEndpoint = "https://qa-init.100ms.live/init"
+                initEndpoint = endPoint
             )
         hmssdk.preview(hmsConfig, this)
 

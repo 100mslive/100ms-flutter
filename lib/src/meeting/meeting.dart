@@ -13,7 +13,8 @@ class HMSMeeting {
   ///join meeting by passing HMSConfig instance to it.
   Future<void> joinMeeting({required HMSConfig config}) async {
     bool isProdLink = true;
-    if (config.endPoint != null) isProdLink = false;
+    if (config.endPoint?.isEmpty??true) isProdLink = false;
+    print("${config.endPoint.toString()} JOINMEETING");
     return await PlatformService.invokeMethod(PlatformMethod.joinMeeting,
         arguments: {...config.getJson(), 'is_prod': isProdLink});
   }
@@ -91,7 +92,7 @@ class HMSMeeting {
   }) async {
 
     bool isProdLink = true;
-    if(config.endPoint != null)isProdLink = false;
+    if (config.endPoint?.isEmpty??true) isProdLink = false;
 
     return await PlatformService.invokeMethod(PlatformMethod.previewVideo,
         arguments: {

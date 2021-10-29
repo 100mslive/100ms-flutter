@@ -3,20 +3,20 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:hmssdk_flutter_example/common/constant.dart';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
+
 
 class RoomService {
   Future<List<String?>?> getToken({required String user, required String room}) async {
     Constant.meetingUrl = room;
     List<String?> codeAndDomain = getCode(room) ?? [];
-    print(codeAndDomain);
+    print(codeAndDomain.toString()+"CODEANDDOMAIN");
     if (codeAndDomain.length == 0) {
       return null;
     }
     Uri endPoint = codeAndDomain[2] == "true"
         ? Uri.parse(Constant.prodTokenEndpoint)
         : Uri.parse(Constant.qaTokenEndPoint);
-
+    print("${codeAndDomain[2] == "true".toString()} endPoint");
     http.Response response = await http.post(endPoint, body: {
       'code': (codeAndDomain[1] ?? "").trim(),
       'user_id': user,
