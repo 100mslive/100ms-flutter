@@ -14,19 +14,22 @@ class PreviewController {
       : _hmsSdkInteractor = HMSSDKInteractor();
 
   Future<bool> startPreview() async {
-    List<String?>? token = await RoomService().getToken(user: user, room: roomId);
+    List<String?>? token =
+        await RoomService().getToken(user: user, room: roomId);
 
     if (token == null) return false;
     FirebaseCrashlytics.instance.setUserIdentifier(token[0]!);
 
     HMSConfig config = HMSConfig(
         userId: Uuid().v1(),
-        roomId: roomId,
         authToken: token[0]!,
         userName: user,
-        );
+        endPoint: token[1] == "true" ? null : "https://qa-init.100ms.live/init");
 
-    _hmsSdkInteractor?.previewVideo(config: config,isProdLink: token[1] == "true" ? true : false,setWebRtcLogs: true);
+    _hmsSdkInteractor?.previewVideo(
+        config: config,
+        isProdLink: token[1] == "true" ? true : false,
+        setWebRtcLogs: true);
     return true;
   }
 
@@ -34,7 +37,7 @@ class PreviewController {
     _hmsSdkInteractor?.addPreviewListener(listener);
   }
 
-  void removeListener(HMSPreviewListener listener){
+  void removeListener(HMSPreviewListener listener) {
     _hmsSdkInteractor?.removePreviewListener(listener);
   }
 
@@ -54,7 +57,7 @@ class PreviewController {
     _hmsSdkInteractor?.addLogsListener(hmsLogListener);
   }
 
-  void removeLogsListener(HMSLogListener hmsLogListener){
+  void removeLogsListener(HMSLogListener hmsLogListener) {
     _hmsSdkInteractor?.removeLogsListener(hmsLogListener);
   }
 }

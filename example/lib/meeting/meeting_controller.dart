@@ -21,12 +21,12 @@ class MeetingController {
     if(token==null)return false;
     HMSConfig config = HMSConfig(
         userId: Uuid().v1(),
-        roomId: roomUrl,
         authToken: token[0]!,
         userName: user,
+        endPoint: token[1] == "true"?null:"https://qa-init.100ms.live/init"
         );
 
-    await _hmsSdkInteractor?.joinMeeting(config: config,isProdLink: token[1] == "true" ? true : false,setWebRtcLogs: true);
+    await _hmsSdkInteractor?.joinMeeting(config: config);
     return true;
   }
 

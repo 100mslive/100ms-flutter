@@ -11,7 +11,7 @@ import 'package:visibility_detector/visibility_detector.dart';
 
 class VideoTile extends StatelessWidget {
   final tileIndex;
-  final List<HMSTrack> filteredList;
+  final List filteredList;
   final double itemHeight;
   final double itemWidth;
   final Map<String, HMSTrackUpdate> map;

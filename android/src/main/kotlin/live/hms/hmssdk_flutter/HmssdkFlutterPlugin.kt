@@ -1,6 +1,7 @@
 package live.hms.hmssdk_flutter
 
 import android.app.Activity
+import android.os.Build
 import androidx.annotation.NonNull
 import io.flutter.Log
 
@@ -19,6 +20,7 @@ import live.hms.hmssdk_flutter.views.HMSVideoViewFactory
 import live.hms.video.error.HMSException
 import live.hms.video.media.tracks.HMSRemoteAudioTrack
 import live.hms.video.media.tracks.HMSTrack
+import live.hms.video.media.tracks.HMSVideoTrack
 import live.hms.video.sdk.*
 import live.hms.video.sdk.models.*
 import live.hms.video.sdk.models.enums.HMSPeerUpdate
@@ -75,7 +77,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
 
         when (call.method) {
             "getPlatformVersion" -> {
-                result.success("Android ${android.os.Build.VERSION.RELEASE}")
+                result.success("Android ${Build.VERSION.RELEASE}")
             }
             "join_meeting" -> {
                 joinMeeting(call)
@@ -377,8 +379,6 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
         val userName = call.argument<String>("user_name")
         val authToken = call.argument<String>("auth_token")
         val isProd = call.argument<Boolean>("is_prod")
-
-
         var hmsConfig = HMSConfig(userName = userName!!, authtoken = authToken!!)
         if (!isProd!!)
             hmsConfig = HMSConfig(
@@ -792,4 +792,6 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
         })
 
     }
+
+
 }

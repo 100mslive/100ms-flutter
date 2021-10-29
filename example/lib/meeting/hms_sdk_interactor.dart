@@ -10,11 +10,9 @@ class HMSSDKInteractor {
     _meeting = HMSMeeting();
   }
 
-  Future<void> joinMeeting({required HMSConfig config,required bool isProdLink,required bool setWebRtcLogs}) async {
+  Future<void> joinMeeting({required HMSConfig config}) async {
     this.config = config;
-    await _meeting.joinMeeting(config: this.config,isProdLink: isProdLink,
-      // endPoint: Constant.getTokenURL,
-      setWebrtcLogs: setWebRtcLogs);
+    await _meeting.joinMeeting(config: this.config);
   }
 
   Future<void> leaveMeeting() async {
