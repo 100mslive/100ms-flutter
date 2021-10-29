@@ -235,9 +235,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         
         var speakersDict = [[String: Any]]()
         for speaker in speakers {
-            speakersDict.append(["peerId": speaker.peer.peerID,
-                                 "trackId": speaker.track.trackId,
-                                 "audioLevel": speaker.level])
+            speakersDict.append(HMSSpeakerExtension.toDictionary(speaker))
         }
         
         let data:[String:Any]=[

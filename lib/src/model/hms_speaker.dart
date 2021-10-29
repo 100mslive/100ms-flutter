@@ -8,7 +8,7 @@ class HMSSpeaker {
   factory HMSSpeaker.fromMap(Map map) {
     return new HMSSpeaker(
       peer: HMSPeer.fromMap(map['peer']),
-      track: map["track"]==null?null:HMSTrack.fromMap(map: map['track']),
+      track: map["track"] == null ? null : HMSTrack.fromMap(map: map['track']),
       audioLevel: map['audioLevel'] as int,
     );
   }
@@ -22,6 +22,9 @@ class HMSSpeaker {
     } as Map<String, dynamic>;
   }
 
-  HMSSpeaker(
-      {required this.peer,required this.track , required this.audioLevel, });
+  HMSSpeaker({
+    required this.peer,
+    required this.track,
+    required this.audioLevel,
+  });
 }
