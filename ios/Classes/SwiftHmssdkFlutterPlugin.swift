@@ -3,13 +3,14 @@ import Flutter
 import UIKit
 import HMSSDK
 
-public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListener, FlutterStreamHandler, HMSPreviewListener {
+public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListener, FlutterStreamHandler, HMSPreviewListener,HMSLogger.Loggable {
     
     let channel:FlutterMethodChannel
     let meetingEventChannel:FlutterEventChannel
     let previewEventChannel:FlutterEventChannel
     var eventSink:FlutterEventSink?
     var previewSink:FlutterEventSink?
+    var logsSink:FlutterEventSink?
     var roleChangeRequest:HMSRoleChangeRequest?
     
     internal var hmsSDK: HMSSDK?
@@ -30,7 +31,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         let channel = FlutterMethodChannel(name: "hmssdk_flutter", binaryMessenger: registrar.messenger())
         let eventChannel = FlutterEventChannel(name: "meeting_event_channel", binaryMessenger: registrar.messenger())
         let previewChannel = FlutterEventChannel(name: "preview_event_channel", binaryMessenger: registrar.messenger())
-        
+        let logsChannel = FlutterEventChannel(name: "logs_event_channel", binaryMessenger: registrar.messenger())
         let instance = SwiftHmssdkFlutterPlugin(channel: channel,meetingEventChannel: eventChannel,previewEventChannel: previewChannel)
         
         
@@ -119,7 +120,10 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
         case "stop_rtmp_and_recording"    :
             stopRtmpAndRecording(result)
-
+        case "start_hms_logger"
+            startHMSLogger(call)
+        case "remove_hms_logger"
+            removeHMSLogger()
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -165,6 +169,9 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                 self.eventSink = events
             }else if(name == "preview"){
                 self.previewSink=events;
+            }
+            else if (name == "logs") {
+                self.logsSink = events
             }
         }
         
@@ -717,21 +724,21 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
             hmssdk.changeTrackState(mute = mute!!,type = HMSTrackExtension.getStringFromKind(type),source = source,roles=realRoles,object : HMSActionResultListener {
 
-                override fun onSuccess() {
+                func onSuccess() {
 
 
                         result(null)
 
                 }
 
-                override fun onError(error: HMSException) {
+                func onError(error: HMSException) {
                         result(HMSExceptionExtension.toDictionary(error))
                 }
             })
 
         }
 
-        private fun startRtmpOrRecording(call: MethodCall, result: Result) {
+        private func startRtmpOrRecording(call: MethodCall, result: Result) {
 
                 let arguments = call.arguments as! Dictionary<String, AnyObject>
 
@@ -742,13 +749,13 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                     HMSRecordingConfig(meetingUrl!!, listOfRtmpUrls, toRecord!!),
                     object : HMSActionResultListener {
 
-                        override fun onSuccess() {
+                        func onSuccess() {
 
                                 result(null)
 
                         }
 
-                        override fun onError(error: HMSException) {
+                        func onError(error: HMSException) {
 
 
                                 result(HMSExceptionExtension.toDictionary(error))
@@ -757,23 +764,91 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                     })
             }
 
-            private fun stopRtmpAndRecording(result: Result) {
+            private func stopRtmpAndRecording(result: Result) {
                 hmssdk.stopRtmpAndRecording(object : HMSActionResultListener {
 
-                    override fun onSuccess() {
+                    func onSuccess() {
 
 
                             result(null)
 
                     }
 
-                    override fun onError(error: HMSException) {
+                    func onError(error: HMSException) {
 
 
                             result(HMSExceptionExtension.toDictionary(error))
 
                     }
                 })
+            }
+
+
+            private func startHMSLogger(_ call: FlutterMethodCall){
+                    let arguments = call.arguments as! Dictionary<String, AnyObject>
+
+                    val setWebRtcLogLevel = arguments["web_rtc_log_level"] as String?""
+                    val setLogLevel = arguments["log_level"] as String?""
+
+
+
+                    switch setWebRtcLogLevel{
+                        "verbose":
+                            HMSLogger.webRtcLogLevel=HMSLogger.LogLevel.VERBOSE
+                        "info":
+                            HMSLogger.webRtcLogLevel=HMSLogger.LogLevel.INFO
+                        "warn":
+                            HMSLogger.webRtcLogLevel=HMSLogger.LogLevel.WARN
+                        "error":
+                            HMSLogger.webRtcLogLevel=HMSLogger.LogLevel.ERROR
+                        "debug":
+                            HMSLogger.webRtcLogLevel=HMSLogger.LogLevel.DEBUG
+                        default:
+                            HMSLogger.webRtcLogLevel= HMSLogger.LogLevel.OFF
+                    }
+
+                    switch setLogLevel{
+                        "verbose":
+                        HMSLogger.level = HMSLogger.LogLevel.VERBOSE
+                        "info":
+                        HMSLogger.level = HMSLogger.LogLevel.INFO
+                        "warn":
+                        HMSLogger.level = HMSLogger.LogLevel.WARN
+                        "error":
+                        HMSLogger.level = HMSLogger.LogLevel.ERROR
+                        "debug":
+                        HMSLogger.level = HMSLogger.LogLevel.DEBUG
+                        default:
+                        HMSLogger.level =  HMSLogger.LogLevel.OFF
+                    }
+
+
+                    HMSLogger.injectLoggable(self)
+                }
+
+                private func removeHMSLogger(){
+                        HMSLogger.removeInjectedLoggable()
+                }
+
+
+        func onLogMessage(
+                level: HMSLogger.LogLevel,
+                tag: String,
+                message: String,
+                isWebRtCLog: Boolean
+            ) {
+                if ( isWebRtCLog && level != HMSLogger.webRtcLogLevel )return
+                if(level != HMSLogger.level )return
+
+                val args = [String, Any?]()
+                args.put("event_name", "on_logs_update")
+                val logArgs = [String, Any?]()
+
+                logArgs["log"] = HMSLogsExtension.toDictionary(level, tag, message, isWebRtCLog)
+                args["data"] = logArgs
+
+                logsSink(args)
+
             }
 }
 
