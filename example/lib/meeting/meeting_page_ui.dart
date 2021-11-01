@@ -6,7 +6,6 @@ import 'package:hmssdk_flutter_example/common/ui/organisms/video_tile.dart';
 class MeetingPageUI extends StatelessWidget {
   int index;
   List<HMSTrack> filteredList;
-  Orientation orientation;
   double itemHeight;
   double itemWidth;
   Map<String, HMSTrackUpdate> map;
@@ -14,7 +13,6 @@ class MeetingPageUI extends StatelessWidget {
   MeetingPageUI(
       {required this.index,
       required this.filteredList,
-      required this.orientation,
       required this.itemWidth,
       required this.itemHeight,
       required this.map})
@@ -22,8 +20,9 @@ class MeetingPageUI extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return (index < filteredList.length &&
-            filteredList[index].source != "SCREEN")
+    var orientation = MediaQuery.of(context).orientation;
+    print("Orientation $orientation}");
+    return (index < filteredList.length && filteredList[index].source != "SCREEN")
         ? ((orientation == Orientation.portrait)
             ? Column(
                 children: [

@@ -220,22 +220,23 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                   return Center(child: Text('Waiting for other to join!'));
                 List<HMSTrack> filteredList = _meetingStore.tracks;
                 print("${filteredList.length} filteredListLength");
+                var itemCount = ((filteredList.length - 1) /
+                    ((orientation == Orientation.portrait) ? 4 : 2)).floor() + 1 +
+                    ((filteredList[0].source != "SCREEN") ? 0 : 1);
+                print("itemCount $itemCount");
                 return PageView.builder(
                   itemBuilder: (ctx, index) {
                     ObservableMap<String, HMSTrackUpdate> map = _meetingStore.trackStatus;
-                    return MeetingPageUI(
-                        index: index,
-                        filteredList: filteredList,
-                        orientation: orientation,
-                        itemWidth: itemWidth,
-                        itemHeight: itemHeight,
-                        map: map);
+                    return Container(
+                      child: MeetingPageUI(
+                          index: index,
+                          filteredList: filteredList,
+                          itemWidth: itemWidth,
+                          itemHeight: itemHeight,
+                          map: map),
+                    );
                   },
-                  itemCount: ((filteredList.length - 1) /
-                              ((orientation == Orientation.portrait) ? 4 : 2))
-                          .floor() +
-                      1 +
-                      ((filteredList[0].source != "SCREEN") ? 0 : 1),
+                  itemCount: itemCount,
                 );
               },
             ),
