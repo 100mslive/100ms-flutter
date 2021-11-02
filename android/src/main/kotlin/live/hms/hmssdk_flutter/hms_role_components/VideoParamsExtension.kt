@@ -30,5 +30,18 @@ class VideoParamsExtension{
                     "defaultCodec"
             }
         }
+
+        fun getValueOfHMSAudioCodecFromString(codec: String?):HMSVideoCodec?{
+            return when (codec) {
+                "h264"->HMSVideoCodec.H264
+
+                "vp8"->HMSVideoCodec.VP8
+
+                "vp9"->HMSVideoCodec.VP9
+
+                else->
+                    null
+            }
+        }
     }
 }

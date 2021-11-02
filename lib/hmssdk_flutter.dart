@@ -58,3 +58,4 @@ export 'src/model/hms_peer_removed_from_room.dart';
 export 'src/model/hms_message_recipient.dart';
 export 'src/model/hms_logs_listener.dart';
 export 'src/model/hms_log.dart';
+export 'src/model/hms_track_setting.dart';

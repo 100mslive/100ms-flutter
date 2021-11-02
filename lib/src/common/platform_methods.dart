@@ -76,7 +76,8 @@ enum PlatformMethod {
   removeHMSLogger,
   changeTrackStateForRole,
   startRtmpOrRecording,
-  stopRtmpAndRecording
+  stopRtmpAndRecording,
+  createSdk
 }
 
 extension PlatformMethodValues on PlatformMethod {
@@ -159,7 +160,8 @@ extension PlatformMethodValues on PlatformMethod {
 
       case PlatformMethod.stopRtmpAndRecording:
         return "stop_rtmp_and_recording";
-
+      case PlatformMethod.createSdk:
+        return 'create_sdk';
     }
   }
 
@@ -239,6 +241,8 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.startRtmpOrRecording;
       case 'stop_rtmp_and_recording':
         return PlatformMethod.stopRtmpAndRecording;
+      case 'create_sdk':
+        return PlatformMethod.createSdk;
       default:
         return PlatformMethod.unknown;
     }

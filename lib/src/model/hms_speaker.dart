@@ -5,11 +5,11 @@ class HMSSpeaker {
   final HMSTrack? track;
   final int audioLevel;
 
-  factory HMSSpeaker.fromMap(Map map) {
+  factory HMSSpeaker.fromMap(Map data) {
     return new HMSSpeaker(
-      peer: HMSPeer.fromMap(map['peer']),
-      track: map["track"] == null ? null : HMSTrack.fromMap(map: map['track']),
-      audioLevel: map['audioLevel'] as int,
+      peer: HMSPeer.fromMap(data['peer']),
+      track: data["track"] == null ? null : data['track']['instance_of']?HMSVideoTrack.fromMap(map: data['track'], peer: null):HMSAudioTrack.fromMap(map: data['track'],peer: null),
+      audioLevel: data['audioLevel'] as int,
     );
   }
 

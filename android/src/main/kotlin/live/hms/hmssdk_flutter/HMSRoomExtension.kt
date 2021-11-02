@@ -5,8 +5,8 @@ import live.hms.video.sdk.models.HMSRoom
 
 class HMSRoomExtension {
     companion object{
-        fun toDictionary(room:HMSRoom?):HashMap<String,Any>?{
-            val hashMap=HashMap<String,Any>()
+        fun toDictionary(room:HMSRoom?):HashMap<String,Any?>?{
+            val hashMap=HashMap<String,Any?>()
 
             if (room==null)return null
             hashMap.put("id",room.roomId )
@@ -19,6 +19,9 @@ class HMSRoomExtension {
             }
             hashMap.put("peers",args)
             hashMap.put("local_peer",HMSPeerExtension.toDictionary(room.localPeer)!!)
+            hashMap["rtmp_streaming_state"] = HMSStreamingState.toDictionary(room.rtmpHMSRtmpStreamingState)
+            hashMap["browser_recording_state"] = HMSStreamingState.toDictionary(room.browserRecordingState)
+            hashMap["server_recording_state"] = HMSStreamingState.toDictionary(room.serverRecordingState)
             return hashMap
         }
     }

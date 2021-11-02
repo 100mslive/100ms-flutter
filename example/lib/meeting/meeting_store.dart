@@ -71,6 +71,8 @@ abstract class MeetingStoreBase
   @observable
   ObservableMap<String, HMSTrackUpdate> audioTrackStatus = ObservableMap.of({});
 
+  HMSRoom? hmsRoom;
+
   @action
   void startListen() {
     meetingController.addMeetingListener(this);
@@ -207,6 +209,7 @@ abstract class MeetingStoreBase
 
   @override
   void onJoin({required HMSRoom room}) async{
+    hmsRoom = room;
     if (Platform.isAndroid) {
       print("members ${room.peers!.length}");
       for (HMSPeer each in room.peers!) {
@@ -513,11 +516,9 @@ abstract class MeetingStoreBase
       String meetingUrl, bool toRecord, List<String>? rtmpUrls) async {
     HMSRecordingConfig hmsRecordingConfig = new HMSRecordingConfig(
         meetingUrl: meetingUrl, toRecord: toRecord, rtmpUrls: rtmpUrls);
-    hmsException =
-        await meetingController.startRtmpOrRecording(hmsRecordingConfig);
+    hmsException = await meetingController.startRtmpOrRecording(hmsRecordingConfig);
     if (hmsException == null || hmsException?.code == 400) {
       isRecordingStarted = true;
-      return;
     }
 
     print("${hmsException?.toString()} HMSEXCEPTION  ${isRecordingStarted}");
@@ -527,7 +528,6 @@ abstract class MeetingStoreBase
     hmsException = (await meetingController.stopRtmpAndRecording());
     if (hmsException == null) {
       isRecordingStarted = false;
-      return;
     }
     print("${hmsException?.toString()} HMSEXCEPTION ${isRecordingStarted}");
   }

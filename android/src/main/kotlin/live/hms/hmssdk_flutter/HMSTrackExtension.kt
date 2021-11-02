@@ -1,5 +1,6 @@
 package live.hms.hmssdk_flutter
 
+import live.hms.video.media.tracks.HMSLocalVideoTrack
 import live.hms.video.media.tracks.HMSTrack
 import live.hms.video.media.tracks.HMSTrackType
 import live.hms.video.media.tracks.HMSVideoTrack
@@ -17,7 +18,15 @@ class HMSTrackExtension {
             hashMap.put("track_mute",track.isMute)
             if(track is HMSVideoTrack){
                 hashMap["is_degraded"] = track.isDegraded
+                hashMap["instance_of"] = true
             }
+            else if (track is HMSLocalVideoTrack){
+                hashMap["hms_video_track_settings"] = HMSVideoTrackSettingsExtension.toDictionary(track.settings)!!
+            }
+            else{
+                hashMap["instance_of"] = false
+            }
+
             return hashMap
         }
 

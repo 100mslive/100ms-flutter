@@ -9,7 +9,7 @@ import 'package:provider/src/provider.dart';
 import 'package:should_rebuild/should_rebuild.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
-class VideoTile extends StatelessWidget {
+class VideoTile extends StatefulWidget {
   final tileIndex;
   final List filteredList;
   final double itemHeight;
@@ -24,11 +24,16 @@ class VideoTile extends StatelessWidget {
       required this.map});
 
   @override
+  State<VideoTile> createState() => _VideoTileState();
+}
+
+class _VideoTileState extends State<VideoTile> {
+  @override
   Widget build(BuildContext context) {
     var orientation = MediaQuery.of(context).orientation;
     MeetingStore _meetingStore = context.read<MeetingStore>();
-    int index = tileIndex;
-    if (index > 0 && filteredList[0].source == "SCREEN") {
+    int index = widget.tileIndex;
+    if (index > 0 && widget.filteredList[0].source == "SCREEN") {
       int a = index ~/ ((orientation == Orientation.portrait) ? 4 : 2);
       int b = index % ((orientation == Orientation.portrait) ? 4 : 2);
 
@@ -37,59 +42,59 @@ class VideoTile extends StatelessWidget {
       //print("${a} a and b ${b} ${filteredList[index].peer!.name}");
     }
 
-    if (index >= filteredList.length) return SizedBox();
+    if (index >= widget.filteredList.length) return SizedBox();
     print("$index after rebuildig");
     return VisibilityDetector(
       onVisibilityChanged: (VisibilityInfo info) {
         var visiblePercentage = info.visibleFraction * 100;
-        print("$index  ${filteredList[index].peer!.name} lengthofFilteredList");
-        String trackId = filteredList[index].trackId;
-        print(filteredList[index].isMute);
+        print("$index  ${widget.filteredList[index].peer!.name} lengthofFilteredList");
+        String trackId = widget.filteredList[index].trackId;
+        print(widget.filteredList[index].isMute);
         if (visiblePercentage <= 40) {
-          map[trackId] = HMSTrackUpdate.trackMuted;
+          widget.map[trackId] = HMSTrackUpdate.trackMuted;
         } else {
-          map[trackId] = filteredList[index].isMute
+          widget.map[trackId] = widget.filteredList[index].isMute
               ? HMSTrackUpdate.trackMuted
               : HMSTrackUpdate.trackUnMuted;
-          print(map[trackId]);
+          print(widget.map[trackId]);
         }
         debugPrint(
             'Widget ${info.key} is $visiblePercentage% visible and index is $index');
       },
-      key: Key(filteredList[index].trackId),
+      key: Key(widget.filteredList[index].trackId),
       child: InkWell(
         onLongPress: () {
-          if (!filteredList[index].peer!.isLocal &&
-              filteredList[index].source != "SCREEN")
+          if (!widget.filteredList[index].peer!.isLocal &&
+              widget.filteredList[index].source != "SCREEN")
             showDialog(
                 context: context,
                 builder: (_) => Column(
                       children: [
                         ChangeTrackOptionDialog(
                             isAudioMuted: _meetingStore.audioTrackStatus[
-                                    filteredList[index].trackId] ==
+                                    widget.filteredList[index].trackId] ==
                                 HMSTrackUpdate.trackMuted,
-                            isVideoMuted: map[filteredList[index].trackId] ==
+                            isVideoMuted: widget.map[widget.filteredList[index].trackId] ==
                                 HMSTrackUpdate.trackMuted,
-                            peerName: filteredList[index].peer?.name ?? '',
+                            peerName: widget.filteredList[index].peer?.name ?? '',
                             changeTrack: (mute, isVideoTrack) {
                               Navigator.pop(context);
-                              if (filteredList[index].source != "SCREEN")
+                              if (widget.filteredList[index].source != "SCREEN")
                                 _meetingStore.changeTrackRequest(
-                                    filteredList[index].peer?.peerId ?? "",
+                                    widget.filteredList[index].peer?.peerId ?? "",
                                     mute,
                                     isVideoTrack);
                             },
                             removePeer: () {
                               Navigator.pop(context);
                               _meetingStore.removePeerFromRoom(
-                                  filteredList[index].peer!.peerId);
+                                  widget.filteredList[index].peer!.peerId);
                             }),
                       ],
                     ));
         },
         child: Observer(builder: (context) {
-          print("${filteredList[index].peer?.name} rebuildingonaudio");
+          print("${widget.filteredList[index].peer?.name} rebuildingonaudio");
           return ShouldRebuild<PeerItemOrganism>(
             shouldRebuild: (oldWidget, newWidget) {
               return oldWidget.track != newWidget.track ||
@@ -98,14 +103,14 @@ class VideoTile extends StatelessWidget {
                       newWidget.track.isHighestAudio;
             },
             child: PeerItemOrganism(
-                setMirror: !filteredList[index].peer!.isLocal,
+                setMirror: !widget.filteredList[index].peer!.isLocal,
                 key: Key(index.toString()),
-                height: itemHeight,
-                width: itemWidth,
-                track: filteredList[index],
-                isVideoMuted: filteredList[index].peer!.isLocal
+                height: widget.itemHeight,
+                width: widget.itemWidth,
+                track: widget.filteredList[index],
+                isVideoMuted: widget.filteredList[index].peer!.isLocal
                     ? !_meetingStore.isVideoOn
-                    : (map[filteredList[index].trackId]) ==
+                    : (widget.map[widget.filteredList[index].trackId]) ==
                         HMSTrackUpdate.trackMuted),
           );
         }),
