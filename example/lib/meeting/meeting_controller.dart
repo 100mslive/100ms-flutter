@@ -120,6 +120,7 @@ class MeetingController {
 
   Future<bool> isAudioMute(HMSPeer? peer) async {
     bool isMute = await _hmsSdkInteractor!.isAudioMute(peer);
+    print("isAudioMute ${isMute}");
     return isMute;
   }
 

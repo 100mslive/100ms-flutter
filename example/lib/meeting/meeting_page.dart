@@ -125,6 +125,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
         !(await _meetingStore.meetingController.isVideoMute(null));
     _meetingStore.isMicOn =
         !(await _meetingStore.meetingController.isAudioMute(null));
+    print("${_meetingStore.isMicOn} isMicOn");
   }
 
   @override
@@ -234,6 +235,8 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                   itemBuilder: (ctx, index) {
                     ObservableMap<String, HMSTrackUpdate> map =
                         _meetingStore.trackStatus;
+                    print("${index} indexOfPage");
+
                     return Container(
                       child: MeetingPageUI(
                           index: index,
