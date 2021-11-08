@@ -22,7 +22,8 @@ class HMSMeeting {
   }
 
   Future<void> joinMeeting({required HMSConfig config}) async {
-    createHMSSdk();
+    var value = await createHMSSdk();
+    print("CreatedHMSSDk? ${value}");
     bool isProdLink = true;
     if (config.endPoint?.isEmpty??true) isProdLink = false;
     print("${config.endPoint.toString()} JOINMEETING");

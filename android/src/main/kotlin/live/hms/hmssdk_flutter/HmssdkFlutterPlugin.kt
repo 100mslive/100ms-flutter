@@ -391,7 +391,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
         val isProd = call.argument<Boolean>("is_prod")
         val endPoint = call.argument<String>("end_point")
         var hmsConfig = HMSConfig(userName = userName!!, authtoken = authToken!!)
-        if (!isProd!! && endPoint!!.isEmpty())
+        if (!isProd!! && endPoint!!.isNotEmpty())
             hmsConfig = HMSConfig(
                 userName = userName,
                 authtoken = authToken,
@@ -825,7 +825,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
             val useHardwareAcousticEchoCanceler =
                 hmsAudioTrackHashMap["user_hardware_acoustic_echo_canceler"] as Boolean?
             val audioCodec =
-                AudioParamsExtension.getValueOfHMSAudioCodecFromString(hmsAudioTrackHashMap["audio_codec"] as String) as HMSAudioCodec?
+                AudioParamsExtension.getValueOfHMSAudioCodecFromString(hmsAudioTrackHashMap["audio_codec"] as String?) as HMSAudioCodec?
 
             if (maxBitRate != null) {
                 hmsAudioTrackSettings = hmsAudioTrackSettings.maxBitrate(maxBitRate)
@@ -859,6 +859,9 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
                 hmsVideoTrackSettings = hmsVideoTrackSettings.maxBitrate(maxBitRate)
             }
 
+            if (maxFrameRate != null){
+                hmsVideoTrackSettings = hmsVideoTrackSettings.maxFrameRate(maxFrameRate)
+            }
             if (videoCodec != null){
                 hmsVideoTrackSettings = hmsVideoTrackSettings.codec(videoCodec)
             }
