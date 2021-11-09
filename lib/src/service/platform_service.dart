@@ -189,7 +189,7 @@ class PlatformService {
           notifyMeetingListeners(method, {});
           break;
         case HMSUpdateListenerMethod.onRoleChangeRequest:
-          HMSRoleChangeRequest roleChangeRequest =
+          HMSRoleChangeRequest? roleChangeRequest =
               HMSRoleChangeRequest.fromMap(data['role_change_request']);
           notifyMeetingListeners(
               method, {'role_change_request': roleChangeRequest});
