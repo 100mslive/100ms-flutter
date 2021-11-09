@@ -9,8 +9,8 @@ class HMSLocalPeer extends HMSPeer {
     HMSRole? role,
     String? customerUserId,
     String? customerDescription,
-    HMSAudioTrack? audioTrack,
-    HMSVideoTrack? videoTrack,
+    HMSLocalAudioTrack? audioTrack,
+    HMSLocalVideoTrack? videoTrack,
     List<HMSTrack>? auxiliaryTracks,
   }) : super(
             isLocal: isLocal,
