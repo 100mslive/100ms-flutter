@@ -147,4 +147,7 @@ class HMSSDKInteractor {
     return await _meeting.stopRtmpAndRecording();
   }
 
+  Future<HMSRoom?> getRoom() async{
+    return await _meeting.getRoom();
+  }
 }

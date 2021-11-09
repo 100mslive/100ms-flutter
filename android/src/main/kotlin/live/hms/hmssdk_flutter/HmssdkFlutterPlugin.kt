@@ -188,6 +188,9 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
             "create_sdk" -> {
                 createHMSSdk(this.activity, call, result)
             }
+            "get_room"->{
+                getRoom(result)
+            }
             else -> {
                 result.notImplemented()
             }
@@ -873,6 +876,10 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
             .setTrackSettings(hmsTrackSettings)
             .build()
         result.success(true)
+    }
+
+    private fun getRoom(result: Result){
+        result.success(HMSRoomExtension.toDictionary(hmssdk?.getRoom()))
     }
 
 

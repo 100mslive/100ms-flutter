@@ -67,4 +67,9 @@ class HMSRoom {
           map["local_peer"],
         ));
   }
+
+  @override
+  String toString() {
+    return 'HMSRoom{id: $id, name: $name, metaData: $metaData, hmsLocalPeer: $hmsLocalPeer, hmsBrowserRecordingState: $hmsBrowserRecordingState, hmsRtmpStreamingState: $hmsRtmpStreamingState, hmsServerRecordingState: $hmsServerRecordingState, peers: $peers}';
+  }
 }
