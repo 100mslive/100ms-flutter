@@ -107,7 +107,7 @@ class _VideoTileState extends State<VideoTile> {
                 key: Key(index.toString()),
                 height: widget.itemHeight,
                 width: widget.itemWidth,
-                track: widget.filteredList[index] as HMSVideoTrack,
+                track: widget.filteredList[index],
                 isVideoMuted: widget.filteredList[index].peer!.isLocal
                     ? !_meetingStore.isVideoOn
                     : (widget.map[widget.filteredList[index].trackId]) ==

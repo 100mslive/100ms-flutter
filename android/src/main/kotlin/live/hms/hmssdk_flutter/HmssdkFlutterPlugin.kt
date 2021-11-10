@@ -396,7 +396,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
         val isProd = call.argument<Boolean>("is_prod")
         val endPoint = call.argument<String>("end_point")
         var hmsConfig = HMSConfig(userName = userName!!, authtoken = authToken!!)
-        if (!isProd!! && endPoint!!.isNotEmpty())
+        if (endPoint!!.isNotEmpty())
             hmsConfig = HMSConfig(
                 userName = userName,
                 authtoken = authToken,
@@ -569,7 +569,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
         Log.i("PreviewVideoAndroid", "EndPoint ${endPoint}  ${isProd}")
         HMSLogger.i("previewVideo", "$userName $isProd")
         var hmsConfig = HMSConfig(userName = userName!!, authtoken = authToken!!)
-        if (!isProd!! && endPoint!!.isNotEmpty())
+        if (endPoint!!.isNotEmpty())
             hmsConfig = HMSConfig(
                 userName = userName,
                 authtoken = authToken,
