@@ -7,6 +7,8 @@ import io.flutter.plugin.platform.PlatformView
 import io.flutter.plugin.common.StandardMessageCodec
 import io.flutter.plugin.platform.PlatformViewFactory
 import live.hms.hmssdk_flutter.HmssdkFlutterPlugin
+import live.hms.video.media.tracks.HMSLocalTrack
+import live.hms.video.media.tracks.HMSLocalVideoTrack
 import live.hms.video.media.tracks.HMSVideoTrack
 import live.hms.video.sdk.models.HMSPeer
 import org.webrtc.SurfaceViewRenderer
@@ -23,10 +25,6 @@ class HMSVideoViewWidget(context: Context, id: Int, creationParams: Map<String?,
     override fun onFlutterViewAttached(flutterView: View) {
         super.onFlutterViewAttached(flutterView)
         renderVideo()
-    }
-
-    override fun onFlutterViewDetached() {
-        super.onFlutterViewDetached()
     }
 
     private fun renderVideo() {
