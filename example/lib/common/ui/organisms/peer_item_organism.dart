@@ -81,7 +81,6 @@ class _PeerItemOrganismState extends State<PeerItemOrganism> {
                 padding: EdgeInsets.all(5.0),
                 child: HMSVideoView(
                   track: widget.track,
-                  isAuxiliaryTrack: widget.track.source == "SCREEN",
                   setMirror: widget.setMirror,
                 ),
               );

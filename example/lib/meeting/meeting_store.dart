@@ -43,7 +43,7 @@ abstract class MeetingStoreBase
   @observable
   HMSTrackChangeRequest? hmsTrackChangeRequest;
   @observable
-  List<HMSRole> roles= [];
+  List<HMSRole> roles = [];
 
   late MeetingController meetingController;
 
@@ -208,7 +208,7 @@ abstract class MeetingStoreBase
   }
 
   @override
-  void onJoin({required HMSRoom room}) async{
+  void onJoin({required HMSRoom room}) async {
     hmsRoom = room;
     if (Platform.isAndroid) {
       print("members ${room.peers!.length}");
@@ -379,7 +379,6 @@ abstract class MeetingStoreBase
   void onRemovedFromRoom(
       {required HMSPeerRemovedFromPeer hmsPeerRemovedFromPeer}) {
     leaveMeeting();
-
   }
 
   void changeRole(
@@ -464,7 +463,7 @@ abstract class MeetingStoreBase
 
   Future<bool> endRoom(bool lock) async {
     bool room = await meetingController.endRoom(lock);
-    if(room == true)isRoomEnded = true;
+    if (room == true) isRoomEnded = true;
     return room;
   }
 
@@ -516,7 +515,8 @@ abstract class MeetingStoreBase
       String meetingUrl, bool toRecord, List<String>? rtmpUrls) async {
     HMSRecordingConfig hmsRecordingConfig = new HMSRecordingConfig(
         meetingUrl: meetingUrl, toRecord: toRecord, rtmpUrls: rtmpUrls);
-    hmsException = await meetingController.startRtmpOrRecording(hmsRecordingConfig);
+    hmsException =
+        await meetingController.startRtmpOrRecording(hmsRecordingConfig);
     if (hmsException == null || hmsException?.code == 400) {
       isRecordingStarted = true;
     }
@@ -532,7 +532,7 @@ abstract class MeetingStoreBase
     print("${hmsException?.toString()} HMSEXCEPTION ${isRecordingStarted}");
   }
 
-  Future<HMSRoom?> getRoom() async{
+  Future<HMSRoom?> getRoom() async {
     HMSRoom? room = await meetingController.getRoom();
     return room;
   }
