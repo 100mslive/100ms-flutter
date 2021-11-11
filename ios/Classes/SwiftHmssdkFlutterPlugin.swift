@@ -110,7 +110,16 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             
         case "get_local_peer":
             getLocalPeer(result)
-            
+
+        case "change_track_state_for_role" :
+            changeTrackStateForRole(call,result)
+
+        case "start_rtmp_or_recording" :
+            startRtmpOrRecording(call,result)
+
+        case "stop_rtmp_and_recording"    :
+            stopRtmpAndRecording(result)
+
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -674,9 +683,9 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     func kindString(from kind: HMSTrackKind) -> String {
         switch kind {
         case .audio:
-            return "Audio"
+            return "KHmsTrackAudio"
         case .video:
-            return "Video"
+            return "KHmsTrackVideo"
         default:
             return "Unknown Kind"
         }
@@ -694,5 +703,77 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
               speakers.map { kindString(from: $0.track.kind) },
               speakers.map { $0.track.source })
     }
+
+    private func changeTrackStateForRole(_ call: FlutterMethodCall,result: FlutterResult){
+
+            let arguments = call.arguments as! Dictionary<String, AnyObject>
+
+            let mute = arguments["mute"] as bool
+            let type = argument["type"] as String
+            let source = arguments["source"] as String
+            let roles:List<String>? = arguments["roles"] as <List<String>>
+
+            val realRoles = hmssdk.getRoles().filter { roles?.contains(it.name)!! }
+
+            hmssdk.changeTrackState(mute = mute!!,type = HMSTrackExtension.getStringFromKind(type),source = source,roles=realRoles,object : HMSActionResultListener {
+
+                override fun onSuccess() {
+
+
+                        result(null)
+
+                }
+
+                override fun onError(error: HMSException) {
+                        result(HMSExceptionExtension.toDictionary(error))
+                }
+            })
+
+        }
+
+        private fun startRtmpOrRecording(call: MethodCall, result: Result) {
+
+                let arguments = call.arguments as! Dictionary<String, AnyObject>
+
+                val meetingUrl = arguments["meeting_url"] as String
+                val toRecord = arguments["to_record"] as bool
+                val listOfRtmpUrls : List<String> = argument["rtmp_urls"]?:listOf()
+                hmssdk.startRtmpOrRecording(
+                    HMSRecordingConfig(meetingUrl!!, listOfRtmpUrls, toRecord!!),
+                    object : HMSActionResultListener {
+
+                        override fun onSuccess() {
+
+                                result(null)
+
+                        }
+
+                        override fun onError(error: HMSException) {
+
+
+                                result(HMSExceptionExtension.toDictionary(error))
+
+                        }
+                    })
+            }
+
+            private fun stopRtmpAndRecording(result: Result) {
+                hmssdk.stopRtmpAndRecording(object : HMSActionResultListener {
+
+                    override fun onSuccess() {
+
+
+                            result(null)
+
+                    }
+
+                    override fun onError(error: HMSException) {
+
+
+                            result(HMSExceptionExtension.toDictionary(error))
+
+                    }
+                })
+            }
 }
 

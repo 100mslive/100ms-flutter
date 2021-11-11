@@ -26,7 +26,7 @@ class  HMSVideoViewFactory: NSObject, FlutterPlatformViewFactory {
         let isLocal = arguments["is_local"] as? Bool ?? true
         let peerId = arguments["peer_id"] as? String ?? ""
         let trackId = arguments["track_id"] as? String ?? ""
-        
+        let setMirror = arguments["set_mirror"] as? String ?? ""
         let width = arguments["width"] as? Double ?? frame.size.width
         let height = arguments["height"] as? Double ?? frame.size.height
         
