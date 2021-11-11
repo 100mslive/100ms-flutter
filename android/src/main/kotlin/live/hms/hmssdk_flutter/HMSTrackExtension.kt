@@ -1,9 +1,6 @@
 package live.hms.hmssdk_flutter
 
-import live.hms.video.media.tracks.HMSLocalVideoTrack
-import live.hms.video.media.tracks.HMSTrack
-import live.hms.video.media.tracks.HMSTrackType
-import live.hms.video.media.tracks.HMSVideoTrack
+import live.hms.video.media.tracks.*
 import live.hms.video.sdk.models.enums.HMSTrackUpdate
 
 class HMSTrackExtension {
@@ -22,6 +19,9 @@ class HMSTrackExtension {
             }
             else if (track is HMSLocalVideoTrack){
                 hashMap["hms_video_track_settings"] = HMSVideoTrackSettingsExtension.toDictionary(track.settings)!!
+            }
+            else if (track is HMSLocalAudioTrack) {
+                hashMap["hms_audio_track_settings"] = HMSAudioTrackSettingsExtension.toDictionary(track.settings)!!
             }
             else{
                 hashMap["instance_of"] = false
