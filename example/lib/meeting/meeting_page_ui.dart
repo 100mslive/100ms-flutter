@@ -3,10 +3,9 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/video_tile.dart';
 
 
-class MeetingPageUI extends StatelessWidget {
+class MeetingPageUI extends StatefulWidget {
   int index;
   List<HMSTrack> filteredList;
-  Orientation orientation;
   double itemHeight;
   double itemWidth;
   Map<String, HMSTrackUpdate> map;
@@ -14,16 +13,21 @@ class MeetingPageUI extends StatelessWidget {
   MeetingPageUI(
       {required this.index,
       required this.filteredList,
-      required this.orientation,
       required this.itemWidth,
       required this.itemHeight,
       required this.map})
       : super();
 
   @override
+  State<MeetingPageUI> createState() => _MeetingPageUIState();
+}
+
+class _MeetingPageUIState extends State<MeetingPageUI> {
+  @override
   Widget build(BuildContext context) {
-    return (index < filteredList.length &&
-            filteredList[index].source != "SCREEN")
+    var orientation = MediaQuery.of(context).orientation;
+    print("Orientation $orientation}");
+    return (widget.index < widget.filteredList.length && widget.filteredList[widget.index].source != "SCREEN")
         ? ((orientation == Orientation.portrait)
             ? Column(
                 children: [
@@ -31,36 +35,36 @@ class MeetingPageUI extends StatelessWidget {
                     children: [
                       //if (index * 4 < filteredList.length)
                       VideoTile(
-                          tileIndex: index * 4,
-                          filteredList: filteredList,
-                          itemHeight: itemHeight,
-                          itemWidth: itemWidth,
-                          map: map),
+                          tileIndex: widget.index * 4,
+                          filteredList: widget.filteredList,
+                          itemHeight: widget.itemHeight,
+                          itemWidth: widget.itemWidth,
+                          map: widget.map),
                       //if (index * 4 + 1 < filteredList.length)
                       VideoTile(
-                          tileIndex: index * 4 + 1,
-                          filteredList: filteredList,
-                          itemHeight: itemHeight,
-                          itemWidth: itemWidth,
-                          map: map),
+                          tileIndex: widget.index * 4 + 1,
+                          filteredList: widget.filteredList,
+                          itemHeight: widget.itemHeight,
+                          itemWidth: widget.itemWidth,
+                          map: widget.map),
                     ],
                   ),
                   Row(
                     children: [
                       //if (index * 4 + 2 < filteredList.length)
                       VideoTile(
-                          tileIndex: index * 4 + 2,
-                          filteredList: filteredList,
-                          itemHeight: itemHeight,
-                          itemWidth: itemWidth,
-                          map: map),
+                          tileIndex: widget.index * 4 + 2,
+                          filteredList: widget.filteredList,
+                          itemHeight: widget.itemHeight,
+                          itemWidth: widget.itemWidth,
+                          map: widget.map),
                       //if (index * 4 + 3 < filteredList.length)
                       VideoTile(
-                          tileIndex: index * 4 + 3,
-                          filteredList: filteredList,
-                          itemHeight: itemHeight,
-                          itemWidth: itemWidth,
-                          map: map),
+                          tileIndex: widget.index * 4 + 3,
+                          filteredList: widget.filteredList,
+                          itemHeight: widget.itemHeight,
+                          itemWidth: widget.itemWidth,
+                          map: widget.map),
                     ],
                   ),
                 ],
@@ -70,17 +74,17 @@ class MeetingPageUI extends StatelessWidget {
                   Row(
                     children: [
                       VideoTile(
-                          tileIndex: index * 2,
-                          filteredList: filteredList,
-                          itemHeight: itemHeight * 2 - 50,
-                          itemWidth: itemWidth,
-                          map: map),
+                          tileIndex: widget.index * 2,
+                          filteredList: widget.filteredList,
+                          itemHeight: widget.itemHeight * 2 - 50,
+                          itemWidth: widget.itemWidth,
+                          map: widget.map),
                       VideoTile(
-                          tileIndex: index * 2 + 1,
-                          filteredList: filteredList,
-                          itemHeight: itemHeight * 2 - 50,
-                          itemWidth: itemWidth,
-                          map: map),
+                          tileIndex: widget.index * 2 + 1,
+                          filteredList: widget.filteredList,
+                          itemHeight: widget.itemHeight * 2 - 50,
+                          itemWidth: widget.itemWidth,
+                          map: widget.map),
                     ],
                   ),
                 ],
@@ -88,10 +92,10 @@ class MeetingPageUI extends StatelessWidget {
         : Container(
             child: VideoTile(
                 tileIndex: 0,
-                filteredList: filteredList,
-                itemHeight: itemHeight * 2,
-                itemWidth: itemWidth * 2,
-                map: map),
+                filteredList: widget.filteredList,
+                itemHeight: widget.itemHeight * 2,
+                itemWidth: widget.itemWidth * 2,
+                map: widget.map),
           );
   }
 }

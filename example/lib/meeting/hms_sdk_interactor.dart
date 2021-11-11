@@ -7,7 +7,7 @@ class HMSSDKInteractor {
   late HMSMeeting _meeting;
 
   HMSSDKInteractor() {
-    _meeting = HMSMeeting();
+    _meeting = HMSMeeting(hmsTrackSetting: HMSTrackSetting(audioTrackSetting: HMSAudioTrackSetting(maxBitrate: 100),videoTrackSetting: HMSVideoTrackSetting(cameraFacing: HMSCameraFacing.BACK)));
   }
 
   Future<void> joinMeeting({required HMSConfig config}) async {

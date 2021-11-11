@@ -13,12 +13,21 @@ class AudioParamsExtension{
             return args
         }
 
-        private fun getValueOfHMSAudioCodec (codec: HMSAudioCodec):String{
+        fun getValueOfHMSAudioCodec (codec: HMSAudioCodec):String{
             return when (codec) {
                 HMSAudioCodec.OPUS->
                     "opus"
                 else->
                     "defaultCodec"
+            }
+        }
+
+        fun getValueOfHMSAudioCodecFromString (codec:String?):HMSAudioCodec?{
+            return when (codec) {
+                "opus"->
+                    HMSAudioCodec.OPUS
+                else->
+                    null
             }
         }
     }

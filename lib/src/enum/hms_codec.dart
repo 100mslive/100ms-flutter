@@ -1,13 +1,14 @@
-enum HMSCodec { kHMSCodecH264, kHMSCodecVP8, unknown }
+enum HMSCodec { H264,VP8,VP9, unknown }
 
 extension HMSCodecValues on HMSCodec {
   static HMSCodec getHMSCodecFromName(String name) {
     switch (name) {
-      case 'kHMSCodecH264':
-        return HMSCodec.kHMSCodecH264;
-      case 'kHMSCodecVP8':
-        return HMSCodec.kHMSCodecVP8;
-
+      case 'h264':
+        return HMSCodec.H264;
+      case 'vp8':
+        return HMSCodec.VP8;
+      case 'vp9':
+        return HMSCodec.VP9;
       default:
         return HMSCodec.unknown;
     }
@@ -15,12 +16,14 @@ extension HMSCodecValues on HMSCodec {
 
   static String getValueFromHMSCodec(HMSCodec hmsCodec) {
     switch (hmsCodec) {
-      case HMSCodec.kHMSCodecH264:
-        return 'kHMSCodecH264';
-      case HMSCodec.kHMSCodecVP8:
-        return 'kHMSCodecVP8';
+      case HMSCodec.H264:
+        return 'h264';
+      case HMSCodec.VP8:
+        return 'vp8';
+      case HMSCodec.VP9:
+        return 'vp9';
       case HMSCodec.unknown:
-        return '';
+        return 'defaultCodec';
     }
   }
 }

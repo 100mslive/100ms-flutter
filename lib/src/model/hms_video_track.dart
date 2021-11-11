@@ -20,12 +20,13 @@ class HMSVideoTrack extends HMSTrack {
             peer: peer);
 
   factory HMSVideoTrack.fromMap({required Map map, HMSPeer? peer}) {
-    return HMSVideoTrack(
+    return map['hms_video_track_settings']==null?HMSVideoTrack(
         trackId: map['track_id'],
         trackDescription: map['track_description'],
         source: (map['track_source']),
         kind: HMSTrackKindValue.getHMSTrackKindFromName(map['track_kind']),
         isMute: map['track_mute'],
-        peer: peer);
+        isDegraded: map['is_degraded'],
+        peer: peer):HMSLocalVideoTrack.fromMap(map: map);
   }
 }
