@@ -27,7 +27,6 @@ import live.hms.video.media.settings.HMSTrackSettings
 import live.hms.video.media.settings.HMSVideoTrackSettings
 import live.hms.video.media.tracks.HMSRemoteAudioTrack
 import live.hms.video.media.tracks.HMSTrack
-import live.hms.video.media.tracks.HMSVideoTrack
 import live.hms.video.sdk.*
 import live.hms.video.sdk.models.*
 import live.hms.video.sdk.models.enums.HMSPeerUpdate
@@ -190,6 +189,9 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
             }
             "get_room"->{
                 getRoom(result)
+            }
+            "update_hms_video_track_settings"->{
+                updateHMSLocalTrackSetting(call)
             }
             else -> {
                 result.notImplemented()
@@ -880,6 +882,35 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
 
     private fun getRoom(result: Result){
         result.success(HMSRoomExtension.toDictionary(hmssdk?.getRoom()))
+    }
+
+    private fun updateHMSLocalTrackSetting(call: MethodCall){
+        val localPeerVideoTrack = getLocalPeer().videoTrack
+        var hmsVideoTrackSettings = localPeerVideoTrack!!.settings.builder()
+        val hmsVideoTrackHashMap: HashMap<String, Any?>? = call.argument("video_track_setting")
+        if (hmsVideoTrackHashMap != null) {
+            val maxBitRate = hmsVideoTrackHashMap["max_bit_rate"] as Int?
+            val maxFrameRate = hmsVideoTrackHashMap["max_frame_rate"] as Int?
+            val videoCodec =
+                VideoParamsExtension.getValueOfHMSAudioCodecFromString(hmsVideoTrackHashMap["video_codec"] as String?) as HMSVideoCodec?
+
+
+            if (maxBitRate != null) {
+                hmsVideoTrackSettings = hmsVideoTrackSettings.maxBitrate(maxBitRate)
+            }
+
+            if (maxFrameRate != null){
+                hmsVideoTrackSettings = hmsVideoTrackSettings.maxFrameRate(maxFrameRate)
+            }
+            if (videoCodec != null){
+                hmsVideoTrackSettings = hmsVideoTrackSettings.codec(videoCodec)
+            }
+        }
+
+        CoroutineScope(Dispatchers.Default).launch {
+            localPeerVideoTrack.setSettings(hmsVideoTrackSettings.build())
+        }
+
     }
 
 
