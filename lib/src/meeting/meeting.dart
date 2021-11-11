@@ -245,4 +245,10 @@ class HMSMeeting {
     if (hmsException == null) return null;
     return HMSException.fromMap(hmsException);
   }
+
+  Future<HMSRoom?> getRoom() async{
+    var hmsRoomMap = await PlatformService.invokeMethod(PlatformMethod.getRoom);
+    if(hmsRoomMap == null)return null;
+    return HMSRoom.fromMap(hmsRoomMap);
+  }
 }

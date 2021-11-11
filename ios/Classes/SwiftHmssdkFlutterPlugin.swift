@@ -124,6 +124,8 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             startHMSLogger(call)
         case "remove_hms_logger"
             removeHMSLogger()
+        case "get_room"
+            getRoom(result)
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -850,5 +852,10 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                 logsSink(args)
 
             }
+
+
+      private func getRoom(result: Result){
+        result(HMSRoomExtension.toDictionary(hmssdk?.getRoom()))
+      }
 }
 

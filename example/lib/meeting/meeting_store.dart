@@ -531,4 +531,9 @@ abstract class MeetingStoreBase
     }
     print("${hmsException?.toString()} HMSEXCEPTION ${isRecordingStarted}");
   }
+
+  Future<HMSRoom?> getRoom() async{
+    HMSRoom? room = await meetingController.getRoom();
+    return room;
+  }
 }

@@ -157,4 +157,8 @@ class MeetingController {
     return await _hmsSdkInteractor!.stopRtmpAndRecording();
   }
 
+  Future<HMSRoom?> getRoom() async{
+    return await _hmsSdkInteractor!.getRoom();
+  }
+
 }
