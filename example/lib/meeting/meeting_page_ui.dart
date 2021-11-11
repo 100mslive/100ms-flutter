@@ -27,75 +27,76 @@ class _MeetingPageUIState extends State<MeetingPageUI> {
   Widget build(BuildContext context) {
     var orientation = MediaQuery.of(context).orientation;
     print("Orientation $orientation}");
-    return (widget.index < widget.filteredList.length && widget.filteredList[widget.index].source != "SCREEN")
+
+    return Container(child: (widget.index < widget.filteredList.length && widget.filteredList[widget.index].source != "SCREEN")
         ? ((orientation == Orientation.portrait)
-            ? Column(
-                children: [
-                  Row(
-                    children: [
-                      //if (index * 4 < filteredList.length)
-                      VideoTile(
-                          tileIndex: widget.index * 4,
-                          filteredList: widget.filteredList,
-                          itemHeight: widget.itemHeight,
-                          itemWidth: widget.itemWidth,
-                          map: widget.map),
-                      //if (index * 4 + 1 < filteredList.length)
-                      VideoTile(
-                          tileIndex: widget.index * 4 + 1,
-                          filteredList: widget.filteredList,
-                          itemHeight: widget.itemHeight,
-                          itemWidth: widget.itemWidth,
-                          map: widget.map),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      //if (index * 4 + 2 < filteredList.length)
-                      VideoTile(
-                          tileIndex: widget.index * 4 + 2,
-                          filteredList: widget.filteredList,
-                          itemHeight: widget.itemHeight,
-                          itemWidth: widget.itemWidth,
-                          map: widget.map),
-                      //if (index * 4 + 3 < filteredList.length)
-                      VideoTile(
-                          tileIndex: widget.index * 4 + 3,
-                          filteredList: widget.filteredList,
-                          itemHeight: widget.itemHeight,
-                          itemWidth: widget.itemWidth,
-                          map: widget.map),
-                    ],
-                  ),
-                ],
-              )
-            : Column(
-                children: [
-                  Row(
-                    children: [
-                      VideoTile(
-                          tileIndex: widget.index * 2,
-                          filteredList: widget.filteredList,
-                          itemHeight: widget.itemHeight * 2 - 50,
-                          itemWidth: widget.itemWidth,
-                          map: widget.map),
-                      VideoTile(
-                          tileIndex: widget.index * 2 + 1,
-                          filteredList: widget.filteredList,
-                          itemHeight: widget.itemHeight * 2 - 50,
-                          itemWidth: widget.itemWidth,
-                          map: widget.map),
-                    ],
-                  ),
-                ],
-              ))
-        : Container(
-            child: VideoTile(
-                tileIndex: 0,
+        ? Column(
+      children: [
+        Row(
+          children: [
+            //if (index * 4 < filteredList.length)
+            VideoTile(
+                tileIndex: widget.index * 4,
                 filteredList: widget.filteredList,
-                itemHeight: widget.itemHeight * 2,
-                itemWidth: widget.itemWidth * 2,
+                itemHeight: widget.itemHeight,
+                itemWidth: widget.itemWidth,
                 map: widget.map),
-          );
+            //if (index * 4 + 1 < filteredList.length)
+            VideoTile(
+                tileIndex: widget.index * 4 + 1,
+                filteredList: widget.filteredList,
+                itemHeight: widget.itemHeight,
+                itemWidth: widget.itemWidth,
+                map: widget.map),
+          ],
+        ),
+        Row(
+          children: [
+            //if (index * 4 + 2 < filteredList.length)
+            VideoTile(
+                tileIndex: widget.index * 4 + 2,
+                filteredList: widget.filteredList,
+                itemHeight: widget.itemHeight,
+                itemWidth: widget.itemWidth,
+                map: widget.map),
+            //if (index * 4 + 3 < filteredList.length)
+            VideoTile(
+                tileIndex: widget.index * 4 + 3,
+                filteredList: widget.filteredList,
+                itemHeight: widget.itemHeight,
+                itemWidth: widget.itemWidth,
+                map: widget.map),
+          ],
+        ),
+      ],
+    )
+        : Column(
+      children: [
+        Row(
+          children: [
+            VideoTile(
+                tileIndex: widget.index * 2,
+                filteredList: widget.filteredList,
+                itemHeight: widget.itemHeight,
+                itemWidth: widget.itemWidth * 2 - 50,
+                map: widget.map),
+            VideoTile(
+                tileIndex: widget.index * 2 + 1,
+                filteredList: widget.filteredList,
+                itemHeight: widget.itemHeight ,
+                itemWidth: widget.itemWidth*2 - 50,
+                map: widget.map),
+          ],
+        ),
+      ],
+    ))
+        : Container(
+      child: VideoTile(
+          tileIndex: 0,
+          filteredList: widget.filteredList,
+          itemHeight: widget.itemHeight * 2,
+          itemWidth: widget.itemWidth * 2,
+          map: widget.map),
+    ),);
   }
 }
