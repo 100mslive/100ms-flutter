@@ -1,24 +1,18 @@
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
+
 class HMSSDKInteractor {
   late HMSConfig config;
   late List<HMSMessage> messages;
   late HMSMeeting _meeting;
 
   HMSSDKInteractor() {
-    _meeting = HMSMeeting();
+    _meeting = HMSMeeting(hmsTrackSetting: HMSTrackSetting(audioTrackSetting: HMSAudioTrackSetting(maxBitrate: 100),videoTrackSetting: HMSVideoTrackSetting(cameraFacing: HMSCameraFacing.BACK)));
   }
 
-  Future<void> joinMeeting(
-      {required HMSConfig config,
-      required bool isProdLink,
-      required bool setWebRtcLogs}) async {
+  Future<void> joinMeeting({required HMSConfig config}) async {
     this.config = config;
-    await _meeting.joinMeeting(
-        config: this.config,
-        isProdLink: isProdLink,
-        // endPoint: Constant.getTokenURL,
-        setWebrtcLogs: setWebRtcLogs);
+    await _meeting.joinMeeting(config: this.config);
   }
 
   Future<void> leaveMeeting() async {
@@ -49,28 +43,24 @@ class HMSSDKInteractor {
     return await _meeting.sendGroupMessage(message, roleName);
   }
 
-  Future<void> previewVideo(
-      {required HMSConfig config,
-      required bool isProdLink,
-      required bool setWebRtcLogs}) async {
+  Future<void> previewVideo({required HMSConfig config}) async {
     this.config = config;
-    return _meeting.previewVideo(
-        config: config, isProdLink: isProdLink, setWebRtcLogs: setWebRtcLogs);
+    return _meeting.previewVideo(config: config);
   }
 
-  void startHMSLogger(HMSLogLevel webRtclogLevel, HMSLogLevel logLevel) {
+  void startHMSLogger(HMSLogLevel webRtclogLevel,HMSLogLevel logLevel){
     _meeting.startHMSLogger(webRtclogLevel, logLevel);
   }
 
-  void removeHMSLogger() {
+  void removeHMSLogger(){
     _meeting.removeHMSLogger();
   }
 
-  void addLogsListener(HMSLogListener hmsLogListener) {
+  void addLogsListener(HMSLogListener hmsLogListener){
     _meeting.addLogListener(hmsLogListener);
   }
 
-  void removeLogsListener(HMSLogListener hmsLogListener) {
+  void removeLogsListener(HMSLogListener hmsLogListener){
     _meeting.removeLogListener(hmsLogListener);
   }
 
@@ -98,7 +88,7 @@ class HMSSDKInteractor {
     _meeting.stopCapturing();
   }
 
-  Future<HMSPeer?> getLocalPeer() async {
+  Future<HMSPeer?> getLocalPeer() async{
     return await _meeting.getLocalPeer();
   }
 
@@ -147,5 +137,17 @@ class HMSSDKInteractor {
 
   void unMuteAll() {
     _meeting.unMuteAll();
+  }
+
+  Future<HMSException?> startRtmpOrRecording(HMSRecordingConfig hmsRecordingConfig) async{
+    return await _meeting.startRtmpOrRecording(hmsRecordingConfig);
+  }
+
+  Future<HMSException?> stopRtmpAndRecording() async{
+    return await _meeting.stopRtmpAndRecording();
+  }
+
+  Future<HMSRoom?> getRoom() async{
+    return await _meeting.getRoom();
   }
 }

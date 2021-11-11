@@ -20,6 +20,9 @@ abstract class MeetingStoreBase
   HMSError? error;
 
   @observable
+  HMSException? hmsException;
+
+  @observable
   HMSRoleChangeRequest? roleChangeRequest;
 
   @observable
@@ -33,7 +36,14 @@ abstract class MeetingStoreBase
   @observable
   bool reconnected = false;
   @observable
+  bool isRoomEnded = false;
+  @observable
+  bool isRecordingStarted = false;
+
+  @observable
   HMSTrackChangeRequest? hmsTrackChangeRequest;
+  @observable
+  List<HMSRole> roles = [];
 
   late MeetingController meetingController;
 
@@ -50,6 +60,9 @@ abstract class MeetingStoreBase
   ObservableList<HMSTrack> tracks = ObservableList.of([]);
 
   @observable
+  ObservableList<HMSTrack> audioTracks = ObservableList.of([]);
+
+  @observable
   ObservableList<HMSMessage> messages = ObservableList.of([]);
 
   @observable
@@ -57,6 +70,8 @@ abstract class MeetingStoreBase
 
   @observable
   ObservableMap<String, HMSTrackUpdate> audioTrackStatus = ObservableMap.of({});
+
+  HMSRoom? hmsRoom;
 
   @action
   void startListen() {
@@ -193,7 +208,8 @@ abstract class MeetingStoreBase
   }
 
   @override
-  void onJoin({required HMSRoom room}) {
+  void onJoin({required HMSRoom room}) async {
+    hmsRoom = room;
     if (Platform.isAndroid) {
       print("members ${room.peers!.length}");
       for (HMSPeer each in room.peers!) {
@@ -222,6 +238,7 @@ abstract class MeetingStoreBase
         }
       }
     }
+    roles = await getRoles();
   }
 
   @override
@@ -247,6 +264,7 @@ abstract class MeetingStoreBase
         muteAll();
       }
       audioTrackStatus[track.trackId] = trackUpdate;
+      audioTracks.add(track);
       if (peer.isLocal && trackUpdate == HMSTrackUpdate.trackMuted) {
         this.isMicOn = false;
       }
@@ -360,7 +378,7 @@ abstract class MeetingStoreBase
   @override
   void onRemovedFromRoom(
       {required HMSPeerRemovedFromPeer hmsPeerRemovedFromPeer}) {
-    meetingController.leaveMeeting();
+    leaveMeeting();
   }
 
   void changeRole(
@@ -444,11 +462,14 @@ abstract class MeetingStoreBase
   }
 
   Future<bool> endRoom(bool lock) async {
-    return await meetingController.endRoom(lock);
+    bool room = await meetingController.endRoom(lock);
+    if (room == true) isRoomEnded = true;
+    return room;
   }
 
   void leaveMeeting() {
     meetingController.leaveMeeting();
+    isRoomEnded = true;
     removeListener();
   }
 
@@ -488,5 +509,31 @@ abstract class MeetingStoreBase
 
   Future<HMSPeer?> getLocalPeer() async {
     return await meetingController.getLocalPeer();
+  }
+
+  void startRtmpOrRecording(
+      String meetingUrl, bool toRecord, List<String>? rtmpUrls) async {
+    HMSRecordingConfig hmsRecordingConfig = new HMSRecordingConfig(
+        meetingUrl: meetingUrl, toRecord: toRecord, rtmpUrls: rtmpUrls);
+    hmsException =
+        await meetingController.startRtmpOrRecording(hmsRecordingConfig);
+    if (hmsException == null || hmsException?.code == 400) {
+      isRecordingStarted = true;
+    }
+
+    print("${hmsException?.toString()} HMSEXCEPTION  ${isRecordingStarted}");
+  }
+
+  void stopRtmpAndRecording() async {
+    hmsException = (await meetingController.stopRtmpAndRecording());
+    if (hmsException == null) {
+      isRecordingStarted = false;
+    }
+    print("${hmsException?.toString()} HMSEXCEPTION ${isRecordingStarted}");
+  }
+
+  Future<HMSRoom?> getRoom() async {
+    HMSRoom? room = await meetingController.getRoom();
+    return room;
   }
 }

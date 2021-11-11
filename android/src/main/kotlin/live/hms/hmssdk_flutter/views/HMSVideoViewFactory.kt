@@ -7,14 +7,16 @@ import io.flutter.plugin.platform.PlatformView
 import io.flutter.plugin.common.StandardMessageCodec
 import io.flutter.plugin.platform.PlatformViewFactory
 import live.hms.hmssdk_flutter.HmssdkFlutterPlugin
+import live.hms.video.media.tracks.HMSLocalTrack
+import live.hms.video.media.tracks.HMSLocalVideoTrack
 import live.hms.video.media.tracks.HMSVideoTrack
 import live.hms.video.sdk.models.HMSPeer
 import org.webrtc.SurfaceViewRenderer
 
-class HMSVideoViewWidget(context: Context, id: Int, creationParams: Map<String?, Any?>?,val peer:HMSPeer?,val trackId:String,val  isAux:Boolean) : PlatformView {
+class HMSVideoViewWidget(context: Context, id: Int, creationParams: Map<String?, Any?>?,val peer:HMSPeer?,val trackId:String,val  isAux:Boolean,val setMirror:Boolean) : PlatformView {
 
     private val hmsVideoView: HMSVideoView by lazy {
-        HMSVideoView(context)
+        HMSVideoView(context,setMirror)
     }
 
     init {
@@ -23,10 +25,6 @@ class HMSVideoViewWidget(context: Context, id: Int, creationParams: Map<String?,
     override fun onFlutterViewAttached(flutterView: View) {
         super.onFlutterViewAttached(flutterView)
         renderVideo()
-    }
-
-    override fun onFlutterViewDetached() {
-        super.onFlutterViewDetached()
     }
 
     private fun renderVideo() {
@@ -78,10 +76,11 @@ class HMSVideoViewFactory(val plugin: HmssdkFlutterPlugin) : PlatformViewFactory
         val creationParams = args as Map<String?, Any?>?
         val id=args!!["peer_id"] as? String
         val isLocal=args!!["is_local"] as? Boolean
+        val setMirror=args!!["set_mirror"] as? Boolean
         val trackId=args!!["track_id"] as? String
         val isAuxiliary = args!!["is_aux"] as? Boolean
         val peer = if(isLocal==null || isLocal!!) plugin.getLocalPeer()
         else plugin.getPeerById(id!!)!!
-        return HMSVideoViewWidget(context, viewId, creationParams,peer,trackId!!,isAuxiliary!!)
+        return HMSVideoViewWidget(context, viewId, creationParams,peer,trackId!!,isAuxiliary!!,setMirror!!)
     }
 }

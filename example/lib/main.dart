@@ -12,6 +12,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:wakelock/wakelock.dart';
 import 'package:input_history_text_field/input_history_text_field.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -45,6 +46,14 @@ class _HomePageState extends State<HomePage> {
   TextEditingController roomIdController =
       TextEditingController(text: Constant.defaultRoomID);
 
+  PackageInfo _packageInfo = PackageInfo(
+    appName: 'Unknown',
+    packageName: 'Unknown',
+    version: 'Unknown',
+    buildNumber: 'Unknown',
+    buildSignature: 'Unknown',
+  );
+
   void getPermissions() async {
     await Permission.camera.request();
     await Permission.microphone.request();
@@ -62,9 +71,17 @@ class _HomePageState extends State<HomePage> {
     // TODO: implement initState
     super.initState();
     getPermissions();
+    _initPackageInfo();
   }
 
   DeepLinkBloc _bloc = DeepLinkBloc();
+
+  Future<void> _initPackageInfo() async {
+    final info = await PackageInfo.fromPlatform();
+    setState(() {
+      _packageInfo = info;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -149,7 +166,13 @@ class _HomePageState extends State<HomePage> {
                                 width: 8,
                               ),
                               Text('Join Meeting',
-                                  style: TextStyle(height: 1, fontSize: 24))
+                                  style: TextStyle(height: 1, fontSize: 24)),
+                              SizedBox(
+                                height: 50.0,
+                              ),
+                              Container(
+                                child: Text("Version: ${_packageInfo.version}"),
+                              )
                             ],
                           ),
                         ))

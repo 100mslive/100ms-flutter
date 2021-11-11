@@ -1,6 +1,7 @@
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/meeting/hms_sdk_interactor.dart';
+import 'package:hmssdk_flutter_example/preview/preview_store.dart';
 import 'package:hmssdk_flutter_example/service/room_service.dart';
 import 'package:uuid/uuid.dart';
 
@@ -20,16 +21,14 @@ class PreviewController {
     FirebaseCrashlytics.instance.setUserIdentifier(token[0]!);
 
     HMSConfig config = HMSConfig(
-      userId: Uuid().v1(),
-      roomId: roomId,
-      authToken: token[0]!,
-      userName: user,
-    );
+        userId: Uuid().v1(),
+        authToken: token[0]!,
+        userName: user,
+        endPoint: token[1] == "true" ? "" : "https://qa-init.100ms.live/init");
 
     _hmsSdkInteractor?.previewVideo(
         config: config,
-        isProdLink: token[1] == "true" ? true : false,
-        setWebRtcLogs: true);
+    );
     return true;
   }
 

@@ -3,13 +3,14 @@ import Flutter
 import UIKit
 import HMSSDK
 
-public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListener, FlutterStreamHandler, HMSPreviewListener {
+public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListener, FlutterStreamHandler, HMSPreviewListener,HMSLogger.Loggable {
     
     let channel:FlutterMethodChannel
     let meetingEventChannel:FlutterEventChannel
     let previewEventChannel:FlutterEventChannel
     var eventSink:FlutterEventSink?
     var previewSink:FlutterEventSink?
+    var logsSink:FlutterEventSink?
     var roleChangeRequest:HMSRoleChangeRequest?
     
     internal var hmsSDK: HMSSDK?
@@ -30,7 +31,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         let channel = FlutterMethodChannel(name: "hmssdk_flutter", binaryMessenger: registrar.messenger())
         let eventChannel = FlutterEventChannel(name: "meeting_event_channel", binaryMessenger: registrar.messenger())
         let previewChannel = FlutterEventChannel(name: "preview_event_channel", binaryMessenger: registrar.messenger())
-        
+        let logsChannel = FlutterEventChannel(name: "logs_event_channel", binaryMessenger: registrar.messenger())
         let instance = SwiftHmssdkFlutterPlugin(channel: channel,meetingEventChannel: eventChannel,previewEventChannel: previewChannel)
         
         
@@ -110,7 +111,21 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             
         case "get_local_peer":
             getLocalPeer(result)
-            
+
+        case "change_track_state_for_role" :
+            changeTrackStateForRole(call,result)
+
+        case "start_rtmp_or_recording" :
+            startRtmpOrRecording(call,result)
+
+        case "stop_rtmp_and_recording"    :
+            stopRtmpAndRecording(result)
+        case "start_hms_logger"
+            startHMSLogger(call)
+        case "remove_hms_logger"
+            removeHMSLogger()
+        case "get_room"
+            getRoom(result)
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -156,6 +171,9 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                 self.eventSink = events
             }else if(name == "preview"){
                 self.previewSink=events;
+            }
+            else if (name == "logs") {
+                self.logsSink = events
             }
         }
         
@@ -674,9 +692,9 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     func kindString(from kind: HMSTrackKind) -> String {
         switch kind {
         case .audio:
-            return "Audio"
+            return "KHmsTrackAudio"
         case .video:
-            return "Video"
+            return "KHmsTrackVideo"
         default:
             return "Unknown Kind"
         }
@@ -694,5 +712,150 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
               speakers.map { kindString(from: $0.track.kind) },
               speakers.map { $0.track.source })
     }
+
+    private func changeTrackStateForRole(_ call: FlutterMethodCall,result: FlutterResult){
+
+            let arguments = call.arguments as! Dictionary<String, AnyObject>
+
+            let mute = arguments["mute"] as bool
+            let type = argument["type"] as String
+            let source = arguments["source"] as String
+            let roles:List<String>? = arguments["roles"] as <List<String>>
+
+            val realRoles = hmssdk.getRoles().filter { roles?.contains(it.name)!! }
+
+            hmssdk.changeTrackState(mute = mute!!,type = HMSTrackExtension.getStringFromKind(type),source = source,roles=realRoles,object : HMSActionResultListener {
+
+                func onSuccess() {
+
+
+                        result(null)
+
+                }
+
+                func onError(error: HMSException) {
+                        result(HMSExceptionExtension.toDictionary(error))
+                }
+            })
+
+        }
+
+        private func startRtmpOrRecording(call: MethodCall, result: Result) {
+
+                let arguments = call.arguments as! Dictionary<String, AnyObject>
+
+                val meetingUrl = arguments["meeting_url"] as String
+                val toRecord = arguments["to_record"] as bool
+                val listOfRtmpUrls : List<String> = argument["rtmp_urls"]?:listOf()
+                hmssdk.startRtmpOrRecording(
+                    HMSRecordingConfig(meetingUrl!!, listOfRtmpUrls, toRecord!!),
+                    object : HMSActionResultListener {
+
+                        func onSuccess() {
+
+                                result(null)
+
+                        }
+
+                        func onError(error: HMSException) {
+
+
+                                result(HMSExceptionExtension.toDictionary(error))
+
+                        }
+                    })
+            }
+
+            private func stopRtmpAndRecording(result: Result) {
+                hmssdk.stopRtmpAndRecording(object : HMSActionResultListener {
+
+                    func onSuccess() {
+
+
+                            result(null)
+
+                    }
+
+                    func onError(error: HMSException) {
+
+
+                            result(HMSExceptionExtension.toDictionary(error))
+
+                    }
+                })
+            }
+
+
+            private func startHMSLogger(_ call: FlutterMethodCall){
+                    let arguments = call.arguments as! Dictionary<String, AnyObject>
+
+                    val setWebRtcLogLevel = arguments["web_rtc_log_level"] as String?""
+                    val setLogLevel = arguments["log_level"] as String?""
+
+
+
+                    switch setWebRtcLogLevel{
+                        "verbose":
+                            HMSLogger.webRtcLogLevel=HMSLogger.LogLevel.VERBOSE
+                        "info":
+                            HMSLogger.webRtcLogLevel=HMSLogger.LogLevel.INFO
+                        "warn":
+                            HMSLogger.webRtcLogLevel=HMSLogger.LogLevel.WARN
+                        "error":
+                            HMSLogger.webRtcLogLevel=HMSLogger.LogLevel.ERROR
+                        "debug":
+                            HMSLogger.webRtcLogLevel=HMSLogger.LogLevel.DEBUG
+                        default:
+                            HMSLogger.webRtcLogLevel= HMSLogger.LogLevel.OFF
+                    }
+
+                    switch setLogLevel{
+                        "verbose":
+                        HMSLogger.level = HMSLogger.LogLevel.VERBOSE
+                        "info":
+                        HMSLogger.level = HMSLogger.LogLevel.INFO
+                        "warn":
+                        HMSLogger.level = HMSLogger.LogLevel.WARN
+                        "error":
+                        HMSLogger.level = HMSLogger.LogLevel.ERROR
+                        "debug":
+                        HMSLogger.level = HMSLogger.LogLevel.DEBUG
+                        default:
+                        HMSLogger.level =  HMSLogger.LogLevel.OFF
+                    }
+
+
+                    HMSLogger.injectLoggable(self)
+                }
+
+                private func removeHMSLogger(){
+                        HMSLogger.removeInjectedLoggable()
+                }
+
+
+        func onLogMessage(
+                level: HMSLogger.LogLevel,
+                tag: String,
+                message: String,
+                isWebRtCLog: Boolean
+            ) {
+                if ( isWebRtCLog && level != HMSLogger.webRtcLogLevel )return
+                if(level != HMSLogger.level )return
+
+                val args = [String, Any?]()
+                args.put("event_name", "on_logs_update")
+                val logArgs = [String, Any?]()
+
+                logArgs["log"] = HMSLogsExtension.toDictionary(level, tag, message, isWebRtCLog)
+                args["data"] = logArgs
+
+                logsSink(args)
+
+            }
+
+
+      private func getRoom(result: Result){
+        result(HMSRoomExtension.toDictionary(hmssdk?.getRoom()))
+      }
 }
 

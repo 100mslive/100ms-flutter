@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 class PeerItemOrganism extends StatefulWidget {
@@ -7,6 +8,7 @@ class PeerItemOrganism extends StatefulWidget {
   final double height;
   final double width;
   final bool isLocal;
+  bool setMirror;
 
   PeerItemOrganism(
       {Key? key,
@@ -14,7 +16,8 @@ class PeerItemOrganism extends StatefulWidget {
       this.isVideoMuted = true,
       this.height = 200.0,
       this.width = 200.0,
-      this.isLocal = false})
+      this.isLocal = false,
+      this.setMirror = false})
       : super(key: key);
 
   @override
@@ -34,7 +37,7 @@ class _PeerItemOrganismState extends State<PeerItemOrganism> {
   @override
   Widget build(BuildContext context) {
     print(
-        "isVideoMuted ${widget.isVideoMuted} ${widget.track.source} ${widget.track.peer?.name}");
+        "isVideoMuted ${widget.isVideoMuted} ${widget.track.source} ${widget.track.peer?.name} ${widget.setMirror}");
 
     return Container(
       key: key,
@@ -75,9 +78,11 @@ class _PeerItemOrganismState extends State<PeerItemOrganism> {
               return Container(
                 height: widget.height + 100,
                 width: widget.width - 5,
+                padding: EdgeInsets.all(5.0),
                 child: HMSVideoView(
-                    track: widget.track,
-                    isAuxiliaryTrack: widget.track.source == "SCREEN"),
+                  track: widget.track,
+                  setMirror: widget.setMirror,
+                ),
               );
             },
           )),

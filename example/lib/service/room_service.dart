@@ -1,20 +1,22 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:hmssdk_flutter_example/common/constant.dart';
 import 'package:http/http.dart' as http;
 
+
 class RoomService {
-  Future<List<String?>?> getToken(
-      {required String user, required String room}) async {
+  Future<List<String?>?> getToken({required String user, required String room}) async {
+    Constant.meetingUrl = room;
     List<String?> codeAndDomain = getCode(room) ?? [];
-    print(codeAndDomain);
+    print(codeAndDomain.toString()+"CODEANDDOMAIN");
     if (codeAndDomain.length == 0) {
       return null;
     }
     Uri endPoint = codeAndDomain[2] == "true"
         ? Uri.parse(Constant.prodTokenEndpoint)
         : Uri.parse(Constant.qaTokenEndPoint);
-
+    print("${codeAndDomain[2] == "true".toString()} endPoint");
     http.Response response = await http.post(endPoint, body: {
       'code': (codeAndDomain[1] ?? "").trim(),
       'user_id': user,
@@ -27,8 +29,8 @@ class RoomService {
     return [body['token'], codeAndDomain[2]!.trim()];
   }
 
-  List<String?>? getCode(String? roomUrl) {
-    String? url = roomUrl;
+  List<String?>? getCode(String roomUrl) {
+    String url = roomUrl;
     if (url == null) return [];
     url = url.trim();
     bool isProdM = url.contains(".app.100ms.live/meeting/");

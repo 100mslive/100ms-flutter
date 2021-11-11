@@ -158,9 +158,8 @@ class PlatformService {
           break;
         case HMSUpdateListenerMethod.onTrackUpdate:
           HMSPeer? peer = HMSPeer.fromMap(event.data['peer']);
-          HMSTrack? track = HMSTrack.fromMap(map: data['track'], peer: peer);
-          HMSTrackUpdate? update =
-              HMSTrackUpdateValues.getHMSTrackUpdateFromName(data['update']);
+          HMSTrack? track = data['track']['instance_of']?HMSVideoTrack.fromMap(map: data['track'], peer: peer):HMSAudioTrack.fromMap(map: data['track'],peer: peer);
+          HMSTrackUpdate? update = HMSTrackUpdateValues.getHMSTrackUpdateFromName(data['update']);
           print("UpdateTrack $update  ${data['update']}");
           notifyMeetingListeners(
               method, {'track': track, 'peer': peer, 'update': update});
@@ -190,7 +189,7 @@ class PlatformService {
           notifyMeetingListeners(method, {});
           break;
         case HMSUpdateListenerMethod.onRoleChangeRequest:
-          HMSRoleChangeRequest roleChangeRequest =
+          HMSRoleChangeRequest? roleChangeRequest =
               HMSRoleChangeRequest.fromMap(data['role_change_request']);
           notifyMeetingListeners(
               method, {'role_change_request': roleChangeRequest});

@@ -9,8 +9,8 @@ class HMSLocalPeer extends HMSPeer {
     HMSRole? role,
     String? customerUserId,
     String? customerDescription,
-    HMSAudioTrack? audioTrack,
-    HMSVideoTrack? videoTrack,
+    HMSLocalAudioTrack? audioTrack,
+    HMSLocalVideoTrack? videoTrack,
     List<HMSTrack>? auxiliaryTracks,
   }) : super(
             isLocal: isLocal,
@@ -23,19 +23,19 @@ class HMSLocalPeer extends HMSPeer {
             videoTrack: videoTrack,
             auxiliaryTracks: auxiliaryTracks);
 
-// HMSLocalAudioTrack localAudioTrack() {}
-// HMSLocalVideoTrack localVideoTrack() {
-//
-// }
-
   factory HMSLocalPeer.fromMap(Map map) {
     return HMSLocalPeer(
-      peerId: map['peer_id'],
-      name: map['name'],
-      isLocal: map['is_local'],
-      role: HMSRole.fromMap(map['role']),
-      customerDescription: map['customer_description'],
-      customerUserId: map['customer_user_id'],
-    );
+        peerId: map['peer_id'],
+        name: map['name'],
+        isLocal: map['is_local'],
+        role: HMSRole.fromMap(map['role']),
+        customerDescription: map['customer_description'],
+        customerUserId: map['customer_user_id'],
+        audioTrack: map["audio_track"] != null
+            ? HMSAudioTrack.fromMap(map: map["audio_track"])
+            : null,
+        videoTrack: map["video_track"] != null
+            ? HMSVideoTrack.fromMap(map: map["video_track"])
+            : null);
   }
 }

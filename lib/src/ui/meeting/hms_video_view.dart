@@ -17,12 +17,13 @@ class HMSVideoView extends StatelessWidget {
 
   /// [HMSVideoView] will use viewSize to get height and width of rendered video. If not passed, it will take whatever size is available to the widget.
   final Size? viewSize;
-  final bool isAuxiliaryTrack;
-  const HMSVideoView(
+  bool setMirror;
+
+  HMSVideoView(
       {Key? key,
       required this.track,
       this.viewSize,
-      required this.isAuxiliaryTrack})
+      this.setMirror = false})
       : super(key: key);
 
   @override
@@ -32,14 +33,14 @@ class HMSVideoView extends StatelessWidget {
       return _PlatformView(
         track: track,
         viewSize: tempViewSize,
-        isAuxiliaryTrack: this.isAuxiliaryTrack,
+        setMirror: setMirror,
       );
     } else
       return LayoutBuilder(builder: (_, constraints) {
         return _PlatformView(
           track: track,
           viewSize: Size(constraints.maxWidth, constraints.maxHeight),
-          isAuxiliaryTrack: this.isAuxiliaryTrack,
+          setMirror: setMirror,
         );
       });
   }
@@ -48,12 +49,13 @@ class HMSVideoView extends StatelessWidget {
 class _PlatformView extends StatelessWidget {
   final HMSTrack track;
   final Size viewSize;
-  final bool isAuxiliaryTrack;
-  const _PlatformView(
+  bool setMirror;
+
+  _PlatformView(
       {Key? key,
       required this.track,
       required this.viewSize,
-      required this.isAuxiliaryTrack})
+      this.setMirror = false})
       : super(key: key);
 
   void onPlatformViewCreated(int id) {
@@ -72,7 +74,8 @@ class _PlatformView extends StatelessWidget {
           'peer_id': track.peer?.peerId,
           'is_local': track.peer?.isLocal,
           'track_id': track.trackId,
-          'is_aux': isAuxiliaryTrack
+          'is_aux': track.source != "REGULAR",
+          'set_mirror': setMirror
         }..addAll({
             'height': viewSize.height,
             'width': viewSize.width,
@@ -88,7 +91,8 @@ class _PlatformView extends StatelessWidget {
         creationParams: {
           'peer_id': track.peer?.peerId,
           'is_local': track.peer?.isLocal,
-          'track_id': track.trackId
+          'track_id': track.trackId,
+          'set_mirror':setMirror
         }..addAll({
             'height': viewSize.height,
             'width': viewSize.width,

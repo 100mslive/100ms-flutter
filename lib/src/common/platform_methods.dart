@@ -73,7 +73,13 @@ enum PlatformMethod {
   getLocalPeer,
   unknown,
   startHMSLogger,
-  removeHMSLogger
+  removeHMSLogger,
+  changeTrackStateForRole,
+  startRtmpOrRecording,
+  stopRtmpAndRecording,
+  createSdk,
+  getRoom,
+  updateHMSLocalVideoTrackSettings
 }
 
 extension PlatformMethodValues on PlatformMethod {
@@ -149,6 +155,19 @@ extension PlatformMethodValues on PlatformMethod {
         return "start_hms_logger";
       case PlatformMethod.removeHMSLogger:
         return "remove_hms_logger";
+      case PlatformMethod.changeTrackStateForRole:
+        return "change_track_state";
+      case PlatformMethod.startRtmpOrRecording:
+        return "start_rtmp_or_recording";
+      case PlatformMethod.getRoom:
+        return "get_room";
+      case PlatformMethod.stopRtmpAndRecording:
+        return "stop_rtmp_and_recording";
+      case PlatformMethod.createSdk:
+        return 'create_sdk';
+      case PlatformMethod.updateHMSLocalVideoTrackSettings:
+        return "update_hms_video_track_settings";
+        break;
     }
   }
 
@@ -222,6 +241,18 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.startHMSLogger;
       case 'remove_hms_logger':
         return PlatformMethod.removeHMSLogger;
+      case 'change_track_state_for_role':
+        return PlatformMethod.changeTrackStateForRole;
+      case 'start_rtmp_or_recording':
+        return PlatformMethod.startRtmpOrRecording;
+      case 'stop_rtmp_and_recording':
+        return PlatformMethod.stopRtmpAndRecording;
+      case 'create_sdk':
+        return PlatformMethod.createSdk;
+      case "get_room":
+        return PlatformMethod.getRoom;
+      case "update_hms_video_track_settings":
+        return PlatformMethod.updateHMSLocalVideoTrackSettings;
       default:
         return PlatformMethod.unknown;
     }
