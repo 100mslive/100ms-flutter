@@ -2,6 +2,7 @@ package live.hms.hmssdk_flutter
 
 import live.hms.video.media.tracks.HMSTrack
 import live.hms.video.media.tracks.HMSTrackType
+import live.hms.video.media.tracks.HMSVideoTrack
 import live.hms.video.sdk.models.enums.HMSTrackUpdate
 
 class HMSTrackExtension {
@@ -14,6 +15,9 @@ class HMSTrackExtension {
             hashMap["track_kind"] = getKindInString(track.type)
             hashMap["track_source"] = track.source.uppercase()
             hashMap.put("track_mute",track.isMute)
+            if(track is HMSVideoTrack){
+                hashMap["is_degraded"] = track.isDegraded
+            }
             return hashMap
         }
 

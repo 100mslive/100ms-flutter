@@ -32,8 +32,7 @@ dependencies:
   firebase_core: ^1.5.0
   firebase_analytics: ^8.2.0
   flutter_launcher_icons: ^0.9.1
-  input_history_text_field: ^0.1.0
-
+  input_history_text_field: 
 
 dev_dependencies:
   flutter_test:

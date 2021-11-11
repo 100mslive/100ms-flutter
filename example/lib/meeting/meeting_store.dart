@@ -60,6 +60,9 @@ abstract class MeetingStoreBase
   ObservableList<HMSTrack> tracks = ObservableList.of([]);
 
   @observable
+  ObservableList<HMSTrack> audioTracks = ObservableList.of([]);
+
+  @observable
   ObservableList<HMSMessage> messages = ObservableList.of([]);
 
   @observable
@@ -258,6 +261,7 @@ abstract class MeetingStoreBase
         muteAll();
       }
       audioTrackStatus[track.trackId] = trackUpdate;
+      audioTracks.add(track);
       if (peer.isLocal && trackUpdate == HMSTrackUpdate.trackMuted) {
         this.isMicOn = false;
       }

@@ -18,6 +18,7 @@ class HMSRoomExtension {
                 args.add(HMSPeerExtension.toDictionary(it)!!)
             }
             hashMap.put("peers",args)
+            hashMap.put("local_peer",HMSPeerExtension.toDictionary(room.localPeer)!!)
             return hashMap
         }
     }

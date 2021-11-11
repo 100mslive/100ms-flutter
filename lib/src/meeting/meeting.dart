@@ -11,16 +11,12 @@ import 'package:hmssdk_flutter/src/service/platform_service.dart';
 
 class HMSMeeting {
   ///join meeting by passing HMSConfig instance to it.
-  Future<void> joinMeeting(
-      {required HMSConfig config,
-      required bool isProdLink,
-      required bool setWebrtcLogs}) async {
+  Future<void> joinMeeting({required HMSConfig config}) async {
+    bool isProdLink = true;
+    if (config.endPoint?.isEmpty??true) isProdLink = false;
+    print("${config.endPoint.toString()} JOINMEETING");
     return await PlatformService.invokeMethod(PlatformMethod.joinMeeting,
-        arguments: {
-          ...config.getJson(),
-          'is_prod': isProdLink,
-          'set_web_rtc_log': setWebrtcLogs
-        });
+        arguments: {...config.getJson(), 'is_prod': isProdLink});
   }
 
   ///just call this method to leave meeting.
@@ -91,15 +87,17 @@ class HMSMeeting {
   }
 
   ///preview before joining the room pass [HMSConfig].
-  Future<void> previewVideo(
-      {required HMSConfig config,
-      required bool isProdLink,
-      required bool setWebRtcLogs}) async {
+  Future<void> previewVideo({
+    required HMSConfig config,
+  }) async {
+
+    bool isProdLink = true;
+    if (config.endPoint?.isEmpty??true) isProdLink = false;
+
     return await PlatformService.invokeMethod(PlatformMethod.previewVideo,
         arguments: {
           ...config.getJson(),
           'is_prod': isProdLink,
-          'set_web_rtc_log': setWebRtcLogs
         });
   }
 
@@ -207,19 +205,31 @@ class HMSMeeting {
     await PlatformService.invokeMethod(PlatformMethod.unMuteAll);
   }
 
-  Future<bool> changeTrackStateForRole(bool mute,String type,String source,List<String> roles) async{
-    return await PlatformService.invokeMethod(PlatformMethod.changeTrackStateForRole,arguments: {"mute":mute,"type":type,"source":source,"roles":roles});
+  Future<bool> changeTrackStateForRole(
+      bool mute, String type, String source, List<String> roles) async {
+    return await PlatformService.invokeMethod(
+        PlatformMethod.changeTrackStateForRole,
+        arguments: {
+          "mute": mute,
+          "type": type,
+          "source": source,
+          "roles": roles
+        });
   }
 
-  Future<HMSException?> startRtmpOrRecording(HMSRecordingConfig hmsRecordingConfig) async{
-    Map? hmsException = await PlatformService.invokeMethod(PlatformMethod.startRtmpOrRecording,arguments: hmsRecordingConfig.getJson()) as Map?;
-    if(hmsException==null)return null;
+  Future<HMSException?> startRtmpOrRecording(
+      HMSRecordingConfig hmsRecordingConfig) async {
+    Map? hmsException = await PlatformService.invokeMethod(
+        PlatformMethod.startRtmpOrRecording,
+        arguments: hmsRecordingConfig.getJson()) as Map?;
+    if (hmsException == null) return null;
     return HMSException.fromMap(hmsException);
   }
 
-  Future<HMSException?> stopRtmpAndRecording() async{
-    Map<String,dynamic>? hmsException = await PlatformService.invokeMethod(PlatformMethod.stopRtmpAndRecording);
-    if(hmsException==null)return null;
+  Future<HMSException?> stopRtmpAndRecording() async {
+    Map<String, dynamic>? hmsException =
+        await PlatformService.invokeMethod(PlatformMethod.stopRtmpAndRecording);
+    if (hmsException == null) return null;
     return HMSException.fromMap(hmsException);
   }
 }

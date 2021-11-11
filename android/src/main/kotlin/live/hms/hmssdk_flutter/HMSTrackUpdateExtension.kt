@@ -11,9 +11,9 @@ class HMSTrackUpdateExtension {
 
             if(peer==null || track==null || update==null)return null
 
-            hashMap.put("peer", HMSPeerExtension.toDictionary(peer)!!)
-            hashMap.put("track", HMSTrackExtension.toDictionary(track)!!)
-            hashMap.put("update", HMSTrackExtension.getTrackUpdateInString(update)!!)
+            hashMap["peer"]   = HMSPeerExtension.toDictionary(peer)!!
+            hashMap["track"]  = HMSTrackExtension.toDictionary(track)!!
+            hashMap["update"] = HMSTrackExtension.getTrackUpdateInString(update)!!
             return hashMap
         }
     }

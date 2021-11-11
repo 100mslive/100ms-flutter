@@ -14,11 +14,12 @@ class HMSRoom {
   String? id;
   String? name;
   String? metaData;
+  HMSPeer hmsLocalPeer;
 
   ///[peers] list which are in the room.
   final List<HMSPeer>? peers;
 
-  HMSRoom({this.id, this.name, required this.peers, this.metaData});
+  HMSRoom({this.id, this.name, required this.peers, this.metaData,required this.hmsLocalPeer});
 
   factory HMSRoom.fromMap(Map map) {
     List<HMSPeer> peers = [];
@@ -37,6 +38,8 @@ class HMSRoom {
         id: map['id'],
         name: map['name'],
         peers: peers,
-        metaData: map['meta_data']);
+        metaData: map['meta_data'],
+        hmsLocalPeer: HMSPeer.fromMap(map["local_peer"])
+    );
   }
 }

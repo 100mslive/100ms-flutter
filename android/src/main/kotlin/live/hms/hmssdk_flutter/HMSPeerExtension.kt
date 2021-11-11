@@ -2,13 +2,14 @@ package live.hms.hmssdk_flutter
 
 import android.util.Log
 import live.hms.video.media.tracks.HMSTrack
+import live.hms.video.sdk.models.HMSLocalPeer
 import live.hms.video.sdk.models.HMSPeer
 import live.hms.video.sdk.models.enums.HMSPeerUpdate
 
 class HMSPeerExtension {
 
     companion object{
-        fun toDictionary(peer:HMSPeer?):HashMap<String,Any?>?{
+        fun toDictionary(peer: HMSPeer?):HashMap<String,Any?>?{
             val args=HashMap<String,Any?>()
 
             if (peer==null)return null
