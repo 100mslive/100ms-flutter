@@ -20,10 +20,7 @@ class HMSVideoView extends StatelessWidget {
   bool setMirror;
 
   HMSVideoView(
-      {Key? key,
-      required this.track,
-      this.viewSize,
-      this.setMirror = false})
+      {Key? key, required this.track, this.viewSize, this.setMirror = false})
       : super(key: key);
 
   @override
@@ -92,7 +89,7 @@ class _PlatformView extends StatelessWidget {
           'peer_id': track.peer?.peerId,
           'is_local': track.peer?.isLocal,
           'track_id': track.trackId,
-          'set_mirror':setMirror
+          'set_mirror': track.source != "REGULAR" ? false : setMirror
         }..addAll({
             'height': viewSize.height,
             'width': viewSize.width,
