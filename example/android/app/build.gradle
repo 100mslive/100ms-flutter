@@ -71,7 +71,7 @@ flutter {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'com.github.100mslive:android-sdk:2.1.8'
+    implementation 'com.github.100mslive:android-sdk:2.1.9'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.1'
     implementation 'com.google.firebase:firebase-crashlytics:18.2.4'
 }
