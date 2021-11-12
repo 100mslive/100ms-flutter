@@ -166,16 +166,16 @@ class _HomePageState extends State<HomePage> {
                                 width: 8,
                               ),
                               Text('Join Meeting',
-                                  style: TextStyle(height: 1, fontSize: 24)),
-                              SizedBox(
-                                height: 50.0,
-                              ),
-                              Container(
-                                child: Text("Version: ${_packageInfo.version}"),
-                              )
+                                  style: TextStyle(height: 1, fontSize: 24))
                             ],
                           ),
-                        ))
+                        )),
+                    SizedBox(
+                      height: 50.0,
+                    ),
+                    Container(
+                      child: Text("Version: ${_packageInfo.version}"),
+                    )
                   ],
                 ),
               ),
