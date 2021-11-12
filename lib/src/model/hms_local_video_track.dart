@@ -43,11 +43,14 @@ class HMSLocalVideoTrack extends HMSVideoTrack {
         kind: HMSTrackKindValue.getHMSTrackKindFromName(map['track_kind']),
         isMute: map['track_mute'],
         isDegraded: map['is_degraded'],
-        peer: peer, setting: HMSVideoTrackSetting.fromMap(map["hms_video_track_settings"]));
+        peer: peer,
+        setting: HMSVideoTrackSetting.fromMap(map["hms_video_track_settings"]));
   }
 
-  set setHMSTrackSetting(HMSVideoTrackSetting hmsVideoTrackSetting){
+  set setHMSTrackSetting(HMSVideoTrackSetting hmsVideoTrackSetting) {
     this.setting = hmsVideoTrackSetting;
-    PlatformService.invokeMethod(PlatformMethod.updateHMSLocalVideoTrackSettings,arguments: {"video_track_setting":this.setting.toMap()});
+    PlatformService.invokeMethod(
+        PlatformMethod.updateHMSLocalVideoTrackSettings,
+        arguments: {"video_track_setting": this.setting.toMap()});
   }
 }
