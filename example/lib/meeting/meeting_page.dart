@@ -227,7 +227,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                 var itemCount = ((filteredList.length - 1) /
                             ((orientation == Orientation.portrait) ? 4 : 2))
                         .floor() +
-                    1 +  ((filteredList[0].source != "SCREEN") ? 0 : 1);
+                    1 +  ((filteredList[0].source == "REGULAR") ? 0 : 1);
 
                 print("itemCount $itemCount");
 

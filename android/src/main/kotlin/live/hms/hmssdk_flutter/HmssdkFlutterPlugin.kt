@@ -53,6 +53,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
     lateinit var hmssdk: HMSSDK
     private lateinit var hmsVideoFactory: HMSVideoViewFactory
     private var requestChange: HMSRoleChangeRequest? = null
+    private var hmsConfig : HMSConfig? = null
 
     override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
         this.channel = MethodChannel(flutterPluginBinding.binaryMessenger, "hmssdk_flutter")
@@ -393,17 +394,17 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
     private fun joinMeeting(@NonNull call: MethodCall) {
         val userName = call.argument<String>("user_name")
         val authToken = call.argument<String>("auth_token")
-        val isProd = call.argument<Boolean>("is_prod")
         val endPoint = call.argument<String>("end_point")
-        var hmsConfig = HMSConfig(userName = userName!!, authtoken = authToken!!)
-        if (endPoint!!.isNotEmpty())
-            hmsConfig = HMSConfig(
-                userName = userName,
-                authtoken = authToken,
-                initEndpoint = endPoint.trim()
-            )
-
-        hmssdk.join(hmsConfig, this)
+        if (this.hmsConfig == null) {
+            this.hmsConfig = HMSConfig(userName = userName!!, authtoken = authToken!!)
+            if (endPoint!!.isNotEmpty())
+                this.hmsConfig = HMSConfig(
+                    userName = userName,
+                    authtoken = authToken,
+                    initEndpoint = endPoint.trim()
+                )
+        }
+        hmssdk.join(hmsConfig!!, this)
 
     }
 
@@ -449,7 +450,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
         val argsIsOn = call.argument<Boolean>("is_on")
         val peer = hmssdk.getLocalPeer()
         val audioTrack = peer?.audioTrack
-
+        Log.i("SwitchAudio",argsIsOn!!.toString())
         audioTrack?.setMute(argsIsOn!!)
         result.success("audio_changed")
     }
@@ -458,6 +459,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
         val argsIsOn = call.argument<Boolean>("is_on")
         val peer = hmssdk.getLocalPeer()
         val videoTrack = peer?.videoTrack
+        Log.i("SwitchVideo",argsIsOn!!.toString())
         if (videoTrack != null) {
             videoTrack.setMute(argsIsOn ?: false)
             result.success("video_changed")
@@ -519,9 +521,11 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
         val peerId = call.argument<String>("peer_id")
 //        val isLocal = call.argument<Boolean>("is_local")
         if (peerId == "null") {
+            Log.i("isVideoMute", (hmssdk.getLocalPeer()?.videoTrack?.isMute ?: false).toString())
             return hmssdk.getLocalPeer()?.videoTrack?.isMute ?: false
         }
         val peer = getPeerById(peerId!!)
+        Log.i("isVideoMute", (peer!!.videoTrack!!.isMute).toString())
         return peer!!.videoTrack!!.isMute
     }
 
@@ -529,9 +533,11 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
         val peerId = call.argument<String>("peer_id")
 //        val isLocal = call.argument<Boolean>("is_local")
         if (peerId == "null") {
+            Log.i("isAudioMute", (hmssdk.getLocalPeer()?.audioTrack?.isMute!!).toString())
             return hmssdk.getLocalPeer()?.audioTrack?.isMute!!
         }
         val peer = getPeerById(peerId!!)
+        Log.i("isAudioMute", (peer!!.audioTrack!!.isMute).toString())
         return peer!!.audioTrack!!.isMute
     }
 
@@ -568,14 +574,14 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
         val endPoint = call.argument<String>("end_point")
         Log.i("PreviewVideoAndroid", "EndPoint ${endPoint}  ${isProd}")
         HMSLogger.i("previewVideo", "$userName $isProd")
-        var hmsConfig = HMSConfig(userName = userName!!, authtoken = authToken!!)
+        this.hmsConfig = HMSConfig(userName = userName!!, authtoken = authToken!!)
         if (endPoint!!.isNotEmpty())
-            hmsConfig = HMSConfig(
+            this.hmsConfig = HMSConfig(
                 userName = userName,
                 authtoken = authToken,
                 initEndpoint = endPoint
             )
-        hmssdk.preview(hmsConfig, this)
+        hmssdk.preview(this.hmsConfig!!, this)
 
 //        HMSLogger.webRtcLogLevel = if(setWebRtcLog == false) HMSLogger.LogLevel.OFF else HMSLogger.LogLevel.INFO
 //        HMSLogger.injectLoggable(this)

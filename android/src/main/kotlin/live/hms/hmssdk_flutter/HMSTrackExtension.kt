@@ -12,7 +12,7 @@ class HMSTrackExtension {
             val hashMap=HashMap<String,Any>()
             if(track==null)return null
             hashMap["track_id"] = track.trackId
-            hashMap["track_description"] = track.description
+            hashMap["track_description"] = track.description?:""
             hashMap["track_kind"] = getKindInString(track.type)
             hashMap["track_source"] = track.source.uppercase()
             hashMap.put("track_mute",track.isMute)
