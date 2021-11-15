@@ -256,7 +256,7 @@ abstract class MeetingStoreBase
       {required HMSTrack track,
       required HMSTrackUpdate trackUpdate,
       required HMSPeer peer}) {
-    print("onTrackUpdateFlutter $track ${peer.isLocal}");
+    print("onTrackUpdateFlutterMeetingStore $track ${peer.isLocal}");
     if (track.kind == HMSTrackKind.kHMSTrackKindAudio) {
       if (isSpeakerOn) {
         unMuteAll();
