@@ -1,5 +1,6 @@
 package live.hms.hmssdk_flutter
 
+import android.util.Log
 import live.hms.video.media.tracks.HMSTrack
 import live.hms.video.sdk.models.HMSPeer
 import live.hms.video.sdk.models.enums.HMSTrackUpdate

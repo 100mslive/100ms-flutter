@@ -103,7 +103,7 @@ class _VideoTileState extends State<VideoTile> {
                       newWidget.track.isHighestAudio;
             },
             child: PeerItemOrganism(
-                setMirror: !widget.filteredList[index].peer!.isLocal,
+                setMirror: widget.filteredList[index].peer?.isLocal??false,
                 key: Key(index.toString()),
                 height: widget.itemHeight,
                 width: widget.itemWidth,

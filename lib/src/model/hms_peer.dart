@@ -21,6 +21,11 @@ class HMSPeer {
   ///returns whether peer is local or not.
   final bool isLocal;
 
+  @override
+  String toString() {
+    return 'HMSPeer{name: $name, isLocal: $isLocal}';
+  }
+
   ///role of the peer in the room.
   final HMSRole? role;
   final String? customerUserId;

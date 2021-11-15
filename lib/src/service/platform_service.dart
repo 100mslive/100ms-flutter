@@ -157,7 +157,9 @@ class PlatformService {
           notifyMeetingListeners(method, {'peer': peer, 'update': update});
           break;
         case HMSUpdateListenerMethod.onTrackUpdate:
+
           HMSPeer? peer = HMSPeer.fromMap(event.data['peer']);
+          //print("HMSUpdateListeneronTrackupdate ${peer.toString()}");
           HMSTrack? track = data['track']['instance_of']?HMSVideoTrack.fromMap(map: data['track'], peer: peer):HMSAudioTrack.fromMap(map: data['track'],peer: peer);
           HMSTrackUpdate? update = HMSTrackUpdateValues.getHMSTrackUpdateFromName(data['update']);
           print("UpdateTrack $update  ${data['update']}");

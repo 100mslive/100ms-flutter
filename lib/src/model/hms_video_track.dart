@@ -27,6 +27,6 @@ class HMSVideoTrack extends HMSTrack {
         kind: HMSTrackKindValue.getHMSTrackKindFromName(map['track_kind']),
         isMute: map['track_mute'],
         isDegraded: map['is_degraded'],
-        peer: peer):HMSLocalVideoTrack.fromMap(map: map);
+        peer: peer):HMSLocalVideoTrack.fromMap(map: map,peer: peer);
   }
 }

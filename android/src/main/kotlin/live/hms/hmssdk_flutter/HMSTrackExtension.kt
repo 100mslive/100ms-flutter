@@ -17,13 +17,13 @@ class HMSTrackExtension {
                 hashMap["is_degraded"] = track.isDegraded
                 hashMap["instance_of"] = true
             }
-            else if (track is HMSLocalVideoTrack){
+            if (track is HMSLocalVideoTrack){
                 hashMap["hms_video_track_settings"] = HMSVideoTrackSettingsExtension.toDictionary(track.settings)!!
             }
-            else if (track is HMSLocalAudioTrack) {
+            if (track is HMSLocalAudioTrack) {
                 hashMap["hms_audio_track_settings"] = HMSAudioTrackSettingsExtension.toDictionary(track.settings)!!
             }
-            else{
+            if(track is HMSAudioTrack){
                 hashMap["instance_of"] = false
             }
 

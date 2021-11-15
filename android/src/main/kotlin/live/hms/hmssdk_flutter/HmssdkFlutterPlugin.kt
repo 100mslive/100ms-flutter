@@ -322,7 +322,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
     override fun onTrackUpdate(type: HMSTrackUpdate, track: HMSTrack, peer: HMSPeer) {
         val args = HashMap<String, Any?>()
         args.put("event_name", "on_track_update")
-//        Log.i("onTrackUpdate", track.toString())
+        Log.i("onTrackUpdate", track.toString()+" "+peer.isLocal)
 
         args.put("data", HMSTrackUpdateExtension.toDictionary(peer, track, type))
         HMSLogger.i("onTrackUpdate", peer.toString())
@@ -449,7 +449,6 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
         val argsIsOn = call.argument<Boolean>("is_on")
         val peer = hmssdk.getLocalPeer()
         val audioTrack = peer?.audioTrack
-//        Log.i("SwitchAudio",argsIsOn!!.toString())
         audioTrack?.setMute(argsIsOn!!)
         result.success("audio_changed")
     }

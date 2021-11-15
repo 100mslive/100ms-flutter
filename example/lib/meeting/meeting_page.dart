@@ -41,12 +41,13 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
       _recordingDisposer,
       _reconnectedDisposer,
       _roomEndedDisposer;
-
+  late PageController _pageController;
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance!.addObserver(this);
     _meetingStore = context.read<MeetingStore>();
+    _pageController = PageController(initialPage: 0);
     MeetingController meetingController = MeetingController(
         roomUrl: widget.roomId, flow: widget.flow, user: widget.user);
     _meetingStore.meetingController = meetingController;
@@ -230,8 +231,11 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                     1 +  ((filteredList[0].source == "REGULAR") ? 0 : 1);
 
                 print("itemCount $itemCount");
-
+                if(filteredList[0].source == "SCREEN"){
+                  _pageController.jumpToPage(0);
+                }
                 return PageView.builder(
+                  controller: _pageController,
                   itemBuilder: (ctx, index) {
                     ObservableMap<String, HMSTrackUpdate> map =
                         _meetingStore.trackStatus;
