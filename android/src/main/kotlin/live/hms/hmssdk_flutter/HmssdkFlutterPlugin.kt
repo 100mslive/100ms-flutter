@@ -375,7 +375,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
 
     override fun onAttachedToActivity(binding: ActivityPluginBinding) {
         this.activity = binding.activity
-        this.hmssdk = HMSSDK.Builder(this.activity).build()
+//        this.hmssdk = HMSSDK.Builder(this.activity).build()
     }
 
     override fun onDetachedFromActivityForConfigChanges() {
