@@ -16,16 +16,14 @@ class HMSMeeting {
   HMSTrackSetting? hmsTrackSetting;
   HMSMeeting({this.hmsTrackSetting});
 
-  Future<bool> createHMSSdk() async{
+  Future<bool> createHMSSdk() async {
     return await PlatformService.invokeMethod(PlatformMethod.createSdk,
-        arguments: {"hms_track_setting":hmsTrackSetting?.toMap()});
+        arguments: {"hms_track_setting": hmsTrackSetting?.toMap()});
   }
 
   Future<void> joinMeeting({required HMSConfig config}) async {
-    var value = await createHMSSdk();
-    print("CreatedHMSSDk? ${value}");
     bool isProdLink = true;
-    if (config.endPoint?.isEmpty??true) isProdLink = false;
+    if (config.endPoint?.isEmpty ?? true) isProdLink = false;
     print("${config.endPoint.toString()} JOINMEETING");
     return await PlatformService.invokeMethod(PlatformMethod.joinMeeting,
         arguments: {...config.getJson(), 'is_prod': isProdLink});
@@ -102,10 +100,10 @@ class HMSMeeting {
   Future<void> previewVideo({
     required HMSConfig config,
   }) async {
-    bool created= await createHMSSdk();
+    bool created = await createHMSSdk();
     print("Created ${created}");
     bool isProdLink = true;
-    if (config.endPoint?.isEmpty??true) isProdLink = false;
+    if (config.endPoint?.isEmpty ?? true) isProdLink = false;
 
     return await PlatformService.invokeMethod(PlatformMethod.previewVideo,
         arguments: {
@@ -246,9 +244,9 @@ class HMSMeeting {
     return HMSException.fromMap(hmsException);
   }
 
-  Future<HMSRoom?> getRoom() async{
+  Future<HMSRoom?> getRoom() async {
     var hmsRoomMap = await PlatformService.invokeMethod(PlatformMethod.getRoom);
-    if(hmsRoomMap == null)return null;
+    if (hmsRoomMap == null) return null;
     return HMSRoom.fromMap(hmsRoomMap);
   }
 }
