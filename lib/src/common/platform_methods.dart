@@ -247,7 +247,7 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.startRtmpOrRecording;
       case 'stop_rtmp_and_recording':
         return PlatformMethod.stopRtmpAndRecording;
-      case 'create_sdk':
+      case 'build':
         return PlatformMethod.build;
       case "get_room":
         return PlatformMethod.getRoom;
