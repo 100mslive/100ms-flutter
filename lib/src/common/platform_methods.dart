@@ -159,15 +159,14 @@ extension PlatformMethodValues on PlatformMethod {
         return "change_track_state";
       case PlatformMethod.startRtmpOrRecording:
         return "start_rtmp_or_recording";
-      case PlatformMethod.getRoom:
-        return "get_room";
       case PlatformMethod.stopRtmpAndRecording:
         return "stop_rtmp_and_recording";
       case PlatformMethod.build:
         return 'build';
+      case PlatformMethod.getRoom:
+        return 'get_room';
       case PlatformMethod.updateHMSLocalVideoTrackSettings:
-        return "update_hms_video_track_settings";
-        break;
+        return 'update_local_video_track_settings';
     }
   }
 
@@ -251,7 +250,7 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.build;
       case "get_room":
         return PlatformMethod.getRoom;
-      case "update_hms_video_track_settings":
+      case 'update_local_video_track_settings':
         return PlatformMethod.updateHMSLocalVideoTrackSettings;
       default:
         return PlatformMethod.unknown;

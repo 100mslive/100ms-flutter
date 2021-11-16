@@ -914,8 +914,5 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
         CoroutineScope(Dispatchers.Default).launch {
             localPeerVideoTrack.setSettings(hmsVideoTrackSettings.build())
         }
-
     }
-
-
 }
