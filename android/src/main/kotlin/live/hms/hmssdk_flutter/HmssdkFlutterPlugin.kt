@@ -437,9 +437,9 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
         try {
             hmssdk?.leave()
             hasJoined = false
-            result.success("left meeting successfully")
+            result.success(true)
         } catch (e: Exception) {
-            result.success("error in leaving meeting check OnError Update")
+            result.success(false)
         }
 
 
