@@ -32,6 +32,8 @@ abstract class MeetingStoreBase
   @observable
   bool isMicOn = true;
   @observable
+  bool isScreenShareOn  = false;
+  @observable
   bool reconnecting = false;
   @observable
   bool reconnected = false;
@@ -73,6 +75,7 @@ abstract class MeetingStoreBase
 
   HMSRoom? hmsRoom;
 
+  int firstTimeBuild =0;
   @action
   void startListen() {
     meetingController.addMeetingListener(this);
@@ -275,6 +278,9 @@ abstract class MeetingStoreBase
 
     print("onTrackUpdate ${trackStatus[track.trackId]}");
 
+    if(track.source == "SCREEN"){
+      isScreenShareOn = true;
+    }
     if (peer.isLocal) {
       localPeer = peer;
       if (track.isMute) {
@@ -288,8 +294,9 @@ abstract class MeetingStoreBase
         print("ScreenShare $screenShareIndex");
         if (screenShareIndex == -1)
           tracks.insert(0, track);
-        else
+        else {
           tracks.insert(1, track);
+        }
       }
     } else {
       peerOperationWithTrack(peer, trackUpdate, track);
@@ -378,6 +385,7 @@ abstract class MeetingStoreBase
   @override
   void onRemovedFromRoom(
       {required HMSPeerRemovedFromPeer hmsPeerRemovedFromPeer}) {
+    print("onRemovedFromRoomFlutter ${hmsPeerRemovedFromPeer}");
     leaveMeeting();
   }
 
@@ -440,6 +448,10 @@ abstract class MeetingStoreBase
         addTrack(track);
         break;
       case HMSTrackUpdate.trackRemoved:
+        if(track.source == "SCREEN"){
+          isScreenShareOn = false;
+          firstTimeBuild=0;
+        }
         removeTrackWithTrackId(track.trackId);
         break;
       case HMSTrackUpdate.trackMuted:
@@ -467,7 +479,7 @@ abstract class MeetingStoreBase
     return room;
   }
 
-  void leaveMeeting() {
+  void leaveMeeting() async{
     meetingController.leaveMeeting();
     isRoomEnded = true;
     removeListener();

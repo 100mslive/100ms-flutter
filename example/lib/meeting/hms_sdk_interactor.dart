@@ -7,7 +7,7 @@ class HMSSDKInteractor {
   late HMSMeeting _meeting;
 
   HMSSDKInteractor() {
-    _meeting = HMSMeeting(hmsTrackSetting: HMSTrackSetting(audioTrackSetting: HMSAudioTrackSetting(maxBitrate: 100),videoTrackSetting: HMSVideoTrackSetting(cameraFacing: HMSCameraFacing.BACK)));
+    _meeting = HMSMeeting();
   }
 
   Future<void> joinMeeting({required HMSConfig config}) async {
@@ -16,7 +16,7 @@ class HMSSDKInteractor {
   }
 
   Future<void> leaveMeeting() async {
-    return await _meeting.leaveMeeting();
+    _meeting.leaveMeeting();
   }
 
   Future<void> switchAudio({bool isOn = false}) async {

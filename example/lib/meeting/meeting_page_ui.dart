@@ -77,14 +77,14 @@ class _MeetingPageUIState extends State<MeetingPageUI> {
             VideoTile(
                 tileIndex: widget.index * 2,
                 filteredList: widget.filteredList,
-                itemHeight: widget.itemHeight,
-                itemWidth: widget.itemWidth * 2 - 50,
+                itemHeight: widget.itemHeight * 2 - 50,
+                itemWidth: widget.itemWidth,
                 map: widget.map),
             VideoTile(
                 tileIndex: widget.index * 2 + 1,
                 filteredList: widget.filteredList,
-                itemHeight: widget.itemHeight ,
-                itemWidth: widget.itemWidth*2 - 50,
+                itemHeight: widget.itemHeight*2 - 50,
+                itemWidth: widget.itemWidth,
                 map: widget.map),
           ],
         ),

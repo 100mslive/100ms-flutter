@@ -30,7 +30,7 @@ class MeetingController {
     return true;
   }
 
-  void leaveMeeting() {
+  Future<void> leaveMeeting() async{
     _hmsSdkInteractor?.leaveMeeting();
   }
 

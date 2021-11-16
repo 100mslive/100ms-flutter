@@ -216,23 +216,24 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
             width: double.infinity,
             child: Observer(
               builder: (_) {
-                print("rebuilding");
+                //print("rebuilding");
 
                 if (!_meetingStore.isMeetingStarted) return SizedBox();
                 if (_meetingStore.tracks.isEmpty)
                   return Center(child: Text('Waiting for other to join!'));
 
                 List<HMSTrack> filteredList = _meetingStore.tracks;
-                print("${filteredList.length} filteredListLength");
+                //print("${filteredList.length} filteredListLength");
 
-                var itemCount = ((filteredList.length - 1) /
-                            ((orientation == Orientation.portrait) ? 4 : 2))
-                        .floor() +
-                    1 +  ((filteredList[0].source == "REGULAR") ? 0 : 1);
-
-                print("itemCount $itemCount");
-                if(filteredList[0].source == "SCREEN"){
+                // var itemCount = ((filteredList.length - 1) /
+                //             ((orientation == Orientation.portrait) ? 4 : 2))
+                //         .floor() +
+                //     1 +  ((filteredList[0].source == "REGULAR") ? 0 : 1);
+                //
+                // print("itemCount $itemCount");
+                if(_meetingStore.isScreenShareOn && _meetingStore.firstTimeBuild == 0){
                   _pageController.jumpToPage(0);
+                  _meetingStore.firstTimeBuild++;
                 }
                 return PageView.builder(
                   controller: _pageController,
@@ -250,7 +251,10 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                           map: map),
                     );
                   },
-                  itemCount: itemCount,
+                  itemCount: ((filteredList.length - 1) /
+                      ((orientation == Orientation.portrait) ? 4 : 2))
+                      .floor() +
+                      1 +  ((filteredList[0].source == "REGULAR") ? 0 : 1),
                 );
               },
             ),
