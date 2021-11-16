@@ -1,6 +1,6 @@
 ---
 title: RTMP Streaming / Recording
-nav: 13
+nav: 14
 ---
 
 Want to preserve your video call for posterity in a recording? Or live stream it out to millions of viewers on Twitch or YouTube or whatever gives you an RTMP injest URL?
@@ -35,13 +35,9 @@ If both are required, they have to be started together by providing both RTMP In
 The result of the action is sent as `HMSException` if it is successfull then it will be null otherwise it is not.
 
 
-
 ```dart
-Future<HMSException?> startRtmpOrRecording(
-      HMSRecordingConfig hmsRecordingConfig) async{}
+Future<HMSException?> startRtmpOrRecording(HMSRecordingConfig hmsRecordingConfig) async{}
 ```
-
-
 
 
 ## Stopping Streaming / Recording
@@ -53,12 +49,9 @@ Here's how to stop both:
 The result of the action is sent as `HMSException` if it is successfull then it will be null otherwise it is not.
 
 
-
 ```dart
-Future<HMSException?> stopRtmpAndRecording() async {}
-
+Future<HMSException?> stopRtmpAndRecording() async { }
 ```
-
 
 
 ## Current Room Status
@@ -74,11 +67,10 @@ Apart from the rtmp stream and the browser recording, which are ones you can sta
 1. **HMSRtmpStreamingState** an instance of `HMSRtmpStreamingState`, which looks like:
 
 ```dart
-class HMSRtmpStreamingState{
+class HMSRtmpStreamingState {
   final HMSException? error;
   final bool running;
   HMSRtmpStreamingState({required this.error,required this.running});
-
 }
 ```
 
@@ -87,7 +79,7 @@ This represents a livestream to one or more RTMP urls.
 2. **browserRecordingState** an instance of `HMSBrowserRecordingState`, which looks like:
 
 ```dart
-class HMSBrowserRecordingState{
+class HMSBrowserRecordingState {
   final HMSException? error;
   final bool running;
   HMSBrowserRecordingState({required this.error,required this.running});
@@ -99,7 +91,7 @@ This represents the recording that can be requested to start.
 3. **serverRecordingState** an instance of `HMSServerRecordingState`, which looks like:
 
 ```dart
-class HMSServerRecordingState{
+class HMSServerRecordingState {
   final HMSException? error;
   final bool running;
   HMSServerRecordingState({required this.error,required this.running});
@@ -111,7 +103,7 @@ This represents that the room was set to be recorded when it was created and all
 ## When to check for room status
 
 The room status should be checked in three places:
-1. `HMSUpdateListener`'s' `onJoin`
+1. `onJoin` callback of `HMSUpdateListener` 
 2. When `hmsMeeting.startRtmpOrRecording()` is called
 3. When `hmsMeeting.stopRtmpAndRecording()` is called.
 
