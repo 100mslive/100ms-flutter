@@ -185,8 +185,8 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
             "stop_rtmp_and_recording" -> {
                 stopRtmpAndRecording(result)
             }
-            "create_sdk" -> {
-                createHMSSdk(this.activity, call, result)
+            "build" -> {
+                build(this.activity, call, result)
             }
             "get_room"->{
                 getRoom(result)
@@ -819,7 +819,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
 
     }
 
-    fun createHMSSdk(activity: Activity, call: MethodCall, result: Result) {
+    fun build(activity: Activity, call: MethodCall, result: Result) {
         val hmsTrackSettingMap =
             call.argument<HashMap<String, HashMap<String, Any?>?>?>("hms_track_setting")
         if (hmsTrackSettingMap == null){
