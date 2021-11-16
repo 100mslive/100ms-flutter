@@ -1,7 +1,7 @@
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 
-class HMSSDKInteractor {
+class HMSSDKInteractor implements HMSActionResultListener{
   late HMSConfig config;
   late List<HMSMessage> messages;
   late HMSMeeting _meeting;
@@ -17,7 +17,7 @@ class HMSSDKInteractor {
   }
 
   Future<void> leaveMeeting() async {
-    _meeting.leaveMeeting();
+    _meeting.leaveMeeting(hmsActionResultListener: this);
   }
 
   Future<void> switchAudio({bool isOn = false}) async {
@@ -151,5 +151,15 @@ class HMSSDKInteractor {
 
   Future<HMSRoom?> getRoom() async {
     return await _meeting.getRoom();
+  }
+
+  @override
+  void onError({HMSException? hmsException}) {
+    print("HMSSdkInteractor onError");
+  }
+
+  @override
+  void onSuccess() {
+    print("HMSSdkInteractor onSuccess");
   }
 }

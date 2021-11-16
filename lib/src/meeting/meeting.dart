@@ -7,6 +7,7 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter/src/common/platform_methods.dart';
 import 'package:hmssdk_flutter/src/enum/hms_log_level.dart';
 import 'package:hmssdk_flutter/src/manager/hms_sdk_manager.dart';
+import 'package:hmssdk_flutter/src/model/hms_actions_result_listener.dart';
 import 'package:hmssdk_flutter/src/model/hms_logs_listener.dart';
 import 'package:hmssdk_flutter/src/service/platform_service.dart';
 
@@ -31,8 +32,12 @@ class HMSMeeting {
   }
 
   ///just call this method to leave meeting.
-  Future<bool> leaveMeeting() async {
-    return await PlatformService.invokeMethod(PlatformMethod.leaveMeeting);
+  Future<void> leaveMeeting({HMSActionResultListener? hmsActionResultListener}) async {
+    var result =  await PlatformService.invokeMethod(PlatformMethod.leaveMeeting);
+    if(hmsActionResultListener!=null){
+      if(result == null)hmsActionResultListener.onSuccess();
+      else hmsActionResultListener.onError(hmsException: HMSException.fromMap(result["error"]));
+    }
   }
 
   ///switch local audio on/off.
