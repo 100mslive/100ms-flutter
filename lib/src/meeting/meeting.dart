@@ -31,7 +31,7 @@ class HMSMeeting {
   }
 
   ///just call this method to leave meeting.
-  Future<void> leaveMeeting() async {
+  Future<bool> leaveMeeting() async {
     return await PlatformService.invokeMethod(PlatformMethod.leaveMeeting);
   }
 

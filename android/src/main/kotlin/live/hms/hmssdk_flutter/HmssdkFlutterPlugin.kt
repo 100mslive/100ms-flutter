@@ -339,6 +339,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
         val args = HashMap<String, Any?>()
         args.put("event_name", "on_removed_from_room")
         args.put("data", HMSRemovedFromRoomExtension.toDictionary(notification))
+
         if (args["data"] != null)
             CoroutineScope(Dispatchers.Main).launch {
                 eventSink?.success(args)
@@ -376,6 +377,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
 
     override fun onAttachedToActivity(binding: ActivityPluginBinding) {
         this.activity = binding.activity
+
     }
 
     override fun onDetachedFromActivityForConfigChanges() {
@@ -437,9 +439,9 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
         try {
             hmssdk?.leave()
             hasJoined = false
-            result.success("left meeting successfully")
+            result.success(true)
         } catch (e: Exception) {
-            result.success("error in leaving meeting check OnError Update")
+            result.success(false)
         }
 
 
@@ -638,10 +640,10 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
             val hashMap = HashMap<String, Any?>()
             hashMap.put("event_name", "on_update_speaker")
             hashMap.put("data", speakersMap)
-            HMSLogger.i(
-                "onAudioLevelUpdateAndroid2",
-                (hashMap.get("data") as HashMap<String, Any>).get("speakers").toString()
-            )
+//            HMSLogger.i(
+//                "onAudioLevelUpdateAndroid2",
+//                (hashMap.get("data") as HashMap<String, Any>).get("speakers").toString()
+//            )
             CoroutineScope(Dispatchers.Main).launch {
                 eventSink!!.success(hashMap)
             }
@@ -823,6 +825,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, HMSUpdateListener,
         val hmsTrackSettingMap =
             call.argument<HashMap<String, HashMap<String, Any?>?>?>("hms_track_setting")
         if (hmsTrackSettingMap == null){
+            this.hmssdk = HMSSDK.Builder(activity).build()
             result.success(false)
             return
         }
