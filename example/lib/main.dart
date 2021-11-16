@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:hmssdk_flutter_example/common/constant.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/user_name_dialog_organism.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
+import 'package:hmssdk_flutter_example/meeting/hms_sdk_interactor.dart';
 import 'package:hmssdk_flutter_example/preview/preview_page.dart';
 import 'package:hmssdk_flutter_example/service/deeplink_service.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -148,10 +149,9 @@ class _HomePageState extends State<HomePage> {
                           if (user.isNotEmpty)
                             Navigator.of(context).push(MaterialPageRoute(
                                 builder: (_) => PreviewPage(
-                                      roomId: roomIdController.text,
-                                      user: user,
-                                      flow: MeetingFlow.join,
-                                    )));
+                                    roomId: roomIdController.text,
+                                    user: user,
+                                    flow: MeetingFlow.join)));
                         },
                         child: Container(
                           padding: const EdgeInsets.all(4.0),

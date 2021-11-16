@@ -6,6 +6,7 @@
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter/src/common/platform_methods.dart';
 import 'package:hmssdk_flutter/src/enum/hms_log_level.dart';
+import 'package:hmssdk_flutter/src/manager/hms_sdk_manager.dart';
 import 'package:hmssdk_flutter/src/model/hms_logs_listener.dart';
 import 'package:hmssdk_flutter/src/service/platform_service.dart';
 
@@ -16,9 +17,9 @@ class HMSMeeting {
   HMSTrackSetting? hmsTrackSetting;
   HMSMeeting({this.hmsTrackSetting});
 
-  Future<bool> createHMSSdk() async {
-    return await PlatformService.invokeMethod(PlatformMethod.createSdk,
-        arguments: {"hms_track_setting": hmsTrackSetting?.toMap()});
+  Future<bool> build() async {
+    bool created = await HmsSdkManager().createHMSSdk(hmsTrackSetting);
+    return false;
   }
 
   Future<void> joinMeeting({required HMSConfig config}) async {
@@ -100,8 +101,6 @@ class HMSMeeting {
   Future<void> previewVideo({
     required HMSConfig config,
   }) async {
-    bool created = await createHMSSdk();
-    print("Created ${created}");
     bool isProdLink = true;
     if (config.endPoint?.isEmpty ?? true) isProdLink = false;
 

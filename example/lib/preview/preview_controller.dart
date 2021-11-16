@@ -1,17 +1,14 @@
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-import 'package:hmssdk_flutter_example/meeting/hms_sdk_interactor.dart';
-import 'package:hmssdk_flutter_example/preview/preview_store.dart';
+import 'package:hmssdk_flutter_example/manager/HmsSdkManager.dart';
 import 'package:hmssdk_flutter_example/service/room_service.dart';
 import 'package:uuid/uuid.dart';
 
 class PreviewController {
   final String roomId;
   final String user;
-  HMSSDKInteractor? _hmsSdkInteractor;
 
-  PreviewController({required this.roomId, required this.user})
-      : _hmsSdkInteractor = HMSSDKInteractor();
+  PreviewController({required this.roomId, required this.user});
 
   Future<bool> startPreview() async {
     List<String?>? token =
@@ -26,37 +23,37 @@ class PreviewController {
         userName: user,
         endPoint: token[1] == "true" ? "" : "https://qa-init.100ms.live/init");
 
-    _hmsSdkInteractor?.previewVideo(
-        config: config,
+    HmsSdkManager.hmsSdkInteractor?.previewVideo(
+      config: config,
     );
     return true;
   }
 
   void startListen(HMSPreviewListener listener) {
-    _hmsSdkInteractor?.addPreviewListener(listener);
+    HmsSdkManager.hmsSdkInteractor?.addPreviewListener(listener);
   }
 
   void removeListener(HMSPreviewListener listener) {
-    _hmsSdkInteractor?.removePreviewListener(listener);
+    HmsSdkManager.hmsSdkInteractor?.removePreviewListener(listener);
   }
 
   void stopCapturing() {
-    _hmsSdkInteractor?.stopCapturing();
+    HmsSdkManager.hmsSdkInteractor?.stopCapturing();
   }
 
   void startCapturing() {
-    _hmsSdkInteractor?.startCapturing();
+    HmsSdkManager.hmsSdkInteractor?.startCapturing();
   }
 
   void switchAudio({bool isOn = false}) {
-    _hmsSdkInteractor?.switchAudio(isOn: isOn);
+    HmsSdkManager.hmsSdkInteractor?.switchAudio(isOn: isOn);
   }
 
   void addLogsListener(HMSLogListener hmsLogListener) {
-    _hmsSdkInteractor?.addLogsListener(hmsLogListener);
+    HmsSdkManager.hmsSdkInteractor?.addLogsListener(hmsLogListener);
   }
 
   void removeLogsListener(HMSLogListener hmsLogListener) {
-    _hmsSdkInteractor?.removeLogsListener(hmsLogListener);
+    HmsSdkManager.hmsSdkInteractor?.removeLogsListener(hmsLogListener);
   }
 }
