@@ -59,3 +59,4 @@ export 'src/model/hms_message_recipient.dart';
 export 'src/model/hms_logs_listener.dart';
 export 'src/model/hms_log.dart';
 export 'src/model/hms_track_setting.dart';
+export 'src/model/hms_actions_result_listener.dart';
