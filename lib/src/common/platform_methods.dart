@@ -77,7 +77,7 @@ enum PlatformMethod {
   changeTrackStateForRole,
   startRtmpOrRecording,
   stopRtmpAndRecording,
-  createSdk,
+  build,
   getRoom,
   updateHMSLocalVideoTrackSettings
 }
@@ -163,8 +163,8 @@ extension PlatformMethodValues on PlatformMethod {
         return "get_room";
       case PlatformMethod.stopRtmpAndRecording:
         return "stop_rtmp_and_recording";
-      case PlatformMethod.createSdk:
-        return 'create_sdk';
+      case PlatformMethod.build:
+        return 'build';
       case PlatformMethod.updateHMSLocalVideoTrackSettings:
         return "update_hms_video_track_settings";
         break;
@@ -248,7 +248,7 @@ extension PlatformMethodValues on PlatformMethod {
       case 'stop_rtmp_and_recording':
         return PlatformMethod.stopRtmpAndRecording;
       case 'create_sdk':
-        return PlatformMethod.createSdk;
+        return PlatformMethod.build;
       case "get_room":
         return PlatformMethod.getRoom;
       case "update_hms_video_track_settings":

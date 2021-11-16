@@ -9,7 +9,7 @@ class HmsSdkManager {
   }
 
   Future<bool> createHMSSdk(HMSTrackSetting? hmsTrackSetting) async {
-    return await PlatformService.invokeMethod(PlatformMethod.createSdk,
+    return await PlatformService.invokeMethod(PlatformMethod.build,
         arguments: {"hms_track_setting": hmsTrackSetting?.toMap()});
   }
 }
