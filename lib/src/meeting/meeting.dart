@@ -9,6 +9,7 @@ import 'package:hmssdk_flutter/src/enum/hms_log_level.dart';
 import 'package:hmssdk_flutter/src/manager/hms_sdk_manager.dart';
 import 'package:hmssdk_flutter/src/model/hms_actions_result_listener.dart';
 import 'package:hmssdk_flutter/src/model/hms_logs_listener.dart';
+import 'package:hmssdk_flutter/src/model/hms_message_result_listener.dart';
 import 'package:hmssdk_flutter/src/service/platform_service.dart';
 
 import '../../hmssdk_flutter.dart';
@@ -16,6 +17,7 @@ import '../../hmssdk_flutter.dart';
 class HMSMeeting {
   ///join meeting by passing HMSConfig instance to it.
   HMSTrackSetting? hmsTrackSetting;
+
   HMSMeeting({this.hmsTrackSetting});
 
   Future<bool> build() async {
@@ -30,11 +32,16 @@ class HMSMeeting {
   }
 
   ///just call this method to leave meeting.
-  Future<void> leaveMeeting({HMSActionResultListener? hmsActionResultListener}) async {
-    var result =  await PlatformService.invokeMethod(PlatformMethod.leaveMeeting);
-    if(hmsActionResultListener!=null){
-      if(result == null)hmsActionResultListener.onSuccess();
-      else hmsActionResultListener.onError(hmsException: HMSException.fromMap(result["error"]));
+  Future<void> leaveMeeting(
+      {HMSActionResultListener? hmsActionResultListener}) async {
+    var result =
+        await PlatformService.invokeMethod(PlatformMethod.leaveMeeting);
+    if (hmsActionResultListener != null) {
+      if (result == null)
+        hmsActionResultListener.onSuccess();
+      else
+        hmsActionResultListener.onError(
+            hmsException: HMSException.fromMap(result["error"]));
     }
   }
 
@@ -60,34 +67,79 @@ class HMSMeeting {
   }
 
   ///send message to the room and the pass the [message].
-  Future<void> sendMessage(String message) async {
-    return await PlatformService.invokeMethod(PlatformMethod.sendMessage,
+  Future<void> sendMessage(String message,{HMSMessageResultListener? hmsMessageResultListener}) async {
+    var result =  await PlatformService.invokeMethod(PlatformMethod.sendMessage,
         arguments: {"message": message});
+
+    if(hmsMessageResultListener!= null){
+      if(result["event_name"] == "on_error"){
+        hmsMessageResultListener.onError(hmsException: HMSException.fromMap(result["error"]));
+      }
+      else{
+        hmsMessageResultListener.onSuccess(hmsMessage: HMSMessage.fromMap(result["message"]));
+      }
+    }
   }
 
-  Future<void> sendGroupMessage(String message, String roleName) async {
-    return await PlatformService.invokeMethod(PlatformMethod.sendGroupMessage,
+  Future<void> sendGroupMessage(String message, String roleName,{HMSMessageResultListener? hmsMessageResultListener}) async {
+    var result = await PlatformService.invokeMethod(PlatformMethod.sendGroupMessage,
         arguments: {"message": message, "role_name": roleName});
+    if(hmsMessageResultListener!= null){
+      if(result["event_name"] == "on_error"){
+        hmsMessageResultListener.onError(hmsException: HMSException.fromMap(result["error"]));
+      }
+      else{
+        hmsMessageResultListener.onSuccess(hmsMessage: HMSMessage.fromMap(result["message"]));
+      }
+    }
   }
 
-  Future<void> sendDirectMessage(String message, String peerId) async {
-    return await PlatformService.invokeMethod(PlatformMethod.sendDirectMessage,
+  Future<void> sendDirectMessage(String message, String peerId,{HMSMessageResultListener? hmsMessageResultListener}) async {
+    var result = await PlatformService.invokeMethod(PlatformMethod.sendDirectMessage,
         arguments: {"message": message, "peer_id": peerId});
+
+    if(hmsMessageResultListener!= null){
+      if(result["event_name"] == "on_error"){
+        hmsMessageResultListener.onError(hmsException: HMSException.fromMap(result["error"]));
+      }
+      else{
+        hmsMessageResultListener.onSuccess(hmsMessage: HMSMessage.fromMap(result["message"]));
+      }
+    }
   }
 
-  Future<void> changeTrackReuest(
-      String peerId, bool mute, bool isVideoTrack) async {
-    return await PlatformService.invokeMethod(PlatformMethod.changeTrack,
+  Future<void> changeTrackReuest(String peerId, bool mute, bool isVideoTrack,
+      {HMSActionResultListener? hmsActionResultListener}) async {
+    var result = await PlatformService.invokeMethod(PlatformMethod.changeTrack,
         arguments: {
           "hms_peer_id": peerId,
           "mute": mute,
           "mute_video_kind": isVideoTrack
         });
+    if (hmsActionResultListener != null) {
+      if (result == null)
+        hmsActionResultListener.onSuccess();
+      else
+        hmsActionResultListener.onError(
+            hmsException: HMSException.fromMap(result["error"]));
+    }
   }
 
-  Future<bool> endRoom(bool lock) async {
-    return await PlatformService.invokeMethod(PlatformMethod.endRoom,
+  Future<bool> endRoom(bool lock,
+      {HMSActionResultListener? hmsActionResultListener}) async {
+    var result = await PlatformService.invokeMethod(PlatformMethod.endRoom,
         arguments: {"lock": lock});
+    if (hmsActionResultListener != null) {
+      if (result == null) {
+        hmsActionResultListener.onSuccess();
+        return true;
+      } else {
+        hmsActionResultListener.onError(
+            hmsException: HMSException.fromMap(result["error"]));
+        return false;
+      }
+    }
+    return result == null;
   }
 
   Future<void> removePeer(String peerId) async {
@@ -104,8 +156,6 @@ class HMSMeeting {
   Future<void> previewVideo({
     required HMSConfig config,
   }) async {
-
-
     return await PlatformService.invokeMethod(PlatformMethod.previewVideo,
         arguments: {
           ...config.getJson(),
@@ -153,8 +203,17 @@ class HMSMeeting {
   }
 
   ///accept the role changes.
-  void acceptRoleChangerequest() {
-    PlatformService.invokeMethod(PlatformMethod.acceptRoleChange);
+  void acceptRoleChangerequest(
+      {HMSActionResultListener? hmsActionResultListener}) async {
+    var result =
+        await PlatformService.invokeMethod(PlatformMethod.acceptRoleChange);
+    if (hmsActionResultListener != null) {
+      if (result == null)
+        hmsActionResultListener.onSuccess();
+      else
+        hmsActionResultListener.onError(
+            hmsException: HMSException.fromMap(result["error"]));
+    }
   }
 
   ///it will stop capturing the local video.
@@ -171,12 +230,21 @@ class HMSMeeting {
   void changeRole(
       {required String peerId,
       required String roleName,
-      bool forceChange = false}) {
-    PlatformService.invokeMethod(PlatformMethod.changeRole, arguments: {
-      'peer_id': peerId,
-      'role_name': roleName,
-      'force_change': forceChange
-    });
+      bool forceChange = false,
+      HMSActionResultListener? hmsActionResultListener}) async {
+    var result = await PlatformService.invokeMethod(PlatformMethod.changeRole,
+        arguments: {
+          'peer_id': peerId,
+          'role_name': roleName,
+          'force_change': forceChange
+        });
+    if (hmsActionResultListener != null) {
+      if (result == null)
+        hmsActionResultListener.onSuccess();
+      else
+        hmsActionResultListener.onError(
+            hmsException: HMSException.fromMap(result["error"]));
+    }
   }
 
   ///returns all the roles associated with the link used
@@ -217,8 +285,8 @@ class HMSMeeting {
   }
 
   Future<bool> changeTrackStateForRole(
-      bool mute, String type, String source, List<String> roles) async {
-    return await PlatformService.invokeMethod(
+      bool mute, String type, String source, List<String> roles,{HMSActionResultListener? hmsActionResultListener}) async {
+    var result = await PlatformService.invokeMethod(
         PlatformMethod.changeTrackStateForRole,
         arguments: {
           "mute": mute,
@@ -226,22 +294,47 @@ class HMSMeeting {
           "source": source,
           "roles": roles
         });
+
+    if (hmsActionResultListener != null) {
+      if (result == null)
+        hmsActionResultListener.onSuccess();
+      else
+        hmsActionResultListener.onError(
+            hmsException: HMSException.fromMap(result["error"]));
+    }
+    return result == null;
   }
 
   Future<HMSException?> startRtmpOrRecording(
-      HMSRecordingConfig hmsRecordingConfig) async {
-    Map? hmsException = await PlatformService.invokeMethod(
+      HMSRecordingConfig hmsRecordingConfig,{HMSActionResultListener? hmsActionResultListener}) async {
+    Map? result = await PlatformService.invokeMethod(
         PlatformMethod.startRtmpOrRecording,
         arguments: hmsRecordingConfig.getJson()) as Map?;
-    if (hmsException == null) return null;
-    return HMSException.fromMap(hmsException);
+
+    if (hmsActionResultListener != null) {
+      if (result == null)
+        hmsActionResultListener.onSuccess();
+      else
+        hmsActionResultListener.onError(
+            hmsException: HMSException.fromMap(result["error"]));
+    }
+    if (result == null) return null;
+    return HMSException.fromMap(result);
   }
 
-  Future<HMSException?> stopRtmpAndRecording() async {
-    Map<String, dynamic>? hmsException =
+  Future<HMSException?> stopRtmpAndRecording({HMSActionResultListener? hmsActionResultListener}) async {
+    Map<String, dynamic>? result =
         await PlatformService.invokeMethod(PlatformMethod.stopRtmpAndRecording);
-    if (hmsException == null) return null;
-    return HMSException.fromMap(hmsException);
+
+    if (hmsActionResultListener != null) {
+      if (result == null)
+        hmsActionResultListener.onSuccess();
+      else
+        hmsActionResultListener.onError(
+            hmsException: HMSException.fromMap(result["error"]));
+    }
+    if (result == null) return null;
+    return HMSException.fromMap(result);
   }
 
   Future<HMSRoom?> getRoom() async {
