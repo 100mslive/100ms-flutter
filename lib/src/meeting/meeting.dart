@@ -25,10 +25,8 @@ class HMSMeeting {
 
   Future<void> joinMeeting({required HMSConfig config}) async {
     bool isProdLink = true;
-    if (config.endPoint?.isEmpty ?? true) isProdLink = false;
-    print("${config.endPoint.toString()} JOINMEETING");
     return await PlatformService.invokeMethod(PlatformMethod.joinMeeting,
-        arguments: {...config.getJson(), 'is_prod': isProdLink});
+        arguments: {...config.getJson()});
   }
 
   ///just call this method to leave meeting.
@@ -106,13 +104,11 @@ class HMSMeeting {
   Future<void> previewVideo({
     required HMSConfig config,
   }) async {
-    bool isProdLink = true;
-    if (config.endPoint?.isEmpty ?? true) isProdLink = false;
+
 
     return await PlatformService.invokeMethod(PlatformMethod.previewVideo,
         arguments: {
           ...config.getJson(),
-          'is_prod': isProdLink,
         });
   }
 
