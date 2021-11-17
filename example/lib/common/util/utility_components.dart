@@ -22,13 +22,14 @@ class UtilityComponents {
           TextButton(
               onPressed: () => {
                 _meetingStore.meetingController.leaveMeeting(),
-                Navigator.pop(context, true),
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (ctx) => HomePage(),
-                  ),
-                )
+
+                // Navigator.pushReplacement(
+                //   context,
+                //   MaterialPageRoute(
+                //     builder: (ctx) => HomePage(),
+                //   ),
+                // ),
+                Navigator.popUntil(context, (route) => route.isFirst)
               },
               child: Text('Yes', style: TextStyle(height: 1, fontSize: 24))),
           TextButton(

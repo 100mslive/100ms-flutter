@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -10,6 +12,7 @@ import 'package:hmssdk_flutter_example/common/ui/organisms/track_change_request_
 import 'package:hmssdk_flutter_example/common/ui/organisms/video_tile.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
+import 'package:hmssdk_flutter_example/logs/custom_singleton_logger.dart';
 import 'package:hmssdk_flutter_example/main.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_controller.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_page_ui.dart';
@@ -17,6 +20,8 @@ import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:mobx/mobx.dart';
 import 'package:provider/src/provider.dart';
 import 'meeting_participants_list.dart';
+import '../logs/static_logger.dart';
+import 'package:share_extend/share_extend.dart';
 
 class MeetingPage extends StatefulWidget {
   final String roomId;
@@ -42,6 +47,9 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
       _reconnectedDisposer,
       _roomEndedDisposer;
   late PageController _pageController;
+  CustomLogger logger = CustomLogger();
+  int appBarIndex = 0;
+
   @override
   void initState() {
     super.initState();
@@ -146,6 +154,43 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
     _hmsExceptionDisposer.reaction.dispose();
   }
 
+  void handleMenu(int value) async {
+    switch (value) {
+      case 1:
+        StaticLogger.logger
+            ?.d("\n----------------------------Sending Logs-----------------\n");
+        StaticLogger.logger?.close();
+        ShareExtend.share(CustomLogger.file?.path ?? '', 'file');
+        logger.getCustomLogger();
+
+        break;
+
+      case 2:
+        if (_meetingStore.isRecordingStarted) {
+          _meetingStore.stopRtmpAndRecording();
+        } else {
+          print("${Constant.meetingUrl} meetingUrl");
+          _meetingStore.startRtmpOrRecording(Constant.meetingUrl, true, null);
+        }
+        break;
+
+      case 3:
+        if (_meetingStore.isVideoOn) _meetingStore.toggleCamera();
+
+        break;
+      case 4:
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) => ParticipantsList(
+              meetingStore: _meetingStore,
+            ),
+          ),
+        );
+        break;
+      default:
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     var orientation = MediaQuery.of(context).orientation;
@@ -160,25 +205,6 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
           title: Text(widget.roomId),
           actions: [
             Observer(
-                builder: (_) => IconButton(
-                      onPressed: () {
-                        if (_meetingStore.isRecordingStarted) {
-                          _meetingStore.stopRtmpAndRecording();
-                        } else {
-                          print("${Constant.meetingUrl} meetingUrl");
-                          _meetingStore.startRtmpOrRecording(
-                              Constant.meetingUrl, true, null);
-                        }
-                      },
-                      icon: Icon(
-                        Icons.circle,
-                        color: _meetingStore.isRecordingStarted
-                            ? Colors.red
-                            : Colors.grey,
-                        size: 32.0,
-                      ),
-                    )),
-            Observer(
               builder: (_) => IconButton(
                 iconSize: 32,
                 onPressed: () {
@@ -189,26 +215,65 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                     : Icons.volume_off),
               ),
             ),
-            IconButton(
-              iconSize: 32,
-              onPressed: () async {
-                if (_meetingStore.isVideoOn) _meetingStore.toggleCamera();
-              },
-              icon: Icon(Icons.switch_camera),
+            PopupMenuButton(
+              icon: Icon(CupertinoIcons.gear),
+              itemBuilder: (BuildContext context) => [
+                PopupMenuItem(
+                  child:
+                      Text("Send Logs", style: TextStyle(color: Colors.blue)),
+                  value: 1,
+                ),
+                PopupMenuItem(
+                  child: Observer(
+                      builder: (_) => Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                    _meetingStore.isRecordingStarted
+                                        ? "Recording "
+                                        : "Record",
+                                    style: TextStyle(
+                                      color: _meetingStore.isRecordingStarted
+                                          ? Colors.red
+                                          : Colors.blue,
+                                    )),
+                                Icon(
+                                  Icons.circle,
+                                  color: _meetingStore.isRecordingStarted
+                                      ? Colors.red
+                                      : Colors.blue,
+                                  size: 32.0,
+                                ),
+                              ])),
+                  value: 2,
+                ),
+                PopupMenuItem(
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Toggle Camera  ",
+                          style: TextStyle(color: Colors.blue),
+                        ),
+                        Icon(Icons.switch_camera, color: Colors.blue),
+                      ]),
+                  value: 3,
+                ),
+                PopupMenuItem(
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Participants  ",
+                          style: TextStyle(color: Colors.blue),
+                        ),
+                        Icon(CupertinoIcons.person_3_fill, color: Colors.blue),
+                      ]),
+                  value: 4,
+                )
+              ],
+              onSelected: handleMenu,
             ),
-            IconButton(
-              iconSize: 32,
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (_) => ParticipantsList(
-                      meetingStore: _meetingStore,
-                    ),
-                  ),
-                );
-              },
-              icon: Icon(CupertinoIcons.person_3_fill),
-            )
           ],
         ),
         body: Center(
@@ -225,13 +290,14 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                 List<HMSTrack> filteredList = _meetingStore.tracks;
                 //print("${filteredList.length} filteredListLength");
 
-                // var itemCount = ((filteredList.length - 1) /
-                //             ((orientation == Orientation.portrait) ? 4 : 2))
-                //         .floor() +
-                //     1 +  ((filteredList[0].source == "REGULAR") ? 0 : 1);
-                //
-                // print("itemCount $itemCount");
-                if(_meetingStore.isScreenShareOn && _meetingStore.firstTimeBuild == 0){
+                var itemCount = ((filteredList.length - 1) /
+                            ((orientation == Orientation.portrait) ? 4 : 2))
+                        .floor() +
+                    1 +
+                    ((filteredList[0].source == "REGULAR") ? 0 : 1);
+
+                print("itemCount $itemCount");
+                if (filteredList[0].source == "SCREEN") {
                   _pageController.jumpToPage(0);
                   _meetingStore.firstTimeBuild++;
                 }
