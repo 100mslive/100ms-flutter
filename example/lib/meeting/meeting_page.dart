@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:hmssdk_flutter_example/common/constant.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/change_track_options.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/chat_bottom_sheet.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/leave_or_end_meeting.dart';
@@ -466,52 +467,49 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
 
     if (index >= filteredList.length) return SizedBox();
     print("$index after rebuildig");
-    return Observer(
-      key: UniqueKey(),
-      builder: (_) => InkWell(
-        onLongPress: () {
-          if (!filteredList[index].peer!.isLocal &&
-              filteredList[index].source !=
-                  "SCREEN")
+    return InkWell(
+      onLongPress: () {
+        if (!filteredList[index].peer!.isLocal &&
+            filteredList[index].source !=
+                "SCREEN")
 
-            showDialog(
-                context: context,
-                builder: (_) => Column(
-                  children: [
-                    ChangeTrackOptionDialog(
-                        isAudioMuted: _meetingStore.audioTrackStatus[
-                        filteredList[index].trackId] ==
-                            HMSTrackUpdate.trackMuted,
-                        isVideoMuted: map[filteredList[index].trackId] ==
-                            HMSTrackUpdate.trackMuted,
-                        peerName: filteredList[index].peer?.name ?? '',
-                        changeTrack: (mute, isVideoTrack) {
-                          Navigator.pop(context);
-                          if (filteredList[index].source !=
-                              "SCREEN")
-                            _meetingStore.changeTrackRequest(
-                                filteredList[index].peer?.peerId ?? "",
-                                mute,
-                                isVideoTrack);
-                        },
-                        removePeer: () {
-                          Navigator.pop(context);
-                          _meetingStore.removePeerFromRoom(
-                              filteredList[index].peer!.peerId);
-                        }),
-                  ],
-                ));
-        },
-        child: PeerItemOrganism(
-            key: Key(index.toString()),
-            height: itemHeight,
-            width: itemWidth,
-            track: filteredList[index],
-            isVideoMuted: filteredList[index].peer!.isLocal
-                ? !_meetingStore.isVideoOn
-                : (map[filteredList[index].trackId]) ==
-                HMSTrackUpdate.trackMuted),
-      ),
+          showDialog(
+              context: context,
+              builder: (_) => Column(
+                children: [
+                  ChangeTrackOptionDialog(
+                      isAudioMuted: _meetingStore.audioTrackStatus[
+                      filteredList[index].trackId] ==
+                          HMSTrackUpdate.trackMuted,
+                      isVideoMuted: map[filteredList[index].trackId] ==
+                          HMSTrackUpdate.trackMuted,
+                      peerName: filteredList[index].peer?.name ?? '',
+                      changeTrack: (mute, isVideoTrack) {
+                        Navigator.pop(context);
+                        if (filteredList[index].source !=
+                            "SCREEN")
+                          _meetingStore.changeTrackRequest(
+                              filteredList[index].peer?.peerId ?? "",
+                              mute,
+                              isVideoTrack);
+                      },
+                      removePeer: () {
+                        Navigator.pop(context);
+                        _meetingStore.removePeerFromRoom(
+                            filteredList[index].peer!.peerId);
+                      }),
+                ],
+              ));
+      },
+      child: PeerItemOrganism(
+          key: Key(index.toString()),
+          height: itemHeight,
+          width: itemWidth,
+          track: filteredList[index],
+          isVideoMuted: filteredList[index].peer!.isLocal
+              ? !_meetingStore.isVideoOn
+              : (map[filteredList[index].trackId]) ==
+              HMSTrackUpdate.trackMuted),
     );
   }
 }
