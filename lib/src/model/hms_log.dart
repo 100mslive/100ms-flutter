@@ -21,6 +21,11 @@ class HMSLog {
         isWebRtcLog: map["is_web_rtc_log"]);
   }
 
+  Map<String, dynamic> toMap() => {
+    'tag':tag,
+    'message':message,
+  };
+
   @override
   String toString() {
     return 'HMSLog{level: $level, tag: $tag, message: $message, isWebRtcLog: $isWebRtcLog}';

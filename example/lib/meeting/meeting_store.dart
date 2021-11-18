@@ -1,8 +1,11 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:hmssdk_flutter/src/enum/hms_log_level.dart';
+import 'package:hmssdk_flutter_example/logs/static_logger.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_controller.dart';
 import 'package:mobx/mobx.dart';
 
@@ -166,6 +169,8 @@ abstract class MeetingStoreBase
     bool ans = await meetingController.joinMeeting();
     if (!ans) return false;
     isMeetingStarted = true;
+    startHMSLogger(HMSLogLevel.VERBOSE, HMSLogLevel.VERBOSE);
+    addLogsListener();
     return true;
   }
 
@@ -499,7 +504,7 @@ abstract class MeetingStoreBase
 
   @override
   void onLogMessage({required dynamic HMSLog}) {
-    print(HMSLog.toString() + "onLogMessageFlutter");
+    StaticLogger.logger?.v(HMSLog.toMap());
     FirebaseCrashlytics.instance.log(HMSLog.toString());
   }
 
