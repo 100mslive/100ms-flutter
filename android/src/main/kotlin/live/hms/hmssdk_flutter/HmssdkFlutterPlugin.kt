@@ -132,7 +132,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware, Eve
                 result.success("preview video")
             }
             "change_role" -> {
-                changeRole(call,result)
+                changeRole(call)
             }
             "get_roles" -> {
                 getRoles(result)
@@ -178,10 +178,10 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware, Eve
                 changeTrackStateForRole(call, result)
             }
             "start_rtmp_or_recording" -> {
-                startRtmpOrRecording(call, result)
+                startRtmpOrRecording(call)
             }
             "stop_rtmp_and_recording" -> {
-                stopRtmpAndRecording(result)
+                stopRtmpAndRecording()
             }
             "build" -> {
                 build(this.activity, call, result)
@@ -441,7 +441,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware, Eve
         return hmssdk.getLocalPeer()!!
     }
 
-    private fun changeRole(call: MethodCall,result: Result) {
+    private fun changeRole(call: MethodCall) {
         val roleUWant = call.argument<String>("role_name")
         val peerId = call.argument<String>("peer_id")
         val forceChange = call.argument<Boolean>("force_change")
@@ -581,7 +581,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware, Eve
             }
     }
 
-    private fun startRtmpOrRecording(call: MethodCall, result: Result) {
+    private fun startRtmpOrRecording(call: MethodCall) {
         val meetingUrl = call.argument<String>("meeting_url")
         val toRecord = call.argument<Boolean>("to_record")
         val listOfRtmpUrls: List<String> = call.argument<List<String>>("rtmp_urls") ?: listOf()
@@ -590,7 +590,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware, Eve
             hmsActionResultListener = this.actionListener)
     }
 
-    private fun stopRtmpAndRecording(result: Result) {
+    private fun stopRtmpAndRecording() {
         hmssdk.stopRtmpAndRecording(hmsActionResultListener = this.actionListener)
     }
 
@@ -888,17 +888,22 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware, Eve
     private val hmsMessageResultListener = object : HMSMessageResultListener{
         override fun onError(error: HMSException) {
             val args = HashMap<String, Any?>()
-            args.put("event_name", "on_error")
-            args.put("data", HMSExceptionExtension.toDictionary(error))
-//        Log.i("onError", args["data"].toString())
+            args["event_name"] = "on_error"
+            args["data"] = HMSExceptionExtension.toDictionary(error)
             if (args["data"] != null)
                 CoroutineScope(Dispatchers.Main).launch {
-                    eventSink?.success(args)
+                    result?.success(args)
                 }
         }
 
         override fun onSuccess(hmsMessage: HMSMessage) {
-            print("Success")
+            val args = HashMap<String, Any?>()
+            args["event_name"] = "on_success"
+            args["data"] = HMSMessageExtension.toDictionary(hmsMessage)
+            if (args["data"] != null)
+                CoroutineScope(Dispatchers.Main).launch {
+                    result?.success(args)
+                }
         }
 
     }
@@ -913,7 +918,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware, Eve
             if (level != HMSLogger.level) return
 
             val args = HashMap<String, Any?>()
-            args.put("event_name", "on_logs_update")
+            args["event_name"] = "on_logs_update"
             val logArgs = HashMap<String, Any?>()
 
             logArgs["log"] = HMSLogsExtension.toDictionary(level, tag, message, isWebRtCLog)
