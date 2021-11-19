@@ -10,6 +10,7 @@ import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show StandardMessageCodec;
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:hmssdk_flutter/src/enum/hms_video_scale_type.dart';
 
 class HMSVideoView extends StatelessWidget {
   /// [HMSVideoView] will render video using trackId from HMSTrack
@@ -72,7 +73,8 @@ class _PlatformView extends StatelessWidget {
           'is_local': track.peer?.isLocal,
           'track_id': track.trackId,
           'is_aux': track.source != "REGULAR",
-          'set_mirror': track.source != "REGULAR"?false:setMirror
+          'scale_type': ScalingType.SCALE_ASPECT_FIT.value,
+          'set_mirror': track.source != "REGULAR" ? false : setMirror
         }..addAll({
             'height': viewSize.height,
             'width': viewSize.width,

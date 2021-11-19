@@ -154,8 +154,8 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
   void handleMenu(int value) async {
     switch (value) {
       case 1:
-        StaticLogger.logger
-            ?.d("\n----------------------------Sending Logs-----------------\n");
+        StaticLogger.logger?.d(
+            "\n----------------------------Sending Logs-----------------\n");
         StaticLogger.logger?.close();
         ShareExtend.share(CustomLogger.file?.path ?? '', 'file');
         logger.getCustomLogger();
@@ -283,7 +283,8 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                 if (_meetingStore.tracks.isEmpty)
                   return Center(child: Text('Waiting for other to join!'));
                 List<HMSTrack> filteredList = _meetingStore.tracks;
-                if(_meetingStore.isScreenShareOn && _meetingStore.firstTimeBuild == 0){
+                if (_meetingStore.isScreenShareOn &&
+                    _meetingStore.firstTimeBuild == 0) {
                   _pageController.jumpToPage(0);
                   _meetingStore.firstTimeBuild++;
                 }
@@ -293,61 +294,63 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                   itemBuilder: (ctx, index) {
                     return Observer(builder: (_) {
                       print("rebuilding");
-                      ObservableMap<String, HMSTrackUpdate> map = _meetingStore.trackStatus;
-                      if ((index < filteredList.length && filteredList[index].source != "SCREEN")) {
+                      ObservableMap<String, HMSTrackUpdate> map =
+                          _meetingStore.trackStatus;
+                      if ((index < filteredList.length &&
+                          filteredList[index].source != "SCREEN")) {
                         return orientation == Orientation.portrait
                             ? Column(
-                          children: [
-                            Row(
-                              children: [
-                                //if (index * 4 < filteredList.length)
-                                peerItemforIndex(index * 4, filteredList,
-                                    itemHeight, itemWidth, map),
-                                //if (index * 4 + 1 < filteredList.length)
-                                peerItemforIndex(
-                                    index * 4 + 1,
-                                    filteredList,
-                                    itemHeight,
-                                    itemWidth,
-                                    map),
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                //if (index * 4 + 2 < filteredList.length)
-                                peerItemforIndex(
-                                    index * 4 + 2,
-                                    filteredList,
-                                    itemHeight,
-                                    itemWidth,
-                                    map),
-                                //if (index * 4 + 3 < filteredList.length)
-                                peerItemforIndex(
-                                    index * 4 + 3,
-                                    filteredList,
-                                    itemHeight,
-                                    itemWidth,
-                                    map),
-                              ],
-                            ),
-                          ],
-                        )
+                                children: [
+                                  Row(
+                                    children: [
+                                      //if (index * 4 < filteredList.length)
+                                      peerItemforIndex(index * 4, filteredList,
+                                          itemHeight, itemWidth, map),
+                                      //if (index * 4 + 1 < filteredList.length)
+                                      peerItemforIndex(
+                                          index * 4 + 1,
+                                          filteredList,
+                                          itemHeight,
+                                          itemWidth,
+                                          map),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      //if (index * 4 + 2 < filteredList.length)
+                                      peerItemforIndex(
+                                          index * 4 + 2,
+                                          filteredList,
+                                          itemHeight,
+                                          itemWidth,
+                                          map),
+                                      //if (index * 4 + 3 < filteredList.length)
+                                      peerItemforIndex(
+                                          index * 4 + 3,
+                                          filteredList,
+                                          itemHeight,
+                                          itemWidth,
+                                          map),
+                                    ],
+                                  ),
+                                ],
+                              )
                             : Column(
-                          children: [
-                            Row(
-                              children: [
-                                peerItemforIndex(index * 2, filteredList,
-                                    itemHeight * 2 - 50, itemWidth, map),
-                                peerItemforIndex(
-                                    index * 2 + 1,
-                                    filteredList,
-                                    itemHeight * 2 - 50,
-                                    itemWidth,
-                                    map),
-                              ],
-                            ),
-                          ],
-                        );
+                                children: [
+                                  Row(
+                                    children: [
+                                      peerItemforIndex(index * 2, filteredList,
+                                          itemHeight * 2 - 50, itemWidth, map),
+                                      peerItemforIndex(
+                                          index * 2 + 1,
+                                          filteredList,
+                                          itemHeight * 2 - 50,
+                                          itemWidth,
+                                          map),
+                                    ],
+                                  ),
+                                ],
+                              );
                       } else {
                         return Container(
                           child: peerItemforIndex(0, filteredList,
@@ -355,15 +358,12 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                         );
                       }
                     });
-
                   },
                   itemCount: ((filteredList.length - 1) /
-                      ((orientation == Orientation.portrait) ? 4 : 2))
-                      .floor() +
+                              ((orientation == Orientation.portrait) ? 4 : 2))
+                          .floor() +
                       1 +
-                      ((filteredList[0].source != "SCREEN")
-                          ? 0
-                          : 1),
+                      ((filteredList[0].source != "SCREEN") ? 0 : 1),
                 );
               },
             ),
@@ -418,8 +418,8 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                     String ans = await showDialog(
                         context: context,
                         builder: (_) => LeaveOrEndMeetingDialogOption(
-                          meetingStore: _meetingStore,
-                        ));
+                              meetingStore: _meetingStore,
+                            ));
                     if (ans == 'Leave' || ans == 'End') Navigator.pop(context);
                   },
                   icon: Icon(Icons.call_end)),
@@ -433,7 +433,6 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
       },
     );
   }
-
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
@@ -453,10 +452,10 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
     }
   }
 
-  Widget peerItemforIndex(int index, List<HMSTrack> filteredList, double itemHeight, double itemWidth, Map<String, HMSTrackUpdate> map) {
+  Widget peerItemforIndex(int index, List<HMSTrack> filteredList,
+      double itemHeight, double itemWidth, Map<String, HMSTrackUpdate> map) {
     var orientation = MediaQuery.of(context).orientation;
-    if (index > 0 &&
-        filteredList[0].source == "SCREEN") {
+    if (index > 0 && filteredList[0].source == "SCREEN") {
       int a = index ~/ ((orientation == Orientation.portrait) ? 4 : 2);
       int b = index % ((orientation == Orientation.portrait) ? 4 : 2);
 
@@ -470,36 +469,33 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
     return InkWell(
       onLongPress: () {
         if (!filteredList[index].peer!.isLocal &&
-            filteredList[index].source !=
-                "SCREEN")
-
+            filteredList[index].source != "SCREEN")
           showDialog(
               context: context,
               builder: (_) => Column(
-                children: [
-                  ChangeTrackOptionDialog(
-                      isAudioMuted: _meetingStore.audioTrackStatus[
-                      filteredList[index].trackId] ==
-                          HMSTrackUpdate.trackMuted,
-                      isVideoMuted: map[filteredList[index].trackId] ==
-                          HMSTrackUpdate.trackMuted,
-                      peerName: filteredList[index].peer?.name ?? '',
-                      changeTrack: (mute, isVideoTrack) {
-                        Navigator.pop(context);
-                        if (filteredList[index].source !=
-                            "SCREEN")
-                          _meetingStore.changeTrackRequest(
-                              filteredList[index].peer?.peerId ?? "",
-                              mute,
-                              isVideoTrack);
-                      },
-                      removePeer: () {
-                        Navigator.pop(context);
-                        _meetingStore.removePeerFromRoom(
-                            filteredList[index].peer!.peerId);
-                      }),
-                ],
-              ));
+                    children: [
+                      ChangeTrackOptionDialog(
+                          isAudioMuted: _meetingStore.audioTrackStatus[
+                                  filteredList[index].trackId] ==
+                              HMSTrackUpdate.trackMuted,
+                          isVideoMuted: map[filteredList[index].trackId] ==
+                              HMSTrackUpdate.trackMuted,
+                          peerName: filteredList[index].peer?.name ?? '',
+                          changeTrack: (mute, isVideoTrack) {
+                            Navigator.pop(context);
+                            if (filteredList[index].source != "SCREEN")
+                              _meetingStore.changeTrackRequest(
+                                  filteredList[index].peer?.peerId ?? "",
+                                  mute,
+                                  isVideoTrack);
+                          },
+                          removePeer: () {
+                            Navigator.pop(context);
+                            _meetingStore.removePeerFromRoom(
+                                filteredList[index].peer!.peerId);
+                          }),
+                    ],
+                  ));
       },
       child: PeerItemOrganism(
           key: Key(index.toString()),
@@ -509,7 +505,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
           isVideoMuted: filteredList[index].peer!.isLocal
               ? !_meetingStore.isVideoOn
               : (map[filteredList[index].trackId]) ==
-              HMSTrackUpdate.trackMuted),
+                  HMSTrackUpdate.trackMuted),
     );
   }
 }
