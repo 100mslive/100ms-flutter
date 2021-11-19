@@ -18,14 +18,12 @@ class HMSVideoView extends StatelessWidget {
   /// [HMSVideoView] will use viewSize to get height and width of rendered video. If not passed, it will take whatever size is available to the widget.
   final Size? viewSize;
   bool setMirror;
-  final bool isScreenShare;
 
   HMSVideoView(
       {Key? key,
-      required this.track,
-      this.viewSize,
-      this.setMirror = false,
-      this.isScreenShare = false})
+        required this.track,
+        this.viewSize,
+        this.setMirror = false})
       : super(key: key);
 
   @override
@@ -41,7 +39,7 @@ class HMSVideoView extends StatelessWidget {
       return LayoutBuilder(builder: (_, constraints) {
         return _PlatformView(
           track: track,
-          isScreenShare: isScreenShare,
+          isScreenShare: track.source == "SCREEN",
           viewSize: Size(constraints.maxWidth, constraints.maxHeight),
           setMirror: setMirror,
         );
