@@ -30,7 +30,7 @@ class HMSVideoViewWidget(context: Context, id: Int, creationParams: Map<String?,
     private fun renderVideo() {
 
         var frameLayoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,FrameLayout.LayoutParams.MATCH_PARENT)
-        if (setMirror.not()){
+        if (isAux){
             frameLayoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT,FrameLayout.LayoutParams.WRAP_CONTENT)
         }
         view.layoutParams =  frameLayoutParams
