@@ -24,18 +24,25 @@ import java.lang.Float.max
 import java.lang.Float.min
 import java.lang.Math.abs
 
-class HMSVideoView(context: Context, setMirror: Boolean) : FrameLayout(context, null) {
+class HMSVideoView(
+    context: Context,
+    setMirror: Boolean,
+    scaleType: Int? = RendererCommon.ScalingType.SCALE_ASPECT_FIT.ordinal
+) : FrameLayout(context, null) {
     val surfaceViewRenderer: SurfaceViewRenderer
 
     init {
-        val inflater = getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        val inflater =
+            getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val view = inflater.inflate(R.layout.hms_video_view, this)
 
         surfaceViewRenderer = view.findViewById(R.id.surfaceViewRenderer)
         surfaceViewRenderer.setEnableHardwareScaler(true)
         Log.i("HMSVideoViewAndroid", setMirror.toString())
         surfaceViewRenderer.setMirror(setMirror)
-        surfaceViewRenderer.setScalingType(RendererCommon.ScalingType.SCALE_ASPECT_FIT)
+        if (scaleType ?: 0 <= RendererCommon.ScalingType.values().size) {
+            surfaceViewRenderer.setScalingType(RendererCommon.ScalingType.values()[scaleType ?: 0])
+        }
         surfaceViewRenderer.init(SharedEglContext.context, null)
     }
 
@@ -47,7 +54,7 @@ class HMSVideoView(context: Context, setMirror: Boolean) : FrameLayout(context, 
     private var widgetDY: Float = 0F
 
     init {
-        draggableSetup()
+//        draggableSetup()
     }
 
     @RequiresApi(Build.VERSION_CODES.N)

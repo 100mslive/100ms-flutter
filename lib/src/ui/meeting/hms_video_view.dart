@@ -10,6 +10,7 @@ import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show StandardMessageCodec;
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:hmssdk_flutter/src/enum/hms_video_scale_type.dart';
 
 class HMSVideoView extends StatelessWidget {
   /// [HMSVideoView] will render video using trackId from HMSTrack
@@ -20,10 +21,7 @@ class HMSVideoView extends StatelessWidget {
   bool setMirror;
 
   HMSVideoView(
-      {Key? key,
-        required this.track,
-        this.viewSize,
-        this.setMirror = false})
+      {Key? key, required this.track, this.viewSize, this.setMirror = false})
       : super(key: key);
 
   @override
@@ -39,7 +37,6 @@ class HMSVideoView extends StatelessWidget {
       return LayoutBuilder(builder: (_, constraints) {
         return _PlatformView(
           track: track,
-          isScreenShare: track.source == "SCREEN",
           viewSize: Size(constraints.maxWidth, constraints.maxHeight),
           setMirror: setMirror,
         );
@@ -51,14 +48,12 @@ class _PlatformView extends StatelessWidget {
   final HMSTrack track;
   final Size viewSize;
   bool setMirror;
-  final bool isScreenShare;
 
   _PlatformView(
       {Key? key,
       required this.track,
       required this.viewSize,
-      this.setMirror = false,
-      this.isScreenShare = false})
+      this.setMirror = false})
       : super(key: key);
 
   void onPlatformViewCreated(int id) {
@@ -78,7 +73,7 @@ class _PlatformView extends StatelessWidget {
           'is_local': track.peer?.isLocal,
           'track_id': track.trackId,
           'is_aux': track.source != "REGULAR",
-          'screen_share': isScreenShare,
+          'scale_type': ScalingType.SCALE_ASPECT_FIT.value,
           'set_mirror': track.source != "REGULAR" ? false : setMirror
         }..addAll({
             'height': viewSize.height,
