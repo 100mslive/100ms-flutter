@@ -15,13 +15,15 @@ class VideoTile extends StatefulWidget {
   final double itemHeight;
   final double itemWidth;
   final Map<String, HMSTrackUpdate> map;
+  final isScreenShare;
 
   VideoTile(
       {required this.tileIndex,
       required this.filteredList,
       required this.itemHeight,
       required this.itemWidth,
-      required this.map});
+      required this.map,
+      this.isScreenShare = false});
 
   @override
   State<VideoTile> createState() => _VideoTileState();
@@ -74,14 +76,17 @@ class _VideoTileState extends State<VideoTile> {
                             isAudioMuted: _meetingStore.audioTrackStatus[
                                     widget.filteredList[index].trackId] ==
                                 HMSTrackUpdate.trackMuted,
-                            isVideoMuted: widget.map[widget.filteredList[index].trackId] ==
+                            isVideoMuted: widget
+                                    .map[widget.filteredList[index].trackId] ==
                                 HMSTrackUpdate.trackMuted,
-                            peerName: widget.filteredList[index].peer?.name ?? '',
+                            peerName:
+                                widget.filteredList[index].peer?.name ?? '',
                             changeTrack: (mute, isVideoTrack) {
                               Navigator.pop(context);
                               if (widget.filteredList[index].source != "SCREEN")
                                 _meetingStore.changeTrackRequest(
-                                    widget.filteredList[index].peer?.peerId ?? "",
+                                    widget.filteredList[index].peer?.peerId ??
+                                        "",
                                     mute,
                                     isVideoTrack);
                             },
@@ -103,11 +108,12 @@ class _VideoTileState extends State<VideoTile> {
                       newWidget.track.isHighestAudio;
             },
             child: PeerItemOrganism(
-                setMirror: widget.filteredList[index].peer?.isLocal??false,
+                setMirror: widget.filteredList[index].peer?.isLocal ?? false,
                 key: Key(index.toString()),
                 height: widget.itemHeight,
                 width: widget.itemWidth,
                 track: widget.filteredList[index],
+                isScreenShare: widget.isScreenShare,
                 isVideoMuted: widget.filteredList[index].peer!.isLocal
                     ? !_meetingStore.isVideoOn
                     : (widget.map[widget.filteredList[index].trackId]) ==

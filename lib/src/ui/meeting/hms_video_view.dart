@@ -18,9 +18,14 @@ class HMSVideoView extends StatelessWidget {
   /// [HMSVideoView] will use viewSize to get height and width of rendered video. If not passed, it will take whatever size is available to the widget.
   final Size? viewSize;
   bool setMirror;
+  final bool isScreenShare;
 
   HMSVideoView(
-      {Key? key, required this.track, this.viewSize, this.setMirror = false})
+      {Key? key,
+      required this.track,
+      this.viewSize,
+      this.setMirror = false,
+      this.isScreenShare = false})
       : super(key: key);
 
   @override
@@ -36,6 +41,7 @@ class HMSVideoView extends StatelessWidget {
       return LayoutBuilder(builder: (_, constraints) {
         return _PlatformView(
           track: track,
+          isScreenShare: isScreenShare,
           viewSize: Size(constraints.maxWidth, constraints.maxHeight),
           setMirror: setMirror,
         );
@@ -47,12 +53,14 @@ class _PlatformView extends StatelessWidget {
   final HMSTrack track;
   final Size viewSize;
   bool setMirror;
+  final bool isScreenShare;
 
   _PlatformView(
       {Key? key,
       required this.track,
       required this.viewSize,
-      this.setMirror = false})
+      this.setMirror = false,
+      this.isScreenShare = false})
       : super(key: key);
 
   void onPlatformViewCreated(int id) {
@@ -72,7 +80,8 @@ class _PlatformView extends StatelessWidget {
           'is_local': track.peer?.isLocal,
           'track_id': track.trackId,
           'is_aux': track.source != "REGULAR",
-          'set_mirror': track.source != "REGULAR"?false:setMirror
+          'screen_share': isScreenShare,
+          'set_mirror': track.source != "REGULAR" ? false : setMirror
         }..addAll({
             'height': viewSize.height,
             'width': viewSize.width,
