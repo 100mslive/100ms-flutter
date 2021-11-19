@@ -73,6 +73,7 @@ class _PlatformView extends StatelessWidget {
           'is_local': track.peer?.isLocal,
           'track_id': track.trackId,
           'is_aux': track.source != "REGULAR",
+          'screen_share': track.source != "REGULAR",
           'scale_type': ScalingType.SCALE_ASPECT_FIT.value,
           'set_mirror': track.source != "REGULAR" ? false : setMirror
         }..addAll({
