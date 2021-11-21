@@ -20,7 +20,7 @@ class CustomLogger {
       () {
         fileOutPut = FileOutput(file: file);
         ConsoleOutput consoleOutput = ConsoleOutput();
-        List<LogOutput> multiOutput = [fileOutPut,consoleOutput];
+        List<LogOutput> multiOutput = [fileOutPut];
         StaticLogger.logger = Logger(
             filter: DevelopmentFilter(),
             // Use the default LogFilter (-> only log in debug mode)
