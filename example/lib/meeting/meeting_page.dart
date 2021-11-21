@@ -45,9 +45,10 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
+    _pageController = PageController(initialPage: 0);
     WidgetsBinding.instance!.addObserver(this);
     _meetingStore = context.read<MeetingStore>();
-    _pageController = PageController(initialPage: 0);
+
     MeetingController meetingController = MeetingController(
         roomUrl: widget.roomId, flow: widget.flow, user: widget.user);
     _meetingStore.meetingController = meetingController;
@@ -223,14 +224,6 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                   return Center(child: Text('Waiting for other to join!'));
 
                 List<HMSTrack> filteredList = _meetingStore.tracks;
-                //print("${filteredList.length} filteredListLength");
-
-                // var itemCount = ((filteredList.length - 1) /
-                //             ((orientation == Orientation.portrait) ? 4 : 2))
-                //         .floor() +
-                //     1 +  ((filteredList[0].source == "REGULAR") ? 0 : 1);
-                //
-                // print("itemCount $itemCount");
                 if(_meetingStore.isScreenShareOn && _meetingStore.firstTimeBuild == 0){
                   _pageController.jumpToPage(0);
                   _meetingStore.firstTimeBuild++;

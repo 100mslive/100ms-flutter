@@ -95,24 +95,16 @@ class _VideoTileState extends State<VideoTile> {
         },
         child: Observer(builder: (context) {
           print("${widget.filteredList[index].peer?.name} rebuildingonaudio");
-          return ShouldRebuild<PeerItemOrganism>(
-            shouldRebuild: (oldWidget, newWidget) {
-              return oldWidget.track != newWidget.track ||
-                  oldWidget.isVideoMuted != newWidget.isVideoMuted ||
-                  oldWidget.track.isHighestAudio !=
-                      newWidget.track.isHighestAudio;
-            },
-            child: PeerItemOrganism(
-                setMirror: widget.filteredList[index].peer?.isLocal??false,
-                key: Key(index.toString()),
-                height: widget.itemHeight,
-                width: widget.itemWidth,
-                track: widget.filteredList[index],
-                isVideoMuted: widget.filteredList[index].peer!.isLocal
-                    ? !_meetingStore.isVideoOn
-                    : (widget.map[widget.filteredList[index].trackId]) ==
-                        HMSTrackUpdate.trackMuted),
-          );
+          return PeerItemOrganism(
+              setMirror: widget.filteredList[index].peer?.isLocal??false,
+              key: Key(index.toString()),
+              height: widget.itemHeight,
+              width: widget.itemWidth,
+              track: widget.filteredList[index],
+              isVideoMuted: widget.filteredList[index].peer!.isLocal
+                  ? !_meetingStore.isVideoOn
+                  : (widget.map[widget.filteredList[index].trackId]) ==
+                  HMSTrackUpdate.trackMuted);
         }),
       ),
     );
