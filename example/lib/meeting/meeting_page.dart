@@ -224,30 +224,28 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                   return Center(child: Text('Waiting for other to join!'));
 
                 List<HMSTrack> filteredList = _meetingStore.tracks;
-                if(_meetingStore.isScreenShareOn && _meetingStore.firstTimeBuild == 0){
+                if (_meetingStore.isScreenShareOn &&
+                    _meetingStore.firstTimeBuild == 0) {
                   _pageController.jumpToPage(0);
                   _meetingStore.firstTimeBuild++;
                 }
-                return PageView.builder(
-                  controller: _pageController,
+                return GridView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: ((filteredList.length) +
+                      ((filteredList[0].source == "REGULAR") ? 0 : 1)),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2),
                   itemBuilder: (ctx, index) {
                     ObservableMap<String, HMSTrackUpdate> map =
                         _meetingStore.trackStatus;
-                    print("${index} indexOfPage");
 
-                    return Container(
-                      child: MeetingPageUI(
-                          index: index,
-                          filteredList: filteredList,
-                          itemWidth: itemWidth,
-                          itemHeight: itemHeight,
-                          map: map),
-                    );
+                    return VideoTile(
+                        tileIndex: index,
+                        filteredList: filteredList,
+                        itemHeight: itemHeight,
+                        itemWidth: itemWidth,
+                        map: map);
                   },
-                  itemCount: ((filteredList.length - 1) /
-                      ((orientation == Orientation.portrait) ? 4 : 2))
-                      .floor() +
-                      1 +  ((filteredList[0].source == "REGULAR") ? 0 : 1),
                 );
               },
             ),

@@ -25,6 +25,7 @@ class HMSVideoView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("temppppp loggggg ${track.trackId}");
     final tempViewSize = viewSize;
     if (tempViewSize != null) {
       return _PlatformView(
@@ -72,7 +73,7 @@ class _PlatformView extends StatelessWidget {
           'is_local': track.peer?.isLocal,
           'track_id': track.trackId,
           'is_aux': track.source != "REGULAR",
-          'set_mirror': track.source != "REGULAR"?false:setMirror
+          'set_mirror': track.source != "REGULAR" ? false : setMirror
         }..addAll({
             'height': viewSize.height,
             'width': viewSize.width,

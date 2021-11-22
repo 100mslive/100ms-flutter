@@ -16,7 +16,7 @@ dependencies:
     path: ../
 
   wakelock: ^0.5.6
-  visibility_detector: ^0.2.0
+  # visibility_detector: ^0.2.0
   cupertino_icons: ^1.0.2
   provider: ^5.0.0-nullsafety.1
   flutter_staggered_grid_view:
