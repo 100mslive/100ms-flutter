@@ -232,7 +232,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                 return GridView.builder(
                   scrollDirection: Axis.horizontal,
                   addAutomaticKeepAlives: false,
-                  cacheExtent: itemWidth,
+                  cacheExtent: 100,
                   itemCount: ((filteredList.length) +
                       ((filteredList[0].source == "REGULAR") ? 0 : 1)),
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(

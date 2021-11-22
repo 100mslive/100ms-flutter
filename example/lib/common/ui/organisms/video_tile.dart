@@ -31,13 +31,19 @@ class _VideoTileState extends State<VideoTile> {
   @override
   void initState() {
     super.initState();
+    String trackId = widget.filteredList[widget.tileIndex].trackId;
+    widget.map[trackId] = widget.filteredList[widget.tileIndex].isMute
+              ? HMSTrackUpdate.trackMuted
+              : HMSTrackUpdate.trackUnMuted;
+          print(widget.map[trackId]);
     print(
-        "----------------------------Init Called for index ${widget.tileIndex}");
+        "----------------------------Init Called-------------------------------------");
   }
 
   @override
   void dispose() {
     super.dispose();
+
     print(
         "----------------------------Dispose Called-------------------------------------");
   }
@@ -70,15 +76,17 @@ class _VideoTileState extends State<VideoTile> {
                           isAudioMuted: _meetingStore.audioTrackStatus[
                                   widget.filteredList[index].trackId] ==
                               HMSTrackUpdate.trackMuted,
-                          isVideoMuted:
-                              widget.map[widget.filteredList[index].trackId] ==
-                                  HMSTrackUpdate.trackMuted,
-                          peerName: widget.filteredList[index].peer?.name ?? '',
+                          isVideoMuted: widget
+                                  .map[widget.filteredList[index].trackId] ==
+                              HMSTrackUpdate.trackMuted,
+                          peerName:
+                              widget.filteredList[index].peer?.name ?? '',
                           changeTrack: (mute, isVideoTrack) {
                             Navigator.pop(context);
                             if (widget.filteredList[index].source != "SCREEN")
                               _meetingStore.changeTrackRequest(
-                                  widget.filteredList[index].peer?.peerId ?? "",
+                                  widget.filteredList[index].peer?.peerId ??
+                                      "",
                                   mute,
                                   isVideoTrack);
                           },
