@@ -30,57 +30,65 @@ class _ParticipantOrganismState extends State<ParticipantOrganism> {
   @override
   Widget build(BuildContext context) {
     HMSPeer peer = widget.peer;
-    return Container(
-      padding: EdgeInsets.all(20.0),
-      child: Row(
-        children: [
-          Expanded(
-              child: Text(
-            peer.name,
-            style: TextStyle(fontSize: 20.0),
-          )),
-          SizedBox(
-            width: 50.0,
-          ),
-          GestureDetector(
-            onTap: () {
-              showDialog(
-                  context: context,
-                  builder: (_) => ChangeRoleOptionDialog(
-                        peerName: peer.name,
-                        getRoleFunction: widget.meetingStore.getRoles(),
-                        changeRole: (role, forceChange) {
-                          Navigator.pop(context);
-                          widget.meetingStore.changeRole(
-                              peerId: peer.peerId,
-                              roleName: role.name,
-                              forceChange: forceChange);
-                        },
-                      ));
-            },
-            child: Container(
-              padding: EdgeInsets.all(10.0),
-              decoration: BoxDecoration(
-                color: Colors.blue,
-                borderRadius: BorderRadius.circular(5.0),
+    return Column(
+      children: [
+        Container(
+          padding: EdgeInsets.all(20.0),
+          child: Row(
+            children: [
+              Expanded(
+                  child: Text(
+                peer.name,
+                style: TextStyle(fontSize: 18.0),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              )),
+              SizedBox(
+                width: 50.0,
               ),
-              child: Text(
-                "${peer.role!.name}",
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.bold),
+              GestureDetector(
+                onTap: () {
+                  showDialog(
+                      context: context,
+                      builder: (_) => ChangeRoleOptionDialog(
+                            peerName: peer.name,
+                            getRoleFunction: widget.meetingStore.getRoles(),
+                            changeRole: (role, forceChange) {
+                              Navigator.pop(context);
+                              widget.meetingStore.changeRole(
+                                  peerId: peer.peerId,
+                                  roleName: role.name,
+                                  forceChange: forceChange);
+                            },
+                          ));
+                },
+                child: Container(
+                  padding: EdgeInsets.all(10.0),
+                  decoration: BoxDecoration(
+                    color: Colors.blue,
+                    borderRadius: BorderRadius.circular(5.0),
+                  ),
+                  child: Text(
+                    "${peer.role!.name}",
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ),
               ),
-            ),
+              SizedBox(
+                width: 50.0,
+              ),
+              Expanded(
+                  child: Icon(isVideoOn ? Icons.videocam : Icons.videocam_off)),
+              Expanded(child: Icon(isAudioOn ? Icons.mic : Icons.mic_off)),
+            ],
           ),
-          SizedBox(
-            width: 50.0,
-          ),
-          Expanded(
-              child: Icon(isVideoOn ? Icons.videocam : Icons.videocam_off)),
-          Expanded(child: Icon(isAudioOn ? Icons.mic : Icons.mic_off)),
-        ],
-      ),
+          
+        ),
+        Divider(height: 15,)
+      ],
     );
   }
 
