@@ -25,7 +25,6 @@ class HMSVideoView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("temppppp loggggg ${track.trackId}");
     final tempViewSize = viewSize;
     if (tempViewSize != null) {
       return _PlatformView(
