@@ -42,10 +42,12 @@ class _VideoTileState extends State<VideoTile> {
 
   @override
   void dispose() {
+    String trackId = widget.filteredList[widget.tileIndex].trackId;
+    widget.map[trackId] = HMSTrackUpdate.trackMuted;
     super.dispose();
 
     print(
-        "----------------------------Dispose Called-------------------------------------");
+        "----------------------------Dispose Called for user ${widget.filteredList[widget.tileIndex].peer?.name}-------------------------------------");
   }
 
   @override
@@ -102,7 +104,7 @@ class _VideoTileState extends State<VideoTile> {
         print("${widget.filteredList[index].peer?.name} rebuildingonaudio");
         return PeerItemOrganism(
             setMirror: widget.filteredList[index].peer?.isLocal ?? false,
-            key: Key(index.toString()),
+            key: Key(widget.filteredList[index].trackId + widget.filteredList[index].peer.peerId),
             height: widget.itemHeight,
             width: widget.itemWidth,
             track: widget.filteredList[index],
