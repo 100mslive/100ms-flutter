@@ -56,6 +56,7 @@ class HMSVideoViewWidget(context: Context, id: Int, creationParams: Map<String?,
     }
 
     override fun dispose() {
+        Log.i("HMSVideoViewFactory","Releasing")
         release()
     }
 

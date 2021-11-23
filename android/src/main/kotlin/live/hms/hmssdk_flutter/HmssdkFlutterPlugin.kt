@@ -422,7 +422,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware, Eve
         val authToken = call.argument<String>("auth_token")
         val isProd = call.argument<Boolean>("is_prod")
         val endPoint = call.argument<String>("end_point")
-//        Log.i("PreviewVideoAndroid", "EndPoint ${endPoint}  ${isProd}")
+        Log.i("PreviewVideoAndroid", "EndPoint ${endPoint}  ${isProd}")
         HMSLogger.i("previewVideo", "$userName $isProd")
         this.hmsConfig = HMSConfig(userName = userName!!, authtoken = authToken!!)
         if (endPoint!!.isNotEmpty())

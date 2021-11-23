@@ -11,7 +11,7 @@ import 'package:visibility_detector/visibility_detector.dart';
 
 class VideoTile extends StatefulWidget {
   final tileIndex;
-  final List filteredList;
+  final List<HMSTrack> filteredList;
   final double itemHeight;
   final double itemWidth;
   final Map<String, HMSTrackUpdate> map;
@@ -42,17 +42,16 @@ class _VideoTileState extends State<VideoTile> {
 
   @override
   void dispose() {
-    String trackId = widget.filteredList[widget.tileIndex].trackId;
-    widget.map[trackId] = HMSTrackUpdate.trackMuted;
     super.dispose();
-
+    String trackId = widget.filteredList[widget.tileIndex].trackId;
+    print("Dispose $trackId}");
+    widget.map[trackId] = HMSTrackUpdate.trackMuted;
     print(
-        "----------------------------Dispose Called for user ${widget.filteredList[widget.tileIndex].peer?.name}-------------------------------------");
+        "----------------------------Dispose Called for user ${widget.filteredList[widget.tileIndex].isMute} ${widget.filteredList[widget.tileIndex].peer?.name}-------------------------------------");
   }
 
   @override
   Widget build(BuildContext context) {
-    var orientation = MediaQuery.of(context).orientation;
     MeetingStore _meetingStore = context.read<MeetingStore>();
     int index = widget.tileIndex;
     // if (index > 0 && widget.filteredList[0].source == "SCREEN") {
@@ -101,10 +100,10 @@ class _VideoTileState extends State<VideoTile> {
                   ));
       },
       child: Observer(builder: (context) {
-        print("${widget.filteredList[index].peer?.name} rebuildingonaudio");
+        print("${widget.filteredList[index].peer?.name}  ${widget.filteredList[index].isMute} rebuilding");
         return PeerItemOrganism(
             setMirror: widget.filteredList[index].peer?.isLocal ?? false,
-            key: Key(widget.filteredList[index].trackId + widget.filteredList[index].peer.peerId),
+            key: Key(widget.filteredList[index].trackId + widget.filteredList[index].peer!.peerId),
             height: widget.itemHeight,
             width: widget.itemWidth,
             track: widget.filteredList[index],

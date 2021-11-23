@@ -42,6 +42,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
       _reconnectedDisposer,
       _roomEndedDisposer;
   late PageController _pageController;
+
   @override
   void initState() {
     super.initState();
@@ -230,16 +231,15 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                 //   _meetingStore.firstTimeBuild++;
                 // }
                 return GridView.builder(
-                  
                   scrollDirection: Axis.horizontal,
                   addAutomaticKeepAlives: false,
                   cacheExtent: 100,
                   itemCount: filteredList.length,
                   shrinkWrap: true,
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      childAspectRatio: aspectRatio,
-                      ),
+                    crossAxisCount: 2,
+                    childAspectRatio: aspectRatio,
+                  ),
                   itemBuilder: (ctx, index) {
                     ObservableMap<String, HMSTrackUpdate> map =
                         _meetingStore.trackStatus;
