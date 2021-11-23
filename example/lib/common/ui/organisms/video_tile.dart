@@ -33,9 +33,9 @@ class _VideoTileState extends State<VideoTile> {
     super.initState();
     String trackId = widget.filteredList[widget.tileIndex].trackId;
     widget.map[trackId] = widget.filteredList[widget.tileIndex].isMute
-              ? HMSTrackUpdate.trackMuted
-              : HMSTrackUpdate.trackUnMuted;
-          print(widget.map[trackId]);
+        ? HMSTrackUpdate.trackMuted
+        : HMSTrackUpdate.trackUnMuted;
+    print(widget.map[trackId]);
     print(
         "----------------------------Init Called for user ${widget.filteredList[widget.tileIndex].peer?.name}-------------------------------------");
   }
@@ -77,17 +77,15 @@ class _VideoTileState extends State<VideoTile> {
                           isAudioMuted: _meetingStore.audioTrackStatus[
                                   widget.filteredList[index].trackId] ==
                               HMSTrackUpdate.trackMuted,
-                          isVideoMuted: widget
-                                  .map[widget.filteredList[index].trackId] ==
-                              HMSTrackUpdate.trackMuted,
-                          peerName:
-                              widget.filteredList[index].peer?.name ?? '',
+                          isVideoMuted:
+                              widget.map[widget.filteredList[index].trackId] ==
+                                  HMSTrackUpdate.trackMuted,
+                          peerName: widget.filteredList[index].peer?.name ?? '',
                           changeTrack: (mute, isVideoTrack) {
                             Navigator.pop(context);
                             if (widget.filteredList[index].source != "SCREEN")
                               _meetingStore.changeTrackRequest(
-                                  widget.filteredList[index].peer?.peerId ??
-                                      "",
+                                  widget.filteredList[index].peer?.peerId ?? "",
                                   mute,
                                   isVideoTrack);
                           },
@@ -100,10 +98,12 @@ class _VideoTileState extends State<VideoTile> {
                   ));
       },
       child: Observer(builder: (context) {
-        print("${widget.filteredList[index].peer?.name}  ${widget.filteredList[index].isMute} rebuilding");
+        print(
+            "${widget.filteredList[index].peer?.name}  ${widget.filteredList[index].isMute} rebuilding");
         return PeerItemOrganism(
             setMirror: widget.filteredList[index].peer?.isLocal ?? false,
-            key: Key(widget.filteredList[index].trackId + widget.filteredList[index].peer!.peerId),
+            key: Key(widget.filteredList[index].trackId +
+                widget.filteredList[index].peer!.peerId),
             height: widget.itemHeight,
             width: widget.itemWidth,
             track: widget.filteredList[index],
