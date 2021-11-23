@@ -153,7 +153,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
     var size = MediaQuery.of(context).size;
     final double itemHeight = (size.height - kToolbarHeight - 24) / 2.5;
     final double itemWidth = size.width / 2;
-    final aspectRatio = itemWidth / itemHeight;
+    final aspectRatio = 1.5;
     print(aspectRatio.toString() + "AspectRatio");
     return WillPopScope(
       child: Scaffold(
@@ -230,13 +230,15 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                 //   _meetingStore.firstTimeBuild++;
                 // }
                 return GridView.builder(
+                  
                   scrollDirection: Axis.horizontal,
                   addAutomaticKeepAlives: false,
                   cacheExtent: 100,
-                  itemCount: ((filteredList.length) +
-                      ((filteredList[0].source == "REGULAR") ? 0 : 1)),
+                  itemCount: filteredList.length,
+                  shrinkWrap: true,
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
+                      childAspectRatio: aspectRatio,
                       ),
                   itemBuilder: (ctx, index) {
                     ObservableMap<String, HMSTrackUpdate> map =
