@@ -791,7 +791,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware, Eve
         override fun onTrackUpdate(type: HMSTrackUpdate, track: HMSTrack, peer: HMSPeer) {
             val args = HashMap<String, Any?>()
             args.put("event_name", "on_track_update")
-            Log.i("onTrackUpdate", track.toString()+" "+peer.isLocal)
+            Log.i("onTrackUpdate", peer.name)
 
             args.put("data", HMSTrackUpdateExtension.toDictionary(peer, track, type))
             HMSLogger.i("onTrackUpdate", peer.toString())

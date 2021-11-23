@@ -61,57 +61,57 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
 
   void allListeners() {
     _roleChangerequestDisposer = reaction(
-        (_) => _meetingStore.roleChangeRequest,
-        (event) => {
-              if ((event as HMSRoleChangeRequest).suggestedBy !=
-                  _meetingStore.localPeer)
-                UtilityComponents.showRoleChangeDialog(event, context)
-            });
+            (_) => _meetingStore.roleChangeRequest,
+            (event) => {
+          if ((event as HMSRoleChangeRequest).suggestedBy !=
+              _meetingStore.localPeer)
+            UtilityComponents.showRoleChangeDialog(event, context)
+        });
     _trackChangerequestDisposer = reaction(
-        (_) => _meetingStore.hmsTrackChangeRequest,
-        (event) => {UtilityComponents.showTrackChangeDialog(event, context)});
+            (_) => _meetingStore.hmsTrackChangeRequest,
+            (event) => {UtilityComponents.showTrackChangeDialog(event, context)});
     _errorDisposer = reaction(
-        (_) => _meetingStore.error,
-        (event) => {
-              UtilityComponents.showSnackBarWithString(
-                  (event as HMSError).description, context)
-            });
+            (_) => _meetingStore.error,
+            (event) => {
+          UtilityComponents.showSnackBarWithString(
+              (event as HMSError).description, context)
+        });
     _recordingDisposer = reaction(
-        (_) => _meetingStore.isRecordingStarted,
-        (event) => {
-              UtilityComponents.showSnackBarWithString(
-                  event == true ? "Recording Started" : "Recording Stopped",
-                  context)
-            });
+            (_) => _meetingStore.isRecordingStarted,
+            (event) => {
+          UtilityComponents.showSnackBarWithString(
+              event == true ? "Recording Started" : "Recording Stopped",
+              context)
+        });
     _reconnectedDisposer = reaction(
-        (_) => _meetingStore.reconnected,
-        (event) => {
-              if ((event as bool) == true)
-                UtilityComponents.showSnackBarWithString(
-                    "reconnected", context),
-              _meetingStore.reconnected = false
-            });
+            (_) => _meetingStore.reconnected,
+            (event) => {
+          if ((event as bool) == true)
+            UtilityComponents.showSnackBarWithString(
+                "reconnected", context),
+          _meetingStore.reconnected = false
+        });
     _roomEndedDisposer = reaction(
-        (_) => _meetingStore.isRoomEnded,
-        (event) => {
-              if ((event as bool) == true) Navigator.of(context).pop(),
-              _meetingStore.isRoomEnded = false
-            });
+            (_) => _meetingStore.isRoomEnded,
+            (event) => {
+          if ((event as bool) == true) Navigator.of(context).pop(),
+          _meetingStore.isRoomEnded = false
+        });
     _reconnectingDisposer = reaction(
-        (_) => _meetingStore.reconnecting,
-        (event) => {
-              if ((event as bool) == true)
-                UtilityComponents.showSnackBarWithString(
-                    "reconnecting", context),
-            });
+            (_) => _meetingStore.reconnecting,
+            (event) => {
+          if ((event as bool) == true)
+            UtilityComponents.showSnackBarWithString(
+                "reconnecting", context),
+        });
 
     _hmsExceptionDisposer = reaction(
-        (_) => _meetingStore.hmsException,
-        (event) => {
-              if ((event as HMSException?) != null)
-                UtilityComponents.showSnackBarWithString(
-                    event?.description, context),
-            });
+            (_) => _meetingStore.hmsException,
+            (event) => {
+          if ((event as HMSException?) != null)
+            UtilityComponents.showSnackBarWithString(
+                event?.description, context),
+        });
   }
 
   void initMeeting() async {
@@ -125,9 +125,9 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
 
   void checkButtons() async {
     _meetingStore.isVideoOn =
-        !(await _meetingStore.meetingController.isVideoMute(null));
+    !(await _meetingStore.meetingController.isVideoMute(null));
     _meetingStore.isMicOn =
-        !(await _meetingStore.meetingController.isAudioMute(null));
+    !(await _meetingStore.meetingController.isAudioMute(null));
     print("${_meetingStore.isMicOn} isMicOn");
   }
 
@@ -152,9 +152,9 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     var orientation = MediaQuery.of(context).orientation;
     var size = MediaQuery.of(context).size;
-    final double itemHeight = (size.height - kToolbarHeight - 24) / 2.5;
+    final double itemHeight = (size.height - kToolbarHeight - 24) / 2.2;
     final double itemWidth = size.width / 2;
-    final aspectRatio = 1.5;
+    final aspectRatio = itemHeight/itemWidth;
     print(aspectRatio.toString() + "AspectRatio");
     return WillPopScope(
       child: Scaffold(
@@ -163,23 +163,23 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
           actions: [
             Observer(
                 builder: (_) => IconButton(
-                      onPressed: () {
-                        if (_meetingStore.isRecordingStarted) {
-                          _meetingStore.stopRtmpAndRecording();
-                        } else {
-                          print("${Constant.meetingUrl} meetingUrl");
-                          _meetingStore.startRtmpOrRecording(
-                              Constant.meetingUrl, true, null);
-                        }
-                      },
-                      icon: Icon(
-                        Icons.circle,
-                        color: _meetingStore.isRecordingStarted
-                            ? Colors.red
-                            : Colors.grey,
-                        size: 32.0,
-                      ),
-                    )),
+                  onPressed: () {
+                    if (_meetingStore.isRecordingStarted) {
+                      _meetingStore.stopRtmpAndRecording();
+                    } else {
+                      print("${Constant.meetingUrl} meetingUrl");
+                      _meetingStore.startRtmpOrRecording(
+                          Constant.meetingUrl, true, null);
+                    }
+                  },
+                  icon: Icon(
+                    Icons.circle,
+                    color: _meetingStore.isRecordingStarted
+                        ? Colors.red
+                        : Colors.grey,
+                    size: 32.0,
+                  ),
+                )),
             Observer(
               builder: (_) => IconButton(
                 iconSize: 32,
@@ -230,6 +230,8 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                 //   _pageController.jumpToPage(0);
                 //   _meetingStore.firstTimeBuild++;
                 // }
+                print("FiltereeListLengthChecking------------------------------------- ${filteredList}");
+                print("FiltereeListLengthChecking------------------------------------- ${filteredList.length}");
                 return GridView.builder(
                   scrollDirection: Axis.horizontal,
                   addAutomaticKeepAlives: false,
@@ -304,8 +306,8 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                     String ans = await showDialog(
                         context: context,
                         builder: (_) => LeaveOrEndMeetingDialogOption(
-                              meetingStore: _meetingStore,
-                            ));
+                          meetingStore: _meetingStore,
+                        ));
                     if (ans == 'Leave' || ans == 'End') Navigator.pop(context);
                   },
                   icon: Icon(Icons.call_end)),
