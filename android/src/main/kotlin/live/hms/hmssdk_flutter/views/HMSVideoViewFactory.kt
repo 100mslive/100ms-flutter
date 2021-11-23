@@ -3,6 +3,8 @@ package live.hms.hmssdk_flutter.views
 import android.content.Context
 import android.util.Log
 import android.view.View
+import android.widget.FrameLayout
+import android.widget.ImageView
 import io.flutter.plugin.platform.PlatformView
 import io.flutter.plugin.common.StandardMessageCodec
 import io.flutter.plugin.platform.PlatformViewFactory
@@ -13,13 +15,11 @@ import live.hms.video.media.tracks.HMSVideoTrack
 import live.hms.video.sdk.models.HMSPeer
 import org.webrtc.SurfaceViewRenderer
 
-class HMSVideoViewWidget(context: Context, id: Int, creationParams: Map<String?, Any?>?,val peer:HMSPeer?,val trackId:String,val  isAux:Boolean,val setMirror:Boolean) : PlatformView {
+class HMSVideoViewWidget(context: Context, id: Int, creationParams: Map<String?, Any?>?, private val peer:HMSPeer?, private val trackId:String, private val  isAux:Boolean, private val setMirror:Boolean,
+                         private val scaleType : Int?,val screenShare:Boolean? = false) : PlatformView {
 
     private val hmsVideoView: HMSVideoView by lazy {
-        HMSVideoView(context,setMirror)
-    }
-
-    init {
+        HMSVideoView(context,setMirror,scaleType)
     }
 
     override fun onFlutterViewAttached(flutterView: View) {
@@ -28,6 +28,12 @@ class HMSVideoViewWidget(context: Context, id: Int, creationParams: Map<String?,
     }
 
     private fun renderVideo() {
+
+        var frameLayoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,FrameLayout.LayoutParams.MATCH_PARENT)
+        if (screenShare == true){
+            frameLayoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT,FrameLayout.LayoutParams.WRAP_CONTENT)
+        }
+        view.layoutParams =  frameLayoutParams
 
         if (peer == null) return
 
@@ -80,8 +86,10 @@ class HMSVideoViewFactory(val plugin: HmssdkFlutterPlugin) : PlatformViewFactory
         val setMirror=args!!["set_mirror"] as? Boolean
         val trackId=args!!["track_id"] as? String
         val isAuxiliary = args!!["is_aux"] as? Boolean
+        val scaleType = args!!["scale_type"] as? Int
+        val screenShare = args!!["screen_share"] as? Boolean
         val peer = if(isLocal==null || isLocal!!) plugin.getLocalPeer()
         else plugin.getPeerById(id!!)!!
-        return HMSVideoViewWidget(context, viewId, creationParams,peer,trackId!!,isAuxiliary!!,setMirror!!)
+        return HMSVideoViewWidget(context, viewId, creationParams,peer,trackId!!,isAuxiliary!!,setMirror!!,scaleType,screenShare)
     }
 }
