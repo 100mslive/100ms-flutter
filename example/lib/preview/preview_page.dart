@@ -40,7 +40,7 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
         (_) => _previewStore.error,
         (event) => {
               UtilityComponents.showSnackBarWithString(
-                  (event as HMSError).message, context)
+                  (event as HMSException).message, context)
             });
   }
 

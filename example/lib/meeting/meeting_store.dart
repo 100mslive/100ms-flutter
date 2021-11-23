@@ -1,8 +1,13 @@
+import 'dart:convert';
 import 'dart:io';
+// import 'dart:js';
 
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:hmssdk_flutter/src/enum/hms_log_level.dart';
+import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
+import 'package:hmssdk_flutter_example/logs/static_logger.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_controller.dart';
 import 'package:mobx/mobx.dart';
 
@@ -17,7 +22,7 @@ abstract class MeetingStoreBase
   bool isSpeakerOn = true;
 
   @observable
-  HMSError? error;
+  HMSException? error;
 
   @observable
   HMSException? hmsException;
@@ -32,7 +37,7 @@ abstract class MeetingStoreBase
   @observable
   bool isMicOn = true;
   @observable
-  bool isScreenShareOn  = false;
+  bool isScreenShareOn = false;
   @observable
   bool reconnecting = false;
   @observable
@@ -75,7 +80,7 @@ abstract class MeetingStoreBase
 
   HMSRoom? hmsRoom;
 
-  int firstTimeBuild =0;
+  int firstTimeBuild = 0;
   @action
   void startListen() {
     meetingController.addMeetingListener(this);
@@ -166,6 +171,8 @@ abstract class MeetingStoreBase
     bool ans = await meetingController.joinMeeting();
     if (!ans) return false;
     isMeetingStarted = true;
+    startHMSLogger(HMSLogLevel.VERBOSE, HMSLogLevel.VERBOSE);
+    addLogsListener();
     return true;
   }
 
@@ -183,7 +190,7 @@ abstract class MeetingStoreBase
   }
 
   @action
-  void updateError(HMSError error) {
+  void updateError(HMSException error) {
     this.error = error;
   }
 
@@ -278,7 +285,7 @@ abstract class MeetingStoreBase
 
     print("onTrackUpdate ${trackStatus[track.trackId]}");
 
-    if(track.source == "SCREEN"){
+    if (track.source == "SCREEN") {
       isScreenShareOn = true;
     }
     if (peer.isLocal) {
@@ -304,7 +311,7 @@ abstract class MeetingStoreBase
   }
 
   @override
-  void onError({required HMSError error}) {
+  void onError({required HMSException error}) {
     updateError(error);
   }
 
@@ -448,9 +455,9 @@ abstract class MeetingStoreBase
         addTrack(track);
         break;
       case HMSTrackUpdate.trackRemoved:
-        if(track.source == "SCREEN"){
+        if (track.source == "SCREEN") {
           isScreenShareOn = false;
-          firstTimeBuild=0;
+          firstTimeBuild = 0;
         }
         removeTrackWithTrackId(track.trackId);
         break;
@@ -479,7 +486,7 @@ abstract class MeetingStoreBase
     return room;
   }
 
-  void leaveMeeting() async{
+  void leaveMeeting() async {
     meetingController.leaveMeeting();
     isRoomEnded = true;
     removeListener();
@@ -499,7 +506,7 @@ abstract class MeetingStoreBase
 
   @override
   void onLogMessage({required dynamic HMSLog}) {
-    print(HMSLog.toString() + "onLogMessageFlutter");
+    StaticLogger.logger?.v(HMSLog.toMap());
     FirebaseCrashlytics.instance.log(HMSLog.toString());
   }
 

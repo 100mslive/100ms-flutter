@@ -80,9 +80,7 @@ class _PeerItemOrganismState extends State<PeerItemOrganism> {
                 width: widget.width - 5,
                 padding: EdgeInsets.all(5.0),
                 child: HMSVideoView(
-                  track: widget.track,
-                  setMirror: widget.setMirror,
-                ),
+                    track: widget.track, setMirror: widget.setMirror),
               );
             },
           )),
@@ -90,7 +88,7 @@ class _PeerItemOrganismState extends State<PeerItemOrganism> {
             height: 4,
           ),
           Text(
-              "${widget.track.peer?.name ?? ''} ${widget.track.peer?.isLocal ?? false ? "(You)" : ""}")
+              "${widget.track.peer?.name ?? ''} ${widget.track.peer?.isLocal ?? false ? "(You)" : ""}",overflow: TextOverflow.ellipsis,maxLines: 1,)
         ],
       ),
     );
