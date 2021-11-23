@@ -10,20 +10,18 @@ import Firebase
     private let linkStreamHandler = LinkStreamHandler()
     
     
-    override func application(
-        _ application: UIApplication,
-        didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
-    ) -> Bool {
+    override func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
         let channelController = window.rootViewController as! FlutterViewController
-        methodChannel = FlutterMethodChannel(name: "deeplink.100ms.dev/cnannel", binaryMessenger: channelController as! FlutterBinaryMessenger)
         
-        methodChannel?.setMethodCallHandler({ (call: FlutterMethodCall, result: FlutterResult) in
+        methodChannel = FlutterMethodChannel(name: "deeplink.100ms.dev/channel", binaryMessenger: channelController as! FlutterBinaryMessenger)
+        
+        methodChannel?.setMethodCallHandler { call, result in
             guard call.method == "initialLink" else {
                 result(FlutterMethodNotImplemented)
                 return
             }
-        })
+        }
         
         let eventController = window.rootViewController as! FlutterViewController
         eventChannel = FlutterEventChannel(name: "deeplink.100ms.dev/events", binaryMessenger: eventController as! FlutterBinaryMessenger)
@@ -35,21 +33,24 @@ import Firebase
     }
     
     override func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
-      eventChannel?.setStreamHandler(linkStreamHandler)
-      return linkStreamHandler.handleLink(url.absoluteString)
+        eventChannel?.setStreamHandler(linkStreamHandler)
+        return linkStreamHandler.handleLink(url.absoluteString)
     }
     
-    override func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
+    override func application(_ application: UIApplication,
+                              continue userActivity: NSUserActivity,
+                              restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
+        
         if userActivity.activityType == NSUserActivityTypeBrowsingWeb {
             let url = userActivity.webpageURL!
-            print(url.absoluteString)
-            linkStreamHandler.handleLink(url.absoluteString)
+            print(#function, url.absoluteString)
+            return linkStreamHandler.handleLink(url.absoluteString)
         }
         return true
     }
 }
 
-class LinkStreamHandler:NSObject, FlutterStreamHandler {
+class LinkStreamHandler: NSObject, FlutterStreamHandler {
     
     var eventSink: FlutterEventSink?
     

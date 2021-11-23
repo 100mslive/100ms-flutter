@@ -1,8 +1,6 @@
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
-import 'package:hmssdk_flutter_example/main.dart';
 import 'package:hmssdk_flutter_example/manager/HmsSdkManager.dart';
-import 'package:hmssdk_flutter_example/meeting/hms_sdk_interactor.dart';
 import 'package:hmssdk_flutter_example/service/room_service.dart';
 import 'package:uuid/uuid.dart';
 
@@ -28,8 +26,7 @@ class MeetingController {
     return true;
   }
 
-
-  Future<void> leaveMeeting() async{
+  Future<void> leaveMeeting() async {
     HmsSdkManager.hmsSdkInteractor?.leaveMeeting();
   }
 
