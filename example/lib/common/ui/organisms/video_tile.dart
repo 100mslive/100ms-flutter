@@ -34,15 +34,11 @@ class _VideoTileState extends State<VideoTile> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration.zero, () async {
-      setState(() {
-        String trackId = widget.filteredList[widget.tileIndex].trackId;
+    String trackId = widget.filteredList[widget.tileIndex].trackId;
         widget.map[trackId] = widget.filteredList[widget.tileIndex].isMute
             ? HMSTrackUpdate.trackMuted
             : HMSTrackUpdate.trackUnMuted;
         print("Called SetState...Track is ${widget.map[trackId]}");
-      });
-    });
 
     print(
         "----------------------------Init Called for user ${widget.filteredList[widget.tileIndex].peer?.name}-------------------------------------");
@@ -50,11 +46,9 @@ class _VideoTileState extends State<VideoTile> {
 
   @override
   void dispose() {
-    setState(() {
-      String trackId = widget.filteredList[widget.tileIndex].trackId;
+    String trackId = widget.filteredList[widget.tileIndex].trackId;
       print("Dispose $trackId}");
       widget.map[trackId] = HMSTrackUpdate.trackMuted;
-    });
     super.dispose();
 
     print(

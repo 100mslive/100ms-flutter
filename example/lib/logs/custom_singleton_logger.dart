@@ -19,23 +19,23 @@ class CustomLogger {
     getDirectoryForLogRecord().whenComplete(
       () {
         fileOutPut = FileOutput(file: file);
-        // ConsoleOutput consoleOutput = ConsoleOutput();
-        // List<LogOutput> multiOutput = [fileOutPut,consoleOutput];
-        // StaticLogger.logger = Logger(
-        //     filter: DevelopmentFilter(),
-        //     // Use the default LogFilter (-> only log in debug mode)
-        //     printer: PrettyPrinter(
-        //         noBoxingByDefault: true,
-        //         methodCount: 0,
-        //         errorMethodCount: 0,
-        //         lineLength: 100,
-        //         colors: false,
-        //         printEmojis: false,
-        //         printTime: false
-        //         ),
-        //     output: MultiOutput(
-        //         multiOutput)
-        //     );
+        ConsoleOutput consoleOutput = ConsoleOutput();
+        List<LogOutput> multiOutput = [fileOutPut];
+        StaticLogger.logger = Logger(
+            filter: DevelopmentFilter(),
+            // Use the default LogFilter (-> only log in debug mode)
+            printer: PrettyPrinter(
+                noBoxingByDefault: true,
+                methodCount: 0,
+                errorMethodCount: 0,
+                lineLength: 100,
+                colors: false,
+                printEmojis: false,
+                printTime: false
+                ),
+            output: MultiOutput(
+                multiOutput)
+            );
       },
     );
   }
