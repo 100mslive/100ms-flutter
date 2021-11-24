@@ -60,7 +60,6 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
         roomUrl: widget.roomId, flow: widget.flow, user: widget.user);
     _meetingStore.meetingController = meetingController;
     allListeners();
-    super.initState();
     initMeeting();
     checkButtons();
   }
@@ -300,6 +299,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                         _meetingStore.trackStatus;
 
                     return VideoTile(
+                        
                         tileIndex: index,
                         filteredList: filteredList,
                         itemHeight: itemHeight,
@@ -440,7 +440,6 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                   ));
       },
       child: PeerItemOrganism(
-          key: Key(index.toString()),
           height: itemHeight,
           width: itemWidth,
           track: filteredList[index],

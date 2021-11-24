@@ -265,7 +265,8 @@ abstract class MeetingStoreBase
       {required HMSTrack track,
       required HMSTrackUpdate trackUpdate,
       required HMSPeer peer}) {
-    print("onTrackUpdateFlutterMeetingStore $track ${peer.name} ${trackUpdate}");
+    print(
+        "onTrackUpdateFlutterMeetingStore $track ${peer.name} ${trackUpdate}");
     if (track.kind == HMSTrackKind.kHMSTrackKindAudio) {
       if (isSpeakerOn) {
         unMuteAll();
@@ -292,20 +293,22 @@ abstract class MeetingStoreBase
         this.isVideoOn = false;
       }
 
-      if (Platform.isAndroid) {
-        int screenShareIndex = tracks.indexWhere((element) {
-          return element.source == 'SCREEN';
-        });
-        print("ScreenShare $screenShareIndex");
-        if (screenShareIndex == -1)
-          tracks.insert(0, track);
-        else {
-          tracks.insert(1, track);
-        }
-      }
-    } else {
-      peerOperationWithTrack(peer, trackUpdate, track);
+      //   if (Platform.isAndroid) {
+      //     int screenShareIndex = tracks.indexWhere((element) {
+      //       return element.source == 'SCREEN';
+      //     });
+      //     print("ScreenShare $screenShareIndex");
+      //     if (screenShareIndex == -1)
+      //       tracks.insert(0, track);
+      //     else {
+      //       tracks.insert(1, track);
+      //     }
+      //   }
+      // } else
     }
+    
+      peerOperationWithTrack(peer, trackUpdate, track);
+    
   }
 
   @override
@@ -450,7 +453,7 @@ abstract class MeetingStoreBase
 
     switch (update) {
       case HMSTrackUpdate.trackAdded:
-        trackStatus[track.trackId] = HMSTrackUpdate.trackMuted ;
+        trackStatus[track.trackId] = HMSTrackUpdate.trackMuted;
         addTrack(track);
         break;
       case HMSTrackUpdate.trackRemoved:
