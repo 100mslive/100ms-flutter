@@ -8,6 +8,7 @@ import 'package:hmssdk_flutter_example/common/ui/organisms/change_track_options.
 import 'package:hmssdk_flutter_example/common/ui/organisms/chat_bottom_sheet.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/leave_or_end_meeting.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/peer_item_organism.dart';
+import 'package:hmssdk_flutter_example/common/ui/organisms/video_tile.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
 import 'package:hmssdk_flutter_example/logs/custom_singleton_logger.dart';
@@ -16,9 +17,10 @@ import 'package:hmssdk_flutter_example/meeting/meeting_controller.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:mobx/mobx.dart';
 import 'package:provider/src/provider.dart';
+import 'package:share_extend/share_extend.dart';
 import 'meeting_participants_list.dart';
 import '../logs/static_logger.dart';
-import 'package:share_extend/share_extend.dart';
+
 
 class MeetingPage extends StatefulWidget {
   final String roomId;
@@ -155,11 +157,11 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
   void handleMenu(int value) async {
     switch (value) {
       case 1:
-        StaticLogger.logger?.d(
-            "\n----------------------------Sending Logs-----------------\n");
-        StaticLogger.logger?.close();
-        ShareExtend.share(CustomLogger.file?.path ?? '', 'file');
-        logger.getCustomLogger();
+        // StaticLogger.logger?.d(
+        //     "\n----------------------------Sending Logs-----------------\n");
+        // StaticLogger.logger?.close();
+        // ShareExtend.share(CustomLogger.file?.path ?? '', 'file');
+        // logger.getCustomLogger();
 
         break;
 
@@ -193,9 +195,9 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     var orientation = MediaQuery.of(context).orientation;
     var size = MediaQuery.of(context).size;
-    final double itemHeight = (size.height - kToolbarHeight - 24) / 2.5;
+    final double itemHeight = (size.height - kToolbarHeight - 24) / 2.3;
     final double itemWidth = size.width / 2;
-    final aspectRatio = 1.5;
+    final aspectRatio = itemHeight/itemWidth;
     print(aspectRatio.toString() + "AspectRatio");
     return WillPopScope(
       child: Scaffold(
@@ -284,11 +286,6 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                 if (_meetingStore.tracks.isEmpty)
                   return Center(child: Text('Waiting for other to join!'));
                 List<HMSTrack> filteredList = _meetingStore.tracks;
-                // if (_meetingStore.isScreenShareOn &&
-                //     _meetingStore.firstTimeBuild == 0) {
-                //   _pageController.jumpToPage(0);
-                //   _meetingStore.firstTimeBuild++;
-                // }
                 return GridView.builder(
                   scrollDirection: Axis.horizontal,
                   addAutomaticKeepAlives: false,

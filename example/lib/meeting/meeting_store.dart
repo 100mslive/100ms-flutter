@@ -35,7 +35,7 @@ abstract class MeetingStoreBase
   @observable
   bool isMicOn = true;
   @observable
-  bool isScreenShareOn  = false;
+  bool isScreenShareOn = false;
   @observable
   bool reconnecting = false;
   @observable
@@ -78,7 +78,8 @@ abstract class MeetingStoreBase
 
   HMSRoom? hmsRoom;
 
-  int firstTimeBuild =0;
+  int firstTimeBuild = 0;
+
   @action
   void startListen() {
     meetingController.addMeetingListener(this);
@@ -169,8 +170,8 @@ abstract class MeetingStoreBase
     bool ans = await meetingController.joinMeeting();
     if (!ans) return false;
     isMeetingStarted = true;
-    startHMSLogger(HMSLogLevel.VERBOSE, HMSLogLevel.VERBOSE);
-    addLogsListener();
+    // startHMSLogger(HMSLogLevel.VERBOSE, HMSLogLevel.VERBOSE);
+    // addLogsListener();
     return true;
   }
 
@@ -264,7 +265,7 @@ abstract class MeetingStoreBase
       {required HMSTrack track,
       required HMSTrackUpdate trackUpdate,
       required HMSPeer peer}) {
-    print("onTrackUpdateFlutterMeetingStore $track ${peer.isLocal}");
+    print("onTrackUpdateFlutterMeetingStore $track ${peer.name} ${trackUpdate}");
     if (track.kind == HMSTrackKind.kHMSTrackKindAudio) {
       if (isSpeakerOn) {
         unMuteAll();
@@ -278,12 +279,11 @@ abstract class MeetingStoreBase
       }
       return;
     }
-    trackStatus[track.trackId] =
-        track.isMute ? HMSTrackUpdate.trackMuted : HMSTrackUpdate.trackUnMuted;
+    trackStatus[track.trackId] = HMSTrackUpdate.trackMuted;
 
     print("onTrackUpdate ${trackStatus[track.trackId]}");
 
-    if(track.source == "SCREEN"){
+    if (track.source == "SCREEN") {
       isScreenShareOn = true;
     }
     if (peer.isLocal) {
@@ -450,12 +450,13 @@ abstract class MeetingStoreBase
 
     switch (update) {
       case HMSTrackUpdate.trackAdded:
+        trackStatus[track.trackId] = HMSTrackUpdate.trackMuted ;
         addTrack(track);
         break;
       case HMSTrackUpdate.trackRemoved:
-        if(track.source == "SCREEN"){
+        if (track.source == "SCREEN") {
           isScreenShareOn = false;
-          firstTimeBuild=0;
+          firstTimeBuild = 0;
         }
         removeTrackWithTrackId(track.trackId);
         break;
@@ -484,7 +485,7 @@ abstract class MeetingStoreBase
     return room;
   }
 
-  void leaveMeeting() async{
+  void leaveMeeting() async {
     meetingController.leaveMeeting();
     isRoomEnded = true;
     removeListener();
