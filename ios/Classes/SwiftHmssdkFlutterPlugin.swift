@@ -376,21 +376,12 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         }
         
         let shouldSkipPIIEvents = arguments["should_skip_pii_events"] as? Bool ?? false
-        let metaData = arguments["meta_data"] as? String ?? nil
-        //        let isProd = arguments["is_prod"] as? Bool ?? true
-        //        let initEndpoint = isProd ? nil : "https://qa-init.100ms.live/init"
-        
-        config = HMSConfig(userName: userName,
-                           authToken: authToken,
-                           shouldSkipPIIEvents: shouldSkipPIIEvents,
-                           metaData: metaData)
+        let metaData = arguments["meta_data"] as? String
         
         if let endPoint = arguments["end_point"] as? String {
-            config = HMSConfig(userName: userName,
-                               authToken: authToken,
-                               shouldSkipPIIEvents: shouldSkipPIIEvents,
-                               metaData: metaData,
-                               endpoint: endPoint)
+            config = HMSConfig(userName: userName, authToken: authToken, shouldSkipPIIEvents: shouldSkipPIIEvents, metadata: metaData, endpoint: endPoint)
+        } else {
+            config = HMSConfig(userName: userName, authToken: authToken, shouldSkipPIIEvents: shouldSkipPIIEvents, metadata: metaData)
         }
         
         hmsSDK?.preview(config: config!, delegate: self)
@@ -415,15 +406,13 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             }
             
             let shouldSkipPIIEvents = arguments["should_skip_pii_events"] as? Bool ?? false
-            let metaData = arguments["meta_data"] as? String ?? nil
-            let isProd = arguments["is_prod"] as? Bool ?? true
-            let initEndpoint = isProd ? nil : "https://qa-init.100ms.live/init"
+            let metaData = arguments["meta_data"] as? String
             
-            config = HMSConfig(userName: userName,
-                               authToken: authToken,
-                               shouldSkipPIIEvents: shouldSkipPIIEvents,
-                               metaData: metaData,
-                               endpoint: initEndpoint)
+            if let endPoint = arguments["end_point"] as? String {
+                config = HMSConfig(userName: userName, authToken: authToken, shouldSkipPIIEvents: shouldSkipPIIEvents, metadata: metaData, endpoint: endPoint)
+            } else {
+                config = HMSConfig(userName: userName, authToken: authToken, shouldSkipPIIEvents: shouldSkipPIIEvents, metadata: metaData)
+            }
             
             hmsSDK?.join(config: config!, delegate: self)
         }
