@@ -18,7 +18,7 @@ class  HMSPeerExtension{
             "peer_id":peer.peerID,
             "name":peer.name,
             "is_local":peer.isLocal,
-            "customer_description":peer.customerDescription ?? "",
+            "customer_description":peer.metadata ?? "",
             "customer_user_id":peer.customerUserID ?? "",
         ]
         
