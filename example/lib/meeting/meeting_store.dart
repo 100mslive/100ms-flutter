@@ -155,7 +155,7 @@ abstract class MeetingStoreBase
   void addTrack(HMSTrack track,HMSPeer peer) {
     if (tracks.contains(track)) removeTrackWithTrackId(peer.peerId);
 
-    if (track.source == "SCREEN")
+    if (track.source == "SCREEN"|| peer.isLocal )
       tracks.insert(0, track);
     else
       tracks.insert(tracks.length, track);
@@ -288,7 +288,7 @@ abstract class MeetingStoreBase
 
     print("onTrackUpdate ${trackStatus[peer.peerId]}");
 
-    if (track.source == "SCREEN") {
+    if (track.source == "SCREEN" && trackUpdate == HMSTrackUpdate.trackAdded) {
       isScreenShareOn = true;
       screenShareTrack = track;
     }
@@ -451,10 +451,9 @@ abstract class MeetingStoreBase
       case HMSTrackUpdate.trackRemoved:
         if (track.source == "SCREEN") {
           isScreenShareOn = false;
-          firstTimeBuild = 0;
           screenShareTrack = null;
         }
-        removeTrackWithTrackId(peer.peerId);
+        removeTrackWithPeerId(peer.peerId);
         break;
       case HMSTrackUpdate.trackMuted:
         trackStatus[peer.peerId] = HMSTrackUpdate.trackMuted;

@@ -74,9 +74,9 @@ class _VideoTileState extends State<VideoTile> {
                           isAudioMuted: _meetingStore.audioTrackStatus[
                                   widget.filteredList[index].peer!.peerId] ==
                               HMSTrackUpdate.trackMuted,
-                          isVideoMuted:
-                              widget.map[widget.filteredList[index].peer!.peerId] ==
-                                  HMSTrackUpdate.trackMuted,
+                          isVideoMuted: widget.map[
+                                  widget.filteredList[index].peer!.peerId] ==
+                              HMSTrackUpdate.trackMuted,
                           peerName: widget.filteredList[index].peer?.name ?? '',
                           changeTrack: (mute, isVideoTrack) {
                             Navigator.pop(context);
@@ -101,10 +101,12 @@ class _VideoTileState extends State<VideoTile> {
             height: widget.itemHeight,
             width: widget.itemWidth,
             track: widget.filteredList[index],
-            isVideoMuted: widget.filteredList[index].source != "REGULAR"?false : widget.filteredList[index].peer!.isLocal
-                ? !_meetingStore.isVideoOn
-                : (widget.map[widget.filteredList[index].peer!.peerId]) ==
-                    HMSTrackUpdate.trackMuted);
+            isVideoMuted: widget.filteredList[index].source != "REGULAR"
+                ? false
+                : widget.filteredList[index].peer!.isLocal
+                    ? !_meetingStore.isVideoOn
+                    : (widget.map[widget.filteredList[index].peer!.peerId]) ==
+                        HMSTrackUpdate.trackMuted);
       }),
     );
   }
