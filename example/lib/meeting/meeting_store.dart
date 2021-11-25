@@ -37,6 +37,8 @@ abstract class MeetingStoreBase
   @observable
   bool isScreenShareOn = false;
   @observable
+  HMSTrack? screenShareTrack;
+  @observable
   bool reconnecting = false;
   @observable
   bool reconnected = false;
@@ -266,7 +268,7 @@ abstract class MeetingStoreBase
       required HMSTrackUpdate trackUpdate,
       required HMSPeer peer}) {
     print(
-        "onTrackUpdateFlutterMeetingStore $track ${peer.name} ${trackUpdate}");
+        "onTrackUpdateFlutterMeetingStore $track ${peer.name} $trackUpdate");
     if (track.kind == HMSTrackKind.kHMSTrackKindAudio) {
       if (isSpeakerOn) {
         unMuteAll();
@@ -280,12 +282,15 @@ abstract class MeetingStoreBase
       }
       return;
     }
-    trackStatus[peer.peerId] = HMSTrackUpdate.trackMuted;
+
+    if(track.source == "REGULAR")
+      trackStatus[peer.peerId] = HMSTrackUpdate.trackMuted;
 
     print("onTrackUpdate ${trackStatus[peer.peerId]}");
 
     if (track.source == "SCREEN") {
       isScreenShareOn = true;
+      screenShareTrack = track;
     }
     if (peer.isLocal) {
       localPeer = peer;
@@ -306,9 +311,12 @@ abstract class MeetingStoreBase
       //   }
       // } else
     }
-    
+    if(screenShareTrack != null){
+      tracks.insert(0, screenShareTrack!);
+    }
+    else {
       peerOperationWithTrack(peer, trackUpdate, track);
-    
+    }
   }
 
   @override
@@ -460,6 +468,7 @@ abstract class MeetingStoreBase
         if (track.source == "SCREEN") {
           isScreenShareOn = false;
           firstTimeBuild = 0;
+          screenShareTrack = null;
         }
         removeTrackWithTrackId(peer.peerId);
         break;

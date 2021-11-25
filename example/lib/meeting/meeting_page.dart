@@ -12,7 +12,6 @@ import 'package:hmssdk_flutter_example/common/ui/organisms/video_tile.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
 import 'package:hmssdk_flutter_example/logs/custom_singleton_logger.dart';
-import 'package:hmssdk_flutter_example/main.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_controller.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:mobx/mobx.dart';
@@ -45,17 +44,14 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
       _recordingDisposer,
       _reconnectedDisposer,
       _roomEndedDisposer;
-  late PageController _pageController;
   CustomLogger logger = CustomLogger();
   int appBarIndex = 0;
 
   @override
   void initState() {
     super.initState();
-    _pageController = PageController(initialPage: 0);
     WidgetsBinding.instance!.addObserver(this);
     _meetingStore = context.read<MeetingStore>();
-
     MeetingController meetingController = MeetingController(
         roomUrl: widget.roomId, flow: widget.flow, user: widget.user);
     _meetingStore.meetingController = meetingController;
@@ -289,6 +285,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                   addAutomaticKeepAlives: false,
                   itemCount: filteredList.length,
                   shrinkWrap: true,
+                  cacheExtent: 0,
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
                     childAspectRatio: aspectRatio,
@@ -298,7 +295,6 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                         _meetingStore.trackStatus;
 
                     return VideoTile(
-
                         tileIndex: index,
                         filteredList: filteredList,
                         itemHeight: itemHeight,
