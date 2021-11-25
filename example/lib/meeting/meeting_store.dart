@@ -152,10 +152,10 @@ abstract class MeetingStoreBase
   }
 
   @action
-  void addTrack(HMSTrack track) {
-    if (tracks.contains(track)) removeTrackWithTrackId(track.trackId);
+  void addTrack(HMSTrack track,HMSPeer peer) {
+    if (tracks.contains(track)) removeTrackWithTrackId(peer.peerId);
 
-    if (track.source == 'SCREEN')
+    if (track.source == "SCREEN")
       tracks.insert(0, track);
     else
       tracks.insert(tracks.length, track);
@@ -172,8 +172,8 @@ abstract class MeetingStoreBase
     bool ans = await meetingController.joinMeeting();
     if (!ans) return false;
     isMeetingStarted = true;
-    startHMSLogger(HMSLogLevel.VERBOSE, HMSLogLevel.VERBOSE);
-    addLogsListener();
+    // startHMSLogger(HMSLogLevel.VERBOSE, HMSLogLevel.VERBOSE);
+    // addLogsListener();
     return true;
   }
 
@@ -268,7 +268,7 @@ abstract class MeetingStoreBase
       required HMSTrackUpdate trackUpdate,
       required HMSPeer peer}) {
     print(
-        "onTrackUpdateFlutterMeetingStore $track ${peer.name} $trackUpdate");
+        "onTrackUpdateFlutterMeetingStore $track ${peer.name} ${track.source}");
     if (track.kind == HMSTrackKind.kHMSTrackKindAudio) {
       if (isSpeakerOn) {
         unMuteAll();
@@ -297,26 +297,10 @@ abstract class MeetingStoreBase
       if (track.isMute) {
         this.isVideoOn = false;
       }
+    }
 
-      //   if (Platform.isAndroid) {
-      //     int screenShareIndex = tracks.indexWhere((element) {
-      //       return element.source == 'SCREEN';
-      //     });
-      //     print("ScreenShare $screenShareIndex");
-      //     if (screenShareIndex == -1)
-      //       tracks.insert(0, track);
-      //     else {
-      //       tracks.insert(1, track);
-      //     }
-      //   }
-      // } else
-    }
-    if(screenShareTrack != null){
-      tracks.insert(0, screenShareTrack!);
-    }
-    else {
-      peerOperationWithTrack(peer, trackUpdate, track);
-    }
+    peerOperationWithTrack(peer, trackUpdate, track);
+
   }
 
   @override
@@ -462,7 +446,7 @@ abstract class MeetingStoreBase
     switch (update) {
       case HMSTrackUpdate.trackAdded:
         trackStatus[peer.peerId] = HMSTrackUpdate.trackMuted;
-        addTrack(track);
+        addTrack(track,peer);
         break;
       case HMSTrackUpdate.trackRemoved:
         if (track.source == "SCREEN") {
