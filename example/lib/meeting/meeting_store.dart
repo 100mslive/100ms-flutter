@@ -153,7 +153,7 @@ abstract class MeetingStoreBase
 
   @action
   void addTrack(HMSTrack track,HMSPeer peer) {
-    if (tracks.contains(track)) removeTrackWithTrackId(peer.peerId);
+    if (tracks.contains(track)) removeTrackWithPeerId(peer.peerId);
 
     if (track.source == "SCREEN"|| peer.isLocal )
       tracks.insert(0, track);
