@@ -170,8 +170,8 @@ abstract class MeetingStoreBase
     bool ans = await meetingController.joinMeeting();
     if (!ans) return false;
     isMeetingStarted = true;
-    // startHMSLogger(HMSLogLevel.VERBOSE, HMSLogLevel.VERBOSE);
-    // addLogsListener();
+    startHMSLogger(HMSLogLevel.VERBOSE, HMSLogLevel.VERBOSE);
+    addLogsListener();
     return true;
   }
 

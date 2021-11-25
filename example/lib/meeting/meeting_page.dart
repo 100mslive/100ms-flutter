@@ -156,11 +156,11 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
   void handleMenu(int value) async {
     switch (value) {
       case 1:
-        // StaticLogger.logger?.d(
-        //     "\n----------------------------Sending Logs-----------------\n");
-        // StaticLogger.logger?.close();
-        // ShareExtend.share(CustomLogger.file?.path ?? '', 'file');
-        // logger.getCustomLogger();
+        StaticLogger.logger?.d(
+            "\n----------------------------Sending Logs-----------------\n");
+        StaticLogger.logger?.close();
+        ShareExtend.share(CustomLogger.file?.path ?? '', 'file');
+        logger.getCustomLogger();
 
         break;
 

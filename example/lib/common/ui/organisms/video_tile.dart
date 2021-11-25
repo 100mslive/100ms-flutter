@@ -18,11 +18,13 @@ class VideoTile extends StatefulWidget {
   final Map<String, HMSTrackUpdate> map;
 
   VideoTile(
-      {required this.tileIndex,
+      {Key? key,
+      required this.tileIndex,
       required this.filteredList,
       required this.itemHeight,
       required this.itemWidth,
-      required this.map});
+      required this.map})
+      : super(key: key);
 
   @override
   State<VideoTile> createState() => _VideoTileState();
