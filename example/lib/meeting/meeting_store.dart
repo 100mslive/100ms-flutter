@@ -280,9 +280,9 @@ abstract class MeetingStoreBase
       }
       return;
     }
-    trackStatus[track.trackId] = HMSTrackUpdate.trackMuted;
+    trackStatus[peer.peerId] = HMSTrackUpdate.trackMuted;
 
-    print("onTrackUpdate ${trackStatus[track.trackId]}");
+    print("onTrackUpdate ${trackStatus[peer.peerId]}");
 
     if (track.source == "SCREEN") {
       isScreenShareOn = true;
@@ -453,7 +453,7 @@ abstract class MeetingStoreBase
 
     switch (update) {
       case HMSTrackUpdate.trackAdded:
-        trackStatus[track.trackId] = HMSTrackUpdate.trackMuted;
+        trackStatus[peer.peerId] = HMSTrackUpdate.trackMuted;
         addTrack(track);
         break;
       case HMSTrackUpdate.trackRemoved:
@@ -461,13 +461,13 @@ abstract class MeetingStoreBase
           isScreenShareOn = false;
           firstTimeBuild = 0;
         }
-        removeTrackWithTrackId(track.trackId);
+        removeTrackWithTrackId(peer.peerId);
         break;
       case HMSTrackUpdate.trackMuted:
-        trackStatus[track.trackId] = HMSTrackUpdate.trackMuted;
+        trackStatus[peer.peerId] = HMSTrackUpdate.trackMuted;
         break;
       case HMSTrackUpdate.trackUnMuted:
-        trackStatus[track.trackId] = HMSTrackUpdate.trackUnMuted;
+        trackStatus[peer.peerId] = HMSTrackUpdate.trackUnMuted;
         break;
       case HMSTrackUpdate.trackDescriptionChanged:
         break;

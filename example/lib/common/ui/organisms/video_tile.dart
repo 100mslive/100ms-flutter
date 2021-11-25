@@ -18,13 +18,11 @@ class VideoTile extends StatefulWidget {
   final Map<String, HMSTrackUpdate> map;
 
   VideoTile(
-      {Key? key,
-      required this.tileIndex,
+      {required this.tileIndex,
       required this.filteredList,
       required this.itemHeight,
       required this.itemWidth,
-      required this.map})
-      : super(key: key);
+      required this.map});
 
   @override
   State<VideoTile> createState() => _VideoTileState();
@@ -36,11 +34,11 @@ class _VideoTileState extends State<VideoTile> {
     super.initState();
     Future.delayed(Duration.zero, () async {
       setState(() {
-        String trackId = widget.filteredList[widget.tileIndex].trackId;
-        widget.map[trackId] = widget.filteredList[widget.tileIndex].isMute
+        String peerId = widget.filteredList[widget.tileIndex].peer!.peerId;
+        widget.map[peerId] = widget.filteredList[widget.tileIndex].isMute
             ? HMSTrackUpdate.trackMuted
             : HMSTrackUpdate.trackUnMuted;
-        print("Called SetState...Track is ${widget.map[trackId]}");
+        print("Called SetState...Track is ${widget.map[peerId]}");
       });
     });
 
@@ -50,13 +48,10 @@ class _VideoTileState extends State<VideoTile> {
 
   @override
   void dispose() {
-    setState(() {
-      String trackId = widget.filteredList[widget.tileIndex].trackId;
-      print("Dispose $trackId}");
-      widget.map[trackId] = HMSTrackUpdate.trackMuted;
-    });
     super.dispose();
-
+    String peerId = widget.filteredList[widget.tileIndex].peer!.peerId;
+    print("Dispose $peerId}");
+    widget.map[peerId] = HMSTrackUpdate.trackMuted;
     print(
         "----------------------------Dispose Called for user ${widget.filteredList[widget.tileIndex].isMute} ${widget.filteredList[widget.tileIndex].peer?.name}-------------------------------------");
   }
@@ -75,10 +70,10 @@ class _VideoTileState extends State<VideoTile> {
                     children: [
                       ChangeTrackOptionDialog(
                           isAudioMuted: _meetingStore.audioTrackStatus[
-                                  widget.filteredList[index].trackId] ==
+                                  widget.filteredList[index].peer!.peerId] ==
                               HMSTrackUpdate.trackMuted,
                           isVideoMuted:
-                              widget.map[widget.filteredList[index].trackId] ==
+                              widget.map[widget.filteredList[index].peer!.peerId] ==
                                   HMSTrackUpdate.trackMuted,
                           peerName: widget.filteredList[index].peer?.name ?? '',
                           changeTrack: (mute, isVideoTrack) {
@@ -100,13 +95,13 @@ class _VideoTileState extends State<VideoTile> {
       child: Observer(builder: (context) {
         return PeerItemOrganism(
             setMirror: widget.filteredList[index].peer?.isLocal ?? false,
-            key: Key(widget.filteredList[index].trackId),
+            key: Key(widget.filteredList[index].peer!.peerId),
             height: widget.itemHeight,
             width: widget.itemWidth,
             track: widget.filteredList[index],
             isVideoMuted: widget.filteredList[index].peer!.isLocal
                 ? !_meetingStore.isVideoOn
-                : (widget.map[widget.filteredList[index].trackId]) ==
+                : (widget.map[widget.filteredList[index].peer!.peerId]) ==
                     HMSTrackUpdate.trackMuted);
       }),
     );

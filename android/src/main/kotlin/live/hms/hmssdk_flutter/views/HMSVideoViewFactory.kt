@@ -18,9 +18,8 @@ import org.webrtc.SurfaceViewRenderer
 class HMSVideoViewWidget(context: Context, id: Int, creationParams: Map<String?, Any?>?, private val peer:HMSPeer?, private val trackId:String, private val  isAux:Boolean, private val setMirror:Boolean,
                          private val scaleType : Int?,val screenShare:Boolean? = false) : PlatformView {
 
-    private val hmsVideoView: HMSVideoView by lazy {
-        HMSVideoView(context,setMirror,scaleType)
-    }
+    private val hmsVideoView: HMSVideoView = HMSVideoView(context,setMirror,scaleType)
+
 
     override fun onFlutterViewAttached(flutterView: View) {
         super.onFlutterViewAttached(flutterView)
