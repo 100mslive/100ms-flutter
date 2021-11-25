@@ -35,13 +35,11 @@ class _VideoTileState extends State<VideoTile> {
   void initState() {
     super.initState();
     Future.delayed(Duration.zero, () async {
-      setState(() {
-        String peerId = widget.filteredList[widget.tileIndex].peer!.peerId;
-        widget.map[peerId] = widget.filteredList[widget.tileIndex].isMute
-            ? HMSTrackUpdate.trackMuted
-            : HMSTrackUpdate.trackUnMuted;
-        print("Called SetState...Track is ${widget.map[peerId]}");
-      });
+      String peerId = widget.filteredList[widget.tileIndex].peer!.peerId;
+      widget.map[peerId] = widget.filteredList[widget.tileIndex].isMute
+          ? HMSTrackUpdate.trackMuted
+          : HMSTrackUpdate.trackUnMuted;
+      print("Called SetState...Track is ${widget.map[peerId]}");
     });
 
     print(
