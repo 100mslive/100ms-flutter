@@ -152,14 +152,21 @@ abstract class MeetingStoreBase
   }
 
   @action
+  void removeTrackWithPeerIdExtra(String peerId) {
+    var index = tracks.indexWhere((element) => element.peer?.peerId == peerId);
+    tracks.removeAt(index);
+  }
+
+  @action
   void addTrack(HMSTrack track, HMSPeer peer) {
     if (tracks.contains(track)) removeTrackWithPeerId(peer.peerId);
 
-    if (track.source == "SCREEN" || peer.isLocal)
-      tracks.insert(0, track);
-    else
-      tracks.insert(tracks.length, track);
-    print("addTrack $track");
+    // if (track.source == "SCREEN" || peer.isLocal)
+    //   tracks.insert(0, track);
+    // else
+    tracks.add(track);
+    // print("addTrack $track");
+    // print("addTrack size ${tracks.toList().toString()}");
   }
 
   @action
@@ -450,7 +457,7 @@ abstract class MeetingStoreBase
       case HMSTrackUpdate.trackRemoved:
         if (track.source == "SCREEN") {
           isScreenShareOn = false;
-          removeTrackWithTrackId(track.trackId);
+          removeTrackWithPeerIdExtra(peer.peerId);
           screenShareTrack = null;
         } else
           removeTrackWithPeerId(peer.peerId);

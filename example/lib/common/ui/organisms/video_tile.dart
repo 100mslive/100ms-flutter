@@ -103,8 +103,7 @@ class _VideoTileState extends State<VideoTile> {
                 ? false
                 : widget.filteredList[index].peer!.isLocal
                     ? !_meetingStore.isVideoOn
-                    : (widget.map[widget.filteredList[index].peer!.peerId]) ==
-                        HMSTrackUpdate.trackMuted);
+                    : widget.filteredList[index].isMute);
       }),
     );
   }
