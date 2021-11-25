@@ -152,10 +152,10 @@ abstract class MeetingStoreBase
   }
 
   @action
-  void addTrack(HMSTrack track,HMSPeer peer) {
+  void addTrack(HMSTrack track, HMSPeer peer) {
     if (tracks.contains(track)) removeTrackWithPeerId(peer.peerId);
 
-    if (track.source == "SCREEN"|| peer.isLocal )
+    if (track.source == "SCREEN" || peer.isLocal)
       tracks.insert(0, track);
     else
       tracks.insert(tracks.length, track);
@@ -283,7 +283,7 @@ abstract class MeetingStoreBase
       return;
     }
 
-    if(track.source == "REGULAR")
+    if (track.source == "REGULAR")
       trackStatus[peer.peerId] = HMSTrackUpdate.trackMuted;
 
     print("onTrackUpdate ${trackStatus[peer.peerId]}");
@@ -300,7 +300,6 @@ abstract class MeetingStoreBase
     }
 
     peerOperationWithTrack(peer, trackUpdate, track);
-
   }
 
   @override
@@ -446,14 +445,15 @@ abstract class MeetingStoreBase
     switch (update) {
       case HMSTrackUpdate.trackAdded:
         trackStatus[peer.peerId] = HMSTrackUpdate.trackMuted;
-        addTrack(track,peer);
+        addTrack(track, peer);
         break;
       case HMSTrackUpdate.trackRemoved:
         if (track.source == "SCREEN") {
           isScreenShareOn = false;
+          removeTrackWithTrackId(track.trackId);
           screenShareTrack = null;
-        }
-        removeTrackWithPeerId(peer.peerId);
+        } else
+          removeTrackWithPeerId(peer.peerId);
         break;
       case HMSTrackUpdate.trackMuted:
         trackStatus[peer.peerId] = HMSTrackUpdate.trackMuted;
