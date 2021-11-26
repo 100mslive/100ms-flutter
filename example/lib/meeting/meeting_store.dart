@@ -152,8 +152,8 @@ abstract class MeetingStoreBase
   }
 
   @action
-  void removeTrackWithPeerIdExtra(String peerId) {
-    var index = tracks.indexWhere((element) => element.peer?.peerId == peerId);
+  void removeTrackWithPeerIdExtra(String trackId) {
+    var index = tracks.indexWhere((element) => trackId == element.trackId);
     tracks.removeAt(index);
   }
 
@@ -291,14 +291,14 @@ abstract class MeetingStoreBase
     }
 
     if (track.source == "REGULAR")
-      trackStatus[peer.peerId] = HMSTrackUpdate.trackMuted;
+      trackStatus[track.trackId] = HMSTrackUpdate.trackMuted;
 
     print("onTrackUpdate ${trackStatus[peer.peerId]}");
 
-    if (track.source == "SCREEN" && trackUpdate == HMSTrackUpdate.trackAdded) {
-      isScreenShareOn = true;
-      screenShareTrack = track;
-    }
+    // if (track.source == "SCREEN" && trackUpdate == HMSTrackUpdate.trackAdded) {
+    //   isScreenShareOn = true;
+    //   screenShareTrack = track;
+    // }
     if (peer.isLocal) {
       localPeer = peer;
       if (track.isMute) {
@@ -451,22 +451,22 @@ abstract class MeetingStoreBase
 
     switch (update) {
       case HMSTrackUpdate.trackAdded:
-        trackStatus[peer.peerId] = HMSTrackUpdate.trackMuted;
+        trackStatus[track.trackId] = HMSTrackUpdate.trackMuted;
         addTrack(track, peer);
         break;
       case HMSTrackUpdate.trackRemoved:
         if (track.source == "SCREEN") {
           isScreenShareOn = false;
-          removeTrackWithPeerIdExtra(peer.peerId);
+          removeTrackWithPeerIdExtra(track.trackId);
           screenShareTrack = null;
         } else
           removeTrackWithPeerId(peer.peerId);
         break;
       case HMSTrackUpdate.trackMuted:
-        trackStatus[peer.peerId] = HMSTrackUpdate.trackMuted;
+        trackStatus[track.trackId] = HMSTrackUpdate.trackMuted;
         break;
       case HMSTrackUpdate.trackUnMuted:
-        trackStatus[peer.peerId] = HMSTrackUpdate.trackUnMuted;
+        trackStatus[track.trackId] = HMSTrackUpdate.trackUnMuted;
         break;
       case HMSTrackUpdate.trackDescriptionChanged:
         break;

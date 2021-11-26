@@ -13,7 +13,7 @@ class HMSRoleChangeRequest {
 
   factory HMSRoleChangeRequest.fromMap(Map map) {
     HMSPeer? requestedBy;
-    HMSRole suggestedRole = HMSRole.fromMap(map['suggested_role']);;
+    HMSRole suggestedRole = HMSRole.fromMap(map['suggested_role']);
 
     if (map['requested_by'] != null) {
       requestedBy = HMSPeer.fromMap(map['requested_by']);
