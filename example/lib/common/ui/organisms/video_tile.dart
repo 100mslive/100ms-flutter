@@ -34,12 +34,10 @@ class _VideoTileState extends State<VideoTile> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration.zero, () async {
       String trackId = widget.filteredList[widget.tileIndex].trackId;
       widget.map[trackId] = widget.filteredList[widget.tileIndex].isMute
           ? HMSTrackUpdate.trackMuted
           : HMSTrackUpdate.trackUnMuted;
-    });
 
     print(
         "----------------------------Init Called for user ${widget.filteredList[widget.tileIndex].peer?.name}-------------------------------------");
