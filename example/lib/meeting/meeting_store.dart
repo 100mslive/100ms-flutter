@@ -158,13 +158,27 @@ abstract class MeetingStoreBase
   }
 
   @action
+  int insertTrackWithPeerId(HMSPeer peer) {
+    return tracks.indexWhere((element) => peer.peerId == element.peer!.peerId);
+  }
+
+  @action
   void addTrack(HMSTrack track, HMSPeer peer) {
-    if (tracks.contains(track)) removeTrackWithPeerId(peer.peerId);
+    var index = -1;
+    if (track.source == "REGULAR") index = insertTrackWithPeerId(peer);
 
     // if (track.source == "SCREEN" || peer.isLocal)
     //   tracks.insert(0, track);
     // else
-    tracks.add(track);
+    if (index >= 0) {
+      if(track.kind == HMSTrackKind.kHMSTrackKindVideo)
+        tracks[index] = track;
+    } else if (index == -1 && track.source != "REGULAR") {
+      tracks.insert(0, track);
+    }
+    else{
+      tracks.add(track);
+    }
     // print("addTrack $track");
     // print("addTrack size ${tracks.toList().toString()}");
   }
@@ -276,22 +290,17 @@ abstract class MeetingStoreBase
       required HMSPeer peer}) {
     print(
         "onTrackUpdateFlutterMeetingStore $track ${peer.name} ${track.source}");
-    if (track.kind == HMSTrackKind.kHMSTrackKindAudio) {
-      if (isSpeakerOn) {
+    if (isSpeakerOn) {
         unMuteAll();
       } else {
         muteAll();
       }
-      audioTrackStatus[track.trackId] = trackUpdate;
-      audioTracks.add(track);
-      if (peer.isLocal && trackUpdate == HMSTrackUpdate.trackMuted) {
-        this.isMicOn = false;
-      }
-      return;
-    }
 
-    if (track.source == "REGULAR")
-      trackStatus[track.trackId] = HMSTrackUpdate.trackMuted;
+     if (peer.isLocal &&
+      trackUpdate == HMSTrackUpdate.trackMuted &&
+      track.kind == HMSTrackKind.kHMSTrackKindAudio) {
+    this.isMicOn = false;
+    }
 
     print("onTrackUpdate ${trackStatus[peer.peerId]}");
 
@@ -451,7 +460,10 @@ abstract class MeetingStoreBase
 
     switch (update) {
       case HMSTrackUpdate.trackAdded:
-        trackStatus[track.trackId] = HMSTrackUpdate.trackMuted;
+        if (track.source == "REGULAR")
+          trackStatus[track.trackId] = track.isMute
+              ? HMSTrackUpdate.trackMuted
+              : HMSTrackUpdate.trackUnMuted;
         addTrack(track, peer);
         break;
       case HMSTrackUpdate.trackRemoved:

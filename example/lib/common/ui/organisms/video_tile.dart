@@ -46,11 +46,14 @@ class _VideoTileState extends State<VideoTile> {
   @override
   void dispose() {
     super.dispose();
-    String peerId = widget.filteredList[widget.tileIndex].peer!.peerId;
-    print("Dispose $peerId}");
-    widget.map[peerId] = HMSTrackUpdate.trackMuted;
-    print(
-        "----------------------------Dispose Called for user ${widget.filteredList[widget.tileIndex].isMute} ${widget.filteredList[widget.tileIndex].peer?.name}-------------------------------------");
+    if(widget.tileIndex < widget.filteredList.length){
+      String peerId = widget.filteredList[widget.tileIndex].peer!.peerId;
+      print("Dispose $peerId}");
+      widget.map[peerId] = HMSTrackUpdate.trackMuted;
+      print(
+          "----------------------------Dispose Called for user ${widget.filteredList[widget.tileIndex].isMute} ${widget.filteredList[widget.tileIndex].peer?.name}-------------------------------------");
+    }
+
   }
 
   @override
