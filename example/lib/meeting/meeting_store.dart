@@ -110,12 +110,7 @@ abstract class MeetingStoreBase
   Future<void> toggleVideo() async {
     print("toggleVideo $isVideoOn");
     await meetingController.switchVideo(isOn: isVideoOn);
-    // if(isVideoOn){
-    //   meetingController.stopCapturing();
-    // }
-    // else{
-    //   meetingController.startCapturing();
-    // }
+
     isVideoOn = !isVideoOn;
   }
 
@@ -165,22 +160,17 @@ abstract class MeetingStoreBase
   @action
   void addTrack(HMSTrack track, HMSPeer peer) {
     var index = -1;
-    if (track.source == "REGULAR") index = insertTrackWithPeerId(peer);
+    if (track.source.trim() == "REGULAR") index = insertTrackWithPeerId(peer);
 
-    // if (track.source == "SCREEN" || peer.isLocal)
-    //   tracks.insert(0, track);
-    // else
     if (index >= 0) {
       if(track.kind == HMSTrackKind.kHMSTrackKindVideo)
         tracks[index] = track;
-    } else if (index == -1 && track.source != "REGULAR") {
+    } else if (index == -1 && track.source.trim() != "REGULAR") {
       tracks.insert(0, track);
     }
     else{
       tracks.add(track);
     }
-    // print("addTrack $track");
-    // print("addTrack size ${tracks.toList().toString()}");
   }
 
   @action
@@ -468,12 +458,15 @@ abstract class MeetingStoreBase
         addTrack(track, peer);
         break;
       case HMSTrackUpdate.trackRemoved:
-        if (track.source == "SCREEN") {
+        if (track.source.trim() != "REGULAR") {
           isScreenShareOn = false;
           removeTrackWithTrackId(track.trackId);
           screenShareTrack = null;
-        } else
-          removeTrackWithPeerId(peer.peerId);
+          print("ScreenShareHMSTrackUpdate ${track.peer!.name}");
+        } else {
+          removeTrackWithTrackId(track.trackId);
+          print("HMSTrackPeerRemoved ${track.peer!.name}");
+        }
         break;
       case HMSTrackUpdate.trackMuted:
         trackStatus[track.trackId] = HMSTrackUpdate.trackMuted;

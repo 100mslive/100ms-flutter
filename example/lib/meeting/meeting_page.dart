@@ -20,7 +20,6 @@ import 'package:share_extend/share_extend.dart';
 import 'meeting_participants_list.dart';
 import '../logs/static_logger.dart';
 
-
 class MeetingPage extends StatefulWidget {
   final String roomId;
   final MeetingFlow flow;
@@ -191,7 +190,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
     var size = MediaQuery.of(context).size;
     final double itemHeight = (size.height - kToolbarHeight - 24) / 2.3;
     final double itemWidth = size.width / 2;
-    final aspectRatio = itemHeight/itemWidth;
+    final aspectRatio = itemHeight / itemWidth;
     print(aspectRatio.toString() + "AspectRatio");
     return WillPopScope(
       child: Scaffold(
@@ -293,12 +292,13 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                   itemBuilder: (ctx, index) {
                     ObservableMap<String, HMSTrackUpdate> map =
                         _meetingStore.trackStatus;
-                        return VideoTile(
-                            tileIndex: index,
-                            filteredList: filteredList,
-                            itemHeight: itemHeight,
-                            itemWidth: itemWidth,
-                            map: map);
+                    return VideoTile(
+                        key: Key(index.toString()),
+                        tileIndex: index,
+                        filteredList: filteredList,
+                        itemHeight: itemHeight,
+                        itemWidth: itemWidth,
+                        map: map);
                   },
                 );
               },
@@ -387,6 +387,4 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
       }
     }
   }
-
-
 }
