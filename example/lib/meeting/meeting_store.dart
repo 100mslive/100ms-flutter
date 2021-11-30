@@ -310,7 +310,8 @@ abstract class MeetingStoreBase
     // }
     if (peer.isLocal) {
       localPeer = peer;
-      if (track.isMute) {
+      if (track.isMute &&
+          track.kind == HMSTrackKind.kHMSTrackKindVideo) {
         this.isVideoOn = false;
       }
     }
@@ -469,7 +470,7 @@ abstract class MeetingStoreBase
       case HMSTrackUpdate.trackRemoved:
         if (track.source == "SCREEN") {
           isScreenShareOn = false;
-          removeTrackWithPeerIdExtra(track.trackId);
+          removeTrackWithTrackId(track.trackId);
           screenShareTrack = null;
         } else
           removeTrackWithPeerId(peer.peerId);
