@@ -15,6 +15,8 @@ abstract class PreviewStoreBase
   @observable
   List<HMSTrack> localTracks = [];
   @observable
+  HMSPeer? peer;
+  @observable
   HMSError? error;
 
   @observable
@@ -29,6 +31,12 @@ abstract class PreviewStoreBase
 
   @override
   void onPreview({required HMSRoom room, required List<HMSTrack> localTracks}) {
+    for (HMSPeer each in room.peers!) {
+      if (each.isLocal) {
+        peer = each;
+        break;
+      }
+    }
     List<HMSTrack> videoTracks = [];
     for (var track in localTracks) {
       if (track.kind == HMSTrackKind.kHMSTrackKindVideo) {

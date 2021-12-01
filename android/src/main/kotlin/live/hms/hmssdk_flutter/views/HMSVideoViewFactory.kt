@@ -80,7 +80,7 @@ class HMSVideoViewFactory(val plugin: HmssdkFlutterPlugin) : PlatformViewFactory
     override fun create(context: Context, viewId: Int, args: Any?): PlatformView {
 
         val creationParams = args as Map<String?, Any?>?
-        val id=args!!["peer_id"] as? String
+        val id=args!!["peer_id"] as? String ?: ""
         val isLocal=args!!["is_local"] as? Boolean
         val setMirror=args!!["set_mirror"] as? Boolean
         val trackId=args!!["track_id"] as? String
@@ -88,7 +88,7 @@ class HMSVideoViewFactory(val plugin: HmssdkFlutterPlugin) : PlatformViewFactory
         val scaleType = args!!["scale_type"] as? Int
         val screenShare = args!!["screen_share"] as? Boolean
         val peer = if(isLocal==null || isLocal!!) plugin.getLocalPeer()
-        else plugin.getPeerById(id!!)!!
+        else plugin.getPeerById(id)
         return HMSVideoViewWidget(context, viewId, creationParams,peer,trackId!!,isAuxiliary!!,setMirror!!,scaleType,screenShare)
     }
 }

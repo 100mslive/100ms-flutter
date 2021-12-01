@@ -14,6 +14,7 @@ import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
 import 'package:hmssdk_flutter_example/logs/custom_singleton_logger.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_controller.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
+import 'package:hmssdk_flutter_example/meeting/peerTrackNode.dart';
 import 'package:mobx/mobx.dart';
 import 'package:provider/src/provider.dart';
 import 'package:share_extend/share_extend.dart';
@@ -276,13 +277,15 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
               builder: (_) {
                 print("rebuilding");
                 if (!_meetingStore.isMeetingStarted) return SizedBox();
-                if (_meetingStore.tracks.isEmpty)
+                if (_meetingStore.peerTracks.isEmpty)
                   return Center(child: Text('Waiting for other to join!'));
                 List<HMSTrack> filteredList = _meetingStore.tracks;
+                ObservableList<PeerTracKNode> peerFilteredList = _meetingStore.peerTracks;
+
                 return GridView.builder(
                   scrollDirection: Axis.horizontal,
                   addAutomaticKeepAlives: false,
-                  itemCount: filteredList.length,
+                  itemCount: peerFilteredList.length,
                   shrinkWrap: true,
                   cacheExtent: 0,
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -290,14 +293,20 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                     childAspectRatio: aspectRatio,
                   ),
                   itemBuilder: (ctx, index) {
-                    ObservableMap<String, HMSTrackUpdate> map =
-                        _meetingStore.trackStatus;
-                    return VideoTile(
-                        tileIndex: index,
-                        filteredList: filteredList,
-                        itemHeight: itemHeight,
-                        itemWidth: itemWidth,
-                        map: map);
+
+                    return Observer(
+                      builder: (context) {
+                        ObservableMap<String, HMSTrackUpdate> map =
+                            _meetingStore.trackStatus;
+                        print("GRIDVIEW ${map.toString()}");
+                        return VideoTile(
+                            tileIndex: index,
+                            filteredList: peerFilteredList,
+                            itemHeight: itemHeight,
+                            itemWidth: itemWidth,
+                            map: map);
+                      }
+                    );
                   },
                 );
               },

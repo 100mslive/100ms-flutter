@@ -743,6 +743,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware, Eve
             previewChannel.setStreamHandler(null)
             val args = HashMap<String, Any?>()
             args.put("event_name", "on_join_room")
+
             val roomArgs = HashMap<String, Any?>()
             roomArgs.put("room", HMSRoomExtension.toDictionary(room))
             args.put("data", roomArgs)

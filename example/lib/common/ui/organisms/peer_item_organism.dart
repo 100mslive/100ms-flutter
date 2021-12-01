@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:hmssdk_flutter_example/meeting/peerTrackNode.dart';
 
 class PeerItemOrganism extends StatefulWidget {
-  final HMSTrack track;
+  final PeerTracKNode peerTracKNode;
   final bool isVideoMuted;
   final double height;
   final double width;
@@ -12,7 +13,7 @@ class PeerItemOrganism extends StatefulWidget {
 
   PeerItemOrganism(
       {Key? key,
-      required this.track,
+      required this.peerTracKNode,
       this.isVideoMuted = true,
       this.height = 200.0,
       this.width = 200.0,
@@ -36,8 +37,8 @@ class _PeerItemOrganismState extends State<PeerItemOrganism> {
 
   @override
   Widget build(BuildContext context) {
-    print(
-        "isVideoMuted ${widget.isVideoMuted} ${widget.track.source} ${widget.track.peer?.name} ${widget.setMirror}");
+    // print(
+    //     "isVideoMuted ${widget.isVideoMuted} ${widget.track.source} ${widget.track.peer?.name} ${widget.setMirror} ${widget.track.isMute}");
 
     return Container(
       key: key,
@@ -47,15 +48,15 @@ class _PeerItemOrganismState extends State<PeerItemOrganism> {
       width: widget.width - 5.0,
       decoration: BoxDecoration(
           border: Border.all(
-              color: widget.track.isHighestAudio ? Colors.blue : Colors.grey,
-              width: widget.track.isHighestAudio ? 4.0 : 1.0),
+              color: widget.peerTracKNode.track?.isHighestAudio??false ? Colors.blue : Colors.grey,
+              width: widget.peerTracKNode.track?.isHighestAudio??false ? 4.0 : 1.0),
           borderRadius: BorderRadius.all(Radius.circular(4))),
       child: Column(
         children: [
           Expanded(child: LayoutBuilder(
             builder: (context, constraints) {
-              if ((widget.isVideoMuted)) {
-                List<String> parts = widget.track.peer?.name.split(" ") ?? [];
+              if ((widget.isVideoMuted || widget.peerTracKNode.track == null)) {
+                List<String> parts = widget.peerTracKNode.name.split(" ") ?? [];
 
                 if (parts.length == 1) {
                   parts[0] += " ";
@@ -80,7 +81,7 @@ class _PeerItemOrganismState extends State<PeerItemOrganism> {
                 width: widget.width - 5,
                 padding: EdgeInsets.all(5.0),
                 child: HMSVideoView(
-                    track: widget.track, setMirror: widget.setMirror),
+                    track: widget.peerTracKNode.track!, setMirror: widget.setMirror),
               );
             },
           )),
@@ -88,7 +89,7 @@ class _PeerItemOrganismState extends State<PeerItemOrganism> {
             height: 4,
           ),
           Text(
-              "${widget.track.peer?.name ?? ''} ${widget.track.peer?.isLocal ?? false ? "(You)" : ""}")
+              "${widget.peerTracKNode.track?.isMute} ${widget.isVideoMuted} ${ widget.peerTracKNode.name} ${widget.peerTracKNode.track?.peer?.isLocal ?? false ? "(You)" : ""}")
         ],
       ),
     );

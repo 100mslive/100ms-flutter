@@ -15,6 +15,7 @@ class HMSRoomExtension {
 
             val args=ArrayList<Any>()
             room.peerList.forEach {
+                io.flutter.Log.i("OnJoinAndroidSDk",it.toString())
                 args.add(HMSPeerExtension.toDictionary(it)!!)
             }
             hashMap.put("peers",args)
