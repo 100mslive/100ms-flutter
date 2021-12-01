@@ -279,7 +279,7 @@ abstract class MeetingStoreBase
       required HMSTrackUpdate trackUpdate,
       required HMSPeer peer}) {
     print(
-        "onTrackUpdateFlutterMeetingStore $track ${peer.name} ${track.source}");
+        "onTrackUpdateFlutterMeetingStore ${peer.name} ${track.source} $trackUpdate ${track.isMute}");
     if (isSpeakerOn) {
         unMuteAll();
       } else {
@@ -330,28 +330,28 @@ abstract class MeetingStoreBase
 
   @override
   void onUpdateSpeakers({required List<HMSSpeaker> updateSpeakers}) {
-    if (updateSpeakers.length == 0) return;
-    HMSSpeaker highestAudioSpeaker = updateSpeakers[0];
-    print("onUpdateSpeakerFlutter ${highestAudioSpeaker.peer.name}");
-    int newHighestIndex = tracks.indexWhere(
-        (element) => element.peer?.peerId == highestAudioSpeaker.peer.peerId);
-    if (newHighestIndex == -1) return;
-
-    if (previousHighestVideoTrack != null) {
-      HMSTrack newPreviousTrack =
-          HMSTrack.copyWith(false, track: previousHighestVideoTrack!);
-      if (previousHighestIndex != -1) {
-        tracks.removeAt(previousHighestIndex);
-        tracks.insert(previousHighestIndex, newPreviousTrack);
-      }
-    }
-    HMSTrack highestAudioSpeakerVideoTrack = tracks[newHighestIndex];
-    HMSTrack newHighestTrack =
-        HMSTrack.copyWith(true, track: highestAudioSpeakerVideoTrack);
-    tracks.removeAt(newHighestIndex);
-    tracks.insert(newHighestIndex, newHighestTrack);
-    previousHighestVideoTrack = newHighestTrack;
-    previousHighestIndex = newHighestIndex;
+    // if (updateSpeakers.length == 0) return;
+    // HMSSpeaker highestAudioSpeaker = updateSpeakers[0];
+    // print("onUpdateSpeakerFlutter ${highestAudioSpeaker.peer.name}");
+    // int newHighestIndex = tracks.indexWhere(
+    //     (element) => element.peer?.peerId == highestAudioSpeaker.peer.peerId);
+    // if (newHighestIndex == -1) return;
+    //
+    // if (previousHighestVideoTrack != null) {
+    //   HMSTrack newPreviousTrack =
+    //       HMSTrack.copyWith(false, track: previousHighestVideoTrack!);
+    //   if (previousHighestIndex != -1) {
+    //     tracks.removeAt(previousHighestIndex);
+    //     tracks.insert(previousHighestIndex, newPreviousTrack);
+    //   }
+    // }
+    // HMSTrack highestAudioSpeakerVideoTrack = tracks[newHighestIndex];
+    // HMSTrack newHighestTrack =
+    //     HMSTrack.copyWith(true, track: highestAudioSpeakerVideoTrack);
+    // tracks.removeAt(newHighestIndex);
+    // tracks.insert(newHighestIndex, newHighestTrack);
+    // previousHighestVideoTrack = newHighestTrack;
+    // previousHighestIndex = newHighestIndex;
   }
 
   @override
@@ -460,7 +460,7 @@ abstract class MeetingStoreBase
       case HMSTrackUpdate.trackRemoved:
         if (track.source.trim() != "REGULAR") {
           isScreenShareOn = false;
-          removeTrackWithTrackId(track.trackId);
+          tracks.removeAt(0);
           screenShareTrack = null;
           print("ScreenShareHMSTrackUpdate ${track.peer!.name}");
         } else {
