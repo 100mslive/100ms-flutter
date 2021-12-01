@@ -293,7 +293,6 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                     ObservableMap<String, HMSTrackUpdate> map =
                         _meetingStore.trackStatus;
                     return VideoTile(
-                        key: Key(index.toString()),
                         tileIndex: index,
                         filteredList: filteredList,
                         itemHeight: itemHeight,
