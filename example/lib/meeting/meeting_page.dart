@@ -273,6 +273,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
         body: Center(
           child: Container(
             width: double.infinity,
+
             child: Column(
               children: [
                 Observer(builder: (_) {
