@@ -334,6 +334,7 @@ abstract class MeetingStoreBase
   @override
   void onMessage({required HMSMessage message}) {
     addMessage(message);
+
   }
 
   @override
