@@ -312,15 +312,7 @@ abstract class MeetingStoreBase
 
     if (track.kind == HMSTrackKind.kHMSTrackKindAudio) return;
 
-    if (track.source == "SCREEN") {
-      peerTracks.insert(
-          0,
-          new PeerTracKNode(
-              peerId: peer.peerId + "SCREEN",
-              isRegular: false,
-              track: track,
-              name: peer.name));
-    } else {
+    if (track.source == "REGULAR"){
       int index =
           peerTracks.indexWhere((element) => element.peerId == peer.peerId);
       print(
@@ -478,9 +470,19 @@ abstract class MeetingStoreBase
 
     switch (update) {
       case HMSTrackUpdate.trackAdded:
+      if(track.source == "REGULAR")
         trackStatus[peer.peerId] = track.isMute
             ? HMSTrackUpdate.trackMuted
             : HMSTrackUpdate.trackUnMuted;
+      else{
+        peerTracks.insert(
+          0,
+          new PeerTracKNode(
+              peerId: peer.peerId + "SCREEN",
+              isRegular: false,
+              track: track,
+              name: peer.name));
+      }
         print("peerOperationWithTrack ${track.isMute}");
         break;
       case HMSTrackUpdate.trackRemoved:
