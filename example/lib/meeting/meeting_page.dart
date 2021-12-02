@@ -273,43 +273,69 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
         body: Center(
           child: Container(
             width: double.infinity,
-            child: Observer(
-              builder: (_) {
-                print("rebuilding");
-                if (!_meetingStore.isMeetingStarted) return SizedBox();
-                if (_meetingStore.peerTracks.isEmpty)
-                  return Center(child: Text('Waiting for other to join!'));
-                List<HMSTrack> filteredList = _meetingStore.tracks;
-                ObservableList<PeerTracKNode> peerFilteredList = _meetingStore.peerTracks;
-
-                return GridView.builder(
-                  scrollDirection: Axis.horizontal,
-                  addAutomaticKeepAlives: false,
-                  itemCount: peerFilteredList.length,
-                  shrinkWrap: true,
-                  cacheExtent: 0,
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    childAspectRatio: aspectRatio,
-                  ),
-                  itemBuilder: (ctx, index) {
-
-                    return Observer(
-                      builder: (context) {
-                        ObservableMap<String, HMSTrackUpdate> map =
-                            _meetingStore.trackStatus;
-                        print("GRIDVIEW ${map.toString()}");
-                        return VideoTile(
-                            tileIndex: index,
-                            filteredList: peerFilteredList,
-                            itemHeight: itemHeight,
-                            itemWidth: itemWidth,
-                            map: map);
-                      }
+            child: Column(
+              children: [
+                Observer(builder: (_) {
+                  if (_meetingStore.screenShareTrack != null) {
+                    return SizedBox(
+                      width: double.infinity,
+                      height: MediaQuery.of(context).size.height / 2.5,
+                      child: PeerItemOrganism(
+                        height: MediaQuery.of(context).size.height / 2,
+                        width: MediaQuery.of(context).size.width,
+                        isVideoMuted: false,
+                        peerTracKNode: new PeerTracKNode(
+                            peerId: _meetingStore.screenSharePeerId,
+                            track: _meetingStore.screenShareTrack!,
+                            name: _meetingStore.screenShareTrack?.peer?.name ??
+                                ""),
+                      ),
                     );
-                  },
-                );
-              },
+                  } else {
+                    return Container();
+                  }
+                }),
+                Flexible(
+                  child: Observer(
+                    builder: (_) {
+                      print("rebuilding");
+                      if (!_meetingStore.isMeetingStarted) return SizedBox();
+                      if (_meetingStore.peerTracks.isEmpty)
+                        return Center(
+                            child: Text('Waiting for other to join!'));
+                      ObservableList<PeerTracKNode> peerFilteredList =
+                          _meetingStore.peerTracks;
+
+                      return GridView.builder(
+                        scrollDirection: Axis.horizontal,
+                        addAutomaticKeepAlives: false,
+                        itemCount: peerFilteredList.length,
+                        cacheExtent: 0,
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: _meetingStore.screenShareTrack!=null ? 1:2,
+                          childAspectRatio:_meetingStore.screenShareTrack!=null ? aspectRatio-0.2 : aspectRatio,
+                        ),
+                        itemBuilder: (ctx, index) {
+                          return Observer(builder: (context) {
+                            ObservableMap<String, HMSTrackUpdate> map =
+                                _meetingStore.trackStatus;
+                            print("GRIDVIEW ${map.toString()}");
+                            return Padding(
+                              padding: _meetingStore.screenShareTrack!=null ? const EdgeInsets.all(8.0) : const EdgeInsets.all(0.0),
+                              child: VideoTile(
+                                  tileIndex: index,
+                                  filteredList: peerFilteredList,
+                                  itemHeight: itemHeight,
+                                  itemWidth: itemWidth,
+                                  map: map),
+                            );
+                          });
+                        },
+                      );
+                    },
+                  ),
+                ),
+              ],
             ),
           ),
         ),

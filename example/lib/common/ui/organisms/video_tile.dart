@@ -40,6 +40,7 @@ class _VideoTileState extends State<VideoTile> {
     Map<String, HMSTrackUpdate> map = widget.map;
     return VisibilityDetector(
       onVisibilityChanged: (VisibilityInfo info) {
+        if (index >= filteredList.length) return;
         var visiblePercentage = info.visibleFraction * 100;
         print("$index  ${filteredList[index].name} lengthofFilteredList");
         String peerId = filteredList[index].peerId;
@@ -50,7 +51,8 @@ class _VideoTileState extends State<VideoTile> {
           map[peerId] = filteredList[index].track?.isMute ?? true
               ? HMSTrackUpdate.trackMuted
               : HMSTrackUpdate.trackUnMuted;
-          debugPrint("${map[peerId]} ${filteredList[index].name} visibilityDetector");
+          debugPrint(
+              "${map[peerId]} ${filteredList[index].name} visibilityDetector");
         }
         debugPrint(
             'Widget ${info.key} is $visiblePercentage% visible and index is $index');

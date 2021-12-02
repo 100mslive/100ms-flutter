@@ -19,7 +19,8 @@ abstract class MeetingStoreBase
     implements HMSUpdateListener, HMSLogListener {
   @observable
   bool isSpeakerOn = true;
-
+  @observable
+  String screenSharePeerId = '';
   @observable
   HMSError? error;
 
@@ -312,7 +313,7 @@ abstract class MeetingStoreBase
 
     if (track.kind == HMSTrackKind.kHMSTrackKindAudio) return;
 
-    if (track.source == "REGULAR"){
+    if (track.source == "REGULAR") {
       int index =
           peerTracks.indexWhere((element) => element.peerId == peer.peerId);
       print(
@@ -470,27 +471,25 @@ abstract class MeetingStoreBase
 
     switch (update) {
       case HMSTrackUpdate.trackAdded:
-      if(track.source == "REGULAR")
-        trackStatus[peer.peerId] = track.isMute
-            ? HMSTrackUpdate.trackMuted
-            : HMSTrackUpdate.trackUnMuted;
-      else{
-        peerTracks.insert(
-          0,
-          new PeerTracKNode(
-              peerId: peer.peerId + "SCREEN",
-              isRegular: false,
-              track: track,
-              name: peer.name));
-      }
+        if (track.source == "REGULAR")
+          trackStatus[peer.peerId] = track.isMute
+              ? HMSTrackUpdate.trackMuted
+              : HMSTrackUpdate.trackUnMuted;
+        else {
+          screenSharePeerId = peer.peerId;
+          screenShareTrack = track;
+        }
         print("peerOperationWithTrack ${track.isMute}");
         break;
       case HMSTrackUpdate.trackRemoved:
         print("peerOperationWithTrack ${peerTracks.toString()}");
-        peerTracks.removeWhere((element) =>
-            element.peerId ==
-            peer.peerId + (track.source == "SCREEN" ? "SCREEN" : ""));
-        print("peerOperationWithTrack ${peerTracks.toString()}");
+        if (track.source == "SCREEN") {
+          screenSharePeerId = "";
+          screenShareTrack = null;
+        } else {
+          peerTracks.removeWhere((element) => element.peerId == peer.peerId);
+          print("peerOperationWithTrack ${peerTracks.toString()}");
+        }
         break;
       case HMSTrackUpdate.trackMuted:
         trackStatus[peer.peerId] = HMSTrackUpdate.trackMuted;

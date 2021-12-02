@@ -56,7 +56,7 @@ class _PeerItemOrganismState extends State<PeerItemOrganism> {
           Expanded(child: LayoutBuilder(
             builder: (context, constraints) {
               if ((widget.isVideoMuted || widget.peerTracKNode.track == null)) {
-                List<String> parts = widget.peerTracKNode.name.split(" ") ?? [];
+                List<String>? parts = widget.peerTracKNode.name.split(" ") ?? [];
 
                 if (parts.length == 1) {
                   parts[0] += " ";
@@ -89,7 +89,7 @@ class _PeerItemOrganismState extends State<PeerItemOrganism> {
             height: 4,
           ),
           Text(
-              "${widget.peerTracKNode.track?.isMute} ${widget.isVideoMuted} ${ widget.peerTracKNode.name} ${widget.peerTracKNode.track?.peer?.isLocal ?? false ? "(You)" : ""}")
+              "${ widget.peerTracKNode.name} ${widget.peerTracKNode.track?.peer?.isLocal ?? false ? "(You)" : ""}")
         ],
       ),
     );
