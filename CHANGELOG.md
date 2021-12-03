@@ -1,3 +1,6 @@
+## 0.4.1
+- `Added matchParent boolean on video view`
+
 ## 0.4.0
 - `Updated Messaging APIs`
 - `Added audio level, peer & track object in HMSSpeaker`
