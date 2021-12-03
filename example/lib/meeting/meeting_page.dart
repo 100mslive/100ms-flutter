@@ -341,6 +341,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
           ),
         ),
         bottomNavigationBar: Row(
+          
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Container(

@@ -74,6 +74,7 @@ class _ParticipantOrganismState extends State<ParticipantOrganism> {
             ),
           ),
           SizedBox(
+            
             width: 50.0,
           ),
           Expanded(
