@@ -7,6 +7,7 @@ class PeerItemOrganism extends StatefulWidget {
   final double height;
   final double width;
   final bool isLocal;
+  final bool matchParent;
 
   PeerItemOrganism(
       {Key? key,
@@ -14,7 +15,8 @@ class PeerItemOrganism extends StatefulWidget {
       this.isVideoMuted = true,
       this.height = 200.0,
       this.width = 200.0,
-      this.isLocal = false})
+      this.isLocal = false,
+      this.matchParent = true})
       : super(key: key);
 
   @override
@@ -77,7 +79,8 @@ class _PeerItemOrganismState extends State<PeerItemOrganism> {
                 width: widget.width - 5,
                 child: HMSVideoView(
                     track: widget.track,
-                    isAuxiliaryTrack: widget.track.source == "SCREEN"),
+                    isAuxiliaryTrack: widget.track.source == "SCREEN",
+                    matchParent: widget.matchParent),
               );
             },
           )),
