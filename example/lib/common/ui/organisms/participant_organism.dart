@@ -38,6 +38,8 @@ class _ParticipantOrganismState extends State<ParticipantOrganism> {
               child: Text(
             peer.name,
             style: TextStyle(fontSize: 20.0),
+            maxLines: 1,
+                overflow: TextOverflow.ellipsis,
           )),
           SizedBox(
             width: 50.0,
@@ -74,12 +76,13 @@ class _ParticipantOrganismState extends State<ParticipantOrganism> {
             ),
           ),
           SizedBox(
-            
+
             width: 50.0,
           ),
           Expanded(
               child: Icon(isVideoOn ? Icons.videocam : Icons.videocam_off)),
           Expanded(child: Icon(isAudioOn ? Icons.mic : Icons.mic_off)),
+           Divider(height: 15,)
         ],
       ),
     );

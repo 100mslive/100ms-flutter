@@ -311,8 +311,12 @@ abstract class MeetingStoreBase
       }
     }
 
-    if (track.kind == HMSTrackKind.kHMSTrackKindAudio) return;
-
+   if (track.kind == HMSTrackKind.kHMSTrackKindAudio){
+  int index =
+  peerTracks.indexWhere((element) => element.peerId == peer.peerId);
+  peerTracks[index].audioTrack = track;
+  return;
+}
     if (track.source == "REGULAR") {
       int index =
           peerTracks.indexWhere((element) => element.peerId == peer.peerId);
