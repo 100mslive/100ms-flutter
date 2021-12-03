@@ -21,7 +21,7 @@ class HMSVideoView extends StatelessWidget {
   bool setMirror;
 
   HMSVideoView(
-      {Key? key, required this.track, this.viewSize, this.setMirror = false})
+      {Key? key, required this.track, this.viewSize, this.setMirror = false,this.matchParent = true})
       : super(key: key);
 
   @override
@@ -30,6 +30,7 @@ class HMSVideoView extends StatelessWidget {
     if (tempViewSize != null) {
       return _PlatformView(
         track: track,
+        matchParent: this.matchParent,
         viewSize: tempViewSize,
         setMirror: setMirror,
       );
@@ -37,6 +38,7 @@ class HMSVideoView extends StatelessWidget {
       return LayoutBuilder(builder: (_, constraints) {
         return _PlatformView(
           track: track,
+          matchParent: this.matchParent,
           viewSize: Size(constraints.maxWidth, constraints.maxHeight),
           setMirror: setMirror,
         );
@@ -48,12 +50,14 @@ class _PlatformView extends StatelessWidget {
   final HMSTrack track;
   final Size viewSize;
   bool setMirror;
+  final bool matchParent;
 
   _PlatformView(
       {Key? key,
       required this.track,
       required this.viewSize,
-      this.setMirror = false})
+      this.setMirror = false,
+      this.matchParent = true,})
       : super(key: key);
 
   void onPlatformViewCreated(int id) {
@@ -75,7 +79,8 @@ class _PlatformView extends StatelessWidget {
           'is_aux': track.source != "REGULAR",
           'screen_share': track.source != "REGULAR",
           'scale_type': ScalingType.SCALE_ASPECT_FIT.value,
-          'set_mirror': track.source != "REGULAR" ? false : setMirror
+          'set_mirror': track.source != "REGULAR" ? false : setMirror,
+          'match_parent': matchParent,
         }..addAll({
             'height': viewSize.height,
             'width': viewSize.width,
@@ -92,7 +97,8 @@ class _PlatformView extends StatelessWidget {
           'peer_id': track.peer?.peerId,
           'is_local': track.peer?.isLocal,
           'track_id': track.trackId,
-          'set_mirror': track.source != "REGULAR" ? false : setMirror
+          'set_mirror': track.source != "REGULAR" ? false : setMirror,
+          'match_parent': matchParent,
         }..addAll({
             'height': viewSize.height,
             'width': viewSize.width,
