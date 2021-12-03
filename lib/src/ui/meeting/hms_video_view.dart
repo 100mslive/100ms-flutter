@@ -18,11 +18,13 @@ class HMSVideoView extends StatelessWidget {
   /// [HMSVideoView] will use viewSize to get height and width of rendered video. If not passed, it will take whatever size is available to the widget.
   final Size? viewSize;
   final bool isAuxiliaryTrack;
+  final bool matchParent;
   const HMSVideoView(
       {Key? key,
       required this.track,
       this.viewSize,
-      required this.isAuxiliaryTrack})
+      required this.isAuxiliaryTrack,
+      this.matchParent = true})
       : super(key: key);
 
   @override
@@ -31,6 +33,7 @@ class HMSVideoView extends StatelessWidget {
     if (tempViewSize != null) {
       return _PlatformView(
         track: track,
+        matchParent: this.matchParent,
         viewSize: tempViewSize,
         isAuxiliaryTrack: this.isAuxiliaryTrack,
       );
@@ -38,6 +41,7 @@ class HMSVideoView extends StatelessWidget {
       return LayoutBuilder(builder: (_, constraints) {
         return _PlatformView(
           track: track,
+          matchParent: this.matchParent,
           viewSize: Size(constraints.maxWidth, constraints.maxHeight),
           isAuxiliaryTrack: this.isAuxiliaryTrack,
         );
@@ -49,10 +53,12 @@ class _PlatformView extends StatelessWidget {
   final HMSTrack track;
   final Size viewSize;
   final bool isAuxiliaryTrack;
+  final bool matchParent;
   const _PlatformView(
       {Key? key,
       required this.track,
       required this.viewSize,
+      this.matchParent = true,
       required this.isAuxiliaryTrack})
       : super(key: key);
 
@@ -72,6 +78,7 @@ class _PlatformView extends StatelessWidget {
           'peer_id': track.peer?.peerId,
           'is_local': track.peer?.isLocal,
           'track_id': track.trackId,
+          'match_parent': matchParent,
           'is_aux': isAuxiliaryTrack
         }..addAll({
             'height': viewSize.height,
@@ -88,7 +95,8 @@ class _PlatformView extends StatelessWidget {
         creationParams: {
           'peer_id': track.peer?.peerId,
           'is_local': track.peer?.isLocal,
-          'track_id': track.trackId
+          'track_id': track.trackId,
+          'match_parent': matchParent,
         }..addAll({
             'height': viewSize.height,
             'width': viewSize.width,

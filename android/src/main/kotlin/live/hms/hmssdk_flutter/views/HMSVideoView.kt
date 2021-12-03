@@ -6,6 +6,7 @@ import android.graphics.Rect
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.FrameLayout
 import android.widget.LinearLayout
 import androidx.constraintlayout.widget.ConstraintLayout
 import live.hms.hmssdk_flutter.R
@@ -16,7 +17,7 @@ import org.webrtc.EglBase
 import org.webrtc.RendererCommon
 import org.webrtc.SurfaceViewRenderer
 
-class HMSVideoView(context: Context) : ConstraintLayout(context, null) {
+class HMSVideoView(context: Context) : FrameLayout(context, null) {
     val surfaceViewRenderer: SurfaceViewRenderer
 
     init {
@@ -25,7 +26,7 @@ class HMSVideoView(context: Context) : ConstraintLayout(context, null) {
 
         surfaceViewRenderer = view.findViewById(R.id.surfaceViewRenderer)
         surfaceViewRenderer.setEnableHardwareScaler(true)
-        surfaceViewRenderer.setScalingType(RendererCommon.ScalingType.SCALE_ASPECT_FILL)
+        surfaceViewRenderer.setScalingType(RendererCommon.ScalingType.SCALE_ASPECT_FIT)
         surfaceViewRenderer.init(SharedEglContext.context, null)
     }
 
