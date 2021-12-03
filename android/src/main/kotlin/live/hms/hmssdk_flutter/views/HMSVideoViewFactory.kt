@@ -16,7 +16,7 @@ import live.hms.video.sdk.models.HMSPeer
 import org.webrtc.SurfaceViewRenderer
 
 class HMSVideoViewWidget(context: Context, id: Int, creationParams: Map<String?, Any?>?, private val peer:HMSPeer?, private val trackId:String, private val  isAux:Boolean, private val setMirror:Boolean,
-                         private val scaleType : Int?,val screenShare:Boolean? = false) : PlatformView {
+                         private val scaleType : Int?, private val screenShare:Boolean? = false,private val matchParent : Boolean? = true) : PlatformView {
 
     private val hmsVideoView: HMSVideoView by lazy {
         HMSVideoView(context,setMirror,scaleType)
@@ -31,6 +31,10 @@ class HMSVideoViewWidget(context: Context, id: Int, creationParams: Map<String?,
 
         var frameLayoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,FrameLayout.LayoutParams.MATCH_PARENT)
         if (screenShare == true){
+            if (matchParent == false){
+                frameLayoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT,FrameLayout.LayoutParams.WRAP_CONTENT)
+            }
+        }else if (matchParent == false){
             frameLayoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT,FrameLayout.LayoutParams.WRAP_CONTENT)
         }
         view.layoutParams =  frameLayoutParams
@@ -87,8 +91,9 @@ class HMSVideoViewFactory(val plugin: HmssdkFlutterPlugin) : PlatformViewFactory
         val isAuxiliary = args!!["is_aux"] as? Boolean
         val scaleType = args!!["scale_type"] as? Int
         val screenShare = args!!["screen_share"] as? Boolean
+        val matchParent = args!!["match_parent"] as? Boolean
         val peer = if(isLocal==null || isLocal!!) plugin.getLocalPeer()
         else plugin.getPeerById(id!!)!!
-        return HMSVideoViewWidget(context, viewId, creationParams,peer,trackId!!,isAuxiliary!!,setMirror!!,scaleType,screenShare)
+        return HMSVideoViewWidget(context, viewId, creationParams,peer,trackId!!,isAuxiliary!!,setMirror!!,scaleType,screenShare,matchParent)
     }
 }

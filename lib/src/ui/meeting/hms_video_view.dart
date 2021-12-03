@@ -19,9 +19,14 @@ class HMSVideoView extends StatelessWidget {
   /// [HMSVideoView] will use viewSize to get height and width of rendered video. If not passed, it will take whatever size is available to the widget.
   final Size? viewSize;
   bool setMirror;
+  bool matchParent;
 
   HMSVideoView(
-      {Key? key, required this.track, this.viewSize, this.setMirror = false})
+      {Key? key,
+      required this.track,
+      this.viewSize,
+      this.setMirror = false,
+      this.matchParent = true})
       : super(key: key);
 
   @override
@@ -30,6 +35,7 @@ class HMSVideoView extends StatelessWidget {
     if (tempViewSize != null) {
       return _PlatformView(
         track: track,
+        matchParent: this.matchParent,
         viewSize: tempViewSize,
         setMirror: setMirror,
       );
@@ -38,6 +44,7 @@ class HMSVideoView extends StatelessWidget {
         return _PlatformView(
           track: track,
           viewSize: Size(constraints.maxWidth, constraints.maxHeight),
+          matchParent: this.matchParent,
           setMirror: setMirror,
         );
       });
@@ -48,11 +55,13 @@ class _PlatformView extends StatelessWidget {
   final HMSTrack track;
   final Size viewSize;
   bool setMirror;
+  bool matchParent;
 
   _PlatformView(
       {Key? key,
       required this.track,
       required this.viewSize,
+      this.matchParent = true,
       this.setMirror = false})
       : super(key: key);
 
@@ -73,6 +82,7 @@ class _PlatformView extends StatelessWidget {
           'is_local': track.peer?.isLocal,
           'track_id': track.trackId,
           'is_aux': track.source != "REGULAR",
+          'match_parent': matchParent,
           'screen_share': track.source != "REGULAR",
           'scale_type': ScalingType.SCALE_ASPECT_FIT.value,
           'set_mirror': track.source != "REGULAR" ? false : setMirror
@@ -92,6 +102,8 @@ class _PlatformView extends StatelessWidget {
           'peer_id': track.peer?.peerId,
           'is_local': track.peer?.isLocal,
           'track_id': track.trackId,
+          'match_parent': matchParent,
+          'screen_share': track.source != "REGULAR",
           'set_mirror': track.source != "REGULAR" ? false : setMirror
         }..addAll({
             'height': viewSize.height,

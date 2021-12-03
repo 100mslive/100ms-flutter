@@ -501,6 +501,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
           key: Key(index.toString()),
           height: itemHeight,
           width: itemWidth,
+          matchParent: true,
           track: filteredList[index],
           isVideoMuted: filteredList[index].peer!.isLocal
               ? !_meetingStore.isVideoOn
