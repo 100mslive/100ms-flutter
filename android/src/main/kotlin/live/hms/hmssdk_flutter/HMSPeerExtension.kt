@@ -17,7 +17,7 @@ class HMSPeerExtension {
             args.put("name",peer.name)
             args.put("is_local",peer.isLocal)
             args.put("role",HMSRoleExtension.toDictionary(peer.hmsRole))
-            args.put("customer_description",peer.customerDescription)
+            args.put("customer_description",peer.metadata)
             args.put("customer_user_id",peer.customerUserID)
             args.put("audio_track", HMSTrackExtension.toDictionary(peer.audioTrack))
             args.put("video_track", HMSTrackExtension.toDictionary(peer.videoTrack))
