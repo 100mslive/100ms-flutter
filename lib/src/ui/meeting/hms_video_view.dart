@@ -15,13 +15,18 @@ import 'package:hmssdk_flutter/src/enum/hms_video_scale_type.dart';
 class HMSVideoView extends StatelessWidget {
   /// [HMSVideoView] will render video using trackId from HMSTrack
   final HMSTrack track;
+  final matchParent;
 
   /// [HMSVideoView] will use viewSize to get height and width of rendered video. If not passed, it will take whatever size is available to the widget.
   final Size? viewSize;
   bool setMirror;
 
   HMSVideoView(
-      {Key? key, required this.track, this.viewSize, this.setMirror = false,this.matchParent = true})
+      {Key? key,
+      required this.track,
+      this.viewSize,
+      this.setMirror = false,
+      this.matchParent = true})
       : super(key: key);
 
   @override
@@ -52,13 +57,13 @@ class _PlatformView extends StatelessWidget {
   bool setMirror;
   final bool matchParent;
 
-  _PlatformView(
-      {Key? key,
-      required this.track,
-      required this.viewSize,
-      this.setMirror = false,
-      this.matchParent = true,})
-      : super(key: key);
+  _PlatformView({
+    Key? key,
+    required this.track,
+    required this.viewSize,
+    this.setMirror = false,
+    this.matchParent = true,
+  }) : super(key: key);
 
   void onPlatformViewCreated(int id) {
     print('On PlatformView Created:: id:$id');
