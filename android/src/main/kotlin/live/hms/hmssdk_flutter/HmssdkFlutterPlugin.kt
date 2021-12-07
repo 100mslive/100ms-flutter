@@ -39,7 +39,8 @@ import java.lang.Exception
 
 
 /** HmssdkFlutterPlugin */
-class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware, EventChannel.StreamHandler{
+class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
+    EventChannel.StreamHandler {
     private lateinit var channel: MethodChannel
     private lateinit var meetingEventChannel: EventChannel
     private lateinit var previewChannel: EventChannel
@@ -51,8 +52,8 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware, Eve
     lateinit var hmssdk: HMSSDK
     private lateinit var hmsVideoFactory: HMSVideoViewFactory
     private var requestChange: HMSRoleChangeRequest? = null
-    private var hmsConfig : HMSConfig? = null
-    private var result: Result ? = null
+    private var hmsConfig: HMSConfig? = null
+    private var result: Result? = null
 
     override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
         this.channel = MethodChannel(flutterPluginBinding.binaryMessenger, "hmssdk_flutter")
@@ -117,15 +118,12 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware, Eve
             }
             "send_message" -> {
                 sendBroadCastMessage(call)
-                result.success("sent message")
             }
             "send_direct_message" -> {
                 sendDirectMessage(call)
-                result.success("sent message")
             }
             "send_group_message" -> {
                 sendGroupMessage(call)
-                result.success("sent message")
             }
             "preview_video" -> {
                 previewVideo(call)
@@ -139,7 +137,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware, Eve
             }
             "accept_role_change" -> {
                 acceptRoleRequest()
-                result.success("role_accepted")
+
             }
             "get_peers" -> {
                 getPeers(result)
@@ -186,10 +184,10 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware, Eve
             "build" -> {
                 build(this.activity, call, result)
             }
-            "get_room"->{
+            "get_room" -> {
                 getRoom(result)
             }
-            "update_hms_video_track_settings"->{
+            "update_hms_video_track_settings" -> {
                 updateHMSLocalTrackSetting(call)
             }
             else -> {
@@ -197,11 +195,9 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware, Eve
             }
         }
     }
-        //        Log.i("onMethodCall", "reached")
+    //        Log.i("onMethodCall", "reached")
 
     var hasJoined: Boolean = false
-
-
 
 
     private fun getPeers(result: Result) {
@@ -256,7 +252,6 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware, Eve
         hmssdk.join(hmsConfig!!, this.hmsUpdateListener)
 
     }
-
 
 
     private fun startHMSLogger(call: MethodCall) {
@@ -422,7 +417,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware, Eve
         val authToken = call.argument<String>("auth_token")
         val isProd = call.argument<Boolean>("is_prod")
         val endPoint = call.argument<String>("end_point")
-//        Log.i("PreviewVideoAndroid", "EndPoint ${endPoint}  ${isProd}")
+        Log.i("PreviewVideoAndroid", "EndPoint ${endPoint}  ${isProd}")
         HMSLogger.i("previewVideo", "$userName $isProd")
         this.hmsConfig = HMSConfig(userName = userName!!, authtoken = authToken!!)
         if (endPoint!!.isNotEmpty())
@@ -450,7 +445,12 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware, Eve
             it.name == roleUWant
         }
         val peer = getPeerById(peerId!!) as HMSPeer
-        hmssdk.changeRole(peer, roleToChangeTo, forceChange ?: false, hmsActionResultListener = this.actionListener)
+        hmssdk.changeRole(
+            peer,
+            roleToChangeTo,
+            forceChange ?: false,
+            hmsActionResultListener = this.actionListener
+        )
     }
 
     private fun getRoles(result: Result) {
@@ -466,44 +466,47 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware, Eve
 
     private fun acceptRoleRequest() {
         if (this.requestChange != null) {
-            hmssdk.acceptChangeRole(this.requestChange!!, hmsActionResultListener = this.actionListener)
+            hmssdk.acceptChangeRole(
+                this.requestChange!!,
+                hmsActionResultListener = this.actionListener
+            )
 //            Log.i("acceptRoleRequest","accept")
         }
     }
 
-    var hmsAudioListener = object :HMSAudioListener{
+    var hmsAudioListener = object : HMSAudioListener {
         override fun onAudioLevelUpdate(speakers: Array<HMSSpeaker>) {
             val speakersList = ArrayList<HashMap<String, Any?>>()
-//        Log.i("onAudioLevelUpdateAndroid1", speakers.size.toString())
+            Log.i("onAudioLevelUpdateAndroid1", speakers.size.toString())
 
             HMSLogger.i(
                 "onAudioLevelUpdateHMSLogger",
                 HMSLogger.level.toString()
             )
-            if (speakers.isNotEmpty()) {
+
+            if(speakers.isNotEmpty()) {
                 speakers.forEach {
                     speakersList.add(HMSSpeakerExtension.toDictionary(it)!!)
 
                 }
-                val speakersMap = HashMap<String, Any>()
-                speakersMap.put("speakers", speakersList)
+            }
+            val speakersMap = HashMap<String, Any>()
+            speakersMap["speakers"] = speakersList
 
-                val hashMap = HashMap<String, Any?>()
-                hashMap.put("event_name", "on_update_speaker")
-                hashMap.put("data", speakersMap)
+            val hashMap = HashMap<String, Any?>()
+            hashMap["event_name"] = "on_update_speaker"
+            hashMap["data"] = speakersMap
 //            HMSLogger.i(
 //                "onAudioLevelUpdateAndroid2",
 //                (hashMap.get("data") as HashMap<String, Any>).get("speakers").toString()
 //            )
-                CoroutineScope(Dispatchers.Main).launch {
-                    eventSink!!.success(hashMap)
-                }
+            CoroutineScope(Dispatchers.Main).launch {
+                eventSink!!.success(hashMap)
             }
+
         }
 
     }
-
-
 
 
     private fun changeTrack(call: MethodCall) {
@@ -521,7 +524,11 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware, Eve
 
         val peer = getPeerById(peerId!!) as HMSRemotePeer
 
-        hmssdk.removePeerRequest(peer = peer, hmsActionResultListener = this.actionListener, reason = "noise")
+        hmssdk.removePeerRequest(
+            peer = peer,
+            hmsActionResultListener = this.actionListener,
+            reason = "noise"
+        )
     }
 
     private fun removeHMSLogger() {
@@ -531,7 +538,11 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware, Eve
     private fun endRoom(call: MethodCall, result: Result) {
         if (isAllowedToEndMeeting() && hasJoined) {
             val lock = call.argument<Boolean>("lock")
-            hmssdk.endRoom(lock = lock!!, reason = "noise", hmsActionResultListener = this.actionListener)
+            hmssdk.endRoom(
+                lock = lock!!,
+                reason = "noise",
+                hmsActionResultListener = this.actionListener
+            )
 
             hasJoined = false
             result.success(true)
@@ -587,13 +598,13 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware, Eve
         val listOfRtmpUrls: List<String> = call.argument<List<String>>("rtmp_urls") ?: listOf()
         hmssdk.startRtmpOrRecording(
             HMSRecordingConfig(meetingUrl!!, listOfRtmpUrls, toRecord!!),
-            hmsActionResultListener = this.actionListener)
+            hmsActionResultListener = this.actionListener
+        )
     }
 
     private fun stopRtmpAndRecording() {
         hmssdk.stopRtmpAndRecording(hmsActionResultListener = this.actionListener)
     }
-
 
 
     private fun changeTrackStateForRole(call: MethodCall, result: Result) {
@@ -609,14 +620,15 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware, Eve
             type = HMSTrackExtension.getStringFromKind(type),
             source = source,
             roles = realRoles,
-            hmsActionResultListener = this.actionListener)
+            hmsActionResultListener = this.actionListener
+        )
 
     }
 
     fun build(activity: Activity, call: MethodCall, result: Result) {
         val hmsTrackSettingMap =
             call.argument<HashMap<String, HashMap<String, Any?>?>?>("hms_track_setting")
-        if (hmsTrackSettingMap == null){
+        if (hmsTrackSettingMap == null) {
             this.hmssdk = HMSSDK.Builder(activity).build()
             result.success(false)
             return
@@ -645,7 +657,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware, Eve
                 )
             }
 
-            if (audioCodec != null){
+            if (audioCodec != null) {
                 hmsAudioTrackSettings = hmsAudioTrackSettings.codec(audioCodec)
             }
         }
@@ -663,15 +675,16 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware, Eve
                 hmsVideoTrackSettings = hmsVideoTrackSettings.maxBitrate(maxBitRate)
             }
 
-            if (maxFrameRate != null){
+            if (maxFrameRate != null) {
                 hmsVideoTrackSettings = hmsVideoTrackSettings.maxFrameRate(maxFrameRate)
             }
-            if (videoCodec != null){
+            if (videoCodec != null) {
                 hmsVideoTrackSettings = hmsVideoTrackSettings.codec(videoCodec)
             }
         }
 
-        val hmsTrackSettings = HMSTrackSettings.Builder().audio(hmsAudioTrackSettings.build()).video(hmsVideoTrackSettings.build()).build()
+        val hmsTrackSettings = HMSTrackSettings.Builder().audio(hmsAudioTrackSettings.build())
+            .video(hmsVideoTrackSettings.build()).build()
         hmssdk = HMSSDK
             .Builder(activity)
             .setTrackSettings(hmsTrackSettings)
@@ -679,11 +692,11 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware, Eve
         result.success(true)
     }
 
-    private fun getRoom(result: Result){
+    private fun getRoom(result: Result) {
         result.success(HMSRoomExtension.toDictionary(hmssdk?.getRoom()))
     }
 
-    private fun updateHMSLocalTrackSetting(call: MethodCall){
+    private fun updateHMSLocalTrackSetting(call: MethodCall) {
         val localPeerVideoTrack = getLocalPeer().videoTrack
         var hmsVideoTrackSettings = localPeerVideoTrack!!.settings.builder()
         val hmsVideoTrackHashMap: HashMap<String, Any?>? = call.argument("video_track_setting")
@@ -698,10 +711,10 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware, Eve
                 hmsVideoTrackSettings = hmsVideoTrackSettings.maxBitrate(maxBitRate)
             }
 
-            if (maxFrameRate != null){
+            if (maxFrameRate != null) {
                 hmsVideoTrackSettings = hmsVideoTrackSettings.maxFrameRate(maxFrameRate)
             }
-            if (videoCodec != null){
+            if (videoCodec != null) {
                 hmsVideoTrackSettings = hmsVideoTrackSettings.codec(videoCodec)
             }
         }
@@ -713,7 +726,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware, Eve
     }
 
 
-    private val hmsUpdateListener = object : HMSUpdateListener{
+    private val hmsUpdateListener = object : HMSUpdateListener {
         override fun onChangeTrackStateRequest(details: HMSChangeTrackStateRequest) {
             val args = HashMap<String, Any?>()
             args.put("event_name", "on_change_track_state_request")
@@ -743,6 +756,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware, Eve
             previewChannel.setStreamHandler(null)
             val args = HashMap<String, Any?>()
             args.put("event_name", "on_join_room")
+
             val roomArgs = HashMap<String, Any?>()
             roomArgs.put("room", HMSRoomExtension.toDictionary(room))
             args.put("data", roomArgs)
@@ -791,7 +805,10 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware, Eve
         override fun onTrackUpdate(type: HMSTrackUpdate, track: HMSTrack, peer: HMSPeer) {
             val args = HashMap<String, Any?>()
             args.put("event_name", "on_track_update")
-            Log.i("onTrackUpdate", track.toString()+" "+peer.isLocal)
+            Log.i(
+                "onTrackUpdate",
+                track.isMute.toString() + " " + peer.name + " " + type.toString()
+            )
 
             args.put("data", HMSTrackUpdateExtension.toDictionary(peer, track, type))
             HMSLogger.i("onTrackUpdate", peer.toString())
@@ -845,7 +862,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware, Eve
         }
 
     }
-    private val actionListener = object : HMSActionResultListener{
+    private val actionListener = object : HMSActionResultListener {
         override fun onError(error: HMSException) {
             CoroutineScope(Dispatchers.Main).launch {
                 result?.success(HMSExceptionExtension.toDictionary(error))
@@ -853,14 +870,14 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware, Eve
         }
 
         override fun onSuccess() {
-            Log.i("HMSActionListener","OnSuccess")
+            Log.i("HMSActionListener", "OnSuccess")
             CoroutineScope(Dispatchers.Main).launch {
                 result?.success(null)
             }
         }
 
     }
-    private val hmsPreviewListener = object :HMSPreviewListener{
+    private val hmsPreviewListener = object : HMSPreviewListener {
         override fun onError(error: HMSException) {
             val args = HashMap<String, Any?>()
             args.put("event_name", "on_error")
@@ -885,7 +902,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware, Eve
         }
 
     }
-    private val hmsMessageResultListener = object : HMSMessageResultListener{
+    private val hmsMessageResultListener = object : HMSMessageResultListener {
         override fun onError(error: HMSException) {
             val args = HashMap<String, Any?>()
             args["event_name"] = "on_error"
@@ -907,7 +924,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware, Eve
         }
 
     }
-    private val hmsLoggerListener = object : HMSLogger.Loggable{
+    private val hmsLoggerListener = object : HMSLogger.Loggable {
         override fun onLogMessage(
             level: HMSLogger.LogLevel,
             tag: String,

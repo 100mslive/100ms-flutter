@@ -177,11 +177,14 @@ class PlatformService {
         case HMSUpdateListenerMethod.onUpdateSpeaker:
           List<HMSSpeaker> speakers = [];
           if (data.containsKey('speakers') && data['speakers'] is List) {
-            (data['speakers'] as List).forEach((element) {
-              speakers.add(HMSSpeaker.fromMap(element as Map));
-            });
+            if((data['speakers'] as List).isNotEmpty) {
+              (data['speakers'] as List).forEach((element) {
+                speakers.add(HMSSpeaker.fromMap(element as Map));
+              });
+            }
           }
-          print(speakers.length);
+
+          print("${speakers.length} speakersLength ");
           notifyMeetingListeners(method, {'speakers': speakers});
           break;
         case HMSUpdateListenerMethod.onReconnecting:

@@ -7,6 +7,7 @@ import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_page.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
+import 'package:hmssdk_flutter_example/meeting/peerTrackNode.dart';
 import 'package:hmssdk_flutter_example/preview/preview_controller.dart';
 import 'package:hmssdk_flutter_example/preview/preview_store.dart';
 import 'package:mobx/mobx.dart';
@@ -88,7 +89,10 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                                 key: UniqueKey(),
                                 height: itemHeight,
                                 width: itemWidth,
-                                track: _previewStore.localTracks[index],
+                                peerTracKNode: new PeerTracKNode(
+                                    peerId: _previewStore.peer?.peerId ?? "",
+                                    name: _previewStore.peer?.name??"",
+                                    track: _previewStore.localTracks[0]),
                                 isVideoMuted: false,
                               )),
                     );
@@ -135,19 +139,17 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                       style: TextStyle(height: 1, fontSize: 18),
                     ),
                   )),
-                  Observer(
-                    builder: (context) {
-                      return Expanded(
-                          child: GestureDetector(
-                        onTap: () async {
-                          _previewStore.switchAudio();
-                        },
-                        child: Icon(
-                            _previewStore.audioOn ? Icons.mic : Icons.mic_off,
-                            size: 48),
-                      ));
-                    }
-                  )
+                  Observer(builder: (context) {
+                    return Expanded(
+                        child: GestureDetector(
+                      onTap: () async {
+                        _previewStore.switchAudio();
+                      },
+                      child: Icon(
+                          _previewStore.audioOn ? Icons.mic : Icons.mic_off,
+                          size: 48),
+                    ));
+                  })
                 ],
               ),
               SizedBox(
