@@ -9,6 +9,7 @@ class PeerItemOrganism extends StatefulWidget {
   final double width;
   final bool isLocal;
   bool setMirror;
+  final bool matchParent;
 
   PeerItemOrganism(
       {Key? key,
@@ -17,7 +18,8 @@ class PeerItemOrganism extends StatefulWidget {
       this.height = 200.0,
       this.width = 200.0,
       this.isLocal = false,
-      this.setMirror = false})
+      this.setMirror = false,
+      this.matchParent = true})
       : super(key: key);
 
   @override
@@ -80,7 +82,7 @@ class _PeerItemOrganismState extends State<PeerItemOrganism> {
                 width: widget.width - 5,
                 padding: EdgeInsets.all(5.0),
                 child: HMSVideoView(
-                    track: widget.track, setMirror: widget.setMirror),
+                    track: widget.track, setMirror: widget.setMirror,matchParent: widget.matchParent),
               );
             },
           )),
