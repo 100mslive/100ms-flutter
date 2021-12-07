@@ -1,7 +1,6 @@
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
-
-class HMSSDKInteractor implements HMSActionResultListener{
+class HMSSDKInteractor implements HMSActionResultListener {
   late HMSConfig config;
   late List<HMSMessage> messages;
   late HMSMeeting _meeting;
@@ -98,7 +97,7 @@ class HMSSDKInteractor implements HMSActionResultListener{
   }
 
   void changeTrackRequest(String peerId, bool mute, bool isVideoTrack) {
-    _meeting.changeTrackReuest(peerId, mute, isVideoTrack);
+    _meeting.changeTrackRequest(peerId, mute, isVideoTrack);
   }
 
   Future<bool> endRoom(bool lock) async {
