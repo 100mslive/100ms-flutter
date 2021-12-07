@@ -43,7 +43,6 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
       _recordingDisposer,
       _reconnectedDisposer,
       _roomEndedDisposer;
-  late PageController _pageController;
   CustomLogger logger = CustomLogger();
   int appBarIndex = 0;
 
@@ -52,12 +51,10 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
     super.initState();
     WidgetsBinding.instance!.addObserver(this);
     _meetingStore = context.read<MeetingStore>();
-    _pageController = PageController(initialPage: 0);
     MeetingController meetingController = MeetingController(
         roomUrl: widget.roomId, flow: widget.flow, user: widget.user);
     _meetingStore.meetingController = meetingController;
     allListeners();
-    super.initState();
     initMeeting();
     checkButtons();
   }
@@ -190,11 +187,10 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    var orientation = MediaQuery.of(context).orientation;
     var size = MediaQuery.of(context).size;
-    final double itemHeight = (size.height - kToolbarHeight - 24) / 2.5;
+    final double itemHeight = (size.height - kToolbarHeight - 24) / 2.3;
     final double itemWidth = size.width / 2;
-    final aspectRatio = itemWidth / itemHeight;
+    final aspectRatio = itemHeight / itemWidth;
     print(aspectRatio.toString() + "AspectRatio");
     return WillPopScope(
       child: Scaffold(
@@ -281,100 +277,75 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
         body: Center(
           child: Container(
             width: double.infinity,
-            child: Observer(
-              builder: (_) {
-                print("rebuilding");
-                if (!_meetingStore.isMeetingStarted) return SizedBox();
-                if (_meetingStore.tracks.isEmpty)
-                  return Center(child: Text('Waiting for other to join!'));
-                List<HMSTrack> filteredList = _meetingStore.tracks;
-                if (_meetingStore.isScreenShareOn &&
-                    _meetingStore.firstTimeBuild == 0) {
-                  _pageController.jumpToPage(0);
-                  _meetingStore.firstTimeBuild++;
-                }
 
-                return PageView.builder(
-                  controller: _pageController,
-                  itemBuilder: (ctx, index) {
-                    return Observer(builder: (_) {
+            child: Column(
+              children: [
+                Observer(builder: (_) {
+                  if (_meetingStore.screenShareTrack != null) {
+                    return SizedBox(
+                      width: double.infinity,
+                      height: MediaQuery.of(context).size.height / 2.5,
+                      child: PeerItemOrganism(
+                        height: MediaQuery.of(context).size.height / 2,
+                        width: MediaQuery.of(context).size.width,
+                        isVideoMuted: false,
+                        peerTracKNode: new PeerTracKNode(
+                            peerId: _meetingStore.screenSharePeerId,
+                            track: _meetingStore.screenShareTrack!,
+                            name: _meetingStore.screenShareTrack?.peer?.name ??
+                                ""),
+                      ),
+                    );
+                  } else {
+                    return Container();
+                  }
+                }),
+                Flexible(
+                  child: Observer(
+                    builder: (_) {
                       print("rebuilding");
-                      ObservableMap<String, HMSTrackUpdate> map =
-                          _meetingStore.trackStatus;
-                      if ((index < filteredList.length &&
-                          filteredList[index].source != "SCREEN")) {
-                        return orientation == Orientation.portrait
-                            ? Column(
-                                children: [
-                                  Row(
-                                    children: [
-                                      //if (index * 4 < filteredList.length)
-                                      peerItemforIndex(index * 4, filteredList,
-                                          itemHeight, itemWidth, map),
-                                      //if (index * 4 + 1 < filteredList.length)
-                                      peerItemforIndex(
-                                          index * 4 + 1,
-                                          filteredList,
-                                          itemHeight,
-                                          itemWidth,
-                                          map),
-                                    ],
-                                  ),
-                                  Row(
-                                    children: [
-                                      //if (index * 4 + 2 < filteredList.length)
-                                      peerItemforIndex(
-                                          index * 4 + 2,
-                                          filteredList,
-                                          itemHeight,
-                                          itemWidth,
-                                          map),
-                                      //if (index * 4 + 3 < filteredList.length)
-                                      peerItemforIndex(
-                                          index * 4 + 3,
-                                          filteredList,
-                                          itemHeight,
-                                          itemWidth,
-                                          map),
-                                    ],
-                                  ),
-                                ],
-                              )
-                            : Column(
-                                children: [
-                                  Row(
-                                    children: [
-                                      peerItemforIndex(index * 2, filteredList,
-                                          itemHeight * 2 - 50, itemWidth, map),
-                                      peerItemforIndex(
-                                          index * 2 + 1,
-                                          filteredList,
-                                          itemHeight * 2 - 50,
-                                          itemWidth,
-                                          map),
-                                    ],
-                                  ),
-                                ],
-                              );
-                      } else {
-                        return Container(
-                          child: peerItemforIndex(0, filteredList,
-                              itemHeight * 2, itemWidth * 2, map),
-                        );
-                      }
-                    });
-                  },
-                  itemCount: ((filteredList.length - 1) /
-                              ((orientation == Orientation.portrait) ? 4 : 2))
-                          .floor() +
-                      1 +
-                      ((filteredList[0].source != "SCREEN") ? 0 : 1),
-                );
-              },
+                      if (!_meetingStore.isMeetingStarted) return SizedBox();
+                      if (_meetingStore.peerTracks.isEmpty)
+                        return Center(
+                            child: Text('Waiting for other to join!'));
+                      ObservableList<PeerTracKNode> peerFilteredList =
+                          _meetingStore.peerTracks;
+
+                      return GridView.builder(
+                        scrollDirection: Axis.horizontal,
+                        addAutomaticKeepAlives: false,
+                        itemCount: peerFilteredList.length,
+                        cacheExtent: 0,
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: _meetingStore.screenShareTrack!=null ? 1:2,
+                          childAspectRatio:_meetingStore.screenShareTrack!=null ? aspectRatio-0.2 : aspectRatio,
+                        ),
+                        itemBuilder: (ctx, index) {
+                          return Observer(builder: (context) {
+                            ObservableMap<String, HMSTrackUpdate> map =
+                                _meetingStore.trackStatus;
+                            print("GRIDVIEW ${map.toString()}");
+                            return Padding(
+                              padding: _meetingStore.screenShareTrack!=null ? const EdgeInsets.all(8.0) : const EdgeInsets.all(0.0),
+                              child: VideoTile(
+                                  tileIndex: index,
+                                  filteredList: peerFilteredList,
+                                  itemHeight: itemHeight,
+                                  itemWidth: itemWidth,
+                                  map: map),
+                            );
+                          });
+                        },
+                      );
+                    },
+                  ),
+                ),
+              ],
             ),
           ),
         ),
         bottomNavigationBar: Row(
+
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Container(

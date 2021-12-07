@@ -18,9 +18,8 @@ class HMSVideoViewWidget(context: Context, id: Int, creationParams: Map<String?,
                          private val scaleType : Int?,val screenShare:Boolean? = false,private val matchParent: Boolean? = true
 ) : PlatformView {
 
-    private val hmsVideoView: HMSVideoView by lazy {
-        HMSVideoView(context,setMirror,scaleType)
-    }
+    private val hmsVideoView: HMSVideoView = HMSVideoView(context,setMirror,scaleType)
+
 
     override fun onFlutterViewAttached(flutterView: View) {
         super.onFlutterViewAttached(flutterView)
@@ -67,6 +66,7 @@ class HMSVideoViewWidget(context: Context, id: Int, creationParams: Map<String?,
     }
 
     override fun dispose() {
+        Log.i("HMSVideoViewFactory","Releasing")
         release()
     }
 
@@ -86,7 +86,7 @@ class HMSVideoViewFactory(val plugin: HmssdkFlutterPlugin) :
     override fun create(context: Context, viewId: Int, args: Any?): PlatformView {
 
         val creationParams = args as Map<String?, Any?>?
-        val id=args!!["peer_id"] as? String
+        val id=args!!["peer_id"] as? String ?: ""
         val isLocal=args!!["is_local"] as? Boolean
         val setMirror=args!!["set_mirror"] as? Boolean
         val trackId=args!!["track_id"] as? String
