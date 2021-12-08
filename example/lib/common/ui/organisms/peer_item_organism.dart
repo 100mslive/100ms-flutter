@@ -50,7 +50,7 @@ class _PeerItemOrganismState extends State<PeerItemOrganism> {
           border: Border.all(
               color: widget.peerTracKNode.track?.isHighestAudio??false ? Colors.blue : Colors.grey,
               width: widget.peerTracKNode.track?.isHighestAudio??false ? 4.0 : 1.0),
-          borderRadius: BorderRadius.all(Radius.circular(4))),
+          borderRadius: BorderRadius.all(Radius.circular(10))),
       child: Column(
         children: [
           Expanded(child: LayoutBuilder(

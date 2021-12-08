@@ -311,12 +311,12 @@ abstract class MeetingStoreBase
       }
     }
 
-   if (track.kind == HMSTrackKind.kHMSTrackKindAudio){
-  int index =
-  peerTracks.indexWhere((element) => element.peerId == peer.peerId);
-  peerTracks[index].audioTrack = track;
-  return;
-}
+    if (track.kind == HMSTrackKind.kHMSTrackKindAudio) {
+      int index =
+          peerTracks.indexWhere((element) => element.peerId == peer.peerId);
+      peerTracks[index].audioTrack = track;
+      return;
+    }
     if (track.source == "REGULAR") {
       int index =
           peerTracks.indexWhere((element) => element.peerId == peer.peerId);
@@ -338,7 +338,6 @@ abstract class MeetingStoreBase
   @override
   void onMessage({required HMSMessage message}) {
     addMessage(message);
-
   }
 
   @override
@@ -488,7 +487,7 @@ abstract class MeetingStoreBase
         break;
       case HMSTrackUpdate.trackRemoved:
         print("peerOperationWithTrack ${peerTracks.toString()}");
-        if (track.source == "SCREEN") {
+        if (track.source != "REGULAR") {
           screenSharePeerId = "";
           screenShareTrack = null;
         } else {

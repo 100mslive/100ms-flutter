@@ -24,9 +24,18 @@ class _ParticipantsListState extends State<ParticipantsList> {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                Text(
-                  "Participants: ",
-                  style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  decoration: BoxDecoration(color: Colors.blue),
+                  child: Padding(
+                    padding: const EdgeInsets.all(15.0),
+                    child: Center(
+                      child: Text(
+                        "Participants",
+                        style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold,color: Colors.white),
+                      ),
+                    ),
+                  ),
                 ),
                 Observer(builder: (_) {
                   List<HMSPeer> peers = widget.meetingStore.peers;
