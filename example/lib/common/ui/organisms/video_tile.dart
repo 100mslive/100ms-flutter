@@ -59,36 +59,33 @@ class _VideoTileState extends State<VideoTile> {
       },
       key: Key(filteredList[index].peerId),
       child: InkWell(
-        onLongPress: () {
-          // if (!filteredList[index].peer!.isLocal &&
-          //     filteredList[index].source != "SCREEN")
-          //   showDialog(
-          //       context: context,
-          //       builder: (_) => Column(
-          //             children: [
-          //               ChangeTrackOptionDialog(
-          //                   isAudioMuted: _meetingStore.audioTrackStatus[
-          //                           filteredList[index].trackId] ==
-          //                       HMSTrackUpdate.trackMuted,
-          //                   isVideoMuted: map[filteredList[index].trackId] ==
-          //                       HMSTrackUpdate.trackMuted,
-          //                   peerName: filteredList[index].peer?.name ?? '',
-          //                   changeTrack: (mute, isVideoTrack) {
-          //                     Navigator.pop(context);
-          //                     if (filteredList[index].source != "SCREEN")
-          //                       _meetingStore.changeTrackRequest(
-          //                           filteredList[index].peer?.peerId ?? "",
-          //                           mute,
-          //                           isVideoTrack);
-          //                   },
-          //                   removePeer: () {
-          //                     Navigator.pop(context);
-          //                     _meetingStore.removePeerFromRoom(
-          //                         filteredList[index].peer!.peerId);
-          //                   }),
-          //             ],
-          //           ));
-        },
+       onLongPress: () {
+  if (filteredList[index].peerId != _meetingStore.localPeer!.peerId)
+    showDialog(
+        context: context,
+        builder: (_) => Column(
+              children: [
+                ChangeTrackOptionDialog(
+                    isAudioMuted: filteredList[index].audioTrack?.isMute,
+                    isVideoMuted: filteredList[index].track == null
+                        ? true
+                        : filteredList[index].track?.isMute,
+                    peerName: filteredList[index].name ?? '',
+                    changeTrack: (mute, isVideoTrack) {
+                      Navigator.pop(context);
+                        _meetingStore.changeTrackRequest(
+                            filteredList[index].peerId ?? "",
+                            mute,
+                            isVideoTrack);
+                    },
+                    removePeer: () {
+                      Navigator.pop(context);
+                      _meetingStore.removePeerFromRoom(
+                          filteredList[index].peerId);
+                    }),
+              ],
+            ));
+},
         child: Observer(builder: (context) {
           print("${filteredList[index].name} rebuildingonaudio");
           return PeerItemOrganism(
