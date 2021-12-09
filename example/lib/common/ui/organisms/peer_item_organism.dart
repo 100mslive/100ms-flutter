@@ -50,15 +50,20 @@ class _PeerItemOrganismState extends State<PeerItemOrganism> {
       width: widget.width - 5.0,
       decoration: BoxDecoration(
           border: Border.all(
-              color: widget.peerTracKNode.track?.isHighestAudio??false ? Colors.blue : Colors.grey,
-              width: widget.peerTracKNode.track?.isHighestAudio??false ? 4.0 : 1.0),
+              color: widget.peerTracKNode.track?.isHighestAudio ?? false
+                  ? Colors.blue
+                  : Colors.grey,
+              width: widget.peerTracKNode.track?.isHighestAudio ?? false
+                  ? 4.0
+                  : 1.0),
           borderRadius: BorderRadius.all(Radius.circular(10))),
       child: Column(
         children: [
           Expanded(child: LayoutBuilder(
             builder: (context, constraints) {
               if ((widget.isVideoMuted || widget.peerTracKNode.track == null)) {
-                List<String>? parts = widget.peerTracKNode.name.split(" ") ?? [];
+                List<String>? parts =
+                    widget.peerTracKNode.name.split(" ") ?? [];
 
                 if (parts.length == 1) {
                   parts[0] += " ";
@@ -83,7 +88,9 @@ class _PeerItemOrganismState extends State<PeerItemOrganism> {
                 width: widget.width - 5,
                 padding: EdgeInsets.all(5.0),
                 child: HMSVideoView(
-                    track: widget.track, setMirror: widget.setMirror,matchParent: widget.matchParent),
+                    track: widget.peerTracKNode.track!,
+                    setMirror: widget.setMirror,
+                    matchParent: widget.matchParent),
               );
             },
           )),
@@ -91,7 +98,10 @@ class _PeerItemOrganismState extends State<PeerItemOrganism> {
             height: 4,
           ),
           Text(
-              "${ widget.peerTracKNode.name} ${widget.peerTracKNode.track?.peer?.isLocal ?? false ? "(You)" : ""}",,overflow: TextOverflow.ellipsis,maxLines: 1,)
+            "${widget.peerTracKNode.name} ${widget.peerTracKNode.track?.peer?.isLocal ?? false ? "(You)" : ""}",
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
+          )
         ],
       ),
     );
