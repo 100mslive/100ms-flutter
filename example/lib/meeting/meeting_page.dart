@@ -243,7 +243,6 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                   color: _meetingStore.isRecordingStarted
                                       ? Colors.red
                                       : Colors.blue,
-                                  
                                 ),
                               ])),
                   value: 2,
@@ -321,7 +320,6 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                           itemCount: peerFilteredList.length,
                           cacheExtent: 0,
                           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            
                             crossAxisCount:
                                 _meetingStore.screenShareTrack != null ? 1 : 2,
                             childAspectRatio:
@@ -334,12 +332,11 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                               ObservableMap<String, HMSTrackUpdate> map =
                                   _meetingStore.trackStatus;
                               print("GRIDVIEW ${map.toString()}");
-                              return 
-                                Padding(
+                                
+                               return Padding(
                                   padding: _meetingStore.screenShareTrack != null
                                       ? const EdgeInsets.all(8.0)
                                       : const EdgeInsets.all(0.0),
-                                      
                                   child: VideoTile(
                                       tileIndex: index,
                                       filteredList: peerFilteredList,
