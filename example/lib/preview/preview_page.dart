@@ -85,16 +85,19 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                       childAspectRatio: (itemWidth / itemHeight),
                       children: List.generate(
                           _previewStore.localTracks.length,
-                          (index) => PeerItemOrganism(
-                                key: UniqueKey(),
-                                height: itemHeight,
-                                width: itemWidth,
-                                peerTracKNode: new PeerTracKNode(
-                                    peerId: _previewStore.peer?.peerId ?? "",
-                                    name: _previewStore.peer?.name??"",
-                                    track: _previewStore.localTracks[0]),
-                                isVideoMuted: false,
-                              )),
+                          (index) => Provider<MeetingStore>(
+                            create: (ctx)=>MeetingStore(),
+                            child: PeerItemOrganism(
+                                  key: UniqueKey(),
+                                  height: itemHeight,
+                                  width: itemWidth,
+                                  peerTracKNode: new PeerTracKNode(
+                                      peerId: _previewStore.peer?.peerId ?? "",
+                                      name: _previewStore.peer?.name??"",
+                                      track: _previewStore.localTracks[0]),
+                                  isVideoMuted: false,
+                                ),
+                          )),
                     );
                   },
                 ),
