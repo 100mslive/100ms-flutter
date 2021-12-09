@@ -8,17 +8,18 @@ import 'package:hmssdk_flutter_example/common/ui/organisms/change_track_options.
 import 'package:hmssdk_flutter_example/common/ui/organisms/chat_bottom_sheet.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/leave_or_end_meeting.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/peer_item_organism.dart';
+import 'package:hmssdk_flutter_example/common/ui/organisms/video_tile.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
 import 'package:hmssdk_flutter_example/logs/custom_singleton_logger.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_controller.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
+import 'package:hmssdk_flutter_example/meeting/peerTrackNode.dart';
 import 'package:mobx/mobx.dart';
 import 'package:provider/src/provider.dart';
+import 'package:share_extend/share_extend.dart';
 import 'meeting_participants_list.dart';
 import '../logs/static_logger.dart';
-import 'package:share_extend/share_extend.dart';
-import '../common/constant.dart';
 
 class MeetingPage extends StatefulWidget {
   final String roomId;
@@ -45,6 +46,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
       _roomEndedDisposer;
   CustomLogger logger = CustomLogger();
   int appBarIndex = 0;
+
 
   @override
   void initState() {
@@ -217,7 +219,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text("Send Logs", style: TextStyle(color: Colors.blue)),
-                          Icon(CupertinoIcons.ant_circle_fill,color: Colors.blue)
+                          Icon(Icons.bug_report, color: Colors.blue),
                         ],
                       ),
                   value: 1,
@@ -241,6 +243,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                   color: _meetingStore.isRecordingStarted
                                       ? Colors.red
                                       : Colors.blue,
+                                  
                                 ),
                               ])),
                   value: 2,
@@ -274,78 +277,89 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
             ),
           ],
         ),
-        body: Center(
-          child: Container(
-            width: double.infinity,
-
-            child: Column(
-              children: [
-                Observer(builder: (_) {
-                  if (_meetingStore.screenShareTrack != null) {
-                    return SizedBox(
-                      width: double.infinity,
-                      height: MediaQuery.of(context).size.height / 2.5,
-                      child: PeerItemOrganism(
-                        height: MediaQuery.of(context).size.height / 2,
-                        width: MediaQuery.of(context).size.width,
-                        isVideoMuted: false,
-                        peerTracKNode: new PeerTracKNode(
-                            peerId: _meetingStore.screenSharePeerId,
-                            track: _meetingStore.screenShareTrack!,
-                            name: _meetingStore.screenShareTrack?.peer?.name ??
-                                ""),
-                      ),
-                    );
-                  } else {
-                    return Container();
-                  }
-                }),
-                Flexible(
-                  child: Observer(
-                    builder: (_) {
-                      print("rebuilding");
-                      if (!_meetingStore.isMeetingStarted) return SizedBox();
-                      if (_meetingStore.peerTracks.isEmpty)
-                        return Center(
-                            child: Text('Waiting for other to join!'));
-                      ObservableList<PeerTracKNode> peerFilteredList =
-                          _meetingStore.peerTracks;
-
-                      return GridView.builder(
-                        scrollDirection: Axis.horizontal,
-                        addAutomaticKeepAlives: false,
-                        itemCount: peerFilteredList.length,
-                        cacheExtent: 0,
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: _meetingStore.screenShareTrack!=null ? 1:2,
-                          childAspectRatio:_meetingStore.screenShareTrack!=null ? aspectRatio-0.2 : aspectRatio,
+        body: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 5.0,horizontal: 5.0),
+          child: Center(
+            child: Container(
+              width: double.infinity,
+              child: Column(
+                children: [
+                  Observer(builder: (_) {
+                    if (_meetingStore.screenShareTrack != null) {
+                      return SizedBox(
+                        width: double.infinity,
+                        height: MediaQuery.of(context).size.height / 2.5,
+                        child: PeerItemOrganism(
+                          height: MediaQuery.of(context).size.height / 2,
+                          width: MediaQuery.of(context).size.width,
+                          isVideoMuted: false,
+                          peerTracKNode: new PeerTracKNode(
+                              peerId: _meetingStore.screenSharePeerId,
+                              track: _meetingStore.screenShareTrack!,
+                              name: _meetingStore.screenShareTrack?.peer?.name ??
+                                  ""),
                         ),
-                        itemBuilder: (ctx, index) {
-                          return Observer(builder: (context) {
-                            ObservableMap<String, HMSTrackUpdate> map =
-                                _meetingStore.trackStatus;
-                            print("GRIDVIEW ${map.toString()}");
-                            return Padding(
-                              padding: _meetingStore.screenShareTrack!=null ? const EdgeInsets.all(8.0) : const EdgeInsets.all(0.0),
-                              child: VideoTile(
-                                  tileIndex: index,
-                                  filteredList: peerFilteredList,
-                                  itemHeight: itemHeight,
-                                  itemWidth: itemWidth,
-                                  map: map),
-                            );
-                          });
-                        },
                       );
-                    },
+                    } else {
+                      return Container();
+                    }
+                  }),
+                  Flexible(
+                    child: Observer(
+                      builder: (_) {
+                        print("rebuilding");
+                        if (!_meetingStore.isMeetingStarted) return SizedBox();
+                        if (_meetingStore.peerTracks.isEmpty)
+                          return Center(
+                              child: Text('Waiting for other to join!'));
+                        ObservableList<PeerTracKNode> peerFilteredList =
+                            _meetingStore.peerTracks;
+
+                        return  GridView.builder(
+                          scrollDirection: Axis.horizontal,
+                          addAutomaticKeepAlives: false,
+                          itemCount: peerFilteredList.length,
+                          cacheExtent: 0,
+                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            
+                            crossAxisCount:
+                                _meetingStore.screenShareTrack != null ? 1 : 2,
+                            childAspectRatio:
+                                _meetingStore.screenShareTrack != null
+                                    ? aspectRatio - 0.2
+                                    : aspectRatio,
+                          ),
+                          itemBuilder: (ctx, index) {
+                            return Observer(builder: (context) {
+                              ObservableMap<String, HMSTrackUpdate> map =
+                                  _meetingStore.trackStatus;
+                              print("GRIDVIEW ${map.toString()}");
+                              return 
+                                Padding(
+                                  padding: _meetingStore.screenShareTrack != null
+                                      ? const EdgeInsets.all(8.0)
+                                      : const EdgeInsets.all(0.0),
+                                      
+                                  child: VideoTile(
+                                      tileIndex: index,
+                                      filteredList: peerFilteredList,
+                                      itemHeight: itemHeight,
+                                      itemWidth: itemWidth,
+                                      map: map),
+                                )
+                              ;
+                            });
+                          },
+                        );
+                      },
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
         bottomNavigationBar: Row(
-
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Container(
@@ -388,6 +402,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
             Container(
               padding: EdgeInsets.all(8),
               child: IconButton(
+                  color: Colors.red,
                   tooltip: 'Leave Or End',
                   iconSize: 32,
                   onPressed: () async {
@@ -426,65 +441,5 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
         _meetingStore.meetingController.stopCapturing();
       }
     }
-  }
-
-  Widget peerItemforIndex(int index, List<HMSTrack> filteredList,
-      double itemHeight, double itemWidth, Map<String, HMSTrackUpdate> map) {
-    var orientation = MediaQuery.of(context).orientation;
-    if (index > 0 && filteredList[0].source == "SCREEN") {
-      int a = index ~/ ((orientation == Orientation.portrait) ? 4 : 2);
-      int b = index % ((orientation == Orientation.portrait) ? 4 : 2);
-
-      index =
-          (a - 1) * ((orientation == Orientation.portrait) ? 4 : 2) + (b + 1);
-      //print("${a} a and b ${b} ${filteredList[index].peer!.name}");
-    }
-
-    if (index >= filteredList.length) return SizedBox();
-    print("$index after rebuildig");
-    return Observer(
-      key: UniqueKey(),
-      builder: (_) => InkWell(
-        onLongPress: () {
-          if (!filteredList[index].peer!.isLocal &&
-              filteredList[index].source != "SCREEN")
-            showDialog(
-                context: context,
-                builder: (_) => Column(
-                      children: [
-                        ChangeTrackOptionDialog(
-                            isAudioMuted: _meetingStore.audioTrackStatus[
-                                    filteredList[index].trackId] ==
-                                HMSTrackUpdate.trackMuted,
-                            isVideoMuted: map[filteredList[index].trackId] ==
-                                HMSTrackUpdate.trackMuted,
-                            peerName: filteredList[index].peer?.name ?? '',
-                            changeTrack: (mute, isVideoTrack) {
-                              Navigator.pop(context);
-                              if (filteredList[index].source != "SCREEN")
-                                _meetingStore.changeTrackRequest(
-                                    filteredList[index].peer?.peerId ?? "",
-                                    mute,
-                                    isVideoTrack);
-                            },
-                            removePeer: () {
-                              Navigator.pop(context);
-                              _meetingStore.removePeerFromRoom(
-                                  filteredList[index].peer!.peerId);
-                            }),
-                      ],
-                    ));
-        },
-        child: PeerItemOrganism(
-            key: Key(index.toString()),
-            height: itemHeight,
-            width: itemWidth,
-            track: filteredList[index],
-            isVideoMuted: filteredList[index].peer!.isLocal
-                ? !_meetingStore.isVideoOn
-                : (map[filteredList[index].trackId]) ==
-                    HMSTrackUpdate.trackMuted),
-      ),
-    );
   }
 }

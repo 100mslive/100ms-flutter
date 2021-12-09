@@ -10,7 +10,6 @@ class PeerItemOrganism extends StatefulWidget {
   final double width;
   final bool isLocal;
   bool setMirror;
-  final bool matchParent;
 
   PeerItemOrganism(
       {Key? key,
@@ -19,8 +18,7 @@ class PeerItemOrganism extends StatefulWidget {
       this.height = 200.0,
       this.width = 200.0,
       this.isLocal = false,
-      this.setMirror = false,
-      this.matchParent = true})
+      this.setMirror = false})
       : super(key: key);
 
   @override
@@ -52,7 +50,7 @@ class _PeerItemOrganismState extends State<PeerItemOrganism> {
           border: Border.all(
               color: widget.peerTracKNode.track?.isHighestAudio??false ? Colors.blue : Colors.grey,
               width: widget.peerTracKNode.track?.isHighestAudio??false ? 4.0 : 1.0),
-          borderRadius: BorderRadius.all(Radius.circular(4))),
+          borderRadius: BorderRadius.all(Radius.circular(10))),
       child: Column(
         children: [
           Expanded(child: LayoutBuilder(
@@ -83,7 +81,7 @@ class _PeerItemOrganismState extends State<PeerItemOrganism> {
                 width: widget.width - 5,
                 padding: EdgeInsets.all(5.0),
                 child: HMSVideoView(
-                    track: widget.track, setMirror: widget.setMirror,matchParent: widget.matchParent),
+                    track: widget.peerTracKNode.track!, setMirror: widget.setMirror),
               );
             },
           )),
@@ -91,7 +89,7 @@ class _PeerItemOrganismState extends State<PeerItemOrganism> {
             height: 4,
           ),
           Text(
-              "${ widget.peerTracKNode.name} ${widget.peerTracKNode.track?.peer?.isLocal ?? false ? "(You)" : ""}",,overflow: TextOverflow.ellipsis,maxLines: 1,)
+              "${ widget.peerTracKNode.name} ${widget.peerTracKNode.track?.peer?.isLocal ?? false ? "(You)" : ""}")
         ],
       ),
     );

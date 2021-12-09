@@ -1,16 +1,24 @@
-
-
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:mobx/mobx.dart';
 
 @observable
-class PeerTracKNode{
+class PeerTracKNode {
   String peerId;
   String name;
   @observable
   HMSTrack? track;
+  HMSTrack? audioTrack;
   bool isRegular;
-  PeerTracKNode({required this.peerId,this.track,this.isRegular = true,this.name=""});
+  @observable
+  bool isHighestSpeaker;
+
+  PeerTracKNode(
+      {required this.peerId,
+      this.track,
+      this.isRegular = true,
+      this.name = "",
+      this.audioTrack,
+      this.isHighestSpeaker = false});
 
   @override
   bool operator ==(Object other) =>
@@ -19,7 +27,6 @@ class PeerTracKNode{
           runtimeType == other.runtimeType &&
           peerId == other.peerId;
 
-
   @override
   String toString() {
     return 'PeerTracKNode{peerId: $peerId, name: $name, track: $track}';
@@ -27,4 +34,5 @@ class PeerTracKNode{
 
   @override
   int get hashCode => peerId.hashCode;
+
 }

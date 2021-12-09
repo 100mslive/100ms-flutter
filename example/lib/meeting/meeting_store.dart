@@ -1,12 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
-// import 'dart:js';
 
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter/src/enum/hms_log_level.dart';
-import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
 import 'package:hmssdk_flutter_example/logs/static_logger.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_controller.dart';
 import 'package:hmssdk_flutter_example/meeting/peerTrackNode.dart';
@@ -306,11 +304,6 @@ abstract class MeetingStoreBase
       this.isMicOn = false;
     }
 
-    print("onTrackUpdate ${trackStatus[track.trackId]}");
-
-    if (track.source == "SCREEN") {
-      isScreenShareOn = true;
-    }
     if (peer.isLocal) {
       localPeer = peer;
       if (track.isMute && track.kind == HMSTrackKind.kHMSTrackKindVideo) {
@@ -318,8 +311,12 @@ abstract class MeetingStoreBase
       }
     }
 
-    if (track.kind == HMSTrackKind.kHMSTrackKindAudio) return;
-
+    if (track.kind == HMSTrackKind.kHMSTrackKindAudio) {
+      int index =
+          peerTracks.indexWhere((element) => element.peerId == peer.peerId);
+      peerTracks[index].audioTrack = track;
+      return;
+    }
     if (track.source == "REGULAR") {
       int index =
           peerTracks.indexWhere((element) => element.peerId == peer.peerId);
@@ -341,7 +338,6 @@ abstract class MeetingStoreBase
   @override
   void onMessage({required HMSMessage message}) {
     addMessage(message);
-
   }
 
   @override
@@ -491,7 +487,7 @@ abstract class MeetingStoreBase
         break;
       case HMSTrackUpdate.trackRemoved:
         print("peerOperationWithTrack ${peerTracks.toString()}");
-        if (track.source == "SCREEN") {
+        if (track.source != "REGULAR") {
           screenSharePeerId = "";
           screenShareTrack = null;
         } else {
