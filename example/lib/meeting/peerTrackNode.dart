@@ -34,5 +34,4 @@ class PeerTracKNode {
 
   @override
   int get hashCode => peerId.hashCode;
-
 }

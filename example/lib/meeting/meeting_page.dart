@@ -47,7 +47,6 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
   CustomLogger logger = CustomLogger();
   int appBarIndex = 0;
 
-
   @override
   void initState() {
     super.initState();
@@ -214,14 +213,13 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
               icon: Icon(CupertinoIcons.gear),
               itemBuilder: (BuildContext context) => [
                 PopupMenuItem(
-                  child:
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text("Send Logs", style: TextStyle(color: Colors.blue)),
-                          Icon(Icons.bug_report, color: Colors.blue),
-                        ],
-                      ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text("Send Logs", style: TextStyle(color: Colors.blue)),
+                      Icon(Icons.bug_report, color: Colors.blue),
+                    ],
+                  ),
                   value: 1,
                 ),
                 PopupMenuItem(
@@ -277,7 +275,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
           ],
         ),
         body: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 5.0,horizontal: 5.0),
+          padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
           child: Center(
             child: Container(
               width: double.infinity,
@@ -295,8 +293,9 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                           peerTracKNode: new PeerTracKNode(
                               peerId: _meetingStore.screenSharePeerId,
                               track: _meetingStore.screenShareTrack!,
-                              name: _meetingStore.screenShareTrack?.peer?.name ??
-                                  ""),
+                              name:
+                                  _meetingStore.screenShareTrack?.peer?.name ??
+                                      ""),
                         ),
                       );
                     } else {
@@ -314,12 +313,13 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                         ObservableList<PeerTracKNode> peerFilteredList =
                             _meetingStore.peerTracks;
 
-                        return  GridView.builder(
+                        return GridView.builder(
                           scrollDirection: Axis.horizontal,
                           addAutomaticKeepAlives: false,
                           itemCount: peerFilteredList.length,
                           cacheExtent: 0,
-                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount:
                                 _meetingStore.screenShareTrack != null ? 1 : 2,
                             childAspectRatio:
@@ -332,19 +332,18 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                               ObservableMap<String, HMSTrackUpdate> map =
                                   _meetingStore.trackStatus;
                               print("GRIDVIEW ${map.toString()}");
-                                
-                               return Padding(
-                                  padding: _meetingStore.screenShareTrack != null
-                                      ? const EdgeInsets.all(8.0)
-                                      : const EdgeInsets.all(0.0),
-                                  child: VideoTile(
-                                      tileIndex: index,
-                                      filteredList: peerFilteredList,
-                                      itemHeight: itemHeight,
-                                      itemWidth: itemWidth,
-                                      map: map),
-                                )
-                              ;
+
+                              return Padding(
+                                padding: _meetingStore.screenShareTrack != null
+                                    ? const EdgeInsets.all(8.0)
+                                    : const EdgeInsets.all(0.0),
+                                child: VideoTile(
+                                    tileIndex: index,
+                                    filteredList: peerFilteredList,
+                                    itemHeight: itemHeight,
+                                    itemWidth: itemWidth,
+                                    map: map),
+                              );
                             });
                           },
                         );
