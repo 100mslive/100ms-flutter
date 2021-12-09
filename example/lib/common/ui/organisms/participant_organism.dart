@@ -38,9 +38,11 @@ class _ParticipantOrganismState extends State<ParticipantOrganism> {
               child: Text(
             peer.name,
             style: TextStyle(fontSize: 20.0),
+            maxLines: 1,
+                overflow: TextOverflow.ellipsis,
           )),
           SizedBox(
-            width: 50.0,
+            width: 20.0,
           ),
           GestureDetector(
             onTap: () {
@@ -58,28 +60,33 @@ class _ParticipantOrganismState extends State<ParticipantOrganism> {
                         },
                       ));
             },
-            child: Container(
-              padding: EdgeInsets.all(10.0),
-              decoration: BoxDecoration(
-                color: Colors.blue,
-                borderRadius: BorderRadius.circular(5.0),
-              ),
-              child: Text(
-                "${peer.role!.name}",
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.bold),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(10,0,10,0),
+              child: Container(
+                padding: const EdgeInsets.all(8.0),
+                decoration: BoxDecoration(
+                  color: Colors.blue,
+                  borderRadius: BorderRadius.circular(5.0),
+                ),
+                child: Text(
+                  "${peer.role!.name}",
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.bold),
+                ),
               ),
             ),
           ),
-          SizedBox(
-            
-            width: 50.0,
+          Padding(
+            padding: const EdgeInsets.fromLTRB(5,0,5,0),
+            child: Icon(isVideoOn ? Icons.videocam : Icons.videocam_off),
           ),
-          Expanded(
-              child: Icon(isVideoOn ? Icons.videocam : Icons.videocam_off)),
-          Expanded(child: Icon(isAudioOn ? Icons.mic : Icons.mic_off)),
+           Padding(
+             padding: const EdgeInsets.fromLTRB(0,0,5,0),
+             child: Icon(isAudioOn ? Icons.mic : Icons.mic_off),
+           ),
+           Divider(height: 15,color: Colors.grey,)
         ],
       ),
     );
