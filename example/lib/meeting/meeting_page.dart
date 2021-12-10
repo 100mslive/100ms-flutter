@@ -189,10 +189,12 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
+    var orientation = MediaQuery.of(context).orientation;
     var size = MediaQuery.of(context).size;
-    final double itemHeight = (size.height - kToolbarHeight - 24) / 2.3;
-    final double itemWidth = size.width / 2;
-    final aspectRatio = itemHeight / itemWidth;
+    final double itemHeight = (size.height - kToolbarHeight - 24) /
+        (orientation == Orientation.landscape ? 2.5 : 3);
+    final double itemWidth = size.width / 2.1;
+    final aspectRatio = itemWidth / itemHeight;
     print(aspectRatio.toString() + "AspectRatio");
     return WillPopScope(
       child: Scaffold(
@@ -316,40 +318,104 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                             _meetingStore.peerTracks;
                         ObservableMap<String, String> audioKeyMap =
                             _meetingStore.observableMap;
-                        return GridView.builder(
-                          scrollDirection: Axis.horizontal,
-                          addAutomaticKeepAlives: false,
-                          itemCount: peerFilteredList.length,
-                          cacheExtent: 0,
-                          gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount:
-                                _meetingStore.screenShareTrack != null ? 1 : 2,
-                            childAspectRatio:
-                                _meetingStore.screenShareTrack != null
-                                    ? aspectRatio - 0.2
-                                    : aspectRatio,
-                          ),
+                        return PageView.builder(
                           itemBuilder: (ctx, index) {
-                            return Observer(builder: (context) {
-                              ObservableMap<String, HMSTrackUpdate> map =
-                                  _meetingStore.trackStatus;
-                              print("GRIDVIEW ${map.toString()}");
-                              return Padding(
-                                padding: _meetingStore.screenShareTrack != null
-                                    ? const EdgeInsets.all(8.0)
-                                    : const EdgeInsets.all(0.0),
-                                child: VideoTile(
-                                  tileIndex: index,
-                                  filteredList: peerFilteredList,
-                                  itemHeight: itemHeight,
-                                  itemWidth: itemWidth,
-                                  map: map,
-                                  observerMap: audioKeyMap,
-                                ),
-                              );
-                            });
+                            ObservableMap<String, HMSTrackUpdate> map =
+                                _meetingStore.trackStatus;
+                            return (index < peerFilteredList.length)
+                                ? ((orientation == Orientation.portrait &&
+                                        _meetingStore.screenShareTrack == null)
+                                    ? Column(
+                                        children: [
+                                          Row(
+                                            children: [
+                                              //if (index * 4 < filteredList.length)
+                                              VideoTile(
+                                                tileIndex: index * 4,
+                                                filteredList: peerFilteredList,
+                                                itemHeight: itemHeight,
+                                                itemWidth: itemWidth,
+                                                trackStatus: map,
+                                                observerMap: audioKeyMap,
+                                              ),
+                                              //if (index * 4 + 1 < filteredList.length)
+                                              VideoTile(
+                                                tileIndex: index * 4 + 1,
+                                                filteredList: peerFilteredList,
+                                                itemHeight: itemHeight,
+                                                itemWidth: itemWidth,
+                                                trackStatus: map,
+                                                observerMap: audioKeyMap,
+                                              ),
+                                            ],
+                                          ),
+                                          Row(
+                                            children: [
+                                              //if (index * 4 + 2 < filteredList.length)
+                                              VideoTile(
+                                                tileIndex: index * 4 + 2,
+                                                filteredList: peerFilteredList,
+                                                itemHeight: itemHeight,
+                                                itemWidth: itemWidth,
+                                                trackStatus: map,
+                                                observerMap: audioKeyMap,
+                                              ),
+                                              //if (index * 4 + 3 < filteredList.length)
+                                              VideoTile(
+                                                tileIndex: index * 4 + 3,
+                                                filteredList: peerFilteredList,
+                                                itemHeight: itemHeight,
+                                                itemWidth: itemWidth,
+                                                trackStatus: map,
+                                                observerMap: audioKeyMap,
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      )
+                                    : Column(
+                                        children: [
+                                          Row(
+                                            children: [
+                                              VideoTile(
+                                                tileIndex: index * 2,
+                                                filteredList: peerFilteredList,
+                                                itemHeight: itemHeight ,
+                                                itemWidth: itemWidth,
+                                                trackStatus: map,
+                                                observerMap: audioKeyMap,
+                                              ),
+                                              VideoTile(
+                                                tileIndex: index * 2 + 1,
+                                                filteredList: peerFilteredList,
+                                                itemHeight: itemHeight,
+                                                itemWidth: itemWidth,
+                                                trackStatus: map,
+                                                observerMap: audioKeyMap,
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ))
+                                : Container(
+                                    child: VideoTile(
+                                      tileIndex: 0,
+                                      filteredList: peerFilteredList,
+                                      itemHeight: itemHeight * 2,
+                                      itemWidth: itemWidth * 2,
+                                      trackStatus: map,
+                                      observerMap: audioKeyMap,
+                                    ),
+                                  );
                           },
+                          itemCount: ((peerFilteredList.length - 1) /
+                                      ((orientation == Orientation.portrait) &&
+                                              (_meetingStore.screenShareTrack ==
+                                                  null)
+                                          ? 4
+                                          : 2))
+                                  .floor() +
+                              1,
                         );
                       },
                     ),

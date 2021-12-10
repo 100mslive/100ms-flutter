@@ -39,8 +39,7 @@ class _PeerItemOrganismState extends State<PeerItemOrganism> {
 
   @override
   Widget build(BuildContext context) {
-    // print(
-    //     "isVideoMuted ${widget.isVideoMuted} ${widget.track.source} ${widget.track.peer?.name} ${widget.setMirror} ${widget.track.isMute}");
+    print("isVideoMuted ${widget.isVideoMuted} ${widget.setMirror} ${widget.peerTracKNode.name}");
     MeetingStore meetingStore = context.watch<MeetingStore>();
     return Container(
       key: key,

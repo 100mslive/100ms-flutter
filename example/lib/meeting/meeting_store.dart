@@ -469,10 +469,12 @@ abstract class MeetingStoreBase
 
     switch (update) {
       case HMSTrackUpdate.trackAdded:
-        if (track.source == "REGULAR")
+        if (track.source == "REGULAR") {
           trackStatus[peer.peerId] = track.isMute
               ? HMSTrackUpdate.trackMuted
               : HMSTrackUpdate.trackUnMuted;
+          print("${trackStatus[peer.peerId]} trackStatusOfPeer");
+        }
         else {
           screenSharePeerId = peer.peerId;
           screenShareTrack = track;
