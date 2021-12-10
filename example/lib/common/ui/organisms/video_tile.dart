@@ -17,14 +17,14 @@ class VideoTile extends StatefulWidget {
   final double itemHeight;
   final double itemWidth;
   final Map<String, HMSTrackUpdate> map;
-
+  final Map<String,String> observerMap;
   VideoTile(
       {Key? key,
       required this.tileIndex,
       required this.filteredList,
       required this.itemHeight,
       required this.itemWidth,
-      required this.map})
+      required this.map,required this.observerMap})
       : super(key: key);
 
   @override
@@ -89,6 +89,7 @@ class _VideoTileState extends State<VideoTile> {
         child: Observer(builder: (context) {
           print("${filteredList[index].name} rebuildingonaudio");
           return PeerItemOrganism(
+              observableMap: widget.observerMap,
               key: Key(index.toString()),
               height: widget.itemHeight,
               width: widget.itemWidth,

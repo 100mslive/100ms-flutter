@@ -88,6 +88,7 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                           (index) => Provider<MeetingStore>(
                             create: (ctx)=>MeetingStore(),
                             child: PeerItemOrganism(
+                                  observableMap: {"highestAudio":""},
                                   key: UniqueKey(),
                                   height: itemHeight,
                                   width: itemWidth,

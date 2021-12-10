@@ -46,7 +46,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
       _roomEndedDisposer;
   CustomLogger logger = CustomLogger();
   int appBarIndex = 0;
-
+  bool raisedHand = false;
 
   @override
   void initState() {
@@ -214,14 +214,13 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
               icon: Icon(CupertinoIcons.gear),
               itemBuilder: (BuildContext context) => [
                 PopupMenuItem(
-                  child:
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text("Send Logs", style: TextStyle(color: Colors.blue)),
-                          Icon(Icons.bug_report, color: Colors.blue),
-                        ],
-                      ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text("Send Logs", style: TextStyle(color: Colors.blue)),
+                      Icon(Icons.bug_report, color: Colors.blue),
+                    ],
+                  ),
                   value: 1,
                 ),
                 PopupMenuItem(
@@ -243,7 +242,6 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                   color: _meetingStore.isRecordingStarted
                                       ? Colors.red
                                       : Colors.blue,
-                                  
                                 ),
                               ])),
                   value: 2,
@@ -278,7 +276,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
           ],
         ),
         body: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 5.0,horizontal: 5.0),
+          padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
           child: Center(
             child: Container(
               width: double.infinity,
@@ -290,14 +288,16 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                         width: double.infinity,
                         height: MediaQuery.of(context).size.height / 2.5,
                         child: PeerItemOrganism(
+                          observableMap: {"highestAudio": ""},
                           height: MediaQuery.of(context).size.height / 2,
                           width: MediaQuery.of(context).size.width,
                           isVideoMuted: false,
                           peerTracKNode: new PeerTracKNode(
                               peerId: _meetingStore.screenSharePeerId,
                               track: _meetingStore.screenShareTrack!,
-                              name: _meetingStore.screenShareTrack?.peer?.name ??
-                                  ""),
+                              name:
+                                  _meetingStore.screenShareTrack?.peer?.name ??
+                                      ""),
                         ),
                       );
                     } else {
@@ -314,14 +314,15 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                               child: Text('Waiting for other to join!'));
                         ObservableList<PeerTracKNode> peerFilteredList =
                             _meetingStore.peerTracks;
-
-                        return  GridView.builder(
+                        ObservableMap<String, String> audioKeyMap =
+                            _meetingStore.observableMap;
+                        return GridView.builder(
                           scrollDirection: Axis.horizontal,
                           addAutomaticKeepAlives: false,
                           itemCount: peerFilteredList.length,
                           cacheExtent: 0,
-                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount:
                                 _meetingStore.screenShareTrack != null ? 1 : 2,
                             childAspectRatio:
@@ -334,20 +335,19 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                               ObservableMap<String, HMSTrackUpdate> map =
                                   _meetingStore.trackStatus;
                               print("GRIDVIEW ${map.toString()}");
-                              return 
-                                Padding(
-                                  padding: _meetingStore.screenShareTrack != null
-                                      ? const EdgeInsets.all(8.0)
-                                      : const EdgeInsets.all(0.0),
-                                      
-                                  child: VideoTile(
-                                      tileIndex: index,
-                                      filteredList: peerFilteredList,
-                                      itemHeight: itemHeight,
-                                      itemWidth: itemWidth,
-                                      map: map),
-                                )
-                              ;
+                              return Padding(
+                                padding: _meetingStore.screenShareTrack != null
+                                    ? const EdgeInsets.all(8.0)
+                                    : const EdgeInsets.all(0.0),
+                                child: VideoTile(
+                                  tileIndex: index,
+                                  filteredList: peerFilteredList,
+                                  itemHeight: itemHeight,
+                                  itemWidth: itemWidth,
+                                  map: map,
+                                  observerMap: audioKeyMap,
+                                ),
+                              );
                             });
                           },
                         );
@@ -388,6 +388,20 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                     icon: Icon(
                         _meetingStore.isMicOn ? Icons.mic : Icons.mic_off));
               }),
+            ),
+            Container(
+              padding: EdgeInsets.all(8),
+              child: IconButton(
+                  tooltip: 'RaiseHand',
+                  iconSize: 32,
+                  onPressed: () {
+                    _meetingStore.raiseHand();
+                    raisedHand = !raisedHand;
+                    UtilityComponents.showSnackBarWithString(
+                        raisedHand ? "Raised Hand ON" : "Raised Hand OFF",
+                        context);
+                  },
+                  icon: Icon(Icons.sports_handball_outlined)),
             ),
             Container(
               padding: EdgeInsets.all(8),

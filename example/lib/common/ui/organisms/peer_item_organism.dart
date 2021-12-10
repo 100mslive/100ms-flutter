@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:hmssdk_flutter_example/meeting/peerTrackNode.dart';
+import 'package:provider/provider.dart';
 
 class PeerItemOrganism extends StatefulWidget {
   final PeerTracKNode peerTracKNode;
@@ -10,7 +12,7 @@ class PeerItemOrganism extends StatefulWidget {
   final double width;
   final bool isLocal;
   bool setMirror;
-
+  final Map<String,String> observableMap;
   PeerItemOrganism(
       {Key? key,
       required this.peerTracKNode,
@@ -18,7 +20,7 @@ class PeerItemOrganism extends StatefulWidget {
       this.height = 200.0,
       this.width = 200.0,
       this.isLocal = false,
-      this.setMirror = false})
+      this.setMirror = false,required this.observableMap})
       : super(key: key);
 
   @override
@@ -39,7 +41,7 @@ class _PeerItemOrganismState extends State<PeerItemOrganism> {
   Widget build(BuildContext context) {
     // print(
     //     "isVideoMuted ${widget.isVideoMuted} ${widget.track.source} ${widget.track.peer?.name} ${widget.setMirror} ${widget.track.isMute}");
-
+    MeetingStore meetingStore = context.watch<MeetingStore>();
     return Container(
       key: key,
       padding: EdgeInsets.all(2),
@@ -48,8 +50,8 @@ class _PeerItemOrganismState extends State<PeerItemOrganism> {
       width: widget.width - 5.0,
       decoration: BoxDecoration(
           border: Border.all(
-              color: widget.peerTracKNode.track?.isHighestAudio??false ? Colors.blue : Colors.grey,
-              width: widget.peerTracKNode.track?.isHighestAudio??false ? 4.0 : 1.0),
+              color: widget.peerTracKNode.peerId == meetingStore.observableMap["highestAudio"]? Colors.blue : Colors.grey,
+              width: widget.peerTracKNode.peerId == meetingStore.observableMap["highestAudio"]? 4.0 : 1.0),
           borderRadius: BorderRadius.all(Radius.circular(10))),
       child: Column(
         children: [
