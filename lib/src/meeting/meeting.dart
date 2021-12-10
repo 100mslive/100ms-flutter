@@ -108,7 +108,7 @@ class HMSMeeting {
     }
   }
 
-  Future<void> changeTrackReuest(String peerId, bool mute, bool isVideoTrack,
+  Future<void> changeTrackRequest(String peerId, bool mute, bool isVideoTrack,
       {HMSActionResultListener? hmsActionResultListener}) async {
     var result = await PlatformService.invokeMethod(PlatformMethod.changeTrack,
         arguments: {

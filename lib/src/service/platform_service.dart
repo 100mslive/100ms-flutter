@@ -167,7 +167,7 @@ class PlatformService {
               method, {'track': track, 'peer': peer, 'update': update});
           break;
         case HMSUpdateListenerMethod.onError:
-          HMSError error = HMSError.fromMap(data['error'] as Map);
+          HMSException error = HMSException.fromMap(data['error'] as Map);
           notifyMeetingListeners(method, {'error': error});
           break;
         case HMSUpdateListenerMethod.onMessage:
@@ -245,7 +245,7 @@ class PlatformService {
               method, {'room': room, 'local_tracks': tracks});
           break;
         case HMSPreviewUpdateListenerMethod.onError:
-          HMSError? error = HMSError.fromMap(event.data["error"] as Map);
+          HMSException? error = HMSException.fromMap(event.data["error"] as Map);
           notifyPreviewListeners(method, {'error': error});
           break;
         case HMSPreviewUpdateListenerMethod.unknown:

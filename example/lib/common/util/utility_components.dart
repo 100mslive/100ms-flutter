@@ -54,7 +54,7 @@ class UtilityComponents {
       debugPrint("OK accepted");
       context.read<MeetingStore>().meetingController.acceptRoleChangeRequest();
       UtilityComponents.showSnackBarWithString(
-          (event as HMSError).description, context);
+          (event as HMSException).description, context);
     }
   }
 

@@ -17,7 +17,7 @@ abstract class PreviewStoreBase
   @observable
   HMSPeer? peer;
   @observable
-  HMSError? error;
+  HMSException? error;
 
   @observable
   bool videoOn = true;
@@ -25,7 +25,7 @@ abstract class PreviewStoreBase
   bool audioOn = true;
 
   @override
-  void onError({required HMSError error}) {
+  void onError({required HMSException error}) {
     updateError(error);
   }
 
@@ -76,7 +76,7 @@ abstract class PreviewStoreBase
   }
 
   @action
-  void updateError(HMSError error) {
+  void updateError(HMSException error) {
     this.error = error;
   }
 
