@@ -49,7 +49,7 @@ abstract class HMSUpdateListener {
   ///
   /// and SDK has already retried to fix the error
   /// - Parameter error: the error that occurred
-  void onError({required HMSError error});
+  void onError({required HMSException error});
 
   /// This is called when there is a new broadcast message from any other peer in the room
   ///
@@ -81,7 +81,6 @@ abstract class HMSUpdateListener {
 
   ///when you are back in the room after reconnection
   void onReconnected();
-
 
   ///when someone requests for track change of yours be it video or audio this will be triggered
   /// - Parameter hmsTrackChangeRequest: request instance consisting of all the required info about track change
