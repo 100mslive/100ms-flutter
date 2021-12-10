@@ -163,4 +163,8 @@ class MeetingController {
   Future<HMSRoom?> getRoom() async {
     return await HmsSdkManager.hmsSdkInteractor?.getRoom();
   }
+
+  Future<void> raiseHand() async{
+    await HmsSdkManager.hmsSdkInteractor?.raiseHand();
+  }
 }

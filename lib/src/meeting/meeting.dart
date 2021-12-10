@@ -133,6 +133,17 @@ class HMSMeeting {
     }
   }
 
+  Future<void> raiseHand({HMSActionResultListener? hmsActionResultListener}) async {
+    var result = await PlatformService.invokeMethod(PlatformMethod.raiseHand);
+    if (hmsActionResultListener != null) {
+      if (result == null)
+        hmsActionResultListener.onSuccess();
+      else
+        hmsActionResultListener.onError(
+            hmsException: HMSException.fromMap(result["error"]));
+    }
+  }
+
   Future<bool> endRoom(bool lock,
       {HMSActionResultListener? hmsActionResultListener}) async {
     var result = await PlatformService.invokeMethod(PlatformMethod.endRoom,
@@ -283,6 +294,8 @@ class HMSMeeting {
         arguments: {"peer_id": peer != null ? peer.peerId : "null"});
     return isMute;
   }
+
+
 
   void muteAll() async {
     await PlatformService.invokeMethod(PlatformMethod.muteAll);

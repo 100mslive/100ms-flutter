@@ -15,7 +15,7 @@ part 'meeting_store.g.dart';
 class MeetingStore = MeetingStoreBase with _$MeetingStore;
 
 abstract class MeetingStoreBase
-    with Store
+    extends ChangeNotifier with Store
     implements HMSUpdateListener, HMSLogListener {
   @observable
   bool isSpeakerOn = true;
@@ -95,7 +95,7 @@ abstract class MeetingStoreBase
   }
 
   @action
-  void removeListener() {
+  void removeListenerMeeting() {
     meetingController.removeMeetingListener(this);
     removeLogsListener();
   }
@@ -348,31 +348,19 @@ abstract class MeetingStoreBase
 
   HMSTrack? previousHighestVideoTrack;
   int previousHighestIndex = -1;
+  @observable
+  ObservableMap<String,String> observableMap = ObservableMap.of({});
 
   @override
   void onUpdateSpeakers({required List<HMSSpeaker> updateSpeakers}) {
-    // if (updateSpeakers.length == 0) return;
-    // HMSSpeaker highestAudioSpeaker = updateSpeakers[0];
-    // print("onUpdateSpeakerFlutter ${highestAudioSpeaker.peer.name}");
-    // int newHighestIndex = tracks.indexWhere(
-    //     (element) => element.peer?.peerId == highestAudioSpeaker.peer.peerId);
-    // if (newHighestIndex == -1) return;
-    //
-    // if (previousHighestVideoTrack != null) {
-    //   HMSTrack newPreviousTrack =
-    //       HMSTrack.copyWith(false, track: previousHighestVideoTrack!);
-    //   if (previousHighestIndex != -1) {
-    //     tracks.removeAt(previousHighestIndex);
-    //     tracks.insert(previousHighestIndex, newPreviousTrack);
-    //   }
-    // }
-    // HMSTrack highestAudioSpeakerVideoTrack = tracks[newHighestIndex];
-    // HMSTrack newHighestTrack =
-    //     HMSTrack.copyWith(true, track: highestAudioSpeakerVideoTrack);
-    // tracks.removeAt(newHighestIndex);
-    // tracks.insert(newHighestIndex, newHighestTrack);
-    // previousHighestVideoTrack = newHighestTrack;
-    // previousHighestIndex = newHighestIndex;
+    if (updateSpeakers.length == 0){
+      observableMap["highestAudio"]="null";
+      return;
+    }
+    HMSSpeaker highestAudioSpeaker = updateSpeakers[0];
+    print("onUpdateSpeakerFlutter ${highestAudioSpeaker.peer.name}");
+    observableMap["highestAudio"] = highestAudioSpeaker.peer.peerId;
+    notifyListeners();
   }
 
   @override
@@ -460,6 +448,12 @@ abstract class MeetingStoreBase
         print('${peers.indexOf(peer)}');
         updatePeerAt(peer);
         break;
+      case HMSPeerUpdate.metadataChanged:
+        updatePeerAt(peer);
+        break;
+      case HMSPeerUpdate.nameChanged:
+        updatePeerAt(peer);
+        break;
       case HMSPeerUpdate.defaultUpdate:
         print("Some default update or untouched case");
         break;
@@ -475,10 +469,12 @@ abstract class MeetingStoreBase
 
     switch (update) {
       case HMSTrackUpdate.trackAdded:
-        if (track.source == "REGULAR")
+        if (track.source == "REGULAR") {
           trackStatus[peer.peerId] = track.isMute
               ? HMSTrackUpdate.trackMuted
               : HMSTrackUpdate.trackUnMuted;
+          print("${trackStatus[peer.peerId]} trackStatusOfPeer");
+        }
         else {
           screenSharePeerId = peer.peerId;
           screenShareTrack = track;
@@ -525,7 +521,7 @@ abstract class MeetingStoreBase
   void leaveMeeting() async {
     meetingController.leaveMeeting();
     isRoomEnded = true;
-    removeListener();
+    removeListenerMeeting();
   }
 
   void removePeerFromRoom(String peerId) {
@@ -590,5 +586,9 @@ abstract class MeetingStoreBase
   Future<HMSRoom?> getRoom() async {
     HMSRoom? room = await meetingController.getRoom();
     return room;
+  }
+
+  Future<void> raiseHand() async{
+    await meetingController.raiseHand();
   }
 }

@@ -152,6 +152,10 @@ class HMSSDKInteractor implements HMSActionResultListener {
     return await _meeting.getRoom();
   }
 
+  Future<void> raiseHand() async{
+    await _meeting.raiseHand();
+  }
+
   @override
   void onError({HMSException? hmsException}) {
     print("HMSSdkInteractor onError");

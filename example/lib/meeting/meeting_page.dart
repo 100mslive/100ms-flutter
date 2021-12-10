@@ -46,6 +46,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
       _roomEndedDisposer;
   CustomLogger logger = CustomLogger();
   int appBarIndex = 0;
+  bool raisedHand = false;
 
   @override
   void initState() {
@@ -75,7 +76,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
         (_) => _meetingStore.error,
         (event) => {
               UtilityComponents.showSnackBarWithString(
-                  (event as HMSException).description, context)
+                  (event as HMSError).description, context)
             });
     _recordingDisposer = reaction(
         (_) => _meetingStore.isRecordingStarted,
@@ -188,10 +189,12 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
+    var orientation = MediaQuery.of(context).orientation;
     var size = MediaQuery.of(context).size;
-    final double itemHeight = (size.height - kToolbarHeight - 24) / 2.3;
-    final double itemWidth = size.width / 2;
-    final aspectRatio = itemHeight / itemWidth;
+    final double itemHeight = (size.height - kToolbarHeight - 24) /
+        (orientation == Orientation.landscape ? 2.5 : 3);
+    final double itemWidth = size.width / 2.1;
+    final aspectRatio = itemWidth / itemHeight;
     print(aspectRatio.toString() + "AspectRatio");
     return WillPopScope(
       child: Scaffold(
@@ -287,6 +290,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                         width: double.infinity,
                         height: MediaQuery.of(context).size.height / 2.5,
                         child: PeerItemOrganism(
+                          observableMap: {"highestAudio": ""},
                           height: MediaQuery.of(context).size.height / 2,
                           width: MediaQuery.of(context).size.width,
                           isVideoMuted: false,
@@ -312,40 +316,106 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                               child: Text('Waiting for other to join!'));
                         ObservableList<PeerTracKNode> peerFilteredList =
                             _meetingStore.peerTracks;
-
-                        return GridView.builder(
-                          scrollDirection: Axis.horizontal,
-                          addAutomaticKeepAlives: false,
-                          itemCount: peerFilteredList.length,
-                          cacheExtent: 0,
-                          gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount:
-                                _meetingStore.screenShareTrack != null ? 1 : 2,
-                            childAspectRatio:
-                                _meetingStore.screenShareTrack != null
-                                    ? aspectRatio - 0.2
-                                    : aspectRatio,
-                          ),
+                        ObservableMap<String, String> audioKeyMap =
+                            _meetingStore.observableMap;
+                        return PageView.builder(
                           itemBuilder: (ctx, index) {
-                            return Observer(builder: (context) {
-                              ObservableMap<String, HMSTrackUpdate> map =
-                                  _meetingStore.trackStatus;
-                              print("GRIDVIEW ${map.toString()}");
-
-                              return Padding(
-                                padding: _meetingStore.screenShareTrack != null
-                                    ? const EdgeInsets.all(8.0)
-                                    : const EdgeInsets.all(0.0),
-                                child: VideoTile(
-                                    tileIndex: index,
-                                    filteredList: peerFilteredList,
-                                    itemHeight: itemHeight,
-                                    itemWidth: itemWidth,
-                                    map: map),
-                              );
-                            });
+                            ObservableMap<String, HMSTrackUpdate> map =
+                                _meetingStore.trackStatus;
+                            return (index < peerFilteredList.length)
+                                ? ((orientation == Orientation.portrait &&
+                                        _meetingStore.screenShareTrack == null)
+                                    ? Column(
+                                        children: [
+                                          Row(
+                                            children: [
+                                              //if (index * 4 < filteredList.length)
+                                              VideoTile(
+                                                tileIndex: index * 4,
+                                                filteredList: peerFilteredList,
+                                                itemHeight: itemHeight,
+                                                itemWidth: itemWidth,
+                                                trackStatus: map,
+                                                observerMap: audioKeyMap,
+                                              ),
+                                              //if (index * 4 + 1 < filteredList.length)
+                                              VideoTile(
+                                                tileIndex: index * 4 + 1,
+                                                filteredList: peerFilteredList,
+                                                itemHeight: itemHeight,
+                                                itemWidth: itemWidth,
+                                                trackStatus: map,
+                                                observerMap: audioKeyMap,
+                                              ),
+                                            ],
+                                          ),
+                                          Row(
+                                            children: [
+                                              //if (index * 4 + 2 < filteredList.length)
+                                              VideoTile(
+                                                tileIndex: index * 4 + 2,
+                                                filteredList: peerFilteredList,
+                                                itemHeight: itemHeight,
+                                                itemWidth: itemWidth,
+                                                trackStatus: map,
+                                                observerMap: audioKeyMap,
+                                              ),
+                                              //if (index * 4 + 3 < filteredList.length)
+                                              VideoTile(
+                                                tileIndex: index * 4 + 3,
+                                                filteredList: peerFilteredList,
+                                                itemHeight: itemHeight,
+                                                itemWidth: itemWidth,
+                                                trackStatus: map,
+                                                observerMap: audioKeyMap,
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      )
+                                    : Column(
+                                        children: [
+                                          Row(
+                                            children: [
+                                              VideoTile(
+                                                tileIndex: index * 2,
+                                                filteredList: peerFilteredList,
+                                                itemHeight: itemHeight ,
+                                                itemWidth: itemWidth,
+                                                trackStatus: map,
+                                                observerMap: audioKeyMap,
+                                              ),
+                                              VideoTile(
+                                                tileIndex: index * 2 + 1,
+                                                filteredList: peerFilteredList,
+                                                itemHeight: itemHeight,
+                                                itemWidth: itemWidth,
+                                                trackStatus: map,
+                                                observerMap: audioKeyMap,
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ))
+                                : Container(
+                                    child: VideoTile(
+                                      tileIndex: 0,
+                                      filteredList: peerFilteredList,
+                                      itemHeight: itemHeight * 2,
+                                      itemWidth: itemWidth * 2,
+                                      trackStatus: map,
+                                      observerMap: audioKeyMap,
+                                    ),
+                                  );
                           },
+                          itemCount: ((peerFilteredList.length - 1) /
+                                      ((orientation == Orientation.portrait) &&
+                                              (_meetingStore.screenShareTrack ==
+                                                  null)
+                                          ? 4
+                                          : 2))
+                                  .floor() +
+                              1,
                         );
                       },
                     ),
@@ -384,6 +454,20 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                     icon: Icon(
                         _meetingStore.isMicOn ? Icons.mic : Icons.mic_off));
               }),
+            ),
+            Container(
+              padding: EdgeInsets.all(8),
+              child: IconButton(
+                  tooltip: 'RaiseHand',
+                  iconSize: 32,
+                  onPressed: () {
+                    _meetingStore.raiseHand();
+                    raisedHand = !raisedHand;
+                    UtilityComponents.showSnackBarWithString(
+                        raisedHand ? "Raised Hand ON" : "Raised Hand OFF",
+                        context);
+                  },
+                  icon: Icon(Icons.sports_handball_outlined)),
             ),
             Container(
               padding: EdgeInsets.all(8),

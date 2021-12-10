@@ -41,7 +41,7 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
         (_) => _previewStore.error,
         (event) => {
               UtilityComponents.showSnackBarWithString(
-                  (event as HMSException).message, context)
+                  (event as HMSError).message, context)
             });
   }
 
@@ -85,16 +85,20 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                       childAspectRatio: (itemWidth / itemHeight),
                       children: List.generate(
                           _previewStore.localTracks.length,
-                          (index) => PeerItemOrganism(
-                                key: UniqueKey(),
-                                height: itemHeight,
-                                width: itemWidth,
-                                peerTracKNode: new PeerTracKNode(
-                                    peerId: _previewStore.peer?.peerId ?? "",
-                                    name: _previewStore.peer?.name ?? "",
-                                    track: _previewStore.localTracks[0]),
-                                isVideoMuted: false,
-                              )),
+                          (index) => Provider<MeetingStore>(
+                            create: (ctx)=>MeetingStore(),
+                            child: PeerItemOrganism(
+                                  observableMap: {"highestAudio":""},
+                                  key: UniqueKey(),
+                                  height: itemHeight,
+                                  width: itemWidth,
+                                  peerTracKNode: new PeerTracKNode(
+                                      peerId: _previewStore.peer?.peerId ?? "",
+                                      name: _previewStore.peer?.name??"",
+                                      track: _previewStore.localTracks[0]),
+                                  isVideoMuted: false,
+                                ),
+                          )),
                     );
                   },
                 ),
