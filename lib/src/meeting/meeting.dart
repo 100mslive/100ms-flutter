@@ -67,48 +67,56 @@ class HMSMeeting {
   }
 
   ///send message to the room and the pass the [message].
-  Future<void> sendMessage(String message,{HMSMessageResultListener? hmsMessageResultListener}) async {
-    var result =  await PlatformService.invokeMethod(PlatformMethod.sendMessage,
+  Future<void> sendMessage(String message,
+      {HMSMessageResultListener? hmsMessageResultListener}) async {
+    var result = await PlatformService.invokeMethod(PlatformMethod.sendMessage,
         arguments: {"message": message});
 
-    if(hmsMessageResultListener!= null){
-      if(result["event_name"] == "on_error"){
-        hmsMessageResultListener.onError(hmsException: HMSException.fromMap(result["error"]));
-      }
-      else{
-        hmsMessageResultListener.onSuccess(hmsMessage: HMSMessage.fromMap(result["message"]));
+    if (hmsMessageResultListener != null) {
+      if (result["event_name"] == "on_error") {
+        hmsMessageResultListener.onError(
+            hmsException: HMSException.fromMap(result["error"]));
+      } else {
+        hmsMessageResultListener.onSuccess(
+            hmsMessage: HMSMessage.fromMap(result["message"]));
       }
     }
   }
 
-  Future<void> sendGroupMessage(String message, String roleName,{HMSMessageResultListener? hmsMessageResultListener}) async {
-    var result = await PlatformService.invokeMethod(PlatformMethod.sendGroupMessage,
+  Future<void> sendGroupMessage(String message, String roleName,
+      {HMSMessageResultListener? hmsMessageResultListener}) async {
+    var result = await PlatformService.invokeMethod(
+        PlatformMethod.sendGroupMessage,
         arguments: {"message": message, "role_name": roleName});
-    if(hmsMessageResultListener!= null){
-      if(result["event_name"] == "on_error"){
-        hmsMessageResultListener.onError(hmsException: HMSException.fromMap(result["error"]));
-      }
-      else{
-        hmsMessageResultListener.onSuccess(hmsMessage: HMSMessage.fromMap(result["message"]));
+    if (hmsMessageResultListener != null) {
+      if (result["event_name"] == "on_error") {
+        hmsMessageResultListener.onError(
+            hmsException: HMSException.fromMap(result["error"]));
+      } else {
+        hmsMessageResultListener.onSuccess(
+            hmsMessage: HMSMessage.fromMap(result["message"]));
       }
     }
   }
 
-  Future<void> sendDirectMessage(String message, String peerId,{HMSMessageResultListener? hmsMessageResultListener}) async {
-    var result = await PlatformService.invokeMethod(PlatformMethod.sendDirectMessage,
+  Future<void> sendDirectMessage(String message, String peerId,
+      {HMSMessageResultListener? hmsMessageResultListener}) async {
+    var result = await PlatformService.invokeMethod(
+        PlatformMethod.sendDirectMessage,
         arguments: {"message": message, "peer_id": peerId});
 
-    if(hmsMessageResultListener!= null){
-      if(result["event_name"] == "on_error"){
-        hmsMessageResultListener.onError(hmsException: HMSException.fromMap(result["error"]));
-      }
-      else{
-        hmsMessageResultListener.onSuccess(hmsMessage: HMSMessage.fromMap(result["message"]));
+    if (hmsMessageResultListener != null) {
+      if (result["event_name"] == "on_error") {
+        hmsMessageResultListener.onError(
+            hmsException: HMSException.fromMap(result["error"]));
+      } else {
+        hmsMessageResultListener.onSuccess(
+            hmsMessage: HMSMessage.fromMap(result["message"]));
       }
     }
   }
 
-  Future<void> changeTrackReuest(String peerId, bool mute, bool isVideoTrack,
+  Future<void> changeTrackRequest(String peerId, bool mute, bool isVideoTrack,
       {HMSActionResultListener? hmsActionResultListener}) async {
     var result = await PlatformService.invokeMethod(PlatformMethod.changeTrack,
         arguments: {
@@ -298,7 +306,8 @@ class HMSMeeting {
   }
 
   Future<bool> changeTrackStateForRole(
-      bool mute, String type, String source, List<String> roles,{HMSActionResultListener? hmsActionResultListener}) async {
+      bool mute, String type, String source, List<String> roles,
+      {HMSActionResultListener? hmsActionResultListener}) async {
     var result = await PlatformService.invokeMethod(
         PlatformMethod.changeTrackStateForRole,
         arguments: {
@@ -319,7 +328,8 @@ class HMSMeeting {
   }
 
   Future<HMSException?> startRtmpOrRecording(
-      HMSRecordingConfig hmsRecordingConfig,{HMSActionResultListener? hmsActionResultListener}) async {
+      HMSRecordingConfig hmsRecordingConfig,
+      {HMSActionResultListener? hmsActionResultListener}) async {
     Map? result = await PlatformService.invokeMethod(
         PlatformMethod.startRtmpOrRecording,
         arguments: hmsRecordingConfig.getJson()) as Map?;
@@ -335,7 +345,8 @@ class HMSMeeting {
     return HMSException.fromMap(result);
   }
 
-  Future<HMSException?> stopRtmpAndRecording({HMSActionResultListener? hmsActionResultListener}) async {
+  Future<HMSException?> stopRtmpAndRecording(
+      {HMSActionResultListener? hmsActionResultListener}) async {
     Map<String, dynamic>? result =
         await PlatformService.invokeMethod(PlatformMethod.stopRtmpAndRecording);
 

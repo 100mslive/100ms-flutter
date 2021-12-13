@@ -86,7 +86,6 @@ class _HomePageState extends State<HomePage> {
     return Future.value(true);
   }
 
-
   DeepLinkBloc _bloc = DeepLinkBloc();
 
   Future<void> _initPackageInfo() async {

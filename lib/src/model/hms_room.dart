@@ -55,10 +55,12 @@ class HMSRoom {
         hmsBrowserRecordingState: map["browser_recording_state"] != null
             ? HMSBrowserRecordingState.fromMap(map["browser_recording_state"])
             : null,
-        hmsRtmpStreamingState:map["rtmp_streaming_state"] != null?
-            HMSRtmpStreamingState.fromMap(map["rtmp_streaming_state"]):null,
-        hmsServerRecordingState:map["server_recording_state"] !=null?
-            HMSServerRecordingState.fromMap(map["server_recording_state"]):null,
+        hmsRtmpStreamingState: map["rtmp_streaming_state"] != null
+            ? HMSRtmpStreamingState.fromMap(map["rtmp_streaming_state"])
+            : null,
+        hmsServerRecordingState: map["server_recording_state"] != null
+            ? HMSServerRecordingState.fromMap(map["server_recording_state"])
+            : null,
         id: map['id'],
         name: map['name'],
         peers: peers,

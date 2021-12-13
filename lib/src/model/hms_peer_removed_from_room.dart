@@ -25,7 +25,9 @@ class HMSPeerRemovedFromPeer {
 
   factory HMSPeerRemovedFromPeer.fromMap(Map map) {
     return HMSPeerRemovedFromPeer(
-      peerWhoRemoved: map['peer_who_removed']!=null?HMSPeer.fromMap(map['peer_who_removed']):null,
+      peerWhoRemoved: map['peer_who_removed'] != null
+          ? HMSPeer.fromMap(map['peer_who_removed'])
+          : null,
       reason: map['reason'] as String,
       roomWasEnded: map['room_was_ended'] as bool,
     );
