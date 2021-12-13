@@ -22,7 +22,7 @@ abstract class MeetingStoreBase
   @observable
   String screenSharePeerId = '';
   @observable
-  HMSError? error;
+  HMSException? error;
 
   @observable
   HMSException? hmsException;
@@ -213,7 +213,7 @@ abstract class MeetingStoreBase
   }
 
   @action
-  void updateError(HMSError error) {
+  void updateError(HMSException error) {
     this.error = error;
   }
 
@@ -331,7 +331,7 @@ abstract class MeetingStoreBase
   }
 
   @override
-  void onError({required HMSError error}) {
+  void onError({required HMSException error}) {
     updateError(error);
   }
 
