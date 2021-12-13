@@ -49,8 +49,8 @@ class _PeerItemOrganismState extends State<PeerItemOrganism> {
       width: widget.width - 5.0,
       decoration: BoxDecoration(
           border: Border.all(
-              color: widget.peerTracKNode.peerId == meetingStore.observableMap["highestAudio"]? Colors.blue : Colors.grey,
-              width: widget.peerTracKNode.peerId == meetingStore.observableMap["highestAudio"]? 4.0 : 1.0),
+              color: widget.peerTracKNode.peerId == meetingStore.highestSpeaker.peerId? Colors.blue : Colors.grey,
+              width: widget.peerTracKNode.peerId == meetingStore.highestSpeaker.peerId? 4.0 : 1.0),
           borderRadius: BorderRadius.all(Radius.circular(10))),
       child: Column(
         children: [
