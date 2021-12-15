@@ -539,6 +539,14 @@ abstract class MeetingStoreBase
     meetingController.removePeer(peerId);
   }
 
+  void startScreenShare(String peerId) {
+    meetingController.startScreenShare();
+  }
+
+  void stopScreenShare() {
+    meetingController.stopScreenShare();
+  }
+
   void muteAll() {
     meetingController.muteAll();
   }

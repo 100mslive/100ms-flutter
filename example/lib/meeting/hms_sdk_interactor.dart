@@ -135,6 +135,14 @@ class HMSSDKInteractor implements HMSActionResultListener {
     _meeting.muteAll();
   }
 
+  void startScreenShare() {
+    _meeting.startScreenShare();
+  }
+
+  void stopScreenShare() {
+    _meeting.stopScreenShare();
+  }
+
   void unMuteAll() {
     _meeting.unMuteAll();
   }

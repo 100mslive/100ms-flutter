@@ -1,6 +1,8 @@
 package live.hms.hmssdk_flutter
 
 import android.app.Activity
+import android.content.Context
+import android.media.projection.MediaProjectionManager
 import android.os.Build
 import androidx.annotation.NonNull
 import io.flutter.Log
@@ -564,6 +566,13 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
 
     private fun localPeer(result: Result) {
         result.success(HMSPeerExtension.toDictionary(getLocalPeer()))
+    }
+
+    private fun startScreenShare(){
+            val mediaProjectionManager: MediaProjectionManager? = requireContext().getSystemService(
+                Context.MEDIA_PROJECTION_SERVICE
+            ) as MediaProjectionManager
+            resultLauncher.launch(mediaProjectionManager?.createScreenCaptureIntent())
     }
 
     private fun muteAll() {

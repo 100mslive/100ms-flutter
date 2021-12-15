@@ -28,8 +28,7 @@ class MeetingController {
     return true;
   }
 
-
-  Future<void> leaveMeeting() async{
+  Future<void> leaveMeeting() async {
     HmsSdkManager.hmsSdkInteractor?.leaveMeeting();
   }
 
@@ -141,6 +140,14 @@ class MeetingController {
 
   void removePeer(String peerId) {
     HmsSdkManager.hmsSdkInteractor?.removePeer(peerId);
+  }
+
+  void startScreenShare() {
+    HmsSdkManager.hmsSdkInteractor?.startScreenShare();
+  }
+
+  void stopScreenShare() {
+    HmsSdkManager.hmsSdkInteractor?.stopScreenShare();
   }
 
   void unMuteAll() {

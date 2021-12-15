@@ -63,6 +63,12 @@ enum PlatformMethod {
   ///change your peer role.
   changeRole,
 
+// turn on screen share start
+  startScreenShare,
+
+// turn off screen share
+  stopScreenShare,
+
   ///get list of roles using this.
   getRoles,
   changeTrack,
@@ -163,6 +169,10 @@ extension PlatformMethodValues on PlatformMethod {
         return "get_room";
       case PlatformMethod.stopRtmpAndRecording:
         return "stop_rtmp_and_recording";
+      case PlatformMethod.startScreenShare:
+        return "start_screen_share";
+      case PlatformMethod.stopScreenShare:
+        return "stop_screen_share";
       case PlatformMethod.build:
         return 'build';
       case PlatformMethod.updateHMSLocalVideoTrackSettings:
