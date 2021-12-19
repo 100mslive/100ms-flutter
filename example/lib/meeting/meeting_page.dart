@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -191,10 +192,10 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     var orientation = MediaQuery.of(context).orientation;
     var size = MediaQuery.of(context).size;
-    final double itemHeightWithSs = (size.height - kToolbarHeight - 24) /
+    final double itemHeightWithSs = (size.height - kToolbarHeight - kBottomNavigationBarHeight) /
         (orientation == Orientation.landscape ? 2.5 : 3);
-    final double itemHeightWithoutSs = (size.height - kToolbarHeight) /
-        (orientation == Orientation.landscape ? 2.5 : 2.9);
+    final double itemHeightWithoutSs = (size.height - kToolbarHeight - kBottomNavigationBarHeight) /
+        (orientation == Orientation.landscape ? 2.5 : 2.8);
 
     final double itemWidth = size.width / 2.1;
     // final aspectRatio = itemWidth / itemHeight;
@@ -328,16 +329,21 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                             return (index < peerFilteredList.length)
                                 ? ((orientation == Orientation.portrait &&
                                         _meetingStore.screenShareTrack == null)
-                                    ? Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
+                                    ? Padding(
+                                      padding: EdgeInsets.symmetric(vertical: itemHeightWithoutSs*0.12),
+                                      child: Column(
+                                        // mainAxisAlignment: moreThanTwoTile?MainAxisAlignment.center:MainAxisAlignment.start,
+                                        
                                         children: [
                                           Row(
                                             children: [
                                               //if (index * 4 < filteredList.length)
                                               VideoTile(
                                                 tileIndex: index * 4,
-                                                filteredList: peerFilteredList,
-                                                itemHeight: itemHeightWithoutSs,
+                                                filteredList:
+                                                    peerFilteredList,
+                                                itemHeight:
+                                                    itemHeightWithoutSs,
                                                 itemWidth: itemWidth,
                                                 trackStatus: map,
                                                 observerMap: audioKeyMap,
@@ -345,23 +351,26 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                               //if (index * 4 + 1 < filteredList.length)
                                               VideoTile(
                                                 tileIndex: index * 4 + 1,
-                                                filteredList: peerFilteredList,
-                                                itemHeight: itemHeightWithoutSs,
+                                                filteredList:
+                                                    peerFilteredList,
+                                                itemHeight:
+                                                    itemHeightWithoutSs,
                                                 itemWidth: itemWidth,
                                                 trackStatus: map,
                                                 observerMap: audioKeyMap,
                                               ),
                                             ],
                                           ),
-                                          
-                                          Row(
 
+                                          Row(
                                             children: [
                                               //if (index * 4 + 2 < filteredList.length)
                                               VideoTile(
                                                 tileIndex: index * 4 + 2,
-                                                filteredList: peerFilteredList,
-                                                itemHeight: itemHeightWithoutSs,
+                                                filteredList:
+                                                    peerFilteredList,
+                                                itemHeight:
+                                                    itemHeightWithoutSs,
                                                 itemWidth: itemWidth,
                                                 trackStatus: map,
                                                 observerMap: audioKeyMap,
@@ -369,8 +378,10 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                               //if (index * 4 + 3 < filteredList.length)
                                               VideoTile(
                                                 tileIndex: index * 4 + 3,
-                                                filteredList: peerFilteredList,
-                                                itemHeight: itemHeightWithoutSs,
+                                                filteredList:
+                                                    peerFilteredList,
+                                                itemHeight:
+                                                    itemHeightWithoutSs,
                                                 itemWidth: itemWidth,
                                                 trackStatus: map,
                                                 observerMap: audioKeyMap,
@@ -378,7 +389,8 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                             ],
                                           ),
                                         ],
-                                      )
+                                      ),
+                                    )
                                     : Column(
                                         children: [
                                           Row(
