@@ -14,8 +14,8 @@ part 'meeting_store.g.dart';
 
 class MeetingStore = MeetingStoreBase with _$MeetingStore;
 
-abstract class MeetingStoreBase
-    extends ChangeNotifier with Store
+abstract class MeetingStoreBase extends ChangeNotifier
+    with Store
     implements HMSUpdateListener, HMSLogListener {
   @observable
   bool isSpeakerOn = true;
@@ -55,6 +55,8 @@ abstract class MeetingStoreBase
   List<HMSRole> roles = [];
 
   late MeetingController meetingController;
+  late PeerTracKNode highestSpeaker = PeerTracKNode(peerId: "-1");
+  late int highestSpeakerIndex = -1;
 
   @observable
   ObservableList<HMSPeer> peers = ObservableList.of([]);
@@ -349,18 +351,28 @@ abstract class MeetingStoreBase
   HMSTrack? previousHighestVideoTrack;
   int previousHighestIndex = -1;
   @observable
-  ObservableMap<String,String> observableMap = ObservableMap.of({});
+  ObservableMap<String, String> observableMap = ObservableMap.of({});
 
   @override
   void onUpdateSpeakers({required List<HMSSpeaker> updateSpeakers}) {
-    if (updateSpeakers.length == 0){
-      observableMap["highestAudio"]="null";
+    if (updateSpeakers.length == 0) {
+      peerTracks.removeAt(highestSpeakerIndex);
+      peerTracks.insert(highestSpeakerIndex, highestSpeaker);
+      highestSpeaker = PeerTracKNode(peerId: "-1");
       return;
     }
-    HMSSpeaker highestAudioSpeaker = updateSpeakers[0];
-    print("onUpdateSpeakerFlutter ${highestAudioSpeaker.peer.name}");
-    observableMap["highestAudio"] = highestAudioSpeaker.peer.peerId;
-    notifyListeners();
+
+    highestSpeakerIndex = peerTracks.indexWhere((element) =>
+        element.peerId.trim() == updateSpeakers[0].peer.peerId.trim());
+
+    print("index is $highestSpeakerIndex");
+    if (highestSpeakerIndex != -1) {
+      highestSpeaker = peerTracks[highestSpeakerIndex];
+      peerTracks.removeAt(highestSpeakerIndex);
+      peerTracks.insert(highestSpeakerIndex, highestSpeaker);
+    } else {
+      highestSpeaker = PeerTracKNode(peerId: "-1");
+    }
   }
 
   @override
@@ -474,8 +486,7 @@ abstract class MeetingStoreBase
               ? HMSTrackUpdate.trackMuted
               : HMSTrackUpdate.trackUnMuted;
           print("${trackStatus[peer.peerId]} trackStatusOfPeer");
-        }
-        else {
+        } else {
           screenSharePeerId = peer.peerId;
           screenShareTrack = track;
         }
@@ -588,7 +599,7 @@ abstract class MeetingStoreBase
     return room;
   }
 
-  Future<void> raiseHand() async{
+  Future<void> raiseHand() async {
     await meetingController.raiseHand();
   }
 }

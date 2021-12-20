@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -76,7 +77,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
         (_) => _meetingStore.error,
         (event) => {
               UtilityComponents.showSnackBarWithString(
-                  (event as HMSError).description, context)
+                  (event as HMSException).description, context)
             });
     _recordingDisposer = reaction(
         (_) => _meetingStore.isRecordingStarted,
@@ -153,12 +154,12 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
   void handleMenu(int value) async {
     switch (value) {
       case 1:
-        StaticLogger.logger?.d(
-            "\n----------------------------Sending Logs-----------------\n");
-        StaticLogger.logger?.close();
-        ShareExtend.share(CustomLogger.file?.path ?? '', 'file');
-        logger.getCustomLogger();
-
+        // StaticLogger.logger?.d(
+        //     "\n----------------------------Sending Logs-----------------\n");
+        // StaticLogger.logger?.close();
+        // ShareExtend.share(CustomLogger.file?.path ?? '', 'file');
+        // logger.getCustomLogger();
+        UtilityComponents.showSnackBarWithString("Coming Soon...", context);
         break;
 
       case 2:
@@ -191,11 +192,14 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     var orientation = MediaQuery.of(context).orientation;
     var size = MediaQuery.of(context).size;
-    final double itemHeight = (size.height - kToolbarHeight - 24) /
+    final double itemHeightWithSs = (size.height - kToolbarHeight - kBottomNavigationBarHeight) /
         (orientation == Orientation.landscape ? 2.5 : 3);
+    final double itemHeightWithoutSs = (size.height - kToolbarHeight - kBottomNavigationBarHeight) /
+        (orientation == Orientation.landscape ? 2.5 : 2.8);
+
     final double itemWidth = size.width / 2.1;
-    final aspectRatio = itemWidth / itemHeight;
-    print(aspectRatio.toString() + "AspectRatio");
+    // final aspectRatio = itemWidth / itemHeight;
+    // print(aspectRatio.toString() + "AspectRatio");
     return WillPopScope(
       child: Scaffold(
         appBar: AppBar(
@@ -325,15 +329,21 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                             return (index < peerFilteredList.length)
                                 ? ((orientation == Orientation.portrait &&
                                         _meetingStore.screenShareTrack == null)
-                                    ? Column(
+                                    ? Padding(
+                                      padding: EdgeInsets.symmetric(vertical: itemHeightWithoutSs*0.12),
+                                      child: Column(
+                                        // mainAxisAlignment: moreThanTwoTile?MainAxisAlignment.center:MainAxisAlignment.start,
+                                        
                                         children: [
                                           Row(
                                             children: [
                                               //if (index * 4 < filteredList.length)
                                               VideoTile(
                                                 tileIndex: index * 4,
-                                                filteredList: peerFilteredList,
-                                                itemHeight: itemHeight,
+                                                filteredList:
+                                                    peerFilteredList,
+                                                itemHeight:
+                                                    itemHeightWithoutSs,
                                                 itemWidth: itemWidth,
                                                 trackStatus: map,
                                                 observerMap: audioKeyMap,
@@ -341,21 +351,26 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                               //if (index * 4 + 1 < filteredList.length)
                                               VideoTile(
                                                 tileIndex: index * 4 + 1,
-                                                filteredList: peerFilteredList,
-                                                itemHeight: itemHeight,
+                                                filteredList:
+                                                    peerFilteredList,
+                                                itemHeight:
+                                                    itemHeightWithoutSs,
                                                 itemWidth: itemWidth,
                                                 trackStatus: map,
                                                 observerMap: audioKeyMap,
                                               ),
                                             ],
                                           ),
+
                                           Row(
                                             children: [
                                               //if (index * 4 + 2 < filteredList.length)
                                               VideoTile(
                                                 tileIndex: index * 4 + 2,
-                                                filteredList: peerFilteredList,
-                                                itemHeight: itemHeight,
+                                                filteredList:
+                                                    peerFilteredList,
+                                                itemHeight:
+                                                    itemHeightWithoutSs,
                                                 itemWidth: itemWidth,
                                                 trackStatus: map,
                                                 observerMap: audioKeyMap,
@@ -363,8 +378,10 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                               //if (index * 4 + 3 < filteredList.length)
                                               VideoTile(
                                                 tileIndex: index * 4 + 3,
-                                                filteredList: peerFilteredList,
-                                                itemHeight: itemHeight,
+                                                filteredList:
+                                                    peerFilteredList,
+                                                itemHeight:
+                                                    itemHeightWithoutSs,
                                                 itemWidth: itemWidth,
                                                 trackStatus: map,
                                                 observerMap: audioKeyMap,
@@ -372,7 +389,8 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                             ],
                                           ),
                                         ],
-                                      )
+                                      ),
+                                    )
                                     : Column(
                                         children: [
                                           Row(
@@ -380,7 +398,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                               VideoTile(
                                                 tileIndex: index * 2,
                                                 filteredList: peerFilteredList,
-                                                itemHeight: itemHeight ,
+                                                itemHeight: itemHeightWithSs,
                                                 itemWidth: itemWidth,
                                                 trackStatus: map,
                                                 observerMap: audioKeyMap,
@@ -388,7 +406,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                               VideoTile(
                                                 tileIndex: index * 2 + 1,
                                                 filteredList: peerFilteredList,
-                                                itemHeight: itemHeight,
+                                                itemHeight: itemHeightWithSs,
                                                 itemWidth: itemWidth,
                                                 trackStatus: map,
                                                 observerMap: audioKeyMap,
@@ -401,8 +419,8 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                     child: VideoTile(
                                       tileIndex: 0,
                                       filteredList: peerFilteredList,
-                                      itemHeight: itemHeight * 2,
-                                      itemWidth: itemWidth * 2,
+                                      itemHeight: itemHeightWithSs * 2,
+                                      itemWidth: itemHeightWithoutSs * 2,
                                       trackStatus: map,
                                       observerMap: audioKeyMap,
                                     ),

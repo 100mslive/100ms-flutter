@@ -8,17 +8,12 @@ class PeerTracKNode {
   @observable
   HMSTrack? track;
   HMSTrack? audioTrack;
-  bool isRegular;
-  @observable
-  bool isHighestSpeaker;
-
   PeerTracKNode(
       {required this.peerId,
       this.track,
-      this.isRegular = true,
       this.name = "",
       this.audioTrack,
-      this.isHighestSpeaker = false});
+      });
 
   @override
   bool operator ==(Object other) =>
