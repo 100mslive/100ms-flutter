@@ -16,16 +16,20 @@ class HMSAudioTrackSetting {
     return HMSAudioTrackSetting(
         volume: map['volume'],
         maxBitrate: map['bit_rate'],
-        hmsAudioCodec: HMSAudioCodecValues.getHMSCodecFromName(map['audio_codec']),
-        useHardwareAcousticEchoCanceler: map['user_hardware_acoustic_echo_canceler']);
+        hmsAudioCodec:
+            HMSAudioCodecValues.getHMSCodecFromName(map['audio_codec']),
+        useHardwareAcousticEchoCanceler:
+            map['user_hardware_acoustic_echo_canceler']);
   }
 
   Map<String, dynamic> toMap() {
     return {
       'bit_rate': maxBitrate,
       'volume': volume,
-      'audio_codec': hmsAudioCodec!=null?HMSAudioCodecValues.getValueFromHMSAudioCodec(hmsAudioCodec!):null,
-      'user_hardware_acoustic_echo_canceler':useHardwareAcousticEchoCanceler
+      'audio_codec': hmsAudioCodec != null
+          ? HMSAudioCodecValues.getValueFromHMSAudioCodec(hmsAudioCodec!)
+          : null,
+      'user_hardware_acoustic_echo_canceler': useHardwareAcousticEchoCanceler
     };
   }
 }

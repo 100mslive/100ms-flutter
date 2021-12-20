@@ -21,16 +21,16 @@ class UtilityComponents {
         actions: [
           TextButton(
               onPressed: () => {
-                _meetingStore.meetingController.leaveMeeting(),
+                    _meetingStore.meetingController.leaveMeeting(),
 
-                // Navigator.pushReplacement(
-                //   context,
-                //   MaterialPageRoute(
-                //     builder: (ctx) => HomePage(),
-                //   ),
-                // ),
-                Navigator.popUntil(context, (route) => route.isFirst)
-              },
+                    // Navigator.pushReplacement(
+                    //   context,
+                    //   MaterialPageRoute(
+                    //     builder: (ctx) => HomePage(),
+                    //   ),
+                    // ),
+                    Navigator.popUntil(context, (route) => route.isFirst)
+                  },
               child: Text('Yes', style: TextStyle(height: 1, fontSize: 24))),
           TextButton(
             onPressed: () => Navigator.pop(context, false),
@@ -45,7 +45,7 @@ class UtilityComponents {
     );
   }
 
-  static void showRoleChangeDialog(event,context) async {
+  static void showRoleChangeDialog(event, context) async {
     event = event as HMSRoleChangeRequest;
     String answer = await showDialog(
         context: context,
@@ -58,7 +58,7 @@ class UtilityComponents {
     }
   }
 
-  static showTrackChangeDialog(event,context) async {
+  static showTrackChangeDialog(event, context) async {
     event = event as HMSTrackChangeRequest;
     String answer = await showDialog(
         context: context,

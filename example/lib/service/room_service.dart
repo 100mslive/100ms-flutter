@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:hmssdk_flutter_example/common/constant.dart';
 import 'package:http/http.dart' as http;
 
@@ -8,14 +9,14 @@ class RoomService {
       {required String user, required String room}) async {
     Constant.meetingUrl = room;
     List<String?> codeAndDomain = getCode(room) ?? [];
-
+    print(codeAndDomain.toString() + "CODEANDDOMAIN");
     if (codeAndDomain.length == 0) {
       return null;
     }
     Uri endPoint = codeAndDomain[2] == "true"
         ? Uri.parse(Constant.prodTokenEndpoint)
         : Uri.parse(Constant.qaTokenEndPoint);
-
+    print("${codeAndDomain[2] == "true".toString()} endPoint");
     http.Response response = await http.post(endPoint, body: {
       'code': (codeAndDomain[1] ?? "").trim(),
       'user_id': user,
@@ -24,15 +25,12 @@ class RoomService {
     });
 
     var body = json.decode(response.body);
-    var token = body['token'];
-    if (token != null) {
-      return [token, codeAndDomain[2]!.trim()];
-    }
-    return null;
+    print(body);
+    return [body['token'], codeAndDomain[2]!.trim()];
   }
 
-  List<String?>? getCode(String? roomUrl) {
-    String? url = roomUrl;
+  List<String?>? getCode(String roomUrl) {
+    String url = roomUrl;
     if (url == null) return [];
     url = url.trim();
     bool isProdM = url.contains(".app.100ms.live/meeting/");
@@ -51,12 +49,14 @@ class RoomService {
           : url.split(".app.100ms.live/preview/");
       code = codeAndDomain[1];
       subDomain = codeAndDomain[0].split("https://")[1] + ".app.100ms.live";
+      print("$subDomain $code");
     } else if (isQaM || isQaP) {
       codeAndDomain = isQaM
           ? url.split(".qa-app.100ms.live/meeting/")
           : url.split(".qa-app.100ms.live/preview/");
       code = codeAndDomain[1];
       subDomain = codeAndDomain[0].split("https://")[1] + ".qa-app.100ms.live";
+      print("$subDomain $code");
     }
     return [subDomain, code, isProdM || isProdP ? "true" : "false"];
   }
