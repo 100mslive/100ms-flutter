@@ -310,10 +310,9 @@ abstract class MeetingStoreBase extends ChangeNotifier
     }
 
     if (peer.isLocal) {
-
       localPeer = peer;
 
-      if(track.kind == HMSTrackKind.kHMSTrackKindVideo){
+      if (track.kind == HMSTrackKind.kHMSTrackKindVideo) {
         print("LOCALPEERTRACKVideo");
         localTrack = track;
         if (track.isMute) {
@@ -612,7 +611,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
     await meetingController.raiseHand();
   }
 
-  Future<void> setPlayBackAllowed(bool allow) async{
+  Future<void> setPlayBackAllowed(bool allow) async {
     await meetingController.setPlayBackAllowed(allow);
   }
 }

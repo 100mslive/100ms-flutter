@@ -61,8 +61,6 @@ class PlatformService {
     if (previewListeners.contains(listener)) previewListeners.remove(listener);
   }
 
-
-
   static void addLogsListener(
     HMSLogListener hmsLogListener,
   ) {

@@ -12,7 +12,7 @@ class PeerItemOrganism extends StatefulWidget {
   final double width;
   final bool isLocal;
   bool setMirror;
-  final Map<String,String> observableMap;
+  final Map<String, String> observableMap;
   PeerItemOrganism(
       {Key? key,
       required this.peerTracKNode,
@@ -20,7 +20,8 @@ class PeerItemOrganism extends StatefulWidget {
       this.height = 200.0,
       this.width = 200.0,
       this.isLocal = false,
-      this.setMirror = false,required this.observableMap})
+      this.setMirror = false,
+      required this.observableMap})
       : super(key: key);
 
   @override
@@ -39,7 +40,8 @@ class _PeerItemOrganismState extends State<PeerItemOrganism> {
 
   @override
   Widget build(BuildContext context) {
-    print("isVideoMuted ${widget.isVideoMuted} ${widget.setMirror} ${widget.peerTracKNode.name}");
+    print(
+        "isVideoMuted ${widget.isVideoMuted} ${widget.setMirror} ${widget.peerTracKNode.name}");
     MeetingStore meetingStore = context.watch<MeetingStore>();
     return Container(
       key: key,
@@ -49,15 +51,22 @@ class _PeerItemOrganismState extends State<PeerItemOrganism> {
       width: widget.width - 5.0,
       decoration: BoxDecoration(
           border: Border.all(
-              color: widget.peerTracKNode.peerId == meetingStore.highestSpeaker.peerId? Colors.blue : Colors.grey,
-              width: widget.peerTracKNode.peerId == meetingStore.highestSpeaker.peerId? 4.0 : 1.0),
+              color: widget.peerTracKNode.peerId ==
+                      meetingStore.highestSpeaker.peerId
+                  ? Colors.blue
+                  : Colors.grey,
+              width: widget.peerTracKNode.peerId ==
+                      meetingStore.highestSpeaker.peerId
+                  ? 4.0
+                  : 1.0),
           borderRadius: BorderRadius.all(Radius.circular(10))),
       child: Column(
         children: [
           Expanded(child: LayoutBuilder(
             builder: (context, constraints) {
               if ((widget.isVideoMuted || widget.peerTracKNode.track == null)) {
-                List<String>? parts = widget.peerTracKNode.name.split(" ") ?? [];
+                List<String>? parts =
+                    widget.peerTracKNode.name.split(" ") ?? [];
 
                 if (parts.length == 1) {
                   parts[0] += " ";
@@ -82,7 +91,8 @@ class _PeerItemOrganismState extends State<PeerItemOrganism> {
                 width: widget.width - 5,
                 padding: EdgeInsets.all(5.0),
                 child: HMSVideoView(
-                    track: widget.peerTracKNode.track!, setMirror: widget.setMirror),
+                    track: widget.peerTracKNode.track!,
+                    setMirror: widget.setMirror),
               );
             },
           )),
@@ -90,7 +100,7 @@ class _PeerItemOrganismState extends State<PeerItemOrganism> {
             height: 4,
           ),
           Text(
-              "${ widget.peerTracKNode.name} ${widget.peerTracKNode.track?.peer?.isLocal ?? false ? "(You)" : ""}")
+              "${widget.peerTracKNode.name} ${widget.peerTracKNode.track?.peer?.isLocal ?? false ? "(You)" : ""}")
         ],
       ),
     );
