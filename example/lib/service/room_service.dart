@@ -4,12 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:hmssdk_flutter_example/common/constant.dart';
 import 'package:http/http.dart' as http;
 
-
 class RoomService {
-  Future<List<String?>?> getToken({required String user, required String room}) async {
+  Future<List<String?>?> getToken(
+      {required String user, required String room}) async {
     Constant.meetingUrl = room;
     List<String?> codeAndDomain = getCode(room) ?? [];
-    print(codeAndDomain.toString()+"CODEANDDOMAIN");
+    print(codeAndDomain.toString() + "CODEANDDOMAIN");
     if (codeAndDomain.length == 0) {
       return null;
     }
