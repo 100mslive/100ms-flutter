@@ -151,18 +151,20 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     // MARK: - HMS SDK Delegate Callbacks
     
     public func onPreview(room: HMSRoom, localTracks: [HMSTrack]) {
-        print("On Preview Room")
+        
+        print(#function, "On Preview Room")
+        
         var tracks:[Dictionary<String, Any?>]=[]
         
         for eachTrack in localTracks{
             tracks.insert(HMSTrackExtension.toDictionary(track: eachTrack), at: tracks.count)
         }
         
-        let data:[String:Any]=[
-            "event_name":"preview_video",
-            "data":[
-                "room":HMSRoomExtension.toDictionary(room),
-                "local_tracks":tracks,
+        let data:[String:Any] = [
+            "event_name": "preview_video",
+            "data": [
+                "room": HMSRoomExtension.toDictionary(room),
+                "local_tracks": tracks
             ]
         ]
         previewSink?(data)
@@ -249,7 +251,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         let data:[String:Any]=[
             "event_name":"on_error",
             "data":[
-                "error":HMSErrorExtension.toDictionary(error: error)
+                "error": HMSErrorExtension.toDictionary(error)
             ]
         ]
         eventSink?(data)
@@ -378,7 +380,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         let shouldSkipPIIEvents = arguments["should_skip_pii_events"] as? Bool ?? false
         let metaData = arguments["meta_data"] as? String
         
-        if let endPoint = arguments["end_point"] as? String {
+        if let endPoint = arguments["end_point"] as? String, !endPoint.isEmpty {
             config = HMSConfig(userName: userName, authToken: authToken, shouldSkipPIIEvents: shouldSkipPIIEvents, metadata: metaData, endpoint: endPoint)
         } else {
             config = HMSConfig(userName: userName, authToken: authToken, shouldSkipPIIEvents: shouldSkipPIIEvents, metadata: metaData)
@@ -408,7 +410,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             let shouldSkipPIIEvents = arguments["should_skip_pii_events"] as? Bool ?? false
             let metaData = arguments["meta_data"] as? String
             
-            if let endPoint = arguments["end_point"] as? String {
+            if let endPoint = arguments["end_point"] as? String, !endPoint.isEmpty  {
                 config = HMSConfig(userName: userName, authToken: authToken, shouldSkipPIIEvents: shouldSkipPIIEvents, metadata: metaData, endpoint: endPoint)
             } else {
                 config = HMSConfig(userName: userName, authToken: authToken, shouldSkipPIIEvents: shouldSkipPIIEvents, metadata: metaData)

@@ -41,7 +41,9 @@ class CustomLogger {
   }
 
   Future<void> getDirectoryForLogRecord() async {
-    final Directory? directory = await getExternalStorageDirectory();
+    final Directory? directory = Platform.isAndroid
+        ? await getExternalStorageDirectory()
+        : await getApplicationSupportDirectory();
     print(directory?.path);
     file = File('${directory?.path}/test.txt');
   }

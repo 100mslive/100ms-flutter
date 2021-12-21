@@ -1,6 +1,7 @@
 import UIKit
 import Flutter
 import Firebase
+
 @UIApplicationMain
 @objc class AppDelegate: FlutterAppDelegate {
     
@@ -11,6 +12,8 @@ import Firebase
     
     
     override func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        
+        GeneratedPluginRegistrant.register(with: self)
         
         let channelController = window.rootViewController as! FlutterViewController
         
@@ -27,8 +30,9 @@ import Firebase
         eventChannel = FlutterEventChannel(name: "deeplink.100ms.dev/events", binaryMessenger: eventController as! FlutterBinaryMessenger)
         
         eventChannel?.setStreamHandler(linkStreamHandler)
-        GeneratedPluginRegistrant.register(with: self)
+        
         UIApplication.shared.isIdleTimerDisabled = true
+        
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
     }
     

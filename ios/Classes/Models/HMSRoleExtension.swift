@@ -15,7 +15,7 @@ class HMSRoleExtension{
         
         let dict:[String:Any?] = [
             "name":role.name,
-            "publish_settings":HMSPublishSettingExtension.toDictionary(publishSettings:role.publishSettings),
+            "publish_settings":HMSPublishSettingsExtension.toDictionary(publishSettings:role.publishSettings),
             "subscribe_settings":HMSSubscribeSettingsExtension.toDictionary(subscribeSettings:role.subscribeSettings),
             "priority":role.priority,
             "permissions":HMSPermissionExtension.toDictionary(permission:role.permissions),

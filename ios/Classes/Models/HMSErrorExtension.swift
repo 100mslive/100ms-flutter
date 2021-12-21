@@ -9,7 +9,7 @@ import Foundation
 import HMSSDK
 
 class HMSErrorExtension{
-    static func toDictionary(error:HMSError)-> Dictionary<String,Any?>{
+    static func toDictionary(_ error: HMSError) -> Dictionary<String,Any?> {
         
         var dict:Dictionary<String, Any?> = [:]
         dict["id"] = error.id
@@ -27,6 +27,8 @@ class HMSErrorExtension{
         if let params = error.params{
             dict["params"] = params
         }
+        
+        dict["description"] = error.localizedDescription
         
         return dict
         

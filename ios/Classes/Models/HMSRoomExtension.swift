@@ -31,6 +31,12 @@ class  HMSRoomExtension {
         }
         dict["peers"] = peers
         
+        dict["rtmp_streaming_state"] = HMSStreamingStateExtension.toDictionary(rtmp: room.rtmpStreamingState)
+
+        dict["browser_recording_state"] = HMSStreamingStateExtension.toDictionary(browser: room.browserRecordingState)
+
+        dict["server_recording_state"] = HMSStreamingStateExtension.toDictionary(server: room.serverRecordingState)
+        
         return dict
     }
 }

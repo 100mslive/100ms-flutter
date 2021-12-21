@@ -47,7 +47,7 @@ class  HMSPeerExtension{
   
     
     
-    static func getValueOfHMSPeerUpdate (update:HMSPeerUpdate)->String{
+    static func getValueOfHMSPeerUpdate(update: HMSPeerUpdate) -> String {
         switch update {
         case .peerJoined:
             return "peerJoined"
@@ -57,6 +57,10 @@ class  HMSPeerExtension{
             return "roleUpdated"
         case .defaultUpdate:
             return "defaultUpdate"
+        case .nameUpdated:
+            return "nameChanged"
+        case .metadataUpdated:
+            return "metadataChanged"
         @unknown default:
             return "defaultUpdate"
         }
