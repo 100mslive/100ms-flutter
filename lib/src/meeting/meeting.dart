@@ -305,6 +305,10 @@ class HMSMeeting {
     await PlatformService.invokeMethod(PlatformMethod.unMuteAll);
   }
 
+  Future<void> setPlayBackAllowed(bool allow) async{
+    await PlatformService.invokeMethod(PlatformMethod.setPlayBackAllowed,arguments: {"allowed":allow});
+  }
+
   Future<bool> changeTrackStateForRole(
       bool mute, String type, String source, List<String> roles,
       {HMSActionResultListener? hmsActionResultListener}) async {

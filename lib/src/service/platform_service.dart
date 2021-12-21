@@ -61,8 +61,7 @@ class PlatformService {
     if (previewListeners.contains(listener)) previewListeners.remove(listener);
   }
 
-  static void startHMSLogger(
-      HMSLogLevel webRtclogLevel, HMSLogLevel logLevel) {}
+
 
   static void addLogsListener(
     HMSLogListener hmsLogListener,

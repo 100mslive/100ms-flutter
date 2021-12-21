@@ -63,6 +63,8 @@ abstract class MeetingStoreBase extends ChangeNotifier
 
   @observable
   HMSPeer? localPeer;
+  @observable
+  HMSTrack? localTrack;
 
   @observable
   HMSTrack? screenTrack;
@@ -294,6 +296,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
       {required HMSTrack track,
       required HMSTrackUpdate trackUpdate,
       required HMSPeer peer}) {
+    print("${peer.name} ${track.kind} onTrackUpdateFlutterMeetingStore");
     if (isSpeakerOn) {
       unMuteAll();
     } else {
@@ -307,9 +310,15 @@ abstract class MeetingStoreBase extends ChangeNotifier
     }
 
     if (peer.isLocal) {
+
       localPeer = peer;
-      if (track.isMute && track.kind == HMSTrackKind.kHMSTrackKindVideo) {
-        this.isVideoOn = false;
+
+      if(track.kind == HMSTrackKind.kHMSTrackKindVideo){
+        print("LOCALPEERTRACKVideo");
+        localTrack = track;
+        if (track.isMute) {
+          this.isVideoOn = false;
+        }
       }
     }
 
@@ -601,5 +610,9 @@ abstract class MeetingStoreBase extends ChangeNotifier
 
   Future<void> raiseHand() async {
     await meetingController.raiseHand();
+  }
+
+  Future<void> setPlayBackAllowed(bool allow) async{
+    await meetingController.setPlayBackAllowed(allow);
   }
 }

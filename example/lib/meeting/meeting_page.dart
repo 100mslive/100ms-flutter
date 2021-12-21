@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -48,6 +47,9 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
   CustomLogger logger = CustomLogger();
   int appBarIndex = 0;
   bool raisedHand = false;
+  bool audioViewOn = false;
+  int countOfVideoOnBetweenTwo = 1;
+  bool videoPreviousState = false;
 
   @override
   void initState() {
@@ -159,7 +161,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
         // StaticLogger.logger?.close();
         // ShareExtend.share(CustomLogger.file?.path ?? '', 'file');
         // logger.getCustomLogger();
-        UtilityComponents.showSnackBarWithString("Coming Soon...", context);
+
         break;
 
       case 2:
@@ -184,6 +186,33 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
           ),
         );
         break;
+      case 5:
+        audioViewOn = !audioViewOn;
+        if (audioViewOn) {
+          countOfVideoOnBetweenTwo = 0;
+          _meetingStore.trackStatus.forEach((key, value) {
+            _meetingStore.trackStatus[key] = HMSTrackUpdate.trackMuted;
+          });
+          videoPreviousState = _meetingStore.isVideoOn;
+          _meetingStore.isVideoOn = false;
+          _meetingStore.setPlayBackAllowed(false);
+        } else {
+          _meetingStore.peerTracks.forEach((element) {
+            _meetingStore.trackStatus[element.peerId] = element.track?.isMute??false
+                ? HMSTrackUpdate.trackMuted
+                : HMSTrackUpdate.trackUnMuted;
+          });
+          _meetingStore.setPlayBackAllowed(true);
+          if (countOfVideoOnBetweenTwo == 0) {
+            _meetingStore.isVideoOn = videoPreviousState;
+          } else
+            _meetingStore.isVideoOn =
+                !(_meetingStore.localTrack?.isMute ?? true);
+          print(
+              "${_meetingStore.isVideoOn} ISVIDEOON ${_meetingStore.localTrack == null}");
+        }
+        setState(() { });
+        break;
       default:
     }
   }
@@ -198,8 +227,8 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
         (orientation == Orientation.landscape ? 2.5 : 2.8);
 
     final double itemWidth = size.width / 2.1;
-    // final aspectRatio = itemWidth / itemHeight;
-    // print(aspectRatio.toString() + "AspectRatio");
+    //final aspectRatio = itemWidth / itemHeight;
+    //print(aspectRatio.toString() + "AspectRatio");
     return WillPopScope(
       child: Scaffold(
         appBar: AppBar(
@@ -275,6 +304,19 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                         Icon(CupertinoIcons.person_3_fill, color: Colors.blue),
                       ]),
                   value: 4,
+                ),
+                PopupMenuItem(
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "AudioView ${audioViewOn ? "On" : "Off"} ",
+                          style: TextStyle(color: Colors.blue),
+                        ),
+                        Icon(audioViewOn ? Icons.toggle_off : Icons.toggle_on,
+                            color: Colors.blue),
+                      ]),
+                  value: 5,
                 )
               ],
               onSelected: handleMenu,
@@ -326,105 +368,89 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                           itemBuilder: (ctx, index) {
                             ObservableMap<String, HMSTrackUpdate> map =
                                 _meetingStore.trackStatus;
-                            return (index < peerFilteredList.length)
-                                ? ((orientation == Orientation.portrait &&
-                                        _meetingStore.screenShareTrack == null)
-                                    ? Padding(
-                                      padding: EdgeInsets.symmetric(vertical: itemHeightWithoutSs*0.12),
-                                      child: Column(
-                                        // mainAxisAlignment: moreThanTwoTile?MainAxisAlignment.center:MainAxisAlignment.start,
-                                        
+                            return ((orientation == Orientation.portrait &&
+                                    _meetingStore.screenShareTrack == null)
+                                ? Padding(
+                                  padding: EdgeInsets.symmetric(vertical: itemHeightWithoutSs*0.12),
+                                  child: Column(
+                                      children: [
+                                        Row(
+                                          children: [
+                                            //if (index * 4 < filteredList.length)
+                                            VideoTile(
+                                              tileIndex: index * 4,
+                                              filteredList: peerFilteredList,
+                                              itemHeight: itemHeightWithoutSs,
+                                              itemWidth: itemWidth,
+                                              trackStatus: map,
+                                              observerMap: audioKeyMap,
+                                              audioView: audioViewOn,
+                                            ),
+                                            //if (index * 4 + 1 < filteredList.length)
+                                            VideoTile(
+                                              tileIndex: index * 4 + 1,
+                                              filteredList: peerFilteredList,
+                                              itemHeight: itemHeightWithoutSs,
+                                              itemWidth: itemWidth,
+                                              trackStatus: map,
+                                              observerMap: audioKeyMap,
+                                              audioView: audioViewOn,
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            //if (index * 4 + 2 < filteredList.length)
+                                            VideoTile(
+                                              tileIndex: index * 4 + 2,
+                                              filteredList: peerFilteredList,
+                                              itemHeight: itemHeightWithoutSs,
+                                              itemWidth: itemWidth,
+                                              trackStatus: map,
+                                              observerMap: audioKeyMap,
+                                              audioView: audioViewOn,
+                                            ),
+                                            //if (index * 4 + 3 < filteredList.length)
+                                            VideoTile(
+                                              tileIndex: index * 4 + 3,
+                                              filteredList: peerFilteredList,
+                                              itemHeight: itemHeightWithoutSs,
+                                              itemWidth: itemWidth,
+                                              trackStatus: map,
+                                              observerMap: audioKeyMap,
+                                              audioView: audioViewOn,
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                )
+                                : Column(
+                                    children: [
+                                      Row(
                                         children: [
-                                          Row(
-                                            children: [
-                                              //if (index * 4 < filteredList.length)
-                                              VideoTile(
-                                                tileIndex: index * 4,
-                                                filteredList:
-                                                    peerFilteredList,
-                                                itemHeight:
-                                                    itemHeightWithoutSs,
-                                                itemWidth: itemWidth,
-                                                trackStatus: map,
-                                                observerMap: audioKeyMap,
-                                              ),
-                                              //if (index * 4 + 1 < filteredList.length)
-                                              VideoTile(
-                                                tileIndex: index * 4 + 1,
-                                                filteredList:
-                                                    peerFilteredList,
-                                                itemHeight:
-                                                    itemHeightWithoutSs,
-                                                itemWidth: itemWidth,
-                                                trackStatus: map,
-                                                observerMap: audioKeyMap,
-                                              ),
-                                            ],
+                                          VideoTile(
+                                            tileIndex: index * 2,
+                                            filteredList: peerFilteredList,
+                                            itemHeight: itemHeightWithSs,
+                                            itemWidth: itemWidth,
+                                            trackStatus: map,
+                                            observerMap: audioKeyMap,
+                                            audioView: audioViewOn,
                                           ),
-
-                                          Row(
-                                            children: [
-                                              //if (index * 4 + 2 < filteredList.length)
-                                              VideoTile(
-                                                tileIndex: index * 4 + 2,
-                                                filteredList:
-                                                    peerFilteredList,
-                                                itemHeight:
-                                                    itemHeightWithoutSs,
-                                                itemWidth: itemWidth,
-                                                trackStatus: map,
-                                                observerMap: audioKeyMap,
-                                              ),
-                                              //if (index * 4 + 3 < filteredList.length)
-                                              VideoTile(
-                                                tileIndex: index * 4 + 3,
-                                                filteredList:
-                                                    peerFilteredList,
-                                                itemHeight:
-                                                    itemHeightWithoutSs,
-                                                itemWidth: itemWidth,
-                                                trackStatus: map,
-                                                observerMap: audioKeyMap,
-                                              ),
-                                            ],
+                                          VideoTile(
+                                            tileIndex: index * 2 + 1,
+                                            filteredList: peerFilteredList,
+                                            itemHeight: itemHeightWithSs,
+                                            itemWidth: itemWidth,
+                                            trackStatus: map,
+                                            observerMap: audioKeyMap,
+                                            audioView: audioViewOn,
                                           ),
                                         ],
                                       ),
-                                    )
-                                    : Column(
-                                        children: [
-                                          Row(
-                                            children: [
-                                              VideoTile(
-                                                tileIndex: index * 2,
-                                                filteredList: peerFilteredList,
-                                                itemHeight: itemHeightWithSs,
-                                                itemWidth: itemWidth,
-                                                trackStatus: map,
-                                                observerMap: audioKeyMap,
-                                              ),
-                                              VideoTile(
-                                                tileIndex: index * 2 + 1,
-                                                filteredList: peerFilteredList,
-                                                itemHeight: itemHeightWithSs,
-                                                itemWidth: itemWidth,
-                                                trackStatus: map,
-                                                observerMap: audioKeyMap,
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ))
-                                : Container(
-                                    child: VideoTile(
-                                      tileIndex: 0,
-                                      filteredList: peerFilteredList,
-                                      itemHeight: itemHeightWithSs * 2,
-                                      itemWidth: itemHeightWithoutSs * 2,
-                                      trackStatus: map,
-                                      observerMap: audioKeyMap,
-                                    ),
-                                  );
+                                    ],
+                                  ));
                           },
                           itemCount: ((peerFilteredList.length - 1) /
                                       ((orientation == Orientation.portrait) &&
@@ -452,9 +478,12 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                 return IconButton(
                     tooltip: 'Video',
                     iconSize: 32,
-                    onPressed: () {
-                      _meetingStore.toggleVideo();
-                    },
+                    onPressed: (audioViewOn)
+                        ? null
+                        : () {
+                            _meetingStore.toggleVideo();
+                            countOfVideoOnBetweenTwo++;
+                          },
                     icon: Icon(_meetingStore.isVideoOn
                         ? Icons.videocam
                         : Icons.videocam_off));
