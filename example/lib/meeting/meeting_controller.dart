@@ -83,6 +83,10 @@ class MeetingController {
     HmsSdkManager.hmsSdkInteractor?.removeLogsListener(listener);
   }
 
+  Future<void> setPlayBackAllowed(bool allow) async{
+    await HmsSdkManager.hmsSdkInteractor?.setPlayBackAllowed(allow);
+  }
+
   void addPreviewListener(HMSPreviewListener listener) {
     HmsSdkManager.hmsSdkInteractor?.addPreviewListener(listener);
   }

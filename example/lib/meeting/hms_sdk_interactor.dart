@@ -140,6 +140,10 @@ class HMSSDKInteractor implements HMSActionResultListener{
     _meeting.unMuteAll();
   }
 
+  Future<void> setPlayBackAllowed(bool allow) async{
+   await _meeting.setPlayBackAllowed(allow);
+  }
+
   Future<HMSException?> startRtmpOrRecording(
       HMSRecordingConfig hmsRecordingConfig) async {
     return await _meeting.startRtmpOrRecording(hmsRecordingConfig);

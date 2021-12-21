@@ -193,6 +193,9 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             "raise_hand"->{
                 raiseHand()
             }
+            "set_playback_allowed"->{
+                setPlayBackAllowed(call)
+            }
             else -> {
                 result.notImplemented()
             }
@@ -253,7 +256,6 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
                 )
         }
         hmssdk.join(hmsConfig!!, this.hmsUpdateListener)
-
     }
 
 
@@ -958,6 +960,16 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         }
 
     }
+
+    private fun setPlayBackAllowed(call: MethodCall){
+        val allowed = call.argument<Boolean>("allowed")
+        hmssdk.getRemotePeers().forEach {
+            it.videoTrack?.isPlaybackAllowed=allowed!!
+        }
+        getLocalPeer().videoTrack?.setMute(!(allowed!!))
+        result?.success("setPlatBackAllowed${allowed!!}")
+    }
+
 
 
 }
