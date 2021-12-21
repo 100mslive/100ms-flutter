@@ -331,7 +331,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
               child: Column(
                 children: [
                   Observer(builder: (_) {
-                    if (_meetingStore.screenShareTrack != null) {
+                    if (_meetingStore.screenShareTrack != null && !audioViewOn) {
                       return SizedBox(
                         width: double.infinity,
                         height: MediaQuery.of(context).size.height / 2.5,
@@ -369,7 +369,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                             ObservableMap<String, HMSTrackUpdate> map =
                                 _meetingStore.trackStatus;
                             return ((orientation == Orientation.portrait &&
-                                    _meetingStore.screenShareTrack == null)
+                                    _meetingStore.screenShareTrack == null) || audioViewOn
                                 ? Padding(
                                   padding: EdgeInsets.symmetric(vertical: itemHeightWithoutSs*0.12),
                                   child: Column(
