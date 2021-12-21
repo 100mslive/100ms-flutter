@@ -80,7 +80,8 @@ enum PlatformMethod {
   build,
   getRoom,
   updateHMSLocalVideoTrackSettings,
-  raiseHand
+  raiseHand,
+  setPlayBackAllowed,
 }
 
 extension PlatformMethodValues on PlatformMethod {
@@ -170,6 +171,8 @@ extension PlatformMethodValues on PlatformMethod {
         return "update_hms_video_track_settings";
       case PlatformMethod.raiseHand:
         return "raise_hand";
+      case PlatformMethod.setPlayBackAllowed:
+        return "set_playback_allowed";
     }
   }
 
@@ -257,6 +260,8 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.updateHMSLocalVideoTrackSettings;
       case "raise_hand":
         return PlatformMethod.raiseHand;
+      case "set_playback_allowed":
+        return PlatformMethod.setPlayBackAllowed;
       default:
         return PlatformMethod.unknown;
     }

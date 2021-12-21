@@ -18,7 +18,7 @@ class VideoTile extends StatefulWidget {
   final double itemWidth;
   final Map<String, HMSTrackUpdate> trackStatus;
   final Map<String, String> observerMap;
-
+  final bool audioView;
   VideoTile(
       {Key? key,
       required this.tileIndex,
@@ -26,7 +26,9 @@ class VideoTile extends StatefulWidget {
       required this.itemHeight,
       required this.itemWidth,
       required this.trackStatus,
-      required this.observerMap})
+      required this.observerMap,
+      required this.audioView,
+      })
       : super(key: key);
 
   @override
@@ -53,7 +55,7 @@ class _VideoTileState extends State<VideoTile> {
         if (visiblePercentage <= 40) {
           trackStatus[peerId] = HMSTrackUpdate.trackMuted;
         } else {
-          trackStatus[peerId] = filteredList[index].track?.isMute ?? true
+          trackStatus[peerId] = (widget.audioView)?HMSTrackUpdate.trackMuted:filteredList[index].track?.isMute ?? true
               ? HMSTrackUpdate.trackMuted
               : HMSTrackUpdate.trackUnMuted;
           debugPrint(
@@ -65,7 +67,7 @@ class _VideoTileState extends State<VideoTile> {
       key: Key(filteredList[index].peerId),
       child: InkWell(
         onLongPress: () {
-          if (filteredList[index].peerId != _meetingStore.localPeer!.peerId)
+          if (!widget.audioView && filteredList[index].peerId != _meetingStore.localPeer!.peerId)
             showDialog(
                 context: context,
                 builder: (_) => Column(
@@ -101,7 +103,7 @@ class _VideoTileState extends State<VideoTile> {
               height: widget.itemHeight,
               width: widget.itemWidth,
               peerTracKNode: filteredList[index],
-              isVideoMuted: filteredList[index].track?.peer?.isLocal ?? true
+              isVideoMuted: (widget.audioView)?true:filteredList[index].track?.peer?.isLocal ?? true
                   ? !_meetingStore.isVideoOn
                   : (trackStatus[filteredList[index].peerId]) ==
                       HMSTrackUpdate.trackMuted);
