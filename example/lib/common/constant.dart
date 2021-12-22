@@ -6,7 +6,8 @@ class Constant {
 
   static String tokenQuery = "api/token";
 
-  static String defaultRoomID = "";
+  static String defaultRoomID =
+      "https://pikachu.app.100ms.live/preview/gloppy-cinnabar-frigatebird";
   // "https://yogi.app.100ms.live/meeting/nih-bkn-vek";
 
   static String tokenKey = "token";

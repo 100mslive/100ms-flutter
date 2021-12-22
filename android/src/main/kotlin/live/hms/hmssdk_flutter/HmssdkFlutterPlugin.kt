@@ -967,12 +967,16 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         hmssdk.startScreenshare(object : HMSActionResultListener {
             override fun onError(error: HMSException) {
                 // error
-                result?.success(false)
+                activity.runOnUiThread {
+                    result?.success(false)
+                }
             }
 
             override fun onSuccess() {
                 // success
-                result?.success(true)
+                activity.runOnUiThread {
+                    result?.success(true)
+                }
             }
         }, data)
 
