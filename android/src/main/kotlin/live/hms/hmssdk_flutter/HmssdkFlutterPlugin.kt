@@ -1,7 +1,9 @@
 package live.hms.hmssdk_flutter
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.media.projection.MediaProjectionManager
 import android.os.Build
 import androidx.annotation.NonNull
@@ -41,6 +43,7 @@ import java.lang.Exception
 
 
 /** HmssdkFlutterPlugin */
+@SuppressLint("StaticFieldLeak")
 class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
     EventChannel.StreamHandler {
     private lateinit var channel: MethodChannel
@@ -56,6 +59,10 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
     private var requestChange: HMSRoleChangeRequest? = null
     private var hmsConfig: HMSConfig? = null
     private var result: Result? = null
+
+    companion object {
+        var hmssdkFlutterPlugin: HmssdkFlutterPlugin? = null
+    }
 
     override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
         this.channel = MethodChannel(flutterPluginBinding.binaryMessenger, "hmssdk_flutter")
@@ -78,6 +85,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             "HMSVideoView",
             hmsVideoFactory
         )
+        hmssdkFlutterPlugin = this
 
     }
 
@@ -183,6 +191,9 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             "stop_rtmp_and_recording" -> {
                 stopRtmpAndRecording()
             }
+            "start_screen_share" -> {
+                startScreenShare()
+            }
             "build" -> {
                 build(this.activity, call, result)
             }
@@ -219,6 +230,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         meetingEventChannel.setStreamHandler(null)
         previewChannel.setStreamHandler(null)
         logsEventChannel.setStreamHandler(null)
+        hmssdkFlutterPlugin = null
     }
 
     override fun onAttachedToActivity(binding: ActivityPluginBinding) {
@@ -227,7 +239,6 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
     }
 
     override fun onDetachedFromActivityForConfigChanges() {
-
     }
 
     override fun onReattachedToActivityForConfigChanges(binding: ActivityPluginBinding) {
@@ -486,7 +497,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
                 HMSLogger.level.toString()
             )
 
-            if(speakers.isNotEmpty()) {
+            if (speakers.isNotEmpty()) {
                 speakers.forEach {
                     speakersList.add(HMSSpeakerExtension.toDictionary(it)!!)
 
@@ -568,11 +579,15 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         result.success(HMSPeerExtension.toDictionary(getLocalPeer()))
     }
 
-    private fun startScreenShare(){
-            val mediaProjectionManager: MediaProjectionManager? = requireContext().getSystemService(
-                Context.MEDIA_PROJECTION_SERVICE
-            ) as MediaProjectionManager
-            resultLauncher.launch(mediaProjectionManager?.createScreenCaptureIntent())
+
+    private fun startScreenShare() {
+        val mediaProjectionManager: MediaProjectionManager? = activity.getSystemService(
+            Context.MEDIA_PROJECTION_SERVICE
+        ) as MediaProjectionManager
+        activity.startActivityForResult(
+            mediaProjectionManager?.createScreenCaptureIntent(),
+            Constants.SCREEN_SHARE_INTENT_REQUEST_CODE
+        )
     }
 
     private fun muteAll() {
@@ -638,7 +653,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         val hmsTrackSettingMap =
             call.argument<HashMap<String, HashMap<String, Any?>?>?>("hms_track_setting")
         if (hmsTrackSettingMap == null) {
-            this.hmssdk = HMSSDK.Builder(activity).build()
+            this.hmssdk = HMSSDK.Builder(activity.applicationContext).build()
             result.success(false)
             return
         }
@@ -933,6 +948,22 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         }
 
     }
+
+    fun requestScreenShare(data: Intent?) {
+        hmssdk.startScreenshare(object : HMSActionResultListener {
+            override fun onError(error: HMSException) {
+                // error
+                result?.success(false)
+            }
+
+            override fun onSuccess() {
+                // success
+                result?.success(true)
+            }
+        }, data)
+
+    }
+
     private val hmsLoggerListener = object : HMSLogger.Loggable {
         override fun onLogMessage(
             level: HMSLogger.LogLevel,
