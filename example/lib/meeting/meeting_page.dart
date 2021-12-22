@@ -360,6 +360,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                   Observer(builder: (_) {
                     if (_meetingStore.screenShareTrack != null &&
                         !audioViewOn) {
+
                       return SizedBox(
                         width: double.infinity,
                         height: MediaQuery
@@ -408,6 +409,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                             return ((orientation == Orientation.portrait &&
                                 _meetingStore.screenShareTrack == null) ||
                                 audioViewOn
+
                                 ? Padding(
                               padding: EdgeInsets.symmetric(
                                   vertical: itemHeightWithoutSs * 0.12),
