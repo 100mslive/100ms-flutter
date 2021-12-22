@@ -333,7 +333,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         val peer = hmssdk.getLocalPeer()
         val videoTrack = peer?.videoTrack
         CoroutineScope(Dispatchers.Default).launch {
-            videoTrack!!.switchCamera()
+            videoTrack?.switchCamera()
         }
     }
 
