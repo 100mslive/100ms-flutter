@@ -145,7 +145,7 @@ class PlatformService {
               data['room'] != null ? HMSRoom.fromMap(data['room']) : null;
 
           HMSRoomUpdate? update =
-              HMSRoomUpdateValues.getHMSRoomUpdateFromName(data['update']);
+              HMSRoomUpdateValues.getHMSRoomUpdateFromName(data['room']['update']);
           notifyMeetingListeners(method, {'room': room, 'update': update});
           break;
         case HMSUpdateListenerMethod.onPeerUpdate:

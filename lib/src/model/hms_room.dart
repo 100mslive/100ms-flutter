@@ -9,6 +9,7 @@
 ///A [room] is the basic object that 100ms SDKs return on successful connection. This contains references to peers, tracks and everything you need to render a live a/v app.
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter/src/model/hms_browser_recording_state.dart';
+import 'package:hmssdk_flutter/src/model/hms_hls_streaming_state.dart';
 
 import 'package:hmssdk_flutter/src/model/hms_server_recording_state.dart';
 
@@ -23,7 +24,7 @@ class HMSRoom {
   HMSBrowserRecordingState? hmsBrowserRecordingState;
   HMSRtmpStreamingState? hmsRtmpStreamingState;
   HMSServerRecordingState? hmsServerRecordingState;
-
+  HMSHLSStreamingState? hmshlsStreamingState;
   ///[peers] list which are in the room.
   final List<HMSPeer>? peers;
 
@@ -35,7 +36,7 @@ class HMSRoom {
       required this.hmsLocalPeer,
       this.hmsServerRecordingState,
       this.hmsRtmpStreamingState,
-      this.hmsBrowserRecordingState});
+      this.hmsBrowserRecordingState,this.hmshlsStreamingState});
 
   factory HMSRoom.fromMap(Map map) {
     List<HMSPeer> peers = [];
@@ -60,6 +61,9 @@ class HMSRoom {
             : null,
         hmsServerRecordingState: map["server_recording_state"] != null
             ? HMSServerRecordingState.fromMap(map["server_recording_state"])
+            : null,
+        hmshlsStreamingState: map["hls_streaming_state"] != null
+            ? HMSHLSStreamingState.fromMap(map["hls_streaming_state"])
             : null,
         id: map['id'],
         name: map['name'],

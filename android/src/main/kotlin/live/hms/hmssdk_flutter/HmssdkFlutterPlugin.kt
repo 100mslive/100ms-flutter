@@ -196,6 +196,12 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             "set_playback_allowed"->{
                 setPlayBackAllowed(call)
             }
+            "hls_start_streaming"->{
+                hlsStreaming(call)
+            }
+            "hls_stop_streaming"->{
+                stopHLSStreaming()
+            }
             else -> {
                 result.notImplemented()
             }
@@ -524,6 +530,24 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         hmssdk.changeTrackState(track, mute!!, hmsActionResultListener = this.actionListener)
     }
 
+    private fun hlsStreaming(call: MethodCall) {
+        val meetingUrl = call.argument<String>("meeting_url")
+        val meetingUrlVariant1 = HMSHLSMeetingURLVariant(
+            meetingUrl = meetingUrl!!,
+            metadata = "tag for reference"
+        )
+
+        val hlsConfig = HMSHLSConfig(listOf(meetingUrlVariant1))
+
+        hmssdk.startHLSStreaming(hlsConfig, hmsActionResultListener = this.actionListener)
+    }
+
+    private fun stopHLSStreaming(){
+        hmssdk.stopHLSStreaming(null, hmsActionResultListener = actionListener)
+    }
+
+
+
     private fun removePeer(call: MethodCall) {
         val peerId = call.argument<String>("peer_id")
 
@@ -699,7 +723,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
     }
 
     private fun getRoom(result: Result) {
-        result.success(HMSRoomExtension.toDictionary(hmssdk?.getRoom()))
+        result.success(HMSRoomExtension.toDictionary(hmssdk?.getRoom(),null))
     }
 
     private fun updateHMSLocalTrackSetting(call: MethodCall) {
@@ -771,7 +795,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             args.put("event_name", "on_join_room")
 
             val roomArgs = HashMap<String, Any?>()
-            roomArgs.put("room", HMSRoomExtension.toDictionary(room))
+            roomArgs.put("room", HMSRoomExtension.toDictionary(room,null))
             args.put("data", roomArgs)
 //        Log.i("onJoin", args.get("data").toString())
             if (roomArgs["room"] != null)
@@ -809,7 +833,10 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         override fun onRoomUpdate(type: HMSRoomUpdate, hmsRoom: HMSRoom) {
             val args = HashMap<String, Any?>()
             args.put("event_name", "on_update_room")
-            args.put("data", hmsRoom.name)
+
+            val arg = HashMap<String,Any?>()
+            arg["room"]=HMSRoomExtension.toDictionary(hmsRoom,type)?:null
+            args.put("data", arg)
             if (args["data"] != null)
                 CoroutineScope(Dispatchers.Main).launch {
                     eventSink?.success(args)

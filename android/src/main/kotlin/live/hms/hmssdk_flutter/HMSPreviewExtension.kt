@@ -9,7 +9,7 @@ class HMSPreviewExtension {
         fun toDictionary(room: HMSRoom?,allTracks:Array<HMSTrack>?):HashMap<String,Any>?{
             val args=HashMap<String,Any>()
             if(room==null || allTracks==null)return null
-            args["room"] = HMSRoomExtension.toDictionary(room)!!
+            args["room"] = HMSRoomExtension.toDictionary(room,hmsRoomUpdate = null)!!
             val tracks=ArrayList<Any>()
 
             for (eachTrack in allTracks) {
