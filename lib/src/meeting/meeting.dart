@@ -295,7 +295,15 @@ class HMSMeeting {
     return isMute;
   }
 
+  Future<bool> startScreenShare() async {
+    bool isScreenShareEnabled =
+        await PlatformService.invokeMethod(PlatformMethod.startScreenShare);
+    return isScreenShareEnabled;
+  }
 
+  void stopScreenShare() async {
+    await PlatformService.invokeMethod(PlatformMethod.stopScreenShare);
+  }
 
   void muteAll() async {
     await PlatformService.invokeMethod(PlatformMethod.muteAll);

@@ -519,6 +519,16 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
             Container(
               padding: EdgeInsets.all(8),
               child: IconButton(
+                  tooltip: 'Screen Share',
+                  iconSize: 32,
+                  onPressed: () {
+                    _meetingStore.startScreenShare();
+                  },
+                  icon: Icon(Icons.screen_share)),
+            ),
+            Container(
+              padding: EdgeInsets.all(8),
+              child: IconButton(
                   tooltip: 'Chat',
                   iconSize: 32,
                   onPressed: () {
