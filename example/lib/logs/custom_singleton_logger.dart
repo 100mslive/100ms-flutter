@@ -69,7 +69,8 @@ class FileOutput extends LogOutput {
 
   @override
   void output(OutputEvent event) {
-    print("-------------------------Logs Start Here------------------------------------------------------");
+    print(
+        "-------------------------Logs Start Here------------------------------------------------------");
     _sink?.writeAll(event.lines, '\n');
   }
 

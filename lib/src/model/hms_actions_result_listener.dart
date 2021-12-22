@@ -1,7 +1,6 @@
-
 import 'package:hmssdk_flutter/src/exceptions/hms_exception.dart';
 
-abstract class HMSActionResultListener{
+abstract class HMSActionResultListener {
   void onSuccess();
 
   void onError({HMSException? hmsException});

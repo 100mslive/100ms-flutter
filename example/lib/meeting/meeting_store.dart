@@ -1,12 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
-// import 'dart:js';
 
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter/src/enum/hms_log_level.dart';
-import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
 import 'package:hmssdk_flutter_example/logs/static_logger.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_controller.dart';
 import 'package:hmssdk_flutter_example/meeting/peerTrackNode.dart';
@@ -16,7 +14,7 @@ part 'meeting_store.g.dart';
 
 class MeetingStore = MeetingStoreBase with _$MeetingStore;
 
-abstract class MeetingStoreBase
+abstract class MeetingStoreBase extends ChangeNotifier
     with Store
     implements HMSUpdateListener, HMSLogListener {
   @observable
@@ -57,12 +55,16 @@ abstract class MeetingStoreBase
   List<HMSRole> roles = [];
 
   late MeetingController meetingController;
+  late PeerTracKNode highestSpeaker = PeerTracKNode(peerId: "-1");
+  late int highestSpeakerIndex = -1;
 
   @observable
   ObservableList<HMSPeer> peers = ObservableList.of([]);
 
   @observable
   HMSPeer? localPeer;
+  @observable
+  HMSTrack? localTrack;
 
   @observable
   HMSTrack? screenTrack;
@@ -97,7 +99,7 @@ abstract class MeetingStoreBase
   }
 
   @action
-  void removeListener() {
+  void removeListenerMeeting() {
     meetingController.removeMeetingListener(this);
     removeLogsListener();
   }
@@ -294,6 +296,7 @@ abstract class MeetingStoreBase
       {required HMSTrack track,
       required HMSTrackUpdate trackUpdate,
       required HMSPeer peer}) {
+    print("${peer.name} ${track.kind} onTrackUpdateFlutterMeetingStore");
     if (isSpeakerOn) {
       unMuteAll();
     } else {
@@ -306,15 +309,16 @@ abstract class MeetingStoreBase
       this.isMicOn = false;
     }
 
-    print("onTrackUpdate ${trackStatus[track.trackId]}");
-
-    if (track.source == "SCREEN") {
-      isScreenShareOn = true;
-    }
     if (peer.isLocal) {
+
       localPeer = peer;
-      if (track.isMute && track.kind == HMSTrackKind.kHMSTrackKindVideo) {
-        this.isVideoOn = false;
+
+      if(track.kind == HMSTrackKind.kHMSTrackKindVideo){
+        print("LOCALPEERTRACKVideo");
+        localTrack = track;
+        if (track.isMute) {
+          this.isVideoOn = false;
+        }
       }
     }
 
@@ -355,31 +359,29 @@ abstract class MeetingStoreBase
 
   HMSTrack? previousHighestVideoTrack;
   int previousHighestIndex = -1;
+  @observable
+  ObservableMap<String, String> observableMap = ObservableMap.of({});
 
   @override
   void onUpdateSpeakers({required List<HMSSpeaker> updateSpeakers}) {
-    // if (updateSpeakers.length == 0) return;
-    // HMSSpeaker highestAudioSpeaker = updateSpeakers[0];
-    // print("onUpdateSpeakerFlutter ${highestAudioSpeaker.peer.name}");
-    // int newHighestIndex = tracks.indexWhere(
-    //     (element) => element.peer?.peerId == highestAudioSpeaker.peer.peerId);
-    // if (newHighestIndex == -1) return;
-    //
-    // if (previousHighestVideoTrack != null) {
-    //   HMSTrack newPreviousTrack =
-    //       HMSTrack.copyWith(false, track: previousHighestVideoTrack!);
-    //   if (previousHighestIndex != -1) {
-    //     tracks.removeAt(previousHighestIndex);
-    //     tracks.insert(previousHighestIndex, newPreviousTrack);
-    //   }
-    // }
-    // HMSTrack highestAudioSpeakerVideoTrack = tracks[newHighestIndex];
-    // HMSTrack newHighestTrack =
-    //     HMSTrack.copyWith(true, track: highestAudioSpeakerVideoTrack);
-    // tracks.removeAt(newHighestIndex);
-    // tracks.insert(newHighestIndex, newHighestTrack);
-    // previousHighestVideoTrack = newHighestTrack;
-    // previousHighestIndex = newHighestIndex;
+    if (updateSpeakers.length == 0) {
+      peerTracks.removeAt(highestSpeakerIndex);
+      peerTracks.insert(highestSpeakerIndex, highestSpeaker);
+      highestSpeaker = PeerTracKNode(peerId: "-1");
+      return;
+    }
+
+    highestSpeakerIndex = peerTracks.indexWhere((element) =>
+        element.peerId.trim() == updateSpeakers[0].peer.peerId.trim());
+
+    print("index is $highestSpeakerIndex");
+    if (highestSpeakerIndex != -1) {
+      highestSpeaker = peerTracks[highestSpeakerIndex];
+      peerTracks.removeAt(highestSpeakerIndex);
+      peerTracks.insert(highestSpeakerIndex, highestSpeaker);
+    } else {
+      highestSpeaker = PeerTracKNode(peerId: "-1");
+    }
   }
 
   @override
@@ -467,6 +469,12 @@ abstract class MeetingStoreBase
         print('${peers.indexOf(peer)}');
         updatePeerAt(peer);
         break;
+      case HMSPeerUpdate.metadataChanged:
+        updatePeerAt(peer);
+        break;
+      case HMSPeerUpdate.nameChanged:
+        updatePeerAt(peer);
+        break;
       case HMSPeerUpdate.defaultUpdate:
         print("Some default update or untouched case");
         break;
@@ -482,11 +490,12 @@ abstract class MeetingStoreBase
 
     switch (update) {
       case HMSTrackUpdate.trackAdded:
-        if (track.source == "REGULAR")
+        if (track.source == "REGULAR") {
           trackStatus[peer.peerId] = track.isMute
               ? HMSTrackUpdate.trackMuted
               : HMSTrackUpdate.trackUnMuted;
-        else {
+          print("${trackStatus[peer.peerId]} trackStatusOfPeer");
+        } else {
           screenSharePeerId = peer.peerId;
           screenShareTrack = track;
         }
@@ -532,7 +541,7 @@ abstract class MeetingStoreBase
   void leaveMeeting() async {
     meetingController.leaveMeeting();
     isRoomEnded = true;
-    removeListener();
+    removeListenerMeeting();
   }
 
   void removePeerFromRoom(String peerId) {
@@ -605,5 +614,13 @@ abstract class MeetingStoreBase
   Future<HMSRoom?> getRoom() async {
     HMSRoom? room = await meetingController.getRoom();
     return room;
+  }
+
+  Future<void> raiseHand() async {
+    await meetingController.raiseHand();
+  }
+
+  Future<void> setPlayBackAllowed(bool allow) async{
+    await meetingController.setPlayBackAllowed(allow);
   }
 }

@@ -22,9 +22,9 @@ class HMSLog {
   }
 
   Map<String, dynamic> toMap() => {
-    'tag':tag,
-    'message':message,
-  };
+        'tag': tag,
+        'message': message,
+      };
 
   @override
   String toString() {

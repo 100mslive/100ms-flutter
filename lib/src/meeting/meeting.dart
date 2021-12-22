@@ -133,6 +133,17 @@ class HMSMeeting {
     }
   }
 
+  Future<void> raiseHand({HMSActionResultListener? hmsActionResultListener}) async {
+    var result = await PlatformService.invokeMethod(PlatformMethod.raiseHand);
+    if (hmsActionResultListener != null) {
+      if (result == null)
+        hmsActionResultListener.onSuccess();
+      else
+        hmsActionResultListener.onError(
+            hmsException: HMSException.fromMap(result["error"]));
+    }
+  }
+
   Future<bool> endRoom(bool lock,
       {HMSActionResultListener? hmsActionResultListener}) async {
     var result = await PlatformService.invokeMethod(PlatformMethod.endRoom,
@@ -284,15 +295,7 @@ class HMSMeeting {
     return isMute;
   }
 
-  Future<bool> startScreenShare() async {
-    bool isScreenShareEnabled =
-        await PlatformService.invokeMethod(PlatformMethod.startScreenShare);
-    return isScreenShareEnabled;
-  }
 
-  void stopScreenShare() async {
-    await PlatformService.invokeMethod(PlatformMethod.stopScreenShare);
-  }
 
   void muteAll() async {
     await PlatformService.invokeMethod(PlatformMethod.muteAll);
@@ -300,6 +303,10 @@ class HMSMeeting {
 
   void unMuteAll() async {
     await PlatformService.invokeMethod(PlatformMethod.unMuteAll);
+  }
+
+  Future<void> setPlayBackAllowed(bool allow) async{
+    await PlatformService.invokeMethod(PlatformMethod.setPlayBackAllowed,arguments: {"allowed":allow});
   }
 
   Future<bool> changeTrackStateForRole(

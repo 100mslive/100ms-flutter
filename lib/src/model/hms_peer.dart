@@ -29,7 +29,7 @@ class HMSPeer {
   ///role of the peer in the room.
   final HMSRole? role;
   final String? customerUserId;
-  final String? customerDescription;
+  final String? metadata;
   HMSAudioTrack? audioTrack;
   HMSVideoTrack? videoTrack;
   final List<HMSTrack>? auxiliaryTracks;
@@ -40,7 +40,7 @@ class HMSPeer {
     required this.isLocal,
     this.role,
     this.customerUserId,
-    this.customerDescription,
+    this.metadata,
     this.audioTrack,
     this.videoTrack,
     this.auxiliaryTracks,
@@ -66,7 +66,7 @@ class HMSPeer {
         name: map['name'],
         isLocal: map['is_local'],
         role: role,
-        customerDescription: map['customer_description'],
+        metadata: map['metadata'],
         customerUserId: map['customer_user_id'],
       );
     } else {
@@ -81,7 +81,7 @@ class HMSPeer {
         name: map['name'],
         isLocal: map['is_local'],
         role: role,
-        customerDescription: map['customer_description'],
+        metadata: map['metadata'],
         customerUserId: map['customer_user_id'],
       );
 

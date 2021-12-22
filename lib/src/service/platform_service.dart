@@ -61,8 +61,7 @@ class PlatformService {
     if (previewListeners.contains(listener)) previewListeners.remove(listener);
   }
 
-  static void startHMSLogger(
-      HMSLogLevel webRtclogLevel, HMSLogLevel logLevel) {}
+
 
   static void addLogsListener(
     HMSLogListener hmsLogListener,
@@ -157,11 +156,13 @@ class PlatformService {
           notifyMeetingListeners(method, {'peer': peer, 'update': update});
           break;
         case HMSUpdateListenerMethod.onTrackUpdate:
-
           HMSPeer? peer = HMSPeer.fromMap(event.data['peer']);
           //print("HMSUpdateListeneronTrackupdate ${peer.toString()}");
-          HMSTrack? track = data['track']['instance_of']?HMSVideoTrack.fromMap(map: data['track'], peer: peer):HMSAudioTrack.fromMap(map: data['track'],peer: peer);
-          HMSTrackUpdate? update = HMSTrackUpdateValues.getHMSTrackUpdateFromName(data['update']);
+          HMSTrack? track = data['track']['instance_of']
+              ? HMSVideoTrack.fromMap(map: data['track'], peer: peer)
+              : HMSAudioTrack.fromMap(map: data['track'], peer: peer);
+          HMSTrackUpdate? update =
+              HMSTrackUpdateValues.getHMSTrackUpdateFromName(data['update']);
           print("UpdateTrack $update  ${data['update']}");
           notifyMeetingListeners(
               method, {'track': track, 'peer': peer, 'update': update});
@@ -177,7 +178,7 @@ class PlatformService {
         case HMSUpdateListenerMethod.onUpdateSpeaker:
           List<HMSSpeaker> speakers = [];
           if (data.containsKey('speakers') && data['speakers'] is List) {
-            if((data['speakers'] as List).isNotEmpty) {
+            if ((data['speakers'] as List).isNotEmpty) {
               (data['speakers'] as List).forEach((element) {
                 speakers.add(HMSSpeaker.fromMap(element as Map));
               });
@@ -245,7 +246,8 @@ class PlatformService {
               method, {'room': room, 'local_tracks': tracks});
           break;
         case HMSPreviewUpdateListenerMethod.onError:
-          HMSException? error = HMSException.fromMap(event.data["error"] as Map);
+          HMSException? error =
+              HMSException.fromMap(event.data["error"] as Map);
           notifyPreviewListeners(method, {'error': error});
           break;
         case HMSPreviewUpdateListenerMethod.unknown:

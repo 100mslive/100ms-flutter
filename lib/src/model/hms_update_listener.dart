@@ -82,7 +82,6 @@ abstract class HMSUpdateListener {
   ///when you are back in the room after reconnection
   void onReconnected();
 
-
   ///when someone requests for track change of yours be it video or audio this will be triggered
   /// - Parameter hmsTrackChangeRequest: request instance consisting of all the required info about track change
   void onChangeTrackStateRequest(

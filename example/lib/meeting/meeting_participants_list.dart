@@ -32,7 +32,10 @@ class _ParticipantsListState extends State<ParticipantsList> {
                     child: Center(
                       child: Text(
                         "Participants",
-                        style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold,color: Colors.white),
+                        style: TextStyle(
+                            fontSize: 20.0,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white),
                       ),
                     ),
                   ),

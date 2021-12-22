@@ -39,7 +39,7 @@ class _ParticipantOrganismState extends State<ParticipantOrganism> {
             peer.name,
             style: TextStyle(fontSize: 20.0),
             maxLines: 1,
-                overflow: TextOverflow.ellipsis,
+            overflow: TextOverflow.ellipsis,
           )),
           SizedBox(
             width: 20.0,
@@ -61,7 +61,7 @@ class _ParticipantOrganismState extends State<ParticipantOrganism> {
                       ));
             },
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(10,0,10,0),
+              padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
               child: Container(
                 padding: const EdgeInsets.all(8.0),
                 decoration: BoxDecoration(
@@ -78,15 +78,23 @@ class _ParticipantOrganismState extends State<ParticipantOrganism> {
               ),
             ),
           ),
+          if(peer.metadata == "{\"isHandRaised\":true}")
+            Padding(
+              padding: const EdgeInsets.fromLTRB(5,0,5,0),
+              child: Icon(Icons.sports_handball),
+            ),
           Padding(
-            padding: const EdgeInsets.fromLTRB(5,0,5,0),
+            padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
             child: Icon(isVideoOn ? Icons.videocam : Icons.videocam_off),
           ),
-           Padding(
-             padding: const EdgeInsets.fromLTRB(0,0,5,0),
-             child: Icon(isAudioOn ? Icons.mic : Icons.mic_off),
-           ),
-           Divider(height: 15,color: Colors.grey,)
+          Padding(
+            padding: const EdgeInsets.fromLTRB(0, 0, 5, 0),
+            child: Icon(isAudioOn ? Icons.mic : Icons.mic_off),
+          ),
+          Divider(
+            height: 15,
+            color: Colors.grey,
+          )
         ],
       ),
     );

@@ -203,6 +203,12 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             "update_hms_video_track_settings" -> {
                 updateHMSLocalTrackSetting(call)
             }
+            "raise_hand"->{
+                raiseHand()
+            }
+            "set_playback_allowed"->{
+                setPlayBackAllowed(call)
+            }
             else -> {
                 result.notImplemented()
             }
@@ -263,7 +269,6 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
                 )
         }
         hmssdk.join(hmsConfig!!, this.hmsUpdateListener)
-
     }
 
 
@@ -686,6 +691,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             }
         }
 
+
         var hmsVideoTrackSettings = HMSVideoTrackSettings.Builder()
         val hmsVideoTrackHashMap: HashMap<String, Any?>? = hmsTrackSettingMap["video_track_setting"]
         if (hmsVideoTrackHashMap != null) {
@@ -749,6 +755,13 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
 
     }
 
+    private var isRaiseHandTrue:Boolean = false
+    private fun raiseHand(){
+        isRaiseHandTrue = !isRaiseHandTrue
+        hmssdk.changeMetadata("{\"isHandRaised\":${isRaiseHandTrue}}",hmsActionResultListener = this.actionListener )
+
+    }
+
 
     private val hmsUpdateListener = object : HMSUpdateListener {
         override fun onChangeTrackStateRequest(details: HMSChangeTrackStateRequest) {
@@ -805,6 +818,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         }
 
         override fun onPeerUpdate(type: HMSPeerUpdate, peer: HMSPeer) {
+
             val args = HashMap<String, Any?>()
             args.put("event_name", "on_peer_update")
 //        Log.i("onPeerUpdate1", type.toString())
@@ -986,4 +1000,16 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         }
 
     }
+
+    private fun setPlayBackAllowed(call: MethodCall){
+        val allowed = call.argument<Boolean>("allowed")
+        hmssdk.getRemotePeers().forEach {
+            it.videoTrack?.isPlaybackAllowed=allowed!!
+        }
+        getLocalPeer().videoTrack?.setMute(!(allowed!!))
+        result?.success("setPlatBackAllowed${allowed!!}")
+    }
+
+
+
 }

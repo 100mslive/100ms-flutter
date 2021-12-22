@@ -8,6 +8,7 @@ import 'package:hmssdk_flutter_example/common/constant.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/user_name_dialog_organism.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
 import 'package:hmssdk_flutter_example/meeting/hms_sdk_interactor.dart';
+import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:hmssdk_flutter_example/preview/preview_page.dart';
 import 'package:hmssdk_flutter_example/service/deeplink_service.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -16,14 +17,14 @@ import 'package:wakelock/wakelock.dart';
 import 'package:input_history_text_field/input_history_text_field.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import './logs/custom_singleton_logger.dart';
-import './logs/static_logger.dart';
-import 'package:path_provider/path_provider.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
   Wakelock.enable();
+  Provider.debugCheckInvalidValueType = null;
   runZonedGuarded(
       () => runApp(HMSExampleApp()), FirebaseCrashlytics.instance.recordError);
 }
@@ -84,7 +85,6 @@ class _HomePageState extends State<HomePage> {
     CustomLogger.file?.delete();
     return Future.value(true);
   }
-
 
   DeepLinkBloc _bloc = DeepLinkBloc();
 
@@ -159,11 +159,14 @@ class _HomePageState extends State<HomePage> {
                                 builder: (_) => UserNameDialogOrganism());
                             if (user.isNotEmpty)
                               Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (_) => PreviewPage(
-                                        roomId: roomIdController.text,
-                                        user: user,
-                                        flow: MeetingFlow.join,
-                                      )));
+                                  builder: (_) => ListenableProvider<MeetingStore>(
+                                    create: (ctx)=>MeetingStore(),
+                                    child: PreviewPage(
+                                          roomId: roomIdController.text,
+                                          user: user,
+                                          flow: MeetingFlow.join,
+                                        ),
+                                  )));
                           },
                           child: Container(
                             padding: const EdgeInsets.all(4.0),

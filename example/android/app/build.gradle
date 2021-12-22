@@ -42,8 +42,8 @@ android {
         applicationId "live.hms.flutter"
         minSdkVersion 21
         targetSdkVersion 31
-        versionCode 20
-        versionName "1.0.20"
+        versionCode 22
+        versionName "1.0.22"
     }
 
     signingConfigs {
@@ -71,8 +71,8 @@ flutter {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.1'
-    implementation 'com.google.firebase:firebase-crashlytics:18.2.4'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.2'
+    implementation 'com.google.firebase:firebase-crashlytics:18.2.6'
 }
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.crashlytics'

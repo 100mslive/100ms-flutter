@@ -147,6 +147,10 @@ class HMSSDKInteractor implements HMSActionResultListener {
     _meeting.unMuteAll();
   }
 
+  Future<void> setPlayBackAllowed(bool allow) async{
+   await _meeting.setPlayBackAllowed(allow);
+  }
+
   Future<HMSException?> startRtmpOrRecording(
       HMSRecordingConfig hmsRecordingConfig) async {
     return await _meeting.startRtmpOrRecording(hmsRecordingConfig);
@@ -158,6 +162,10 @@ class HMSSDKInteractor implements HMSActionResultListener {
 
   Future<HMSRoom?> getRoom() async {
     return await _meeting.getRoom();
+  }
+
+  Future<void> raiseHand() async{
+    await _meeting.raiseHand();
   }
 
   @override

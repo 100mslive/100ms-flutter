@@ -8,7 +8,7 @@ class HMSLocalPeer extends HMSPeer {
     required bool isLocal,
     HMSRole? role,
     String? customerUserId,
-    String? customerDescription,
+    String? metadata,
     HMSLocalAudioTrack? audioTrack,
     HMSLocalVideoTrack? videoTrack,
     List<HMSTrack>? auxiliaryTracks,
@@ -17,7 +17,7 @@ class HMSLocalPeer extends HMSPeer {
             name: name,
             peerId: peerId,
             customerUserId: customerUserId,
-            customerDescription: customerDescription,
+            metadata: metadata,
             role: role,
             audioTrack: audioTrack,
             videoTrack: videoTrack,
@@ -29,7 +29,7 @@ class HMSLocalPeer extends HMSPeer {
         name: map['name'],
         isLocal: map['is_local'],
         role: HMSRole.fromMap(map['role']),
-        customerDescription: map['customer_description'],
+        metadata: map['metadata'],
         customerUserId: map['customer_user_id'],
         audioTrack: map["audio_track"] != null
             ? HMSLocalAudioTrack.fromMap(map: map["audio_track"])

@@ -26,7 +26,7 @@ class HMSTrackSetting {
   Map<String, dynamic> toMap() {
     return {
       'audio_track_setting': audioTrackSetting?.toMap() ?? {},
-      'video_track_setting': this.videoTrackSetting?.toMap() ??{},
+      'video_track_setting': this.videoTrackSetting?.toMap() ?? {},
     };
   }
 }

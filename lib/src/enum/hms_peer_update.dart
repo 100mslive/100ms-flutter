@@ -17,6 +17,8 @@ enum HMSPeerUpdate {
 
   ///when peer's role is changed
   roleUpdated,
+  metadataChanged,
+  nameChanged,
   defaultUpdate
 }
 
@@ -35,6 +37,10 @@ extension HMSPeerUpdateValues on HMSPeerUpdate {
         return HMSPeerUpdate.videoToggled;
       case 'roleUpdated':
         return HMSPeerUpdate.roleUpdated;
+      case 'metadataChanged':
+        return HMSPeerUpdate.metadataChanged;
+      case 'nameChanged':
+        return HMSPeerUpdate.nameChanged;
       case 'defaultUpdate':
         return HMSPeerUpdate.defaultUpdate;
       default:
@@ -46,7 +52,10 @@ extension HMSPeerUpdateValues on HMSPeerUpdate {
     switch (hmsPeerUpdate) {
       case HMSPeerUpdate.peerJoined:
         return 'peerJoined';
-
+      case HMSPeerUpdate.metadataChanged:
+        return 'metadataChanged';
+      case HMSPeerUpdate.nameChanged:
+        return 'nameChanged';
       case HMSPeerUpdate.peerLeft:
         return 'peerLeft';
 
