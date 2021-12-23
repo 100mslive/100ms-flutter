@@ -247,36 +247,25 @@ abstract class MeetingStoreBase extends ChangeNotifier
   @override
   void onJoin({required HMSRoom room}) async {
     hmsRoom = room;
-    if (Platform.isAndroid) {
-      print("members ${room.peers!.length}");
-      for (HMSPeer each in room.peers!) {
-        if (each.isLocal) {
-          peerTracks
-              .add(new PeerTracKNode(peerId: each.peerId, name: each.name));
-          localPeer = each;
-          addPeer(localPeer!);
-          print('on join ${localPeer!.peerId}');
-          break;
-        }
-      }
-    } else {
-      for (HMSPeer each in room.peers!) {
-        addPeer(each);
-        if (each.isLocal) {
-          localPeer = each;
-          print('on join ${localPeer!.name}  ${localPeer!.peerId}');
-          if (each.videoTrack != null) {
-            trackStatus[each.videoTrack!.trackId] = HMSTrackUpdate.trackMuted;
-            tracks.insert(0, each.videoTrack!);
-          }
-        } else {
-          if (each.videoTrack != null) {
-            trackStatus[each.videoTrack!.trackId] = HMSTrackUpdate.trackMuted;
-            tracks.insert(0, each.videoTrack!);
+
+    for (HMSPeer each in room.peers!) {
+      if (each.isLocal) {
+        peerTracks.add(new PeerTracKNode(peerId: each.peerId, name: each.name));
+        localPeer = each;
+        addPeer(localPeer!);
+
+        if (each.videoTrack != null) {
+          if (each.videoTrack!.kind == HMSTrackKind.kHMSTrackKindVideo) {
+            localTrack = each.videoTrack;
+            if (each.videoTrack!.isMute) {
+              this.isVideoOn = false;
+            }
           }
         }
+        break;
       }
     }
+
     roles = await getRoles();
   }
 
@@ -330,11 +319,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
     if (track.source == "REGULAR") {
       int index =
           peerTracks.indexWhere((element) => element.peerId == peer.peerId);
-      print(
-          "onTrackUpdateFlutter ${peerTracks[index].track?.isMute} ${peer.name} before");
       peerTracks[index].track = track;
-      print(
-          "onTrackUpdateFlutter ${peerTracks[index].track?.isMute} ${peer.name} after");
     }
 
     peerOperationWithTrack(peer, trackUpdate, track);

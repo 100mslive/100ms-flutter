@@ -492,7 +492,6 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             if(speakers.isNotEmpty()) {
                 speakers.forEach {
                     speakersList.add(HMSSpeakerExtension.toDictionary(it)!!)
-
                 }
             }
             val speakersMap = HashMap<String, Any>()
@@ -501,16 +500,11 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             val hashMap = HashMap<String, Any?>()
             hashMap["event_name"] = "on_update_speaker"
             hashMap["data"] = speakersMap
-//            HMSLogger.i(
-//                "onAudioLevelUpdateAndroid2",
-//                (hashMap.get("data") as HashMap<String, Any>).get("speakers").toString()
-//            )
+
             CoroutineScope(Dispatchers.Main).launch {
                 eventSink!!.success(hashMap)
             }
-
         }
-
     }
 
 
