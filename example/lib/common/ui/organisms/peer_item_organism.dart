@@ -1,9 +1,14 @@
+// Flutter imports
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
+
+// SDK imports
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+
+// Package imports
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:hmssdk_flutter_example/meeting/peerTrackNode.dart';
 import 'package:provider/provider.dart';
+
 
 class PeerItemOrganism extends StatefulWidget {
   final PeerTracKNode peerTracKNode;
@@ -57,7 +62,7 @@ class _PeerItemOrganismState extends State<PeerItemOrganism> {
           Expanded(child: LayoutBuilder(
             builder: (context, constraints) {
               if ((widget.isVideoMuted || widget.peerTracKNode.track == null)) {
-                List<String>? parts = widget.peerTracKNode.name.split(" ") ?? [];
+                List<String>? parts = widget.peerTracKNode.name.split(" ");
 
                 if (parts.length == 1) {
                   parts[0] += " ";

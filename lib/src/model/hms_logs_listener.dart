@@ -1,5 +1,5 @@
-import 'package:hmssdk_flutter/src/model/hms_log.dart';
+import 'package:hmssdk_flutter/src/model/hms_log_list.dart';
 
 abstract class HMSLogListener {
-  void onLogMessage({required HMSLog});
+  void onLogMessage({required HMSLogList});
 }
