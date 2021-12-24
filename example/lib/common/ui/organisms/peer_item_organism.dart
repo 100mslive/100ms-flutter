@@ -94,8 +94,10 @@ class _PeerItemOrganismState extends State<PeerItemOrganism> {
                 width: widget.width - 5,
                 padding: EdgeInsets.all(5.0),
                 child: HMSVideoView(
-                    track: widget.peerTracKNode.track!,
-                    setMirror: widget.setMirror),
+                  track: widget.peerTracKNode.track!,
+                  setMirror: widget.setMirror,
+                  matchParent: false,
+                ),
               );
             },
           )),
