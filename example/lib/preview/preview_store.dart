@@ -81,9 +81,9 @@ abstract class PreviewStoreBase
   }
 
   @override
-  void onLogMessage({required dynamic HMSLog}) {
-    print(HMSLog.toString() + "onLogMessageFlutter");
-    FirebaseCrashlytics.instance.log(HMSLog.toString());
+  void onLogMessage({required dynamic HMSLogList}) {
+    print("onLogMessageFlutter" + HMSLogList.toString());
+    FirebaseCrashlytics.instance.log(HMSLogList.toString());
   }
 
   void addLogsListener() {

@@ -932,6 +932,8 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         }
 
     }
+
+    var finalargs = mutableListOf<Any?>()
     private val hmsLoggerListener = object : HMSLogger.Loggable {
         override fun onLogMessage(
             level: HMSLogger.LogLevel,
@@ -948,9 +950,19 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
 
             logArgs["log"] = HMSLogsExtension.toDictionary(level, tag, message, isWebRtCLog)
             args["data"] = logArgs
-            CoroutineScope(Dispatchers.Main).launch {
-                logsSink?.success(args)
+
+            if(finalargs.size < 1000){
+                finalargs.add(args)
             }
+            else{
+                var copyfinalargs = mutableListOf<Any?> ();
+                copyfinalargs.addAll(finalargs);
+                CoroutineScope(Dispatchers.Main).launch {
+                    logsSink?.success(copyfinalargs);
+                }
+                finalargs.clear()
+            }
+            
         }
 
     }
