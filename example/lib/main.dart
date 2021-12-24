@@ -14,7 +14,6 @@ import 'package:hmssdk_flutter_example/service/deeplink_service.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:wakelock/wakelock.dart';
-import 'package:input_history_text_field/input_history_text_field.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import './logs/custom_singleton_logger.dart';
 import 'package:path_provider/path_provider.dart';
@@ -130,10 +129,8 @@ class _HomePageState extends State<HomePage> {
                                 roomIdController.text = url;
                               }
                             }
-                            return InputHistoryTextField(
-                              historyKey: "key-01",
-                              textEditingController: roomIdController,
-                              enableOpacityGradient: true,
+                            return TextField(
+                              controller: roomIdController,
                               autofocus: true,
                               maxLines: 3,
                               decoration: InputDecoration(
