@@ -50,7 +50,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
   bool audioViewOn = false;
   int countOfVideoOnBetweenTwo = 1;
   bool videoPreviousState = false;
-
+  late PageController _pageController = PageController(initialPage: 0);
   @override
   void initState() {
     super.initState();
@@ -171,11 +171,12 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
   void handleMenu(int value) async {
     switch (value) {
       case 1:
-      // StaticLogger.logger?.d(
-      //     "\n----------------------------Sending Logs-----------------\n");
-      // StaticLogger.logger?.close();
-      // ShareExtend.share(CustomLogger.file?.path ?? '', 'file');
-      // logger.getCustomLogger();
+        StaticLogger.logger?.d(
+            "\n----------------------------Sending Logs-----------------\n");
+        StaticLogger.logger?.close();
+        ShareExtend.share(CustomLogger.file?.path ?? '', 'file');
+        logger.getCustomLogger();
+
 
         break;
 
@@ -215,9 +216,9 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
         } else {
           _meetingStore.peerTracks.forEach((element) {
             _meetingStore.trackStatus[element.peerId] =
-            element.track?.isMute ?? false
-                ? HMSTrackUpdate.trackMuted
-                : HMSTrackUpdate.trackUnMuted;
+                element.track?.isMute ?? false
+                    ? HMSTrackUpdate.trackMuted
+                    : HMSTrackUpdate.trackUnMuted;
           });
           _meetingStore.setPlayBackAllowed(true);
           if (countOfVideoOnBetweenTwo == 0) {
@@ -231,24 +232,41 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
         }
         setState(() {});
         break;
+      case 6:
+        // if(!_meetingStore.isActiveSpeakerMode){
+        //     _meetingStore.activeSpeakerPeerTracksStore = _meetingStore.peerTracks;
+        //     _meetingStore.isActiveSpeakerMode = true;
+        //     _pageController.animateToPage(0,duration: Duration(seconds: 1),curve: Curves.decelerate);
+        //     setState(() {});
+        //     UtilityComponents.showSnackBarWithString(
+        //           "Active Speaker Mode", context);
+        // }
+        UtilityComponents.showSnackBarWithString("Coming Soon...", context);
+        break;
+      case 7:
+      // if (_meetingStore.isActiveSpeakerMode) {
+      //   _meetingStore.isActiveSpeakerMode = false;
+      //   setState(() {});
+      //   UtilityComponents.showSnackBarWithString(
+      //       "Switched to Hero Mode", context);
+      // }
+      UtilityComponents.showSnackBarWithString("Coming Soon...", context);
+      break;
       default:
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    var orientation = MediaQuery
-        .of(context)
-        .orientation;
-    var size = MediaQuery
-        .of(context)
-        .size;
-    final double itemHeightWithSs = (size.height - kToolbarHeight -
-        kBottomNavigationBarHeight) /
-        (orientation == Orientation.landscape ? 2.5 : 3);
-    final double itemHeightWithoutSs = (size.height - kToolbarHeight -
-        kBottomNavigationBarHeight) /
-        (orientation == Orientation.landscape ? 2.5 : 2.8);
+    var orientation = MediaQuery.of(context).orientation;
+    var size = MediaQuery.of(context).size;
+    final double itemHeightWithSs =
+        (size.height - kToolbarHeight - kBottomNavigationBarHeight) /
+            (orientation == Orientation.landscape ? 2.5 : 3);
+    final double itemHeightWithoutSs =
+        (size.height - kToolbarHeight - kBottomNavigationBarHeight) /
+            (orientation == Orientation.landscape ? 2.5 : 2.8);
+
 
     final double itemWidth = size.width / 2.1;
     //final aspectRatio = itemWidth / itemHeight;
@@ -344,7 +362,31 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                             color: Colors.blue),
                       ]),
                   value: 5,
-                )
+                ),
+                PopupMenuItem(
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Active Speaker Mode ",
+                          style: TextStyle(color: Colors.blue),
+                        ),
+                        Icon(CupertinoIcons.person_3_fill, color: Colors.blue),
+                      ]),
+                  value: 6,
+                ),
+                PopupMenuItem(
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Hero Mode ",
+                          style: TextStyle(color: Colors.blue),
+                        ),
+                        Icon(CupertinoIcons.person_3_fill, color: Colors.blue),
+                      ]),
+                  value: 7,
+                ),
               ],
               onSelected: handleMenu,
             ),
@@ -398,10 +440,16 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                           return Center(
                               child: Text('Waiting for other to join!'));
                         ObservableList<PeerTracKNode> peerFilteredList =
-                            _meetingStore.peerTracks;
+                            _meetingStore.isActiveSpeakerMode
+                                ? _meetingStore.activeSpeakerPeerTracksStore
+                                : _meetingStore.peerTracks;
                         ObservableMap<String, String> audioKeyMap =
                             _meetingStore.observableMap;
                         return PageView.builder(
+                          controller: _pageController,
+                          physics: _meetingStore.isActiveSpeakerMode
+                              ? NeverScrollableScrollPhysics()
+                              : null,
                           itemBuilder: (ctx, index) {
                             ObservableMap<String, HMSTrackUpdate> map =
                                 _meetingStore.trackStatus;

@@ -78,11 +78,11 @@ class _VideoTileState extends State<VideoTile> {
                             isVideoMuted: filteredList[index].track == null
                                 ? true
                                 : filteredList[index].track?.isMute,
-                            peerName: filteredList[index].name ?? '',
+                            peerName: filteredList[index].name,
                             changeTrack: (mute, isVideoTrack) {
                               Navigator.pop(context);
                               _meetingStore.changeTrackRequest(
-                                  filteredList[index].peerId ?? "",
+                                  filteredList[index].peerId,
                                   mute,
                                   isVideoTrack);
                             },

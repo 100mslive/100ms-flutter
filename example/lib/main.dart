@@ -16,7 +16,7 @@ import 'package:provider/provider.dart';
 import 'package:wakelock/wakelock.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import './logs/custom_singleton_logger.dart';
-
+import 'package:path_provider/path_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -156,14 +156,15 @@ class _HomePageState extends State<HomePage> {
                                 builder: (_) => UserNameDialogOrganism());
                             if (user.isNotEmpty)
                               Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (_) => ListenableProvider<MeetingStore>(
-                                    create: (ctx)=>MeetingStore(),
-                                    child: PreviewPage(
+                                  builder: (_) =>
+                                      ListenableProvider<MeetingStore>(
+                                        create: (ctx) => MeetingStore(),
+                                        child: PreviewPage(
                                           roomId: roomIdController.text,
                                           user: user,
                                           flow: MeetingFlow.join,
                                         ),
-                                  )));
+                                      )));
                           },
                           child: Container(
                             padding: const EdgeInsets.all(4.0),
