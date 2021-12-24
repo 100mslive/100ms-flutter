@@ -548,7 +548,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
     meetingController.removePeer(peerId);
   }
 
-  void startScreenShare(String peerId) {
+  void startScreenShare() {
     meetingController.startScreenShare();
   }
 
