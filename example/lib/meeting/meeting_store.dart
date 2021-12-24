@@ -258,6 +258,9 @@ abstract class MeetingStoreBase extends ChangeNotifier
       print("members ${room.peers!.length}");
       for (HMSPeer each in room.peers!) {
         if (each.isLocal) {
+          int index =
+              peerTracks.indexWhere((element) => element.peerId == each.peerId);
+        if(index == -1)
           peerTracks
               .add(new PeerTracKNode(peerId: each.peerId, name: each.name));
           localPeer = each;
@@ -303,6 +306,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
       {required HMSTrack track,
       required HMSTrackUpdate trackUpdate,
       required HMSPeer peer}) {
+    print("Called After Reconnection ${peer.name} ${track.source}");
     print("${peer.name} ${track.kind} onTrackUpdateFlutterMeetingStore");
     if (isSpeakerOn) {
       unMuteAll();
@@ -370,50 +374,44 @@ abstract class MeetingStoreBase extends ChangeNotifier
 
   @override
   void onUpdateSpeakers({required List<HMSSpeaker> updateSpeakers}) {
+    if (!isActiveSpeakerMode) {
+      if (updateSpeakers.length == 0) {
+        peerTracks.removeAt(highestSpeakerIndex);
+        peerTracks.insert(highestSpeakerIndex, highestSpeaker);
+        highestSpeaker = PeerTracKNode(peerId: "-1");
+        return;
+      }
 
-      if(!isActiveSpeakerMode){
-          if (updateSpeakers.length == 0) {
-            peerTracks.removeAt(highestSpeakerIndex);
-            peerTracks.insert(highestSpeakerIndex, highestSpeaker);
-            highestSpeaker = PeerTracKNode(peerId: "-1");
-            return;
-        }
+      highestSpeakerIndex = peerTracks.indexWhere((element) =>
+          element.peerId.trim() == updateSpeakers[0].peer.peerId.trim());
 
-        highestSpeakerIndex = peerTracks.indexWhere((element) =>
-        element.peerId.trim() == updateSpeakers[0].peer.peerId.trim());
+      print("index is $highestSpeakerIndex");
+      if (highestSpeakerIndex != -1) {
+        highestSpeaker = peerTracks[highestSpeakerIndex];
+        peerTracks.removeAt(highestSpeakerIndex);
+        peerTracks.insert(highestSpeakerIndex, highestSpeaker);
+      } else {
+        highestSpeaker = PeerTracKNode(peerId: "-1");
+      }
+    } else {
+      if (updateSpeakers.length == 0) {
+        activeSpeakerPeerTracksStore.removeAt(0);
+        activeSpeakerPeerTracksStore.insert(0, highestSpeaker);
+        highestSpeaker = PeerTracKNode(peerId: "-1");
+        return;
+      }
+      highestSpeakerIndex = activeSpeakerPeerTracksStore.indexWhere((element) =>
+          element.peerId.trim() == updateSpeakers[0].peer.peerId.trim());
 
-        print("index is $highestSpeakerIndex");
-        if (highestSpeakerIndex != -1) {
-          highestSpeaker = peerTracks[highestSpeakerIndex];
-          peerTracks.removeAt(highestSpeakerIndex);
-          peerTracks.insert(highestSpeakerIndex, highestSpeaker);
-        }
-        else {
-          highestSpeaker = PeerTracKNode(peerId: "-1");
-          }
+      print("index is $highestSpeakerIndex");
+      if (highestSpeakerIndex != -1) {
+        highestSpeaker = activeSpeakerPeerTracksStore[highestSpeakerIndex];
+        activeSpeakerPeerTracksStore.removeAt(highestSpeakerIndex);
+        activeSpeakerPeerTracksStore.insert(0, highestSpeaker);
+      } else {
+        highestSpeaker = PeerTracKNode(peerId: "-1");
+      }
     }
-    else{
-        if (updateSpeakers.length == 0) {
-            activeSpeakerPeerTracksStore.removeAt(0);
-            activeSpeakerPeerTracksStore.insert(0, highestSpeaker);
-            highestSpeaker = PeerTracKNode(peerId: "-1");
-            return;
-        }
-        highestSpeakerIndex = activeSpeakerPeerTracksStore.indexWhere((element) =>
-        element.peerId.trim() == updateSpeakers[0].peer.peerId.trim());
-
-        print("index is $highestSpeakerIndex");
-        if (highestSpeakerIndex != -1) {
-          highestSpeaker = activeSpeakerPeerTracksStore[highestSpeakerIndex];
-          activeSpeakerPeerTracksStore.removeAt(highestSpeakerIndex);
-          activeSpeakerPeerTracksStore.insert(0, highestSpeaker);
-        }
-        else {
-          highestSpeaker = PeerTracKNode(peerId: "-1");
-          }
-    }
-      
-
   }
 
   @override
@@ -479,8 +477,10 @@ abstract class MeetingStoreBase extends ChangeNotifier
       case HMSPeerUpdate.peerJoined:
         print('peer joined');
         //TODO-> containsPeer or not
-
-        peerTracks.add(new PeerTracKNode(peerId: peer.peerId, name: peer.name));
+        int index =
+              peerTracks.indexWhere((element) => element.peerId == peer.peerId);
+        if(index == -1)  
+          peerTracks.add(new PeerTracKNode(peerId: peer.peerId, name: peer.name));
         addPeer(peer);
         break;
       case HMSPeerUpdate.peerLeft:

@@ -406,7 +406,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                         if (!_meetingStore.isMeetingStarted) return SizedBox();
                         if (_meetingStore.peerTracks.isEmpty)
                           return Center(
-                              child: Text('Waiting for other to join!'));
+                              child: Text('Waiting for others to join!'));
                         ObservableList<PeerTracKNode> peerFilteredList =
                             _meetingStore.isActiveSpeakerMode
                                 ? _meetingStore.activeSpeakerPeerTracksStore
