@@ -338,7 +338,7 @@ class PlatformService {
         break;
 
       case HMSUpdateListenerMethod.onRemovedFromRoom:
-        if(meetingListeners.isEmpty)break;
+        if (meetingListeners.isEmpty) break;
         meetingListeners.forEach((element) {
           element.onRemovedFromRoom(
               hmsPeerRemovedFromPeer: arguments['removed_from_room']);
