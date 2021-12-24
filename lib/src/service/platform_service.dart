@@ -320,7 +320,7 @@ class PlatformService {
             (e) => e.onUpdateSpeakers(updateSpeakers: arguments['speakers']));
         break;
       case HMSUpdateListenerMethod.onReconnecting:
-        meetingListeners.forEach((e) => e.onReconnecting()); 
+        meetingListeners.forEach((e) => e.onReconnecting());
         break;
       case HMSUpdateListenerMethod.onReconnected:
         meetingListeners.forEach((e) => e.onReconnected());
@@ -335,7 +335,7 @@ class PlatformService {
         break;
 
       case HMSUpdateListenerMethod.onRemovedFromRoom:
-        if(meetingListeners.isEmpty)break;
+        if (meetingListeners.isEmpty) break;
         meetingListeners.forEach((element) {
           element.onRemovedFromRoom(
               hmsPeerRemovedFromPeer: arguments['removed_from_room']);
