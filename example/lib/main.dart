@@ -15,7 +15,6 @@ import 'package:hmssdk_flutter_example/service/deeplink_service.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:wakelock/wakelock.dart';
-import 'package:input_history_text_field/input_history_text_field.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import './logs/custom_singleton_logger.dart';
 import 'package:path_provider/path_provider.dart';

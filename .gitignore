@@ -3,7 +3,7 @@
 
 .packages
 .pub/
-
+pubspec.lock
 build/
 
 *.g.dart
