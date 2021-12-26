@@ -539,11 +539,29 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
 
         val hlsConfig = HMSHLSConfig(listOf(meetingUrlVariant1))
 
-        hmssdk.startHLSStreaming(hlsConfig, hmsActionResultListener = this.actionListener)
+        hmssdk.startHLSStreaming(hlsConfig, hmsActionResultListener = object : HMSActionResultListener{
+            override fun onError(error: HMSException) {
+
+            }
+
+            override fun onSuccess() {
+
+            }
+
+        })
     }
 
     private fun stopHLSStreaming(){
-        hmssdk.stopHLSStreaming(null, hmsActionResultListener = actionListener)
+        hmssdk.stopHLSStreaming(null, hmsActionResultListener = object : HMSActionResultListener{
+            override fun onError(error: HMSException) {
+
+            }
+
+            override fun onSuccess() {
+
+            }
+
+        })
     }
 
 
@@ -835,7 +853,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             args.put("event_name", "on_update_room")
 
             val arg = HashMap<String,Any?>()
-            arg["room"]=HMSRoomExtension.toDictionary(hmsRoom,type)?:null
+            arg["room"]= HMSRoomExtension.toDictionary(hmsRoom,type)
             args.put("data", arg)
             if (args["data"] != null)
                 CoroutineScope(Dispatchers.Main).launch {

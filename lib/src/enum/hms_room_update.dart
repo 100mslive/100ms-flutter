@@ -12,13 +12,13 @@ extension HMSRoomUpdateValues on HMSRoomUpdate {
     switch (name) {
       case 'HMSRoomUpdateRoomTypeChanged':
         return HMSRoomUpdate.HMSRoomUpdateRoomTypeChanged;
-      case 'HMSRoomUpdate.HMSRoomUpdateMetaDataUpdated':
+      case 'HMSRoomUpdateMetaDataUpdated':
         return HMSRoomUpdate.HMSRoomUpdateMetaDataUpdated;
-      case 'HMSRoomUpdate.RTMP_STREAMING_STATE_UPDATED':
+      case 'RTMP_STREAMING_STATE_UPDATED':
         return HMSRoomUpdate.RTMP_STREAMING_STATE_UPDATED;
-      case 'HMSRoomUpdate.HLS_STREAMING_STATE_UPDATED':
+      case 'HLS_STREAMING_STATE_UPDATED':
         return HMSRoomUpdate.HLS_STREAMING_STATE_UPDATED;
-      case 'HMSRoomUpdate.BROWSER_RECORDING_STATE_UPDATED':
+      case 'BROWSER_RECORDING_STATE_UPDATED':
         return HMSRoomUpdate.BROWSER_RECORDING_STATE_UPDATED;
       default:
         return HMSRoomUpdate.unknown;
@@ -30,15 +30,15 @@ extension HMSRoomUpdateValues on HMSRoomUpdate {
       case HMSRoomUpdate.HMSRoomUpdateRoomTypeChanged:
         return 'HMSRoomUpdateRoomTypeChanged';
       case HMSRoomUpdate.HMSRoomUpdateMetaDataUpdated:
-        return 'HMSRoomUpdate.HMSRoomUpdateMetaDataUpdated';
+        return 'HMSRoomUpdateMetaDataUpdated';
       case HMSRoomUpdate.unknown:
         return 'unknown';
       case HMSRoomUpdate.RTMP_STREAMING_STATE_UPDATED:
-        return 'HMSRoomUpdate.RTMP_STREAMING_STATE_UPDATED';
+        return 'RTMP_STREAMING_STATE_UPDATED';
       case HMSRoomUpdate.HLS_STREAMING_STATE_UPDATED:
-        return 'HMSRoomUpdate.HLS_STREAMING_STATE_UPDATED';
+        return 'HLS_STREAMING_STATE_UPDATED';
       case HMSRoomUpdate.BROWSER_RECORDING_STATE_UPDATED:
-        return 'HMSRoomUpdate.BROWSER_RECORDING_STATE_UPDATED';
+        return 'BROWSER_RECORDING_STATE_UPDATED';
     }
   }
 }

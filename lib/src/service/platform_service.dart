@@ -141,6 +141,7 @@ class PlatformService {
           notifyMeetingListeners(method, {'room': room});
           break;
         case HMSUpdateListenerMethod.onUpdateRoom:
+          print("OnUpdateRoom ${data["room"]["update"]}" );
           HMSRoom? room =
               data['room'] != null ? HMSRoom.fromMap(data['room']) : null;
 

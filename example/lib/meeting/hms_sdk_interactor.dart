@@ -160,6 +160,14 @@ class HMSSDKInteractor implements HMSActionResultListener {
     await _meeting.raiseHand();
   }
 
+  Future<void> startHLSStreaming(String meetingUrl) async{
+    await _meeting.startHlsStreaming(meetingUrl,hmsActionResultListener: this);
+  }
+
+  Future<void> stopHLSStreaming() async{
+    await _meeting.stopHlsStreaming(hmsActionResultListener: this);
+  }
+
   @override
   void onError({HMSException? hmsException}) {
     print("HMSSdkInteractor onError");

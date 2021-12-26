@@ -94,6 +94,14 @@ class MeetingController {
     HmsSdkManager.hmsSdkInteractor?.removePreviewListener(listener);
   }
 
+  Future<void> startHLSStreaming(String meetingUrl) async{
+    await HmsSdkManager.hmsSdkInteractor?.startHLSStreaming(meetingUrl);
+  }
+
+  Future<void> stopHLSStreaming() async{
+    await HmsSdkManager.hmsSdkInteractor?.stopHLSStreaming();
+  }
+
   Future<HMSPeer?> getLocalPeer() async {
     return await HmsSdkManager.hmsSdkInteractor?.getLocalPeer();
   }

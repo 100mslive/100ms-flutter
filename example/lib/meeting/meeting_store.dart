@@ -5,6 +5,7 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter/src/enum/hms_log_level.dart';
+import 'package:hmssdk_flutter_example/common/constant.dart';
 import 'package:hmssdk_flutter_example/logs/static_logger.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_controller.dart';
 import 'package:hmssdk_flutter_example/meeting/peerTrackNode.dart';
@@ -249,10 +250,13 @@ abstract class MeetingStoreBase extends ChangeNotifier
     hmsRoom = room;
     if (Platform.isAndroid) {
       print("members ${room.peers!.length}");
-      for (HMSPeer each in room.peers!) {
+      for (int i = 0; i < room.peers!.length; i++) {
+        HMSPeer each = room.peers![i];
         if (each.isLocal) {
-          peerTracks
-              .add(new PeerTracKNode(peerId: each.peerId, name: each.name));
+          if (peerTracks
+                  .indexWhere((element) => element.peerId == each.peerId) == -1)
+            peerTracks
+                .add(new PeerTracKNode(peerId: each.peerId, name: each.name));
           localPeer = each;
           addPeer(localPeer!);
           print('on join ${localPeer!.peerId}');
@@ -282,7 +286,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
 
   @override
   void onRoomUpdate({required HMSRoom room, required HMSRoomUpdate update}) {
-    print('on room update');
+    print('on room update $update ${room.hmshlsStreamingState?.running}');
   }
 
   @override
@@ -310,10 +314,9 @@ abstract class MeetingStoreBase extends ChangeNotifier
     }
 
     if (peer.isLocal) {
-
       localPeer = peer;
 
-      if(track.kind == HMSTrackKind.kHMSTrackKindVideo){
+      if (track.kind == HMSTrackKind.kHMSTrackKindVideo) {
         print("LOCALPEERTRACKVideo");
         localTrack = track;
         if (track.isMute) {
@@ -337,7 +340,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
       print(
           "onTrackUpdateFlutter ${peerTracks[index].track?.isMute} ${peer.name} after");
     }
-
+    print("onTrackLength ${peerTracks.length}");
     peerOperationWithTrack(peer, trackUpdate, track);
   }
 
@@ -612,7 +615,15 @@ abstract class MeetingStoreBase extends ChangeNotifier
     await meetingController.raiseHand();
   }
 
-  Future<void> setPlayBackAllowed(bool allow) async{
+  Future<void> setPlayBackAllowed(bool allow) async {
     await meetingController.setPlayBackAllowed(allow);
+  }
+
+  Future<void> startHLSStreaming(String meetingUrl) async {
+    await meetingController.startHLSStreaming(meetingUrl);
+  }
+
+  Future<void> stopHLSStreaming() async {
+    await meetingController.stopHLSStreaming();
   }
 }
