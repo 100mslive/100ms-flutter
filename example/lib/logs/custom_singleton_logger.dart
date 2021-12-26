@@ -81,3 +81,4 @@ class MyFilter extends LogFilter {
     return true;
   }
 }
+
