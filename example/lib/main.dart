@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:connectivity_wrapper/connectivity_wrapper.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/cupertino.dart';
@@ -129,8 +130,10 @@ class _HomePageState extends State<HomePage> {
                                 roomIdController.text = url;
                               }
                             }
-                            return TextField(
-                              controller: roomIdController,
+                            return InputHistoryTextField(
+                              historyKey: "key-01",
+                              textEditingController: roomIdController,
+                              enableOpacityGradient: true,
                               autofocus: true,
                               maxLines: 3,
                               decoration: InputDecoration(
