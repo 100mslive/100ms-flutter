@@ -15,8 +15,8 @@ class PreviewController {
         await RoomService().getToken(user: user, room: roomId);
 
     if (token == null) return false;
+    if (token[0] == null) return false;
     FirebaseCrashlytics.instance.setUserIdentifier(token[0]!);
-
     HMSConfig config = HMSConfig(
         userId: Uuid().v1(),
         authToken: token[0]!,

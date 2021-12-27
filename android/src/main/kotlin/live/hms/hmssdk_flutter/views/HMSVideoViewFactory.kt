@@ -41,8 +41,9 @@ class HMSVideoViewWidget(context: Context, id: Int, creationParams: Map<String?,
         view.layoutParams = frameLayoutParams
 
         if (peer == null) return
-
         val tracks = peer.auxiliaryTracks
+        
+        Log.i("HMSVideoView","${peer.name} ${isAux} ${tracks.isNotEmpty()}")
         if (tracks.isNotEmpty() && isAux) {
             val track = tracks.first {
                 it.trackId == trackId
@@ -66,8 +67,8 @@ class HMSVideoViewWidget(context: Context, id: Int, creationParams: Map<String?,
     }
 
     override fun dispose() {
-        Log.i("HMSVideoViewFactory","Releasing")
-        release()
+         release()
+
     }
 
     private fun release() {

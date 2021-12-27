@@ -53,6 +53,12 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
   int countOfVideoOnBetweenTwo = 1;
   bool videoPreviousState = false;
   late PageController _pageController = PageController(initialPage: 0);
+  late ObservableList<PeerTracKNode> peerFilteredList;
+  late ObservableMap<String, String> audioKeyMap ;
+  late ObservableMap<String, HMSTrackUpdate> map; 
+
+
+
   @override
   void initState() {
     super.initState();
@@ -61,6 +67,11 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
     MeetingController meetingController = MeetingController(
         roomUrl: widget.roomId, flow: widget.flow, user: widget.user);
     _meetingStore.meetingController = meetingController;
+    peerFilteredList = _meetingStore.isActiveSpeakerMode
+                       ? _meetingStore.activeSpeakerPeerTracksStore
+                      : _meetingStore.peerTracks;
+    audioKeyMap = _meetingStore.observableMap;
+    map =_meetingStore.trackStatus; 
     allListeners();
     initMeeting();
     checkButtons();
@@ -250,7 +261,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
     final double itemHeightWithoutSs =
         (size.height - kToolbarHeight - kBottomNavigationBarHeight) /
             (orientation == Orientation.landscape ? 2.5 : 2.8);
-
+    
     final double itemWidth = size.width / 2.1;
     //final aspectRatio = itemWidth / itemHeight;
     //print(aspectRatio.toString() + "AspectRatio");
@@ -416,20 +427,14 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                 if (_meetingStore.peerTracks.isEmpty)
                                   return Center(
                                       child: Text('Waiting for others to join!'));
-                                ObservableList<PeerTracKNode> peerFilteredList =
-                                    _meetingStore.isActiveSpeakerMode
-                                        ? _meetingStore.activeSpeakerPeerTracksStore
-                                        : _meetingStore.peerTracks;
-                                ObservableMap<String, String> audioKeyMap =
-                                    _meetingStore.observableMap;
+                                
                                 return PageView.builder(
                                   controller: _pageController,
                                   physics: _meetingStore.isActiveSpeakerMode
                                       ? NeverScrollableScrollPhysics()
                                       : null,
                                   itemBuilder: (ctx, index) {
-                                    ObservableMap<String, HMSTrackUpdate> map =
-                                        _meetingStore.trackStatus;
+                                    
                                     return ((orientation == Orientation.portrait &&
                                             _meetingStore.screenShareTrack == null)
                                         ? Padding(
