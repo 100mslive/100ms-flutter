@@ -56,7 +56,7 @@ class FileOutput extends LogOutput {
   @override
   void init() {
     _sink = file?.openWrite(
-      mode:FileMode.writeOnly,
+      mode: FileMode.writeOnly,
       encoding: encoding,
     );
   }

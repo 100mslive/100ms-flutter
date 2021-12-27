@@ -53,12 +53,6 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
   int countOfVideoOnBetweenTwo = 1;
   bool videoPreviousState = false;
   late PageController _pageController = PageController(initialPage: 0);
-  late ObservableList<PeerTracKNode> peerFilteredList;
-  late ObservableMap<String, String> audioKeyMap ;
-  late ObservableMap<String, HMSTrackUpdate> map; 
-
-
-
   @override
   void initState() {
     super.initState();
@@ -67,11 +61,6 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
     MeetingController meetingController = MeetingController(
         roomUrl: widget.roomId, flow: widget.flow, user: widget.user);
     _meetingStore.meetingController = meetingController;
-    peerFilteredList = _meetingStore.isActiveSpeakerMode
-                       ? _meetingStore.activeSpeakerPeerTracksStore
-                      : _meetingStore.peerTracks;
-    audioKeyMap = _meetingStore.observableMap;
-    map =_meetingStore.trackStatus; 
     allListeners();
     initMeeting();
     checkButtons();
@@ -112,8 +101,13 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
     _roomEndedDisposer = reaction(
         (_) => _meetingStore.isRoomEnded,
         (event) => {
-              if ((event as bool) == true) Navigator.of(context).pop(),
-              _meetingStore.isRoomEnded = false
+              if ((event as bool) == true)
+                {
+                  Navigator.of(context).pop(),
+                  UtilityComponents.showSnackBarWithString(
+                      "Meeting Ended", context),
+                },
+              _meetingStore.isRoomEnded = false,
             });
     _reconnectingDisposer = reaction(
         (_) => _meetingStore.reconnecting,
@@ -239,14 +233,14 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
         UtilityComponents.showSnackBarWithString("Coming Soon...", context);
         break;
       case 7:
-      // if (_meetingStore.isActiveSpeakerMode) {
-      //   _meetingStore.isActiveSpeakerMode = false;
-      //   setState(() {});
-      //   UtilityComponents.showSnackBarWithString(
-      //       "Switched to Hero Mode", context);
-      // }
-      UtilityComponents.showSnackBarWithString("Coming Soon...", context);
-      break;
+        // if (_meetingStore.isActiveSpeakerMode) {
+        //   _meetingStore.isActiveSpeakerMode = false;
+        //   setState(() {});
+        //   UtilityComponents.showSnackBarWithString(
+        //       "Switched to Hero Mode", context);
+        // }
+        UtilityComponents.showSnackBarWithString("Coming Soon...", context);
+        break;
       default:
     }
   }
@@ -261,318 +255,392 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
     final double itemHeightWithoutSs =
         (size.height - kToolbarHeight - kBottomNavigationBarHeight) /
             (orientation == Orientation.landscape ? 2.5 : 2.8);
-    
+
     final double itemWidth = size.width / 2.1;
     //final aspectRatio = itemWidth / itemHeight;
     //print(aspectRatio.toString() + "AspectRatio");
     return ConnectivityAppWrapper(
-      app: WillPopScope(
-        child: ConnectivityWidgetWrapper(
+        app: WillPopScope(
+      child: ConnectivityWidgetWrapper(
           disableInteraction: true,
           offlineWidget: OfflineWidget(),
-          child: Observer(
-            builder: (_) {
-              return _meetingStore.reconnecting?OfflineWidget():
-              Scaffold(
-                appBar: AppBar(
-                  title: Text(widget.roomId),
-                  actions: [
-                    Observer(
-                      builder: (_) => IconButton(
-                        iconSize: 32,
-                        onPressed: () {
-                          _meetingStore.toggleSpeaker();
-                        },
-                        icon: Icon(_meetingStore.isSpeakerOn
-                            ? Icons.volume_up
-                            : Icons.volume_off),
-                      ),
-                    ),
-                    PopupMenuButton(
-                      icon: Icon(CupertinoIcons.gear),
-                      itemBuilder: (BuildContext context) => [
-                        PopupMenuItem(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text("Send Logs", style: TextStyle(color: Colors.blue)),
-                              Icon(Icons.bug_report, color: Colors.blue),
-                            ],
-                          ),
-                          value: 1,
-                        ),
-                        PopupMenuItem(
-                          child: Observer(
-                              builder: (_) => Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(
-                                            _meetingStore.isRecordingStarted
-                                                ? "Recording "
-                                                : "Record",
-                                            style: TextStyle(
-                                              color: _meetingStore.isRecordingStarted
-                                                  ? Colors.red
-                                                  : Colors.blue,
-                                            )),
-                                        Icon(
-                                          Icons.circle,
-                                          color: _meetingStore.isRecordingStarted
-                                              ? Colors.red
-                                              : Colors.blue,
-                                        ),
-                                      ])),
-                          value: 2,
-                        ),
-                        PopupMenuItem(
-                          child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  "Toggle Camera  ",
-                                  style: TextStyle(color: Colors.blue),
-                                ),
-                                Icon(Icons.switch_camera, color: Colors.blue),
-                              ]),
-                          value: 3,
-                        ),
-                        PopupMenuItem(
-                          child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  "Participants  ",
-                                  style: TextStyle(color: Colors.blue),
-                                ),
-                                Icon(CupertinoIcons.person_3_fill, color: Colors.blue),
-                              ]),
-                          value: 4,
-                        ),
-                        PopupMenuItem(
-                          child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  audioViewOn?"Video View":"Audio View",
-                                  style: TextStyle(color: Colors.blue),
-                                ),
-                                Image.asset(audioViewOn?'assets/icons/video.png':'assets/icons/audio.png',
-                                    color: Colors.blue,height: 24.0,width: 24.0,),
-                              ]),
-                          value: 5,
-                        ),
-                        PopupMenuItem(
-                          child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  "Active Speaker Mode ",
-                                  style: TextStyle(color: Colors.blue),
-                                ),
-                                Icon(CupertinoIcons.person_3_fill, color: Colors.blue),
-                              ]),
-                          value: 6,
-                        ),
-                        PopupMenuItem(
-                          child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  "Hero Mode ",
-                                  style: TextStyle(color: Colors.blue),
-                                ),
-                                Icon(CupertinoIcons.person_3_fill, color: Colors.blue),
-                              ]),
-                          value: 7,
-                        ),
-                      ],
-                      onSelected: handleMenu,
-                    ),
-                  ],
-                ),
-                body: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
-                  child: Center(
-                    child: Container(
-                      width: double.infinity,
-                      child: Column(
-                        children: [
-                          Observer(builder: (_) {
-                            if (_meetingStore.screenShareTrack != null) {
-                              return SizedBox(
-                                width: double.infinity,
-                                height: MediaQuery.of(context).size.height / 2.5,
-                                child: PeerItemOrganism(
-                                  observableMap: {"highestAudio": ""},
-                                  height: MediaQuery.of(context).size.height / 2,
-                                  width: MediaQuery.of(context).size.width,
-                                  isVideoMuted: false,
-                                  peerTracKNode: new PeerTracKNode(
-                                      peerId: _meetingStore.screenSharePeerId,
-                                      track: _meetingStore.screenShareTrack!,
-                                      name:
-                                          _meetingStore.screenShareTrack?.peer?.name ??
-                                              ""),
-                                ),
-                              );
-                            } else {
-                              return Container();
-                            }
-                          }),
-                          Flexible(
-                            child: Observer(
-                              builder: (_) {
-                                print("rebuilding");
-                                if (!_meetingStore.isMeetingStarted) return SizedBox();
-                                if (_meetingStore.peerTracks.isEmpty)
-                                  return Center(
-                                      child: Text('Waiting for others to join!'));
-                                
-                                return PageView.builder(
-                                  controller: _pageController,
-                                  physics: _meetingStore.isActiveSpeakerMode
-                                      ? NeverScrollableScrollPhysics()
-                                      : null,
-                                  itemBuilder: (ctx, index) {
-                                    
-                                    return ((orientation == Orientation.portrait &&
-                                            _meetingStore.screenShareTrack == null)
-                                        ? Padding(
-                                            padding: EdgeInsets.symmetric(
-                                                vertical: itemHeightWithoutSs * 0.12),
-                                            child: Column(
-                                              children: [
-                                                Row(
-                                                  children: [
-                                                    //if (index * 4 < filteredList.length)
-                                                    VideoTile(
-                                                      tileIndex: index * 4,
-                                                      filteredList: peerFilteredList,
-                                                      itemHeight: itemHeightWithoutSs,
-                                                      itemWidth: itemWidth,
-                                                      trackStatus: map,
-                                                      observerMap: audioKeyMap,
-                                                      audioView: audioViewOn,
-                                                    ),
-                                                    //if (index * 4 + 1 < filteredList.length)
-                                                    VideoTile(
-                                                      tileIndex: index * 4 + 1,
-                                                      filteredList: peerFilteredList,
-                                                      itemHeight: itemHeightWithoutSs,
-                                                      itemWidth: itemWidth,
-                                                      trackStatus: map,
-                                                      observerMap: audioKeyMap,
-                                                      audioView: audioViewOn,
-                                                    ),
-                                                  ],
-                                                ),
-                                                Row(
-                                                  children: [
-                                                    //if (index * 4 + 2 < filteredList.length)
-                                                    VideoTile(
-                                                      tileIndex: index * 4 + 2,
-                                                      filteredList: peerFilteredList,
-                                                      itemHeight: itemHeightWithoutSs,
-                                                      itemWidth: itemWidth,
-                                                      trackStatus: map,
-                                                      observerMap: audioKeyMap,
-                                                      audioView: audioViewOn,
-                                                    ),
-                                                    //if (index * 4 + 3 < filteredList.length)
-                                                    VideoTile(
-                                                      tileIndex: index * 4 + 3,
-                                                      filteredList: peerFilteredList,
-                                                      itemHeight: itemHeightWithoutSs,
-                                                      itemWidth: itemWidth,
-                                                      trackStatus: map,
-                                                      observerMap: audioKeyMap,
-                                                      audioView: audioViewOn,
-                                                    ),
-                                                  ],
-                                                ),
-                                              ],
-                                            ),
-                                          )
-                                        : Column(
-                                            children: [
-                                              Row(
-                                                children: [
-                                                  VideoTile(
-                                                    tileIndex: index * 2,
-                                                    filteredList: peerFilteredList,
-                                                    itemHeight: itemHeightWithSs,
-                                                    itemWidth: itemWidth,
-                                                    trackStatus: map,
-                                                    observerMap: audioKeyMap,
-                                                    audioView: audioViewOn,
-                                                  ),
-                                                  VideoTile(
-                                                    tileIndex: index * 2 + 1,
-                                                    filteredList: peerFilteredList,
-                                                    itemHeight: itemHeightWithSs,
-                                                    itemWidth: itemWidth,
-                                                    trackStatus: map,
-                                                    observerMap: audioKeyMap,
-                                                    audioView: audioViewOn,
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
-                                          ));
-                                  },
-                                  itemCount: ((peerFilteredList.length - 1) /
-                                              ((orientation == Orientation.portrait) &&
-                                                      (_meetingStore.screenShareTrack ==
-                                                          null)
-                                                  ? 4
-                                                  : 2))
-                                          .floor() +
-                                      1,
-                                );
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                bottomNavigationBar: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Container(
-                      padding: EdgeInsets.all(8),
-                      child: Observer(builder: (context) {
-                        return IconButton(
-                            tooltip: 'Video',
-                            iconSize: 32,
-                            onPressed: (audioViewOn)
-                                ? null
-                                : () {
-                                    _meetingStore.toggleVideo();
-                                    countOfVideoOnBetweenTwo++;
-                                  },
-                            icon: Icon(_meetingStore.isVideoOn
-                                ? Icons.videocam
-                                : Icons.videocam_off));
-                      }),
-                    ),
-                    Container(
-                      padding: EdgeInsets.all(8),
-                      child: Observer(builder: (context) {
-                        return IconButton(
-                            tooltip: 'Audio',
+          child: Observer(builder: (_) {
+            return _meetingStore.reconnecting
+                ? OfflineWidget()
+                : Scaffold(
+                    appBar: AppBar(
+                      title: Text(widget.roomId),
+                      actions: [
+                        Observer(
+                          builder: (_) => IconButton(
                             iconSize: 32,
                             onPressed: () {
-                              _meetingStore.toggleAudio();
+                              _meetingStore.toggleSpeaker();
                             },
-                            icon: Icon(
-                                _meetingStore.isMicOn ? Icons.mic : Icons.mic_off));
-                      }),
+                            icon: Icon(_meetingStore.isSpeakerOn
+                                ? Icons.volume_up
+                                : Icons.volume_off),
+                          ),
+                        ),
+                        PopupMenuButton(
+                          icon: Icon(CupertinoIcons.gear),
+                          itemBuilder: (BuildContext context) => [
+                            PopupMenuItem(
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text("Send Logs",
+                                      style: TextStyle(color: Colors.blue)),
+                                  Icon(Icons.bug_report, color: Colors.blue),
+                                ],
+                              ),
+                              value: 1,
+                            ),
+                            PopupMenuItem(
+                              child: Observer(
+                                  builder: (_) => Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                                _meetingStore.isRecordingStarted
+                                                    ? "Recording "
+                                                    : "Record",
+                                                style: TextStyle(
+                                                  color: _meetingStore
+                                                          .isRecordingStarted
+                                                      ? Colors.red
+                                                      : Colors.blue,
+                                                )),
+                                            Icon(
+                                              Icons.circle,
+                                              color: _meetingStore
+                                                      .isRecordingStarted
+                                                  ? Colors.red
+                                                  : Colors.blue,
+                                            ),
+                                          ])),
+                              value: 2,
+                            ),
+                            PopupMenuItem(
+                              child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      "Toggle Camera  ",
+                                      style: TextStyle(color: Colors.blue),
+                                    ),
+                                    Icon(Icons.switch_camera,
+                                        color: Colors.blue),
+                                  ]),
+                              value: 3,
+                            ),
+                            PopupMenuItem(
+                              child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      "Participants  ",
+                                      style: TextStyle(color: Colors.blue),
+                                    ),
+                                    Icon(CupertinoIcons.person_3_fill,
+                                        color: Colors.blue),
+                                  ]),
+                              value: 4,
+                            ),
+                            PopupMenuItem(
+                              child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      audioViewOn ? "Video View" : "Audio View",
+                                      style: TextStyle(color: Colors.blue),
+                                    ),
+                                    Image.asset(
+                                      audioViewOn
+                                          ? 'assets/icons/video.png'
+                                          : 'assets/icons/audio.png',
+                                      color: Colors.blue,
+                                      height: 24.0,
+                                      width: 24.0,
+                                    ),
+                                  ]),
+                              value: 5,
+                            ),
+                            PopupMenuItem(
+                              child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      "Active Speaker Mode ",
+                                      style: TextStyle(color: Colors.blue),
+                                    ),
+                                    Icon(CupertinoIcons.person_3_fill,
+                                        color: Colors.blue),
+                                  ]),
+                              value: 6,
+                            ),
+                            PopupMenuItem(
+                              child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      "Hero Mode ",
+                                      style: TextStyle(color: Colors.blue),
+                                    ),
+                                    Icon(CupertinoIcons.person_3_fill,
+                                        color: Colors.blue),
+                                  ]),
+                              value: 7,
+                            ),
+                          ],
+                          onSelected: handleMenu,
+                        ),
+                      ],
                     ),
-                    Container(
-                      padding: EdgeInsets.all(8),
-                      child: IconButton(
+                    body: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 5.0, horizontal: 5.0),
+                      child: Center(
+                        child: Container(
+                          width: double.infinity,
+                          child: Column(
+                            children: [
+                              Observer(builder: (_) {
+                                if (_meetingStore.screenShareTrack != null &&
+                                    !audioViewOn) {
+                                  return SizedBox(
+                                    width: double.infinity,
+                                    height: MediaQuery.of(context).size.height /
+                                        2.5,
+                                    child: PeerItemOrganism(
+                                      observableMap: {"highestAudio": ""},
+                                      height:
+                                          MediaQuery.of(context).size.height /
+                                              2,
+                                      width: MediaQuery.of(context).size.width,
+                                      isVideoMuted: false,
+                                      peerTracKNode: new PeerTracKNode(
+                                          peerId:
+                                              _meetingStore.screenSharePeerId,
+                                          track:
+                                              _meetingStore.screenShareTrack!,
+                                          name: _meetingStore.screenShareTrack
+                                                  ?.peer?.name ??
+                                              ""),
+                                    ),
+                                  );
+                                } else {
+                                  return Container();
+                                }
+                              }),
+                              Flexible(
+                                child: Observer(
+                                  builder: (_) {
+                                    print("rebuilding");
+                                    if (!_meetingStore.isMeetingStarted)
+                                      return SizedBox();
+                                    if (_meetingStore.peerTracks.isEmpty)
+                                      return Center(
+                                          child: Text(
+                                              'Waiting for others to join!'));
+                                    ObservableList<PeerTracKNode>
+                                        peerFilteredList =
+                                        _meetingStore.isActiveSpeakerMode
+                                            ? _meetingStore
+                                                .activeSpeakerPeerTracksStore
+                                            : _meetingStore.peerTracks;
+                                    ObservableMap<String, String> audioKeyMap =
+                                        _meetingStore.observableMap;
+                                    return PageView.builder(
+                                      controller: _pageController,
+                                      physics: _meetingStore.isActiveSpeakerMode
+                                          ? NeverScrollableScrollPhysics()
+                                          : null,
+                                      itemBuilder: (ctx, index) {
+                                        ObservableMap<String, HMSTrackUpdate>
+                                            map = _meetingStore.trackStatus;
+                                        return ((orientation ==
+                                                        Orientation.portrait &&
+                                                    _meetingStore
+                                                            .screenShareTrack ==
+                                                        null) ||
+                                                audioViewOn
+                                            ? Padding(
+                                                padding: EdgeInsets.symmetric(
+                                                    vertical:
+                                                        itemHeightWithoutSs *
+                                                            0.12),
+                                                child: Column(
+                                                  children: [
+                                                    Row(
+                                                      children: [
+                                                        //if (index * 4 < filteredList.length)
+                                                        VideoTile(
+                                                          tileIndex: index * 4,
+                                                          filteredList:
+                                                              peerFilteredList,
+                                                          itemHeight:
+                                                              itemHeightWithoutSs,
+                                                          itemWidth: itemWidth,
+                                                          trackStatus: map,
+                                                          observerMap:
+                                                              audioKeyMap,
+                                                          audioView:
+                                                              audioViewOn,
+                                                        ),
+                                                        //if (index * 4 + 1 < filteredList.length)
+                                                        VideoTile(
+                                                          tileIndex:
+                                                              index * 4 + 1,
+                                                          filteredList:
+                                                              peerFilteredList,
+                                                          itemHeight:
+                                                              itemHeightWithoutSs,
+                                                          itemWidth: itemWidth,
+                                                          trackStatus: map,
+                                                          observerMap:
+                                                              audioKeyMap,
+                                                          audioView:
+                                                              audioViewOn,
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    Row(
+                                                      children: [
+                                                        //if (index * 4 + 2 < filteredList.length)
+                                                        VideoTile(
+                                                          tileIndex:
+                                                              index * 4 + 2,
+                                                          filteredList:
+                                                              peerFilteredList,
+                                                          itemHeight:
+                                                              itemHeightWithoutSs,
+                                                          itemWidth: itemWidth,
+                                                          trackStatus: map,
+                                                          observerMap:
+                                                              audioKeyMap,
+                                                          audioView:
+                                                              audioViewOn,
+                                                        ),
+                                                        //if (index * 4 + 3 < filteredList.length)
+                                                        VideoTile(
+                                                          tileIndex:
+                                                              index * 4 + 3,
+                                                          filteredList:
+                                                              peerFilteredList,
+                                                          itemHeight:
+                                                              itemHeightWithoutSs,
+                                                          itemWidth: itemWidth,
+                                                          trackStatus: map,
+                                                          observerMap:
+                                                              audioKeyMap,
+                                                          audioView:
+                                                              audioViewOn,
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ],
+                                                ),
+                                              )
+                                            : Column(
+                                                children: [
+                                                  Row(
+                                                    children: [
+                                                      VideoTile(
+                                                        tileIndex: index * 2,
+                                                        filteredList:
+                                                            peerFilteredList,
+                                                        itemHeight:
+                                                            itemHeightWithSs,
+                                                        itemWidth: itemWidth,
+                                                        trackStatus: map,
+                                                        observerMap:
+                                                            audioKeyMap,
+                                                        audioView: audioViewOn,
+                                                      ),
+                                                      VideoTile(
+                                                        tileIndex:
+                                                            index * 2 + 1,
+                                                        filteredList:
+                                                            peerFilteredList,
+                                                        itemHeight:
+                                                            itemHeightWithSs,
+                                                        itemWidth: itemWidth,
+                                                        trackStatus: map,
+                                                        observerMap:
+                                                            audioKeyMap,
+                                                        audioView: audioViewOn,
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ));
+                                      },
+                                      itemCount: ((peerFilteredList.length -
+                                                      1) /
+                                                  ((orientation ==
+                                                              Orientation
+                                                                  .portrait) &&
+                                                          (_meetingStore
+                                                                  .screenShareTrack ==
+                                                              null)
+                                                      ? 4
+                                                      : 2))
+                                              .floor() +
+                                          1,
+                                    );
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    bottomNavigationBar: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Container(
+                          padding: EdgeInsets.all(8),
+                          child: Observer(builder: (context) {
+                            return IconButton(
+                                tooltip: 'Video',
+                                iconSize: 32,
+                                onPressed: (audioViewOn)
+                                    ? null
+                                    : () {
+                                        _meetingStore.toggleVideo();
+                                        countOfVideoOnBetweenTwo++;
+                                      },
+                                icon: Icon(_meetingStore.isVideoOn
+                                    ? Icons.videocam
+                                    : Icons.videocam_off));
+                          }),
+                        ),
+                        Container(
+                          padding: EdgeInsets.all(8),
+                          child: Observer(builder: (context) {
+                            return IconButton(
+                                tooltip: 'Audio',
+                                iconSize: 32,
+                                onPressed: () {
+                                  _meetingStore.toggleAudio();
+                                },
+                                icon: Icon(_meetingStore.isMicOn
+                                    ? Icons.mic
+                                    : Icons.mic_off));
+                          }),
+                        ),
+                        Container(
+                          padding: EdgeInsets.all(8),
+                          child: IconButton(
                           tooltip: 'RaiseHand',
                           iconSize: 32,
                           onPressed: () {
@@ -585,45 +653,45 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                 context);
                           },
                           icon: Image.asset('assets/icons/raise_hand.png',color: raisedHand?Colors.amber.shade300:Colors.black,),
-                    )),
-                    Container(
-                      padding: EdgeInsets.all(8),
-                      child: IconButton(
-                          tooltip: 'Chat',
-                          iconSize: 32,
-                          onPressed: () {
-                            chatMessages(context, _meetingStore);
-                          },
-                          icon: Icon(Icons.chat_bubble)),
+                    )
+                        ),
+                        Container(
+                          padding: EdgeInsets.all(8),
+                          child: IconButton(
+                              tooltip: 'Chat',
+                              iconSize: 32,
+                              onPressed: () {
+                                chatMessages(context, _meetingStore);
+                              },
+                              icon: Icon(Icons.chat_bubble)),
+                        ),
+                        Container(
+                          padding: EdgeInsets.all(8),
+                          child: IconButton(
+                              color: Colors.red,
+                              tooltip: 'Leave Or End',
+                              iconSize: 32,
+                              onPressed: () async {
+                                String ans = await showDialog(
+                                    context: context,
+                                    builder: (_) =>
+                                        LeaveOrEndMeetingDialogOption(
+                                          meetingStore: _meetingStore,
+                                        ));
+                                if (ans == 'Leave' || ans == 'End')
+                                  Navigator.pop(context);
+                              },
+                              icon: Icon(Icons.call_end)),
+                        ),
+                      ],
                     ),
-                    Container(
-                      padding: EdgeInsets.all(8),
-                      child: IconButton(
-                          color: Colors.red,
-                          tooltip: 'Leave Or End',
-                          iconSize: 32,
-                          onPressed: () async {
-                            String ans = await showDialog(
-                                context: context,
-                                builder: (_) => LeaveOrEndMeetingDialogOption(
-                                      meetingStore: _meetingStore,
-                                    ));
-                            if (ans == 'Leave' || ans == 'End') Navigator.pop(context);
-                          },
-                          icon: Icon(Icons.call_end)),
-                    ),
-                  ],
-                ),
-              );
-            }
-          ),
-        ),
-        onWillPop: () async {
-          bool ans = await UtilityComponents.onBackPressed(context);
-          return ans;
-        },
-      ),
-    );
+                  );
+          })),
+      onWillPop: () async {
+        bool ans = await UtilityComponents.onBackPressed(context);
+        return ans;
+      },
+    ));
   }
 
   @override

@@ -133,7 +133,8 @@ class HMSMeeting {
     }
   }
 
-  Future<void> raiseHand({HMSActionResultListener? hmsActionResultListener}) async {
+  Future<void> raiseHand(
+      {HMSActionResultListener? hmsActionResultListener}) async {
     var result = await PlatformService.invokeMethod(PlatformMethod.raiseHand);
     if (hmsActionResultListener != null) {
       if (result == null)
@@ -295,8 +296,6 @@ class HMSMeeting {
     return isMute;
   }
 
-
-
   void muteAll() async {
     await PlatformService.invokeMethod(PlatformMethod.muteAll);
   }
@@ -305,8 +304,9 @@ class HMSMeeting {
     await PlatformService.invokeMethod(PlatformMethod.unMuteAll);
   }
 
-  Future<void> setPlayBackAllowed(bool allow) async{
-    await PlatformService.invokeMethod(PlatformMethod.setPlayBackAllowed,arguments: {"allowed":allow});
+  Future<void> setPlayBackAllowed(bool allow) async {
+    await PlatformService.invokeMethod(PlatformMethod.setPlayBackAllowed,
+        arguments: {"allowed": allow});
   }
 
   Future<bool> changeTrackStateForRole(
