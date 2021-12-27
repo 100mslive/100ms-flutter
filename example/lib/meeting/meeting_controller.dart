@@ -82,7 +82,7 @@ class MeetingController {
     HmsSdkManager.hmsSdkInteractor?.removeLogsListener(listener);
   }
 
-  Future<void> setPlayBackAllowed(bool allow) async{
+  Future<void> setPlayBackAllowed(bool allow) async {
     await HmsSdkManager.hmsSdkInteractor?.setPlayBackAllowed(allow);
   }
 
@@ -168,7 +168,7 @@ class MeetingController {
     return await HmsSdkManager.hmsSdkInteractor?.getRoom();
   }
 
-  Future<void> raiseHand() async{
+  Future<void> raiseHand() async {
     await HmsSdkManager.hmsSdkInteractor?.raiseHand();
   }
 }

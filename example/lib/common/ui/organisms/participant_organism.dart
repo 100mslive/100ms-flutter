@@ -78,9 +78,9 @@ class _ParticipantOrganismState extends State<ParticipantOrganism> {
               ),
             ),
           ),
-          if(peer.metadata == "{\"isHandRaised\":true}")
+          if (peer.metadata == "{\"isHandRaised\":true}")
             Padding(
-              padding: const EdgeInsets.fromLTRB(5,0,5,0),
+              padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
               child: Icon(Icons.sports_handball),
             ),
           Padding(

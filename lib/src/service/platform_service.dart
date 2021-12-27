@@ -320,7 +320,7 @@ class PlatformService {
             (e) => e.onUpdateSpeakers(updateSpeakers: arguments['speakers']));
         break;
       case HMSUpdateListenerMethod.onReconnecting:
-        meetingListeners.forEach((e) => e.onReconnecting()); 
+        meetingListeners.forEach((e) => e.onReconnecting());
         break;
       case HMSUpdateListenerMethod.onReconnected:
         meetingListeners.forEach((e) => e.onReconnected());
@@ -333,13 +333,15 @@ class PlatformService {
         meetingListeners.forEach((e) => e.onChangeTrackStateRequest(
             hmsTrackChangeRequest: arguments['track_change_request']));
         break;
-      case HMSUpdateListenerMethod.unknown:
-        break;
+
       case HMSUpdateListenerMethod.onRemovedFromRoom:
+        if (meetingListeners.isEmpty) break;
         meetingListeners.forEach((element) {
           element.onRemovedFromRoom(
               hmsPeerRemovedFromPeer: arguments['removed_from_room']);
         });
+        break;
+      case HMSUpdateListenerMethod.unknown:
         break;
     }
   }
