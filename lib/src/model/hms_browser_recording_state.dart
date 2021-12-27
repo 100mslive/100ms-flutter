@@ -1,3 +1,4 @@
+// Project imports:
 import 'package:hmssdk_flutter/src/exceptions/hms_exception.dart';
 
 class HMSBrowserRecordingState {

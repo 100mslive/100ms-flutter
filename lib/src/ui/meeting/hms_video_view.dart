@@ -5,10 +5,15 @@
 /// just pass the videotracks of local or remote peer and internally it passes [peer_id], [is_local] and [track_id] to specific views.
 ///
 /// if you want to pass height and width you can pass as a map.
+
+// Dart imports:
 import 'dart:io' show Platform;
 
+// Flutter imports:
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show StandardMessageCodec;
+
+// Project imports:
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter/src/enum/hms_video_scale_type.dart';
 

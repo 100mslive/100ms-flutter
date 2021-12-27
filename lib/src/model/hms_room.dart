@@ -7,11 +7,11 @@
 /// This library depends only on core Dart libraries and the `hms_peer.dart` library.
 ///
 ///A [room] is the basic object that 100ms SDKs return on successful connection. This contains references to peers, tracks and everything you need to render a live a/v app.
+
+// Project imports:
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter/src/model/hms_browser_recording_state.dart';
-
 import 'package:hmssdk_flutter/src/model/hms_server_recording_state.dart';
-
 import 'hms_rtmp_streaming_state.dart';
 
 class HMSRoom {
