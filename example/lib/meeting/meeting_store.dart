@@ -258,6 +258,9 @@ abstract class MeetingStoreBase extends ChangeNotifier
       print("members ${room.peers!.length}");
       for (HMSPeer each in room.peers!) {
         if (each.isLocal) {
+          int index =
+              peerTracks.indexWhere((element) => element.peerId == each.peerId);
+        if(index == -1)
           peerTracks
               .add(new PeerTracKNode(peerId: each.peerId, name: each.name));
           localPeer = each;
@@ -303,6 +306,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
       {required HMSTrack track,
       required HMSTrackUpdate trackUpdate,
       required HMSPeer peer}) {
+    print("Called After Reconnection ${peer.name} ${track.source}");
     print("${peer.name} ${track.kind} onTrackUpdateFlutterMeetingStore");
     if (isSpeakerOn) {
       unMuteAll();
@@ -473,8 +477,10 @@ abstract class MeetingStoreBase extends ChangeNotifier
       case HMSPeerUpdate.peerJoined:
         print('peer joined');
         //TODO-> containsPeer or not
-
-        peerTracks.add(new PeerTracKNode(peerId: peer.peerId, name: peer.name));
+        int index =
+              peerTracks.indexWhere((element) => element.peerId == peer.peerId);
+        if(index == -1)  
+          peerTracks.add(new PeerTracKNode(peerId: peer.peerId, name: peer.name));
         addPeer(peer);
         break;
       case HMSPeerUpdate.peerLeft:

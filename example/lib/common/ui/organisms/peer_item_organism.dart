@@ -9,6 +9,7 @@ import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:hmssdk_flutter_example/meeting/peerTrackNode.dart';
 import 'package:provider/provider.dart';
 
+
 class PeerItemOrganism extends StatefulWidget {
   final PeerTracKNode peerTracKNode;
   final bool isVideoMuted;
