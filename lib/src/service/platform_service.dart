@@ -320,7 +320,7 @@ class PlatformService {
             (e) => e.onUpdateSpeakers(updateSpeakers: arguments['speakers']));
         break;
       case HMSUpdateListenerMethod.onReconnecting:
-        meetingListeners.forEach((e) => e.onReconnecting());
+        meetingListeners.forEach((e) => e.onReconnecting()); 
         break;
       case HMSUpdateListenerMethod.onReconnected:
         meetingListeners.forEach((e) => e.onReconnected());

@@ -479,10 +479,9 @@ abstract class MeetingStoreBase extends ChangeNotifier
         print('peer joined');
         //TODO-> containsPeer or not
         int index =
-            peerTracks.indexWhere((element) => element.peerId == peer.peerId);
-        if (index == -1)
-          peerTracks
-              .add(new PeerTracKNode(peerId: peer.peerId, name: peer.name));
+              peerTracks.indexWhere((element) => element.peerId == peer.peerId);
+        if(index == -1)  
+          peerTracks.add(new PeerTracKNode(peerId: peer.peerId, name: peer.name));
         addPeer(peer);
         break;
       case HMSPeerUpdate.peerLeft:
