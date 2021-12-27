@@ -260,9 +260,9 @@ abstract class MeetingStoreBase extends ChangeNotifier
         if (each.isLocal) {
           int index =
               peerTracks.indexWhere((element) => element.peerId == each.peerId);
-        if(index == -1)
-          peerTracks
-              .add(new PeerTracKNode(peerId: each.peerId, name: each.name));
+          if (index == -1)
+            peerTracks
+                .add(new PeerTracKNode(peerId: each.peerId, name: each.name));
           localPeer = each;
           addPeer(localPeer!);
           print('on join ${localPeer!.peerId}');
@@ -416,6 +416,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
 
   @override
   void onReconnecting() {
+    reconnected = false;
     reconnecting = true;
   }
 

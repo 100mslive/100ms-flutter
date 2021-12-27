@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:connectivity_wrapper/connectivity_wrapper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -7,6 +8,7 @@ import 'package:hmssdk_flutter_example/common/constant.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/change_track_options.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/chat_bottom_sheet.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/leave_or_end_meeting.dart';
+import 'package:hmssdk_flutter_example/common/ui/organisms/offline_screen.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/peer_item_organism.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/video_tile.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
@@ -269,127 +271,132 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
     final double itemWidth = size.width / 2.1;
     //final aspectRatio = itemWidth / itemHeight;
     //print(aspectRatio.toString() + "AspectRatio");
-    return WillPopScope(
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(widget.roomId),
-          actions: [
-            Observer(
-              builder: (_) =>
-                  IconButton(
-                    iconSize: 32,
-                    onPressed: () {
-                      _meetingStore.toggleSpeaker();
-                    },
-                    icon: Icon(_meetingStore.isSpeakerOn
-                        ? Icons.volume_up
-                        : Icons.volume_off),
-                  ),
-            ),
-            PopupMenuButton(
-              icon: Icon(CupertinoIcons.gear),
-              itemBuilder: (BuildContext context) =>
-              [
-                PopupMenuItem(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text("Send Logs", style: TextStyle(color: Colors.blue)),
-                      Icon(Icons.bug_report, color: Colors.blue),
-                    ],
-                  ),
-                  value: 1,
-                ),
-                PopupMenuItem(
-                  child: Observer(
-                      builder: (_) =>
-                          Row(
+    return ConnectivityAppWrapper(
+      app: WillPopScope(
+        child: ConnectivityWidgetWrapper(
+          disableInteraction: true,
+          offlineWidget: OfflineWidget(),
+          child: Observer(
+            builder: (_) {
+              return _meetingStore.reconnecting?OfflineWidget():
+              Scaffold(
+                appBar: AppBar(
+                  title: Text(widget.roomId),
+                  actions: [
+                    Observer(
+                      builder: (_) => IconButton(
+                        iconSize: 32,
+                        onPressed: () {
+                          _meetingStore.toggleSpeaker();
+                        },
+                        icon: Icon(_meetingStore.isSpeakerOn
+                            ? Icons.volume_up
+                            : Icons.volume_off),
+                      ),
+                    ),
+                    PopupMenuButton(
+                      icon: Icon(CupertinoIcons.gear),
+                      itemBuilder: (BuildContext context) => [
+                        PopupMenuItem(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text("Send Logs", style: TextStyle(color: Colors.blue)),
+                              Icon(Icons.bug_report, color: Colors.blue),
+                            ],
+                          ),
+                          value: 1,
+                        ),
+                        PopupMenuItem(
+                          child: Observer(
+                              builder: (_) => Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                            _meetingStore.isRecordingStarted
+                                                ? "Recording "
+                                                : "Record",
+                                            style: TextStyle(
+                                              color: _meetingStore.isRecordingStarted
+                                                  ? Colors.red
+                                                  : Colors.blue,
+                                            )),
+                                        Icon(
+                                          Icons.circle,
+                                          color: _meetingStore.isRecordingStarted
+                                              ? Colors.red
+                                              : Colors.blue,
+                                        ),
+                                      ])),
+                          value: 2,
+                        ),
+                        PopupMenuItem(
+                          child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                    _meetingStore.isRecordingStarted
-                                        ? "Recording "
-                                        : "Record",
-                                    style: TextStyle(
-                                      color: _meetingStore.isRecordingStarted
-                                          ? Colors.red
-                                          : Colors.blue,
-                                    )),
-                                Icon(
-                                  Icons.circle,
-                                  color: _meetingStore.isRecordingStarted
-                                      ? Colors.red
-                                      : Colors.blue,
+                                  "Toggle Camera  ",
+                                  style: TextStyle(color: Colors.blue),
                                 ),
-                              ])),
-                  value: 2,
-                ),
-                PopupMenuItem(
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Toggle Camera  ",
-                          style: TextStyle(color: Colors.blue),
+                                Icon(Icons.switch_camera, color: Colors.blue),
+                              ]),
+                          value: 3,
                         ),
-                        Icon(Icons.switch_camera, color: Colors.blue),
-                      ]),
-                  value: 3,
-                ),
-                PopupMenuItem(
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Participants  ",
-                          style: TextStyle(color: Colors.blue),
+                        PopupMenuItem(
+                          child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  "Participants  ",
+                                  style: TextStyle(color: Colors.blue),
+                                ),
+                                Icon(CupertinoIcons.person_3_fill, color: Colors.blue),
+                              ]),
+                          value: 4,
                         ),
-                        Icon(CupertinoIcons.person_3_fill, color: Colors.blue),
-                      ]),
-                  value: 4,
-                ),
-                PopupMenuItem(
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "AudioView ${audioViewOn ? "On" : "Off"} ",
-                          style: TextStyle(color: Colors.blue),
+                        PopupMenuItem(
+                          child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  audioViewOn?"Video View":"Audio View",
+                                  style: TextStyle(color: Colors.blue),
+                                ),
+                                Image.asset(audioViewOn?'assets/icons/video.png':'assets/icons/audio.png',
+                                    color: Colors.blue,height: 24.0,width: 24.0,),
+                              ]),
+                          value: 5,
                         ),
-                        Icon(audioViewOn ? Icons.toggle_off : Icons.toggle_on,
-                            color: Colors.blue),
-                      ]),
-                  value: 5,
-                ),
-                PopupMenuItem(
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Active Speaker Mode ",
-                          style: TextStyle(color: Colors.blue),
+                        PopupMenuItem(
+                          child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  "Active Speaker Mode ",
+                                  style: TextStyle(color: Colors.blue),
+                                ),
+                                Icon(CupertinoIcons.person_3_fill, color: Colors.blue),
+                              ]),
+                          value: 6,
                         ),
-                        Icon(CupertinoIcons.person_3_fill, color: Colors.blue),
-                      ]),
-                  value: 6,
-                ),
-                PopupMenuItem(
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Hero Mode ",
-                          style: TextStyle(color: Colors.blue),
+                        PopupMenuItem(
+                          child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  "Hero Mode ",
+                                  style: TextStyle(color: Colors.blue),
+                                ),
+                                Icon(CupertinoIcons.person_3_fill, color: Colors.blue),
+                              ]),
+                          value: 7,
                         ),
-                        Icon(CupertinoIcons.person_3_fill, color: Colors.blue),
-                      ]),
-                  value: 7,
+                      ],
+                      onSelected: handleMenu,
+                    ),
+                  ],
                 ),
-              ],
-              onSelected: handleMenu,
-            ),
-          ],
-        ),
+
         body: Padding(
           padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
           child: Center(
@@ -630,11 +637,11 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
             ),
           ],
         ),
+        onWillPop: () async {
+          bool ans = await UtilityComponents.onBackPressed(context);
+          return ans;
+        },
       ),
-      onWillPop: () async {
-        bool ans = await UtilityComponents.onBackPressed(context);
-        return ans;
-      },
     );
   }
 
