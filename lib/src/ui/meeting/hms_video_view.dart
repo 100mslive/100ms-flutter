@@ -88,8 +88,11 @@ class _PlatformView extends StatelessWidget {
           'track_id': track.trackId,
           'is_aux': track.source != "REGULAR",
           'screen_share': track.source != "REGULAR",
-          'scale_type': ScalingType.SCALE_ASPECT_FIT.value,
+          // TODO: add config setting for scale type
           'set_mirror': track.source != "REGULAR" ? false : setMirror,
+          // TODO: add config setting for mirror
+          'scale_type': track.source != "REGULAR" ? ScalingType.SCALE_ASPECT_FIT.value : ScalingType.SCALE_ASPECT_FILL.value,
+          // TODO: add config setting for match_parent
           'match_parent': matchParent,
         }..addAll({
             'height': viewSize.height,
