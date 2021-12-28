@@ -85,6 +85,7 @@ class HMSVideoViewWidget(context: Context, id: Int, creationParams: Map<String?,
             if (hmsVideoView.currentVideoTrack!!.trackId == trackId) { // peer?.isLocal == true
                 hmsVideoView.currentVideoTrack!!.removeSink(hmsVideoView.surfaceViewRenderer)
                 hmsVideoView.surfaceViewRenderer.release()
+                hmsVideoView.currentVideoTrack = null
                 Log.i("HMSVideoViewFactory","### released ${peer!!.name} <> $trackId")
             }
         }
