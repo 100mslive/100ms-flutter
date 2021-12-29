@@ -257,11 +257,12 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
     //         (orientation == Orientation.landscape ? 2.5 : 2.8);
 
     final double itemHeightWithSs =
-        (size.height - kToolbarHeight - kBottomNavigationBarHeight) / 2.3;
+        (size.height - kToolbarHeight - kBottomNavigationBarHeight) / 2;
     final double itemHeightWithoutSs =
         (size.height - kToolbarHeight - kBottomNavigationBarHeight) / 2.3;
 
-    final double itemWidth = size.width / 2;
+    final double itemWidth = (size.width - 12) / 2;
+    // itemWidth / itemHeightWithSs;
     //final aspectRatio = itemWidth / itemHeight;
     //print(aspectRatio.toString() + "AspectRatio");
     return ConnectivityAppWrapper(
@@ -410,60 +411,57 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                       ],
                     ),
                     body: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 5.0, horizontal: 5.0),
-                      child: Center(
-                        child: Container(
-                          width: double.infinity,
-                          child: Column(
-                            children: [
-                              Observer(builder: (_) {
-                                if (_meetingStore.screenShareTrack != null &&
-                                    !audioViewOn) {
-                                  return SizedBox(
-                                    width: double.infinity,
-                                    height: MediaQuery.of(context).size.height /
-                                        2.5,
-                                    child: PeerItemOrganism(
-                                      observableMap: {"highestAudio": ""},
-                                      height:
-                                          MediaQuery.of(context).size.height /
-                                              2,
-                                      width: MediaQuery.of(context).size.width,
-                                      isVideoMuted: false,
-                                      peerTracKNode: new PeerTracKNode(
-                                          peerId:
-                                              _meetingStore.screenSharePeerId,
-                                          track:
-                                              _meetingStore.screenShareTrack!,
-                                          name: _meetingStore.screenShareTrack
-                                                  ?.peer?.name ??
-                                              ""),
-                                    ),
-                                  );
-                                } else {
-                                  return Container();
-                                }
-                              }),
-                              Flexible(
-                                child: Observer(
-                                  builder: (_) {
-                                    print("rebuilding");
-                                    if (!_meetingStore.isMeetingStarted)
-                                      return SizedBox();
-                                    if (_meetingStore.peerTracks.isEmpty)
-                                      return Center(
-                                          child: Text(
-                                              'Waiting for others to join!'));
-                                    ObservableList<PeerTracKNode>
-                                        peerFilteredList =
-                                        _meetingStore.isActiveSpeakerMode
-                                            ? _meetingStore
-                                                .activeSpeakerPeerTracksStore
-                                            : _meetingStore.peerTracks;
-                                    ObservableMap<String, String> audioKeyMap =
-                                        _meetingStore.observableMap;
-                                    return GridView.builder(
+                      padding: const EdgeInsets.symmetric(horizontal: 5.0,vertical: 5.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Observer(builder: (_) {
+                            if (_meetingStore.screenShareTrack != null &&
+                                !audioViewOn) {
+                              return SizedBox(
+                                width: double.infinity,
+                                height: MediaQuery.of(context).size.height /
+                                    2.5,
+                                child: PeerItemOrganism(
+                                  observableMap: {"highestAudio": ""},
+                                  height:
+                                      MediaQuery.of(context).size.height /
+                                          2,
+                                  width: MediaQuery.of(context).size.width,
+                                  isVideoMuted: false,
+                                  peerTracKNode: new PeerTracKNode(
+                                      peerId:
+                                          _meetingStore.screenSharePeerId,
+                                      track:
+                                          _meetingStore.screenShareTrack!,
+                                      name: _meetingStore.screenShareTrack
+                                              ?.peer?.name ??
+                                          ""),
+                                ),
+                              );
+                            } else {
+                              return Container();
+                            }
+                          }),
+                          Flexible(
+                            child: Observer(
+                              builder: (_) {
+                                print("rebuilding");
+                                if (!_meetingStore.isMeetingStarted)
+                                  return SizedBox();
+                                if (_meetingStore.peerTracks.isEmpty)
+                                  return Center(
+                                      child: Text(
+                                          'Waiting for others to join!'));
+                                ObservableList<PeerTracKNode>
+                                    peerFilteredList =
+                                    _meetingStore.isActiveSpeakerMode
+                                        ? _meetingStore
+                                            .activeSpeakerPeerTracksStore
+                                        : _meetingStore.peerTracks;
+                                ObservableMap<String, String> audioKeyMap =
+                                    _meetingStore.observableMap;
+                                return GridView.builder(
                                     physics: PageScrollPhysics(),
                                     scrollDirection: Axis.horizontal,
                                     addAutomaticKeepAlives: false,
@@ -472,18 +470,24 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                     cacheExtent: 0,
                                     gridDelegate:
                                         SliverGridDelegateWithFixedCrossAxisCount(
-                                      crossAxisCount:  !audioViewOn && _meetingStore.screenShareTrack != null ? 1 : 2,
-                                      childAspectRatio: 1.7,
+                                      crossAxisCount:( !audioViewOn &&
+                                              _meetingStore
+                                                      .screenShareTrack !=
+                                                  null)
+                                          ? 1
+                                          : 2,
+                                      mainAxisExtent:itemWidth,
                                     ),
                                     itemBuilder: (ctx, index) {
                                       return Observer(builder: (context) {
-                                        ObservableMap<String, HMSTrackUpdate>
-                                            map = _meetingStore.trackStatus;
+                                        ObservableMap<String,
+                                                HMSTrackUpdate> map =
+                                            _meetingStore.trackStatus;
                                         print("GRIDVIEW ${map.toString()}");
                                         return VideoTile(
                                           tileIndex: index,
                                           filteredList: peerFilteredList,
-                                          itemHeight: itemHeightWithoutSs,
+                                          itemHeight: itemHeightWithSs,
                                           itemWidth: itemWidth,
                                           trackStatus: map,
                                           observerMap: audioKeyMap,
@@ -491,238 +495,105 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                         );
                                       });
                                     });
-                                    // return PageView.builder(
-                                    //   controller: _pageController,
-                                    //   physics: _meetingStore.isActiveSpeakerMode
-                                    //       ? NeverScrollableScrollPhysics()
-                                    //       : null,
-                                    //   itemBuilder: (ctx, index) {
-                                    //     ObservableMap<String, HMSTrackUpdate>
-                                    //         map = _meetingStore.trackStatus;
-                                    //     return ((orientation ==
-                                    //                     Orientation.portrait &&
-                                    //                 _meetingStore
-                                    //                         .screenShareTrack ==
-                                    //                     null) ||
-                                    //             audioViewOn
-                                    //         ? Column(
-                                    //           children: [
-                                    //             Row(
-                                    //               children: [
-                                    //                 //if (index * 4 < filteredList.length)
-                                    //                 VideoTile(
-                                    //                   tileIndex: index * 4,
-                                    //                   filteredList:
-                                    //                       peerFilteredList,
-                                    //                   itemHeight:
-                                    //                       itemHeightWithoutSs,
-                                    //                   itemWidth: itemWidth,
-                                    //                   trackStatus: map,
-                                    //                   observerMap:
-                                    //                       audioKeyMap,
-                                    //                   audioView:
-                                    //                       audioViewOn,
-                                    //                 ),
-                                    //                 //if (index * 4 + 1 < filteredList.length)
-                                    //                 VideoTile(
-                                    //                   tileIndex:
-                                    //                       index * 4 + 1,
-                                    //                   filteredList:
-                                    //                       peerFilteredList,
-                                    //                   itemHeight:
-                                    //                       itemHeightWithoutSs,
-                                    //                   itemWidth: itemWidth,
-                                    //                   trackStatus: map,
-                                    //                   observerMap:
-                                    //                       audioKeyMap,
-                                    //                   audioView:
-                                    //                       audioViewOn,
-                                    //                 ),
-                                    //               ],
-                                    //             ),
-                                    //             Row(
-                                    //               children: [
-                                    //                 //if (index * 4 + 2 < filteredList.length)
-                                    //                 VideoTile(
-                                    //                   tileIndex:
-                                    //                       index * 4 + 2,
-                                    //                   filteredList:
-                                    //                       peerFilteredList,
-                                    //                   itemHeight:
-                                    //                       itemHeightWithoutSs,
-                                    //                   itemWidth: itemWidth,
-                                    //                   trackStatus: map,
-                                    //                   observerMap:
-                                    //                       audioKeyMap,
-                                    //                   audioView:
-                                    //                       audioViewOn,
-                                    //                 ),
-                                    //                 //if (index * 4 + 3 < filteredList.length)
-                                    //                 VideoTile(
-                                    //                   tileIndex:
-                                    //                       index * 4 + 3,
-                                    //                   filteredList:
-                                    //                       peerFilteredList,
-                                    //                   itemHeight:
-                                    //                       itemHeightWithoutSs,
-                                    //                   itemWidth: itemWidth,
-                                    //                   trackStatus: map,
-                                    //                   observerMap:
-                                    //                       audioKeyMap,
-                                    //                   audioView:
-                                    //                       audioViewOn,
-                                    //                 ),
-                                    //               ],
-                                    //             ),
-                                    //           ],
-                                    //         )
-                                    //         : Column(
-                                    //             children: [
-                                    //               Row(
-                                    //                 children: [
-                                    //                   VideoTile(
-                                    //                     tileIndex: index * 2,
-                                    //                     filteredList:
-                                    //                         peerFilteredList,
-                                    //                     itemHeight:
-                                    //                         itemHeightWithSs,
-                                    //                     itemWidth: itemWidth,
-                                    //                     trackStatus: map,
-                                    //                     observerMap:
-                                    //                         audioKeyMap,
-                                    //                     audioView: audioViewOn,
-                                    //                   ),
-                                    //                   VideoTile(
-                                    //                     tileIndex:
-                                    //                         index * 2 + 1,
-                                    //                     filteredList:
-                                    //                         peerFilteredList,
-                                    //                     itemHeight:
-                                    //                         itemHeightWithSs,
-                                    //                     itemWidth: itemWidth,
-                                    //                     trackStatus: map,
-                                    //                     observerMap:
-                                    //                         audioKeyMap,
-                                    //                     audioView: audioViewOn,
-                                    //                   ),
-                                    //                 ],
-                                    //               ),
-                                    //             ],
-                                    //           ));
-                                    //   },
-                                    //   itemCount: ((peerFilteredList.length -
-                                    //                   1) /
-                                    //               ((orientation ==
-                                    //                           Orientation
-                                    //                               .portrait) &&
-                                    //                       (_meetingStore
-                                    //                               .screenShareTrack ==
-                                    //                           null)
-                                    //                   ? 4
-                                    //                   : 2))
-                                    //           .floor() +
-                                    //       1,
-                                    // );
-                                  },
-                                ),
-                              ),
-                            ],
+                              },
+                            ),
                           ),
-                        ),
+                        ],
                       ),
                     ),
                     bottomNavigationBar: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Container(
-                          padding: EdgeInsets.all(8),
-                          child: Observer(builder: (context) {
-                            return IconButton(
-                                tooltip: 'Video',
-                                iconSize: 32,
-                                onPressed: (audioViewOn)
-                                    ? null
-                                    : () {
-                                        _meetingStore.toggleVideo();
-                                        countOfVideoOnBetweenTwo++;
-                                      },
-                                icon: Icon(_meetingStore.isVideoOn
-                                    ? Icons.videocam
-                                    : Icons.videocam_off));
-                          }),
-                        ),
-                        Container(
-                          padding: EdgeInsets.all(8),
-                          child: Observer(builder: (context) {
-                            return IconButton(
-                                tooltip: 'Audio',
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Container(
+                            padding: EdgeInsets.all(8),
+                            child: Observer(builder: (context) {
+                              return IconButton(
+                                  tooltip: 'Video',
+                                  iconSize: 32,
+                                  onPressed: (audioViewOn)
+                                      ? null
+                                      : () {
+                                          _meetingStore.toggleVideo();
+                                          countOfVideoOnBetweenTwo++;
+                                        },
+                                  icon: Icon(_meetingStore.isVideoOn
+                                      ? Icons.videocam
+                                      : Icons.videocam_off));
+                            }),
+                          ),
+                          Container(
+                            padding: EdgeInsets.all(8),
+                            child: Observer(builder: (context) {
+                              return IconButton(
+                                  tooltip: 'Audio',
+                                  iconSize: 32,
+                                  onPressed: () {
+                                    _meetingStore.toggleAudio();
+                                  },
+                                  icon: Icon(_meetingStore.isMicOn
+                                      ? Icons.mic
+                                      : Icons.mic_off));
+                            }),
+                          ),
+                          Container(
+                              padding: EdgeInsets.all(8),
+                              child: IconButton(
+                                tooltip: 'RaiseHand',
                                 iconSize: 32,
                                 onPressed: () {
-                                  _meetingStore.toggleAudio();
+                                  setState(() {
+                                    raisedHand = !raisedHand;
+                                  });
+                                  _meetingStore.raiseHand();
+                                  UtilityComponents.showSnackBarWithString(
+                                      raisedHand
+                                          ? "Raised Hand ON"
+                                          : "Raised Hand OFF",
+                                      context);
                                 },
-                                icon: Icon(_meetingStore.isMicOn
-                                    ? Icons.mic
-                                    : Icons.mic_off));
-                          }),
-                        ),
-                        Container(
-                          padding: EdgeInsets.all(8),
-                          child: IconButton(
-                          tooltip: 'RaiseHand',
-                          iconSize: 32,
-                          onPressed: () {
-                            setState(() {
-                            raisedHand = !raisedHand;
-                            });
-                            _meetingStore.raiseHand();
-                            UtilityComponents.showSnackBarWithString(
-                                raisedHand ? "Raised Hand ON" : "Raised Hand OFF",
-                                context);
-                          },
-                          icon: Image.asset('assets/icons/raise_hand.png',color: raisedHand?Colors.amber.shade300:Colors.black,),
-                    )
-                        ),
-                        Container(
-                          padding: EdgeInsets.all(8),
-                          child: IconButton(
-                              tooltip: 'Chat',
-                              iconSize: 32,
-                              onPressed: () {
-                                chatMessages(context, _meetingStore);
-                              },
-                              icon: Icon(Icons.chat_bubble)),
-                        ),
-                         Container(
-                          padding: EdgeInsets.all(8),
-                          child: IconButton(
-                              color: Colors.red,
-                              tooltip: 'Leave Or End',
-                              iconSize: 32,
-                              onPressed: () async {
-                                String ans = await showDialog(
-                                    context: context,
-                                    builder: (_) =>
-                                        LeaveOrEndMeetingDialogOption(
-                                          meetingStore: _meetingStore,
-                                        ));
-                                if (ans == 'Leave' || ans == 'End')
-                                  Navigator.pop(context);
-                              },
-                              icon: Icon(Icons.call_end)),
-                        ),
-                      ]),
-           
-    );
-    }
-    )),
-    onWillPop: () async {
+                                icon: Image.asset(
+                                  'assets/icons/raise_hand.png',
+                                  color: raisedHand
+                                      ? Colors.amber.shade300
+                                      : Colors.black,
+                                ),
+                              )),
+                          Container(
+                            padding: EdgeInsets.all(8),
+                            child: IconButton(
+                                tooltip: 'Chat',
+                                iconSize: 32,
+                                onPressed: () {
+                                  chatMessages(context, _meetingStore);
+                                },
+                                icon: Icon(Icons.chat_bubble)),
+                          ),
+                          Container(
+                            padding: EdgeInsets.all(8),
+                            child: IconButton(
+                                color: Colors.red,
+                                tooltip: 'Leave Or End',
+                                iconSize: 32,
+                                onPressed: () async {
+                                  String ans = await showDialog(
+                                      context: context,
+                                      builder: (_) =>
+                                          LeaveOrEndMeetingDialogOption(
+                                            meetingStore: _meetingStore,
+                                          ));
+                                  if (ans == 'Leave' || ans == 'End')
+                                    Navigator.pop(context);
+                                },
+                                icon: Icon(Icons.call_end)),
+                          ),
+                        ]),
+                  );
+          })),
+      onWillPop: () async {
         bool ans = await UtilityComponents.onBackPressed(context);
         return ans;
       },
-    )
-    
-    
-    );
+    ));
   }
 
   @override
