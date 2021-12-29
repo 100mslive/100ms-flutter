@@ -20,7 +20,7 @@ class ParticipantOrganism extends StatefulWidget {
 
 class _ParticipantOrganismState extends State<ParticipantOrganism> {
   bool isVideoOn = false, isAudioOn = false;
-
+  Color isOffColor = Colors.red.shade300, isOnColor = Colors.green.shade300;
   @override
   void initState() {
     super.initState();
@@ -30,72 +30,91 @@ class _ParticipantOrganismState extends State<ParticipantOrganism> {
   @override
   Widget build(BuildContext context) {
     HMSPeer peer = widget.peer;
-    return Container(
-      padding: EdgeInsets.all(20.0),
-      child: Row(
-        children: [
-          Expanded(
-              child: Text(
-            peer.name,
-            style: TextStyle(fontSize: 20.0),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          )),
-          SizedBox(
-            width: 20.0,
-          ),
-          GestureDetector(
-            onTap: () {
-              showDialog(
-                  context: context,
-                  builder: (_) => ChangeRoleOptionDialog(
-                        peerName: peer.name,
-                        getRoleFunction: widget.meetingStore.getRoles(),
-                        changeRole: (role, forceChange) {
-                          Navigator.pop(context);
-                          widget.meetingStore.changeRole(
-                              peerId: peer.peerId,
-                              roleName: role.name,
-                              forceChange: forceChange);
-                        },
-                      ));
-            },
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-              child: Container(
-                padding: const EdgeInsets.all(8.0),
-                decoration: BoxDecoration(
-                  color: Colors.blue,
-                  borderRadius: BorderRadius.circular(5.0),
+    return Card(
+      child: Container(
+        padding: EdgeInsets.all(20.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              peer.name,
+              style: TextStyle(fontSize: 20.0),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+            Row(
+              children: [
+                    if (peer.metadata == "{\"isHandRaised\":true}")
+              Padding(
+                padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
+                child: Image.asset(
+                  'assets/icons/raise_hand.png',
+                  color: Colors.amber.shade300,
+                  width: 20,
+                  height: 20,
                 ),
-                child: Text(
-                  "${peer.role!.name}",
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.bold),
+              ),
+            GestureDetector(
+              onTap: () {
+                showDialog(
+                    context: context,
+                    builder: (_) => ChangeRoleOptionDialog(
+                          peerName: peer.name,
+                          getRoleFunction: widget.meetingStore.getRoles(),
+                          changeRole: (role, forceChange) {
+                            Navigator.pop(context);
+                            widget.meetingStore.changeRole(
+                                peerId: peer.peerId,
+                                roleName: role.name,
+                                forceChange: forceChange);
+                          },
+                        ));
+              },
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                child: Container(
+                  padding: const EdgeInsets.all(5.0),
+                  decoration: BoxDecoration(
+                    color: Colors.blue,
+                    borderRadius: BorderRadius.circular(5.0),
+                  ),
+                  child: Text(
+                    "${peer.role!.name}",
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold),
+                  ),
                 ),
               ),
             ),
-          ),
-          if (peer.metadata == "{\"isHandRaised\":true}")
+            
             Padding(
-              padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
-              child: Icon(Icons.sports_handball),
+              padding: const EdgeInsets.fromLTRB(10.0,0,10,0),
+              child: Container(
+                decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: isVideoOn ? isOnColor : isOffColor),
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(5, 5, 5, 5),
+                  child: Icon(isVideoOn ? Icons.videocam : Icons.videocam_off),
+                ),
+              ),
             ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
-            child: Icon(isVideoOn ? Icons.videocam : Icons.videocam_off),
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(0, 0, 5, 0),
-            child: Icon(isAudioOn ? Icons.mic : Icons.mic_off),
-          ),
-          Divider(
-            height: 15,
-            color: Colors.grey,
-          )
-        ],
+            Container(
+              decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: isVideoOn ? isOnColor : isOffColor),
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(5, 5, 5, 5),
+                child: Icon(isAudioOn ? Icons.mic : Icons.mic_off),
+              ),
+            ),
+              ],
+            )
+            
+          ],
+        ),
       ),
     );
   }
