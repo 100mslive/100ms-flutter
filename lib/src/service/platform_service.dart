@@ -151,7 +151,7 @@ class PlatformService {
           break;
         case HMSUpdateListenerMethod.onPeerUpdate:
           HMSPeer? peer = HMSPeer.fromMap(data['peer']);
-          print(data['update']);
+          print(data['update']+"onFlutterPeerUpdate");
           HMSPeerUpdate? update =
               HMSPeerUpdateValues.getHMSPeerUpdateFromName(data['update']);
           notifyMeetingListeners(method, {'peer': peer, 'update': update});

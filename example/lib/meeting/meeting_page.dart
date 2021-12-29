@@ -487,8 +487,6 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                         return VideoTile(
                                           tileIndex: index,
                                           filteredList: peerFilteredList,
-                                          itemHeight: itemHeightWithSs,
-                                          itemWidth: itemWidth,
                                           trackStatus: map,
                                           observerMap: audioKeyMap,
                                           audioView: audioViewOn,

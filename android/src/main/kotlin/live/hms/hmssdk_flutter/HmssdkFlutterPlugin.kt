@@ -796,10 +796,10 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         override fun onPeerUpdate(type: HMSPeerUpdate, peer: HMSPeer) {
 
             val args = HashMap<String, Any?>()
-            args.put("event_name", "on_peer_update")
-//        Log.i("onPeerUpdate1", type.toString())
-            args.put("data", HMSPeerUpdateExtension.toDictionary(peer, type))
-//        Log.i("onPeerUpdate2", args.get("data").toString())
+            args["event_name"] = "on_peer_update"
+
+            args["data"] = HMSPeerUpdateExtension.toDictionary(peer, type)
+            Log.i("onPeerUpdateAndroid", "${args["data"]} ${peer.name}")
             if (args["data"] != null)
                 CoroutineScope(Dispatchers.Main).launch {
                     eventSink?.success(args)
