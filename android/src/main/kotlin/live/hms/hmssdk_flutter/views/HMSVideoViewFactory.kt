@@ -51,6 +51,8 @@ class HMSVideoViewWidget(context: Context, id: Int, creationParams: Map<String?,
         }
 
         val tracks = peer.auxiliaryTracks
+        
+        Log.i("HMSVideoView","${peer.name} ${isAux} ${tracks.isNotEmpty()}")
         if (tracks.isNotEmpty() && isAux) {
             val track = tracks.first {
                 it.trackId == trackId
