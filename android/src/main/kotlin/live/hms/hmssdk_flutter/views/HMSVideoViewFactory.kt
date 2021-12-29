@@ -28,6 +28,8 @@ class HMSVideoViewWidget(context: Context, id: Int, creationParams: Map<String?,
 
     private fun renderVideo() {
 
+        Log.i("HMSVideoViewFactory","### will start renderVideo ${peer!!.name} <> $trackId")
+
         var frameLayoutParams = FrameLayout.LayoutParams(
             FrameLayout.LayoutParams.MATCH_PARENT,
             FrameLayout.LayoutParams.MATCH_PARENT
@@ -41,6 +43,18 @@ class HMSVideoViewWidget(context: Context, id: Int, creationParams: Map<String?,
         view.layoutParams = frameLayoutParams
 
         if (peer == null) return
+        else {
+            // TODO: add exception logs
+        }
+
+        if (hmsVideoView.currentVideoTrack != null) {
+            if (hmsVideoView.currentVideoTrack!!.trackId == trackId) {
+                return
+            }
+        } else {
+            // TODO: add exception logs
+        }
+
         val tracks = peer.auxiliaryTracks
         
         Log.i("HMSVideoView","${peer.name} ${isAux} ${tracks.isNotEmpty()}")
@@ -51,12 +65,14 @@ class HMSVideoViewWidget(context: Context, id: Int, creationParams: Map<String?,
 
             if (track != null) {
                 hmsVideoView.setVideoTrack((track as HMSVideoTrack))
+                Log.i("HMSVideoViewFactory","### renderVideo auxiliary ${peer!!.name} <> ${track.source} <> ${track.trackId} <> $trackId")
                 return
             }
         } else {
             peer.videoTrack.let {
                 if (it?.trackId == trackId || peer.isLocal) {
                     hmsVideoView.setVideoTrack(it)
+                    Log.i("HMSVideoViewFactory","### renderVideo regular ${peer!!.name} <> ${it!!.source} <> ${it!!.trackId} <> $trackId")
                 }
             }
         }
@@ -67,17 +83,28 @@ class HMSVideoViewWidget(context: Context, id: Int, creationParams: Map<String?,
     }
 
     override fun dispose() {
-         release()
-
+        Log.i("HMSVideoViewFactory","### will start dispose ${peer!!.name} <> $trackId")
+        release()
     }
 
     private fun release() {
-        peer?.videoTrack.let {
-            if (it?.trackId == trackId || peer?.isLocal == true) {
-                it?.removeSink(hmsVideoView.surfaceViewRenderer)
+        if (hmsVideoView.currentVideoTrack != null) {
+            if (hmsVideoView.currentVideoTrack!!.trackId == trackId) { // peer?.isLocal == true
+                hmsVideoView.currentVideoTrack!!.removeSink(hmsVideoView.surfaceViewRenderer)
+                hmsVideoView.surfaceViewRenderer.release()
+                hmsVideoView.currentVideoTrack = null
+                Log.i("HMSVideoViewFactory","### released ${peer!!.name} <> $trackId")
             }
         }
-        hmsVideoView.surfaceViewRenderer.release()
+        else {
+            // TODO: add exception logs
+        }
+//        peer?.videoTrack.let {
+//            if (it?.trackId == trackId || peer?.isLocal == true) {
+//                it?.removeSink(hmsVideoView.surfaceViewRenderer)
+//            }
+//        }
+//        hmsVideoView.surfaceViewRenderer.release()
     }
 }
 
