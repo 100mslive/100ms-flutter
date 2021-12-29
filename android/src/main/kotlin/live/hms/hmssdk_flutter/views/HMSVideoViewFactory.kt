@@ -43,11 +43,16 @@ class HMSVideoViewWidget(context: Context, id: Int, creationParams: Map<String?,
         view.layoutParams = frameLayoutParams
 
         if (peer == null) return
+        else {
+            // TODO: add exception logs
+        }
 
         if (hmsVideoView.currentVideoTrack != null) {
             if (hmsVideoView.currentVideoTrack!!.trackId == trackId) {
                 return
             }
+        } else {
+            // TODO: add exception logs
         }
 
         val tracks = peer.auxiliaryTracks
@@ -90,6 +95,9 @@ class HMSVideoViewWidget(context: Context, id: Int, creationParams: Map<String?,
                 hmsVideoView.currentVideoTrack = null
                 Log.i("HMSVideoViewFactory","### released ${peer!!.name} <> $trackId")
             }
+        }
+        else {
+            // TODO: add exception logs
         }
 //        peer?.videoTrack.let {
 //            if (it?.trackId == trackId || peer?.isLocal == true) {
