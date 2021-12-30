@@ -21,6 +21,7 @@ class ParticipantOrganism extends StatefulWidget {
 class _ParticipantOrganismState extends State<ParticipantOrganism> {
   bool isVideoOn = false, isAudioOn = false;
   Color isOffColor = Colors.red.shade300, isOnColor = Colors.green.shade300;
+
   @override
   void initState() {
     super.initState();
@@ -29,6 +30,7 @@ class _ParticipantOrganismState extends State<ParticipantOrganism> {
 
   @override
   Widget build(BuildContext context) {
+  final width = MediaQuery.of(context).size.width;
     HMSPeer peer = widget.peer;
     return Card(
       child: Container(
@@ -36,11 +38,14 @@ class _ParticipantOrganismState extends State<ParticipantOrganism> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              peer.name,
-              style: TextStyle(fontSize: 20.0),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
+            Container(
+              width: width/3,
+              child: Text(
+                peer.name,
+                style: TextStyle(fontSize: 20.0),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
             Row(
               children: [
@@ -104,7 +109,7 @@ class _ParticipantOrganismState extends State<ParticipantOrganism> {
             Container(
               decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: isVideoOn ? isOnColor : isOffColor),
+                  color: isAudioOn ? isOnColor : isOffColor),
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(5, 5, 5, 5),
                 child: Icon(isAudioOn ? Icons.mic : Icons.mic_off),
