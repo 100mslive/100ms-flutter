@@ -4,6 +4,7 @@ import 'dart:io';
 // import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+
 // import 'package:hmssdk_flutter/src/enum/hms_log_level.dart';
 // import 'package:hmssdk_flutter_example/logs/static_logger.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_controller.dart';
@@ -16,7 +17,8 @@ class MeetingStore = MeetingStoreBase with _$MeetingStore;
 
 abstract class MeetingStoreBase extends ChangeNotifier
     with Store
-    implements HMSUpdateListener { // HMSLogListener
+    implements HMSUpdateListener {
+  // HMSLogListener
   @observable
   bool isSpeakerOn = true;
   @observable
@@ -474,6 +476,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
 
   @action
   void peerOperation(HMSPeer peer, HMSPeerUpdate update) {
+    print("peerOperation ${peer.name} ${update}");
     switch (update) {
       case HMSPeerUpdate.peerJoined:
         print('peer joined');
@@ -504,6 +507,13 @@ abstract class MeetingStoreBase extends ChangeNotifier
         updatePeerAt(peer);
         break;
       case HMSPeerUpdate.metadataChanged:
+        int index =
+            peerTracks.indexWhere((element) => element.peerId == peer.peerId);
+        if (index != -1 && peer.metadata == "{\"isHandRaised\":true}")
+          peerTracks[index].isRaiseHand = true;
+        else if(index != -1 && peer.metadata == "{\"isHandRaised\":false}"){
+          peerTracks[index].isRaiseHand = false;
+        }
         updatePeerAt(peer);
         break;
       case HMSPeerUpdate.nameChanged:
@@ -592,7 +602,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
 
   // @override
   // void onLogMessage({required dynamic HMSLogList}) async {
-    // StaticLogger.logger?.v(HMSLogList.toString());
+  // StaticLogger.logger?.v(HMSLogList.toString());
   //   FirebaseCrashlytics.instance.log(HMSLogList.toString());
   // }
 

@@ -5,6 +5,7 @@ import 'package:mobx/mobx.dart';
 class PeerTracKNode {
   String peerId;
   String name;
+  bool isRaiseHand;
   @observable
   HMSTrack? track;
   HMSTrack? audioTrack;
@@ -13,6 +14,7 @@ class PeerTracKNode {
     this.track,
     this.name = "",
     this.audioTrack,
+    this.isRaiseHand=false
   });
 
   @override

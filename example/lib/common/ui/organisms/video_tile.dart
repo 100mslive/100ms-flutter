@@ -14,8 +14,8 @@ import 'package:visibility_detector/visibility_detector.dart';
 class VideoTile extends StatefulWidget {
   final tileIndex;
   final List<PeerTracKNode> filteredList;
-  final double itemHeight;
-  final double itemWidth;
+  double itemHeight;
+  double itemWidth;
   final Map<String, HMSTrackUpdate> trackStatus;
   final Map<String, String> observerMap;
   final bool audioView;
@@ -23,8 +23,8 @@ class VideoTile extends StatefulWidget {
     Key? key,
     required this.tileIndex,
     required this.filteredList,
-    required this.itemHeight,
-    required this.itemWidth,
+    this.itemHeight=200.0,
+    this.itemWidth =200.0,
     required this.trackStatus,
     required this.observerMap,
     required this.audioView,

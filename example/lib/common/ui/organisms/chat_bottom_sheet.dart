@@ -93,7 +93,9 @@ class _ChatWidgetState extends State<ChatWidget> {
                         }),
                         GestureDetector(
                           onTap: () {
-                            Navigator.of(context).pop();
+                            FocusScope.of(context).unfocus();
+                            Future.delayed(Duration(milliseconds: 500))
+                                .then((value) => Navigator.of(context).pop());
                           },
                           child: Icon(
                             Icons.clear,
@@ -280,6 +282,7 @@ class _ChatWidgetState extends State<ChatWidget> {
 
 void chatMessages(BuildContext context, MeetingStore meetingStore) {
   showModalBottomSheet(
+      elevation: 6.0,
       context: context,
       builder: (ctx) => ChatWidget(meetingStore),
       isScrollControlled: true);
