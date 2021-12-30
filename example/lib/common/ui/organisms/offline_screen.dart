@@ -37,22 +37,6 @@ class OfflineWidget extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.only(top: 20),
               ),
-              //     Container(
-              //     width: MediaQuery.of(context).size.width,
-              //     height: MediaQuery.of(context).size.width,
-              //     margin: EdgeInsets.all(25),
-              //     child: Column(
-              //       mainAxisAlignment: MainAxisAlignment.center,
-              //       children: <Widget>[
-              //         // Image.asset(
-              //         //   'assets/icons/no_network.png',
-              //         //   width: MediaQuery.of(context).size.width * 0.22,
-              //         //   height: MediaQuery.of(context).size.width * 0.22,
-              //         // ),
-
-              //       ],
-              //     ),
-              // )
             ],
           ),
         ),

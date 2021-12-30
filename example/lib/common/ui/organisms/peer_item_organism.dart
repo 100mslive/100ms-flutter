@@ -17,6 +17,7 @@ class PeerItemOrganism extends StatefulWidget {
   final bool isLocal;
   bool setMirror;
   final Map<String, String> observableMap;
+
   PeerItemOrganism(
       {Key? key,
       required this.peerTracKNode,
@@ -63,14 +64,15 @@ class _PeerItemOrganismState extends State<PeerItemOrganism> {
                       meetingStore.highestSpeaker.peerId
                   ? 4.0
                   : 1.0),
-          borderRadius: BorderRadius.all(Radius.circular(10))),
-      child: Column(
+          borderRadius: BorderRadius.all(Radius.circular(10))
+          ),
+      child: Stack(
         children: [
-          Expanded(child: LayoutBuilder(
+          LayoutBuilder(
             builder: (context, constraints) {
               if ((widget.isVideoMuted || widget.peerTracKNode.track == null)) {
                 List<String>? parts = widget.peerTracKNode.name.split(" ");
-
+    
                 if (parts.length == 1) {
                   parts[0] += " ";
                   name = parts[0][0] + parts[0][1];
@@ -88,11 +90,11 @@ class _PeerItemOrganismState extends State<PeerItemOrganism> {
                   child: Center(child: CircleAvatar(child: Text(name))),
                 );
               }
-
+    
               return Container(
                 height: widget.height + 100,
                 width: widget.width - 5,
-                padding: EdgeInsets.all(5.0),
+                padding: EdgeInsets.fromLTRB(5.0,5.0,5.0,15.0),
                 child: HMSVideoView(
                   track: widget.peerTracKNode.track!,
                   setMirror: widget.setMirror,
@@ -100,12 +102,24 @@ class _PeerItemOrganismState extends State<PeerItemOrganism> {
                 ),
               );
             },
-          )),
-          SizedBox(
-            height: 4,
           ),
-          Text(
-              "${widget.peerTracKNode.name} ${widget.peerTracKNode.track?.peer?.isLocal ?? false ? "(You)" : ""}")
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Text(
+                "${widget.peerTracKNode.name} ${widget.peerTracKNode.track?.peer?.isLocal ?? false ? "(You)" : ""}"),
+          ),
+          if (widget.peerTracKNode.isRaiseHand)
+            Positioned(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
+                child: Image.asset(
+                  'assets/icons/raise_hand.png',
+                  color: Colors.amber.shade300,
+                ),
+              ),
+              top: 5.0,
+              left: 5.0,
+            )
         ],
       ),
     );

@@ -1,11 +1,12 @@
-import 'dart:convert';
+// import 'dart:convert';
 import 'dart:io';
 
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+// import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-import 'package:hmssdk_flutter/src/enum/hms_log_level.dart';
-import 'package:hmssdk_flutter_example/logs/static_logger.dart';
+
+// import 'package:hmssdk_flutter/src/enum/hms_log_level.dart';
+// import 'package:hmssdk_flutter_example/logs/static_logger.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_controller.dart';
 import 'package:hmssdk_flutter_example/meeting/peerTrackNode.dart';
 import 'package:mobx/mobx.dart';
@@ -16,7 +17,8 @@ class MeetingStore = MeetingStoreBase with _$MeetingStore;
 
 abstract class MeetingStoreBase extends ChangeNotifier
     with Store
-    implements HMSUpdateListener, HMSLogListener {
+    implements HMSUpdateListener {
+  // HMSLogListener
   @observable
   bool isSpeakerOn = true;
   @observable
@@ -108,7 +110,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
   @action
   void removeListenerMeeting() {
     meetingController.removeMeetingListener(this);
-    removeLogsListener();
+    // removeLogsListener();
   }
 
   @action
@@ -205,8 +207,8 @@ abstract class MeetingStoreBase extends ChangeNotifier
     bool ans = await meetingController.joinMeeting();
     if (!ans) return false;
     isMeetingStarted = true;
-    startHMSLogger(HMSLogLevel.VERBOSE, HMSLogLevel.VERBOSE);
-    addLogsListener();
+    // startHMSLogger(HMSLogLevel.VERBOSE, HMSLogLevel.VERBOSE);
+    // addLogsListener();
     return true;
   }
 
@@ -363,44 +365,44 @@ abstract class MeetingStoreBase extends ChangeNotifier
 
   @override
   void onUpdateSpeakers({required List<HMSSpeaker> updateSpeakers}) {
-    if (!isActiveSpeakerMode) {
-      if (updateSpeakers.length == 0) {
-        peerTracks.removeAt(highestSpeakerIndex);
-        peerTracks.insert(highestSpeakerIndex, highestSpeaker);
-        highestSpeaker = PeerTracKNode(peerId: "-1");
-        return;
-      }
-
-      highestSpeakerIndex = peerTracks.indexWhere((element) =>
-          element.peerId.trim() == updateSpeakers[0].peer.peerId.trim());
-
-      print("index is $highestSpeakerIndex");
-      if (highestSpeakerIndex != -1) {
-        highestSpeaker = peerTracks[highestSpeakerIndex];
-        peerTracks.removeAt(highestSpeakerIndex);
-        peerTracks.insert(highestSpeakerIndex, highestSpeaker);
-      } else {
-        highestSpeaker = PeerTracKNode(peerId: "-1");
-      }
-    } else {
-      if (updateSpeakers.length == 0) {
-        activeSpeakerPeerTracksStore.removeAt(0);
-        activeSpeakerPeerTracksStore.insert(0, highestSpeaker);
-        highestSpeaker = PeerTracKNode(peerId: "-1");
-        return;
-      }
-      highestSpeakerIndex = activeSpeakerPeerTracksStore.indexWhere((element) =>
-          element.peerId.trim() == updateSpeakers[0].peer.peerId.trim());
-
-      print("index is $highestSpeakerIndex");
-      if (highestSpeakerIndex != -1) {
-        highestSpeaker = activeSpeakerPeerTracksStore[highestSpeakerIndex];
-        activeSpeakerPeerTracksStore.removeAt(highestSpeakerIndex);
-        activeSpeakerPeerTracksStore.insert(0, highestSpeaker);
-      } else {
-        highestSpeaker = PeerTracKNode(peerId: "-1");
-      }
-    }
+    // if (!isActiveSpeakerMode) {
+    //   if (updateSpeakers.length == 0) {
+    //     peerTracks.removeAt(highestSpeakerIndex);
+    //     peerTracks.insert(highestSpeakerIndex, highestSpeaker);
+    //     highestSpeaker = PeerTracKNode(peerId: "-1");
+    //     return;
+    //   }
+    //
+    //   highestSpeakerIndex = peerTracks.indexWhere((element) =>
+    //       element.peerId.trim() == updateSpeakers[0].peer.peerId.trim());
+    //
+    //   print("index is $highestSpeakerIndex");
+    //   if (highestSpeakerIndex != -1) {
+    //     highestSpeaker = peerTracks[highestSpeakerIndex];
+    //     peerTracks.removeAt(highestSpeakerIndex);
+    //     peerTracks.insert(highestSpeakerIndex, highestSpeaker);
+    //   } else {
+    //     highestSpeaker = PeerTracKNode(peerId: "-1");
+    //   }
+    // } else {
+    //   if (updateSpeakers.length == 0) {
+    //     activeSpeakerPeerTracksStore.removeAt(0);
+    //     activeSpeakerPeerTracksStore.insert(0, highestSpeaker);
+    //     highestSpeaker = PeerTracKNode(peerId: "-1");
+    //     return;
+    //   }
+    //   highestSpeakerIndex = activeSpeakerPeerTracksStore.indexWhere((element) =>
+    //       element.peerId.trim() == updateSpeakers[0].peer.peerId.trim());
+    //
+    //   print("index is $highestSpeakerIndex");
+    //   if (highestSpeakerIndex != -1) {
+    //     highestSpeaker = activeSpeakerPeerTracksStore[highestSpeakerIndex];
+    //     activeSpeakerPeerTracksStore.removeAt(highestSpeakerIndex);
+    //     activeSpeakerPeerTracksStore.insert(0, highestSpeaker);
+    //   } else {
+    //     highestSpeaker = PeerTracKNode(peerId: "-1");
+    //   }
+    // }
   }
 
   @override
@@ -463,6 +465,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
 
   @action
   void peerOperation(HMSPeer peer, HMSPeerUpdate update) {
+    print("peerOperation ${peer.name} ${update}");
     switch (update) {
       case HMSPeerUpdate.peerJoined:
         print('peer joined');
@@ -493,6 +496,13 @@ abstract class MeetingStoreBase extends ChangeNotifier
         updatePeerAt(peer);
         break;
       case HMSPeerUpdate.metadataChanged:
+        int index =
+            peerTracks.indexWhere((element) => element.peerId == peer.peerId);
+        if (index != -1 && peer.metadata == "{\"isHandRaised\":true}")
+          peerTracks[index].isRaiseHand = true;
+        else if(index != -1 && peer.metadata == "{\"isHandRaised\":false}"){
+          peerTracks[index].isRaiseHand = false;
+        }
         updatePeerAt(peer);
         break;
       case HMSPeerUpdate.nameChanged:
@@ -564,7 +574,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
   void leaveMeeting() async {
     meetingController.leaveMeeting();
     isRoomEnded = true;
-    //removeListenerMeeting();
+    // removeListenerMeeting();
   }
 
   void removePeerFromRoom(String peerId) {
@@ -579,27 +589,27 @@ abstract class MeetingStoreBase extends ChangeNotifier
     meetingController.unMuteAll();
   }
 
-  @override
-  void onLogMessage({required dynamic HMSLogList}) async {
-    StaticLogger.logger?.v(HMSLogList.toString());
-    FirebaseCrashlytics.instance.log(HMSLogList.toString());
-  }
+  // @override
+  // void onLogMessage({required dynamic HMSLogList}) async {
+  // StaticLogger.logger?.v(HMSLogList.toString());
+  //   FirebaseCrashlytics.instance.log(HMSLogList.toString());
+  // }
 
-  void startHMSLogger(HMSLogLevel webRtclogLevel, HMSLogLevel logLevel) {
-    meetingController.startHMSLogger(webRtclogLevel, logLevel);
-  }
-
-  void addLogsListener() {
-    meetingController.addLogsListener(this);
-  }
-
-  void removeLogsListener() {
-    meetingController.removeLogsListener(this);
-  }
-
-  void removeHMSLogger() {
-    meetingController.removeHMSLogger();
-  }
+  // void startHMSLogger(HMSLogLevel webRtclogLevel, HMSLogLevel logLevel) {
+  //   meetingController.startHMSLogger(webRtclogLevel, logLevel);
+  // }
+  //
+  // void addLogsListener() {
+  //   meetingController.addLogsListener(this);
+  // }
+  //
+  // void removeLogsListener() {
+  //   meetingController.removeLogsListener(this);
+  // }
+  //
+  // void removeHMSLogger() {
+  //   meetingController.removeHMSLogger();
+  // }
 
   Future<HMSPeer?> getLocalPeer() async {
     return await meetingController.getLocalPeer();

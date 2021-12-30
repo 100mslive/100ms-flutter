@@ -7,9 +7,14 @@
 ///You can add as many as [meeting_event_listeners] and [preview_event_listeners].
 ///
 ///[hmssdk_flutter] will send updates to all the listeners when there is any change in anything.
+
+// Dart imports:
 import 'dart:async';
 
+// Flutter imports:
 import 'package:flutter/services.dart';
+
+// Project imports:
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter/src/common/platform_methods.dart';
 import 'package:hmssdk_flutter/src/enum/hms_logs_update_listener.dart';
@@ -146,7 +151,7 @@ class PlatformService {
           break;
         case HMSUpdateListenerMethod.onPeerUpdate:
           HMSPeer? peer = HMSPeer.fromMap(data['peer']);
-          print(data['update']);
+          print(data['update']+"onFlutterPeerUpdate");
           HMSPeerUpdate? update =
               HMSPeerUpdateValues.getHMSPeerUpdateFromName(data['update']);
           notifyMeetingListeners(method, {'peer': peer, 'update': update});
