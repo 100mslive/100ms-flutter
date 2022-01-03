@@ -518,7 +518,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
             peerTracks.indexWhere((element) => element.peerId == peer.peerId);
         if (index != -1 && peer.metadata == "{\"isHandRaised\":true}")
           peerTracks[index].isRaiseHand = true;
-        else if(index != -1 && peer.metadata == "{\"isHandRaised\":false}"){
+        else if (index != -1 && peer.metadata == "{\"isHandRaised\":false}") {
           peerTracks[index].isRaiseHand = false;
         }
         updatePeerAt(peer);
@@ -547,8 +547,8 @@ abstract class MeetingStoreBase extends ChangeNotifier
               : HMSTrackUpdate.trackUnMuted;
           print("${trackStatus[peer.peerId]} trackStatusOfPeer");
         } else {
-          screenSharePeerId = peer.peerId;
           screenShareTrack.add(track);
+          screenSharePeerId = screenShareTrack.first?.peer?.peerId ?? "";
         }
         print("peerOperationWithTrack ${track.isMute}");
         break;
@@ -558,12 +558,6 @@ abstract class MeetingStoreBase extends ChangeNotifier
           screenShareTrack
               .removeWhere((element) => element?.trackId == track.trackId);
           screenSharePeerId = screenShareTrack.first?.peer?.peerId ?? "";
-          // screenShareTrack.forEach((element) {
-          //   if (element.track?.source == "SCREEN") {
-          //     screenSharePeerId = element.peer?.peerId ?? "";
-          //     screenShareTrack = element;
-          //   }
-          // });
         } else {
           peerTracks.removeWhere((element) => element.peerId == peer.peerId);
           print("peerOperationWithTrack ${peerTracks.toString()}");

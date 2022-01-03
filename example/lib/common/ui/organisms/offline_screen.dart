@@ -4,7 +4,6 @@ class OfflineWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
-    // TODO: implement build
     return Material(
       color: Colors.white,
       child: SafeArea(
