@@ -14,22 +14,21 @@ import 'package:visibility_detector/visibility_detector.dart';
 class VideoTile extends StatefulWidget {
   final tileIndex;
   final List<PeerTracKNode> filteredList;
-  final double itemHeight;
-  final double itemWidth;
+  double itemHeight;
+  double itemWidth;
   final Map<String, HMSTrackUpdate> trackStatus;
   final Map<String, String> observerMap;
   final bool audioView;
-  VideoTile(
-      {Key? key,
-      required this.tileIndex,
-      required this.filteredList,
-      required this.itemHeight,
-      required this.itemWidth,
-      required this.trackStatus,
-      required this.observerMap,
-      required this.audioView,
-      })
-      : super(key: key);
+  VideoTile({
+    Key? key,
+    required this.tileIndex,
+    required this.filteredList,
+    this.itemHeight=200.0,
+    this.itemWidth =200.0,
+    required this.trackStatus,
+    required this.observerMap,
+    required this.audioView,
+  }) : super(key: key);
 
   @override
   State<VideoTile> createState() => _VideoTileState();
@@ -69,7 +68,8 @@ class _VideoTileState extends State<VideoTile> {
       key: Key(filteredList[index].peerId),
       child: InkWell(
         onLongPress: () {
-          if (!widget.audioView && filteredList[index].peerId != _meetingStore.localPeer!.peerId)
+          if (!widget.audioView &&
+              filteredList[index].peerId != _meetingStore.localPeer!.peerId)
             showDialog(
                 context: context,
                 builder: (_) => Column(

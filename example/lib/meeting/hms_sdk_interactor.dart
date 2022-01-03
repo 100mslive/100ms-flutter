@@ -152,7 +152,7 @@ class HMSSDKInteractor implements HMSActionResultListener {
   }
 
   Future<void> setPlayBackAllowed(bool allow) async {
-    //  await _meeting.setPlayBackAllowed(allow);
+    await _meeting.setPlayBackAllowed(allow);
   }
 
   Future<HMSException?> startRtmpOrRecording(
@@ -169,7 +169,7 @@ class HMSSDKInteractor implements HMSActionResultListener {
   }
 
   Future<void> raiseHand() async {
-    // await _meeting.raiseHand();
+    await _meeting.raiseHand();
   }
 
   @override

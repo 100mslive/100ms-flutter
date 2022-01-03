@@ -29,6 +29,9 @@ class HMSVideoView(
     setMirror: Boolean,
     scaleType: Int? = RendererCommon.ScalingType.SCALE_ASPECT_FIT.ordinal
 ) : FrameLayout(context, null) {
+
+    var currentVideoTrack: HMSVideoTrack? = null
+
     val surfaceViewRenderer: SurfaceViewRenderer
 
     init {
@@ -120,6 +123,7 @@ class HMSVideoView(
     }
 
     fun setVideoTrack(track: HMSVideoTrack?) {
+        currentVideoTrack = track
         track?.addSink(surfaceViewRenderer)
     }
 }
