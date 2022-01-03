@@ -811,7 +811,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             previewChannel.setStreamHandler(null)
             val args = HashMap<String, Any?>()
             args.put("event_name", "on_join_room")
-            Log.i("onjoinAndroidPreviewListener", room.hlsStreamingState?.running.toString())
+            //Log.i("onjoinAndroidPreviewListener", room.hlsStreamingState?.running.toString())
             val roomArgs = HashMap<String, Any?>()
             roomArgs.put("room", HMSRoomExtension.toDictionary(room,null))
             args.put("data", roomArgs)
@@ -929,7 +929,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         }
 
         override fun onSuccess() {
-            Log.i("HMSActionListener", "OnSuccess")
+            //Log.i("HMSActionListener", "OnSuccess")
             CoroutineScope(Dispatchers.Main).launch {
                 result?.success(null)
             }
@@ -952,7 +952,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             val args = HashMap<String, Any?>()
             args.put("event_name", "preview_video")
             args.put("data", HMSPreviewExtension.toDictionary(room, localTracks))
-            Log.i("onPreviewAndroidPreviewListener", room.hlsStreamingState.toString()+room.peerList.size)
+            //Log.i("onPreviewAndroidPreviewListener", room.hlsStreamingState.toString()+room.peerList.size)
             if (args["data"] != null)
                 CoroutineScope(Dispatchers.Main).launch {
                     previewSink?.success(args)

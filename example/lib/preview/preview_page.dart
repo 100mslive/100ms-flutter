@@ -71,28 +71,16 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                 fit: FlexFit.tight,
                 child: Observer(
                   builder: (_) {
-                    if (_previewStore.localTracks.isEmpty) {
-                      return Column(children: [
-                        CupertinoActivityIndicator(radius: 124),
-                        SizedBox(
-                          height: 64.0,
-                        ),
-                        Text("No preview available") //
-                      ]);
-                    }
-                    return Provider<MeetingStore>(
-                      create: (ctx) => MeetingStore(),
-                      child: PeerItemOrganism(
-                        observableMap: {"highestAudio": ""},
-                        key: UniqueKey(),
-                        height: itemHeight,
-                        width: itemWidth,
-                        peerTracKNode: new PeerTracKNode(
-                            peerId: _previewStore.peer?.peerId ?? "",
-                            name: _previewStore.peer?.name ?? "",
-                            track: _previewStore.localTracks[0]),
-                        isVideoMuted: false,
+                    return PeerItemOrganism(
+                      observableMap: {"highestAudio": ""},
+                      key: UniqueKey(),
+                      height: itemHeight,
+                      width: itemWidth,
+                      peerTracKNode: new PeerTracKNode(
+                        peerId: _previewStore.peer?.peerId ?? "",
+                        name: _previewStore.peer?.name ?? "",
                       ),
+                      isVideoMuted: false,
                     );
                   },
                 ),
@@ -105,7 +93,8 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                   Expanded(
                     child: Observer(builder: (context) {
                       return GestureDetector(
-                        onTap: _previewStore.isHLSLink
+                        onTap: _previewStore.isHLSLink ||
+                                _previewStore.localTracks.isEmpty
                             ? null
                             : () async {
                                 if (_previewStore.videoOn) {
@@ -150,7 +139,7 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                                 _previewStore.switchAudio();
                               },
                         child: Icon(
-                            _previewStore.audioOn && !_previewStore.isHLSLink
+                            (_previewStore.audioOn && !_previewStore.isHLSLink)
                                 ? Icons.mic
                                 : Icons.mic_off,
                             size: 48),

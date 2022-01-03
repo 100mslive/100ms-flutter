@@ -98,8 +98,6 @@ abstract class MeetingStoreBase extends ChangeNotifier
   @action
   void startListen() {
     meetingController.addMeetingListener(this);
-    //startHMSLogger(HMSLogLevel.DEBUG, HMSLogLevel.DEBUG);
-    //addLogsListener();
   }
 
   @action
@@ -566,7 +564,6 @@ abstract class MeetingStoreBase extends ChangeNotifier
   void leaveMeeting() async {
     meetingController.leaveMeeting();
     isRoomEnded = true;
-    //removeListenerMeeting();
   }
 
   void removePeerFromRoom(String peerId) {
