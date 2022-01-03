@@ -35,6 +35,7 @@ class _LeaveOrEndMeetingDialogOptionState
               padding: EdgeInsets.only(bottom: 16.0),
               child: GestureDetector(
                 onTap: () {
+                  widget.meetingStore.dialogisOn=false;
                   widget.meetingStore.leaveMeeting();
                   Navigator.of(context).pop('Leave');
                 },
@@ -52,6 +53,7 @@ class _LeaveOrEndMeetingDialogOptionState
             ),
             GestureDetector(
               onTap: () async {
+                widget.meetingStore.dialogisOn=false;
                 bool ended = await widget.meetingStore.endRoom(forceValue);
                 if (ended)
                   Navigator.of(context).pop('End');

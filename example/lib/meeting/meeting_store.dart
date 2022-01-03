@@ -69,7 +69,8 @@ abstract class MeetingStoreBase extends ChangeNotifier
   HMSPeer? localPeer;
   @observable
   HMSTrack? localTrack;
-
+  @observable
+  bool dialogisOn=false;
   @observable
   HMSTrack? screenTrack;
 

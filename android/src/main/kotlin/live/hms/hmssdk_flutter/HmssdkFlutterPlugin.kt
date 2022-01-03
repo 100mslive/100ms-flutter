@@ -592,7 +592,6 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             )
 
             hasJoined = false
-
         } else
             result.success(false)
     }
