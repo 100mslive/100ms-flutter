@@ -48,6 +48,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
   int countOfVideoOnBetweenTwo = 1;
   bool videoPreviousState = false;
 
+
   @override
   void initState() {
     super.initState();
@@ -56,6 +57,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
     MeetingController meetingController = MeetingController(
         roomUrl: widget.roomId, flow: widget.flow, user: widget.user);
     _meetingStore.meetingController = meetingController;
+    _meetingStore.dialogisOn=false;
     allListeners();
     initMeeting();
     checkButtons();
@@ -98,6 +100,9 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
         (event) => {
               if ((event as bool) == true)
                 {
+                  if(_meetingStore.dialogisOn){
+                    Navigator.of(context).pop(),
+                  },
                   Navigator.of(context).pop(),
                   UtilityComponents.showSnackBarWithString(
                       "Meeting Ended", context),
@@ -577,19 +582,25 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
             ),
             Container(
               padding: EdgeInsets.all(8),
-              child: IconButton(
-                  color: Colors.red,
-                  tooltip: 'Leave Or End',
-                  iconSize: 32,
-                  onPressed: () async {
-                    String ans = await showDialog(
-                        context: context,
-                        builder: (_) => LeaveOrEndMeetingDialogOption(
-                              meetingStore: _meetingStore,
-                            ));
-                    if (ans == 'Leave' || ans == 'End') Navigator.pop(context);
-                  },
-                  icon: Icon(Icons.call_end)),
+              child: Observer(
+                builder: (context) {
+                  return IconButton(
+                      color: Colors.red,
+                      tooltip: 'Leave Or End',
+                      iconSize: 32,
+                      onPressed: () async {
+                        _meetingStore.dialogisOn=true;
+                        dynamic? ans = await showDialog(
+                            context: context,
+                            builder: (_) => LeaveOrEndMeetingDialogOption(
+                                  meetingStore: _meetingStore,
+                                ));
+                        //print(ans.toString()+"onWillPOPSCOPE");
+                        //if (ans == 'Leave' || ans == 'End') Navigator.pop(context);
+                      },
+                      icon: Icon(Icons.call_end));
+                }
+              ),
             ),
           ],
         ),
