@@ -198,9 +198,10 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
           _meetingStore.setPlayBackAllowed(false);
         } else {
           _meetingStore.peerTracks.forEach((element) {
-            _meetingStore.trackStatus[element.peerId] = element.track?.isMute??false
-                ? HMSTrackUpdate.trackMuted
-                : HMSTrackUpdate.trackUnMuted;
+            _meetingStore.trackStatus[element.peerId] =
+                element.track?.isMute ?? false
+                    ? HMSTrackUpdate.trackMuted
+                    : HMSTrackUpdate.trackUnMuted;
           });
           _meetingStore.setPlayBackAllowed(true);
           if (countOfVideoOnBetweenTwo == 0) {
@@ -211,7 +212,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
           print(
               "${_meetingStore.isVideoOn} ISVIDEOON ${_meetingStore.localTrack == null}");
         }
-        setState(() { });
+        setState(() {});
         break;
       default:
     }
@@ -221,10 +222,12 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     var orientation = MediaQuery.of(context).orientation;
     var size = MediaQuery.of(context).size;
-    final double itemHeightWithSs = (size.height - kToolbarHeight - kBottomNavigationBarHeight) /
-        (orientation == Orientation.landscape ? 2.5 : 3);
-    final double itemHeightWithoutSs = (size.height - kToolbarHeight - kBottomNavigationBarHeight) /
-        (orientation == Orientation.landscape ? 2.5 : 2.8);
+    final double itemHeightWithSs =
+        (size.height - kToolbarHeight - kBottomNavigationBarHeight) /
+            (orientation == Orientation.landscape ? 2.5 : 3);
+    final double itemHeightWithoutSs =
+        (size.height - kToolbarHeight - kBottomNavigationBarHeight) /
+            (orientation == Orientation.landscape ? 2.5 : 2.8);
 
     final double itemWidth = size.width / 2.1;
     //final aspectRatio = itemWidth / itemHeight;
@@ -331,7 +334,10 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
               child: Column(
                 children: [
                   Observer(builder: (_) {
-                    if (_meetingStore.screenShareTrack != null && !audioViewOn) {
+                    if (_meetingStore.screenShareTrack.isNotEmpty &&
+                        !audioViewOn) {
+                      print(
+                          "shit ${_meetingStore.screenShareTrack.first?.peer?.peerId}");
                       return SizedBox(
                         width: double.infinity,
                         height: MediaQuery.of(context).size.height / 2.5,
@@ -341,11 +347,13 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                           width: MediaQuery.of(context).size.width,
                           isVideoMuted: false,
                           peerTracKNode: new PeerTracKNode(
-                              peerId: _meetingStore.screenSharePeerId,
-                              track: _meetingStore.screenShareTrack!,
-                              name:
-                                  _meetingStore.screenShareTrack?.peer?.name ??
-                                      ""),
+                              peerId: _meetingStore
+                                      .screenShareTrack.first?.peer?.peerId ??
+                                  "",
+                              track: _meetingStore.screenShareTrack.first,
+                              name: _meetingStore
+                                      .screenShareTrack.first?.peer?.name ??
+                                  ""),
                         ),
                       );
                     } else {
@@ -369,10 +377,13 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                             ObservableMap<String, HMSTrackUpdate> map =
                                 _meetingStore.trackStatus;
                             return ((orientation == Orientation.portrait &&
-                                    _meetingStore.screenShareTrack == null) || audioViewOn
+                                        _meetingStore.screenShareTrack ==
+                                            null) ||
+                                    audioViewOn
                                 ? Padding(
-                                  padding: EdgeInsets.symmetric(vertical: itemHeightWithoutSs*0.12),
-                                  child: Column(
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: itemHeightWithoutSs * 0.12),
+                                    child: Column(
                                       children: [
                                         Row(
                                           children: [
@@ -424,7 +435,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                         ),
                                       ],
                                     ),
-                                )
+                                  )
                                 : Column(
                                     children: [
                                       Row(
@@ -518,13 +529,23 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
             ),
             Container(
               padding: EdgeInsets.all(8),
-              child: IconButton(
-                  tooltip: 'Screen Share',
-                  iconSize: 32,
-                  onPressed: () {
-                    _meetingStore.startScreenShare();
-                  },
-                  icon: Icon(Icons.screen_share)),
+              child: Observer(builder: (context) {
+                return IconButton(
+                    tooltip: 'Screen Share',
+                    iconSize: 32,
+                    onPressed: () {
+                      print(_meetingStore.isScreenShareActive());
+                      var isScreenShareOn = _meetingStore.isScreenShareOn;
+                      if (isScreenShareOn) {
+                        _meetingStore.stopScreenShare();
+                      } else {
+                        _meetingStore.startScreenShare();
+                      }
+                    },
+                    icon: _meetingStore.isScreenShareOn
+                        ? Icon(Icons.close)
+                        : Icon(Icons.screen_share));
+              }),
             ),
             Container(
               padding: EdgeInsets.all(8),

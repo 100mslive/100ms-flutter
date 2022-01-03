@@ -66,6 +66,13 @@ class HMSMeeting {
     );
   }
 
+  ///switch camera to front or rear.
+  Future<bool> isScreenShareActive() async {
+    return await PlatformService.invokeMethod(
+      PlatformMethod.isScreenShareActive,
+    );
+  }
+
   ///send message to the room and the pass the [message].
   Future<void> sendMessage(String message,
       {HMSMessageResultListener? hmsMessageResultListener}) async {
@@ -133,7 +140,8 @@ class HMSMeeting {
     }
   }
 
-  Future<void> raiseHand({HMSActionResultListener? hmsActionResultListener}) async {
+  Future<void> raiseHand(
+      {HMSActionResultListener? hmsActionResultListener}) async {
     var result = await PlatformService.invokeMethod(PlatformMethod.raiseHand);
     if (hmsActionResultListener != null) {
       if (result == null)
@@ -313,8 +321,9 @@ class HMSMeeting {
     await PlatformService.invokeMethod(PlatformMethod.unMuteAll);
   }
 
-  Future<void> setPlayBackAllowed(bool allow) async{
-    await PlatformService.invokeMethod(PlatformMethod.setPlayBackAllowed,arguments: {"allowed":allow});
+  Future<void> setPlayBackAllowed(bool allow) async {
+    await PlatformService.invokeMethod(PlatformMethod.setPlayBackAllowed,
+        arguments: {"allowed": allow});
   }
 
   Future<bool> changeTrackStateForRole(

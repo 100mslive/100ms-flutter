@@ -31,6 +31,10 @@ class HMSSDKInteractor implements HMSActionResultListener {
     return await _meeting.switchCamera();
   }
 
+  Future<bool> isScreenShareActive() async {
+    return await _meeting.isScreenShareActive();
+  }
+
   Future<void> sendMessage(String message) async {
     return await _meeting.sendMessage(message);
   }
@@ -147,8 +151,8 @@ class HMSSDKInteractor implements HMSActionResultListener {
     _meeting.unMuteAll();
   }
 
-  Future<void> setPlayBackAllowed(bool allow) async{
-   await _meeting.setPlayBackAllowed(allow);
+  Future<void> setPlayBackAllowed(bool allow) async {
+    //  await _meeting.setPlayBackAllowed(allow);
   }
 
   Future<HMSException?> startRtmpOrRecording(
@@ -164,8 +168,8 @@ class HMSSDKInteractor implements HMSActionResultListener {
     return await _meeting.getRoom();
   }
 
-  Future<void> raiseHand() async{
-    await _meeting.raiseHand();
+  Future<void> raiseHand() async {
+    // await _meeting.raiseHand();
   }
 
   @override

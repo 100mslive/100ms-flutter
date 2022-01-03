@@ -44,6 +44,10 @@ class MeetingController {
     return await HmsSdkManager.hmsSdkInteractor?.switchCamera();
   }
 
+  Future<bool> isScreenShareActive() async {
+    return await HmsSdkManager.hmsSdkInteractor?.isScreenShareActive() ?? false;
+  }
+
   Future<void> sendMessage(String message) async {
     return await HmsSdkManager.hmsSdkInteractor?.sendMessage(message);
   }
@@ -82,7 +86,7 @@ class MeetingController {
     HmsSdkManager.hmsSdkInteractor?.removeLogsListener(listener);
   }
 
-  Future<void> setPlayBackAllowed(bool allow) async{
+  Future<void> setPlayBackAllowed(bool allow) async {
     await HmsSdkManager.hmsSdkInteractor?.setPlayBackAllowed(allow);
   }
 
@@ -176,7 +180,7 @@ class MeetingController {
     return await HmsSdkManager.hmsSdkInteractor?.getRoom();
   }
 
-  Future<void> raiseHand() async{
+  Future<void> raiseHand() async {
     await HmsSdkManager.hmsSdkInteractor?.raiseHand();
   }
 }

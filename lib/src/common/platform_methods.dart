@@ -69,6 +69,9 @@ enum PlatformMethod {
 // turn off screen share
   stopScreenShare,
 
+// check if screen share is active
+  isScreenShareActive,
+
   ///get list of roles using this.
   getRoles,
   changeTrack,
@@ -123,6 +126,8 @@ extension PlatformMethodValues on PlatformMethod {
         return 'switch_video';
       case PlatformMethod.switchCamera:
         return 'switch_camera';
+      case PlatformMethod.isScreenShareActive:
+        return 'is_screen_share_active';
       case PlatformMethod.isAudioMute:
         return 'is_audio_mute';
       case PlatformMethod.isVideoMute:
@@ -212,7 +217,9 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.onReconnecting;
       case 'on_re_connected':
         return PlatformMethod.onReconnected;
-      case 'switch_audio':
+      case 'on_re_connected':
+        return PlatformMethod.isScreenShareActive;
+      case 'is_screen_share_active':
         return PlatformMethod.switchAudio;
       case 'switch_video':
         return PlatformMethod.switchVideo;

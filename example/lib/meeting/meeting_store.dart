@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter/src/enum/hms_log_level.dart';
 import 'package:hmssdk_flutter_example/logs/static_logger.dart';
@@ -39,7 +40,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
   @observable
   bool isScreenShareOn = false;
   @observable
-  HMSTrack? screenShareTrack;
+  ObservableList<HMSTrack?> screenShareTrack = ObservableList.of([]);
   @observable
   bool reconnecting = false;
   @observable
@@ -126,6 +127,11 @@ abstract class MeetingStoreBase extends ChangeNotifier
   @action
   Future<void> toggleCamera() async {
     await meetingController.switchCamera();
+  }
+
+  @action
+  Future<void> isScreenShareActive() async {
+    isScreenShareOn = await meetingController.isScreenShareActive();
   }
 
   @action
@@ -302,6 +308,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
     } else {
       muteAll();
     }
+    isScreenShareActive();
 
     if (peer.isLocal &&
         trackUpdate == HMSTrackUpdate.trackMuted &&
@@ -310,10 +317,9 @@ abstract class MeetingStoreBase extends ChangeNotifier
     }
 
     if (peer.isLocal) {
-
       localPeer = peer;
 
-      if(track.kind == HMSTrackKind.kHMSTrackKindVideo){
+      if (track.kind == HMSTrackKind.kHMSTrackKindVideo) {
         print("LOCALPEERTRACKVideo");
         localTrack = track;
         if (track.isMute) {
@@ -497,15 +503,22 @@ abstract class MeetingStoreBase extends ChangeNotifier
           print("${trackStatus[peer.peerId]} trackStatusOfPeer");
         } else {
           screenSharePeerId = peer.peerId;
-          screenShareTrack = track;
+          screenShareTrack.add(track);
         }
         print("peerOperationWithTrack ${track.isMute}");
         break;
       case HMSTrackUpdate.trackRemoved:
         print("peerOperationWithTrack ${peerTracks.toString()}");
         if (track.source != "REGULAR") {
-          screenSharePeerId = "";
-          screenShareTrack = null;
+          screenShareTrack
+              .removeWhere((element) => element?.trackId == track.trackId);
+          screenSharePeerId = screenShareTrack.first?.peer?.peerId ?? "";
+          // screenShareTrack.forEach((element) {
+          //   if (element.track?.source == "SCREEN") {
+          //     screenSharePeerId = element.peer?.peerId ?? "";
+          //     screenShareTrack = element;
+          //   }
+          // });
         } else {
           peerTracks.removeWhere((element) => element.peerId == peer.peerId);
           print("peerOperationWithTrack ${peerTracks.toString()}");
@@ -550,10 +563,12 @@ abstract class MeetingStoreBase extends ChangeNotifier
 
   void startScreenShare() {
     meetingController.startScreenShare();
+    isScreenShareActive();
   }
 
   void stopScreenShare() {
     meetingController.stopScreenShare();
+    isScreenShareActive();
   }
 
   void muteAll() {
@@ -620,7 +635,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
     await meetingController.raiseHand();
   }
 
-  Future<void> setPlayBackAllowed(bool allow) async{
+  Future<void> setPlayBackAllowed(bool allow) async {
     await meetingController.setPlayBackAllowed(allow);
   }
 }

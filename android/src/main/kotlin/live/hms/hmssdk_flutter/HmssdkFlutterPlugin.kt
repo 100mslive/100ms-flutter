@@ -108,6 +108,9 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             "switch_video" -> {
                 switchVideo(call, result)
             }
+            "is_screen_share_active" -> {
+                result.success(hmssdk.isScreenShared())
+            }
             "switch_camera" -> {
                 switchCamera()
                 result.success("switch_camera")
@@ -193,6 +196,9 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             }
             "start_screen_share" -> {
                 startScreenShare()
+            }
+            "stop_screen_share" -> {
+                stopScreenShare()
             }
             "build" -> {
                 build(this.activity, call, result)
@@ -595,6 +601,19 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         )
     }
 
+    private fun stopScreenShare() {
+
+        hmssdk.stopScreenshare(object :HMSActionResultListener{
+            override fun onError(error: HMSException) {
+            }
+
+            override fun onSuccess() {
+
+            }
+
+        })
+    }
+
     private fun muteAll() {
         val peersList = hmssdk.getRemotePeers()
         if (isAllowedToMuteOthers())
@@ -931,7 +950,6 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             val args = HashMap<String, Any?>()
             args.put("event_name", "preview_video")
             args.put("data", HMSPreviewExtension.toDictionary(room, localTracks))
-//        Log.i("onPreview", args.get("data").toString())
             if (args["data"] != null)
                 CoroutineScope(Dispatchers.Main).launch {
                     previewSink?.success(args)
@@ -967,16 +985,16 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         hmssdk.startScreenshare(object : HMSActionResultListener {
             override fun onError(error: HMSException) {
                 // error
-                activity.runOnUiThread {
-                    result?.success(false)
-                }
+//                activity.runOnUiThread {
+//                    result?.success(false)
+//                }
             }
 
             override fun onSuccess() {
                 // success
-                activity.runOnUiThread {
-                    result?.success(true)
-                }
+//                activity.runOnUiThread {
+//                    result?.success(true)
+//                }
             }
         }, data)
 
