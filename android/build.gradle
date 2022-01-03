@@ -17,7 +17,6 @@ buildscript {
 rootProject.allprojects {
     repositories {
         google()
-        jcenter()
         maven { url 'https://jitpack.io' }
     }
 }
@@ -38,7 +37,7 @@ android {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'com.github.100mslive:android-sdk:2.2.4'
+    implementation 'com.github.100mslive:android-sdk:2.2.5'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.0'
     implementation "org.jetbrains.kotlin:kotlin-script-runtime:1.5.0"

@@ -11,7 +11,7 @@ class HMSHLSVariantExtension {
             args.put("hls_stream_url",hmshlsVariant.hlsStreamUrl?:"")
             args.put("meeting_url",hmshlsVariant.meetingUrl?:"")
             args.put("metadata",hmshlsVariant.metadata?:"")
-            args.put("started_at",hmshlsVariant.startedAt?:"")
+            args.put("started_at",hmshlsVariant.startedAt?:-1)
 
 
             val Args=HashMap<String,Any>()

@@ -2,10 +2,10 @@ import 'dart:core';
 
 class HMSHLSVariant{
 
-  final String hlsStreamUrl;
-  final String meetingUrl;
-  final String metadata;
-  final double startedAt;
+  final String? hlsStreamUrl;
+  final String? meetingUrl;
+  final String? metadata;
+  final int? startedAt;
 
   HMSHLSVariant(
       {required this.hlsStreamUrl,required this.meetingUrl,required this.metadata,required this.startedAt});
@@ -19,12 +19,17 @@ class HMSHLSVariant{
     };
   }
 
-  factory HMSHLSVariant.fromMap(Map<String, dynamic> map) {
+  @override
+  String toString() {
+    return 'HMSHLSVariant{hlsStreamUrl: $hlsStreamUrl, meetingUrl: $meetingUrl, metadata: $metadata, startedAt: $startedAt}';
+  }
+
+  factory HMSHLSVariant.fromMap(Map map) {
     return HMSHLSVariant(
-      hlsStreamUrl: map['hlsStreamUrl'] as String,
-      meetingUrl: map['meetingUrl'] as String,
-      metadata: map['metadata'] as String,
-      startedAt: map['startedAt'] as double,
+      hlsStreamUrl: map['hls_stream_url'] as String?,
+      meetingUrl: map['meeting_url'] as String?,
+      metadata: map['metadata'] as String?,
+      startedAt:  map['started_at'] as int?,
     );
   }
 }

@@ -18,7 +18,7 @@ dependencies:
   wakelock: ^0.5.6
   visibility_detector: ^0.2.0
   cupertino_icons: ^1.0.2
-  provider: ^5.0.0-nullsafety.1
+  provider:
   uuid: ^3.0.4
   http: ^0.13.3
   mobx: ^2.0.1
@@ -36,7 +36,9 @@ dependencies:
   logger: ^1.1.0
   path_provider: ^2.0.7
   share_extend: "^2.0.0"
-  video_player: ^2.2.10
+  flick_video_player:
+  video_player:
+
 
 dev_dependencies:
   flutter_test:

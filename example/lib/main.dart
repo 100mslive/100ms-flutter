@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:hmssdk_flutter_example/common/constant.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/user_name_dialog_organism.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
-import 'package:hmssdk_flutter_example/meeting/hms_sdk_interactor.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:hmssdk_flutter_example/preview/preview_page.dart';
 import 'package:hmssdk_flutter_example/service/deeplink_service.dart';
@@ -25,7 +24,7 @@ void main() async {
   Wakelock.enable();
   Provider.debugCheckInvalidValueType = null;
   runZonedGuarded(
-      () => runApp(HMSExampleApp()), FirebaseCrashlytics.instance.recordError);
+          () => runApp(HMSExampleApp()), FirebaseCrashlytics.instance.recordError);
 }
 
 class HMSExampleApp extends StatelessWidget {
@@ -49,7 +48,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   TextEditingController roomIdController =
-      TextEditingController(text: Constant.defaultRoomID);
+  TextEditingController(text: Constant.defaultRoomID);
   CustomLogger logger = CustomLogger();
   PackageInfo _packageInfo = PackageInfo(
     appName: 'Unknown',
@@ -146,10 +145,10 @@ class _HomePageState extends State<HomePage> {
                       ElevatedButton(
                           style: ButtonStyle(
                               shape: MaterialStateProperty.all<
-                                      RoundedRectangleBorder>(
+                                  RoundedRectangleBorder>(
                                   RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16.0),
-                          ))),
+                                    borderRadius: BorderRadius.circular(16.0),
+                                  ))),
                           onPressed: () async {
                             String user = await showDialog(
                                 context: context,
@@ -159,17 +158,17 @@ class _HomePageState extends State<HomePage> {
                                   builder: (_) => ListenableProvider<MeetingStore>(
                                     create: (ctx)=>MeetingStore(),
                                     child: PreviewPage(
-                                          roomId: roomIdController.text,
-                                          user: user,
-                                          flow: MeetingFlow.join,
-                                        ),
+                                      roomId: roomIdController.text,
+                                      user: user,
+                                      flow: MeetingFlow.join,
+                                    ),
                                   )));
                           },
                           child: Container(
                             padding: const EdgeInsets.all(4.0),
                             decoration: BoxDecoration(
                                 borderRadius:
-                                    BorderRadius.all(Radius.circular(16))),
+                                BorderRadius.all(Radius.circular(16))),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [

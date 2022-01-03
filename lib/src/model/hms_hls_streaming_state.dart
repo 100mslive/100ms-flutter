@@ -9,11 +9,12 @@ class HMSHLSStreamingState{
 
   factory HMSHLSStreamingState.fromMap(Map map) {
     List<HMSHLSVariant?> variants = [];
-    print("${map} MAP");
+    print("${map} ");
     if (map.containsKey('variants') && map['variants'] is List) {
       for (var each in (map['variants'] as List)) {
         try {
-          HMSHLSVariant? variant = each["variant"]!= null? HMSHLSVariant.fromMap(each["variant"]):null;
+
+          HMSHLSVariant? variant = each["variant"]!= null? HMSHLSVariant.fromMap(each["variant"] as Map):null;
 
           variants.add(variant);
         } catch (e) {
@@ -21,6 +22,7 @@ class HMSHLSStreamingState{
         }
       }
     }
+    print("${variants.length} MAPOFHMSHLSStreaming ");
 
     return HMSHLSStreamingState(
       running: map['running'],

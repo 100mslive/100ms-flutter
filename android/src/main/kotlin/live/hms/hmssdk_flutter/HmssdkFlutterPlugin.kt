@@ -378,7 +378,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
 //        val isLocal = call.argument<Boolean>("is_local")
         if (peerId == "null") {
 //            Log.i("isVideoMute", (hmssdk.getLocalPeer()?.videoTrack?.isMute ?: false).toString())
-            return hmssdk.getLocalPeer()?.videoTrack?.isMute ?: false
+            return hmssdk.getLocalPeer()?.videoTrack?.isMute ?: true
         }
         val peer = getPeerById(peerId!!)
 //        Log.i("isVideoMute", (peer!!.videoTrack!!.isMute).toString())
@@ -390,7 +390,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
 //        val isLocal = call.argument<Boolean>("is_local")
         if (peerId == "null") {
 //            Log.i("isAudioMute", (hmssdk.getLocalPeer()?.audioTrack?.isMute!!).toString())
-            return hmssdk.getLocalPeer()?.audioTrack?.isMute!!
+            return hmssdk.getLocalPeer()?.audioTrack?.isMute?:true
         }
         val peer = getPeerById(peerId!!)
 //        Log.i("isAudioMute", (peer!!.audioTrack!!.isMute).toString())
@@ -811,7 +811,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             previewChannel.setStreamHandler(null)
             val args = HashMap<String, Any?>()
             args.put("event_name", "on_join_room")
-
+            Log.i("onjoinAndroidPreviewListener", room.hlsStreamingState?.running.toString())
             val roomArgs = HashMap<String, Any?>()
             roomArgs.put("room", HMSRoomExtension.toDictionary(room,null))
             args.put("data", roomArgs)
@@ -952,12 +952,11 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             val args = HashMap<String, Any?>()
             args.put("event_name", "preview_video")
             args.put("data", HMSPreviewExtension.toDictionary(room, localTracks))
-//        Log.i("onPreview", args.get("data").toString())
+            Log.i("onPreviewAndroidPreviewListener", room.hlsStreamingState.toString()+room.peerList.size)
             if (args["data"] != null)
                 CoroutineScope(Dispatchers.Main).launch {
                     previewSink?.success(args)
                 }
-
         }
 
     }
@@ -1014,7 +1013,4 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         getLocalPeer().videoTrack?.setMute(!(allowed!!))
         result?.success("setPlatBackAllowed${allowed!!}")
     }
-
-
-
 }

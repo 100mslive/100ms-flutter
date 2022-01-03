@@ -54,16 +54,16 @@ class HMSRoom {
 
     return HMSRoom(
         hmsBrowserRecordingState: map["browser_recording_state"] != null
-            ? HMSBrowserRecordingState.fromMap(map["browser_recording_state"])
+            ? HMSBrowserRecordingState.fromMap(map["browser_recording_state"] as Map)
             : null,
         hmsRtmpStreamingState: map["rtmp_streaming_state"] != null
-            ? HMSRtmpStreamingState.fromMap(map["rtmp_streaming_state"])
+            ? HMSRtmpStreamingState.fromMap(map["rtmp_streaming_state"] as Map)
             : null,
         hmsServerRecordingState: map["server_recording_state"] != null
-            ? HMSServerRecordingState.fromMap(map["server_recording_state"])
+            ? HMSServerRecordingState.fromMap(map["server_recording_state"] as Map)
             : null,
         hmshlsStreamingState: map["hls_streaming_state"] != null
-            ? HMSHLSStreamingState.fromMap(map["hls_streaming_state"])
+            ? HMSHLSStreamingState.fromMap(map["hls_streaming_state"] as Map)
             : null,
         id: map['id'],
         name: map['name'],

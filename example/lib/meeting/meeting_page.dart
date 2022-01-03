@@ -1,25 +1,22 @@
-import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/constant.dart';
-import 'package:hmssdk_flutter_example/common/ui/organisms/change_track_options.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/chat_bottom_sheet.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/leave_or_end_meeting.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/peer_item_organism.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/video_tile.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
+import 'package:hmssdk_flutter_example/hls_viewer/hls_viewer.dart';
 import 'package:hmssdk_flutter_example/logs/custom_singleton_logger.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_controller.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:hmssdk_flutter_example/meeting/peerTrackNode.dart';
 import 'package:mobx/mobx.dart';
 import 'package:provider/src/provider.dart';
-import 'package:share_extend/share_extend.dart';
 import 'meeting_participants_list.dart';
-import '../logs/static_logger.dart';
 
 class MeetingPage extends StatefulWidget {
   final String roomId;
@@ -66,72 +63,62 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
 
   void allListeners() {
     _roleChangerequestDisposer = reaction(
-            (_) => _meetingStore.roleChangeRequest,
-            (event) =>
-        {
-          if ((event as HMSRoleChangeRequest).suggestedBy !=
-              _meetingStore.localPeer)
-            UtilityComponents.showRoleChangeDialog(event, context)
-        });
+        (_) => _meetingStore.roleChangeRequest,
+        (event) => {
+              if ((event as HMSRoleChangeRequest).suggestedBy !=
+                  _meetingStore.localPeer)
+                UtilityComponents.showRoleChangeDialog(event, context)
+            });
     _trackChangerequestDisposer = reaction(
-            (_) => _meetingStore.hmsTrackChangeRequest,
-            (event) =>
-        {
-          UtilityComponents.showTrackChangeDialog(event, context)
-        });
+        (_) => _meetingStore.hmsTrackChangeRequest,
+        (event) => {UtilityComponents.showTrackChangeDialog(event, context)});
     _errorDisposer = reaction(
-            (_) => _meetingStore.error,
-            (event) =>
-        {
-          UtilityComponents.showSnackBarWithString(
-              (event as HMSException).description, context)
-        });
+        (_) => _meetingStore.error,
+        (event) => {
+              UtilityComponents.showSnackBarWithString(
+                  (event as HMSException).description, context)
+            });
     _recordingDisposer = reaction(
-            (_) => _meetingStore.isRecordingStarted,
-            (event) =>
-        {
-          UtilityComponents.showSnackBarWithString(
-              event == true ? "Recording Started" : "Recording Stopped",
-              context)
-        });
+        (_) => _meetingStore.isRecordingStarted,
+        (event) => {
+              UtilityComponents.showSnackBarWithString(
+                  event == true ? "Recording Started" : "Recording Stopped",
+                  context)
+            });
     _reconnectedDisposer = reaction(
-            (_) => _meetingStore.reconnected,
-            (event) =>
-        {
-          if ((event as bool) == true)
-            UtilityComponents.showSnackBarWithString(
-                "reconnected", context),
-          _meetingStore.reconnected = false
-        });
+        (_) => _meetingStore.reconnected,
+        (event) => {
+              if ((event as bool) == true)
+                UtilityComponents.showSnackBarWithString(
+                    "reconnected", context),
+              _meetingStore.reconnected = false
+            });
     _roomEndedDisposer = reaction(
-            (_) => _meetingStore.isRoomEnded,
-            (event) =>
-        {
-          if ((event as bool) == true) {
-            Navigator.of(context).pop(),
-            UtilityComponents.showSnackBarWithString(
-                "Meeting Ended", context),
-          },
-          _meetingStore.isRoomEnded = false,
-
-        });
+        (_) => _meetingStore.isRoomEnded,
+        (event) => {
+              if ((event as bool) == true)
+                {
+                  Navigator.of(context).pop(),
+                  UtilityComponents.showSnackBarWithString(
+                      "Meeting Ended", context),
+                },
+              _meetingStore.isRoomEnded = false,
+            });
     _reconnectingDisposer = reaction(
-            (_) => _meetingStore.reconnecting,
-            (event) =>
-        {
-          if ((event as bool) == true)
-            UtilityComponents.showSnackBarWithString(
-                "reconnecting", context),
-        });
+        (_) => _meetingStore.reconnecting,
+        (event) => {
+              if ((event as bool) == true)
+                UtilityComponents.showSnackBarWithString(
+                    "reconnecting", context),
+            });
 
     _hmsExceptionDisposer = reaction(
-            (_) => _meetingStore.hmsException,
-            (event) =>
-        {
-          if ((event as HMSException?) != null)
-            UtilityComponents.showSnackBarWithString(
-                event?.description, context),
-        });
+        (_) => _meetingStore.hmsException,
+        (event) => {
+              if ((event as HMSException?) != null)
+                UtilityComponents.showSnackBarWithString(
+                    event?.description, context),
+            });
   }
 
   void initMeeting() async {
@@ -145,9 +132,9 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
 
   void checkButtons() async {
     _meetingStore.isVideoOn =
-    !(await _meetingStore.meetingController.isVideoMute(null));
+        !(await _meetingStore.meetingController.isVideoMute(null));
     _meetingStore.isMicOn =
-    !(await _meetingStore.meetingController.isAudioMute(null));
+        !(await _meetingStore.meetingController.isAudioMute(null));
     print("${_meetingStore.isMicOn} isMicOn");
   }
 
@@ -171,11 +158,11 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
   void handleMenu(int value) async {
     switch (value) {
       case 1:
-      // StaticLogger.logger?.d(
-      //     "\n----------------------------Sending Logs-----------------\n");
-      // StaticLogger.logger?.close();
-      // ShareExtend.share(CustomLogger.file?.path ?? '', 'file');
-      // logger.getCustomLogger();
+        // StaticLogger.logger?.d(
+        //     "\n----------------------------Sending Logs-----------------\n");
+        // StaticLogger.logger?.close();
+        // ShareExtend.share(CustomLogger.file?.path ?? '', 'file');
+        // logger.getCustomLogger();
 
         break;
 
@@ -195,10 +182,9 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
       case 4:
         Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (_) =>
-                ParticipantsList(
-                  meetingStore: _meetingStore,
-                ),
+            builder: (_) => ParticipantsList(
+              meetingStore: _meetingStore,
+            ),
           ),
         );
         break;
@@ -215,19 +201,18 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
         } else {
           _meetingStore.peerTracks.forEach((element) {
             _meetingStore.trackStatus[element.peerId] =
-            element.track?.isMute ?? false
-                ? HMSTrackUpdate.trackMuted
-                : HMSTrackUpdate.trackUnMuted;
+                element.track?.isMute ?? false
+                    ? HMSTrackUpdate.trackMuted
+                    : HMSTrackUpdate.trackUnMuted;
           });
           _meetingStore.setPlayBackAllowed(true);
           if (countOfVideoOnBetweenTwo == 0) {
             _meetingStore.isVideoOn = videoPreviousState;
           } else
             _meetingStore.isVideoOn =
-            !(_meetingStore.localTrack?.isMute ?? true);
+                !(_meetingStore.localTrack?.isMute ?? true);
           print(
-              "${_meetingStore.isVideoOn} ISVIDEOON ${_meetingStore
-                  .localTrack == null}");
+              "${_meetingStore.isVideoOn} ISVIDEOON ${_meetingStore.localTrack == null}");
         }
         setState(() {});
         break;
@@ -237,18 +222,14 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    var orientation = MediaQuery
-        .of(context)
-        .orientation;
-    var size = MediaQuery
-        .of(context)
-        .size;
-    final double itemHeightWithSs = (size.height - kToolbarHeight -
-        kBottomNavigationBarHeight) /
-        (orientation == Orientation.landscape ? 2.5 : 3);
-    final double itemHeightWithoutSs = (size.height - kToolbarHeight -
-        kBottomNavigationBarHeight) /
-        (orientation == Orientation.landscape ? 2.5 : 2.8);
+    var orientation = MediaQuery.of(context).orientation;
+    var size = MediaQuery.of(context).size;
+    final double itemHeightWithSs =
+        (size.height - kToolbarHeight - kBottomNavigationBarHeight) /
+            (orientation == Orientation.landscape ? 2.5 : 3);
+    final double itemHeightWithoutSs =
+        (size.height - kToolbarHeight - kBottomNavigationBarHeight) /
+            (orientation == Orientation.landscape ? 2.5 : 2.8);
 
     final double itemWidth = size.width / 2.1;
     //final aspectRatio = itemWidth / itemHeight;
@@ -259,21 +240,19 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
           title: Text(widget.roomId),
           actions: [
             Observer(
-              builder: (_) =>
-                  IconButton(
-                    iconSize: 32,
-                    onPressed: () {
-                      _meetingStore.toggleSpeaker();
-                    },
-                    icon: Icon(_meetingStore.isSpeakerOn
-                        ? Icons.volume_up
-                        : Icons.volume_off),
-                  ),
+              builder: (_) => IconButton(
+                iconSize: 32,
+                onPressed: () {
+                  _meetingStore.toggleSpeaker();
+                },
+                icon: Icon(_meetingStore.isSpeakerOn
+                    ? Icons.volume_up
+                    : Icons.volume_off),
+              ),
             ),
             PopupMenuButton(
               icon: Icon(CupertinoIcons.gear),
-              itemBuilder: (BuildContext context) =>
-              [
+              itemBuilder: (BuildContext context) => [
                 PopupMenuItem(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -286,8 +265,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                 ),
                 PopupMenuItem(
                   child: Observer(
-                      builder: (_) =>
-                          Row(
+                      builder: (_) => Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
@@ -358,153 +336,183 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
               child: Column(
                 children: [
                   Observer(builder: (_) {
-                    if (_meetingStore.screenShareTrack != null &&
-                        !audioViewOn) {
-
-                      return SizedBox(
-                        width: double.infinity,
-                        height: MediaQuery
-                            .of(context)
-                            .size
-                            .height / 2.5,
-                        child: PeerItemOrganism(
-                          observableMap: {"highestAudio": ""},
-                          height: MediaQuery
-                              .of(context)
-                              .size
-                              .height / 2,
-                          width: MediaQuery
-                              .of(context)
-                              .size
-                              .width,
-                          isVideoMuted: false,
-                          peerTracKNode: new PeerTracKNode(
-                              peerId: _meetingStore.screenSharePeerId,
-                              track: _meetingStore.screenShareTrack!,
-                              name:
-                              _meetingStore.screenShareTrack?.peer?.name ??
-                                  ""),
-                        ),
-                      );
+                    if (!_meetingStore.isHLSLink) {
+                      if (_meetingStore.screenShareTrack != null &&
+                          !audioViewOn) {
+                        return SizedBox(
+                          width: double.infinity,
+                          height: MediaQuery.of(context).size.height / 2.5,
+                          child: PeerItemOrganism(
+                            observableMap: {"highestAudio": ""},
+                            height: MediaQuery.of(context).size.height / 2,
+                            width: MediaQuery.of(context).size.width,
+                            isVideoMuted: false,
+                            peerTracKNode: new PeerTracKNode(
+                                peerId: _meetingStore.screenSharePeerId,
+                                track: _meetingStore.screenShareTrack!,
+                                name: _meetingStore
+                                        .screenShareTrack?.peer?.name ??
+                                    ""),
+                          ),
+                        );
+                      } else {
+                        return SizedBox(
+                          height: 0.0,
+                        );
+                      }
                     } else {
-                      return Container();
+                      return SizedBox();
                     }
                   }),
                   Flexible(
                     child: Observer(
                       builder: (_) {
-                        print("rebuilding");
-                        if (!_meetingStore.isMeetingStarted) return SizedBox();
-                        if (_meetingStore.peerTracks.isEmpty)
-                          return Center(
-                              child: Text('Waiting for other to join!'));
-                        ObservableList<PeerTracKNode> peerFilteredList =
-                            _meetingStore.peerTracks;
-                        ObservableMap<String, String> audioKeyMap =
-                            _meetingStore.observableMap;
-                        return PageView.builder(
-                          itemBuilder: (ctx, index) {
-                            ObservableMap<String, HMSTrackUpdate> map =
-                                _meetingStore.trackStatus;
-                            return ((orientation == Orientation.portrait &&
-                                _meetingStore.screenShareTrack == null) ||
-                                audioViewOn
-
-                                ? Padding(
-                              padding: EdgeInsets.symmetric(
-                                  vertical: itemHeightWithoutSs * 0.12),
-                              child: Column(
-                                children: [
-                                  Row(
-                                    children: [
-                                      //if (index * 4 < filteredList.length)
-                                      VideoTile(
-                                        tileIndex: index * 4,
-                                        filteredList: peerFilteredList,
-                                        itemHeight: itemHeightWithoutSs,
-                                        itemWidth: itemWidth,
-                                        trackStatus: map,
-                                        observerMap: audioKeyMap,
-                                        audioView: audioViewOn,
+                        if (!_meetingStore.isHLSLink) {
+                          print("rebuilding");
+                          if (!_meetingStore.isMeetingStarted)
+                            return SizedBox();
+                          if (_meetingStore.peerTracks.isEmpty)
+                            return Center(
+                                child: Text('Waiting for other to join!'));
+                          ObservableList<PeerTracKNode> peerFilteredList =
+                              _meetingStore.peerTracks;
+                          ObservableMap<String, String> audioKeyMap =
+                              _meetingStore.observableMap;
+                          return PageView.builder(
+                            itemBuilder: (ctx, index) {
+                              ObservableMap<String, HMSTrackUpdate> map =
+                                  _meetingStore.trackStatus;
+                              return ((orientation == Orientation.portrait &&
+                                          _meetingStore.screenShareTrack ==
+                                              null) ||
+                                      audioViewOn
+                                  ? Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          vertical: itemHeightWithoutSs * 0.12),
+                                      child: Column(
+                                        children: [
+                                          Row(
+                                            children: [
+                                              //if (index * 4 < filteredList.length)
+                                              VideoTile(
+                                                tileIndex: index * 4,
+                                                filteredList: peerFilteredList,
+                                                itemHeight: itemHeightWithoutSs,
+                                                itemWidth: itemWidth,
+                                                trackStatus: map,
+                                                observerMap: audioKeyMap,
+                                                audioView: audioViewOn,
+                                              ),
+                                              //if (index * 4 + 1 < filteredList.length)
+                                              VideoTile(
+                                                tileIndex: index * 4 + 1,
+                                                filteredList: peerFilteredList,
+                                                itemHeight: itemHeightWithoutSs,
+                                                itemWidth: itemWidth,
+                                                trackStatus: map,
+                                                observerMap: audioKeyMap,
+                                                audioView: audioViewOn,
+                                              ),
+                                            ],
+                                          ),
+                                          Row(
+                                            children: [
+                                              //if (index * 4 + 2 < filteredList.length)
+                                              VideoTile(
+                                                tileIndex: index * 4 + 2,
+                                                filteredList: peerFilteredList,
+                                                itemHeight: itemHeightWithoutSs,
+                                                itemWidth: itemWidth,
+                                                trackStatus: map,
+                                                observerMap: audioKeyMap,
+                                                audioView: audioViewOn,
+                                              ),
+                                              //if (index * 4 + 3 < filteredList.length)
+                                              VideoTile(
+                                                tileIndex: index * 4 + 3,
+                                                filteredList: peerFilteredList,
+                                                itemHeight: itemHeightWithoutSs,
+                                                itemWidth: itemWidth,
+                                                trackStatus: map,
+                                                observerMap: audioKeyMap,
+                                                audioView: audioViewOn,
+                                              ),
+                                            ],
+                                          ),
+                                        ],
                                       ),
-                                      //if (index * 4 + 1 < filteredList.length)
-                                      VideoTile(
-                                        tileIndex: index * 4 + 1,
-                                        filteredList: peerFilteredList,
-                                        itemHeight: itemHeightWithoutSs,
-                                        itemWidth: itemWidth,
-                                        trackStatus: map,
-                                        observerMap: audioKeyMap,
-                                        audioView: audioViewOn,
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    children: [
-                                      //if (index * 4 + 2 < filteredList.length)
-                                      VideoTile(
-                                        tileIndex: index * 4 + 2,
-                                        filteredList: peerFilteredList,
-                                        itemHeight: itemHeightWithoutSs,
-                                        itemWidth: itemWidth,
-                                        trackStatus: map,
-                                        observerMap: audioKeyMap,
-                                        audioView: audioViewOn,
-                                      ),
-                                      //if (index * 4 + 3 < filteredList.length)
-                                      VideoTile(
-                                        tileIndex: index * 4 + 3,
-                                        filteredList: peerFilteredList,
-                                        itemHeight: itemHeightWithoutSs,
-                                        itemWidth: itemWidth,
-                                        trackStatus: map,
-                                        observerMap: audioKeyMap,
-                                        audioView: audioViewOn,
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            )
-                                : Column(
-                              children: [
-                                Row(
-                                  children: [
-                                    VideoTile(
-                                      tileIndex: index * 2,
-                                      filteredList: peerFilteredList,
-                                      itemHeight: itemHeightWithSs,
-                                      itemWidth: itemWidth,
-                                      trackStatus: map,
-                                      observerMap: audioKeyMap,
-                                      audioView: audioViewOn,
-                                    ),
-                                    VideoTile(
-                                      tileIndex: index * 2 + 1,
-                                      filteredList: peerFilteredList,
-                                      itemHeight: itemHeightWithSs,
-                                      itemWidth: itemWidth,
-                                      trackStatus: map,
-                                      observerMap: audioKeyMap,
-                                      audioView: audioViewOn,
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ));
-                          },
-                          itemCount: ((peerFilteredList.length - 1) /
-                              ((orientation == Orientation.portrait) &&
-                                  (_meetingStore.screenShareTrack ==
-                                      null)
-                                  ? 4
-                                  : 2))
-                              .floor() +
-                              1,
-                        );
+                                    )
+                                  : Column(
+                                      children: [
+                                        Row(
+                                          children: [
+                                            VideoTile(
+                                              tileIndex: index * 2,
+                                              filteredList: peerFilteredList,
+                                              itemHeight: itemHeightWithSs,
+                                              itemWidth: itemWidth,
+                                              trackStatus: map,
+                                              observerMap: audioKeyMap,
+                                              audioView: audioViewOn,
+                                            ),
+                                            VideoTile(
+                                              tileIndex: index * 2 + 1,
+                                              filteredList: peerFilteredList,
+                                              itemHeight: itemHeightWithSs,
+                                              itemWidth: itemWidth,
+                                              trackStatus: map,
+                                              observerMap: audioKeyMap,
+                                              audioView: audioViewOn,
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ));
+                            },
+                            itemCount: ((peerFilteredList.length - 1) /
+                                        ((orientation ==
+                                                    Orientation.portrait) &&
+                                                (_meetingStore
+                                                        .screenShareTrack ==
+                                                    null)
+                                            ? 4
+                                            : 2))
+                                    .floor() +
+                                1,
+                          );
+                        }
+                        else {
+                          return SizedBox();
+                        }
                       },
                     ),
                   ),
+                  Observer(builder: (_) {
+                    print("hasHLSStarted ${_meetingStore.hasHlsStarted}");
+                    if (_meetingStore.isHLSLink && _meetingStore.hasHlsStarted==false) {
+                      return Flexible(
+                        child: Container(
+                          child: Center(
+                              child: Text(
+                                "NO HLS URL PRESENT",
+                                style: TextStyle(fontSize: 30.0),
+                              )),
+                        ),
+                      );
+                    }
+                    if (_meetingStore.isHLSLink && _meetingStore.hasHlsStarted) {
+                      return Flexible(
+                        child: Center(
+                          child: Container(
+                            child: HLSViewer(streamUrl: _meetingStore.streamUrl),
+                          ),
+                        ),
+                      );
+                    } else {
+                      return SizedBox(
+                      );
+                    }
+                  }),
                 ],
               ),
             ),
@@ -519,12 +527,12 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                 return IconButton(
                     tooltip: 'Video',
                     iconSize: 32,
-                    onPressed: (audioViewOn)
+                    onPressed: (audioViewOn || _meetingStore.isHLSLink)
                         ? null
                         : () {
-                      _meetingStore.toggleVideo();
-                      countOfVideoOnBetweenTwo++;
-                    },
+                            _meetingStore.toggleVideo();
+                            countOfVideoOnBetweenTwo++;
+                          },
                     icon: Icon(_meetingStore.isVideoOn
                         ? Icons.videocam
                         : Icons.videocam_off));
@@ -536,7 +544,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                 return IconButton(
                     tooltip: 'Audio',
                     iconSize: 32,
-                    onPressed: () {
+                    onPressed: (_meetingStore.isHLSLink)?null:() {
                       _meetingStore.toggleAudio();
                     },
                     icon: Icon(
@@ -576,8 +584,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                   onPressed: () async {
                     String ans = await showDialog(
                         context: context,
-                        builder: (_) =>
-                            LeaveOrEndMeetingDialogOption(
+                        builder: (_) => LeaveOrEndMeetingDialogOption(
                               meetingStore: _meetingStore,
                             ));
                     if (ans == 'Leave' || ans == 'End') Navigator.pop(context);

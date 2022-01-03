@@ -24,9 +24,11 @@ abstract class MeetingStoreBase extends ChangeNotifier
   String screenSharePeerId = '';
   @observable
   HMSException? error;
-
+  @observable
+  bool hasHlsStarted = false;
   @observable
   HMSException? hmsException;
+  String streamUrl="";
 
   @observable
   HMSRoleChangeRequest? roleChangeRequest;
@@ -61,7 +63,8 @@ abstract class MeetingStoreBase extends ChangeNotifier
 
   @observable
   ObservableList<HMSPeer> peers = ObservableList.of([]);
-
+  @observable
+  bool isHLSLink=false;
   @observable
   HMSPeer? localPeer;
   @observable
@@ -248,6 +251,13 @@ abstract class MeetingStoreBase extends ChangeNotifier
   @override
   void onJoin({required HMSRoom room}) async {
     hmsRoom = room;
+    if(room.hmshlsStreamingState?.running??false){
+      hasHlsStarted=true;
+      streamUrl = room.hmshlsStreamingState?.variants[0]?.hlsStreamUrl??"";
+    }
+    else{
+      hasHlsStarted=false;
+    }
     if (Platform.isAndroid) {
       print("members ${room.peers!.length}");
       for (int i = 0; i < room.peers!.length; i++) {
@@ -258,8 +268,10 @@ abstract class MeetingStoreBase extends ChangeNotifier
             peerTracks
                 .add(new PeerTracKNode(peerId: each.peerId, name: each.name));
           localPeer = each;
+          if(localPeer!.role!.name.contains("hls-")==true)
+            isHLSLink=true;
           addPeer(localPeer!);
-          print('on join ${localPeer!.peerId}');
+          print('on join ${localPeer!.peerId} ${localPeer!.role!.name}');
           break;
         }
       }
@@ -287,6 +299,16 @@ abstract class MeetingStoreBase extends ChangeNotifier
   @override
   void onRoomUpdate({required HMSRoom room, required HMSRoomUpdate update}) {
     print('on room update $update ${room.hmshlsStreamingState?.running}');
+    if(update == HMSRoomUpdate.HLS_STREAMING_STATE_UPDATED) {
+      if (room.hmshlsStreamingState?.running ?? false) {
+        hasHlsStarted = true;
+        streamUrl = room.hmshlsStreamingState?.variants[0]?.hlsStreamUrl??"";
+      }
+      else {
+        hasHlsStarted = false;
+        streamUrl="";
+      }
+    }
   }
 
   @override
@@ -450,8 +472,8 @@ abstract class MeetingStoreBase extends ChangeNotifier
       case HMSPeerUpdate.peerJoined:
         print('peer joined');
         //TODO-> containsPeer or not
-
-        peerTracks.add(new PeerTracKNode(peerId: peer.peerId, name: peer.name));
+        if(peer.role?.name.contains("hls-")==false)
+          peerTracks.add(new PeerTracKNode(peerId: peer.peerId, name: peer.name));
         addPeer(peer);
         break;
       case HMSPeerUpdate.peerLeft:
