@@ -1,3 +1,4 @@
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
@@ -45,52 +46,59 @@ class _ChatWidgetState extends State<ChatWidget> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Container(
-                    padding: EdgeInsets.all(10.0),
+                    padding:
+                        EdgeInsets.symmetric(vertical: 5.0, horizontal: 10),
                     color: Colors.blue,
                     child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Expanded(
-                          child: Text(
-                            "Chat",
-                            style:
-                                TextStyle(color: Colors.black, fontSize: 30.0),
-                          ),
+                        Row(
+                          children: [
+                            Icon(Icons.people_alt_outlined),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Observer(builder: (ctx) {
+                              List<HMSRole> roles = _meetingStore.roles;
+                              if (roles.length > 0) {
+                                return DropdownButtonHideUnderline(
+                                  child: DropdownButton2(
+                                    itemWidth: 150,
+                                    value: valueChoose,
+                                    iconEnabledColor: Colors.black,
+                                    onChanged: (newvalue) {
+                                      setState(() {
+                                        this.valueChoose = newvalue as String;
+                                      });
+                                    },
+                                    items: [
+                                      DropdownMenuItem<String>(
+                                        child: Text("Everyone"),
+                                        value: "Everyone",
+                                      ),
+                                      ..._meetingStore.peers.map((e) {
+                                        return DropdownMenuItem<String>(
+                                          child: Text(
+                                              "${e.name} ${e.isLocal ? "(You)" : ""}"),
+                                          value: e.peerId,
+                                        );
+                                      }).toList(),
+                                      ...roles
+                                          .map((e) => DropdownMenuItem<String>(
+                                                child: Text("${e.name}"),
+                                                value: e.name,
+                                              ))
+                                          .toList()
+                                    ],
+                                  ),
+                                );
+                              } else
+                                return CircularProgressIndicator(
+                                  color: Colors.black,
+                                );
+                            }),
+                          ],
                         ),
-                        Observer(builder: (ctx) {
-                          List<HMSRole> roles = _meetingStore.roles;
-                          if (roles.length > 0) {
-                            return DropdownButton<String>(
-                              value: valueChoose,
-                              onChanged: (newvalue) {
-                                setState(() {
-                                  this.valueChoose = newvalue as String;
-                                });
-                              },
-                              items: [
-                                DropdownMenuItem<String>(
-                                  child: Text("Everyone"),
-                                  value: "Everyone",
-                                ),
-                                ..._meetingStore.peers.map((e) {
-                                  return DropdownMenuItem<String>(
-                                    child: Text(
-                                        "${e.name} ${e.isLocal ? "(You)" : ""}"),
-                                    value: e.peerId,
-                                  );
-                                }).toList(),
-                                ...roles
-                                    .map((e) => DropdownMenuItem<String>(
-                                          child: Text("${e.name}"),
-                                          value: e.name,
-                                        ))
-                                    .toList()
-                              ],
-                            );
-                          } else
-                            return CircularProgressIndicator(
-                              color: Colors.black,
-                            );
-                        }),
                         GestureDetector(
                           onTap: () {
                             Navigator.of(context).pop();
@@ -108,12 +116,15 @@ class _ChatWidgetState extends State<ChatWidget> {
                       builder: (_) {
                         if (!_meetingStore.isMeetingStarted) return SizedBox();
                         if (_meetingStore.messages.isEmpty)
-                          return Text('No messages');
+                          return Center(child: Text('No messages'));
+
                         return ListView(
                           children: List.generate(
                             _meetingStore.messages.length,
                             (index) => Container(
-                              padding: EdgeInsets.all(5.0),
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 3, horizontal: 10),
+                              margin: EdgeInsets.symmetric(vertical: 3),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisSize: MainAxisSize.min,
@@ -126,27 +137,19 @@ class _ChatWidgetState extends State<ChatWidget> {
                                                   ?.name ??
                                               "",
                                           style: TextStyle(
-                                              fontSize: 10.0,
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.w900),
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: Text(
-                                          HMSMessageRecipientValues
-                                              .getValueFromHMSMessageRecipientType(
-                                                  _meetingStore
-                                                      .messages[index]
-                                                      .hmsMessageRecipient!
-                                                      .hmsMessageRecipientType),
-                                          style: TextStyle(
-                                              fontSize: 15.0,
-                                              color: Colors.blue,
-                                              fontWeight: FontWeight.w900),
+                                              fontSize: 14.0,
+                                              color: Colors.grey[700],
+                                              fontWeight: FontWeight.w600),
                                         ),
                                       ),
                                       Text(
-                                        _meetingStore.messages[index].time
+                                        DateFormat("HH:MM")
+                                            .format(DateFormat(
+                                                    "d MMM y h:mm:ss a")
+                                                .parse(_meetingStore
+                                                    .messages[index].time
+                                                    .replaceFirst("pm", "PM")
+                                                    .replaceFirst("am", "AM")))
                                             .toString(),
                                         style: TextStyle(
                                             fontSize: 10.0,
@@ -155,16 +158,36 @@ class _ChatWidgetState extends State<ChatWidget> {
                                       )
                                     ],
                                   ),
-                                  SizedBox(
-                                    height: 10.0,
-                                  ),
-                                  Text(
-                                    _meetingStore.messages[index].message
-                                        .toString(),
-                                    style: TextStyle(
-                                        fontSize: 12.0,
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.w300),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Flexible(
+                                        child: Text(
+                                          _meetingStore.messages[index].message
+                                              .toString(),
+                                          style: TextStyle(
+                                              fontSize: 14.0,
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.w700),
+                                        ),
+                                      ),
+                                      Text(
+                                        HMSMessageRecipientValues
+                                                .getValueFromHMSMessageRecipientType(
+                                                    _meetingStore
+                                                        .messages[index]
+                                                        .hmsMessageRecipient!
+                                                        .hmsMessageRecipientType)
+                                            .toLowerCase(),
+                                        style: TextStyle(
+                                            fontSize: 14.0,
+                                            color: Colors.blue,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                    ],
                                   ),
                                 ],
                               ),
@@ -182,8 +205,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                     ),
                   ),
                   Container(
-                    color: Colors.grey,
-                    margin: EdgeInsets.only(top: 10.0),
+                    color: Colors.grey[700],
                     child: Row(
                       children: [
                         Container(
@@ -197,6 +219,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                                 enabledBorder: InputBorder.none,
                                 errorBorder: InputBorder.none,
                                 disabledBorder: InputBorder.none,
+                                hintStyle: TextStyle(color: Colors.grey[300]),
                                 contentPadding: EdgeInsets.only(
                                     left: 15, bottom: 11, top: 11, right: 15),
                                 hintText: "Type a Message"),
@@ -210,7 +233,7 @@ class _ChatWidgetState extends State<ChatWidget> {
 
                             DateTime currentTime = DateTime.now();
                             final DateFormat formatter =
-                                DateFormat('yyyy-MM-dd hh:mm a');
+                                DateFormat('d MMM y h:mm:ss a');
 
                             List<String> rolesName = <String>[];
                             for (int i = 0; i < hmsRoles.length; i++)
@@ -263,8 +286,8 @@ class _ChatWidgetState extends State<ChatWidget> {
                             messageTextController.clear();
                           },
                           child: Icon(
-                            Icons.double_arrow,
-                            size: 40.0,
+                            Icons.send,
+                            color: Colors.grey[300],
                           ),
                         )
                       ],
