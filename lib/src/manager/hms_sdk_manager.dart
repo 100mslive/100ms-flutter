@@ -1,5 +1,5 @@
+// Project imports:
 import 'package:hmssdk_flutter/src/service/platform_service.dart';
-
 import '../../hmssdk_flutter.dart';
 
 class HmsSdkManager {

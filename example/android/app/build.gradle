@@ -31,7 +31,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 android {
-    compileSdkVersion 31
+    compileSdkVersion 32
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
@@ -41,9 +41,9 @@ android {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "live.hms.flutter"
         minSdkVersion 21
-        targetSdkVersion 31
-        versionCode 22
-        versionName "1.0.22"
+        targetSdkVersion 32
+        versionCode 23
+        versionName "1.0.23"
     }
 
     signingConfigs {

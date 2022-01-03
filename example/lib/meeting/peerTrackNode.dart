@@ -5,15 +5,17 @@ import 'package:mobx/mobx.dart';
 class PeerTracKNode {
   String peerId;
   String name;
+  bool isRaiseHand;
   @observable
   HMSTrack? track;
   HMSTrack? audioTrack;
-  PeerTracKNode(
-      {required this.peerId,
-      this.track,
-      this.name = "",
-      this.audioTrack,
-      });
+  PeerTracKNode({
+    required this.peerId,
+    this.track,
+    this.name = "",
+    this.audioTrack,
+    this.isRaiseHand=false
+  });
 
   @override
   bool operator ==(Object other) =>
