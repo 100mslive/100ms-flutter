@@ -37,6 +37,7 @@ dependencies:
   path_provider: ^2.0.7
   share_extend: "^2.0.0"
   connectivity_wrapper: ^1.0.6
+  dropdown_button2: ^1.0.7
 
 dev_dependencies:
   flutter_test:
