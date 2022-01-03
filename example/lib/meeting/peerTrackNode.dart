@@ -9,13 +9,12 @@ class PeerTracKNode {
   @observable
   HMSTrack? track;
   HMSTrack? audioTrack;
-  PeerTracKNode({
-    required this.peerId,
-    this.track,
-    this.name = "",
-    this.audioTrack,
-    this.isRaiseHand=false
-  });
+  PeerTracKNode(
+      {required this.peerId,
+      this.track,
+      this.name = "",
+      this.audioTrack,
+      this.isRaiseHand = false});
 
   @override
   bool operator ==(Object other) =>

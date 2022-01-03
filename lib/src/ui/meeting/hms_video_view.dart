@@ -91,7 +91,9 @@ class _PlatformView extends StatelessWidget {
           // TODO: add config setting for mirror
           'set_mirror': track.source != "REGULAR" ? false : setMirror,
           // TODO: add config setting for scale type
-          'scale_type': track.source != "REGULAR" ? ScalingType.SCALE_ASPECT_FIT.value : ScalingType.SCALE_ASPECT_FILL.value,
+          'scale_type': track.source != "REGULAR"
+              ? ScalingType.SCALE_ASPECT_FIT.value
+              : ScalingType.SCALE_ASPECT_FILL.value,
           // TODO: add config setting for match_parent
           'match_parent': matchParent,
         }..addAll({
@@ -110,7 +112,15 @@ class _PlatformView extends StatelessWidget {
           'peer_id': track.peer?.peerId,
           'is_local': track.peer?.isLocal,
           'track_id': track.trackId,
+          'is_aux': track.source != "REGULAR",
+          'screen_share': track.source != "REGULAR",
+          // TODO: add config setting for mirror
           'set_mirror': track.source != "REGULAR" ? false : setMirror,
+          // TODO: add config setting for scale type
+          'scale_type': track.source != "REGULAR"
+              ? ScalingType.SCALE_ASPECT_FIT.value
+              : ScalingType.SCALE_ASPECT_FILL.value,
+          // TODO: add config setting for match_parent
           'match_parent': matchParent,
         }..addAll({
             'height': viewSize.height,

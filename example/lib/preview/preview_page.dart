@@ -45,7 +45,7 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
               UtilityComponents.showSnackBarWithString(
                   (event as HMSException).message, context)
             });
-    }
+  }
 
   void initPreview() async {
     _previewStore.startListen();
@@ -87,15 +87,15 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                           ]);
                         }
                         return Provider<MeetingStore>(
-                          create: (ctx)=>MeetingStore(),
+                          create: (ctx) => MeetingStore(),
                           child: PeerItemOrganism(
-                            observableMap: {"highestAudio":""},
+                            observableMap: {"highestAudio": ""},
                             key: UniqueKey(),
                             height: itemHeight,
                             width: itemWidth,
                             peerTracKNode: new PeerTracKNode(
                                 peerId: _previewStore.peer?.peerId ?? "",
-                                name: _previewStore.peer?.name??"",
+                                name: _previewStore.peer?.name ?? "",
                                 track: _previewStore.localTracks[0]),
                             isVideoMuted: false,
                           ),
@@ -129,14 +129,15 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                           child: ElevatedButton(
                         onPressed: () {
                           _previewStore.removeListener();
-                          Navigator.of(context).pushReplacement(MaterialPageRoute(
-                              builder: (_) => Provider<MeetingStore>(
-                                    create: (_) => MeetingStore(),
-                                    child: MeetingPage(
-                                        roomId: widget.roomId,
-                                        flow: widget.flow,
-                                        user: widget.user),
-                                  )));
+                          Navigator.of(context)
+                              .pushReplacement(MaterialPageRoute(
+                                  builder: (_) => Provider<MeetingStore>(
+                                        create: (_) => MeetingStore(),
+                                        child: MeetingPage(
+                                            roomId: widget.roomId,
+                                            flow: widget.flow,
+                                            user: widget.user),
+                                      )));
                         },
                         child: Text(
                           'Join Now',
