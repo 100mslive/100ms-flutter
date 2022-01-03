@@ -55,44 +55,43 @@ class _ParticipantOrganismState extends State<ParticipantOrganism> {
                 child: Image.asset(
                   'assets/icons/raise_hand.png',
                   color: Colors.amber.shade300,
-                  width: 20,
-                  height: 20,
-                ),
-              ),
-            GestureDetector(
-              onTap: () {
-                showDialog(
-                    context: context,
-                    builder: (_) => ChangeRoleOptionDialog(
-                          peerName: peer.name,
-                          getRoleFunction: widget.meetingStore.getRoles(),
-                          changeRole: (role, forceChange) {
-                            Navigator.pop(context);
-                            widget.meetingStore.changeRole(
-                                peerId: peer.peerId,
-                                roleName: role.name,
-                                forceChange: forceChange);
-                          },
-                        ));
-              },
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                child: Container(
-                  padding: const EdgeInsets.all(5.0),
-                  decoration: BoxDecoration(
-                    color: Colors.blue,
-                    borderRadius: BorderRadius.circular(5.0),
+                      scale: 1.5,
+                    ),
                   ),
-                  child: Text(
-                    "${peer.role!.name}",
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.bold),
+                GestureDetector(
+                  onTap: () {
+                    showDialog(
+                        context: context,
+                        builder: (_) => ChangeRoleOptionDialog(
+                              peerName: peer.name,
+                              getRoleFunction: widget.meetingStore.getRoles(),
+                              changeRole: (role, forceChange) {
+                                Navigator.pop(context);
+                                widget.meetingStore.changeRole(
+                                    peerId: peer.peerId,
+                                    roleName: role.name,
+                                    forceChange: forceChange);
+                              },
+                            ));
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                    child: Container(
+                      padding: const EdgeInsets.all(5.0),
+                      decoration: BoxDecoration(
+                        color: Colors.blue,
+                        borderRadius: BorderRadius.circular(5.0),
+                      ),
+                      child: Text(
+                        "${peer.role!.name}",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20.0,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
                   ),
                 ),
-              ),
-            ),
             
             Padding(
               padding: const EdgeInsets.fromLTRB(10.0,0,10,0),

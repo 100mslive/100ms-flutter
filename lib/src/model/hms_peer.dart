@@ -84,7 +84,7 @@ class HMSPeer {
         name: map['name'],
         isLocal: map['is_local'],
         role: role,
-        metadata: map['metadata'],
+        metadata: map['customer_description'],
         customerUserId: map['customer_user_id'],
       );
 

@@ -114,10 +114,10 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             toggleMuteAll(result, shouldMute: false)
             
         case "is_video_mute":
-            isVideoMute(result)
+            isVideoMute(call, result)
             
         case "is_audio_mute":
-            isAudioMute(result)
+            isAudioMute(call, result)
             
         case "get_local_peer":
             getLocalPeer(result)
@@ -847,16 +847,34 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         shouldMute ? result("muted all") : result("unMutedAll")
     }
     
-    func isVideoMute(_ result: FlutterResult) {
+    func isVideoMute(_ call: FlutterMethodCall, _ result: FlutterResult) {
+        let arguments = call.arguments as! Dictionary<String, AnyObject>
+        guard let peer_id = arguments["peer_id"] as? String else {
+            print(#function, "invalid parameters for isVideoMuted:")
+            return result("invalid parameters for isVideoMuted:")
+        }
         guard let peer = hmsSDK?.localPeer else { return }
-        
+        if(peer_id == peer.peerID){
         result(peer.videoTrack?.isMute() ?? false)
+        }else{
+            guard let peer = getPeerById(peerId: peer_id,isLocal: false) else { return }
+            result(peer.videoTrack?.isMute() ?? false)
+        }
     }
     
-    func isAudioMute(_ result: FlutterResult) {
+    func isAudioMute(_ call: FlutterMethodCall, _ result: FlutterResult) {
+        let arguments = call.arguments as! Dictionary<String, AnyObject>
+        guard let peer_id = arguments["peer_id"] as? String else {
+            print(#function, "invalid parameters for isAudioMuted:")
+            return result("invalid parameters for isAudioMuted:")
+        }
         guard let peer = hmsSDK?.localPeer else { return }
-        
+        if(peer_id == peer.peerID){
         result(peer.audioTrack?.isMute() ?? false)
+        }else{
+            guard let peer = getPeerById(peerId: peer_id,isLocal: false) else { return }
+            result(peer.audioTrack?.isMute() ?? false)
+        }
     }
     
     func getLocalPeer(_ result: FlutterResult) {
