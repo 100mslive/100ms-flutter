@@ -57,9 +57,11 @@ class _LeaveOrEndMeetingDialogOptionState
                 bool ended = await widget.meetingStore.endRoom(forceValue);
                 if (ended)
                   Navigator.of(context).pop('End');
-                else
+                else {
+                  Navigator.pop(context);
                   UtilityComponents.showSnackBarWithString(
                       "No permission", context);
+                }
               },
               child: Row(
                 children: [
