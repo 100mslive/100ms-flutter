@@ -139,6 +139,9 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             
         case "get_room":
             getRoom(result)
+        
+        case "raise_hand":
+            raiseHand()
             
         case "build":
             build(call, result)
@@ -683,6 +686,18 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             print(#function, success)
         }
         result(#function)
+    }
+
+    var isHandRaise = false
+    public func raiseHand(){
+        isHandRaise =  !isHandRaise
+        hmsSDK?.change(metadata: "{\"isHandRaised\":\(isHandRaise)}") { success, error in 
+            if let error = error {
+                print(#function, error.localizedDescription)
+                return
+            }
+            print(#function, success)
+        }
     }
     
     private func startRtmpOrRecording(_ call: FlutterMethodCall, _ result: FlutterResult) {
