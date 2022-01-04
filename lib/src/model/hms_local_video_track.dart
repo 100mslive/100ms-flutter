@@ -23,17 +23,6 @@ class HMSLocalVideoTrack extends HMSVideoTrack {
             isMute: isMute,
             peer: peer);
 
-  Future<void> startCapturing() async {
-    await PlatformService.invokeMethod(PlatformMethod.startCapturing);
-  }
-
-  Future<void> stopCapturing() async {
-    await PlatformService.invokeMethod(PlatformMethod.stopCapturing);
-  }
-
-  Future<void> switchCamera() async {
-    await PlatformService.invokeMethod(PlatformMethod.switchCamera);
-  }
 
   factory HMSLocalVideoTrack.fromMap({required Map map, HMSPeer? peer}) {
     return HMSLocalVideoTrack(

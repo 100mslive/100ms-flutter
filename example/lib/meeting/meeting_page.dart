@@ -595,7 +595,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                             builder: (_) => LeaveOrEndMeetingDialogOption(
                                   meetingStore: _meetingStore,
                                 ));
-                        //print(ans.toString()+"onWillPOPSCOPE");
+                        print(ans.toString()+"onWillPOPSCOPE");
                         //if (ans == 'Leave' || ans == 'End') Navigator.pop(context);
                       },
                       icon: Icon(Icons.call_end));
@@ -615,15 +615,22 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
+    print("didChangeLifeCycleState ${state} ${_meetingStore.isVideoOn}");
     if (state == AppLifecycleState.resumed) {
       if (_meetingStore.isVideoOn) {
+        print("meeting page resumed ");
         _meetingStore.meetingController.startCapturing();
       }
+      else{
+        _meetingStore.meetingController.stopCapturing();
+      }
     } else if (state == AppLifecycleState.paused) {
+      print("meeting page paused");
       if (_meetingStore.isVideoOn) {
         _meetingStore.meetingController.stopCapturing();
       }
     } else if (state == AppLifecycleState.inactive) {
+      print("meeting page inactive");
       if (_meetingStore.isVideoOn) {
         _meetingStore.meetingController.stopCapturing();
       }
