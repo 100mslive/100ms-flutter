@@ -17,6 +17,7 @@ import 'package:flutter/services.dart' show StandardMessageCodec;
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter/src/enum/hms_video_scale_type.dart';
 
+// ignore: must_be_immutable
 class HMSVideoView extends StatelessWidget {
   /// [HMSVideoView] will render video using trackId from HMSTrack
   final HMSTrack track;
@@ -56,6 +57,7 @@ class HMSVideoView extends StatelessWidget {
   }
 }
 
+// ignore: must_be_immutable
 class _PlatformView extends StatelessWidget {
   final HMSTrack track;
   final Size viewSize;
@@ -91,7 +93,9 @@ class _PlatformView extends StatelessWidget {
           // TODO: add config setting for mirror
           'set_mirror': track.source != "REGULAR" ? false : setMirror,
           // TODO: add config setting for scale type
-          'scale_type': track.source != "REGULAR" ? ScalingType.SCALE_ASPECT_FIT.value : ScalingType.SCALE_ASPECT_FILL.value,
+          'scale_type': track.source != "REGULAR"
+              ? ScalingType.SCALE_ASPECT_FIT.value
+              : ScalingType.SCALE_ASPECT_FILL.value,
           // TODO: add config setting for match_parent
           'match_parent': matchParent,
         }..addAll({

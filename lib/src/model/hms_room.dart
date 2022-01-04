@@ -39,7 +39,7 @@ class HMSRoom {
 
   factory HMSRoom.fromMap(Map map) {
     List<HMSPeer> peers = [];
-    print("${map} MAP");
+    print("$map MAP");
     if (map.containsKey('peers') && map['peers'] is List) {
       for (var each in (map['peers'] as List)) {
         try {

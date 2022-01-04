@@ -143,13 +143,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                                         ),
                                       ),
                                       Text(
-                                        DateFormat("HH:MM")
-                                            .format(DateFormat(
-                                                    "d MMM y h:mm:ss a")
-                                                .parse(_meetingStore
-                                                    .messages[index].time
-                                                    .replaceFirst("pm", "PM")
-                                                    .replaceFirst("am", "AM")))
+                                        _meetingStore.messages[index].time
                                             .toString(),
                                         style: TextStyle(
                                             fontSize: 10.0,

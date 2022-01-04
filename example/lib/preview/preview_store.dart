@@ -81,6 +81,7 @@ abstract class PreviewStoreBase
   }
 
   @override
+  // ignore: non_constant_identifier_names
   void onLogMessage({required dynamic HMSLogList}) {
     print("onLogMessageFlutter" + HMSLogList.toString());
     FirebaseCrashlytics.instance.log(HMSLogList.toString());

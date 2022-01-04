@@ -15,7 +15,7 @@ class PeerItemOrganism extends StatefulWidget {
   final double height;
   final double width;
   final bool isLocal;
-  bool setMirror;
+  final bool setMirror;
   final Map<String, String> observableMap;
 
   PeerItemOrganism(
@@ -64,15 +64,14 @@ class _PeerItemOrganismState extends State<PeerItemOrganism> {
                       meetingStore.highestSpeaker.peerId
                   ? 4.0
                   : 1.0),
-          borderRadius: BorderRadius.all(Radius.circular(10))
-          ),
+          borderRadius: BorderRadius.all(Radius.circular(10))),
       child: Stack(
         children: [
           LayoutBuilder(
             builder: (context, constraints) {
               if ((widget.isVideoMuted || widget.peerTracKNode.track == null)) {
                 List<String>? parts = widget.peerTracKNode.name.split(" ");
-    
+
                 if (parts.length == 1) {
                   parts[0] += " ";
                   name = parts[0][0] + parts[0][1];
@@ -90,11 +89,11 @@ class _PeerItemOrganismState extends State<PeerItemOrganism> {
                   child: Center(child: CircleAvatar(child: Text(name))),
                 );
               }
-    
+
               return Container(
                 height: widget.height + 100,
                 width: widget.width - 5,
-                padding: EdgeInsets.fromLTRB(5.0,5.0,5.0,15.0),
+                padding: EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 15.0),
                 child: HMSVideoView(
                   track: widget.peerTracKNode.track!,
                   setMirror: widget.setMirror,
