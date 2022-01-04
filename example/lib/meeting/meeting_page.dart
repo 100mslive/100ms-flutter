@@ -99,7 +99,8 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
         (event) => {
               if ((event as bool) == true)
                 {
-                  Navigator.of(context).pop(),
+                  Navigator.of(context)
+                      .popUntil((route) => route.isFirst),
                   UtilityComponents.showSnackBarWithString(
                       "Meeting Ended", context),
                 },
@@ -570,8 +571,6 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                           LeaveOrEndMeetingDialogOption(
                                             meetingStore: _meetingStore,
                                           ));
-                                  if (ans == 'Leave' || ans == 'End')
-                                    Navigator.pop(context);
                                 },
                                 icon: Icon(Icons.call_end)),
                           ),
