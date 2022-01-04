@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:connectivity_wrapper/connectivity_wrapper.dart';
+import 'package:connectivity_checker/connectivity_checker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -411,7 +411,8 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                       ],
                     ),
                     body: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 5.0,vertical: 5.0),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 5.0, vertical: 5.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -420,22 +421,19 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                 !audioViewOn) {
                               return SizedBox(
                                 width: double.infinity,
-                                height: MediaQuery.of(context).size.height /
-                                    2.5,
+                                height:
+                                    MediaQuery.of(context).size.height / 2.5,
                                 child: PeerItemOrganism(
                                   observableMap: {"highestAudio": ""},
                                   height:
-                                      MediaQuery.of(context).size.height /
-                                          2,
+                                      MediaQuery.of(context).size.height / 2,
                                   width: MediaQuery.of(context).size.width,
                                   isVideoMuted: false,
                                   peerTracKNode: new PeerTracKNode(
-                                      peerId:
-                                          _meetingStore.screenSharePeerId,
-                                      track:
-                                          _meetingStore.screenShareTrack!,
-                                      name: _meetingStore.screenShareTrack
-                                              ?.peer?.name ??
+                                      peerId: _meetingStore.screenSharePeerId,
+                                      track: _meetingStore.screenShareTrack!,
+                                      name: _meetingStore
+                                              .screenShareTrack?.peer?.name ??
                                           ""),
                                 ),
                               );
@@ -451,10 +449,9 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                   return SizedBox();
                                 if (_meetingStore.peerTracks.isEmpty)
                                   return Center(
-                                      child: Text(
-                                          'Waiting for others to join!'));
-                                ObservableList<PeerTracKNode>
-                                    peerFilteredList =
+                                      child:
+                                          Text('Waiting for others to join!'));
+                                ObservableList<PeerTracKNode> peerFilteredList =
                                     _meetingStore.isActiveSpeakerMode
                                         ? _meetingStore
                                             .activeSpeakerPeerTracksStore
@@ -470,19 +467,17 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                     cacheExtent: 0,
                                     gridDelegate:
                                         SliverGridDelegateWithFixedCrossAxisCount(
-                                      crossAxisCount:( !audioViewOn &&
-                                              _meetingStore
-                                                      .screenShareTrack !=
+                                      crossAxisCount: (!audioViewOn &&
+                                              _meetingStore.screenShareTrack !=
                                                   null)
                                           ? 1
                                           : 2,
-                                      mainAxisExtent:itemWidth,
+                                      mainAxisExtent: itemWidth,
                                     ),
                                     itemBuilder: (ctx, index) {
                                       return Observer(builder: (context) {
-                                        ObservableMap<String,
-                                                HMSTrackUpdate> map =
-                                            _meetingStore.trackStatus;
+                                        ObservableMap<String, HMSTrackUpdate>
+                                            map = _meetingStore.trackStatus;
                                         print("GRIDVIEW ${map.toString()}");
                                         return VideoTile(
                                           tileIndex: index,
