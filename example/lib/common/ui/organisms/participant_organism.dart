@@ -30,7 +30,7 @@ class _ParticipantOrganismState extends State<ParticipantOrganism> {
 
   @override
   Widget build(BuildContext context) {
-  final width = MediaQuery.of(context).size.width;
+    final width = MediaQuery.of(context).size.width;
     HMSPeer peer = widget.peer;
     return Card(
       child: Container(
@@ -39,7 +39,7 @@ class _ParticipantOrganismState extends State<ParticipantOrganism> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Container(
-              width: width/3,
+              width: width / 3,
               child: Text(
                 peer.name,
                 style: TextStyle(fontSize: 20.0),
@@ -92,31 +92,30 @@ class _ParticipantOrganismState extends State<ParticipantOrganism> {
                     ),
                   ),
                 ),
-            
-            Padding(
-              padding: const EdgeInsets.fromLTRB(10.0,0,10,0),
-              child: Container(
-                decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: isVideoOn ? isOnColor : isOffColor),
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(5, 5, 5, 5),
-                  child: Icon(isVideoOn ? Icons.videocam : Icons.videocam_off),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(10.0, 0, 10, 0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: isVideoOn ? isOnColor : isOffColor),
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(5, 5, 5, 5),
+                      child:
+                          Icon(isVideoOn ? Icons.videocam : Icons.videocam_off),
+                    ),
+                  ),
                 ),
-              ),
-            ),
-            Container(
-              decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: isAudioOn ? isOnColor : isOffColor),
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(5, 5, 5, 5),
-                child: Icon(isAudioOn ? Icons.mic : Icons.mic_off),
-              ),
-            ),
+                Container(
+                  decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: isAudioOn ? isOnColor : isOffColor),
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(5, 5, 5, 5),
+                    child: Icon(isAudioOn ? Icons.mic : Icons.mic_off),
+                  ),
+                ),
               ],
             )
-            
           ],
         ),
       ),

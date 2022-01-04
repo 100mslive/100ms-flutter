@@ -728,8 +728,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
     private var isRaiseHandTrue:Boolean = false
     private fun raiseHand(){
         isRaiseHandTrue = !isRaiseHandTrue
-        hmssdk.changeMetadata("{\"isHandRaised\":${isRaiseHandTrue}}",hmsActionResultListener = this.actionListener )
-
+        hmssdk.changeMetadata("{\"isHandRaised\":${isRaiseHandTrue}}", hmsActionResultListener = this.actionListener)
     }
 
 

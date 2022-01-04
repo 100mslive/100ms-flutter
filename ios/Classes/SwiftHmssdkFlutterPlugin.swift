@@ -345,8 +345,32 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         let arguments = call.arguments as! Dictionary<String, AnyObject>
         
         var trackSettings: HMSTrackSettings?
-        if let settings = arguments["hms_track_setting"] as? [AnyHashable: Any] {
+        if let settingsDict = arguments["hms_track_setting"] as? [AnyHashable: Any] {
             
+            var audioSettings: HMSAudioTrackSettings?
+            if let audioSettingsDict = settingsDict["audio_track_setting"] as? [AnyHashable: Any] {
+                if let bitrate = audioSettingsDict["bit_rate"] as? Int, let desc = audioSettingsDict["track_description"] as? String {
+                    audioSettings = HMSAudioTrackSettings(maxBitrate: bitrate, trackDescription: desc)
+                }
+            }
+            
+            var videoSettings: HMSVideoTrackSettings?
+            if let videoSettingsDict = settingsDict["video_track_setting"] as? [AnyHashable: Any] {
+                if let codec = videoSettingsDict["video_codec"] as? String,
+                   let bitrate = videoSettingsDict["max_bit_rate"] as? Int,
+                   let framerate = videoSettingsDict["max_frame_rate"] as? Int,
+                   let desc = videoSettingsDict["track_description"] as? String {
+                    
+                    videoSettings = HMSVideoTrackSettings(codec: getCodec(from: codec),
+                                                          resolution: .init(width: 320, height: 180),
+                                                          maxBitrate: bitrate,
+                                                          maxFrameRate: framerate,
+                                                          cameraFacing: .front,
+                                                        trackDescription: desc)
+                }
+            }
+            
+            trackSettings = HMSTrackSettings(videoSettings: videoSettings, audioSettings: audioSettings)
         }
         
         var setLogger = false
@@ -367,6 +391,13 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         }
         
         result(true)
+    }
+    
+    private func getCodec(from string: String) -> HMSCodec {
+        if string.lowercased().contains("h264") {
+            return HMSCodec.H264
+        }
+        return HMSCodec.VP8
     }
     
     func preview(_ call: FlutterMethodCall, _ result: FlutterResult) {

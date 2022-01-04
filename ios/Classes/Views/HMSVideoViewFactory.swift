@@ -28,7 +28,7 @@ class  HMSVideoViewFactory: NSObject, FlutterPlatformViewFactory {
         let peerId = arguments["peer_id"] as? String ?? ""
         let trackId = arguments["track_id"] as? String ?? ""
         let mirror = arguments["set_mirror"] as? Bool ?? false
-        let scaleTypeInt = arguments["scale_type"] as? Int ?? 0
+        let scaleTypeInt = arguments["scale_type"] as? Int
         let scaleType = getViewContentMode(scaleTypeInt)
         let width = arguments["width"] as? Double ?? frame.size.width
         let height = arguments["height"] as? Double ?? frame.size.height
@@ -51,14 +51,16 @@ class  HMSVideoViewFactory: NSObject, FlutterPlatformViewFactory {
         return FlutterStandardMessageCodec.sharedInstance()
     }
     
-    private func getViewContentMode(_ type: Int) -> UIView.ContentMode {
+    private func getViewContentMode(_ type: Int?) -> UIView.ContentMode {
         switch type {
+        case 0:
+            return .scaleAspectFit
         case 1:
-            return .scaleToFill
+            return .scaleAspectFill
         case 2:
             return .center
         default:
-            return .scaleAspectFit
+            return .scaleAspectFill
         }
     }
 }
@@ -102,7 +104,6 @@ class HMSVideoViewWidget: NSObject, FlutterPlatformView {
                     videoView.mirror = mirror
                     videoView.setVideoTrack(videoTrack)
                     _view.addSubview(videoView)
-                    print(#function, "attaching screen track")
                     return
                 }
             }
@@ -114,11 +115,9 @@ class HMSVideoViewWidget: NSObject, FlutterPlatformView {
                 videoView.mirror = mirror
                 videoView.setVideoTrack(videoTrack)
                 _view.addSubview(videoView)
-                print(#function, "attaching video track")
                 return
             }
         }
-        print(#function, "Error: Could not find video track to attach to view")
     }
     
     func view() -> UIView {
