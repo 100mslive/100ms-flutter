@@ -100,10 +100,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
         (event) => {
               if ((event as bool) == true)
                 {
-                  if(_meetingStore.dialogisOn){
-                    Navigator.of(context).pop(),
-                  },
-                  Navigator.of(context).pop(),
+                  Navigator.of(context).popUntil((route) => route.isFirst),
                   UtilityComponents.showSnackBarWithString(
                       "Meeting Ended", context),
                 },
