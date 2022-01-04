@@ -55,7 +55,8 @@ class _ParticipantOrganismState extends State<ParticipantOrganism> {
                     child: Image.asset(
                       'assets/icons/raise_hand.png',
                       color: Colors.amber.shade300,
-                      scale: 1.5,
+                      width: 20,
+                      height: 20,
                     ),
                   ),
                 GestureDetector(
