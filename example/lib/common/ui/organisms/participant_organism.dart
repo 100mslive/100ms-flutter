@@ -49,12 +49,12 @@ class _ParticipantOrganismState extends State<ParticipantOrganism> {
             ),
             Row(
               children: [
-                    if (peer.metadata == "{\"isHandRaised\":true}")
-              Padding(
-                padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
-                child: Image.asset(
-                  'assets/icons/raise_hand.png',
-                  color: Colors.amber.shade300,
+                if (peer.metadata == "{\"isHandRaised\":true}")
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
+                    child: Image.asset(
+                      'assets/icons/raise_hand.png',
+                      color: Colors.amber.shade300,
                       scale: 1.5,
                     ),
                   ),
