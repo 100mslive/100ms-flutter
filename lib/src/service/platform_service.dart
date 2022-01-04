@@ -16,12 +16,8 @@ import 'package:flutter/services.dart';
 
 // Project imports:
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-import 'package:hmssdk_flutter/src/common/platform_methods.dart';
 import 'package:hmssdk_flutter/src/enum/hms_logs_update_listener.dart';
-import 'package:hmssdk_flutter/src/model/hms_log.dart';
 import 'package:hmssdk_flutter/src/model/hms_log_list.dart';
-import 'package:hmssdk_flutter/src/model/hms_logs_listener.dart';
-import 'package:hmssdk_flutter/src/model/hms_track_change_request.dart';
 
 class PlatformService {
   ///used to pass data to platform using methods

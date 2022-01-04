@@ -454,7 +454,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
   @override
   void onRemovedFromRoom(
       {required HMSPeerRemovedFromPeer hmsPeerRemovedFromPeer}) {
-    print("onRemovedFromRoomFlutter ${hmsPeerRemovedFromPeer}");
+    print("onRemovedFromRoomFlutter $hmsPeerRemovedFromPeer");
     leaveMeeting();
   }
 
@@ -476,7 +476,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
 
   @action
   void peerOperation(HMSPeer peer, HMSPeerUpdate update) {
-    print("peerOperation ${peer.name} ${update}");
+    print("peerOperation ${peer.name} $update");
     switch (update) {
       case HMSPeerUpdate.peerJoined:
         print('peer joined');
@@ -632,11 +632,12 @@ abstract class MeetingStoreBase extends ChangeNotifier
         meetingUrl: meetingUrl, toRecord: toRecord, rtmpUrls: rtmpUrls);
     hmsException =
         await meetingController.startRtmpOrRecording(hmsRecordingConfig);
+    // ignore: unrelated_type_equality_checks
     if (hmsException == null || hmsException?.code == 400) {
       isRecordingStarted = true;
     }
 
-    print("${hmsException?.toString()} HMSEXCEPTION  ${isRecordingStarted}");
+    print("${hmsException?.toString()} HMSEXCEPTION  $isRecordingStarted");
   }
 
   void stopRtmpAndRecording() async {
@@ -644,7 +645,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
     if (hmsException == null) {
       isRecordingStarted = false;
     }
-    print("${hmsException?.toString()} HMSEXCEPTION ${isRecordingStarted}");
+    print("${hmsException?.toString()} HMSEXCEPTION $isRecordingStarted");
   }
 
   Future<HMSRoom?> getRoom() async {

@@ -17,6 +17,7 @@ import 'package:flutter/services.dart' show StandardMessageCodec;
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter/src/enum/hms_video_scale_type.dart';
 
+// ignore: must_be_immutable
 class HMSVideoView extends StatelessWidget {
   /// [HMSVideoView] will render video using trackId from HMSTrack
   final HMSTrack track;
@@ -56,6 +57,7 @@ class HMSVideoView extends StatelessWidget {
   }
 }
 
+// ignore: must_be_immutable
 class _PlatformView extends StatelessWidget {
   final HMSTrack track;
   final Size viewSize;

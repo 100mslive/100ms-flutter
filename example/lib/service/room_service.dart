@@ -1,6 +1,4 @@
 import 'dart:convert';
-
-import 'package:flutter/material.dart';
 import 'package:hmssdk_flutter_example/common/constant.dart';
 import 'package:http/http.dart' as http;
 
@@ -31,7 +29,7 @@ class RoomService {
 
   List<String?>? getCode(String roomUrl) {
     String url = roomUrl;
-    if (url == null) return [];
+    if (url == "") return [];
     url = url.trim();
     bool isProdM = url.contains(".app.100ms.live/meeting/");
     bool isProdP = url.contains(".app.100ms.live/preview/");
