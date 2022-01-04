@@ -1,4 +1,4 @@
-import 'package:connectivity_wrapper/connectivity_wrapper.dart';
+import 'package:connectivity_checker/connectivity_checker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';

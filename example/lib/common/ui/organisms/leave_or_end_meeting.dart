@@ -36,7 +36,7 @@ class _LeaveOrEndMeetingDialogOptionState
               child: GestureDetector(
                 onTap: () {
                   widget.meetingStore.leaveMeeting();
-                  Navigator.of(context).pop('Leave');
+                  // Navigator.of(context).pop('Leave');
                 },
                 child: Row(
                   children: [
@@ -53,9 +53,7 @@ class _LeaveOrEndMeetingDialogOptionState
             GestureDetector(
               onTap: () async {
                 bool ended = await widget.meetingStore.endRoom(forceValue);
-                if (ended)
-                  Navigator.of(context).pop('End');
-                else {
+                if (!ended) {
                   Navigator.pop(context);
                   UtilityComponents.showSnackBarWithString(
                       "No permission", context);

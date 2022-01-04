@@ -1,9 +1,11 @@
-import 'package:connectivity_wrapper/connectivity_wrapper.dart';
+import 'dart:io';
+import 'package:connectivity_checker/connectivity_checker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/constant.dart';
+import 'package:hmssdk_flutter_example/common/ui/organisms/change_track_options.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/chat_bottom_sheet.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/leave_or_end_meeting.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/offline_screen.dart';
@@ -16,7 +18,7 @@ import 'package:hmssdk_flutter_example/meeting/meeting_controller.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:hmssdk_flutter_example/meeting/peerTrackNode.dart';
 import 'package:mobx/mobx.dart';
-import 'package:provider/provider.dart';
+import 'package:provider/src/provider.dart';
 import 'package:share_extend/share_extend.dart';
 import 'meeting_participants_list.dart';
 import '../logs/static_logger.dart';
@@ -101,7 +103,8 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
         (event) => {
               if ((event as bool) == true)
                 {
-                  Navigator.of(context).pop(),
+                  Navigator.of(context)
+                      .popUntil((route) => route.isFirst),
                   UtilityComponents.showSnackBarWithString(
                       "Meeting Ended", context),
                 },
@@ -566,14 +569,12 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                 tooltip: 'Leave Or End',
                                 iconSize: 32,
                                 onPressed: () async {
-                                  String? ans = await showDialog(
+                                  String ans = await showDialog(
                                       context: context,
                                       builder: (_) =>
                                           LeaveOrEndMeetingDialogOption(
                                             meetingStore: _meetingStore,
                                           ));
-                                  if (ans == 'Leave' || ans == 'End')
-                                    Navigator.pop(context);
                                 },
                                 icon: Icon(Icons.call_end)),
                           ),
