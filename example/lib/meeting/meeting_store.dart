@@ -511,7 +511,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
             peerTracks.indexWhere((element) => element.peerId == peer.peerId);
         if (index != -1 && peer.metadata == "{\"isHandRaised\":true}")
           peerTracks[index].isRaiseHand = true;
-        else if(index != -1 && peer.metadata == "{\"isHandRaised\":false}"){
+        else if (index != -1 && peer.metadata == "{\"isHandRaised\":false}") {
           peerTracks[index].isRaiseHand = false;
         }
         updatePeerAt(peer);

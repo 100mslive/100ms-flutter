@@ -143,8 +143,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                                         ),
                                       ),
                                       Text(
-                                        _meetingStore
-                                                    .messages[index].time
+                                        _meetingStore.messages[index].time
                                             .toString(),
                                         style: TextStyle(
                                             fontSize: 10.0,
