@@ -37,7 +37,7 @@ class _LeaveOrEndMeetingDialogOptionState
                 onTap: () {
                   widget.meetingStore.dialogisOn=false;
                   widget.meetingStore.leaveMeeting();
-                  Navigator.of(context).pop('Leave');
+                  // Navigator.of(context).pop('Leave');
                 },
                 child: Row(
                   children: [
@@ -55,11 +55,11 @@ class _LeaveOrEndMeetingDialogOptionState
               onTap: () async {
                 widget.meetingStore.dialogisOn=false;
                 bool ended = await widget.meetingStore.endRoom(forceValue);
-                if (ended)
-                  Navigator.of(context).pop('End');
-                else
+                if (!ended) {
+                  Navigator.pop(context);
                   UtilityComponents.showSnackBarWithString(
                       "No permission", context);
+                }
               },
               child: Row(
                 children: [

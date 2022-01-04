@@ -190,17 +190,29 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             "update_hms_video_track_settings" -> {
                 updateHMSLocalTrackSetting(call)
             }
-            "raise_hand"->{
+            "raise_hand" -> {
                 raiseHand()
             }
-            "set_playback_allowed"->{
+            "set_playback_allowed" -> {
                 setPlayBackAllowed(call)
             }
-            "hls_start_streaming"->{
+            "hls_start_streaming" -> {
                 hlsStreaming(call)
             }
-            "hls_stop_streaming"->{
+            "hls_stop_streaming" -> {
                 stopHLSStreaming()
+            }
+            "is_video_playback_allowed"->{
+                isVideoPlayBackAllowed(call)
+            }
+            "is_audio_playback_allowed"->{
+                isAudioPlayBackAllowed(call)
+            }
+            "set_video_playback_allowed"->{
+                setVideoPlayBackAllowed(call)
+            }
+            "set_audio_playback_allowed"->{
+                setAudioPlayBackAllowed(call)
             }
             else -> {
                 result.notImplemented()
@@ -389,7 +401,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
 //        val isLocal = call.argument<Boolean>("is_local")
         if (peerId == "null") {
 //            Log.i("isAudioMute", (hmssdk.getLocalPeer()?.audioTrack?.isMute!!).toString())
-            return hmssdk.getLocalPeer()?.audioTrack?.isMute?:true
+            return hmssdk.getLocalPeer()?.audioTrack?.isMute ?: true
         }
         val peer = getPeerById(peerId!!)
 //        Log.i("isAudioMute", (peer!!.audioTrack!!.isMute).toString())
@@ -494,7 +506,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
                 HMSLogger.level.toString()
             )
 
-            if(speakers.isNotEmpty()) {
+            if (speakers.isNotEmpty()) {
                 speakers.forEach {
                     speakersList.add(HMSSpeakerExtension.toDictionary(it)!!)
 
@@ -538,7 +550,22 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
 
         val hlsConfig = HMSHLSConfig(listOf(meetingUrlVariant1))
 
-        hmssdk.startHLSStreaming(hlsConfig, hmsActionResultListener = object : HMSActionResultListener{
+        hmssdk.startHLSStreaming(
+            hlsConfig,
+            hmsActionResultListener = object : HMSActionResultListener {
+                override fun onError(error: HMSException) {
+
+                }
+
+                override fun onSuccess() {
+
+                }
+
+            })
+    }
+
+    private fun stopHLSStreaming() {
+        hmssdk.stopHLSStreaming(null, hmsActionResultListener = object : HMSActionResultListener {
             override fun onError(error: HMSException) {
 
             }
@@ -549,20 +576,6 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
 
         })
     }
-
-    private fun stopHLSStreaming(){
-        hmssdk.stopHLSStreaming(null, hmsActionResultListener = object : HMSActionResultListener{
-            override fun onError(error: HMSException) {
-
-            }
-
-            override fun onSuccess() {
-
-            }
-
-        })
-    }
-
 
 
     private fun removePeer(call: MethodCall) {
@@ -739,7 +752,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
     }
 
     private fun getRoom(result: Result) {
-        result.success(HMSRoomExtension.toDictionary(hmssdk?.getRoom(),null))
+        result.success(HMSRoomExtension.toDictionary(hmssdk?.getRoom(), null))
     }
 
     private fun updateHMSLocalTrackSetting(call: MethodCall) {
@@ -771,10 +784,13 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
 
     }
 
-    private var isRaiseHandTrue:Boolean = false
-    private fun raiseHand(){
+    private var isRaiseHandTrue: Boolean = false
+    private fun raiseHand() {
         isRaiseHandTrue = !isRaiseHandTrue
-        hmssdk.changeMetadata("{\"isHandRaised\":${isRaiseHandTrue}}",hmsActionResultListener = this.actionListener )
+        hmssdk.changeMetadata(
+            "{\"isHandRaised\":${isRaiseHandTrue}}",
+            hmsActionResultListener = this.actionListener
+        )
 
     }
 
@@ -811,7 +827,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             args.put("event_name", "on_join_room")
             //Log.i("onjoinAndroidPreviewListener", room.hlsStreamingState?.running.toString())
             val roomArgs = HashMap<String, Any?>()
-            roomArgs.put("room", HMSRoomExtension.toDictionary(room,null))
+            roomArgs.put("room", HMSRoomExtension.toDictionary(room, null))
             args.put("data", roomArgs)
 //        Log.i("onJoin", args.get("data").toString())
             if (roomArgs["room"] != null)
@@ -850,8 +866,8 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             val args = HashMap<String, Any?>()
             args.put("event_name", "on_update_room")
 
-            val arg = HashMap<String,Any?>()
-            arg["room"]= HMSRoomExtension.toDictionary(hmsRoom,type)
+            val arg = HashMap<String, Any?>()
+            arg["room"] = HMSRoomExtension.toDictionary(hmsRoom, type)
             args.put("data", arg)
             if (args["data"] != null)
                 CoroutineScope(Dispatchers.Main).launch {
@@ -1003,12 +1019,59 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
 
     }
 
-    private fun setPlayBackAllowed(call: MethodCall){
+    private fun setPlayBackAllowed(call: MethodCall) {
         val allowed = call.argument<Boolean>("allowed")
         hmssdk.getRemotePeers().forEach {
-            it.videoTrack?.isPlaybackAllowed=allowed!!
+            it.videoTrack?.isPlaybackAllowed = allowed!!
         }
         getLocalPeer().videoTrack?.setMute(!(allowed!!))
         result?.success("setPlatBackAllowed${allowed!!}")
+    }
+
+    private fun isVideoPlayBackAllowed(call: MethodCall) {
+        val peerId = call.argument<String>("peer_id")
+        val peer : HMSRemotePeer? = hmssdk.getRemotePeers().first { it.peerID == peerId }
+        if(peer == null){
+            result?.success(false)
+        }
+        else
+            result?.success(peer.videoTrack?.isPlaybackAllowed)
+    }
+
+    private fun isAudioPlayBackAllowed(call: MethodCall) {
+        val peerId = call.argument<String>("peer_id")
+        val peer : HMSRemotePeer? = hmssdk.getRemotePeers().first { it.peerID == peerId }
+        if(peer == null){
+            result?.success(false)
+        }
+        else {
+            result?.success(peer.audioTrack?.isPlaybackAllowed)
+        }
+    }
+
+    private fun setVideoPlayBackAllowed(call: MethodCall) {
+        val peerId = call.argument<String>("peer_id")
+        val setVideo = call.argument<Boolean>("is_playback_allowed")
+        val peer : HMSRemotePeer? = hmssdk.getRemotePeers().first { it.peerID == peerId }
+        if(peer == null){
+            result?.success(false)
+        }
+        else {
+            peer.videoTrack?.isPlaybackAllowed = setVideo!!
+            result?.success(true)
+        }
+    }
+
+    private fun setAudioPlayBackAllowed(call: MethodCall) {
+        val peerId = call.argument<String>("peer_id")
+        val setAudio = call.argument<Boolean>("is_playback_allowed")
+        val peer : HMSRemotePeer? = hmssdk.getRemotePeers().first { it.peerID == peerId }
+        if(peer == null){
+            result?.success(false)
+        }
+        else {
+            peer.videoTrack?.isPlaybackAllowed = setAudio!!
+                result?.success(true)
+        }
     }
 }

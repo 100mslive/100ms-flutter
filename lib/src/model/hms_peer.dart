@@ -7,8 +7,11 @@
 /// A [peer] is the object returned by 100ms SDKs that contains all information about a user - name, role, video track etc.
 ///
 ///This library depends only on core Dart libraries and hms_audio_track.dart, hms_role.dart, hms_track.dart, hms_video_track.dart library.
+
+// Dart imports:
 import 'dart:io';
 
+// Project imports:
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 class HMSPeer {
