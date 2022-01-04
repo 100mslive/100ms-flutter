@@ -594,6 +594,9 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
       if (_meetingStore.isVideoOn) {
         _meetingStore.meetingController.startCapturing();
       }
+      else{
+        _meetingStore.meetingController.stopCapturing();
+      }
     } else if (state == AppLifecycleState.paused) {
       if (_meetingStore.isVideoOn) {
         _meetingStore.meetingController.stopCapturing();
