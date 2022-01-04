@@ -1,6 +1,5 @@
 // Project imports:
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-import 'hms_video_track_setting.dart';
 
 class HMSRemoteVideoTrack extends HMSVideoTrack {
   final HMSVideoTrackSetting setting;

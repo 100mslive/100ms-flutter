@@ -1,11 +1,9 @@
-import 'dart:io';
 import 'package:connectivity_checker/connectivity_checker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/constant.dart';
-import 'package:hmssdk_flutter_example/common/ui/organisms/change_track_options.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/chat_bottom_sheet.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/leave_or_end_meeting.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/offline_screen.dart';
@@ -18,10 +16,9 @@ import 'package:hmssdk_flutter_example/meeting/meeting_controller.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:hmssdk_flutter_example/meeting/peerTrackNode.dart';
 import 'package:mobx/mobx.dart';
+// ignore: implementation_imports
 import 'package:provider/src/provider.dart';
-import 'package:share_extend/share_extend.dart';
 import 'meeting_participants_list.dart';
-import '../logs/static_logger.dart';
 
 class MeetingPage extends StatefulWidget {
   final String roomId;
@@ -52,7 +49,6 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
   bool audioViewOn = false;
   int countOfVideoOnBetweenTwo = 1;
   bool videoPreviousState = false;
-  late PageController _pageController = PageController(initialPage: 0);
   @override
   void initState() {
     super.initState();
@@ -247,7 +243,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    var orientation = MediaQuery.of(context).orientation;
+    //var orientation = MediaQuery.of(context).orientation;
     var size = MediaQuery.of(context).size;
     // final double itemHeightWithSs =
     //     (size.height - kToolbarHeight - kBottomNavigationBarHeight) /
@@ -256,10 +252,10 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
     //     (size.height - kToolbarHeight - kBottomNavigationBarHeight) /
     //         (orientation == Orientation.landscape ? 2.5 : 2.8);
 
-    final double itemHeightWithSs =
-        (size.height - kToolbarHeight - kBottomNavigationBarHeight) / 2;
-    final double itemHeightWithoutSs =
-        (size.height - kToolbarHeight - kBottomNavigationBarHeight) / 2.3;
+    // final double itemHeightWithSs =
+    //     (size.height - kToolbarHeight - kBottomNavigationBarHeight) / 2;
+    // final double itemHeightWithoutSs =
+    //     (size.height - kToolbarHeight - kBottomNavigationBarHeight) / 2.3;
 
     final double itemWidth = (size.width - 12) / 2;
     // itemWidth / itemHeightWithSs;
@@ -593,6 +589,8 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
     if (state == AppLifecycleState.resumed) {
       if (_meetingStore.isVideoOn) {
         _meetingStore.meetingController.startCapturing();
+      } else {
+        _meetingStore.meetingController.stopCapturing();
       }
     } else if (state == AppLifecycleState.paused) {
       if (_meetingStore.isVideoOn) {

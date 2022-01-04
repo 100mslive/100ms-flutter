@@ -1,6 +1,5 @@
 // Project imports:
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-import 'hms_audio_track_setting.dart';
 
 class HMSRemoteAudioTrack extends HMSAudioTrack {
   final HMSAudioTrackSetting setting;

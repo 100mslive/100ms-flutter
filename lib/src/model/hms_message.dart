@@ -14,7 +14,6 @@ import 'dart:core';
 
 // Project imports:
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-import 'package:hmssdk_flutter/src/model/hms_message_recipient.dart';
 
 class HMSMessage {
   ///[sender] id basically it is the peerId who is sending message.

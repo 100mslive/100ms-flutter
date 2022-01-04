@@ -15,7 +15,7 @@ class PeerItemOrganism extends StatefulWidget {
   final double height;
   final double width;
   final bool isLocal;
-  bool setMirror;
+  final bool setMirror;
   final Map<String, String> observableMap;
 
   PeerItemOrganism(

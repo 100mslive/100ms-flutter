@@ -5,8 +5,6 @@ import 'package:hmssdk_flutter_example/common/ui/organisms/track_change_request_
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:provider/provider.dart';
 
-import '../../main.dart';
-
 class UtilityComponents {
   static void showSnackBarWithString(event, context) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(event)));

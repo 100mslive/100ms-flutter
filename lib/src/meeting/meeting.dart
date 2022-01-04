@@ -6,12 +6,7 @@
 
 // Project imports:
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-import 'package:hmssdk_flutter/src/common/platform_methods.dart';
-import 'package:hmssdk_flutter/src/enum/hms_log_level.dart';
 import 'package:hmssdk_flutter/src/manager/hms_sdk_manager.dart';
-import 'package:hmssdk_flutter/src/model/hms_actions_result_listener.dart';
-import 'package:hmssdk_flutter/src/model/hms_logs_listener.dart';
-import 'package:hmssdk_flutter/src/model/hms_message_result_listener.dart';
 import 'package:hmssdk_flutter/src/service/platform_service.dart';
 import '../../hmssdk_flutter.dart';
 
@@ -22,11 +17,13 @@ class HMSMeeting {
   HMSMeeting({this.hmsTrackSetting});
 
   Future<bool> build() async {
+    // ignore: unused_local_variable
     bool created = await HmsSdkManager().createHMSSdk(hmsTrackSetting);
     return false;
   }
 
   Future<void> joinMeeting({required HMSConfig config}) async {
+    // ignore: unused_local_variable
     bool isProdLink = true;
     return await PlatformService.invokeMethod(PlatformMethod.joinMeeting,
         arguments: {...config.getJson()});
