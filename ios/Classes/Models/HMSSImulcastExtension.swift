@@ -8,20 +8,21 @@
 import Foundation
 import HMSSDK
 
-class  HMSSimulcastSettingsPolicyExtension{
-    static func toDictionary(simulcastlayerSettingPolicy:HMSSimulcastSettingsPolicy)-> Dictionary<String,Any?>{
-        var dict:Dictionary<String, Any?> = [:]
-        var layers:[Dictionary<String, Any?>]=[]
-
-        dict["height"] = simulcastlayerSettingPolicy.height
-        dict["width"] = simulcastlayerSettingPolicy.width
-
-        if let layerArray = simulcastlayerSettingPolicy.layers{
-            for eachLayer:HMSSimulcastLayerSettingsPolicy in layerArray{
-                layers.insert(HMSSimulcastLayerSettingsPolicyExtension.toDictionary(simulcastlayerSettingPolicy: eachLayer), at:layers.count)
-            }
+class  HMSSimulcastSettingsPolicyExtension {
+    
+    static func toDictionary(_ policy: HMSSimulcastSettingsPolicy) -> [String: Any?] {
+        
+        var dict = [String: Any]()
+        
+        dict["width"] = policy.width
+        dict["height"] = policy.height
+        
+        if let layersPolicy = policy.layers {
+            var layers = [[String: Any?]]()
+            layersPolicy.forEach { layers.append(HMSSimulcastLayerSettingsPolicyExtension.toDictionary($0)) }
+            dict["layers"] = layers
         }
-        dict["layers"] = layers
+
         return dict
     }
 }

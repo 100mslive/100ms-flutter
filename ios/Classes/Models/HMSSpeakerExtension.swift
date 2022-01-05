@@ -10,12 +10,10 @@ import HMSSDK
 
 class HMSSpeakerExtension {
     static func toDictionary(_ speaker: HMSSpeaker) -> [String: Any] {
-        let dict = [
-            "peer": HMSPeerExtension.toDictionary(peer: speaker.peer),
-            "track": HMSTrackExtension.toDictionary(track: speaker.track),
+        [
+            "peer": HMSPeerExtension.toDictionary(speaker.peer),
+            "track": HMSTrackExtension.toDictionary(speaker.track),
             "audioLevel": speaker.level
-        ] as [String: Any]
-        
-        return dict
+        ]
     }
 }

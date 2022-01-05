@@ -16,8 +16,10 @@ class HMSStreamingStateExtension {
         dict["running"] = rtmp.running
         
         if let error = rtmp.error {
-            dict["error"] = HMSErrorExtension.toDictionary(error)
+//            dict["error"] = HMSErrorExtension.toDictionary(error)
+            dict.merge(HMSErrorExtension.toDictionary(error)) { (_, new) in new }
         }
+        
         
         return dict
     }
@@ -30,7 +32,8 @@ class HMSStreamingStateExtension {
         dict["running"] = server.running
         
         if let error = server.error {
-            dict["error"] = HMSErrorExtension.toDictionary(error)
+//            dict["error"] = HMSErrorExtension.toDictionary(error)
+            dict.merge(HMSErrorExtension.toDictionary(error)) { (_, new) in new }
         }
         
         return dict
@@ -44,7 +47,8 @@ class HMSStreamingStateExtension {
         dict["running"] = browser.running
         
         if let error = browser.error {
-            dict["error"] = HMSErrorExtension.toDictionary(error)
+//            dict["error"] = HMSErrorExtension.toDictionary(error)
+            dict.merge(HMSErrorExtension.toDictionary(error)) { (_, new) in new }
         }
         
         return dict

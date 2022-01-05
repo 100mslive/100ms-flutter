@@ -279,16 +279,14 @@ class HMSMeeting {
 
   ///checks the audio is mute or unmute just pass [peer]
   Future<bool> isAudioMute(HMSPeer? peer) async {
-    bool isMute = await PlatformService.invokeMethod(PlatformMethod.isAudioMute,
+    return await PlatformService.invokeMethod(PlatformMethod.isAudioMute,
         arguments: {"peer_id": peer != null ? peer.peerId : "null"});
-    return isMute;
   }
 
   ///checks the video is mute or unmute just pass [peer]
   Future<bool> isVideoMute(HMSPeer? peer) async {
-    bool isMute = await PlatformService.invokeMethod(PlatformMethod.isVideoMute,
+    return await PlatformService.invokeMethod(PlatformMethod.isVideoMute,
         arguments: {"peer_id": peer != null ? peer.peerId : "null"});
-    return isMute;
   }
 
   void muteAll() async {

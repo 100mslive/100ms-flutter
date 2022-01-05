@@ -9,25 +9,18 @@ import Foundation
 import HMSSDK
 
 
-class HMSRoleExtension{
+class HMSRoleExtension {
     
-    static func toDictionary(role:HMSRole)-> Dictionary<String,Any?>{
-        
-        let dict:[String:Any?] = [
-            "name":role.name,
-            "publish_settings":HMSPublishSettingsExtension.toDictionary(publishSettings:role.publishSettings),
-            "subscribe_settings":HMSSubscribeSettingsExtension.toDictionary(subscribeSettings:role.subscribeSettings),
-            "priority":role.priority,
-            "permissions":HMSPermissionExtension.toDictionary(permission:role.permissions),
-            "general_permissions":role.generalPermissions,
-            "internal_plugins":role.internalPlugins,
-            "external_plugins":role.externalPlugins,
+    static func toDictionary(_ role: HMSRole) -> [String: Any] {
+        [
+            "name": role.name,
+            "publish_settings": HMSPublishSettingsExtension.toDictionary(role.publishSettings),
+            "subscribe_settings": HMSSubscribeSettingsExtension.toDictionary(role.subscribeSettings),
+            "priority": role.priority,
+            "permissions": HMSPermissionExtension.toDictionary(role.permissions),
+            "general_permissions": role.generalPermissions as Any,
+            "internal_plugins": role.internalPlugins as Any,
+            "external_plugins": role.externalPlugins as Any,
         ]
-        
-        return dict
     }
-    
-    
 }
-
-

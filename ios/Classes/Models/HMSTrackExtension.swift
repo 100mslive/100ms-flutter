@@ -10,7 +10,7 @@ import HMSSDK
 
 class HMSTrackExtension {
     
-    static func toDictionary(track: HMSTrack) -> [String: Any] {
+    static func toDictionary(_ track: HMSTrack) -> [String: Any] {
         
         var dict = [
             "track_id": track.trackId,
@@ -51,16 +51,30 @@ class HMSTrackExtension {
         }
     }
     
-    static func getTrackUpdateInString(trackUpdate: HMSTrackUpdate) -> String {
+    static func getValueOf(_ update: HMSTrackUpdate) -> String {
         
-        switch trackUpdate {    
-        case .trackAdded :return "trackAdded"
-        case .trackDegraded: return "trackDegraded"
-        case .trackDescriptionChanged: return "trackDescriptionChanged"
-        case .trackMuted: return "trackMuted"
-        case .trackRemoved: return "trackRemoved"
-        case .trackRestored: return "trackRestored"
-        case .trackUnmuted: return "trackUnMuted"
+        switch update {
+        case .trackAdded:
+            return "trackAdded"
+            
+        case .trackDegraded:
+            return "trackDegraded"
+            
+        case .trackDescriptionChanged:
+            return "trackDescriptionChanged"
+            
+        case .trackMuted:
+            return "trackMuted"
+            
+        case .trackRemoved:
+            return "trackRemoved"
+            
+        case .trackRestored:
+            return "trackRestored"
+            
+        case .trackUnmuted:
+            return "trackUnMuted"
+        
         default:
             return "defaultUpdate"
         }

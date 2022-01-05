@@ -10,9 +10,9 @@ import HMSSDK
 
 class HMSErrorExtension {
     
-    static func toDictionary(_ error: HMSError) -> Dictionary<String,Any?> {
+    static func toDictionary(_ error: HMSError) -> [String: Any] {
         
-        var dict:Dictionary<String, Any?> = [:]
+        var dict = [String: Any]()
         dict["id"] = error.id
         dict["message"] = error.message
         dict["code"] = getValueOfHMSErrorCode(errorCode:error.code)
@@ -31,7 +31,7 @@ class HMSErrorExtension {
         
         dict["description"] = error.localizedDescription
         
-        return dict
+        return ["error": dict]
     }
     
     static func getValueOfHMSErrorCode(errorCode: HMSErrorCode) -> String {

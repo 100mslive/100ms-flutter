@@ -125,8 +125,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
                 sendGroupMessage(call)
             }
             "preview_video" -> {
-                previewVideo(call)
-                result.success("preview video")
+                previewVideo(call, result)
             }
             "change_role" -> {
                 changeRole(call)
@@ -292,8 +291,6 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         } catch (e: Exception) {
             //result.success(false)
         }
-
-
     }
 
     private fun switchAudio(call: MethodCall, result: Result) {
@@ -415,7 +412,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         hmssdk?.sendGroupMessage(message!!, "chat", role, this.hmsMessageResultListener)
     }
 
-    private fun previewVideo(call: MethodCall) {
+    private fun previewVideo(call: MethodCall, result: Result) {
         val userName = call.argument<String>("user_name")
         val authToken = call.argument<String>("auth_token")
         val isProd = call.argument<Boolean>("is_prod")
@@ -431,8 +428,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             )
         hmssdk.preview(this.hmsConfig!!, this.hmsPreviewListener)
 
-//        HMSLogger.webRtcLogLevel = if(setWebRtcLog == false) HMSLogger.LogLevel.OFF else HMSLogger.LogLevel.INFO
-//        HMSLogger.injectLoggable(this)
+        result.success(null)
     }
 
     fun getLocalPeer(): HMSLocalPeer {
@@ -516,10 +512,13 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         hmssdk.changeTrackState(track, mute!!, hmsActionResultListener = this.actionListener)
     }
 
+    
     private fun removePeer(call: MethodCall) {
         val peerId = call.argument<String>("peer_id")
 
         val peer = getPeerById(peerId!!) as HMSRemotePeer
+
+        val reason = call.argument<String>("reason") ?: "Removed from room"
 
         hmssdk.removePeerRequest(
             peer = peer,
@@ -534,10 +533,11 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
 
     private fun endRoom(call: MethodCall, result: Result) {
         if (isAllowedToEndMeeting() && hasJoined) {
-            val lock = call.argument<Boolean>("lock")
+            val lock = call.argument<Boolean>("lock") ?: false
+            val reason = call.argument<String>("reason") ?: "End room invoked"
             hmssdk.endRoom(
                 lock = lock!!,
-                reason = "noise",
+                reason = reason,
                 hmsActionResultListener = this.actionListener
             )
 
@@ -619,8 +619,10 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             roles = realRoles,
             hmsActionResultListener = this.actionListener
         )
-
     }
+
+    // TODO: individual remote track state change does not exist on android
+    // @objc public func changeTrackState(for remoteTrack: HMSTrack, mute: Bool, completion: ((Bool, HMSSDK.HMSError?) -> Void)? = nil)
 
     fun build(activity: Activity, call: MethodCall, result: Result) {
         val hmsTrackSettingMap =
@@ -722,10 +724,11 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         CoroutineScope(Dispatchers.Default).launch {
             localPeerVideoTrack.setSettings(hmsVideoTrackSettings.build())
         }
-
     }
 
     private var isRaiseHandTrue:Boolean = false
+
+    // TODO: add metadata from dart side
     private fun raiseHand(){
         isRaiseHandTrue = !isRaiseHandTrue
         hmssdk.changeMetadata("{\"isHandRaised\":${isRaiseHandTrue}}", hmsActionResultListener = this.actionListener)
@@ -799,9 +802,10 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
                 }
         }
 
+        // TODO: handle room update on dart side
         override fun onRoomUpdate(type: HMSRoomUpdate, hmsRoom: HMSRoom) {
             val args = HashMap<String, Any?>()
-            args.put("event_name", "on_update_room")
+            args.put("event_name", "on_room_update")
             args.put("data", hmsRoom.name)
             if (args["data"] != null)
                 CoroutineScope(Dispatchers.Main).launch {
