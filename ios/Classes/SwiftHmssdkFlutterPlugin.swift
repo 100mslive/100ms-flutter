@@ -139,16 +139,16 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             
         case "get_room":
             getRoom(result)
-        
+            
         case "raise_hand":
             raiseHand()
             
         case "build":
             build(call, result)
-           
+            
         case "set_playback_allowed":
             setPlaybackAllowed(call, result)
-
+            
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -310,10 +310,12 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     }
     
     public func on(changeTrackStateRequest: HMSChangeTrackStateRequest) {
+        // TODO: on(changeTrackStateRequest
         print(#function)
     }
     
     public func on(removedFromRoom notification: HMSRemovedFromRoomNotification) {
+        // TODO: on(removedFromRoom
         print(#function)
     }
     
@@ -369,7 +371,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                                                           maxBitrate: bitrate,
                                                           maxFrameRate: framerate,
                                                           cameraFacing: .front,
-                                                        trackDescription: desc)
+                                                          trackDescription: desc)
                 }
             }
             
@@ -425,7 +427,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         
         hmsSDK?.preview(config: config!, delegate: self)
         
-        result("preview called")
+        result("\(#function)")
     }
     
     func joinMeeting(_ call: FlutterMethodCall, _ result: FlutterResult) {
@@ -458,12 +460,12 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         
         meetingEventChannel.setStreamHandler(self)
         
-        result("joining meeting in ios")
+        result("\(#function)")
     }
     
     func leaveMeeting(_ result: FlutterResult) {
         hmsSDK?.leave();
-        result("Leaving meeting")
+        result("\(#function)")
     }
     
     func switchAudio(_ call: FlutterMethodCall, _ result: FlutterResult) {
@@ -472,7 +474,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         if let peer = hmsSDK?.localPeer, let audioTrack = peer.audioTrack as? HMSLocalAudioTrack {
             audioTrack.setMute( arguments["is_on"] as? Bool ?? false)
         }
-        result("audio_changed")
+        result("\(#function)")
     }
     
     func switchVideo(_ call: FlutterMethodCall, _ result: FlutterResult) {
@@ -486,7 +488,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                 unMuteVideo()
             }
         }
-        result("video_changed")
+        result("\(#function)")
     }
     
     func muteVideo() {
@@ -506,7 +508,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         if let peer = hmsSDK?.localPeer, let videoTrack = peer.videoTrack as? HMSLocalVideoTrack {
             videoTrack.switchCamera()
         }
-        result("camera_changed")
+        result("\(#function)")
     }
     
     func sendBroadcastMessage(_ call: FlutterMethodCall, _ result: FlutterResult) {
@@ -528,7 +530,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             print(#function, "Successfully sent broadcast message: ", message?.message ?? "")
         }
         
-        result("sent message")
+        result("\(#function)")
     }
     
     func sendDirectMessage(_ call: FlutterMethodCall, _ result: FlutterResult) {
@@ -552,7 +554,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             print(#function, "Successfully sent direct message: ", message?.message ?? "")
         }
         
-        result("sent direct message")
+        result("\(#function)")
     }
     
     func sendGroupMessage(_ call: FlutterMethodCall, _ result: FlutterResult) {
@@ -577,7 +579,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             print(#function, "Successfully sent group message: ", message?.message ?? "")
         }
         
-        result("sent group message")
+        result("\(#function)")
     }
     
     func changeRole(_ call: FlutterMethodCall, _ result: FlutterResult) {
@@ -592,7 +594,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             hmsSDK?.changeRole(for: peer!, to: role!,force: forceChange)
         }
         
-        result("role change requested")
+        result("\(#function)")
     }
     
     func getRoles(_ call: FlutterMethodCall, _ result: FlutterResult) {
@@ -602,7 +604,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                 roleList.insert(HMSRoleExtension.toDictionary(role: role), at: roleList.count)
             }
         }
-        result(["roles":roleList])
+        result("\(#function)")
     }
     
     func acceptRoleRequest(_ call: FlutterMethodCall, _ result: FlutterResult) {
@@ -614,7 +616,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                 }
             })
         }
-        result("role_accepted")
+        result("\(#function)")
     }
     
     func endRoom(_ call: FlutterMethodCall) {
@@ -719,13 +721,13 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             }
             print(#function, success)
         }
-        result(#function)
+        result("\(#function)")
     }
-
+    
     var isHandRaise = false
-    private func raiseHand(){
+    private func raiseHand() {
         isHandRaise =  !isHandRaise
-        hmsSDK?.change(metadata: "{\"isHandRaised\":\(isHandRaise)}") { success, error in 
+        hmsSDK?.change(metadata: "{\"isHandRaised\":\(isHandRaise)}") { success, error in
             if let error = error {
                 print(#function, error.localizedDescription)
                 return
@@ -771,7 +773,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             }
             print(#function, success)
         }
-        result(#function)
+        result("\(#function)")
     }
     
     private func stopRtmpAndRecording(_ result: FlutterResult) {
@@ -783,7 +785,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             }
             print(#function, success)
         }
-        result(#function)
+        result("\(#function)")
     }
     
     var logLevel = HMSLogLevel.off
@@ -842,7 +844,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             result(roomData)
             return
         }
-        result(nil)
+        result("\(#function)")
     }
     
     private func setPlaybackAllowed(_ call: FlutterMethodCall, _ result: FlutterResult) {
@@ -868,7 +870,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             }
         }
         
-        result("\(#function) setPlatBackAllowed: \(allowed)")
+        result("\(#function)")
     }
     
     
@@ -915,7 +917,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         }
         guard let peer = hmsSDK?.localPeer else { return }
         if(peer_id == peer.peerID){
-        result(peer.videoTrack?.isMute() ?? false)
+            result(peer.videoTrack?.isMute() ?? false)
         }else{
             guard let peer = getPeerById(peerId: peer_id,isLocal: false) else { return }
             result(peer.videoTrack?.isMute() ?? false)
@@ -930,7 +932,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         }
         guard let peer = hmsSDK?.localPeer else { return }
         if(peer_id == peer.peerID){
-        result(peer.audioTrack?.isMute() ?? false)
+            result(peer.audioTrack?.isMute() ?? false)
         }else{
             guard let peer = getPeerById(peerId: peer_id,isLocal: false) else { return }
             result(peer.audioTrack?.isMute() ?? false)
@@ -999,5 +1001,4 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             return .audio
         }
     }
-    
 }
