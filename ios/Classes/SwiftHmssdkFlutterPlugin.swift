@@ -20,7 +20,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     private var config: HMSConfig?
     
     
-    // MARK: - Initial Setup
+    // MARK: - Flutter Setup
     
     public static func register(with registrar: FlutterPluginRegistrar) {
         
@@ -57,6 +57,36 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         self.logsEventChannel = logsEventChannel
     }
     
+    
+    public func onListen(withArguments arguments: Any?, eventSink events: @escaping FlutterEventSink) -> FlutterError? {
+        
+        guard let tempArg = arguments as? [AnyHashable: Any],
+              let name =  tempArg["name"] as? String else {
+                  return FlutterError(code: #function, message: "invalid event sink name", details: arguments)
+              }
+            
+        switch name {
+        case "meeting":
+            eventSink = events
+        case "preview":
+            previewSink = events
+        case "logs":
+            logsSink = events
+        default:
+            return FlutterError(code: #function, message: "invalid event sink name", details: arguments)
+        }
+        
+        return nil
+    }
+    
+    
+    public func onCancel(withArguments arguments: Any?) -> FlutterError? {
+        eventSink = nil
+        previewSink = nil
+        logsSink = nil
+        return nil
+    }
+    
     public func detachFromEngine(for registrar: FlutterPluginRegistrar) {
         meetingEventChannel.setStreamHandler(nil)
         previewEventChannel.setStreamHandler(nil)
@@ -64,6 +94,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     }
     
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
+        
         switch call.method {
             
         case "join_meeting":
@@ -165,7 +196,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     }
     
     
-    // MARK: - HMS SDK Delegate Callbacks
+    // MARK: - 100ms SDK Delegate Callbacks
     
     public func onPreview(room: HMSRoom, localTracks: [HMSTrack]) {
         
@@ -197,27 +228,6 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             ]
         ]
         eventSink?(data)
-    }
-    
-    
-    public func onListen(withArguments arguments: Any?, eventSink events: @escaping FlutterEventSink) -> FlutterError? {
-        if let tempArg = arguments as? Dictionary<String, AnyObject>{
-            let name =  tempArg["name"] as? String ?? ""
-            if name == "meeting" {
-                self.eventSink = events
-            } else if name == "preview" {
-                self.previewSink = events
-            } else if name == "logs" {
-                self.logsSink = events
-            }
-        }
-        
-        return nil
-    }
-    
-    public func onCancel(withArguments arguments: Any?) -> FlutterError? {
-        print("on flutter error")
-        return nil
     }
     
     public func on(room: HMSRoom, update: HMSRoomUpdate) {
@@ -358,7 +368,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     // MARK: - Room Actions
     
     private func build(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
-        let arguments = call.arguments as! Dictionary<String, AnyObject>
+        let arguments = call.arguments as! [AnyHashable: Any]
         
         var trackSettings: HMSTrackSettings?
         if let settingsDict = arguments["hms_track_setting"] as? [AnyHashable: Any] {
@@ -411,7 +421,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     
     
     private func preview(_ call: FlutterMethodCall, _ result: FlutterResult) {
-        let arguments = call.arguments as! Dictionary<String, AnyObject>
+        let arguments = call.arguments as! [AnyHashable: Any]
         
         guard let authToken = arguments["auth_token"] as? String,
               let userName = arguments["user_name"] as? String
@@ -438,7 +448,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     
     /*
      private func previewForRole(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
-         let arguments = call.arguments as! Dictionary<String, AnyObject>
+         let arguments = call.arguments as! [AnyHashable: Any]
 
          hmsSDK?.preview(role: ) { ,  in
              
@@ -454,7 +464,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     
     private func join(_ call: FlutterMethodCall, _ result: FlutterResult) {
         
-        let arguments = call.arguments as! Dictionary<String, AnyObject>
+        let arguments = call.arguments as! [AnyHashable: Any]
         
         if let config = config {
             hmsSDK?.join(config: config, delegate: self)
@@ -513,7 +523,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     }
     
     private func switchVideo(_ call: FlutterMethodCall, _ result: FlutterResult) {
-        let arguments = call.arguments as! Dictionary<String, AnyObject>
+        let arguments = call.arguments as! [AnyHashable: Any]
         
         if let shouldMute = arguments["is_on"] as? Bool,
            let peer = hmsSDK?.localPeer,
@@ -524,7 +534,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     }
     
     private func isVideoMute(_ call: FlutterMethodCall, _ result: FlutterResult) {
-        let arguments = call.arguments as! Dictionary<String, AnyObject>
+        let arguments = call.arguments as! [AnyHashable: Any]
         guard let peerID = arguments["peer_id"] as? String else {
             print(#function, "invalid parameters for isVideoMuted:")
             return result("invalid parameters for isVideoMuted:")
@@ -543,7 +553,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     // MARK: - Audio Helpers
     
     private func switchAudio(_ call: FlutterMethodCall, _ result: FlutterResult) {
-        let arguments = call.arguments as! Dictionary<String, AnyObject>
+        let arguments = call.arguments as! [AnyHashable: Any]
         
         if let shouldMute = arguments["is_on"] as? Bool,
            let peer = hmsSDK?.localPeer,
@@ -555,7 +565,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     }
     
     private func isAudioMute(_ call: FlutterMethodCall, _ result: FlutterResult) {
-        let arguments = call.arguments as! Dictionary<String, AnyObject>
+        let arguments = call.arguments as! [AnyHashable: Any]
         guard let peerID = arguments["peer_id"] as? String else {
             print(#function, "invalid parameters for isAudioMuted:")
             return result("invalid parameters for isAudioMuted:")
@@ -595,7 +605,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     // MARK: - Messaging
     
     private func sendBroadcastMessage(_ call: FlutterMethodCall, _ result: FlutterResult) {
-        let arguments = call.arguments as! Dictionary<String, AnyObject>
+        let arguments = call.arguments as! [AnyHashable: Any]
         
         guard let message = arguments["message"] as? String
         else {
@@ -619,7 +629,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     }
     
     private func sendDirectMessage(_ call: FlutterMethodCall, _ result: FlutterResult) {
-        let arguments = call.arguments as! Dictionary<String, AnyObject>
+        let arguments = call.arguments as! [AnyHashable: Any]
         
         guard let message = arguments["message"] as? String,
               let peerID = arguments["peer_id"] as? String,
@@ -645,7 +655,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     }
     
     private func sendGroupMessage(_ call: FlutterMethodCall, _ result: FlutterResult) {
-        let arguments = call.arguments as! Dictionary<String, AnyObject>
+        let arguments = call.arguments as! [AnyHashable: Any]
         
         guard let message = arguments["message"] as? String,
               let roleString = arguments["role_name"] as? String,
@@ -675,7 +685,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     
     private func changeRole(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         
-        let arguments = call.arguments as! Dictionary<String, AnyObject>
+        let arguments = call.arguments as! [AnyHashable: Any]
         
         if let peerID = arguments["peer_id"] as? String,
            let peer = getPeer(by: peerID),
@@ -717,7 +727,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     }
     
     private func endRoom(_ call: FlutterMethodCall) {
-        let arguments = call.arguments as! Dictionary<String, AnyObject>
+        let arguments = call.arguments as! [AnyHashable: Any]
         let lock = arguments["lock"] as? Bool ?? false
         
         hmsSDK?.endRoom(lock: lock, reason: "Meeting is over") { success, error in
@@ -734,7 +744,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     }
     
     private func removePeer(_ call: FlutterMethodCall) {
-        let arguments = call.arguments as! Dictionary<String, AnyObject>
+        let arguments = call.arguments as! [AnyHashable: Any]
         guard let peerID = arguments["peer_id"] as? String,
               let peer = getPeer(by: peerID)
         else {
@@ -757,7 +767,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     }
     
     private func changeTrack(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
-        let arguments = call.arguments as! Dictionary<String, AnyObject>
+        let arguments = call.arguments as! [AnyHashable: Any]
         
         guard let peerID = arguments["hms_peer_id"] as? String,
               let peer = getPeer(by: peerID)
@@ -798,7 +808,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     
     private func changeTrackStateForRole(_ call: FlutterMethodCall, _ result: FlutterResult) {
         
-        let arguments = call.arguments as! Dictionary<String, AnyObject>
+        let arguments = call.arguments as! [AnyHashable: Any]
         
         guard let mute = arguments["mute"] as? Bool else {
             print(#function, "invalid parameters for changeTrackStateForRole:")
@@ -846,7 +856,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     
     private func startRtmpOrRecording(_ call: FlutterMethodCall, _ result: FlutterResult) {
         
-        let arguments = call.arguments as! Dictionary<String, AnyObject>
+        let arguments = call.arguments as! [AnyHashable: Any]
         
         guard let record = arguments["to_record"] as? Bool else {
             print(#function, "Could not find to_record boolean")
@@ -902,7 +912,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     private var logLevel = HMSLogLevel.off
     
     private func startHMSLogger(_ call: FlutterMethodCall) {
-        let arguments = call.arguments as! Dictionary<String, AnyObject>
+        let arguments = call.arguments as! [AnyHashable: Any]
         
         guard let level = arguments["log_level"] as? String else {
             print(#function, "Could not find `log_level` argument")
@@ -967,7 +977,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     }
     
     private func setPlaybackAllowed(_ call: FlutterMethodCall, _ result: FlutterResult) {
-        let arguments = call.arguments as! Dictionary<String, AnyObject>
+        let arguments = call.arguments as! [AnyHashable: Any]
         
         guard let allowed = arguments["allowed"] as? Bool
         else {
