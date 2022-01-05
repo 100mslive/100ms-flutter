@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/change_track_options.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/peer_item_organism.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:hmssdk_flutter_example/meeting/peerTrackNode.dart';
-import 'package:mobx/mobx.dart';
+// ignore: implementation_imports
 import 'package:provider/src/provider.dart';
-import 'package:should_rebuild/should_rebuild.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
 class VideoTile extends StatefulWidget {
@@ -19,17 +17,16 @@ class VideoTile extends StatefulWidget {
   final Map<String, HMSTrackUpdate> trackStatus;
   final Map<String, String> observerMap;
   final bool audioView;
-  VideoTile(
-      {Key? key,
-      required this.tileIndex,
-      required this.filteredList,
-      required this.itemHeight,
-      required this.itemWidth,
-      required this.trackStatus,
-      required this.observerMap,
-      required this.audioView,
-      })
-      : super(key: key);
+  VideoTile({
+    Key? key,
+    required this.tileIndex,
+    required this.filteredList,
+    this.itemHeight = 200.0,
+    this.itemWidth = 200.0,
+    required this.trackStatus,
+    required this.observerMap,
+    required this.audioView,
+  }) : super(key: key);
 
   @override
   State<VideoTile> createState() => _VideoTileState();
@@ -55,9 +52,11 @@ class _VideoTileState extends State<VideoTile> {
         if (visiblePercentage <= 40) {
           trackStatus[peerId] = HMSTrackUpdate.trackMuted;
         } else {
-          trackStatus[peerId] = (widget.audioView)?HMSTrackUpdate.trackMuted:filteredList[index].track?.isMute ?? true
+          trackStatus[peerId] = (widget.audioView)
               ? HMSTrackUpdate.trackMuted
-              : HMSTrackUpdate.trackUnMuted;
+              : filteredList[index].track?.isMute ?? true
+                  ? HMSTrackUpdate.trackMuted
+                  : HMSTrackUpdate.trackUnMuted;
           debugPrint(
               "${trackStatus[peerId]} ${filteredList[index].name} visibilityDetector");
         }
@@ -67,7 +66,8 @@ class _VideoTileState extends State<VideoTile> {
       key: Key(filteredList[index].peerId),
       child: InkWell(
         onLongPress: () {
-          if (!widget.audioView && filteredList[index].peerId != _meetingStore.localPeer!.peerId)
+          if (!widget.audioView &&
+              filteredList[index].peerId != _meetingStore.localPeer!.peerId)
             showDialog(
                 context: context,
                 builder: (_) => Column(
@@ -78,11 +78,11 @@ class _VideoTileState extends State<VideoTile> {
                             isVideoMuted: filteredList[index].track == null
                                 ? true
                                 : filteredList[index].track?.isMute,
-                            peerName: filteredList[index].name ?? '',
+                            peerName: filteredList[index].name,
                             changeTrack: (mute, isVideoTrack) {
                               Navigator.pop(context);
                               _meetingStore.changeTrackRequest(
-                                  filteredList[index].peerId ?? "",
+                                  filteredList[index].peerId,
                                   mute,
                                   isVideoTrack);
                             },
@@ -103,10 +103,12 @@ class _VideoTileState extends State<VideoTile> {
               height: widget.itemHeight,
               width: widget.itemWidth,
               peerTracKNode: filteredList[index],
-              isVideoMuted: (widget.audioView)?true:filteredList[index].track?.peer?.isLocal ?? true
-                  ? !_meetingStore.isVideoOn
-                  : (trackStatus[filteredList[index].peerId]) ==
-                      HMSTrackUpdate.trackMuted);
+              isVideoMuted: (widget.audioView)
+                  ? true
+                  : filteredList[index].track?.peer?.isLocal ?? true
+                      ? !_meetingStore.isVideoOn
+                      : (trackStatus[filteredList[index].peerId]) ==
+                          HMSTrackUpdate.trackMuted);
         }),
       ),
     );

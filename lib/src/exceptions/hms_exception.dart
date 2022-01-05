@@ -1,4 +1,4 @@
-import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+// Project imports:
 import '../exceptions/hms_exception_code.dart';
 
 class HMSException {

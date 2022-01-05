@@ -3,15 +3,11 @@
 ///Just create instance of [HMSMeeting] and use the functionality which is present.
 ///
 ///All methods related to meeting, preview and their listeners are present here.
-import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-import 'package:hmssdk_flutter/src/common/platform_methods.dart';
-import 'package:hmssdk_flutter/src/enum/hms_log_level.dart';
-import 'package:hmssdk_flutter/src/manager/hms_sdk_manager.dart';
-import 'package:hmssdk_flutter/src/model/hms_actions_result_listener.dart';
-import 'package:hmssdk_flutter/src/model/hms_logs_listener.dart';
-import 'package:hmssdk_flutter/src/model/hms_message_result_listener.dart';
-import 'package:hmssdk_flutter/src/service/platform_service.dart';
 
+// Project imports:
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:hmssdk_flutter/src/manager/hms_sdk_manager.dart';
+import 'package:hmssdk_flutter/src/service/platform_service.dart';
 import '../../hmssdk_flutter.dart';
 
 class HMSMeeting {
@@ -21,11 +17,14 @@ class HMSMeeting {
   HMSMeeting({this.hmsTrackSetting});
 
   Future<bool> build() async {
+    // ignore: unused_local_variable
     bool created = await HmsSdkManager().createHMSSdk(hmsTrackSetting);
     return false;
   }
 
   Future<void> joinMeeting({required HMSConfig config}) async {
+    // ignore: unused_local_variable
+    bool isProdLink = true;
     return await PlatformService.invokeMethod(PlatformMethod.joinMeeting,
         arguments: {...config.getJson()});
   }
@@ -306,34 +305,6 @@ class HMSMeeting {
   Future<void> setPlayBackAllowed(bool allow) async {
     await PlatformService.invokeMethod(PlatformMethod.setPlayBackAllowed,
         arguments: {"allowed": allow});
-  }
-
-  Future<void> startHlsStreaming(String meetingUrl,
-      {HMSActionResultListener? hmsActionResultListener}) async {
-    var result = await PlatformService.invokeMethod(
-        PlatformMethod.startHlsStreaming,
-        arguments: {"meeting_url": meetingUrl});
-    if (hmsActionResultListener != null) {
-      if (result == null)
-        hmsActionResultListener.onSuccess();
-      else
-        hmsActionResultListener.onError(
-            hmsException: HMSException.fromMap(result["error"]));
-    }
-  }
-
-  Future<void> stopHlsStreaming(
-      {HMSActionResultListener? hmsActionResultListener}) async {
-    var result = await PlatformService.invokeMethod(
-        PlatformMethod.stopHlsStreaming,
-        );
-    if (hmsActionResultListener != null) {
-      if (result == null)
-        hmsActionResultListener.onSuccess();
-      else
-        hmsActionResultListener.onError(
-            hmsException: HMSException.fromMap(result["error"]));
-    }
   }
 
   Future<bool> changeTrackStateForRole(

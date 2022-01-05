@@ -7,15 +7,17 @@
 ///You can add as many as [meeting_event_listeners] and [preview_event_listeners].
 ///
 ///[hmssdk_flutter] will send updates to all the listeners when there is any change in anything.
+
+// Dart imports:
 import 'dart:async';
 
+// Flutter imports:
 import 'package:flutter/services.dart';
+
+// Project imports:
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-import 'package:hmssdk_flutter/src/common/platform_methods.dart';
 import 'package:hmssdk_flutter/src/enum/hms_logs_update_listener.dart';
-import 'package:hmssdk_flutter/src/model/hms_log.dart';
-import 'package:hmssdk_flutter/src/model/hms_logs_listener.dart';
-import 'package:hmssdk_flutter/src/model/hms_track_change_request.dart';
+import 'package:hmssdk_flutter/src/model/hms_log_list.dart';
 
 class PlatformService {
   ///used to pass data to platform using methods
@@ -61,8 +63,6 @@ class PlatformService {
     if (previewListeners.contains(listener)) previewListeners.remove(listener);
   }
 
-
-
   static void addLogsListener(
     HMSLogListener hmsLogListener,
   ) {
@@ -89,24 +89,21 @@ class PlatformService {
   ///recieves all the meeting updates here as streams
   static void updatesFromPlatform() {
     _logsEventChannel.receiveBroadcastStream({'name': 'logs'}).map((event) {
-      print(event.toString() + 'LOGSCHANNEL');
-      Map<String, dynamic>? data = {};
-      if (event is Map && event['data'] != null && event['data'] is Map) {
-        (event['data'] as Map).forEach((key, value) {
-          data[key.toString()] = value;
-        });
-      }
+      print("event is $event");
+
+      List<dynamic> data = [];
 
       HMSLogsUpdateListenerMethod method =
           HMSLogsUpdateListenerMethodValues.getMethodFromName(
-              event['event_name']);
+              event[0]['event_name']);
+      data = event;
       return HMSLogsUpdateListenerMethodResponse(
           method: method, data: data, response: event);
     }).listen((event) {
       HMSLogsUpdateListenerMethod method = event.method;
       print("flutterdata1 ${event.method}");
-      Map<String, dynamic> data = event.data;
-
+      print("Flutterdata1 ${event.data}");
+      List<dynamic> data = event.data;
       switch (method) {
         case HMSLogsUpdateListenerMethod.onLogsUpdate:
           notifyLogsUpdateListeners(method, data);
@@ -141,17 +138,16 @@ class PlatformService {
           notifyMeetingListeners(method, {'room': room});
           break;
         case HMSUpdateListenerMethod.onUpdateRoom:
-          print("OnUpdateRoom ${data["room"]["update"]}" );
           HMSRoom? room =
               data['room'] != null ? HMSRoom.fromMap(data['room']) : null;
 
           HMSRoomUpdate? update =
-              HMSRoomUpdateValues.getHMSRoomUpdateFromName(data['room']['update']);
+              HMSRoomUpdateValues.getHMSRoomUpdateFromName(data['update']);
           notifyMeetingListeners(method, {'room': room, 'update': update});
           break;
         case HMSUpdateListenerMethod.onPeerUpdate:
           HMSPeer? peer = HMSPeer.fromMap(data['peer']);
-          print(data['update']);
+          print(data['update'] + "onFlutterPeerUpdate");
           HMSPeerUpdate? update =
               HMSPeerUpdateValues.getHMSPeerUpdateFromName(data['update']);
           notifyMeetingListeners(method, {'peer': peer, 'update': update});
@@ -258,13 +254,12 @@ class PlatformService {
   }
 
   static void notifyLogsUpdateListeners(
-      HMSLogsUpdateListenerMethod method, Map<String, dynamic> arguments) {
+      HMSLogsUpdateListenerMethod method, List<dynamic> arguments) {
     switch (method) {
       case HMSLogsUpdateListenerMethod.onLogsUpdate:
-        print("$arguments argumentsLogsUpdateListeners");
         logsListeners.forEach((element) {
-          HMSLog hmsLog = HMSLog.fromMap(arguments);
-          element.onLogMessage(HMSLog: hmsLog);
+          HMSLogList hmsLogList = HMSLogList.fromMap(arguments);
+          element.onLogMessage(HMSLogList: hmsLogList);
         });
         break;
       case HMSLogsUpdateListenerMethod.unknown:
@@ -341,7 +336,7 @@ class PlatformService {
         break;
 
       case HMSUpdateListenerMethod.onRemovedFromRoom:
-        if(meetingListeners.isEmpty)break;
+        if (meetingListeners.isEmpty) break;
         meetingListeners.forEach((element) {
           element.onRemovedFromRoom(
               hmsPeerRemovedFromPeer: arguments['removed_from_room']);

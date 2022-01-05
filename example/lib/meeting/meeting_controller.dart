@@ -1,8 +1,6 @@
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
-import 'package:hmssdk_flutter_example/main.dart';
 import 'package:hmssdk_flutter_example/manager/HmsSdkManager.dart';
-import 'package:hmssdk_flutter_example/meeting/hms_sdk_interactor.dart';
 import 'package:hmssdk_flutter_example/service/room_service.dart';
 import 'package:uuid/uuid.dart';
 
@@ -82,7 +80,7 @@ class MeetingController {
     HmsSdkManager.hmsSdkInteractor?.removeLogsListener(listener);
   }
 
-  Future<void> setPlayBackAllowed(bool allow) async{
+  Future<void> setPlayBackAllowed(bool allow) async {
     await HmsSdkManager.hmsSdkInteractor?.setPlayBackAllowed(allow);
   }
 
@@ -132,7 +130,7 @@ class MeetingController {
 
   Future<bool> isAudioMute(HMSPeer? peer) async {
     bool isMute = await HmsSdkManager.hmsSdkInteractor!.isAudioMute(peer);
-    print("isAudioMute ${isMute}");
+    print("isAudioMute $isMute");
     return isMute;
   }
 
@@ -176,7 +174,7 @@ class MeetingController {
     return await HmsSdkManager.hmsSdkInteractor?.getRoom();
   }
 
-  Future<void> raiseHand() async{
+  Future<void> raiseHand() async {
     await HmsSdkManager.hmsSdkInteractor?.raiseHand();
   }
 }

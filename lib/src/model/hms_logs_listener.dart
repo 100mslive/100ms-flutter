@@ -1,5 +1,6 @@
-import 'package:hmssdk_flutter/src/model/hms_log.dart';
+// Project imports:
 
 abstract class HMSLogListener {
-  void onLogMessage({required HMSLog});
+  // ignore: non_constant_identifier_names
+  void onLogMessage({required HMSLogList});
 }

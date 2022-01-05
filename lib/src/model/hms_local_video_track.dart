@@ -1,5 +1,5 @@
+// Project imports:
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-import 'package:hmssdk_flutter/src/common/platform_methods.dart';
 import 'package:hmssdk_flutter/src/service/platform_service.dart';
 
 class HMSLocalVideoTrack extends HMSVideoTrack {
