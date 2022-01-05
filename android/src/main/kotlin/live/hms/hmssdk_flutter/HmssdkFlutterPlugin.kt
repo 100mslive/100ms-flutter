@@ -137,7 +137,6 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             }
             "accept_role_change" -> {
                 acceptRoleRequest()
-
             }
             "get_peers" -> {
                 getPeers(result)
@@ -974,8 +973,4 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         getLocalPeer().videoTrack?.setMute(!(allowed!!))
         result?.success("setPlatBackAllowed${allowed!!}")
     }
-
-
-
-
 }

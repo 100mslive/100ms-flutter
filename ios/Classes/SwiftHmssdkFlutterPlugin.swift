@@ -145,7 +145,10 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             
         case "build":
             build(call, result)
-            
+           
+        case "set_playback_allowed":
+            setPlaybackAllowed(call, result)
+
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -720,7 +723,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     }
 
     var isHandRaise = false
-    public func raiseHand(){
+    private func raiseHand(){
         isHandRaise =  !isHandRaise
         hmsSDK?.change(metadata: "{\"isHandRaised\":\(isHandRaise)}") { success, error in 
             if let error = error {
@@ -840,6 +843,32 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             return
         }
         result(nil)
+    }
+    
+    private func setPlaybackAllowed(_ call: FlutterMethodCall, _ result: FlutterResult) {
+        let arguments = call.arguments as! Dictionary<String, AnyObject>
+        
+        guard let allowed = arguments["allowed"] as? Bool
+        else {
+            result(nil)
+            return
+        }
+        
+        if let localPeer = hmsSDK?.localPeer {
+            if let video = localPeer.videoTrack as? HMSLocalVideoTrack {
+                video.setMute(allowed)
+            }
+        }
+        
+        if let remotePeers = hmsSDK?.remotePeers {
+            remotePeers.forEach { peer in
+                if let video = peer.remoteVideoTrack() {
+                    video.setPlaybackAllowed(allowed)
+                }
+            }
+        }
+        
+        result("\(#function) setPlatBackAllowed: \(allowed)")
     }
     
     
