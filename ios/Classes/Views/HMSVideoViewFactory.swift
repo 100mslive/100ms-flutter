@@ -24,8 +24,8 @@ class  HMSVideoViewFactory: NSObject, FlutterPlatformViewFactory {
         
         let arguments = args as! Dictionary<String, AnyObject>
         
-        let isLocal = arguments["is_local"] as? Bool ?? true
-        let peerId = arguments["peer_id"] as? String ?? ""
+        //        let isLocal = arguments["is_local"] as? Bool ?? true
+        let peerID = arguments["peer_id"] as? String ?? ""
         let trackId = arguments["track_id"] as? String ?? ""
         let mirror = arguments["set_mirror"] as? Bool ?? false
         let scaleTypeInt = arguments["scale_type"] as? Int
@@ -35,7 +35,7 @@ class  HMSVideoViewFactory: NSObject, FlutterPlatformViewFactory {
         
         let newFrame = CGRect(x: 0, y: 0, width: width, height: height)
         
-        let peer = plugin.getPeerById(peerId: peerId, isLocal: isLocal)
+        let peer = plugin.getPeer(by: peerID)
         
         return HMSVideoViewWidget(frame: newFrame,
                                   viewIdentifier: viewId,
