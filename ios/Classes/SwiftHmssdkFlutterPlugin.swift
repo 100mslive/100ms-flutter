@@ -22,6 +22,30 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     
     // MARK: - Initial Setup
     
+    public static func register(with registrar: FlutterPluginRegistrar) {
+        
+        let channel = FlutterMethodChannel(name: "hmssdk_flutter", binaryMessenger: registrar.messenger())
+        
+        let eventChannel = FlutterEventChannel(name: "meeting_event_channel", binaryMessenger: registrar.messenger())
+        let previewChannel = FlutterEventChannel(name: "preview_event_channel", binaryMessenger: registrar.messenger())
+        let logsChannel = FlutterEventChannel(name: "logs_event_channel", binaryMessenger: registrar.messenger())
+        
+        let instance = SwiftHmssdkFlutterPlugin(channel: channel,
+                                                meetingEventChannel: eventChannel,
+                                                previewEventChannel: previewChannel,
+                                                logsEventChannel: logsChannel)
+        
+        let videoViewFactory = HMSVideoViewFactory(messenger: registrar.messenger(), plugin: instance)
+        registrar.register(videoViewFactory, withId: "HMSVideoView")
+        
+        eventChannel.setStreamHandler(instance)
+        previewChannel.setStreamHandler(instance)
+        logsChannel.setStreamHandler(instance)
+        
+        registrar.addMethodCallDelegate(instance, channel: channel)
+    }
+
+    
     public init(channel: FlutterMethodChannel,
                 meetingEventChannel: FlutterEventChannel,
                 previewEventChannel: FlutterEventChannel,
@@ -33,31 +57,17 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         self.logsEventChannel = logsEventChannel
     }
     
-    public static func register(with registrar: FlutterPluginRegistrar) {
-        let channel = FlutterMethodChannel(name: "hmssdk_flutter", binaryMessenger: registrar.messenger())
-        let eventChannel = FlutterEventChannel(name: "meeting_event_channel", binaryMessenger: registrar.messenger())
-        let previewChannel = FlutterEventChannel(name: "preview_event_channel", binaryMessenger: registrar.messenger())
-        let logsChannel = FlutterEventChannel(name: "logs_event_channel", binaryMessenger: registrar.messenger())
-        
-        let instance = SwiftHmssdkFlutterPlugin(channel: channel,
-                                                meetingEventChannel: eventChannel,
-                                                previewEventChannel: previewChannel,
-                                                logsEventChannel: logsChannel)
-        
-        let videoViewFactory:HMSVideoViewFactory = HMSVideoViewFactory(messenger: registrar.messenger(),plugin: instance)
-        registrar.register(videoViewFactory, withId: "HMSVideoView")
-        
-        eventChannel.setStreamHandler(instance)
-        previewChannel.setStreamHandler(instance)
-        logsChannel.setStreamHandler(instance)
-        registrar.addMethodCallDelegate(instance, channel: channel)
+    public func detachFromEngine(for registrar: FlutterPluginRegistrar) {
+        meetingEventChannel.setStreamHandler(nil)
+        previewEventChannel.setStreamHandler(nil)
+        logsEventChannel.setStreamHandler(nil)
     }
     
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         switch call.method {
             
         case "join_meeting":
-            joinMeeting(call, result)
+            join(call, result)
             
         case "leave_meeting":
             leaveMeeting(result)
@@ -105,7 +115,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             removePeer(call)
             
         case "on_change_track_state_request":
-            changeTrack(call)
+            changeTrack(call, result)
             
         case "mute_all":
             toggleMuteAll(result, shouldMute: true)
@@ -153,6 +163,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             result(FlutterMethodNotImplemented)
         }
     }
+    
     
     // MARK: - HMS SDK Delegate Callbacks
     
@@ -344,9 +355,9 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     }
     
     
-    // MARK: - HMS SDK Actions
+    // MARK: - Room Actions
     
-    func build(_ call: FlutterMethodCall, _ result: FlutterResult) {
+    private func build(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         let arguments = call.arguments as! Dictionary<String, AnyObject>
         
         var trackSettings: HMSTrackSettings?
@@ -393,19 +404,13 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             if setLogger {
                 sdk.logger = self
             }
+            
+            result(true)
         }
-        
-        result(true)
     }
     
-    private func getCodec(from string: String) -> HMSCodec {
-        if string.lowercased().contains("h264") {
-            return HMSCodec.H264
-        }
-        return HMSCodec.VP8
-    }
     
-    func preview(_ call: FlutterMethodCall, _ result: FlutterResult) {
+    private func preview(_ call: FlutterMethodCall, _ result: FlutterResult) {
         let arguments = call.arguments as! Dictionary<String, AnyObject>
         
         guard let authToken = arguments["auth_token"] as? String,
@@ -430,7 +435,24 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         result("\(#function)")
     }
     
-    func joinMeeting(_ call: FlutterMethodCall, _ result: FlutterResult) {
+    
+    /*
+     private func previewForRole(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+         let arguments = call.arguments as! Dictionary<String, AnyObject>
+
+         hmsSDK?.preview(role: ) { ,  in
+             
+         }
+     }
+     
+     private func cancelPreview(_ result: FlutterResult) {
+         hmsSDK?.cancelPreview()
+         result(nil)
+     }
+     */
+    
+    
+    private func join(_ call: FlutterMethodCall, _ result: FlutterResult) {
         
         let arguments = call.arguments as! Dictionary<String, AnyObject>
         
@@ -458,17 +480,69 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             hmsSDK?.join(config: config!, delegate: self)
         }
         
-        meetingEventChannel.setStreamHandler(self)
-        
-        result("\(#function)")
+        result(nil)
     }
     
-    func leaveMeeting(_ result: FlutterResult) {
+    private func leaveMeeting(_ result: FlutterResult) {
         hmsSDK?.leave()
         result("\(#function)")
     }
     
-    func switchAudio(_ call: FlutterMethodCall, _ result: FlutterResult) {
+    
+    // MARK: - Video Helpers
+    
+    private func startCapturing(_ result: FlutterResult) {
+        if let peer = hmsSDK?.localPeer, let track = peer.videoTrack as? HMSLocalVideoTrack {
+            track.startCapturing()
+        }
+        result("\(#function)")
+    }
+    
+    private func stopCapturing(_ result: FlutterResult) {
+        if let peer = hmsSDK?.localPeer, let track = peer.videoTrack as? HMSLocalVideoTrack {
+            track.stopCapturing()
+        }
+        result("\(#function)")
+    }
+    
+    private func switchCamera(_ result: FlutterResult) {
+        if let peer = hmsSDK?.localPeer, let videoTrack = peer.videoTrack as? HMSLocalVideoTrack {
+            videoTrack.switchCamera()
+        }
+        result("\(#function)")
+    }
+    
+    private func switchVideo(_ call: FlutterMethodCall, _ result: FlutterResult) {
+        let arguments = call.arguments as! Dictionary<String, AnyObject>
+        
+        if let shouldMute = arguments["is_on"] as? Bool,
+           let peer = hmsSDK?.localPeer,
+           let video = peer.videoTrack as? HMSLocalVideoTrack {
+            video.setMute(shouldMute)
+        }
+        result("\(#function)")
+    }
+    
+    private func isVideoMute(_ call: FlutterMethodCall, _ result: FlutterResult) {
+        let arguments = call.arguments as! Dictionary<String, AnyObject>
+        guard let peerID = arguments["peer_id"] as? String else {
+            print(#function, "invalid parameters for isVideoMuted:")
+            return result("invalid parameters for isVideoMuted:")
+        }
+        guard let peer = hmsSDK?.localPeer else { return }
+        if(peerID == peer.peerID){
+            result(peer.videoTrack?.isMute() ?? false)
+        }else{
+            guard let peer = getPeer(by: peerID) else { return }
+            result(peer.videoTrack?.isMute() ?? false)
+        }
+    }
+    
+    
+    
+    // MARK: - Audio Helpers
+    
+    private func switchAudio(_ call: FlutterMethodCall, _ result: FlutterResult) {
         let arguments = call.arguments as! Dictionary<String, AnyObject>
         
         if let shouldMute = arguments["is_on"] as? Bool,
@@ -480,39 +554,47 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         result("\(#function)")
     }
     
-    func switchVideo(_ call: FlutterMethodCall, _ result: FlutterResult) {
+    private func isAudioMute(_ call: FlutterMethodCall, _ result: FlutterResult) {
         let arguments = call.arguments as! Dictionary<String, AnyObject>
+        guard let peerID = arguments["peer_id"] as? String else {
+            print(#function, "invalid parameters for isAudioMuted:")
+            return result("invalid parameters for isAudioMuted:")
+        }
         
-        if let shouldMute = arguments["is_on"] as? Bool,
-           let peer = hmsSDK?.localPeer,
-           let video = peer.videoTrack as? HMSLocalVideoTrack {
-            video.setMute(shouldMute)
+        guard let peer = hmsSDK?.localPeer else { return }
+        
+        if peerID == peer.peerID {
+            result(peer.audioTrack?.isMute() ?? false)
+        } else {
+            guard let peer = getPeer(by: peerID) else { return }
+            result(peer.audioTrack?.isMute() ?? false)
         }
-        result("\(#function)")
     }
     
-    func startCapturing(_ result: FlutterResult) {
-        if let peer = hmsSDK?.localPeer, let track = peer.videoTrack as? HMSLocalVideoTrack {
-            track.startCapturing()
+    private func toggleMuteAll(_ result: FlutterResult, shouldMute: Bool) {
+        
+        guard let peers = hmsSDK?.remotePeers
+        else {
+            print(#function, "No remote peers in the room")
+            return
         }
-        result("\(#function)")
+        
+        for peer in peers {
+            peer.remoteAudioTrack()?.setPlaybackAllowed(!shouldMute)
+            for track in peer.auxiliaryTracks ?? [] {
+                if let audio = track as? HMSRemoteAudioTrack {
+                    audio.setPlaybackAllowed(!shouldMute)
+                }
+            }
+        }
+        
+        shouldMute ? result("muted all") : result("unMutedAll")
     }
     
-    func stopCapturing(_ result: FlutterResult) {
-        if let peer = hmsSDK?.localPeer, let track = peer.videoTrack as? HMSLocalVideoTrack {
-            track.stopCapturing()
-        }
-        result("\(#function)")
-    }
     
-    func switchCamera(_ result: FlutterResult) {
-        if let peer = hmsSDK?.localPeer, let videoTrack = peer.videoTrack as? HMSLocalVideoTrack {
-            videoTrack.switchCamera()
-        }
-        result("\(#function)")
-    }
+    // MARK: - Messaging
     
-    func sendBroadcastMessage(_ call: FlutterMethodCall, _ result: FlutterResult) {
+    private func sendBroadcastMessage(_ call: FlutterMethodCall, _ result: FlutterResult) {
         let arguments = call.arguments as! Dictionary<String, AnyObject>
         
         guard let message = arguments["message"] as? String
@@ -536,7 +618,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         result("\(#function)")
     }
     
-    func sendDirectMessage(_ call: FlutterMethodCall, _ result: FlutterResult) {
+    private func sendDirectMessage(_ call: FlutterMethodCall, _ result: FlutterResult) {
         let arguments = call.arguments as! Dictionary<String, AnyObject>
         
         guard let message = arguments["message"] as? String,
@@ -562,7 +644,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         result("\(#function)")
     }
     
-    func sendGroupMessage(_ call: FlutterMethodCall, _ result: FlutterResult) {
+    private func sendGroupMessage(_ call: FlutterMethodCall, _ result: FlutterResult) {
         let arguments = call.arguments as! Dictionary<String, AnyObject>
         
         guard let message = arguments["message"] as? String,
@@ -588,7 +670,10 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         result("\(#function)")
     }
     
-    func changeRole(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+    
+    // MARK: - Role based Actions
+    
+    private func changeRole(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         
         let arguments = call.arguments as! Dictionary<String, AnyObject>
         
@@ -601,7 +686,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             
             hmsSDK?.changeRole(for: peer, to: role, force: force) { success, error in
                 if let error = error {
-                    result(HMSErrorExtension.toDictionary(error))
+                    result(["error": HMSErrorExtension.toDictionary(error)])
                 } else {
                     result(nil)
                 }
@@ -609,7 +694,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         }
     }
     
-    func getRoles(_ call: FlutterMethodCall, _ result: FlutterResult) {
+    private func getRoles(_ call: FlutterMethodCall, _ result: FlutterResult) {
         var roleList:[Dictionary<String, Any?>]=[]
         if  let roles:[HMSRole] = hmsSDK?.roles {
             for role in roles{
@@ -619,7 +704,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         result(["roles":roleList])
     }
     
-    func acceptRoleRequest(_ call: FlutterMethodCall, _ result: FlutterResult) {
+    private func acceptRoleRequest(_ call: FlutterMethodCall, _ result: FlutterResult) {
         if let role = roleChangeRequest {
             hmsSDK?.accept(changeRole: role, completion: { [weak self] success, error in
                 print(#function, "success: ", success, "error: ", error?.description as Any)
@@ -631,7 +716,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         result("\(#function)")
     }
     
-    func endRoom(_ call: FlutterMethodCall) {
+    private func endRoom(_ call: FlutterMethodCall) {
         let arguments = call.arguments as! Dictionary<String, AnyObject>
         let lock = arguments["lock"] as? Bool ?? false
         
@@ -648,7 +733,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         }
     }
     
-    func removePeer(_ call: FlutterMethodCall) {
+    private func removePeer(_ call: FlutterMethodCall) {
         let arguments = call.arguments as! Dictionary<String, AnyObject>
         guard let peerID = arguments["peer_id"] as? String,
               let peer = getPeer(by: peerID)
@@ -671,13 +756,16 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         }
     }
     
-    func changeTrack(_ call: FlutterMethodCall) {
+    private func changeTrack(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         let arguments = call.arguments as! Dictionary<String, AnyObject>
         
         guard let peerID = arguments["hms_peer_id"] as? String,
               let peer = getPeer(by: peerID)
         else {
-            print(#function, "Could not change track state")
+            let error = getError(message: "Could not find peer to change track",
+                                 description: "Could not find peer from peerID",
+                                 params: ["function": #function, "arguments": arguments])
+            result(["error": HMSErrorExtension.toDictionary(error)])
             return
         }
         
@@ -691,7 +779,9 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         }
         
         guard let track = track else {
-            print(#function, "Could not find track for peer: \(peer.name)")
+            let error = getError(message: "Could not find track for peer: \(peer.name)",
+                                 params: ["function": #function, "arguments": arguments])
+            result(["error": HMSErrorExtension.toDictionary(error)])
             return
         }
         
@@ -699,10 +789,10 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         
         hmsSDK?.changeTrackState(for: track, mute: mute) { success, error in
             if let error = error {
-                print(#function, "Error in changing track state: ", error.description)
+                result(["error": HMSErrorExtension.toDictionary(error)])
                 return
             }
-            print(#function, "Successfully changed track state for: ", track.trackId)
+            result(nil)
         }
     }
     
@@ -736,7 +826,10 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         result("\(#function)")
     }
     
-    var isHandRaise = false
+    
+    // MARK: -
+    
+    private var isHandRaise = false
     private func raiseHand() {
         isHandRaise =  !isHandRaise
         hmsSDK?.change(metadata: "{\"isHandRaised\":\(isHandRaise)}") { success, error in
@@ -747,6 +840,9 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             print(#function, success)
         }
     }
+    
+    
+    // MARK: - Recording
     
     private func startRtmpOrRecording(_ call: FlutterMethodCall, _ result: FlutterResult) {
         
@@ -800,7 +896,10 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         result("\(#function)")
     }
     
-    var logLevel = HMSLogLevel.off
+    
+    // MARK: - Logging
+    
+    private var logLevel = HMSLogLevel.off
     
     private func startHMSLogger(_ call: FlutterMethodCall) {
         let arguments = call.arguments as! Dictionary<String, AnyObject>
@@ -849,6 +948,9 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         hmsSDK?.logger = nil
     }
     
+    
+    // MARK: - Native SDK Data Getters
+    
     private func getRoom(_ result: FlutterResult) {
         
         if let room = hmsSDK?.room {
@@ -857,6 +959,11 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             return
         }
         result(nil)
+    }
+    
+    private func getLocalPeer(_ result: FlutterResult) {
+        guard let localPeer = hmsSDK?.localPeer else { return }
+        result(localPeer)
     }
     
     private func setPlaybackAllowed(_ call: FlutterMethodCall, _ result: FlutterResult) {
@@ -888,6 +995,14 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     
     // MARK: - Helper Functions
     
+    private func getError(message: String, description: String? = nil, params: [String: Any]) -> HMSError {
+        HMSError(id: "NONE",
+                 code: .genericErrorJsonParsingFailed,
+                 message: message,
+                 info: description,
+                 params: params)
+    }
+    
     private func logSpeakers(_ speakers: [HMSSpeaker]) {
         let date = Date()
         let calendar = Calendar.current
@@ -901,63 +1016,6 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
               speakers.map { $0.track.source })
     }
     
-    func toggleMuteAll(_ result: FlutterResult, shouldMute: Bool) {
-        
-        guard let peers = hmsSDK?.remotePeers
-        else {
-            print(#function, "No remote peers in the room")
-            return
-        }
-        
-        for peer in peers {
-            peer.remoteAudioTrack()?.setPlaybackAllowed(!shouldMute)
-            for track in peer.auxiliaryTracks ?? [] {
-                if let audio = track as? HMSRemoteAudioTrack {
-                    audio.setPlaybackAllowed(!shouldMute)
-                }
-            }
-        }
-        
-        shouldMute ? result("muted all") : result("unMutedAll")
-    }
-    
-    func isVideoMute(_ call: FlutterMethodCall, _ result: FlutterResult) {
-        let arguments = call.arguments as! Dictionary<String, AnyObject>
-        guard let peerID = arguments["peer_id"] as? String else {
-            print(#function, "invalid parameters for isVideoMuted:")
-            return result("invalid parameters for isVideoMuted:")
-        }
-        guard let peer = hmsSDK?.localPeer else { return }
-        if(peerID == peer.peerID){
-            result(peer.videoTrack?.isMute() ?? false)
-        }else{
-            guard let peer = getPeer(by: peerID) else { return }
-            result(peer.videoTrack?.isMute() ?? false)
-        }
-    }
-    
-    func isAudioMute(_ call: FlutterMethodCall, _ result: FlutterResult) {
-        let arguments = call.arguments as! Dictionary<String, AnyObject>
-        guard let peerID = arguments["peer_id"] as? String else {
-            print(#function, "invalid parameters for isAudioMuted:")
-            return result("invalid parameters for isAudioMuted:")
-        }
-        
-        guard let peer = hmsSDK?.localPeer else { return }
-        
-        if peerID == peer.peerID {
-            result(peer.audioTrack?.isMute() ?? false)
-        } else {
-            guard let peer = getPeer(by: peerID) else { return }
-            result(peer.audioTrack?.isMute() ?? false)
-        }
-    }
-    
-    func getLocalPeer(_ result: FlutterResult) {
-        guard let localPeer = hmsSDK?.localPeer else { return }
-        result(localPeer)
-    }
-    
     internal func getPeer(by peerID: String) -> HMSPeer? {
         hmsSDK?.room?.peers.first { $0.peerID == peerID }
     }
@@ -966,7 +1024,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         hmsSDK?.roles.first { $0.name == name }
     }
     
-    func kindString(from kind: HMSTrackKind) -> String {
+    private func kindString(from kind: HMSTrackKind) -> String {
         switch kind {
         case .audio:
             return "KHmsTrackAudio"
@@ -977,7 +1035,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         }
     }
     
-    func kind(from string: String) -> HMSTrackKind {
+    private func kind(from string: String) -> HMSTrackKind {
         switch string {
         case "KHmsTrackAudio":
             return .audio
@@ -986,5 +1044,12 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         default:
             return .audio
         }
+    }
+    
+    private func getCodec(from string: String) -> HMSCodec {
+        if string.lowercased().contains("h264") {
+            return HMSCodec.H264
+        }
+        return HMSCodec.VP8
     }
 }

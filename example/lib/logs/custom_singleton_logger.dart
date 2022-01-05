@@ -15,9 +15,8 @@ class CustomLogger {
   void getCustomLogger() {
     getDirectoryForLogRecord().whenComplete(
       () {
+        // ConsoleOutput consoleOutput = ConsoleOutput();
         fileOutPut = FileOutput(file: file);
-        // ignore: unused_local_variable
-        ConsoleOutput consoleOutput = ConsoleOutput();
         List<LogOutput> multiOutput = [fileOutPut];
         StaticLogger.logger = Logger(
             filter: MyFilter(),

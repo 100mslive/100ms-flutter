@@ -12,19 +12,16 @@ import '../../hmssdk_flutter.dart';
 
 class HMSMeeting {
   ///join meeting by passing HMSConfig instance to it.
+
   HMSTrackSetting? hmsTrackSetting;
 
   HMSMeeting({this.hmsTrackSetting});
 
   Future<bool> build() async {
-    // ignore: unused_local_variable
-    bool created = await HmsSdkManager().createHMSSdk(hmsTrackSetting);
-    return false;
+    return await HmsSdkManager().createHMSSdk(hmsTrackSetting);
   }
 
   Future<void> joinMeeting({required HMSConfig config}) async {
-    // ignore: unused_local_variable
-    bool isProdLink = true;
     return await PlatformService.invokeMethod(PlatformMethod.joinMeeting,
         arguments: {...config.getJson()});
   }

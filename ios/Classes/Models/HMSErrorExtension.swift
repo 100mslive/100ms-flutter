@@ -8,33 +8,33 @@
 import Foundation
 import HMSSDK
 
-class HMSErrorExtension{
+class HMSErrorExtension {
+    
     static func toDictionary(_ error: HMSError) -> Dictionary<String,Any?> {
         
         var dict:Dictionary<String, Any?> = [:]
         dict["id"] = error.id
         dict["message"] = error.message
         dict["code"] = getValueOfHMSErrorCode(errorCode:error.code)
- 
-        if let info = error.info{
+        
+        if let info = error.info {
             dict["info"] = info
         }
         
-        if let action = error.action{
+        if let action = error.action {
             dict["action"] = action
         }
-        	
-        if let params = error.params{
+        
+        if let params = error.params {
             dict["params"] = params
         }
         
         dict["description"] = error.localizedDescription
         
         return dict
-        
-    }
-    static func getValueOfHMSErrorCode (errorCode:HMSErrorCode)->String{
-       return "\(errorCode)"
     }
     
+    static func getValueOfHMSErrorCode(errorCode: HMSErrorCode) -> String {
+        return "\(errorCode)"
+    }
 }

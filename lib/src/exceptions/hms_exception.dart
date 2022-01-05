@@ -6,7 +6,6 @@ class HMSException {
   final HMSExceptionCode? code;
   final String message;
 
-  ///description is info in android
   String description;
   String action;
   Map? params;

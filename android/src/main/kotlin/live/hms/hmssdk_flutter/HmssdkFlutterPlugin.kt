@@ -86,8 +86,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
                 result.success("Android ${Build.VERSION.RELEASE}")
             }
             "join_meeting" -> {
-                joinMeeting(call)
-                result.success("joining meeting in android")
+                joinMeeting(call, result)
             }
             "leave_meeting" -> {
                 leaveMeeting()
@@ -241,7 +240,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
 
     }
 
-    private fun joinMeeting(@NonNull call: MethodCall) {
+    private fun joinMeeting(call: MethodCall, result: Result) {
         val userName = call.argument<String>("user_name")
         val authToken = call.argument<String>("auth_token")
         val endPoint = call.argument<String>("end_point")
@@ -255,6 +254,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
                 )
         }
         hmssdk.join(hmsConfig!!, this.hmsUpdateListener)
+        result.success(null)
     }
 
 
@@ -308,7 +308,6 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         val argsIsOn = call.argument<Boolean>("is_on")
         val peer = hmssdk.getLocalPeer()
         val videoTrack = peer?.videoTrack
-//        Log.i("SwitchVideo",argsIsOn!!.toString())
         if (videoTrack != null) {
             videoTrack.setMute(argsIsOn ?: false)
             result.success("video_changed")
@@ -626,11 +625,13 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
     fun build(activity: Activity, call: MethodCall, result: Result) {
         val hmsTrackSettingMap =
             call.argument<HashMap<String, HashMap<String, Any?>?>?>("hms_track_setting")
+
         if (hmsTrackSettingMap == null) {
             this.hmssdk = HMSSDK.Builder(activity).build()
-            result.success(false)
+            result.success(true)
             return
         }
+
         val hmsAudioTrackHashMap: HashMap<String, Any?>? = hmsTrackSettingMap["audio_track_setting"]
         var hmsAudioTrackSettings = HMSAudioTrackSettings.Builder()
         if (hmsAudioTrackHashMap != null) {
