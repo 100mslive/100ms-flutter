@@ -482,9 +482,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
         peerTracks.removeWhere((element) => element.peerId == peer.peerId);
         removePeer(peer);
         break;
-      case HMSPeerUpdate.peerKnocked:
-        // removePeer(peer);
-        break;
+
       case HMSPeerUpdate.audioToggled:
         print('Peer audio toggled');
         break;

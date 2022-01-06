@@ -26,6 +26,7 @@ import live.hms.video.media.settings.HMSAudioTrackSettings
 import live.hms.video.media.settings.HMSTrackSettings
 import live.hms.video.media.settings.HMSVideoTrackSettings
 import live.hms.video.media.tracks.HMSRemoteAudioTrack
+import live.hms.video.media.tracks.HMSRemoteVideoTrack
 import live.hms.video.media.tracks.HMSTrack
 import live.hms.video.sdk.*
 import live.hms.video.sdk.models.*
@@ -297,8 +298,12 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         val argsIsOn = call.argument<Boolean>("is_on")
         val peer = hmssdk.getLocalPeer()
         val audioTrack = peer?.audioTrack
-        audioTrack?.setMute(argsIsOn!!)
-        result.success("audio_changed")
+        if (audioTrack != null) {
+            audioTrack?.setMute(argsIsOn!!)
+            result.success(null)
+        } else {
+            result.success("could not switch audio")
+        }
     }
 
     private fun switchVideo(call: MethodCall, result: Result) {
@@ -307,7 +312,9 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         val videoTrack = peer?.videoTrack
         if (videoTrack != null) {
             videoTrack.setMute(argsIsOn ?: false)
-            result.success("video_changed")
+            result.success(null)
+        } else {
+            result.success("could not switch video")
         }
     }
 
@@ -759,7 +766,6 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         }
 
         override fun onJoin(room: HMSRoom) {
-//        Log.i("onJoin", hmssdk.getRoles().toString());
             hasJoined = true
             hmssdk.addAudioObserver(hmsAudioListener)
             previewChannel.setStreamHandler(null)
@@ -769,12 +775,10 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             val roomArgs = HashMap<String, Any?>()
             roomArgs.put("room", HMSRoomExtension.toDictionary(room))
             args.put("data", roomArgs)
-//        Log.i("onJoin", args.get("data").toString())
             if (roomArgs["room"] != null)
                 CoroutineScope(Dispatchers.Main).launch {
                     eventSink?.success(args)
                 }
-
         }
 
         override fun onMessageReceived(message: HMSMessage) {
@@ -795,7 +799,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             args["event_name"] = "on_peer_update"
 
             args["data"] = HMSPeerUpdateExtension.toDictionary(peer, type)
-            Log.i("onPeerUpdateAndroid", "${args["data"]} ${peer.name}")
+            // Log.i("onPeerUpdateAndroid", "${args["data"]} ${peer.name}")
             if (args["data"] != null)
                 CoroutineScope(Dispatchers.Main).launch {
                     eventSink?.success(args)
@@ -806,7 +810,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         override fun onRoomUpdate(type: HMSRoomUpdate, hmsRoom: HMSRoom) {
             val args = HashMap<String, Any?>()
             args.put("event_name", "on_room_update")
-            args.put("data", hmsRoom.name)
+            args.put("data", HMSRoomUpdateExtension.toDictionary(hmsRoom, type))
             if (args["data"] != null)
                 CoroutineScope(Dispatchers.Main).launch {
                     eventSink?.success(args)
@@ -816,20 +820,15 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         override fun onTrackUpdate(type: HMSTrackUpdate, track: HMSTrack, peer: HMSPeer) {
             val args = HashMap<String, Any?>()
             args.put("event_name", "on_track_update")
-            Log.i(
-                "onTrackUpdate",
-                track.isMute.toString() + " " + peer.name + " " + type.toString()
-            )
+            // Log.i("onTrackUpdate", track.isMute.toString() + " " + peer.name + " " + type.toString())
 
             args.put("data", HMSTrackUpdateExtension.toDictionary(peer, track, type))
-            HMSLogger.i("onTrackUpdate", peer.toString())
+            // HMSLogger.i("onTrackUpdate", peer.toString())
             //Log.i("onTrackUpdate", args.get("data").toString())
             if (args["data"] != null)
                 CoroutineScope(Dispatchers.Main).launch {
                     eventSink?.success(args)
                 }
-
-
         }
 
         override fun onRemovedFromRoom(notification: HMSRemovedFromRoom) {
@@ -970,12 +969,18 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
 
     }
 
-    private fun setPlayBackAllowed(call: MethodCall){
+    private fun setPlayBackAllowed(call: MethodCall) {
         val allowed = call.argument<Boolean>("allowed")
         hmssdk.getRemotePeers().forEach {
             it.videoTrack?.isPlaybackAllowed=allowed!!
+
+            it.auxiliaryTracks.forEach {
+                    if (it is HMSRemoteVideoTrack) {
+                        it.isPlaybackAllowed = allowed!!
+                    }
+                }
         }
         getLocalPeer().videoTrack?.setMute(!(allowed!!))
-        result?.success("setPlatBackAllowed${allowed!!}")
+        result?.success(null)
     }
 }

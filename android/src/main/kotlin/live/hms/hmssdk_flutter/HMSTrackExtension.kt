@@ -64,11 +64,13 @@ class HMSTrackExtension {
         fun getTrackUpdateInString(hmsTrackUpdate: HMSTrackUpdate?):String?{
             if (hmsTrackUpdate==null)return null
             return when(hmsTrackUpdate){
-                HMSTrackUpdate.TRACK_UNMUTED-> "trackUnMuted"
-                HMSTrackUpdate.TRACK_MUTED-> "trackMuted"
-                HMSTrackUpdate.TRACK_REMOVED-> "trackRemoved"
-                HMSTrackUpdate.TRACK_DESCRIPTION_CHANGED-> "trackDescriptionChanged"
                 HMSTrackUpdate.TRACK_ADDED-> "trackAdded"
+                HMSTrackUpdate.TRACK_REMOVED-> "trackRemoved"
+                HMSTrackUpdate.TRACK_MUTED-> "trackMuted"
+                HMSTrackUpdate.TRACK_UNMUTED-> "trackUnMuted"
+                HMSTrackUpdate.TRACK_DESCRIPTION_CHANGED-> "trackDescriptionChanged"
+                HMSTrackUpdate.TRACK_DEGRADED-> "trackDegraded"
+                HMSTrackUpdate.TRACK_RESTORED -> "trackRestored"
                 else->{
                     "defaultUpdate"
                 }

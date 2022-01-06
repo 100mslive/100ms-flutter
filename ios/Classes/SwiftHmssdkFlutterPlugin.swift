@@ -127,10 +127,10 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             isAudioMute(call, result)
             
         case "mute_all":
-            toggleMuteAll(result, shouldMute: true)
+            toggleAudioMuteAll(result, shouldMute: true)
             
         case "un_mute_all":
-            toggleMuteAll(result, shouldMute: false)
+            toggleAudioMuteAll(result, shouldMute: false)
             
         // MARK: - Video Helpers
             
@@ -396,6 +396,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         result(nil)
     }
     
+    
     private func isAudioMute(_ call: FlutterMethodCall, _ result: FlutterResult) {
         let arguments = call.arguments as! [AnyHashable: Any]
         
@@ -414,28 +415,46 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         result(false)
     }
     
-    private func toggleMuteAll(_ result: FlutterResult, shouldMute: Bool) {
+    
+    private func toggleAudioMuteAll(_ result: FlutterResult, shouldMute: Bool) {
         
         guard let peers = hmsSDK?.remotePeers
         else {
-            let error = getError(message: "No remote peers in the room", params: ["function": #function])
+            let error = getError(message: "No remote peers in the room", params: ["function": #function, "arguments": shouldMute])
             result(HMSErrorExtension.toDictionary(error))
             return
         }
         
-        for peer in peers {
-            peer.remoteAudioTrack()?.setPlaybackAllowed(!shouldMute)
-            for track in peer.auxiliaryTracks ?? [] {
+        if shouldMute {
+            if let localPeerCanMute = hmsSDK?.localPeer?.role?.permissions.mute, localPeerCanMute {
+                performPlaybackToggle(peers, shouldMute)
+                result(nil)
+                return
+            }
+        } else {
+            if let localPeerCanUnmute = hmsSDK?.localPeer?.role?.permissions.unmute, localPeerCanUnmute {
+                performPlaybackToggle(peers, shouldMute)
+                result(nil)
+                return
+            }
+        }
+        
+        let error = getError(message: "No permission to perform this action", description: "Local peer cannot perform mute/unmute toggle for remote peers", params: ["function": #function, "arguments": shouldMute])
+        result(HMSErrorExtension.toDictionary(error))
+    }
+    
+    private func performPlaybackToggle(_ peers: [HMSRemotePeer], _ shouldMute: Bool) {
+        peers.forEach { peer in
+            if let audio = peer.remoteAudioTrack() {
+                audio.setPlaybackAllowed(!shouldMute)
+            }
+            peer.auxiliaryTracks?.forEach { track in
                 if let audio = track as? HMSRemoteAudioTrack {
                     audio.setPlaybackAllowed(!shouldMute)
                 }
             }
         }
-        
-        shouldMute ? result("muted all") : result("unMutedAll")
-        result(nil)
     }
-    
     
     // MARK: - Video Helpers
     
@@ -538,6 +557,11 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             remotePeers.forEach { peer in
                 if let video = peer.remoteVideoTrack() {
                     video.setPlaybackAllowed(allowed)
+                }
+                peer.auxiliaryTracks?.forEach { track in
+                    if let video = track as? HMSRemoteVideoTrack {
+                        video.setPlaybackAllowed(allowed)
+                    }
                 }
             }
         }
@@ -958,8 +982,9 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         previewSink?(data)
     }
     
-    
     public func on(join room: HMSRoom) {
+        
+        previewEventChannel.setStreamHandler(nil)
         
         let data = [
             "event_name": "on_join_room",

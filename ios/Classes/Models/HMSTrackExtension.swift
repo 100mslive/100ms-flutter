@@ -57,23 +57,23 @@ class HMSTrackExtension {
         case .trackAdded:
             return "trackAdded"
             
-        case .trackDegraded:
-            return "trackDegraded"
-            
-        case .trackDescriptionChanged:
-            return "trackDescriptionChanged"
+        case .trackRemoved:
+            return "trackRemoved"
             
         case .trackMuted:
             return "trackMuted"
             
-        case .trackRemoved:
-            return "trackRemoved"
+        case .trackUnmuted:
+            return "trackUnMuted"
+            
+        case .trackDegraded:
+            return "trackDegraded"
             
         case .trackRestored:
             return "trackRestored"
             
-        case .trackUnmuted:
-            return "trackUnMuted"
+        case .trackDescriptionChanged:
+            return "trackDescriptionChanged"
         
         default:
             return "defaultUpdate"

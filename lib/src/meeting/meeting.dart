@@ -27,6 +27,7 @@ class HMSMeeting {
   }
 
   // TODO: leave should be async
+  // TODO: check if the func signature is correct on both iOS & Android
   ///just call this method to leave meeting.
   Future<void> leaveMeeting(
       {HMSActionResultListener? hmsActionResultListener}) async {
@@ -112,6 +113,7 @@ class HMSMeeting {
     }
   }
 
+// TODO: check if the func signature is correct on both iOS & Android
   Future<void> changeTrackRequest(String peerId, bool mute, bool isVideoTrack,
       {HMSActionResultListener? hmsActionResultListener}) async {
     var result = await PlatformService.invokeMethod(PlatformMethod.changeTrack,
@@ -129,6 +131,7 @@ class HMSMeeting {
     }
   }
 
+// TODO: check if the func signature is correct on both iOS & Android
   Future<void> raiseHand(
       {HMSActionResultListener? hmsActionResultListener}) async {
     var result = await PlatformService.invokeMethod(PlatformMethod.raiseHand);
@@ -141,6 +144,7 @@ class HMSMeeting {
     }
   }
 
+// TODO: check if the func signature is correct on both iOS & Android
   Future<bool> endRoom(bool lock,
       {HMSActionResultListener? hmsActionResultListener}) async {
     var result = await PlatformService.invokeMethod(PlatformMethod.endRoom,
@@ -218,6 +222,7 @@ class HMSMeeting {
     PlatformService.removePreviewListener(listener);
   }
 
+// TODO: check if the func signature is correct on both iOS & Android
   ///accept the role changes.
   void acceptRoleChangerequest(
       {HMSActionResultListener? hmsActionResultListener}) async {
@@ -242,6 +247,7 @@ class HMSMeeting {
     PlatformService.invokeMethod(PlatformMethod.startCapturing);
   }
 
+// TODO: check if the func signature is correct on both iOS & Android
   ///you can change role of any peer in the room just pass [peerId] and [roleName], [forceChange] is optional.
   void changeRole(
       {required String peerId,
@@ -290,19 +296,20 @@ class HMSMeeting {
         arguments: {"peer_id": peer != null ? peer.peerId : "null"});
   }
 
-  void muteAll() async {
-    await PlatformService.invokeMethod(PlatformMethod.muteAll);
+  Future<void> muteAll() async {
+    return await PlatformService.invokeMethod(PlatformMethod.muteAll);
   }
 
-  void unMuteAll() async {
-    await PlatformService.invokeMethod(PlatformMethod.unMuteAll);
+  Future<void> unMuteAll() async {
+    return await PlatformService.invokeMethod(PlatformMethod.unMuteAll);
   }
 
   Future<void> setPlayBackAllowed(bool allow) async {
-    await PlatformService.invokeMethod(PlatformMethod.setPlayBackAllowed,
+    return await PlatformService.invokeMethod(PlatformMethod.setPlayBackAllowed,
         arguments: {"allowed": allow});
   }
 
+// TODO: check if the func signature is correct on both iOS & Android
   Future<bool> changeTrackStateForRole(
       bool mute, String type, String source, List<String> roles,
       {HMSActionResultListener? hmsActionResultListener}) async {
@@ -325,6 +332,7 @@ class HMSMeeting {
     return result == null;
   }
 
+// TODO: check if the func signature is correct on both iOS & Android
   Future<HMSException?> startRtmpOrRecording(
       HMSRecordingConfig hmsRecordingConfig,
       {HMSActionResultListener? hmsActionResultListener}) async {
@@ -343,6 +351,7 @@ class HMSMeeting {
     return HMSException.fromMap(result);
   }
 
+// TODO: check if the func signature is correct on both iOS & Android
   Future<HMSException?> stopRtmpAndRecording(
       {HMSActionResultListener? hmsActionResultListener}) async {
     Map<String, dynamic>? result =
