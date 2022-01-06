@@ -26,6 +26,7 @@ class HMSMeeting {
         arguments: {...config.getJson()});
   }
 
+  // TODO: leave should be async
   ///just call this method to leave meeting.
   Future<void> leaveMeeting(
       {HMSActionResultListener? hmsActionResultListener}) async {
