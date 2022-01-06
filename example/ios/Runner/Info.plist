@@ -29,7 +29,7 @@
 			<string>app.100ms.live</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>100ms</string>
+				<string>hmsflutter</string>
 			</array>
 		</dict>
 	</array>
