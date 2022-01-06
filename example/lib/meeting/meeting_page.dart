@@ -339,18 +339,40 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                       return SizedBox(
                         width: double.infinity,
                         height: MediaQuery.of(context).size.height / 2.5,
-                        child: PeerItemOrganism(
-                          observableMap: {"highestAudio": ""},
-                          height: MediaQuery.of(context).size.height / 2,
-                          width: MediaQuery.of(context).size.width,
-                          isVideoMuted: false,
-                          peerTracKNode: new PeerTracKNode(
-                              peerId: _meetingStore.screenSharePeerId,
-                              track: _meetingStore.screenShareTrack.first,
-                              name: _meetingStore
-                                      .screenShareTrack.first?.peer?.name ??
-                                  ""),
-                        ),
+                        child: _meetingStore.isScreenShareOn
+                            ? Container(
+                                padding: EdgeInsets.all(2),
+                                margin: EdgeInsets.all(2),
+                                decoration: BoxDecoration(
+                                    color: Colors.grey,
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(10)),
+                                    border: Border.all(
+                                        color: Colors.black, width: 1)),
+                                child: Center(
+                                  child: ElevatedButton(
+                                    onPressed: () {
+                                      if (_meetingStore.isScreenShareOn) {
+                                        _meetingStore.stopScreenShare();
+                                        // setState(() {});
+                                      }
+                                    },
+                                    child: Text("Stop Screen share"),
+                                  ),
+                                ),
+                              )
+                            : PeerItemOrganism(
+                                observableMap: {"highestAudio": ""},
+                                height: MediaQuery.of(context).size.height / 2,
+                                width: MediaQuery.of(context).size.width,
+                                isVideoMuted: false,
+                                peerTracKNode: new PeerTracKNode(
+                                    peerId: _meetingStore.screenSharePeerId,
+                                    track: _meetingStore.screenShareTrack.first,
+                                    name: _meetingStore.screenShareTrack.first
+                                            ?.peer?.name ??
+                                        ""),
+                              ),
                       );
                     } else {
                       return Container();
@@ -435,6 +457,8 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                 : Column(
                                     children: [
                                       Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
                                         children: [
                                           VideoTile(
                                             tileIndex: index * 2,
