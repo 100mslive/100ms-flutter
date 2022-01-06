@@ -335,6 +335,9 @@ abstract class MeetingStoreBase extends ChangeNotifier
     }
 
     if (track.kind == HMSTrackKind.kHMSTrackKindAudio) {
+      if(track is HMSRemoteAudioTrack){
+        track.setVolume(0);
+      }
       int index =
           peerTracks.indexWhere((element) => element.peerId == peer.peerId);
       peerTracks[index].audioTrack = track;

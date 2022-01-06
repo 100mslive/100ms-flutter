@@ -25,6 +25,8 @@ import live.hms.video.media.codec.HMSVideoCodec
 import live.hms.video.media.settings.HMSAudioTrackSettings
 import live.hms.video.media.settings.HMSTrackSettings
 import live.hms.video.media.settings.HMSVideoTrackSettings
+import live.hms.video.media.tracks.HMSAudioTrack
+import live.hms.video.media.tracks.HMSLocalAudioTrack
 import live.hms.video.media.tracks.HMSRemoteAudioTrack
 import live.hms.video.media.tracks.HMSTrack
 import live.hms.video.sdk.*
@@ -195,6 +197,9 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             }
             "set_playback_allowed"->{
                 setPlayBackAllowed(call)
+            }
+            "set_volume"->{
+                setVolume(call)
             }
             else -> {
                 result.notImplemented()
@@ -982,6 +987,23 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         result?.success("setPlatBackAllowed${allowed!!}")
     }
 
+    private fun setVolume(call: MethodCall){
+        val peerId = call.argument<String>("peer_id")
+        val volume = call.argument<Double>("volume")
+        val peer : HMSPeer? = getPeerById(peerId!!)
+        if(peer == null)result?.success(false)
+        val audioTrack : HMSAudioTrack? = peer?.audioTrack
 
+        if(audioTrack == null)result?.success(false)
+
+        if(audioTrack is HMSRemoteAudioTrack){
+            audioTrack.setVolume(volume!!.toDouble())
+        }
+        else if(audioTrack is HMSLocalAudioTrack){
+            audioTrack.volume=volume!!.toDouble()
+        }
+
+        result?.success(true)
+    }
 
 }
