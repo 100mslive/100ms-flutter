@@ -401,12 +401,12 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         
         if let peerID = arguments["peer_id"] as? String, let peer = getPeer(by: peerID) {
             if let audio = peer.audioTrack {
-                result(audio.isMute)
+                result(audio.isMute())
                 return
             }
         } else {
             if let peer = hmsSDK?.localPeer, let audio = peer.audioTrack {
-                result(audio.isMute)
+                result(audio.isMute())
                 return
             }
         }
@@ -504,12 +504,12 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         
         if let peerID = arguments["peer_id"] as? String, let peer = getPeer(by: peerID) {
             if let video = peer.videoTrack {
-                result(video.isMute)
+                result(video.isMute())
                 return
             }
         } else {
             if let peer = hmsSDK?.localPeer, let video = peer.videoTrack {
-                result(video.isMute)
+                result(video.isMute())
                 return
             }
         }
