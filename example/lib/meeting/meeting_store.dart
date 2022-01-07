@@ -293,7 +293,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
   @override
   void onPeerUpdate({required HMSPeer peer, required HMSPeerUpdate update}) {
     peerOperation(peer, update);
-    print("${peerTracks.toString()} onPeerUpdateListLength");
+    // print("${peerTracks.toString()} onPeerUpdateListLength");
   }
 
   @override
@@ -566,12 +566,14 @@ abstract class MeetingStoreBase extends ChangeNotifier
   Future<bool> endRoom(bool lock) async {
     bool room = await meetingController.endRoom(lock);
     if (room == true) isRoomEnded = true;
+    peerTracks.clear();
     return room;
   }
 
   void leaveMeeting() async {
     meetingController.leaveMeeting();
     isRoomEnded = true;
+    peerTracks.clear();
     // removeListenerMeeting();
   }
 

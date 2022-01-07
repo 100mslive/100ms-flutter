@@ -339,22 +339,12 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         result(nil)
     }
     
-    private var hasJoinedaRoom = false
     
     private func leaveMeeting(_ result: @escaping FlutterResult) {
-        
-        guard hasJoinedaRoom else {
-            let error = getError(message: "Has not joined a room", description: "No room to leave", params: ["function": #function])
-            result(HMSErrorExtension.toDictionary(error))
-            return
-        }
-        
-        hmsSDK?.leave { [weak self] success, error in
+        hmsSDK?.leave { success, error in
             if let error = error {
-                self?.hasJoinedaRoom = true
                 result(HMSErrorExtension.toDictionary(error))
             } else {
-                self?.hasJoinedaRoom = false
                 result(nil)
             }
         }
@@ -385,15 +375,13 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         guard let shouldMute = arguments["is_on"] as? Bool,
               let peer = hmsSDK?.localPeer,
               let audio = peer.audioTrack as? HMSLocalAudioTrack else {
-                  
-                  let error = getError(message: "Invalid parameters passed to switch audio", params: ["function": #function, "arguments": arguments])
-                  result(HMSErrorExtension.toDictionary(error))
+                  result(false)
                   return
               }
         
         audio.setMute(shouldMute)
         
-        result(nil)
+        result(true)
     }
     
     
@@ -418,33 +406,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     
     private func toggleAudioMuteAll(_ result: FlutterResult, shouldMute: Bool) {
         
-        guard let peers = hmsSDK?.remotePeers
-        else {
-            let error = getError(message: "No remote peers in the room", params: ["function": #function, "arguments": shouldMute])
-            result(HMSErrorExtension.toDictionary(error))
-            return
-        }
-        
-        if shouldMute {
-            if let localPeerCanMute = hmsSDK?.localPeer?.role?.permissions.mute, localPeerCanMute {
-                performPlaybackToggle(peers, shouldMute)
-                result(nil)
-                return
-            }
-        } else {
-            if let localPeerCanUnmute = hmsSDK?.localPeer?.role?.permissions.unmute, localPeerCanUnmute {
-                performPlaybackToggle(peers, shouldMute)
-                result(nil)
-                return
-            }
-        }
-        
-        let error = getError(message: "No permission to perform this action", description: "Local peer cannot perform mute/unmute toggle for remote peers", params: ["function": #function, "arguments": shouldMute])
-        result(HMSErrorExtension.toDictionary(error))
-    }
-    
-    private func performPlaybackToggle(_ peers: [HMSRemotePeer], _ shouldMute: Bool) {
-        peers.forEach { peer in
+         hmsSDK?.remotePeers.forEach { peer in
             if let audio = peer.remoteAudioTrack() {
                 audio.setPlaybackAllowed(!shouldMute)
             }
@@ -454,36 +416,37 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                 }
             }
         }
+
+        result(nil)
     }
-    
+
+
     // MARK: - Video Helpers
     
     private func startCapturing(_ result: FlutterResult) {
         guard let peer = hmsSDK?.localPeer,
               let track = peer.videoTrack as? HMSLocalVideoTrack
         else {
-            let error = getError(message: "Local Peer not found", params: ["function": #function])
-            result(HMSErrorExtension.toDictionary(error))
+            result(false)
             return
         }
         
         track.startCapturing()
         
-        result(nil)
+        result(true)
     }
     
     private func stopCapturing(_ result: FlutterResult) {
         guard let peer = hmsSDK?.localPeer,
               let track = peer.videoTrack as? HMSLocalVideoTrack
         else {
-            let error = getError(message: "Local Peer not found", params: ["function": #function])
-            result(HMSErrorExtension.toDictionary(error))
+            result(false)
             return
         }
         
         track.stopCapturing()
         
-        result(nil)
+        result(true)
     }
     
     private func switchCamera(_ result: FlutterResult) {
@@ -507,15 +470,13 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         guard let shouldMute = arguments["is_on"] as? Bool,
               let peer = hmsSDK?.localPeer,
               let video = peer.videoTrack as? HMSLocalVideoTrack else {
-                  
-                  let error = getError(message: "Invalid parameters passed to switch audio", params: ["function": #function, "arguments": arguments])
-                  result(HMSErrorExtension.toDictionary(error))
+                  result(false)
                   return
               }
         
         video.setMute(shouldMute)
         
-        result(nil)
+        result(true)
     }
     
     private func isVideoMute(_ call: FlutterMethodCall, _ result: FlutterResult) {
@@ -540,12 +501,8 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     private func setPlaybackAllowed(_ call: FlutterMethodCall, _ result: FlutterResult) {
         let arguments = call.arguments as! [AnyHashable: Any]
         
-        guard let allowed = arguments["allowed"] as? Bool
-        else {
-            let error = getError(message: "Playback Allowed status not found", params: ["function": #function, "arguments": arguments])
-            result(HMSErrorExtension.toDictionary(error))
-            return
-        }
+        let allowed = arguments["allowed"] as! Bool
+        
         
         if let localPeer = hmsSDK?.localPeer {
             if let video = localPeer.videoTrack as? HMSLocalVideoTrack {
@@ -572,13 +529,14 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     
     // MARK: - Messaging
     
+    // TODO: update result type in messaging
     private func sendBroadcastMessage(_ call: FlutterMethodCall, _ result: FlutterResult) {
         let arguments = call.arguments as! [AnyHashable: Any]
         
         guard let message = arguments["message"] as? String
         else {
-            print(#function, "Could not send broadcast message")
-            result("Could not send broadcast message")
+            // print(#function, "Could not send broadcast message")
+            // result("Could not send broadcast message")
             return
         }
         
@@ -586,14 +544,11 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         
         hmsSDK?.sendBroadcastMessage(type: type, message: message) { message, error in
             if let error = error {
-                print(#function, "Error sending broadcast message: ", error.description)
-                return
+                
+            } else {
+
             }
-            
-            print(#function, "Successfully sent broadcast message: ", message?.message ?? "")
         }
-        
-        result("\(#function)")
     }
     
     private func sendDirectMessage(_ call: FlutterMethodCall, _ result: FlutterResult) {
@@ -691,13 +646,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         
         let arguments = call.arguments as! [AnyHashable: Any]
         
-        guard let request = roleChangeRequest else {
-            let error = getError(message: "No role change request received", params: ["function": #function, "arguments": arguments])
-            result(HMSErrorExtension.toDictionary(error))
-            return
-        }
-        
-        hmsSDK?.accept(changeRole: request) { [weak self] success, error in
+        hmsSDK?.accept(changeRole: roleChangeRequest!) { [weak self] success, error in
             if let error = error {
                 result(HMSErrorExtension.toDictionary(error))
             } else {
@@ -712,29 +661,13 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         
         let arguments = call.arguments as! [AnyHashable: Any]
         
-        guard let canEndRoom = hmsSDK?.localPeer?.role?.permissions.endRoom
-        else {
-            let error = getError(message: "Don't have permission to end room", params: ["function": #function, "arguments": arguments])
-            result(HMSErrorExtension.toDictionary(error))
-            return
-        }
-        
-        guard hasJoinedaRoom && canEndRoom else {
-            let error = getError(message: "User has not joined a room", params: ["function": #function, "arguments": arguments])
-            result(HMSErrorExtension.toDictionary(error))
-            return
-        }
-        
         let lock = arguments["lock"] as? Bool ?? false
-        // TODO: add reason to dart side
         let reason = arguments["reason"] as? String ?? "End room invoked"
         
-        hmsSDK?.endRoom(lock: lock, reason: reason) { [weak self] success, error in
-            
+        hmsSDK?.endRoom(lock: lock, reason: reason) { success, error in
             if let error = error {
                 result(HMSErrorExtension.toDictionary(error))
             } else {
-                self?.hasJoinedaRoom = false
                 result(nil)
             }
         }
@@ -753,7 +686,6 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             return
         }
         
-        // TODO: add reason to dart side
         let reason = (arguments["reason"] as? String) ?? "Removed from room"
         
         hmsSDK?.removePeer(peer, reason: reason) { success, error in
@@ -841,12 +773,12 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     
     private var isHandRaise = false
     
-    // TODO: add metadata from dart side
     private func raiseHand(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         
-        // let arguments = call.arguments as! [AnyHashable: Any]
+        let arguments = call.arguments as! [AnyHashable: Any]
+        let metadata = arguments["metadata"] as? String ?? ""
         
-        hmsSDK?.change(metadata: "{\"isHandRaised\":\(isHandRaise)}") { [weak self] success, error in
+        hmsSDK?.change(metadata: metadata) { [weak self] success, error in
             if let error = error {
                 result(HMSErrorExtension.toDictionary(error))
                 return
@@ -992,8 +924,6 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                 "room" : HMSRoomExtension.toDictionary(room)
             ]
         ] as [String: Any]
-        
-        hasJoinedaRoom = true
         
         eventSink?(data)
     }
