@@ -406,7 +406,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     
     private func toggleAudioMuteAll(_ result: FlutterResult, shouldMute: Bool) {
         
-         hmsSDK?.remotePeers.forEach { peer in
+        hmsSDK?.remotePeers?.forEach { peer in
             if let audio = peer.remoteAudioTrack() {
                 audio.setPlaybackAllowed(!shouldMute)
             }

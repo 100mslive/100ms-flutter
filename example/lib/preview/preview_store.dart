@@ -33,7 +33,7 @@ abstract class PreviewStoreBase
   void onPreview({required HMSRoom room, required List<HMSTrack> localTracks}) {
     for (HMSPeer each in room.peers!) {
       if (each.isLocal) {
-        peer = each;
+        this.peer = each;
         break;
       }
     }
