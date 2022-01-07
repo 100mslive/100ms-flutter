@@ -228,8 +228,17 @@ class PlatformService {
       switch (method) {
         case HMSPreviewUpdateListenerMethod.onPreviewVideo:
           HMSRoom? room = HMSRoom.fromMap(event.data['room']);
+
+          HMSPeer? localPeer;
+          for (var peer in room.peers!) {
+            if (peer.isLocal) {
+              localPeer = peer;
+            }
+          }
+
           List<HMSTrack> tracks = HMSTrack.getHMSTracksFromList(
-              listOfMap: event.data['local_tracks']);
+              listOfMap: event.data['local_tracks'], peer: localPeer);
+
           notifyPreviewListeners(
               method, {'room': room, 'local_tracks': tracks});
           break;
