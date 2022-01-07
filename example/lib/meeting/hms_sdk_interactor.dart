@@ -19,11 +19,11 @@ class HMSSDKInteractor implements HMSActionResultListener {
     _meeting.leaveMeeting(hmsActionResultListener: this);
   }
 
-  Future<void> switchAudio({bool isOn = false}) async {
+  Future<HMSException?> switchAudio({bool isOn = false}) async {
     return await _meeting.switchAudio(isOn: isOn);
   }
 
-  Future<void> switchVideo({bool isOn = false}) async {
+  Future<HMSException?> switchVideo({bool isOn = false}) async {
     return await _meeting.switchVideo(isOn: isOn);
   }
 
@@ -81,7 +81,7 @@ class HMSSDKInteractor implements HMSActionResultListener {
   }
 
   void acceptRoleChangeRequest() {
-    _meeting.acceptRoleChangerequest();
+    _meeting.acceptRoleChangeRequest();
   }
 
   void stopCapturing() {
