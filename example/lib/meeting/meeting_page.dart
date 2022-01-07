@@ -563,8 +563,8 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                 color: Colors.red,
                                 tooltip: 'Leave Or End',
                                 iconSize: 32,
-                                onPressed: () async {
-                                  String ans = await showDialog(
+                                onPressed: () {
+                                  showDialog(
                                       context: context,
                                       builder: (_) =>
                                           LeaveOrEndMeetingDialogOption(
