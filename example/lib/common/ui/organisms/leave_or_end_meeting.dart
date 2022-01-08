@@ -52,12 +52,12 @@ class _LeaveOrEndMeetingDialogOptionState
             ),
             GestureDetector(
               onTap: () async {
-                bool ended = await widget.meetingStore.endRoom(forceValue);
-                if (!ended) {
-                  Navigator.pop(context);
-                  UtilityComponents.showSnackBarWithString(
-                      "No permission", context);
-                }
+                // bool ended = await widget.meetingStore.endRoom(forceValue);
+                // if (!ended) {
+                //   Navigator.pop(context);
+                //   UtilityComponents.showSnackBarWithString(
+                //       "No permission", context);
+                // }
               },
               child: Row(
                 children: [

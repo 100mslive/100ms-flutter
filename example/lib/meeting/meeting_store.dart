@@ -213,16 +213,16 @@ abstract class MeetingStoreBase extends ChangeNotifier
   }
 
   @action
-  Future<void> sendMessage(String message) async {
-    await meetingController.sendMessage(message);
+  void sendMessage(String message) {
+    meetingController.sendMessage(message);
   }
 
-  Future<void> sendDirectMessage(String message, String peerId) async {
-    await meetingController.sendDirectMessage(message, peerId);
+  void sendDirectMessage(String message, String peerId) async {
+    meetingController.sendDirectMessage(message, peerId);
   }
 
-  Future<void> sendGroupMessage(String message, String roleName) async {
-    await meetingController.sendGroupMessage(message, roleName);
+  void sendGroupMessage(String message, String roleName) async {
+    meetingController.sendGroupMessage(message, roleName);
   }
 
   @action
@@ -563,11 +563,11 @@ abstract class MeetingStoreBase extends ChangeNotifier
     }
   }
 
-  Future<bool> endRoom(bool lock) async {
-    bool room = await meetingController.endRoom(lock);
-    if (room == true) isRoomEnded = true;
-    peerTracks.clear();
-    return room;
+  void endRoom(bool lock, String? reason) {
+    meetingController.endRoom(lock, reason == null ? "" : reason);
+    // if (room == true) isRoomEnded = true;
+    // peerTracks.clear();
+    // return room;
   }
 
   void leaveMeeting() async {
@@ -617,24 +617,29 @@ abstract class MeetingStoreBase extends ChangeNotifier
 
   void startRtmpOrRecording(
       String meetingUrl, bool toRecord, List<String>? rtmpUrls) async {
-    HMSRecordingConfig hmsRecordingConfig = new HMSRecordingConfig(
-        meetingUrl: meetingUrl, toRecord: toRecord, rtmpUrls: rtmpUrls);
-    hmsException =
-        await meetingController.startRtmpOrRecording(hmsRecordingConfig);
-    // ignore: unrelated_type_equality_checks
-    if (hmsException == null || hmsException?.code == 400) {
-      isRecordingStarted = true;
-    }
 
-    print("${hmsException?.toString()} HMSEXCEPTION  $isRecordingStarted");
+        HMSRecordingConfig hmsRecordingConfig = new HMSRecordingConfig(
+        meetingUrl: meetingUrl, toRecord: toRecord, rtmpUrls: rtmpUrls);
+        
+        meetingController.startRtmpOrRecording(hmsRecordingConfig);
+    // hmsException =
+    //     await meetingController.startRtmpOrRecording(hmsRecordingConfig);
+    // // ignore: unrelated_type_equality_checks
+    // if (hmsException == null || hmsException?.code == 400) {
+    //   isRecordingStarted = true;
+    // }
+
+    // print("${hmsException?.toString()} HMSEXCEPTION  $isRecordingStarted");
   }
 
   void stopRtmpAndRecording() async {
-    hmsException = (await meetingController.stopRtmpAndRecording());
-    if (hmsException == null) {
-      isRecordingStarted = false;
-    }
-    print("${hmsException?.toString()} HMSEXCEPTION $isRecordingStarted");
+    meetingController.stopRtmpAndRecording();
+
+    // hmsException = (await meetingController.stopRtmpAndRecording());
+    // if (hmsException == null) {
+    //   isRecordingStarted = false;
+    // }
+    // print("${hmsException?.toString()} HMSEXCEPTION $isRecordingStarted");
   }
 
   Future<HMSRoom?> getRoom() async {
@@ -642,11 +647,11 @@ abstract class MeetingStoreBase extends ChangeNotifier
     return room;
   }
 
-  Future<void> raiseHand() async {
-    await meetingController.raiseHand();
+  void raiseHand() {
+    meetingController.raiseHand();
   }
 
-  Future<void> setPlayBackAllowed(bool allow) async {
-    await meetingController.setPlayBackAllowed(allow);
+  void setPlayBackAllowed(bool allow) {
+    meetingController.setPlayBackAllowed(allow);
   }
 }

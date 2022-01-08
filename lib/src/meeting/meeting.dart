@@ -34,7 +34,7 @@ class HMSMeeting {
         await PlatformService.invokeMethod(PlatformMethod.leaveMeeting);
     if (hmsActionResultListener != null) {
       if (result == null)
-        hmsActionResultListener.onSuccess();
+        hmsActionResultListener.onSuccess("leave-meeting");
       else
         hmsActionResultListener.onError(
             hmsException: HMSException.fromMap(result["error"]));
@@ -143,7 +143,7 @@ class HMSMeeting {
 
     if (hmsActionResultListener != null) {
       if (result == null)
-        hmsActionResultListener.onSuccess();
+        hmsActionResultListener.onSuccess("change-track-request");
       else
         hmsActionResultListener.onError(
             hmsException: HMSException.fromMap(result["error"]));
@@ -157,7 +157,7 @@ class HMSMeeting {
 
     if (hmsActionResultListener != null) {
       if (result == null)
-        hmsActionResultListener.onSuccess();
+        hmsActionResultListener.onSuccess("raise-hand");
       else
         hmsActionResultListener.onError(
             hmsException: HMSException.fromMap(result["error"]));
@@ -171,7 +171,7 @@ class HMSMeeting {
 
     if (hmsActionResultListener != null) {
       if (result == null) {
-        hmsActionResultListener.onSuccess();
+        hmsActionResultListener.onSuccess("end-room");
       } else {
         hmsActionResultListener.onError(
             hmsException: HMSException.fromMap(result["error"]));
@@ -186,7 +186,7 @@ class HMSMeeting {
 
     if (hmsActionResultListener != null) {
       if (result == null) {
-        hmsActionResultListener.onSuccess();
+        hmsActionResultListener.onSuccess("remove-peer");
       } else {
         hmsActionResultListener.onError(
             hmsException: HMSException.fromMap(result["error"]));
@@ -256,7 +256,7 @@ class HMSMeeting {
         await PlatformService.invokeMethod(PlatformMethod.acceptRoleChange);
     if (hmsActionResultListener != null) {
       if (result == null)
-        hmsActionResultListener.onSuccess();
+        hmsActionResultListener.onSuccess("accept-role-change-request");
       else
         hmsActionResultListener.onError(
             hmsException: HMSException.fromMap(result["error"]));
@@ -288,7 +288,7 @@ class HMSMeeting {
 
     if (hmsActionResultListener != null) {
       if (result == null)
-        hmsActionResultListener.onSuccess();
+        hmsActionResultListener.onSuccess("change-role");
       else
         hmsActionResultListener.onError(
             hmsException: HMSException.fromMap(result["error"]));
@@ -349,7 +349,7 @@ class HMSMeeting {
 
     if (hmsActionResultListener != null) {
       if (result == null)
-        hmsActionResultListener.onSuccess();
+        hmsActionResultListener.onSuccess("change-track-state-for-role");
       else
         hmsActionResultListener.onError(
             hmsException: HMSException.fromMap(result["error"]));
@@ -364,7 +364,7 @@ class HMSMeeting {
 
     if (hmsActionResultListener != null) {
       if (result == null)
-        hmsActionResultListener.onSuccess();
+        hmsActionResultListener.onSuccess("start-rtmp-or-recording");
       else
         hmsActionResultListener.onError(
             hmsException: HMSException.fromMap(result["error"]));
@@ -378,7 +378,7 @@ class HMSMeeting {
 
     if (hmsActionResultListener != null) {
       if (result == null)
-        hmsActionResultListener.onSuccess();
+        hmsActionResultListener.onSuccess("stop-rtmp-and-recording");
       else
         hmsActionResultListener.onError(
             hmsException: HMSException.fromMap(result["error"]));

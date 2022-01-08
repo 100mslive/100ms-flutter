@@ -1,6 +1,6 @@
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
-class HMSSDKInteractor {
+class HMSSDKInteractor implements HMSActionResultListener {
   late HMSConfig config;
   late List<HMSMessage> messages;
   late HMSMeeting _meeting;
@@ -15,9 +15,8 @@ class HMSSDKInteractor {
     await _meeting.joinMeeting(config: this.config);
   }
 
-  Future<void> leaveMeeting() async {
-    _meeting.leaveMeeting(
-        hmsActionResultListener: ActionListener("leaveMeeting"));
+  void leaveMeeting() async {
+    _meeting.leaveMeeting(hmsActionResultListener: this);
   }
 
   Future<HMSException?> switchAudio({bool isOn = false}) async {
@@ -33,17 +32,23 @@ class HMSSDKInteractor {
   }
 
   void sendMessage(String message) {
-    _meeting.sendMessage(message, "chat", hmsMessageResultListener: this);
+    _meeting.sendMessage(message, "chat");
   }
 
   void sendDirectMessage(String message, String peerId) async {
-    _meeting.sendDirectMessage(message, peerId, "chat",
-        hmsMessageResultListener: this);
+    _meeting.sendDirectMessage(
+      message,
+      peerId,
+      "chat",
+    );
   }
 
   void sendGroupMessage(String message, String roleName) async {
-    _meeting.sendGroupMessage(message, roleName, "chat",
-        hmsMessageResultListener: this);
+    _meeting.sendGroupMessage(
+      message,
+      roleName,
+      "chat",
+    );
   }
 
   Future<void> previewVideo({required HMSConfig config}) async {
@@ -84,7 +89,7 @@ class HMSSDKInteractor {
   }
 
   void acceptRoleChangeRequest() {
-    _meeting.acceptRoleChangeRequest();
+    _meeting.acceptRoleChangeRequest(hmsActionResultListener: this);
   }
 
   void stopCapturing() {
@@ -95,8 +100,8 @@ class HMSSDKInteractor {
     return await _meeting.getLocalPeer();
   }
 
-  void startCapturing() {
-    _meeting.startCapturing();
+  Future<bool> startCapturing() async {
+    return await _meeting.startCapturing();
   }
 
   void changeTrackRequest(String peerId, bool mute, bool isVideoTrack) {
@@ -106,8 +111,8 @@ class HMSSDKInteractor {
 
   // TODO: implement accept change Track request
 
-  void endRoom(bool lock) {
-    _meeting.endRoom(lock, "Ending Meeting from Flutter",
+  void endRoom(bool lock,String reason) {
+    _meeting.endRoom(lock, reason,
         hmsActionResultListener: this);
   }
 
@@ -151,9 +156,9 @@ class HMSSDKInteractor {
     _meeting.unMuteAll();
   }
 
-  Future<void> setPlayBackAllowed(bool allow) async {
+  void setPlayBackAllowed(bool allow) {
     // TODO: add permission checks in exmaple app UI
-    await _meeting.setPlayBackAllowed(allow);
+    _meeting.setPlayBackAllowed(allow);
   }
 
   void startRtmpOrRecording(HMSRecordingConfig hmsRecordingConfig) {
@@ -181,42 +186,40 @@ class HMSSDKInteractor {
   }
 
   @override
-  void onSuccess() {
-    print("HMSSdkInteractor onSuccess");
-  }
-}
-
-class ActionListener implements HMSActionResultListener {
-  late String method;
-
-  ActionListener(String method) {
-    this.method = method;
-  }
-
-  @override
-  void onError({HMSException? hmsException}) {
-    // TODO: implement onError
-  }
-
-  @override
-  void onSuccess() {
-    // TODO: implement onSuccess
+  void onSuccess(String? method) {
     switch (method) {
-      case "leaveMeeting":
+      case "leave-meeting":
+        
         break;
+
+      case "change-track-request":
+        break;
+
+      case "raise-hand":
+        break;
+
+      case "end-room":
+        break;
+
+      case "remove-peer":
+        break;
+
+      case "accept-role-change-request":
+        break;
+
+      case "change-role":
+        break;
+
+      case "change-track-state-for-role":
+        break;
+
+      case "start-rtmp-or-recording":
+        break;
+
+      case "stop-rtmp-or-recording":
+        break;
+
       default:
     }
-  }
-}
-
-class MessageListener implements HMSMessageResultListener {
-  @override
-  void onError({HMSException? hmsException}) {
-    // TODO: implement onError
-  }
-
-  @override
-  void onSuccess({HMSMessage hmsMessage}) {
-    // TODO: implement onSuccess
   }
 }

@@ -186,7 +186,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
                 updateHMSLocalTrackSetting(call)
             }
             "raise_hand"->{
-                raiseHand()
+                raiseHand(call)
             }
             "set_playback_allowed"->{
                 setPlayBackAllowed(call)
@@ -322,9 +322,9 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         val videoTrack = peer?.videoTrack
         if (videoTrack != null) {
             videoTrack.setMute(false)
-            result.success(true)
+            result?.success(true)
         } else {
-            result.success(false)
+            result?.success(false)
         }
     }
 
@@ -475,7 +475,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
     private fun acceptRoleRequest() {
         hmssdk.acceptChangeRole(
             this.requestChange!!,
-            hmsActionResultListener = listener
+            hmsActionResultListener = acceptRoleRequestListener
         )
     }
 
@@ -487,7 +487,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             }
 
             override fun onSuccess() {
-                this.requestChange = null
+//                this.requestChange = null
                 CoroutineScope(Dispatchers.Main).launch {
                     result?.success(null)
                 }
@@ -583,7 +583,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
                 }
             }
         }
-        result(null)
+//        result(null)
     }
 
     private fun unMuteAll(result: Result) {
@@ -597,7 +597,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
                 }
             }
         }
-        result(null)
+//        result(null)
     }
 
     private fun startRtmpOrRecording(call: MethodCall) {
@@ -739,10 +739,11 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
     private var isRaiseHandTrue:Boolean = false
 
     // TODO: check if metadata is correct from dart side
-    private fun raiseHand(){
+    private fun raiseHand(call:MethodCall){
         isRaiseHandTrue = !isRaiseHandTrue
         val metadata = call.argument<String>("metadata")
-        hmssdk.changeMetadata(metadata, hmsActionResultListener = this.actionListener)
+        hmssdk.changeMetadata(metadata!!, hmsActionResultListener = this.actionListener)
+        
     }
 
 
@@ -770,7 +771,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         }
 
         override fun onJoin(room: HMSRoom) {
-            hasJoined = true
+//            hasJoined = true
             hmssdk.addAudioObserver(hmsAudioListener)
             previewChannel.setStreamHandler(null)
             val args = HashMap<String, Any?>()
