@@ -617,11 +617,10 @@ abstract class MeetingStoreBase extends ChangeNotifier
 
   void startRtmpOrRecording(
       String meetingUrl, bool toRecord, List<String>? rtmpUrls) async {
-
-        HMSRecordingConfig hmsRecordingConfig = new HMSRecordingConfig(
+    HMSRecordingConfig hmsRecordingConfig = new HMSRecordingConfig(
         meetingUrl: meetingUrl, toRecord: toRecord, rtmpUrls: rtmpUrls);
-        
-        meetingController.startRtmpOrRecording(hmsRecordingConfig);
+
+    meetingController.startRtmpOrRecording(hmsRecordingConfig);
     // hmsException =
     //     await meetingController.startRtmpOrRecording(hmsRecordingConfig);
     // // ignore: unrelated_type_equality_checks

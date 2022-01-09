@@ -111,9 +111,8 @@ class HMSSDKInteractor implements HMSActionResultListener {
 
   // TODO: implement accept change Track request
 
-  void endRoom(bool lock,String reason) {
-    _meeting.endRoom(lock, reason,
-        hmsActionResultListener: this);
+  void endRoom(bool lock, String reason) {
+    _meeting.endRoom(lock, reason, hmsActionResultListener: this);
   }
 
   void removePeer(String peerId) {
@@ -181,45 +180,82 @@ class HMSSDKInteractor implements HMSActionResultListener {
 
 // TODO: implement changes based on action listener
   @override
-  void onError({HMSException? hmsException}) {
-    print("HMSSdkInteractor onError");
+  void onError({HMSActionResultListenerMethod methodType = HMSActionResultListenerMethod.unknown,HMSException? hmsException}) {
+    switch (methodType) {
+      
+      case HMSActionResultListenerMethod.leaveMeeting:
+        // TODO: Handle this case.
+        break;
+      case HMSActionResultListenerMethod.changeTrackRequest:
+        // TODO: Handle this case.
+        break;
+      case HMSActionResultListenerMethod.raiseHand:
+        // TODO: Handle this case.
+        break;
+      case HMSActionResultListenerMethod.endRoom:
+        // TODO: Handle this case.
+        break;
+      case HMSActionResultListenerMethod.removePeer:
+        // TODO: Handle this case.
+        break;
+      case HMSActionResultListenerMethod.acceptRoleChangeRequest:
+        // TODO: Handle this case.
+        break;
+      case HMSActionResultListenerMethod.changeRole:
+        // TODO: Handle this case.
+        break;
+      case HMSActionResultListenerMethod.changeTrackStateForRole:
+        // TODO: Handle this case.
+        break;
+      case HMSActionResultListenerMethod.startRtmpOrRecording:
+        // TODO: Handle this case.
+        break;
+      case HMSActionResultListenerMethod.stopRtmpAndRecording:
+        // TODO: Handle this case.
+        break;
+      case HMSActionResultListenerMethod.unknown:
+        // TODO: Handle this case.
+        break;
+    }
   }
 
   @override
-  void onSuccess(String? method) {
-    switch (method) {
-      case "leave-meeting":
-        
+  void onSuccess({HMSActionResultListenerMethod methodType = HMSActionResultListenerMethod.unknown,dynamic arguments}) {
+    switch (methodType) {
+      
+      case HMSActionResultListenerMethod.leaveMeeting:
+        // TODO: Handle this case.
         break;
-
-      case "change-track-request":
+      case HMSActionResultListenerMethod.changeTrackRequest:
+        // TODO: Handle this case.
         break;
-
-      case "raise-hand":
+      case HMSActionResultListenerMethod.raiseHand:
+        // TODO: Handle this case.
         break;
-
-      case "end-room":
+      case HMSActionResultListenerMethod.endRoom:
+        // TODO: Handle this case.
         break;
-
-      case "remove-peer":
+      case HMSActionResultListenerMethod.removePeer:
+        // TODO: Handle this case.
         break;
-
-      case "accept-role-change-request":
+      case HMSActionResultListenerMethod.acceptRoleChangeRequest:
+        // TODO: Handle this case.
         break;
-
-      case "change-role":
+      case HMSActionResultListenerMethod.changeRole:
+        // TODO: Handle this case.
         break;
-
-      case "change-track-state-for-role":
+      case HMSActionResultListenerMethod.changeTrackStateForRole:
+        // TODO: Handle this case.
         break;
-
-      case "start-rtmp-or-recording":
+      case HMSActionResultListenerMethod.startRtmpOrRecording:
+        // TODO: Handle this case.
         break;
-
-      case "stop-rtmp-or-recording":
+      case HMSActionResultListenerMethod.stopRtmpAndRecording:
+        // TODO: Handle this case.
         break;
-
-      default:
+      case HMSActionResultListenerMethod.unknown:
+        // TODO: Handle this case.
+        break;
     }
   }
 }

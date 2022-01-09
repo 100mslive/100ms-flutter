@@ -8,6 +8,7 @@
 import 'dart:ffi';
 
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:hmssdk_flutter/src/enum/hms_action_result_listener_method.dart';
 import 'package:hmssdk_flutter/src/manager/hms_sdk_manager.dart';
 import 'package:hmssdk_flutter/src/service/platform_service.dart';
 import '../../hmssdk_flutter.dart';
@@ -34,9 +35,9 @@ class HMSMeeting {
         await PlatformService.invokeMethod(PlatformMethod.leaveMeeting);
     if (hmsActionResultListener != null) {
       if (result == null)
-        hmsActionResultListener.onSuccess("leave-meeting");
+        hmsActionResultListener.onSuccess(methodType: HMSActionResultListenerMethod.leaveMeeting);
       else
-        hmsActionResultListener.onError(
+        hmsActionResultListener.onError(methodType: HMSActionResultListenerMethod.leaveMeeting,
             hmsException: HMSException.fromMap(result["error"]));
     }
   }
@@ -143,9 +144,10 @@ class HMSMeeting {
 
     if (hmsActionResultListener != null) {
       if (result == null)
-        hmsActionResultListener.onSuccess("change-track-request");
+        hmsActionResultListener.onSuccess(methodType: HMSActionResultListenerMethod.changeTrackRequest);
       else
         hmsActionResultListener.onError(
+          methodType: HMSActionResultListenerMethod.changeTrackRequest,
             hmsException: HMSException.fromMap(result["error"]));
     }
   }
@@ -157,9 +159,9 @@ class HMSMeeting {
 
     if (hmsActionResultListener != null) {
       if (result == null)
-        hmsActionResultListener.onSuccess("raise-hand");
+        hmsActionResultListener.onSuccess(methodType: HMSActionResultListenerMethod.raiseHand);
       else
-        hmsActionResultListener.onError(
+        hmsActionResultListener.onError(methodType: HMSActionResultListenerMethod.raiseHand,
             hmsException: HMSException.fromMap(result["error"]));
     }
   }
@@ -171,9 +173,9 @@ class HMSMeeting {
 
     if (hmsActionResultListener != null) {
       if (result == null) {
-        hmsActionResultListener.onSuccess("end-room");
+        hmsActionResultListener.onSuccess(methodType: HMSActionResultListenerMethod.endRoom);
       } else {
-        hmsActionResultListener.onError(
+        hmsActionResultListener.onError(methodType: HMSActionResultListenerMethod.endRoom,
             hmsException: HMSException.fromMap(result["error"]));
       }
     }
@@ -186,9 +188,9 @@ class HMSMeeting {
 
     if (hmsActionResultListener != null) {
       if (result == null) {
-        hmsActionResultListener.onSuccess("remove-peer");
+        hmsActionResultListener.onSuccess(methodType: HMSActionResultListenerMethod.removePeer);
       } else {
-        hmsActionResultListener.onError(
+        hmsActionResultListener.onError(methodType: HMSActionResultListenerMethod.removePeer,
             hmsException: HMSException.fromMap(result["error"]));
       }
     }
@@ -256,9 +258,9 @@ class HMSMeeting {
         await PlatformService.invokeMethod(PlatformMethod.acceptRoleChange);
     if (hmsActionResultListener != null) {
       if (result == null)
-        hmsActionResultListener.onSuccess("accept-role-change-request");
+        hmsActionResultListener.onSuccess(methodType: HMSActionResultListenerMethod.acceptRoleChangeRequest);
       else
-        hmsActionResultListener.onError(
+        hmsActionResultListener.onError(methodType: HMSActionResultListenerMethod.acceptRoleChangeRequest,
             hmsException: HMSException.fromMap(result["error"]));
     }
   }
@@ -288,9 +290,9 @@ class HMSMeeting {
 
     if (hmsActionResultListener != null) {
       if (result == null)
-        hmsActionResultListener.onSuccess("change-role");
+        hmsActionResultListener.onSuccess(methodType: HMSActionResultListenerMethod.changeRole);
       else
-        hmsActionResultListener.onError(
+        hmsActionResultListener.onError(methodType: HMSActionResultListenerMethod.changeRole,
             hmsException: HMSException.fromMap(result["error"]));
     }
   }
@@ -349,9 +351,9 @@ class HMSMeeting {
 
     if (hmsActionResultListener != null) {
       if (result == null)
-        hmsActionResultListener.onSuccess("change-track-state-for-role");
+        hmsActionResultListener.onSuccess(methodType: HMSActionResultListenerMethod.changeTrackStateForRole);
       else
-        hmsActionResultListener.onError(
+        hmsActionResultListener.onError(methodType: HMSActionResultListenerMethod.changeTrackStateForRole,
             hmsException: HMSException.fromMap(result["error"]));
     }
   }
@@ -364,9 +366,9 @@ class HMSMeeting {
 
     if (hmsActionResultListener != null) {
       if (result == null)
-        hmsActionResultListener.onSuccess("start-rtmp-or-recording");
+        hmsActionResultListener.onSuccess(methodType: HMSActionResultListenerMethod.startRtmpOrRecording);
       else
-        hmsActionResultListener.onError(
+        hmsActionResultListener.onError(methodType: HMSActionResultListenerMethod.startRtmpOrRecording,
             hmsException: HMSException.fromMap(result["error"]));
     }
   }
@@ -378,9 +380,9 @@ class HMSMeeting {
 
     if (hmsActionResultListener != null) {
       if (result == null)
-        hmsActionResultListener.onSuccess("stop-rtmp-and-recording");
+        hmsActionResultListener.onSuccess(methodType: HMSActionResultListenerMethod.stopRtmpAndRecording);
       else
-        hmsActionResultListener.onError(
+        hmsActionResultListener.onError(methodType: HMSActionResultListenerMethod.stopRtmpAndRecording,
             hmsException: HMSException.fromMap(result["error"]));
     }
   }

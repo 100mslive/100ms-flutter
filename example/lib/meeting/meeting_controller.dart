@@ -42,18 +42,16 @@ class MeetingController {
     return await HmsSdkManager.hmsSdkInteractor?.switchCamera();
   }
 
-  void sendMessage(String message){
+  void sendMessage(String message) {
     HmsSdkManager.hmsSdkInteractor?.sendMessage(message);
   }
 
-  void sendDirectMessage(String message, String peerId){
-    HmsSdkManager.hmsSdkInteractor
-        ?.sendDirectMessage(message, peerId);
+  void sendDirectMessage(String message, String peerId) {
+    HmsSdkManager.hmsSdkInteractor?.sendDirectMessage(message, peerId);
   }
 
-  void sendGroupMessage(String message, String roleName){
-     HmsSdkManager.hmsSdkInteractor
-        ?.sendGroupMessage(message, roleName);
+  void sendGroupMessage(String message, String roleName) {
+    HmsSdkManager.hmsSdkInteractor?.sendGroupMessage(message, roleName);
   }
 
   void addMeetingListener(HMSUpdateListener listener) {
@@ -80,8 +78,8 @@ class MeetingController {
     HmsSdkManager.hmsSdkInteractor?.removeLogsListener(listener);
   }
 
-  void setPlayBackAllowed(bool allow)  {
-     HmsSdkManager.hmsSdkInteractor?.setPlayBackAllowed(allow);
+  void setPlayBackAllowed(bool allow) {
+    HmsSdkManager.hmsSdkInteractor?.setPlayBackAllowed(allow);
   }
 
   void addPreviewListener(HMSPreviewListener listener) {
@@ -136,8 +134,8 @@ class MeetingController {
         ?.changeTrackRequest(peerId, mute, isVideoTrack);
   }
 
-  void endRoom(bool lock,String reason){
-     HmsSdkManager.hmsSdkInteractor?.endRoom(lock,reason);
+  void endRoom(bool lock, String reason) {
+    HmsSdkManager.hmsSdkInteractor?.endRoom(lock, reason);
   }
 
   void removePeer(String peerId) {
@@ -152,21 +150,19 @@ class MeetingController {
     HmsSdkManager.hmsSdkInteractor?.muteAll();
   }
 
-  void startRtmpOrRecording(
-      HMSRecordingConfig hmsRecordingConfig) {
-     HmsSdkManager.hmsSdkInteractor!
-        .startRtmpOrRecording(hmsRecordingConfig);
+  void startRtmpOrRecording(HMSRecordingConfig hmsRecordingConfig) {
+    HmsSdkManager.hmsSdkInteractor!.startRtmpOrRecording(hmsRecordingConfig);
   }
 
-  void stopRtmpAndRecording()  {
-     HmsSdkManager.hmsSdkInteractor?.stopRtmpAndRecording();
+  void stopRtmpAndRecording() {
+    HmsSdkManager.hmsSdkInteractor?.stopRtmpAndRecording();
   }
 
   Future<HMSRoom?> getRoom() async {
     return await HmsSdkManager.hmsSdkInteractor?.getRoom();
   }
 
-  void raiseHand(){
+  void raiseHand() {
     HmsSdkManager.hmsSdkInteractor?.raiseHand();
   }
 }
