@@ -990,15 +990,37 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
     private fun setVolume(call: MethodCall){
         val trackId = call.argument<String>("track_id")
         val volume = call.argument<Double>("volume")
-        val peer=hmssdk.getPeers().first {
-            it.audioTrack?.trackId == trackId
+        var peer : HMSPeer? = null
+        hmssdk.getPeers().forEach {
+            if(it.audioTrack?.trackId == trackId){
+                peer = it
+            }
+
+            var hmsTrack:HMSTrack? = null
+            it.auxiliaryTracks.forEach {
+                if(it.trackId == trackId){
+                    hmsTrack = it
+                }
+            }
+
+            if(hmsTrack != null){
+                peer = it
+            }
         }
 
-        val audioTrack : HMSAudioTrack? = peer.audioTrack
+
+        val audioTrack : HMSAudioTrack? = peer?.audioTrack
 
         if(audioTrack == null)result?.success(false)
 
         if(audioTrack is HMSRemoteAudioTrack){
+            peer?.auxiliaryTracks?.forEach {
+                if(it.trackId == trackId && it is HMSRemoteAudioTrack){
+                    it.setVolume(volume!!.toDouble())
+                    result?.success(true)
+                    return
+                }
+            }
             audioTrack.setVolume(volume!!.toDouble())
         }
         else if(audioTrack is HMSLocalAudioTrack){

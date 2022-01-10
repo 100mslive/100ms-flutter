@@ -8,7 +8,6 @@ class HMSTrackExtension {
         fun toDictionary(track:HMSTrack?):HashMap<String,Any?>?{
             val hashMap=HashMap<String,Any?>()
             if(track==null)return null
-            hashMap["volume"]=null
             hashMap["track_id"] = track.trackId
             hashMap["track_description"] = track.description?:""
             hashMap["track_kind"] = getKindInString(track.type)
