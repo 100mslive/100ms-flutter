@@ -132,7 +132,7 @@ class HMSSDKInteractor implements HMSActionResultListener {
   }
 
   Future<List<HMSRole>> getRoles() async {
-    return _meeting.getRoles();
+    return await _meeting.getRoles();
   }
 
   Future<bool> isAudioMute(HMSPeer? peer) async {

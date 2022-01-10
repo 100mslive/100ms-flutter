@@ -22,7 +22,7 @@ class HMSTrackExtension {
             }
 
             if(track is HMSLocalAudioTrack){
-                hashMap["volume"]=track.volume.toInt()
+                hashMap["volume"]=track.volume.toDouble()
             }
 
             if (track is HMSLocalAudioTrack) {
