@@ -988,11 +988,13 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
     }
 
     private fun setVolume(call: MethodCall){
-        val peerId = call.argument<String>("peer_id")
+        val trackId = call.argument<String>("track_id")
         val volume = call.argument<Double>("volume")
-        val peer : HMSPeer? = getPeerById(peerId!!)
-        if(peer == null)result?.success(false)
-        val audioTrack : HMSAudioTrack? = peer?.audioTrack
+        val peer=hmssdk.getPeers().first {
+            it.audioTrack?.trackId == trackId
+        }
+
+        val audioTrack : HMSAudioTrack? = peer.audioTrack
 
         if(audioTrack == null)result?.success(false)
 

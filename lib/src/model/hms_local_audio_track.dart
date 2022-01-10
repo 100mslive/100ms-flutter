@@ -24,7 +24,7 @@ class HMSLocalAudioTrack extends HMSAudioTrack {
 
   void setVolume(double volume) async{
     bool result = await PlatformService.invokeMethod(PlatformMethod.setVolume,
-        arguments: {"peer_id": peer?.peerId, "volume": volume.toDouble()});
+        arguments: {"track_id": trackId, "volume": volume.toDouble()});
     if(result == true)
       this.volume = volume;
   }

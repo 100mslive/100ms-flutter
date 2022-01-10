@@ -33,6 +33,6 @@ class HMSRemoteAudioTrack extends HMSAudioTrack {
 
   void setVolume(int volume) async {
     await PlatformService.invokeMethod(PlatformMethod.setVolume,
-        arguments: {"peer_id": peer?.peerId, "volume": volume.toDouble()});
+        arguments: {"track_id": trackId, "volume": volume.toDouble()});
   }
 }
