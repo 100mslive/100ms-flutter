@@ -154,7 +154,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             
         // MARK: - Messaging
             
-        case "send_message":
+        case "send__broadcast_message":
             sendBroadcastMessage(call, result)
             
         case "send_direct_message":

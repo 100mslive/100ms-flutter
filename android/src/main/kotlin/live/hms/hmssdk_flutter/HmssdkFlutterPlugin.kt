@@ -113,7 +113,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
                 startCapturing()
                 result.success("start_capturing")
             }
-            "send_message" -> {
+            "send__broadcast_message" -> {
                 sendBroadCastMessage(call)
             }
             "send_direct_message" -> {
@@ -441,8 +441,8 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         result.success(null)
     }
 
-    fun getLocalPeer(): HMSLocalPeer {
-        return hmssdk.getLocalPeer()!!
+    fun getLocalPeer(): HMSLocalPeer? {
+        return hmssdk.getLocalPeer()
     }
 
     private fun changeRole(call: MethodCall) {
@@ -710,7 +710,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
     }
 
     private fun updateHMSLocalTrackSetting(call: MethodCall) {
-        val localPeerVideoTrack = getLocalPeer().videoTrack
+        val localPeerVideoTrack = getLocalPeer()!!.videoTrack
         var hmsVideoTrackSettings = localPeerVideoTrack!!.settings.builder()
         val hmsVideoTrackHashMap: HashMap<String, Any?>? = call.argument("video_track_setting")
         if (hmsVideoTrackHashMap != null) {
@@ -983,7 +983,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
                     }
                 }
         }
-        getLocalPeer().videoTrack?.setMute(!(allowed!!))
+        getLocalPeer()!!.videoTrack?.setMute(!(allowed!!))
         result?.success(null)
     }
 

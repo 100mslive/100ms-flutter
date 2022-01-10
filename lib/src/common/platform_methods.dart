@@ -24,7 +24,7 @@ enum PlatformMethod {
   onMessage,
 
   ///when you want to send a message.
-  sendMessage,
+  sendBroadcastMessage,
   sendDirectMessage,
   sendGroupMessage,
   onUpdateSpeaker,
@@ -126,8 +126,8 @@ extension PlatformMethodValues on PlatformMethod {
         return 'start_capturing';
       case PlatformMethod.stopCapturing:
         return 'stop_capturing';
-      case PlatformMethod.sendMessage:
-        return 'send_message';
+      case PlatformMethod.sendBroadcastMessage:
+        return 'send__broadcast_message';
       case PlatformMethod.sendDirectMessage:
         return 'send_direct_message';
       case PlatformMethod.sendGroupMessage:
@@ -219,8 +219,8 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.stopCapturing;
       case 'start_capturing':
         return PlatformMethod.startCapturing;
-      case 'send_message':
-        return PlatformMethod.sendMessage;
+      case 'send__broadcast_message':
+        return PlatformMethod.sendBroadcastMessage;
       case 'send_direct_message':
         return PlatformMethod.sendDirectMessage;
       case 'send_group_message':

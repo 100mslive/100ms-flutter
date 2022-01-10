@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-import 'package:hmssdk_flutter_example/manager/HmsSdkManager.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 
 import 'change_role_options.dart';
@@ -123,10 +122,8 @@ class _ParticipantOrganismState extends State<ParticipantOrganism> {
   }
 
   void checkButtons() async {
-    this.isAudioOn =
-        !(await HmsSdkManager.hmsSdkInteractor!.isAudioMute(widget.peer));
-    this.isVideoOn =
-        !(await HmsSdkManager.hmsSdkInteractor!.isVideoMute(widget.peer));
+    this.isAudioOn = await widget.meetingStore.isAudioMute(widget.peer);
+    this.isVideoOn = await widget.meetingStore.isVideoMute(widget.peer);
     setState(() {});
   }
 }

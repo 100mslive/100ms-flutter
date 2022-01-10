@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/role_change_request_dialog.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/track_change_request_dialog.dart';
-import 'package:hmssdk_flutter_example/manager/HmsSdkManager.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:provider/provider.dart';
 
@@ -20,8 +19,7 @@ class UtilityComponents {
         actions: [
           TextButton(
               onPressed: () => {
-                    HmsSdkManager.hmsSdkInteractor?.leaveMeeting(),
-
+                    _meetingStore.leaveMeeting(),
                     // Navigator.pushReplacement(
                     //   context,
                     //   MaterialPageRoute(

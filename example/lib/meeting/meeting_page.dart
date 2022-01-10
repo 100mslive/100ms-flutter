@@ -12,7 +12,6 @@ import 'package:hmssdk_flutter_example/common/ui/organisms/video_tile.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
 import 'package:hmssdk_flutter_example/logs/custom_singleton_logger.dart';
-import 'package:hmssdk_flutter_example/manager/HmsSdkManager.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:hmssdk_flutter_example/meeting/peerTrackNode.dart';
 import 'package:mobx/mobx.dart';
@@ -130,10 +129,9 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
 
   void checkButtons() async {
     _meetingStore.isVideoOn =
-        !(await HmsSdkManager.hmsSdkInteractor?.isVideoMute(null) ?? true);
+        !(await _meetingStore.isVideoMute(null));
     _meetingStore.isMicOn =
-        !(await HmsSdkManager.hmsSdkInteractor?.isAudioMute(null) ?? true);
-    print("${_meetingStore.isMicOn} isMicOn");
+        !(await _meetingStore.isAudioMute(null));
   }
 
   @override
@@ -174,7 +172,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
         break;
 
       case 3:
-        if (_meetingStore.isVideoOn) _meetingStore.toggleCamera();
+        if (_meetingStore.isVideoOn) _meetingStore.switchCamera();
 
         break;
       case 4:
@@ -503,7 +501,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                   onPressed: (audioViewOn)
                                       ? null
                                       : () {
-                                          _meetingStore.toggleVideo();
+                                          _meetingStore.switchVideo();
                                           countOfVideoOnBetweenTwo++;
                                         },
                                   icon: Icon(_meetingStore.isVideoOn
@@ -518,7 +516,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                   tooltip: 'Audio',
                                   iconSize: 32,
                                   onPressed: () {
-                                    _meetingStore.toggleAudio();
+                                    _meetingStore.switchAudio();
                                   },
                                   icon: Icon(_meetingStore.isMicOn
                                       ? Icons.mic
@@ -589,17 +587,17 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
     super.didChangeAppLifecycleState(state);
     if (state == AppLifecycleState.resumed) {
       if (_meetingStore.isVideoOn) {
-        HmsSdkManager.hmsSdkInteractor?.startCapturing();
+        _meetingStore.startCapturing();
       } else {
-        HmsSdkManager.hmsSdkInteractor?.stopCapturing();
+        _meetingStore.stopCapturing();
       }
     } else if (state == AppLifecycleState.paused) {
       if (_meetingStore.isVideoOn) {
-        HmsSdkManager.hmsSdkInteractor?.stopCapturing();
+        _meetingStore.stopCapturing();
       }
     } else if (state == AppLifecycleState.inactive) {
       if (_meetingStore.isVideoOn) {
-        HmsSdkManager.hmsSdkInteractor?.stopCapturing();
+        _meetingStore.stopCapturing();
       }
     }
   }

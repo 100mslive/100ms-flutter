@@ -51,13 +51,14 @@ class _LeaveOrEndMeetingDialogOptionState
               height: 24,
             ),
             GestureDetector(
-              onTap: () async {
-                // bool ended = await widget.meetingStore.endRoom(forceValue);
-                // if (!ended) {
-                //   Navigator.pop(context);
-                //   UtilityComponents.showSnackBarWithString(
-                //       "No permission", context);
-                // }
+              onTap: () {
+                widget.meetingStore
+                    .endRoom(forceValue, "Room Ended From Flutter");
+                if (!widget.meetingStore.isRoomEnded) {
+                  Navigator.pop(context);
+                  UtilityComponents.showSnackBarWithString(
+                      "No permission", context);
+                }
               },
               child: Row(
                 children: [

@@ -15,7 +15,8 @@ class HMSSDKInteractor {
     await _meeting.joinMeeting(config: this.config);
   }
 
-  void leaveMeeting({required HMSActionResultListener hmsActionResultListener}) async {
+  void leaveMeeting(
+      {required HMSActionResultListener hmsActionResultListener}) async {
     _meeting.leaveMeeting(hmsActionResultListener: hmsActionResultListener);
   }
 
@@ -31,8 +32,8 @@ class HMSSDKInteractor {
     return await _meeting.switchCamera();
   }
 
-  void sendMessage(String message) {
-    _meeting.sendMessage(message, "chat");
+  void sendBroadcastMessage(String message) {
+    _meeting.sendBroadcastMessage(message, "chat");
   }
 
   void sendDirectMessage(String message, String peerId) async {
@@ -88,8 +89,10 @@ class HMSSDKInteractor {
     _meeting.removePreviewListener(listener);
   }
 
-  void acceptRoleChangeRequest(HMSActionResultListener hmsActionResultListener) {
-    _meeting.acceptRoleChangeRequest(hmsActionResultListener: hmsActionResultListener);
+  void acceptRoleChangeRequest(
+      HMSActionResultListener hmsActionResultListener) {
+    _meeting.acceptRoleChangeRequest(
+        hmsActionResultListener: hmsActionResultListener);
   }
 
   void stopCapturing() {
@@ -104,18 +107,22 @@ class HMSSDKInteractor {
     return await _meeting.startCapturing();
   }
 
-  void changeTrackRequest(String peerId, bool mute, bool isVideoTrack,HMSActionResultListener hmsActionResultListener) {
+  void changeTrackRequest(String peerId, bool mute, bool isVideoTrack,
+      HMSActionResultListener hmsActionResultListener) {
     _meeting.changeTrackRequest(peerId, mute, isVideoTrack,
         hmsActionResultListener: hmsActionResultListener);
   }
 
   // TODO: implement accept change Track request
 
-  void endRoom(bool lock, String reason,HMSActionResultListener hmsActionResultListener) {
-    _meeting.endRoom(lock, reason, hmsActionResultListener: hmsActionResultListener);
+  void endRoom(bool lock, String reason,
+      HMSActionResultListener hmsActionResultListener) {
+    _meeting.endRoom(lock, reason,
+        hmsActionResultListener: hmsActionResultListener);
   }
 
-  void removePeer(String peerId,HMSActionResultListener hmsActionResultListener) {
+  void removePeer(
+      String peerId, HMSActionResultListener hmsActionResultListener) {
     _meeting.removePeer(peerId, "Removing Peer from Flutter",
         hmsActionResultListener: hmsActionResultListener);
   }
@@ -123,7 +130,8 @@ class HMSSDKInteractor {
   void changeRole(
       {required String peerId,
       required String roleName,
-      bool forceChange = false,required HMSActionResultListener hmsActionResultListener}) {
+      bool forceChange = false,
+      required HMSActionResultListener hmsActionResultListener}) {
     _meeting.changeRole(
         peerId: peerId,
         roleName: roleName,
@@ -160,13 +168,15 @@ class HMSSDKInteractor {
     _meeting.setPlayBackAllowed(allow);
   }
 
-  void startRtmpOrRecording(HMSRecordingConfig hmsRecordingConfig,HMSActionResultListener hmsActionResultListener) {
+  void startRtmpOrRecording(HMSRecordingConfig hmsRecordingConfig,
+      HMSActionResultListener hmsActionResultListener) {
     _meeting.startRtmpOrRecording(hmsRecordingConfig,
         hmsActionResultListener: hmsActionResultListener);
   }
 
   void stopRtmpAndRecording(HMSActionResultListener hmsActionResultListener) {
-    _meeting.stopRtmpAndRecording(hmsActionResultListener: hmsActionResultListener);
+    _meeting.stopRtmpAndRecording(
+        hmsActionResultListener: hmsActionResultListener);
   }
 
   Future<HMSRoom?> getRoom() async {
@@ -177,5 +187,4 @@ class HMSSDKInteractor {
     _meeting.raiseHand("Raised Hand from Flutter",
         hmsActionResultListener: hmsActionResultListener);
   }
-
 }

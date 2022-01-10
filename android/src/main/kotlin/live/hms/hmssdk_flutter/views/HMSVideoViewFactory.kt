@@ -28,7 +28,7 @@ class HMSVideoViewWidget(context: Context, id: Int, creationParams: Map<String?,
 
     private fun renderVideo() {
 
-        Log.i("HMSVideoViewFactory","### will start renderVideo ${peer!!.name} <> $trackId")
+        Log.i("HMSVideoViewFactory","### will start renderVideo <> $trackId")
 
         var frameLayoutParams = FrameLayout.LayoutParams(
             FrameLayout.LayoutParams.MATCH_PARENT,
@@ -65,7 +65,7 @@ class HMSVideoViewWidget(context: Context, id: Int, creationParams: Map<String?,
 
             if (track != null) {
                 hmsVideoView.setVideoTrack((track as HMSVideoTrack))
-                Log.i("HMSVideoViewFactory","### renderVideo auxiliary ${peer!!.name} <> ${track.source} <> ${track.trackId} <> $trackId")
+//                Log.i("HMSVideoViewFactory","### renderVideo auxiliary ${peer!!.name} <> ${track.source} <> ${track.trackId} <> $trackId")
                 return
             }
         } else {
@@ -83,7 +83,7 @@ class HMSVideoViewWidget(context: Context, id: Int, creationParams: Map<String?,
     }
 
     override fun dispose() {
-        Log.i("Called for release","### will start dispose ${peer!!.name} <> $trackId")
+//        Log.i("Called for release","### will start dispose ${peer!!.name} <> $trackId")
         release()
     }
 
