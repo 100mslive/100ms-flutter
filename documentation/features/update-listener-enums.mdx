@@ -1,0 +1,95 @@
+---
+title: Update Listeners Enums
+nav: 3.71
+---
+
+## HMSPeerUpdate
+
+```dart
+///PeerUpdates in a room.
+enum HMSPeerUpdate {
+  ///When new peer joins the room.
+  peerJoined,
+
+  ///When peer left the room.
+  peerLeft,
+
+  ///when peer is knocked out by the host.
+  peerKnocked,
+
+  ///when peer's audio is toggled
+  audioToggled,
+
+  ///when peer's video is toggled
+  videoToggled,
+
+  ///when peer's role is changed
+  roleUpdated,
+
+  ///when meta data is changed(eg:Hand Raise)
+  metadataChanged,
+
+  ///When Peer name is changed
+  nameChanged,
+
+  ///Unknown Update
+  defaultUpdate
+}
+```
+
+## HMSTrackUpdate
+
+```dart
+///Track updates you will get when there is any change in the track
+enum HMSTrackUpdate {
+  //when a new track is added.
+  trackAdded,
+
+  ///when track is removed.
+  trackRemoved,
+
+  ///when track is muted could be audio,video or both.
+  trackMuted,
+
+  ///when track is unmuted could be audio,video or both.
+  trackUnMuted,
+
+  ///when track description is changed
+  trackDescriptionChanged,
+
+  ///When track is degraded
+  trackDegraded,
+
+  ///When track is restored
+  trackRestored,
+
+  ///default update
+  defaultUpdate
+}
+```
+
+
+## HMSRoomUpdate
+
+```dart
+enum HMSRoomUpdate {
+
+  ///When any room update is done
+  HMSRoomUpdateRoomTypeChanged,
+
+  ///When metadata is updated in room
+  HMSRoomUpdateMetaDataUpdated,
+
+  ///When RTMP is started or stopped
+  RTMP_STREAMING_STATE_UPDATED,
+
+  ///When HLS is started or stopped
+  HLS_STREAMING_STATE_UPDATED,
+
+  ///When browser recording state is changed
+  BROWSER_RECORDING_STATE_UPDATED,
+
+  ///Unknown Update
+  unknown
+}
+```

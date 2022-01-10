@@ -31,4 +31,19 @@ meeting.stopCapturing();
 
 meeting.startCapturing();
 ````
- 
+
+
+## Remote Peer Mute/Unmute
+
+Mute/Unmute status can be checked for local peer as well as remote peer according to their mute status.
+
+In most of the cases you would need to render the components on basis of current mute status of peers like their mic and camera icons.
+
+```dart
+
+peer.audioTrack.isMute();
+peer.videoTrack.isMute();
+
+```
+
+For muting remote peer refer to [Change Track State](./change-track-state) docs and for muting remote peers locally refer to [Playback Allowed](./playback-allowed) docs.
