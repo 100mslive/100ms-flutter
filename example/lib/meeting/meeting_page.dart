@@ -419,18 +419,20 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                 width: double.infinity,
                                 height:
                                     MediaQuery.of(context).size.height / 2.5,
-                                child: PeerItemOrganism(
-                                  observableMap: {"highestAudio": ""},
-                                  height:
-                                      MediaQuery.of(context).size.height / 2,
-                                  width: MediaQuery.of(context).size.width,
-                                  isVideoMuted: false,
-                                  peerTracKNode: new PeerTracKNode(
-                                      peerId: _meetingStore.screenSharePeerId,
-                                      track: _meetingStore.screenShareTrack!,
-                                      name: _meetingStore
-                                              .screenShareTrack?.peer?.name ??
-                                          ""),
+                                child: InteractiveViewer(
+                                  child: PeerItemOrganism(
+                                    observableMap: {"highestAudio": ""},
+                                    height:
+                                        MediaQuery.of(context).size.height / 2,
+                                    width: MediaQuery.of(context).size.width,
+                                    isVideoMuted: false,
+                                    peerTracKNode: new PeerTracKNode(
+                                        peerId: _meetingStore.screenSharePeerId,
+                                        track: _meetingStore.screenShareTrack!,
+                                        name: _meetingStore
+                                                .screenShareTrack?.peer?.name ??
+                                            ""),
+                                  ),
                                 ),
                               );
                             } else {
