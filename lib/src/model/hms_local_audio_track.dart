@@ -4,7 +4,7 @@ import 'package:hmssdk_flutter/src/service/platform_service.dart';
 
 class HMSLocalAudioTrack extends HMSAudioTrack {
   final HMSAudioTrackSetting setting;
-  int? volume;
+  double? volume;
   HMSLocalAudioTrack(
       {required this.setting,
         required HMSTrackKind kind,
@@ -22,7 +22,7 @@ class HMSLocalAudioTrack extends HMSAudioTrack {
       isMute: isMute,
       peer: peer);
 
-  void setVolume(int volume) async{
+  void setVolume(double volume) async{
     bool result = await PlatformService.invokeMethod(PlatformMethod.setVolume,
         arguments: {"peer_id": peer?.peerId, "volume": volume.toDouble()});
     if(result == true)

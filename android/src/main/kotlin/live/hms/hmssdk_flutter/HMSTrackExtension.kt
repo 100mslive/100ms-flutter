@@ -76,6 +76,8 @@ class HMSTrackExtension {
                 HMSTrackUpdate.TRACK_REMOVED-> "trackRemoved"
                 HMSTrackUpdate.TRACK_DESCRIPTION_CHANGED-> "trackDescriptionChanged"
                 HMSTrackUpdate.TRACK_ADDED-> "trackAdded"
+                HMSTrackUpdate.TRACK_DEGRADED-> "trackDegraded"
+                HMSTrackUpdate.TRACK_RESTORED -> "trackRestored"
                 else->{
                     "defaultUpdate"
                 }
