@@ -24,17 +24,12 @@ class HMSTrackExtension {
 
             if(track is HMSLocalAudioTrack){
                 hashMap["volume"]=track.volume.toInt()
-                hashMap["instance_of_lor"]=false
-            }
-            else if (track is HMSRemoteAudioTrack){
-
-                hashMap["volume"]=12
-                hashMap["instance_of_lor"]=true
             }
 
             if (track is HMSLocalAudioTrack) {
                 hashMap["hms_audio_track_settings"] = HMSAudioTrackSettingsExtension.toDictionary(track.settings)!!
             }
+
             if(track is HMSAudioTrack){
                 hashMap["instance_of"] = false
             }
