@@ -234,7 +234,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                               rolesName.add(hmsRoles[i].name);
                             print("${this.hmsRoles.toString()} dekte hai");
                             if (this.valueChoose == "Everyone") {
-                              _meetingStore.sendMessage(message);
+                              _meetingStore.sendBroadcastMessage(message);
                               _meetingStore.addMessage(HMSMessage(
                                 sender: _meetingStore.localPeer!,
                                 message: message,

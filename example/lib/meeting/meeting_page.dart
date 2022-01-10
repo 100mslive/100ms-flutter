@@ -12,7 +12,6 @@ import 'package:hmssdk_flutter_example/common/ui/organisms/video_tile.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
 import 'package:hmssdk_flutter_example/logs/custom_singleton_logger.dart';
-import 'package:hmssdk_flutter_example/meeting/meeting_controller.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:hmssdk_flutter_example/meeting/peerTrackNode.dart';
 import 'package:mobx/mobx.dart';
@@ -54,9 +53,6 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
     super.initState();
     WidgetsBinding.instance!.addObserver(this);
     _meetingStore = context.read<MeetingStore>();
-    MeetingController meetingController = MeetingController(
-        roomUrl: widget.roomId, flow: widget.flow, user: widget.user);
-    _meetingStore.meetingController = meetingController;
     allListeners();
     initMeeting();
     checkButtons();
@@ -123,7 +119,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
   }
 
   void initMeeting() async {
-    bool ans = await _meetingStore.joinMeeting();
+    bool ans = await _meetingStore.joinMeeting(widget.user, widget.roomId);
     if (!ans) {
       UtilityComponents.showSnackBarWithString("Unable to Join", context);
       Navigator.of(context).pop();
@@ -133,10 +129,9 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
 
   void checkButtons() async {
     _meetingStore.isVideoOn =
-        !(await _meetingStore.meetingController.isVideoMute(null));
+        !(await _meetingStore.isVideoMute(null));
     _meetingStore.isMicOn =
-        !(await _meetingStore.meetingController.isAudioMute(null));
-    print("${_meetingStore.isMicOn} isMicOn");
+        !(await _meetingStore.isAudioMute(null));
   }
 
   @override
@@ -177,7 +172,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
         break;
 
       case 3:
-        if (_meetingStore.isVideoOn) _meetingStore.toggleCamera();
+        if (_meetingStore.isVideoOn) _meetingStore.switchCamera();
 
         break;
       case 4:
@@ -442,9 +437,11 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                           Flexible(
                             child: Observer(
                               builder: (_) {
+                                print(
+                                    "Number of people in call ${_meetingStore.peerTracks.length}");
                                 print("rebuilding");
-                                if (!_meetingStore.isMeetingStarted)
-                                  return SizedBox();
+                                // if (!_meetingStore.isMeetingStarted)
+                                //   return SizedBox();
                                 if (_meetingStore.peerTracks.isEmpty)
                                   return Center(
                                       child:
@@ -454,6 +451,8 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                         ? _meetingStore
                                             .activeSpeakerPeerTracksStore
                                         : _meetingStore.peerTracks;
+                                print(
+                                    "filteredList length ${peerFilteredList.length}");
                                 ObservableMap<String, String> audioKeyMap =
                                     _meetingStore.observableMap;
                                 return GridView.builder(
@@ -504,7 +503,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                   onPressed: (audioViewOn)
                                       ? null
                                       : () {
-                                          _meetingStore.toggleVideo();
+                                          _meetingStore.switchVideo();
                                           countOfVideoOnBetweenTwo++;
                                         },
                                   icon: Icon(_meetingStore.isVideoOn
@@ -519,7 +518,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                   tooltip: 'Audio',
                                   iconSize: 32,
                                   onPressed: () {
-                                    _meetingStore.toggleAudio();
+                                    _meetingStore.switchAudio();
                                   },
                                   icon: Icon(_meetingStore.isMicOn
                                       ? Icons.mic
@@ -590,17 +589,17 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
     super.didChangeAppLifecycleState(state);
     if (state == AppLifecycleState.resumed) {
       if (_meetingStore.isVideoOn) {
-        _meetingStore.meetingController.startCapturing();
+        _meetingStore.startCapturing();
       } else {
-        _meetingStore.meetingController.stopCapturing();
+        _meetingStore.stopCapturing();
       }
     } else if (state == AppLifecycleState.paused) {
       if (_meetingStore.isVideoOn) {
-        _meetingStore.meetingController.stopCapturing();
+        _meetingStore.stopCapturing();
       }
     } else if (state == AppLifecycleState.inactive) {
       if (_meetingStore.isVideoOn) {
-        _meetingStore.meetingController.stopCapturing();
+        _meetingStore.stopCapturing();
       }
     }
   }

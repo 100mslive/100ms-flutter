@@ -19,8 +19,7 @@ class UtilityComponents {
         actions: [
           TextButton(
               onPressed: () => {
-                    _meetingStore.meetingController.leaveMeeting(),
-
+                    _meetingStore.leaveMeeting(),
                     // Navigator.pushReplacement(
                     //   context,
                     //   MaterialPageRoute(

@@ -25,9 +25,7 @@ import live.hms.video.media.codec.HMSVideoCodec
 import live.hms.video.media.settings.HMSAudioTrackSettings
 import live.hms.video.media.settings.HMSTrackSettings
 import live.hms.video.media.settings.HMSVideoTrackSettings
-import live.hms.video.media.tracks.HMSRemoteAudioTrack
-import live.hms.video.media.tracks.HMSRemoteVideoTrack
-import live.hms.video.media.tracks.HMSTrack
+import live.hms.video.media.tracks.*
 import live.hms.video.sdk.*
 import live.hms.video.sdk.models.*
 import live.hms.video.sdk.models.enums.HMSPeerUpdate
@@ -115,7 +113,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
                 startCapturing()
                 result.success("start_capturing")
             }
-            "send_message" -> {
+            "send__broadcast_message" -> {
                 sendBroadCastMessage(call)
             }
             "send_direct_message" -> {
@@ -190,6 +188,9 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             }
             "set_playback_allowed"->{
                 setPlayBackAllowed(call)
+            }
+            "set_volume"->{
+                setVolume(call)
             }
             else -> {
                 result.notImplemented()
@@ -440,8 +441,8 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         result.success(null)
     }
 
-    fun getLocalPeer(): HMSLocalPeer {
-        return hmssdk.getLocalPeer()!!
+    fun getLocalPeer(): HMSLocalPeer? {
+        return hmssdk.getLocalPeer()
     }
 
     private fun changeRole(call: MethodCall) {
@@ -709,7 +710,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
     }
 
     private fun updateHMSLocalTrackSetting(call: MethodCall) {
-        val localPeerVideoTrack = getLocalPeer().videoTrack
+        val localPeerVideoTrack = getLocalPeer()!!.videoTrack
         var hmsVideoTrackSettings = localPeerVideoTrack!!.settings.builder()
         val hmsVideoTrackHashMap: HashMap<String, Any?>? = call.argument("video_track_setting")
         if (hmsVideoTrackHashMap != null) {
@@ -982,7 +983,31 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
                     }
                 }
         }
-        getLocalPeer().videoTrack?.setMute(!(allowed!!))
+        getLocalPeer()!!.videoTrack?.setMute(!(allowed!!))
         result?.success(null)
+    }
+
+    private fun setVolume(call: MethodCall){
+        val trackId = call.argument<String>("track_id")
+        val volume = call.argument<Double>("volume")
+       
+        hmssdk.getPeers().forEach { it ->
+            if(it.audioTrack?.trackId == trackId){
+                if(it.audioTrack is HMSRemoteAudioTrack){
+                    (it.audioTrack as HMSRemoteAudioTrack).setVolume(volume!!)
+                }
+                else if(it.audioTrack is HMSLocalAudioTrack){
+                    (it.audioTrack as HMSLocalAudioTrack).volume = volume!!
+                }
+            }
+
+            
+            it.auxiliaryTracks.forEach {
+                if(it.trackId == trackId && it is HMSRemoteAudioTrack){
+                    it.setVolume(volume!!.toDouble())
+                }
+            }
+        }
+       
     }
 }
