@@ -7,6 +7,14 @@ Preview screen is a frequently used UX element which allows users to check if th
 
 100ms SDKs provide an easy-to-use API to back this feature. Additionally, the SDK will try to establish a connection to 100ms server to verify there are no network issues and that the auth credentials are valid so that if everything is in order the subsequent room join is instant.
 
+create an object of HMSConfig class using the available  joining configurations
+
+   ```dart
+   HMSConfig hmsConfig = HMSConfig(userId: Uuid().v1(),
+                                authToken: token,
+                                userName: user);
+   ```
+
 To invoke the Preview API call -
 
 ```dart

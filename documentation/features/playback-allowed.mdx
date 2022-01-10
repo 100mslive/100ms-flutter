@@ -1,0 +1,37 @@
+---
+title: Playback Allowed
+nav: 3.93
+---
+
+Mute is something that applies to both audio and video and its possible to mute remote peers only for yourself. When you will mute audio or video, you won't be able to hear or see the remote person but it will be audible and visible to others.
+
+## Fetch isPlaybackAllowed
+
+You can check if playback is allowed or not for a certain remote peer's audio or video.
+
+```dart
+HMSMeeting meeting;
+
+var isVideoPlaybackAllowed = meeting.isVideoPlaybackAllowed(peerId);
+var isAudioPlaybackAllowed = meeting.isAudioPlaybackAllowed(peerId);
+```
+
+## Set isPlaybackAllowed
+
+You can set playback for a certain remote peer's audio or video. If you set it to false it will turn off the audio or video only for you. You can revert it back by setting it true.
+
+```dart
+HMSMeeting meeting;
+
+var isVideoPlaybackAllowed = meeting.setVideoPlaybackAllowed(peerId,true);
+var isAudioPlaybackAllowed = meeting.setAudioPlaybackAllowed(peerId,true);
+```
+
+## Mute all remote peers
+
+```js
+// instance acquired from build method
+
+meeting.muteAll(true)  // mute
+meeting.muteAll(false) // unmute
+```

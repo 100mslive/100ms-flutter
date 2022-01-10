@@ -60,3 +60,20 @@ You will also need to request Camera and Record Audio permissions at runtime bef
 ## Debugging Tools
  
 You can use [Android Studio](https://developer.android.com/studio), [VS Code](https://code.visualstudio.com/) & [Xcode](https://developer.apple.com/xcode/) to develop application with 100ms.
+
+## Proguard configuration
+
+### 100ms Android SDK 2.1.2 or higher
+
+If using 100ms Android SDK version 2.1.2 and higher proguard configuration is bundled inside it. No additional code is required.
+
+### Prior to Android SDK version 2.1.2
+Prior to Android SDK version 2.1.2, the following configuration was needed in release builds.
+
+Add it to your proguard-rules.pro
+
+```kotlin
+# 100ms proguard rules
+-keep class org.webrtc.** { *; }
+-keep class live.hms.video.** { *; }
+```
