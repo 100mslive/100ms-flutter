@@ -34,6 +34,7 @@ abstract class PreviewStoreBase
     for (HMSPeer each in room.peers!) {
       if (each.isLocal) {
         this.peer = each;
+        print("onPreview ${each.peerId}");
         break;
       }
     }

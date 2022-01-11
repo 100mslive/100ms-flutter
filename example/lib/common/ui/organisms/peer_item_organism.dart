@@ -89,7 +89,7 @@ class _PeerItemOrganismState extends State<PeerItemOrganism> {
                   child: Center(child: CircleAvatar(child: Text(name))),
                 );
               }
-
+              //print("${widget.peerTracKNode.track?.peer?.peerId} ${widget.peerTracKNode.peerId} peerItem");
               return Container(
                 height: widget.height + 100,
                 width: widget.width - 5,

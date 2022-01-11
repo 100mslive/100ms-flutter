@@ -60,9 +60,11 @@ class UtilityComponents {
     String answer = await showDialog(
         context: context,
         builder: (ctx) => TrackChangeDialogOrganism(trackChangeRequest: event));
+    print(answer+'----------------->');
     if (answer == "OK") {
       debugPrint("OK accepted");
-      context.read<MeetingStore>().changeTracks();
+      MeetingStore meetingStore = Provider.of<MeetingStore>(context,listen: false);
+      meetingStore.changeTracks();
     }
   }
 }

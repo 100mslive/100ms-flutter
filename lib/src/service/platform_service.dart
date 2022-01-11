@@ -106,7 +106,7 @@ class PlatformService {
       HMSUpdateListenerMethod method = event.method;
       // print("flutterdata1 ${event.method}");
       Map data = event.data;
-
+      print("updateFromPlatform ${method.toString()}");
       switch (method) {
         case HMSUpdateListenerMethod.onJoinRoom:
           HMSRoom? room = HMSRoom.fromMap(data['room']);
@@ -322,6 +322,7 @@ class PlatformService {
         meetingListeners.forEach((e) => e.onJoin(room: arguments['room']));
         break;
       case HMSUpdateListenerMethod.onUpdateRoom:
+        print('roomUpdatedOnUpdateRoom');
         meetingListeners.forEach((e) => e.onRoomUpdate(
             room: arguments['room'], update: arguments['update']));
         break;

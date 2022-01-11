@@ -144,7 +144,7 @@ class HMSSDKInteractor {
   }
 
   Future<bool> isAudioMute(HMSPeer? peer) async {
-    // TODO: add permission checks in exmaple app UI
+
     return await _meeting.isAudioMute(peer:peer);
   }
 
@@ -183,8 +183,8 @@ class HMSSDKInteractor {
     return await _meeting.getRoom();
   }
 
-  void raiseHand({required HMSActionResultListener hmsActionResultListener}) {
-    _meeting.raiseHand(metadata: "Raised Hand from Flutter",
+  void raiseHand({required String metadata, required HMSActionResultListener hmsActionResultListener}) {
+    _meeting.raiseHand(metadata: metadata,
         hmsActionResultListener: hmsActionResultListener);
   }
 }

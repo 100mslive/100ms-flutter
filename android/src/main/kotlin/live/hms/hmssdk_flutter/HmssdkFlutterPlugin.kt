@@ -372,7 +372,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
 //        val isLocal = call.argument<Boolean>("is_local")
         if (peerId == "null") {
 //            Log.i("isVideoMute", (hmssdk.getLocalPeer()?.videoTrack?.isMute ?: false).toString())
-            return hmssdk.getLocalPeer()?.videoTrack?.isMute ?: false
+            return hmssdk.getLocalPeer()?.videoTrack?.isMute ?: true
         }
         val peer = getPeerById(peerId!!)
 //        Log.i("isVideoMute", (peer!!.videoTrack!!.isMute).toString())
@@ -384,7 +384,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
 //        val isLocal = call.argument<Boolean>("is_local")
         if (peerId == "null") {
 //            Log.i("isAudioMute", (hmssdk.getLocalPeer()?.audioTrack?.isMute!!).toString())
-            return hmssdk.getLocalPeer()?.audioTrack?.isMute!!
+            return hmssdk.getLocalPeer()?.audioTrack?.isMute?:true
         }
         val peer = getPeerById(peerId!!)
 //        Log.i("isAudioMute", (peer!!.audioTrack!!.isMute).toString())
@@ -436,6 +436,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
                 authtoken = authToken,
                 initEndpoint = endPoint
             )
+
         hmssdk.preview(this.hmsConfig!!, this.hmsPreviewListener)
 
         result.success(null)
@@ -443,6 +444,10 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
 
     fun getLocalPeer(): HMSLocalPeer? {
         return hmssdk.getLocalPeer()
+    }
+
+    fun getPeers():Array<HMSPeer>{
+        return hmssdk.getPeers()
     }
 
     private fun changeRole(call: MethodCall) {
@@ -515,12 +520,12 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             val speakersMap = HashMap<String, Any>()
             speakersMap["speakers"] = speakersList
 
-            val hashMap = HashMap<String, Any?>()
+            val hashMap : HashMap<String,Any?> = HashMap()
             hashMap["event_name"] = "on_update_speaker"
             hashMap["data"] = speakersMap
 
             CoroutineScope(Dispatchers.Main).launch {
-                eventSink!!.success(hashMap)
+                eventSink?.success(hashMap)
             }
         }
     }
@@ -743,8 +748,8 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
     private fun raiseHand(call:MethodCall){
         isRaiseHandTrue = !isRaiseHandTrue
         val metadata = call.argument<String>("metadata")
+
         hmssdk.changeMetadata(metadata!!, hmsActionResultListener = this.actionListener)
-        
     }
 
 
@@ -817,6 +822,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             val args = HashMap<String, Any?>()
             args.put("event_name", "on_room_update")
             args.put("data", HMSRoomUpdateExtension.toDictionary(hmsRoom, type))
+            Log.i("onroomUpdate",type.toString())
             if (args["data"] != null)
                 CoroutineScope(Dispatchers.Main).launch {
                     eventSink?.success(args)
@@ -886,6 +892,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         }
 
         override fun onSuccess() {
+            Log.i("onSuccess","raised hand")
             CoroutineScope(Dispatchers.Main).launch {
                 result?.success(null)
             }

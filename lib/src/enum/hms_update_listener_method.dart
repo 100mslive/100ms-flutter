@@ -19,7 +19,7 @@ extension HMSUpdateListenerMethodValues on HMSUpdateListenerMethod {
     switch (name) {
       case 'on_join_room':
         return HMSUpdateListenerMethod.onJoinRoom;
-      case 'on_update_room':
+      case 'on_room_update':
         return HMSUpdateListenerMethod.onUpdateRoom;
       case 'on_peer_update':
         return HMSUpdateListenerMethod.onPeerUpdate;

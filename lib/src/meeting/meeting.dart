@@ -400,6 +400,7 @@ class HMSMeeting {
     }
   }
 
+  ///this function takes sometime to return result {around 10secs}
   void startRtmpOrRecording(
       {required HMSRecordingConfig hmsRecordingConfig,
       HMSActionResultListener? hmsActionResultListener}) async {

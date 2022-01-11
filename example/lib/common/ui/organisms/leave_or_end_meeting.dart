@@ -56,8 +56,6 @@ class _LeaveOrEndMeetingDialogOptionState
                     .endRoom(forceValue, "Room Ended From Flutter");
                 if (!widget.meetingStore.isRoomEnded) {
                   Navigator.pop(context);
-                  UtilityComponents.showSnackBarWithString(
-                      "No permission", context);
                 }
               },
               child: Row(

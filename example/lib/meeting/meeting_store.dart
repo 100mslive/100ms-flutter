@@ -23,7 +23,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
     implements HMSUpdateListener, HMSActionResultListener {
   late HMSSDKInteractor _hmssdkInteractor;
   MeetingStoreBase() {
-    _hmssdkInteractor = HMSSDKInteractor();
+    _hmssdkInteractor = HmsSdkManager.hmsSdkInteractor!;
   }
   // HMSLogListener
   @observable
@@ -276,7 +276,10 @@ abstract class MeetingStoreBase extends ChangeNotifier
   @action
   void addTrackChangeRequestInstance(
       HMSTrackChangeRequest hmsTrackChangeRequest) {
-    this.hmsTrackChangeRequest = hmsTrackChangeRequest;
+    if((trackChange == 1 && isVideoOn==false) || (trackChange==0 && !isMicOn)) {
+      print("hmsTrackChangeRequest $trackChange $isVideoOn $isMicOn");
+      this.hmsTrackChangeRequest = hmsTrackChangeRequest;
+    }
   }
 
   @action
@@ -289,6 +292,11 @@ abstract class MeetingStoreBase extends ChangeNotifier
   @override
   void onJoin({required HMSRoom room}) async {
     hmsRoom = room;
+    if(room.hmsBrowserRecordingState?.running == true)
+      isRecordingStarted = true;
+    else
+      isRecordingStarted = false;
+
     for (HMSPeer each in room.peers!) {
       if (each.isLocal) {
         int index =
@@ -320,7 +328,13 @@ abstract class MeetingStoreBase extends ChangeNotifier
 
   @override
   void onRoomUpdate({required HMSRoom room, required HMSRoomUpdate update}) {
-    print('on room update');
+    if(update == HMSRoomUpdate.browserRecordingStateUpdated){
+      if(room.hmsBrowserRecordingState?.running == true)
+        isRecordingStarted = true;
+      else
+        isRecordingStarted = false;
+    }
+    print('on room update ${update.toString()}');
   }
 
   @override
@@ -645,8 +659,8 @@ abstract class MeetingStoreBase extends ChangeNotifier
     return await _hmssdkInteractor.getLocalPeer();
   }
 
-  void startRtmpOrRecording(
-      String meetingUrl, bool toRecord, List<String>? rtmpUrls) async {
+  void startRtmpOrRecording({
+     required String meetingUrl,required bool toRecord, List<String>? rtmpUrls}) async {
     HMSRecordingConfig hmsRecordingConfig = new HMSRecordingConfig(
         meetingUrl: meetingUrl, toRecord: toRecord, rtmpUrls: rtmpUrls);
 
@@ -676,8 +690,10 @@ abstract class MeetingStoreBase extends ChangeNotifier
     return room;
   }
 
+  bool isRaisedHand = false;
   void raiseHand() {
-    _hmssdkInteractor.raiseHand(hmsActionResultListener: this);
+    isRaisedHand = !isRaisedHand;
+    _hmssdkInteractor.raiseHand(metadata: "{\"isHandRaised\":$isRaisedHand}", hmsActionResultListener: this);
   }
 
   void setPlayBackAllowed(bool allow) {
@@ -697,7 +713,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
         // TODO: Handle this case.
         break;
       case HMSActionResultListenerMethod.raiseHand:
-        // TODO: Handle this case.
+        print("raised hand");
         break;
       case HMSActionResultListenerMethod.endRoom:
         isRoomEnded = true;
@@ -716,11 +732,11 @@ abstract class MeetingStoreBase extends ChangeNotifier
         break;
       case HMSActionResultListenerMethod.startRtmpOrRecording:
         //TODO: HmsException?.code == 400(To see what this means)
-        isRecordingStarted = true;
+        //isRecordingStarted = true;
         break;
       case HMSActionResultListenerMethod.stopRtmpAndRecording:
-        //TODO: HmsException?.code == 400(To see what this means)
-        isRecordingStarted = false;
+        print("stopped rtmp");
+        //isRecordingStarted = false;
         break;
       case HMSActionResultListenerMethod.unknown:
         print("Unknown Method Called");
@@ -734,6 +750,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
           HMSActionResultListenerMethod.unknown,
         Map<String, dynamic>? arguments,
       required HMSException hmsException}) {
+    this.hmsException = hmsException;
     switch (methodType) {
       case HMSActionResultListenerMethod.leaveMeeting:
         // TODO: Handle this case.
@@ -762,7 +779,9 @@ abstract class MeetingStoreBase extends ChangeNotifier
         // TODO: Handle this case.
         break;
       case HMSActionResultListenerMethod.startRtmpOrRecording:
-        // TODO: Handle this case.
+        if(hmsException.code?.errorCode == "400"){
+          isRecordingStarted = true;
+        }
         print("HMSException ${hmsException.message}");
         break;
       case HMSActionResultListenerMethod.stopRtmpAndRecording:

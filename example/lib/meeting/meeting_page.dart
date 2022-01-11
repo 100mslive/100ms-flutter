@@ -15,6 +15,7 @@ import 'package:hmssdk_flutter_example/logs/custom_singleton_logger.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:hmssdk_flutter_example/meeting/peerTrackNode.dart';
 import 'package:mobx/mobx.dart';
+
 // ignore: implementation_imports
 import 'package:provider/src/provider.dart';
 import 'meeting_participants_list.dart';
@@ -38,8 +39,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
       _hmsExceptionDisposer,
       _trackChangerequestDisposer,
       _reconnectingDisposer;
-  late ReactionDisposer _errorDisposer,
-      _recordingDisposer,
+  late ReactionDisposer _recordingDisposer,
       _reconnectedDisposer,
       _roomEndedDisposer;
   CustomLogger logger = CustomLogger();
@@ -48,6 +48,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
   bool audioViewOn = false;
   int countOfVideoOnBetweenTwo = 1;
   bool videoPreviousState = false;
+  bool isRecordingStarted = false;
   @override
   void initState() {
     super.initState();
@@ -69,12 +70,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
     _trackChangerequestDisposer = reaction(
         (_) => _meetingStore.hmsTrackChangeRequest,
         (event) => {UtilityComponents.showTrackChangeDialog(event, context)});
-    _errorDisposer = reaction(
-        (_) => _meetingStore.error,
-        (event) => {
-              UtilityComponents.showSnackBarWithString(
-                  (event as HMSException).description, context)
-            });
+
     _recordingDisposer = reaction(
         (_) => _meetingStore.isRecordingStarted,
         (event) => {
@@ -128,10 +124,8 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
   }
 
   void checkButtons() async {
-    _meetingStore.isVideoOn =
-        !(await _meetingStore.isVideoMute(null));
-    _meetingStore.isMicOn =
-        !(await _meetingStore.isAudioMute(null));
+    _meetingStore.isVideoOn = !(await _meetingStore.isVideoMute(null));
+    _meetingStore.isMicOn = !(await _meetingStore.isAudioMute(null));
   }
 
   @override
@@ -142,7 +136,6 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
 
   void disposeAllListeners() {
     _roleChangerequestDisposer.reaction.dispose();
-    _errorDisposer.reaction.dispose();
     _trackChangerequestDisposer.reaction.dispose();
     _recordingDisposer.reaction.dispose();
     _roomEndedDisposer.reaction.dispose();
@@ -163,11 +156,18 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
         break;
 
       case 2:
+
         if (_meetingStore.isRecordingStarted) {
           _meetingStore.stopRtmpAndRecording();
+          isRecordingStarted = false;
         } else {
-          print("${Constant.meetingUrl} meetingUrl");
-          _meetingStore.startRtmpOrRecording(Constant.meetingUrl, true, null);
+          if(isRecordingStarted == false) {
+            print("${Constant.meetingUrl} meetingUrl");
+            _meetingStore.startRtmpOrRecording(meetingUrl: Constant.meetingUrl,
+                toRecord: true,
+                rtmpUrls: null);
+            isRecordingStarted = true;
+          }
         }
         break;
 
