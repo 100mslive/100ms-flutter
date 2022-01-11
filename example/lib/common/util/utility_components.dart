@@ -15,16 +15,21 @@ class UtilityComponents {
     return showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: Text('Leave Room?'),
+        title: Text(
+          'Leave Room?',
+          style: TextStyle(fontSize: 24, fontWeight: FontWeight.w700),
+        ),
         actions: [
-          TextButton(
+          ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                primary: Colors.red,
+              ),
               onPressed: () => {
                     _meetingStore.leaveMeeting(),
                     Navigator.popUntil(context, (route) => route.isFirst)
                   },
-              child: Text('Yes',
-                  style: TextStyle(fontSize: 24, color: Colors.red))),
-          TextButton(
+              child: Text('Yes', style: TextStyle(fontSize: 24))),
+          ElevatedButton(
             onPressed: () => Navigator.pop(context, false),
             child: Text(
               'Cancel',
@@ -68,7 +73,7 @@ class UtilityComponents {
   static showonExceptionDialog(event, context) {
     event = event as HMSException;
     var message =
-        "${event.message} ${event.id??""} ${event.code?.errorCode??""} ${event.description} ${event.action} ${event.params??"".toString()}";
+        "${event.message} ${event.id ?? ""} ${event.code?.errorCode ?? ""} ${event.description} ${event.action} ${event.params ?? "".toString()}";
     showDialog(
         context: context,
         builder: (context) {
@@ -76,11 +81,11 @@ class UtilityComponents {
             content: Text(message),
             actions: [
               ElevatedButton(
-          child: Text('OK'),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
+                child: Text('OK'),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
             ],
           );
         });
