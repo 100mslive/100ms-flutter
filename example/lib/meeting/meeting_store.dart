@@ -22,11 +22,9 @@ abstract class MeetingStoreBase extends ChangeNotifier
     with Store
     implements HMSUpdateListener, HMSActionResultListener {
   late HMSSDKInteractor _hmssdkInteractor;
-
   MeetingStoreBase() {
     _hmssdkInteractor = HmsSdkManager.hmsSdkInteractor!;
   }
-
   // HMSLogListener
   @observable
   bool isSpeakerOn = true;
@@ -140,6 +138,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
     _hmssdkInteractor.leaveMeeting(hmsActionResultListener: this);
     isRoomEnded = true;
     peerTracks.clear();
+    // removeListenerMeeting();
   }
 
   @action
@@ -164,8 +163,8 @@ abstract class MeetingStoreBase extends ChangeNotifier
     _hmssdkInteractor.sendBroadcastMessage(message);
   }
 
-  void sendDirectMessage(String message, String peerId) async {
-    _hmssdkInteractor.sendDirectMessage(message, peerId);
+  void sendDirectMessage(String message, HMSPeer peer) async {
+    _hmssdkInteractor.sendDirectMessage(message, peer);
   }
 
   void sendGroupMessage(String message, String roleName) async {
@@ -276,8 +275,10 @@ abstract class MeetingStoreBase extends ChangeNotifier
 
   @action
   void addTrackChangeRequestInstance(
-      HMSTrackChangeRequest hmsTrackChangeRequest) async {
-    if (!hmsTrackChangeRequest.mute) {
+      HMSTrackChangeRequest hmsTrackChangeRequest) {
+    if ((trackChange == 1 && isVideoOn == false) ||
+        (trackChange == 0 && !isMicOn)) {
+      print("hmsTrackChangeRequest $trackChange $isVideoOn $isMicOn");
       this.hmsTrackChangeRequest = hmsTrackChangeRequest;
     }
   }
@@ -469,15 +470,20 @@ abstract class MeetingStoreBase extends ChangeNotifier
   @override
   void onChangeTrackStateRequest(
       {required HMSTrackChangeRequest hmsTrackChangeRequest}) {
-    // print("flutteronChangeTrack $trackChange $isVideoOn");
+    int isVideoTrack =
+        hmsTrackChangeRequest.track.kind == HMSTrackKind.kHMSTrackKindVideo
+            ? 1
+            : 0;
+    trackChange = isVideoTrack;
+    print("flutteronChangeTrack $trackChange");
     addTrackChangeRequestInstance(hmsTrackChangeRequest);
   }
 
-  void changeTracks(HMSTrackChangeRequest hmsTrackChangeRequest) {
-
-    if (hmsTrackChangeRequest.track.kind == HMSTrackKind.kHMSTrackKindVideo) {
+  void changeTracks() {
+    print("flutteronChangeTracks $trackChange");
+    if (trackChange == 1) {
       switchVideo();
-    } else{
+    } else if (trackChange == 0) {
       switchAudio();
     }
   }
@@ -485,9 +491,8 @@ abstract class MeetingStoreBase extends ChangeNotifier
   @override
   void onRemovedFromRoom(
       {required HMSPeerRemovedFromPeer hmsPeerRemovedFromPeer}) {
-    //print("onRemovedFromRoomFlutter $hmsPeerRemovedFromPeer");
-    isRoomEnded = true;
-    peerTracks.clear();
+    print("onRemovedFromRoomFlutter $hmsPeerRemovedFromPeer");
+    leaveMeeting();
   }
 
   void changeRole(
@@ -505,9 +510,9 @@ abstract class MeetingStoreBase extends ChangeNotifier
     return await _hmssdkInteractor.getRoles();
   }
 
-  void changeTrackRequest(String peerId, bool mute, bool isVideoTrack) {
+  void changeTrackRequest(HMSPeer peer, bool mute, bool isVideoTrack) {
     return HmsSdkManager.hmsSdkInteractor
-        ?.changeTrackRequest(peerId, mute, isVideoTrack, this);
+        ?.changeTrackRequest(peer, mute, isVideoTrack, this);
   }
 
   @action
@@ -689,7 +694,6 @@ abstract class MeetingStoreBase extends ChangeNotifier
   }
 
   bool isRaisedHand = false;
-
   void raiseHand() {
     isRaisedHand = !isRaisedHand;
     _hmssdkInteractor.raiseHand(

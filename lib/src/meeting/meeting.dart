@@ -124,15 +124,14 @@ class HMSMeeting {
     }
   }
 
-// TODO: should be HMSPeer instead of peerId
   void sendDirectMessage(
       {required String message,
-      required String peerId,
+      required HMSPeer peer,
       String? type,
       HMSMessageResultListener? hmsMessageResultListener}) async {
     var result = await PlatformService.invokeMethod(
         PlatformMethod.sendDirectMessage,
-        arguments: {"message": message, "peer_id": peerId, "type": type});
+        arguments: {"message": message, "peer_id": peer.peerId, "type": type});
 
     if (hmsMessageResultListener != null) {
       if (result["event_name"] == "on_error") {
@@ -145,15 +144,14 @@ class HMSMeeting {
     }
   }
 
-// TODO: should be HMSPeer instead of peerId
   void changeTrackRequest(
-      {required String peerId,
+      {required HMSPeer peer,
       required bool mute,
       required bool isVideoTrack,
       HMSActionResultListener? hmsActionResultListener}) async {
     var result = await PlatformService.invokeMethod(PlatformMethod.changeTrack,
         arguments: {
-          "hms_peer_id": peerId,
+          "hms_peer_id": peer.peerId,
           "mute": mute,
           "mute_video_kind": isVideoTrack
         });
@@ -206,18 +204,18 @@ class HMSMeeting {
     }
   }
 
-// TODO: should be HMSPeer instead of peerId
+// TODO: declare arguments as a val
   void removePeer(
-      {required String peerId,
+      {required HMSPeer peer,
       required String reason,
       HMSActionResultListener? hmsActionResultListener}) async {
     var result = await PlatformService.invokeMethod(PlatformMethod.removePeer,
-        arguments: {"peer_id": peerId, "reason": reason});
+        arguments: {"peer_id": peer.peerId, "reason": reason});
 
     if (hmsActionResultListener != null) {
       if (result == null) {
         hmsActionResultListener.onSuccess(
-            arguments: {"peer_id": peerId, "reason": reason},
+            arguments: {"peer_id": peer.peerId, "reason": reason},
             methodType: HMSActionResultListenerMethod.removePeer);
       } else {
         hmsActionResultListener.onException(
@@ -310,15 +308,14 @@ class HMSMeeting {
   }
 
   ///you can change role of any peer in the room just pass [peerId] and [roleName], [forceChange] is optional.
-  // TODO: should be HMSPeer instead of peerId
   void changeRole(
-      {required String peerId,
+      {required HMSPeer peer,
       required String roleName,
       bool forceChange = false,
       HMSActionResultListener? hmsActionResultListener}) async {
     var result = await PlatformService.invokeMethod(PlatformMethod.changeRole,
         arguments: {
-          'peer_id': peerId,
+          'peer_id': peer.peerId,
           'role_name': roleName,
           'force_change': forceChange
         });
@@ -400,7 +397,6 @@ class HMSMeeting {
     }
   }
 
-  ///this function takes sometime to return result {around 10secs}
   void startRtmpOrRecording(
       {required HMSRecordingConfig hmsRecordingConfig,
       HMSActionResultListener? hmsActionResultListener}) async {

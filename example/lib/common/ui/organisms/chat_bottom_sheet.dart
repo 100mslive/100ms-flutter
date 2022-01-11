@@ -262,6 +262,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                               ));
                             } else if (_meetingStore.localPeer!.peerId !=
                                 this.valueChoose) {
+                              // TODO: correct the implementation here
                               _meetingStore.sendDirectMessage(
                                   message, this.valueChoose);
                               _meetingStore.addMessage(HMSMessage(
