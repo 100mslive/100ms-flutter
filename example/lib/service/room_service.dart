@@ -3,13 +3,11 @@ import 'package:hmssdk_flutter_example/common/constant.dart';
 import 'package:http/http.dart' as http;
 
 class RoomService {
-  Future<List<String?>?> getToken(
-      {required String user, required String room}) async {
-    Constant.meetingUrl = room;
-    List<String?> codeAndDomain = getCode(room) ?? [];
+  Future<dynamic> getToken(
+      {required String user, required List<String?> codeAndDomain}) async {
     print(codeAndDomain.toString() + "CODEANDDOMAIN");
     if (codeAndDomain.length == 0) {
-      return null;
+      return "codeAndDomain.length == 0";
     }
     Uri endPoint = codeAndDomain[2] == "true"
         ? Uri.parse(Constant.prodTokenEndpoint)
@@ -24,7 +22,7 @@ class RoomService {
 
     var body = json.decode(response.body);
     print(body);
-    return [body['token'], codeAndDomain[2]!.trim()];
+    return body;
   }
 
   List<String?>? getCode(String roomUrl) {

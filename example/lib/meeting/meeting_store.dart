@@ -31,9 +31,6 @@ abstract class MeetingStoreBase extends ChangeNotifier
   @observable
   String screenSharePeerId = '';
   @observable
-  HMSException? error;
-
-  @observable
   HMSException? hmsException;
 
   @observable
@@ -259,11 +256,6 @@ abstract class MeetingStoreBase extends ChangeNotifier
   }
 
   @action
-  void updateError(HMSException error) {
-    this.error = error;
-  }
-
-  @action
   void updateRoleChangeRequest(HMSRoleChangeRequest roleChangeRequest) {
     this.roleChangeRequest = roleChangeRequest;
   }
@@ -276,11 +268,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
   @action
   void addTrackChangeRequestInstance(
       HMSTrackChangeRequest hmsTrackChangeRequest) {
-    if ((trackChange == 1 && isVideoOn == false) ||
-        (trackChange == 0 && !isMicOn)) {
-      print("hmsTrackChangeRequest $trackChange $isVideoOn $isMicOn");
-      this.hmsTrackChangeRequest = hmsTrackChangeRequest;
-    }
+    this.hmsTrackChangeRequest = hmsTrackChangeRequest;
   }
 
   @action
@@ -392,7 +380,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
 
   @override
   void onError({required HMSException error}) {
-    updateError(error);
+    this.hmsException = hmsException;
   }
 
   @override
@@ -470,7 +458,8 @@ abstract class MeetingStoreBase extends ChangeNotifier
   @override
   void onChangeTrackStateRequest(
       {required HMSTrackChangeRequest hmsTrackChangeRequest}) {
-    addTrackChangeRequestInstance(hmsTrackChangeRequest);
+    if (!hmsTrackChangeRequest.mute)
+      addTrackChangeRequestInstance(hmsTrackChangeRequest);
   }
 
   void changeTracks(HMSTrackChangeRequest hmsTrackChangeRequest) {
@@ -536,6 +525,9 @@ abstract class MeetingStoreBase extends ChangeNotifier
         break;
       case HMSPeerUpdate.roleUpdated:
         print('${peers.indexOf(peer)}');
+        if (peer.isLocal) {
+          localPeer = peer;
+        }
         updatePeerAt(peer);
         break;
       case HMSPeerUpdate.metadataChanged:
@@ -546,9 +538,15 @@ abstract class MeetingStoreBase extends ChangeNotifier
         else if (index != -1 && peer.metadata == "{\"isHandRaised\":false}") {
           peerTracks[index].isRaiseHand = false;
         }
+        if (peer.isLocal) {
+          localPeer = peer;
+        }
         updatePeerAt(peer);
         break;
       case HMSPeerUpdate.nameChanged:
+        if (peer.isLocal) {
+          localPeer = peer;
+        }
         updatePeerAt(peer);
         break;
       case HMSPeerUpdate.defaultUpdate:
@@ -700,6 +698,10 @@ abstract class MeetingStoreBase extends ChangeNotifier
 
   void setPlayBackAllowed(bool allow) {
     _hmssdkInteractor.setPlayBackAllowed(allow);
+  }
+
+  void acceptRoleChangeRequest() {
+    _hmssdkInteractor.acceptRoleChangeRequest(this);
   }
 
   @override

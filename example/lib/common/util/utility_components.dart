@@ -18,18 +18,17 @@ class UtilityComponents {
         title: Text('Leave Room?'),
         actions: [
           TextButton(
-              
               onPressed: () => {
                     _meetingStore.leaveMeeting(),
                     Navigator.popUntil(context, (route) => route.isFirst)
                   },
-              child: Text('Yes', style: TextStyle(fontSize: 24,color: Colors.red))),
+              child: Text('Yes',
+                  style: TextStyle(fontSize: 24, color: Colors.red))),
           TextButton(
             onPressed: () => Navigator.pop(context, false),
             child: Text(
               'Cancel',
-              style: TextStyle(
-                  fontSize: 24),
+              style: TextStyle(fontSize: 24),
             ),
           ),
         ],
@@ -44,7 +43,9 @@ class UtilityComponents {
         builder: (ctx) => RoleChangeDialogOrganism(roleChangeRequest: event));
     if (answer == "OK") {
       debugPrint("OK accepted");
-      context.read<MeetingStore>().meetingController.acceptRoleChangeRequest();
+      MeetingStore meetingStore =
+          Provider.of<MeetingStore>(context, listen: false);
+      meetingStore.acceptRoleChangeRequest();
       UtilityComponents.showSnackBarWithString(
           (event as HMSException).description, context);
     }
@@ -55,11 +56,33 @@ class UtilityComponents {
     String answer = await showDialog(
         context: context,
         builder: (ctx) => TrackChangeDialogOrganism(trackChangeRequest: event));
-    print(answer+'----------------->');
+    print(answer + '----------------->');
     if (answer == "OK") {
       debugPrint("OK accepted");
-      MeetingStore meetingStore = Provider.of<MeetingStore>(context,listen: false);
+      MeetingStore meetingStore =
+          Provider.of<MeetingStore>(context, listen: false);
       meetingStore.changeTracks(event);
     }
+  }
+
+  static showonExceptionDialog(event, context) {
+    event = event as HMSException;
+    var message =
+        "${event.message} ${event.id??""} ${event.code?.errorCode??""} ${event.description} ${event.action} ${event.params??"".toString()}";
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            content: Text(message),
+            actions: [
+              ElevatedButton(
+          child: Text('OK'),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+            ],
+          );
+        });
   }
 }
