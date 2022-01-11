@@ -22,9 +22,11 @@ abstract class MeetingStoreBase extends ChangeNotifier
     with Store
     implements HMSUpdateListener, HMSActionResultListener {
   late HMSSDKInteractor _hmssdkInteractor;
+
   MeetingStoreBase() {
     _hmssdkInteractor = HmsSdkManager.hmsSdkInteractor!;
   }
+
   // HMSLogListener
   @observable
   bool isSpeakerOn = true;
@@ -138,7 +140,6 @@ abstract class MeetingStoreBase extends ChangeNotifier
     _hmssdkInteractor.leaveMeeting(hmsActionResultListener: this);
     isRoomEnded = true;
     peerTracks.clear();
-    // removeListenerMeeting();
   }
 
   @action
@@ -275,9 +276,8 @@ abstract class MeetingStoreBase extends ChangeNotifier
 
   @action
   void addTrackChangeRequestInstance(
-      HMSTrackChangeRequest hmsTrackChangeRequest) {
-    if((trackChange == 1 && isVideoOn==false) || (trackChange==0 && !isMicOn)) {
-      print("hmsTrackChangeRequest $trackChange $isVideoOn $isMicOn");
+      HMSTrackChangeRequest hmsTrackChangeRequest) async {
+    if (!hmsTrackChangeRequest.mute) {
       this.hmsTrackChangeRequest = hmsTrackChangeRequest;
     }
   }
@@ -292,7 +292,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
   @override
   void onJoin({required HMSRoom room}) async {
     hmsRoom = room;
-    if(room.hmsBrowserRecordingState?.running == true)
+    if (room.hmsBrowserRecordingState?.running == true)
       isRecordingStarted = true;
     else
       isRecordingStarted = false;
@@ -328,8 +328,8 @@ abstract class MeetingStoreBase extends ChangeNotifier
 
   @override
   void onRoomUpdate({required HMSRoom room, required HMSRoomUpdate update}) {
-    if(update == HMSRoomUpdate.browserRecordingStateUpdated){
-      if(room.hmsBrowserRecordingState?.running == true)
+    if (update == HMSRoomUpdate.browserRecordingStateUpdated) {
+      if (room.hmsBrowserRecordingState?.running == true)
         isRecordingStarted = true;
       else
         isRecordingStarted = false;
@@ -469,20 +469,15 @@ abstract class MeetingStoreBase extends ChangeNotifier
   @override
   void onChangeTrackStateRequest(
       {required HMSTrackChangeRequest hmsTrackChangeRequest}) {
-    int isVideoTrack =
-        hmsTrackChangeRequest.track.kind == HMSTrackKind.kHMSTrackKindVideo
-            ? 1
-            : 0;
-    trackChange = isVideoTrack;
-    print("flutteronChangeTrack $trackChange");
+    // print("flutteronChangeTrack $trackChange $isVideoOn");
     addTrackChangeRequestInstance(hmsTrackChangeRequest);
   }
 
-  void changeTracks() {
-    print("flutteronChangeTracks $trackChange");
-    if (trackChange == 1) {
+  void changeTracks(HMSTrackChangeRequest hmsTrackChangeRequest) {
+
+    if (hmsTrackChangeRequest.track.kind == HMSTrackKind.kHMSTrackKindVideo) {
       switchVideo();
-    } else if (trackChange == 0) {
+    } else{
       switchAudio();
     }
   }
@@ -490,8 +485,9 @@ abstract class MeetingStoreBase extends ChangeNotifier
   @override
   void onRemovedFromRoom(
       {required HMSPeerRemovedFromPeer hmsPeerRemovedFromPeer}) {
-    print("onRemovedFromRoomFlutter $hmsPeerRemovedFromPeer");
-    leaveMeeting();
+    //print("onRemovedFromRoomFlutter $hmsPeerRemovedFromPeer");
+    isRoomEnded = true;
+    peerTracks.clear();
   }
 
   void changeRole(
@@ -659,8 +655,10 @@ abstract class MeetingStoreBase extends ChangeNotifier
     return await _hmssdkInteractor.getLocalPeer();
   }
 
-  void startRtmpOrRecording({
-     required String meetingUrl,required bool toRecord, List<String>? rtmpUrls}) async {
+  void startRtmpOrRecording(
+      {required String meetingUrl,
+      required bool toRecord,
+      List<String>? rtmpUrls}) async {
     HMSRecordingConfig hmsRecordingConfig = new HMSRecordingConfig(
         meetingUrl: meetingUrl, toRecord: toRecord, rtmpUrls: rtmpUrls);
 
@@ -691,9 +689,12 @@ abstract class MeetingStoreBase extends ChangeNotifier
   }
 
   bool isRaisedHand = false;
+
   void raiseHand() {
     isRaisedHand = !isRaisedHand;
-    _hmssdkInteractor.raiseHand(metadata: "{\"isHandRaised\":$isRaisedHand}", hmsActionResultListener: this);
+    _hmssdkInteractor.raiseHand(
+        metadata: "{\"isHandRaised\":$isRaisedHand}",
+        hmsActionResultListener: this);
   }
 
   void setPlayBackAllowed(bool allow) {
@@ -748,7 +749,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
   void onException(
       {HMSActionResultListenerMethod methodType =
           HMSActionResultListenerMethod.unknown,
-        Map<String, dynamic>? arguments,
+      Map<String, dynamic>? arguments,
       required HMSException hmsException}) {
     this.hmsException = hmsException;
     switch (methodType) {
@@ -779,7 +780,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
         // TODO: Handle this case.
         break;
       case HMSActionResultListenerMethod.startRtmpOrRecording:
-        if(hmsException.code?.errorCode == "400"){
+        if (hmsException.code?.errorCode == "400") {
           isRecordingStarted = true;
         }
         print("HMSException ${hmsException.message}");

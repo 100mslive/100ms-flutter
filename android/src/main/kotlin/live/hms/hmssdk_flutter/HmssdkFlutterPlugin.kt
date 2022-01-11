@@ -375,7 +375,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             return hmssdk.getLocalPeer()?.videoTrack?.isMute ?: true
         }
         val peer = getPeerById(peerId!!)
-//        Log.i("isVideoMute", (peer!!.videoTrack!!.isMute).toString())
+       // Log.i("isVideoMuteAndroid", (peer!!.videoTrack!!.isMute).toString())
         return peer!!.videoTrack!!.isMute
     }
 
@@ -892,7 +892,6 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         }
 
         override fun onSuccess() {
-            Log.i("onSuccess","raised hand")
             CoroutineScope(Dispatchers.Main).launch {
                 result?.success(null)
             }

@@ -49,6 +49,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
   int countOfVideoOnBetweenTwo = 1;
   bool videoPreviousState = false;
   bool isRecordingStarted = false;
+
   @override
   void initState() {
     super.initState();
@@ -124,8 +125,11 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
   }
 
   void checkButtons() async {
-    _meetingStore.isVideoOn = !(await _meetingStore.isVideoMute(null));
-    _meetingStore.isMicOn = !(await _meetingStore.isAudioMute(null));
+    _meetingStore.isVideoOn =
+        !(await _meetingStore.isVideoMute(_meetingStore.localPeer));
+    print('${_meetingStore.isVideoOn} initStateButton');
+    _meetingStore.isMicOn =
+        !(await _meetingStore.isAudioMute(_meetingStore.localPeer));
   }
 
   @override
@@ -156,14 +160,14 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
         break;
 
       case 2:
-
         if (_meetingStore.isRecordingStarted) {
           _meetingStore.stopRtmpAndRecording();
           isRecordingStarted = false;
         } else {
-          if(isRecordingStarted == false) {
+          if (isRecordingStarted == false) {
             print("${Constant.meetingUrl} meetingUrl");
-            _meetingStore.startRtmpOrRecording(meetingUrl: Constant.meetingUrl,
+            _meetingStore.startRtmpOrRecording(
+                meetingUrl: Constant.meetingUrl,
                 toRecord: true,
                 rtmpUrls: null);
             isRecordingStarted = true;

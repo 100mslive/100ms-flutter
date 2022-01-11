@@ -20,12 +20,6 @@ class UtilityComponents {
           TextButton(
               onPressed: () => {
                     _meetingStore.leaveMeeting(),
-                    // Navigator.pushReplacement(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //     builder: (ctx) => HomePage(),
-                    //   ),
-                    // ),
                     Navigator.popUntil(context, (route) => route.isFirst)
                   },
               child: Text('Yes', style: TextStyle(height: 1, fontSize: 24))),
@@ -64,7 +58,7 @@ class UtilityComponents {
     if (answer == "OK") {
       debugPrint("OK accepted");
       MeetingStore meetingStore = Provider.of<MeetingStore>(context,listen: false);
-      meetingStore.changeTracks();
+      meetingStore.changeTracks(event);
     }
   }
 }
