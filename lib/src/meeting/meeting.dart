@@ -124,6 +124,7 @@ class HMSMeeting {
     }
   }
 
+// TODO: should be HMSPeer instead of peerId
   void sendDirectMessage(
       {required String message,
       required String peerId,
@@ -144,6 +145,7 @@ class HMSMeeting {
     }
   }
 
+// TODO: should be HMSPeer instead of peerId
   void changeTrackRequest(
       {required String peerId,
       required bool mute,
@@ -204,6 +206,7 @@ class HMSMeeting {
     }
   }
 
+// TODO: should be HMSPeer instead of peerId
   void removePeer(
       {required String peerId,
       required String reason,
@@ -307,6 +310,7 @@ class HMSMeeting {
   }
 
   ///you can change role of any peer in the room just pass [peerId] and [roleName], [forceChange] is optional.
+  // TODO: should be HMSPeer instead of peerId
   void changeRole(
       {required String peerId,
       required String roleName,
@@ -371,7 +375,11 @@ class HMSMeeting {
   }
 
   void changeTrackStateForRole(
-      {required bool mute,required String type,required String source,required List<String> roles,HMSActionResultListener? hmsActionResultListener}) async {
+      {required bool mute,
+      required String type,
+      required String source,
+      required List<String> roles,
+      HMSActionResultListener? hmsActionResultListener}) async {
     var result = await PlatformService.invokeMethod(
         PlatformMethod.changeTrackStateForRole,
         arguments: {
@@ -393,7 +401,8 @@ class HMSMeeting {
   }
 
   void startRtmpOrRecording(
-      {required HMSRecordingConfig hmsRecordingConfig,HMSActionResultListener? hmsActionResultListener}) async {
+      {required HMSRecordingConfig hmsRecordingConfig,
+      HMSActionResultListener? hmsActionResultListener}) async {
     var result = await PlatformService.invokeMethod(
         PlatformMethod.startRtmpOrRecording,
         arguments: hmsRecordingConfig.getJson()) as Map?;
