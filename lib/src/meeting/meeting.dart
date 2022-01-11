@@ -86,8 +86,10 @@ class HMSMeeting {
   }
 
   ///send message to the room and the pass the [message].
-  void sendBroadcastMessage(String message, String? type,
-      {HMSMessageResultListener? hmsMessageResultListener}) async {
+  void sendBroadcastMessage(
+      {required String message,
+      String? type,
+      HMSMessageResultListener? hmsMessageResultListener}) async {
     var result = await PlatformService.invokeMethod(
         PlatformMethod.sendBroadcastMessage,
         arguments: {"message": message, "type": type});
@@ -103,8 +105,11 @@ class HMSMeeting {
     }
   }
 
-  void sendGroupMessage(String message, String roleName, String? type,
-      {HMSMessageResultListener? hmsMessageResultListener}) async {
+  void sendGroupMessage(
+      {required String message,
+      required String roleName,
+      String? type,
+      HMSMessageResultListener? hmsMessageResultListener}) async {
     var result = await PlatformService.invokeMethod(
         PlatformMethod.sendGroupMessage,
         arguments: {"message": message, "role_name": roleName, "type": type});
@@ -119,8 +124,11 @@ class HMSMeeting {
     }
   }
 
-  void sendDirectMessage(String message, String peerId, String? type,
-      {HMSMessageResultListener? hmsMessageResultListener}) async {
+  void sendDirectMessage(
+      {required String message,
+      required String peerId,
+      String? type,
+      HMSMessageResultListener? hmsMessageResultListener}) async {
     var result = await PlatformService.invokeMethod(
         PlatformMethod.sendDirectMessage,
         arguments: {"message": message, "peer_id": peerId, "type": type});
@@ -136,8 +144,11 @@ class HMSMeeting {
     }
   }
 
-  void changeTrackRequest(String peerId, bool mute, bool isVideoTrack,
-      {HMSActionResultListener? hmsActionResultListener}) async {
+  void changeTrackRequest(
+      {required String peerId,
+      required bool mute,
+      required bool isVideoTrack,
+      HMSActionResultListener? hmsActionResultListener}) async {
     var result = await PlatformService.invokeMethod(PlatformMethod.changeTrack,
         arguments: {
           "hms_peer_id": peerId,
@@ -156,8 +167,9 @@ class HMSMeeting {
     }
   }
 
-  void raiseHand(String metadata,
-      {HMSActionResultListener? hmsActionResultListener}) async {
+  void raiseHand(
+      {required String metadata,
+      HMSActionResultListener? hmsActionResultListener}) async {
     var result = await PlatformService.invokeMethod(PlatformMethod.raiseHand,
         arguments: {"metadata": metadata});
 
@@ -172,8 +184,10 @@ class HMSMeeting {
     }
   }
 
-  void endRoom(bool lock, String reason,
-      {HMSActionResultListener? hmsActionResultListener}) async {
+  void endRoom(
+      {required bool lock,
+      required String reason,
+      HMSActionResultListener? hmsActionResultListener}) async {
     var result = await PlatformService.invokeMethod(PlatformMethod.endRoom,
         arguments: {"lock": lock, "reason": reason});
 
@@ -190,8 +204,10 @@ class HMSMeeting {
     }
   }
 
-  void removePeer(String peerId, String reason,
-      {HMSActionResultListener? hmsActionResultListener}) async {
+  void removePeer(
+      {required String peerId,
+      required String reason,
+      HMSActionResultListener? hmsActionResultListener}) async {
     var result = await PlatformService.invokeMethod(PlatformMethod.removePeer,
         arguments: {"peer_id": peerId, "reason": reason});
 
@@ -223,7 +239,8 @@ class HMSMeeting {
         });
   }
 
-  void startHMSLogger(HMSLogLevel webRtclogLevel, HMSLogLevel logLevel) {
+  void startHMSLogger(
+      {required HMSLogLevel webRtclogLevel, required HMSLogLevel logLevel}) {
     PlatformService.invokeMethod(PlatformMethod.startHMSLogger, arguments: {
       "web_rtc_log_level":
           HMSLogLevelValue.getValueFromHMSLogLevel(webRtclogLevel),
@@ -235,31 +252,31 @@ class HMSMeeting {
     PlatformService.invokeMethod(PlatformMethod.removeHMSLogger);
   }
 
-  void addLogListener(HMSLogListener hmsLogListener) {
+  void addLogListener({required HMSLogListener hmsLogListener}) {
     PlatformService.addLogsListener(hmsLogListener);
   }
 
-  void removeLogListener(HMSLogListener hmsLogListener) {
+  void removeLogListener({required HMSLogListener hmsLogListener}) {
     PlatformService.removeLogsListener(hmsLogListener);
   }
 
   ///add MeetingListener it will add all the listeners.
-  void addMeetingListener(HMSUpdateListener listener) {
+  void addMeetingListener({required HMSUpdateListener listener}) {
     PlatformService.addMeetingListener(listener);
   }
 
   ///remove a meetListener.
-  void removeMeetingListener(HMSUpdateListener listener) {
+  void removeMeetingListener({required HMSUpdateListener listener}) {
     PlatformService.removeMeetingListener(listener);
   }
 
   ///add one or more previewListeners.
-  void addPreviewListener(HMSPreviewListener listener) {
+  void addPreviewListener({required HMSPreviewListener listener}) {
     PlatformService.addPreviewListener(listener);
   }
 
   ///remove a previewListener.
-  void removePreviewListener(HMSPreviewListener listener) {
+  void removePreviewListener({required HMSPreviewListener listener}) {
     PlatformService.removePreviewListener(listener);
   }
 
@@ -329,13 +346,13 @@ class HMSMeeting {
   }
 
   ///checks the audio is mute or unmute just pass [peer]
-  Future<bool> isAudioMute(HMSPeer? peer) async {
+  Future<bool> isAudioMute({HMSPeer? peer}) async {
     return await PlatformService.invokeMethod(PlatformMethod.isAudioMute,
         arguments: {"peer_id": peer != null ? peer.peerId : "null"});
   }
 
   ///checks the video is mute or unmute just pass [peer]
-  Future<bool> isVideoMute(HMSPeer? peer) async {
+  Future<bool> isVideoMute({HMSPeer? peer}) async {
     return await PlatformService.invokeMethod(PlatformMethod.isVideoMute,
         arguments: {"peer_id": peer != null ? peer.peerId : "null"});
   }
@@ -348,14 +365,13 @@ class HMSMeeting {
     return await PlatformService.invokeMethod(PlatformMethod.unMuteAll);
   }
 
-  Future<void> setPlayBackAllowed(bool allow) async {
+  Future<void> setPlayBackAllowed({required bool allow}) async {
     return await PlatformService.invokeMethod(PlatformMethod.setPlayBackAllowed,
         arguments: {"allowed": allow});
   }
 
   void changeTrackStateForRole(
-      bool mute, String type, String source, List<String> roles,
-      {HMSActionResultListener? hmsActionResultListener}) async {
+      {required bool mute,required String type,required String source,required List<String> roles,HMSActionResultListener? hmsActionResultListener}) async {
     var result = await PlatformService.invokeMethod(
         PlatformMethod.changeTrackStateForRole,
         arguments: {
@@ -376,8 +392,8 @@ class HMSMeeting {
     }
   }
 
-  void startRtmpOrRecording(HMSRecordingConfig hmsRecordingConfig,
-      {HMSActionResultListener? hmsActionResultListener}) async {
+  void startRtmpOrRecording(
+      {required HMSRecordingConfig hmsRecordingConfig,HMSActionResultListener? hmsActionResultListener}) async {
     var result = await PlatformService.invokeMethod(
         PlatformMethod.startRtmpOrRecording,
         arguments: hmsRecordingConfig.getJson()) as Map?;
