@@ -117,6 +117,12 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             
         case "get_local_peer":
             getLocalPeer(result)
+
+        case "get_remote_peers":
+            getRemotePeers(result)
+
+        case "get_peers":
+            getPeers(result)
             
         // MARK: - Audio Helpers
             
@@ -364,6 +370,24 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         guard let localPeer = hmsSDK?.localPeer else { result(nil); return }
         
         result(HMSPeerExtension.toDictionary(localPeer))
+    }
+
+    private func getRemotePeers(_ result: FlutterResult) {
+        
+        guard let peers = hmsSDK?.remotePeers else { result(nil); return }
+        
+        var listOfPeers = [[String: Any]]()
+        peers.forEach { listOfPeers.append(HMSPeerExtension.toDictionary($0)) }
+        result(listOfPeers)
+    }
+
+    private func getPeers(_ result: FlutterResult) {
+        
+        guard let peers = hmsSDK?.room?.peers else { result(nil); return }
+        
+        var listOfPeers = [[String: Any]]()
+        peers.forEach { listOfPeers.append(HMSPeerExtension.toDictionary($0)) }
+        result(listOfPeers)
     }
     
     

@@ -134,6 +134,9 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             "accept_role_change" -> {
                 acceptRoleRequest()
             }
+            "get_remote_peers" -> {
+                getRemotePeers(result)
+            }
             "get_peers" -> {
                 getPeers(result)
             }
@@ -198,7 +201,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         }
     }
 
-
+// TODO: check behaviour when room is not joined
     private fun getPeers(result: Result) {
         val peersList = hmssdk.getPeers()
         val peersMapList = ArrayList<HashMap<String, Any?>?>()
@@ -208,7 +211,17 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         CoroutineScope(Dispatchers.Main).launch {
             result.success(peersMapList)
         }
+    }
 
+    private fun getRemotePeers(result: Result) {
+        val peersList = hmssdk.getRemotePeers()
+        val peersMapList = ArrayList<HashMap<String, Any?>?>()
+        peersList.forEach {
+            peersMapList.add(HMSPeerExtension.toDictionary(it))
+        }
+        CoroutineScope(Dispatchers.Main).launch {
+            result.success(peersMapList)
+        }
     }
 
     override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
@@ -444,10 +457,6 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
 
     fun getLocalPeer(): HMSLocalPeer? {
         return hmssdk.getLocalPeer()
-    }
-
-    fun getPeers():Array<HMSPeer>{
-        return hmssdk.getPeers()
     }
 
     private fun changeRole(call: MethodCall) {

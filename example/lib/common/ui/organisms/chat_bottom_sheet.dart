@@ -76,17 +76,18 @@ class _ChatWidgetState extends State<ChatWidget> {
                                         child: Text("Everyone"),
                                         value: "Everyone",
                                       ),
-                                      ..._meetingStore.peers.map((e) {
+                                      ..._meetingStore.peers.map((peer) {
                                         return DropdownMenuItem<String>(
                                           child: Text(
-                                              "${e.name} ${e.isLocal ? "(You)" : ""}"),
-                                          value: e.peerId,
+                                              "${peer.name} ${peer.isLocal ? "(You)" : ""}"),
+                                          value: peer.peerId,
                                         );
                                       }).toList(),
                                       ...roles
-                                          .map((e) => DropdownMenuItem<String>(
-                                                child: Text("${e.name}"),
-                                                value: e.name,
+                                          .map((role) =>
+                                              DropdownMenuItem<String>(
+                                                child: Text("${role.name}"),
+                                                value: role.name,
                                               ))
                                           .toList()
                                     ],
@@ -221,7 +222,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                           width: widthOfScreen - 45.0,
                         ),
                         GestureDetector(
-                          onTap: () {
+                          onTap: () async {
                             String message = messageTextController.text;
                             if (message.isEmpty) return;
 
@@ -232,7 +233,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                             List<String> rolesName = <String>[];
                             for (int i = 0; i < hmsRoles.length; i++)
                               rolesName.add(hmsRoles[i].name);
-                            print("${this.hmsRoles.toString()} dekte hai");
+
                             if (this.valueChoose == "Everyone") {
                               _meetingStore.sendBroadcastMessage(message);
                               _meetingStore.addMessage(HMSMessage(
@@ -262,9 +263,11 @@ class _ChatWidgetState extends State<ChatWidget> {
                               ));
                             } else if (_meetingStore.localPeer!.peerId !=
                                 this.valueChoose) {
-                              // TODO: correct the implementation here
-                              _meetingStore.sendDirectMessage(
-                                  message, this.valueChoose);
+                              var peer = await _meetingStore.getPeer(
+                                  peerId: this.valueChoose);
+                              _meetingStore.sendDirectMessage(message, peer!);
+
+                              // TODO: add messages based on action listener success/failure
                               _meetingStore.addMessage(HMSMessage(
                                 sender: _meetingStore.localPeer!,
                                 message: message,

@@ -71,6 +71,8 @@ enum PlatformMethod {
   muteAll,
   unMuteAll,
   getLocalPeer,
+  getRemotePeers,
+  getPeers,
   unknown,
   startHMSLogger,
   removeHMSLogger,
@@ -152,6 +154,10 @@ extension PlatformMethodValues on PlatformMethod {
         return 'un_mute_all';
       case PlatformMethod.getLocalPeer:
         return 'get_local_peer';
+      case PlatformMethod.getRemotePeers:
+        return 'get_remote_peers';
+      case PlatformMethod.getPeers:
+        return 'get_peers';
       case PlatformMethod.unknown:
         return 'unknown';
       case PlatformMethod.startHMSLogger:
@@ -245,6 +251,10 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.unMuteAll;
       case 'get_local_peer':
         return PlatformMethod.getLocalPeer;
+      case 'get_remote_peers':
+        return PlatformMethod.getRemotePeers;
+      case 'get_peers':
+        return PlatformMethod.getPeers;
       case 'start_hms_logger':
         return PlatformMethod.startHMSLogger;
       case 'remove_hms_logger':

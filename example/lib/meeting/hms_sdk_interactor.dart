@@ -107,6 +107,12 @@ class HMSSDKInteractor {
     return await _meeting.startCapturing();
   }
 
+  Future<HMSPeer?> getPeer({required String peerId}) async {
+    List<HMSPeer>? peers = await _meeting.getPeers();
+
+    return peers?.firstWhere((element) => element.peerId == peerId);
+  }
+
   void changeTrackRequest(HMSPeer peer, bool mute, bool isVideoTrack,
       HMSActionResultListener hmsActionResultListener) {
     _meeting.changeTrackRequest(

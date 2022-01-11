@@ -79,17 +79,18 @@ class _VideoTileState extends State<VideoTile> {
                                 ? true
                                 : filteredList[index].track?.isMute,
                             peerName: filteredList[index].name,
-                            changeTrack: (mute, isVideoTrack) {
+                            changeTrack: (mute, isVideoTrack) async {
                               Navigator.pop(context);
+                              var peer = await _meetingStore.getPeer(
+                                  peerId: filteredList[index].peerId);
                               _meetingStore.changeTrackRequest(
-                                  filteredList[index].peerId,
-                                  mute,
-                                  isVideoTrack);
+                                  peer!, mute, isVideoTrack);
                             },
-                            removePeer: () {
+                            removePeer: () async {
                               Navigator.pop(context);
-                              _meetingStore.removePeerFromRoom(
-                                  filteredList[index].peerId);
+                              var peer = await _meetingStore.getPeer(
+                                  peerId: filteredList[index].peerId);
+                              _meetingStore.removePeerFromRoom(peer!);
                             }),
                       ],
                     ));

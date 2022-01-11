@@ -119,7 +119,6 @@ class HMSVideoViewFactory(private val plugin: HmssdkFlutterPlugin) :
 
         val peer = if(isLocal==null || isLocal) plugin.getLocalPeer()
         else plugin.getPeerById(id!!)!!
-        Log.i("viewFactory",plugin.getPeers().size.toString())
         return HMSVideoViewWidget(context, viewId, creationParams,peer,trackId!!,isAuxiliary!!,setMirror!!,scaleType,screenShare,matchParent)
     }
 }

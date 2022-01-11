@@ -67,7 +67,7 @@ class _ParticipantOrganismState extends State<ParticipantOrganism> {
                               changeRole: (role, forceChange) {
                                 Navigator.pop(context);
                                 widget.meetingStore.changeRole(
-                                    peerId: peer.peerId,
+                                    peer: peer,
                                     roleName: role.name,
                                     forceChange: forceChange);
                               },

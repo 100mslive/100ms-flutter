@@ -16,7 +16,7 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 class HMSPeer {
   ///id of the peer
-  final String peerId;
+  late final String peerId;
 
   ///name of the peer in the room.
   final String name;
@@ -101,6 +101,8 @@ class HMSPeer {
       return peer;
     }
   }
+
+  // TODO: add HMSRemotePeer class
 
   static List<HMSPeer> fromListOfMap(List peersMap) {
     List<HMSPeer> peers = peersMap.map((e) => HMSPeer.fromMap(e)).toList();

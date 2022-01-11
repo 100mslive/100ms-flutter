@@ -225,9 +225,30 @@ class HMSMeeting {
     }
   }
 
-  Future<HMSPeer?> getLocalPeer() async {
-    return HMSPeer.fromMap(
+  Future<HMSLocalPeer?> getLocalPeer() async {
+    return HMSLocalPeer.fromMap(
         await PlatformService.invokeMethod(PlatformMethod.getLocalPeer) as Map);
+  }
+
+  Future<List<HMSPeer>?> getRemotePeers() async {
+    List peers =
+        await PlatformService.invokeMethod(PlatformMethod.getRemotePeers);
+
+    List<HMSPeer> listOfRemotePeers = [];
+    peers.forEach((element) {
+      listOfRemotePeers.add(HMSPeer.fromMap(element as Map));
+    });
+    return listOfRemotePeers;
+  }
+
+  Future<List<HMSPeer>?> getPeers() async {
+    List peers = await PlatformService.invokeMethod(PlatformMethod.getPeers);
+
+    List<HMSPeer> listOfPeers = [];
+    peers.forEach((element) {
+      listOfPeers.add(HMSPeer.fromMap(element as Map));
+    });
+    return listOfPeers;
   }
 
   ///preview before joining the room pass [HMSConfig].
