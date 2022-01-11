@@ -5,7 +5,6 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/constant.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/chat_bottom_sheet.dart';
-import 'package:hmssdk_flutter_example/common/ui/organisms/leave_or_end_meeting.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/offline_screen.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/peer_item_organism.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/video_tile.dart';
@@ -236,7 +235,16 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
         // }
         UtilityComponents.showSnackBarWithString("Coming Soon...", context);
         break;
+
+      case 8:
+        _meetingStore.endRoom(false, "Room Ended From Flutter");
+        if (_meetingStore.isRoomEnded) {
+          Navigator.pop(context);
+        }
+        break;
+
       default:
+        break;
     }
   }
 
@@ -400,6 +408,22 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                   ]),
                               value: 7,
                             ),
+                            if (_meetingStore
+                                .localPeer!.role!.permissions!.endRoom!)
+                              PopupMenuItem(
+                                child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        "End Room",
+                                        style: TextStyle(color: Colors.blue),
+                                      ),
+                                      Icon(Icons.cancel_schedule_send,
+                                          color: Colors.blue),
+                                    ]),
+                                value: 8,
+                              ),
                           ],
                           onSelected: handleMenu,
                         ),
@@ -568,13 +592,9 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                 color: Colors.red,
                                 tooltip: 'Leave Or End',
                                 iconSize: 32,
-                                onPressed: () {
-                                  showDialog(
-                                      context: context,
-                                      builder: (_) =>
-                                          LeaveOrEndMeetingDialogOption(
-                                            meetingStore: _meetingStore,
-                                          ));
+                                onPressed: () async {
+                                  await UtilityComponents.onBackPressed(
+                                      context);
                                 },
                                 icon: Icon(Icons.call_end)),
                           ),

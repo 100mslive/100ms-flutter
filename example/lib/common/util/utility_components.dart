@@ -15,20 +15,21 @@ class UtilityComponents {
     return showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: Text('Leave the Meeting?'),
+        title: Text('Leave Room?'),
         actions: [
           TextButton(
+              
               onPressed: () => {
                     _meetingStore.leaveMeeting(),
                     Navigator.popUntil(context, (route) => route.isFirst)
                   },
-              child: Text('Yes', style: TextStyle(height: 1, fontSize: 24))),
+              child: Text('Yes', style: TextStyle(fontSize: 24,color: Colors.red))),
           TextButton(
             onPressed: () => Navigator.pop(context, false),
             child: Text(
               'Cancel',
               style: TextStyle(
-                  height: 1, fontSize: 24, fontWeight: FontWeight.bold),
+                  fontSize: 24),
             ),
           ),
         ],
