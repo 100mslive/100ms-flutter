@@ -33,22 +33,22 @@ class HMSSDKInteractor {
   }
 
   void sendBroadcastMessage(String message) {
-    _meeting.sendBroadcastMessage(message, "chat");
+    _meeting.sendBroadcastMessage(message:message, type:"chat");
   }
 
   void sendDirectMessage(String message, String peerId) async {
     _meeting.sendDirectMessage(
-      message,
-      peerId,
-      "chat",
+      message:message,
+      peerId:peerId,
+      type:"chat",
     );
   }
 
   void sendGroupMessage(String message, String roleName) async {
     _meeting.sendGroupMessage(
-      message,
-      roleName,
-      "chat",
+      message:message,
+      roleName:roleName,
+      type: "chat",
     );
   }
 
@@ -58,7 +58,7 @@ class HMSSDKInteractor {
   }
 
   void startHMSLogger(HMSLogLevel webRtclogLevel, HMSLogLevel logLevel) {
-    _meeting.startHMSLogger(webRtclogLevel, logLevel);
+    _meeting.startHMSLogger(webRtclogLevel:webRtclogLevel,logLevel:logLevel);
   }
 
   void removeHMSLogger() {
@@ -66,27 +66,27 @@ class HMSSDKInteractor {
   }
 
   void addLogsListener(HMSLogListener hmsLogListener) {
-    _meeting.addLogListener(hmsLogListener);
+    _meeting.addLogListener(hmsLogListener:hmsLogListener);
   }
 
   void removeLogsListener(HMSLogListener hmsLogListener) {
-    _meeting.removeLogListener(hmsLogListener);
+    _meeting.removeLogListener(hmsLogListener:hmsLogListener);
   }
 
   void addMeetingListener(HMSUpdateListener listener) {
-    _meeting.addMeetingListener(listener);
+    _meeting.addMeetingListener(listener:listener);
   }
 
   void removeMeetingListener(HMSUpdateListener listener) {
-    _meeting.removeMeetingListener(listener);
+    _meeting.removeMeetingListener(listener:listener);
   }
 
   void addPreviewListener(HMSPreviewListener listener) {
-    _meeting.addPreviewListener(listener);
+    _meeting.addPreviewListener(listener:listener);
   }
 
   void removePreviewListener(HMSPreviewListener listener) {
-    _meeting.removePreviewListener(listener);
+    _meeting.removePreviewListener(listener:listener);
   }
 
   void acceptRoleChangeRequest(
@@ -109,7 +109,7 @@ class HMSSDKInteractor {
 
   void changeTrackRequest(String peerId, bool mute, bool isVideoTrack,
       HMSActionResultListener hmsActionResultListener) {
-    _meeting.changeTrackRequest(peerId, mute, isVideoTrack,
+    _meeting.changeTrackRequest(peerId:peerId, mute:mute,isVideoTrack:isVideoTrack,
         hmsActionResultListener: hmsActionResultListener);
   }
 
@@ -117,13 +117,13 @@ class HMSSDKInteractor {
 
   void endRoom(bool lock, String reason,
       HMSActionResultListener hmsActionResultListener) {
-    _meeting.endRoom(lock, reason,
+    _meeting.endRoom(lock:lock, reason:reason,
         hmsActionResultListener: hmsActionResultListener);
   }
 
   void removePeer(
       String peerId, HMSActionResultListener hmsActionResultListener) {
-    _meeting.removePeer(peerId, "Removing Peer from Flutter",
+    _meeting.removePeer(peerId:peerId, reason:"Removing Peer from Flutter",
         hmsActionResultListener: hmsActionResultListener);
   }
 
@@ -145,12 +145,12 @@ class HMSSDKInteractor {
 
   Future<bool> isAudioMute(HMSPeer? peer) async {
     // TODO: add permission checks in exmaple app UI
-    return await _meeting.isAudioMute(peer);
+    return await _meeting.isAudioMute(peer:peer);
   }
 
   Future<bool> isVideoMute(HMSPeer? peer) async {
     // TODO: add permission checks in exmaple app UI
-    return await _meeting.isVideoMute(peer);
+    return await _meeting.isVideoMute(peer:peer);
   }
 
   void muteAll() {
@@ -165,12 +165,12 @@ class HMSSDKInteractor {
 
   void setPlayBackAllowed(bool allow) {
     // TODO: add permission checks in exmaple app UI
-    _meeting.setPlayBackAllowed(allow);
+    _meeting.setPlayBackAllowed(allow:allow);
   }
 
   void startRtmpOrRecording(HMSRecordingConfig hmsRecordingConfig,
       HMSActionResultListener hmsActionResultListener) {
-    _meeting.startRtmpOrRecording(hmsRecordingConfig,
+    _meeting.startRtmpOrRecording(hmsRecordingConfig:hmsRecordingConfig,
         hmsActionResultListener: hmsActionResultListener);
   }
 
@@ -184,7 +184,7 @@ class HMSSDKInteractor {
   }
 
   void raiseHand({required HMSActionResultListener hmsActionResultListener}) {
-    _meeting.raiseHand("Raised Hand from Flutter",
+    _meeting.raiseHand(metadata: "Raised Hand from Flutter",
         hmsActionResultListener: hmsActionResultListener);
   }
 }
