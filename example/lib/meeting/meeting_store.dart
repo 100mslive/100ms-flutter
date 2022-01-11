@@ -707,6 +707,8 @@ abstract class MeetingStoreBase extends ChangeNotifier
       {HMSActionResultListenerMethod methodType =
           HMSActionResultListenerMethod.unknown,
       Map<String, dynamic>? arguments}) {
+    print(
+        "onSuccess Action Result Listener method: $methodType || arguments $arguments");
     switch (methodType) {
       case HMSActionResultListenerMethod.leaveMeeting:
         isRoomEnded = true;
@@ -753,6 +755,8 @@ abstract class MeetingStoreBase extends ChangeNotifier
       Map<String, dynamic>? arguments,
       required HMSException hmsException}) {
     this.hmsException = hmsException;
+    print(
+        "onException Action Result Listener method: $methodType || arguments: $arguments || exception: $hmsException");
     switch (methodType) {
       case HMSActionResultListenerMethod.leaveMeeting:
         // TODO: Handle this case.
