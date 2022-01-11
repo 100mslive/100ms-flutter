@@ -12,7 +12,6 @@ class PreviewController {
   PreviewController({required this.roomId, required this.user});
 
   Future<String?> startPreview() async {
-    
     List<String?> codeAndDomain = getCode(roomId) ?? [];
     Constant.meetingUrl = roomId;
     var body =

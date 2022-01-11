@@ -57,7 +57,7 @@ abstract class PreviewStoreBase
     removeLogsListener();
   }
 
-  Future<String?> startPreview() async{
+  Future<String?> startPreview() async {
     return await previewController.startPreview();
   }
 

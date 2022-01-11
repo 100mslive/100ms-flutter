@@ -8,5 +8,7 @@ abstract class HMSActionResultListener {
       Map<String, dynamic>? arguments});
 
   void onException(
-      {HMSActionResultListenerMethod methodType,Map<String, dynamic>? arguments,required HMSException hmsException});
+      {HMSActionResultListenerMethod methodType,
+      Map<String, dynamic>? arguments,
+      required HMSException hmsException});
 }

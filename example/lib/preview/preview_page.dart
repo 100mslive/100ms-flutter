@@ -50,13 +50,16 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
   void initPreview() async {
     _previewStore.startListen();
     String? error = await _previewStore.startPreview();
-    if(error!=null){
-      HMSException hmsException = HMSException(message: error,id:'INIT',description: "[INIT]: Server Errors",
-      action: "INIT",params:{});
-      UtilityComponents.showonExceptionDialog(
-                  hmsException, context);
-            }
+    if (error != null) {
+      HMSException hmsException = HMSException(
+          message: error,
+          id: 'INIT',
+          description: "[INIT]: Server Errors",
+          action: "INIT",
+          params: {});
+      UtilityComponents.showonExceptionDialog(hmsException, context);
     }
+  }
 
   @override
   Widget build(BuildContext context) {

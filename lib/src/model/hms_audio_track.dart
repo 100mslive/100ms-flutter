@@ -5,18 +5,18 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 class HMSAudioTrack extends HMSTrack {
   HMSAudioTrack(
       {required HMSTrackKind kind,
-        required String source,
-        required String trackId,
-        required String trackDescription,
-        required bool isMute,
-        HMSPeer? peer})
+      required String source,
+      required String trackId,
+      required String trackDescription,
+      required bool isMute,
+      HMSPeer? peer})
       : super(
-      kind: kind,
-      source: source,
-      trackDescription: trackDescription,
-      trackId: trackId,
-      isMute: isMute,
-      peer: peer);
+            kind: kind,
+            source: source,
+            trackDescription: trackDescription,
+            trackId: trackId,
+            isMute: isMute,
+            peer: peer);
 
   ///returns true if audio is mute
   factory HMSAudioTrack.fromMap({required Map map, HMSPeer? peer}) {
@@ -30,9 +30,9 @@ class HMSAudioTrack extends HMSTrack {
           peer: peer);
 
     if (!peer.isLocal) {
-      return HMSRemoteAudioTrack.fromMap(map: map,peer: peer);
+      return HMSRemoteAudioTrack.fromMap(map: map, peer: peer);
     }
-    
-    return HMSLocalAudioTrack.fromMap(map: map,peer: peer);
+
+    return HMSLocalAudioTrack.fromMap(map: map, peer: peer);
   }
 }
