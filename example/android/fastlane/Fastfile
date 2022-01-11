@@ -61,12 +61,13 @@ platform :android do
       task: 'assemble',
     build_type: 'Release'
     )
+    commit = last_git_commit
     firebase_app_distribution(
       firebase_cli_token: "1//0geU53tX2aWsBCgYIARAAGBASNwF-L9IrOUsSQeQwn7ekZNV-WpdTC39RWaePRiT21BRqglwhEtlSEQYeeO7QtToYX4e99IeegFo",
       app: "1:19544678223:android:a33d9b410e9a290db32f3a",
       groups: "internal, External",
-        android_artifact_path: "/Users/govind/Documents/new/100ms-flutter/example/build/app/outputs/flutter-apk/app-release.apk",
-        release_notes: "Testing!"
+        android_artifact_path: "/Users/govind/Documents/new/100ms-flutter/example/build/app/outputs/apk/release/app-release.apk",
+        release_notes: commit[:message]
     )
 end
 
