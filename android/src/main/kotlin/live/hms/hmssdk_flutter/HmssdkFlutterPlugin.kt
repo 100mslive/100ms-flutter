@@ -1004,7 +1004,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         result?.success(null)
     }
 
-    private fun setVolume(call: MethodCal, result: Result){
+    private fun setVolume(call: MethodCall, result: Result){
         val trackId = call.argument<String>("track_id")
         val volume = call.argument<Double>("volume")
        
@@ -1031,8 +1031,8 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             }
         }
 
-        var map = Map<String, Map<String, String>>()
-        var error = Map<String, String>()
+        var map = HashMap<String,Map<String,String>>()
+        var error = HashMap<String, String>()
         error["message"] = "Could not set volume"
         error["action"] = "NONE"
         error["description"] = "Track not found for setting volume"

@@ -635,7 +635,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                   );
           })),
       onWillPop: () async {
-        bool ans = await UtilityComponents.onBackPressed(context);
+        bool ans = await UtilityComponents.onBackPressed(context)??false;
         return ans;
       },
     ));

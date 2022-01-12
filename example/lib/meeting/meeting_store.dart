@@ -551,9 +551,16 @@ abstract class MeetingStoreBase extends ChangeNotifier
               .indexWhere((element) => element.peerId == localPeer!.peerId);
           if (localPeerIndex != -1) {
             peerTracks[localPeerIndex].name = peer.name;
+            localPeer = peer;
           }
-          localPeer = peer;
+        } else {
+          int remotePeerIndex =
+              peerTracks.indexWhere((element) => element.peerId == peer.peerId);
+          if (remotePeerIndex != -1) {
+            peerTracks[remotePeerIndex].name = peer.name;
+          }
         }
+
         updatePeerAt(peer);
         break;
       case HMSPeerUpdate.defaultUpdate:
