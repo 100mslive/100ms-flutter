@@ -117,7 +117,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
   }
 
   @action
-  Future<bool> joinMeeting(String user, String roomUrl) async {
+  Future<bool> join(String user, String roomUrl) async {
     List<String?>? token =
         await RoomService().getToken(user: user, room: roomUrl);
     if (token == null) return false;
@@ -127,15 +127,14 @@ abstract class MeetingStoreBase extends ChangeNotifier
         userName: user,
         endPoint: token[1] == "true" ? "" : "https://qa-init.100ms.live/init");
 
-    await HmsSdkManager.hmsSdkInteractor?.joinMeeting(config: config);
+    await HmsSdkManager.hmsSdkInteractor?.join(config: config);
     return true;
   }
 
-  void leaveMeeting() async {
-    _hmssdkInteractor.leaveMeeting(hmsActionResultListener: this);
+  void leave() async {
+    _hmssdkInteractor.leave(hmsActionResultListener: this);
     isRoomEnded = true;
     peerTracks.clear();
-    // removeListenerMeeting();
   }
 
   @action
@@ -474,7 +473,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
   void onRemovedFromRoom(
       {required HMSPeerRemovedFromPeer hmsPeerRemovedFromPeer}) {
     print("onRemovedFromRoomFlutter $hmsPeerRemovedFromPeer");
-    leaveMeeting();
+    leave();
   }
 
   void changeRole(
@@ -492,9 +491,9 @@ abstract class MeetingStoreBase extends ChangeNotifier
     return await _hmssdkInteractor.getRoles();
   }
 
-  void changeTrackRequest(HMSPeer peer, bool mute, bool isVideoTrack) {
+  void changeTrackState(HMSPeer peer, bool mute, bool isVideoTrack) {
     return HmsSdkManager.hmsSdkInteractor
-        ?.changeTrackRequest(peer, mute, isVideoTrack, this);
+        ?.changeTrackState(peer, mute, isVideoTrack, this);
   }
 
   @action
@@ -689,9 +688,9 @@ abstract class MeetingStoreBase extends ChangeNotifier
   }
 
   bool isRaisedHand = false;
-  void raiseHand() {
+  void changeMetadata() {
     isRaisedHand = !isRaisedHand;
-    _hmssdkInteractor.raiseHand(
+    _hmssdkInteractor.changeMetadata(
         metadata: "{\"isHandRaised\":$isRaisedHand}",
         hmsActionResultListener: this);
   }
@@ -700,8 +699,8 @@ abstract class MeetingStoreBase extends ChangeNotifier
     _hmssdkInteractor.setPlayBackAllowed(allow);
   }
 
-  void acceptRoleChangeRequest() {
-    _hmssdkInteractor.acceptRoleChangeRequest(this);
+  void acceptChangeRole() {
+    _hmssdkInteractor.acceptChangeRole(this);
   }
 
   @override
@@ -712,13 +711,13 @@ abstract class MeetingStoreBase extends ChangeNotifier
     print(
         "onSuccess Action Result Listener method: $methodType || arguments $arguments");
     switch (methodType) {
-      case HMSActionResultListenerMethod.leaveMeeting:
+      case HMSActionResultListenerMethod.leave:
         isRoomEnded = true;
         break;
-      case HMSActionResultListenerMethod.changeTrackRequest:
+      case HMSActionResultListenerMethod.changeTrackState:
         // TODO: Handle this case.
         break;
-      case HMSActionResultListenerMethod.raiseHand:
+      case HMSActionResultListenerMethod.changeMetadata:
         print("raised hand");
         break;
       case HMSActionResultListenerMethod.endRoom:
@@ -727,7 +726,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
       case HMSActionResultListenerMethod.removePeer:
         // TODO: Handle this case.
         break;
-      case HMSActionResultListenerMethod.acceptRoleChangeRequest:
+      case HMSActionResultListenerMethod.acceptChangeRole:
         // TODO: Handle this case.
         break;
       case HMSActionResultListenerMethod.changeRole:
@@ -760,14 +759,14 @@ abstract class MeetingStoreBase extends ChangeNotifier
     print(
         "onException Action Result Listener method: $methodType || arguments: $arguments || exception: $hmsException");
     switch (methodType) {
-      case HMSActionResultListenerMethod.leaveMeeting:
+      case HMSActionResultListenerMethod.leave:
         // TODO: Handle this case.
         print("HMSException ${hmsException.message}");
         break;
-      case HMSActionResultListenerMethod.changeTrackRequest:
+      case HMSActionResultListenerMethod.changeTrackState:
         // TODO: Handle this case.
         break;
-      case HMSActionResultListenerMethod.raiseHand:
+      case HMSActionResultListenerMethod.changeMetadata:
         // TODO: Handle this case.
         break;
       case HMSActionResultListenerMethod.endRoom:
@@ -777,7 +776,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
       case HMSActionResultListenerMethod.removePeer:
         // TODO: Handle this case.
         break;
-      case HMSActionResultListenerMethod.acceptRoleChangeRequest:
+      case HMSActionResultListenerMethod.acceptChangeRole:
         // TODO: Handle this case.
         break;
       case HMSActionResultListenerMethod.changeRole:

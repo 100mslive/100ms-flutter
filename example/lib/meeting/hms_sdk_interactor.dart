@@ -3,41 +3,40 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 class HMSSDKInteractor {
   late HMSConfig config;
   late List<HMSMessage> messages;
-  late HMSMeeting _meeting;
+  late HMSSDK hmsSDK;
 
   HMSSDKInteractor() {
-    _meeting = HMSMeeting();
-    _meeting.build();
+    hmsSDK = HMSSDK();
+    hmsSDK.build();
   }
 
-  Future<void> joinMeeting({required HMSConfig config}) async {
+  Future<void> join({required HMSConfig config}) async {
     this.config = config;
-    await _meeting.joinMeeting(config: this.config);
+    await hmsSDK.join(config: this.config);
   }
 
-  void leaveMeeting(
-      {required HMSActionResultListener hmsActionResultListener}) async {
-    _meeting.leaveMeeting(hmsActionResultListener: hmsActionResultListener);
+  void leave({required HMSActionResultListener hmsActionResultListener}) async {
+    hmsSDK.leave(hmsActionResultListener: hmsActionResultListener);
   }
 
   Future<HMSException?> switchAudio({bool isOn = false}) async {
-    return await _meeting.switchAudio(isOn: isOn);
+    return await hmsSDK.switchAudio(isOn: isOn);
   }
 
   Future<HMSException?> switchVideo({bool isOn = false}) async {
-    return await _meeting.switchVideo(isOn: isOn);
+    return await hmsSDK.switchVideo(isOn: isOn);
   }
 
   Future<void> switchCamera() async {
-    return await _meeting.switchCamera();
+    return await hmsSDK.switchCamera();
   }
 
   void sendBroadcastMessage(String message) {
-    _meeting.sendBroadcastMessage(message: message, type: "chat");
+    hmsSDK.sendBroadcastMessage(message: message, type: "chat");
   }
 
   void sendDirectMessage(String message, HMSPeer peer) async {
-    _meeting.sendDirectMessage(
+    hmsSDK.sendDirectMessage(
       message: message,
       peer: peer,
       type: "chat",
@@ -45,77 +44,75 @@ class HMSSDKInteractor {
   }
 
   void sendGroupMessage(String message, String roleName) async {
-    _meeting.sendGroupMessage(
+    hmsSDK.sendGroupMessage(
       message: message,
       roleName: roleName,
       type: "chat",
     );
   }
 
-  Future<void> previewVideo({required HMSConfig config}) async {
+  Future<void> preview({required HMSConfig config}) async {
     this.config = config;
-    return _meeting.previewVideo(config: config);
+    return hmsSDK.preview(config: config);
   }
 
   void startHMSLogger(HMSLogLevel webRtclogLevel, HMSLogLevel logLevel) {
-    _meeting.startHMSLogger(webRtclogLevel: webRtclogLevel, logLevel: logLevel);
+    hmsSDK.startHMSLogger(webRtclogLevel: webRtclogLevel, logLevel: logLevel);
   }
 
   void removeHMSLogger() {
-    _meeting.removeHMSLogger();
+    hmsSDK.removeHMSLogger();
   }
 
   void addLogsListener(HMSLogListener hmsLogListener) {
-    _meeting.addLogListener(hmsLogListener: hmsLogListener);
+    hmsSDK.addLogListener(hmsLogListener: hmsLogListener);
   }
 
   void removeLogsListener(HMSLogListener hmsLogListener) {
-    _meeting.removeLogListener(hmsLogListener: hmsLogListener);
+    hmsSDK.removeLogListener(hmsLogListener: hmsLogListener);
   }
 
   void addMeetingListener(HMSUpdateListener listener) {
-    _meeting.addMeetingListener(listener: listener);
+    hmsSDK.addMeetingListener(listener: listener);
   }
 
   void removeMeetingListener(HMSUpdateListener listener) {
-    _meeting.removeMeetingListener(listener: listener);
+    hmsSDK.removeMeetingListener(listener: listener);
   }
 
   void addPreviewListener(HMSPreviewListener listener) {
-    _meeting.addPreviewListener(listener: listener);
+    hmsSDK.addPreviewListener(listener: listener);
   }
 
   void removePreviewListener(HMSPreviewListener listener) {
-    _meeting.removePreviewListener(listener: listener);
+    hmsSDK.removePreviewListener(listener: listener);
   }
 
-  void acceptRoleChangeRequest(
-      HMSActionResultListener hmsActionResultListener) {
-    _meeting.acceptRoleChangeRequest(
-        hmsActionResultListener: hmsActionResultListener);
+  void acceptChangeRole(HMSActionResultListener hmsActionResultListener) {
+    hmsSDK.acceptChangeRole(hmsActionResultListener: hmsActionResultListener);
   }
 
   void stopCapturing() {
-    _meeting.stopCapturing();
+    hmsSDK.stopCapturing();
   }
 
   Future<HMSPeer?> getLocalPeer() async {
-    return await _meeting.getLocalPeer();
+    return await hmsSDK.getLocalPeer();
   }
 
   Future<bool> startCapturing() async {
-    return await _meeting.startCapturing();
+    return await hmsSDK.startCapturing();
   }
 
   Future<HMSPeer?> getPeer({required String peerId}) async {
-    List<HMSPeer>? peers = await _meeting.getPeers();
+    List<HMSPeer>? peers = await hmsSDK.getPeers();
 
     return peers?.firstWhere((element) => element.peerId == peerId);
   }
 
-  void changeTrackRequest(HMSPeer peer, bool mute, bool isVideoTrack,
+  void changeTrackState(HMSPeer peer, bool mute, bool isVideoTrack,
       HMSActionResultListener hmsActionResultListener) {
-    _meeting.changeTrackRequest(
+    hmsSDK.changeTrackState(
         peer: peer,
         mute: mute,
         isVideoTrack: isVideoTrack,
@@ -126,7 +123,7 @@ class HMSSDKInteractor {
 
   void endRoom(bool lock, String reason,
       HMSActionResultListener hmsActionResultListener) {
-    _meeting.endRoom(
+    hmsSDK.endRoom(
         lock: lock,
         reason: reason,
         hmsActionResultListener: hmsActionResultListener);
@@ -134,7 +131,7 @@ class HMSSDKInteractor {
 
   void removePeer(
       HMSPeer peer, HMSActionResultListener hmsActionResultListener) {
-    _meeting.removePeer(
+    hmsSDK.removePeer(
         peer: peer,
         reason: "Removing Peer from Flutter",
         hmsActionResultListener: hmsActionResultListener);
@@ -145,7 +142,7 @@ class HMSSDKInteractor {
       required String roleName,
       bool forceChange = false,
       required HMSActionResultListener hmsActionResultListener}) {
-    _meeting.changeRole(
+    hmsSDK.changeRole(
         peer: peer,
         roleName: roleName,
         forceChange: forceChange,
@@ -153,53 +150,53 @@ class HMSSDKInteractor {
   }
 
   Future<List<HMSRole>> getRoles() async {
-    return await _meeting.getRoles();
+    return await hmsSDK.getRoles();
   }
 
   Future<bool> isAudioMute(HMSPeer? peer) async {
-    return await _meeting.isAudioMute(peer: peer);
+    return await hmsSDK.isAudioMute(peer: peer);
   }
 
   Future<bool> isVideoMute(HMSPeer? peer) async {
     // TODO: add permission checks in exmaple app UI
-    return await _meeting.isVideoMute(peer: peer);
+    return await hmsSDK.isVideoMute(peer: peer);
   }
 
   void muteAll() {
     // TODO: add permission checks in exmaple app UI
-    _meeting.muteAll();
+    hmsSDK.muteAll();
   }
 
   void unMuteAll() {
     // TODO: add permission checks in exmaple app UI
-    _meeting.unMuteAll();
+    hmsSDK.unMuteAll();
   }
 
   void setPlayBackAllowed(bool allow) {
     // TODO: add permission checks in exmaple app UI
-    _meeting.setPlayBackAllowed(allow: allow);
+    hmsSDK.setPlayBackAllowed(allow: allow);
   }
 
   void startRtmpOrRecording(HMSRecordingConfig hmsRecordingConfig,
       HMSActionResultListener hmsActionResultListener) {
-    _meeting.startRtmpOrRecording(
+    hmsSDK.startRtmpOrRecording(
         hmsRecordingConfig: hmsRecordingConfig,
         hmsActionResultListener: hmsActionResultListener);
   }
 
   void stopRtmpAndRecording(HMSActionResultListener hmsActionResultListener) {
-    _meeting.stopRtmpAndRecording(
+    hmsSDK.stopRtmpAndRecording(
         hmsActionResultListener: hmsActionResultListener);
   }
 
   Future<HMSRoom?> getRoom() async {
-    return await _meeting.getRoom();
+    return await hmsSDK.getRoom();
   }
 
-  void raiseHand(
+  void changeMetadata(
       {required String metadata,
       required HMSActionResultListener hmsActionResultListener}) {
-    _meeting.raiseHand(
+    hmsSDK.changeMetadata(
         metadata: metadata, hmsActionResultListener: hmsActionResultListener);
   }
 }

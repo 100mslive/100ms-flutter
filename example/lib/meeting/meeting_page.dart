@@ -114,7 +114,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
   }
 
   void initMeeting() async {
-    bool ans = await _meetingStore.joinMeeting(widget.user, widget.roomId);
+    bool ans = await _meetingStore.join(widget.user, widget.roomId);
     if (!ans) {
       UtilityComponents.showSnackBarWithString("Unable to Join", context);
       Navigator.of(context).pop();
@@ -276,7 +276,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
             return _meetingStore.reconnecting
                 ? OfflineWidget()
                 : Scaffold(
-                    resizeToAvoidBottomInset:false,
+                    resizeToAvoidBottomInset: false,
                     appBar: AppBar(
                       title: Text(widget.roomId),
                       actions: [
@@ -567,7 +567,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                   setState(() {
                                     raisedHand = !raisedHand;
                                   });
-                                  _meetingStore.raiseHand();
+                                  _meetingStore.changeMetadata();
                                   UtilityComponents.showSnackBarWithString(
                                       raisedHand
                                           ? "Raised Hand ON"

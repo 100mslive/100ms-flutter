@@ -19,7 +19,7 @@ export 'src/enum/hms_log_level.dart';
 //EXCEPTIONS
 export 'src/exceptions/hms_exception.dart';
 export 'src/exceptions/hms_in_sufficient_data.dart';
-export 'src/meeting/meeting.dart';
+export 'src/hmssdk.dart';
 //MODELS
 export 'src/model/hms_audio_setting.dart';
 export 'src/model/hms_audio_track.dart';

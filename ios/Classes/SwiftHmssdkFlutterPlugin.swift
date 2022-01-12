@@ -103,14 +103,14 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         case "build":
             build(call, result)
             
-        case "preview_video":
+        case "preview":
             preview(call, result)
             
-        case "join_meeting":
+        case "join":
             join(call, result)
             
-        case "leave_meeting":
-            leaveMeeting(result)
+        case "leave":
+            leave(result)
             
         case "get_room":
             getRoom(result)
@@ -160,7 +160,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             
         // MARK: - Messaging
             
-        case "send__broadcast_message":
+        case "send_broadcast_message":
             sendBroadcastMessage(call, result)
             
         case "send_direct_message":
@@ -177,8 +177,8 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         case "change_role":
             changeRole(call, result)
             
-        case "accept_role_change":
-            acceptRoleRequest(call, result)
+        case "accept_change_role":
+            acceptChangeRole(call, result)
             
         case "end_room":
             endRoom(call, result)
@@ -187,13 +187,13 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             removePeer(call, result)
             
         case "on_change_track_state_request":
-            changeTrack(call, result)
+            changeTrackState(call, result)
             
         case "change_track_state_for_role":
             changeTrackStateForRole(call, result)
             
-        case "raise_hand":
-            raiseHand(call, result)
+        case "change_metadata":
+            changeMetadata(call, result)
             
         // MARK: - Recording
             
@@ -346,7 +346,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     }
     
     
-    private func leaveMeeting(_ result: @escaping FlutterResult) {
+    private func leave(_ result: @escaping FlutterResult) {
         hmsSDK?.leave { success, error in
             if let error = error {
                 result(HMSErrorExtension.toDictionary(error))
@@ -666,7 +666,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     }
     
     
-    private func acceptRoleRequest(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+    private func acceptChangeRole(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         
         let arguments = call.arguments as! [AnyHashable: Any]
         
@@ -722,7 +722,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     }
     
     
-    private func changeTrack(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+    private func changeTrackState(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         let arguments = call.arguments as! [AnyHashable: Any]
         
         guard let peerID = arguments["hms_peer_id"] as? String,
@@ -795,9 +795,9 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     }
     
     
-    private var isHandRaise = false
+    private var hasChangedMetadata = false
     
-    private func raiseHand(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+    private func changeMetadata(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         
         let arguments = call.arguments as! [AnyHashable: Any]
         let metadata = arguments["metadata"] as? String ?? ""
@@ -808,7 +808,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                 return
             } else {
                 if let strongSelf = self {
-                    strongSelf.isHandRaise = !strongSelf.isHandRaise
+                    strongSelf.hasChangedMetadata = !strongSelf.hasChangedMetadata
                 }
                 result(nil)
             }

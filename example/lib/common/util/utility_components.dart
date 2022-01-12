@@ -25,7 +25,7 @@ class UtilityComponents {
                 primary: Colors.red,
               ),
               onPressed: () => {
-                    _meetingStore.leaveMeeting(),
+                    _meetingStore.leave(),
                     Navigator.popUntil(context, (route) => route.isFirst)
                   },
               child: Text('Yes', style: TextStyle(fontSize: 24))),
@@ -50,7 +50,7 @@ class UtilityComponents {
       debugPrint("OK accepted");
       MeetingStore meetingStore =
           Provider.of<MeetingStore>(context, listen: false);
-      meetingStore.acceptRoleChangeRequest();
+      meetingStore.acceptChangeRole();
       UtilityComponents.showSnackBarWithString(
           (event as HMSException).description, context);
     }

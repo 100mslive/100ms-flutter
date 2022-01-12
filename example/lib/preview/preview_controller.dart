@@ -23,9 +23,7 @@ class PreviewController {
         userName: user,
         endPoint: token[1] == "true" ? "" : "https://qa-init.100ms.live/init");
 
-    HmsSdkManager.hmsSdkInteractor?.previewVideo(
-      config: config,
-    );
+    HmsSdkManager.hmsSdkInteractor?.preview(config: config);
     return true;
   }
 

@@ -84,11 +84,11 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             "getPlatformVersion" -> {
                 result.success("Android ${Build.VERSION.RELEASE}")
             }
-            "join_meeting" -> {
-                joinMeeting(call, result)
+            "join" -> {
+                join(call, result)
             }
-            "leave_meeting" -> {
-                leaveMeeting()
+            "leave" -> {
+                leave()
             }
             "switch_audio" -> {
                 switchAudio(call, result)
@@ -113,7 +113,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
                 startCapturing()
                 result.success("start_capturing")
             }
-            "send__broadcast_message" -> {
+            "send_broadcast_message" -> {
                 sendBroadCastMessage(call)
             }
             "send_direct_message" -> {
@@ -122,8 +122,8 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             "send_group_message" -> {
                 sendGroupMessage(call)
             }
-            "preview_video" -> {
-                previewVideo(call, result)
+            "preview" -> {
+                preview(call, result)
             }
             "change_role" -> {
                 changeRole(call)
@@ -131,8 +131,8 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             "get_roles" -> {
                 getRoles(result)
             }
-            "accept_role_change" -> {
-                acceptRoleRequest()
+            "accept_change_role" -> {
+                acceptChangeRole()
             }
             "get_remote_peers" -> {
                 getRemotePeers(result)
@@ -141,7 +141,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
                 getPeers(result)
             }
             "on_change_track_state_request" -> {
-                changeTrack(call)
+                changeTrackState(call)
             }
 
             "end_room" -> {
@@ -186,8 +186,8 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             "update_hms_video_track_settings" -> {
                 updateHMSLocalTrackSetting(call)
             }
-            "raise_hand"->{
-                raiseHand(call)
+            "change_metadata"->{
+                changeMetadata(call)
             }
             "set_playback_allowed"->{
                 setPlayBackAllowed(call)
@@ -248,7 +248,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
 
     }
 
-    private fun joinMeeting(call: MethodCall, result: Result) {
+    private fun join(call: MethodCall, result: Result) {
         val userName = call.argument<String>("user_name")
         val authToken = call.argument<String>("auth_token")
         val endPoint = call.argument<String>("end_point")
@@ -292,7 +292,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
     }
 
     
-    private fun leaveMeeting() {
+    private fun leave() {
         hmssdk.leave(hmsActionResultListener = this.actionListener)
     }
 
@@ -435,13 +435,12 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         hmssdk?.sendGroupMessage(message!!, type, role, this.hmsMessageResultListener)
     }
 
-    private fun previewVideo(call: MethodCall, result: Result) {
+    private fun preview(call: MethodCall, result: Result) {
         val userName = call.argument<String>("user_name")
         val authToken = call.argument<String>("auth_token")
         val isProd = call.argument<Boolean>("is_prod")
         val endPoint = call.argument<String>("end_point")
-        Log.i("PreviewVideoAndroid", "EndPoint ${endPoint}  ${isProd}")
-        HMSLogger.i("previewVideo", "$userName $isProd")
+        
         this.hmsConfig = HMSConfig(userName = userName!!, authtoken = authToken!!)
         if (endPoint!!.isNotEmpty())
             this.hmsConfig = HMSConfig(
@@ -487,14 +486,14 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         result.success(args)
     }
 
-    private fun acceptRoleRequest() {
+    private fun acceptChangeRole() {
         hmssdk.acceptChangeRole(
             this.requestChange!!,
-            hmsActionResultListener = acceptRoleRequestListener
+            hmsActionResultListener = acceptChangeRoleListener
         )
     }
 
-    private val acceptRoleRequestListener = object : HMSActionResultListener {
+    private val acceptChangeRoleListener = object : HMSActionResultListener {
             override fun onError(error: HMSException) {
                 CoroutineScope(Dispatchers.Main).launch {
                     result?.success(HMSExceptionExtension.toDictionary(error))
@@ -540,7 +539,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
     }
 
 
-    private fun changeTrack(call: MethodCall) {
+    private fun changeTrackState(call: MethodCall) {
         val hmsPeerId = call.argument<String>("hms_peer_id")
         val mute = call.argument<Boolean>("mute")
         val muteVideoKind = call.argument<Boolean>("mute_video_kind")
@@ -751,11 +750,11 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         }
     }
 
-    private var isRaiseHandTrue:Boolean = false
+    private var hasChangedMetadata:Boolean = false
 
     // TODO: check if metadata is correct from dart side
-    private fun raiseHand(call:MethodCall){
-        isRaiseHandTrue = !isRaiseHandTrue
+    private fun changeMetadata(call:MethodCall){
+        hasChangedMetadata = !hasChangedMetadata
         val metadata = call.argument<String>("metadata")
 
         hmssdk.changeMetadata(metadata!!, hmsActionResultListener = this.actionListener)
