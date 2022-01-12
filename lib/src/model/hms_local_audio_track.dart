@@ -22,10 +22,15 @@ class HMSLocalAudioTrack extends HMSAudioTrack {
             isMute: isMute,
             peer: peer);
 
-  void setVolume(double volume) async {
-    bool result = await PlatformService.invokeMethod(PlatformMethod.setVolume,
+  Future<HMSException?> setVolume(double volume) async {
+    var result = await PlatformService.invokeMethod(PlatformMethod.setVolume,
         arguments: {"track_id": trackId, "volume": volume.toDouble()});
-    if (result == true) this.volume = volume;
+
+    if (result) {
+      return null;
+    } else {
+      return HMSException.fromMap(result["error"]);
+    }
   }
 
   factory HMSLocalAudioTrack.fromMap({required Map map, HMSPeer? peer}) {
