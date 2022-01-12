@@ -90,4 +90,47 @@ class UtilityComponents {
           );
         });
   }
+
+  static Future<String> showRTMPDialog(context) async {
+    TextEditingController urlController = TextEditingController();
+    String answer = await showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              content: Container(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    TextField(
+                      autofocus: true,
+                      controller: urlController,
+                      decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(16)),
+                          ),
+                          hintText: 'Enter RTMP Url'),
+                    ),
+                  ],
+                ),
+              ),
+              actions: [
+                ElevatedButton(
+                  child: Text('Cancel'),
+                  onPressed: () {
+                    Navigator.pop(context, '');
+                  },
+                ),
+                ElevatedButton(
+                  child: Text('OK'),
+                  onPressed: () {
+                    if (urlController.text == "") {
+                    } else {
+                      Navigator.pop(context, urlController.text);
+                    }
+                  },
+                ),
+              ],
+            ));
+
+    return answer;
+  }
 }
