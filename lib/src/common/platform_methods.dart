@@ -84,7 +84,8 @@ enum PlatformMethod {
   updateHMSLocalVideoTrackSettings,
   changeMetadata,
   setPlayBackAllowed,
-  setVolume
+  setVolume,
+  changeName
 }
 
 extension PlatformMethodValues on PlatformMethod {
@@ -182,6 +183,8 @@ extension PlatformMethodValues on PlatformMethod {
         return "set_playback_allowed";
       case PlatformMethod.setVolume:
         return "set_volume";
+      case PlatformMethod.changeName:
+        return "change_name";
     }
   }
 
@@ -277,6 +280,8 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.setPlayBackAllowed;
       case "set_volume":
         return PlatformMethod.setVolume;
+      case "change_name":
+        return PlatformMethod.changeName;
       default:
         return PlatformMethod.unknown;
     }

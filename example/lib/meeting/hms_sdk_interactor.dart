@@ -199,4 +199,11 @@ class HMSSDKInteractor {
     hmsSDK.changeMetadata(
         metadata: metadata, hmsActionResultListener: hmsActionResultListener);
   }
+
+  void changeName(
+      {required String name,
+      required HMSActionResultListener hmsActionResultListener}) {
+    hmsSDK.changeName(
+        name: name, hmsActionResultListener: hmsActionResultListener);
+  }
 }

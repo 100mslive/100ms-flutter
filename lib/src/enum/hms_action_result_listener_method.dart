@@ -9,5 +9,6 @@ enum HMSActionResultListenerMethod {
   changeTrackStateForRole,
   startRtmpOrRecording,
   stopRtmpAndRecording,
+  changeName,
   unknown
 }

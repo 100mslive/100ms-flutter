@@ -54,6 +54,8 @@ abstract class MeetingStoreBase extends ChangeNotifier
   bool isRoomEnded = false;
   @observable
   bool isRecordingStarted = false;
+  @observable
+  String event = '';
 
   @observable
   HMSTrackChangeRequest? hmsTrackChangeRequest;
@@ -544,6 +546,11 @@ abstract class MeetingStoreBase extends ChangeNotifier
         break;
       case HMSPeerUpdate.nameChanged:
         if (peer.isLocal) {
+          int localPeerIndex = peerTracks
+              .indexWhere((element) => element.peerId == localPeer!.peerId);
+          if (localPeerIndex != -1) {
+            peerTracks[localPeerIndex].name = peer.name;
+          }
           localPeer = peer;
         }
         updatePeerAt(peer);
@@ -703,6 +710,10 @@ abstract class MeetingStoreBase extends ChangeNotifier
     _hmssdkInteractor.acceptChangeRole(this);
   }
 
+  void changeName({required String name}) {
+    _hmssdkInteractor.changeName(name: name, hmsActionResultListener: this);
+  }
+
   @override
   void onSuccess(
       {HMSActionResultListenerMethod methodType =
@@ -745,6 +756,10 @@ abstract class MeetingStoreBase extends ChangeNotifier
         break;
       case HMSActionResultListenerMethod.unknown:
         print("Unknown Method Called");
+        break;
+      case HMSActionResultListenerMethod.changeName:
+        // TODO: Handle this case.
+        this.event = "Name Changed to ${localPeer!.name}";
         break;
     }
   }
@@ -797,6 +812,9 @@ abstract class MeetingStoreBase extends ChangeNotifier
         break;
       case HMSActionResultListenerMethod.unknown:
         print("Unknown Method Called");
+        break;
+      case HMSActionResultListenerMethod.changeName:
+        // TODO: Handle this case.
         break;
     }
   }

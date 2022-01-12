@@ -37,7 +37,8 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
   late ReactionDisposer _roleChangerequestDisposer,
       _hmsExceptionDisposer,
       _trackChangerequestDisposer,
-      _reconnectingDisposer;
+      _reconnectingDisposer,
+      _eventOccuredDisposer;
   late ReactionDisposer _recordingDisposer,
       _reconnectedDisposer,
       _roomEndedDisposer;
@@ -60,6 +61,11 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
   }
 
   void allListeners() {
+    _eventOccuredDisposer = reaction(
+        (_) => _meetingStore.event,
+        (eventOccured){
+            return UtilityComponents.showSnackBarWithString(eventOccured, context);
+        });
     _roleChangerequestDisposer = reaction(
         (_) => _meetingStore.roleChangeRequest,
         (event) => {
@@ -144,6 +150,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
     _reconnectedDisposer.reaction.dispose();
     _reconnectingDisposer.reaction.dispose();
     _hmsExceptionDisposer.reaction.dispose();
+    _eventOccuredDisposer.reaction.dispose();
   }
 
   void handleMenu(int value) async {
@@ -163,7 +170,8 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
           isRecordingStarted = false;
         } else {
           if (isRecordingStarted == false) {
-            String url = await UtilityComponents.showRTMPDialog(context);
+            String url = await UtilityComponents.showRTMPDialog(
+                context, "Enter RTMP Url");
             if (url.isNotEmpty) {
               _meetingStore.startRtmpOrRecording(
                   meetingUrl: url, toRecord: true, rtmpUrls: null);
@@ -234,8 +242,14 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
         // }
         UtilityComponents.showSnackBarWithString("Coming Soon...", context);
         break;
-
       case 8:
+        String name =
+            await UtilityComponents.showRTMPDialog(context, "Enter Name");
+        if (name.isNotEmpty) {
+          _meetingStore.changeName(name: name);
+        }
+        break;
+      case 9:
         _meetingStore.endRoom(false, "Room Ended From Flutter");
         if (_meetingStore.isRoomEnded) {
           Navigator.pop(context);
@@ -412,6 +426,20 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                     ]),
                                 value: 7,
                               ),
+                              PopupMenuItem(
+                                child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        "Change Name",
+                                        style: TextStyle(color: Colors.blue),
+                                      ),
+                                      Icon(Icons.cancel_schedule_send,
+                                          color: Colors.blue),
+                                    ]),
+                                value: 8,
+                              ),
                               if (_meetingStore
                                   .localPeer!.role!.permissions!.endRoom!)
                                 PopupMenuItem(
@@ -426,7 +454,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                         Icon(Icons.cancel_schedule_send,
                                             color: Colors.blue),
                                       ]),
-                                  value: 8,
+                                  value: 9,
                                 ),
                             ],
                             onSelected: handleMenu,

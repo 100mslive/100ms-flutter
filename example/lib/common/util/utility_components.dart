@@ -91,7 +91,7 @@ class UtilityComponents {
         });
   }
 
-  static Future<String> showRTMPDialog(context) async {
+  static Future<String> showRTMPDialog(context,method) async {
     TextEditingController urlController = TextEditingController();
     String answer = await showDialog(
         context: context,
@@ -107,7 +107,7 @@ class UtilityComponents {
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.all(Radius.circular(16)),
                           ),
-                          hintText: 'Enter RTMP Url'),
+                          hintText: method),
                     ),
                   ],
                 ),

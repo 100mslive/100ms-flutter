@@ -417,9 +417,22 @@ class HMSSDK {
     }
   }
 
+  ///Method to change name of localPeer
   void changeName(
       {required String name,
       HMSActionResultListener? hmsActionResultListener}) async {
+    var result = await PlatformService.invokeMethod(PlatformMethod.changeName,
+        arguments: {"name": name});
+
+    if (hmsActionResultListener != null) {
+      if (result == null)
+        hmsActionResultListener.onSuccess(
+            methodType: HMSActionResultListenerMethod.changeName);
+      else
+        hmsActionResultListener.onException(
+            methodType: HMSActionResultListenerMethod.changeName,
+            hmsException: HMSException.fromMap(result["error"]));
+    }
     // TODO: add changeName API implementation
   }
 

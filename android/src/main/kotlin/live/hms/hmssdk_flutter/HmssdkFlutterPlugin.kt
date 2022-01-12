@@ -195,6 +195,9 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             "set_volume"->{
                 setVolume(call)
             }
+            "change_name"->{
+                changeName(call)
+            }
             else -> {
                 result.notImplemented()
             }
@@ -1023,5 +1026,10 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             }
         }
        
+    }
+
+    private fun changeName(call:MethodCall){
+        val name = call.argument<String>("name");
+        hmssdk.changeName(name=name!!, hmsActionResultListener = this.actionListener);
     }
 }
