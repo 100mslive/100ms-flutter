@@ -93,7 +93,7 @@ class UtilityComponents {
         });
   }
 
-  static Future<String> showRTMPDialog(context,method) async {
+  static Future<String> showRTMPDialog(context, method) async {
     TextEditingController urlController = TextEditingController();
     String answer = await showDialog(
         context: context,

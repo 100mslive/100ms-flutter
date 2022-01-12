@@ -61,11 +61,10 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
   }
 
   void allListeners() {
-    _eventOccuredDisposer = reaction(
-        (_) => _meetingStore.event,
-        (eventOccured){
-            return UtilityComponents.showSnackBarWithString(eventOccured, context);
-        });
+    _eventOccuredDisposer =
+        reaction((_) => _meetingStore.event, (eventOccured) {
+      return UtilityComponents.showSnackBarWithString(eventOccured, context);
+    });
     _roleChangerequestDisposer = reaction(
         (_) => _meetingStore.roleChangeRequest,
         (event) => {
@@ -635,7 +634,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                   );
           })),
       onWillPop: () async {
-        bool ans = await UtilityComponents.onBackPressed(context)??false;
+        bool ans = await UtilityComponents.onBackPressed(context) ?? false;
         return ans;
       },
     ));

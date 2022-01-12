@@ -31,28 +31,30 @@ class HMSSDKInteractor {
     return await hmsSDK.switchCamera();
   }
 
-  void sendBroadcastMessage(String message,HMSActionResultListener hmsActionResultListener){
-    hmsSDK.sendBroadcastMessage(message: message, type: "chat",
-      hmsActionResultListener: hmsActionResultListener
-    );
+  void sendBroadcastMessage(
+      String message, HMSActionResultListener hmsActionResultListener) {
+    hmsSDK.sendBroadcastMessage(
+        message: message,
+        type: "chat",
+        hmsActionResultListener: hmsActionResultListener);
   }
 
-  void sendDirectMessage(String message, HMSPeer peer,HMSActionResultListener hmsActionResultListener) async {
+  void sendDirectMessage(String message, HMSPeer peer,
+      HMSActionResultListener hmsActionResultListener) async {
     hmsSDK.sendDirectMessage(
-      message: message,
-      peer: peer,
-      type: "chat",
-      hmsActionResultListener: hmsActionResultListener
-    );
+        message: message,
+        peer: peer,
+        type: "chat",
+        hmsActionResultListener: hmsActionResultListener);
   }
 
-  void sendGroupMessage(String message, String roleName,HMSActionResultListener hmsActionResultListener) async {
+  void sendGroupMessage(String message, String roleName,
+      HMSActionResultListener hmsActionResultListener) async {
     hmsSDK.sendGroupMessage(
-      message: message,
-      roleName: roleName,
-      type: "chat",
-      hmsActionResultListener: hmsActionResultListener
-    );
+        message: message,
+        roleName: roleName,
+        type: "chat",
+        hmsActionResultListener: hmsActionResultListener);
   }
 
   Future<void> preview({required HMSConfig config}) async {
