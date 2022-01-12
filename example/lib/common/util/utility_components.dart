@@ -44,6 +44,7 @@ class UtilityComponents {
   static void showRoleChangeDialog(event, context) async {
     event = event as HMSRoleChangeRequest;
     String answer = await showDialog(
+        barrierDismissible: false,
         context: context,
         builder: (ctx) => RoleChangeDialogOrganism(roleChangeRequest: event));
     if (answer == "OK") {
@@ -59,6 +60,7 @@ class UtilityComponents {
   static showTrackChangeDialog(event, context) async {
     event = event as HMSTrackChangeRequest;
     String answer = await showDialog(
+        barrierDismissible: false,
         context: context,
         builder: (ctx) => TrackChangeDialogOrganism(trackChangeRequest: event));
     print(answer + '----------------->');
