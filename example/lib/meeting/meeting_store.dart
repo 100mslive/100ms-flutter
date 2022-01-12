@@ -319,19 +319,27 @@ abstract class MeetingStoreBase extends ChangeNotifier
 
   @override
   void onRoomUpdate({required HMSRoom room, required HMSRoomUpdate update}) {
-    if (update == HMSRoomUpdate.browserRecordingStateUpdated) {
-      if (room.hmsBrowserRecordingState?.running == true)
-        isRecordingStarted = true;
-      else
-        isRecordingStarted = false;
+    switch (update) {
+      case HMSRoomUpdate.browserRecordingStateUpdated:
+        isRecordingStarted = room.hmsBrowserRecordingState?.running ?? false;
+        break;
+
+      case HMSRoomUpdate.serverRecordingStateUpdated:
+        isRecordingStarted = room.hmsServerRecordingState?.running ?? false;
+        break;
+
+      case HMSRoomUpdate.rtmpStreamingStateUpdated:
+        isRecordingStarted = room.hmsRtmpStreamingState?.running ?? false;
+        break;
+
+      default:
+        print('on room update ${update.toString()}');
     }
-    print('on room update ${update.toString()}');
   }
 
   @override
   void onPeerUpdate({required HMSPeer peer, required HMSPeerUpdate update}) {
     peerOperation(peer, update);
-    // print("${peerTracks.toString()} onPeerUpdateListLength");
   }
 
   @override
@@ -339,8 +347,6 @@ abstract class MeetingStoreBase extends ChangeNotifier
       {required HMSTrack track,
       required HMSTrackUpdate trackUpdate,
       required HMSPeer peer}) {
-    print("Called After Reconnection ${peer.name} ${track.source}");
-    print("${peer.name} ${track.kind} onTrackUpdateFlutterMeetingStore");
     if (isSpeakerOn) {
       unMuteAll();
     } else {
@@ -357,7 +363,6 @@ abstract class MeetingStoreBase extends ChangeNotifier
       localPeer = peer;
 
       if (track.kind == HMSTrackKind.kHMSTrackKindVideo) {
-        print("LOCALPEERTRACKVideo");
         localTrack = track;
         if (track.isMute) {
           this.isVideoOn = false;
