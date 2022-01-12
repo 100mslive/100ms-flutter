@@ -44,7 +44,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         
         registrar.addMethodCallDelegate(instance, channel: channel)
     }
-
+    
     
     public init(channel: FlutterMethodChannel,
                 meetingEventChannel: FlutterEventChannel,
@@ -64,7 +64,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
               let name =  tempArg["name"] as? String else {
                   return FlutterError(code: #function, message: "invalid event sink name", details: arguments)
               }
-            
+        
         switch name {
         case "meeting":
             eventSink = events
@@ -98,7 +98,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         
         switch call.method {
             
-        // MARK:  Room Actions
+            // MARK:  Room Actions
             
         case "build":
             build(call, result)
@@ -117,14 +117,14 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             
         case "get_local_peer":
             getLocalPeer(result)
-
+            
         case "get_remote_peers":
             getRemotePeers(result)
-
+            
         case "get_peers":
             getPeers(result)
             
-        // MARK: - Audio Helpers
+            // MARK: - Audio Helpers
             
         case "switch_audio":
             switchAudio(call, result)
@@ -138,7 +138,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         case "un_mute_all":
             toggleAudioMuteAll(result, shouldMute: false)
             
-        // MARK: - Video Helpers
+            // MARK: - Video Helpers
             
         case "switch_video":
             switchVideo(call, result)
@@ -158,7 +158,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         case "set_playback_allowed":
             setPlaybackAllowed(call, result)
             
-        // MARK: - Messaging
+            // MARK: - Messaging
             
         case "send_broadcast_message":
             sendBroadcastMessage(call, result)
@@ -169,8 +169,8 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         case "send_group_message":
             sendGroupMessage(call, result)
             
-        // MARK: - Role based Actions
-        
+            // MARK: - Role based Actions
+            
         case "get_roles":
             getRoles(call, result)
             
@@ -195,7 +195,10 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         case "change_metadata":
             changeMetadata(call, result)
             
-        // MARK: - Recording
+        case "change_name":
+            changeName(call, result)
+            
+            // MARK: - Recording
             
         case "start_rtmp_or_recording":
             startRtmpOrRecording(call, result)
@@ -203,7 +206,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         case "stop_rtmp_and_recording":
             stopRtmpAndRecording(result)
             
-        // MARK: - Logging
+            // MARK: - Logging
             
         case "start_hms_logger":
             startHMSLogger(call)
@@ -211,8 +214,6 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         case "remove_hms_logger":
             removeHMSLogger()
             
-        case "change_name":
-            changeName(call)
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -302,16 +303,16 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     
     /*
      private func previewForRole(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
-         let arguments = call.arguments as! [AnyHashable: Any]
-
-         hmsSDK?.preview(role: ) { ,  in
-             
-         }
+     let arguments = call.arguments as! [AnyHashable: Any]
+     
+     hmsSDK?.preview(role: ) { ,  in
+     
+     }
      }
      
      private func cancelPreview(_ result: FlutterResult) {
-         hmsSDK?.cancelPreview()
-         result(nil)
+     hmsSDK?.cancelPreview()
+     result(nil)
      }
      */
     
@@ -373,7 +374,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         
         result(HMSPeerExtension.toDictionary(localPeer))
     }
-
+    
     private func getRemotePeers(_ result: FlutterResult) {
         
         guard let peers = hmsSDK?.remotePeers else { result(nil); return }
@@ -382,7 +383,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         peers.forEach { listOfPeers.append(HMSPeerExtension.toDictionary($0)) }
         result(listOfPeers)
     }
-
+    
     private func getPeers(_ result: FlutterResult) {
         
         guard let peers = hmsSDK?.room?.peers else { result(nil); return }
@@ -442,11 +443,11 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                 }
             }
         }
-
+        
         result(nil)
     }
-
-
+    
+    
     // MARK: - Video Helpers
     
     private func startCapturing(_ result: FlutterResult) {
@@ -483,7 +484,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             result(HMSErrorExtension.toDictionary(error))
             return
         }
-
+        
         videoTrack.switchCamera()
         
         result(nil)
@@ -555,14 +556,15 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     
     // MARK: - Messaging
     
-    // TODO: update result type in messaging
-    private func sendBroadcastMessage(_ call: FlutterMethodCall, _ result: FlutterResult) {
+    private func sendBroadcastMessage(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         let arguments = call.arguments as! [AnyHashable: Any]
         
         guard let message = arguments["message"] as? String
         else {
-            // print(#function, "Could not send broadcast message")
-            // result("Could not send broadcast message")
+            let error = getError(message: "No message found in \(#function)",
+                                 description: "Message is nil",
+                                 params: ["function": #function, "arguments": arguments])
+            result(HMSErrorExtension.toDictionary(error))
             return
         }
         
@@ -570,72 +572,70 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         
         hmsSDK?.sendBroadcastMessage(type: type, message: message) { message, error in
             if let error = error {
-                //TODO add onSuccess,OnError Handlers
+                result(HMSErrorExtension.toDictionary(error))
             } else {
-
+                result(nil)
             }
         }
     }
     
-    private func sendDirectMessage(_ call: FlutterMethodCall, _ result: FlutterResult) {
+    private func sendDirectMessage(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+        
         let arguments = call.arguments as! [AnyHashable: Any]
         
         guard let message = arguments["message"] as? String,
               let peerID = arguments["peer_id"] as? String,
               let peer = getPeer(by: peerID)
         else {
-            print(#function, "Could not send direct message")
-            result("Could not send direct message")
+            let error = getError(message: "Invalid arguments passed in \(#function)",
+                                 description: "Message is nil",
+                                 params: ["function": #function, "arguments": arguments])
+            result(HMSErrorExtension.toDictionary(error))
             return
         }
         
         let type = arguments["type"] as? String ?? "chat"
         
         hmsSDK?.sendDirectMessage(type: type, message: message, peer: peer) { message, error in
-            //TODO add onSuccess,OnError Handlers
             if let error = error {
-                print(#function, "Error sending direct message: ", error.description)
-                return
+                result(HMSErrorExtension.toDictionary(error))
+            } else {
+                result(nil)
             }
-            
-            print(#function, "Successfully sent direct message: ", message?.message ?? "")
         }
-        
-        result("\(#function)")
     }
     
-    private func sendGroupMessage(_ call: FlutterMethodCall, _ result: FlutterResult) {
+    private func sendGroupMessage(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+        
         let arguments = call.arguments as! [AnyHashable: Any]
         
         guard let message = arguments["message"] as? String,
               let roleString = arguments["role_name"] as? String,
               let role = getRole(by: roleString)
         else {
-            print(#function, "Could not send group message")
-            result("Could not send group message")
+            let error = getError(message: "Invalid arguments passed in \(#function)",
+                                 description: "Message is nil",
+                                 params: ["function": #function, "arguments": arguments])
+            result(HMSErrorExtension.toDictionary(error))
             return
         }
         
         let type = arguments["type"] as? String ?? "chat"
         
         hmsSDK?.sendGroupMessage(type: type, message: message, roles: [role]) { message, error in
-            //TODO add onSuccess,OnError Handlers
             if let error = error {
-                print(#function, "Error sending group message: ", error.description)
-                return
+                result(HMSErrorExtension.toDictionary(error))
+            } else {
+                result(nil)
             }
-            
-            print(#function, "Successfully sent group message: ", message?.message ?? "")
         }
-        
-        result("\(#function)")
     }
     
     
     // MARK: - Role based Actions
     
     private func getRoles(_ call: FlutterMethodCall, _ result: FlutterResult) {
-
+        
         var roles = [[String: Any]]()
         
         hmsSDK?.roles.forEach { roles.append(HMSRoleExtension.toDictionary($0)) }
@@ -725,12 +725,6 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         }
     }
     
-    private func changeName(_call: FlutterMethodCall){
-        let arguments = call.arguments as![AnyHashable:Any]
-        //TODO implement changeName Function 
-        guard let name = arguments["name"] as? String,
-        hmsSDK.changeName(name:name);
-    }
     
     private func changeTrackState(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         let arguments = call.arguments as! [AnyHashable: Any]
@@ -810,7 +804,14 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     private func changeMetadata(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         
         let arguments = call.arguments as! [AnyHashable: Any]
-        let metadata = arguments["metadata"] as? String ?? ""
+        
+        guard let metadata = arguments["metadata"] as? String else {
+            let error = getError(message: "No metadata found in \(#function)",
+                                 description: "Metadata is nil",
+                                 params: ["function": #function, "arguments": arguments])
+            result(HMSErrorExtension.toDictionary(error))
+            return
+        }
         
         hmsSDK?.change(metadata: metadata) { [weak self] success, error in
             if let error = error {
@@ -820,6 +821,28 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                 if let strongSelf = self {
                     strongSelf.hasChangedMetadata = !strongSelf.hasChangedMetadata
                 }
+                result(nil)
+            }
+        }
+    }
+    
+    
+    private func changeName(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+        
+        let arguments = call.arguments as![AnyHashable:Any]
+        
+        guard let name = arguments["name"] as? String else {
+            let error = getError(message: "No name found in \(#function)",
+                                 description: "Name is nil",
+                                 params: ["function": #function, "arguments": arguments])
+            result(HMSErrorExtension.toDictionary(error))
+            return
+        }
+        
+        hmsSDK?.change(name: name) { success, error in
+            if let error = error {
+                result(HMSErrorExtension.toDictionary(error))
+            } else {
                 result(nil)
             }
         }
@@ -1161,6 +1184,6 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         }
         return HMSCodec.VP8
     }
-
+    
     
 }

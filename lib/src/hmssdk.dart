@@ -13,7 +13,6 @@ import 'package:hmssdk_flutter/src/manager/hms_sdk_manager.dart';
 import 'package:hmssdk_flutter/src/service/platform_service.dart';
 import '../hmssdk_flutter.dart';
 
-// TODO: HMSRemotePeer
 // TODO: setVolume on iOS
 // TODO: reorder functions kotlin & swift file
 class HMSSDK {
