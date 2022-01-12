@@ -181,7 +181,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             changeRole(call, result)
             
         case "accept_change_role":
-            acceptChangeRole(call, result)
+            acceptChangeRole(result)
             
         case "end_room":
             endRoom(call, result)
@@ -699,9 +699,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     }
     
     
-    private func acceptChangeRole(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
-        
-        let arguments = call.arguments as! [AnyHashable: Any]
+    private func acceptChangeRole(_ result: @escaping FlutterResult) {
         
         hmsSDK?.accept(changeRole: roleChangeRequest!) { [weak self] success, error in
             if let error = error {
