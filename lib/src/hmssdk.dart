@@ -165,18 +165,19 @@ class HMSSDK {
   void sendBroadcastMessage(
       {required String message,
       String? type,
-      HMSMessageResultListener? hmsMessageResultListener}) async {
+      HMSActionResultListener? hmsActionResultListener}) async {
     var result = await PlatformService.invokeMethod(
         PlatformMethod.sendBroadcastMessage,
         arguments: {"message": message, "type": type});
-
-    if (hmsMessageResultListener != null) {
+    if (hmsActionResultListener != null) {
       if (result["event_name"] == "on_error") {
-        hmsMessageResultListener.onError(
+        hmsActionResultListener.onException(
             hmsException: HMSException.fromMap(result["error"]));
       } else {
-        hmsMessageResultListener.onSuccess(
-            hmsMessage: HMSMessage.fromMap(result["message"]));
+        hmsActionResultListener.onSuccess(arguments: {
+          "message": HMSMessage.fromMap(result["message"]),
+          "type": type
+        });
       }
     }
   }
@@ -185,17 +186,20 @@ class HMSSDK {
       {required String message,
       required String roleName,
       String? type,
-      HMSMessageResultListener? hmsMessageResultListener}) async {
+      HMSActionResultListener? hmsActionResultListener}) async {
     var result = await PlatformService.invokeMethod(
         PlatformMethod.sendGroupMessage,
         arguments: {"message": message, "role_name": roleName, "type": type});
-    if (hmsMessageResultListener != null) {
+    if (hmsActionResultListener != null) {
       if (result["event_name"] == "on_error") {
-        hmsMessageResultListener.onError(
+        hmsActionResultListener.onException(
             hmsException: HMSException.fromMap(result["error"]));
       } else {
-        hmsMessageResultListener.onSuccess(
-            hmsMessage: HMSMessage.fromMap(result["message"]));
+        hmsActionResultListener.onSuccess(arguments: {
+          "message": HMSMessage.fromMap(result["message"]),
+          "type": type,
+          "roleName": roleName
+        });
       }
     }
   }
@@ -204,18 +208,21 @@ class HMSSDK {
       {required String message,
       required HMSPeer peer,
       String? type,
-      HMSMessageResultListener? hmsMessageResultListener}) async {
+      HMSActionResultListener? hmsActionResultListener}) async {
     var result = await PlatformService.invokeMethod(
         PlatformMethod.sendDirectMessage,
         arguments: {"message": message, "peer_id": peer.peerId, "type": type});
 
-    if (hmsMessageResultListener != null) {
+    if (hmsActionResultListener != null) {
       if (result["event_name"] == "on_error") {
-        hmsMessageResultListener.onError(
+        hmsActionResultListener.onException(
             hmsException: HMSException.fromMap(result["error"]));
       } else {
-        hmsMessageResultListener.onSuccess(
-            hmsMessage: HMSMessage.fromMap(result["message"]));
+        hmsActionResultListener.onSuccess(arguments: {
+          "message": HMSMessage.fromMap(result["message"]),
+          "type": type,
+          "peer": peer
+        });
       }
     }
   }

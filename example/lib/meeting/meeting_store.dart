@@ -130,6 +130,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
         endPoint: token[1] == "true" ? "" : "https://qa-init.100ms.live/init");
 
     await HmsSdkManager.hmsSdkInteractor?.join(config: config);
+    isMeetingStarted = true;
     return true;
   }
 
@@ -158,15 +159,15 @@ abstract class MeetingStoreBase extends ChangeNotifier
 
   @action
   void sendBroadcastMessage(String message) {
-    _hmssdkInteractor.sendBroadcastMessage(message);
+    _hmssdkInteractor.sendBroadcastMessage(message, this);
   }
 
   void sendDirectMessage(String message, HMSPeer peer) async {
-    _hmssdkInteractor.sendDirectMessage(message, peer);
+    _hmssdkInteractor.sendDirectMessage(message, peer, this);
   }
 
   void sendGroupMessage(String message, String roleName) async {
-    _hmssdkInteractor.sendGroupMessage(message, roleName);
+    _hmssdkInteractor.sendGroupMessage(message, roleName, this);
   }
 
   @action
@@ -761,6 +762,18 @@ abstract class MeetingStoreBase extends ChangeNotifier
         // TODO: Handle this case.
         this.event = "Name Changed to ${localPeer!.name}";
         break;
+      case HMSActionResultListenerMethod.sendBroadcastMessage:
+        print("Message is ${arguments!['message']}");
+        // addMessage(arguments['message']);
+        break;
+      case HMSActionResultListenerMethod.sendGroupMessage:
+        print("Message is ${arguments!['message']}");
+        // addMessage(arguments['message']);
+        break;
+      case HMSActionResultListenerMethod.sendDirectMessage:
+        print("Message is ${arguments!['message']}");
+        // addMessage(arguments['message']);
+        break;
     }
   }
 
@@ -771,8 +784,6 @@ abstract class MeetingStoreBase extends ChangeNotifier
       Map<String, dynamic>? arguments,
       required HMSException hmsException}) {
     this.hmsException = hmsException;
-    print(
-        "onException Action Result Listener method: $methodType || arguments: $arguments || exception: $hmsException");
     switch (methodType) {
       case HMSActionResultListenerMethod.leave:
         // TODO: Handle this case.
@@ -814,6 +825,15 @@ abstract class MeetingStoreBase extends ChangeNotifier
         print("Unknown Method Called");
         break;
       case HMSActionResultListenerMethod.changeName:
+        // TODO: Handle this case.
+        break;
+      case HMSActionResultListenerMethod.sendBroadcastMessage:
+        // TODO: Handle this case.
+        break;
+      case HMSActionResultListenerMethod.sendGroupMessage:
+        // TODO: Handle this case.
+        break;
+      case HMSActionResultListenerMethod.sendDirectMessage:
         // TODO: Handle this case.
         break;
     }

@@ -211,6 +211,8 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         case "remove_hms_logger":
             removeHMSLogger()
             
+        case "change_name":
+            changeName(call)
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -568,7 +570,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         
         hmsSDK?.sendBroadcastMessage(type: type, message: message) { message, error in
             if let error = error {
-                
+                //TODO add onSuccess,OnError Handlers
             } else {
 
             }
@@ -590,6 +592,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         let type = arguments["type"] as? String ?? "chat"
         
         hmsSDK?.sendDirectMessage(type: type, message: message, peer: peer) { message, error in
+            //TODO add onSuccess,OnError Handlers
             if let error = error {
                 print(#function, "Error sending direct message: ", error.description)
                 return
@@ -616,6 +619,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         let type = arguments["type"] as? String ?? "chat"
         
         hmsSDK?.sendGroupMessage(type: type, message: message, roles: [role]) { message, error in
+            //TODO add onSuccess,OnError Handlers
             if let error = error {
                 print(#function, "Error sending group message: ", error.description)
                 return
@@ -721,6 +725,12 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         }
     }
     
+    private func changeName(_call: FlutterMethodCall){
+        let arguments = call.arguments as![AnyHashable:Any]
+        //TODO implement changeName Function 
+        guard let name = arguments["name"] as? String,
+        hmsSDK.changeName(name:name);
+    }
     
     private func changeTrackState(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         let arguments = call.arguments as! [AnyHashable: Any]
@@ -1151,4 +1161,6 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         }
         return HMSCodec.VP8
     }
+
+    
 }
