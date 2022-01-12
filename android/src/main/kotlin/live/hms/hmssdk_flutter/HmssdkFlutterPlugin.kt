@@ -193,7 +193,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
                 setPlayBackAllowed(call)
             }
             "set_volume"->{
-                setVolume(call)
+                setVolume(call, result)
             }
             "change_name"->{
                 changeName(call)
@@ -1004,7 +1004,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         result?.success(null)
     }
 
-    private fun setVolume(call: MethodCall){
+    private fun setVolume(call: MethodCal, result: Result){
         val trackId = call.argument<String>("track_id")
         val volume = call.argument<Double>("volume")
        
@@ -1012,20 +1012,32 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             if(it.audioTrack?.trackId == trackId){
                 if(it.audioTrack is HMSRemoteAudioTrack){
                     (it.audioTrack as HMSRemoteAudioTrack).setVolume(volume!!)
+                    result.success(null)
+                    return
                 }
                 else if(it.audioTrack is HMSLocalAudioTrack){
                     (it.audioTrack as HMSLocalAudioTrack).volume = volume!!
+                    result.success(null)
+                    return
                 }
             }
-
             
             it.auxiliaryTracks.forEach {
                 if(it.trackId == trackId && it is HMSRemoteAudioTrack){
                     it.setVolume(volume!!.toDouble())
+                    result.success(null)
+                    return
                 }
             }
         }
-       
+
+        var map = Map<String, Map<String, String>>()
+        var error = Map<String, String>()
+        error["message"] = "Could not set volume"
+        error["action"] = "NONE"
+        error["description"] = "Track not found for setting volume"
+        map["error"] = error
+        result.success(map)
     }
 
     private fun changeName(call:MethodCall){

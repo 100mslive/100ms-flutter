@@ -10,14 +10,13 @@ class HMSException {
   String action;
   Map? params;
 
-  HMSException({
-    this.id,
-    this.code,
-    required this.message,
-    required this.description,
-    required this.action,
-    required this.params,
-  });
+  HMSException(
+      {this.id,
+      this.code,
+      required this.message,
+      required this.description,
+      required this.action,
+      this.params});
 
   factory HMSException.fromMap(Map map) {
     HMSExceptionCode? code;
@@ -32,7 +31,7 @@ class HMSException {
       message: map['message'],
       action: map['action'],
       description: map['info'] ?? map['description'] ?? '',
-      params: map['params'],
+      params: map['params'] ?? [],
     );
   }
 
