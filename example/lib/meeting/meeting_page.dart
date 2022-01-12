@@ -163,12 +163,12 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
           isRecordingStarted = false;
         } else {
           if (isRecordingStarted == false) {
-            print("${Constant.meetingUrl} meetingUrl");
-            _meetingStore.startRtmpOrRecording(
-                meetingUrl: Constant.meetingUrl,
-                toRecord: true,
-                rtmpUrls: null);
-            isRecordingStarted = true;
+            String url = await UtilityComponents.showRTMPDialog(context);
+            if (url.isNotEmpty) {
+              _meetingStore.startRtmpOrRecording(
+                  meetingUrl: url, toRecord: true, rtmpUrls: null);
+              isRecordingStarted = true;
+            }
           }
         }
         break;
@@ -276,6 +276,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
             return _meetingStore.reconnecting
                 ? OfflineWidget()
                 : Scaffold(
+                    resizeToAvoidBottomInset:false,
                     appBar: AppBar(
                       title: Text(widget.roomId),
                       actions: [
