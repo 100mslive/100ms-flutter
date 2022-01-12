@@ -435,7 +435,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                         "Change Name",
                                         style: TextStyle(color: Colors.blue),
                                       ),
-                                      Icon(Icons.cancel_schedule_send,
+                                      Icon(Icons.create_rounded,
                                           color: Colors.blue),
                                     ]),
                                 value: 8,

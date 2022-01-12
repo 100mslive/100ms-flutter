@@ -947,8 +947,8 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         override fun onSuccess(hmsMessage: HMSMessage) {
             val args = HashMap<String, Any?>()
             args["event_name"] = "on_success"
-            args["data"] = HMSMessageExtension.toDictionary(hmsMessage)
-            if (args["data"] != null)
+            args["message"] = HMSMessageExtension.toDictionary(hmsMessage)
+            if (args["message"] != null)
                 CoroutineScope(Dispatchers.Main).launch {
                     result?.success(args)
                 }

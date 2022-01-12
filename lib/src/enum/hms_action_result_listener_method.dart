@@ -10,5 +10,8 @@ enum HMSActionResultListenerMethod {
   startRtmpOrRecording,
   stopRtmpAndRecording,
   changeName,
+  sendBroadcastMessage,
+  sendGroupMessage,
+  sendDirectMessage,
   unknown
 }
