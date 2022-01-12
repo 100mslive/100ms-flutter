@@ -1,6 +1,3 @@
-// Project imports:
-import 'package:hmssdk_flutter/src/enum/hms_log_level.dart';
-
 class HMSCustomLog {
   String tag;
   String message;

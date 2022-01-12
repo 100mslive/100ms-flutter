@@ -9,17 +9,20 @@ import Foundation
 import HMSSDK
 
 class  HMSPermissionExtension {
-    static func toDictionary(permission:HMSPermissions)-> Dictionary<String,Any?>{
-        var dict:Dictionary<String, Any?> = [:]
+    
+    static func toDictionary(_ permission: HMSPermissions) -> [String: Any?] {
+        [
+            "change_role": permission.changeRole,
+            "end_room": permission.endRoom,
+            "mute_all": permission.muteAll,
+            "un_mute": permission.unmute,
+            "mute": permission.mute,
+            "remove_others": permission.removeOthers,
+            "stop_presentation": permission.stopPresentation
+        ]
         
-//        dict["ask_to_un_mute"] = permission.askToUnmute
-        dict["change_role"]=permission.changeRole
-        dict["end_room"]=permission.endRoom
-        dict["mute_all"]=permission.muteAll
-//        dict["mute_selective"]=permission.muteSelective
-        dict["remove_others"]=permission.removeOthers
-        dict["stop_presentation"]=permission.stopPresentation
-        
-        return dict
+//        "changeRoleForce"
+//        "rtmp"
+//        "recording"
     }
 }

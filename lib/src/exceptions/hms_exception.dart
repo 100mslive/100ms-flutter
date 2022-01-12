@@ -1,5 +1,4 @@
 // Project imports:
-import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import '../exceptions/hms_exception_code.dart';
 
 class HMSException {
@@ -7,7 +6,6 @@ class HMSException {
   final HMSExceptionCode? code;
   final String message;
 
-  ///description is info in android
   String description;
   String action;
   Map? params;

@@ -8,13 +8,13 @@
 import Foundation
 import HMSSDK
 
-class  HMSSubscribeDegradationPolicyExtensin{
-    static func toDictionary(policy:HMSSubscribeDegradationPolicy) -> Dictionary<String,Any?>{
-        var dict:Dictionary<String,Any?>=[:]
-            dict["packet_loss_threshold"]=policy.packetLossThreshold
-            dict["degrade_grace_period_seconds"]=policy.degradeGracePeriodSeconds
-            dict["recover_grace_period_seconds"]=policy.recoverGracePeriodSeconds
-        
-        return dict
+class HMSSubscribeDegradationPolicyExtension {
+    
+    static func toDictionary(_ policy: HMSSubscribeDegradationPolicy?) -> [String: Any?]? {
+        [
+            "packet_loss_threshold": policy?.packetLossThreshold,
+            "degrade_grace_period_seconds": policy?.degradeGracePeriodSeconds,
+            "recover_grace_period_seconds": policy?.recoverGracePeriodSeconds
+        ]
     }
 }

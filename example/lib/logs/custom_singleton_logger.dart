@@ -15,8 +15,8 @@ class CustomLogger {
   void getCustomLogger() {
     getDirectoryForLogRecord().whenComplete(
       () {
+        // ConsoleOutput consoleOutput = ConsoleOutput();
         fileOutPut = FileOutput(file: file);
-        ConsoleOutput consoleOutput = ConsoleOutput();
         List<LogOutput> multiOutput = [fileOutPut];
         StaticLogger.logger = Logger(
             filter: MyFilter(),
@@ -35,7 +35,9 @@ class CustomLogger {
   }
 
   Future<void> getDirectoryForLogRecord() async {
-    final Directory? directory = await getExternalStorageDirectory();
+    final Directory? directory = Platform.isAndroid
+        ? await getExternalStorageDirectory()
+        : await getApplicationSupportDirectory();
     print(directory?.path);
     file = File('${directory?.path}/logs.txt');
   }

@@ -3,352 +3,320 @@ import Flutter
 import UIKit
 import HMSSDK
 
-public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListener, FlutterStreamHandler, HMSPreviewListener,HMSLogger.Loggable {
+public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListener, FlutterStreamHandler, HMSPreviewListener, HMSLogger {
     
-    let channel:FlutterMethodChannel
-    let meetingEventChannel:FlutterEventChannel
-    let previewEventChannel:FlutterEventChannel
-    var eventSink:FlutterEventSink?
-    var previewSink:FlutterEventSink?
-    var logsSink:FlutterEventSink?
-    var roleChangeRequest:HMSRoleChangeRequest?
+    let channel: FlutterMethodChannel
+    let meetingEventChannel: FlutterEventChannel
+    let previewEventChannel: FlutterEventChannel
+    let logsEventChannel: FlutterEventChannel
+    
+    var eventSink: FlutterEventSink?
+    var previewSink: FlutterEventSink?
+    var logsSink: FlutterEventSink?
+    var roleChangeRequest: HMSRoleChangeRequest?
     
     internal var hmsSDK: HMSSDK?
     
     private var config: HMSConfig?
     
     
-    // MARK: - Initial Setup
-    
-    public init(channel: FlutterMethodChannel, meetingEventChannel: FlutterEventChannel, previewEventChannel: FlutterEventChannel) {
-        self.channel=channel
-        self.meetingEventChannel=meetingEventChannel
-        self.previewEventChannel=previewEventChannel
-        hmsSDK=HMSSDK.build()
-    }
+    // MARK: - Flutter Setup
     
     public static func register(with registrar: FlutterPluginRegistrar) {
+        
         let channel = FlutterMethodChannel(name: "hmssdk_flutter", binaryMessenger: registrar.messenger())
+        
         let eventChannel = FlutterEventChannel(name: "meeting_event_channel", binaryMessenger: registrar.messenger())
         let previewChannel = FlutterEventChannel(name: "preview_event_channel", binaryMessenger: registrar.messenger())
         let logsChannel = FlutterEventChannel(name: "logs_event_channel", binaryMessenger: registrar.messenger())
-        let instance = SwiftHmssdkFlutterPlugin(channel: channel,meetingEventChannel: eventChannel,previewEventChannel: previewChannel)
         
+        let instance = SwiftHmssdkFlutterPlugin(channel: channel,
+                                                meetingEventChannel: eventChannel,
+                                                previewEventChannel: previewChannel,
+                                                logsEventChannel: logsChannel)
         
-        let videoViewFactory:HMSVideoViewFactory = HMSVideoViewFactory(messenger: registrar.messenger(),plugin: instance)
+        let videoViewFactory = HMSVideoViewFactory(messenger: registrar.messenger(), plugin: instance)
         registrar.register(videoViewFactory, withId: "HMSVideoView")
         
         eventChannel.setStreamHandler(instance)
         previewChannel.setStreamHandler(instance)
+        logsChannel.setStreamHandler(instance)
+        
         registrar.addMethodCallDelegate(instance, channel: channel)
     }
+
+    
+    public init(channel: FlutterMethodChannel,
+                meetingEventChannel: FlutterEventChannel,
+                previewEventChannel: FlutterEventChannel,
+                logsEventChannel: FlutterEventChannel) {
+        
+        self.channel = channel
+        self.meetingEventChannel = meetingEventChannel
+        self.previewEventChannel = previewEventChannel
+        self.logsEventChannel = logsEventChannel
+    }
+    
+    
+    public func onListen(withArguments arguments: Any?, eventSink events: @escaping FlutterEventSink) -> FlutterError? {
+        
+        guard let tempArg = arguments as? [AnyHashable: Any],
+              let name =  tempArg["name"] as? String else {
+                  return FlutterError(code: #function, message: "invalid event sink name", details: arguments)
+              }
+            
+        switch name {
+        case "meeting":
+            eventSink = events
+        case "preview":
+            previewSink = events
+        case "logs":
+            logsSink = events
+        default:
+            return FlutterError(code: #function, message: "invalid event sink name", details: arguments)
+        }
+        
+        return nil
+    }
+    
+    
+    public func onCancel(withArguments arguments: Any?) -> FlutterError? {
+        eventSink = nil
+        previewSink = nil
+        logsSink = nil
+        return nil
+    }
+    
+    public func detachFromEngine(for registrar: FlutterPluginRegistrar) {
+        meetingEventChannel.setStreamHandler(nil)
+        previewEventChannel.setStreamHandler(nil)
+        logsEventChannel.setStreamHandler(nil)
+    }
+    
     
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
-        switch call.method {
         
-        case "join_meeting":
-            joinMeeting(call:call,result:result)
+        switch call.method {
             
-        case "leave_meeting":
-            leaveMeeting(result: result)
+        // MARK:  Room Actions
             
-        case "switch_audio":
-            switchAudio(call: call , result: result)
-            
-        case "switch_video":
-            switchVideo(call: call , result: result)
-            
-        case "switch_camera":
-            switchCamera(result: result)
+        case "build":
+            build(call, result)
             
         case "preview_video":
-            previewVideo(call:call,result:result)
+            preview(call, result)
             
-        case "send_message":
-            sendBroadcastMessage(call:call,result:result)
+        case "join_meeting":
+            join(call, result)
             
-        case "send_direct_message":
-            sendDirectMessage(call:call,result:result)
+        case "leave_meeting":
+            leaveMeeting(result)
             
-        case "send_group_message":
-            sendGroupMessage(call, result)
-            
-        case "accept_role_change":
-            acceptRoleRequest(call:call,result:result)
-            
-        case "change_role":
-            changeRole(call:call,result:result)
-            
-        case "get_roles":
-            getRoles(call:call,result:result)
-            
-        case "start_capturing":
-            unMuteVideo()
-            
-        case "stop_capturing":
-            muteVideo()
-            
-        case "end_room":
-            endRoom(call)
-            
-        case "remove_peer":
-            removePeer(call)
-            
-        case "on_change_track_state_request":
-            changeTrack(call)
-            
-        case "mute_all":
-            toggleMuteAll(result, shouldMute: true)
-            
-        case "un_mute_all":
-            toggleMuteAll(result, shouldMute: false)
-            
-        case "is_video_mute":
-            isVideoMute(result)
-            
-        case "is_audio_mute":
-            isAudioMute(result)
+        case "get_room":
+            getRoom(result)
             
         case "get_local_peer":
             getLocalPeer(result)
 
-        case "change_track_state_for_role" :
-            changeTrackStateForRole(call,result)
+        case "get_remote_peers":
+            getRemotePeers(result)
 
-        case "start_rtmp_or_recording" :
-            startRtmpOrRecording(call,result)
-
-        case "stop_rtmp_and_recording"    :
+        case "get_peers":
+            getPeers(result)
+            
+        // MARK: - Audio Helpers
+            
+        case "switch_audio":
+            switchAudio(call, result)
+            
+        case "is_audio_mute":
+            isAudioMute(call, result)
+            
+        case "mute_all":
+            toggleAudioMuteAll(result, shouldMute: true)
+            
+        case "un_mute_all":
+            toggleAudioMuteAll(result, shouldMute: false)
+            
+        // MARK: - Video Helpers
+            
+        case "switch_video":
+            switchVideo(call, result)
+            
+        case "switch_camera":
+            switchCamera(result)
+            
+        case "start_capturing":
+            startCapturing(result)
+            
+        case "stop_capturing":
+            stopCapturing(result)
+            
+        case "is_video_mute":
+            isVideoMute(call, result)
+            
+        case "set_playback_allowed":
+            setPlaybackAllowed(call, result)
+            
+        // MARK: - Messaging
+            
+        case "send__broadcast_message":
+            sendBroadcastMessage(call, result)
+            
+        case "send_direct_message":
+            sendDirectMessage(call, result)
+            
+        case "send_group_message":
+            sendGroupMessage(call, result)
+            
+        // MARK: - Role based Actions
+        
+        case "get_roles":
+            getRoles(call, result)
+            
+        case "change_role":
+            changeRole(call, result)
+            
+        case "accept_role_change":
+            acceptRoleRequest(call, result)
+            
+        case "end_room":
+            endRoom(call, result)
+            
+        case "remove_peer":
+            removePeer(call, result)
+            
+        case "on_change_track_state_request":
+            changeTrack(call, result)
+            
+        case "change_track_state_for_role":
+            changeTrackStateForRole(call, result)
+            
+        case "raise_hand":
+            raiseHand(call, result)
+            
+        // MARK: - Recording
+            
+        case "start_rtmp_or_recording":
+            startRtmpOrRecording(call, result)
+            
+        case "stop_rtmp_and_recording":
             stopRtmpAndRecording(result)
-        case "start_hms_logger"
+            
+        // MARK: - Logging
+            
+        case "start_hms_logger":
             startHMSLogger(call)
-        case "remove_hms_logger"
+            
+        case "remove_hms_logger":
             removeHMSLogger()
-        case "get_room"
-            getRoom(result)
+            
         default:
             result(FlutterMethodNotImplemented)
         }
     }
     
-    // MARK: - HMS SDK Delegate Callbacks
     
-    public func onPreview(room: HMSRoom, localTracks: [HMSTrack]) {
-        print("On Preview Room")
-        var tracks:[Dictionary<String, Any?>]=[]
+    // MARK: - Room Actions
+    
+    private func build(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+        let arguments = call.arguments as! [AnyHashable: Any]
         
-        for eachTrack in localTracks{
-            tracks.insert(HMSTrackExtension.toDictionary(track: eachTrack), at: tracks.count)
-        }
-        
-        let data:[String:Any]=[
-            "event_name":"preview_video",
-            "data":[
-                "room":HMSRoomExtension.toDictionary(room),
-                "local_tracks":tracks,
-            ]
-        ]
-        previewSink?(data)
-    }
-    
-    public func on(join room: HMSRoom) {
-        print("On Join Room")
-        
-        let data:[String:Any]=[
-            "event_name":"on_join_room",
-            "data":[
-                "room" : HMSRoomExtension.toDictionary(room)
-            ]
-        ]
-        eventSink?(data)
-    }
-    
-    
-    public func onListen(withArguments arguments: Any?, eventSink events: @escaping FlutterEventSink) -> FlutterError? {
-        if let tempArg = arguments as? Dictionary<String, AnyObject>{
-            let name:String =  tempArg["name"] as? String ?? ""
-            if(name == "meeting"){
-                self.eventSink = events
-            }else if(name == "preview"){
-                self.previewSink=events;
-            }
-            else if (name == "logs") {
-                self.logsSink = events
-            }
-        }
-        
-        return nil
-    }
-    
-    public func onCancel(withArguments arguments: Any?) -> FlutterError? {
-        print("on flutter error")
-        return nil
-    }
-    
-    public func on(room: HMSRoom, update: HMSRoomUpdate) {
-        print("On Update Room")
-        
-        let data:[String:Any]=[
-            "event_name":"on_update_room",
-            "data":[
-                "name":"On Update Room"
-            ]
-        ]
-        eventSink?(data)
-    }
-    
-    public func on(peer: HMSPeer, update: HMSPeerUpdate) {
-        print("On Peer join Room")
-        
-        let data:[String:Any]=[
-            "event_name":"on_peer_update",
-            "data":[
-                "peer":HMSPeerExtension.toDictionary(peer: peer),
-                "update": HMSPeerExtension.getValueOfHMSPeerUpdate(update: update)
-            ]
+        var trackSettings: HMSTrackSettings?
+        if let settingsDict = arguments["hms_track_setting"] as? [AnyHashable: Any] {
             
-        ]
-        print(data)
-        eventSink?(data)
-    }
-    
-    public func on(track: HMSTrack, update: HMSTrackUpdate, for peer: HMSPeer) {
-        
-        print("On Track Update")
-        
-        let data:[String:Any]=[
-            "event_name":"on_track_update",
-            "data":[
-                "peer":HMSPeerExtension.toDictionary(peer: peer),
-                "update":HMSTrackExtension.getTrackUpdateInString(trackUpdate: update),
-                "track":HMSTrackExtension.toDictionary(track: track)
-            ]
-        ]
-        eventSink?(data)
-    }
-    
-    public func on(error: HMSError) {
-        print("On Error")
-        
-        let data:[String:Any]=[
-            "event_name":"on_error",
-            "data":[
-                "error":HMSErrorExtension.toDictionary(error: error)
-            ]
-        ]
-        eventSink?(data)
-    }
-    
-    public func on(updated speakers: [HMSSpeaker]) {
-        logSpeakers(speakers)
-        
-        var speakersDict = [[String: Any]]()
-        for speaker in speakers {
-            speakersDict.append(HMSSpeakerExtension.toDictionary(speaker))
+            var audioSettings: HMSAudioTrackSettings?
+            if let audioSettingsDict = settingsDict["audio_track_setting"] as? [AnyHashable: Any] {
+                if let bitrate = audioSettingsDict["bit_rate"] as? Int, let desc = audioSettingsDict["track_description"] as? String {
+                    audioSettings = HMSAudioTrackSettings(maxBitrate: bitrate, trackDescription: desc)
+                }
+            }
+            
+            var videoSettings: HMSVideoTrackSettings?
+            if let videoSettingsDict = settingsDict["video_track_setting"] as? [AnyHashable: Any] {
+                if let codec = videoSettingsDict["video_codec"] as? String,
+                   let bitrate = videoSettingsDict["max_bit_rate"] as? Int,
+                   let framerate = videoSettingsDict["max_frame_rate"] as? Int,
+                   let desc = videoSettingsDict["track_description"] as? String {
+                    
+                    videoSettings = HMSVideoTrackSettings(codec: getCodec(from: codec),
+                                                          resolution: .init(width: 320, height: 180),
+                                                          maxBitrate: bitrate,
+                                                          maxFrameRate: framerate,
+                                                          cameraFacing: .front,
+                                                          trackDescription: desc)
+                }
+            }
+            
+            trackSettings = HMSTrackSettings(videoSettings: videoSettings, audioSettings: audioSettings)
         }
         
-        let data:[String:Any]=[
-            "event_name": "on_update_speaker",
-            "data": [
-                "speakers": speakersDict
-            ]
-        ]
-        eventSink?(data)
-    }
-    
-    public func on(message: HMSMessage) {
+        var setLogger = false
+        if let level = arguments["log_level"] as? String {
+            logLevel = getLogLevel(from: level)
+            setLogger = true
+        }
         
-        let data:[String:Any]=[
-            "event_name":"on_message",
-            "data":[
-                "message": HMSMessageExtension.toDictionary(message: message)
-            ]
-        ]
-        eventSink?(data)
-    }
-    
-    public func on(roleChangeRequest: HMSRoleChangeRequest) {
-        print(#function, "On Role Change Request: ", roleChangeRequest.suggestedRole.name, roleChangeRequest.requestedBy.name)
-        
-        self.roleChangeRequest = roleChangeRequest
-        
-        let data: [String:Any] = [
-            "event_name": "on_role_change_request",
-            "data": [
-                "role_change_request":[
-                    "requested_by": HMSPeerExtension.toDictionary(peer: roleChangeRequest.requestedBy),
-                    "suggested_role": HMSRoleExtension.toDictionary(role: roleChangeRequest.suggestedRole)
-                ]
-            ]
-        ]
-        eventSink?(data)
-    }
-    
-    public func on(changeTrackStateRequest: HMSChangeTrackStateRequest) {
-        print(#function)
-    }
-    
-    public func on(removedFromRoom notification: HMSRemovedFromRoomNotification) {
-        print(#function)
-    }
-    
-    public func onReconnecting() {
-        print(#function, "on Reconnecting")
-        
-        let data:[String:Any]=[
-            "event_name":"on_re_connecting",
-            "data":[
-                "name":"on Reconnecting"
-            ]
-        ]
-        eventSink?(data)
-    }
-    
-    public func onReconnected() {
-        print(#function, "on Reconnected")
-        
-        let data:[String:Any]=[
-            "event_name":"on_re_connected",
-            "data":[
-                "name":"onReconnected"
-            ]
-        ]
-        eventSink?(data)
+        hmsSDK = HMSSDK.build { sdk in
+            
+            if let settings = trackSettings {
+                sdk.trackSettings = settings
+            }
+            
+            if setLogger {
+                sdk.logger = self
+            }
+            
+            result(true)
+        }
     }
     
     
-    // MARK: - HMS SDK Actions
-    
-    func previewVideo(call: FlutterMethodCall, result: FlutterResult) {
-        let arguments = call.arguments as! Dictionary<String, AnyObject>
+    private func preview(_ call: FlutterMethodCall, _ result: FlutterResult) {
+        let arguments = call.arguments as! [AnyHashable: Any]
         
         guard let authToken = arguments["auth_token"] as? String,
               let userName = arguments["user_name"] as? String
         else {
-            print(#function, "Could not show preview, invalid parameters passed!")
-            result("Could not preview")
+            let error = getError(message: "Could not show preview, invalid parameters passed", params: ["function": #function, "arguments": arguments])
+            result(HMSErrorExtension.toDictionary(error))
             return
         }
         
         let shouldSkipPIIEvents = arguments["should_skip_pii_events"] as? Bool ?? false
-        let metaData = arguments["meta_data"] as? String ?? nil
-        let isProd = arguments["is_prod"] as? Bool ?? true
-        let initEndpoint = isProd ? nil : "https://qa-init.100ms.live/init"
+        let metaData = arguments["meta_data"] as? String
         
-        config = HMSConfig(userName: userName,
-                           authToken: authToken,
-                           shouldSkipPIIEvents: shouldSkipPIIEvents,
-                           metaData: metaData,
-                           endpoint: initEndpoint)
+        if let endPoint = arguments["end_point"] as? String, !endPoint.isEmpty {
+            config = HMSConfig(userName: userName, authToken: authToken, shouldSkipPIIEvents: shouldSkipPIIEvents, metadata: metaData, endpoint: endPoint)
+        } else {
+            config = HMSConfig(userName: userName, authToken: authToken, shouldSkipPIIEvents: shouldSkipPIIEvents, metadata: metaData)
+        }
         
         hmsSDK?.preview(config: config!, delegate: self)
         
-        result("preview called")
+        result(nil)
     }
     
-    func joinMeeting(call: FlutterMethodCall, result: FlutterResult) {
+    
+    /*
+     private func previewForRole(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+         let arguments = call.arguments as! [AnyHashable: Any]
+
+         hmsSDK?.preview(role: ) { ,  in
+             
+         }
+     }
+     
+     private func cancelPreview(_ result: FlutterResult) {
+         hmsSDK?.cancelPreview()
+         result(nil)
+     }
+     */
+    
+    
+    private func join(_ call: FlutterMethodCall, _ result: FlutterResult) {
         
-        let arguments = call.arguments as! Dictionary<String, AnyObject>
+        let arguments = call.arguments as! [AnyHashable: Any]
         
         if let config = config {
             hmsSDK?.join(config: config, delegate: self)
@@ -357,113 +325,271 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             guard let authToken = arguments["auth_token"] as? String,
                   let userName = arguments["user_name"] as? String
             else {
-                print(#function, "Could not join room, invalid parameters passed!")
-                result("Could not join room")
+                let error = getError(message: "Could not join room, invalid parameters passed", params: ["function": #function, "arguments": arguments])
+                result(HMSErrorExtension.toDictionary(error))
                 return
             }
             
             let shouldSkipPIIEvents = arguments["should_skip_pii_events"] as? Bool ?? false
-            let metaData = arguments["meta_data"] as? String ?? nil
-            let isProd = arguments["is_prod"] as? Bool ?? true
-            let initEndpoint = isProd ? nil : "https://qa-init.100ms.live/init"
+            let metaData = arguments["meta_data"] as? String
             
-            config = HMSConfig(userName: userName,
-                               authToken: authToken,
-                               shouldSkipPIIEvents: shouldSkipPIIEvents,
-                               metaData: metaData,
-                               endpoint: initEndpoint)
+            if let endPoint = arguments["end_point"] as? String, !endPoint.isEmpty  {
+                config = HMSConfig(userName: userName, authToken: authToken, shouldSkipPIIEvents: shouldSkipPIIEvents, metadata: metaData, endpoint: endPoint)
+            } else {
+                config = HMSConfig(userName: userName, authToken: authToken, shouldSkipPIIEvents: shouldSkipPIIEvents, metadata: metaData)
+            }
             
             hmsSDK?.join(config: config!, delegate: self)
         }
         
-        meetingEventChannel.setStreamHandler(self)
-        
-        result("joining meeting in ios")
+        result(nil)
     }
     
-    func leaveMeeting(result:FlutterResult){
-        hmsSDK?.leave();
-        result("Leaving meeting")
-    }
     
-    func switchAudio(call: FlutterMethodCall,result:FlutterResult) {
-        let arguments = call.arguments as! Dictionary<String, AnyObject>
-        print(arguments)
-        if let peer = hmsSDK?.localPeer, let audioTrack = peer.audioTrack as? HMSLocalAudioTrack {
-            audioTrack.setMute( arguments["is_on"] as? Bool ?? false)
-        }
-        result("audio_changed")
-    }
-    
-    func switchVideo(call: FlutterMethodCall,result:FlutterResult) {
-        let arguments = call.arguments as! Dictionary<String, AnyObject>
-        if let peer = hmsSDK?.localPeer, let videoTrack = peer.videoTrack as? HMSLocalVideoTrack {
-            let isOn:Bool = arguments["is_on"] as? Bool ?? false
-            print(videoTrack.settings)
-            if isOn {
-                muteVideo()
-            }else{
-                unMuteVideo()
+    private func leaveMeeting(_ result: @escaping FlutterResult) {
+        hmsSDK?.leave { success, error in
+            if let error = error {
+                result(HMSErrorExtension.toDictionary(error))
+            } else {
+                result(nil)
             }
         }
-        result("video_changed")
     }
     
-    func muteVideo(){
-        if let peer = hmsSDK?.localPeer, let videoTrack = peer.videoTrack as? HMSLocalVideoTrack {
-            print(videoTrack.settings)
-            videoTrack.setMute(true)
-        }
-    }
-    func unMuteVideo(){
-        if let peer = hmsSDK?.localPeer, let videoTrack = peer.videoTrack as? HMSLocalVideoTrack {
-            print(videoTrack.settings)
-            videoTrack.setMute(false)
-        }
+    
+    private func getRoom(_ result: FlutterResult) {
+        
+        guard let room = hmsSDK?.room else { result(nil); return }
+        
+        result(HMSRoomExtension.toDictionary(room))
     }
     
-    func switchCamera(result:FlutterResult) {
-        if let peer = hmsSDK?.localPeer, let videoTrack = peer.videoTrack as? HMSLocalVideoTrack {
-            videoTrack.switchCamera()
-        }
-        result("camera_changed")
+    
+    private func getLocalPeer(_ result: FlutterResult) {
+        
+        guard let localPeer = hmsSDK?.localPeer else { result(nil); return }
+        
+        result(HMSPeerExtension.toDictionary(localPeer))
+    }
+
+    private func getRemotePeers(_ result: FlutterResult) {
+        
+        guard let peers = hmsSDK?.remotePeers else { result(nil); return }
+        
+        var listOfPeers = [[String: Any]]()
+        peers.forEach { listOfPeers.append(HMSPeerExtension.toDictionary($0)) }
+        result(listOfPeers)
+    }
+
+    private func getPeers(_ result: FlutterResult) {
+        
+        guard let peers = hmsSDK?.room?.peers else { result(nil); return }
+        
+        var listOfPeers = [[String: Any]]()
+        peers.forEach { listOfPeers.append(HMSPeerExtension.toDictionary($0)) }
+        result(listOfPeers)
     }
     
-    func sendBroadcastMessage(call: FlutterMethodCall,result:FlutterResult) {
-        let arguments = call.arguments as! Dictionary<String, AnyObject>
-       
-        guard let message = arguments["message"] as? String
+    
+    // MARK: - Audio Helpers
+    
+    private func switchAudio(_ call: FlutterMethodCall, _ result: FlutterResult) {
+        let arguments = call.arguments as! [AnyHashable: Any]
+        
+        guard let shouldMute = arguments["is_on"] as? Bool,
+              let peer = hmsSDK?.localPeer,
+              let audio = peer.audioTrack as? HMSLocalAudioTrack else {
+                  result(false)
+                  return
+              }
+        
+        audio.setMute(shouldMute)
+        
+        result(true)
+    }
+    
+    
+    private func isAudioMute(_ call: FlutterMethodCall, _ result: FlutterResult) {
+        let arguments = call.arguments as! [AnyHashable: Any]
+        
+        if let peerID = arguments["peer_id"] as? String, let peer = getPeer(by: peerID) {
+            if let audio = peer.audioTrack {
+                result(audio.isMute())
+                return
+            }
+        } else {
+            if let peer = hmsSDK?.localPeer, let audio = peer.audioTrack {
+                result(audio.isMute())
+                return
+            }
+        }
+        
+        result(false)
+    }
+    
+    
+    private func toggleAudioMuteAll(_ result: FlutterResult, shouldMute: Bool) {
+        
+        hmsSDK?.remotePeers?.forEach { peer in
+            if let audio = peer.remoteAudioTrack() {
+                audio.setPlaybackAllowed(!shouldMute)
+            }
+            peer.auxiliaryTracks?.forEach { track in
+                if let audio = track as? HMSRemoteAudioTrack {
+                    audio.setPlaybackAllowed(!shouldMute)
+                }
+            }
+        }
+
+        result(nil)
+    }
+
+
+    // MARK: - Video Helpers
+    
+    private func startCapturing(_ result: FlutterResult) {
+        guard let peer = hmsSDK?.localPeer,
+              let track = peer.videoTrack as? HMSLocalVideoTrack
         else {
-            print(#function, "Could not send broadcast message")
-            result("Could not send broadcast message")
+            result(false)
             return
         }
         
-        hmsSDK?.sendBroadcastMessage(type: "chat", message: message) { message, error in
-            if let error = error {
-                print(#function, "Error sending broadcast message: ", error.description)
-                return
-            }
-            
-            print(#function, "Successfully sent broadcast message: ", message?.message ?? "")
-        }
+        track.startCapturing()
         
-        result("sent message")
+        result(true)
     }
     
-    func sendDirectMessage(call: FlutterMethodCall,result:FlutterResult){
-        let arguments = call.arguments as! Dictionary<String, AnyObject>
+    private func stopCapturing(_ result: FlutterResult) {
+        guard let peer = hmsSDK?.localPeer,
+              let track = peer.videoTrack as? HMSLocalVideoTrack
+        else {
+            result(false)
+            return
+        }
+        
+        track.stopCapturing()
+        
+        result(true)
+    }
+    
+    private func switchCamera(_ result: FlutterResult) {
+        guard let peer = hmsSDK?.localPeer,
+              let videoTrack = peer.videoTrack as? HMSLocalVideoTrack
+        else {
+            let error = getError(message: "Local Peer not found", params: ["function": #function])
+            result(HMSErrorExtension.toDictionary(error))
+            return
+        }
+
+        videoTrack.switchCamera()
+        
+        result(nil)
+    }
+    
+    private func switchVideo(_ call: FlutterMethodCall, _ result: FlutterResult) {
+        
+        let arguments = call.arguments as! [AnyHashable: Any]
+        
+        guard let shouldMute = arguments["is_on"] as? Bool,
+              let peer = hmsSDK?.localPeer,
+              let video = peer.videoTrack as? HMSLocalVideoTrack else {
+                  result(false)
+                  return
+              }
+        
+        video.setMute(shouldMute)
+        
+        result(true)
+    }
+    
+    private func isVideoMute(_ call: FlutterMethodCall, _ result: FlutterResult) {
+        let arguments = call.arguments as! [AnyHashable: Any]
+        
+        if let peerID = arguments["peer_id"] as? String, let peer = getPeer(by: peerID) {
+            if let video = peer.videoTrack {
+                result(video.isMute())
+                return
+            }
+        } else {
+            if let peer = hmsSDK?.localPeer, let video = peer.videoTrack {
+                result(video.isMute())
+                return
+            }
+        }
+        
+        result(false)
+    }
+    
+    
+    private func setPlaybackAllowed(_ call: FlutterMethodCall, _ result: FlutterResult) {
+        let arguments = call.arguments as! [AnyHashable: Any]
+        
+        let allowed = arguments["allowed"] as! Bool
+        
+        
+        if let localPeer = hmsSDK?.localPeer {
+            if let video = localPeer.videoTrack as? HMSLocalVideoTrack {
+                video.setMute(allowed)
+            }
+        }
+        
+        if let remotePeers = hmsSDK?.remotePeers {
+            remotePeers.forEach { peer in
+                if let video = peer.remoteVideoTrack() {
+                    video.setPlaybackAllowed(allowed)
+                }
+                peer.auxiliaryTracks?.forEach { track in
+                    if let video = track as? HMSRemoteVideoTrack {
+                        video.setPlaybackAllowed(allowed)
+                    }
+                }
+            }
+        }
+        
+        result(nil)
+    }
+    
+    
+    // MARK: - Messaging
+    
+    // TODO: update result type in messaging
+    private func sendBroadcastMessage(_ call: FlutterMethodCall, _ result: FlutterResult) {
+        let arguments = call.arguments as! [AnyHashable: Any]
+        
+        guard let message = arguments["message"] as? String
+        else {
+            // print(#function, "Could not send broadcast message")
+            // result("Could not send broadcast message")
+            return
+        }
+        
+        let type = arguments["type"] as? String ?? "chat"
+        
+        hmsSDK?.sendBroadcastMessage(type: type, message: message) { message, error in
+            if let error = error {
+                
+            } else {
+
+            }
+        }
+    }
+    
+    private func sendDirectMessage(_ call: FlutterMethodCall, _ result: FlutterResult) {
+        let arguments = call.arguments as! [AnyHashable: Any]
         
         guard let message = arguments["message"] as? String,
               let peerID = arguments["peer_id"] as? String,
-              let peer = getRemotePeerById(peerId: peerID)
+              let peer = getPeer(by: peerID)
         else {
             print(#function, "Could not send direct message")
             result("Could not send direct message")
             return
         }
         
-        hmsSDK?.sendDirectMessage(type: "chat", message: message, peer: peer) { message, error in
+        let type = arguments["type"] as? String ?? "chat"
+        
+        hmsSDK?.sendDirectMessage(type: type, message: message, peer: peer) { message, error in
             if let error = error {
                 print(#function, "Error sending direct message: ", error.description)
                 return
@@ -472,23 +598,24 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             print(#function, "Successfully sent direct message: ", message?.message ?? "")
         }
         
-        result("sent direct message")
+        result("\(#function)")
     }
     
-    func sendGroupMessage(_ call: FlutterMethodCall, _ result: FlutterResult) {
-        let arguments = call.arguments as! Dictionary<String, AnyObject>
+    private func sendGroupMessage(_ call: FlutterMethodCall, _ result: FlutterResult) {
+        let arguments = call.arguments as! [AnyHashable: Any]
         
         guard let message = arguments["message"] as? String,
               let roleString = arguments["role_name"] as? String,
-              let availableRoles = hmsSDK?.roles,
-              let role = availableRoles.first(where: { $0.name == roleString })
+              let role = getRole(by: roleString)
         else {
             print(#function, "Could not send group message")
             result("Could not send group message")
             return
         }
         
-        hmsSDK?.sendGroupMessage(type: "chat", message: message, roles: [role]) { message, error in
+        let type = arguments["type"] as? String ?? "chat"
+        
+        hmsSDK?.sendGroupMessage(type: type, message: message, roles: [role]) { message, error in
             if let error = error {
                 print(#function, "Error sending group message: ", error.description)
                 return
@@ -497,70 +624,89 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             print(#function, "Successfully sent group message: ", message?.message ?? "")
         }
         
-        result("sent group message")
+        result("\(#function)")
     }
     
-    func changeRole(call: FlutterMethodCall,result:FlutterResult) {
-        let arguments = call.arguments as! Dictionary<String, AnyObject>
+    
+    // MARK: - Role based Actions
+    
+    private func getRoles(_ call: FlutterMethodCall, _ result: FlutterResult) {
+
+        var roles = [[String: Any]]()
         
-        let forceChange:Bool = arguments["force_change"] as? Bool ?? false
-        let peerId:String = (arguments["peer_id"] as? String) ?? ""
-        let peer:HMSRemotePeer? = getRemotePeerById(peerId: peerId)
-        let role:HMSRole? = getRoleByString(name: (arguments["role_name"] as? String) ?? "")
-        if (peer != nil && role != nil) {
-            hmsSDK?.changeRole(for: peer!, to: role!,force: forceChange)
-        }
+        hmsSDK?.roles.forEach { roles.append(HMSRoleExtension.toDictionary($0)) }
         
-        result("role change requested")
+        result(["roles": roles])
     }
     
     
-    func getRoles(call: FlutterMethodCall,result:FlutterResult){
-        var roleList:[Dictionary<String, Any?>]=[]
-        if  let roles:[HMSRole] = hmsSDK?.roles {
-            for role in roles{
-                roleList.insert(HMSRoleExtension.toDictionary(role: role), at: roleList.count)
-            }
-        }
-        result(["roles":roleList])
+    private func changeRole(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         
-    }
-    
-    func acceptRoleRequest(call: FlutterMethodCall,result:FlutterResult) {
-        if let role = roleChangeRequest {
-            hmsSDK?.accept(changeRole: role, completion: { [weak self] success, error in
-                print(#function, "success: ", success, "error: ", error?.description as Any)
-                if success {
-                    self?.roleChangeRequest = nil
-                }
-            })
-        }
-        result("role_accepted")
-    }
-    
-    func endRoom(_ call: FlutterMethodCall){
-        let arguments = call.arguments as! Dictionary<String, AnyObject>
-        let lock = arguments["lock"] as? Bool ?? false
+        let arguments = call.arguments as! [AnyHashable: Any]
         
-        hmsSDK?.endRoom(lock: lock, reason: "Meeting is over") { success, error in
-            
-            if let error = error {
-                print(#function, "Error in ending room: ", error.description)
-                return
-            }
-            
-            if (success) {
-                print(#function, "Ended room successfully")
-            }
-        }
-    }
-    
-    func removePeer(_ call: FlutterMethodCall){
-        let arguments = call.arguments as! Dictionary<String, AnyObject>
         guard let peerID = arguments["peer_id"] as? String,
-              let peer = getRemotePeerById(peerId: peerID)
+              let peer = getPeer(by: peerID),
+              let roleString = arguments["role_name"] as? String,
+              let role = getRole(by: roleString)
         else {
-            print(#function, "Could not remove from room")
+            let error = getError(message: "Invalid parameters for change role", params: ["function": #function, "arguments": arguments])
+            result(HMSErrorExtension.toDictionary(error))
+            return
+        }
+        
+        let force = arguments["force_change"] as? Bool ?? false
+        
+        hmsSDK?.changeRole(for: peer, to: role, force: force) { success, error in
+            if let error = error {
+                result(HMSErrorExtension.toDictionary(error))
+            } else {
+                result(nil)
+            }
+        }
+    }
+    
+    
+    private func acceptRoleRequest(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+        
+        let arguments = call.arguments as! [AnyHashable: Any]
+        
+        hmsSDK?.accept(changeRole: roleChangeRequest!) { [weak self] success, error in
+            if let error = error {
+                result(HMSErrorExtension.toDictionary(error))
+            } else {
+                self?.roleChangeRequest = nil
+                result(nil)
+            }
+        }
+    }
+    
+    
+    private func endRoom(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+        
+        let arguments = call.arguments as! [AnyHashable: Any]
+        
+        let lock = arguments["lock"] as? Bool ?? false
+        let reason = arguments["reason"] as? String ?? "End room invoked"
+        
+        hmsSDK?.endRoom(lock: lock, reason: reason) { success, error in
+            if let error = error {
+                result(HMSErrorExtension.toDictionary(error))
+            } else {
+                result(nil)
+            }
+        }
+    }
+    
+    
+    private func removePeer(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+        
+        let arguments = call.arguments as! [AnyHashable: Any]
+        
+        guard let peerID = arguments["peer_id"] as? String,
+              let peer = getPeer(by: peerID)
+        else {
+            let error = getError(message: "Peer not found", params: ["function": #function, "arguments": arguments])
+            result(HMSErrorExtension.toDictionary(error))
             return
         }
         
@@ -568,26 +714,27 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         
         hmsSDK?.removePeer(peer, reason: reason) { success, error in
             if let error = error {
-                print(#function, "Error in removing peer from room: ", error.description)
-                return
-            }
-            
-            if (success) {
-                print(#function, "Removed \(peer.name) from room successfully")
+                result(HMSErrorExtension.toDictionary(error))
+            } else {
+                result(nil)
             }
         }
     }
     
-    func changeTrack(_ call: FlutterMethodCall){
-        let arguments = call.arguments as! Dictionary<String, AnyObject>
+    
+    private func changeTrack(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+        let arguments = call.arguments as! [AnyHashable: Any]
         
-        guard let hmsPeerID = arguments["hms_peer_id"] as? String,
-        let peer = getRemotePeerById(peerId: hmsPeerID)
+        guard let peerID = arguments["hms_peer_id"] as? String,
+              let peer = getPeer(by: peerID)
         else {
-            print(#function, "Could not change track state")
+            let error = getError(message: "Could not find peer to change track",
+                                 description: "Could not find peer from peerID",
+                                 params: ["function": #function, "arguments": arguments])
+            result(HMSErrorExtension.toDictionary(error))
             return
         }
-              
+        
         let muteVideoKind = arguments["mute_video_kind"] as? Bool ?? false
         
         let track: HMSTrack?
@@ -598,7 +745,9 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         }
         
         guard let track = track else {
-            print(#function, "Could not find track for peer: \(peer.name)")
+            let error = getError(message: "Could not find track for peer: \(peer.name)",
+                                 params: ["function": #function, "arguments": arguments])
+            result(HMSErrorExtension.toDictionary(error))
             return
         }
         
@@ -606,98 +755,351 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         
         hmsSDK?.changeTrackState(for: track, mute: mute) { success, error in
             if let error = error {
-                print(#function, "Error in changing track state: ", error.description)
+                result(HMSErrorExtension.toDictionary(error))
                 return
             }
-            print(#function, "Successfully changed track state for: ", track.trackId)
+            result(nil)
         }
+    }
+    
+    private func changeTrackStateForRole(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+        
+        let arguments = call.arguments as! [AnyHashable: Any]
+        
+        guard let mute = arguments["mute"] as? Bool else {
+            let error = getError(message: "Mute status to be set not found",
+                                 params: ["function": #function, "arguments": arguments])
+            result(HMSErrorExtension.toDictionary(error))
+            return
+        }
+        
+        var trackKind: HMSTrackKind?
+        if let kindStr = arguments["type"] as? String {
+            trackKind = kind(from: kindStr)
+        }
+        
+        let source = arguments["source"] as? String
+        
+        var roles: [HMSRole]?
+        if let rolesString = arguments["roles"] as? [String] {
+            roles = hmsSDK?.roles.filter { rolesString.contains($0.name) }
+        }
+        
+        hmsSDK?.changeTrackState(mute: mute, for: trackKind, source: source, roles: roles) { success, error in
+            if let error = error {
+                result(HMSErrorExtension.toDictionary(error))
+            } else {
+                result(nil)
+            }
+        }
+    }
+    
+    
+    private var isHandRaise = false
+    
+    private func raiseHand(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+        
+        let arguments = call.arguments as! [AnyHashable: Any]
+        let metadata = arguments["metadata"] as? String ?? ""
+        
+        hmsSDK?.change(metadata: metadata) { [weak self] success, error in
+            if let error = error {
+                result(HMSErrorExtension.toDictionary(error))
+                return
+            } else {
+                if let strongSelf = self {
+                    strongSelf.isHandRaise = !strongSelf.isHandRaise
+                }
+                result(nil)
+            }
+        }
+    }
+    
+    
+    // MARK: - Recording
+    
+    private func startRtmpOrRecording(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+        
+        let arguments = call.arguments as! [AnyHashable: Any]
+        
+        guard let record = arguments["to_record"] as? Bool else {
+            let error = getError(message: "Record boolean not found", params: ["function": #function, "arguments": arguments])
+            result(HMSErrorExtension.toDictionary(error))
+            return
+        }
+        
+        var meetingURL: URL?
+        if let meetingURLStr = arguments["meeting_url"] as? String {
+            meetingURL = URL(string: meetingURLStr)
+        }
+        
+        var rtmpURLs: [URL]?
+        if let strings = arguments["rtmp_urls"] as? [String] {
+            for string in strings {
+                if let url = URL(string: string) {
+                    if rtmpURLs == nil {
+                        rtmpURLs = [URL]()
+                    }
+                    rtmpURLs?.append(url)
+                }
+            }
+        }
+        
+        
+        let config = HMSRTMPConfig(meetingURL: meetingURL, rtmpURLs: rtmpURLs, record: record)
+        
+        hmsSDK?.startRTMPOrRecording(config: config) { success, error in
+            if let error = error {
+                result(HMSErrorExtension.toDictionary(error))
+            } else {
+                result(nil)
+            }
+        }
+    }
+    
+    private func stopRtmpAndRecording(_ result: @escaping FlutterResult) {
+        hmsSDK?.stopRTMPAndRecording { success, error in
+            if let error = error {
+                result(HMSErrorExtension.toDictionary(error))
+            } else {
+                result(nil)
+            }
+        }
+    }
+    
+    
+    // MARK: - Logging
+    
+    private var logLevel = HMSLogLevel.off
+    
+    private func startHMSLogger(_ call: FlutterMethodCall) {
+        let arguments = call.arguments as! [AnyHashable: Any]
+        
+        guard let level = arguments["log_level"] as? String else {
+            print(#function, "Could not find `log_level` argument")
+            return
+        }
+        
+        logLevel = getLogLevel(from: level)
+        
+        hmsSDK?.logger = self
+    }
+    
+    private func getLogLevel(from level: String) -> HMSLogLevel {
+        switch level {
+        case "verbose":
+            return .verbose
+        case "warning":
+            return .warning
+        case "error":
+            return .error
+        case "off":
+            return .off
+        default:
+            return .off
+        }
+    }
+    
+    public func log(_ message: String, _ level: HMSLogLevel) {
+        guard level.rawValue <= logLevel.rawValue else { return }
+        
+        var args = [String: Any]()
+        args["event_name"] = "on_logs_update"
+        
+        var logArgs = [String: Any]()
+        logArgs["log"] = ["message": message, "level": level.rawValue]
+        
+        args["data"] = logArgs
+        
+        logsSink?(args)
+    }
+    
+    private func removeHMSLogger() {
+        logLevel = .off
+        hmsSDK?.logger = nil
+    }
+    
+    
+    // MARK: - 100ms SDK Delegate Callbacks
+    
+    public func onPreview(room: HMSRoom, localTracks: [HMSTrack]) {
+        
+        var tracks = [[String: Any]]()
+        localTracks.forEach { tracks.append(HMSTrackExtension.toDictionary($0)) }
+        
+        let data = [
+            "event_name": "preview_video",
+            "data": [
+                "room": HMSRoomExtension.toDictionary(room),
+                "local_tracks": tracks
+            ]
+        ] as [String: Any]
+        
+        previewSink?(data)
+    }
+    
+    public func on(join room: HMSRoom) {
+        
+        previewEventChannel.setStreamHandler(nil)
+        
+        let data = [
+            "event_name": "on_join_room",
+            "data": [
+                "room" : HMSRoomExtension.toDictionary(room)
+            ]
+        ] as [String: Any]
+        
+        eventSink?(data)
+    }
+    
+    
+    // TODO: handle room update on dart side
+    public func on(room: HMSRoom, update: HMSRoomUpdate) {
+        
+        let data = [
+            "event_name": "on_room_update",
+            "data": [
+                "room": HMSRoomExtension.toDictionary(room),
+                "update": HMSRoomExtension.getValueOf(update)
+            ]
+        ] as [String: Any]
+        
+        eventSink?(data)
+    }
+    
+    
+    public func on(peer: HMSPeer, update: HMSPeerUpdate) {
+        
+        let data = [
+            "event_name": "on_peer_update",
+            "data":[
+                "peer": HMSPeerExtension.toDictionary(peer),
+                "update": HMSPeerExtension.getValueOf(update)
+            ]
+        ] as [String: Any]
+        
+        eventSink?(data)
+    }
+    
+    
+    public func on(track: HMSTrack, update: HMSTrackUpdate, for peer: HMSPeer) {
+        
+        let data = [
+            "event_name": "on_track_update",
+            "data": [
+                "peer": HMSPeerExtension.toDictionary(peer),
+                "track": HMSTrackExtension.toDictionary(track),
+                "update": HMSTrackExtension.getValueOf(update)
+            ]
+        ] as [String: Any]
+        
+        eventSink?(data)
+    }
+    
+    
+    public func on(error: HMSError) {
+        
+        let data = [
+            "event_name": "on_error",
+            "data": HMSErrorExtension.toDictionary(error)
+        ] as [String: Any]
+        
+        eventSink?(data)
+    }
+    
+    
+    public func on(updated speakers: [HMSSpeaker]) {
+        
+        logSpeakers(speakers)
+        
+        var speakersDict = [[String: Any]]()
+        speakers.forEach { speakersDict.append(HMSSpeakerExtension.toDictionary($0)) }
+        
+        let data = [
+            "event_name": "on_update_speaker",
+            "data": [
+                "speakers": speakersDict
+            ]
+        ] as [String: Any]
+        
+        eventSink?(data)
+    }
+    
+    
+    public func on(message: HMSMessage) {
+        
+        let data = [
+            "event_name": "on_message",
+            "data": [
+                "message": HMSMessageExtension.toDictionary(message)
+            ]
+        ] as [String: Any]
+        
+        eventSink?(data)
+    }
+    
+    
+    public func on(roleChangeRequest: HMSRoleChangeRequest) {
+        
+        self.roleChangeRequest = roleChangeRequest
+        
+        var dict = ["event_name": "on_role_change_request"] as [String: Any]
+        var request = ["suggested_role": HMSRoleExtension.toDictionary(roleChangeRequest.suggestedRole)] as [String: Any]
+        
+        if let peer = roleChangeRequest.requestedBy {
+            request["requested_by"] = HMSPeerExtension.toDictionary(peer)
+        }
+        
+        dict["data"] = ["role_change_request": request]
+        
+        eventSink?(dict)
+    }
+    
+    
+    public func on(changeTrackStateRequest: HMSChangeTrackStateRequest) {
+        
+        let data = [
+            "event_name": "on_change_track_state_request",
+            "data": [
+                "track_change_request": HMSChangeTrackStateRequestExtension.toDictionary(changeTrackStateRequest)
+            ]
+        ] as [String: Any]
+        
+        eventSink?(data)
+    }
+    
+    
+    public func on(removedFromRoom notification: HMSRemovedFromRoomNotification) {
+        
+        let data = [
+            "event_name": "on_removed_from_room",
+            "data": [
+                "removed_from_room": HMSRemovedFromRoomExtension.toDictionary(notification)
+            ]
+        ] as [String: Any]
+        
+        eventSink?(data)
+    }
+    
+    public func onReconnecting() {
+        let data = [ "event_name": "on_re_connecting" ]
+        eventSink?(data)
+    }
+    
+    public func onReconnected() {
+        let data = [ "event_name": "on_re_connected" ]
+        eventSink?(data)
     }
     
     
     // MARK: - Helper Functions
     
-    func toggleMuteAll(_ result: FlutterResult, shouldMute: Bool) {
-        
-        guard let peers = hmsSDK?.remotePeers
-        else {
-            print(#function, "No remote peers in the room")
-            return
-        }
-        
-        for peer in peers {
-            peer.remoteAudioTrack()?.setPlaybackAllowed(!shouldMute)
-            for track in peer.auxiliaryTracks ?? [] {
-                if let audio = track as? HMSRemoteAudioTrack {
-                    audio.setPlaybackAllowed(!shouldMute)
-                }
-            }
-        }
-        
-        shouldMute ? result("muted all") : result("unMutedAll")
-    }
-    
-    func isVideoMute(_ result: FlutterResult) {
-        guard let peer = hmsSDK?.localPeer else { return }
-        
-        result(peer.videoTrack?.isMute() ?? false)
-    }
-    
-    func isAudioMute(_ result: FlutterResult) {
-        guard let peer = hmsSDK?.localPeer else { return }
-        
-        result(peer.audioTrack?.isMute() ?? false)
-    }
-
-    func getLocalPeer(_ result: FlutterResult) {
-        guard let localPeer = hmsSDK?.localPeer else { return }
-        result(localPeer)
-    }
-    
-    public func getPeerById(peerId:String,isLocal:Bool) -> HMSPeer?{
-        if isLocal{
-            if  let peer:HMSLocalPeer = hmsSDK?.localPeer{
-                return peer
-            }
-        }else{
-            if let peers:[HMSRemotePeer] = hmsSDK?.remotePeers{
-                for peer in peers {
-                    if(peer.peerID == peerId){
-                        return peer
-                    }
-                }
-            }
-        }
-        return nil
-    }
-    
-    public func getRemotePeerById(peerId: String) -> HMSRemotePeer? {
-        
-        guard let peers = hmsSDK?.remotePeers else { return nil }
-
-        return peers.first { $0.peerID == peerId }
-    }
-    
-    public func getRoleByString(name:String) -> HMSRole?{
-        if let roles = hmsSDK?.roles{
-            for role in roles{
-                if(role.name == name){
-                    return role
-                }
-                
-            }
-        }
-        return nil
-    }
-    
-    func kindString(from kind: HMSTrackKind) -> String {
-        switch kind {
-        case .audio:
-            return "KHmsTrackAudio"
-        case .video:
-            return "KHmsTrackVideo"
-        default:
-            return "Unknown Kind"
-        }
+    private func getError(message: String, description: String? = nil, params: [String: Any]) -> HMSError {
+        HMSError(id: "NONE",
+                 code: .genericErrorJsonParsingFailed,
+                 message: message,
+                 info: description,
+                 params: params)
     }
     
     private func logSpeakers(_ speakers: [HMSSpeaker]) {
@@ -712,150 +1114,41 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
               speakers.map { kindString(from: $0.track.kind) },
               speakers.map { $0.track.source })
     }
-
-    private func changeTrackStateForRole(_ call: FlutterMethodCall,result: FlutterResult){
-
-            let arguments = call.arguments as! Dictionary<String, AnyObject>
-
-            let mute = arguments["mute"] as bool
-            let type = argument["type"] as String
-            let source = arguments["source"] as String
-            let roles:List<String>? = arguments["roles"] as <List<String>>
-
-            val realRoles = hmssdk.getRoles().filter { roles?.contains(it.name)!! }
-
-            hmssdk.changeTrackState(mute = mute!!,type = HMSTrackExtension.getStringFromKind(type),source = source,roles=realRoles,object : HMSActionResultListener {
-
-                func onSuccess() {
-
-
-                        result(null)
-
-                }
-
-                func onError(error: HMSException) {
-                        result(HMSExceptionExtension.toDictionary(error))
-                }
-            })
-
+    
+    internal func getPeer(by peerID: String) -> HMSPeer? {
+        hmsSDK?.room?.peers.first { $0.peerID == peerID }
+    }
+    
+    private func getRole(by name: String) -> HMSRole? {
+        hmsSDK?.roles.first { $0.name == name }
+    }
+    
+    private func kindString(from kind: HMSTrackKind) -> String {
+        switch kind {
+        case .audio:
+            return "KHmsTrackAudio"
+        case .video:
+            return "KHmsTrackVideo"
+        default:
+            return "Unknown Kind"
         }
-
-        private func startRtmpOrRecording(call: MethodCall, result: Result) {
-
-                let arguments = call.arguments as! Dictionary<String, AnyObject>
-
-                val meetingUrl = arguments["meeting_url"] as String
-                val toRecord = arguments["to_record"] as bool
-                val listOfRtmpUrls : List<String> = argument["rtmp_urls"]?:listOf()
-                hmssdk.startRtmpOrRecording(
-                    HMSRecordingConfig(meetingUrl!!, listOfRtmpUrls, toRecord!!),
-                    object : HMSActionResultListener {
-
-                        func onSuccess() {
-
-                                result(null)
-
-                        }
-
-                        func onError(error: HMSException) {
-
-
-                                result(HMSExceptionExtension.toDictionary(error))
-
-                        }
-                    })
-            }
-
-            private func stopRtmpAndRecording(result: Result) {
-                hmssdk.stopRtmpAndRecording(object : HMSActionResultListener {
-
-                    func onSuccess() {
-
-
-                            result(null)
-
-                    }
-
-                    func onError(error: HMSException) {
-
-
-                            result(HMSExceptionExtension.toDictionary(error))
-
-                    }
-                })
-            }
-
-
-            private func startHMSLogger(_ call: FlutterMethodCall){
-                    let arguments = call.arguments as! Dictionary<String, AnyObject>
-
-                    val setWebRtcLogLevel = arguments["web_rtc_log_level"] as String?""
-                    val setLogLevel = arguments["log_level"] as String?""
-
-
-
-                    switch setWebRtcLogLevel{
-                        "verbose":
-                            HMSLogger.webRtcLogLevel=HMSLogger.LogLevel.VERBOSE
-                        "info":
-                            HMSLogger.webRtcLogLevel=HMSLogger.LogLevel.INFO
-                        "warn":
-                            HMSLogger.webRtcLogLevel=HMSLogger.LogLevel.WARN
-                        "error":
-                            HMSLogger.webRtcLogLevel=HMSLogger.LogLevel.ERROR
-                        "debug":
-                            HMSLogger.webRtcLogLevel=HMSLogger.LogLevel.DEBUG
-                        default:
-                            HMSLogger.webRtcLogLevel= HMSLogger.LogLevel.OFF
-                    }
-
-                    switch setLogLevel{
-                        "verbose":
-                        HMSLogger.level = HMSLogger.LogLevel.VERBOSE
-                        "info":
-                        HMSLogger.level = HMSLogger.LogLevel.INFO
-                        "warn":
-                        HMSLogger.level = HMSLogger.LogLevel.WARN
-                        "error":
-                        HMSLogger.level = HMSLogger.LogLevel.ERROR
-                        "debug":
-                        HMSLogger.level = HMSLogger.LogLevel.DEBUG
-                        default:
-                        HMSLogger.level =  HMSLogger.LogLevel.OFF
-                    }
-
-
-                    HMSLogger.injectLoggable(self)
-                }
-
-                private func removeHMSLogger(){
-                        HMSLogger.removeInjectedLoggable()
-                }
-
-
-        func onLogMessage(
-                level: HMSLogger.LogLevel,
-                tag: String,
-                message: String,
-                isWebRtCLog: Boolean
-            ) {
-                if ( isWebRtCLog && level != HMSLogger.webRtcLogLevel )return
-                if(level != HMSLogger.level )return
-
-                val args = [String, Any?]()
-                args.put("event_name", "on_logs_update")
-                val logArgs = [String, Any?]()
-
-                logArgs["log"] = HMSLogsExtension.toDictionary(level, tag, message, isWebRtCLog)
-                args["data"] = logArgs
-
-                logsSink(args)
-
-            }
-
-
-      private func getRoom(result: Result){
-        result(HMSRoomExtension.toDictionary(hmssdk?.getRoom()))
-      }
+    }
+    
+    private func kind(from string: String) -> HMSTrackKind {
+        switch string {
+        case "KHmsTrackAudio":
+            return .audio
+        case "KHmsTrackVideo":
+            return .video
+        default:
+            return .audio
+        }
+    }
+    
+    private func getCodec(from string: String) -> HMSCodec {
+        if string.lowercased().contains("h264") {
+            return HMSCodec.H264
+        }
+        return HMSCodec.VP8
+    }
 }
-

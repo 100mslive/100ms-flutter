@@ -1,18 +1,15 @@
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
-import 'package:hmssdk_flutter_example/main.dart';
-import 'package:hmssdk_flutter_example/manager/HmsSdkManager.dart';
-import 'package:hmssdk_flutter_example/meeting/hms_sdk_interactor.dart';
-import 'package:hmssdk_flutter_example/service/room_service.dart';
+import 'package:zoom/main.dart';
+import 'package:zoom/setup/HmsSdkManager.dart';
+import 'package:zoom/setup/hms_sdk_interactor.dart';
+import 'package:zoom/setup/room_service.dart';
 import 'package:uuid/uuid.dart';
 
 class MeetingController {
   final String roomUrl;
   final String user;
-  final MeetingFlow flow;
 
-  MeetingController(
-      {required this.roomUrl, required this.user, required this.flow});
+  MeetingController({required this.roomUrl, required this.user});
 
   Future<bool> joinMeeting() async {
     List<String?>? token =

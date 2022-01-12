@@ -24,7 +24,7 @@ enum PlatformMethod {
   onMessage,
 
   ///when you want to send a message.
-  sendMessage,
+  sendBroadcastMessage,
   sendDirectMessage,
   sendGroupMessage,
   onUpdateSpeaker,
@@ -80,6 +80,8 @@ enum PlatformMethod {
   muteAll,
   unMuteAll,
   getLocalPeer,
+  getRemotePeers,
+  getPeers,
   unknown,
   startHMSLogger,
   removeHMSLogger,
@@ -91,6 +93,7 @@ enum PlatformMethod {
   updateHMSLocalVideoTrackSettings,
   raiseHand,
   setPlayBackAllowed,
+  setVolume
 }
 
 extension PlatformMethodValues on PlatformMethod {
@@ -136,8 +139,8 @@ extension PlatformMethodValues on PlatformMethod {
         return 'start_capturing';
       case PlatformMethod.stopCapturing:
         return 'stop_capturing';
-      case PlatformMethod.sendMessage:
-        return 'send_message';
+      case PlatformMethod.sendBroadcastMessage:
+        return 'send__broadcast_message';
       case PlatformMethod.sendDirectMessage:
         return 'send_direct_message';
       case PlatformMethod.sendGroupMessage:
@@ -162,6 +165,10 @@ extension PlatformMethodValues on PlatformMethod {
         return 'un_mute_all';
       case PlatformMethod.getLocalPeer:
         return 'get_local_peer';
+      case PlatformMethod.getRemotePeers:
+        return 'get_remote_peers';
+      case PlatformMethod.getPeers:
+        return 'get_peers';
       case PlatformMethod.unknown:
         return 'unknown';
       case PlatformMethod.startHMSLogger:
@@ -188,6 +195,8 @@ extension PlatformMethodValues on PlatformMethod {
         return "raise_hand";
       case PlatformMethod.setPlayBackAllowed:
         return "set_playback_allowed";
+      case PlatformMethod.setVolume:
+        return "set_volume";
     }
   }
 
@@ -233,8 +242,8 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.stopCapturing;
       case 'start_capturing':
         return PlatformMethod.startCapturing;
-      case 'send_message':
-        return PlatformMethod.sendMessage;
+      case 'send__broadcast_message':
+        return PlatformMethod.sendBroadcastMessage;
       case 'send_direct_message':
         return PlatformMethod.sendDirectMessage;
       case 'send_group_message':
@@ -259,6 +268,10 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.unMuteAll;
       case 'get_local_peer':
         return PlatformMethod.getLocalPeer;
+      case 'get_remote_peers':
+        return PlatformMethod.getRemotePeers;
+      case 'get_peers':
+        return PlatformMethod.getPeers;
       case 'start_hms_logger':
         return PlatformMethod.startHMSLogger;
       case 'remove_hms_logger':
@@ -279,6 +292,8 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.raiseHand;
       case "set_playback_allowed":
         return PlatformMethod.setPlayBackAllowed;
+      case "set_volume":
+        return PlatformMethod.setVolume;
       default:
         return PlatformMethod.unknown;
     }

@@ -1,21 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/change_track_options.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/peer_item_organism.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:hmssdk_flutter_example/meeting/peerTrackNode.dart';
-import 'package:mobx/mobx.dart';
+// ignore: implementation_imports
 import 'package:provider/src/provider.dart';
-import 'package:should_rebuild/should_rebuild.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
 class VideoTile extends StatefulWidget {
   final tileIndex;
   final List<PeerTracKNode> filteredList;
-  double itemHeight;
-  double itemWidth;
+  final double itemHeight;
+  final double itemWidth;
   final Map<String, HMSTrackUpdate> trackStatus;
   final Map<String, String> observerMap;
   final bool audioView;
@@ -23,8 +21,8 @@ class VideoTile extends StatefulWidget {
     Key? key,
     required this.tileIndex,
     required this.filteredList,
-    this.itemHeight=200.0,
-    this.itemWidth =200.0,
+    this.itemHeight = 200.0,
+    this.itemWidth = 200.0,
     required this.trackStatus,
     required this.observerMap,
     required this.audioView,
@@ -81,17 +79,18 @@ class _VideoTileState extends State<VideoTile> {
                                 ? true
                                 : filteredList[index].track?.isMute,
                             peerName: filteredList[index].name,
-                            changeTrack: (mute, isVideoTrack) {
+                            changeTrack: (mute, isVideoTrack) async {
                               Navigator.pop(context);
+                              var peer = await _meetingStore.getPeer(
+                                  peerId: filteredList[index].peerId);
                               _meetingStore.changeTrackRequest(
-                                  filteredList[index].peerId,
-                                  mute,
-                                  isVideoTrack);
+                                  peer!, mute, isVideoTrack);
                             },
-                            removePeer: () {
+                            removePeer: () async {
                               Navigator.pop(context);
-                              _meetingStore.removePeerFromRoom(
-                                  filteredList[index].peerId);
+                              var peer = await _meetingStore.getPeer(
+                                  peerId: filteredList[index].peerId);
+                              _meetingStore.removePeerFromRoom(peer!);
                             }),
                       ],
                     ));

@@ -33,7 +33,8 @@ abstract class PreviewStoreBase
   void onPreview({required HMSRoom room, required List<HMSTrack> localTracks}) {
     for (HMSPeer each in room.peers!) {
       if (each.isLocal) {
-        peer = each;
+        this.peer = each;
+        print("onPreview ${each.peerId}");
         break;
       }
     }
@@ -81,6 +82,7 @@ abstract class PreviewStoreBase
   }
 
   @override
+  // ignore: non_constant_identifier_names
   void onLogMessage({required dynamic HMSLogList}) {
     print("onLogMessageFlutter" + HMSLogList.toString());
     FirebaseCrashlytics.instance.log(HMSLogList.toString());

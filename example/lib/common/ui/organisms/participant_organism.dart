@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
@@ -30,7 +28,7 @@ class _ParticipantOrganismState extends State<ParticipantOrganism> {
 
   @override
   Widget build(BuildContext context) {
-  final width = MediaQuery.of(context).size.width;
+    final width = MediaQuery.of(context).size.width;
     HMSPeer peer = widget.peer;
     return Card(
       child: Container(
@@ -39,7 +37,7 @@ class _ParticipantOrganismState extends State<ParticipantOrganism> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Container(
-              width: width/3,
+              width: width / 3,
               child: Text(
                 peer.name,
                 style: TextStyle(fontSize: 20.0),
@@ -49,75 +47,74 @@ class _ParticipantOrganismState extends State<ParticipantOrganism> {
             ),
             Row(
               children: [
-                    if (peer.metadata == "{\"isHandRaised\":true}")
-              Padding(
-                padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
-                child: Image.asset(
-                  'assets/icons/raise_hand.png',
-                  color: Colors.amber.shade300,
-                  width: 20,
-                  height: 20,
+                if (peer.metadata == "{\"isHandRaised\":true}")
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
+                    child: Image.asset(
+                      'assets/icons/raise_hand.png',
+                      color: Colors.amber.shade300,
+                      width: 20,
+                      height: 20,
+                    ),
+                  ),
+                GestureDetector(
+                  onTap: () {
+                    showDialog(
+                        context: context,
+                        builder: (_) => ChangeRoleOptionDialog(
+                              peerName: peer.name,
+                              getRoleFunction: widget.meetingStore.getRoles(),
+                              changeRole: (role, forceChange) {
+                                Navigator.pop(context);
+                                widget.meetingStore.changeRole(
+                                    peer: peer,
+                                    roleName: role.name,
+                                    forceChange: forceChange);
+                              },
+                            ));
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                    child: Container(
+                      padding: const EdgeInsets.all(5.0),
+                      decoration: BoxDecoration(
+                        color: Colors.blue,
+                        borderRadius: BorderRadius.circular(5.0),
+                      ),
+                      child: Text(
+                        "${peer.role!.name}",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20.0,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
                 ),
-              ),
-            GestureDetector(
-              onTap: () {
-                showDialog(
-                    context: context,
-                    builder: (_) => ChangeRoleOptionDialog(
-                          peerName: peer.name,
-                          getRoleFunction: widget.meetingStore.getRoles(),
-                          changeRole: (role, forceChange) {
-                            Navigator.pop(context);
-                            widget.meetingStore.changeRole(
-                                peerId: peer.peerId,
-                                roleName: role.name,
-                                forceChange: forceChange);
-                          },
-                        ));
-              },
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                child: Container(
-                  padding: const EdgeInsets.all(5.0),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(10.0, 0, 10, 0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: isVideoOn ? isOnColor : isOffColor),
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(5, 5, 5, 5),
+                      child:
+                          Icon(isVideoOn ? Icons.videocam : Icons.videocam_off),
+                    ),
+                  ),
+                ),
+                Container(
                   decoration: BoxDecoration(
-                    color: Colors.blue,
-                    borderRadius: BorderRadius.circular(5.0),
-                  ),
-                  child: Text(
-                    "${peer.role!.name}",
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.bold),
+                      shape: BoxShape.circle,
+                      color: isAudioOn ? isOnColor : isOffColor),
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(5, 5, 5, 5),
+                    child: Icon(isAudioOn ? Icons.mic : Icons.mic_off),
                   ),
                 ),
-              ),
-            ),
-            
-            Padding(
-              padding: const EdgeInsets.fromLTRB(10.0,0,10,0),
-              child: Container(
-                decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: isVideoOn ? isOnColor : isOffColor),
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(5, 5, 5, 5),
-                  child: Icon(isVideoOn ? Icons.videocam : Icons.videocam_off),
-                ),
-              ),
-            ),
-            Container(
-              decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: isAudioOn ? isOnColor : isOffColor),
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(5, 5, 5, 5),
-                child: Icon(isAudioOn ? Icons.mic : Icons.mic_off),
-              ),
-            ),
               ],
             )
-            
           ],
         ),
       ),
@@ -125,10 +122,8 @@ class _ParticipantOrganismState extends State<ParticipantOrganism> {
   }
 
   void checkButtons() async {
-    this.isAudioOn =
-        !(await widget.meetingStore.meetingController.isAudioMute(widget.peer));
-    this.isVideoOn =
-        !(await widget.meetingStore.meetingController.isVideoMute(widget.peer));
+    this.isAudioOn = await widget.meetingStore.isAudioMute(widget.peer);
+    this.isVideoOn = await widget.meetingStore.isVideoMute(widget.peer);
     setState(() {});
   }
 }
