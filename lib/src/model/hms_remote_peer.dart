@@ -33,8 +33,8 @@ class HMSRemotePeer extends HMSPeer {
   final HMSRole? role;
   final String? customerUserId;
   final String? metadata;
-  HMSAudioTrack? audioTrack;
-  HMSVideoTrack? videoTrack;
+  HMSRemoteAudioTrack? audioRemoteTrack;
+  HMSRemoteVideoTrack? videoRemoteTrack;
   final List<HMSTrack>? auxiliaryTracks;
 
   HMSRemotePeer({
@@ -44,8 +44,8 @@ class HMSRemotePeer extends HMSPeer {
     this.role,
     this.customerUserId,
     this.metadata,
-    this.audioTrack,
-    this.videoTrack,
+    this.audioRemoteTrack,
+    this.videoRemoteTrack,
     this.auxiliaryTracks,
   }) : super(
             peerId: peerId,
@@ -54,8 +54,8 @@ class HMSRemotePeer extends HMSPeer {
             role: role,
             customerUserId: customerUserId,
             metadata: metadata,
-            audioTrack: audioTrack,
-            videoTrack: videoTrack,
+            audioTrack: audioRemoteTrack,
+            videoTrack: videoRemoteTrack,
             auxiliaryTracks: auxiliaryTracks);
 
   ///important to compare using [peerId]
@@ -98,13 +98,13 @@ class HMSRemotePeer extends HMSPeer {
       );
 
       if (map['audio_track'] != null) {
-        peer.audioTrack =
-            HMSAudioTrack.fromMap(map: map['audio_track']!, peer: peer);
+        peer.audioRemoteTrack =
+            HMSAudioTrack.fromMap(map: map['audio_track']!, peer: peer) as HMSRemoteAudioTrack;
       }
 
       if (map['video_track'] != null) {
-        peer.videoTrack =
-            HMSVideoTrack.fromMap(map: map['video_track']!, peer: peer);
+        peer.videoRemoteTrack =
+            HMSVideoTrack.fromMap(map: map['video_track']!, peer: peer) as HMSRemoteVideoTrack;
       }
 
       return peer;
