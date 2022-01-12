@@ -21,7 +21,7 @@ class HMSPeerExtension {
             args.put("customer_user_id",peer.customerUserID)
             args.put("audio_track", HMSTrackExtension.toDictionary(peer.audioTrack))
             args.put("video_track", HMSTrackExtension.toDictionary(peer.videoTrack))
-
+            
 
             val auxTrackList=ArrayList<Any>()
             peer.auxiliaryTracks.forEach {

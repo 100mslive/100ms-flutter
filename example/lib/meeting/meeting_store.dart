@@ -615,9 +615,6 @@ abstract class MeetingStoreBase extends ChangeNotifier
 
   void endRoom(bool lock, String? reason) {
     _hmssdkInteractor.endRoom(lock, reason == null ? "" : reason, this);
-    // if (room == true) isRoomEnded = true;
-    // peerTracks.clear();
-    // return room;
   }
 
   void removePeerFromRoom(HMSPeer peer) {
