@@ -19,23 +19,34 @@ platform :ios do
   desc "Description of what the lane does"
   lane :ios_build do
     
-    commit = last_git_commit
-    gym(
-   project: 'Runner.xcodeproj',
-   scheme: 'Release-Development',
-   configuration: 'Release-Development',
-   clean: true,
-   output_directory: 'archives',
-   output_name: 'example.ipa',
-   export_method: 'ad-hoc'
-)
-    firebase_app_distribution(
-      firebase_cli_token: "1//0geU53tX2aWsBCgYIARAAGBASNwF-L9IrOUsSQeQwn7ekZNV-WpdTC39RWaePRiT21BRqglwhEtlSEQYeeO7QtToYX4e99IeegFo",
-      app: "1:19544678223:ios:a7bb21cc95bb495ab32f3a",
-      #groups: "internal, External",
-      testers: "govind@100ms.live",
-      ipa_path: 'archives/example.ipa'
-      release_notes: commit[:message]
+#     commit = last_git_commit
+#     gym(
+#    project: 'Runner.xcodeproj',
+#    scheme: 'Release-Development',
+#    configuration: 'Release-Development',
+#    clean: true,
+#    output_directory: 'archives',fluu
+#    output_name: 'example.ipa',
+#    export_method: 'ad-hoc'
+# )
+build_app(
+      scheme: "Runner",
+      workspace: "./Runner.xcworkspace",
+      include_symbols: true,
+      export_options: {
+        method: "development",
+        provisioningProfiles: { 
+          "live.100ms.flutter" => "Flutter"
+        }
+      }
     )
+    # firebase_app_distribution(
+    #   firebase_cli_token: "1//0geU53tX2aWsBCgYIARAAGBASNwF-L9IrOUsSQeQwn7ekZNV-WpdTC39RWaePRiT21BRqglwhEtlSEQYeeO7QtToYX4e99IeegFo",
+    #   app: "1:19544678223:ios:a7bb21cc95bb495ab32f3a",
+    #   #groups: "internal, External",
+    #   testers: "govind@100ms.live",
+    #   ipa_path: 'archives/example.ipa',
+    #   release_notes: commit[:message]
+    # )
   end
 end
