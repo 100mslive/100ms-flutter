@@ -11,7 +11,7 @@ import HMSSDK
 class  HMSPeerExtension {
     
     static func toDictionary(_ peer: HMSPeer) -> [String: Any] {
-      
+        
         var dict = [
             "peer_id":peer.peerID,
             "name":peer.name,
@@ -20,6 +20,9 @@ class  HMSPeerExtension {
             "customer_user_id":peer.customerUserID ?? "",
         ] as [String: Any]
         
+        if let metadata = peer.metadata {
+            dict["metadata"] = metadata
+        }
         if let role = peer.role {
             dict["role"] = HMSRoleExtension.toDictionary(role)
         }
@@ -37,10 +40,10 @@ class  HMSPeerExtension {
             aux.forEach { auxilaryTracks.append(HMSTrackExtension.toDictionary($0)) }
             dict["auxilary_tracks"] = auxilaryTracks
         }
-      
+        
         return dict
     }
-  
+    
     
     static func getValueOf(_ update: HMSPeerUpdate) -> String {
         switch update {
