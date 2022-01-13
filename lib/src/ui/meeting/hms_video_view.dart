@@ -27,7 +27,12 @@ class HMSVideoView extends StatelessWidget {
   final Size? viewSize;
   bool setMirror;
 
-  HMSVideoView({Key? key, required this.track, this.viewSize, this.setMirror = false, this.matchParent = true})
+  HMSVideoView(
+      {Key? key,
+      required this.track,
+      this.viewSize,
+      this.setMirror = false,
+      this.matchParent = true})
       : super(key: key);
 
   @override
@@ -88,8 +93,9 @@ class _PlatformView extends StatelessWidget {
           // TODO: add config setting for mirror
           'set_mirror': track.source != "REGULAR" ? false : setMirror,
           // TODO: add config setting for scale type
-          'scale_type':
-              track.source != "REGULAR" ? ScalingType.SCALE_ASPECT_FIT.value : ScalingType.SCALE_ASPECT_FILL.value,
+          'scale_type': track.source != "REGULAR"
+              ? ScalingType.SCALE_ASPECT_FIT.value
+              : ScalingType.SCALE_ASPECT_FILL.value,
           // TODO: add config setting for match_parent
           'match_parent': matchParent,
         }..addAll({
@@ -113,8 +119,9 @@ class _PlatformView extends StatelessWidget {
           // TODO: add config setting for mirror
           'set_mirror': track.source != "REGULAR" ? false : setMirror,
           // TODO: add config setting for scale type
-          'scale_type':
-              track.source != "REGULAR" ? ScalingType.SCALE_ASPECT_FIT.value : ScalingType.SCALE_ASPECT_FILL.value,
+          'scale_type': track.source != "REGULAR"
+              ? ScalingType.SCALE_ASPECT_FIT.value
+              : ScalingType.SCALE_ASPECT_FILL.value,
           // TODO: add config setting for match_parent
           'match_parent': matchParent,
         }..addAll({
@@ -124,7 +131,8 @@ class _PlatformView extends StatelessWidget {
         gestureRecognizers: {},
       );
     } else {
-      throw UnimplementedError('Video View is not implemented for this platform ${Platform.localHostname}');
+      throw UnimplementedError(
+          'Video View is not implemented for this platform ${Platform.localHostname}');
     }
   }
 }

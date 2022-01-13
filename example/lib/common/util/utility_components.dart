@@ -94,7 +94,7 @@ class UtilityComponents {
   }
 
   static Future<String> showInputDialog(
-      {context,String placeholder = "",String prefilledValue = ""}) async {
+      {context, String placeholder = "", String prefilledValue = ""}) async {
     TextEditingController textController = TextEditingController();
     if (prefilledValue.isNotEmpty) {
       textController.text = prefilledValue;

@@ -170,7 +170,9 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
         } else {
           if (isRecordingStarted == false) {
             String url = await UtilityComponents.showInputDialog(
-                context:context, placeholder:"Enter RTMP Url",prefilledValue: Constant.rtmpUrl);
+                context: context,
+                placeholder: "Enter RTMP Url",
+                prefilledValue: Constant.rtmpUrl);
             if (url.isNotEmpty) {
               _meetingStore.startRtmpOrRecording(
                   meetingUrl: url, toRecord: true, rtmpUrls: null);
@@ -242,8 +244,8 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
         UtilityComponents.showSnackBarWithString("Coming Soon...", context);
         break;
       case 8:
-        String name =
-            await UtilityComponents.showInputDialog(context:context,placeholder:"Enter Name");
+        String name = await UtilityComponents.showInputDialog(
+            context: context, placeholder: "Enter Name");
         if (name.isNotEmpty) {
           _meetingStore.changeName(name: name);
         }
