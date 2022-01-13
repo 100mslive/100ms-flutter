@@ -28,8 +28,7 @@ platform :ios do
     firebase_app_distribution(
       firebase_cli_token: "1//0geU53tX2aWsBCgYIARAAGBASNwF-L9IrOUsSQeQwn7ekZNV-WpdTC39RWaePRiT21BRqglwhEtlSEQYeeO7QtToYX4e99IeegFo",
       app: "1:19544678223:ios:a7bb21cc95bb495ab32f3a",
-      #groups: "internal, External",
-      testers: "yogesh@100ms.live",
+      groups: "internal, External",
       ipa_path: './Runner.ipa',
       release_notes: commit[:message]
     )
