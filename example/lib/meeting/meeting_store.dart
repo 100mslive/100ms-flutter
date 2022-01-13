@@ -540,10 +540,9 @@ abstract class MeetingStoreBase extends ChangeNotifier
       case HMSPeerUpdate.metadataChanged:
         int index =
             peerTracks.indexWhere((element) => element.peerId == peer.peerId);
-        if (index != -1 && peer.metadata == "{\"isHandRaised\":true}")
-          peerTracks[index].isRaiseHand = true;
-        else if (index != -1 && peer.metadata == "{\"isHandRaised\":false}") {
-          peerTracks[index].isRaiseHand = false;
+        if (index != -1) {
+          peerTracks[index].isRaiseHand =
+              (peer.metadata == "{\"isHandRaised\":true}");
         }
         if (peer.isLocal) {
           localPeer = peer;
@@ -707,9 +706,9 @@ abstract class MeetingStoreBase extends ChangeNotifier
   bool isRaisedHand = false;
   void changeMetadata() {
     isRaisedHand = !isRaisedHand;
+    String value = isRaisedHand ? "true" : "false";
     _hmssdkInteractor.changeMetadata(
-        metadata: "{\"isHandRaised\":$isRaisedHand}",
-        hmsActionResultListener: this);
+        metadata: "{\"isHandRaised\":$value}", hmsActionResultListener: this);
   }
 
   void setPlayBackAllowed(bool allow) {
