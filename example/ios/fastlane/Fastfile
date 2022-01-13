@@ -1,0 +1,37 @@
+update_fastlane
+
+default_platform(:ios)
+
+platform :ios do
+  desc "Description of what the lane does"
+  lane :release_on_firebase do
+
+    increment_build_number()
+
+    increment_version_number(
+      bump_type: "patch"
+    )
+
+    build_app(
+      scheme: "Runner",
+      workspace: "./Runner.xcworkspace",
+      include_symbols: true,
+      export_options: {
+        method: "development",
+        provisioningProfiles: { 
+          "live.100ms.flutter" => "Flutter"
+        }
+      }
+    )
+
+    commit = last_git_commit
+    firebase_app_distribution(
+      firebase_cli_token: "1//0geU53tX2aWsBCgYIARAAGBASNwF-L9IrOUsSQeQwn7ekZNV-WpdTC39RWaePRiT21BRqglwhEtlSEQYeeO7QtToYX4e99IeegFo",
+      app: "1:19544678223:ios:a7bb21cc95bb495ab32f3a",
+      #groups: "internal, External",
+      testers: "yogesh@100ms.live",
+      ipa_path: './Runner.ipa',
+      release_notes: commit[:message]
+    )
+  end
+end
