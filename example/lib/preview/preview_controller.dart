@@ -43,6 +43,10 @@ class PreviewController {
     HmsSdkManager.hmsSdkInteractor?.startCapturing();
   }
 
+  void switchVideo({bool isOn = false}) {
+    HmsSdkManager.hmsSdkInteractor?.switchVideo(isOn: isOn);
+  }
+
   void switchAudio({bool isOn = false}) {
     HmsSdkManager.hmsSdkInteractor?.switchAudio(isOn: isOn);
   }

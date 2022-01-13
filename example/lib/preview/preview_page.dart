@@ -108,23 +108,20 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                   ),
                   Row(
                     children: [
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: () async {
-                            if (_previewStore.videoOn) {
-                              _previewStore.stopCapturing();
-                            } else {
-                              _previewStore.startCapturing();
-                            }
-                            setState(() {});
-                          },
-                          child: Icon(
-                              _previewStore.videoOn
-                                  ? Icons.videocam
-                                  : Icons.videocam_off,
-                              size: 48),
-                        ),
-                      ),
+                      Observer(builder: (context) {
+                        return Expanded(
+                          child: GestureDetector(
+                            onTap: () async {
+                              _previewStore.switchVideo();
+                            },
+                            child: Icon(
+                                _previewStore.videoOn
+                                    ? Icons.videocam
+                                    : Icons.videocam_off,
+                                size: 48),
+                          ),
+                        );
+                      }),
                       Expanded(
                           child: ElevatedButton(
                         onPressed: () {

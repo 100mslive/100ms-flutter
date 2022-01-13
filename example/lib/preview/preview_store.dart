@@ -63,12 +63,15 @@ abstract class PreviewStoreBase
 
   void startCapturing() {
     previewController.startCapturing();
-    videoOn = true;
   }
 
   void stopCapturing() {
     previewController.stopCapturing();
-    videoOn = false;
+  }
+
+  void switchVideo() {
+    previewController.switchVideo(isOn: videoOn);
+    videoOn = !videoOn;
   }
 
   void switchAudio() {
