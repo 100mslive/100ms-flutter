@@ -21,9 +21,6 @@ class HMSRoleExtension {
             hashMap["publish_settings"] = PublishParamsExtension.toDictionary(role?.publishParams?:null)
             hashMap["subscribe_settings"] = SubscribeSettings.toDictionary(role?.subscribeParams?:null)
             hashMap["priority"] = role?.priority!!
-            hashMap["general_permissions"] = null
-            hashMap["internal_plugins"] = null
-            hashMap["external_plugins"] = null
             hashMap["permissions"] = PermissionParamsExtension.toDictionary(role.permission?:null)
 
             return hashMap

@@ -81,13 +81,15 @@ class HMSTrackExtension {
     }
     
     
-    static func toDictionary(audio settings: HMSAudioTrackSettings) -> Dictionary<String,Any?> {
+    static func toDictionary(audio settings: HMSAudioTrackSettings) -> [String: Any] {
     
         var dict = [String: Any]()
         
         dict["bit_rate"] = settings.maxBitrate
         
-        dict["track_description"] = settings.trackDescription
+        if let desc = settings.trackDescription {
+            dict["track_description"] = desc
+        }
         
         return dict
     }
@@ -104,7 +106,9 @@ class HMSTrackExtension {
         
         dict["max_frame_rate"] = settings.maxFrameRate
         
-        dict["track_description"] = settings.trackDescription
+        if let desc = settings.trackDescription {
+            dict["track_description"] = desc
+        }
         
         return dict
     }

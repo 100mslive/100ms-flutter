@@ -17,10 +17,7 @@ class HMSRoleExtension {
             "publish_settings": HMSPublishSettingsExtension.toDictionary(role.publishSettings),
             "subscribe_settings": HMSSubscribeSettingsExtension.toDictionary(role.subscribeSettings),
             "priority": role.priority,
-            "permissions": HMSPermissionExtension.toDictionary(role.permissions),
-            "general_permissions": role.generalPermissions as Any,
-            "internal_plugins": role.internalPlugins as Any,
-            "external_plugins": role.externalPlugins as Any,
+            "permissions": HMSPermissionExtension.toDictionary(role.permissions)
         ]
     }
 }

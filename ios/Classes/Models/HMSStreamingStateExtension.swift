@@ -10,29 +10,26 @@ import HMSSDK
 
 class HMSStreamingStateExtension {
     
-    static func toDictionary(rtmp: HMSRTMPStreamingState) -> Dictionary<String,Any?> {
+    static func toDictionary(rtmp: HMSRTMPStreamingState) -> [String: Any] {
         var dict = [String: Any]()
         
         dict["running"] = rtmp.running
         
         if let error = rtmp.error {
-//            dict["error"] = HMSErrorExtension.toDictionary(error)
             dict.merge(HMSErrorExtension.toDictionary(error)) { (_, new) in new }
         }
-        
         
         return dict
     }
     
     
-    static func toDictionary(server: HMSServerRecordingState) -> Dictionary<String,Any?> {
+    static func toDictionary(server: HMSServerRecordingState) -> [String: Any] {
         
         var dict = [String: Any]()
         
         dict["running"] = server.running
         
         if let error = server.error {
-//            dict["error"] = HMSErrorExtension.toDictionary(error)
             dict.merge(HMSErrorExtension.toDictionary(error)) { (_, new) in new }
         }
         
@@ -40,14 +37,13 @@ class HMSStreamingStateExtension {
     }
     
     
-    static func toDictionary(browser: HMSBrowserRecordingState) -> Dictionary<String,Any?> {
+    static func toDictionary(browser: HMSBrowserRecordingState) -> [String: Any] {
         
         var dict = [String: Any]()
         
         dict["running"] = browser.running
         
         if let error = browser.error {
-//            dict["error"] = HMSErrorExtension.toDictionary(error)
             dict.merge(HMSErrorExtension.toDictionary(error)) { (_, new) in new }
         }
         

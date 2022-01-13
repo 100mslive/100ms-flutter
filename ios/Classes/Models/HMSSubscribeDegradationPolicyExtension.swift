@@ -10,11 +10,11 @@ import HMSSDK
 
 class HMSSubscribeDegradationPolicyExtension {
     
-    static func toDictionary(_ policy: HMSSubscribeDegradationPolicy?) -> [String: Any?]? {
+    static func toDictionary(_ policy: HMSSubscribeDegradationPolicy?) -> [String: Any]? {
         [
-            "packet_loss_threshold": policy?.packetLossThreshold,
-            "degrade_grace_period_seconds": policy?.degradeGracePeriodSeconds,
-            "recover_grace_period_seconds": policy?.recoverGracePeriodSeconds
+            "packet_loss_threshold": policy?.packetLossThreshold ?? 0,
+            "degrade_grace_period_seconds": policy?.degradeGracePeriodSeconds ?? 0,
+            "recover_grace_period_seconds": policy?.recoverGracePeriodSeconds ?? 0
         ]
     }
 }

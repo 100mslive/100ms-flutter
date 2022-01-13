@@ -10,7 +10,7 @@ import HMSSDK
 
 class  HMSPermissionExtension {
     
-    static func toDictionary(_ permission: HMSPermissions) -> [String: Any?] {
+    static func toDictionary(_ permission: HMSPermissions) -> [String: Bool] {
         [
             "change_role": permission.changeRole ?? false,
             "end_room": permission.endRoom ?? false,
@@ -20,9 +20,5 @@ class  HMSPermissionExtension {
             "remove_others": permission.removeOthers ?? false,
             "stop_presentation": permission.stopPresentation ?? false
         ]
-        
-//        "changeRoleForce"
-//        "rtmp"
-//        "recording"
     }
 }
