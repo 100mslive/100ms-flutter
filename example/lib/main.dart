@@ -91,6 +91,15 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  void setRTMPUrl(String roomUrl) {
+    List<String> urlSplit = roomUrl.split('/');
+    int index = urlSplit.lastIndexOf("meeting");
+    if (index != -1) {
+      urlSplit[index] = "preview";
+    }
+    Constant.rtmpUrl = urlSplit.join('/') + "?token=beam_recording";
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -150,6 +159,7 @@ class _HomePageState extends State<HomePage> {
                             borderRadius: BorderRadius.circular(16.0),
                           ))),
                           onPressed: () async {
+                            setRTMPUrl(roomIdController.text);
                             String user = await showDialog(
                                 context: context,
                                 builder: (_) => UserNameDialogOrganism());

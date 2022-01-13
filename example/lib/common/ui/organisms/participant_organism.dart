@@ -122,8 +122,8 @@ class _ParticipantOrganismState extends State<ParticipantOrganism> {
   }
 
   void checkButtons() async {
-    this.isAudioOn = await widget.meetingStore.isAudioMute(widget.peer);
-    this.isVideoOn = await widget.meetingStore.isVideoMute(widget.peer);
+    this.isAudioOn = !await widget.meetingStore.isAudioMute(widget.peer);
+    this.isVideoOn = !await widget.meetingStore.isVideoMute(widget.peer);
     setState(() {});
   }
 }

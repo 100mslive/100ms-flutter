@@ -1,11 +1,15 @@
-# 100ms SDK Flutter Quickstart Guide
+---
+title: 100ms SDK Flutter Quickstart Guide
+nav: 2.0
+---
 
 ## Overview
+
 This overview shows the major steps involved in creating a Demo Flutter Project with the 100ms SDK. Each section links to extra detail.
 
 [A sample app demonstrating this is available here](https://github.com/100mslive/100ms-flutter/tree/main/example).
 
-Jump to a section you're interested in or read top down to get the overview</a>
+Jump to a section you're interested in or read top down to get the overview
 
 -   [Getting the video call joining link](#getting-the-video-call-joining-link)
 -   [Add the sdk dependencies](#add-sdk-dependencies)
@@ -25,7 +29,6 @@ Jump to a section you're interested in or read top down to get the overview</a>
 
 Familiarity with the [fundamentals](https://flutter.dev/docs/reference/tutorials) of Flutter apps.
 
-
 ### Getting the video call joining link
 
 To join a video call you need an authentication token and a room id. Or a server that will translate the link into them. The [100ms Dashboard](https://dashboard.100ms.live/register) is one way to generate these auth tokens. In production your own server will generate these and manage user authentication.
@@ -40,8 +43,8 @@ From either the dashboard, or your own server once implemented, you need to gene
 >
 > With your own server for authentication and link generation, the format of the link is up to you.
 
-
 ### Add SDK dependencies
+
 Add the `hmssdk_flutter` plugin in dependencies of pubspec.yaml
 
 ```dart
@@ -53,6 +56,7 @@ flutter:
 
 hmssdk_flutter:
 ```
+
 ### Login
 
 #### Request
@@ -76,6 +80,7 @@ The 100ms server will respond with an auth token like this `{"token":"some-token
 ### Add Permissions
 
 #### Android Permissions
+
 Camera, Recording Audio and Internet permissions are required. Add them to your AndroidManifest.xml.
 
 ```xml
@@ -89,6 +94,7 @@ You will also need to request Camera and Record Audio permissions at runtime bef
 #### iOS Permissions
 
 Add following permissions in iOS Info.plist file
+
 ```xml
 <key>NSMicrophoneUsageDescription</key>
 <string>{YourAppName} wants to use your microphone</string>
@@ -117,7 +123,9 @@ These are some listener's callback functions:
 > 💡 It's essential that this callback is listened to or you may have peers without video.
 
 ```dart
+HMSConfig config = HMSConfig(userId: this.userId, authToken: this.authToken);
 _meeting = HMSMeeting();
+_meeting.build()
 _meeting.joinMeeting(config: this.config);
 _meeting.addMeetingListener(listener);
 
@@ -125,10 +133,10 @@ class AppUpdateListener extends HMSUpdateListener {
 
   @override
   void onJoin({required HMSRoom room}) {}
-  
+
   @override
   void onPeerUpdate({required HMSPeer peer, required HMSPeerUpdate update}) {}
-  
+
   @override
   void onTrackUpdate({required HMSTrack track, required HMSTrackUpdate trackUpdate, required HMSPeer peer}) {}
 
@@ -148,26 +156,27 @@ class AppUpdateListener extends HMSUpdateListener {
   void onReconnected() {}
 
   @override
-  void onReconnecting() {}  
-  
+  void onReconnecting() {}
+
   @override
   void onError({required HMSError error}) {}
 }
 ```
 
 ### How you know when people join or leave
+
 The join method takes an interface called `HMSUpdateListener`. It lets you know when peers join and leave the call, mute/unmute their audio and video and lots more.
 
 The `HMSUpdateListener` has a callback to notify about people joining or leaving. It is `onPeerUpdate(type: HMSPeerUpdate, peer: HMSPeer)`.
 
 > 💡 HMSPeer is object that represents a person in the call.
 
-<br>
+---
 
 ### How to render audio and video
 
-The SDK plays the audio for every person who joins the call. Audio will begin playing when join succeeds. 
-To see the person's video you need to create an instance of HMSVideoView with height and width in arguments.
+The SDK plays the audio for every person who joins the call. Audio will begin playing when join succeeds.
+To render the person's video you need to create an instance of HMSVideoView.
 
 ### Showing Videos
 
@@ -188,7 +197,7 @@ You can mute/unmute audio by calling switchAudio on HMSMeeting. `isOn` is state 
 
 /// audio unmute
 _meeting.switchAudio(isOn: true);
- 
+
 /// audio mute
 _meeting.switchAudio(isOn: false);
 ```
@@ -219,7 +228,8 @@ _meeting.leaveMeeting();
 Checkout the [simple version](https://github.com/100mslive/100ms-flutter/tree/main/example) of the project.
 
 ## Glossary
-- `Room`: When you join a particular video call, all the peers said to be in a video call `room`
-- `Track`: Media. Can be the audio track or the video track.
-- `Peer`: One participant in the video call. Local peers are you, remote peers are others.
-- `Broadcast`: Chat messages are broadcasts.
+
+-   `Room`: When you join a particular video call, all the peers said to be in a video call `room`
+-   `Track`: Media. Can be the audio track or the video track.
+-   `Peer`: One participant in the video call. Local peers are you, remote peers are others.
+-   `Broadcast`: Chat messages are broadcasts.

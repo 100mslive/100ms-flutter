@@ -138,6 +138,9 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         case "un_mute_all":
             toggleAudioMuteAll(result, shouldMute: false)
             
+        case "set_volume":
+            setVolume(call, result)
+            
             // MARK: - Video Helpers
             
         case "switch_video":
@@ -178,7 +181,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             changeRole(call, result)
             
         case "accept_change_role":
-            acceptChangeRole(call, result)
+            acceptChangeRole(result)
             
         case "end_room":
             endRoom(call, result)
@@ -446,6 +449,32 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         
         result(nil)
     }
+
+    
+    private func setVolume(_ call: FlutterMethodCall, _ result: FlutterResult) {
+        let arguments = call.arguments as! [AnyHashable: Any]
+        
+        guard let volume = arguments["volume"] as? Double,
+              let trackID = arguments["track_id"] as? String,
+              let track = HMSUtilities.getTrack(for: trackID, in: hmsSDK!.room!)
+        else {
+            let error = getError(message: "Invalid arguments passed in \(#function)",
+                                 description: "Message is nil",
+                                 params: ["function": #function, "arguments": arguments])
+            result(HMSErrorExtension.toDictionary(error))
+            return
+        }
+        
+        if let remoteAudio = track as? HMSRemoteAudioTrack {
+            remoteAudio.setVolume(volume)
+            result(nil)
+            return
+        }
+        
+        let error = getError(message: "Invalid arguments passed in \(#function)",
+                             params: ["function": #function, "arguments": arguments])
+        result(HMSErrorExtension.toDictionary(error))
+    }
     
     
     // MARK: - Video Helpers
@@ -670,9 +699,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     }
     
     
-    private func acceptChangeRole(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
-        
-        let arguments = call.arguments as! [AnyHashable: Any]
+    private func acceptChangeRole(_ result: @escaping FlutterResult) {
         
         hmsSDK?.accept(changeRole: roleChangeRequest!) { [weak self] success, error in
             if let error = error {

@@ -319,19 +319,27 @@ abstract class MeetingStoreBase extends ChangeNotifier
 
   @override
   void onRoomUpdate({required HMSRoom room, required HMSRoomUpdate update}) {
-    if (update == HMSRoomUpdate.browserRecordingStateUpdated) {
-      if (room.hmsBrowserRecordingState?.running == true)
-        isRecordingStarted = true;
-      else
-        isRecordingStarted = false;
+    switch (update) {
+      case HMSRoomUpdate.browserRecordingStateUpdated:
+        isRecordingStarted = room.hmsBrowserRecordingState?.running ?? false;
+        break;
+
+      case HMSRoomUpdate.serverRecordingStateUpdated:
+        isRecordingStarted = room.hmsServerRecordingState?.running ?? false;
+        break;
+
+      case HMSRoomUpdate.rtmpStreamingStateUpdated:
+        isRecordingStarted = room.hmsRtmpStreamingState?.running ?? false;
+        break;
+
+      default:
+        print('on room update ${update.toString()}');
     }
-    print('on room update ${update.toString()}');
   }
 
   @override
   void onPeerUpdate({required HMSPeer peer, required HMSPeerUpdate update}) {
     peerOperation(peer, update);
-    // print("${peerTracks.toString()} onPeerUpdateListLength");
   }
 
   @override
@@ -339,8 +347,6 @@ abstract class MeetingStoreBase extends ChangeNotifier
       {required HMSTrack track,
       required HMSTrackUpdate trackUpdate,
       required HMSPeer peer}) {
-    print("Called After Reconnection ${peer.name} ${track.source}");
-    print("${peer.name} ${track.kind} onTrackUpdateFlutterMeetingStore");
     if (isSpeakerOn) {
       unMuteAll();
     } else {
@@ -357,7 +363,6 @@ abstract class MeetingStoreBase extends ChangeNotifier
       localPeer = peer;
 
       if (track.kind == HMSTrackKind.kHMSTrackKindVideo) {
-        print("LOCALPEERTRACKVideo");
         localTrack = track;
         if (track.isMute) {
           this.isVideoOn = false;
@@ -535,10 +540,9 @@ abstract class MeetingStoreBase extends ChangeNotifier
       case HMSPeerUpdate.metadataChanged:
         int index =
             peerTracks.indexWhere((element) => element.peerId == peer.peerId);
-        if (index != -1 && peer.metadata == "{\"isHandRaised\":true}")
-          peerTracks[index].isRaiseHand = true;
-        else if (index != -1 && peer.metadata == "{\"isHandRaised\":false}") {
-          peerTracks[index].isRaiseHand = false;
+        if (index != -1) {
+          peerTracks[index].isRaiseHand =
+              (peer.metadata == "{\"isHandRaised\":true}");
         }
         if (peer.isLocal) {
           localPeer = peer;
@@ -551,9 +555,16 @@ abstract class MeetingStoreBase extends ChangeNotifier
               .indexWhere((element) => element.peerId == localPeer!.peerId);
           if (localPeerIndex != -1) {
             peerTracks[localPeerIndex].name = peer.name;
+            localPeer = peer;
           }
-          localPeer = peer;
+        } else {
+          int remotePeerIndex =
+              peerTracks.indexWhere((element) => element.peerId == peer.peerId);
+          if (remotePeerIndex != -1) {
+            peerTracks[remotePeerIndex].name = peer.name;
+          }
         }
+
         updatePeerAt(peer);
         break;
       case HMSPeerUpdate.defaultUpdate:
@@ -695,9 +706,9 @@ abstract class MeetingStoreBase extends ChangeNotifier
   bool isRaisedHand = false;
   void changeMetadata() {
     isRaisedHand = !isRaisedHand;
+    String value = isRaisedHand ? "true" : "false";
     _hmssdkInteractor.changeMetadata(
-        metadata: "{\"isHandRaised\":$isRaisedHand}",
-        hmsActionResultListener: this);
+        metadata: "{\"isHandRaised\":$value}", hmsActionResultListener: this);
   }
 
   void setPlayBackAllowed(bool allow) {
