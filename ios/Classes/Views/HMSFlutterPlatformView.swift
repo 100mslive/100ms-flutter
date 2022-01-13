@@ -50,7 +50,6 @@ class HMSFlutterPlatformView: NSObject, FlutterPlatformView {
     }
     
     deinit {
-        print("#######", #function)
         videoView?.setVideoTrack(nil)
         videoView = nil
     }
