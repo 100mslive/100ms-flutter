@@ -93,8 +93,12 @@ class UtilityComponents {
         });
   }
 
-  static Future<String> showRTMPDialog(context, method) async {
-    TextEditingController urlController = TextEditingController();
+  static Future<String> showInputDialog(
+      {context,String placeholder = "",String prefilledValue = ""}) async {
+    TextEditingController textController = TextEditingController();
+    if (prefilledValue.isNotEmpty) {
+      textController.text = prefilledValue;
+    }
     String answer = await showDialog(
         context: context,
         builder: (context) => AlertDialog(
@@ -104,12 +108,12 @@ class UtilityComponents {
                   children: [
                     TextField(
                       autofocus: true,
-                      controller: urlController,
+                      controller: textController,
                       decoration: InputDecoration(
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.all(Radius.circular(16)),
                           ),
-                          hintText: method),
+                          hintText: placeholder),
                     ),
                   ],
                 ),
@@ -124,9 +128,9 @@ class UtilityComponents {
                 ElevatedButton(
                   child: Text('OK'),
                   onPressed: () {
-                    if (urlController.text == "") {
+                    if (textController.text == "") {
                     } else {
-                      Navigator.pop(context, urlController.text);
+                      Navigator.pop(context, textController.text);
                     }
                   },
                 ),
