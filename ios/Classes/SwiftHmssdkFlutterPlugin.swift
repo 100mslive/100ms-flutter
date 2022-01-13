@@ -1013,7 +1013,6 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     }
     
     
-    // TODO: handle room update on dart side
     public func on(room: HMSRoom, update: HMSRoomUpdate) {
         
         let data = [
@@ -1170,9 +1169,9 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         let second = calendar.component(.second, from: date)
         let dateString = "\(hour):\(minutes):\(second)"
         
-        print(#function, "Speaker update " + dateString, speakers.map { $0.peer.name },
-              speakers.map { kindString(from: $0.track.kind) },
-              speakers.map { $0.track.source })
+        // print(#function, "Speaker update " + dateString, speakers.map { $0.peer.name },
+        //       speakers.map { kindString(from: $0.track.kind) },
+        //       speakers.map { $0.track.source })
     }
     
     internal func getPeer(by peerID: String) -> HMSPeer? {

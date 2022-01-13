@@ -290,7 +290,6 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             else -> HMSLogger.LogLevel.OFF
         }
 
-//        Log.i("startHMSLogger", "${HMSLogger.webRtcLogLevel}  ${HMSLogger.level}")
         HMSLogger.injectLoggable(hmsLoggerListener)
     }
 
@@ -356,17 +355,14 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
     override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
 
         val nameOfEventSink = (arguments as HashMap<String, Any>)["name"]
-//        Log.i("onListen EventChannel", nameOfEventSink.toString())
+
         if (nameOfEventSink!! == "meeting") {
             this.eventSink = events
-//            Log.i("onListen EventChannel", "eventSink")
         } else if (nameOfEventSink == "preview") {
             this.previewSink = events
-//            Log.i("onListen EventChannel", "previewSink")
         } else if (nameOfEventSink == "logs") {
             this.logsSink = events
         }
-
     }
 
     override fun onCancel(arguments: Any?) {
@@ -385,25 +381,20 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
 
     private fun isVideoMute(call: MethodCall): Boolean {
         val peerId = call.argument<String>("peer_id")
-//        val isLocal = call.argument<Boolean>("is_local")
         if (peerId == "null") {
-//            Log.i("isVideoMute", (hmssdk.getLocalPeer()?.videoTrack?.isMute ?: false).toString())
             return hmssdk.getLocalPeer()?.videoTrack?.isMute ?: true
         }
         val peer = getPeerById(peerId!!)
-       // Log.i("isVideoMuteAndroid", (peer!!.videoTrack!!.isMute).toString())
         return peer!!.videoTrack!!.isMute
     }
 
     private fun isAudioMute(call: MethodCall): Boolean {
         val peerId = call.argument<String>("peer_id")
-//        val isLocal = call.argument<Boolean>("is_local")
+
         if (peerId == "null") {
-//            Log.i("isAudioMute", (hmssdk.getLocalPeer()?.audioTrack?.isMute!!).toString())
             return hmssdk.getLocalPeer()?.audioTrack?.isMute?:true
         }
         val peer = getPeerById(peerId!!)
-//        Log.i("isAudioMute", (peer!!.audioTrack!!.isMute).toString())
         return peer!!.audioTrack!!.isMute
     }
 
@@ -516,7 +507,6 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
     var hmsAudioListener = object : HMSAudioListener {
         override fun onAudioLevelUpdate(speakers: Array<HMSSpeaker>) {
             val speakersList = ArrayList<HashMap<String, Any?>>()
-            Log.i("onAudioLevelUpdateAndroid1", speakers.size.toString())
 
             HMSLogger.i(
                 "onAudioLevelUpdateHMSLogger",
@@ -649,8 +639,6 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         )
     }
 
-    // TODO: individual remote track state change does not exist on android
-
     fun build(activity: Activity, call: MethodCall, result: Result) {
         val hmsTrackSettingMap =
             call.argument<HashMap<String, HashMap<String, Any?>?>?>("hms_track_setting")
@@ -755,7 +743,6 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
 
     private var hasChangedMetadata:Boolean = false
 
-    // TODO: check if metadata is correct from dart side
     private fun changeMetadata(call:MethodCall){
         hasChangedMetadata = !hasChangedMetadata
         val metadata = call.argument<String>("metadata")
@@ -769,7 +756,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             val args = HashMap<String, Any?>()
             args.put("event_name", "on_change_track_state_request")
             args.put("data", HMSChangeTrackStateRequestExtension.toDictionary(details)!!)
-//        Log.i("androiddata1", args.get("event_name").toString())
+
             if (args["data"] != null)
                 CoroutineScope(Dispatchers.Main).launch {
                     eventSink?.success(args)
@@ -780,7 +767,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             val args = HashMap<String, Any?>()
             args.put("event_name", "on_error")
             args.put("data", HMSExceptionExtension.toDictionary(error))
-//        Log.i("onError", args["data"].toString())
+
             if (args["data"] != null)
                 CoroutineScope(Dispatchers.Main).launch {
                     eventSink?.success(args)
@@ -808,7 +795,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             val args = HashMap<String, Any?>()
             args.put("event_name", "on_message")
             args.put("data", HMSMessageExtension.toDictionary(message))
-//        Log.i("onMessageReceived", args.get("data").toString())
+
             if (args["data"] != null)
                 CoroutineScope(Dispatchers.Main).launch {
                     eventSink?.success(args)
@@ -821,19 +808,19 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             args["event_name"] = "on_peer_update"
 
             args["data"] = HMSPeerUpdateExtension.toDictionary(peer, type)
-            // Log.i("onPeerUpdateAndroid", "${args["data"]} ${peer.name}")
+            
             if (args["data"] != null)
                 CoroutineScope(Dispatchers.Main).launch {
                     eventSink?.success(args)
                 }
         }
 
-        // TODO: handle room update on dart side
+        
         override fun onRoomUpdate(type: HMSRoomUpdate, hmsRoom: HMSRoom) {
             val args = HashMap<String, Any?>()
             args.put("event_name", "on_room_update")
             args.put("data", HMSRoomUpdateExtension.toDictionary(hmsRoom, type))
-            Log.i("onroomUpdate",type.toString())
+            
             if (args["data"] != null)
                 CoroutineScope(Dispatchers.Main).launch {
                     eventSink?.success(args)
@@ -843,11 +830,9 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         override fun onTrackUpdate(type: HMSTrackUpdate, track: HMSTrack, peer: HMSPeer) {
             val args = HashMap<String, Any?>()
             args.put("event_name", "on_track_update")
-            // Log.i("onTrackUpdate", track.isMute.toString() + " " + peer.name + " " + type.toString())
 
             args.put("data", HMSTrackUpdateExtension.toDictionary(peer, track, type))
-            // HMSLogger.i("onTrackUpdate", peer.toString())
-            //Log.i("onTrackUpdate", args.get("data").toString())
+            
             if (args["data"] != null)
                 CoroutineScope(Dispatchers.Main).launch {
                     eventSink?.success(args)
@@ -913,7 +898,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             val args = HashMap<String, Any?>()
             args.put("event_name", "on_error")
             args.put("data", HMSExceptionExtension.toDictionary(error))
-//        Log.i("onError", args["data"].toString())
+
             if (args["data"] != null)
                 CoroutineScope(Dispatchers.Main).launch {
                     previewSink?.success(args)
@@ -924,7 +909,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             val args = HashMap<String, Any?>()
             args.put("event_name", "preview_video")
             args.put("data", HMSPreviewExtension.toDictionary(room, localTracks))
-//        Log.i("onPreview", args.get("data").toString())
+
             if (args["data"] != null)
                 CoroutineScope(Dispatchers.Main).launch {
                     previewSink?.success(args)
