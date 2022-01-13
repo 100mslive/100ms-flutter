@@ -15,10 +15,10 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 ## iOS
 
-### ios custom_lane
+### ios release_on_firebase
 
 ```sh
-[bundle exec] fastlane ios custom_lane
+[bundle exec] fastlane ios release_on_firebase
 ```
 
 Description of what the lane does
