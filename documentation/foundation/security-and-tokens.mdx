@@ -5,6 +5,12 @@ nav: 1.3
 
 <Content alias="securityAndTokens" />
 
+## Management Token
+
+Any service calling 100ms' REST APIs need to authenticate using a management token. The service required to generate this token should be hosted on your server
+
+### Sample management token generation code
+
 <Tabs id="test-code" items={['Node.js', 'Python', 'Java', 'Ruby', 'PHP']} />
 
 <Tab id='test-code-0'>
@@ -62,7 +68,7 @@ def generateManagementToken():
         'iat': now,
         'exp': exp,
         'nbf': now
-        }, key=app_secret).decode('utf-8')
+        }, key=app_secret)
 
 
 if __name__ == '__main__':
@@ -235,7 +241,7 @@ def generate(room_id, user_id, role):
                 "exp": exp,
                 "iat": now,
                 "nbf": now,
-                }, key=app_secret).decode("utf-8")
+                }, key=app_secret)
 if __name__ == "__main__":
     if len(sys.argv) == 3:
         room_id = sys.argv[0]

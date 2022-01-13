@@ -41,6 +41,17 @@ Camera, Recording Audio and Internet permissions are required. Add them to your 
 
 You will also need to request Camera and Record Audio permissions at runtime before you join a call or display a preview. Please follow [Android Documentation](https://developer.android.com/training/permissions/requesting#request-permission) for runtime permissions.
 
+### Update target Android version
+
+Update the Android SDK version to 21 or later by navigating to the directory and updating the android/app/build.gradle file
+
+```xml
+defaultConfig{
+  minSdkVersion 21
+  …
+}
+```
+
 ### iOS
 
 Add the entitlements for video, audio and network access to your Info.plist
