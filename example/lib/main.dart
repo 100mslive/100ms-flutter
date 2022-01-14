@@ -1,7 +1,16 @@
+//Dart imports
 import 'dart:async';
+
+//Package imports
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
+import 'package:wakelock/wakelock.dart';
+import 'package:package_info_plus/package_info_plus.dart';
+
+//Project imports
 import 'package:hmssdk_flutter_example/common/constant.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/user_name_dialog_organism.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
@@ -9,10 +18,6 @@ import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:hmssdk_flutter_example/preview/preview_page.dart';
 import 'package:hmssdk_flutter_example/service/deeplink_service.dart';
 import 'package:input_history_text_field/input_history_text_field.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:provider/provider.dart';
-import 'package:wakelock/wakelock.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 import './logs/custom_singleton_logger.dart';
 
 void main() async {

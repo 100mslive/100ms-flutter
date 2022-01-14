@@ -1,7 +1,11 @@
+//Package imports
 import 'package:connectivity_checker/connectivity_checker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:mobx/mobx.dart';
+
+//Project imports
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/constant.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/chat_bottom_sheet.dart';
@@ -13,7 +17,7 @@ import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
 import 'package:hmssdk_flutter_example/logs/custom_singleton_logger.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:hmssdk_flutter_example/meeting/peerTrackNode.dart';
-import 'package:mobx/mobx.dart';
+
 
 // ignore: implementation_imports
 import 'package:provider/src/provider.dart';
@@ -130,7 +134,6 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
   void checkButtons() async {
     _meetingStore.isVideoOn =
         !(await _meetingStore.isVideoMute(_meetingStore.localPeer));
-    print('${_meetingStore.isVideoOn} initStateButton');
     _meetingStore.isMicOn =
         !(await _meetingStore.isAudioMute(_meetingStore.localPeer));
   }
@@ -218,8 +221,6 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
           } else
             _meetingStore.isVideoOn =
                 !(_meetingStore.localTrack?.isMute ?? true);
-          print(
-              "${_meetingStore.isVideoOn} ISVIDEOON ${_meetingStore.localTrack == null}");
         }
         setState(() {});
         break;
@@ -264,24 +265,8 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    //var orientation = MediaQuery.of(context).orientation;
     var size = MediaQuery.of(context).size;
-    // final double itemHeightWithSs =
-    //     (size.height - kToolbarHeight - kBottomNavigationBarHeight) /
-    //         (orientation == Orientation.landscape ? 2.5 : 3);
-    // final double itemHeightWithoutSs =
-    //     (size.height - kToolbarHeight - kBottomNavigationBarHeight) /
-    //         (orientation == Orientation.landscape ? 2.5 : 2.8);
-
-    // final double itemHeightWithSs =
-    //     (size.height - kToolbarHeight - kBottomNavigationBarHeight) / 2;
-    // final double itemHeightWithoutSs =
-    //     (size.height - kToolbarHeight - kBottomNavigationBarHeight) / 2.3;
-
     final double itemWidth = (size.width - 12) / 2;
-    // itemWidth / itemHeightWithSs;
-    //final aspectRatio = itemWidth / itemHeight;
-    //print(aspectRatio.toString() + "AspectRatio");
     return ConnectivityAppWrapper(
         app: WillPopScope(
       child: ConnectivityWidgetWrapper(
@@ -499,9 +484,6 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                           Flexible(
                             child: Observer(
                               builder: (_) {
-                                print(
-                                    "Number of people in call ${_meetingStore.peerTracks.length}");
-                                print("rebuilding");
                                 // if (!_meetingStore.isMeetingStarted)
                                 //   return SizedBox();
                                 if (_meetingStore.peerTracks.isEmpty)
@@ -513,8 +495,6 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                         ? _meetingStore
                                             .activeSpeakerPeerTracksStore
                                         : _meetingStore.peerTracks;
-                                print(
-                                    "filteredList length ${peerFilteredList.length}");
                                 ObservableMap<String, String> audioKeyMap =
                                     _meetingStore.observableMap;
                                 return GridView.builder(
@@ -537,7 +517,6 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                       return Observer(builder: (context) {
                                         ObservableMap<String, HMSTrackUpdate>
                                             map = _meetingStore.trackStatus;
-                                        print("GRIDVIEW ${map.toString()}");
                                         return VideoTile(
                                           tileIndex: index,
                                           filteredList: peerFilteredList,
