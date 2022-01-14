@@ -481,4 +481,32 @@ class HMSSDK {
   void removeLogListener({required HMSLogListener hmsLogListener}) {
     PlatformService.removeLogsListener(hmsLogListener);
   }
+
+  Future<void> startHlsStreaming(String meetingUrl,
+      {HMSActionResultListener? hmsActionResultListener}) async {
+    var result = await PlatformService.invokeMethod(
+        PlatformMethod.startHlsStreaming,
+        arguments: {"meeting_url": meetingUrl});
+    if (hmsActionResultListener != null) {
+      if (result == null)
+        hmsActionResultListener.onSuccess();
+      else
+        hmsActionResultListener.onException(
+            hmsException: HMSException.fromMap(result["error"]));
+    }
+  }
+
+  Future<void> stopHlsStreaming(
+      {HMSActionResultListener? hmsActionResultListener}) async {
+    var result = await PlatformService.invokeMethod(
+      PlatformMethod.stopHlsStreaming,
+    );
+    if (hmsActionResultListener != null) {
+      if (result == null)
+        hmsActionResultListener.onSuccess();
+      else
+        hmsActionResultListener.onException(
+            hmsException: HMSException.fromMap(result["error"]));
+    }
+  }
 }

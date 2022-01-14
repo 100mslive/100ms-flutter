@@ -19,10 +19,12 @@ class HMSRoomExtension {
                 io.flutter.Log.i("OnJoinAndroidSDk",it.toString())
                 args.add(HMSPeerExtension.toDictionary(it)!!)
             }
-            hashMap.put("peers",args)
+
+            hashMap["peers"] = args
             hashMap["rtmp_streaming_state"] = HMSStreamingState.toDictionary(room.rtmpHMSRtmpStreamingState)
             hashMap["browser_recording_state"] = HMSStreamingState.toDictionary(room.browserRecordingState)
             hashMap["server_recording_state"] = HMSStreamingState.toDictionary(room.serverRecordingState)
+            hashMap["hls_streaming_state"] = HMSStreamingState.toDictionary(room.hlsStreamingState)
             return hashMap
         }
 

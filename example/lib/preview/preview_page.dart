@@ -113,20 +113,28 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                 ),
                 Row(
                   children: [
-                    Observer(builder: (context) {
-                      return Expanded(
-                        child: GestureDetector(
-                          onTap: () async {
-                            _previewStore.switchVideo();
+                    Expanded(
+                      child: Observer(builder: (context) {
+                        return GestureDetector(
+                          onTap: _previewStore.isHLSLink ||
+                              _previewStore.localTracks.isEmpty
+                              ? null
+                              : () async {
+                            if (_previewStore.videoOn) {
+                              _previewStore.stopCapturing();
+                            } else {
+                              _previewStore.startCapturing();
+                            }
+                            setState(() {});
                           },
                           child: Icon(
-                              _previewStore.videoOn
+                              _previewStore.videoOn && !_previewStore.isHLSLink
                                   ? Icons.videocam
                                   : Icons.videocam_off,
                               size: 48),
-                        ),
-                      );
-                    }),
+                        );
+                      }),
+                    ),
                     Expanded(
                         child: ElevatedButton(
                       onPressed: () {
@@ -145,16 +153,39 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                         style: TextStyle(height: 1, fontSize: 18),
                       ),
                     )),
+                    Expanded(
+                        child: ElevatedButton(
+                          onPressed: () {
+                            _previewStore.removeListener();
+                            Navigator.of(context).pushReplacement(MaterialPageRoute(
+                                builder: (_) => Provider<MeetingStore>(
+                                  create: (_) => MeetingStore(),
+                                  child: MeetingPage(
+                                      roomId: widget.roomId,
+                                      flow: widget.flow,
+                                      user: widget.user),
+                                )));
+                          },
+                          child: Text(
+                            'Join Now',
+                            style: TextStyle(height: 1, fontSize: 18),
+                          ),
+                        )),
                     Observer(builder: (context) {
-                      return Expanded(
-                          child: GestureDetector(
-                        onTap: () async {
-                          _previewStore.switchAudio();
-                        },
-                        child: Icon(
-                            _previewStore.audioOn ? Icons.mic : Icons.mic_off,
-                            size: 48),
-                      ));
+                      return Expanded(child: Observer(builder: (context) {
+                        return GestureDetector(
+                          onTap: _previewStore.isHLSLink
+                              ? null
+                              : () async {
+                            _previewStore.switchAudio();
+                          },
+                          child: Icon(
+                              (_previewStore.audioOn && !_previewStore.isHLSLink)
+                                  ? Icons.mic
+                                  : Icons.mic_off,
+                              size: 48),
+                        );
+                      }));
                     })
                   ],
                 ),

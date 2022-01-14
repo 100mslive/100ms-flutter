@@ -213,4 +213,12 @@ class HMSSDKInteractor {
     hmsSDK.changeName(
         name: name, hmsActionResultListener: hmsActionResultListener);
   }
+
+  Future<void> startHLSStreaming(String meetingUrl) async{
+    await hmsSDK.startHlsStreaming(meetingUrl);
+  }
+
+  Future<void> stopHLSStreaming({required HMSActionResultListener hmsActionResultListener}) async{
+    await hmsSDK.stopHlsStreaming(hmsActionResultListener: hmsActionResultListener);
+  }
 }

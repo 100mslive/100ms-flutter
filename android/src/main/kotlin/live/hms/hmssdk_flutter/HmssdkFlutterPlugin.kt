@@ -198,6 +198,12 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             "change_name"->{
                 changeName(call)
             }
+            "hls_start_streaming"->{
+                hlsStreaming(call)
+            }
+            "hls_stop_streaming"->{
+                stopHLSStreaming()
+            }
             else -> {
                 result.notImplemented()
             }
@@ -1028,5 +1034,39 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
     private fun changeName(call:MethodCall){
         val name = call.argument<String>("name");
         hmssdk.changeName(name=name!!, hmsActionResultListener = this.actionListener);
+    }
+
+    private fun hlsStreaming(call: MethodCall) {
+        val meetingUrl = call.argument<String>("meeting_url")
+        val meetingUrlVariant1 = HMSHLSMeetingURLVariant(
+            meetingUrl = meetingUrl!!,
+            metadata = "tag for reference"
+        )
+
+        val hlsConfig = HMSHLSConfig(listOf(meetingUrlVariant1))
+
+        hmssdk.startHLSStreaming(hlsConfig, hmsActionResultListener = object : HMSActionResultListener{
+            override fun onError(error: HMSException) {
+
+            }
+
+            override fun onSuccess() {
+
+            }
+
+        })
+    }
+
+    private fun stopHLSStreaming(){
+        hmssdk.stopHLSStreaming(null, hmsActionResultListener = object : HMSActionResultListener{
+            override fun onError(error: HMSException) {
+
+            }
+
+            override fun onSuccess() {
+
+            }
+
+        })
     }
 }
