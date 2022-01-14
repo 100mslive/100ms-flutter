@@ -42,7 +42,7 @@ class  HMSPublishSettingsExtension {
     }
     
     
-    static func toDictionary(video settings:HMSVideoSettings) -> [String: Any] {
+    static func toDictionary(video settings: HMSVideoSettings) -> [String: Any] {
         [
             "bit_rate": settings.bitRate ?? 0,
             "codec": settings.codec,
