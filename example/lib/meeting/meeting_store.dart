@@ -235,7 +235,6 @@ abstract class MeetingStoreBase extends ChangeNotifier
       if (track.kind == HMSTrackKind.kHMSTrackKindVideo) {
         tracks.insert(index, track);
         tracks.removeAt(index + 1);
-       
       }
     } else if (index == -1 && track.source.trim() != "REGULAR") {
       tracks.insert(0, track);
@@ -371,7 +370,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
     if (track.source == "REGULAR") {
       int index =
           peerTracks.indexWhere((element) => element.peerId == peer.peerId);
-      peerTracks[index].track = track;
+      if (index != -1) peerTracks[index].track = track;
     }
 
     peerOperationWithTrack(peer, trackUpdate, track);
@@ -563,7 +562,6 @@ abstract class MeetingStoreBase extends ChangeNotifier
   @action
   void peerOperationWithTrack(
       HMSPeer peer, HMSTrackUpdate update, HMSTrack track) {
-
     switch (update) {
       case HMSTrackUpdate.trackAdded:
         if (track.source == "REGULAR") {

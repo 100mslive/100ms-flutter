@@ -66,102 +66,102 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
     final double itemWidth = size.width;
 
     return ConnectivityAppWrapper(
-      app: SafeArea(
-        child: ConnectivityWidgetWrapper(
-          offlineWidget: OfflineWidget(),
-          disableInteraction: true,
-          child: Scaffold(
-            body: Container(
-              height: itemHeight,
-              width: itemWidth,
-              child: Column(
-                children: [
-                  Flexible(
-                    fit: FlexFit.tight,
-                    child: Observer(
-                      builder: (_) {
-                        if (_previewStore.localTracks.isEmpty) {
-                          return Column(children: [
-                            CupertinoActivityIndicator(radius: 124),
-                            SizedBox(
-                              height: 64.0,
-                            ),
-                            Text("No preview available") //
-                          ]);
-                        }
-                        return Provider<MeetingStore>(
-                          create: (ctx) => MeetingStore(),
-                          child: PeerItemOrganism(
-                            observableMap: {"highestAudio": ""},
-                            key: UniqueKey(),
-                            height: itemHeight,
-                            width: itemWidth,
-                            peerTracKNode: new PeerTracKNode(
-                                peerId: _previewStore.peer?.peerId ?? "",
-                                name: _previewStore.peer?.name ?? "",
-                                track: _previewStore.localTracks[0]),
-                            isVideoMuted: false,
+      app: ConnectivityWidgetWrapper(
+        offlineWidget: OfflineWidget(),
+        disableInteraction: true,
+        child: Scaffold(
+          appBar: AppBar(
+            title: Text("Preview"),
+          ),
+          body: Container(
+            height: itemHeight,
+            width: itemWidth,
+            child: Column(
+              children: [
+                Flexible(
+                  fit: FlexFit.tight,
+                  child: Observer(
+                    builder: (_) {
+                      if (_previewStore.localTracks.isEmpty) {
+                        return Column(children: [
+                          CupertinoActivityIndicator(radius: 124),
+                          SizedBox(
+                            height: 64.0,
                           ),
-                        );
-                      },
-                    ),
-                  ),
-                  SizedBox(
-                    height: 16,
-                  ),
-                  Row(
-                    children: [
-                      Observer(builder: (context) {
-                        return Expanded(
-                          child: GestureDetector(
-                            onTap: () async {
-                              _previewStore.switchVideo();
-                            },
-                            child: Icon(
-                                _previewStore.videoOn
-                                    ? Icons.videocam
-                                    : Icons.videocam_off,
-                                size: 48),
-                          ),
-                        );
-                      }),
-                      Expanded(
-                          child: ElevatedButton(
-                        onPressed: () {
-                          _previewStore.removeListener();
-                          Navigator.of(context)
-                              .pushReplacement(MaterialPageRoute(
-                                  builder: (_) => Provider<MeetingStore>(
-                                        create: (_) => MeetingStore(),
-                                        child: MeetingPage(
-                                            roomId: widget.roomId,
-                                            flow: widget.flow,
-                                            user: widget.user),
-                                      )));
-                        },
-                        child: Text(
-                          'Join Now',
-                          style: TextStyle(height: 1, fontSize: 18),
+                          Text("No preview available") //
+                        ]);
+                      }
+                      return Provider<MeetingStore>(
+                        create: (ctx) => MeetingStore(),
+                        child: PeerItemOrganism(
+                          observableMap: {"highestAudio": ""},
+                          key: UniqueKey(),
+                          height: itemHeight,
+                          width: itemWidth,
+                          peerTracKNode: new PeerTracKNode(
+                              peerId: _previewStore.peer?.peerId ?? "",
+                              name: _previewStore.peer?.name ?? "",
+                              track: _previewStore.localTracks[0]),
+                          isVideoMuted: false,
                         ),
-                      )),
-                      Observer(builder: (context) {
-                        return Expanded(
-                            child: GestureDetector(
+                      );
+                    },
+                  ),
+                ),
+                SizedBox(
+                  height: 16,
+                ),
+                Row(
+                  children: [
+                    Observer(builder: (context) {
+                      return Expanded(
+                        child: GestureDetector(
                           onTap: () async {
-                            _previewStore.switchAudio();
+                            _previewStore.switchVideo();
                           },
                           child: Icon(
-                              _previewStore.audioOn ? Icons.mic : Icons.mic_off,
+                              _previewStore.videoOn
+                                  ? Icons.videocam
+                                  : Icons.videocam_off,
                               size: 48),
-                        ));
-                      })
-                    ],
-                  ),
-                  SizedBox(
-                    height: 16,
-                  )
-                ],
-              ),
+                        ),
+                      );
+                    }),
+                    Expanded(
+                        child: ElevatedButton(
+                      onPressed: () {
+                        _previewStore.removeListener();
+                        Navigator.of(context).pushReplacement(MaterialPageRoute(
+                            builder: (_) => Provider<MeetingStore>(
+                                  create: (_) => MeetingStore(),
+                                  child: MeetingPage(
+                                      roomId: widget.roomId,
+                                      flow: widget.flow,
+                                      user: widget.user),
+                                )));
+                      },
+                      child: Text(
+                        'Join Now',
+                        style: TextStyle(height: 1, fontSize: 18),
+                      ),
+                    )),
+                    Observer(builder: (context) {
+                      return Expanded(
+                          child: GestureDetector(
+                        onTap: () async {
+                          _previewStore.switchAudio();
+                        },
+                        child: Icon(
+                            _previewStore.audioOn ? Icons.mic : Icons.mic_off,
+                            size: 48),
+                      ));
+                    })
+                  ],
+                ),
+                SizedBox(
+                  height: 16,
+                )
+              ],
             ),
           ),
         ),

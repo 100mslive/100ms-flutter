@@ -144,7 +144,7 @@ class _HomePageState extends State<HomePage> {
                               textEditingController: roomIdController,
                               enableOpacityGradient: true,
                               autofocus: true,
-                              maxLines: 3,
+                              keyboardType: TextInputType.url,
                               decoration: InputDecoration(
                                   hintText: 'Enter Room URL',
                                   border: OutlineInputBorder(
