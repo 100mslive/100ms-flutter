@@ -1,13 +1,11 @@
-// Flutter imports
-import 'package:flutter/material.dart';
-
-// SDK imports
-import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-
 // Package imports
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+// Project imports
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:hmssdk_flutter_example/meeting/peerTrackNode.dart';
-import 'package:provider/provider.dart';
 
 class PeerItemOrganism extends StatefulWidget {
   final PeerTracKNode peerTracKNode;
@@ -45,8 +43,7 @@ class _PeerItemOrganismState extends State<PeerItemOrganism> {
 
   @override
   Widget build(BuildContext context) {
-    print(
-        "isVideoMuted ${widget.isVideoMuted} ${widget.setMirror} ${widget.peerTracKNode.name}");
+    
     MeetingStore meetingStore = context.watch<MeetingStore>();
     return Container(
       key: key,
@@ -89,7 +86,6 @@ class _PeerItemOrganismState extends State<PeerItemOrganism> {
                   child: Center(child: CircleAvatar(child: Text(name))),
                 );
               }
-              //print("${widget.peerTracKNode.track?.peer?.peerId} ${widget.peerTracKNode.peerId} peerItem");
               return Container(
                 height: widget.height + 100,
                 width: widget.width - 5,
@@ -107,6 +103,7 @@ class _PeerItemOrganismState extends State<PeerItemOrganism> {
             child: Text(
                 "${widget.peerTracKNode.name} ${widget.peerTracKNode.track?.peer?.isLocal ?? false ? "(You)" : ""}"),
           ),
+          //Raise Hand on Tile is turned off
           // if (widget.peerTracKNode.isRaiseHand)
           //   Positioned(
           //     child: Padding(

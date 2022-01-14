@@ -1,5 +1,8 @@
+//Package imports
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+
+//Project imports
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/participant_organism.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';

@@ -1,4 +1,4 @@
-// package imports
+// Package imports
 import 'package:logger/logger.dart';
 
 class StaticLogger {

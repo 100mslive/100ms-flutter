@@ -1,7 +1,12 @@
+//Package imports
 import 'package:connectivity_checker/connectivity_checker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:mobx/mobx.dart';
+import 'package:provider/provider.dart';
+
+//Project imports
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/offline_screen.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/peer_item_organism.dart';
@@ -12,8 +17,6 @@ import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:hmssdk_flutter_example/meeting/peerTrackNode.dart';
 import 'package:hmssdk_flutter_example/preview/preview_controller.dart';
 import 'package:hmssdk_flutter_example/preview/preview_store.dart';
-import 'package:mobx/mobx.dart';
-import 'package:provider/provider.dart';
 
 class PreviewPage extends StatefulWidget {
   final String roomId;

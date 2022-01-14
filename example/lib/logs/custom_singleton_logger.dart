@@ -1,9 +1,11 @@
-// Flutter imports
-import 'package:flutter/material.dart';
+//Dart imports
 import 'dart:io';
 import 'dart:convert';
 
-// package imports
+//Package imports
+import 'package:flutter/material.dart';
+
+//Package imports
 import 'package:hmssdk_flutter_example/logs/static_logger.dart';
 import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
@@ -38,7 +40,6 @@ class CustomLogger {
     final Directory? directory = Platform.isAndroid
         ? await getExternalStorageDirectory()
         : await getApplicationSupportDirectory();
-    print(directory?.path);
     file = File('${directory?.path}/logs.txt');
   }
 }
@@ -65,8 +66,6 @@ class FileOutput extends LogOutput {
 
   @override
   void output(OutputEvent event) {
-    print(
-        "-------------------------Logs Start Here------------------------------------------------------");
     _sink?.writeAll(event.lines, '\n');
   }
 

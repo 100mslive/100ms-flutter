@@ -82,7 +82,6 @@ class PlatformService {
     }
     var result = await _channel.invokeMethod(
         PlatformMethodValues.getName(method), arguments);
-    // print(result);
     return result;
   }
 
@@ -91,7 +90,6 @@ class PlatformService {
     _meetingEventChannel.receiveBroadcastStream(
         {'name': 'meeting'}).map<HMSUpdateListenerMethodResponse>((event) {
       Map<String, dynamic>? data = {};
-      // print("flutterdata2 ${event["event_name"]} ${event["data"]}");
       if (event is Map && event['data'] != null && event['data'] is Map) {
         (event['data'] as Map).forEach((key, value) {
           data[key.toString()] = value;
@@ -104,9 +102,7 @@ class PlatformService {
           method: method, data: data, response: event);
     }).listen((event) {
       HMSUpdateListenerMethod method = event.method;
-      // print("flutterdata1 ${event.method}");
       Map data = event.data;
-      print("updateFromPlatform ${method.toString()}");
       switch (method) {
         case HMSUpdateListenerMethod.onJoinRoom:
           HMSRoom? room = HMSRoom.fromMap(data['room']);
@@ -124,7 +120,6 @@ class PlatformService {
 
         case HMSUpdateListenerMethod.onPeerUpdate:
           HMSPeer? peer = HMSPeer.fromMap(data['peer']);
-          // print(data['update'] + "onFlutterPeerUpdate");
           HMSPeerUpdate? update =
               HMSPeerUpdateValues.getHMSPeerUpdateFromName(data['update']);
           notifyMeetingListeners(method, {'peer': peer, 'update': update});
@@ -132,14 +127,12 @@ class PlatformService {
 
         case HMSUpdateListenerMethod.onTrackUpdate:
           HMSPeer? peer = HMSPeer.fromMap(event.data['peer']);
-          //// print("HMSUpdateListeneronTrackupdate ${peer.toString()}");
           HMSTrack? track = data['track']['instance_of']
               ? HMSVideoTrack.fromMap(map: data['track'], peer: peer)
               : HMSAudioTrack.fromMap(map: data['track'], peer: peer);
 
           HMSTrackUpdate? update =
               HMSTrackUpdateValues.getHMSTrackUpdateFromName(data['update']);
-          // print("UpdateTrack $update  ${data['update']}");
           notifyMeetingListeners(
               method, {'track': track, 'peer': peer, 'update': update});
           break;
@@ -165,7 +158,6 @@ class PlatformService {
             }
           }
 
-          // print("${speakers.length} speakersLength ");
           notifyMeetingListeners(method, {'speakers': speakers});
           break;
 
@@ -185,7 +177,6 @@ class PlatformService {
           break;
 
         case HMSUpdateListenerMethod.onChangeTrackStateRequest:
-          // print("flutter listener $data");
           HMSTrackChangeRequest trackChangeRequest =
               HMSTrackChangeRequest.fromMap(
                   data['track_change_request'] as Map);
@@ -194,7 +185,6 @@ class PlatformService {
           break;
 
         case HMSUpdateListenerMethod.unknown:
-          // print('Unknown method called');
           break;
 
         case HMSUpdateListenerMethod.onRemovedFromRoom:
@@ -255,7 +245,6 @@ class PlatformService {
     });
 
     _logsEventChannel.receiveBroadcastStream({'name': 'logs'}).map((event) {
-      // print("event is $event");
 
       List<dynamic> data = [];
 
@@ -267,8 +256,6 @@ class PlatformService {
           method: method, data: data, response: event);
     }).listen((event) {
       HMSLogsUpdateListenerMethod method = event.method;
-      // // print("flutterdata1 ${event.method}");
-      // // print("Flutterdata1 ${event.data}");
       List<dynamic> data = event.data;
       switch (method) {
         case HMSLogsUpdateListenerMethod.onLogsUpdate:
@@ -322,7 +309,6 @@ class PlatformService {
         meetingListeners.forEach((e) => e.onJoin(room: arguments['room']));
         break;
       case HMSUpdateListenerMethod.onUpdateRoom:
-        print('roomUpdatedOnUpdateRoom');
         meetingListeners.forEach((e) => e.onRoomUpdate(
             room: arguments['room'], update: arguments['update']));
         break;
@@ -344,7 +330,6 @@ class PlatformService {
             .forEach((e) => e.onMessage(message: arguments['message']));
         break;
       case HMSUpdateListenerMethod.onUpdateSpeaker:
-        // print("flutterOnUpdateSpeaker $arguments");
         meetingListeners.forEach(
             (e) => e.onUpdateSpeakers(updateSpeakers: arguments['speakers']));
         break;

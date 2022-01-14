@@ -1,3 +1,4 @@
+//Package imports
 import 'package:flutter/material.dart';
 
 class OfflineWidget extends StatelessWidget {
