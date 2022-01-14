@@ -43,7 +43,6 @@ class _PeerItemOrganismState extends State<PeerItemOrganism> {
 
   @override
   Widget build(BuildContext context) {
-    
     MeetingStore meetingStore = context.watch<MeetingStore>();
     return Container(
       key: key,
@@ -83,7 +82,13 @@ class _PeerItemOrganismState extends State<PeerItemOrganism> {
                 return Container(
                   height: widget.height + 100,
                   width: widget.width - 5,
-                  child: Center(child: CircleAvatar(child: Text(name))),
+                  child: Center(
+                      child: CircleAvatar(
+                          child: Text(
+                    name,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ))),
                 );
               }
               return Container(
