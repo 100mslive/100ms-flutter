@@ -559,11 +559,12 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         
         let allowed = arguments["allowed"] as! Bool
         
-        
+        if(allowed==false){
         if let localPeer = hmsSDK?.localPeer {
             if let video = localPeer.videoTrack as? HMSLocalVideoTrack {
                 video.setMute(!allowed)
             }
+        }
         }
         
         if let remotePeers = hmsSDK?.remotePeers {

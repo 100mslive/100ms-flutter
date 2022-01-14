@@ -985,7 +985,9 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
                     }
                 }
         }
-        getLocalPeer()!!.videoTrack?.setMute(!(allowed!!))
+        if((allowed!!)==false){
+            getLocalPeer()!!.videoTrack?.setMute(!(allowed!!))
+        }
         result?.success(null)
     }
 
