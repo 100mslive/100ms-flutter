@@ -86,8 +86,6 @@ class _PeerItemOrganismState extends State<PeerItemOrganism> {
                       child: CircleAvatar(
                           child: Text(
                     name,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
                   ))),
                 );
               }
@@ -106,7 +104,10 @@ class _PeerItemOrganismState extends State<PeerItemOrganism> {
           Align(
             alignment: Alignment.bottomCenter,
             child: Text(
-                "${widget.peerTracKNode.name} ${widget.peerTracKNode.track?.peer?.isLocal ?? false ? "(You)" : ""}"),
+              "${widget.peerTracKNode.name} ${widget.peerTracKNode.track?.peer?.isLocal ?? false ? "(You)" : ""}",
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
           ),
           //Raise Hand on Tile is turned off
           // if (widget.peerTracKNode.isRaiseHand)
