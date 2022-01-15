@@ -12,11 +12,15 @@ platform :android do
     vn = /versionName\s+"\d.\d.(\d+)"/
     s = File.read(path)
     versionCode = s[re, 1].to_i
-    s[re, 1] = (versionCode + 1).to_s
+    s[re, 1] = (versionCode+1).to_s
     s[vn, 1] = (versionCode+1).to_s
+
+    updatedVersionCode = s[re, 1]
+    updatedVersionName = s[/versionName\s+"(\d.\d.\d+)"/, 1]
+    
     f = File.new(path, 'w')
     f.write(s)
-    f.close
+    f.close 
 
     build_android_app(
       task: 'assemble',
@@ -43,7 +47,7 @@ platform :android do
       attachment_properties: {      
         fields: [{
           title: "🎊 Version",
-          value: version + " (" + build_number + ")",
+          value: updatedVersionName + " (" + updatedVersionCode + ")",
           short: false 
         }]
       }
