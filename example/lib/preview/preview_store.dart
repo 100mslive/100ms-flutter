@@ -1,3 +1,4 @@
+//Package imports
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/preview/preview_controller.dart';
@@ -33,7 +34,7 @@ abstract class PreviewStoreBase
   void onPreview({required HMSRoom room, required List<HMSTrack> localTracks}) {
     for (HMSPeer each in room.peers!) {
       if (each.isLocal) {
-        peer = each;
+        this.peer = each;
         break;
       }
     }
@@ -62,12 +63,15 @@ abstract class PreviewStoreBase
 
   void startCapturing() {
     previewController.startCapturing();
-    videoOn = true;
   }
 
   void stopCapturing() {
     previewController.stopCapturing();
-    videoOn = false;
+  }
+
+  void switchVideo() {
+    previewController.switchVideo(isOn: videoOn);
+    videoOn = !videoOn;
   }
 
   void switchAudio() {
@@ -83,7 +87,6 @@ abstract class PreviewStoreBase
   @override
   // ignore: non_constant_identifier_names
   void onLogMessage({required dynamic HMSLogList}) {
-    print("onLogMessageFlutter" + HMSLogList.toString());
     FirebaseCrashlytics.instance.log(HMSLogList.toString());
   }
 

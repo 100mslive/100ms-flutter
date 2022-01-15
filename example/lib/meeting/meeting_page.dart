@@ -1,21 +1,23 @@
+//Package imports
 import 'package:connectivity_checker/connectivity_checker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:mobx/mobx.dart';
+
+//Project imports
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/constant.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/chat_bottom_sheet.dart';
-import 'package:hmssdk_flutter_example/common/ui/organisms/leave_or_end_meeting.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/offline_screen.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/peer_item_organism.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/video_tile.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
 import 'package:hmssdk_flutter_example/logs/custom_singleton_logger.dart';
-import 'package:hmssdk_flutter_example/meeting/meeting_controller.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:hmssdk_flutter_example/meeting/peerTrackNode.dart';
-import 'package:mobx/mobx.dart';
+
 // ignore: implementation_imports
 import 'package:provider/src/provider.dart';
 import 'meeting_participants_list.dart';
@@ -38,9 +40,9 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
   late ReactionDisposer _roleChangerequestDisposer,
       _hmsExceptionDisposer,
       _trackChangerequestDisposer,
-      _reconnectingDisposer;
-  late ReactionDisposer _errorDisposer,
-      _recordingDisposer,
+      _reconnectingDisposer,
+      _eventOccuredDisposer;
+  late ReactionDisposer _recordingDisposer,
       _reconnectedDisposer,
       _roomEndedDisposer;
   CustomLogger logger = CustomLogger();
@@ -49,20 +51,23 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
   bool audioViewOn = false;
   int countOfVideoOnBetweenTwo = 1;
   bool videoPreviousState = false;
+  bool isRecordingStarted = false;
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance!.addObserver(this);
     _meetingStore = context.read<MeetingStore>();
-    MeetingController meetingController = MeetingController(
-        roomUrl: widget.roomId, flow: widget.flow, user: widget.user);
-    _meetingStore.meetingController = meetingController;
     allListeners();
     initMeeting();
     checkButtons();
   }
 
   void allListeners() {
+    _eventOccuredDisposer =
+        reaction((_) => _meetingStore.event, (eventOccured) {
+      return UtilityComponents.showSnackBarWithString(eventOccured, context);
+    });
     _roleChangerequestDisposer = reaction(
         (_) => _meetingStore.roleChangeRequest,
         (event) => {
@@ -73,12 +78,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
     _trackChangerequestDisposer = reaction(
         (_) => _meetingStore.hmsTrackChangeRequest,
         (event) => {UtilityComponents.showTrackChangeDialog(event, context)});
-    _errorDisposer = reaction(
-        (_) => _meetingStore.error,
-        (event) => {
-              UtilityComponents.showSnackBarWithString(
-                  (event as HMSException).description, context)
-            });
+
     _recordingDisposer = reaction(
         (_) => _meetingStore.isRecordingStarted,
         (event) => {
@@ -117,13 +117,12 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
         (_) => _meetingStore.hmsException,
         (event) => {
               if ((event as HMSException?) != null)
-                UtilityComponents.showSnackBarWithString(
-                    event?.description, context),
+                UtilityComponents.showonExceptionDialog(event, context),
             });
   }
 
   void initMeeting() async {
-    bool ans = await _meetingStore.joinMeeting();
+    bool ans = await _meetingStore.join(widget.user, widget.roomId);
     if (!ans) {
       UtilityComponents.showSnackBarWithString("Unable to Join", context);
       Navigator.of(context).pop();
@@ -133,10 +132,9 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
 
   void checkButtons() async {
     _meetingStore.isVideoOn =
-        !(await _meetingStore.meetingController.isVideoMute(null));
+        !(await _meetingStore.isVideoMute(_meetingStore.localPeer));
     _meetingStore.isMicOn =
-        !(await _meetingStore.meetingController.isAudioMute(null));
-    print("${_meetingStore.isMicOn} isMicOn");
+        !(await _meetingStore.isAudioMute(_meetingStore.localPeer));
   }
 
   @override
@@ -147,13 +145,13 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
 
   void disposeAllListeners() {
     _roleChangerequestDisposer.reaction.dispose();
-    _errorDisposer.reaction.dispose();
     _trackChangerequestDisposer.reaction.dispose();
     _recordingDisposer.reaction.dispose();
     _roomEndedDisposer.reaction.dispose();
     _reconnectedDisposer.reaction.dispose();
     _reconnectingDisposer.reaction.dispose();
     _hmsExceptionDisposer.reaction.dispose();
+    _eventOccuredDisposer.reaction.dispose();
   }
 
   void handleMenu(int value) async {
@@ -170,14 +168,24 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
       case 2:
         if (_meetingStore.isRecordingStarted) {
           _meetingStore.stopRtmpAndRecording();
+          isRecordingStarted = false;
         } else {
-          print("${Constant.meetingUrl} meetingUrl");
-          _meetingStore.startRtmpOrRecording(Constant.meetingUrl, true, null);
+          if (isRecordingStarted == false) {
+            String url = await UtilityComponents.showInputDialog(
+                context: context,
+                placeholder: "Enter RTMP Url",
+                prefilledValue: Constant.rtmpUrl);
+            if (url.isNotEmpty) {
+              _meetingStore.startRtmpOrRecording(
+                  meetingUrl: url, toRecord: true, rtmpUrls: null);
+              isRecordingStarted = true;
+            }
+          }
         }
         break;
 
       case 3:
-        if (_meetingStore.isVideoOn) _meetingStore.toggleCamera();
+        if (_meetingStore.isVideoOn) _meetingStore.switchCamera();
 
         break;
       case 4:
@@ -212,8 +220,6 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
           } else
             _meetingStore.isVideoOn =
                 !(_meetingStore.localTrack?.isMute ?? true);
-          print(
-              "${_meetingStore.isVideoOn} ISVIDEOON ${_meetingStore.localTrack == null}");
         }
         setState(() {});
         break;
@@ -237,30 +243,29 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
         // }
         UtilityComponents.showSnackBarWithString("Coming Soon...", context);
         break;
+      case 8:
+        String name = await UtilityComponents.showInputDialog(
+            context: context, placeholder: "Enter Name");
+        if (name.isNotEmpty) {
+          _meetingStore.changeName(name: name);
+        }
+        break;
+      case 9:
+        _meetingStore.endRoom(false, "Room Ended From Flutter");
+        if (_meetingStore.isRoomEnded) {
+          Navigator.pop(context);
+        }
+        break;
+
       default:
+        break;
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    //var orientation = MediaQuery.of(context).orientation;
     var size = MediaQuery.of(context).size;
-    // final double itemHeightWithSs =
-    //     (size.height - kToolbarHeight - kBottomNavigationBarHeight) /
-    //         (orientation == Orientation.landscape ? 2.5 : 3);
-    // final double itemHeightWithoutSs =
-    //     (size.height - kToolbarHeight - kBottomNavigationBarHeight) /
-    //         (orientation == Orientation.landscape ? 2.5 : 2.8);
-
-    // final double itemHeightWithSs =
-    //     (size.height - kToolbarHeight - kBottomNavigationBarHeight) / 2;
-    // final double itemHeightWithoutSs =
-    //     (size.height - kToolbarHeight - kBottomNavigationBarHeight) / 2.3;
-
     final double itemWidth = (size.width - 12) / 2;
-    // itemWidth / itemHeightWithSs;
-    //final aspectRatio = itemWidth / itemHeight;
-    //print(aspectRatio.toString() + "AspectRatio");
     return ConnectivityAppWrapper(
         app: WillPopScope(
       child: ConnectivityWidgetWrapper(
@@ -270,6 +275,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
             return _meetingStore.reconnecting
                 ? OfflineWidget()
                 : Scaffold(
+                    resizeToAvoidBottomInset: false,
                     appBar: AppBar(
                       title: Text(widget.roomId),
                       actions: [
@@ -284,126 +290,161 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                 : Icons.volume_off),
                           ),
                         ),
-                        PopupMenuButton(
-                          icon: Icon(CupertinoIcons.gear),
-                          itemBuilder: (BuildContext context) => [
-                            PopupMenuItem(
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text("Send Logs",
-                                      style: TextStyle(color: Colors.blue)),
-                                  Icon(Icons.bug_report, color: Colors.blue),
-                                ],
+                        Observer(builder: (context) {
+                          return PopupMenuButton(
+                            icon: Icon(CupertinoIcons.gear),
+                            itemBuilder: (BuildContext context) => [
+                              PopupMenuItem(
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text("Send Logs",
+                                        style: TextStyle(color: Colors.blue)),
+                                    Icon(Icons.bug_report, color: Colors.blue),
+                                  ],
+                                ),
+                                value: 1,
                               ),
-                              value: 1,
-                            ),
-                            PopupMenuItem(
-                              child: Observer(
-                                  builder: (_) => Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(
-                                                _meetingStore.isRecordingStarted
-                                                    ? "Recording "
-                                                    : "Record",
-                                                style: TextStyle(
-                                                  color: _meetingStore
+                              PopupMenuItem(
+                                child: Observer(
+                                    builder: (_) => Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                  _meetingStore
                                                           .isRecordingStarted
-                                                      ? Colors.red
-                                                      : Colors.blue,
-                                                )),
-                                            Icon(
-                                              Icons.circle,
-                                              color: _meetingStore
-                                                      .isRecordingStarted
-                                                  ? Colors.red
-                                                  : Colors.blue,
-                                            ),
-                                          ])),
-                              value: 2,
-                            ),
-                            PopupMenuItem(
-                              child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      "Toggle Camera  ",
-                                      style: TextStyle(color: Colors.blue),
-                                    ),
-                                    Icon(Icons.switch_camera,
-                                        color: Colors.blue),
-                                  ]),
-                              value: 3,
-                            ),
-                            PopupMenuItem(
-                              child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      "Participants  ",
-                                      style: TextStyle(color: Colors.blue),
-                                    ),
-                                    Icon(CupertinoIcons.person_3_fill,
-                                        color: Colors.blue),
-                                  ]),
-                              value: 4,
-                            ),
-                            PopupMenuItem(
-                              child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      audioViewOn ? "Video View" : "Audio View",
-                                      style: TextStyle(color: Colors.blue),
-                                    ),
-                                    Image.asset(
-                                      audioViewOn
-                                          ? 'assets/icons/video.png'
-                                          : 'assets/icons/audio.png',
-                                      color: Colors.blue,
-                                      height: 24.0,
-                                      width: 24.0,
-                                    ),
-                                  ]),
-                              value: 5,
-                            ),
-                            PopupMenuItem(
-                              child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      "Active Speaker Mode ",
-                                      style: TextStyle(color: Colors.blue),
-                                    ),
-                                    Icon(CupertinoIcons.person_3_fill,
-                                        color: Colors.blue),
-                                  ]),
-                              value: 6,
-                            ),
-                            PopupMenuItem(
-                              child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      "Hero Mode ",
-                                      style: TextStyle(color: Colors.blue),
-                                    ),
-                                    Icon(CupertinoIcons.person_3_fill,
-                                        color: Colors.blue),
-                                  ]),
-                              value: 7,
-                            ),
-                          ],
-                          onSelected: handleMenu,
-                        ),
+                                                      ? "Recording "
+                                                      : "Record",
+                                                  style: TextStyle(
+                                                    color: _meetingStore
+                                                            .isRecordingStarted
+                                                        ? Colors.red
+                                                        : Colors.blue,
+                                                  )),
+                                              Icon(
+                                                Icons.circle,
+                                                color: _meetingStore
+                                                        .isRecordingStarted
+                                                    ? Colors.red
+                                                    : Colors.blue,
+                                              ),
+                                            ])),
+                                value: 2,
+                              ),
+                              PopupMenuItem(
+                                child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        "Toggle Camera  ",
+                                        style: TextStyle(color: Colors.blue),
+                                      ),
+                                      Icon(Icons.switch_camera,
+                                          color: Colors.blue),
+                                    ]),
+                                value: 3,
+                              ),
+                              PopupMenuItem(
+                                child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        "Participants  ",
+                                        style: TextStyle(color: Colors.blue),
+                                      ),
+                                      Icon(CupertinoIcons.person_3_fill,
+                                          color: Colors.blue),
+                                    ]),
+                                value: 4,
+                              ),
+                              PopupMenuItem(
+                                child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        audioViewOn
+                                            ? "Video View"
+                                            : "Audio View",
+                                        style: TextStyle(color: Colors.blue),
+                                      ),
+                                      Image.asset(
+                                        audioViewOn
+                                            ? 'assets/icons/video.png'
+                                            : 'assets/icons/audio.png',
+                                        color: Colors.blue,
+                                        height: 24.0,
+                                        width: 24.0,
+                                      ),
+                                    ]),
+                                value: 5,
+                              ),
+                              PopupMenuItem(
+                                child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        "Active Speaker Mode ",
+                                        style: TextStyle(color: Colors.blue),
+                                      ),
+                                      Icon(CupertinoIcons.person_3_fill,
+                                          color: Colors.blue),
+                                    ]),
+                                value: 6,
+                              ),
+                              PopupMenuItem(
+                                child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        "Hero Mode ",
+                                        style: TextStyle(color: Colors.blue),
+                                      ),
+                                      Icon(CupertinoIcons.person_3_fill,
+                                          color: Colors.blue),
+                                    ]),
+                                value: 7,
+                              ),
+                              PopupMenuItem(
+                                child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        "Change Name",
+                                        style: TextStyle(color: Colors.blue),
+                                      ),
+                                      Icon(Icons.create_rounded,
+                                          color: Colors.blue),
+                                    ]),
+                                value: 8,
+                              ),
+                              if (_meetingStore
+                                  .localPeer!.role!.permissions!.endRoom!)
+                                PopupMenuItem(
+                                  child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          "End Room",
+                                          style: TextStyle(color: Colors.blue),
+                                        ),
+                                        Icon(Icons.cancel_schedule_send,
+                                            color: Colors.blue),
+                                      ]),
+                                  value: 9,
+                                ),
+                            ],
+                            onSelected: handleMenu,
+                          );
+                        }),
                       ],
                     ),
                     body: Padding(
@@ -419,18 +460,20 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                 width: double.infinity,
                                 height:
                                     MediaQuery.of(context).size.height / 2.5,
-                                child: PeerItemOrganism(
-                                  observableMap: {"highestAudio": ""},
-                                  height:
-                                      MediaQuery.of(context).size.height / 2,
-                                  width: MediaQuery.of(context).size.width,
-                                  isVideoMuted: false,
-                                  peerTracKNode: new PeerTracKNode(
-                                      peerId: _meetingStore.screenSharePeerId,
-                                      track: _meetingStore.screenShareTrack!,
-                                      name: _meetingStore
-                                              .screenShareTrack?.peer?.name ??
-                                          ""),
+                                child: InteractiveViewer(
+                                  child: PeerItemOrganism(
+                                    observableMap: {"highestAudio": ""},
+                                    height:
+                                        MediaQuery.of(context).size.height / 2,
+                                    width: MediaQuery.of(context).size.width,
+                                    isVideoMuted: false,
+                                    peerTracKNode: new PeerTracKNode(
+                                        peerId: _meetingStore.screenSharePeerId,
+                                        track: _meetingStore.screenShareTrack!,
+                                        name: _meetingStore
+                                                .screenShareTrack?.peer?.name ??
+                                            ""),
+                                  ),
                                 ),
                               );
                             } else {
@@ -440,9 +483,8 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                           Flexible(
                             child: Observer(
                               builder: (_) {
-                                print("rebuilding");
-                                if (!_meetingStore.isMeetingStarted)
-                                  return SizedBox();
+                                // if (!_meetingStore.isMeetingStarted)
+                                //   return SizedBox();
                                 if (_meetingStore.peerTracks.isEmpty)
                                   return Center(
                                       child:
@@ -474,7 +516,6 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                       return Observer(builder: (context) {
                                         ObservableMap<String, HMSTrackUpdate>
                                             map = _meetingStore.trackStatus;
-                                        print("GRIDVIEW ${map.toString()}");
                                         return VideoTile(
                                           tileIndex: index,
                                           filteredList: peerFilteredList,
@@ -502,7 +543,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                   onPressed: (audioViewOn)
                                       ? null
                                       : () {
-                                          _meetingStore.toggleVideo();
+                                          _meetingStore.switchVideo();
                                           countOfVideoOnBetweenTwo++;
                                         },
                                   icon: Icon(_meetingStore.isVideoOn
@@ -517,7 +558,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                   tooltip: 'Audio',
                                   iconSize: 32,
                                   onPressed: () {
-                                    _meetingStore.toggleAudio();
+                                    _meetingStore.switchAudio();
                                   },
                                   icon: Icon(_meetingStore.isMicOn
                                       ? Icons.mic
@@ -533,7 +574,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                   setState(() {
                                     raisedHand = !raisedHand;
                                   });
-                                  _meetingStore.raiseHand();
+                                  _meetingStore.changeMetadata();
                                   UtilityComponents.showSnackBarWithString(
                                       raisedHand
                                           ? "Raised Hand ON"
@@ -564,12 +605,8 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                 tooltip: 'Leave Or End',
                                 iconSize: 32,
                                 onPressed: () async {
-                                  String ans = await showDialog(
-                                      context: context,
-                                      builder: (_) =>
-                                          LeaveOrEndMeetingDialogOption(
-                                            meetingStore: _meetingStore,
-                                          ));
+                                  await UtilityComponents.onBackPressed(
+                                      context);
                                 },
                                 icon: Icon(Icons.call_end)),
                           ),
@@ -577,7 +614,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                   );
           })),
       onWillPop: () async {
-        bool ans = await UtilityComponents.onBackPressed(context);
+        bool ans = await UtilityComponents.onBackPressed(context) ?? false;
         return ans;
       },
     ));
@@ -588,17 +625,17 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
     super.didChangeAppLifecycleState(state);
     if (state == AppLifecycleState.resumed) {
       if (_meetingStore.isVideoOn) {
-        _meetingStore.meetingController.startCapturing();
+        _meetingStore.startCapturing();
       } else {
-        _meetingStore.meetingController.stopCapturing();
+        _meetingStore.stopCapturing();
       }
     } else if (state == AppLifecycleState.paused) {
       if (_meetingStore.isVideoOn) {
-        _meetingStore.meetingController.stopCapturing();
+        _meetingStore.stopCapturing();
       }
     } else if (state == AppLifecycleState.inactive) {
       if (_meetingStore.isVideoOn) {
-        _meetingStore.meetingController.stopCapturing();
+        _meetingStore.stopCapturing();
       }
     }
   }

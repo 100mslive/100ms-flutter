@@ -1,13 +1,11 @@
-// Flutter imports
-import 'package:flutter/material.dart';
-
-// SDK imports
-import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-
 // Package imports
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+// Project imports
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:hmssdk_flutter_example/meeting/peerTrackNode.dart';
-import 'package:provider/provider.dart';
 
 class PeerItemOrganism extends StatefulWidget {
   final PeerTracKNode peerTracKNode;
@@ -45,8 +43,6 @@ class _PeerItemOrganismState extends State<PeerItemOrganism> {
 
   @override
   Widget build(BuildContext context) {
-    print(
-        "isVideoMuted ${widget.isVideoMuted} ${widget.setMirror} ${widget.peerTracKNode.name}");
     MeetingStore meetingStore = context.watch<MeetingStore>();
     return Container(
       key: key,
@@ -86,10 +82,13 @@ class _PeerItemOrganismState extends State<PeerItemOrganism> {
                 return Container(
                   height: widget.height + 100,
                   width: widget.width - 5,
-                  child: Center(child: CircleAvatar(child: Text(name))),
+                  child: Center(
+                      child: CircleAvatar(
+                          child: Text(
+                    name,
+                  ))),
                 );
               }
-
               return Container(
                 height: widget.height + 100,
                 width: widget.width - 5,
@@ -105,20 +104,24 @@ class _PeerItemOrganismState extends State<PeerItemOrganism> {
           Align(
             alignment: Alignment.bottomCenter,
             child: Text(
-                "${widget.peerTracKNode.name} ${widget.peerTracKNode.track?.peer?.isLocal ?? false ? "(You)" : ""}"),
+              "${widget.peerTracKNode.name} ${widget.peerTracKNode.track?.peer?.isLocal ?? false ? "(You)" : ""}",
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
           ),
-          if (widget.peerTracKNode.isRaiseHand)
-            Positioned(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
-                child: Image.asset(
-                  'assets/icons/raise_hand.png',
-                  color: Colors.amber.shade300,
-                ),
-              ),
-              top: 5.0,
-              left: 5.0,
-            )
+          //Raise Hand on Tile is turned off
+          // if (widget.peerTracKNode.isRaiseHand)
+          //   Positioned(
+          //     child: Padding(
+          //       padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
+          //       child: Image.asset(
+          //         'assets/icons/raise_hand.png',
+          //         color: Colors.amber.shade300,
+          //       ),
+          //     ),
+          //     top: 5.0,
+          //     left: 5.0,
+          //   )
         ],
       ),
     );

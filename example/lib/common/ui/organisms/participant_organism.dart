@@ -1,7 +1,9 @@
+//Package imports
 import 'package:flutter/material.dart';
+
+//Project imports
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
-
 import 'change_role_options.dart';
 
 class ParticipantOrganism extends StatefulWidget {
@@ -67,7 +69,7 @@ class _ParticipantOrganismState extends State<ParticipantOrganism> {
                               changeRole: (role, forceChange) {
                                 Navigator.pop(context);
                                 widget.meetingStore.changeRole(
-                                    peerId: peer.peerId,
+                                    peer: peer,
                                     roleName: role.name,
                                     forceChange: forceChange);
                               },
@@ -122,10 +124,8 @@ class _ParticipantOrganismState extends State<ParticipantOrganism> {
   }
 
   void checkButtons() async {
-    this.isAudioOn =
-        !(await widget.meetingStore.meetingController.isAudioMute(widget.peer));
-    this.isVideoOn =
-        !(await widget.meetingStore.meetingController.isVideoMute(widget.peer));
+    this.isAudioOn = !await widget.meetingStore.isAudioMute(widget.peer);
+    this.isVideoOn = !await widget.meetingStore.isVideoMute(widget.peer);
     setState(() {});
   }
 }

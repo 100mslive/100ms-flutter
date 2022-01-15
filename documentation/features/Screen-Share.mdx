@@ -1,0 +1,70 @@
+---
+title: Screen Share (Beta)
+nav: 12
+---
+
+Flutter SDK provides support for sharing the entire screen of the device to the room.
+
+Please note that for a peer to share their screen, their role must have screenshare enabled in the dashboard. Also select the appropriate resolution that you desire the screenshare track should be of.
+
+## How to start screenshare from the app
+
+To start screen share, app needs to call the `startScreenshare` method of `HMSMeeting`.
+
+Following is the snippet on how to use this:
+
+<Tabs id="startscreenshare" items={["Dart"]} />
+
+<Tab id='startscreenshare-0'>
+
+```dart
+
+  hmsMeeting.startScreenShare()
+
+```
+
+</Tab>
+
+## How to get Screen Share Status
+
+Application needs to call the `isScreenShareActive` method of `HMSSDK`.
+
+This method returns a `Boolean` which will be true inscase ScreenShare is currently active and being used, and False for inactive state.
+
+<Tabs id="screensharestatus" items={["Dart"]} />
+
+<Tab id='screensharestatus-0'>
+
+```dart
+
+  hmsMeeting.isScreenShareActive()
+
+```
+
+</Tab>
+
+## How to stop screenshare
+
+To stop the screenshare, you need to invoke `stopscreenShare` method of `HmsMeeting`
+
+Following is the snippet on how to use this:
+
+<Tabs id="stopscreenshare" items={["Dart"]} />
+
+<Tab id='stopscreenshare-0'>
+
+```dart
+
+  hmsMeeting.stopScreenShare()
+
+```
+
+</Tab>
+
+> DONOT forget to add the permission for foreground service in AndroidManifest.xml
+
+```kotlin
+
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
+```

@@ -1,8 +1,16 @@
+//Dart imports
 import 'dart:async';
 
+//Package imports
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
+import 'package:wakelock/wakelock.dart';
+import 'package:package_info_plus/package_info_plus.dart';
+
+//Project imports
 import 'package:hmssdk_flutter_example/common/constant.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/user_name_dialog_organism.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
@@ -10,10 +18,6 @@ import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:hmssdk_flutter_example/preview/preview_page.dart';
 import 'package:hmssdk_flutter_example/service/deeplink_service.dart';
 import 'package:input_history_text_field/input_history_text_field.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:provider/provider.dart';
-import 'package:wakelock/wakelock.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 import './logs/custom_singleton_logger.dart';
 
 void main() async {
@@ -91,6 +95,15 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  void setRTMPUrl(String roomUrl) {
+    List<String> urlSplit = roomUrl.split('/');
+    int index = urlSplit.lastIndexOf("meeting");
+    if (index != -1) {
+      urlSplit[index] = "preview";
+    }
+    Constant.rtmpUrl = urlSplit.join('/') + "?token=beam_recording";
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -131,7 +144,7 @@ class _HomePageState extends State<HomePage> {
                               textEditingController: roomIdController,
                               enableOpacityGradient: true,
                               autofocus: true,
-                              maxLines: 3,
+                              keyboardType: TextInputType.url,
                               decoration: InputDecoration(
                                   hintText: 'Enter Room URL',
                                   border: OutlineInputBorder(
@@ -150,10 +163,12 @@ class _HomePageState extends State<HomePage> {
                             borderRadius: BorderRadius.circular(16.0),
                           ))),
                           onPressed: () async {
+                            setRTMPUrl(roomIdController.text);
                             String user = await showDialog(
                                 context: context,
                                 builder: (_) => UserNameDialogOrganism());
                             if (user.isNotEmpty)
+                              FocusManager.instance.primaryFocus?.unfocus();
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (_) =>
                                       ListenableProvider<MeetingStore>(

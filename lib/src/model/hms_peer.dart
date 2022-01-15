@@ -16,7 +16,7 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 class HMSPeer {
   ///id of the peer
-  final String peerId;
+  late final String peerId;
 
   ///name of the peer in the room.
   final String name;
@@ -64,7 +64,17 @@ class HMSPeer {
     if (Platform.isAndroid) {
       HMSRole? role;
       if (map['role'] != null) role = HMSRole.fromMap(map['role']);
-      return HMSPeer(
+      if (map['is_local'] == true) {
+        return HMSLocalPeer(
+          peerId: map['peer_id'],
+          name: map['name'],
+          isLocal: map['is_local'],
+          role: role,
+          metadata: map['metadata'],
+          customerUserId: map['customer_user_id'],
+        );
+      }
+      return HMSRemotePeer(
         peerId: map['peer_id'],
         name: map['name'],
         isLocal: map['is_local'],
@@ -79,14 +89,23 @@ class HMSPeer {
 
       // TODO: add auxiliary tracks
 
-      HMSPeer peer = HMSPeer(
-        peerId: map['peer_id'],
-        name: map['name'],
-        isLocal: map['is_local'],
-        role: role,
-        metadata: map['metadata'],
-        customerUserId: map['customer_user_id'],
-      );
+      HMSPeer peer = (map['is_local'] == true)
+          ? HMSLocalPeer(
+              peerId: map['peer_id'],
+              name: map['name'],
+              isLocal: map['is_local'],
+              role: role,
+              metadata: map['metadata'],
+              customerUserId: map['customer_user_id'],
+            )
+          : HMSRemotePeer(
+              peerId: map['peer_id'],
+              name: map['name'],
+              isLocal: map['is_local'],
+              role: role,
+              metadata: map['metadata'],
+              customerUserId: map['customer_user_id'],
+            );
 
       if (map['audio_track'] != null) {
         peer.audioTrack =
@@ -101,6 +120,8 @@ class HMSPeer {
       return peer;
     }
   }
+
+  // TODO: add HMSRemotePeer class
 
   static List<HMSPeer> fromListOfMap(List peersMap) {
     List<HMSPeer> peers = peersMap.map((e) => HMSPeer.fromMap(e)).toList();

@@ -21,7 +21,7 @@ class HMSPeerExtension {
             args.put("customer_user_id",peer.customerUserID)
             args.put("audio_track", HMSTrackExtension.toDictionary(peer.audioTrack))
             args.put("video_track", HMSTrackExtension.toDictionary(peer.videoTrack))
-
+            
 
             val auxTrackList=ArrayList<Any>()
             peer.auxiliaryTracks.forEach {
@@ -39,13 +39,16 @@ class HMSPeerExtension {
                 HMSPeerUpdate.PEER_LEFT-> "peerLeft"
                 HMSPeerUpdate.AUDIO_TOGGLED-> "audioToggled"
                 HMSPeerUpdate.VIDEO_TOGGLED-> "videoToggled"
-                HMSPeerUpdate.ROLE_CHANGED->"roleUpdated"
-                HMSPeerUpdate.METADATA_CHANGED->"metadataChanged"
-                HMSPeerUpdate.NAME_CHANGED->"nameChanged"
+                HMSPeerUpdate.ROLE_CHANGED-> "roleUpdated"
+                HMSPeerUpdate.METADATA_CHANGED-> "metadataChanged"
+                HMSPeerUpdate.NAME_CHANGED-> "nameChanged"
+                HMSPeerUpdate.BECAME_DOMINANT_SPEAKER-> "becameDominantSpeaker"
+                HMSPeerUpdate.NO_DOMINANT_SPEAKER-> "noDominantSpeaker"
+                HMSPeerUpdate.RESIGNED_DOMINANT_SPEAKER-> "resignedDominantSpeaker"
+                HMSPeerUpdate.STARTED_SPEAKING-> "startedSpeaking"
+                HMSPeerUpdate.STOPPED_SPEAKING-> "stoppedSpeaking"
                 else-> "defaultUpdate"
             }
         }
-
-
     }
 }

@@ -6,19 +6,20 @@ class HMSException {
   final HMSExceptionCode? code;
   final String message;
 
-  ///description is info in android
   String description;
   String action;
   Map? params;
 
-  HMSException({
-    this.id,
-    this.code,
-    required this.message,
-    required this.description,
-    required this.action,
-    required this.params,
-  });
+  bool isTerminal = false;
+
+  HMSException(
+      {this.id,
+      this.code,
+      required this.message,
+      required this.description,
+      required this.action,
+      required this.isTerminal,
+      this.params});
 
   factory HMSException.fromMap(Map map) {
     HMSExceptionCode? code;
@@ -28,13 +29,13 @@ class HMSException {
     }
 
     return HMSException(
-      id: map["id"] ?? map['name'] ?? '',
-      code: code,
-      message: map['message'],
-      action: map['action'],
-      description: map['info'] ?? map['description'] ?? '',
-      params: map['params'],
-    );
+        id: map["id"] ?? map['name'] ?? '',
+        code: code,
+        message: map['message'],
+        action: map['action'],
+        description: map['info'] ?? map['description'] ?? '',
+        params: map['params'],
+        isTerminal: map['isTerminal'] ?? false);
   }
 
   Map<String, dynamic> toMap() {
@@ -47,6 +48,7 @@ class HMSException {
       'description': this.description,
       'action': this.action,
       'params': this.params,
+      'isTerminal': this.params
     };
   }
 

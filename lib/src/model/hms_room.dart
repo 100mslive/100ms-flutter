@@ -19,7 +19,6 @@ class HMSRoom {
   String? id;
   String? name;
   String? metaData;
-  HMSPeer hmsLocalPeer;
   HMSBrowserRecordingState? hmsBrowserRecordingState;
   HMSRtmpStreamingState? hmsRtmpStreamingState;
   HMSServerRecordingState? hmsServerRecordingState;
@@ -32,14 +31,12 @@ class HMSRoom {
       this.name,
       required this.peers,
       this.metaData,
-      required this.hmsLocalPeer,
       this.hmsServerRecordingState,
       this.hmsRtmpStreamingState,
       this.hmsBrowserRecordingState});
 
   factory HMSRoom.fromMap(Map map) {
     List<HMSPeer> peers = [];
-    print("$map MAP");
     if (map.containsKey('peers') && map['peers'] is List) {
       for (var each in (map['peers'] as List)) {
         try {
@@ -64,14 +61,11 @@ class HMSRoom {
         id: map['id'],
         name: map['name'],
         peers: peers,
-        metaData: map['meta_data'],
-        hmsLocalPeer: HMSPeer.fromMap(
-          map["local_peer"],
-        ));
+        metaData: map['meta_data']);
   }
 
   @override
   String toString() {
-    return 'HMSRoom{id: $id, name: $name, metaData: $metaData, hmsLocalPeer: $hmsLocalPeer, hmsBrowserRecordingState: $hmsBrowserRecordingState, hmsRtmpStreamingState: $hmsRtmpStreamingState, hmsServerRecordingState: $hmsServerRecordingState, peers: $peers}';
+    return 'HMSRoom{id: $id, name: $name, metaData: $metaData, hmsBrowserRecordingState: $hmsBrowserRecordingState, hmsRtmpStreamingState: $hmsRtmpStreamingState, hmsServerRecordingState: $hmsServerRecordingState, peers: $peers}';
   }
 }

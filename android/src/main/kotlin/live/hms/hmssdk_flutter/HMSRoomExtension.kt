@@ -2,6 +2,7 @@ package live.hms.hmssdk_flutter
 
 import android.util.Log
 import live.hms.video.sdk.models.HMSRoom
+import live.hms.video.sdk.models.enums.HMSRoomUpdate
 
 class HMSRoomExtension {
     companion object{
@@ -19,11 +20,24 @@ class HMSRoomExtension {
                 args.add(HMSPeerExtension.toDictionary(it)!!)
             }
             hashMap.put("peers",args)
-            hashMap.put("local_peer",HMSPeerExtension.toDictionary(room.localPeer)!!)
             hashMap["rtmp_streaming_state"] = HMSStreamingState.toDictionary(room.rtmpHMSRtmpStreamingState)
             hashMap["browser_recording_state"] = HMSStreamingState.toDictionary(room.browserRecordingState)
             hashMap["server_recording_state"] = HMSStreamingState.toDictionary(room.serverRecordingState)
             return hashMap
+        }
+
+        fun getValueofHMSRoomUpdate(update:HMSRoomUpdate?):String?{
+            if(update==null)return null
+
+            return when(update){
+                HMSRoomUpdate.ROOM_MUTED-> "room_unmuted"
+                HMSRoomUpdate.ROOM_UNMUTED-> "room_muted"
+                HMSRoomUpdate.SERVER_RECORDING_STATE_UPDATED-> "server_recording_state_updated"
+                HMSRoomUpdate.RTMP_STREAMING_STATE_UPDATED-> "rtmp_streaming_state_updated"
+                HMSRoomUpdate.HLS_STREAMING_STATE_UPDATED-> "hls_streaming_state_updated"
+                HMSRoomUpdate.BROWSER_RECORDING_STATE_UPDATED-> "browser_recording_state_updated"
+                else-> "defaultUpdate"
+            }
         }
     }
 }

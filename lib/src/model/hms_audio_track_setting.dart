@@ -15,12 +15,13 @@ class HMSAudioTrackSetting {
 
   factory HMSAudioTrackSetting.fromMap(Map map) {
     return HMSAudioTrackSetting(
-        volume: map['volume'],
-        maxBitrate: map['bit_rate'],
-        hmsAudioCodec:
-            HMSAudioCodecValues.getHMSCodecFromName(map['audio_codec']),
+        volume: map['volume'] ?? null,
+        maxBitrate: map['bit_rate'] ?? null,
+        hmsAudioCodec: map["audio_codec"] == null
+            ? null
+            : HMSAudioCodecValues.getHMSCodecFromName(map['audio_codec']),
         useHardwareAcousticEchoCanceler:
-            map['user_hardware_acoustic_echo_canceler']);
+            map['user_hardware_acoustic_echo_canceler'] ?? null);
   }
 
   Map<String, dynamic> toMap() {

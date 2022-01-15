@@ -19,7 +19,7 @@ export 'src/enum/hms_log_level.dart';
 //EXCEPTIONS
 export 'src/exceptions/hms_exception.dart';
 export 'src/exceptions/hms_in_sufficient_data.dart';
-export 'src/meeting/meeting.dart';
+export 'src/hmssdk.dart';
 //MODELS
 export 'src/model/hms_audio_setting.dart';
 export 'src/model/hms_audio_track.dart';
@@ -59,3 +59,5 @@ export 'src/model/hms_log.dart';
 export 'src/model/hms_track_setting.dart';
 export 'src/model/hms_actions_result_listener.dart';
 export 'src/model/hms_message_result_listener.dart';
+export 'src/enum/hms_action_result_listener_method.dart';
+export 'src/model/hms_remote_peer.dart';

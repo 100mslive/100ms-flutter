@@ -1,10 +1,14 @@
+// Package imports
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+
+// Project imports
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/change_track_options.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/peer_item_organism.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:hmssdk_flutter_example/meeting/peerTrackNode.dart';
+
 // ignore: implementation_imports
 import 'package:provider/src/provider.dart';
 import 'package:visibility_detector/visibility_detector.dart';
@@ -46,9 +50,7 @@ class _VideoTileState extends State<VideoTile> {
       onVisibilityChanged: (VisibilityInfo info) {
         if (index >= filteredList.length) return;
         var visiblePercentage = info.visibleFraction * 100;
-        print("$index  ${filteredList[index].name} lengthofFilteredList");
         String peerId = filteredList[index].peerId;
-        print(filteredList[index].track?.isMute);
         if (visiblePercentage <= 40) {
           trackStatus[peerId] = HMSTrackUpdate.trackMuted;
         } else {
@@ -57,11 +59,7 @@ class _VideoTileState extends State<VideoTile> {
               : filteredList[index].track?.isMute ?? true
                   ? HMSTrackUpdate.trackMuted
                   : HMSTrackUpdate.trackUnMuted;
-          debugPrint(
-              "${trackStatus[peerId]} ${filteredList[index].name} visibilityDetector");
         }
-        debugPrint(
-            'Widget ${info.key} is $visiblePercentage% visible and index is $index');
       },
       key: Key(filteredList[index].peerId),
       child: InkWell(
@@ -79,24 +77,23 @@ class _VideoTileState extends State<VideoTile> {
                                 ? true
                                 : filteredList[index].track?.isMute,
                             peerName: filteredList[index].name,
-                            changeTrack: (mute, isVideoTrack) {
+                            changeTrack: (mute, isVideoTrack) async {
                               Navigator.pop(context);
-                              _meetingStore.changeTrackRequest(
-                                  filteredList[index].peerId,
-                                  mute,
-                                  isVideoTrack);
+                              var peer = await _meetingStore.getPeer(
+                                  peerId: filteredList[index].peerId);
+                              _meetingStore.changeTrackState(
+                                  peer!, mute, isVideoTrack);
                             },
-                            removePeer: () {
+                            removePeer: () async {
                               Navigator.pop(context);
-                              _meetingStore.removePeerFromRoom(
-                                  filteredList[index].peerId);
+                              var peer = await _meetingStore.getPeer(
+                                  peerId: filteredList[index].peerId);
+                              _meetingStore.removePeerFromRoom(peer!);
                             }),
                       ],
                     ));
         },
         child: Observer(builder: (context) {
-          print(
-              "${filteredList[index].name} ${(trackStatus[filteredList[index].peerId])} rebuildingonaudio");
           return PeerItemOrganism(
               observableMap: widget.observerMap,
               key: Key(index.toString()),
@@ -105,9 +102,8 @@ class _VideoTileState extends State<VideoTile> {
               peerTracKNode: filteredList[index],
               isVideoMuted: (widget.audioView)
                   ? true
-                  : filteredList[index].track?.peer?.isLocal ?? true
-                      ? !_meetingStore.isVideoOn
-                      : (trackStatus[filteredList[index].peerId]) ==
+                  :
+                  (trackStatus[filteredList[index].peerId]) ==
                           HMSTrackUpdate.trackMuted);
         }),
       ),

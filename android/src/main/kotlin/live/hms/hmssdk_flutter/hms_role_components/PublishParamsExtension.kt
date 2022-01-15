@@ -8,9 +8,19 @@ class PublishParamsExtension {
         fun toDictionary(publishParams: PublishParams?):HashMap<String,Any?>?{
             val args=HashMap<String,Any?>()
             if(publishParams==null)return null
-            args.put("audio",AudioParamsExtension.toDictionary(publishParams?.audio!!))
-            args.put("video",VideoParamsExtension.toDictionary(publishParams?.video!!))
-            args.put("screen",VideoParamsExtension.toDictionary(publishParams?.screen!!))
+
+            publishParams.audio?.let {
+                args.put("audio",AudioParamsExtension.toDictionary(publishParams.audio!!))
+            }
+
+            publishParams.video?.let {
+                args.put("video",VideoParamsExtension.toDictionary(publishParams.video!!))
+            }
+
+            publishParams.screen?.let {
+                args.put("screen",VideoParamsExtension.toDictionary(publishParams?.screen!!))
+            }
+
             return args
         }
     }
