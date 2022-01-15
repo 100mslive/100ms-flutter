@@ -3,7 +3,6 @@
 
 .packages
 .pub/
-pubspec.lock
 build/
 
 *.g.dart
@@ -11,6 +10,6 @@ build/
 private_key.pepk
 ./example/android/app/100msKeyStore
 100msKeyStore
-launch.json
 example/ios/Runner.app.dSYM.zip
 example/ios/Runner.ipa
+launch.json
