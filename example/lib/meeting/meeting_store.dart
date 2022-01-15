@@ -140,7 +140,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
   @action
   Future<void> switchVideo() async {
     await _hmssdkInteractor.switchVideo(isOn: isVideoOn);
-    if(isVideoOn)
+    if (isVideoOn)
       trackStatus[localPeer!.peerId] = HMSTrackUpdate.trackMuted;
     else
       trackStatus[localPeer!.peerId] = HMSTrackUpdate.trackUnMuted;
@@ -455,7 +455,8 @@ abstract class MeetingStoreBase extends ChangeNotifier
 
   @override
   void onRemovedFromRoom({required HMSPeerRemovedFromPeer hmsPeerRemovedFromPeer}) {
-    leave();
+    peerTracks.clear();
+    isRoomEnded = true;
   }
 
   void changeRole({required HMSPeer peer, required String roleName, bool forceChange = false}) {
