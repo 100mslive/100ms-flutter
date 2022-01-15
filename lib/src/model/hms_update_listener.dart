@@ -42,7 +42,10 @@ abstract class HMSUpdateListener {
   ///   - track: the track which was added, removed or updated
   ///   - trackUpdate: the triggered update type
   ///   - peer: the peer for which track was added, removed or updated
-  void onTrackUpdate({required HMSTrack track, required HMSTrackUpdate trackUpdate, required HMSPeer peer});
+  void onTrackUpdate(
+      {required HMSTrack track,
+      required HMSTrackUpdate trackUpdate,
+      required HMSPeer peer});
 
   /// This will be called when there is an error in the system
   ///
@@ -83,9 +86,11 @@ abstract class HMSUpdateListener {
 
   ///when someone requests for track change of yours be it video or audio this will be triggered
   /// - Parameter hmsTrackChangeRequest: request instance consisting of all the required info about track change
-  void onChangeTrackStateRequest({required HMSTrackChangeRequest hmsTrackChangeRequest});
+  void onChangeTrackStateRequest(
+      {required HMSTrackChangeRequest hmsTrackChangeRequest});
 
   ///when someone kicks you out or when someone ends the room at that time it is triggered
   ///- Paramter hmsPeerRemovedFromPeer - it consists info about who removed you and why.
-  void onRemovedFromRoom({required HMSPeerRemovedFromPeer hmsPeerRemovedFromPeer});
+  void onRemovedFromRoom(
+      {required HMSPeerRemovedFromPeer hmsPeerRemovedFromPeer});
 }
