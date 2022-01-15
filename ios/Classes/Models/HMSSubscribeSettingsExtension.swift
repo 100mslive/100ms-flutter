@@ -8,15 +8,20 @@
 import Foundation
 import HMSSDK
 
-class  HMSSubscribeSettingsExtension {
-    static func toDictionary(subscribeSettings:HMSSubscribeSettings)-> Dictionary<String,Any?>{
-        var dict:Dictionary<String, Any?> = [:]
-        dict["subscribe_to_roles"] = subscribeSettings.subscribeToRoles
-        dict["max_subs_bit_rate"] = subscribeSettings.maxSubsBitRate
+class HMSSubscribeSettingsExtension {
+    
+    static func toDictionary(_ settings: HMSSubscribeSettings) -> [String: Any] {
         
-        if let policy = subscribeSettings.subscribeDegradation {
-            dict["max_display_tiles"] = HMSSubscribeDegradationPolicyExtensin.toDictionary(policy:policy)
+        var dict = ["max_subs_bit_rate": settings.maxSubsBitRate] as [String: Any]
+        
+        if let roles = settings.subscribeToRoles {
+            dict["subscribe_to_roles"] = roles
         }
+        
+        if let policy = settings.subscribeDegradation {
+            dict["max_display_tiles"] = HMSSubscribeDegradationPolicyExtension.toDictionary(policy)
+        }
+        
         return dict
     }
 }

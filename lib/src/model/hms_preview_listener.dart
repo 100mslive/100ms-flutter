@@ -3,6 +3,8 @@
 ///Just implement it and get the preview updates.
 ///
 /// Check out the [Sample App] how we are using it.
+
+// Project imports:
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 abstract class HMSPreviewListener {
@@ -10,7 +12,7 @@ abstract class HMSPreviewListener {
   ///
   /// - Parameters:
   ///   - error: error which you get.
-  void onError({required HMSError error});
+  void onError({required HMSException error});
 
   ///when you want to preview listen to this callback
   ///

@@ -9,7 +9,7 @@ class VideoParamsExtension{
     companion object{
         fun toDictionary(videoParams: VideoParams):HashMap<String,Any>?{
             val args=HashMap<String,Any>()
-            if (videoParams==null)return null
+            if (videoParams==null || videoParams.codec==null)return null
             args.put("bit_rate",videoParams.bitRate)
             args.put("frame_rate",videoParams.frameRate)
             args.put("width",videoParams.width)
@@ -28,6 +28,19 @@ class VideoParamsExtension{
                     "vp9"
                 else->
                     "defaultCodec"
+            }
+        }
+
+        fun getValueOfHMSAudioCodecFromString(codec: String?):HMSVideoCodec?{
+            return when (codec) {
+                "h264"->HMSVideoCodec.H264
+
+                "vp8"->HMSVideoCodec.VP8
+
+                "vp9"->HMSVideoCodec.VP9
+
+                else->
+                    null
             }
         }
     }

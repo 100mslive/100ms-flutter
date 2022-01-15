@@ -1,16 +1,22 @@
+//Package imports
+import 'package:connectivity_checker/connectivity_checker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:mobx/mobx.dart';
+import 'package:provider/provider.dart';
+
+//Project imports
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:hmssdk_flutter_example/common/ui/organisms/offline_screen.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/peer_item_organism.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_page.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
+import 'package:hmssdk_flutter_example/meeting/peerTrackNode.dart';
 import 'package:hmssdk_flutter_example/preview/preview_controller.dart';
 import 'package:hmssdk_flutter_example/preview/preview_store.dart';
-import 'package:mobx/mobx.dart';
-import 'package:provider/provider.dart';
 
 class PreviewPage extends StatefulWidget {
   final String roomId;
@@ -40,7 +46,7 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
         (_) => _previewStore.error,
         (event) => {
               UtilityComponents.showSnackBarWithString(
-                  (event as HMSError).message, context)
+                  (event as HMSException).message, context)
             });
   }
 
@@ -56,103 +62,107 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-
-    /*24 is for notification bar on Android*/
     final double itemHeight = (size.height - kToolbarHeight - 24);
     final double itemWidth = size.width;
 
-    return SafeArea(
-      child: Scaffold(
-        body: Container(
-          height: itemHeight,
-          width: itemWidth,
-          child: Column(
-            children: [
-              Flexible(
-                fit: FlexFit.tight,
-                child: Observer(
-                  builder: (_) {
-                    if (_previewStore.localTracks.isEmpty) {
-                      return Column(children: [
-                        CupertinoActivityIndicator(radius: 124),
-                        SizedBox(
-                          height: 64.0,
+    return ConnectivityAppWrapper(
+      app: ConnectivityWidgetWrapper(
+        offlineWidget: OfflineWidget(),
+        disableInteraction: true,
+        child: Scaffold(
+          appBar: AppBar(
+            title: Text("Preview"),
+          ),
+          body: Container(
+            height: itemHeight,
+            width: itemWidth,
+            child: Column(
+              children: [
+                Flexible(
+                  fit: FlexFit.tight,
+                  child: Observer(
+                    builder: (_) {
+                      if (_previewStore.localTracks.isEmpty) {
+                        return Column(children: [
+                          CupertinoActivityIndicator(radius: 124),
+                          SizedBox(
+                            height: 64.0,
+                          ),
+                          Text("No preview available") //
+                        ]);
+                      }
+                      return Provider<MeetingStore>(
+                        create: (ctx) => MeetingStore(),
+                        child: PeerItemOrganism(
+                          observableMap: {"highestAudio": ""},
+                          key: UniqueKey(),
+                          height: itemHeight,
+                          width: itemWidth,
+                          peerTracKNode: new PeerTracKNode(
+                              peerId: _previewStore.peer?.peerId ?? "",
+                              name: _previewStore.peer?.name ?? "",
+                              track: _previewStore.localTracks[0]),
+                          isVideoMuted: false,
                         ),
-                        Text("No preview available") //
-                      ]);
-                    }
-                    return GridView.count(
-                      crossAxisCount: 1,
-                      childAspectRatio: (itemWidth / itemHeight),
-                      children: List.generate(
-                          _previewStore.localTracks.length,
-                          (index) => PeerItemOrganism(
-                                key: UniqueKey(),
-                                height: itemHeight,
-                                width: itemWidth,
-                                track: _previewStore.localTracks[index],
-                                isVideoMuted: false,
-                              )),
-                    );
-                  },
-                ),
-              ),
-              SizedBox(
-                height: 16,
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: () async {
-                        if (_previewStore.videoOn) {
-                          _previewStore.stopCapturing();
-                        } else {
-                          _previewStore.startCapturing();
-                        }
-                        setState(() {});
-                      },
-                      child: Icon(
-                          _previewStore.videoOn
-                              ? Icons.videocam
-                              : Icons.videocam_off,
-                          size: 48),
-                    ),
+                      );
+                    },
                   ),
-                  Expanded(
-                      child: ElevatedButton(
-                    onPressed: () {
-                      _previewStore.removeListener();
-                      Navigator.of(context).pushReplacement(MaterialPageRoute(
-                          builder: (_) => Provider<MeetingStore>(
-                                create: (_) => MeetingStore(),
-                                child: MeetingPage(
-                                    roomId: widget.roomId,
-                                    flow: widget.flow,
-                                    user: widget.user),
-                              )));
-                    },
-                    child: Text(
-                      'Join Now',
-                      style: TextStyle(height: 1, fontSize: 18),
-                    ),
-                  )),
-                  Expanded(
-                      child: GestureDetector(
-                    onTap: () async {
-                      _previewStore.switchAudio();
-                      setState(() {});
-                    },
-                    child: Icon(
-                        _previewStore.audioOn ? Icons.mic : Icons.mic_off,
-                        size: 48),
-                  ))
-                ],
-              ),
-              SizedBox(
-                height: 16,
-              )
-            ],
+                ),
+                SizedBox(
+                  height: 16,
+                ),
+                Row(
+                  children: [
+                    Observer(builder: (context) {
+                      return Expanded(
+                        child: GestureDetector(
+                          onTap: () async {
+                            _previewStore.switchVideo();
+                          },
+                          child: Icon(
+                              _previewStore.videoOn
+                                  ? Icons.videocam
+                                  : Icons.videocam_off,
+                              size: 48),
+                        ),
+                      );
+                    }),
+                    Expanded(
+                        child: ElevatedButton(
+                      onPressed: () {
+                        _previewStore.removeListener();
+                        Navigator.of(context).pushReplacement(MaterialPageRoute(
+                            builder: (_) => Provider<MeetingStore>(
+                                  create: (_) => MeetingStore(),
+                                  child: MeetingPage(
+                                      roomId: widget.roomId,
+                                      flow: widget.flow,
+                                      user: widget.user),
+                                )));
+                      },
+                      child: Text(
+                        'Join Now',
+                        style: TextStyle(height: 1, fontSize: 18),
+                      ),
+                    )),
+                    Observer(builder: (context) {
+                      return Expanded(
+                          child: GestureDetector(
+                        onTap: () async {
+                          _previewStore.switchAudio();
+                        },
+                        child: Icon(
+                            _previewStore.audioOn ? Icons.mic : Icons.mic_off,
+                            size: 48),
+                      ));
+                    })
+                  ],
+                ),
+                SizedBox(
+                  height: 16,
+                )
+              ],
+            ),
           ),
         ),
       ),

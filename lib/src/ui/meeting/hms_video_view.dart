@@ -5,25 +5,33 @@
 /// just pass the videotracks of local or remote peer and internally it passes [peer_id], [is_local] and [track_id] to specific views.
 ///
 /// if you want to pass height and width you can pass as a map.
+
+// Dart imports:
 import 'dart:io' show Platform;
 
+// Flutter imports:
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show StandardMessageCodec;
+
+// Project imports:
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:hmssdk_flutter/src/enum/hms_video_scale_type.dart';
 
 class HMSVideoView extends StatelessWidget {
   /// [HMSVideoView] will render video using trackId from HMSTrack
   final HMSTrack track;
+  final matchParent;
 
   /// [HMSVideoView] will use viewSize to get height and width of rendered video. If not passed, it will take whatever size is available to the widget.
   final Size? viewSize;
-  final bool isAuxiliaryTrack;
-  final bool matchParent;
-  const HMSVideoView(
+
+  final bool setMirror;
+
+  HMSVideoView(
       {Key? key,
       required this.track,
       this.viewSize,
-      required this.isAuxiliaryTrack,
+      this.setMirror = false,
       this.matchParent = true})
       : super(key: key);
 
@@ -35,7 +43,7 @@ class HMSVideoView extends StatelessWidget {
         track: track,
         matchParent: this.matchParent,
         viewSize: tempViewSize,
-        isAuxiliaryTrack: this.isAuxiliaryTrack,
+        setMirror: setMirror,
       );
     } else
       return LayoutBuilder(builder: (_, constraints) {
@@ -43,7 +51,7 @@ class HMSVideoView extends StatelessWidget {
           track: track,
           matchParent: this.matchParent,
           viewSize: Size(constraints.maxWidth, constraints.maxHeight),
-          isAuxiliaryTrack: this.isAuxiliaryTrack,
+          setMirror: setMirror,
         );
       });
   }
@@ -52,15 +60,17 @@ class HMSVideoView extends StatelessWidget {
 class _PlatformView extends StatelessWidget {
   final HMSTrack track;
   final Size viewSize;
-  final bool isAuxiliaryTrack;
+
+  final bool setMirror;
   final bool matchParent;
-  const _PlatformView(
-      {Key? key,
-      required this.track,
-      required this.viewSize,
-      this.matchParent = true,
-      required this.isAuxiliaryTrack})
-      : super(key: key);
+
+  _PlatformView({
+    Key? key,
+    required this.track,
+    required this.viewSize,
+    this.setMirror = false,
+    this.matchParent = true,
+  }) : super(key: key);
 
   void onPlatformViewCreated(int id) {
     print('On PlatformView Created:: id:$id');
@@ -78,8 +88,13 @@ class _PlatformView extends StatelessWidget {
           'peer_id': track.peer?.peerId,
           'is_local': track.peer?.isLocal,
           'track_id': track.trackId,
+          'is_aux': track.source != "REGULAR",
+          'screen_share': track.source != "REGULAR",
+          'set_mirror': track.source != "REGULAR" ? false : setMirror,
+          'scale_type': track.source != "REGULAR"
+              ? ScalingType.SCALE_ASPECT_FIT.value
+              : ScalingType.SCALE_ASPECT_FILL.value,
           'match_parent': matchParent,
-          'is_aux': isAuxiliaryTrack
         }..addAll({
             'height': viewSize.height,
             'width': viewSize.width,
@@ -89,13 +104,19 @@ class _PlatformView extends StatelessWidget {
     } else if (Platform.isIOS) {
       ///UiKitView for ios it uses VideoView provided by 100ms ios_sdk internally.
       return UiKitView(
-        viewType: 'HMSVideoView',
+        viewType: 'HMSFlutterPlatformView',
         onPlatformViewCreated: onPlatformViewCreated,
         creationParamsCodec: StandardMessageCodec(),
         creationParams: {
           'peer_id': track.peer?.peerId,
           'is_local': track.peer?.isLocal,
           'track_id': track.trackId,
+          'is_aux': track.source != "REGULAR",
+          'screen_share': track.source != "REGULAR",
+          'set_mirror': track.source != "REGULAR" ? false : setMirror,
+          'scale_type': track.source != "REGULAR"
+              ? ScalingType.SCALE_ASPECT_FIT.value
+              : ScalingType.SCALE_ASPECT_FILL.value,
           'match_parent': matchParent,
         }..addAll({
             'height': viewSize.height,

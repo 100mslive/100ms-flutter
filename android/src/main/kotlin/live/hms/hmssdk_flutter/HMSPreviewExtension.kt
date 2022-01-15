@@ -16,7 +16,7 @@ class HMSPreviewExtension {
                 tracks.add(HMSTrackExtension.toDictionary(eachTrack)!!)
             }
             args["local_tracks"] = tracks
-            return  args
+            return args
         }
     }
 }

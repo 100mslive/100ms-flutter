@@ -1,19 +1,24 @@
+//Package imports
+import 'package:connectivity_checker/connectivity_checker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:mobx/mobx.dart';
+
+//Project imports
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:hmssdk_flutter_example/common/constant.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/chat_bottom_sheet.dart';
-import 'package:hmssdk_flutter_example/common/ui/organisms/leave_or_end_meeting.dart';
-import 'package:hmssdk_flutter_example/common/ui/organisms/role_change_request_dialog.dart';
-import 'package:hmssdk_flutter_example/common/ui/organisms/track_change_request_dialog.dart';
+import 'package:hmssdk_flutter_example/common/ui/organisms/offline_screen.dart';
+import 'package:hmssdk_flutter_example/common/ui/organisms/peer_item_organism.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/video_tile.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
-import 'package:hmssdk_flutter_example/main.dart';
-import 'package:hmssdk_flutter_example/meeting/meeting_controller.dart';
+import 'package:hmssdk_flutter_example/logs/custom_singleton_logger.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
-import 'package:mobx/mobx.dart';
-import 'package:provider/src/provider.dart';
+import 'package:hmssdk_flutter_example/meeting/peerTrackNode.dart';
+
+import 'package:provider/provider.dart';
 import 'meeting_participants_list.dart';
 
 class MeetingPage extends StatefulWidget {
@@ -31,39 +36,56 @@ class MeetingPage extends StatefulWidget {
 
 class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
   late MeetingStore _meetingStore;
-  late ReactionDisposer _roleChangerequestDisposer, _trackChangerequestDisposer;
-  late ReactionDisposer _errorDisposer;
+  late ReactionDisposer _roleChangerequestDisposer,
+      _hmsExceptionDisposer,
+      _trackChangerequestDisposer,
+      _reconnectingDisposer,
+      _eventOccuredDisposer;
+  late ReactionDisposer _recordingDisposer,
+      _reconnectedDisposer,
+      _roomEndedDisposer;
+  CustomLogger logger = CustomLogger();
+  int appBarIndex = 0;
+  bool raisedHand = false;
+  bool audioViewOn = false;
+  int countOfVideoOnBetweenTwo = 1;
+  bool videoPreviousState = false;
+  bool isRecordingStarted = false;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance!.addObserver(this);
     _meetingStore = context.read<MeetingStore>();
-    MeetingController meetingController = MeetingController(
-        roomUrl: widget.roomId, flow: widget.flow, user: widget.user);
-    _meetingStore.meetingController = meetingController;
+    allListeners();
+    initMeeting();
+    checkButtons();
+  }
 
-    // _meetingStore.trackStatus.observe((p0) {
-    //   print("in initmeetingTrackStatus");
-    // }, fireImmediately: true);
-
+  void allListeners() {
+    _eventOccuredDisposer =
+        reaction((_) => _meetingStore.event, (eventOccured) {
+      return UtilityComponents.showSnackBarWithString(eventOccured, context);
+    });
     _roleChangerequestDisposer = reaction(
         (_) => _meetingStore.roleChangeRequest,
         (event) => {
               if ((event as HMSRoleChangeRequest).suggestedBy !=
                   _meetingStore.localPeer)
-                showRoleChangeDialog(event)
+                UtilityComponents.showRoleChangeDialog(event, context)
             });
     _trackChangerequestDisposer = reaction(
         (_) => _meetingStore.hmsTrackChangeRequest,
-        (event) => {showTrackChangeDialog(event)});
-    _errorDisposer = reaction(
-        (_) => _meetingStore.error,
+        (event) => {UtilityComponents.showTrackChangeDialog(event, context)});
+
+    _recordingDisposer = reaction(
+        (_) => _meetingStore.isRecordingStarted,
         (event) => {
               UtilityComponents.showSnackBarWithString(
-                  (event as HMSError).description, context)
+                  event == true ? "Recording Started" : "Recording Stopped",
+                  context)
             });
-    reaction(
+    _reconnectedDisposer = reaction(
         (_) => _meetingStore.reconnected,
         (event) => {
               if ((event as bool) == true)
@@ -71,20 +93,35 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                     "reconnected", context),
               _meetingStore.reconnected = false
             });
-    reaction(
+    _roomEndedDisposer = reaction(
+        (_) => _meetingStore.isRoomEnded,
+        (event) => {
+              if ((event as bool) == true)
+                {
+                  Navigator.of(context).popUntil((route) => route.isFirst),
+                  UtilityComponents.showSnackBarWithString(
+                      "Meeting Ended", context),
+                },
+              _meetingStore.isRoomEnded = false,
+            });
+    _reconnectingDisposer = reaction(
         (_) => _meetingStore.reconnecting,
         (event) => {
               if ((event as bool) == true)
                 UtilityComponents.showSnackBarWithString(
                     "reconnecting", context),
             });
-    super.initState();
-    initMeeting();
-    checkButtons();
+
+    _hmsExceptionDisposer = reaction(
+        (_) => _meetingStore.hmsException,
+        (event) => {
+              if ((event as HMSException?) != null)
+                UtilityComponents.showonExceptionDialog(event, context),
+            });
   }
 
   void initMeeting() async {
-    bool ans = await _meetingStore.joinMeeting();
+    bool ans = await _meetingStore.join(widget.user, widget.roomId);
     if (!ans) {
       UtilityComponents.showSnackBarWithString("Unable to Join", context);
       Navigator.of(context).pop();
@@ -94,264 +131,492 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
 
   void checkButtons() async {
     _meetingStore.isVideoOn =
-        !(await _meetingStore.meetingController.isVideoMute(null));
+        !(await _meetingStore.isVideoMute(_meetingStore.localPeer));
     _meetingStore.isMicOn =
-        !(await _meetingStore.meetingController.isAudioMute(null));
-  }
-
-  void showRoleChangeDialog(event) async {
-    event = event as HMSRoleChangeRequest;
-    String answer = await showDialog(
-        context: context,
-        builder: (ctx) => RoleChangeDialogOrganism(roleChangeRequest: event));
-    if (answer == "OK") {
-      debugPrint("OK accepted");
-      _meetingStore.meetingController.acceptRoleChangeRequest();
-      UtilityComponents.showSnackBarWithString(
-          (event as HMSError).description, context);
-    }
-  }
-
-  Future<dynamic> _onBackPressed() {
-    return showDialog(
-        context: context,
-        builder: (ctx) => AlertDialog(
-              title: Text('Leave the Meeting?'),
-              actions: [
-                TextButton(
-                    onPressed: () => {
-                          _meetingStore.meetingController.leaveMeeting(),
-                          Navigator.pop(context, true),
-                          Navigator.pushReplacement(context,
-                              MaterialPageRoute(builder: (ctx) => HomePage()))
-                        },
-                    child:
-                        Text('Yes', style: TextStyle(height: 1, fontSize: 24))),
-                TextButton(
-                    onPressed: () => Navigator.pop(context, false),
-                    child: Text('Cancel',
-                        style: TextStyle(
-                            height: 1,
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold))),
-              ],
-            ));
+        !(await _meetingStore.isAudioMute(_meetingStore.localPeer));
   }
 
   @override
   void dispose() {
-    _roleChangerequestDisposer.reaction.dispose();
-    _errorDisposer.reaction.dispose();
-    _trackChangerequestDisposer.reaction.dispose();
+    disposeAllListeners();
     super.dispose();
+  }
+
+  void disposeAllListeners() {
+    _roleChangerequestDisposer.reaction.dispose();
+    _trackChangerequestDisposer.reaction.dispose();
+    _recordingDisposer.reaction.dispose();
+    _roomEndedDisposer.reaction.dispose();
+    _reconnectedDisposer.reaction.dispose();
+    _reconnectingDisposer.reaction.dispose();
+    _hmsExceptionDisposer.reaction.dispose();
+    _eventOccuredDisposer.reaction.dispose();
+  }
+
+  void handleMenu(int value) async {
+    switch (value) {
+      case 1:
+        // StaticLogger.logger?.d(
+        //     "\n----------------------------Sending Logs-----------------\n");
+        // StaticLogger.logger?.close();
+        // ShareExtend.share(CustomLogger.file?.path ?? '', 'file');
+        // logger.getCustomLogger();
+        UtilityComponents.showSnackBarWithString("Coming Soon...", context);
+        break;
+
+      case 2:
+        if (_meetingStore.isRecordingStarted) {
+          _meetingStore.stopRtmpAndRecording();
+          isRecordingStarted = false;
+        } else {
+          if (isRecordingStarted == false) {
+            String url = await UtilityComponents.showInputDialog(
+                context: context,
+                placeholder: "Enter RTMP Url",
+                prefilledValue: Constant.rtmpUrl);
+            if (url.isNotEmpty) {
+              _meetingStore.startRtmpOrRecording(
+                  meetingUrl: url, toRecord: true, rtmpUrls: null);
+              isRecordingStarted = true;
+            }
+          }
+        }
+        break;
+
+      case 3:
+        if (_meetingStore.isVideoOn) _meetingStore.switchCamera();
+
+        break;
+      case 4:
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) => ParticipantsList(
+              meetingStore: _meetingStore,
+            ),
+          ),
+        );
+        break;
+      case 5:
+        audioViewOn = !audioViewOn;
+        if (audioViewOn) {
+          countOfVideoOnBetweenTwo = 0;
+          _meetingStore.trackStatus.forEach((key, value) {
+            _meetingStore.trackStatus[key] = HMSTrackUpdate.trackMuted;
+          });
+          videoPreviousState = _meetingStore.isVideoOn;
+          _meetingStore.isVideoOn = false;
+          _meetingStore.setPlayBackAllowed(false);
+        } else {
+          _meetingStore.peerTracks.forEach((element) {
+            _meetingStore.trackStatus[element.peerId] =
+                element.track?.isMute ?? false
+                    ? HMSTrackUpdate.trackMuted
+                    : HMSTrackUpdate.trackUnMuted;
+          });
+          _meetingStore.setPlayBackAllowed(true);
+          if (countOfVideoOnBetweenTwo == 0) {
+            _meetingStore.isVideoOn = videoPreviousState;
+          } else
+            _meetingStore.isVideoOn =
+                !(_meetingStore.localTrack?.isMute ?? true);
+        }
+        setState(() {});
+        break;
+      case 6:
+        // if(!_meetingStore.isActiveSpeakerMode){
+        //     _meetingStore.activeSpeakerPeerTracksStore = _meetingStore.peerTracks;
+        //     _meetingStore.isActiveSpeakerMode = true;
+        //     _pageController.animateToPage(0,duration: Duration(seconds: 1),curve: Curves.decelerate);
+        //     setState(() {});
+        //     UtilityComponents.showSnackBarWithString(
+        //           "Active Speaker Mode", context);
+        // }
+        UtilityComponents.showSnackBarWithString("Coming Soon...", context);
+        break;
+      case 7:
+        // if (_meetingStore.isActiveSpeakerMode) {
+        //   _meetingStore.isActiveSpeakerMode = false;
+        //   setState(() {});
+        //   UtilityComponents.showSnackBarWithString(
+        //       "Switched to Hero Mode", context);
+        // }
+        UtilityComponents.showSnackBarWithString("Coming Soon...", context);
+        break;
+      case 8:
+        String name = await UtilityComponents.showInputDialog(
+            context: context, placeholder: "Enter Name");
+        if (name.isNotEmpty) {
+          _meetingStore.changeName(name: name);
+        }
+        break;
+      case 9:
+        _meetingStore.endRoom(false, "Room Ended From Flutter");
+        if (_meetingStore.isRoomEnded) {
+          Navigator.pop(context);
+        }
+        break;
+
+      default:
+        break;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    var orientation = MediaQuery.of(context).orientation;
     var size = MediaQuery.of(context).size;
-    final double itemHeight = (size.height - kToolbarHeight - 24) / 2.5;
-    final double itemWidth = size.width / 2;
-    final aspectRatio = itemWidth / itemHeight;
-    print(aspectRatio.toString() + "AspectRatio");
-    return WillPopScope(
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(widget.roomId),
-          actions: [
-            Observer(
-              builder: (_) => IconButton(
-                iconSize: 32,
-                onPressed: () {
-                  _meetingStore.toggleSpeaker();
-                },
-                icon: Icon(_meetingStore.isSpeakerOn
-                    ? Icons.volume_up
-                    : Icons.volume_off),
-              ),
-            ),
-            IconButton(
-              iconSize: 32,
-              onPressed: () async {
-                if (_meetingStore.isVideoOn) _meetingStore.toggleCamera();
-              },
-              icon: Icon(Icons.switch_camera),
-            ),
-            IconButton(
-              iconSize: 32,
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (_) => ParticipantsList(
-                      meetingStore: _meetingStore,
-                    ),
-                  ),
-                );
-              },
-              icon: Icon(CupertinoIcons.person_3_fill),
-            )
-          ],
-        ),
-        body: Center(
-          child: Container(
-            width: double.infinity,
-            child: Observer(
-              builder: (_) {
-                print("rebuilding");
-
-                if (!_meetingStore.isMeetingStarted) return SizedBox();
-                if (_meetingStore.tracks.isEmpty)
-                  return Center(child: Text('Waiting for other to join!'));
-                List<HMSTrack> filteredList = _meetingStore.tracks;
-                return PageView.builder(
-                  itemBuilder: (ctx, index) {
-                    ObservableMap<String, HMSTrackUpdate> map =
-                        _meetingStore.trackStatus;
-                    return (index < filteredList.length &&
-                            filteredList[index].source != "SCREEN")
-                        ? ((orientation == Orientation.portrait)
-                            ? Column(
-                                children: [
-                                  Row(
+    final double itemWidth = (size.width - 12) / 2;
+    return ConnectivityAppWrapper(
+        app: WillPopScope(
+      child: ConnectivityWidgetWrapper(
+          disableInteraction: true,
+          offlineWidget: OfflineWidget(),
+          child: Observer(builder: (_) {
+            return _meetingStore.reconnecting
+                ? OfflineWidget()
+                : Scaffold(
+                    resizeToAvoidBottomInset: false,
+                    appBar: AppBar(
+                      title: Text(widget.roomId),
+                      actions: [
+                        Observer(
+                          builder: (_) => IconButton(
+                            iconSize: 32,
+                            onPressed: () {
+                              _meetingStore.toggleSpeaker();
+                            },
+                            icon: Icon(_meetingStore.isSpeakerOn
+                                ? Icons.volume_up
+                                : Icons.volume_off),
+                          ),
+                        ),
+                        Observer(builder: (context) {
+                          return PopupMenuButton(
+                            icon: Icon(CupertinoIcons.gear),
+                            itemBuilder: (BuildContext context) => [
+                              PopupMenuItem(
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text("Send Logs",
+                                        style: TextStyle(color: Colors.blue)),
+                                    Icon(Icons.bug_report, color: Colors.blue),
+                                  ],
+                                ),
+                                value: 1,
+                              ),
+                              PopupMenuItem(
+                                child: Observer(
+                                    builder: (_) => Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                  _meetingStore
+                                                          .isRecordingStarted
+                                                      ? "Recording "
+                                                      : "Record",
+                                                  style: TextStyle(
+                                                    color: _meetingStore
+                                                            .isRecordingStarted
+                                                        ? Colors.red
+                                                        : Colors.blue,
+                                                  )),
+                                              Icon(
+                                                Icons.circle,
+                                                color: _meetingStore
+                                                        .isRecordingStarted
+                                                    ? Colors.red
+                                                    : Colors.blue,
+                                              ),
+                                            ])),
+                                value: 2,
+                              ),
+                              PopupMenuItem(
+                                child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
-                                      //if (index * 4 < filteredList.length)
-                                      VideoTile(
-                                          tileIndex: index * 4,
-                                          filteredList: filteredList,
-                                          itemHeight: itemHeight,
-                                          itemWidth: itemWidth,
-                                          map: map),
-                                      //if (index * 4 + 1 < filteredList.length)
-                                      VideoTile(
-                                          tileIndex: index * 4 + 1,
-                                          filteredList: filteredList,
-                                          itemHeight: itemHeight,
-                                          itemWidth: itemWidth,
-                                          map: map),
-                                    ],
-                                  ),
-                                  Row(
+                                      Text(
+                                        "Toggle Camera  ",
+                                        style: TextStyle(color: Colors.blue),
+                                      ),
+                                      Icon(Icons.switch_camera,
+                                          color: Colors.blue),
+                                    ]),
+                                value: 3,
+                              ),
+                              PopupMenuItem(
+                                child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
-                                      //if (index * 4 + 2 < filteredList.length)
-                                      VideoTile(
-                                          tileIndex: index * 4 + 2,
-                                          filteredList: filteredList,
-                                          itemHeight: itemHeight,
-                                          itemWidth: itemWidth,
-                                          map: map),
-                                      //if (index * 4 + 3 < filteredList.length)
-                                      VideoTile(
-                                          tileIndex: index * 4 + 3,
-                                          filteredList: filteredList,
-                                          itemHeight: itemHeight,
-                                          itemWidth: itemWidth,
-                                          map: map),
-                                    ],
-                                  ),
-                                ],
-                              )
-                            : Column(
-                                children: [
-                                  Row(
+                                      Text(
+                                        "Participants  ",
+                                        style: TextStyle(color: Colors.blue),
+                                      ),
+                                      Icon(CupertinoIcons.person_3_fill,
+                                          color: Colors.blue),
+                                    ]),
+                                value: 4,
+                              ),
+                              PopupMenuItem(
+                                child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
-                                      VideoTile(
-                                          tileIndex: index * 2,
-                                          filteredList: filteredList,
-                                          itemHeight: itemHeight * 2 - 50,
-                                          itemWidth: itemWidth,
-                                          map: map),
-                                      VideoTile(
-                                          tileIndex: index * 2 + 1,
-                                          filteredList: filteredList,
-                                          itemHeight: itemHeight,
-                                          itemWidth: itemWidth,
-                                          map: map),
-                                    ],
-                                  ),
-                                ],
-                              ))
-                        : Container(
-                            child: VideoTile(
-                                tileIndex: 0,
-                                filteredList: filteredList,
-                                itemHeight: itemHeight * 2,
-                                itemWidth: itemWidth * 2,
-                                map: map),
+                                      Text(
+                                        audioViewOn
+                                            ? "Video View"
+                                            : "Audio View",
+                                        style: TextStyle(color: Colors.blue),
+                                      ),
+                                      Image.asset(
+                                        audioViewOn
+                                            ? 'assets/icons/video.png'
+                                            : 'assets/icons/audio.png',
+                                        color: Colors.blue,
+                                        height: 24.0,
+                                        width: 24.0,
+                                      ),
+                                    ]),
+                                value: 5,
+                              ),
+                              PopupMenuItem(
+                                child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        "Active Speaker Mode ",
+                                        style: TextStyle(color: Colors.blue),
+                                      ),
+                                      Icon(CupertinoIcons.person_3_fill,
+                                          color: Colors.blue),
+                                    ]),
+                                value: 6,
+                              ),
+                              PopupMenuItem(
+                                child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        "Hero Mode ",
+                                        style: TextStyle(color: Colors.blue),
+                                      ),
+                                      Icon(CupertinoIcons.person_3_fill,
+                                          color: Colors.blue),
+                                    ]),
+                                value: 7,
+                              ),
+                              PopupMenuItem(
+                                child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        "Change Name",
+                                        style: TextStyle(color: Colors.blue),
+                                      ),
+                                      Icon(Icons.create_rounded,
+                                          color: Colors.blue),
+                                    ]),
+                                value: 8,
+                              ),
+                              if (_meetingStore
+                                  .localPeer!.role!.permissions!.endRoom!)
+                                PopupMenuItem(
+                                  child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          "End Room",
+                                          style: TextStyle(color: Colors.blue),
+                                        ),
+                                        Icon(Icons.cancel_schedule_send,
+                                            color: Colors.blue),
+                                      ]),
+                                  value: 9,
+                                ),
+                            ],
+                            onSelected: handleMenu,
                           );
-                  },
-                  itemCount: ((filteredList.length - 1) /
-                              ((orientation == Orientation.portrait) ? 4 : 2))
-                          .floor() +
-                      1 +
-                      ((filteredList[0].source != "SCREEN") ? 0 : 1),
-                );
-              },
-            ),
-          ),
-        ),
-        bottomNavigationBar: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Container(
-              padding: EdgeInsets.all(8),
-              child: Observer(builder: (context) {
-                return IconButton(
-                    tooltip: 'Video',
-                    iconSize: 32,
-                    onPressed: () {
-                      _meetingStore.toggleVideo();
-                    },
-                    icon: Icon(_meetingStore.isVideoOn
-                        ? Icons.videocam
-                        : Icons.videocam_off));
-              }),
-            ),
-            Container(
-              padding: EdgeInsets.all(8),
-              child: Observer(builder: (context) {
-                return IconButton(
-                    tooltip: 'Audio',
-                    iconSize: 32,
-                    onPressed: () {
-                      _meetingStore.toggleAudio();
-                    },
-                    icon: Icon(
-                        _meetingStore.isMicOn ? Icons.mic : Icons.mic_off));
-              }),
-            ),
-            Container(
-              padding: EdgeInsets.all(8),
-              child: IconButton(
-                  tooltip: 'Chat',
-                  iconSize: 32,
-                  onPressed: () {
-                    chatMessages(context, _meetingStore);
-                  },
-                  icon: Icon(Icons.chat_bubble)),
-            ),
-            Container(
-              padding: EdgeInsets.all(8),
-              child: IconButton(
-                  tooltip: 'Leave Or End',
-                  iconSize: 32,
-                  onPressed: () async {
-                    String ans = await showDialog(
-                        context: context,
-                        builder: (_) => LeaveOrEndMeetingDialogOption(
-                              meetingStore: _meetingStore,
-                            ));
-                    if (ans == 'Leave' || ans == 'End') Navigator.pop(context);
-                  },
-                  icon: Icon(Icons.call_end)),
-            ),
-          ],
-        ),
-      ),
+                        }),
+                      ],
+                    ),
+                    body: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 5.0, vertical: 5.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Observer(builder: (_) {
+                            if (_meetingStore.screenShareTrack != null &&
+                                !audioViewOn) {
+                              return SizedBox(
+                                width: double.infinity,
+                                height:
+                                    MediaQuery.of(context).size.height / 2.5,
+                                child: InteractiveViewer(
+                                  child: PeerItemOrganism(
+                                    observableMap: {"highestAudio": ""},
+                                    height:
+                                        MediaQuery.of(context).size.height / 2,
+                                    width: MediaQuery.of(context).size.width,
+                                    isVideoMuted: false,
+                                    peerTracKNode: new PeerTracKNode(
+                                        peerId: _meetingStore.screenSharePeerId,
+                                        track: _meetingStore.screenShareTrack!,
+                                        name: _meetingStore
+                                                .screenShareTrack?.peer?.name ??
+                                            ""),
+                                  ),
+                                ),
+                              );
+                            } else {
+                              return Container();
+                            }
+                          }),
+                          Flexible(
+                            child: Observer(
+                              builder: (_) {
+                                // if (!_meetingStore.isMeetingStarted)
+                                //   return SizedBox();
+                                if (_meetingStore.peerTracks.isEmpty)
+                                  return Center(
+                                      child:
+                                          Text('Waiting for others to join!'));
+                                ObservableList<PeerTracKNode> peerFilteredList =
+                                    _meetingStore.isActiveSpeakerMode
+                                        ? _meetingStore
+                                            .activeSpeakerPeerTracksStore
+                                        : _meetingStore.peerTracks;
+                                ObservableMap<String, String> audioKeyMap =
+                                    _meetingStore.observableMap;
+                                return GridView.builder(
+                                    physics: PageScrollPhysics(),
+                                    scrollDirection: Axis.horizontal,
+                                    addAutomaticKeepAlives: false,
+                                    itemCount: peerFilteredList.length,
+                                    shrinkWrap: true,
+                                    cacheExtent: 0,
+                                    gridDelegate:
+                                        SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: (!audioViewOn &&
+                                              _meetingStore.screenShareTrack !=
+                                                  null)
+                                          ? 1
+                                          : 2,
+                                      mainAxisExtent: itemWidth,
+                                    ),
+                                    itemBuilder: (ctx, index) {
+                                      return Observer(builder: (context) {
+                                        ObservableMap<String, HMSTrackUpdate>
+                                            map = _meetingStore.trackStatus;
+                                        return VideoTile(
+                                          tileIndex: index,
+                                          filteredList: peerFilteredList,
+                                          trackStatus: map,
+                                          observerMap: audioKeyMap,
+                                          audioView: audioViewOn,
+                                        );
+                                      });
+                                    });
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    bottomNavigationBar: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Container(
+                            padding: EdgeInsets.all(8),
+                            child: Observer(builder: (context) {
+                              return IconButton(
+                                  tooltip: 'Video',
+                                  iconSize: 32,
+                                  onPressed: (audioViewOn)
+                                      ? null
+                                      : () {
+                                          _meetingStore.switchVideo();
+                                          countOfVideoOnBetweenTwo++;
+                                        },
+                                  icon: Icon(_meetingStore.isVideoOn
+                                      ? Icons.videocam
+                                      : Icons.videocam_off));
+                            }),
+                          ),
+                          Container(
+                            padding: EdgeInsets.all(8),
+                            child: Observer(builder: (context) {
+                              return IconButton(
+                                  tooltip: 'Audio',
+                                  iconSize: 32,
+                                  onPressed: () {
+                                    _meetingStore.switchAudio();
+                                  },
+                                  icon: Icon(_meetingStore.isMicOn
+                                      ? Icons.mic
+                                      : Icons.mic_off));
+                            }),
+                          ),
+                          Container(
+                              padding: EdgeInsets.all(8),
+                              child: IconButton(
+                                tooltip: 'RaiseHand',
+                                iconSize: 32,
+                                onPressed: () {
+                                  setState(() {
+                                    raisedHand = !raisedHand;
+                                  });
+                                  _meetingStore.changeMetadata();
+                                  UtilityComponents.showSnackBarWithString(
+                                      raisedHand
+                                          ? "Raised Hand ON"
+                                          : "Raised Hand OFF",
+                                      context);
+                                },
+                                icon: Image.asset(
+                                  'assets/icons/raise_hand.png',
+                                  color: raisedHand
+                                      ? Colors.amber.shade300
+                                      : Colors.black,
+                                ),
+                              )),
+                          Container(
+                            padding: EdgeInsets.all(8),
+                            child: IconButton(
+                                tooltip: 'Chat',
+                                iconSize: 32,
+                                onPressed: () {
+                                  chatMessages(context, _meetingStore);
+                                },
+                                icon: Icon(Icons.chat_bubble)),
+                          ),
+                          Container(
+                            padding: EdgeInsets.all(8),
+                            child: IconButton(
+                                color: Colors.red,
+                                tooltip: 'Leave Or End',
+                                iconSize: 32,
+                                onPressed: () async {
+                                  await UtilityComponents.onBackPressed(
+                                      context);
+                                },
+                                icon: Icon(Icons.call_end)),
+                          ),
+                        ]),
+                  );
+          })),
       onWillPop: () async {
-        bool ans = await _onBackPressed();
+        bool ans = await UtilityComponents.onBackPressed(context) ?? false;
         return ans;
       },
-    );
+    ));
   }
 
   @override
@@ -359,27 +624,18 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
     super.didChangeAppLifecycleState(state);
     if (state == AppLifecycleState.resumed) {
       if (_meetingStore.isVideoOn) {
-        _meetingStore.meetingController.startCapturing();
+        _meetingStore.startCapturing();
+      } else {
+        _meetingStore.stopCapturing();
       }
     } else if (state == AppLifecycleState.paused) {
       if (_meetingStore.isVideoOn) {
-        _meetingStore.meetingController.stopCapturing();
+        _meetingStore.stopCapturing();
       }
     } else if (state == AppLifecycleState.inactive) {
       if (_meetingStore.isVideoOn) {
-        _meetingStore.meetingController.stopCapturing();
+        _meetingStore.stopCapturing();
       }
-    }
-  }
-
-  showTrackChangeDialog(event) async {
-    event = event as HMSTrackChangeRequest;
-    String answer = await showDialog(
-        context: context,
-        builder: (ctx) => TrackChangeDialogOrganism(trackChangeRequest: event));
-    if (answer == "OK") {
-      debugPrint("OK accepted");
-      _meetingStore.changeTracks();
     }
   }
 }

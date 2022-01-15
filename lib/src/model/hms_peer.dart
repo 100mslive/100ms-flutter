@@ -7,13 +7,16 @@
 /// A [peer] is the object returned by 100ms SDKs that contains all information about a user - name, role, video track etc.
 ///
 ///This library depends only on core Dart libraries and hms_audio_track.dart, hms_role.dart, hms_track.dart, hms_video_track.dart library.
+
+// Dart imports:
 import 'dart:io';
 
+// Project imports:
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 class HMSPeer {
   ///id of the peer
-  final String peerId;
+  late final String peerId;
 
   ///name of the peer in the room.
   final String name;
@@ -21,10 +24,15 @@ class HMSPeer {
   ///returns whether peer is local or not.
   final bool isLocal;
 
+  @override
+  String toString() {
+    return 'HMSPeer{name: $name, isLocal: $isLocal}';
+  }
+
   ///role of the peer in the room.
   final HMSRole? role;
   final String? customerUserId;
-  final String? customerDescription;
+  final String? metadata;
   HMSAudioTrack? audioTrack;
   HMSVideoTrack? videoTrack;
   final List<HMSTrack>? auxiliaryTracks;
@@ -35,7 +43,7 @@ class HMSPeer {
     required this.isLocal,
     this.role,
     this.customerUserId,
-    this.customerDescription,
+    this.metadata,
     this.audioTrack,
     this.videoTrack,
     this.auxiliaryTracks,
@@ -56,12 +64,22 @@ class HMSPeer {
     if (Platform.isAndroid) {
       HMSRole? role;
       if (map['role'] != null) role = HMSRole.fromMap(map['role']);
-      return HMSPeer(
+      if (map['is_local'] == true) {
+        return HMSLocalPeer(
+          peerId: map['peer_id'],
+          name: map['name'],
+          isLocal: map['is_local'],
+          role: role,
+          metadata: map['metadata'],
+          customerUserId: map['customer_user_id'],
+        );
+      }
+      return HMSRemotePeer(
         peerId: map['peer_id'],
         name: map['name'],
         isLocal: map['is_local'],
         role: role,
-        customerDescription: map['customer_description'],
+        metadata: map['metadata'],
         customerUserId: map['customer_user_id'],
       );
     } else {
@@ -71,14 +89,23 @@ class HMSPeer {
 
       // TODO: add auxiliary tracks
 
-      HMSPeer peer = HMSPeer(
-        peerId: map['peer_id'],
-        name: map['name'],
-        isLocal: map['is_local'],
-        role: role,
-        customerDescription: map['customer_description'],
-        customerUserId: map['customer_user_id'],
-      );
+      HMSPeer peer = (map['is_local'] == true)
+          ? HMSLocalPeer(
+              peerId: map['peer_id'],
+              name: map['name'],
+              isLocal: map['is_local'],
+              role: role,
+              metadata: map['metadata'],
+              customerUserId: map['customer_user_id'],
+            )
+          : HMSRemotePeer(
+              peerId: map['peer_id'],
+              name: map['name'],
+              isLocal: map['is_local'],
+              role: role,
+              metadata: map['metadata'],
+              customerUserId: map['customer_user_id'],
+            );
 
       if (map['audio_track'] != null) {
         peer.audioTrack =

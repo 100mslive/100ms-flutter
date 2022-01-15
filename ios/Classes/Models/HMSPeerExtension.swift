@@ -8,46 +8,44 @@
 import Foundation
 import HMSSDK
 
-class  HMSPeerExtension{
+class  HMSPeerExtension {
     
-    static func toDictionary(peer: HMSPeer) -> Dictionary<String, Any?> {
-   
-        var auxilaryTracks:[Dictionary<String, Any?>]=[]
-              
-        var dict:[String:Any?] = [
+    static func toDictionary(_ peer: HMSPeer) -> [String: Any] {
+        
+        var dict = [
             "peer_id":peer.peerID,
             "name":peer.name,
             "is_local":peer.isLocal,
-            "customer_description":peer.customerDescription ?? "",
+            "customer_description":peer.metadata ?? "",
             "customer_user_id":peer.customerUserID ?? "",
-        ]
+        ] as [String: Any]
         
-        if let role = peer.role{
-            dict["role"]=HMSRoleExtension.toDictionary(role:role)
+        if let metadata = peer.metadata {
+            dict["metadata"] = metadata
         }
+        if let role = peer.role {
+            dict["role"] = HMSRoleExtension.toDictionary(role)
+        }
+        
         if let audioTrack = peer.audioTrack{
-            dict["audio_track"]=HMSTrackExtension.toDictionary(track:audioTrack)
+            dict["audio_track"] = HMSTrackExtension.toDictionary(audioTrack)
         }
         
         if let videoTrack = peer.videoTrack{
-            dict["video_track"]=HMSTrackExtension.toDictionary(track:videoTrack)
+            dict["video_track"] = HMSTrackExtension.toDictionary(videoTrack)
         }
         
-        if let tracks = peer.auxiliaryTracks {
-            for eachTrack:HMSTrack in tracks{
-                    auxilaryTracks.insert(HMSTrackExtension.toDictionary(track: eachTrack),at: auxilaryTracks.count)
-            }
+        if let aux = peer.auxiliaryTracks {
+            var auxilaryTracks = [[String: Any]]()
+            aux.forEach { auxilaryTracks.append(HMSTrackExtension.toDictionary($0)) }
+            dict["auxilary_tracks"] = auxilaryTracks
         }
         
-        dict["auxilary_tracks"] = auxilaryTracks
-        
-      
         return dict
     }
-  
     
     
-    static func getValueOfHMSPeerUpdate (update:HMSPeerUpdate)->String{
+    static func getValueOf(_ update: HMSPeerUpdate) -> String {
         switch update {
         case .peerJoined:
             return "peerJoined"
@@ -57,6 +55,10 @@ class  HMSPeerExtension{
             return "roleUpdated"
         case .defaultUpdate:
             return "defaultUpdate"
+        case .nameUpdated:
+            return "nameChanged"
+        case .metadataUpdated:
+            return "metadataChanged"
         @unknown default:
             return "defaultUpdate"
         }

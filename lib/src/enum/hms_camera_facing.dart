@@ -1,4 +1,4 @@
-enum HMSCameraFacing { kHMSCameraFacingFront, kHMSCameraFacingBack, unknown }
+enum HMSCameraFacing { FRONT, BACK, unknown }
 
 ///Camera facing
 extension HMSCameraFacingValues on HMSCameraFacing {
@@ -6,12 +6,12 @@ extension HMSCameraFacingValues on HMSCameraFacing {
     switch (name) {
 
       ///front camera is being used
-      case 'kHMSCameraFacingFront':
-        return HMSCameraFacing.kHMSCameraFacingFront;
+      case 'front':
+        return HMSCameraFacing.FRONT;
 
       ///rear camera is being used
-      case 'kHMSCameraFacingBack':
-        return HMSCameraFacing.kHMSCameraFacingBack;
+      case 'back':
+        return HMSCameraFacing.BACK;
 
       default:
         return HMSCameraFacing.unknown;
@@ -20,10 +20,10 @@ extension HMSCameraFacingValues on HMSCameraFacing {
 
   static String getValueFromHMSCameraFacing(HMSCameraFacing hmsCameraFacing) {
     switch (hmsCameraFacing) {
-      case HMSCameraFacing.kHMSCameraFacingFront:
-        return 'kHMSCameraFacingFront';
-      case HMSCameraFacing.kHMSCameraFacingBack:
-        return 'kHMSCameraFacingVideo';
+      case HMSCameraFacing.FRONT:
+        return 'front';
+      case HMSCameraFacing.BACK:
+        return 'back';
       case HMSCameraFacing.unknown:
         return '';
     }

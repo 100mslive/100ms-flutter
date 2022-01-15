@@ -1,3 +1,4 @@
+//Package imports
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/preview/preview_controller.dart';
@@ -15,7 +16,9 @@ abstract class PreviewStoreBase
   @observable
   List<HMSTrack> localTracks = [];
   @observable
-  HMSError? error;
+  HMSPeer? peer;
+  @observable
+  HMSException? error;
 
   @observable
   bool videoOn = true;
@@ -23,12 +26,18 @@ abstract class PreviewStoreBase
   bool audioOn = true;
 
   @override
-  void onError({required HMSError error}) {
+  void onError({required HMSException error}) {
     updateError(error);
   }
 
   @override
   void onPreview({required HMSRoom room, required List<HMSTrack> localTracks}) {
+    for (HMSPeer each in room.peers!) {
+      if (each.isLocal) {
+        this.peer = each;
+        break;
+      }
+    }
     List<HMSTrack> videoTracks = [];
     for (var track in localTracks) {
       if (track.kind == HMSTrackKind.kHMSTrackKindVideo) {
@@ -54,12 +63,15 @@ abstract class PreviewStoreBase
 
   void startCapturing() {
     previewController.startCapturing();
-    videoOn = true;
   }
 
   void stopCapturing() {
     previewController.stopCapturing();
-    videoOn = false;
+  }
+
+  void switchVideo() {
+    previewController.switchVideo(isOn: videoOn);
+    videoOn = !videoOn;
   }
 
   void switchAudio() {
@@ -68,14 +80,13 @@ abstract class PreviewStoreBase
   }
 
   @action
-  void updateError(HMSError error) {
+  void updateError(HMSException error) {
     this.error = error;
   }
 
   @override
-  void onLogMessage({required dynamic HMSLog}) {
-    print(HMSLog.toString() + "onLogMessageFlutter");
-    FirebaseCrashlytics.instance.log(HMSLog.toString());
+  void onLogMessage({required dynamic hmsLogList}) {
+    FirebaseCrashlytics.instance.log(hmsLogList.toString());
   }
 
   void addLogsListener() {

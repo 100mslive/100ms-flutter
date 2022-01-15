@@ -5,10 +5,12 @@
 /// There are 10 callbacks which will be called on different changes in the room.a
 ///
 /// Check more down below.
-import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-import 'package:hmssdk_flutter/src/model/hms_peer_removed_from_room.dart';
-import 'package:hmssdk_flutter/src/model/hms_track_change_request.dart';
 
+// Project imports:
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+
+/// 100ms SDK provides callbacks to the client app about any change or update happening in the room after a user has joined by implementing HMSUpdateListener.
+/// These updates can be used to render the video on screen or to display other info regarding the room.
 abstract class HMSUpdateListener {
   /// This will be called on a successful JOIN of the room by the user
   ///
@@ -49,7 +51,7 @@ abstract class HMSUpdateListener {
   ///
   /// and SDK has already retried to fix the error
   /// - Parameter error: the error that occurred
-  void onError({required HMSError error});
+  void onError({required HMSException error});
 
   /// This is called when there is a new broadcast message from any other peer in the room
   ///
@@ -82,9 +84,13 @@ abstract class HMSUpdateListener {
   ///when you are back in the room after reconnection
   void onReconnected();
 
+  ///when someone requests for track change of yours be it video or audio this will be triggered
+  /// - Parameter hmsTrackChangeRequest: request instance consisting of all the required info about track change
   void onChangeTrackStateRequest(
       {required HMSTrackChangeRequest hmsTrackChangeRequest});
 
+  ///when someone kicks you out or when someone ends the room at that time it is triggered
+  ///- Paramter hmsPeerRemovedFromPeer - it consists info about who removed you and why.
   void onRemovedFromRoom(
       {required HMSPeerRemovedFromPeer hmsPeerRemovedFromPeer});
 }

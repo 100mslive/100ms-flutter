@@ -1,4 +1,7 @@
+// Package imports
 import 'package:flutter/material.dart';
+
+// Project imports
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 class RoleChangeDialogOrganism extends StatefulWidget {
@@ -23,7 +26,7 @@ class _RoleChangeDialogOrganismState extends State<RoleChangeDialogOrganism> {
               "Change Role request",
               style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
             ),
-            Text(widget.roleChangeRequest.suggestedBy.name.toString()),
+            Text(widget.roleChangeRequest.suggestedBy?.name ?? "No name"),
             Text(widget.roleChangeRequest.suggestedRole.name)
           ],
         ),

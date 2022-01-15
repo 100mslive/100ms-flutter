@@ -1,11 +1,11 @@
 ///platformmethods to use to interact with specific platform
 enum PlatformMethod {
   ///join meeting using this.
-  joinMeeting,
+  join,
 
   ///leave meeting
-  leaveMeeting,
-  onLeaveMeeting,
+  leave,
+  onLeave,
 
   ///when onJoin callback is called
   onJoinRoom,
@@ -24,7 +24,7 @@ enum PlatformMethod {
   onMessage,
 
   ///when you want to send a message.
-  sendMessage,
+  sendBroadcastMessage,
   sendDirectMessage,
   sendGroupMessage,
   onUpdateSpeaker,
@@ -54,37 +54,49 @@ enum PlatformMethod {
   ///stop capturing your video from your camera.
   stopCapturing,
 
-  ///get tracks for previewVideo.
-  previewVideo,
+  ///get tracks for preview.
+  preview,
 
   ///accept role changes suggestedBy any peer.
-  acceptRoleChange,
+  acceptChangeRole,
 
   ///change your peer role.
   changeRole,
 
   ///get list of roles using this.
   getRoles,
-  changeTrack,
+  changeTrackState,
   endRoom,
   removePeer,
   muteAll,
   unMuteAll,
   getLocalPeer,
+  getRemotePeers,
+  getPeers,
   unknown,
   startHMSLogger,
-  removeHMSLogger
+  removeHMSLogger,
+  changeTrackStateForRole,
+  startRtmpOrRecording,
+  stopRtmpAndRecording,
+  build,
+  getRoom,
+  updateHMSLocalVideoTrackSettings,
+  changeMetadata,
+  setPlayBackAllowed,
+  setVolume,
+  changeName
 }
 
 extension PlatformMethodValues on PlatformMethod {
   static String getName(PlatformMethod method) {
     switch (method) {
-      case PlatformMethod.joinMeeting:
-        return 'join_meeting';
-      case PlatformMethod.leaveMeeting:
-        return 'leave_meeting';
-      case PlatformMethod.onLeaveMeeting:
-        return 'on_leave_meeting';
+      case PlatformMethod.join:
+        return 'join';
+      case PlatformMethod.leave:
+        return 'leave';
+      case PlatformMethod.onLeave:
+        return 'on_leave';
       case PlatformMethod.onJoinRoom:
         return 'on_join_room';
       case PlatformMethod.onUpdateRoom:
@@ -117,21 +129,21 @@ extension PlatformMethodValues on PlatformMethod {
         return 'start_capturing';
       case PlatformMethod.stopCapturing:
         return 'stop_capturing';
-      case PlatformMethod.sendMessage:
-        return 'send_message';
+      case PlatformMethod.sendBroadcastMessage:
+        return 'send_broadcast_message';
       case PlatformMethod.sendDirectMessage:
         return 'send_direct_message';
       case PlatformMethod.sendGroupMessage:
         return 'send_group_message';
-      case PlatformMethod.previewVideo:
-        return 'preview_video';
-      case PlatformMethod.acceptRoleChange:
-        return 'accept_role_change';
+      case PlatformMethod.preview:
+        return 'preview';
+      case PlatformMethod.acceptChangeRole:
+        return 'accept_change_role';
       case PlatformMethod.changeRole:
         return 'change_role';
       case PlatformMethod.getRoles:
         return 'get_roles';
-      case PlatformMethod.changeTrack:
+      case PlatformMethod.changeTrackState:
         return 'on_change_track_state_request';
       case PlatformMethod.endRoom:
         return 'end_room';
@@ -143,23 +155,47 @@ extension PlatformMethodValues on PlatformMethod {
         return 'un_mute_all';
       case PlatformMethod.getLocalPeer:
         return 'get_local_peer';
+      case PlatformMethod.getRemotePeers:
+        return 'get_remote_peers';
+      case PlatformMethod.getPeers:
+        return 'get_peers';
       case PlatformMethod.unknown:
         return 'unknown';
       case PlatformMethod.startHMSLogger:
         return "start_hms_logger";
       case PlatformMethod.removeHMSLogger:
         return "remove_hms_logger";
+      case PlatformMethod.changeTrackStateForRole:
+        return "change_track_state";
+      case PlatformMethod.startRtmpOrRecording:
+        return "start_rtmp_or_recording";
+      case PlatformMethod.getRoom:
+        return "get_room";
+      case PlatformMethod.stopRtmpAndRecording:
+        return "stop_rtmp_and_recording";
+      case PlatformMethod.build:
+        return 'build';
+      case PlatformMethod.updateHMSLocalVideoTrackSettings:
+        return "update_hms_video_track_settings";
+      case PlatformMethod.changeMetadata:
+        return "change_metadata";
+      case PlatformMethod.setPlayBackAllowed:
+        return "set_playback_allowed";
+      case PlatformMethod.setVolume:
+        return "set_volume";
+      case PlatformMethod.changeName:
+        return "change_name";
     }
   }
 
   static PlatformMethod getMethodFromName(String name) {
     switch (name) {
-      case 'join_meeting':
-        return PlatformMethod.joinMeeting;
-      case 'leave_meeting':
-        return PlatformMethod.leaveMeeting;
-      case 'on_leave_meeting':
-        return PlatformMethod.onLeaveMeeting;
+      case 'join':
+        return PlatformMethod.join;
+      case 'leave':
+        return PlatformMethod.leave;
+      case 'on_leave':
+        return PlatformMethod.onLeave;
       case 'on_join_room':
         return PlatformMethod.onJoinRoom;
       case 'on_update_room':
@@ -192,22 +228,22 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.stopCapturing;
       case 'start_capturing':
         return PlatformMethod.startCapturing;
-      case 'send_message':
-        return PlatformMethod.sendMessage;
+      case 'send_broadcast_message':
+        return PlatformMethod.sendBroadcastMessage;
       case 'send_direct_message':
         return PlatformMethod.sendDirectMessage;
       case 'send_group_message':
         return PlatformMethod.sendGroupMessage;
-      case 'preview_video':
-        return PlatformMethod.previewVideo;
-      case 'accept_role_change':
-        return PlatformMethod.acceptRoleChange;
+      case 'preview':
+        return PlatformMethod.preview;
+      case 'accept_change_role':
+        return PlatformMethod.acceptChangeRole;
       case 'change_role':
         return PlatformMethod.changeRole;
       case 'get_roles':
         return PlatformMethod.getRoles;
       case 'on_change_track_state_request':
-        return PlatformMethod.changeTrack;
+        return PlatformMethod.changeTrackState;
       case 'end_room':
         return PlatformMethod.endRoom;
       case 'remove_peer':
@@ -218,10 +254,34 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.unMuteAll;
       case 'get_local_peer':
         return PlatformMethod.getLocalPeer;
+      case 'get_remote_peers':
+        return PlatformMethod.getRemotePeers;
+      case 'get_peers':
+        return PlatformMethod.getPeers;
       case 'start_hms_logger':
         return PlatformMethod.startHMSLogger;
       case 'remove_hms_logger':
         return PlatformMethod.removeHMSLogger;
+      case 'change_track_state_for_role':
+        return PlatformMethod.changeTrackStateForRole;
+      case 'start_rtmp_or_recording':
+        return PlatformMethod.startRtmpOrRecording;
+      case 'stop_rtmp_and_recording':
+        return PlatformMethod.stopRtmpAndRecording;
+      case 'build':
+        return PlatformMethod.build;
+      case "get_room":
+        return PlatformMethod.getRoom;
+      case "update_hms_video_track_settings":
+        return PlatformMethod.updateHMSLocalVideoTrackSettings;
+      case "change_metadata":
+        return PlatformMethod.changeMetadata;
+      case "set_playback_allowed":
+        return PlatformMethod.setPlayBackAllowed;
+      case "set_volume":
+        return PlatformMethod.setVolume;
+      case "change_name":
+        return PlatformMethod.changeName;
       default:
         return PlatformMethod.unknown;
     }

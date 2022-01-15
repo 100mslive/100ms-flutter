@@ -1,3 +1,4 @@
+// Project imports:
 import 'package:hmssdk_flutter/src/enum/hms_log_level.dart';
 
 class HMSLog {
@@ -20,6 +21,11 @@ class HMSLog {
         message: map["message"],
         isWebRtcLog: map["is_web_rtc_log"]);
   }
+
+  Map<String, dynamic> toMap() => {
+        'tag': tag,
+        'message': message,
+      };
 
   @override
   String toString() {

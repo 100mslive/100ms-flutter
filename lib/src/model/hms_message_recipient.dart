@@ -1,5 +1,5 @@
+// Project imports:
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-import 'package:hmssdk_flutter/src/enum/hms_message_recipient_type.dart';
 
 class HMSMessageRecipient {
   HMSPeer? recipientPeer;

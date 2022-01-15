@@ -6,9 +6,6 @@ enum HMSPeerUpdate {
   ///When peer left the room.
   peerLeft,
 
-  ///when peer is knocked out by the host.
-  peerKnocked,
-
   ///when peer's audio is toggled
   audioToggled,
 
@@ -17,6 +14,8 @@ enum HMSPeerUpdate {
 
   ///when peer's role is changed
   roleUpdated,
+  metadataChanged,
+  nameChanged,
   defaultUpdate
 }
 
@@ -27,14 +26,16 @@ extension HMSPeerUpdateValues on HMSPeerUpdate {
         return HMSPeerUpdate.peerJoined;
       case 'peerLeft':
         return HMSPeerUpdate.peerLeft;
-      case 'peerKnocked':
-        return HMSPeerUpdate.peerKnocked;
       case 'audioToggled':
         return HMSPeerUpdate.audioToggled;
       case 'videoToggled':
         return HMSPeerUpdate.videoToggled;
       case 'roleUpdated':
         return HMSPeerUpdate.roleUpdated;
+      case 'metadataChanged':
+        return HMSPeerUpdate.metadataChanged;
+      case 'nameChanged':
+        return HMSPeerUpdate.nameChanged;
       case 'defaultUpdate':
         return HMSPeerUpdate.defaultUpdate;
       default:
@@ -50,17 +51,20 @@ extension HMSPeerUpdateValues on HMSPeerUpdate {
       case HMSPeerUpdate.peerLeft:
         return 'peerLeft';
 
-      case HMSPeerUpdate.peerKnocked:
-        return 'peerKnocked';
+      case HMSPeerUpdate.roleUpdated:
+        return 'roleUpdated';
+
+      case HMSPeerUpdate.metadataChanged:
+        return 'metadataChanged';
+
+      case HMSPeerUpdate.nameChanged:
+        return 'nameChanged';
 
       case HMSPeerUpdate.audioToggled:
         return 'audioToggled';
 
       case HMSPeerUpdate.videoToggled:
         return 'videoToggled';
-
-      case HMSPeerUpdate.roleUpdated:
-        return 'roleUpdated';
 
       case HMSPeerUpdate.defaultUpdate:
         return 'defaultUpdate';

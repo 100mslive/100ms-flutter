@@ -1,22 +1,30 @@
+// Package imports
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+// Project imports
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
+import 'package:hmssdk_flutter_example/meeting/peerTrackNode.dart';
 
 class PeerItemOrganism extends StatefulWidget {
-  final HMSTrack track;
+  final PeerTracKNode peerTracKNode;
   final bool isVideoMuted;
   final double height;
   final double width;
   final bool isLocal;
-  final bool matchParent;
+  final bool setMirror;
+  final Map<String, String> observableMap;
 
   PeerItemOrganism(
       {Key? key,
-      required this.track,
+      required this.peerTracKNode,
       this.isVideoMuted = true,
       this.height = 200.0,
       this.width = 200.0,
       this.isLocal = false,
-      this.matchParent = true})
+      this.setMirror = false,
+      required this.observableMap})
       : super(key: key);
 
   @override
@@ -35,9 +43,7 @@ class _PeerItemOrganismState extends State<PeerItemOrganism> {
 
   @override
   Widget build(BuildContext context) {
-    print(
-        "isVideoMuted ${widget.isVideoMuted} ${widget.track.source} ${widget.track.peer?.name}");
-
+    MeetingStore meetingStore = context.watch<MeetingStore>();
     return Container(
       key: key,
       padding: EdgeInsets.all(2),
@@ -46,15 +52,21 @@ class _PeerItemOrganismState extends State<PeerItemOrganism> {
       width: widget.width - 5.0,
       decoration: BoxDecoration(
           border: Border.all(
-              color: widget.track.isHighestAudio ? Colors.blue : Colors.grey,
-              width: widget.track.isHighestAudio ? 4.0 : 1.0),
-          borderRadius: BorderRadius.all(Radius.circular(4))),
-      child: Column(
+              color: widget.peerTracKNode.peerId ==
+                      meetingStore.highestSpeaker.peerId
+                  ? Colors.blue
+                  : Colors.grey,
+              width: widget.peerTracKNode.peerId ==
+                      meetingStore.highestSpeaker.peerId
+                  ? 4.0
+                  : 1.0),
+          borderRadius: BorderRadius.all(Radius.circular(10))),
+      child: Stack(
         children: [
-          Expanded(child: LayoutBuilder(
+          LayoutBuilder(
             builder: (context, constraints) {
-              if ((widget.isVideoMuted)) {
-                List<String> parts = widget.track.peer?.name.split(" ") ?? [];
+              if ((widget.isVideoMuted || widget.peerTracKNode.track == null)) {
+                List<String>? parts = widget.peerTracKNode.name.split(" ");
 
                 if (parts.length == 1) {
                   parts[0] += " ";
@@ -70,25 +82,33 @@ class _PeerItemOrganismState extends State<PeerItemOrganism> {
                 return Container(
                   height: widget.height + 100,
                   width: widget.width - 5,
-                  child: Center(child: CircleAvatar(child: Text(name))),
+                  child: Center(
+                      child: CircleAvatar(
+                          child: Text(
+                    name,
+                  ))),
                 );
               }
-
               return Container(
                 height: widget.height + 100,
                 width: widget.width - 5,
+                padding: EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 15.0),
                 child: HMSVideoView(
-                    track: widget.track,
-                    isAuxiliaryTrack: widget.track.source == "SCREEN",
-                    matchParent: widget.matchParent),
+                  track: widget.peerTracKNode.track!,
+                  setMirror: widget.setMirror,
+                  matchParent: false,
+                ),
               );
             },
-          )),
-          SizedBox(
-            height: 4,
           ),
-          Text(
-              "${widget.track.peer?.name ?? ''} ${widget.track.peer?.isLocal ?? false ? "(You)" : ""}")
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Text(
+              "${widget.peerTracKNode.name} ${widget.peerTracKNode.track?.peer?.isLocal ?? false ? "(You)" : ""}",
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
         ],
       ),
     );

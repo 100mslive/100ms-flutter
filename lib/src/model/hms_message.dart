@@ -8,10 +8,12 @@
 ///You can see an example of every type of message (of the types below) being sent and displayed in the advanced sample app.
 ///
 /// You can use chat feature using this HMSMessage object it will contains each message with other relevant information.
+
+// Dart imports:
 import 'dart:core';
 
+// Project imports:
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-import 'package:hmssdk_flutter/src/model/hms_message_recipient.dart';
 
 class HMSMessage {
   ///[sender] id basically it is the peerId who is sending message.

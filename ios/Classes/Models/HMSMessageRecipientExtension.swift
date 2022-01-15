@@ -9,22 +9,22 @@ import Foundation
 import HMSSDK
 
 class HMSMessageRecipientExtension {
-    static func toDictionary(receipient: HMSMessageRecipient) -> [String: Any] {
+    
+    static func toDictionary(_ receipient: HMSMessageRecipient) -> [String: Any] {
+        
         var dict = [String: Any]()
         
+        dict["recipient_type"] = getString(from: receipient.type)
+        
         if let peer = receipient.peerRecipient {
-            dict["recipient_peer"] = HMSPeerExtension.toDictionary(peer: peer)
+            dict["recipient_peer"] = HMSPeerExtension.toDictionary(peer)
         }
         
         if let roles = receipient.rolesRecipient {
             var roleExtension = [Any]()
-            for role in roles {
-                roleExtension.append(HMSRoleExtension.toDictionary(role: role))
-            }
+            roles.forEach { roleExtension.append(HMSRoleExtension.toDictionary($0)) }
             dict["recipient_roles"] = roleExtension
         }
-        
-        dict["recipient_type"] = getString(from: receipient.type)
         
         return dict
     }

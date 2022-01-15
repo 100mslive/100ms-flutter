@@ -1,17 +1,37 @@
+// Project imports:
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+
 class HMSAudioTrackSetting {
-  final int maxBitrate;
-  final String trackDescription;
+  final int? maxBitrate;
+  final HMSAudioCodec? hmsAudioCodec;
+  final bool? useHardwareAcousticEchoCanceler;
+  final double? volume;
 
   HMSAudioTrackSetting(
-      {required this.maxBitrate, required this.trackDescription});
+      {this.maxBitrate,
+      this.hmsAudioCodec,
+      this.useHardwareAcousticEchoCanceler,
+      this.volume});
 
   factory HMSAudioTrackSetting.fromMap(Map map) {
     return HMSAudioTrackSetting(
-        maxBitrate: map['bit_rate'],
-        trackDescription: map['track_description']);
+        volume: map['volume'] ?? null,
+        maxBitrate: map['bit_rate'] ?? null,
+        hmsAudioCodec: map["audio_codec"] == null
+            ? null
+            : HMSAudioCodecValues.getHMSCodecFromName(map['audio_codec']),
+        useHardwareAcousticEchoCanceler:
+            map['user_hardware_acoustic_echo_canceler'] ?? null);
   }
 
   Map<String, dynamic> toMap() {
-    return {'bit_rate': maxBitrate, 'track_description': trackDescription};
+    return {
+      'bit_rate': maxBitrate,
+      'volume': volume,
+      'audio_codec': hmsAudioCodec != null
+          ? HMSAudioCodecValues.getValueFromHMSAudioCodec(hmsAudioCodec!)
+          : null,
+      'user_hardware_acoustic_echo_canceler': useHardwareAcousticEchoCanceler
+    };
   }
 }

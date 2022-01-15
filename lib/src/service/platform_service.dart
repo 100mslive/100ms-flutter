@@ -7,15 +7,17 @@
 ///You can add as many as [meeting_event_listeners] and [preview_event_listeners].
 ///
 ///[hmssdk_flutter] will send updates to all the listeners when there is any change in anything.
+
+// Dart imports:
 import 'dart:async';
 
+// Flutter imports:
 import 'package:flutter/services.dart';
+
+// Project imports:
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-import 'package:hmssdk_flutter/src/common/platform_methods.dart';
 import 'package:hmssdk_flutter/src/enum/hms_logs_update_listener.dart';
-import 'package:hmssdk_flutter/src/model/hms_log.dart';
-import 'package:hmssdk_flutter/src/model/hms_logs_listener.dart';
-import 'package:hmssdk_flutter/src/model/hms_track_change_request.dart';
+import 'package:hmssdk_flutter/src/model/hms_log_list.dart';
 
 class PlatformService {
   ///used to pass data to platform using methods
@@ -61,9 +63,6 @@ class PlatformService {
     if (previewListeners.contains(listener)) previewListeners.remove(listener);
   }
 
-  static void startHMSLogger(
-      HMSLogLevel webRtclogLevel, HMSLogLevel logLevel) {}
-
   static void addLogsListener(
     HMSLogListener hmsLogListener,
   ) {
@@ -83,44 +82,14 @@ class PlatformService {
     }
     var result = await _channel.invokeMethod(
         PlatformMethodValues.getName(method), arguments);
-    print(result);
     return result;
   }
 
   ///recieves all the meeting updates here as streams
   static void updatesFromPlatform() {
-    _logsEventChannel.receiveBroadcastStream({'name': 'logs'}).map((event) {
-      print(event.toString() + 'LOGSCHANNEL');
-      Map<String, dynamic>? data = {};
-      if (event is Map && event['data'] != null && event['data'] is Map) {
-        (event['data'] as Map).forEach((key, value) {
-          data[key.toString()] = value;
-        });
-      }
-
-      HMSLogsUpdateListenerMethod method =
-          HMSLogsUpdateListenerMethodValues.getMethodFromName(
-              event['event_name']);
-      return HMSLogsUpdateListenerMethodResponse(
-          method: method, data: data, response: event);
-    }).listen((event) {
-      HMSLogsUpdateListenerMethod method = event.method;
-      print("flutterdata1 ${event.method}");
-      Map<String, dynamic> data = event.data;
-
-      switch (method) {
-        case HMSLogsUpdateListenerMethod.onLogsUpdate:
-          notifyLogsUpdateListeners(method, data);
-          break;
-        case HMSLogsUpdateListenerMethod.unknown:
-          break;
-      }
-    });
-
     _meetingEventChannel.receiveBroadcastStream(
         {'name': 'meeting'}).map<HMSUpdateListenerMethodResponse>((event) {
       Map<String, dynamic>? data = {};
-      print("flutterdata2 ${event["event_name"]} ${event["data"]}");
       if (event is Map && event['data'] != null && event['data'] is Map) {
         (event['data'] as Map).forEach((key, value) {
           data[key.toString()] = value;
@@ -133,14 +102,13 @@ class PlatformService {
           method: method, data: data, response: event);
     }).listen((event) {
       HMSUpdateListenerMethod method = event.method;
-      print("flutterdata1 ${event.method}");
       Map data = event.data;
-
       switch (method) {
         case HMSUpdateListenerMethod.onJoinRoom:
           HMSRoom? room = HMSRoom.fromMap(data['room']);
           notifyMeetingListeners(method, {'room': room});
           break;
+
         case HMSUpdateListenerMethod.onUpdateRoom:
           HMSRoom? room =
               data['room'] != null ? HMSRoom.fromMap(data['room']) : null;
@@ -149,63 +117,75 @@ class PlatformService {
               HMSRoomUpdateValues.getHMSRoomUpdateFromName(data['update']);
           notifyMeetingListeners(method, {'room': room, 'update': update});
           break;
+
         case HMSUpdateListenerMethod.onPeerUpdate:
           HMSPeer? peer = HMSPeer.fromMap(data['peer']);
-          print(data['update']);
           HMSPeerUpdate? update =
               HMSPeerUpdateValues.getHMSPeerUpdateFromName(data['update']);
           notifyMeetingListeners(method, {'peer': peer, 'update': update});
           break;
+
         case HMSUpdateListenerMethod.onTrackUpdate:
           HMSPeer? peer = HMSPeer.fromMap(event.data['peer']);
-          HMSTrack? track = HMSTrack.fromMap(map: data['track'], peer: peer);
+          HMSTrack? track = data['track']['instance_of']
+              ? HMSVideoTrack.fromMap(map: data['track'], peer: peer)
+              : HMSAudioTrack.fromMap(map: data['track'], peer: peer);
+
           HMSTrackUpdate? update =
               HMSTrackUpdateValues.getHMSTrackUpdateFromName(data['update']);
-          print("UpdateTrack $update  ${data['update']}");
           notifyMeetingListeners(
               method, {'track': track, 'peer': peer, 'update': update});
           break;
+
         case HMSUpdateListenerMethod.onError:
-          HMSError error = HMSError.fromMap(data['error'] as Map);
+          HMSException error = HMSException.fromMap(data['error'] as Map);
           notifyMeetingListeners(method, {'error': error});
           break;
+
         case HMSUpdateListenerMethod.onMessage:
           HMSMessage message = HMSMessage.fromMap(data['message']);
           notifyMeetingListeners(method, {'message': message});
           break;
+
         case HMSUpdateListenerMethod.onUpdateSpeaker:
           List<HMSSpeaker> speakers = [];
           if (data.containsKey('speakers') && data['speakers'] is List) {
-            (data['speakers'] as List).forEach((element) {
-              speakers.add(HMSSpeaker.fromMap(element as Map));
-            });
+            if ((data['speakers'] as List).isNotEmpty) {
+              (data['speakers'] as List).forEach((element) {
+                speakers.add(HMSSpeaker.fromMap(element as Map));
+              });
+            }
           }
-          print(speakers.length);
+
           notifyMeetingListeners(method, {'speakers': speakers});
           break;
+
         case HMSUpdateListenerMethod.onReconnecting:
           notifyMeetingListeners(method, {});
           break;
+
         case HMSUpdateListenerMethod.onReconnected:
           notifyMeetingListeners(method, {});
           break;
+
         case HMSUpdateListenerMethod.onRoleChangeRequest:
-          HMSRoleChangeRequest roleChangeRequest =
+          HMSRoleChangeRequest? roleChangeRequest =
               HMSRoleChangeRequest.fromMap(data['role_change_request']);
           notifyMeetingListeners(
               method, {'role_change_request': roleChangeRequest});
           break;
+
         case HMSUpdateListenerMethod.onChangeTrackStateRequest:
-          print("flutter listener $data");
           HMSTrackChangeRequest trackChangeRequest =
               HMSTrackChangeRequest.fromMap(
                   data['track_change_request'] as Map);
           notifyMeetingListeners(
               method, {'track_change_request': trackChangeRequest});
           break;
+
         case HMSUpdateListenerMethod.unknown:
-          print('Unknown method called');
           break;
+
         case HMSUpdateListenerMethod.onRemovedFromRoom:
           HMSPeerRemovedFromPeer hmsPeerRemovedFromPeer =
               HMSPeerRemovedFromPeer.fromMap(data['removed_from_room'] as Map);
@@ -219,11 +199,13 @@ class PlatformService {
     _previewEventChannel.receiveBroadcastStream({'name': 'preview'}).map<
         HMSPreviewUpdateListenerMethodResponse>((event) {
       Map<String, dynamic>? data = {};
+
       if (event is Map && event['data'] is Map) {
         (event['data'] as Map).forEach((key, value) {
           data[key.toString()] = value;
         });
       }
+
       HMSPreviewUpdateListenerMethod method =
           HMSPreviewUpdateListenerMethodValues.getMethodFromName(
               event['event_name']);
@@ -235,29 +217,61 @@ class PlatformService {
       switch (method) {
         case HMSPreviewUpdateListenerMethod.onPreviewVideo:
           HMSRoom? room = HMSRoom.fromMap(event.data['room']);
+
+          HMSPeer? localPeer;
+          for (var peer in room.peers!) {
+            if (peer.isLocal) {
+              localPeer = peer;
+            }
+          }
+
           List<HMSTrack> tracks = HMSTrack.getHMSTracksFromList(
-              listOfMap: event.data['local_tracks']);
+              listOfMap: event.data['local_tracks'], peer: localPeer);
+
           notifyPreviewListeners(
               method, {'room': room, 'local_tracks': tracks});
           break;
+
         case HMSPreviewUpdateListenerMethod.onError:
-          HMSError? error = HMSError.fromMap(event.data["error"] as Map);
+          HMSException? error =
+              HMSException.fromMap(event.data["error"] as Map);
           notifyPreviewListeners(method, {'error': error});
           break;
+
         case HMSPreviewUpdateListenerMethod.unknown:
+          break;
+      }
+    });
+
+    _logsEventChannel.receiveBroadcastStream({'name': 'logs'}).map((event) {
+      List<dynamic> data = [];
+
+      HMSLogsUpdateListenerMethod method =
+          HMSLogsUpdateListenerMethodValues.getMethodFromName(
+              event[0]['event_name']);
+      data = event;
+      return HMSLogsUpdateListenerMethodResponse(
+          method: method, data: data, response: event);
+    }).listen((event) {
+      HMSLogsUpdateListenerMethod method = event.method;
+      List<dynamic> data = event.data;
+      switch (method) {
+        case HMSLogsUpdateListenerMethod.onLogsUpdate:
+          notifyLogsUpdateListeners(method, data);
+          break;
+        case HMSLogsUpdateListenerMethod.unknown:
           break;
       }
     });
   }
 
   static void notifyLogsUpdateListeners(
-      HMSLogsUpdateListenerMethod method, Map<String, dynamic> arguments) {
+      HMSLogsUpdateListenerMethod method, List<dynamic> arguments) {
     switch (method) {
       case HMSLogsUpdateListenerMethod.onLogsUpdate:
-        print("$arguments argumentsLogsUpdateListeners");
         logsListeners.forEach((element) {
-          HMSLog hmsLog = HMSLog.fromMap(arguments);
-          element.onLogMessage(HMSLog: hmsLog);
+          HMSLogList hmsLogList = HMSLogList.fromMap(arguments);
+          element.onLogMessage(hmsLogList: hmsLogList);
         });
         break;
       case HMSLogsUpdateListenerMethod.unknown:
@@ -314,7 +328,6 @@ class PlatformService {
             .forEach((e) => e.onMessage(message: arguments['message']));
         break;
       case HMSUpdateListenerMethod.onUpdateSpeaker:
-        print("flutterOnUpdateSpeaker $arguments");
         meetingListeners.forEach(
             (e) => e.onUpdateSpeakers(updateSpeakers: arguments['speakers']));
         break;
@@ -332,13 +345,15 @@ class PlatformService {
         meetingListeners.forEach((e) => e.onChangeTrackStateRequest(
             hmsTrackChangeRequest: arguments['track_change_request']));
         break;
-      case HMSUpdateListenerMethod.unknown:
-        break;
+
       case HMSUpdateListenerMethod.onRemovedFromRoom:
+        if (meetingListeners.isEmpty) break;
         meetingListeners.forEach((element) {
           element.onRemovedFromRoom(
               hmsPeerRemovedFromPeer: arguments['removed_from_room']);
         });
+        break;
+      case HMSUpdateListenerMethod.unknown:
         break;
     }
   }
