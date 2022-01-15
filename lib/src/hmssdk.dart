@@ -11,6 +11,19 @@ import 'package:hmssdk_flutter/src/manager/hms_sdk_manager.dart';
 import 'package:hmssdk_flutter/src/service/platform_service.dart';
 import '../hmssdk_flutter.dart';
 
+/// /// The public interface of 100ms SDK. Create an instance of HMSSDK to start using the SDK.
+///
+/// **Key Concepts**
+///
+/// **Room** - A room represents a real-time audio, video session, the basic building block of the 100mslive Video SDK
+///
+/// **Track** - A track represents either the audio or video that makes up a stream
+///
+/// **Peer** - A peer represents all participants connected to a room. Peers can be "local" or "remote"
+///
+/// **Broadcast** - A local peer can send any message/data to all remote peers in the room
+///
+/// HMSSDK has other methods which the client app can use to get more info about the Room, Peer and Tracks
 class HMSSDK {
   ///join meeting by passing HMSConfig instance to it.
 
@@ -26,8 +39,7 @@ class HMSSDK {
 
   /// Join the room with configuration options passed as a [HMSConfig] object
   Future<void> join({required HMSConfig config}) async {
-    return await PlatformService.invokeMethod(PlatformMethod.join,
-        arguments: {...config.getJson()});
+    return await PlatformService.invokeMethod(PlatformMethod.join, arguments: {...config.getJson()});
   }
 
   /// Begin a preview so that the local peer's audio and video can be displayed to them before they join a call.
@@ -35,10 +47,9 @@ class HMSSDK {
   Future<void> preview({
     required HMSConfig config,
   }) async {
-    return await PlatformService.invokeMethod(PlatformMethod.preview,
-        arguments: {
-          ...config.getJson(),
-        });
+    return await PlatformService.invokeMethod(PlatformMethod.preview, arguments: {
+      ...config.getJson(),
+    });
   }
 
   /// Call this method to leave the room
@@ -47,20 +58,17 @@ class HMSSDK {
     var result = await PlatformService.invokeMethod(PlatformMethod.leave);
     if (hmsActionResultListener != null) {
       if (result == null)
-        hmsActionResultListener.onSuccess(
-            methodType: HMSActionResultListenerMethod.leave);
+        hmsActionResultListener.onSuccess(methodType: HMSActionResultListenerMethod.leave);
       else
         hmsActionResultListener.onException(
-            methodType: HMSActionResultListenerMethod.leave,
-            hmsException: HMSException.fromMap(result["error"]));
+            methodType: HMSActionResultListenerMethod.leave, hmsException: HMSException.fromMap(result["error"]));
     }
   }
 
   /// To switch local peer's audio on/off.
   /// Pass bool value to [isOn] to change current audio status
   Future<HMSException?> switchAudio({bool isOn = false}) async {
-    bool result = await PlatformService.invokeMethod(PlatformMethod.switchAudio,
-        arguments: {'is_on': isOn});
+    bool result = await PlatformService.invokeMethod(PlatformMethod.switchAudio, arguments: {'is_on': isOn});
 
     if (result) {
       return null;
@@ -77,8 +85,7 @@ class HMSSDK {
   /// To switch local peer's video on/off.
   /// Pass bool value to [isOn] to change current video status
   Future<HMSException?> switchVideo({bool isOn = false}) async {
-    bool result = await PlatformService.invokeMethod(PlatformMethod.switchVideo,
-        arguments: {'is_on': isOn});
+    bool result = await PlatformService.invokeMethod(PlatformMethod.switchVideo, arguments: {'is_on': isOn});
 
     if (result) {
       return null;
@@ -139,8 +146,7 @@ class HMSSDK {
   /// Video from other peers will be stopped for the local peer after invoking [setPlayBackAllowed] with [allow] as false
   /// Note: Other peers can still see each other in the room, just you (the local peer) won't see any video from the peers in the room
   Future<void> setPlayBackAllowed({required bool allow}) async {
-    return await PlatformService.invokeMethod(PlatformMethod.setPlayBackAllowed,
-        arguments: {"allowed": allow});
+    return await PlatformService.invokeMethod(PlatformMethod.setPlayBackAllowed, arguments: {"allowed": allow});
   }
 
   /// Get the [HMSRoom] room object which the local peer has currently joined. Returns nil if no room is joined.
@@ -152,14 +158,12 @@ class HMSSDK {
 
   /// Returns an instance of the local peer if one existed. A local peer only exists during a preview and an active call.
   Future<HMSLocalPeer?> getLocalPeer() async {
-    return HMSLocalPeer.fromMap(
-        await PlatformService.invokeMethod(PlatformMethod.getLocalPeer) as Map);
+    return HMSLocalPeer.fromMap(await PlatformService.invokeMethod(PlatformMethod.getLocalPeer) as Map);
   }
 
   /// Returns only remote peers. The peer's own instance will not be included in this. To get all peers including the local one consider getPeers or for only the local one consider getLocalPeer.
   Future<List<HMSPeer>?> getRemotePeers() async {
-    List peers =
-        await PlatformService.invokeMethod(PlatformMethod.getRemotePeers);
+    List peers = await PlatformService.invokeMethod(PlatformMethod.getRemotePeers);
 
     List<HMSPeer> listOfRemotePeers = [];
     peers.forEach((element) {
@@ -182,21 +186,14 @@ class HMSSDK {
   /// Sends a message to everyone in the call. [message] contains the content of the message.
   /// The [hmsActionResultListener] informs about whether the message was successfully sent, or the kind of error if not.
   void sendBroadcastMessage(
-      {required String message,
-      String? type,
-      HMSActionResultListener? hmsActionResultListener}) async {
-    var result = await PlatformService.invokeMethod(
-        PlatformMethod.sendBroadcastMessage,
+      {required String message, String? type, HMSActionResultListener? hmsActionResultListener}) async {
+    var result = await PlatformService.invokeMethod(PlatformMethod.sendBroadcastMessage,
         arguments: {"message": message, "type": type});
     if (hmsActionResultListener != null) {
       if (result["event_name"] == "on_error") {
-        hmsActionResultListener.onException(
-            hmsException: HMSException.fromMap(result["error"]));
+        hmsActionResultListener.onException(hmsException: HMSException.fromMap(result["error"]));
       } else {
-        hmsActionResultListener.onSuccess(arguments: {
-          "message": HMSMessage.fromMap(result["message"]),
-          "type": type
-        });
+        hmsActionResultListener.onSuccess(arguments: {"message": HMSMessage.fromMap(result["message"]), "type": type});
       }
     }
   }
@@ -209,19 +206,14 @@ class HMSSDK {
       required String roleName,
       String? type,
       HMSActionResultListener? hmsActionResultListener}) async {
-    var result = await PlatformService.invokeMethod(
-        PlatformMethod.sendGroupMessage,
+    var result = await PlatformService.invokeMethod(PlatformMethod.sendGroupMessage,
         arguments: {"message": message, "role_name": roleName, "type": type});
     if (hmsActionResultListener != null) {
       if (result["event_name"] == "on_error") {
-        hmsActionResultListener.onException(
-            hmsException: HMSException.fromMap(result["error"]));
+        hmsActionResultListener.onException(hmsException: HMSException.fromMap(result["error"]));
       } else {
-        hmsActionResultListener.onSuccess(arguments: {
-          "message": HMSMessage.fromMap(result["message"]),
-          "type": type,
-          "roleName": roleName
-        });
+        hmsActionResultListener.onSuccess(
+            arguments: {"message": HMSMessage.fromMap(result["message"]), "type": type, "roleName": roleName});
       }
     }
   }
@@ -234,20 +226,15 @@ class HMSSDK {
       required HMSPeer peer,
       String? type,
       HMSActionResultListener? hmsActionResultListener}) async {
-    var result = await PlatformService.invokeMethod(
-        PlatformMethod.sendDirectMessage,
+    var result = await PlatformService.invokeMethod(PlatformMethod.sendDirectMessage,
         arguments: {"message": message, "peer_id": peer.peerId, "type": type});
 
     if (hmsActionResultListener != null) {
       if (result["event_name"] == "on_error") {
-        hmsActionResultListener.onException(
-            hmsException: HMSException.fromMap(result["error"]));
+        hmsActionResultListener.onException(hmsException: HMSException.fromMap(result["error"]));
       } else {
-        hmsActionResultListener.onSuccess(arguments: {
-          "message": HMSMessage.fromMap(result["message"]),
-          "type": type,
-          "peer": peer
-        });
+        hmsActionResultListener
+            .onSuccess(arguments: {"message": HMSMessage.fromMap(result["message"]), "type": type, "peer": peer});
       }
     }
   }
@@ -278,33 +265,24 @@ class HMSSDK {
       bool forceChange = false,
       HMSActionResultListener? hmsActionResultListener}) async {
     var result = await PlatformService.invokeMethod(PlatformMethod.changeRole,
-        arguments: {
-          'peer_id': peer.peerId,
-          'role_name': roleName,
-          'force_change': forceChange
-        });
+        arguments: {'peer_id': peer.peerId, 'role_name': roleName, 'force_change': forceChange});
 
     if (hmsActionResultListener != null) {
       if (result == null)
-        hmsActionResultListener.onSuccess(
-            methodType: HMSActionResultListenerMethod.changeRole);
+        hmsActionResultListener.onSuccess(methodType: HMSActionResultListenerMethod.changeRole);
       else
         hmsActionResultListener.onException(
-            methodType: HMSActionResultListenerMethod.changeRole,
-            hmsException: HMSException.fromMap(result["error"]));
+            methodType: HMSActionResultListenerMethod.changeRole, hmsException: HMSException.fromMap(result["error"]));
     }
   }
 
   /// When a peer is requested to change their role (see [changeRole]) to accept the new role this has to be called. Once this method is called, the peer's role will be changed to the requested one. The HMSRoleChangeRequest that the SDK had sent to this peer (in HMSUpdateListener.onRoleChangeRequest) to inform them that a role change was requested.
   /// [hmsActionResultListener] - Listener that will return HMSActionResultListener.onSuccess if the role change request is successful else will call HMSActionResultListener.onException with the error received from server
-  void acceptChangeRole(
-      {HMSActionResultListener? hmsActionResultListener}) async {
-    var result =
-        await PlatformService.invokeMethod(PlatformMethod.acceptChangeRole);
+  void acceptChangeRole({HMSActionResultListener? hmsActionResultListener}) async {
+    var result = await PlatformService.invokeMethod(PlatformMethod.acceptChangeRole);
     if (hmsActionResultListener != null) {
       if (result == null)
-        hmsActionResultListener.onSuccess(
-            methodType: HMSActionResultListenerMethod.acceptChangeRole);
+        hmsActionResultListener.onSuccess(methodType: HMSActionResultListenerMethod.acceptChangeRole);
       else
         hmsActionResultListener.onException(
             methodType: HMSActionResultListenerMethod.acceptChangeRole,
@@ -320,18 +298,12 @@ class HMSSDK {
       required bool mute,
       required bool isVideoTrack,
       HMSActionResultListener? hmsActionResultListener}) async {
-    var result = await PlatformService.invokeMethod(
-        PlatformMethod.changeTrackState,
-        arguments: {
-          "hms_peer_id": peer.peerId,
-          "mute": mute,
-          "mute_video_kind": isVideoTrack
-        });
+    var result = await PlatformService.invokeMethod(PlatformMethod.changeTrackState,
+        arguments: {"hms_peer_id": peer.peerId, "mute": mute, "mute_video_kind": isVideoTrack});
 
     if (hmsActionResultListener != null) {
       if (result == null)
-        hmsActionResultListener.onSuccess(
-            methodType: HMSActionResultListenerMethod.changeTrackState);
+        hmsActionResultListener.onSuccess(methodType: HMSActionResultListenerMethod.changeTrackState);
       else
         hmsActionResultListener.onException(
             methodType: HMSActionResultListenerMethod.changeTrackState,
@@ -351,19 +323,12 @@ class HMSSDK {
       required String source,
       required List<String> roles,
       HMSActionResultListener? hmsActionResultListener}) async {
-    var result = await PlatformService.invokeMethod(
-        PlatformMethod.changeTrackStateForRole,
-        arguments: {
-          "mute": mute,
-          "type": type,
-          "source": source,
-          "roles": roles
-        });
+    var result = await PlatformService.invokeMethod(PlatformMethod.changeTrackStateForRole,
+        arguments: {"mute": mute, "type": type, "source": source, "roles": roles});
 
     if (hmsActionResultListener != null) {
       if (result == null)
-        hmsActionResultListener.onSuccess(
-            methodType: HMSActionResultListenerMethod.changeTrackStateForRole);
+        hmsActionResultListener.onSuccess(methodType: HMSActionResultListenerMethod.changeTrackStateForRole);
       else
         hmsActionResultListener.onException(
             methodType: HMSActionResultListenerMethod.changeTrackStateForRole,
@@ -375,9 +340,7 @@ class HMSSDK {
   /// A [reason] string will be shown to them.
   /// [hmsActionResultListener] is the callback that would be called by SDK in case of a success or failure
   void removePeer(
-      {required HMSPeer peer,
-      required String reason,
-      HMSActionResultListener? hmsActionResultListener}) async {
+      {required HMSPeer peer, required String reason, HMSActionResultListener? hmsActionResultListener}) async {
     var result = await PlatformService.invokeMethod(PlatformMethod.removePeer,
         arguments: {"peer_id": peer.peerId, "reason": reason});
 
@@ -388,8 +351,7 @@ class HMSSDK {
             methodType: HMSActionResultListenerMethod.removePeer);
       } else {
         hmsActionResultListener.onException(
-            methodType: HMSActionResultListenerMethod.removePeer,
-            hmsException: HMSException.fromMap(result["error"]));
+            methodType: HMSActionResultListenerMethod.removePeer, hmsException: HMSException.fromMap(result["error"]));
       }
     }
   }
@@ -398,22 +360,17 @@ class HMSSDK {
   /// [reason] is the reason why the room is being ended.
   /// [lock] bool is whether rejoining the room should be disabled for the foreseeable future.
   /// [hmsActionResultListener] is the callback that would be called by SDK in case of a success or failure
-  void endRoom(
-      {required bool lock,
-      required String reason,
-      HMSActionResultListener? hmsActionResultListener}) async {
-    var result = await PlatformService.invokeMethod(PlatformMethod.endRoom,
-        arguments: {"lock": lock, "reason": reason});
+  void endRoom({required bool lock, required String reason, HMSActionResultListener? hmsActionResultListener}) async {
+    var result =
+        await PlatformService.invokeMethod(PlatformMethod.endRoom, arguments: {"lock": lock, "reason": reason});
 
     if (hmsActionResultListener != null) {
       if (result == null) {
-        hmsActionResultListener.onSuccess(
-            methodType: HMSActionResultListenerMethod.endRoom,
-            arguments: {"lock": lock, "reason": reason});
+        hmsActionResultListener
+            .onSuccess(methodType: HMSActionResultListenerMethod.endRoom, arguments: {"lock": lock, "reason": reason});
       } else {
         hmsActionResultListener.onException(
-            methodType: HMSActionResultListenerMethod.endRoom,
-            hmsException: HMSException.fromMap(result["error"]));
+            methodType: HMSActionResultListenerMethod.endRoom, hmsException: HMSException.fromMap(result["error"]));
       }
     }
   }
@@ -422,16 +379,14 @@ class HMSSDK {
   /// [config] is the HMSRecordingConfig which defines streaming/recording parameters for this start request.
   /// [hmsActionResultListener] is the callback that would be called by SDK in case of a success or failure.
   void startRtmpOrRecording(
-      {required HMSRecordingConfig hmsRecordingConfig,
-      HMSActionResultListener? hmsActionResultListener}) async {
-    var result = await PlatformService.invokeMethod(
-        PlatformMethod.startRtmpOrRecording,
-        arguments: hmsRecordingConfig.getJson()) as Map?;
+      {required HMSRecordingConfig hmsRecordingConfig, HMSActionResultListener? hmsActionResultListener}) async {
+    var result =
+        await PlatformService.invokeMethod(PlatformMethod.startRtmpOrRecording, arguments: hmsRecordingConfig.getJson())
+            as Map?;
 
     if (hmsActionResultListener != null) {
       if (result == null)
-        hmsActionResultListener.onSuccess(
-            methodType: HMSActionResultListenerMethod.startRtmpOrRecording);
+        hmsActionResultListener.onSuccess(methodType: HMSActionResultListenerMethod.startRtmpOrRecording);
       else
         hmsActionResultListener.onException(
             methodType: HMSActionResultListenerMethod.startRtmpOrRecording,
@@ -441,15 +396,12 @@ class HMSSDK {
 
   /// Stops a previously started rtmp recording or stream. See startRtmpOrRecording for starting.
   /// [hmsActionResultListener] is the callback that would be called by SDK in case of a success or failure.
-  void stopRtmpAndRecording(
-      {HMSActionResultListener? hmsActionResultListener}) async {
-    var result =
-        await PlatformService.invokeMethod(PlatformMethod.stopRtmpAndRecording);
+  void stopRtmpAndRecording({HMSActionResultListener? hmsActionResultListener}) async {
+    var result = await PlatformService.invokeMethod(PlatformMethod.stopRtmpAndRecording);
 
     if (hmsActionResultListener != null) {
       if (result == null)
-        hmsActionResultListener.onSuccess(
-            methodType: HMSActionResultListenerMethod.stopRtmpAndRecording);
+        hmsActionResultListener.onSuccess(methodType: HMSActionResultListenerMethod.stopRtmpAndRecording);
       else
         hmsActionResultListener.onException(
             methodType: HMSActionResultListenerMethod.stopRtmpAndRecording,
@@ -460,17 +412,12 @@ class HMSSDK {
   /// Change the metadata that appears inside [HMSPeer.metadata]. This change is persistent and all peers joining after the change will still see these values.
   /// [metadata] is the string data to be set now
   /// [hmsActionResultListener] is callback whose [HMSActionResultListener.onSuccess] will be called when the the action completes successfully.
-  void changeMetadata(
-      {required String metadata,
-      HMSActionResultListener? hmsActionResultListener}) async {
-    var result = await PlatformService.invokeMethod(
-        PlatformMethod.changeMetadata,
-        arguments: {"metadata": metadata});
+  void changeMetadata({required String metadata, HMSActionResultListener? hmsActionResultListener}) async {
+    var result = await PlatformService.invokeMethod(PlatformMethod.changeMetadata, arguments: {"metadata": metadata});
 
     if (hmsActionResultListener != null) {
       if (result == null)
-        hmsActionResultListener.onSuccess(
-            methodType: HMSActionResultListenerMethod.changeMetadata);
+        hmsActionResultListener.onSuccess(methodType: HMSActionResultListenerMethod.changeMetadata);
       else
         hmsActionResultListener.onException(
             methodType: HMSActionResultListenerMethod.changeMetadata,
@@ -481,20 +428,15 @@ class HMSSDK {
   /// Change the name that appears inside [HMSPeer.name] This change is persistent and all peers joining after the change will still see these values.
   /// [name] is the string which is to be set as the [HMSPeer.name]
   /// [hmsActionResultListener] is the callback whose [HMSActionResultListener.onSuccess] will be called when the the action completes successfully.
-  void changeName(
-      {required String name,
-      HMSActionResultListener? hmsActionResultListener}) async {
-    var result = await PlatformService.invokeMethod(PlatformMethod.changeName,
-        arguments: {"name": name});
+  void changeName({required String name, HMSActionResultListener? hmsActionResultListener}) async {
+    var result = await PlatformService.invokeMethod(PlatformMethod.changeName, arguments: {"name": name});
 
     if (hmsActionResultListener != null) {
       if (result == null)
-        hmsActionResultListener.onSuccess(
-            methodType: HMSActionResultListenerMethod.changeName);
+        hmsActionResultListener.onSuccess(methodType: HMSActionResultListenerMethod.changeName);
       else
         hmsActionResultListener.onException(
-            methodType: HMSActionResultListenerMethod.changeName,
-            hmsException: HMSException.fromMap(result["error"]));
+            methodType: HMSActionResultListenerMethod.changeName, hmsException: HMSException.fromMap(result["error"]));
     }
   }
 
@@ -518,11 +460,9 @@ class HMSSDK {
     PlatformService.removePreviewListener(listener);
   }
 
-  void startHMSLogger(
-      {required HMSLogLevel webRtclogLevel, required HMSLogLevel logLevel}) {
+  void startHMSLogger({required HMSLogLevel webRtclogLevel, required HMSLogLevel logLevel}) {
     PlatformService.invokeMethod(PlatformMethod.startHMSLogger, arguments: {
-      "web_rtc_log_level":
-          HMSLogLevelValue.getValueFromHMSLogLevel(webRtclogLevel),
+      "web_rtc_log_level": HMSLogLevelValue.getValueFromHMSLogLevel(webRtclogLevel),
       "log_level": HMSLogLevelValue.getValueFromHMSLogLevel(logLevel)
     });
   }
