@@ -14,6 +14,7 @@ class HMSExceptionExtension {
             args.put("description",hmsException.description)
             args.put("name",hmsException.name)
             args.put("message",hmsException.message)
+            args.put("isTerminal", hmsException.isTerminal)
 
             val errorArgs=HashMap<String,Any>()
             errorArgs.put("error",args)
