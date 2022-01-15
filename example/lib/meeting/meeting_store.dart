@@ -76,8 +76,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
   bool isActiveSpeakerMode = false;
 
   @observable
-  ObservableList<PeerTracKNode> activeSpeakerPeerTracksStore =
-      ObservableList.of([]);
+  ObservableList<PeerTracKNode> activeSpeakerPeerTracksStore = ObservableList.of([]);
 
   @observable
   ObservableList<HMSTrack> tracks = ObservableList.of([]);
@@ -116,14 +115,10 @@ abstract class MeetingStoreBase extends ChangeNotifier
 
   @action
   Future<bool> join(String user, String roomUrl) async {
-    List<String?>? token =
-        await RoomService().getToken(user: user, room: roomUrl);
+    List<String?>? token = await RoomService().getToken(user: user, room: roomUrl);
     if (token == null) return false;
     HMSConfig config = HMSConfig(
-        userId: Uuid().v1(),
-        authToken: token[0]!,
-        userName: user,
-        endPoint: token[1] == "true" ? "" : "https://qa-init.100ms.live/init");
+        authToken: token[0]!, userName: user, endPoint: token[1] == "true" ? "" : "https://qa-init.100ms.live/init");
 
     await HmsSdkManager.hmsSdkInteractor?.join(config: config);
     isMeetingStarted = true;
@@ -259,8 +254,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
   }
 
   @action
-  void addTrackChangeRequestInstance(
-      HMSTrackChangeRequest hmsTrackChangeRequest) {
+  void addTrackChangeRequestInstance(HMSTrackChangeRequest hmsTrackChangeRequest) {
     this.hmsTrackChangeRequest = hmsTrackChangeRequest;
   }
 
@@ -281,18 +275,14 @@ abstract class MeetingStoreBase extends ChangeNotifier
 
     for (HMSPeer each in room.peers!) {
       if (each.isLocal) {
-        int index =
-            peerTracks.indexWhere((element) => element.peerId == each.peerId);
-        if (index == -1)
-          peerTracks
-              .add(new PeerTracKNode(peerId: each.peerId, name: each.name));
+        int index = peerTracks.indexWhere((element) => element.peerId == each.peerId);
+        if (index == -1) peerTracks.add(new PeerTracKNode(peerId: each.peerId, name: each.name));
         localPeer = each;
         addPeer(localPeer!);
 
         if (each.videoTrack != null) {
           if (each.videoTrack!.kind == HMSTrackKind.kHMSTrackKindVideo) {
-            int index = peerTracks
-                .indexWhere((element) => element.peerId == each.peerId);
+            int index = peerTracks.indexWhere((element) => element.peerId == each.peerId);
             peerTracks[index].track = each.videoTrack!;
 
             localTrack = each.videoTrack;
@@ -334,19 +324,14 @@ abstract class MeetingStoreBase extends ChangeNotifier
   }
 
   @override
-  void onTrackUpdate(
-      {required HMSTrack track,
-      required HMSTrackUpdate trackUpdate,
-      required HMSPeer peer}) {
+  void onTrackUpdate({required HMSTrack track, required HMSTrackUpdate trackUpdate, required HMSPeer peer}) {
     if (isSpeakerOn) {
       unMuteAll();
     } else {
       muteAll();
     }
 
-    if (peer.isLocal &&
-        trackUpdate == HMSTrackUpdate.trackMuted &&
-        track.kind == HMSTrackKind.kHMSTrackKindAudio) {
+    if (peer.isLocal && trackUpdate == HMSTrackUpdate.trackMuted && track.kind == HMSTrackKind.kHMSTrackKindAudio) {
       this.isMicOn = false;
     }
 
@@ -362,14 +347,12 @@ abstract class MeetingStoreBase extends ChangeNotifier
     }
 
     if (track.kind == HMSTrackKind.kHMSTrackKindAudio) {
-      int index =
-          peerTracks.indexWhere((element) => element.peerId == peer.peerId);
+      int index = peerTracks.indexWhere((element) => element.peerId == peer.peerId);
       if (index != -1) peerTracks[index].audioTrack = track;
       return;
     }
     if (track.source == "REGULAR") {
-      int index =
-          peerTracks.indexWhere((element) => element.peerId == peer.peerId);
+      int index = peerTracks.indexWhere((element) => element.peerId == peer.peerId);
       if (index != -1) peerTracks[index].track = track;
     }
 
@@ -454,10 +437,8 @@ abstract class MeetingStoreBase extends ChangeNotifier
   int trackChange = -1;
 
   @override
-  void onChangeTrackStateRequest(
-      {required HMSTrackChangeRequest hmsTrackChangeRequest}) {
-    if (!hmsTrackChangeRequest.mute)
-      addTrackChangeRequestInstance(hmsTrackChangeRequest);
+  void onChangeTrackStateRequest({required HMSTrackChangeRequest hmsTrackChangeRequest}) {
+    if (!hmsTrackChangeRequest.mute) addTrackChangeRequestInstance(hmsTrackChangeRequest);
   }
 
   void changeTracks(HMSTrackChangeRequest hmsTrackChangeRequest) {
@@ -469,20 +450,13 @@ abstract class MeetingStoreBase extends ChangeNotifier
   }
 
   @override
-  void onRemovedFromRoom(
-      {required HMSPeerRemovedFromPeer hmsPeerRemovedFromPeer}) {
+  void onRemovedFromRoom({required HMSPeerRemovedFromPeer hmsPeerRemovedFromPeer}) {
     leave();
   }
 
-  void changeRole(
-      {required HMSPeer peer,
-      required String roleName,
-      bool forceChange = false}) {
+  void changeRole({required HMSPeer peer, required String roleName, bool forceChange = false}) {
     _hmssdkInteractor.changeRole(
-        roleName: roleName,
-        peer: peer,
-        forceChange: forceChange,
-        hmsActionResultListener: this);
+        roleName: roleName, peer: peer, forceChange: forceChange, hmsActionResultListener: this);
   }
 
   Future<List<HMSRole>> getRoles() async {
@@ -490,8 +464,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
   }
 
   void changeTrackState(HMSPeer peer, bool mute, bool isVideoTrack) {
-    return HmsSdkManager.hmsSdkInteractor
-        ?.changeTrackState(peer, mute, isVideoTrack, this);
+    return HmsSdkManager.hmsSdkInteractor?.changeTrackState(peer, mute, isVideoTrack, this);
   }
 
   @action
@@ -499,11 +472,8 @@ abstract class MeetingStoreBase extends ChangeNotifier
     switch (update) {
       case HMSPeerUpdate.peerJoined:
         //TODO-> containsPeer or not
-        int index =
-            peerTracks.indexWhere((element) => element.peerId == peer.peerId);
-        if (index == -1)
-          peerTracks
-              .add(new PeerTracKNode(peerId: peer.peerId, name: peer.name));
+        int index = peerTracks.indexWhere((element) => element.peerId == peer.peerId);
+        if (index == -1) peerTracks.add(new PeerTracKNode(peerId: peer.peerId, name: peer.name));
         addPeer(peer);
         break;
       case HMSPeerUpdate.peerLeft:
@@ -522,11 +492,9 @@ abstract class MeetingStoreBase extends ChangeNotifier
         updatePeerAt(peer);
         break;
       case HMSPeerUpdate.metadataChanged:
-        int index =
-            peerTracks.indexWhere((element) => element.peerId == peer.peerId);
+        int index = peerTracks.indexWhere((element) => element.peerId == peer.peerId);
         if (index != -1) {
-          peerTracks[index].isRaiseHand =
-              (peer.metadata == "{\"isHandRaised\":true}");
+          peerTracks[index].isRaiseHand = (peer.metadata == "{\"isHandRaised\":true}");
         }
         if (peer.isLocal) {
           localPeer = peer;
@@ -535,15 +503,13 @@ abstract class MeetingStoreBase extends ChangeNotifier
         break;
       case HMSPeerUpdate.nameChanged:
         if (peer.isLocal) {
-          int localPeerIndex = peerTracks
-              .indexWhere((element) => element.peerId == localPeer!.peerId);
+          int localPeerIndex = peerTracks.indexWhere((element) => element.peerId == localPeer!.peerId);
           if (localPeerIndex != -1) {
             peerTracks[localPeerIndex].name = peer.name;
             localPeer = peer;
           }
         } else {
-          int remotePeerIndex =
-              peerTracks.indexWhere((element) => element.peerId == peer.peerId);
+          int remotePeerIndex = peerTracks.indexWhere((element) => element.peerId == peer.peerId);
           if (remotePeerIndex != -1) {
             peerTracks[remotePeerIndex].name = peer.name;
           }
@@ -560,14 +526,11 @@ abstract class MeetingStoreBase extends ChangeNotifier
   }
 
   @action
-  void peerOperationWithTrack(
-      HMSPeer peer, HMSTrackUpdate update, HMSTrack track) {
+  void peerOperationWithTrack(HMSPeer peer, HMSTrackUpdate update, HMSTrack track) {
     switch (update) {
       case HMSTrackUpdate.trackAdded:
         if (track.source == "REGULAR") {
-          trackStatus[peer.peerId] = track.isMute
-              ? HMSTrackUpdate.trackMuted
-              : HMSTrackUpdate.trackUnMuted;
+          trackStatus[peer.peerId] = track.isMute ? HMSTrackUpdate.trackMuted : HMSTrackUpdate.trackUnMuted;
         } else {
           screenSharePeerId = peer.peerId;
           screenShareTrack = track;
@@ -643,12 +606,9 @@ abstract class MeetingStoreBase extends ChangeNotifier
     return await _hmssdkInteractor.getLocalPeer();
   }
 
-  void startRtmpOrRecording(
-      {required String meetingUrl,
-      required bool toRecord,
-      List<String>? rtmpUrls}) async {
-    HMSRecordingConfig hmsRecordingConfig = new HMSRecordingConfig(
-        meetingUrl: meetingUrl, toRecord: toRecord, rtmpUrls: rtmpUrls);
+  void startRtmpOrRecording({required String meetingUrl, required bool toRecord, List<String>? rtmpUrls}) async {
+    HMSRecordingConfig hmsRecordingConfig =
+        new HMSRecordingConfig(meetingUrl: meetingUrl, toRecord: toRecord, rtmpUrls: rtmpUrls);
 
     _hmssdkInteractor.startRtmpOrRecording(hmsRecordingConfig, this);
   }
@@ -670,8 +630,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
   void changeMetadata() {
     isRaisedHand = !isRaisedHand;
     String value = isRaisedHand ? "true" : "false";
-    _hmssdkInteractor.changeMetadata(
-        metadata: "{\"isHandRaised\":$value}", hmsActionResultListener: this);
+    _hmssdkInteractor.changeMetadata(metadata: "{\"isHandRaised\":$value}", hmsActionResultListener: this);
   }
 
   void setPlayBackAllowed(bool allow) {
@@ -688,8 +647,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
 
   @override
   void onSuccess(
-      {HMSActionResultListenerMethod methodType =
-          HMSActionResultListenerMethod.unknown,
+      {HMSActionResultListenerMethod methodType = HMSActionResultListenerMethod.unknown,
       Map<String, dynamic>? arguments}) {
     switch (methodType) {
       case HMSActionResultListenerMethod.leave:
@@ -739,8 +697,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
 
   @override
   void onException(
-      {HMSActionResultListenerMethod methodType =
-          HMSActionResultListenerMethod.unknown,
+      {HMSActionResultListenerMethod methodType = HMSActionResultListenerMethod.unknown,
       Map<String, dynamic>? arguments,
       required HMSException hmsException}) {
     this.hmsException = hmsException;

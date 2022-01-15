@@ -252,22 +252,30 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
     }
 
     private fun join(call: MethodCall, result: Result) {
-        val userName = call.argument<String>("user_name")
-        val authToken = call.argument<String>("auth_token")
-        val endPoint = call.argument<String>("end_point")
-        if (this.hmsConfig == null) {
-            this.hmsConfig = HMSConfig(userName = userName!!, authtoken = authToken!!)
-            if (endPoint!!.isNotEmpty())
-                this.hmsConfig = HMSConfig(
-                    userName = userName,
-                    authtoken = authToken,
-                    initEndpoint = endPoint.trim()
-                )
-        }
+        this.hmsConfig = getConfig(call)
+    
         hmssdk.join(hmsConfig!!, this.hmsUpdateListener)
         result.success(null)
     }
 
+    private fun getConfig(call: MethodCall): HMSConfig {
+
+        val userName = call.argument<String>("user_name")
+        val authToken = call.argument<String>("auth_token")
+        val metaData = call.argument<String>("meta_data")?: ""
+        val endPoint = call.argument<String>("end_point")        
+
+        if (endPoint != null && endPoint!!.isNotEmpty()) {
+            return HMSConfig(
+                userName = userName!!,
+                authtoken = authToken!!,
+                metadata = metaData,
+                initEndpoint = endPoint.trim()
+            )
+        }
+            
+        return HMSConfig(userName = userName!!, authtoken = authToken!!, metadata = metaData)
+    }
 
     private fun startHMSLogger(call: MethodCall) {
         val setWebRtcLogLevel = call.argument<String>("web_rtc_log_level")
@@ -296,6 +304,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
     
     private fun leave() {
         hmssdk.leave(hmsActionResultListener = this.actionListener)
+        this.hmsConfig = null
     }
 
     private fun switchAudio(call: MethodCall, result: Result) {
@@ -430,19 +439,8 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
     }
 
     private fun preview(call: MethodCall, result: Result) {
-        val userName = call.argument<String>("user_name")
-        val authToken = call.argument<String>("auth_token")
-        val isProd = call.argument<Boolean>("is_prod")
-        val endPoint = call.argument<String>("end_point")
-        
-        this.hmsConfig = HMSConfig(userName = userName!!, authtoken = authToken!!)
-        if (endPoint!!.isNotEmpty())
-            this.hmsConfig = HMSConfig(
-                userName = userName,
-                authtoken = authToken,
-                initEndpoint = endPoint
-            )
-
+        this.hmsConfig = getConfig(call)
+      
         hmssdk.preview(this.hmsConfig!!, this.hmsPreviewListener)
 
         result.success(null)

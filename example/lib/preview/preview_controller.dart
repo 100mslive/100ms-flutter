@@ -13,17 +13,13 @@ class PreviewController {
   PreviewController({required this.roomId, required this.user});
 
   Future<bool> startPreview() async {
-    List<String?>? token =
-        await RoomService().getToken(user: user, room: roomId);
+    List<String?>? token = await RoomService().getToken(user: user, room: roomId);
 
     if (token == null) return false;
     if (token[0] == null) return false;
     FirebaseCrashlytics.instance.setUserIdentifier(token[0]!);
     HMSConfig config = HMSConfig(
-        userId: Uuid().v1(),
-        authToken: token[0]!,
-        userName: user,
-        endPoint: token[1] == "true" ? "" : "https://qa-init.100ms.live/init");
+        authToken: token[0]!, userName: user, endPoint: token[1] == "true" ? "" : "https://qa-init.100ms.live/init");
 
     HmsSdkManager.hmsSdkInteractor?.preview(config: config);
     return true;
