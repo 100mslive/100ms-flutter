@@ -32,6 +32,22 @@ platform :android do
       android_artifact_path: "../build/app/outputs/apk/release/app-release.apk",
       release_notes: commit[:message]
     )
+
+    slack(
+      message: "🎉🤖🍀 Flutter Android App released! 🤖🍀 Download here 👉 https://appdistribution.firebase.dev/i/b623e5310929ab70",
+      slack_url: "https://hooks.slack.com/services/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",
+      payload: {  
+        "Build Date" => Time.new.to_s
+      },
+      default_payloads: [:last_git_commit], 
+      attachment_properties: {      
+        fields: [{
+          title: "🎊 Version",
+          value: version + " (" + build_number + ")",
+          short: false 
+        }]
+      }
+    )
   end
 
 end
