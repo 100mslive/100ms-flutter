@@ -51,7 +51,6 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
     lateinit var hmssdk: HMSSDK
     private lateinit var hmsVideoFactory: HMSVideoViewFactory
     private var requestChange: HMSRoleChangeRequest? = null
-    private var hmsConfig: HMSConfig? = null
     private var result: Result? = null
 
     override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
@@ -252,9 +251,9 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
     }
 
     private fun join(call: MethodCall, result: Result) {
-        this.hmsConfig = getConfig(call)
+        val config = getConfig(call)
     
-        hmssdk.join(hmsConfig!!, this.hmsUpdateListener)
+        hmssdk.join(config, this.hmsUpdateListener)
         result.success(null)
     }
 
@@ -304,7 +303,6 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
     
     private fun leave() {
         hmssdk.leave(hmsActionResultListener = this.actionListener)
-        this.hmsConfig = null
     }
 
     private fun switchAudio(call: MethodCall, result: Result) {
@@ -439,9 +437,10 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
     }
 
     private fun preview(call: MethodCall, result: Result) {
-        this.hmsConfig = getConfig(call)
+        
+        val config = getConfig(call)
       
-        hmssdk.preview(this.hmsConfig!!, this.hmsPreviewListener)
+        hmssdk.preview(config, this.hmsPreviewListener)
 
         result.success(null)
     }
