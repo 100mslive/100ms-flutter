@@ -39,7 +39,7 @@ platform :android do
 
     slack(
       message: "🎉🤖🍀 Flutter Android App released! 🤖🍀 Download here 👉 https://appdistribution.firebase.dev/i/b623e5310929ab70",
-      slack_url: "https://hooks.slack.com/services/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",
+      slack_url: "https://hooks.slack.com/services/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",
       payload: {  
         "Build Date" => Time.new.to_s
       },
