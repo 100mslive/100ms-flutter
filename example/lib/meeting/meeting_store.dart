@@ -140,6 +140,10 @@ abstract class MeetingStoreBase extends ChangeNotifier
   @action
   Future<void> switchVideo() async {
     await _hmssdkInteractor.switchVideo(isOn: isVideoOn);
+    if(isVideoOn)
+      trackStatus[localPeer!.peerId] = HMSTrackUpdate.trackMuted;
+    else
+      trackStatus[localPeer!.peerId] = HMSTrackUpdate.trackUnMuted;
     isVideoOn = !isVideoOn;
   }
 

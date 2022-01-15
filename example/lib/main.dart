@@ -168,6 +168,7 @@ class _HomePageState extends State<HomePage> {
                                 context: context,
                                 builder: (_) => UserNameDialogOrganism());
                             if (user.isNotEmpty)
+                              FocusManager.instance.primaryFocus?.unfocus();
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (_) =>
                                       ListenableProvider<MeetingStore>(
