@@ -126,8 +126,6 @@ class HMSSDKInteractor {
         hmsActionResultListener: hmsActionResultListener);
   }
 
-  // TODO: implement accept change Track request
-
   void endRoom(bool lock, String reason,
       HMSActionResultListener hmsActionResultListener) {
     hmsSDK.endRoom(

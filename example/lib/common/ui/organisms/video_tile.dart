@@ -8,10 +8,8 @@ import 'package:hmssdk_flutter_example/common/ui/organisms/change_track_options.
 import 'package:hmssdk_flutter_example/common/ui/organisms/peer_item_organism.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:hmssdk_flutter_example/meeting/peerTrackNode.dart';
-
-// ignore: implementation_imports
-import 'package:provider/src/provider.dart';
 import 'package:visibility_detector/visibility_detector.dart';
+import 'package:provider/provider.dart';
 
 class VideoTile extends StatefulWidget {
   final tileIndex;
@@ -102,9 +100,8 @@ class _VideoTileState extends State<VideoTile> {
               peerTracKNode: filteredList[index],
               isVideoMuted: (widget.audioView)
                   ? true
-                  :
-                  (trackStatus[filteredList[index].peerId]) ==
-                          HMSTrackUpdate.trackMuted);
+                  : (trackStatus[filteredList[index].peerId]) ==
+                      HMSTrackUpdate.trackMuted);
         }),
       ),
     );

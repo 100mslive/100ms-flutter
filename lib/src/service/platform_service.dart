@@ -147,7 +147,6 @@ class PlatformService {
           notifyMeetingListeners(method, {'message': message});
           break;
 
-// TODO: update parsing & sending of data
         case HMSUpdateListenerMethod.onUpdateSpeaker:
           List<HMSSpeaker> speakers = [];
           if (data.containsKey('speakers') && data['speakers'] is List) {
@@ -272,7 +271,7 @@ class PlatformService {
       case HMSLogsUpdateListenerMethod.onLogsUpdate:
         logsListeners.forEach((element) {
           HMSLogList hmsLogList = HMSLogList.fromMap(arguments);
-          element.onLogMessage(HMSLogList: hmsLogList);
+          element.onLogMessage(hmsLogList: hmsLogList);
         });
         break;
       case HMSLogsUpdateListenerMethod.unknown:
