@@ -1,7 +1,6 @@
 //dart imports
 import 'dart:convert';
 
-
 //Package imports
 import 'package:hmssdk_flutter_example/common/constant.dart';
 import 'package:http/http.dart' as http;

@@ -245,7 +245,6 @@ class PlatformService {
     });
 
     _logsEventChannel.receiveBroadcastStream({'name': 'logs'}).map((event) {
-
       List<dynamic> data = [];
 
       HMSLogsUpdateListenerMethod method =

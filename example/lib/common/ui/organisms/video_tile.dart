@@ -102,9 +102,8 @@ class _VideoTileState extends State<VideoTile> {
               peerTracKNode: filteredList[index],
               isVideoMuted: (widget.audioView)
                   ? true
-                  : filteredList[index].track?.peer?.isLocal ?? true
-                      ? !_meetingStore.isVideoOn
-                      : (trackStatus[filteredList[index].peerId]) ==
+                  :
+                  (trackStatus[filteredList[index].peerId]) ==
                           HMSTrackUpdate.trackMuted);
         }),
       ),
