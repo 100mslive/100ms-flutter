@@ -93,11 +93,7 @@ enum PlatformMethod {
 extension PlatformMethodValues on PlatformMethod {
   static String getName(PlatformMethod method) {
     switch (method) {
-      case PlatformMethod.startHlsStreaming:
-        return "hls_start_streaming";
 
-      case PlatformMethod.stopHlsStreaming:
-        return "hls_stop_streaming";
       case PlatformMethod.join:
         return 'join';
       case PlatformMethod.leave:
@@ -192,15 +188,16 @@ extension PlatformMethodValues on PlatformMethod {
         return "set_volume";
       case PlatformMethod.changeName:
         return "change_name";
+      case PlatformMethod.startHlsStreaming:
+        return "hls_start_streaming";
+
+      case PlatformMethod.stopHlsStreaming:
+        return "hls_stop_streaming";
     }
   }
 
   static PlatformMethod getMethodFromName(String name) {
     switch (name) {
-      case "hls_stop_streaming":
-        return PlatformMethod.stopHlsStreaming;
-      case "hls_start_streaming":
-        return PlatformMethod.startHlsStreaming;
       case 'join':
         return PlatformMethod.join;
       case 'leave':
@@ -293,6 +290,10 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.setVolume;
       case "change_name":
         return PlatformMethod.changeName;
+      case "hls_stop_streaming":
+        return PlatformMethod.stopHlsStreaming;
+      case "hls_start_streaming":
+        return PlatformMethod.startHlsStreaming;
       default:
         return PlatformMethod.unknown;
     }

@@ -24,6 +24,7 @@ class HMSRoom {
   HMSRtmpStreamingState? hmsRtmpStreamingState;
   HMSServerRecordingState? hmsServerRecordingState;
   HMSHLSStreamingState? hmshlsStreamingState;
+
   ///[peers] list which are in the room.
   final List<HMSPeer>? peers;
 
@@ -34,7 +35,8 @@ class HMSRoom {
       this.metaData,
       this.hmsServerRecordingState,
       this.hmsRtmpStreamingState,
-      this.hmsBrowserRecordingState,this.hmshlsStreamingState});
+      this.hmsBrowserRecordingState,
+      this.hmshlsStreamingState});
 
   factory HMSRoom.fromMap(Map map) {
     List<HMSPeer> peers = [];

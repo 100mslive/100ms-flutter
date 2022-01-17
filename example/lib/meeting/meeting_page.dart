@@ -548,7 +548,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                 child: Container(
                                   child: Center(
                                       child: Text(
-                                        "NO HLS URL PRESENT",
+                                        "Waiting for the HLS Streaming to start...",
                                         style: TextStyle(fontSize: 30.0),
                                       )),
                                 ),

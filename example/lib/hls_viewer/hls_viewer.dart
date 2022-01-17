@@ -24,21 +24,16 @@ class _HLSViewerState extends State<HLSViewer> {
     super.initState();
 
     MeetingStore meetingStore = context.read<MeetingStore>();
-    print("streamUrlhls_viewer ${meetingStore.streamUrl}");
     flickManager = FlickManager(
       onVideoEnd: () {
         flickManager.handleChangeVideo(VideoPlayerController.network(
           meetingStore.streamUrl,
         ));
-        print("onVideoEnded");
       },
       videoPlayerController: VideoPlayerController.network(
         meetingStore.streamUrl,
       ),
     );
-    print(
-        " ${flickManager.flickVideoManager?.isVideoInitialized} error In Video");
-
   }
 
   @override
@@ -56,7 +51,7 @@ class _HLSViewerState extends State<HLSViewer> {
           return Container(
             child: Center(
                 child: Text(
-                  "NO HLS URL PRESENT",
+                  "Waiting for the HLS Streaming to start...",
                   style: TextStyle(fontSize: 30.0),
                 )),
           );

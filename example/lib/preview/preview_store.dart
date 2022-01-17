@@ -40,7 +40,6 @@ abstract class PreviewStoreBase
         this.peer = each;
         if(each.role.name.indexOf("hls-") == 0){
           isHLSLink = true;
-          print("in previewstore ${peer?.name} ${peer?.role.name} $isHLSLink");
         }
         break;
       }

@@ -125,7 +125,6 @@ abstract class MeetingStoreBase extends ChangeNotifier
         await RoomService().getToken(user: user, room: roomUrl);
     if (token == null) return false;
     HMSConfig config = HMSConfig(
-        userId: Uuid().v1(),
         authToken: token[0]!,
         userName: user,
         endPoint: token[1] == "true" ? "" : "https://qa-init.100ms.live/init");
@@ -527,7 +526,6 @@ abstract class MeetingStoreBase extends ChangeNotifier
       case HMSPeerUpdate.roleUpdated:
         if (peer.isLocal) {
           localPeer = peer;
-          print("ON ROLE UPDATE ${peer.role.name}");
           if (!peer.role.name.contains("hls-")) {
             isHLSLink = false;
           }
@@ -708,7 +706,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
   }
 
   Future<void> startHLSStreaming(String meetingUrl) async {
-    await _hmssdkInteractor.startHLSStreaming(meetingUrl);
+    await _hmssdkInteractor.startHLSStreaming(meetingUrl,this);
   }
 
   Future<void> stopHLSStreaming() async {
@@ -762,6 +760,12 @@ abstract class MeetingStoreBase extends ChangeNotifier
       case HMSActionResultListenerMethod.sendGroupMessage:
         break;
       case HMSActionResultListenerMethod.sendDirectMessage:
+        break;
+      case HMSActionResultListenerMethod.hlsStreamingStarted:
+        // TODO: Handle this case.
+        break;
+      case HMSActionResultListenerMethod.hlsStreamingStopped:
+        // TODO: Handle this case.
         break;
     }
   }
@@ -822,6 +826,13 @@ abstract class MeetingStoreBase extends ChangeNotifier
       case HMSActionResultListenerMethod.sendDirectMessage:
         // TODO: Handle this case.
         break;
+      case HMSActionResultListenerMethod.hlsStreamingStarted:
+        // TODO: Handle this case.
+        break;
+      case HMSActionResultListenerMethod.hlsStreamingStopped:
+        // TODO: Handle this case.
+        break;
     }
   }
+
 }

@@ -811,7 +811,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             args["event_name"] = "on_peer_update"
 
             args["data"] = HMSPeerUpdateExtension.toDictionary(peer, type)
-            Log.i("onPeerUpdate",type.toString()+peer.hmsRole.name+peer.name)
+
             if (args["data"] != null)
                 CoroutineScope(Dispatchers.Main).launch {
                     eventSink?.success(args)
@@ -835,7 +835,6 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             args.put("event_name", "on_track_update")
 
             args.put("data", HMSTrackUpdateExtension.toDictionary(peer, track, type))
-            Log.i("onTrackUpdate", peer.name)
             if (args["data"] != null)
                 CoroutineScope(Dispatchers.Main).launch {
                     eventSink?.success(args)
@@ -1035,35 +1034,19 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
 
     private fun hlsStreaming(call: MethodCall) {
         val meetingUrl = call.argument<String>("meeting_url")
+        val metadata   = call.argument<String>("meta_data")
         val meetingUrlVariant1 = HMSHLSMeetingURLVariant(
             meetingUrl = meetingUrl!!,
-            metadata = "tag for reference"
+            metadata = metadata!!
         )
 
         val hlsConfig = HMSHLSConfig(listOf(meetingUrlVariant1))
 
-        hmssdk.startHLSStreaming(hlsConfig, hmsActionResultListener = object : HMSActionResultListener{
-            override fun onError(error: HMSException) {
-
-            }
-
-            override fun onSuccess() {
-
-            }
-
-        })
+        hmssdk.startHLSStreaming(hlsConfig, hmsActionResultListener = this.actionListener)
     }
 
     private fun stopHLSStreaming(){
-        hmssdk.stopHLSStreaming(null, hmsActionResultListener = object : HMSActionResultListener{
-            override fun onError(error: HMSException) {
-
-            }
-
-            override fun onSuccess() {
-
-            }
-
-        })
+        hmssdk.stopHLSStreaming(null, hmsActionResultListener = this.actionListener)
     }
+
 }
