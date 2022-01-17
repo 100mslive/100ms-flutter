@@ -207,7 +207,7 @@ class HMSSDK {
         hmsActionResultListener.onSuccess(
             methodType: HMSActionResultListenerMethod.sendBroadcastMessage,
             arguments: arugments);
-      } else if (result["event_name"] == "on_error") {
+      } else{
         hmsActionResultListener.onException(
             methodType: HMSActionResultListenerMethod.sendBroadcastMessage,
             arguments: arugments,
@@ -233,7 +233,7 @@ class HMSSDK {
         hmsActionResultListener.onSuccess(
             methodType: HMSActionResultListenerMethod.sendGroupMessage,
             arguments: arugments);
-      } else if (result["event_name"] == "on_error") {
+      } else{
         hmsActionResultListener.onException(
             methodType: HMSActionResultListenerMethod.sendGroupMessage,
             arguments: arugments,
@@ -258,8 +258,8 @@ class HMSSDK {
       if (result == null) {
         hmsActionResultListener.onSuccess(
             methodType: HMSActionResultListenerMethod.sendDirectMessage,
-            arguments: arugments);
-      } else if (result["event_name"] == "on_error") {
+            arguments: {"message": message, "peer": peer, "type": type});
+      } else{
         hmsActionResultListener.onException(
             methodType: HMSActionResultListenerMethod.sendDirectMessage,
             arguments: arugments,
@@ -303,7 +303,12 @@ class HMSSDK {
     if (hmsActionResultListener != null) {
       if (result == null)
         hmsActionResultListener.onSuccess(
-            methodType: HMSActionResultListenerMethod.changeRole);
+            methodType: HMSActionResultListenerMethod.changeRole,
+            arguments: {
+                      'peer': peer,
+                      'role_name': roleName,
+                      'force_change': forceChange
+            });
       else
         hmsActionResultListener.onException(
             methodType: HMSActionResultListenerMethod.changeRole,
@@ -348,7 +353,11 @@ class HMSSDK {
     if (hmsActionResultListener != null) {
       if (result == null)
         hmsActionResultListener.onSuccess(
-            arguments: arguments,
+            arguments: arguments = {
+              "hms_peer": peer, 
+              "mute": mute,
+              "mute_video_kind": isVideoTrack
+            },
             methodType: HMSActionResultListenerMethod.changeTrackState);
       else
         hmsActionResultListener.onException(
@@ -407,7 +416,7 @@ class HMSSDK {
     if (hmsActionResultListener != null) {
       if (result == null) {
         hmsActionResultListener.onSuccess(
-            arguments: arguments,
+            arguments: {"peer":peer,"reason":reason},
             methodType: HMSActionResultListenerMethod.removePeer);
       } else {
         hmsActionResultListener.onException(
