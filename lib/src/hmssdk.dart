@@ -198,18 +198,20 @@ class HMSSDK {
       {required String message,
       String? type,
       HMSActionResultListener? hmsActionResultListener}) async {
+    var arugments = {"message": message, "type": type};
     var result = await PlatformService.invokeMethod(
         PlatformMethod.sendBroadcastMessage,
-        arguments: {"message": message, "type": type});
+        arguments: arugments);
     if (hmsActionResultListener != null) {
-      if (result["event_name"] == "on_error") {
+      if (result == null) {
+        hmsActionResultListener.onSuccess(
+            methodType: HMSActionResultListenerMethod.sendBroadcastMessage,
+            arguments: arugments);
+      } else if (result["event_name"] == "on_error") {
         hmsActionResultListener.onException(
+            methodType: HMSActionResultListenerMethod.sendBroadcastMessage,
+            arguments: arugments,
             hmsException: HMSException.fromMap(result["error"]));
-      } else {
-        hmsActionResultListener.onSuccess(arguments: {
-          "message": HMSMessage.fromMap(result["message"]),
-          "type": type
-        });
       }
     }
   }
@@ -222,19 +224,20 @@ class HMSSDK {
       required String roleName,
       String? type,
       HMSActionResultListener? hmsActionResultListener}) async {
+    var arugments = {"message": message, "type": type, "role_name": roleName};
     var result = await PlatformService.invokeMethod(
         PlatformMethod.sendGroupMessage,
-        arguments: {"message": message, "role_name": roleName, "type": type});
+        arguments: arugments);
     if (hmsActionResultListener != null) {
-      if (result["event_name"] == "on_error") {
+      if (result == null) {
+        hmsActionResultListener.onSuccess(
+            methodType: HMSActionResultListenerMethod.sendGroupMessage,
+            arguments: arugments);
+      } else if (result["event_name"] == "on_error") {
         hmsActionResultListener.onException(
+            methodType: HMSActionResultListenerMethod.sendGroupMessage,
+            arguments: arugments,
             hmsException: HMSException.fromMap(result["error"]));
-      } else {
-        hmsActionResultListener.onSuccess(arguments: {
-          "message": HMSMessage.fromMap(result["message"]),
-          "type": type,
-          "roleName": roleName
-        });
       }
     }
   }
@@ -247,20 +250,20 @@ class HMSSDK {
       required HMSPeer peer,
       String? type,
       HMSActionResultListener? hmsActionResultListener}) async {
+    var arugments = {"message": message, "peer_id": peer.peerId, "type": type};
     var result = await PlatformService.invokeMethod(
         PlatformMethod.sendDirectMessage,
-        arguments: {"message": message, "peer_id": peer.peerId, "type": type});
-
+        arguments: arugments);
     if (hmsActionResultListener != null) {
-      if (result["event_name"] == "on_error") {
+      if (result == null) {
+        hmsActionResultListener.onSuccess(
+            methodType: HMSActionResultListenerMethod.sendDirectMessage,
+            arguments: arugments);
+      } else if (result["event_name"] == "on_error") {
         hmsActionResultListener.onException(
+            methodType: HMSActionResultListenerMethod.sendDirectMessage,
+            arguments: arugments,
             hmsException: HMSException.fromMap(result["error"]));
-      } else {
-        hmsActionResultListener.onSuccess(arguments: {
-          "message": HMSMessage.fromMap(result["message"]),
-          "type": type,
-          "peer": peer
-        });
       }
     }
   }
@@ -333,20 +336,23 @@ class HMSSDK {
       required bool mute,
       required bool isVideoTrack,
       HMSActionResultListener? hmsActionResultListener}) async {
+    var arguments = {
+      "hms_peer_id": peer.peerId,
+      "mute": mute,
+      "mute_video_kind": isVideoTrack
+    };
     var result = await PlatformService.invokeMethod(
         PlatformMethod.changeTrackState,
-        arguments: {
-          "hms_peer_id": peer.peerId,
-          "mute": mute,
-          "mute_video_kind": isVideoTrack
-        });
+        arguments: arguments);
 
     if (hmsActionResultListener != null) {
       if (result == null)
         hmsActionResultListener.onSuccess(
+            arguments: arguments,
             methodType: HMSActionResultListenerMethod.changeTrackState);
       else
         hmsActionResultListener.onException(
+            arguments: arguments,
             methodType: HMSActionResultListenerMethod.changeTrackState,
             hmsException: HMSException.fromMap(result["error"]));
     }
@@ -364,21 +370,24 @@ class HMSSDK {
       required String source,
       required List<String> roles,
       HMSActionResultListener? hmsActionResultListener}) async {
+    var arguments = {
+      "mute": mute,
+      "type": type,
+      "source": source,
+      "roles": roles
+    };
     var result = await PlatformService.invokeMethod(
         PlatformMethod.changeTrackStateForRole,
-        arguments: {
-          "mute": mute,
-          "type": type,
-          "source": source,
-          "roles": roles
-        });
+        arguments: arguments);
 
     if (hmsActionResultListener != null) {
       if (result == null)
         hmsActionResultListener.onSuccess(
+            arguments: arguments,
             methodType: HMSActionResultListenerMethod.changeTrackStateForRole);
       else
         hmsActionResultListener.onException(
+            arguments: arguments,
             methodType: HMSActionResultListenerMethod.changeTrackStateForRole,
             hmsException: HMSException.fromMap(result["error"]));
     }
@@ -391,16 +400,18 @@ class HMSSDK {
       {required HMSPeer peer,
       required String reason,
       HMSActionResultListener? hmsActionResultListener}) async {
+    var arguments = {"peer_id": peer.peerId, "reason": reason};
     var result = await PlatformService.invokeMethod(PlatformMethod.removePeer,
-        arguments: {"peer_id": peer.peerId, "reason": reason});
+        arguments: arguments);
 
     if (hmsActionResultListener != null) {
       if (result == null) {
         hmsActionResultListener.onSuccess(
-            arguments: {"peer_id": peer.peerId, "reason": reason},
+            arguments: arguments,
             methodType: HMSActionResultListenerMethod.removePeer);
       } else {
         hmsActionResultListener.onException(
+            arguments: arguments,
             methodType: HMSActionResultListenerMethod.removePeer,
             hmsException: HMSException.fromMap(result["error"]));
       }
@@ -415,16 +426,18 @@ class HMSSDK {
       {required bool lock,
       required String reason,
       HMSActionResultListener? hmsActionResultListener}) async {
+    var arguments = {"lock": lock, "reason": reason};
     var result = await PlatformService.invokeMethod(PlatformMethod.endRoom,
-        arguments: {"lock": lock, "reason": reason});
+        arguments: arguments);
 
     if (hmsActionResultListener != null) {
       if (result == null) {
         hmsActionResultListener.onSuccess(
             methodType: HMSActionResultListenerMethod.endRoom,
-            arguments: {"lock": lock, "reason": reason});
+            arguments: arguments);
       } else {
         hmsActionResultListener.onException(
+            arguments: arguments,
             methodType: HMSActionResultListenerMethod.endRoom,
             hmsException: HMSException.fromMap(result["error"]));
       }
@@ -437,16 +450,19 @@ class HMSSDK {
   void startRtmpOrRecording(
       {required HMSRecordingConfig hmsRecordingConfig,
       HMSActionResultListener? hmsActionResultListener}) async {
+    var arguments = hmsRecordingConfig.getJson();
     var result = await PlatformService.invokeMethod(
         PlatformMethod.startRtmpOrRecording,
-        arguments: hmsRecordingConfig.getJson()) as Map?;
+        arguments: arguments) as Map?;
 
     if (hmsActionResultListener != null) {
       if (result == null)
         hmsActionResultListener.onSuccess(
+            arguments: arguments,
             methodType: HMSActionResultListenerMethod.startRtmpOrRecording);
       else
         hmsActionResultListener.onException(
+            arguments: arguments,
             methodType: HMSActionResultListenerMethod.startRtmpOrRecording,
             hmsException: HMSException.fromMap(result["error"]));
     }
@@ -476,16 +492,19 @@ class HMSSDK {
   void changeMetadata(
       {required String metadata,
       HMSActionResultListener? hmsActionResultListener}) async {
+    var arguments = {"metadata": metadata};
     var result = await PlatformService.invokeMethod(
         PlatformMethod.changeMetadata,
-        arguments: {"metadata": metadata});
+        arguments: arguments);
 
     if (hmsActionResultListener != null) {
       if (result == null)
         hmsActionResultListener.onSuccess(
+            arguments: arguments,
             methodType: HMSActionResultListenerMethod.changeMetadata);
       else
         hmsActionResultListener.onException(
+            arguments: arguments,
             methodType: HMSActionResultListenerMethod.changeMetadata,
             hmsException: HMSException.fromMap(result["error"]));
     }
@@ -497,15 +516,18 @@ class HMSSDK {
   void changeName(
       {required String name,
       HMSActionResultListener? hmsActionResultListener}) async {
+    var arguments = {"name": name};
     var result = await PlatformService.invokeMethod(PlatformMethod.changeName,
-        arguments: {"name": name});
+        arguments: arguments);
 
     if (hmsActionResultListener != null) {
       if (result == null)
         hmsActionResultListener.onSuccess(
+            arguments: arguments,
             methodType: HMSActionResultListenerMethod.changeName);
       else
         hmsActionResultListener.onException(
+            arguments: arguments,
             methodType: HMSActionResultListenerMethod.changeName,
             hmsException: HMSException.fromMap(result["error"]));
     }
