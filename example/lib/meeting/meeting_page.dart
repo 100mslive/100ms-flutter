@@ -448,9 +448,10 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                     isVideoMuted: false,
                                     peerTracKNode: new PeerTracKNode(
                                         peerId: _meetingStore.screenSharePeerId,
-                                        track: _meetingStore.screenShareTrack!,
-                                        name: _meetingStore
-                                                .screenShareTrack?.peer?.name ??
+                                        track: _meetingStore
+                                            .screenShareTrack.first,
+                                        name: _meetingStore.screenShareTrack
+                                                .first?.peer?.name ??
                                             ""),
                                   ),
                                 ),
@@ -596,7 +597,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
         bool ans = await UtilityComponents.onBackPressed(context) ?? false;
         return ans;
       },
-    );
+    ));
   }
 
   @override

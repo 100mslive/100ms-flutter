@@ -273,6 +273,11 @@ abstract class MeetingStoreBase extends ChangeNotifier
     this.peers.insert(index, peer);
   }
 
+  @action
+  Future<void> isScreenShareActive() async {
+    isScreenShareOn = await _hmssdkInteractor.isScreenShareActive();
+  }
+
   @override
   void onJoin({required HMSRoom room}) async {
     hmsRoom = room;
@@ -614,12 +619,12 @@ abstract class MeetingStoreBase extends ChangeNotifier
   }
 
   void startScreenShare() {
-    meetingController.startScreenShare();
+    _hmssdkInteractor.startScreenShare();
     isScreenShareActive();
   }
 
   void stopScreenShare() {
-    meetingController.stopScreenShare();
+    _hmssdkInteractor.stopScreenShare();
     isScreenShareActive();
   }
 

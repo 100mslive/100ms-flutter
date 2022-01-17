@@ -33,7 +33,7 @@ class HMSSDKInteractor {
   }
 
   Future<bool> isScreenShareActive() async {
-    return await _meeting.isScreenShareActive();
+    return await hmsSDK.isScreenShareActive();
   }
 
   void sendBroadcastMessage(
@@ -177,11 +177,11 @@ class HMSSDKInteractor {
   }
 
   void startScreenShare() {
-    _meeting.startScreenShare();
+    hmsSDK.startScreenShare();
   }
 
   void stopScreenShare() {
-    _meeting.stopScreenShare();
+    hmsSDK.stopScreenShare();
   }
 
   void unMuteAll() {
