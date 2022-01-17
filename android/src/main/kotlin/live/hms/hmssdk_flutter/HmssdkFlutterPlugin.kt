@@ -391,7 +391,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             return hmssdk.getLocalPeer()?.videoTrack?.isMute ?: true
         }
         val peer = getPeerById(peerId!!)
-        return peer!!.videoTrack!!.isMute
+        return peer?.videoTrack?.isMute?:true
     }
 
     private fun isAudioMute(call: MethodCall): Boolean {
@@ -401,7 +401,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             return hmssdk.getLocalPeer()?.audioTrack?.isMute?:true
         }
         val peer = getPeerById(peerId!!)
-        return peer!!.audioTrack!!.isMute
+        return peer?.audioTrack?.isMute?:true
     }
 
     private fun sendBroadCastMessage(call: MethodCall) {
@@ -814,7 +814,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             args["event_name"] = "on_peer_update"
 
             args["data"] = HMSPeerUpdateExtension.toDictionary(peer, type)
-            
+            Log.i("onPeerUpdate",type.toString()+peer.hmsRole.name+peer.name)
             if (args["data"] != null)
                 CoroutineScope(Dispatchers.Main).launch {
                     eventSink?.success(args)
@@ -838,7 +838,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             args.put("event_name", "on_track_update")
 
             args.put("data", HMSTrackUpdateExtension.toDictionary(peer, track, type))
-            
+            Log.i("onTrackUpdate", peer.name)
             if (args["data"] != null)
                 CoroutineScope(Dispatchers.Main).launch {
                     eventSink?.success(args)

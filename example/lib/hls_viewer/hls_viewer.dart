@@ -13,10 +13,10 @@ class HLSViewer extends StatefulWidget {
   HLSViewer({Key? key, required this.streamUrl}) : super(key: key);
 
   @override
-  _DefaultPlayerState createState() => _DefaultPlayerState();
+  _HLSViewerState createState() => _HLSViewerState();
 }
 
-class _DefaultPlayerState extends State<HLSViewer> {
+class _HLSViewerState extends State<HLSViewer> {
   late FlickManager flickManager;
 
   @override

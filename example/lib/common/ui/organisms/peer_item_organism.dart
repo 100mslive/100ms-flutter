@@ -70,8 +70,8 @@ class _PeerItemOrganismState extends State<PeerItemOrganism> {
                 List<String>? parts = widget.peerTracKNode.name.split(" ");
 
                 if (parts.length == 1) {
-                  parts[0] += " ";
-                  name = parts[0][0] + parts[0][1];
+                  parts[0] += ".";
+                  name = parts[0][0];
                 } else if (parts.length >= 2) {
                   name = parts[0][0];
                   if (parts[1] == "" || parts[1] == " ") {

@@ -132,6 +132,12 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
     _meetingStore.startListen();
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    checkButtons();
+  }
+
   void checkButtons() async {
     _meetingStore.isVideoOn =
         !(await _meetingStore.isVideoMute(_meetingStore.localPeer));
@@ -428,7 +434,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                 value: 8,
                               ),
                               if (_meetingStore
-                                  .localPeer!.role!.permissions!.endRoom!)
+                                  .localPeer!.role.permissions.endRoom!)
                                 PopupMenuItem(
                                   child: Row(
                                       mainAxisAlignment:
@@ -456,7 +462,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Observer(builder: (_) {
-                            if (_meetingStore.isHLSLink && _meetingStore.screenShareTrack != null &&
+                            if (!_meetingStore.isHLSLink && _meetingStore.screenShareTrack != null &&
                                 !audioViewOn) {
                               return SizedBox(
                                 width: double.infinity,

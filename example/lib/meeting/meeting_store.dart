@@ -18,9 +18,11 @@ abstract class MeetingStoreBase extends ChangeNotifier
     with Store
     implements HMSUpdateListener, HMSActionResultListener {
   late HMSSDKInteractor _hmssdkInteractor;
+
   MeetingStoreBase() {
     _hmssdkInteractor = HmsSdkManager.hmsSdkInteractor!;
   }
+
   // HMSLogListener
   @observable
   bool isSpeakerOn = true;
@@ -31,9 +33,9 @@ abstract class MeetingStoreBase extends ChangeNotifier
   @observable
   bool hasHlsStarted = false;
 
-  String streamUrl="";
+  String streamUrl = "";
   @observable
-  bool isHLSLink=false;
+  bool isHLSLink = false;
   @observable
   HMSRoleChangeRequest? roleChangeRequest;
 
@@ -280,12 +282,11 @@ abstract class MeetingStoreBase extends ChangeNotifier
   void onJoin({required HMSRoom room}) async {
     hmsRoom = room;
 
-    if(room.hmshlsStreamingState?.running??false){
-      hasHlsStarted=true;
-      streamUrl = room.hmshlsStreamingState?.variants[0]?.hlsStreamUrl??"";
-    }
-    else{
-      hasHlsStarted=false;
+    if (room.hmshlsStreamingState?.running ?? false) {
+      hasHlsStarted = true;
+      streamUrl = room.hmshlsStreamingState?.variants[0]?.hlsStreamUrl ?? "";
+    } else {
+      hasHlsStarted = false;
     }
     if (room.hmsBrowserRecordingState?.running == true)
       isRecordingStarted = true;
@@ -301,8 +302,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
               .add(new PeerTracKNode(peerId: each.peerId, name: each.name));
         localPeer = each;
         addPeer(localPeer!);
-        if(localPeer!.role!.name.contains("hls-")==true)
-          isHLSLink=true;
+        if (localPeer!.role.name.contains("hls-") == true) isHLSLink = true;
 
         if (each.videoTrack != null) {
           if (each.videoTrack!.kind == HMSTrackKind.kHMSTrackKindVideo) {
@@ -339,7 +339,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
         break;
       case HMSRoomUpdate.hlsStreamingStateUpdated:
         hasHlsStarted = room.hmshlsStreamingState?.running ?? false;
-        streamUrl = room.hmshlsStreamingState?.variants[0]?.hlsStreamUrl??"";
+        streamUrl = room.hmshlsStreamingState?.variants[0]?.hlsStreamUrl ?? "";
         break;
       default:
         print('on room update ${update.toString()}');
@@ -348,6 +348,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
 
   @override
   void onPeerUpdate({required HMSPeer peer, required HMSPeerUpdate update}) {
+    print("onPeerUpdate" + update.toString() + peer.role.name + peer.name);
     peerOperation(peer, update);
   }
 
@@ -356,6 +357,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
       {required HMSTrack track,
       required HMSTrackUpdate trackUpdate,
       required HMSPeer peer}) {
+    print("onTrackUpdate ${peer.name}");
     if (isSpeakerOn) {
       unMuteAll();
     } else {
@@ -516,9 +518,9 @@ abstract class MeetingStoreBase extends ChangeNotifier
   void peerOperation(HMSPeer peer, HMSPeerUpdate update) {
     switch (update) {
       case HMSPeerUpdate.peerJoined:
-        //TODO-> containsPeer or not
-        if(peer.role?.name.contains("hls-")==false)
-          peerTracks.add(new PeerTracKNode(peerId: peer.peerId, name: peer.name));
+        if (peer.role.name.contains("hls-") == false)
+          peerTracks
+              .add(new PeerTracKNode(peerId: peer.peerId, name: peer.name));
         addPeer(peer);
         break;
       case HMSPeerUpdate.peerLeft:
@@ -533,6 +535,18 @@ abstract class MeetingStoreBase extends ChangeNotifier
       case HMSPeerUpdate.roleUpdated:
         if (peer.isLocal) {
           localPeer = peer;
+          print("ON ROLE UPDATE ${peer.role.name}");
+          if (!peer.role.name.contains("hls-")) {
+            isHLSLink = false;
+          }
+        }
+        if (peer.role.name.contains("hls-") == false) {
+          int index =
+              peerTracks.indexWhere((element) => element.peerId == peer.peerId);
+          //if (index != -1) peerTracks[index].track = track;
+          if (index == -1)
+            peerTracks
+                .add(new PeerTracKNode(peerId: peer.peerId, name: peer.name));
         }
         updatePeerAt(peer);
         break;
@@ -682,6 +696,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
   }
 
   bool isRaisedHand = false;
+
   void changeMetadata() {
     isRaisedHand = !isRaisedHand;
     String value = isRaisedHand ? "true" : "false";
