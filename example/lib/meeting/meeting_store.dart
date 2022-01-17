@@ -18,11 +18,9 @@ abstract class MeetingStoreBase extends ChangeNotifier
     with Store
     implements HMSUpdateListener, HMSActionResultListener {
   late HMSSDKInteractor _hmssdkInteractor;
-
   MeetingStoreBase() {
     _hmssdkInteractor = HmsSdkManager.hmsSdkInteractor!;
   }
-
   // HMSLogListener
   @observable
   bool isSpeakerOn = true;
@@ -33,9 +31,9 @@ abstract class MeetingStoreBase extends ChangeNotifier
   @observable
   bool hasHlsStarted = false;
 
-  String streamUrl = "";
+  String streamUrl="";
   @observable
-  bool isHLSLink = false;
+  bool isHLSLink=false;
   @observable
   HMSRoleChangeRequest? roleChangeRequest;
 
@@ -348,7 +346,6 @@ abstract class MeetingStoreBase extends ChangeNotifier
 
   @override
   void onPeerUpdate({required HMSPeer peer, required HMSPeerUpdate update}) {
-    print("onPeerUpdate" + update.toString() + peer.role.name + peer.name);
     peerOperation(peer, update);
   }
 
@@ -357,7 +354,6 @@ abstract class MeetingStoreBase extends ChangeNotifier
       {required HMSTrack track,
       required HMSTrackUpdate trackUpdate,
       required HMSPeer peer}) {
-    print("onTrackUpdate ${peer.name}");
     if (isSpeakerOn) {
       unMuteAll();
     } else {
@@ -382,14 +378,12 @@ abstract class MeetingStoreBase extends ChangeNotifier
     }
 
     if (track.kind == HMSTrackKind.kHMSTrackKindAudio) {
-      int index =
-          peerTracks.indexWhere((element) => element.peerId == peer.peerId);
+      int index = peerTracks.indexWhere((element) => element.peerId == peer.peerId);
       if (index != -1) peerTracks[index].audioTrack = track;
       return;
     }
     if (track.source == "REGULAR") {
-      int index =
-          peerTracks.indexWhere((element) => element.peerId == peer.peerId);
+      int index = peerTracks.indexWhere((element) => element.peerId == peer.peerId);
       if (index != -1) peerTracks[index].track = track;
     }
 
@@ -474,10 +468,8 @@ abstract class MeetingStoreBase extends ChangeNotifier
   int trackChange = -1;
 
   @override
-  void onChangeTrackStateRequest(
-      {required HMSTrackChangeRequest hmsTrackChangeRequest}) {
-    if (!hmsTrackChangeRequest.mute)
-      addTrackChangeRequestInstance(hmsTrackChangeRequest);
+  void onChangeTrackStateRequest({required HMSTrackChangeRequest hmsTrackChangeRequest}) {
+    if (!hmsTrackChangeRequest.mute) addTrackChangeRequestInstance(hmsTrackChangeRequest);
   }
 
   void changeTracks(HMSTrackChangeRequest hmsTrackChangeRequest) {
@@ -696,7 +688,6 @@ abstract class MeetingStoreBase extends ChangeNotifier
   }
 
   bool isRaisedHand = false;
-
   void changeMetadata() {
     isRaisedHand = !isRaisedHand;
     String value = isRaisedHand ? "true" : "false";

@@ -17,8 +17,6 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     
     internal var hmsSDK: HMSSDK?
     
-    private var config: HMSConfig?
-    
     
     // MARK: - Flutter Setup
     
@@ -279,26 +277,16 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     
     
     private func preview(_ call: FlutterMethodCall, _ result: FlutterResult) {
+        
         let arguments = call.arguments as! [AnyHashable: Any]
         
-        guard let authToken = arguments["auth_token"] as? String,
-              let userName = arguments["user_name"] as? String
-        else {
-            let error = getError(message: "Could not show preview, invalid parameters passed", params: ["function": #function, "arguments": arguments])
+        guard let config = getConfig(from: arguments) else {
+            let error = getError(message: "Could not join room, invalid parameters passed", params: ["function": #function, "arguments": arguments])
             result(HMSErrorExtension.toDictionary(error))
             return
         }
         
-        let shouldSkipPIIEvents = arguments["should_skip_pii_events"] as? Bool ?? false
-        let metaData = arguments["meta_data"] as? String
-        
-        if let endPoint = arguments["end_point"] as? String, !endPoint.isEmpty {
-            config = HMSConfig(userName: userName, authToken: authToken, shouldSkipPIIEvents: shouldSkipPIIEvents, metadata: metaData, endpoint: endPoint)
-        } else {
-            config = HMSConfig(userName: userName, authToken: authToken, shouldSkipPIIEvents: shouldSkipPIIEvents, metadata: metaData)
-        }
-        
-        hmsSDK?.preview(config: config!, delegate: self)
+        hmsSDK?.preview(config: config, delegate: self)
         
         result(nil)
     }
@@ -324,29 +312,13 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         
         let arguments = call.arguments as! [AnyHashable: Any]
         
-        if let config = config {
-            hmsSDK?.join(config: config, delegate: self)
-        } else {
-            
-            guard let authToken = arguments["auth_token"] as? String,
-                  let userName = arguments["user_name"] as? String
-            else {
-                let error = getError(message: "Could not join room, invalid parameters passed", params: ["function": #function, "arguments": arguments])
-                result(HMSErrorExtension.toDictionary(error))
-                return
-            }
-            
-            let shouldSkipPIIEvents = arguments["should_skip_pii_events"] as? Bool ?? false
-            let metaData = arguments["meta_data"] as? String
-            
-            if let endPoint = arguments["end_point"] as? String, !endPoint.isEmpty  {
-                config = HMSConfig(userName: userName, authToken: authToken, shouldSkipPIIEvents: shouldSkipPIIEvents, metadata: metaData, endpoint: endPoint)
-            } else {
-                config = HMSConfig(userName: userName, authToken: authToken, shouldSkipPIIEvents: shouldSkipPIIEvents, metadata: metaData)
-            }
-            
-            hmsSDK?.join(config: config!, delegate: self)
+        guard let config = getConfig(from: arguments) else {
+            let error = getError(message: "Could not join room, invalid parameters passed", params: ["function": #function, "arguments": arguments])
+            result(HMSErrorExtension.toDictionary(error))
+            return
         }
+            
+        hmsSDK?.join(config: config, delegate: self)
         
         result(nil)
     }
@@ -562,7 +534,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         
         if let localPeer = hmsSDK?.localPeer {
             if let video = localPeer.videoTrack as? HMSLocalVideoTrack {
-                video.setMute(allowed)
+                video.setMute(!allowed)
             }
         }
         
@@ -1153,6 +1125,29 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     
     // MARK: - Helper Functions
     
+    private func getConfig(from arguments: [AnyHashable: Any]) -> HMSConfig? {
+        guard let authToken = arguments["auth_token"] as? String,
+              let userName = arguments["user_name"] as? String
+        else {
+            return nil
+        }
+        
+        let shouldSkipPIIEvents = arguments["should_skip_pii_events"] as? Bool ?? false
+        let metaData = arguments["meta_data"] as? String
+        
+        var endPoint: String?
+        if let endPointStr = arguments["end_point"] as? String, !endPointStr.isEmpty {
+            endPoint = endPointStr
+        }
+        
+        return HMSConfig(userName: userName,
+                         authToken: authToken,
+                         shouldSkipPIIEvents: shouldSkipPIIEvents,
+                         metadata: metaData,
+                         endpoint: endPoint)
+    }
+    
+    
     private func getError(message: String, description: String? = nil, params: [String: Any]) -> HMSError {
         HMSError(id: "NONE",
                  code: .genericErrorJsonParsingFailed,
@@ -1162,12 +1157,12 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     }
     
     private func logSpeakers(_ speakers: [HMSSpeaker]) {
-        let date = Date()
-        let calendar = Calendar.current
-        let hour = calendar.component(.hour, from: date)
-        let minutes = calendar.component(.minute, from: date)
-        let second = calendar.component(.second, from: date)
-        let dateString = "\(hour):\(minutes):\(second)"
+//        let date = Date()
+//        let calendar = Calendar.current
+//        let hour = calendar.component(.hour, from: date)
+//        let minutes = calendar.component(.minute, from: date)
+//        let second = calendar.component(.second, from: date)
+//        let dateString = "\(hour):\(minutes):\(second)"
         
         // print(#function, "Speaker update " + dateString, speakers.map { $0.peer.name },
         //       speakers.map { kindString(from: $0.track.kind) },

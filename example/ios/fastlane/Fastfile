@@ -32,5 +32,21 @@ platform :ios do
       ipa_path: './Runner.ipa',
       release_notes: commit[:message]
     )
+
+     slack(
+      message: "🎉🍀📱 Flutter iOS App released! 📱🍀 Download here 👉 https://appdistribution.firebase.dev/i/051800400061502d",
+      slack_url: "https://hooks.slack.com/services/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",
+      payload: {  
+        "Build Date" => Time.new.to_s
+      },
+      default_payloads: [:last_git_commit], 
+      attachment_properties: {      
+        fields: [{
+          title: "🎊 Version",
+          value: version + " (" + build_number + ")",
+          short: false 
+        }]
+      }
+    )
   end
 end

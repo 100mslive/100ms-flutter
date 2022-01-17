@@ -51,7 +51,6 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
     lateinit var hmssdk: HMSSDK
     private lateinit var hmsVideoFactory: HMSVideoViewFactory
     private var requestChange: HMSRoleChangeRequest? = null
-    private var hmsConfig: HMSConfig? = null
     private var result: Result? = null
 
     override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
@@ -258,22 +257,30 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
     }
 
     private fun join(call: MethodCall, result: Result) {
-        val userName = call.argument<String>("user_name")
-        val authToken = call.argument<String>("auth_token")
-        val endPoint = call.argument<String>("end_point")
-        if (this.hmsConfig == null) {
-            this.hmsConfig = HMSConfig(userName = userName!!, authtoken = authToken!!)
-            if (endPoint!!.isNotEmpty())
-                this.hmsConfig = HMSConfig(
-                    userName = userName,
-                    authtoken = authToken,
-                    initEndpoint = endPoint.trim()
-                )
-        }
-        hmssdk.join(hmsConfig!!, this.hmsUpdateListener)
+        val config = getConfig(call)
+    
+        hmssdk.join(config, this.hmsUpdateListener)
         result.success(null)
     }
 
+    private fun getConfig(call: MethodCall): HMSConfig {
+
+        val userName = call.argument<String>("user_name")
+        val authToken = call.argument<String>("auth_token")
+        val metaData = call.argument<String>("meta_data")?: ""
+        val endPoint = call.argument<String>("end_point")        
+
+        if (endPoint != null && endPoint!!.isNotEmpty()) {
+            return HMSConfig(
+                userName = userName!!,
+                authtoken = authToken!!,
+                metadata = metaData,
+                initEndpoint = endPoint.trim()
+            )
+        }
+            
+        return HMSConfig(userName = userName!!, authtoken = authToken!!, metadata = metaData)
+    }
 
     private fun startHMSLogger(call: MethodCall) {
         val setWebRtcLogLevel = call.argument<String>("web_rtc_log_level")
@@ -436,20 +443,10 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
     }
 
     private fun preview(call: MethodCall, result: Result) {
-        val userName = call.argument<String>("user_name")
-        val authToken = call.argument<String>("auth_token")
-        val isProd = call.argument<Boolean>("is_prod")
-        val endPoint = call.argument<String>("end_point")
         
-        this.hmsConfig = HMSConfig(userName = userName!!, authtoken = authToken!!)
-        if (endPoint!!.isNotEmpty())
-            this.hmsConfig = HMSConfig(
-                userName = userName,
-                authtoken = authToken,
-                initEndpoint = endPoint
-            )
-
-        hmssdk.preview(this.hmsConfig!!, this.hmsPreviewListener)
+        val config = getConfig(call)
+      
+        hmssdk.preview(config, this.hmsPreviewListener)
 
         result.success(null)
     }
