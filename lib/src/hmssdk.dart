@@ -293,19 +293,22 @@ class HMSSDK {
       required String roleName,
       bool forceChange = false,
       HMSActionResultListener? hmsActionResultListener}) async {
+    var arguments = {
+      'peer_id': peer.peerId,
+      'role_name': roleName,
+      'force_change': forceChange
+    };
     var result = await PlatformService.invokeMethod(PlatformMethod.changeRole,
-        arguments: {
-          'peer_id': peer.peerId,
-          'role_name': roleName,
-          'force_change': forceChange
-        });
+        arguments: arguments);
 
     if (hmsActionResultListener != null) {
       if (result == null)
         hmsActionResultListener.onSuccess(
+            arguments: arguments,
             methodType: HMSActionResultListenerMethod.changeRole);
       else
         hmsActionResultListener.onException(
+            arguments: arguments,
             methodType: HMSActionResultListenerMethod.changeRole,
             hmsException: HMSException.fromMap(result["error"]));
     }
