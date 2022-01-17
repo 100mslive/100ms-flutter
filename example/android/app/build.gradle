@@ -37,13 +37,17 @@ android {
         main.java.srcDirs += 'src/main/kotlin'
     }
 
+    lintOptions {
+        checkDependencies true
+    }
+
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "live.hms.flutter"
         minSdkVersion 21
         targetSdkVersion 32
-        versionCode 23
-        versionName "1.0.23"
+        versionCode 34
+        versionName "1.0.34"
     }
 
     signingConfigs {

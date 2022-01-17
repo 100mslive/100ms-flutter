@@ -24,7 +24,8 @@ class HMSVideoView extends StatelessWidget {
 
   /// [HMSVideoView] will use viewSize to get height and width of rendered video. If not passed, it will take whatever size is available to the widget.
   final Size? viewSize;
-  bool setMirror;
+
+  final bool setMirror;
 
   HMSVideoView(
       {Key? key,
@@ -59,7 +60,8 @@ class HMSVideoView extends StatelessWidget {
 class _PlatformView extends StatelessWidget {
   final HMSTrack track;
   final Size viewSize;
-  bool setMirror;
+
+  final bool setMirror;
   final bool matchParent;
 
   _PlatformView({
@@ -88,11 +90,10 @@ class _PlatformView extends StatelessWidget {
           'track_id': track.trackId,
           'is_aux': track.source != "REGULAR",
           'screen_share': track.source != "REGULAR",
-          // TODO: add config setting for mirror
           'set_mirror': track.source != "REGULAR" ? false : setMirror,
-          // TODO: add config setting for scale type
-          'scale_type': track.source != "REGULAR" ? ScalingType.SCALE_ASPECT_FIT.value : ScalingType.SCALE_ASPECT_FILL.value,
-          // TODO: add config setting for match_parent
+          'scale_type': track.source != "REGULAR"
+              ? ScalingType.SCALE_ASPECT_FIT.value
+              : ScalingType.SCALE_ASPECT_FILL.value,
           'match_parent': matchParent,
         }..addAll({
             'height': viewSize.height,
@@ -103,14 +104,19 @@ class _PlatformView extends StatelessWidget {
     } else if (Platform.isIOS) {
       ///UiKitView for ios it uses VideoView provided by 100ms ios_sdk internally.
       return UiKitView(
-        viewType: 'HMSVideoView',
+        viewType: 'HMSFlutterPlatformView',
         onPlatformViewCreated: onPlatformViewCreated,
         creationParamsCodec: StandardMessageCodec(),
         creationParams: {
           'peer_id': track.peer?.peerId,
           'is_local': track.peer?.isLocal,
           'track_id': track.trackId,
+          'is_aux': track.source != "REGULAR",
+          'screen_share': track.source != "REGULAR",
           'set_mirror': track.source != "REGULAR" ? false : setMirror,
+          'scale_type': track.source != "REGULAR"
+              ? ScalingType.SCALE_ASPECT_FIT.value
+              : ScalingType.SCALE_ASPECT_FILL.value,
           'match_parent': matchParent,
         }..addAll({
             'height': viewSize.height,

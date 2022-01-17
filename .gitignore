@@ -3,7 +3,6 @@
 
 .packages
 .pub/
-pubspec.lock
 build/
 
 *.g.dart
@@ -11,3 +10,21 @@ build/
 private_key.pepk
 ./example/android/app/100msKeyStore
 100msKeyStore
+example/ios/Runner.app.dSYM.zip
+example/ios/Runner.ipa
+launch.json
+./documentation
+
+example/android/app/google-services.json
+example/android/fastlane/Appfile
+example/android/fastlane/Fastfile
+example/android/fastlane/Pluginfile
+example/android/fastlane/README.md
+/example/android/fastlane/report.xml
+
+example/ios/fastlane/Appfile
+example/ios/fastlane/Fastfile
+example/ios/fastlane/Pluginfile
+example/ios/fastlane/README.md
+/example/ios/fastlane/report.xml
+example/ios/Runner/GoogleService-Info.plist

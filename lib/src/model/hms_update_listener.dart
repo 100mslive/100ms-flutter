@@ -8,9 +8,9 @@
 
 // Project imports:
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-import 'package:hmssdk_flutter/src/model/hms_peer_removed_from_room.dart';
-import 'package:hmssdk_flutter/src/model/hms_track_change_request.dart';
 
+/// 100ms SDK provides callbacks to the client app about any change or update happening in the room after a user has joined by implementing HMSUpdateListener.
+/// These updates can be used to render the video on screen or to display other info regarding the room.
 abstract class HMSUpdateListener {
   /// This will be called on a successful JOIN of the room by the user
   ///

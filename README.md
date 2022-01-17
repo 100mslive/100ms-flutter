@@ -126,64 +126,50 @@ Add following permissions in iOS Info.plist file
 100ms SDK provides callbacks to the client app about any change or update happening in the room after a user has joined by implementing `HMSUpdateListener`. These updates can be used to render the video on screen or to display other info regarding the room.
 
 ```dart
+
+/// 100ms SDK provides callbacks to the client app about any change or update happening in the room after a user has joined by implementing HMSUpdateListener.
+/// These updates can be used to render the video on screen or to display other info regarding the room.
 abstract class HMSUpdateListener {
 
   /// This will be called on a successful JOIN of the room by the user
   ///
   /// This is the point where applications can stop showing its loading state
-  /// - Parameter room: the room which was joined
+  /// [room]: the room which was joined
   void onJoin({required HMSRoom room});
-  
 
+  /// This is called when there is a change in any property of the Room
+  ///
+  ///  [room]: the room which was joined
+  ///  [update]: the triggered update type. Should be used to perform different UI Actions
+  void onRoomUpdate({required HMSRoom room, required HMSRoomUpdate update});
 
   /// This will be called whenever there is an update on an existing peer
   /// or a new peer got added/existing peer is removed.
   ///
   /// This callback can be used to keep a track of all the peers in the room
-  /// - Parameters:
-  ///   - peer: the peer who joined/left or was updated
-  ///   - update: the triggered update type. Should be used to perform different UI Actions
+  /// [peer]: the peer who joined/left or was updated
+  /// [update]: the triggered update type. Should be used to perform different UI Actions
   void onPeerUpdate({required HMSPeer peer, required HMSPeerUpdate update});
-
-
 
   /// This is called when there are updates on an existing track
   /// or a new track got added/existing track is removed
   ///
   /// This callback can be used to render the video on screen whenever a track gets added
-  /// - Parameters:
-  ///   - track: the track which was added, removed or updated
-  ///   - trackUpdate: the triggered update type
-  ///   - peer: the peer for which track was added, removed or updated
-  void onTrackUpdate(
-      {required HMSTrack track,
-      required HMSTrackUpdate trackUpdate,
-      required HMSPeer peer});
+  ///  [track]: the track which was added, removed or updated
+  ///  [trackUpdate]: the triggered update type
+  ///  [peer]: the peer for which track was added, removed or updated
+  void onTrackUpdate({required HMSTrack track, required HMSTrackUpdate trackUpdate, required HMSPeer peer});
 
-
+  /// This will be called when there is an error in the system
+  /// and SDK has already retried to fix the error
+  /// [error]: the error that occurred
+  void onError({required HMSException error});
 
   /// This is called when there is a new broadcast message from any other peer in the room
   ///
   /// This can be used to implement chat is the room
-  /// - Parameter message: the received broadcast message
+  /// [message]: the received broadcast message
   void onMessage({required HMSMessage message});
-  
-  
-  
-  /// This is called every 1 second with list of active speakers
-  ///
-  ///    A HMSSpeaker object contains -
-  ///    - peerId: the peer identifier of HMSPeer who is speaking
-  ///    - trackId: the track identifier of HMSTrack which is emitting audio
-  ///    - audioLevel: a number within range 1-100 indicating the audio volume
-  ///
-  /// A peer who is not present in the list indicates that the peer is not speaking
-  ///
-  /// This can be used to highlight currently speaking peers in the room
-  /// - Parameter speakers: the list of speakers
-  void onUpdateSpeakers({required List<HMSSpeaker> updateSpeakers});
-
-
 
   /// This is called when someone asks for change or role
   ///
@@ -191,32 +177,34 @@ abstract class HMSUpdateListener {
   /// this triggers this call on peer's app
   void onRoleChangeRequest({required HMSRoleChangeRequest roleChangeRequest});
 
-
-
-  /// This will be called when there is an error in the system
+  /// This is called every 1 second with list of active speakers
   ///
-  /// and SDK has already retried to fix the error
-  /// - Parameter error: the error that occurred
-  void onError({required HMSError error});
-  
-  
-  
-  /// This is called when there is a change in any property of the Room
+  /// ## A HMSSpeaker object contains -
+  ///    - peerId: the peer identifier of HMSPeer who is speaking
+  ///    - trackId: the track identifier of HMSTrack which is emitting audio
+  ///    - audioLevel: a number within range 1-100 indicating the audio volume
   ///
-  /// - Parameters:
-  ///   - room: the room which was joined
-  ///   - update: the triggered update type. Should be used to perform different UI Actions
-  void onRoomUpdate({required HMSRoom room, required HMSRoomUpdate update});
+  /// A peer who is not present in the list indicates that the peer is not speaking
+  ///
+  /// This can be used to highlight currently speaking peers in the room
+  /// [speakers] the list of speakers
+  void onUpdateSpeakers({required List<HMSSpeaker> updateSpeakers});
 
-
-
-  /// This is called when SDK detects a network issue and is trying to recover
+  ///when network or some other error happens it will be called
   void onReconnecting();
 
-
-  /// This is called when SDK successfully recovered from a network issue
+  ///when you are back in the room after reconnection
   void onReconnected();
+
+  ///when someone requests for track change of yours be it video or audio this will be triggered
+  /// [hmsTrackChangeRequest] request instance consisting of all the required info about track change
+  void onChangeTrackStateRequest({required HMSTrackChangeRequest hmsTrackChangeRequest});
+
+  ///when someone kicks you out or when someone ends the room at that time it is triggered
+  /// [hmsPeerRemovedFromPeer] it consists info about who removed you and why.
+  void onRemovedFromRoom({required HMSPeerRemovedFromPeer hmsPeerRemovedFromPeer});
 }
+
 ```
 
 ## 🤔 How to listen to Track, Peer and Room updates? 
@@ -227,17 +215,27 @@ abstract class HMSUpdateListener {
   The following are the different types of updates that are emitted by the SDK - 
 ```dart
 HMSPeerUpdate
-  case PEER_JOINED A new peer joins the room
-  case PEER_LEFT - An existing peer leaves the room
-  case BECAME_DOMINANT_SPEAKER - A peer becomes a dominant speaker
-  case NO_DOMINANT_SPEAKER - There is silence in the room (No speaker is detected)
+  HMSPeerUpdate.peerJoined: A new peer joins the room
+  HMSPeerUpdate.peerLeft: An existing peer leaves the room
+  HMSPeerUpdate.roleUpdated
+  HMSPeerUpdate.metadataChanged
+  HMSPeerUpdate.nameChanged
 
 HMSTrackUpdate
-  case TRACK_ADDED - A new track is added by a remote peer
-  case TRACK_REMOVED - An existing track is removed from a remote peer
-  case TRACK_MUTED - An existing track of a remote peer is muted
-  case TRACK_UNMUTED - An existing track of a remote peer is unmuted
-  case TRACK_DESCRIPTION_CHANGED - The optional description of a track of a remote peer is changed
+  HMSTrackUpdate.trackAdded: A new track is added by a remote peer
+  HMSTrackUpdate.trackRemoved: An existing track is removed from a remote peer
+  HMSTrackUpdate.trackMuted: An existing track of a remote peer is muted
+  HMSTrackUpdate.trackUnMuted: An existing track of a remote peer is unmuted
+  HMSTrackUpdate.trackDegraded
+  HMSTrackUpdate.trackRestored
+
+HMSRoomUpdate
+  HMSRoomUpdate.roomMuted
+  HMSRoomUpdate.roomUnmuted
+  HMSRoomUpdate.serverRecordingStateUpdated
+  HMSRoomUpdate.browserRecordingStateUpdated
+  HMSRoomUpdate.rtmpStreamingStateUpdated
+  HMSRoomUpdate.hlsStreamingStateUpdated
 ```
   
 ## 🛤 How to know the type and source of Track?
@@ -253,14 +251,10 @@ To join a room created by following the steps described in the above section, cl
 
 ```dart
 // Create a new HMSConfig
-HMSConfig config = HMSConfig( userId: userId,
-                              roomId: roomId,
-                              authToken: token,
-                              userName: userName);
+HMSConfig config = HMSConfig(authToken: token,
+                            userName: userName);
 ```
 
- `userId`: should be unique we are using `Uuid` package to generate one.
- `roomId`: id of the room which you want to join.
  `token`:  follow the above step 1 to generate token.
  `userName`: your name using which you want to join the room.   
 
@@ -270,8 +264,9 @@ Use the HMSConfig and HMSUpdateListener instances to call the join method on the
 Once Join succeeds, all the callbacks keep coming on every change in the room and the app can react accordingly
 
 ```dart
-HMSMeeting meeting = HMSMeeting()
-meeting.joinMeeting(config: this.config);
+HMSSDK hmsSDK = HMSSDK()
+hmsSDK.build()
+hmsSDK.joinMeeting(config: this.config);
 ```
 
 ## 👋 Leave Room
@@ -279,27 +274,27 @@ meeting.joinMeeting(config: this.config);
 Call the leave method on the HMSSDK instance
 
 ```dart
-meeting.leave() // to leave a room
+hmsSDK.leave() // to leave a room
 ```
   
 ## 🙊 Mute/Unmute Local Audio
   
 ```dart
 // Turn on
-meeting.switchAudio(isOn:true)
+hmsSDK.switchAudio(isOn: true)
 
 // Turn off  
-meeting.switchAudio(isOn:false)
+hmsSDK.switchAudio(isOn: false)
 ```
 
 ## 🙈 Mute/Unmute Local Video  
   
 ```dart  
-meeting.startCapturing()
+hmsSDK.startCapturing()
 
-meeting.stopCapturing()
+hmsSDK.stopCapturing()
 
-meeting.switchCamera()
+hmsSDK.switchCamera()
 ```
   
 ## 🛤 HMSTracks Explained
@@ -320,21 +315,14 @@ HMSTrack
   To display a video track, first get the `HMSVideoTrack` & pass it on to `HMSVideoView` using `setVideoTrack` function. Ensure to attach the `HMSVideoView` to your UI hierarchy.
 
 ```dart
-HMSVideoView(
-    track: videoTrack,
-    args: {
-      'height': customHeight,
-      'width': customWidth,
-    },
-  );
+HMSVideoView(track: videoTrack);
 ```
 
 ## Change a Role
-  To change role, you will provide peerId of selected peer and new roleName from roles. If forceChange is true, the system will prompt user for the change. If forceChange is false, user will get a prompt to accept/reject the role.
+  To change role, you will provide the selected peer and new roleName from roles. If forceChange is true, the system will prompt user for the change. If forceChange is false, user will get a prompt to accept/reject the role.
   After changeRole is called, HMSUpdateListener's onRoleChangeRequest will be called on selected user's end.
 ```dart
- meeting.changeRole(
-        peerId: peerId, roleName: roleName, forceChange: forceChange);
+ hmsSDK.changeRole(peer: peer, roleName: roleName, forceChange: true);
 ```
 
 ## 📨 Chat Messaging
@@ -344,7 +332,7 @@ To send a message first create an instance of `HMSMessage` object.
 
 Add the information to be sent in the `message` property of `HMSMessage`.
 
-Then use the `  Future<void> sendMessage(String message)` function on instance of HMSMeeting.
+Then use the `void sendBroadcastMessage(message: String)` function on instance of HMSSDK.
 
 When you(the local peer) receives a message from others(any remote peer), `  void onMessage({required HMSMessage message})` function of `HMSUpdateListener` is invoked.
   
@@ -353,7 +341,7 @@ When you(the local peer) receives a message from others(any remote peer), `  voi
 
 // to send a broadcast message
 String message = 'Hello World!'
-meeting.sendMessage(message);  // meeting is an instance of `HMSMeeting` object
+hmsSDK.sendBroadcastMessage(message);  // meeting is an instance of `HMSSDK` object
 
 
 // receiving messages
@@ -375,7 +363,7 @@ void onMessage({required HMSMessage message}){
 abstract class HMSPreviewListener {
 
   //you will get all error updates here
-  void onError({required HMSError error});
+  void onError({required HMSException error});
 
   //here you will get room instance where you are going to join and your own local tracks to render the video by checking the type of trackKind and then using the 
   //above mentioned VideoView widget

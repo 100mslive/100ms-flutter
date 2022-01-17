@@ -1,9 +1,11 @@
-// Flutter imports
-import 'package:flutter/material.dart';
+//Dart imports
 import 'dart:io';
 import 'dart:convert';
 
-// package imports
+//Package imports
+import 'package:flutter/material.dart';
+
+//Package imports
 import 'package:hmssdk_flutter_example/logs/static_logger.dart';
 import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
@@ -15,8 +17,8 @@ class CustomLogger {
   void getCustomLogger() {
     getDirectoryForLogRecord().whenComplete(
       () {
+        // ConsoleOutput consoleOutput = ConsoleOutput();
         fileOutPut = FileOutput(file: file);
-        ConsoleOutput consoleOutput = ConsoleOutput();
         List<LogOutput> multiOutput = [fileOutPut];
         StaticLogger.logger = Logger(
             filter: MyFilter(),
@@ -35,8 +37,9 @@ class CustomLogger {
   }
 
   Future<void> getDirectoryForLogRecord() async {
-    final Directory? directory = await getExternalStorageDirectory();
-    print(directory?.path);
+    final Directory? directory = Platform.isAndroid
+        ? await getExternalStorageDirectory()
+        : await getApplicationSupportDirectory();
     file = File('${directory?.path}/logs.txt');
   }
 }
@@ -63,8 +66,6 @@ class FileOutput extends LogOutput {
 
   @override
   void output(OutputEvent event) {
-    print(
-        "-------------------------Logs Start Here------------------------------------------------------");
     _sink?.writeAll(event.lines, '\n');
   }
 

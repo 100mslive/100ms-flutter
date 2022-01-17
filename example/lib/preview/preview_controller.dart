@@ -1,8 +1,9 @@
+//Package imports
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+//Project imports
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/manager/HmsSdkManager.dart';
 import 'package:hmssdk_flutter_example/service/room_service.dart';
-import 'package:uuid/uuid.dart';
 
 class PreviewController {
   final String roomId;
@@ -18,14 +19,11 @@ class PreviewController {
     if (token[0] == null) return false;
     FirebaseCrashlytics.instance.setUserIdentifier(token[0]!);
     HMSConfig config = HMSConfig(
-        userId: Uuid().v1(),
         authToken: token[0]!,
         userName: user,
         endPoint: token[1] == "true" ? "" : "https://qa-init.100ms.live/init");
 
-    HmsSdkManager.hmsSdkInteractor?.previewVideo(
-      config: config,
-    );
+    HmsSdkManager.hmsSdkInteractor?.preview(config: config);
     return true;
   }
 
@@ -43,6 +41,10 @@ class PreviewController {
 
   void startCapturing() {
     HmsSdkManager.hmsSdkInteractor?.startCapturing();
+  }
+
+  void switchVideo({bool isOn = false}) {
+    HmsSdkManager.hmsSdkInteractor?.switchVideo(isOn: isOn);
   }
 
   void switchAudio({bool isOn = false}) {

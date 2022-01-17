@@ -1,24 +1,24 @@
+//Dart imports
 import 'dart:async';
-import 'dart:io';
-import 'package:connectivity_wrapper/connectivity_wrapper.dart';
+
+//Package imports
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:hmssdk_flutter_example/common/constant.dart';
-import 'package:hmssdk_flutter_example/common/ui/organisms/user_name_dialog_organism.dart';
-import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
-import 'package:hmssdk_flutter_example/meeting/hms_sdk_interactor.dart';
-import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
-import 'package:hmssdk_flutter_example/preview/preview_page.dart';
-import 'package:hmssdk_flutter_example/service/deeplink_service.dart';
-import 'package:input_history_text_field/input_history_text_field.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:wakelock/wakelock.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+
+//Project imports
+import 'package:hmssdk_flutter_example/common/constant.dart';
+import 'package:hmssdk_flutter_example/common/ui/organisms/user_name_dialog_organism.dart';
+import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
+import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
+import 'package:hmssdk_flutter_example/preview/preview_page.dart';
+import 'package:hmssdk_flutter_example/service/deeplink_service.dart';
+import 'package:input_history_text_field/input_history_text_field.dart';
 import './logs/custom_singleton_logger.dart';
-import 'package:path_provider/path_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -75,7 +75,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     logger.getCustomLogger();
     getPermissions();
@@ -94,6 +93,15 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       _packageInfo = info;
     });
+  }
+
+  void setRTMPUrl(String roomUrl) {
+    List<String> urlSplit = roomUrl.split('/');
+    int index = urlSplit.lastIndexOf("meeting");
+    if (index != -1) {
+      urlSplit[index] = "preview";
+    }
+    Constant.rtmpUrl = urlSplit.join('/') + "?token=beam_recording";
   }
 
   @override
@@ -136,7 +144,7 @@ class _HomePageState extends State<HomePage> {
                               textEditingController: roomIdController,
                               enableOpacityGradient: true,
                               autofocus: true,
-                              maxLines: 3,
+                              keyboardType: TextInputType.url,
                               decoration: InputDecoration(
                                   hintText: 'Enter Room URL',
                                   border: OutlineInputBorder(
@@ -155,20 +163,22 @@ class _HomePageState extends State<HomePage> {
                             borderRadius: BorderRadius.circular(16.0),
                           ))),
                           onPressed: () async {
+                            setRTMPUrl(roomIdController.text);
                             String user = await showDialog(
                                 context: context,
                                 builder: (_) => UserNameDialogOrganism());
                             if (user.isNotEmpty)
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (_) =>
-                                      ListenableProvider<MeetingStore>(
-                                        create: (ctx) => MeetingStore(),
-                                        child: PreviewPage(
-                                          roomId: roomIdController.text,
-                                          user: user,
-                                          flow: MeetingFlow.join,
-                                        ),
-                                      )));
+                              FocusManager.instance.primaryFocus?.unfocus();
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (_) =>
+                                    ListenableProvider<MeetingStore>(
+                                      create: (ctx) => MeetingStore(),
+                                      child: PreviewPage(
+                                        roomId: roomIdController.text,
+                                        user: user,
+                                        flow: MeetingFlow.join,
+                                      ),
+                                    )));
                           },
                           child: Container(
                             padding: const EdgeInsets.all(4.0),
