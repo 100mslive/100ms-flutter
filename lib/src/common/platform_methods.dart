@@ -93,7 +93,6 @@ enum PlatformMethod {
 extension PlatformMethodValues on PlatformMethod {
   static String getName(PlatformMethod method) {
     switch (method) {
-
       case PlatformMethod.join:
         return 'join';
       case PlatformMethod.leave:

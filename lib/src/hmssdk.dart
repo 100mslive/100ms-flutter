@@ -318,7 +318,6 @@ class HMSSDK {
     }
   }
 
-
   ///accept the change role request
   /// When a peer is requested to change their role (see [changeRole]) to accept the new role this has to be called. Once this method is called, the peer's role will be changed to the requested one. The HMSRoleChangeRequest that the SDK had sent to this peer (in HMSUpdateListener.onRoleChangeRequest) to inform them that a role change was requested.
   /// [hmsActionResultListener] - Listener that will return HMSActionResultListener.onSuccess if the role change request is successful else will call HMSActionResultListener.onException with the error received from server
@@ -432,7 +431,6 @@ class HMSSDK {
     }
   }
 
-
   /// Remove all the peers from the room & end the room.
   /// [reason] is the reason why the room is being ended.
   /// [lock] bool is whether rejoining the room should be disabled for the foreseeable future.
@@ -484,7 +482,6 @@ class HMSSDK {
     }
   }
 
-
   /// Stops a previously started rtmp recording or stream. See startRtmpOrRecording for starting.
   /// [hmsActionResultListener] is the callback that would be called by SDK in case of a success or failure.
 
@@ -503,7 +500,6 @@ class HMSSDK {
             hmsException: HMSException.fromMap(result["error"]));
     }
   }
-
 
   Future<void> startHlsStreaming(String meetingUrl, String metadata,
       {HMSActionResultListener? hmsActionResultListener}) async {
@@ -537,7 +533,6 @@ class HMSSDK {
     }
   }
 
-
   /// Change the metadata that appears inside [HMSPeer.metadata]. This change is persistent and all peers joining after the change will still see these values.
   /// [metadata] is the string data to be set now
   /// [hmsActionResultListener] is callback whose [HMSActionResultListener.onSuccess] will be called when the the action completes successfully.
@@ -562,7 +557,6 @@ class HMSSDK {
             hmsException: HMSException.fromMap(result["error"]));
     }
   }
-
 
   ///Method to change name of localPeer
   /// Change the name that appears inside [HMSPeer.name] This change is persistent and all peers joining after the change will still see these values.

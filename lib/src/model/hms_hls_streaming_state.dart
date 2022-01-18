@@ -1,17 +1,17 @@
 import 'package:hmssdk_flutter/src/model/hms_hls_variant.dart';
 
-class HMSHLSStreamingState{
+class HMSHLSStreamingState {
   final bool running;
   final List<HMSHLSVariant?> variants;
-  HMSHLSStreamingState({required this.running,required this.variants});
+  HMSHLSStreamingState({required this.running, required this.variants});
 
   factory HMSHLSStreamingState.fromMap(Map map) {
     List<HMSHLSVariant?> variants = [];
     if (map.containsKey('variants') && map['variants'] is List) {
       for (var each in (map["variants"] as List)) {
         try {
-
-          HMSHLSVariant? variant = each!= null? HMSHLSVariant.fromMap(each as Map):null;
+          HMSHLSVariant? variant =
+              each != null ? HMSHLSVariant.fromMap(each as Map) : null;
 
           variants.add(variant);
         } catch (e) {
@@ -25,5 +25,4 @@ class HMSHLSStreamingState{
       variants: variants,
     );
   }
-
 }

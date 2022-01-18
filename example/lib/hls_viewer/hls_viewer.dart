@@ -1,4 +1,3 @@
-
 import 'package:flick_video_player/flick_video_player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -51,12 +50,11 @@ class _HLSViewerState extends State<HLSViewer> {
           return Container(
             child: Center(
                 child: Text(
-                  "Waiting for the HLS Streaming to start...",
-                  style: TextStyle(fontSize: 30.0),
-                )),
+              "Waiting for the HLS Streaming to start...",
+              style: TextStyle(fontSize: 30.0),
+            )),
           );
-        }
-        else
+        } else
           return VisibilityDetector(
             key: ObjectKey(flickManager),
             onVisibilityChanged: (visibility) {
