@@ -169,16 +169,16 @@ class _HomePageState extends State<HomePage> {
                                 builder: (_) => UserNameDialogOrganism());
                             if (user.isNotEmpty)
                               FocusManager.instance.primaryFocus?.unfocus();
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (_) =>
-                                      ListenableProvider<MeetingStore>(
-                                        create: (ctx) => MeetingStore(),
-                                        child: PreviewPage(
-                                          roomId: roomIdController.text,
-                                          user: user,
-                                          flow: MeetingFlow.join,
-                                        ),
-                                      )));
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (_) =>
+                                    ListenableProvider<MeetingStore>(
+                                      create: (ctx) => MeetingStore(),
+                                      child: PreviewPage(
+                                        roomId: roomIdController.text,
+                                        user: user,
+                                        flow: MeetingFlow.join,
+                                      ),
+                                    )));
                           },
                           child: Container(
                             padding: const EdgeInsets.all(4.0),

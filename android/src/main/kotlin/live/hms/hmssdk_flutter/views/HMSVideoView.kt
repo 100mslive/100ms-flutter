@@ -41,7 +41,6 @@ class HMSVideoView(
 
         surfaceViewRenderer = view.findViewById(R.id.surfaceViewRenderer)
         surfaceViewRenderer.setEnableHardwareScaler(true)
-        Log.i("HMSVideoViewAndroid", setMirror.toString())
         surfaceViewRenderer.setMirror(setMirror)
         if (scaleType ?: 0 <= RendererCommon.ScalingType.values().size) {
             surfaceViewRenderer.setScalingType(RendererCommon.ScalingType.values()[scaleType ?: 0])

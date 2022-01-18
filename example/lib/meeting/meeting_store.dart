@@ -1,7 +1,6 @@
 //Package imports
 import 'package:flutter/cupertino.dart';
 import 'package:mobx/mobx.dart';
-import 'package:uuid/uuid.dart';
 
 //Project imports
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
@@ -149,6 +148,11 @@ abstract class MeetingStoreBase extends ChangeNotifier
   @action
   Future<void> switchVideo() async {
     await _hmssdkInteractor.switchVideo(isOn: isVideoOn);
+    if (isVideoOn)
+      trackStatus[localPeer!.peerId] = HMSTrackUpdate.trackMuted;
+    else
+      trackStatus[localPeer!.peerId] = HMSTrackUpdate.trackUnMuted;
+
     isVideoOn = !isVideoOn;
   }
 
@@ -377,12 +381,14 @@ abstract class MeetingStoreBase extends ChangeNotifier
     }
 
     if (track.kind == HMSTrackKind.kHMSTrackKindAudio) {
-      int index = peerTracks.indexWhere((element) => element.peerId == peer.peerId);
+      int index =
+          peerTracks.indexWhere((element) => element.peerId == peer.peerId);
       if (index != -1) peerTracks[index].audioTrack = track;
       return;
     }
     if (track.source == "REGULAR") {
-      int index = peerTracks.indexWhere((element) => element.peerId == peer.peerId);
+      int index =
+          peerTracks.indexWhere((element) => element.peerId == peer.peerId);
       if (index != -1) peerTracks[index].track = track;
     }
 
@@ -467,8 +473,10 @@ abstract class MeetingStoreBase extends ChangeNotifier
   int trackChange = -1;
 
   @override
-  void onChangeTrackStateRequest({required HMSTrackChangeRequest hmsTrackChangeRequest}) {
-    if (!hmsTrackChangeRequest.mute) addTrackChangeRequestInstance(hmsTrackChangeRequest);
+  void onChangeTrackStateRequest(
+      {required HMSTrackChangeRequest hmsTrackChangeRequest}) {
+    if (!hmsTrackChangeRequest.mute)
+      addTrackChangeRequestInstance(hmsTrackChangeRequest);
   }
 
   void changeTracks(HMSTrackChangeRequest hmsTrackChangeRequest) {
@@ -482,7 +490,9 @@ abstract class MeetingStoreBase extends ChangeNotifier
   @override
   void onRemovedFromRoom(
       {required HMSPeerRemovedFromPeer hmsPeerRemovedFromPeer}) {
-    leave();
+
+    peerTracks.clear();
+    isRoomEnded = true;
   }
 
   void changeRole(
@@ -509,9 +519,14 @@ abstract class MeetingStoreBase extends ChangeNotifier
   void peerOperation(HMSPeer peer, HMSPeerUpdate update) {
     switch (update) {
       case HMSPeerUpdate.peerJoined:
-        if (peer.role.name.contains("hls-") == false)
+        if (peer.role.name.contains("hls-") == false){
+        int index =
+            peerTracks.indexWhere((element) => element.peerId == peer.peerId);
+        if (index == -1)
+
           peerTracks
               .add(new PeerTracKNode(peerId: peer.peerId, name: peer.name));
+        }
         addPeer(peer);
         break;
       case HMSPeerUpdate.peerLeft:
