@@ -3,6 +3,7 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:intl/intl.dart';
+import 'package:collection/collection.dart';
 
 //Project imports
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
@@ -79,13 +80,18 @@ class _ChatWidgetState extends State<ChatWidget> {
                                         child: Text("Everyone"),
                                         value: "Everyone",
                                       ),
-                                      ..._meetingStore.peers.map((peer) {
-                                        return DropdownMenuItem<String>(
-                                          child: Text(
-                                              "${peer.name} ${peer.isLocal ? "(You)" : ""}"),
-                                          value: peer.peerId,
-                                        );
-                                      }).toList(),
+                                      ..._meetingStore.peers
+                                          .map((peer) {
+                                            return !peer.isLocal
+                                                ? DropdownMenuItem<String>(
+                                                    child: Text(
+                                                        "${peer.name} ${peer.isLocal ? "(You)" : ""}"),
+                                                    value: peer.peerId,
+                                                  )
+                                                : null;
+                                          })
+                                          .whereNotNull()
+                                          .toList(),
                                       ...roles
                                           .map((role) =>
                                               DropdownMenuItem<String>(
