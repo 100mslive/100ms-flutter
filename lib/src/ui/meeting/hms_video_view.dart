@@ -17,7 +17,6 @@ import 'package:flutter/services.dart' show StandardMessageCodec;
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter/src/enum/hms_video_scale_type.dart';
 
-// ignore: must_be_immutable
 class HMSVideoView extends StatelessWidget {
   /// [HMSVideoView] will render video using trackId from HMSTrack
   final HMSVideoTrack track;
@@ -25,7 +24,8 @@ class HMSVideoView extends StatelessWidget {
 
   /// [HMSVideoView] will use viewSize to get height and width of rendered video. If not passed, it will take whatever size is available to the widget.
   final Size? viewSize;
-  bool setMirror;
+
+  final bool setMirror;
 
   HMSVideoView(
       {Key? key,
@@ -57,11 +57,11 @@ class HMSVideoView extends StatelessWidget {
   }
 }
 
-// ignore: must_be_immutable
 class _PlatformView extends StatelessWidget {
   final HMSTrack track;
   final Size viewSize;
-  bool setMirror;
+
+  final bool setMirror;
   final bool matchParent;
 
   _PlatformView({
@@ -90,13 +90,10 @@ class _PlatformView extends StatelessWidget {
           'track_id': track.trackId,
           'is_aux': track.source != "REGULAR",
           'screen_share': track.source != "REGULAR",
-          // TODO: add config setting for mirror
           'set_mirror': track.source != "REGULAR" ? false : setMirror,
-          // TODO: add config setting for scale type
           'scale_type': track.source != "REGULAR"
               ? ScalingType.SCALE_ASPECT_FIT.value
               : ScalingType.SCALE_ASPECT_FILL.value,
-          // TODO: add config setting for match_parent
           'match_parent': matchParent,
         }..addAll({
             'height': viewSize.height,
@@ -116,13 +113,10 @@ class _PlatformView extends StatelessWidget {
           'track_id': track.trackId,
           'is_aux': track.source != "REGULAR",
           'screen_share': track.source != "REGULAR",
-          // TODO: add config setting for mirror
           'set_mirror': track.source != "REGULAR" ? false : setMirror,
-          // TODO: add config setting for scale type
           'scale_type': track.source != "REGULAR"
               ? ScalingType.SCALE_ASPECT_FIT.value
               : ScalingType.SCALE_ASPECT_FILL.value,
-          // TODO: add config setting for match_parent
           'match_parent': matchParent,
         }..addAll({
             'height': viewSize.height,

@@ -19,12 +19,11 @@ class HMSSpeaker {
   }
 
   Map<String, dynamic> toMap() {
-    // ignore: unnecessary_cast
     return {
       'peer': this.peer,
       'track': this.track,
       'audioLevel': this.audioLevel,
-    } as Map<String, dynamic>;
+    };
   }
 
   HMSSpeaker({
