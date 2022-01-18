@@ -9,6 +9,8 @@ class HMSPublishSetting {
   final HMSSimulCastSettings? videoSimulCast;
   final HMSSimulCastSettings? screenSimulCast;
 
+  // TODO: add allowed list of strings parsing
+
   HMSPublishSetting(
       {this.audioSetting,
       this.videoSetting,
