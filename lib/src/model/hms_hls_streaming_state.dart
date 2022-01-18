@@ -8,10 +8,10 @@ class HMSHLSStreamingState{
   factory HMSHLSStreamingState.fromMap(Map map) {
     List<HMSHLSVariant?> variants = [];
     if (map.containsKey('variants') && map['variants'] is List) {
-      for (var each in (map['variants'] as List)) {
+      for (var each in (map["variants"] as List)) {
         try {
 
-          HMSHLSVariant? variant = each["variant"]!= null? HMSHLSVariant.fromMap(each["variant"] as Map):null;
+          HMSHLSVariant? variant = each!= null? HMSHLSVariant.fromMap(each as Map):null;
 
           variants.add(variant);
         } catch (e) {

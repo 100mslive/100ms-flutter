@@ -14,9 +14,8 @@ class HMSHLSVariantExtension {
             args.put("started_at",hmshlsVariant.startedAt?:-1)
 
 
-            val Args=HashMap<String,Any>()
-            Args.put("variant",args)
-            return Args
+
+            return args
         }
     }
 
