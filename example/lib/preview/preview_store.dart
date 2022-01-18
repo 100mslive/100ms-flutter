@@ -14,7 +14,7 @@ abstract class PreviewStoreBase
   late PreviewController previewController;
 
   @observable
-  List<HMSTrack> localTracks = [];
+  List<HMSVideoTrack> localTracks = [];
   @observable
   HMSPeer? peer;
   @observable
@@ -44,10 +44,10 @@ abstract class PreviewStoreBase
         break;
       }
     }
-    List<HMSTrack> videoTracks = [];
+    List<HMSVideoTrack> videoTracks = [];
     for (var track in localTracks) {
       if (track.kind == HMSTrackKind.kHMSTrackKindVideo) {
-        videoTracks.add(track);
+        videoTracks.add(track as HMSVideoTrack);
       }
     }
     this.localTracks = ObservableList.of(videoTracks);

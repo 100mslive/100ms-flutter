@@ -20,7 +20,7 @@ import 'package:hmssdk_flutter/src/enum/hms_video_scale_type.dart';
 // ignore: must_be_immutable
 class HMSVideoView extends StatelessWidget {
   /// [HMSVideoView] will render video using trackId from HMSTrack
-  final HMSTrack track;
+  final HMSVideoTrack track;
   final matchParent;
 
   /// [HMSVideoView] will use viewSize to get height and width of rendered video. If not passed, it will take whatever size is available to the widget.

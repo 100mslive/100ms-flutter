@@ -109,19 +109,6 @@ class _PeerItemOrganismState extends State<PeerItemOrganism> {
               overflow: TextOverflow.ellipsis,
             ),
           ),
-          //Raise Hand on Tile is turned off
-          // if (widget.peerTracKNode.isRaiseHand)
-          //   Positioned(
-          //     child: Padding(
-          //       padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
-          //       child: Image.asset(
-          //         'assets/icons/raise_hand.png',
-          //         color: Colors.amber.shade300,
-          //       ),
-          //     ),
-          //     top: 5.0,
-          //     left: 5.0,
-          //   )
         ],
       ),
     );

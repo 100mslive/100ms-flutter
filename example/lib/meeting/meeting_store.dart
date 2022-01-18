@@ -46,7 +46,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
   @observable
   bool isScreenShareOn = false;
   @observable
-  HMSTrack? screenShareTrack;
+  HMSVideoTrack? screenShareTrack;
   @observable
   bool reconnecting = false;
   @observable
@@ -383,7 +383,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
     }
     if (track.source == "REGULAR") {
       int index = peerTracks.indexWhere((element) => element.peerId == peer.peerId);
-      if (index != -1) peerTracks[index].track = track;
+      if (index != -1) peerTracks[index].track = track as HMSVideoTrack;
     }
 
     peerOperationWithTrack(peer, trackUpdate, track);
@@ -589,7 +589,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
               : HMSTrackUpdate.trackUnMuted;
         } else {
           screenSharePeerId = peer.peerId;
-          screenShareTrack = track;
+          screenShareTrack = track as HMSVideoTrack;
         }
         break;
       case HMSTrackUpdate.trackRemoved:
