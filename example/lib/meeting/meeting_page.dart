@@ -3,6 +3,7 @@ import 'package:connectivity_checker/connectivity_checker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:hmssdk_flutter_example/hls_viewer/hls_viewer.dart';
 import 'package:mobx/mobx.dart';
 
 //Project imports
@@ -127,6 +128,12 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
       Navigator.of(context).pop();
     }
     _meetingStore.startListen();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    checkButtons();
   }
 
   void checkButtons() async {
@@ -436,9 +443,31 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                     ]),
                                 value: 9,
                               ),
+                          if (_meetingStore
+                                  .localPeer!.role.permissions.endRoom!)
+                                PopupMenuItem(
+                                  child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          "End Room",
+                                          style: TextStyle(color: Colors.blue),
+                                        ),
+                                        Icon(Icons.cancel_schedule_send,
+                                            color: Colors.blue),
+                                      ]),
+                                  value: 9,
+                                ),
+                            ],
+                            onSelected: handleMenu,
+                          );
+                        }),
+
                           ],
                           onSelected: handleMenu,
                         )
+
                       ],
                     ),
                     body: Padding(
@@ -448,7 +477,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Observer(builder: (_) {
-                            if (_meetingStore.screenShareTrack != null &&
+                            if (!_meetingStore.isHLSLink && _meetingStore.screenShareTrack != null &&
                                 !audioViewOn) {
                               return SizedBox(
                                 width: double.infinity,
@@ -479,49 +508,81 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                               builder: (_) {
                                 // if (!_meetingStore.isMeetingStarted)
                                 //   return SizedBox();
-                                if (_meetingStore.peerTracks.isEmpty)
-                                  return Center(
-                                      child:
-                                          Text('Waiting for others to join!'));
-                                ObservableList<PeerTracKNode> peerFilteredList =
-                                    _meetingStore.isActiveSpeakerMode
-                                        ? _meetingStore
-                                            .activeSpeakerPeerTracksStore
-                                        : _meetingStore.peerTracks;
-                                ObservableMap<String, String> audioKeyMap =
-                                    _meetingStore.observableMap;
-                                return GridView.builder(
-                                    physics: PageScrollPhysics(),
-                                    scrollDirection: Axis.horizontal,
-                                    addAutomaticKeepAlives: false,
-                                    itemCount: peerFilteredList.length,
-                                    shrinkWrap: true,
-                                    cacheExtent: 0,
-                                    gridDelegate:
-                                        SliverGridDelegateWithFixedCrossAxisCount(
-                                      crossAxisCount: (!audioViewOn &&
-                                              _meetingStore.screenShareTrack !=
-                                                  null)
-                                          ? 1
-                                          : 2,
-                                      mainAxisExtent: itemWidth,
-                                    ),
-                                    itemBuilder: (ctx, index) {
-                                      return Observer(builder: (context) {
-                                        ObservableMap<String, HMSTrackUpdate>
-                                            map = _meetingStore.trackStatus;
-                                        return VideoTile(
-                                          tileIndex: index,
-                                          filteredList: peerFilteredList,
-                                          trackStatus: map,
-                                          observerMap: audioKeyMap,
-                                          audioView: audioViewOn,
-                                        );
+                                if (!_meetingStore.isHLSLink) {
+                                  if (_meetingStore.peerTracks.isEmpty)
+                                    return Center(
+                                        child:
+                                        Text('Waiting for others to join!'));
+                                  ObservableList<
+                                      PeerTracKNode> peerFilteredList =
+                                  _meetingStore.isActiveSpeakerMode
+                                      ? _meetingStore
+                                      .activeSpeakerPeerTracksStore
+                                      : _meetingStore.peerTracks;
+                                  ObservableMap<String, String> audioKeyMap =
+                                      _meetingStore.observableMap;
+                                  return GridView.builder(
+                                      physics: PageScrollPhysics(),
+                                      scrollDirection: Axis.horizontal,
+                                      addAutomaticKeepAlives: false,
+                                      itemCount: peerFilteredList.length,
+                                      shrinkWrap: true,
+                                      cacheExtent: 0,
+                                      gridDelegate:
+                                      SliverGridDelegateWithFixedCrossAxisCount(
+                                        crossAxisCount: (!audioViewOn &&
+                                            _meetingStore.screenShareTrack !=
+                                                null)
+                                            ? 1
+                                            : 2,
+                                        mainAxisExtent: itemWidth,
+                                      ),
+                                      itemBuilder: (ctx, index) {
+                                        return Observer(builder: (context) {
+                                          ObservableMap<String, HMSTrackUpdate>
+                                          map = _meetingStore.trackStatus;
+                                          return VideoTile(
+                                            tileIndex: index,
+                                            filteredList: peerFilteredList,
+                                            trackStatus: map,
+                                            observerMap: audioKeyMap,
+                                            audioView: audioViewOn,
+                                          );
+                                        });
                                       });
-                                    });
-                              },
+                                }
+                                else {
+                                  return SizedBox();
+                                }
+                              }
                             ),
                           ),
+                          Observer(builder: (_) {
+                            print("hasHLSStarted ${_meetingStore.hasHlsStarted}");
+                            if (_meetingStore.isHLSLink && _meetingStore.hasHlsStarted==false) {
+                              return Flexible(
+                                child: Container(
+                                  child: Center(
+                                      child: Text(
+                                        "Waiting for the HLS Streaming to start...",
+                                        style: TextStyle(fontSize: 30.0),
+                                      )),
+                                ),
+                              );
+                            }
+                            if (_meetingStore.isHLSLink && _meetingStore.hasHlsStarted) {
+                              return Flexible(
+                                child: Center(
+                                  child: Container(
+                                    child: HLSViewer(streamUrl: _meetingStore.streamUrl),
+                                  ),
+                                ),
+                              );
+                            } else {
+                              return SizedBox(
+                              );
+                            }
+                          }),
                         ],
                       ),
                     ),
@@ -534,12 +595,12 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                               return IconButton(
                                   tooltip: 'Video',
                                   iconSize: 32,
-                                  onPressed: (audioViewOn)
+                                  onPressed: (audioViewOn || _meetingStore.isHLSLink)
                                       ? null
                                       : () {
-                                          _meetingStore.switchVideo();
-                                          countOfVideoOnBetweenTwo++;
-                                        },
+                                    _meetingStore.switchVideo();
+                                    countOfVideoOnBetweenTwo++;
+                                  },
                                   icon: Icon(_meetingStore.isVideoOn
                                       ? Icons.videocam
                                       : Icons.videocam_off));
@@ -551,7 +612,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                               return IconButton(
                                   tooltip: 'Audio',
                                   iconSize: 32,
-                                  onPressed: () {
+                                  onPressed: (_meetingStore.isHLSLink)?null:() {
                                     _meetingStore.switchAudio();
                                   },
                                   icon: Icon(_meetingStore.isMicOn

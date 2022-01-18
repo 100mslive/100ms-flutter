@@ -13,5 +13,7 @@ enum HMSActionResultListenerMethod {
   sendBroadcastMessage,
   sendGroupMessage,
   sendDirectMessage,
+  hlsStreamingStarted,
+  hlsStreamingStopped,
   unknown
 }

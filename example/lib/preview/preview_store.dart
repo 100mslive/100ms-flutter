@@ -19,7 +19,9 @@ abstract class PreviewStoreBase
   HMSPeer? peer;
   @observable
   HMSException? error;
-
+  @observable
+  bool isHLSLink=false;
+  HMSRoom? room;
   @observable
   bool videoOn = true;
   @observable
@@ -32,9 +34,13 @@ abstract class PreviewStoreBase
 
   @override
   void onPreview({required HMSRoom room, required List<HMSTrack> localTracks}) {
+    this.room = room;
     for (HMSPeer each in room.peers!) {
       if (each.isLocal) {
         this.peer = each;
+        if(each.role.name.indexOf("hls-") == 0){
+          isHLSLink = true;
+        }
         break;
       }
     }

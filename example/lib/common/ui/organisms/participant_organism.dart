@@ -84,7 +84,7 @@ class _ParticipantOrganismState extends State<ParticipantOrganism> {
                         borderRadius: BorderRadius.circular(5.0),
                       ),
                       child: Text(
-                        "${peer.role!.name}",
+                        "${peer.role.name}",
                         style: TextStyle(
                             color: Colors.white,
                             fontSize: 20.0,
