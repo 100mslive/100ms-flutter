@@ -316,8 +316,10 @@ class HMSSDK {
     }
   }
 
+  ///accept the change role request
   /// When a peer is requested to change their role (see [changeRole]) to accept the new role this has to be called. Once this method is called, the peer's role will be changed to the requested one. The HMSRoleChangeRequest that the SDK had sent to this peer (in HMSUpdateListener.onRoleChangeRequest) to inform them that a role change was requested.
   /// [hmsActionResultListener] - Listener that will return HMSActionResultListener.onSuccess if the role change request is successful else will call HMSActionResultListener.onException with the error received from server
+
   void acceptChangeRole(
       {HMSActionResultListener? hmsActionResultListener}) async {
     var result =
@@ -431,6 +433,7 @@ class HMSSDK {
   /// [reason] is the reason why the room is being ended.
   /// [lock] bool is whether rejoining the room should be disabled for the foreseeable future.
   /// [hmsActionResultListener] is the callback that would be called by SDK in case of a success or failure
+
   void endRoom(
       {required bool lock,
       required String reason,
@@ -479,6 +482,7 @@ class HMSSDK {
 
   /// Stops a previously started rtmp recording or stream. See startRtmpOrRecording for starting.
   /// [hmsActionResultListener] is the callback that would be called by SDK in case of a success or failure.
+
   void stopRtmpAndRecording(
       {HMSActionResultListener? hmsActionResultListener}) async {
     var result =
@@ -495,9 +499,42 @@ class HMSSDK {
     }
   }
 
+  Future<void> startHlsStreaming(String meetingUrl, String metadata,
+      {HMSActionResultListener? hmsActionResultListener}) async {
+    var result = await PlatformService.invokeMethod(
+        PlatformMethod.startHlsStreaming,
+        arguments: {"meeting_url": meetingUrl, "meta_data": metadata});
+    if (hmsActionResultListener != null) {
+      if (result == null)
+        hmsActionResultListener.onSuccess(
+            methodType: HMSActionResultListenerMethod.hlsStreamingStarted);
+      else
+        hmsActionResultListener.onException(
+            hmsException: HMSException.fromMap(result["error"]),
+            methodType: HMSActionResultListenerMethod.hlsStreamingStarted);
+    }
+  }
+
+  Future<void> stopHlsStreaming(
+      {HMSActionResultListener? hmsActionResultListener}) async {
+    var result = await PlatformService.invokeMethod(
+      PlatformMethod.stopHlsStreaming,
+    );
+    if (hmsActionResultListener != null) {
+      if (result == null)
+        hmsActionResultListener.onSuccess(
+            methodType: HMSActionResultListenerMethod.hlsStreamingStopped);
+      else
+        hmsActionResultListener.onException(
+            hmsException: HMSException.fromMap(result["error"]),
+            methodType: HMSActionResultListenerMethod.hlsStreamingStopped);
+    }
+  }
+
   /// Change the metadata that appears inside [HMSPeer.metadata]. This change is persistent and all peers joining after the change will still see these values.
   /// [metadata] is the string data to be set now
   /// [hmsActionResultListener] is callback whose [HMSActionResultListener.onSuccess] will be called when the the action completes successfully.
+
   void changeMetadata(
       {required String metadata,
       HMSActionResultListener? hmsActionResultListener}) async {
@@ -519,9 +556,11 @@ class HMSSDK {
     }
   }
 
+  ///Method to change name of localPeer
   /// Change the name that appears inside [HMSPeer.name] This change is persistent and all peers joining after the change will still see these values.
   /// [name] is the string which is to be set as the [HMSPeer.name]
   /// [hmsActionResultListener] is the callback whose [HMSActionResultListener.onSuccess] will be called when the the action completes successfully.
+
   void changeName(
       {required String name,
       HMSActionResultListener? hmsActionResultListener}) async {

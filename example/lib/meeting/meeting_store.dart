@@ -33,6 +33,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
   String streamUrl="";
   @observable
   bool isHLSLink=false;
+
   @observable
   HMSRoleChangeRequest? roleChangeRequest;
 

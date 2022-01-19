@@ -51,12 +51,14 @@ class _HLSViewerState extends State<HLSViewer> {
           return Container(
             child: Center(
                 child: Text(
+
                   "Waiting for the HLS Streaming to start...",
                   style: TextStyle(fontSize: 30.0),
                 )),
           );
         }
-        else
+       else
+
           return VisibilityDetector(
             key: ObjectKey(flickManager),
             onVisibilityChanged: (visibility) {
@@ -82,4 +84,5 @@ class _HLSViewerState extends State<HLSViewer> {
       }),
     );
   }
+
 }
