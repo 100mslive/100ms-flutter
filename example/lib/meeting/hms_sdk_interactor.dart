@@ -40,20 +40,20 @@ class HMSSDKInteractor {
         hmsActionResultListener: hmsActionResultListener);
   }
 
-  void sendDirectMessage(String message, HMSPeer peer,
+  void sendDirectMessage(String message, HMSPeer peerTo,
       HMSActionResultListener hmsActionResultListener) async {
     hmsSDK.sendDirectMessage(
         message: message,
-        peer: peer,
+        peerTo: peerTo,
         type: "chat",
         hmsActionResultListener: hmsActionResultListener);
   }
 
-  void sendGroupMessage(String message, List<HMSRole> roles,
+  void sendGroupMessage(String message, List<HMSRole> hmsRolesTo,
       HMSActionResultListener hmsActionResultListener) async {
     hmsSDK.sendGroupMessage(
         message: message,
-        roles: roles,
+        hmsRolesTo: hmsRolesTo,
         type: "chat",
         hmsActionResultListener: hmsActionResultListener);
   }
@@ -95,8 +95,11 @@ class HMSSDKInteractor {
     hmsSDK.removePreviewListener(listener: listener);
   }
 
-  void acceptChangeRole(HMSRoleChangeRequest hmsRoleChangeRequest,HMSActionResultListener hmsActionResultListener) {
-    hmsSDK.acceptChangeRole(hmsRoleChangeRequest:hmsRoleChangeRequest,hmsActionResultListener: hmsActionResultListener);
+  void acceptChangeRole(HMSRoleChangeRequest hmsRoleChangeRequest,
+      HMSActionResultListener hmsActionResultListener) {
+    hmsSDK.acceptChangeRole(
+        hmsRoleChangeRequest: hmsRoleChangeRequest,
+        hmsActionResultListener: hmsActionResultListener);
   }
 
   void stopCapturing() {
@@ -117,10 +120,10 @@ class HMSSDKInteractor {
     return peers?.firstWhere((element) => element.peerId == peerId);
   }
 
-  void changeTrackState(HMSTrack track, bool mute,
+  void changeTrackState(HMSTrack forRemoteTrack, bool mute,
       HMSActionResultListener hmsActionResultListener) {
     hmsSDK.changeTrackState(
-        track:track,
+        forRemoteTrack: forRemoteTrack,
         mute: mute,
         hmsActionResultListener: hmsActionResultListener);
   }
@@ -142,14 +145,14 @@ class HMSSDKInteractor {
   }
 
   void changeRole(
-      {required HMSPeer peer,
-      required HMSRole roleName,
-      bool forceChange = false,
+      {required HMSPeer forPeer,
+      required HMSRole toRole,
+      bool force = false,
       required HMSActionResultListener hmsActionResultListener}) {
     hmsSDK.changeRole(
-        peer: peer,
-        roleName: roleName,
-        forceChange: forceChange,
+        forPeer: forPeer,
+        toRole: toRole,
+        force: force,
         hmsActionResultListener: hmsActionResultListener);
   }
 
@@ -211,14 +214,15 @@ class HMSSDKInteractor {
         name: name, hmsActionResultListener: hmsActionResultListener);
   }
 
-
-  Future<void> startHLSStreaming(String meetingUrl,HMSActionResultListener hmsActionResultListener) async{
-    await hmsSDK.startHlsStreaming(meetingUrl,"meta data",hmsActionResultListener: hmsActionResultListener);
+  Future<void> startHLSStreaming(String meetingUrl,
+      HMSActionResultListener hmsActionResultListener) async {
+    await hmsSDK.startHlsStreaming(meetingUrl, "meta data",
+        hmsActionResultListener: hmsActionResultListener);
   }
 
-  Future<void> stopHLSStreaming({required HMSActionResultListener hmsActionResultListener}) async{
-    await hmsSDK.stopHlsStreaming(hmsActionResultListener: hmsActionResultListener);
-
+  Future<void> stopHLSStreaming(
+      {required HMSActionResultListener hmsActionResultListener}) async {
+    await hmsSDK.stopHlsStreaming(
+        hmsActionResultListener: hmsActionResultListener);
   }
-  
 }
