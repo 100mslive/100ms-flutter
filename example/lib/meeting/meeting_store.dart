@@ -30,9 +30,10 @@ abstract class MeetingStoreBase extends ChangeNotifier
   @observable
   bool hasHlsStarted = false;
 
-  String streamUrl = "";
+  String streamUrl="";
   @observable
-  bool isHLSLink = false;
+  bool isHLSLink=false;
+
   @observable
   HMSRoleChangeRequest? roleChangeRequest;
 
@@ -45,7 +46,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
   @observable
   bool isScreenShareOn = false;
   @observable
-  HMSTrack? screenShareTrack;
+  HMSVideoTrack? screenShareTrack;
   @observable
   bool reconnecting = false;
   @observable
@@ -387,9 +388,9 @@ abstract class MeetingStoreBase extends ChangeNotifier
       return;
     }
     if (track.source == "REGULAR") {
-      int index =
-          peerTracks.indexWhere((element) => element.peerId == peer.peerId);
-      if (index != -1) peerTracks[index].track = track;
+      int index = peerTracks.indexWhere((element) => element.peerId == peer.peerId);
+      if (index != -1) peerTracks[index].track = track as HMSVideoTrack;
+
     }
 
     peerOperationWithTrack(peer, trackUpdate, track);
@@ -490,6 +491,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
   @override
   void onRemovedFromRoom(
       {required HMSPeerRemovedFromPeer hmsPeerRemovedFromPeer}) {
+
     peerTracks.clear();
     isRoomEnded = true;
   }
@@ -518,12 +520,13 @@ abstract class MeetingStoreBase extends ChangeNotifier
   void peerOperation(HMSPeer peer, HMSPeerUpdate update) {
     switch (update) {
       case HMSPeerUpdate.peerJoined:
-        if (peer.role.name.contains("hls-") == false) {
-          int index =
-              peerTracks.indexWhere((element) => element.peerId == peer.peerId);
-          if (index == -1)
-            peerTracks
-                .add(new PeerTracKNode(peerId: peer.peerId, name: peer.name));
+
+        if (peer.role.name.contains("hls-") == false){
+        int index =
+            peerTracks.indexWhere((element) => element.peerId == peer.peerId);
+        if (index == -1)
+          peerTracks
+              .add(new PeerTracKNode(peerId: peer.peerId, name: peer.name));
         }
         addPeer(peer);
         break;
@@ -602,7 +605,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
               : HMSTrackUpdate.trackUnMuted;
         } else {
           screenSharePeerId = peer.peerId;
-          screenShareTrack = track;
+          screenShareTrack = track as HMSVideoTrack;
         }
         break;
       case HMSTrackUpdate.trackRemoved:
@@ -719,7 +722,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
   }
 
   Future<void> startHLSStreaming(String meetingUrl) async {
-    await _hmssdkInteractor.startHLSStreaming(meetingUrl, this);
+    await _hmssdkInteractor.startHLSStreaming(meetingUrl,this);
   }
 
   Future<void> stopHLSStreaming() async {
@@ -847,4 +850,5 @@ abstract class MeetingStoreBase extends ChangeNotifier
         break;
     }
   }
+
 }

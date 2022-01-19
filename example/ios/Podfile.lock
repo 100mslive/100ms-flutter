@@ -125,6 +125,8 @@ PODS:
     - Flutter
   - shared_preferences (0.0.1):
     - Flutter
+  - video_player (0.0.1):
+    - Flutter
   - wakelock (0.0.1):
     - Flutter
 
@@ -139,6 +141,7 @@ DEPENDENCIES:
   - permission_handler (from `.symlinks/plugins/permission_handler/ios`)
   - share_extend (from `.symlinks/plugins/share_extend/ios`)
   - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
+  - video_player (from `.symlinks/plugins/video_player/ios`)
   - wakelock (from `.symlinks/plugins/wakelock/ios`)
 
 SPEC REPOS:
@@ -178,6 +181,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/share_extend/ios"
   shared_preferences:
     :path: ".symlinks/plugins/shared_preferences/ios"
+  video_player:
+    :path: ".symlinks/plugins/video_player/ios"
   wakelock:
     :path: ".symlinks/plugins/wakelock/ios"
 
@@ -205,6 +210,7 @@ SPEC CHECKSUMS:
   PromisesObjC: 68159ce6952d93e17b2dfe273b8c40907db5ba58
   share_extend: b6748dc53695587891126a89533b862b92548c7b
   shared_preferences: 5033afbb22d372e15aff8ff766df9021b845f273
+  video_player: ecd305f42e9044793efd34846e1ce64c31ea6fcb
   wakelock: d0fc7c864128eac40eba1617cb5264d9c940b46f
 
 PODFILE CHECKSUM: 4243bd56b6b40b83d3e32bd65fa10fffb54f8ea7
