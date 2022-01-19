@@ -3,7 +3,6 @@
 ///Just create instance of [HMSSDK] and use the functionality which is present.
 ///
 ///All methods related to meeting, preview and their listeners are present here.
-
 // Project imports:
 
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
@@ -26,7 +25,6 @@ import '../hmssdk_flutter.dart';
 /// HMSSDK has other methods which the client app can use to get more info about the Room, Peer and Tracks
 class HMSSDK {
   ///join meeting by passing HMSConfig instance to it.
-
   HMSTrackSetting? hmsTrackSetting;
 
   HMSSDK({this.hmsTrackSetting});

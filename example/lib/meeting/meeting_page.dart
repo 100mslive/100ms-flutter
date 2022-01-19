@@ -19,7 +19,8 @@ import 'package:hmssdk_flutter_example/logs/custom_singleton_logger.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:hmssdk_flutter_example/meeting/peerTrackNode.dart';
 
-import 'package:provider/provider.dart';
+// ignore: implementation_imports
+import 'package:provider/src/provider.dart';
 import 'meeting_participants_list.dart';
 
 class MeetingPage extends StatefulWidget {
@@ -296,172 +297,161 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                 : Icons.volume_off),
                           ),
                         ),
-                        PopupMenuButton(
-                          icon: Icon(CupertinoIcons.gear),
-                          itemBuilder: (BuildContext context) => [
-                            PopupMenuItem(
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text("Send Logs",
-                                      style: TextStyle(color: Colors.blue)),
-                                  Icon(Icons.bug_report, color: Colors.blue),
-                                ],
+                        Observer(builder: (context) {
+                          return PopupMenuButton(
+                            icon: Icon(CupertinoIcons.gear),
+                            itemBuilder: (BuildContext context) => [
+                              PopupMenuItem(
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text("Send Logs",
+                                        style: TextStyle(color: Colors.blue)),
+                                    Icon(Icons.bug_report, color: Colors.blue),
+                                  ],
+                                ),
+                                value: 1,
                               ),
-                              value: 1,
-                            ),
-                            PopupMenuItem(
-                              child: Observer(
-                                  builder: (_) => Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(
-                                                _meetingStore.isRecordingStarted
-                                                    ? "Recording "
-                                                    : "Record",
-                                                style: TextStyle(
-                                                  color: _meetingStore
+                              PopupMenuItem(
+                                child: Observer(
+                                    builder: (_) => Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                  _meetingStore
                                                           .isRecordingStarted
-                                                      ? Colors.red
-                                                      : Colors.blue,
-                                                )),
-                                            Icon(
-                                              Icons.circle,
-                                              color: _meetingStore
-                                                      .isRecordingStarted
-                                                  ? Colors.red
-                                                  : Colors.blue,
-                                            ),
-                                          ])),
-                              value: 2,
-                            ),
-                            PopupMenuItem(
-                              child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      "Toggle Camera  ",
-                                      style: TextStyle(color: Colors.blue),
-                                    ),
-                                    Icon(Icons.switch_camera,
-                                        color: Colors.blue),
-                                  ]),
-                              value: 3,
-                            ),
-                            PopupMenuItem(
-                              child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      "Participants  ",
-                                      style: TextStyle(color: Colors.blue),
-                                    ),
-                                    Icon(CupertinoIcons.person_3_fill,
-                                        color: Colors.blue),
-                                  ]),
-                              value: 4,
-                            ),
-                            PopupMenuItem(
-                              child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      audioViewOn ? "Video View" : "Audio View",
-                                      style: TextStyle(color: Colors.blue),
-                                    ),
-                                    Image.asset(
-                                      audioViewOn
-                                          ? 'assets/icons/video.png'
-                                          : 'assets/icons/audio.png',
-                                      color: Colors.blue,
-                                      height: 24.0,
-                                      width: 24.0,
-                                    ),
-                                  ]),
-                              value: 5,
-                            ),
-                            PopupMenuItem(
-                              child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      "Active Speaker Mode ",
-                                      style: TextStyle(color: Colors.blue),
-                                    ),
-                                    Icon(CupertinoIcons.person_3_fill,
-                                        color: Colors.blue),
-                                  ]),
-                              value: 6,
-                            ),
-                            PopupMenuItem(
-                              child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      "Hero Mode ",
-                                      style: TextStyle(color: Colors.blue),
-                                    ),
-                                    Icon(CupertinoIcons.person_3_fill,
-                                        color: Colors.blue),
-                                  ]),
-                              value: 7,
-                            ),
-                            PopupMenuItem(
-                              child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      "Change Name",
-                                      style: TextStyle(color: Colors.blue),
-                                    ),
-                                    Icon(Icons.create_rounded,
-                                        color: Colors.blue),
-                                  ]),
-                              value: 8,
-                            ),
-                            if (_meetingStore
-                                .localPeer!.role.permissions.endRoom!)
+                                                      ? "Recording "
+                                                      : "Record",
+                                                  style: TextStyle(
+                                                    color: _meetingStore
+                                                            .isRecordingStarted
+                                                        ? Colors.red
+                                                        : Colors.blue,
+                                                  )),
+                                              Icon(
+                                                Icons.circle,
+                                                color: _meetingStore
+                                                        .isRecordingStarted
+                                                    ? Colors.red
+                                                    : Colors.blue,
+                                              ),
+                                            ])),
+                                value: 2,
+                              ),
                               PopupMenuItem(
                                 child: Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
-                                        "End Room",
+                                        "Toggle Camera  ",
                                         style: TextStyle(color: Colors.blue),
                                       ),
-                                      Icon(Icons.cancel_schedule_send,
+                                      Icon(Icons.switch_camera,
                                           color: Colors.blue),
                                     ]),
-                                value: 9,
+                                value: 3,
                               ),
-                            if (_meetingStore
-                                .localPeer!.role.permissions.endRoom!)
                               PopupMenuItem(
                                 child: Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
-                                        "End Room",
+                                        "Participants  ",
                                         style: TextStyle(color: Colors.blue),
                                       ),
-                                      Icon(Icons.cancel_schedule_send,
+                                      Icon(CupertinoIcons.person_3_fill,
                                           color: Colors.blue),
                                     ]),
-                                value: 9,
+                                value: 4,
                               ),
-                          ],
-                          onSelected: handleMenu,
-                        )
+                              PopupMenuItem(
+                                child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        audioViewOn
+                                            ? "Video View"
+                                            : "Audio View",
+                                        style: TextStyle(color: Colors.blue),
+                                      ),
+                                      Image.asset(
+                                        audioViewOn
+                                            ? 'assets/icons/video.png'
+                                            : 'assets/icons/audio.png',
+                                        color: Colors.blue,
+                                        height: 24.0,
+                                        width: 24.0,
+                                      ),
+                                    ]),
+                                value: 5,
+                              ),
+                              PopupMenuItem(
+                                child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        "Active Speaker Mode ",
+                                        style: TextStyle(color: Colors.blue),
+                                      ),
+                                      Icon(CupertinoIcons.person_3_fill,
+                                          color: Colors.blue),
+                                    ]),
+                                value: 6,
+                              ),
+                              PopupMenuItem(
+                                child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        "Hero Mode ",
+                                        style: TextStyle(color: Colors.blue),
+                                      ),
+                                      Icon(CupertinoIcons.person_3_fill,
+                                          color: Colors.blue),
+                                    ]),
+                                value: 7,
+                              ),
+                              PopupMenuItem(
+                                child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        "Change Name",
+                                        style: TextStyle(color: Colors.blue),
+                                      ),
+                                      Icon(Icons.create_rounded,
+                                          color: Colors.blue),
+                                    ]),
+                                value: 8,
+                              ),
+                              if (_meetingStore
+                                  .localPeer!.role.permissions.endRoom!)
+                                PopupMenuItem(
+                                  child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          "End Room",
+                                          style: TextStyle(color: Colors.blue),
+                                        ),
+                                        Icon(Icons.cancel_schedule_send,
+                                            color: Colors.blue),
+                                      ]),
+                                  value: 9,
+                                ),
+                            ],
+                            onSelected: handleMenu,
+                          );
+                        }),
                       ],
                     ),
                     body: Padding(
@@ -471,8 +461,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Observer(builder: (_) {
-                            if (!_meetingStore.isHLSLink &&
-                                _meetingStore.screenShareTrack != null &&
+                            if (!_meetingStore.isHLSLink && _meetingStore.screenShareTrack != null &&
                                 !audioViewOn) {
                               return SizedBox(
                                 width: double.infinity,
@@ -499,82 +488,83 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                             }
                           }),
                           Flexible(
-                            child: Observer(builder: (_) {
-                              // if (!_meetingStore.isMeetingStarted)
-                              //   return SizedBox();
-                              if (!_meetingStore.isHLSLink) {
-                                if (_meetingStore.peerTracks.isEmpty)
-                                  return Center(
-                                      child:
-                                          Text('Waiting for others to join!'));
-                                ObservableList<PeerTracKNode> peerFilteredList =
-                                    _meetingStore.isActiveSpeakerMode
-                                        ? _meetingStore
-                                            .activeSpeakerPeerTracksStore
-                                        : _meetingStore.peerTracks;
-                                ObservableMap<String, String> audioKeyMap =
-                                    _meetingStore.observableMap;
-                                return GridView.builder(
-                                    physics: PageScrollPhysics(),
-                                    scrollDirection: Axis.horizontal,
-                                    addAutomaticKeepAlives: false,
-                                    itemCount: peerFilteredList.length,
-                                    shrinkWrap: true,
-                                    cacheExtent: 0,
-                                    gridDelegate:
-                                        SliverGridDelegateWithFixedCrossAxisCount(
-                                      crossAxisCount: (!audioViewOn &&
-                                              _meetingStore.screenShareTrack !=
-                                                  null)
-                                          ? 1
-                                          : 2,
-                                      mainAxisExtent: itemWidth,
-                                    ),
-                                    itemBuilder: (ctx, index) {
-                                      return Observer(builder: (context) {
-                                        ObservableMap<String, HMSTrackUpdate>
-                                            map = _meetingStore.trackStatus;
-                                        return VideoTile(
-                                          tileIndex: index,
-                                          filteredList: peerFilteredList,
-                                          trackStatus: map,
-                                          observerMap: audioKeyMap,
-                                          audioView: audioViewOn,
-                                        );
+                            child: Observer(
+                              builder: (_) {
+                                // if (!_meetingStore.isMeetingStarted)
+                                //   return SizedBox();
+                                if (!_meetingStore.isHLSLink) {
+                                  if (_meetingStore.peerTracks.isEmpty)
+                                    return Center(
+                                        child:
+                                        Text('Waiting for others to join!'));
+                                  ObservableList<
+                                      PeerTracKNode> peerFilteredList =
+                                  _meetingStore.isActiveSpeakerMode
+                                      ? _meetingStore
+                                      .activeSpeakerPeerTracksStore
+                                      : _meetingStore.peerTracks;
+                                  ObservableMap<String, String> audioKeyMap =
+                                      _meetingStore.observableMap;
+                                  return GridView.builder(
+                                      physics: PageScrollPhysics(),
+                                      scrollDirection: Axis.horizontal,
+                                      addAutomaticKeepAlives: false,
+                                      itemCount: peerFilteredList.length,
+                                      shrinkWrap: true,
+                                      cacheExtent: 0,
+                                      gridDelegate:
+                                      SliverGridDelegateWithFixedCrossAxisCount(
+                                        crossAxisCount: (!audioViewOn &&
+                                            _meetingStore.screenShareTrack !=
+                                                null)
+                                            ? 1
+                                            : 2,
+                                        mainAxisExtent: itemWidth,
+                                      ),
+                                      itemBuilder: (ctx, index) {
+                                        return Observer(builder: (context) {
+                                          ObservableMap<String, HMSTrackUpdate>
+                                          map = _meetingStore.trackStatus;
+                                          return VideoTile(
+                                            tileIndex: index,
+                                            filteredList: peerFilteredList,
+                                            trackStatus: map,
+                                            observerMap: audioKeyMap,
+                                            audioView: audioViewOn,
+                                          );
+                                        });
                                       });
-                                    });
-                              } else {
-                                return SizedBox();
+                                }
+                                else {
+                                  return SizedBox();
+                                }
                               }
-                            }),
+                            ),
                           ),
                           Observer(builder: (_) {
-                            print(
-                                "hasHLSStarted ${_meetingStore.hasHlsStarted}");
-                            if (_meetingStore.isHLSLink &&
-                                _meetingStore.hasHlsStarted == false) {
+                            print("hasHLSStarted ${_meetingStore.hasHlsStarted}");
+                            if (_meetingStore.isHLSLink && _meetingStore.hasHlsStarted==false) {
                               return Flexible(
                                 child: Container(
                                   child: Center(
                                       child: Text(
-                                    "Waiting for the HLS Streaming to start...",
-                                    style: TextStyle(fontSize: 30.0),
-                                  )),
+                                        "Waiting for the HLS Streaming to start...",
+                                        style: TextStyle(fontSize: 30.0),
+                                      )),
                                 ),
                               );
                             }
-                            if (_meetingStore.isHLSLink &&
-                                _meetingStore.hasHlsStarted) {
+                            if (_meetingStore.isHLSLink && _meetingStore.hasHlsStarted) {
                               return Flexible(
                                 child: Center(
                                   child: Container(
-                                    child: HLSViewer(
-                                        streamUrl: _meetingStore.streamUrl),
+                                    child: HLSViewer(streamUrl: _meetingStore.streamUrl),
                                   ),
                                 ),
                               );
                             } else {
-                              return SizedBox();
+                              return SizedBox(
+                              );
                             }
                           }),
                         ],
@@ -589,13 +579,12 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                               return IconButton(
                                   tooltip: 'Video',
                                   iconSize: 32,
-                                  onPressed:
-                                      (audioViewOn || _meetingStore.isHLSLink)
-                                          ? null
-                                          : () {
-                                              _meetingStore.switchVideo();
-                                              countOfVideoOnBetweenTwo++;
-                                            },
+                                  onPressed: (audioViewOn || _meetingStore.isHLSLink)
+                                      ? null
+                                      : () {
+                                    _meetingStore.switchVideo();
+                                    countOfVideoOnBetweenTwo++;
+                                  },
                                   icon: Icon(_meetingStore.isVideoOn
                                       ? Icons.videocam
                                       : Icons.videocam_off));
@@ -607,11 +596,9 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                               return IconButton(
                                   tooltip: 'Audio',
                                   iconSize: 32,
-                                  onPressed: (_meetingStore.isHLSLink)
-                                      ? null
-                                      : () {
-                                          _meetingStore.switchAudio();
-                                        },
+                                  onPressed: (_meetingStore.isHLSLink)?null:() {
+                                    _meetingStore.switchAudio();
+                                  },
                                   icon: Icon(_meetingStore.isMicOn
                                       ? Icons.mic
                                       : Icons.mic_off));

@@ -12,9 +12,6 @@ class HMSHLSVariantExtension {
             args.put("meeting_url",hmshlsVariant.meetingUrl?:"")
             args.put("metadata",hmshlsVariant.metadata?:"")
             args.put("started_at",hmshlsVariant.startedAt?:-1)
-
-
-
             return args
         }
     }
