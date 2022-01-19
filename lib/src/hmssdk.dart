@@ -3,6 +3,7 @@
 ///Just create instance of [HMSSDK] and use the functionality which is present.
 ///
 ///All methods related to meeting, preview and their listeners are present here.
+
 // Project imports:
 
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
@@ -25,6 +26,7 @@ import '../hmssdk_flutter.dart';
 /// HMSSDK has other methods which the client app can use to get more info about the Room, Peer and Tracks
 class HMSSDK {
   ///join meeting by passing HMSConfig instance to it.
+
   HMSTrackSetting? hmsTrackSetting;
 
   HMSSDK({this.hmsTrackSetting});
@@ -225,7 +227,7 @@ class HMSSDK {
     List<String> rolesMap = [];
     roles.forEach((role) => rolesMap.add(role.name));
 
-    var arguments = {"message": message, "type": type, "roles": roles};
+    var arguments = {"message": message, "type": type, "roles": rolesMap};
     var result = await PlatformService.invokeMethod(
         PlatformMethod.sendGroupMessage,
         arguments: arguments);
@@ -233,7 +235,7 @@ class HMSSDK {
       if (result == null) {
         hmsActionResultListener.onSuccess(
             methodType: HMSActionResultListenerMethod.sendGroupMessage,
-            arguments: arguments);
+            arguments: {"message": message, "type": type, "roles": roles});
       } else {
         hmsActionResultListener.onException(
             methodType: HMSActionResultListenerMethod.sendGroupMessage,
@@ -391,7 +393,7 @@ class HMSSDK {
       "type": HMSTrackKindValue.getValueFromHMSTrackKind(
           kind ?? HMSTrackKind.unknown),
       "source": source,
-      "roles": roles
+      "roles": rolesMap
     };
     var result = await PlatformService.invokeMethod(
         PlatformMethod.changeTrackStateForRole,
@@ -399,9 +401,13 @@ class HMSSDK {
 
     if (hmsActionResultListener != null) {
       if (result == null)
-        hmsActionResultListener.onSuccess(
-            arguments: arguments,
-            methodType: HMSActionResultListenerMethod.changeTrackStateForRole);
+        hmsActionResultListener.onSuccess(arguments: {
+          "mute": mute,
+          "type": HMSTrackKindValue.getValueFromHMSTrackKind(
+              kind ?? HMSTrackKind.unknown),
+          "source": source,
+          "roles": roles
+        }, methodType: HMSActionResultListenerMethod.changeTrackStateForRole);
       else
         hmsActionResultListener.onException(
             arguments: arguments,
