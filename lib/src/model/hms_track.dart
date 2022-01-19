@@ -23,11 +23,12 @@ class HMSTrack {
       this.isHighestAudio = false});
 
   factory HMSTrack.fromMap({required Map map, HMSPeer? peer}) {
-    HMSTrackKind hmsTrackKind = HMSTrackKindValue.getHMSTrackKindFromName(map['track_kind']);
-    if(hmsTrackKind == HMSTrackKind.kHMSTrackKindVideo){
-      return HMSVideoTrack.fromMap(map: map,peer: peer);
+    HMSTrackKind hmsTrackKind =
+        HMSTrackKindValue.getHMSTrackKindFromName(map['track_kind']);
+    if (hmsTrackKind == HMSTrackKind.kHMSTrackKindVideo) {
+      return HMSVideoTrack.fromMap(map: map, peer: peer);
     }
-    return HMSAudioTrack.fromMap(map: map,peer: peer);
+    return HMSAudioTrack.fromMap(map: map, peer: peer);
   }
 
   factory HMSTrack.copyWith(bool? isHighest, {required HMSTrack track}) {

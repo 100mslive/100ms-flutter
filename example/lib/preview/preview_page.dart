@@ -59,8 +59,6 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
     }
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;

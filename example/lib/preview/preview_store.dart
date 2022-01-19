@@ -20,7 +20,7 @@ abstract class PreviewStoreBase
   @observable
   HMSException? error;
   @observable
-  bool isHLSLink=false;
+  bool isHLSLink = false;
   HMSRoom? room;
   @observable
   bool videoOn = true;
@@ -39,7 +39,6 @@ abstract class PreviewStoreBase
       if (each.isLocal) {
         this.peer = each;
         if (each.role.name.indexOf("hls-") == 0) {
-
           isHLSLink = true;
         }
         break;

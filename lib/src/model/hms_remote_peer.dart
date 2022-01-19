@@ -71,7 +71,7 @@ class HMSRemotePeer extends HMSPeer {
 
   factory HMSRemotePeer.fromMap(Map map) {
     if (Platform.isAndroid) {
-      HMSRole role= HMSRole.fromMap(map['role']);
+      HMSRole role = HMSRole.fromMap(map['role']);
       return HMSRemotePeer(
         peerId: map['peer_id'],
         name: map['name'],

@@ -212,14 +212,15 @@ class HMSSDKInteractor {
         name: name, hmsActionResultListener: hmsActionResultListener);
   }
 
-
-  Future<void> startHLSStreaming(String meetingUrl,HMSActionResultListener hmsActionResultListener) async{
-    await hmsSDK.startHlsStreaming(meetingUrl,"meta data",hmsActionResultListener: hmsActionResultListener);
+  Future<void> startHLSStreaming(String meetingUrl,
+      HMSActionResultListener hmsActionResultListener) async {
+    await hmsSDK.startHlsStreaming(meetingUrl, "meta data",
+        hmsActionResultListener: hmsActionResultListener);
   }
 
-  Future<void> stopHLSStreaming({required HMSActionResultListener hmsActionResultListener}) async{
-    await hmsSDK.stopHlsStreaming(hmsActionResultListener: hmsActionResultListener);
-
+  Future<void> stopHLSStreaming(
+      {required HMSActionResultListener hmsActionResultListener}) async {
+    await hmsSDK.stopHlsStreaming(
+        hmsActionResultListener: hmsActionResultListener);
   }
-  
 }

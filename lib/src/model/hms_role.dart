@@ -48,7 +48,6 @@ class HMSRole {
 
     HMSPermissions permissions = HMSPermissions.fromMap(map['permissions']);
 
-
     return HMSRole(
       name: name,
       publishSettings: publishSetting,
