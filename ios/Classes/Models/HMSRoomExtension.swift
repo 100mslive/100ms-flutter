@@ -37,7 +37,7 @@ class  HMSRoomExtension {
         dict["server_recording_state"] = HMSStreamingStateExtension.toDictionary(server: room.serverRecordingState)
         
         // TODO: add HMSHLSStreamingState
-        // dict["hls_streaming_state"] = room.hlsStreamingState
+         dict["hls_streaming_state"] = HMSStreamingStateExtension.toDictionary(hlsVarient: room.hlsStreamingState)
         
         return dict
     }

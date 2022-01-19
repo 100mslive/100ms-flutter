@@ -49,4 +49,17 @@ class HMSStreamingStateExtension {
         
         return dict
     }
+    
+    static func toDictionary(hlsVarient: HMSHLSStreamingState) -> [String: Any] {
+        var dict = [String: Any]()
+        
+        dict["running"] = hlsVarient.running
+        var args = [Any]()
+        hlsVarient.variants.forEach { varient in
+            args.append(HMSHLSVariantExtension.toDictionary(varient))
+        }         
+        dict["variants"]=args
+        
+        return dict
+    }
 }

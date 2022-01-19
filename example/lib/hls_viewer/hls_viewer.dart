@@ -21,16 +21,14 @@ class _HLSViewerState extends State<HLSViewer> {
   @override
   void initState() {
     super.initState();
-
-    MeetingStore meetingStore = context.read<MeetingStore>();
     flickManager = FlickManager(
-      onVideoEnd: () {
-        flickManager.handleChangeVideo(VideoPlayerController.network(
-          meetingStore.streamUrl,
-        ));
-      },
+      // onVideoEnd: () {
+      //   flickManager.handleChangeVideo(VideoPlayerController.network(
+      //     widget.streamUrl,
+      //   ));
+      // },
       videoPlayerController: VideoPlayerController.network(
-        meetingStore.streamUrl,
+        widget.streamUrl,
       ),
     );
   }

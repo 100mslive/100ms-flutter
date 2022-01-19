@@ -207,6 +207,14 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         case "stop_rtmp_and_recording":
             stopRtmpAndRecording(result)
             
+            //MARK: - HLS
+        
+        case "hls_start_streaming":
+            startHlsStreaming(call)
+        
+        case "hls_stop_streaming":
+            stopHlsStreaming()
+            
             // MARK: - Logging
             
         case "start_hms_logger":
@@ -895,6 +903,41 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                 result(HMSErrorExtension.toDictionary(error))
             } else {
                 result(nil)
+            }
+        }
+    }
+    
+    //MARK: - HLS
+    
+    private func startHlsStreaming(_ call: FlutterMethodCall){
+        let arguments = call.arguments as! [AnyHashable: Any]
+        
+        guard let meetingUrl = arguments["meeting_url"] as? String,
+              let metadata = arguments["meta_data"] as? String
+        else {
+            let error = getError(message: "Wrong Paramenter found in \(#function)",
+                                 description: "Paramenter is nil",
+                                 params: ["function": #function, "arguments": arguments])
+            print(error)
+            return
+        }
+        let hlsConfig = HMSHLSConfig(variants: [HMSHLSMeetingURLVariant(meetingURL: URL(string:meetingUrl)!, metadata: metadata)])
+        hmsSDK?.startHLSStreaming(config: hlsConfig) { success, error in
+            if let error = error {
+                print(HMSErrorExtension.toDictionary(error))
+            } else {
+                return
+            }
+        }
+    }
+
+    
+    private func stopHlsStreaming(){
+        hmsSDK?.stopHLSStreaming { success, error in
+            if let error = error {
+                print(HMSErrorExtension.toDictionary(error))
+            } else {
+                return
             }
         }
     }
