@@ -49,11 +49,11 @@ class HMSSDKInteractor {
         hmsActionResultListener: hmsActionResultListener);
   }
 
-  void sendGroupMessage(String message, String roleName,
+  void sendGroupMessage(String message, List<HMSRole> roles,
       HMSActionResultListener hmsActionResultListener) async {
     hmsSDK.sendGroupMessage(
         message: message,
-        roleName: roleName,
+        roles: roles,
         type: "chat",
         hmsActionResultListener: hmsActionResultListener);
   }
@@ -95,8 +95,8 @@ class HMSSDKInteractor {
     hmsSDK.removePreviewListener(listener: listener);
   }
 
-  void acceptChangeRole(HMSActionResultListener hmsActionResultListener) {
-    hmsSDK.acceptChangeRole(hmsActionResultListener: hmsActionResultListener);
+  void acceptChangeRole(HMSRoleChangeRequest hmsRoleChangeRequest,HMSActionResultListener hmsActionResultListener) {
+    hmsSDK.acceptChangeRole(hmsRoleChangeRequest:hmsRoleChangeRequest,hmsActionResultListener: hmsActionResultListener);
   }
 
   void stopCapturing() {
@@ -143,7 +143,7 @@ class HMSSDKInteractor {
 
   void changeRole(
       {required HMSPeer peer,
-      required String roleName,
+      required HMSRole roleName,
       bool forceChange = false,
       required HMSActionResultListener hmsActionResultListener}) {
     hmsSDK.changeRole(

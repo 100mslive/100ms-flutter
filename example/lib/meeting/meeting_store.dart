@@ -170,8 +170,8 @@ abstract class MeetingStoreBase extends ChangeNotifier
     _hmssdkInteractor.sendDirectMessage(message, peer, this);
   }
 
-  void sendGroupMessage(String message, String roleName) async {
-    _hmssdkInteractor.sendGroupMessage(message, roleName, this);
+  void sendGroupMessage(String message, List<HMSRole> roles) async {
+    _hmssdkInteractor.sendGroupMessage(message, roles, this);
   }
 
   @action
@@ -496,7 +496,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
 
   void changeRole(
       {required HMSPeer peer,
-      required String roleName,
+      required HMSRole roleName,
       bool forceChange = false}) {
     _hmssdkInteractor.changeRole(
         roleName: roleName,
@@ -710,8 +710,8 @@ abstract class MeetingStoreBase extends ChangeNotifier
     _hmssdkInteractor.setPlayBackAllowed(allow);
   }
 
-  void acceptChangeRole() {
-    _hmssdkInteractor.acceptChangeRole(this);
+  void acceptChangeRole(HMSRoleChangeRequest hmsRoleChangeRequest) {
+    _hmssdkInteractor.acceptChangeRole(hmsRoleChangeRequest,this);
   }
 
   void changeName({required String name}) {

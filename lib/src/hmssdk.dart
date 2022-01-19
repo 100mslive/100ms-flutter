@@ -221,12 +221,16 @@ class HMSSDK {
   /// The [hmsActionResultListener] informs about whether the message was successfully sent, or the kind of error if not.
   void sendGroupMessage(
       {required String message,
-      required String roleName,
+      required List<HMSRole> roles,
       String? type,
       HMSActionResultListener? hmsActionResultListener}) async {
-    var arugments = {"message": message, "type": type, "role_name": roleName};
+
+    List<String> rolesMap = [];
+    roles.forEach((role)=> rolesMap.add(role.name));
+
+    var arugments = {"message": message, "type": type, "roles": rolesMap};
     var result = await PlatformService.invokeMethod(
-        PlatformMethod.sendGroupMessage,
+        PlatformMethod.sendGroupMessage, 
         arguments: arugments);
     if (hmsActionResultListener != null) {
       if (result == null) {
@@ -290,12 +294,12 @@ class HMSSDK {
   /// [hmsActionResultListener] - Listener that will return HMSActionResultListener.onSuccess if the role change request is successful else will call [HMSActionResultListener.onException] with the error received from server
   void changeRole(
       {required HMSPeer peer,
-      required String roleName,
+      required HMSRole roleName,
       bool forceChange = false,
       HMSActionResultListener? hmsActionResultListener}) async {
     var arguments = {
       'peer_id': peer.peerId,
-      'role_name': roleName,
+      'role_name': roleName.name,
       'force_change': forceChange
     };
     var result = await PlatformService.invokeMethod(PlatformMethod.changeRole,
@@ -323,7 +327,8 @@ class HMSSDK {
   /// [hmsActionResultListener] - Listener that will return HMSActionResultListener.onSuccess if the role change request is successful else will call HMSActionResultListener.onException with the error received from server
 
   void acceptChangeRole(
-      {HMSActionResultListener? hmsActionResultListener}) async {
+      { required HMSRoleChangeRequest hmsRoleChangeRequest,
+        HMSActionResultListener? hmsActionResultListener}) async {
     var result =
         await PlatformService.invokeMethod(PlatformMethod.acceptChangeRole);
     if (hmsActionResultListener != null) {
@@ -380,10 +385,11 @@ class HMSSDK {
       required String? source,
       required List<HMSRole>? roles,
       HMSActionResultListener? hmsActionResultListener}) async {
-    List<Map<String, dynamic>> rolesMap = [];
+
+    List<String> rolesMap = [];
 
     if(roles != null)
-      roles.forEach((role)=> rolesMap.add(role.toMap()));
+      roles.forEach((role)=> rolesMap.add(role.name));
 
     var arguments = {
       "mute": mute,

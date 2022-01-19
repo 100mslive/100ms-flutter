@@ -467,18 +467,13 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
     }
 
     private fun sendGroupMessage(call: MethodCall) {
-        val roleUWant = call.argument<String>("role_name")
         val message = call.argument<String>("message")
-        val roles = hmssdk.getRoles()
-        val roleToChangeTo: HMSRole = roles.first {
-            it.name == roleUWant
-        }
-        val role = ArrayList<HMSRole>()
-        role.add(roleToChangeTo)
-
+        val roles: List<String>? = call.argument<List<String>>("roles")
         val type = call.argument<String>("type") ?: "chat"
 
-        hmssdk?.sendGroupMessage(message!!, type, role, this.hmsMessageResultListener)
+        val realRoles = hmssdk.getRoles().filter { roles?.contains(it.name)!! }
+
+        hmssdk?.sendGroupMessage(message!!, type, realRoles, this.hmsMessageResultListener)
     }
 
     private fun preview(call: MethodCall, result: Result) {
@@ -668,20 +663,20 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
 
 
     private fun changeTrackStateForRole(call: MethodCall) {
-//        val mute = call.argument<Boolean>("mute")
-//        val type = call.argument<String>("type")
-//        val source = call.argument<String>("source")
-//        val roles: List<Map<String,Any?>>? = call.argument<List<Map<String,Any?>>>("roles")
-//
-//        val realRoles = hmssdk.getRoles().filter { roles?.contains(it.name)!! }
-//
-//        hmssdk.changeTrackState(
-//            mute = mute!!,
-//            type = HMSTrackExtension.getStringFromKind(type),
-//            source = source,
-//            roles = realRoles,
-//            hmsActionResultListener = this.actionListener
-//        )
+        val mute = call.argument<Boolean>("mute")
+        val type = call.argument<String>("type")
+        val source = call.argument<String>("source")
+        val roles: List<String>? = call.argument<List<String>>("roles")
+
+        val realRoles = hmssdk.getRoles().filter { roles?.contains(it.name)!! }
+
+        hmssdk.changeTrackState(
+            mute = mute!!,
+            type = HMSTrackExtension.getStringFromKind(type),
+            source = source,
+            roles = realRoles,
+            hmsActionResultListener = this.actionListener
+        )
     }
 
     fun build(activity: Activity, call: MethodCall, result: Result) {
