@@ -14,13 +14,13 @@ abstract class PreviewStoreBase
   late PreviewController previewController;
 
   @observable
-  List<HMSTrack> localTracks = [];
+  List<HMSVideoTrack> localTracks = [];
   @observable
   HMSPeer? peer;
   @observable
   HMSException? error;
   @observable
-  bool isHLSLink = false;
+  bool isHLSLink=false;
   HMSRoom? room;
   @observable
   bool videoOn = true;
@@ -39,15 +39,16 @@ abstract class PreviewStoreBase
       if (each.isLocal) {
         this.peer = each;
         if (each.role.name.indexOf("hls-") == 0) {
+
           isHLSLink = true;
         }
         break;
       }
     }
-    List<HMSTrack> videoTracks = [];
+    List<HMSVideoTrack> videoTracks = [];
     for (var track in localTracks) {
       if (track.kind == HMSTrackKind.kHMSTrackKindVideo) {
-        videoTracks.add(track);
+        videoTracks.add(track as HMSVideoTrack);
       }
     }
     this.localTracks = ObservableList.of(videoTracks);

@@ -62,7 +62,7 @@ class HMSPeer {
 
   factory HMSPeer.fromMap(Map map) {
     if (Platform.isAndroid) {
-      HMSRole role = HMSRole.fromMap(map['role']);
+      HMSRole role=HMSRole.fromMap(map['role']);
       if (map['is_local'] == true) {
         return HMSLocalPeer(
           peerId: map['peer_id'],
@@ -117,6 +117,8 @@ class HMSPeer {
       return peer;
     }
   }
+
+  // TODO: add HMSRemotePeer class
 
   static List<HMSPeer> fromListOfMap(List peersMap) {
     List<HMSPeer> peers = peersMap.map((e) => HMSPeer.fromMap(e)).toList();
