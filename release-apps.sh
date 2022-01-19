@@ -1,7 +1,7 @@
 #!/bin/sh
 #alias rel='sh -x release-apps.sh'
 
-set -e
+# set -e
 # set -x
 
 echo "🌳🍀 git branch: $(git rev-parse --abbrev-ref HEAD)"
