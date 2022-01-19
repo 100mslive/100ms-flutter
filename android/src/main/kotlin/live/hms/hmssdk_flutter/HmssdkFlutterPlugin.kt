@@ -392,6 +392,36 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         return null
     }
 
+    private fun getAudioTracks():ArrayList<HMSTrack>{
+        val audioTracks = ArrayList<HMSTrack>();
+        val peers :ArrayList<HMSPeer> = hmssdk.getPeers() as ArrayList<HMSPeer>
+        peers.forEach{
+            if(it.audioTrack != null)
+                audioTracks.add(it.audioTrack!!)
+        }
+        return audioTracks;
+    }
+
+    private fun getVideoTracks():ArrayList<HMSTrack>{
+        val videoTracks = ArrayList<HMSTrack>();
+        val peers :ArrayList<HMSPeer> = hmssdk.getPeers() as ArrayList<HMSPeer>
+        peers.forEach{
+            if(it.videoTrack != null)
+                videoTracks.add(it.videoTrack!!)
+        }
+        return videoTracks;
+    }
+
+    private fun getAuxiliaryTracks():ArrayList<HMSTrack>{
+        val auxiliaryTracks = ArrayList<HMSTrack>();
+        val peers :ArrayList<HMSPeer> = hmssdk.getPeers() as ArrayList<HMSPeer>
+        peers.forEach{
+            if(it.auxiliaryTracks != null)
+                auxiliaryTracks.addAll(it.auxiliaryTracks!!)
+        }
+        return auxiliaryTracks;
+    }
+
     private fun isVideoMute(call: MethodCall): Boolean {
         val peerId = call.argument<String>("peer_id")
         if (peerId == "null") {
@@ -536,13 +566,23 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
 
 
     private fun changeTrackState(call: MethodCall) {
-        val hmsPeerId = call.argument<String>("hms_peer_id")
+        val trackId = call.argument<String>("track_id")
         val mute = call.argument<Boolean>("mute")
-        val muteVideoKind = call.argument<Boolean>("mute_video_kind")
-        val peer = getPeerById(hmsPeerId!!)
-        val track: HMSTrack =
-            if (muteVideoKind == true) peer!!.videoTrack!! else peer!!.audioTrack!!
-        hmssdk.changeTrackState(track, mute!!, hmsActionResultListener = this.actionListener)
+        val trackKind = call.argument<String>("track_kind")
+
+        val tracks = ArrayList<HMSTrack>();
+        if(trackKind.equals("kHMSTrackKindAudio")){
+            tracks.addAll(getAudioTracks());
+        }
+        else if(trackKind.equals("kHMSTrackKindVideo")){
+            tracks.addAll(getVideoTracks());
+        }
+
+        val track  = tracks.first {
+            it.trackId == trackId
+        }
+
+        hmssdk.changeTrackState(track!!, mute!!, hmsActionResultListener = this.actionListener)
     }
 
     

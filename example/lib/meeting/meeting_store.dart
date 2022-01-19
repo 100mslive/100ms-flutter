@@ -509,9 +509,9 @@ abstract class MeetingStoreBase extends ChangeNotifier
     return await _hmssdkInteractor.getRoles();
   }
 
-  void changeTrackState(HMSPeer peer, bool mute, bool isVideoTrack) {
+  void changeTrackState(HMSTrack track, bool mute) {
     return HmsSdkManager.hmsSdkInteractor
-        ?.changeTrackState(peer, mute, isVideoTrack, this);
+        ?.changeTrackState(track,mute,this);
   }
 
   @action

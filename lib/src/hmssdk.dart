@@ -198,19 +198,19 @@ class HMSSDK {
       {required String message,
       String? type,
       HMSActionResultListener? hmsActionResultListener}) async {
-    var arugments = {"message": message, "type": type};
+    var arguments = {"message": message, "type": type};
     var result = await PlatformService.invokeMethod(
         PlatformMethod.sendBroadcastMessage,
-        arguments: arugments);
+        arguments: arguments);
     if (hmsActionResultListener != null) {
       if (result == null) {
         hmsActionResultListener.onSuccess(
             methodType: HMSActionResultListenerMethod.sendBroadcastMessage,
-            arguments: arugments);
+            arguments: arguments);
       } else {
         hmsActionResultListener.onException(
             methodType: HMSActionResultListenerMethod.sendBroadcastMessage,
-            arguments: arugments,
+            arguments: arguments,
             hmsException: HMSException.fromMap(result["error"]));
       }
     }
@@ -341,14 +341,13 @@ class HMSSDK {
   /// Set [mute] to true if the track needs to be muted, false otherwise.
   /// [hmsActionResultListener] - the callback that would be called by SDK in case of a success or failure.
   void changeTrackState(
-      {required HMSPeer peer,
+      {required HMSTrack track,
       required bool mute,
-      required bool isVideoTrack,
       HMSActionResultListener? hmsActionResultListener}) async {
     var arguments = {
-      "hms_peer_id": peer.peerId,
+      "track_id": track.trackId,
+      "track_kind": HMSTrackKindValue.getValueFromHMSTrackKind(track.kind),
       "mute": mute,
-      "mute_video_kind": isVideoTrack
     };
     var result = await PlatformService.invokeMethod(
         PlatformMethod.changeTrackState,
@@ -358,9 +357,8 @@ class HMSSDK {
       if (result == null)
         hmsActionResultListener.onSuccess(
             arguments: arguments = {
-              "hms_peer": peer,
+              "track": track,
               "mute": mute,
-              "mute_video_kind": isVideoTrack
             },
             methodType: HMSActionResultListenerMethod.changeTrackState);
       else
@@ -379,13 +377,19 @@ class HMSSDK {
   /// [hmsActionResultListener] - the callback that would be called by SDK in case of a success or failure.
   void changeTrackStateForRole(
       {required bool mute,
-      required String type,
-      required String source,
-      required List<String> roles,
+      required HMSTrackKind? type,
+      required String? source,
+      required List<HMSRole>? roles,
       HMSActionResultListener? hmsActionResultListener}) async {
+    List<Map<String, dynamic>> rolesMap = [];
+
+    if(roles != null)
+      roles.forEach((role)=> rolesMap.add(role.toMap()));
+
     var arguments = {
       "mute": mute,
-      "type": type,
+      "type": HMSTrackKindValue.getValueFromHMSTrackKind(
+          type ?? HMSTrackKind.unknown),
       "source": source,
       "roles": roles
     };

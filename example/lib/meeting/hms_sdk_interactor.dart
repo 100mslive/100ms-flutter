@@ -117,12 +117,11 @@ class HMSSDKInteractor {
     return peers?.firstWhere((element) => element.peerId == peerId);
   }
 
-  void changeTrackState(HMSPeer peer, bool mute, bool isVideoTrack,
+  void changeTrackState(HMSTrack track, bool mute,
       HMSActionResultListener hmsActionResultListener) {
     hmsSDK.changeTrackState(
-        peer: peer,
+        track:track,
         mute: mute,
-        isVideoTrack: isVideoTrack,
         hmsActionResultListener: hmsActionResultListener);
   }
 

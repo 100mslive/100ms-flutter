@@ -443,22 +443,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                     ]),
                                 value: 9,
                               ),
-                            if (_meetingStore
-                                .localPeer!.role.permissions.endRoom!)
-                              PopupMenuItem(
-                                child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        "End Room",
-                                        style: TextStyle(color: Colors.blue),
-                                      ),
-                                      Icon(Icons.cancel_schedule_send,
-                                          color: Colors.blue),
-                                    ]),
-                                value: 9,
-                              ),
+                            
                           ],
                           onSelected: handleMenu,
                         )

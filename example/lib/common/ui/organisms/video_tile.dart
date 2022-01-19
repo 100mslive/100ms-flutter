@@ -80,7 +80,7 @@ class _VideoTileState extends State<VideoTile> {
                               var peer = await _meetingStore.getPeer(
                                   peerId: filteredList[index].peerId);
                               _meetingStore.changeTrackState(
-                                  peer!, mute, isVideoTrack);
+                                  filteredList[index].track!, mute);
                             },
                             removePeer: () async {
                               Navigator.pop(context);
