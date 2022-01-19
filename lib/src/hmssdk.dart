@@ -239,7 +239,7 @@ class HMSSDK {
       } else {
         hmsActionResultListener.onException(
             methodType: HMSActionResultListenerMethod.sendGroupMessage,
-            arguments: arguments,
+            arguments: {"message": message, "type": type, "roles": roles},
             hmsException: HMSException.fromMap(result["error"]));
       }
     }
@@ -410,7 +410,13 @@ class HMSSDK {
         }, methodType: HMSActionResultListenerMethod.changeTrackStateForRole);
       else
         hmsActionResultListener.onException(
-            arguments: arguments,
+            arguments: {
+              "mute": mute,
+              "type": HMSTrackKindValue.getValueFromHMSTrackKind(
+                  kind ?? HMSTrackKind.unknown),
+              "source": source,
+              "roles": roles
+            },
             methodType: HMSActionResultListenerMethod.changeTrackStateForRole,
             hmsException: HMSException.fromMap(result["error"]));
     }
