@@ -983,10 +983,12 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         hmssdk.startScreenshare(object : HMSActionResultListener {
             override fun onError(error: HMSException) {
                 // error
+
             }
 
             override fun onSuccess() {
                 // success
+                
             }
         }, data)
 

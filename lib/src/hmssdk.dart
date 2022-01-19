@@ -113,8 +113,8 @@ class HMSSDK {
   }
 
   /// start screen share for the meeting
-  Future<void> startScreenShare() async {
-    return await PlatformService.invokeMethod(
+  void startScreenShare() async {
+    await PlatformService.invokeMethod(
       PlatformMethod.startScreenShare,
     );
   }

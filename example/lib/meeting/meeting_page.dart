@@ -269,8 +269,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                 : Icons.volume_off),
                           ),
                         ),
-                        Observer(builder: (context) {
-                          return PopupMenuButton(
+                       PopupMenuButton(
                             icon: Icon(CupertinoIcons.gear),
                             itemBuilder: (BuildContext context) => [
                               PopupMenuItem(
@@ -422,8 +421,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                 ),
                             ],
                             onSelected: handleMenu,
-                          );
-                        }),
+                          )
                       ],
                     ),
                     body: Padding(
@@ -433,7 +431,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Observer(builder: (_) {
-                            if (_meetingStore.screenShareTrack != null &&
+                            if (_meetingStore.screenShareTrack.isNotEmpty &&
                                 !audioViewOn) {
                               return SizedBox(
                                 width: double.infinity,
@@ -486,8 +484,8 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                     gridDelegate:
                                         SliverGridDelegateWithFixedCrossAxisCount(
                                       crossAxisCount: (!audioViewOn &&
-                                              _meetingStore.screenShareTrack !=
-                                                  null)
+                                              _meetingStore
+                                                  .screenShareTrack.isNotEmpty)
                                           ? 1
                                           : 2,
                                       mainAxisExtent: itemWidth,
@@ -577,6 +575,20 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                   chatMessages(context, _meetingStore);
                                 },
                                 icon: Icon(Icons.chat_bubble)),
+                          ),
+                          Container(
+                            padding: EdgeInsets.all(8),
+                            child: IconButton(
+                                tooltip: 'Share',
+                                iconSize: 32,
+                                onPressed: () {
+                                  if (!_meetingStore.isScreenShareOn)
+                                    _meetingStore.startScreenShare();
+                                  else
+                                    _meetingStore.stopScreenShare();
+                                },
+                                icon: Icon(Icons.screen_share,color: 
+                                _meetingStore.isScreenShareOn?Colors.blue:Colors.black,)),
                           ),
                           Container(
                             padding: EdgeInsets.all(8),
