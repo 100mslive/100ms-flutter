@@ -5,12 +5,14 @@ class ChangeTrackOptionDialog extends StatefulWidget {
   final String peerName;
   final isVideoMuted;
   final isAudioMuted;
-  final Function(bool, bool) changeTrack;
+  final Function(bool, bool) changeVideoTrack;
+  final Function(bool, bool) changeAudioTrack;
   final Function() removePeer;
   const ChangeTrackOptionDialog(
       {required this.isVideoMuted,
       required this.isAudioMuted,
-      required this.changeTrack,
+      required this.changeVideoTrack,
+      required this.changeAudioTrack,
       required this.peerName,
       required this.removePeer});
 
@@ -33,7 +35,7 @@ class _ChangeTrackOptionDialogState extends State<ChangeTrackOptionDialog> {
               padding: EdgeInsets.only(bottom: 20.0),
               child: GestureDetector(
                 onTap: () {
-                  widget.changeTrack(!widget.isVideoMuted, true);
+                  widget.changeVideoTrack(!widget.isVideoMuted, true);
                 },
                 child: Row(
                   children: [
@@ -55,7 +57,7 @@ class _ChangeTrackOptionDialogState extends State<ChangeTrackOptionDialog> {
               padding: const EdgeInsets.only(bottom: 20.0),
               child: GestureDetector(
                 onTap: () {
-                  widget.changeTrack(!widget.isAudioMuted, false);
+                  widget.changeAudioTrack(!widget.isAudioMuted, false);
                 },
                 child: Row(
                   children: [

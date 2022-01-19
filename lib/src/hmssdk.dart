@@ -346,7 +346,6 @@ class HMSSDK {
       HMSActionResultListener? hmsActionResultListener}) async {
     var arguments = {
       "track_id": track.trackId,
-      "track_kind": HMSTrackKindValue.getValueFromHMSTrackKind(track.kind),
       "mute": mute,
     };
     var result = await PlatformService.invokeMethod(
@@ -391,7 +390,7 @@ class HMSSDK {
       "type": HMSTrackKindValue.getValueFromHMSTrackKind(
           type ?? HMSTrackKind.unknown),
       "source": source,
-      "roles": roles
+      "roles": rolesMap
     };
     var result = await PlatformService.invokeMethod(
         PlatformMethod.changeTrackStateForRole,

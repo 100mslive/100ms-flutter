@@ -394,7 +394,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
 
     private fun getAudioTracks():ArrayList<HMSTrack>{
         val audioTracks = ArrayList<HMSTrack>();
-        val peers :ArrayList<HMSPeer> = hmssdk.getPeers() as ArrayList<HMSPeer>
+        val peers = hmssdk.getPeers()
         peers.forEach{
             if(it.audioTrack != null)
                 audioTracks.add(it.audioTrack!!)
@@ -404,7 +404,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
 
     private fun getVideoTracks():ArrayList<HMSTrack>{
         val videoTracks = ArrayList<HMSTrack>();
-        val peers :ArrayList<HMSPeer> = hmssdk.getPeers() as ArrayList<HMSPeer>
+        val peers = hmssdk.getPeers()
         peers.forEach{
             if(it.videoTrack != null)
                 videoTracks.add(it.videoTrack!!)
@@ -414,12 +414,21 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
 
     private fun getAuxiliaryTracks():ArrayList<HMSTrack>{
         val auxiliaryTracks = ArrayList<HMSTrack>();
-        val peers :ArrayList<HMSPeer> = hmssdk.getPeers() as ArrayList<HMSPeer>
+        val peers = hmssdk.getPeers()
         peers.forEach{
             if(it.auxiliaryTracks != null)
                 auxiliaryTracks.addAll(it.auxiliaryTracks!!)
         }
         return auxiliaryTracks;
+    }
+
+    private fun getAllTracks():ArrayList<HMSTrack>{
+        val allTracks = ArrayList<HMSTrack>()
+        allTracks.addAll(getAudioTracks())
+        allTracks.addAll(getVideoTracks())
+        allTracks.addAll(getAuxiliaryTracks())
+
+        return allTracks
     }
 
     private fun isVideoMute(call: MethodCall): Boolean {
@@ -568,21 +577,14 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
     private fun changeTrackState(call: MethodCall) {
         val trackId = call.argument<String>("track_id")
         val mute = call.argument<Boolean>("mute")
-        val trackKind = call.argument<String>("track_kind")
 
-        val tracks = ArrayList<HMSTrack>();
-        if(trackKind.equals("kHMSTrackKindAudio")){
-            tracks.addAll(getAudioTracks());
-        }
-        else if(trackKind.equals("kHMSTrackKindVideo")){
-            tracks.addAll(getVideoTracks());
-        }
+        val tracks = getAllTracks()
 
         val track  = tracks.first {
             it.trackId == trackId
         }
 
-        hmssdk.changeTrackState(track!!, mute!!, hmsActionResultListener = this.actionListener)
+        hmssdk.changeTrackState(track, mute!!, hmsActionResultListener = this.actionListener)
     }
 
     
@@ -666,20 +668,20 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
 
 
     private fun changeTrackStateForRole(call: MethodCall) {
-        val mute = call.argument<Boolean>("mute")
-        val type = call.argument<String>("type")
-        val source = call.argument<String>("source")
-        val roles: List<String>? = call.argument<List<String>>("roles")
-
-        val realRoles = hmssdk.getRoles().filter { roles?.contains(it.name)!! }
-
-        hmssdk.changeTrackState(
-            mute = mute!!,
-            type = HMSTrackExtension.getStringFromKind(type),
-            source = source,
-            roles = realRoles,
-            hmsActionResultListener = this.actionListener
-        )
+//        val mute = call.argument<Boolean>("mute")
+//        val type = call.argument<String>("type")
+//        val source = call.argument<String>("source")
+//        val roles: List<Map<String,Any?>>? = call.argument<List<Map<String,Any?>>>("roles")
+//
+//        val realRoles = hmssdk.getRoles().filter { roles?.contains(it.name)!! }
+//
+//        hmssdk.changeTrackState(
+//            mute = mute!!,
+//            type = HMSTrackExtension.getStringFromKind(type),
+//            source = source,
+//            roles = realRoles,
+//            hmsActionResultListener = this.actionListener
+//        )
     }
 
     fun build(activity: Activity, call: MethodCall, result: Result) {
