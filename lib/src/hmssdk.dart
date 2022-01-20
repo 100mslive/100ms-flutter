@@ -503,7 +503,10 @@ class HMSSDK {
       {HMSActionResultListener? hmsActionResultListener}) async {
     var result = await PlatformService.invokeMethod(
         PlatformMethod.startHlsStreaming,
-        arguments: {"meeting_url": meetingUrl, "meta_data": metadata});
+        arguments: {
+          "meeting_url": meetingUrl + "?token=beam_recording",
+          "meta_data": metadata
+        });
     if (hmsActionResultListener != null) {
       if (result == null)
         hmsActionResultListener.onSuccess(
