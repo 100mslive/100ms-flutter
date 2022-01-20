@@ -110,7 +110,6 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             }
             "start_capturing" -> {
                 startCapturing()
-                result.success("start_capturing")
             }
             "send_broadcast_message" -> {
                 sendBroadCastMessage(call)
@@ -202,6 +201,9 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             }
             "hls_stop_streaming"->{
                 stopHLSStreaming()
+            }
+            "set_volume_all"->{
+                setVolumeAll(call)
             }
             else -> {
                 result.notImplemented()
@@ -1049,4 +1051,10 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         hmssdk.stopHLSStreaming(null, hmsActionResultListener = this.actionListener)
     }
 
+    private fun setVolumeAll(call: MethodCall){
+        val value = call.argument<Double>("volume")
+        hmssdk.getRemotePeers().forEach {
+            it.audioTrack?.setVolume(value!!)
+        }
+    }
 }

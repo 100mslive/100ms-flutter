@@ -623,11 +623,6 @@ class HMSSDK {
   }
 
   void setVolumeAll(double value) async{
-     List<HMSPeer>? peers =  await getPeers();
-     peers!.forEach((element) {
-       if(!element.isLocal){
-         (element.audioTrack as HMSRemoteAudioTrack).setVolume(value);
-       }
-     });
+     PlatformService.invokeMethod(PlatformMethod.setVolumeAll,arguments: {"volume":value});
   }
 }
