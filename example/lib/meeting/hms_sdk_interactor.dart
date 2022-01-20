@@ -223,4 +223,8 @@ class HMSSDKInteractor {
     await hmsSDK.stopHlsStreaming(
         hmsActionResultListener: hmsActionResultListener);
   }
+
+  void setVolumeAll(double value){
+    hmsSDK.setVolumeAll(10.0);
+  }
 }

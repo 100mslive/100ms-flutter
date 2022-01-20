@@ -1018,8 +1018,8 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             }
         }
 
-        var map = HashMap<String,Map<String,String>>()
-        var error = HashMap<String, String>()
+        val map = HashMap<String,Map<String,String>>()
+        val error = HashMap<String, String>()
         error["message"] = "Could not set volume"
         error["action"] = "NONE"
         error["description"] = "Track not found for setting volume"

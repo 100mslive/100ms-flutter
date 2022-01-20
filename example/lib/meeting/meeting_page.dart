@@ -666,6 +666,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
     if (state == AppLifecycleState.resumed) {
+      _meetingStore.setVolumeAll(10.0);
       if (_meetingStore.isVideoOn) {
         _meetingStore.startCapturing();
       } else {
