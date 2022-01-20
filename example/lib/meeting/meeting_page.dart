@@ -308,8 +308,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                           ),
                         ),
                         
-                        Observer(builder: (context) {
-                          return PopupMenuButton(
+                          PopupMenuButton(
                             icon: Icon(CupertinoIcons.gear),
                             itemBuilder: (BuildContext context) => [
                               PopupMenuItem(
@@ -461,8 +460,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                 ),
                             ],
                             onSelected: handleMenu,
-                          );
-                        }),
+                          )
                       ],
                     ),
                     body: Padding(
