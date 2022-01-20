@@ -16,18 +16,16 @@ class HMSHLSVariantExtension{
         
         dict["meeting_url"] = hmshlsVariant.meetingURL.absoluteString
                 
-        dict["metadata"] = hmshlsVariant.metadata
-        
-        if hmshlsVariant.startedAt != nil {
-            dict["started_at"] = Int(hmshlsVariant.startedAt!.timeIntervalSince1970)
-        }else{
-            dict["started_at"] = -1
+        if let metadata = hmshlsVariant.metadata  as? String {
+            dict["metadata"] = metadata
         }
         
-        if hmshlsVariant.url.absoluteString != nil {
-            dict["hls_stream_url"] = hmshlsVariant.url.absoluteString
-        }else{
-            dict["hls_stream_url"] = ""
+        if let _ =  hmshlsVariant.startedAt {
+            dict["started_at"] = Int(hmshlsVariant.startedAt!.timeIntervalSince1970)
+        }
+        
+        if let streamUrl =  hmshlsVariant.url.absoluteString as? String{
+            dict["hls_stream_url"] = streamUrl
         }
         
         return dict

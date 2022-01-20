@@ -210,10 +210,10 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             //MARK: - HLS
         
         case "hls_start_streaming":
-            startHlsStreaming(call)
+            startHlsStreaming(call, result)
         
         case "hls_stop_streaming":
-            stopHlsStreaming()
+            stopHlsStreaming(result)
             
             // MARK: - Logging
             
@@ -909,7 +909,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     
     //MARK: - HLS
     
-    private func startHlsStreaming(_ call: FlutterMethodCall){
+    private func startHlsStreaming(_ call: FlutterMethodCall, _ result: @escaping FlutterResult){
         let arguments = call.arguments as! [AnyHashable: Any]
         
         guard let meetingUrl = arguments["meeting_url"] as? String,
@@ -918,26 +918,26 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             let error = getError(message: "Wrong Paramenter found in \(#function)",
                                  description: "Paramenter is nil",
                                  params: ["function": #function, "arguments": arguments])
-            print(error)
+            result(HMSErrorExtension.toDictionary(error))
             return
         }
         let hlsConfig = HMSHLSConfig(variants: [HMSHLSMeetingURLVariant(meetingURL: URL(string:meetingUrl)!, metadata: metadata)])
         hmsSDK?.startHLSStreaming(config: hlsConfig) { success, error in
             if let error = error {
-                print(HMSErrorExtension.toDictionary(error))
+                result(HMSErrorExtension.toDictionary(error))
             } else {
-                return
+                result(nil)
             }
         }
     }
 
     
-    private func stopHlsStreaming(){
+    private func stopHlsStreaming(_ result: @escaping FlutterResult){
         hmsSDK?.stopHLSStreaming { success, error in
             if let error = error {
-                print(HMSErrorExtension.toDictionary(error))
+                result(HMSErrorExtension.toDictionary(error))
             } else {
-                return
+                result(nil)
             }
         }
     }

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flick_video_player/flick_video_player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -21,21 +23,28 @@ class _HLSViewerState extends State<HLSViewer> {
   @override
   void initState() {
     super.initState();
-    flickManager = FlickManager(
-      // onVideoEnd: () {
-      //   flickManager.handleChangeVideo(VideoPlayerController.network(
-      //     widget.streamUrl,
-      //   ));
-      // },
-      videoPlayerController: VideoPlayerController.network(
-        widget.streamUrl,
-      ),
-    );
+    if (Platform.isAndroid)
+      flickManager = FlickManager(
+        onVideoEnd: () {
+          flickManager.handleChangeVideo(VideoPlayerController.network(
+            widget.streamUrl,
+          ));
+        },
+        videoPlayerController: VideoPlayerController.network(
+          widget.streamUrl,
+        ),
+      );
+    else
+      flickManager = FlickManager(
+        videoPlayerController: VideoPlayerController.network(
+          widget.streamUrl,
+        ),
+      );
   }
 
   @override
-  void dispose() {
-    flickManager.dispose();
+  void dispose() async {
+    await flickManager.dispose();
     super.dispose();
   }
 
