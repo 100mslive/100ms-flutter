@@ -171,8 +171,8 @@ abstract class MeetingStoreBase extends ChangeNotifier
     _hmssdkInteractor.sendDirectMessage(message, peer, this);
   }
 
-  void sendGroupMessage(String message, String roleName) async {
-    _hmssdkInteractor.sendGroupMessage(message, roleName, this);
+  void sendGroupMessage(String message, List<HMSRole> roles) async {
+    _hmssdkInteractor.sendGroupMessage(message, roles, this);
   }
 
   @action
@@ -503,12 +503,12 @@ abstract class MeetingStoreBase extends ChangeNotifier
 
   void changeRole(
       {required HMSPeer peer,
-      required String roleName,
+      required HMSRole roleName,
       bool forceChange = false}) {
     _hmssdkInteractor.changeRole(
-        roleName: roleName,
-        peer: peer,
-        forceChange: forceChange,
+        toRole: roleName,
+        forPeer: peer,
+        force: forceChange,
         hmsActionResultListener: this);
   }
 
@@ -516,9 +516,8 @@ abstract class MeetingStoreBase extends ChangeNotifier
     return await _hmssdkInteractor.getRoles();
   }
 
-  void changeTrackState(HMSPeer peer, bool mute, bool isVideoTrack) {
-    return HmsSdkManager.hmsSdkInteractor
-        ?.changeTrackState(peer, mute, isVideoTrack, this);
+  void changeTrackState(HMSTrack track, bool mute) {
+    return HmsSdkManager.hmsSdkInteractor?.changeTrackState(track, mute, this);
   }
 
   @action
@@ -728,8 +727,8 @@ abstract class MeetingStoreBase extends ChangeNotifier
     _hmssdkInteractor.setPlayBackAllowed(allow);
   }
 
-  void acceptChangeRole() {
-    _hmssdkInteractor.acceptChangeRole(this);
+  void acceptChangeRole(HMSRoleChangeRequest hmsRoleChangeRequest) {
+    _hmssdkInteractor.acceptChangeRole(hmsRoleChangeRequest, this);
   }
 
   void changeName({required String name}) {

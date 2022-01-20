@@ -264,8 +264,18 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                 : Scaffold(
                     resizeToAvoidBottomInset: false,
                     appBar: AppBar(
-                      title: Text(widget.roomId),
+                      title: Text(Constant.meetingCode),
                       actions: [
+                        _meetingStore.isRecordingStarted?Observer(
+                          builder: (_) => Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(width: 2,color: Colors.red.shade600)
+                            ),
+                            child: Icon(Icons.circle,
+                                                  color:Colors.red,size: 15,),
+                          )
+                        ):Container(),
                         Observer(
                           builder: (_) => IconButton(
                             iconSize: 32,

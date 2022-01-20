@@ -411,6 +411,45 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         return null
     }
 
+    private fun getAudioTracks():ArrayList<HMSTrack>{
+        val audioTracks = ArrayList<HMSTrack>();
+        val peers = hmssdk.getPeers()
+        peers.forEach{
+            if(it.audioTrack != null)
+                audioTracks.add(it.audioTrack!!)
+        }
+        return audioTracks;
+    }
+
+    private fun getVideoTracks():ArrayList<HMSTrack>{
+        val videoTracks = ArrayList<HMSTrack>();
+        val peers = hmssdk.getPeers()
+        peers.forEach{
+            if(it.videoTrack != null)
+                videoTracks.add(it.videoTrack!!)
+        }
+        return videoTracks;
+    }
+
+    private fun getAuxiliaryTracks():ArrayList<HMSTrack>{
+        val auxiliaryTracks = ArrayList<HMSTrack>();
+        val peers = hmssdk.getPeers()
+        peers.forEach{
+            if(it.auxiliaryTracks != null)
+                auxiliaryTracks.addAll(it.auxiliaryTracks!!)
+        }
+        return auxiliaryTracks;
+    }
+
+    private fun getAllTracks():ArrayList<HMSTrack>{
+        val allTracks = ArrayList<HMSTrack>()
+        allTracks.addAll(getAudioTracks())
+        allTracks.addAll(getVideoTracks())
+        allTracks.addAll(getAuxiliaryTracks())
+
+        return allTracks
+    }
+
     private fun isVideoMute(call: MethodCall): Boolean {
         val peerId = call.argument<String>("peer_id")
         if (peerId == "null") {
@@ -447,18 +486,13 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
     }
 
     private fun sendGroupMessage(call: MethodCall) {
-        val roleUWant = call.argument<String>("role_name")
         val message = call.argument<String>("message")
-        val roles = hmssdk.getRoles()
-        val roleToChangeTo: HMSRole = roles.first {
-            it.name == roleUWant
-        }
-        val role = ArrayList<HMSRole>()
-        role.add(roleToChangeTo)
-
+        val roles: List<String>? = call.argument<List<String>>("roles")
         val type = call.argument<String>("type") ?: "chat"
 
-        hmssdk?.sendGroupMessage(message!!, type, role, this.hmsMessageResultListener)
+        val realRoles = hmssdk.getRoles().filter { roles?.contains(it.name)!! }
+
+        hmssdk?.sendGroupMessage(message!!, type, realRoles, this.hmsMessageResultListener)
     }
 
     private fun preview(call: MethodCall, result: Result) {
@@ -555,12 +589,15 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
 
 
     private fun changeTrackState(call: MethodCall) {
-        val hmsPeerId = call.argument<String>("hms_peer_id")
+        val trackId = call.argument<String>("track_id")
         val mute = call.argument<Boolean>("mute")
-        val muteVideoKind = call.argument<Boolean>("mute_video_kind")
-        val peer = getPeerById(hmsPeerId!!)
-        val track: HMSTrack =
-            if (muteVideoKind == true) peer!!.videoTrack!! else peer!!.audioTrack!!
+
+        val tracks = getAllTracks()
+
+        val track  = tracks.first {
+            it.trackId == trackId
+        }
+
         hmssdk.changeTrackState(track, mute!!, hmsActionResultListener = this.actionListener)
     }
 

@@ -25,14 +25,14 @@ extension HMSTrackKindValue on HMSTrackKind {
     }
   }
 
-  static String getValueFromHMSTrackKind(HMSTrackKind hmsTrackKind) {
+  static String? getValueFromHMSTrackKind(HMSTrackKind hmsTrackKind) {
     switch (hmsTrackKind) {
       case HMSTrackKind.kHMSTrackKindAudio:
         return 'kHMSTrackKindAudio';
       case HMSTrackKind.kHMSTrackKindVideo:
         return 'kHMSTrackKindVideo';
       case HMSTrackKind.unknown:
-        return '';
+        return null;
     }
   }
 }
