@@ -611,8 +611,8 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         let arguments = call.arguments as! [AnyHashable: Any]
         
         guard let message = arguments["message"] as? String,
-              let roleString = arguments["role_name"] as? String,
-              let role = getRole(by: roleString)
+              let rolesList = arguments["roles"] as? [String],
+              let roles: [HMSRole] = (hmsSDK?.roles.filter { rolesList.contains($0.name) })
         else {
             let error = getError(message: "Invalid arguments passed in \(#function)",
                                  description: "Message is nil",
@@ -623,7 +623,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         
         let type = arguments["type"] as? String ?? "chat"
         
-        hmsSDK?.sendGroupMessage(type: type, message: message, roles: [role]) { message, error in
+        hmsSDK?.sendGroupMessage(type: type, message: message, roles: roles) { message, error in
             if let error = error {
                 result(HMSErrorExtension.toDictionary(error))
             } else {
@@ -726,43 +726,27 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     
     
     private func changeTrackState(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
-        let arguments = call.arguments as! [AnyHashable: Any]
-        
-        guard let peerID = arguments["hms_peer_id"] as? String,
-              let peer = getPeer(by: peerID)
-        else {
-            let error = getError(message: "Could not find peer to change track",
-                                 description: "Could not find peer from peerID",
-                                 params: ["function": #function, "arguments": arguments])
-            result(HMSErrorExtension.toDictionary(error))
-            return
-        }
-        
-        let muteVideoKind = arguments["mute_video_kind"] as? Bool ?? false
-        
-        let track: HMSTrack?
-        if muteVideoKind {
-            track = peer.videoTrack
-        } else {
-            track = peer.audioTrack
-        }
-        
-        guard let track = track else {
-            let error = getError(message: "Could not find track for peer: \(peer.name)",
-                                 params: ["function": #function, "arguments": arguments])
-            result(HMSErrorExtension.toDictionary(error))
-            return
-        }
-        
-        let mute = arguments["mute"] as? Bool ?? false
-        
-        hmsSDK?.changeTrackState(for: track, mute: mute) { success, error in
-            if let error = error {
-                result(HMSErrorExtension.toDictionary(error))
-                return
-            }
-            result(nil)
-        }
+         let arguments = call.arguments as! [AnyHashable: Any]
+                
+                guard let trackID = arguments["track_id"] as? String,
+                      let track = HMSUtilities.getTrack(for: trackID, in: hmsSDK!.room!)
+                else{
+                    let error = getError(message: "Could not find track to change track",
+                                         description: "Could not find track from trackID",
+                                         params: ["function": #function, "arguments": arguments])
+                    result(HMSErrorExtension.toDictionary(error))
+                    return
+                }
+                
+                let mute = arguments["mute"] as? Bool ?? false
+                        
+                hmsSDK?.changeTrackState(for: track, mute: mute) { success, error in
+                    if let error = error {
+                        result(HMSErrorExtension.toDictionary(error))
+                        return
+                    }
+                    result(nil)
+                }
     }
     
     private func changeTrackStateForRole(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {

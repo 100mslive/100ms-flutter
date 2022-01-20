@@ -3,6 +3,7 @@
 ///Just create instance of [HMSSDK] and use the functionality which is present.
 ///
 ///All methods related to meeting, preview and their listeners are present here.
+
 // Project imports:
 
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
@@ -25,6 +26,7 @@ import '../hmssdk_flutter.dart';
 /// HMSSDK has other methods which the client app can use to get more info about the Room, Peer and Tracks
 class HMSSDK {
   ///join meeting by passing HMSConfig instance to it.
+
   HMSTrackSetting? hmsTrackSetting;
 
   HMSSDK({this.hmsTrackSetting});
@@ -196,19 +198,19 @@ class HMSSDK {
       {required String message,
       String? type,
       HMSActionResultListener? hmsActionResultListener}) async {
-    var arugments = {"message": message, "type": type};
+    var arguments = {"message": message, "type": type};
     var result = await PlatformService.invokeMethod(
         PlatformMethod.sendBroadcastMessage,
-        arguments: arugments);
+        arguments: arguments);
     if (hmsActionResultListener != null) {
       if (result == null) {
         hmsActionResultListener.onSuccess(
             methodType: HMSActionResultListenerMethod.sendBroadcastMessage,
-            arguments: arugments);
+            arguments: arguments);
       } else {
         hmsActionResultListener.onException(
             methodType: HMSActionResultListenerMethod.sendBroadcastMessage,
-            arguments: arugments,
+            arguments: arguments,
             hmsException: HMSException.fromMap(result["error"]));
       }
     }
@@ -219,22 +221,25 @@ class HMSSDK {
   /// The [hmsActionResultListener] informs about whether the message was successfully sent, or the kind of error if not.
   void sendGroupMessage(
       {required String message,
-      required String roleName,
+      required List<HMSRole> hmsRolesTo,
       String? type,
       HMSActionResultListener? hmsActionResultListener}) async {
-    var arugments = {"message": message, "type": type, "role_name": roleName};
+    List<String> rolesMap = [];
+    hmsRolesTo.forEach((role) => rolesMap.add(role.name));
+
+    var arguments = {"message": message, "type": type, "roles": rolesMap};
     var result = await PlatformService.invokeMethod(
         PlatformMethod.sendGroupMessage,
-        arguments: arugments);
+        arguments: arguments);
     if (hmsActionResultListener != null) {
       if (result == null) {
         hmsActionResultListener.onSuccess(
             methodType: HMSActionResultListenerMethod.sendGroupMessage,
-            arguments: arugments);
+            arguments: {"message": message, "type": type, "roles": hmsRolesTo});
       } else {
         hmsActionResultListener.onException(
             methodType: HMSActionResultListenerMethod.sendGroupMessage,
-            arguments: arugments,
+            arguments: {"message": message, "type": type, "roles": hmsRolesTo},
             hmsException: HMSException.fromMap(result["error"]));
       }
     }
@@ -245,22 +250,26 @@ class HMSSDK {
   /// The [hmsActionResultListener] informs about whether the message was successfully sent, or the kind of error if not.
   void sendDirectMessage(
       {required String message,
-      required HMSPeer peer,
+      required HMSPeer peerTo,
       String? type,
       HMSActionResultListener? hmsActionResultListener}) async {
-    var arugments = {"message": message, "peer_id": peer.peerId, "type": type};
+    var arguments = {
+      "message": message,
+      "peer_id": peerTo.peerId,
+      "type": type
+    };
     var result = await PlatformService.invokeMethod(
         PlatformMethod.sendDirectMessage,
-        arguments: arugments);
+        arguments: arguments);
     if (hmsActionResultListener != null) {
       if (result == null) {
         hmsActionResultListener.onSuccess(
             methodType: HMSActionResultListenerMethod.sendDirectMessage,
-            arguments: {"message": message, "peer": peer, "type": type});
+            arguments: {"message": message, "peer": peerTo, "type": type});
       } else {
         hmsActionResultListener.onException(
             methodType: HMSActionResultListenerMethod.sendDirectMessage,
-            arguments: arugments,
+            arguments: {"message": message, "peer": peerTo, "type": type},
             hmsException: HMSException.fromMap(result["error"]));
       }
     }
@@ -287,14 +296,14 @@ class HMSSDK {
   /// Set [forceChange] to false if the peer should be requested to accept the new role (they can choose to deny). Set [forceChange] to true if their role should be changed without asking them.
   /// [hmsActionResultListener] - Listener that will return HMSActionResultListener.onSuccess if the role change request is successful else will call [HMSActionResultListener.onException] with the error received from server
   void changeRole(
-      {required HMSPeer peer,
-      required String roleName,
-      bool forceChange = false,
+      {required HMSPeer forPeer,
+      required HMSRole toRole,
+      bool force = false,
       HMSActionResultListener? hmsActionResultListener}) async {
     var arguments = {
-      'peer_id': peer.peerId,
-      'role_name': roleName,
-      'force_change': forceChange
+      'peer_id': forPeer.peerId,
+      'role_name': toRole.name,
+      'force_change': force
     };
     var result = await PlatformService.invokeMethod(PlatformMethod.changeRole,
         arguments: arguments);
@@ -304,13 +313,17 @@ class HMSSDK {
         hmsActionResultListener.onSuccess(
             methodType: HMSActionResultListenerMethod.changeRole,
             arguments: {
-              'peer': peer,
-              'role_name': roleName,
-              'force_change': forceChange
+              'peer': forPeer,
+              'role_name': toRole,
+              'force_change': force
             });
       else
         hmsActionResultListener.onException(
-            arguments: arguments,
+            arguments: {
+              'peer': forPeer,
+              'role_name': toRole,
+              'force_change': force
+            },
             methodType: HMSActionResultListenerMethod.changeRole,
             hmsException: HMSException.fromMap(result["error"]));
     }
@@ -321,7 +334,8 @@ class HMSSDK {
   /// [hmsActionResultListener] - Listener that will return HMSActionResultListener.onSuccess if the role change request is successful else will call HMSActionResultListener.onException with the error received from server
 
   void acceptChangeRole(
-      {HMSActionResultListener? hmsActionResultListener}) async {
+      {required HMSRoleChangeRequest hmsRoleChangeRequest,
+      HMSActionResultListener? hmsActionResultListener}) async {
     var result =
         await PlatformService.invokeMethod(PlatformMethod.acceptChangeRole);
     if (hmsActionResultListener != null) {
@@ -339,14 +353,12 @@ class HMSSDK {
   /// Set [mute] to true if the track needs to be muted, false otherwise.
   /// [hmsActionResultListener] - the callback that would be called by SDK in case of a success or failure.
   void changeTrackState(
-      {required HMSPeer peer,
+      {required HMSTrack forRemoteTrack,
       required bool mute,
-      required bool isVideoTrack,
       HMSActionResultListener? hmsActionResultListener}) async {
     var arguments = {
-      "hms_peer_id": peer.peerId,
+      "track_id": forRemoteTrack.trackId,
       "mute": mute,
-      "mute_video_kind": isVideoTrack
     };
     var result = await PlatformService.invokeMethod(
         PlatformMethod.changeTrackState,
@@ -354,16 +366,16 @@ class HMSSDK {
 
     if (hmsActionResultListener != null) {
       if (result == null)
-        hmsActionResultListener.onSuccess(
-            arguments: arguments = {
-              "hms_peer": peer,
-              "mute": mute,
-              "mute_video_kind": isVideoTrack
-            },
-            methodType: HMSActionResultListenerMethod.changeTrackState);
+        hmsActionResultListener.onSuccess(arguments: {
+          "track": forRemoteTrack,
+          "mute": mute,
+        }, methodType: HMSActionResultListenerMethod.changeTrackState);
       else
         hmsActionResultListener.onException(
-            arguments: arguments,
+            arguments: {
+              "track": forRemoteTrack,
+              "mute": mute,
+            },
             methodType: HMSActionResultListenerMethod.changeTrackState,
             hmsException: HMSException.fromMap(result["error"]));
     }
@@ -377,15 +389,20 @@ class HMSSDK {
   /// [hmsActionResultListener] - the callback that would be called by SDK in case of a success or failure.
   void changeTrackStateForRole(
       {required bool mute,
-      required String type,
-      required String source,
-      required List<String> roles,
+      required HMSTrackKind? kind,
+      required String? source,
+      required List<HMSRole>? roles,
       HMSActionResultListener? hmsActionResultListener}) async {
+    List<String> rolesMap = [];
+
+    if (roles != null) roles.forEach((role) => rolesMap.add(role.name));
+
     var arguments = {
       "mute": mute,
-      "type": type,
+      "type": HMSTrackKindValue.getValueFromHMSTrackKind(
+          kind ?? HMSTrackKind.unknown),
       "source": source,
-      "roles": roles
+      "roles": rolesMap
     };
     var result = await PlatformService.invokeMethod(
         PlatformMethod.changeTrackStateForRole,
@@ -393,12 +410,22 @@ class HMSSDK {
 
     if (hmsActionResultListener != null) {
       if (result == null)
-        hmsActionResultListener.onSuccess(
-            arguments: arguments,
-            methodType: HMSActionResultListenerMethod.changeTrackStateForRole);
+        hmsActionResultListener.onSuccess(arguments: {
+          "mute": mute,
+          "type": HMSTrackKindValue.getValueFromHMSTrackKind(
+              kind ?? HMSTrackKind.unknown),
+          "source": source,
+          "roles": roles
+        }, methodType: HMSActionResultListenerMethod.changeTrackStateForRole);
       else
         hmsActionResultListener.onException(
-            arguments: arguments,
+            arguments: {
+              "mute": mute,
+              "type": HMSTrackKindValue.getValueFromHMSTrackKind(
+                  kind ?? HMSTrackKind.unknown),
+              "source": source,
+              "roles": roles
+            },
             methodType: HMSActionResultListenerMethod.changeTrackStateForRole,
             hmsException: HMSException.fromMap(result["error"]));
     }
