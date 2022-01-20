@@ -15,7 +15,7 @@ class HMSRole {
   String name;
   HMSPublishSetting? publishSettings;
   HMSSubscribeSettings? subscribeSettings;
-  HMSPermissions? permissions;
+  HMSPermissions permissions;
   int priority;
   Map? generalPermissions;
 
@@ -27,7 +27,7 @@ class HMSRole {
       required this.publishSettings,
       required this.subscribeSettings,
       required this.priority,
-      this.permissions,
+      required this.permissions,
       required this.generalPermissions,
       required this.internalPlugins,
       required this.externalPlugins});
@@ -46,10 +46,7 @@ class HMSRole {
           HMSSubscribeSettings.fromMap(map['subscribe_settings']);
     }
 
-    HMSPermissions? permissions;
-    if (map['permissions'] != null) {
-      permissions = HMSPermissions.fromMap(map['permissions']);
-    }
+    HMSPermissions permissions = HMSPermissions.fromMap(map['permissions']);
 
     return HMSRole(
       name: name,

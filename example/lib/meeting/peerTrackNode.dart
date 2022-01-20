@@ -7,7 +7,7 @@ class PeerTracKNode {
   String name;
   bool isRaiseHand;
   @observable
-  HMSTrack? track;
+  HMSVideoTrack? track;
   HMSTrack? audioTrack;
   PeerTracKNode(
       {required this.peerId,

@@ -94,7 +94,9 @@ enum PlatformMethod {
   changeMetadata,
   setPlayBackAllowed,
   setVolume,
-  changeName
+  changeName,
+  startHlsStreaming,
+  stopHlsStreaming,
 }
 
 extension PlatformMethodValues on PlatformMethod {
@@ -200,6 +202,11 @@ extension PlatformMethodValues on PlatformMethod {
         return "set_volume";
       case PlatformMethod.changeName:
         return "change_name";
+      case PlatformMethod.startHlsStreaming:
+        return "hls_start_streaming";
+
+      case PlatformMethod.stopHlsStreaming:
+        return "hls_stop_streaming";
     }
   }
 
@@ -299,6 +306,10 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.setVolume;
       case "change_name":
         return PlatformMethod.changeName;
+      case "hls_stop_streaming":
+        return PlatformMethod.stopHlsStreaming;
+      case "hls_start_streaming":
+        return PlatformMethod.startHlsStreaming;
       default:
         return PlatformMethod.unknown;
     }

@@ -30,7 +30,7 @@ class HMSPeer {
   }
 
   ///role of the peer in the room.
-  final HMSRole? role;
+  final HMSRole role;
   final String? customerUserId;
   final String? metadata;
   HMSAudioTrack? audioTrack;
@@ -41,7 +41,7 @@ class HMSPeer {
     required this.peerId,
     required this.name,
     required this.isLocal,
-    this.role,
+    required this.role,
     this.customerUserId,
     this.metadata,
     this.audioTrack,
@@ -62,8 +62,7 @@ class HMSPeer {
 
   factory HMSPeer.fromMap(Map map) {
     if (Platform.isAndroid) {
-      HMSRole? role;
-      if (map['role'] != null) role = HMSRole.fromMap(map['role']);
+      HMSRole role = HMSRole.fromMap(map['role']);
       if (map['is_local'] == true) {
         return HMSLocalPeer(
           peerId: map['peer_id'],
@@ -83,9 +82,7 @@ class HMSPeer {
         customerUserId: map['customer_user_id'],
       );
     } else {
-      HMSRole? role;
-
-      if (map['role'] != null) role = HMSRole.fromMap(map['role']);
+      HMSRole role = HMSRole.fromMap(map['role']);
 
       // TODO: add auxiliary tracks
 
@@ -120,6 +117,8 @@ class HMSPeer {
       return peer;
     }
   }
+
+  // TODO: add HMSRemotePeer class
 
   static List<HMSPeer> fromListOfMap(List peersMap) {
     List<HMSPeer> peers = peersMap.map((e) => HMSPeer.fromMap(e)).toList();

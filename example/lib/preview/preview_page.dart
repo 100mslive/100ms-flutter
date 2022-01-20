@@ -82,15 +82,15 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                   fit: FlexFit.tight,
                   child: Observer(
                     builder: (_) {
-                      if (_previewStore.localTracks.isEmpty) {
-                        return Column(children: [
-                          CupertinoActivityIndicator(radius: 124),
-                          SizedBox(
-                            height: 64.0,
-                          ),
-                          Text("No preview available") //
-                        ]);
-                      }
+                      // if (_previewStore.localTracks.isEmpty) {
+                      //   return Column(children: [
+                      //     CupertinoActivityIndicator(radius: 124),
+                      //     SizedBox(
+                      //       height: 64.0,
+                      //     ),
+                      //     Text("No preview available") //
+                      //   ]);
+                      // }
                       return Provider<MeetingStore>(
                         create: (ctx) => MeetingStore(),
                         child: PeerItemOrganism(
@@ -101,7 +101,9 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                           peerTracKNode: new PeerTracKNode(
                               peerId: _previewStore.peer?.peerId ?? "",
                               name: _previewStore.peer?.name ?? "",
-                              track: _previewStore.localTracks[0]),
+                              track: _previewStore.localTracks.isEmpty
+                                  ? null
+                                  : _previewStore.localTracks[0]),
                           isVideoMuted: false,
                         ),
                       );
@@ -113,20 +115,23 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                 ),
                 Row(
                   children: [
-                    Observer(builder: (context) {
-                      return Expanded(
-                        child: GestureDetector(
-                          onTap: () async {
-                            _previewStore.switchVideo();
-                          },
+                    Expanded(
+                      child: Observer(builder: (context) {
+                        return GestureDetector(
+                          onTap: _previewStore.isHLSLink ||
+                                  _previewStore.localTracks.isEmpty
+                              ? null
+                              : () async {
+                                  _previewStore.switchVideo();
+                                },
                           child: Icon(
-                              _previewStore.videoOn
+                              _previewStore.videoOn && !_previewStore.isHLSLink
                                   ? Icons.videocam
                                   : Icons.videocam_off,
                               size: 48),
-                        ),
-                      );
-                    }),
+                        );
+                      }),
+                    ),
                     Expanded(
                         child: ElevatedButton(
                       onPressed: () {
@@ -145,17 +150,20 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                         style: TextStyle(height: 1, fontSize: 18),
                       ),
                     )),
-                    Observer(builder: (context) {
-                      return Expanded(
-                          child: GestureDetector(
-                        onTap: () async {
-                          _previewStore.switchAudio();
-                        },
+                    Expanded(child: Observer(builder: (context) {
+                      return GestureDetector(
+                        onTap: _previewStore.isHLSLink
+                            ? null
+                            : () async {
+                                _previewStore.switchAudio();
+                              },
                         child: Icon(
-                            _previewStore.audioOn ? Icons.mic : Icons.mic_off,
+                            (_previewStore.audioOn && !_previewStore.isHLSLink)
+                                ? Icons.mic
+                                : Icons.mic_off,
                             size: 48),
-                      ));
-                    })
+                      );
+                    }))
                   ],
                 ),
                 SizedBox(

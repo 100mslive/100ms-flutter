@@ -27,6 +27,12 @@ abstract class MeetingStoreBase extends ChangeNotifier
   String screenSharePeerId = '';
   @observable
   HMSException? hmsException;
+  @observable
+  bool hasHlsStarted = false;
+
+  String streamUrl = "";
+  @observable
+  bool isHLSLink = false;
 
   @observable
   HMSRoleChangeRequest? roleChangeRequest;
@@ -147,6 +153,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
       trackStatus[localPeer!.peerId] = HMSTrackUpdate.trackMuted;
     else
       trackStatus[localPeer!.peerId] = HMSTrackUpdate.trackUnMuted;
+
     isVideoOn = !isVideoOn;
   }
 
@@ -281,6 +288,13 @@ abstract class MeetingStoreBase extends ChangeNotifier
   @override
   void onJoin({required HMSRoom room}) async {
     hmsRoom = room;
+
+    if (room.hmshlsStreamingState?.running ?? false) {
+      hasHlsStarted = true;
+      streamUrl = room.hmshlsStreamingState?.variants[0]?.hlsStreamUrl ?? "";
+    } else {
+      hasHlsStarted = false;
+    }
     if (room.hmsBrowserRecordingState?.running == true)
       isRecordingStarted = true;
     else
@@ -295,6 +309,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
               .add(new PeerTracKNode(peerId: each.peerId, name: each.name));
         localPeer = each;
         addPeer(localPeer!);
+        if (localPeer!.role.name.contains("hls-") == true) isHLSLink = true;
 
         if (each.videoTrack != null) {
           if (each.videoTrack!.kind == HMSTrackKind.kHMSTrackKindVideo) {
@@ -329,7 +344,10 @@ abstract class MeetingStoreBase extends ChangeNotifier
       case HMSRoomUpdate.rtmpStreamingStateUpdated:
         isRecordingStarted = room.hmsRtmpStreamingState?.running ?? false;
         break;
-
+      case HMSRoomUpdate.hlsStreamingStateUpdated:
+        hasHlsStarted = room.hmshlsStreamingState?.running ?? false;
+        streamUrl = room.hmshlsStreamingState?.variants[0]?.hlsStreamUrl ?? "";
+        break;
       default:
         print('on room update ${update.toString()}');
     }
@@ -378,7 +396,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
     if (track.source == "REGULAR") {
       int index =
           peerTracks.indexWhere((element) => element.peerId == peer.peerId);
-      if (index != -1) peerTracks[index].track = track;
+      if (index != -1) peerTracks[index].track = track as HMSVideoTrack;
     }
 
     peerOperationWithTrack(peer, trackUpdate, track);
@@ -507,12 +525,13 @@ abstract class MeetingStoreBase extends ChangeNotifier
   void peerOperation(HMSPeer peer, HMSPeerUpdate update) {
     switch (update) {
       case HMSPeerUpdate.peerJoined:
-        //TODO-> containsPeer or not
-        int index =
-            peerTracks.indexWhere((element) => element.peerId == peer.peerId);
-        if (index == -1)
-          peerTracks
-              .add(new PeerTracKNode(peerId: peer.peerId, name: peer.name));
+        if (peer.role.name.contains("hls-") == false) {
+          int index =
+              peerTracks.indexWhere((element) => element.peerId == peer.peerId);
+          if (index == -1)
+            peerTracks
+                .add(new PeerTracKNode(peerId: peer.peerId, name: peer.name));
+        }
         addPeer(peer);
         break;
       case HMSPeerUpdate.peerLeft:
@@ -527,6 +546,17 @@ abstract class MeetingStoreBase extends ChangeNotifier
       case HMSPeerUpdate.roleUpdated:
         if (peer.isLocal) {
           localPeer = peer;
+          if (!peer.role.name.contains("hls-")) {
+            isHLSLink = false;
+          }
+        }
+        if (peer.role.name.contains("hls-") == false) {
+          int index =
+              peerTracks.indexWhere((element) => element.peerId == peer.peerId);
+          //if (index != -1) peerTracks[index].track = track;
+          if (index == -1)
+            peerTracks
+                .add(new PeerTracKNode(peerId: peer.peerId, name: peer.name));
         }
         updatePeerAt(peer);
         break;
@@ -706,6 +736,14 @@ abstract class MeetingStoreBase extends ChangeNotifier
     _hmssdkInteractor.changeName(name: name, hmsActionResultListener: this);
   }
 
+  Future<void> startHLSStreaming(String meetingUrl) async {
+    await _hmssdkInteractor.startHLSStreaming(meetingUrl, this);
+  }
+
+  Future<void> stopHLSStreaming() async {
+    await _hmssdkInteractor.stopHLSStreaming(hmsActionResultListener: this);
+  }
+
   @override
   void onSuccess(
       {HMSActionResultListenerMethod methodType =
@@ -753,6 +791,12 @@ abstract class MeetingStoreBase extends ChangeNotifier
       case HMSActionResultListenerMethod.sendGroupMessage:
         break;
       case HMSActionResultListenerMethod.sendDirectMessage:
+        break;
+      case HMSActionResultListenerMethod.hlsStreamingStarted:
+        // TODO: Handle this case.
+        break;
+      case HMSActionResultListenerMethod.hlsStreamingStopped:
+        // TODO: Handle this case.
         break;
     }
   }
@@ -811,6 +855,12 @@ abstract class MeetingStoreBase extends ChangeNotifier
         // TODO: Handle this case.
         break;
       case HMSActionResultListenerMethod.sendDirectMessage:
+        // TODO: Handle this case.
+        break;
+      case HMSActionResultListenerMethod.hlsStreamingStarted:
+        // TODO: Handle this case.
+        break;
+      case HMSActionResultListenerMethod.hlsStreamingStopped:
         // TODO: Handle this case.
         break;
     }

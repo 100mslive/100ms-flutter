@@ -216,6 +216,12 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             "change_name"->{
                 changeName(call)
             }
+            "hls_start_streaming"->{
+                hlsStreaming(call)
+            }
+            "hls_stop_streaming"->{
+                stopHLSStreaming()
+            }
             else -> {
                 result.notImplemented()
             }
@@ -411,7 +417,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             return hmssdk.getLocalPeer()?.videoTrack?.isMute ?: true
         }
         val peer = getPeerById(peerId!!)
-        return peer!!.videoTrack!!.isMute
+        return peer?.videoTrack?.isMute?:true
     }
 
     private fun isAudioMute(call: MethodCall): Boolean {
@@ -421,7 +427,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             return hmssdk.getLocalPeer()?.audioTrack?.isMute?:true
         }
         val peer = getPeerById(peerId!!)
-        return peer!!.audioTrack!!.isMute
+        return peer?.audioTrack?.isMute?:true
     }
 
     private fun sendBroadCastMessage(call: MethodCall) {
@@ -872,7 +878,6 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             args.put("event_name", "on_track_update")
 
             args.put("data", HMSTrackUpdateExtension.toDictionary(peer, track, type))
-
             if (args["data"] != null)
                 CoroutineScope(Dispatchers.Main).launch {
                     eventSink?.success(args)
@@ -1083,4 +1088,22 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         val name = call.argument<String>("name");
         hmssdk.changeName(name=name!!, hmsActionResultListener = this.actionListener);
     }
+
+    private fun hlsStreaming(call: MethodCall) {
+        val meetingUrl = call.argument<String>("meeting_url")
+        val metadata   = call.argument<String>("meta_data")
+        val meetingUrlVariant1 = HMSHLSMeetingURLVariant(
+            meetingUrl = meetingUrl!!,
+            metadata = metadata!!
+        )
+
+        val hlsConfig = HMSHLSConfig(listOf(meetingUrlVariant1))
+
+        hmssdk.startHLSStreaming(hlsConfig, hmsActionResultListener = this.actionListener)
+    }
+
+    private fun stopHLSStreaming(){
+        hmssdk.stopHLSStreaming(null, hmsActionResultListener = this.actionListener)
+    }
+
 }
