@@ -112,6 +112,25 @@ class HMSSDK {
     );
   }
 
+  /// start screen share for the meeting
+  void startScreenShare() async {
+    await PlatformService.invokeMethod(
+      PlatformMethod.startScreenShare,
+    );
+  }
+
+  Future<bool> isScreenShareActive() async {
+    return await PlatformService.invokeMethod(
+      PlatformMethod.isScreenShareActive,
+    );
+  }
+
+  Future<void> stopScreenShare() async {
+    return await PlatformService.invokeMethod(
+      PlatformMethod.stopScreenShare,
+    );
+  }
+
   /// To start capturing the local peer's video & send it to other peer's in the room
   Future<bool> startCapturing() async {
     return await PlatformService.invokeMethod(PlatformMethod.startCapturing);

@@ -55,10 +55,6 @@ class HMSVideoView(
     private var widgetInitialY: Float = 0F
     private var widgetDY: Float = 0F
 
-    init {
-//        draggableSetup()
-    }
-
     @RequiresApi(Build.VERSION_CODES.N)
     private fun draggableSetup() {
         this.setOnTouchListener { v, event ->

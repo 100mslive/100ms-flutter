@@ -169,7 +169,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
         // StaticLogger.logger?.close();
         // ShareExtend.share(CustomLogger.file?.path ?? '', 'file');
         // logger.getCustomLogger();
-        UtilityComponents.showSnackBarWithString("Coming Soon...", context);
+
         break;
 
       case 2:
@@ -230,26 +230,6 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
         }
         setState(() {});
         break;
-      case 6:
-        // if(!_meetingStore.isActiveSpeakerMode){
-        //     _meetingStore.activeSpeakerPeerTracksStore = _meetingStore.peerTracks;
-        //     _meetingStore.isActiveSpeakerMode = true;
-        //     _pageController.animateToPage(0,duration: Duration(seconds: 1),curve: Curves.decelerate);
-        //     setState(() {});
-        //     UtilityComponents.showSnackBarWithString(
-        //           "Active Speaker Mode", context);
-        // }
-        UtilityComponents.showSnackBarWithString("Coming Soon...", context);
-        break;
-      case 7:
-        // if (_meetingStore.isActiveSpeakerMode) {
-        //   _meetingStore.isActiveSpeakerMode = false;
-        //   setState(() {});
-        //   UtilityComponents.showSnackBarWithString(
-        //       "Switched to Hero Mode", context);
-        // }
-        UtilityComponents.showSnackBarWithString("Coming Soon...", context);
-        break;
       case 8:
         String name = await UtilityComponents.showInputDialog(
             context: context, placeholder: "Enter Name");
@@ -307,8 +287,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                 : Icons.volume_off),
                           ),
                         ),
-                        
-                          PopupMenuButton(
+                       PopupMenuButton(
                             icon: Icon(CupertinoIcons.gear),
                             itemBuilder: (BuildContext context) => [
                               PopupMenuItem(
@@ -471,7 +450,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                         children: [
                           Observer(builder: (_) {
                             if (!_meetingStore.isHLSLink &&
-                                _meetingStore.screenShareTrack != null &&
+                                _meetingStore.screenShareTrack.isNotEmpty &&
                                 !audioViewOn) {
                               return SizedBox(
                                 width: double.infinity,
@@ -486,9 +465,10 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                     isVideoMuted: false,
                                     peerTracKNode: new PeerTracKNode(
                                         peerId: _meetingStore.screenSharePeerId,
-                                        track: _meetingStore.screenShareTrack!,
-                                        name: _meetingStore
-                                                .screenShareTrack?.peer?.name ??
+                                        track: _meetingStore
+                                            .screenShareTrack.first,
+                                        name: _meetingStore.screenShareTrack
+                                                .first?.peer?.name ??
                                             ""),
                                   ),
                                 ),
@@ -523,8 +503,8 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                     gridDelegate:
                                         SliverGridDelegateWithFixedCrossAxisCount(
                                       crossAxisCount: (!audioViewOn &&
-                                              _meetingStore.screenShareTrack !=
-                                                  null)
+                                              _meetingStore
+                                                  .screenShareTrack.isNotEmpty)
                                           ? 1
                                           : 2,
                                       mainAxisExtent: itemWidth,
@@ -648,6 +628,20 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                   chatMessages(context, _meetingStore);
                                 },
                                 icon: Icon(Icons.chat_bubble)),
+                          ),
+                          Container(
+                            padding: EdgeInsets.all(8),
+                            child: IconButton(
+                                tooltip: 'Share',
+                                iconSize: 32,
+                                onPressed: () {
+                                  if (!_meetingStore.isScreenShareOn)
+                                    _meetingStore.startScreenShare();
+                                  else
+                                    _meetingStore.stopScreenShare();
+                                },
+                                icon: Icon(Icons.screen_share,color: 
+                                _meetingStore.isScreenShareOn?Colors.blue:Colors.black,)),
                           ),
                           Container(
                             padding: EdgeInsets.all(8),

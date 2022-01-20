@@ -46,7 +46,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
   @observable
   bool isScreenShareOn = false;
   @observable
-  HMSVideoTrack? screenShareTrack;
+  ObservableList<HMSTrack?> screenShareTrack = ObservableList.of([]);
   @observable
   bool reconnecting = false;
   @observable
@@ -280,6 +280,11 @@ abstract class MeetingStoreBase extends ChangeNotifier
     this.peers.insert(index, peer);
   }
 
+  @action
+  Future<void> isScreenShareActive() async {
+    isScreenShareOn = await _hmssdkInteractor.isScreenShareActive();
+  }
+
   @override
   void onJoin({required HMSRoom room}) async {
     hmsRoom = room;
@@ -363,6 +368,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
     } else {
       muteAll();
     }
+    isScreenShareActive();
 
     if (peer.isLocal &&
         trackUpdate == HMSTrackUpdate.trackMuted &&
@@ -601,14 +607,15 @@ abstract class MeetingStoreBase extends ChangeNotifier
               ? HMSTrackUpdate.trackMuted
               : HMSTrackUpdate.trackUnMuted;
         } else {
-          screenSharePeerId = peer.peerId;
-          screenShareTrack = track as HMSVideoTrack;
+          screenShareTrack.add(track);
+          screenSharePeerId = screenShareTrack.first?.peer?.peerId ?? "";
         }
         break;
       case HMSTrackUpdate.trackRemoved:
         if (track.source != "REGULAR") {
-          screenSharePeerId = "";
-          screenShareTrack = null;
+          screenShareTrack
+              .removeWhere((element) => element?.trackId == track.trackId);
+          screenSharePeerId = screenShareTrack.first?.peer?.peerId ?? "";
         } else {
           peerTracks.removeWhere((element) => element.peerId == peer.peerId);
         }
@@ -638,6 +645,16 @@ abstract class MeetingStoreBase extends ChangeNotifier
 
   void removePeerFromRoom(HMSPeer peer) {
     _hmssdkInteractor.removePeer(peer, this);
+  }
+
+  void startScreenShare() {
+    _hmssdkInteractor.startScreenShare();
+    isScreenShareActive();
+  }
+
+  void stopScreenShare() {
+    _hmssdkInteractor.stopScreenShare();
+    isScreenShareActive();
   }
 
   void muteAll() {

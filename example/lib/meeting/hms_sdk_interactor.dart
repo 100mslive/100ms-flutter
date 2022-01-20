@@ -32,6 +32,10 @@ class HMSSDKInteractor {
     return await hmsSDK.switchCamera();
   }
 
+  Future<bool> isScreenShareActive() async {
+    return await hmsSDK.isScreenShareActive();
+  }
+
   void sendBroadcastMessage(
       String message, HMSActionResultListener hmsActionResultListener) {
     hmsSDK.sendBroadcastMessage(
@@ -172,6 +176,14 @@ class HMSSDKInteractor {
   void muteAll() {
     // TODO: add permission checks in exmaple app UI
     hmsSDK.muteAll();
+  }
+
+  void startScreenShare() {
+     hmsSDK.startScreenShare();
+  }
+
+  void stopScreenShare() {
+    hmsSDK.stopScreenShare();
   }
 
   void unMuteAll() {

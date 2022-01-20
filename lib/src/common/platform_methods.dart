@@ -63,6 +63,15 @@ enum PlatformMethod {
   ///change your peer role.
   changeRole,
 
+// turn on screen share start
+  startScreenShare,
+
+// turn off screen share
+  stopScreenShare,
+
+// check if screen share is active
+  isScreenShareActive,
+
   ///get list of roles using this.
   getRoles,
   changeTrackState,
@@ -123,6 +132,8 @@ extension PlatformMethodValues on PlatformMethod {
         return 'switch_video';
       case PlatformMethod.switchCamera:
         return 'switch_camera';
+      case PlatformMethod.isScreenShareActive:
+        return 'is_screen_share_active';
       case PlatformMethod.isAudioMute:
         return 'is_audio_mute';
       case PlatformMethod.isVideoMute:
@@ -175,6 +186,10 @@ extension PlatformMethodValues on PlatformMethod {
         return "get_room";
       case PlatformMethod.stopRtmpAndRecording:
         return "stop_rtmp_and_recording";
+      case PlatformMethod.startScreenShare:
+        return "start_screen_share";
+      case PlatformMethod.stopScreenShare:
+        return "stop_screen_share";
       case PlatformMethod.build:
         return 'build';
       case PlatformMethod.updateHMSLocalVideoTrackSettings:
@@ -221,7 +236,9 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.onReconnecting;
       case 'on_re_connected':
         return PlatformMethod.onReconnected;
-      case 'switch_audio':
+      case 'on_re_connected':
+        return PlatformMethod.isScreenShareActive;
+      case 'is_screen_share_active':
         return PlatformMethod.switchAudio;
       case 'switch_video':
         return PlatformMethod.switchVideo;
