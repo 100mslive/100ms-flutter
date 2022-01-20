@@ -179,7 +179,7 @@ class HMSSDKInteractor {
   }
 
   void startScreenShare() {
-     hmsSDK.startScreenShare();
+    hmsSDK.startScreenShare();
   }
 
   void stopScreenShare() {
