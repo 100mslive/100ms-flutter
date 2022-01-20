@@ -238,12 +238,18 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
         }
         break;
       case 9:
+        if (_meetingStore.hasHlsStarted) {
+          _meetingStore.stopHLSStreaming();
+        } else {
+          _meetingStore.startHLSStreaming(Constant.meetingUrl);
+        }
+        break;
+      case 10:
         _meetingStore.endRoom(false, "Room Ended From Flutter");
         if (_meetingStore.isRoomEnded) {
           Navigator.pop(context);
         }
         break;
-
       default:
         break;
     }
@@ -421,6 +427,19 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                     ]),
                                 value: 8,
                               ),
+                              PopupMenuItem(
+                                child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        "HLS",
+                                        style: TextStyle(color: Colors.blue),
+                                      ),
+                                      Icon(Icons.stream, color: Colors.blue),
+                                    ]),
+                                value: 9,
+                              ),
                               if (_meetingStore
                                   .localPeer!.role.permissions.endRoom!)
                                 PopupMenuItem(
@@ -435,7 +454,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                         Icon(Icons.cancel_schedule_send,
                                             color: Colors.blue),
                                       ]),
-                                  value: 9,
+                                  value: 10,
                                 ),
                             ],
                             onSelected: handleMenu,

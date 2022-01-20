@@ -207,6 +207,14 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         case "stop_rtmp_and_recording":
             stopRtmpAndRecording(result)
             
+            //MARK: - HLS
+        
+        case "hls_start_streaming":
+            startHlsStreaming(call, result)
+        
+        case "hls_stop_streaming":
+            stopHlsStreaming(result)
+            
             // MARK: - Logging
             
         case "start_hms_logger":
@@ -875,6 +883,41 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     
     private func stopRtmpAndRecording(_ result: @escaping FlutterResult) {
         hmsSDK?.stopRTMPAndRecording { success, error in
+            if let error = error {
+                result(HMSErrorExtension.toDictionary(error))
+            } else {
+                result(nil)
+            }
+        }
+    }
+    
+    //MARK: - HLS
+    
+    private func startHlsStreaming(_ call: FlutterMethodCall, _ result: @escaping FlutterResult){
+        let arguments = call.arguments as! [AnyHashable: Any]
+        
+        guard let meetingUrl = arguments["meeting_url"] as? String,
+              let metadata = arguments["meta_data"] as? String
+        else {
+            let error = getError(message: "Wrong Paramenter found in \(#function)",
+                                 description: "Paramenter is nil",
+                                 params: ["function": #function, "arguments": arguments])
+            result(HMSErrorExtension.toDictionary(error))
+            return
+        }
+        let hlsConfig = HMSHLSConfig(variants: [HMSHLSMeetingURLVariant(meetingURL: URL(string:meetingUrl)!, metadata: metadata)])
+        hmsSDK?.startHLSStreaming(config: hlsConfig) { success, error in
+            if let error = error {
+                result(HMSErrorExtension.toDictionary(error))
+            } else {
+                result(nil)
+            }
+        }
+    }
+
+    
+    private func stopHlsStreaming(_ result: @escaping FlutterResult){
+        hmsSDK?.stopHLSStreaming { success, error in
             if let error = error {
                 result(HMSErrorExtension.toDictionary(error))
             } else {
