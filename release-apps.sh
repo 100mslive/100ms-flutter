@@ -28,6 +28,8 @@ bundle install --verbose
 
 bundle exec fastlane release_on_firebase
 
+cd .. ; cd ..
+
 while read line; do
     if [[ $line =~ ^versionCode.[0-9]+$ ]]; then 
         buildNumber=$(echo $line | grep -o -E '[0-9]+')
