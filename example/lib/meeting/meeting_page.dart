@@ -602,40 +602,45 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                     bottomNavigationBar: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Container(
-                            padding: EdgeInsets.all(8),
-                            child: Observer(builder: (context) {
-                              return IconButton(
-                                  tooltip: 'Video',
-                                  iconSize: 32,
-                                  onPressed:
-                                      (audioViewOn || _meetingStore.isHLSLink)
-                                          ? null
-                                          : () {
-                                              _meetingStore.switchVideo();
-                                              countOfVideoOnBetweenTwo++;
-                                            },
-                                  icon: Icon(_meetingStore.isVideoOn
-                                      ? Icons.videocam
-                                      : Icons.videocam_off));
-                            }),
-                          ),
-                          Container(
-                            padding: EdgeInsets.all(8),
-                            child: Observer(builder: (context) {
-                              return IconButton(
-                                  tooltip: 'Audio',
-                                  iconSize: 32,
-                                  onPressed: (_meetingStore.isHLSLink)
-                                      ? null
-                                      : () {
-                                          _meetingStore.switchAudio();
-                                        },
-                                  icon: Icon(_meetingStore.isMicOn
-                                      ? Icons.mic
-                                      : Icons.mic_off));
-                            }),
-                          ),
+                          if (_meetingStore.peerTracks.isNotEmpty &&
+                              _meetingStore
+                                  .localPeer!.role.publishSettings!.allowed
+                                  .contains("video"))
+                            Container(
+                              padding: EdgeInsets.all(8),
+                              child: Observer(builder: (context) {
+                                return IconButton(
+                                    tooltip: 'Video',
+                                    iconSize: 32,
+                                    onPressed: (audioViewOn)
+                                        ? null
+                                        : () {
+                                            _meetingStore.switchVideo();
+                                            countOfVideoOnBetweenTwo++;
+                                          },
+                                    icon: Icon(_meetingStore.isVideoOn
+                                        ? Icons.videocam
+                                        : Icons.videocam_off));
+                              }),
+                            ),
+                          if (_meetingStore.peerTracks.isNotEmpty &&
+                              _meetingStore
+                                  .localPeer!.role.publishSettings!.allowed
+                                  .contains("audio"))
+                            Container(
+                              padding: EdgeInsets.all(8),
+                              child: Observer(builder: (context) {
+                                return IconButton(
+                                    tooltip: 'Audio',
+                                    iconSize: 32,
+                                    onPressed: () {
+                                      _meetingStore.switchAudio();
+                                    },
+                                    icon: Icon(_meetingStore.isMicOn
+                                        ? Icons.mic
+                                        : Icons.mic_off));
+                              }),
+                            ),
                           Container(
                               padding: EdgeInsets.all(8),
                               child: IconButton(
@@ -669,24 +674,28 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                 },
                                 icon: Icon(Icons.chat_bubble)),
                           ),
-                          Container(
-                            padding: EdgeInsets.all(8),
-                            child: IconButton(
-                                tooltip: 'Share',
-                                iconSize: 32,
-                                onPressed: () {
-                                  if (!_meetingStore.isScreenShareOn)
-                                    _meetingStore.startScreenShare();
-                                  else
-                                    _meetingStore.stopScreenShare();
-                                },
-                                icon: Icon(
-                                  Icons.screen_share,
-                                  color: _meetingStore.isScreenShareOn
-                                      ? Colors.blue
-                                      : Colors.black,
-                                )),
-                          ),
+                          if (_meetingStore.peerTracks.isNotEmpty &&
+                              _meetingStore
+                                  .localPeer!.role.publishSettings!.allowed
+                                  .contains("screen"))
+                            Container(
+                              padding: EdgeInsets.all(8),
+                              child: IconButton(
+                                  tooltip: 'Share',
+                                  iconSize: 32,
+                                  onPressed: () {
+                                    if (!_meetingStore.isScreenShareOn)
+                                      _meetingStore.startScreenShare();
+                                    else
+                                      _meetingStore.stopScreenShare();
+                                  },
+                                  icon: Icon(
+                                    Icons.screen_share,
+                                    color: _meetingStore.isScreenShareOn
+                                        ? Colors.blue
+                                        : Colors.black,
+                                  )),
+                            ),
                           Container(
                             padding: EdgeInsets.all(8),
                             child: IconButton(

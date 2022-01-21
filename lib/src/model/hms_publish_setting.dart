@@ -2,7 +2,7 @@
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 class HMSPublishSetting {
-  final List<String>? allowed;
+  final List<String> allowed;
   final HMSAudioSetting? audioSetting;
   final HMSVideoSetting? videoSetting;
   final HMSVideoSetting? screenSetting;
@@ -11,7 +11,7 @@ class HMSPublishSetting {
   final HMSSimulCastSettings? screenSimulCast;
 
   HMSPublishSetting(
-      {this.allowed,
+      {required this.allowed,
       this.audioSetting,
       this.videoSetting,
       this.screenSetting,
@@ -20,10 +20,11 @@ class HMSPublishSetting {
       this.screenSimulCast});
 
   factory HMSPublishSetting.fromMap(Map map) {
-    List<String>? allowed;
+    List<String> allowed;
     if (map.containsKey('allowed')) {
-      allowed = map['allowed'];
-    }
+      allowed = map['allowed'].cast<String>();
+    } else
+      allowed = [];
 
     HMSAudioSetting? audioSetting;
     if (map.containsKey('audio_setting'))
