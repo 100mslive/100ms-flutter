@@ -104,7 +104,7 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                               track: _previewStore.localTracks.isEmpty
                                   ? null
                                   : _previewStore.localTracks[0]),
-                          isVideoMuted: false,
+                          isVideoMuted: !_previewStore.videoOn,
                         ),
                       );
                     },
