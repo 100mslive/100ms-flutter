@@ -40,6 +40,12 @@ class _VideoTileState extends State<VideoTile> {
     MeetingStore _meetingStore = context.read<MeetingStore>();
     var index = widget.tileIndex;
     var filteredList = widget.filteredList;
+    bool audioMutePermission =
+        _meetingStore.localPeer!.role.permissions.mute ?? false;
+    bool audioUnMutePermission =
+        _meetingStore.localPeer!.role.permissions.unMute ?? false;
+    bool removePeerPermission =
+        _meetingStore.localPeer!.role.permissions.removeOthers ?? false;
 
     if (index >= filteredList.length) return SizedBox();
 
