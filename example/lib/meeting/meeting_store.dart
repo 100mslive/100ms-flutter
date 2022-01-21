@@ -46,7 +46,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
   @observable
   bool isScreenShareOn = false;
   @observable
-  HMSVideoTrack? screenShareTrack;
+  ObservableList<HMSTrack?> screenShareTrack = ObservableList.of([]);
   @observable
   bool reconnecting = false;
   @observable
@@ -171,8 +171,8 @@ abstract class MeetingStoreBase extends ChangeNotifier
     _hmssdkInteractor.sendDirectMessage(message, peer, this);
   }
 
-  void sendGroupMessage(String message, String roleName) async {
-    _hmssdkInteractor.sendGroupMessage(message, roleName, this);
+  void sendGroupMessage(String message, List<HMSRole> roles) async {
+    _hmssdkInteractor.sendGroupMessage(message, roles, this);
   }
 
   @action
@@ -280,6 +280,11 @@ abstract class MeetingStoreBase extends ChangeNotifier
     this.peers.insert(index, peer);
   }
 
+  @action
+  Future<void> isScreenShareActive() async {
+    isScreenShareOn = await _hmssdkInteractor.isScreenShareActive();
+  }
+
   @override
   void onJoin({required HMSRoom room}) async {
     hmsRoom = room;
@@ -341,7 +346,9 @@ abstract class MeetingStoreBase extends ChangeNotifier
         break;
       case HMSRoomUpdate.hlsStreamingStateUpdated:
         hasHlsStarted = room.hmshlsStreamingState?.running ?? false;
-        streamUrl = room.hmshlsStreamingState?.variants[0]?.hlsStreamUrl ?? "";
+        streamUrl = hasHlsStarted
+            ? room.hmshlsStreamingState?.variants[0]?.hlsStreamUrl ?? ""
+            : "";
         break;
       default:
         print('on room update ${update.toString()}');
@@ -363,6 +370,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
     } else {
       muteAll();
     }
+    isScreenShareActive();
 
     if (peer.isLocal &&
         trackUpdate == HMSTrackUpdate.trackMuted &&
@@ -497,12 +505,12 @@ abstract class MeetingStoreBase extends ChangeNotifier
 
   void changeRole(
       {required HMSPeer peer,
-      required String roleName,
+      required HMSRole roleName,
       bool forceChange = false}) {
     _hmssdkInteractor.changeRole(
-        roleName: roleName,
-        peer: peer,
-        forceChange: forceChange,
+        toRole: roleName,
+        forPeer: peer,
+        force: forceChange,
         hmsActionResultListener: this);
   }
 
@@ -510,9 +518,8 @@ abstract class MeetingStoreBase extends ChangeNotifier
     return await _hmssdkInteractor.getRoles();
   }
 
-  void changeTrackState(HMSPeer peer, bool mute, bool isVideoTrack) {
-    return HmsSdkManager.hmsSdkInteractor
-        ?.changeTrackState(peer, mute, isVideoTrack, this);
+  void changeTrackState(HMSTrack track, bool mute) {
+    return HmsSdkManager.hmsSdkInteractor?.changeTrackState(track, mute, this);
   }
 
   @action
@@ -602,14 +609,15 @@ abstract class MeetingStoreBase extends ChangeNotifier
               ? HMSTrackUpdate.trackMuted
               : HMSTrackUpdate.trackUnMuted;
         } else {
-          screenSharePeerId = peer.peerId;
-          screenShareTrack = track as HMSVideoTrack;
+          screenShareTrack.add(track);
+          screenSharePeerId = screenShareTrack.first?.peer?.peerId ?? "";
         }
         break;
       case HMSTrackUpdate.trackRemoved:
         if (track.source != "REGULAR") {
-          screenSharePeerId = "";
-          screenShareTrack = null;
+          screenShareTrack
+              .removeWhere((element) => element?.trackId == track.trackId);
+          screenSharePeerId = screenShareTrack.first?.peer?.peerId ?? "";
         } else {
           peerTracks.removeWhere((element) => element.peerId == peer.peerId);
         }
@@ -639,6 +647,16 @@ abstract class MeetingStoreBase extends ChangeNotifier
 
   void removePeerFromRoom(HMSPeer peer) {
     _hmssdkInteractor.removePeer(peer, this);
+  }
+
+  void startScreenShare() {
+    _hmssdkInteractor.startScreenShare();
+    isScreenShareActive();
+  }
+
+  void stopScreenShare() {
+    _hmssdkInteractor.stopScreenShare();
+    isScreenShareActive();
   }
 
   void muteAll() {
@@ -711,8 +729,8 @@ abstract class MeetingStoreBase extends ChangeNotifier
     _hmssdkInteractor.setPlayBackAllowed(allow);
   }
 
-  void acceptChangeRole() {
-    _hmssdkInteractor.acceptChangeRole(this);
+  void acceptChangeRole(HMSRoleChangeRequest hmsRoleChangeRequest) {
+    _hmssdkInteractor.acceptChangeRole(hmsRoleChangeRequest, this);
   }
 
   void changeName({required String name}) {

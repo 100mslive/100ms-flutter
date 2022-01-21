@@ -39,7 +39,7 @@ dependencies:
   connectivity_checker: ^1.0.0
   dropdown_button2: ^1.0.7
   video_player:
-  flick_video_player:
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
