@@ -721,12 +721,20 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
   }
 
   @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
+  void didChangeAppLifecycleState(AppLifecycleState state) async{
     super.didChangeAppLifecycleState(state);
     if (state == AppLifecycleState.resumed) {
-      _meetingStore.audioTracks.forEach((element) {
-          if(element is HMSRemoteAudioTrack)
-            element.setVolume(10.0);
+      List<HMSPeer>? peersList = await _meetingStore.getPeers();
+
+      peersList?.forEach((element) {
+        if(!element.isLocal){
+          (element.audioTrack as HMSRemoteAudioTrack?)?.setVolume(10.0);
+          element.auxiliaryTracks?.forEach((element) {
+            if(element.kind == HMSTrackKind.kHMSTrackKindAudio){
+              (element as HMSRemoteAudioTrack?)?.setVolume(10.0);
+            }
+          });
+        }
       });
 
       if (_meetingStore.isVideoOn) {

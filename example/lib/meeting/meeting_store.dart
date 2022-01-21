@@ -874,4 +874,8 @@ abstract class MeetingStoreBase extends ChangeNotifier
     }
   }
 
+
+  Future<List<HMSPeer>?> getPeers() async{
+    return await _hmssdkInteractor.getPeers();
+  }
 }
