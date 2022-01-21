@@ -139,10 +139,8 @@ class _HomePageState extends State<HomePage> {
                                 roomIdController.text = url;
                               }
                             }
-                            return InputHistoryTextField(
-                              historyKey: "key-01",
-                              textEditingController: roomIdController,
-                              enableOpacityGradient: true,
+                            return TextField(
+                              controller: roomIdController,
                               autofocus: true,
                               keyboardType: TextInputType.url,
                               decoration: InputDecoration(

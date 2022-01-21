@@ -241,7 +241,13 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
         if (_meetingStore.hasHlsStarted) {
           _meetingStore.stopHLSStreaming();
         } else {
-          _meetingStore.startHLSStreaming(Constant.meetingUrl);
+          String url = await UtilityComponents.showInputDialog(
+              context: context,
+              placeholder: "Enter HLS Url",
+              prefilledValue: widget.roomId + "?token=beam_recording");
+          if (url.isNotEmpty) {
+            _meetingStore.startHLSStreaming(url);
+          }
         }
         break;
       case 10:
@@ -313,46 +319,51 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                               ),
                               value: 1,
                             ),
-                            PopupMenuItem(
-                              child: Observer(
-                                  builder: (_) => Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(
-                                                _meetingStore.isRecordingStarted
-                                                    ? "Recording "
-                                                    : "Record",
-                                                style: TextStyle(
-                                                  color: _meetingStore
+                            if (!_meetingStore.localPeer!.role.name
+                                .contains("hls-"))
+                              PopupMenuItem(
+                                child: Observer(
+                                    builder: (_) => Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                  _meetingStore
                                                           .isRecordingStarted
-                                                      ? Colors.red
-                                                      : Colors.blue,
-                                                )),
-                                            Icon(
-                                              Icons.circle,
-                                              color: _meetingStore
-                                                      .isRecordingStarted
-                                                  ? Colors.red
-                                                  : Colors.blue,
-                                            ),
-                                          ])),
-                              value: 2,
-                            ),
-                            PopupMenuItem(
-                              child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      "Toggle Camera  ",
-                                      style: TextStyle(color: Colors.blue),
-                                    ),
-                                    Icon(Icons.switch_camera,
-                                        color: Colors.blue),
-                                  ]),
-                              value: 3,
-                            ),
+                                                      ? "Recording "
+                                                      : "Record",
+                                                  style: TextStyle(
+                                                    color: _meetingStore
+                                                            .isRecordingStarted
+                                                        ? Colors.red
+                                                        : Colors.blue,
+                                                  )),
+                                              Icon(
+                                                Icons.circle,
+                                                color: _meetingStore
+                                                        .isRecordingStarted
+                                                    ? Colors.red
+                                                    : Colors.blue,
+                                              ),
+                                            ])),
+                                value: 2,
+                              ),
+                            if (!_meetingStore.localPeer!.role.name
+                                .contains("hls-"))
+                              PopupMenuItem(
+                                child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        "Toggle Camera  ",
+                                        style: TextStyle(color: Colors.blue),
+                                      ),
+                                      Icon(Icons.switch_camera,
+                                          color: Colors.blue),
+                                    ]),
+                                value: 3,
+                              ),
                             PopupMenuItem(
                               child: Row(
                                   mainAxisAlignment:
@@ -429,19 +440,27 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                   ]),
                               value: 8,
                             ),
-                            PopupMenuItem(
-                              child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      "HLS",
-                                      style: TextStyle(color: Colors.blue),
-                                    ),
-                                    Icon(Icons.stream, color: Colors.blue),
-                                  ]),
-                              value: 9,
-                            ),
+                            if (!_meetingStore.localPeer!.role.name
+                                .contains("hls-"))
+                              PopupMenuItem(
+                                child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        _meetingStore.hasHlsStarted
+                                            ? "Stop HLS"
+                                            : "Start HLS",
+                                        style: TextStyle(
+                                          color: _meetingStore.hasHlsStarted
+                                              ? Colors.red
+                                              : Colors.blue,
+                                        ),
+                                      ),
+                                      Icon(Icons.stream, color: Colors.blue),
+                                    ]),
+                                value: 9,
+                              ),
                             if (_meetingStore
                                 .localPeer!.role.permissions.endRoom!)
                               PopupMenuItem(
