@@ -297,161 +297,159 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                 : Icons.volume_off),
                           ),
                         ),
-                        Observer(builder: (context) {
-                          return PopupMenuButton(
-                            icon: Icon(CupertinoIcons.gear),
-                            itemBuilder: (BuildContext context) => [
-                              PopupMenuItem(
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text("Send Logs",
-                                        style: TextStyle(color: Colors.blue)),
-                                    Icon(Icons.bug_report, color: Colors.blue),
-                                  ],
-                                ),
-                                value: 1,
+                        PopupMenuButton(
+                          icon: Icon(CupertinoIcons.gear),
+                          itemBuilder: (BuildContext context) => [
+                            PopupMenuItem(
+                              child: Row(
+                                mainAxisAlignment:
+                                MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text("Send Logs",
+                                      style: TextStyle(color: Colors.blue)),
+                                  Icon(Icons.bug_report, color: Colors.blue),
+                                ],
                               ),
-                              PopupMenuItem(
-                                child: Observer(
-                                    builder: (_) => Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text(
-                                                  _meetingStore
-                                                          .isRecordingStarted
-                                                      ? "Recording "
-                                                      : "Record",
-                                                  style: TextStyle(
-                                                    color: _meetingStore
-                                                            .isRecordingStarted
-                                                        ? Colors.red
-                                                        : Colors.blue,
-                                                  )),
-                                              Icon(
-                                                Icons.circle,
-                                                color: _meetingStore
-                                                        .isRecordingStarted
-                                                    ? Colors.red
-                                                    : Colors.blue,
-                                              ),
-                                            ])),
-                                value: 2,
-                              ),
-                              PopupMenuItem(
-                                child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        "Toggle Camera  ",
-                                        style: TextStyle(color: Colors.blue),
-                                      ),
-                                      Icon(Icons.switch_camera,
-                                          color: Colors.blue),
-                                    ]),
-                                value: 3,
-                              ),
-                              PopupMenuItem(
-                                child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        "Participants  ",
-                                        style: TextStyle(color: Colors.blue),
-                                      ),
-                                      Icon(CupertinoIcons.person_3_fill,
-                                          color: Colors.blue),
-                                    ]),
-                                value: 4,
-                              ),
-                              PopupMenuItem(
-                                child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        audioViewOn
-                                            ? "Video View"
-                                            : "Audio View",
-                                        style: TextStyle(color: Colors.blue),
-                                      ),
-                                      Image.asset(
-                                        audioViewOn
-                                            ? 'assets/icons/video.png'
-                                            : 'assets/icons/audio.png',
-                                        color: Colors.blue,
-                                        height: 24.0,
-                                        width: 24.0,
-                                      ),
-                                    ]),
-                                value: 5,
-                              ),
-                              PopupMenuItem(
-                                child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        "Active Speaker Mode ",
-                                        style: TextStyle(color: Colors.blue),
-                                      ),
-                                      Icon(CupertinoIcons.person_3_fill,
-                                          color: Colors.blue),
-                                    ]),
-                                value: 6,
-                              ),
-                              PopupMenuItem(
-                                child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        "Hero Mode ",
-                                        style: TextStyle(color: Colors.blue),
-                                      ),
-                                      Icon(CupertinoIcons.person_3_fill,
-                                          color: Colors.blue),
-                                    ]),
-                                value: 7,
-                              ),
-                              PopupMenuItem(
-                                child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        "Change Name",
-                                        style: TextStyle(color: Colors.blue),
-                                      ),
-                                      Icon(Icons.create_rounded,
-                                          color: Colors.blue),
-                                    ]),
-                                value: 8,
-                              ),
-                              if (_meetingStore
-                                  .localPeer!.role.permissions.endRoom!)
-                                PopupMenuItem(
-                                  child: Row(
+                              value: 1,
+                            ),
+                            PopupMenuItem(
+                              child: Observer(
+                                  builder: (_) => Row(
                                       mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
+                                      MainAxisAlignment.spaceBetween,
                                       children: [
                                         Text(
-                                          "End Room",
-                                          style: TextStyle(color: Colors.blue),
+                                            _meetingStore
+                                                .isRecordingStarted
+                                                ? "Recording "
+                                                : "Record",
+                                            style: TextStyle(
+                                              color: _meetingStore
+                                                  .isRecordingStarted
+                                                  ? Colors.red
+                                                  : Colors.blue,
+                                            )),
+                                        Icon(
+                                          Icons.circle,
+                                          color: _meetingStore
+                                              .isRecordingStarted
+                                              ? Colors.red
+                                              : Colors.blue,
                                         ),
-                                        Icon(Icons.cancel_schedule_send,
-                                            color: Colors.blue),
-                                      ]),
-                                  value: 9,
-                                ),
-                            ],
-                            onSelected: handleMenu,
-                          );
-                        }),
+                                      ])),
+                              value: 2,
+                            ),
+                            PopupMenuItem(
+                              child: Row(
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      "Toggle Camera  ",
+                                      style: TextStyle(color: Colors.blue),
+                                    ),
+                                    Icon(Icons.switch_camera,
+                                        color: Colors.blue),
+                                  ]),
+                              value: 3,
+                            ),
+                            PopupMenuItem(
+                              child: Row(
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      "Participants  ",
+                                      style: TextStyle(color: Colors.blue),
+                                    ),
+                                    Icon(CupertinoIcons.person_3_fill,
+                                        color: Colors.blue),
+                                  ]),
+                              value: 4,
+                            ),
+                            PopupMenuItem(
+                              child: Row(
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      audioViewOn
+                                          ? "Video View"
+                                          : "Audio View",
+                                      style: TextStyle(color: Colors.blue),
+                                    ),
+                                    Image.asset(
+                                      audioViewOn
+                                          ? 'assets/icons/video.png'
+                                          : 'assets/icons/audio.png',
+                                      color: Colors.blue,
+                                      height: 24.0,
+                                      width: 24.0,
+                                    ),
+                                  ]),
+                              value: 5,
+                            ),
+                            PopupMenuItem(
+                              child: Row(
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      "Active Speaker Mode ",
+                                      style: TextStyle(color: Colors.blue),
+                                    ),
+                                    Icon(CupertinoIcons.person_3_fill,
+                                        color: Colors.blue),
+                                  ]),
+                              value: 6,
+                            ),
+                            PopupMenuItem(
+                              child: Row(
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      "Hero Mode ",
+                                      style: TextStyle(color: Colors.blue),
+                                    ),
+                                    Icon(CupertinoIcons.person_3_fill,
+                                        color: Colors.blue),
+                                  ]),
+                              value: 7,
+                            ),
+                            PopupMenuItem(
+                              child: Row(
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      "Change Name",
+                                      style: TextStyle(color: Colors.blue),
+                                    ),
+                                    Icon(Icons.create_rounded,
+                                        color: Colors.blue),
+                                  ]),
+                              value: 8,
+                            ),
+                            if (_meetingStore
+                                .localPeer!.role.permissions.endRoom!)
+                              PopupMenuItem(
+                                child: Row(
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        "End Room",
+                                        style: TextStyle(color: Colors.blue),
+                                      ),
+                                      Icon(Icons.cancel_schedule_send,
+                                          color: Colors.blue),
+                                    ]),
+                                value: 9,
+                              ),
+                          ],
+                          onSelected: handleMenu,
+                        ),
                       ],
                     ),
                     body: Padding(
@@ -666,7 +664,10 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
     if (state == AppLifecycleState.resumed) {
-      _meetingStore.setVolumeAll(10.0);
+      _meetingStore.peerTracks.forEach((element) {
+        if(element.peerId != _meetingStore.localPeer!.peerId)
+          (element.audioTrack as HMSRemoteAudioTrack?)?.setVolume(10.0);
+      });
       if (_meetingStore.isVideoOn) {
         _meetingStore.startCapturing();
       } else {

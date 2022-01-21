@@ -849,7 +849,4 @@ abstract class MeetingStoreBase extends ChangeNotifier
     }
   }
 
-  void setVolumeAll(double value){
-    _hmssdkInteractor.setVolumeAll(value);
-  }
 }

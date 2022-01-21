@@ -4,7 +4,7 @@
 ///
 ///All methods related to meeting, preview and their listeners are present here.
 // Project imports:
-
+import 'package:flutter/material.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter/src/manager/hms_sdk_manager.dart';
 import 'package:hmssdk_flutter/src/service/platform_service.dart';
@@ -23,7 +23,7 @@ import '../hmssdk_flutter.dart';
 /// **Broadcast** - A local peer can send any message/data to all remote peers in the room
 ///
 /// HMSSDK has other methods which the client app can use to get more info about the Room, Peer and Tracks
-class HMSSDK {
+class HMSSDK with WidgetsBindingObserver{
   ///join meeting by passing HMSConfig instance to it.
   HMSTrackSetting? hmsTrackSetting;
 
@@ -622,7 +622,5 @@ class HMSSDK {
     PlatformService.removeLogsListener(hmsLogListener);
   }
 
-  void setVolumeAll(double value) async{
-     PlatformService.invokeMethod(PlatformMethod.setVolumeAll,arguments: {"volume":value});
-  }
+
 }

@@ -224,7 +224,4 @@ class HMSSDKInteractor {
         hmsActionResultListener: hmsActionResultListener);
   }
 
-  void setVolumeAll(double value){
-    hmsSDK.setVolumeAll(10.0);
-  }
 }
