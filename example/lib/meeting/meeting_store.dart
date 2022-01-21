@@ -47,6 +47,10 @@ abstract class MeetingStoreBase extends ChangeNotifier
   bool isScreenShareOn = false;
   @observable
   ObservableList<HMSTrack?> screenShareTrack = ObservableList.of([]);
+
+  @observable
+  HMSTrack? curentScreenShareTrack;
+
   @observable
   bool reconnecting = false;
   @observable
@@ -135,6 +139,10 @@ abstract class MeetingStoreBase extends ChangeNotifier
   }
 
   void leave() async {
+    if (isScreenShareOn) {
+      isScreenShareOn = false;
+      _hmssdkInteractor.stopScreenShare();
+    }
     _hmssdkInteractor.leave(hmsActionResultListener: this);
     isRoomEnded = true;
     peerTracks.clear();
@@ -282,7 +290,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
 
   @action
   Future<void> isScreenShareActive() async {
-    isScreenShareOn = await _hmssdkInteractor.isScreenShareActive();
+    this.isScreenShareOn = await _hmssdkInteractor.isScreenShareActive();
   }
 
   @override
@@ -610,6 +618,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
               : HMSTrackUpdate.trackUnMuted;
         } else {
           screenShareTrack.add(track);
+          this.curentScreenShareTrack = screenShareTrack.first;
           screenSharePeerId = screenShareTrack.first?.peer?.peerId ?? "";
         }
         break;
@@ -617,6 +626,11 @@ abstract class MeetingStoreBase extends ChangeNotifier
         if (track.source != "REGULAR") {
           screenShareTrack
               .removeWhere((element) => element?.trackId == track.trackId);
+          if (this.screenShareTrack.length >= 1) {
+            curentScreenShareTrack = screenShareTrack.first;
+          } else {
+            curentScreenShareTrack = null;
+          }
           screenSharePeerId = screenShareTrack.first?.peer?.peerId ?? "";
         } else {
           peerTracks.removeWhere((element) => element.peerId == peer.peerId);
