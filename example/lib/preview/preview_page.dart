@@ -114,26 +114,30 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                   height: 16,
                 ),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Expanded(
-                      child: Observer(builder: (context) {
-                        return GestureDetector(
-                          onTap: _previewStore.isHLSLink ||
-                                  _previewStore.localTracks.isEmpty
-                              ? null
-                              : () async {
-                                  _previewStore.switchVideo();
-                                },
-                          child: Icon(
-                              _previewStore.videoOn && !_previewStore.isHLSLink
-                                  ? Icons.videocam
-                                  : Icons.videocam_off,
-                              size: 48),
-                        );
-                      }),
-                    ),
-                    Expanded(
-                        child: ElevatedButton(
+                    // if (_previewStore.peer != null &&
+                    //     _previewStore.peer!.role.publishSettings!.allowed
+                    //         .contains("video"))
+                    Observer(builder: (context) {
+                      return (_previewStore.peer != null &&
+                              _previewStore.peer!.role.publishSettings!.allowed
+                                  .contains("video"))
+                          ? GestureDetector(
+                              onTap: _previewStore.localTracks.isEmpty
+                                  ? null
+                                  : () async {
+                                      _previewStore.switchVideo();
+                                    },
+                              child: Icon(
+                                  _previewStore.videoOn
+                                      ? Icons.videocam
+                                      : Icons.videocam_off,
+                                  size: 48),
+                            )
+                          : Container();
+                    }),
+                    ElevatedButton(
                       onPressed: () {
                         _previewStore.removeListener();
                         Navigator.of(context).pushReplacement(MaterialPageRoute(
@@ -149,21 +153,23 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                         'Join Now',
                         style: TextStyle(height: 1, fontSize: 18),
                       ),
-                    )),
-                    Expanded(child: Observer(builder: (context) {
-                      return GestureDetector(
-                        onTap: _previewStore.isHLSLink
-                            ? null
-                            : () async {
+                    ),
+                    Observer(builder: (context) {
+                      return (_previewStore.peer != null &&
+                              _previewStore.peer!.role.publishSettings!.allowed
+                                  .contains("audio"))
+                          ? GestureDetector(
+                              onTap: () async {
                                 _previewStore.switchAudio();
                               },
-                        child: Icon(
-                            (_previewStore.audioOn && !_previewStore.isHLSLink)
-                                ? Icons.mic
-                                : Icons.mic_off,
-                            size: 48),
-                      );
-                    }))
+                              child: Icon(
+                                  (_previewStore.audioOn)
+                                      ? Icons.mic
+                                      : Icons.mic_off,
+                                  size: 48),
+                            )
+                          : Container();
+                    })
                   ],
                 ),
                 SizedBox(

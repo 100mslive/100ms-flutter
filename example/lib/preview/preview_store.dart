@@ -37,7 +37,7 @@ abstract class PreviewStoreBase
     this.room = room;
     for (HMSPeer each in room.peers!) {
       if (each.isLocal) {
-        this.peer = each;
+        peer = each;
         if (each.role.name.indexOf("hls-") == 0) {
           isHLSLink = true;
         }
