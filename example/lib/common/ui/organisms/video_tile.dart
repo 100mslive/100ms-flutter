@@ -19,6 +19,7 @@ class VideoTile extends StatefulWidget {
   final Map<String, HMSTrackUpdate> trackStatus;
   final Map<String, String> observerMap;
   final bool audioView;
+
   VideoTile({
     Key? key,
     required this.tileIndex,
@@ -40,9 +41,9 @@ class _VideoTileState extends State<VideoTile> {
     MeetingStore _meetingStore = context.read<MeetingStore>();
     var index = widget.tileIndex;
     var filteredList = widget.filteredList;
-    bool audioMutePermission =
+    bool mutePermission =
         _meetingStore.localPeer!.role.permissions.mute ?? false;
-    bool audioUnMutePermission =
+    bool unMutePermission =
         _meetingStore.localPeer!.role.permissions.unMute ?? false;
     bool removePeerPermission =
         _meetingStore.localPeer!.role.permissions.removeOthers ?? false;
@@ -61,22 +62,26 @@ class _VideoTileState extends State<VideoTile> {
           trackStatus[peerId] = (widget.audioView)
               ? HMSTrackUpdate.trackMuted
               : filteredList[index].track?.isMute ?? true
-                  ? HMSTrackUpdate.trackMuted
-                  : HMSTrackUpdate.trackUnMuted;
+              ? HMSTrackUpdate.trackMuted
+              : HMSTrackUpdate.trackUnMuted;
         }
       },
       key: Key(filteredList[index].peerId),
       child: InkWell(
         onLongPress: () {
+          if (!mutePermission || !unMutePermission ||
+              !removePeerPermission)
+            return;
           if (!widget.audioView &&
               filteredList[index].peerId != _meetingStore.localPeer!.peerId)
             showDialog(
                 context: context,
-                builder: (_) => Column(
+                builder: (_) =>
+                    Column(
                       children: [
                         ChangeTrackOptionDialog(
                             isAudioMuted:
-                                filteredList[index].audioTrack?.isMute,
+                            filteredList[index].audioTrack?.isMute,
                             isVideoMuted: filteredList[index].track == null
                                 ? true
                                 : filteredList[index].track?.isMute,
@@ -96,7 +101,10 @@ class _VideoTileState extends State<VideoTile> {
                               var peer = await _meetingStore.getPeer(
                                   peerId: filteredList[index].peerId);
                               _meetingStore.removePeerFromRoom(peer!);
-                            }),
+                            },
+                            mute : mutePermission,
+                            unMute :unMutePermission,
+                            removeOthers: removePeerPermission),
                       ],
                     ));
         },
@@ -110,7 +118,7 @@ class _VideoTileState extends State<VideoTile> {
               isVideoMuted: (widget.audioView)
                   ? true
                   : (trackStatus[filteredList[index].peerId]) ==
-                      HMSTrackUpdate.trackMuted);
+                  HMSTrackUpdate.trackMuted);
         }),
       ),
     );

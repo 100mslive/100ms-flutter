@@ -602,7 +602,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                     bottomNavigationBar: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          if (_meetingStore.peerTracks.isNotEmpty &&
+                          if (_meetingStore.localPeer != null &&
                               _meetingStore
                                   .localPeer!.role.publishSettings!.allowed
                                   .contains("video"))
@@ -623,7 +623,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                         : Icons.videocam_off));
                               }),
                             ),
-                          if (_meetingStore.peerTracks.isNotEmpty &&
+                          if (_meetingStore.localPeer != null &&
                               _meetingStore
                                   .localPeer!.role.publishSettings!.allowed
                                   .contains("audio"))
@@ -674,7 +674,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                 },
                                 icon: Icon(Icons.chat_bubble)),
                           ),
-                          if (_meetingStore.peerTracks.isNotEmpty &&
+                          if (_meetingStore.localPeer != null &&
                               _meetingStore
                                   .localPeer!.role.publishSettings!.allowed
                                   .contains("screen"))
