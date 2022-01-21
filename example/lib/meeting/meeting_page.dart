@@ -490,7 +490,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                         children: [
                           Observer(builder: (_) {
                             if (!_meetingStore.isHLSLink &&
-                                _meetingStore.screenShareTrack.isNotEmpty &&
+                                _meetingStore.curentScreenShareTrack != null &&
                                 !audioViewOn) {
                               return SizedBox(
                                 width: double.infinity,
@@ -505,10 +505,13 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                     isVideoMuted: false,
                                     peerTracKNode: new PeerTracKNode(
                                         peerId: _meetingStore.screenSharePeerId,
-                                        track: _meetingStore.screenShareTrack
-                                            .first as HMSVideoTrack,
-                                        name: _meetingStore.screenShareTrack
-                                                .first?.peer?.name ??
+                                        track:
+                                            _meetingStore.curentScreenShareTrack
+                                                as HMSVideoTrack,
+                                        name: _meetingStore
+                                                .curentScreenShareTrack!
+                                                .peer
+                                                ?.name ??
                                             ""),
                                   ),
                                 ),
