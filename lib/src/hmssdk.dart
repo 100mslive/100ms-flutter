@@ -24,7 +24,7 @@ import '../hmssdk_flutter.dart';
 /// **Broadcast** - A local peer can send any message/data to all remote peers in the room
 ///
 /// HMSSDK has other methods which the client app can use to get more info about the Room, Peer and Tracks
-class HMSSDK with WidgetsBindingObserver{
+class HMSSDK {
   ///join meeting by passing HMSConfig instance to it.
 
   HMSTrackSetting? hmsTrackSetting;
