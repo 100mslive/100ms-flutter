@@ -228,8 +228,7 @@ class HMSSDKInteractor {
 
   Future<void> startHLSStreaming(String meetingUrl,
       HMSActionResultListener hmsActionResultListener) async {
-    await hmsSDK.startHlsStreaming(
-        meetingUrl + "?token=beam_recording", "meta data",
+    await hmsSDK.startHlsStreaming(meetingUrl, "meta data",
         hmsActionResultListener: hmsActionResultListener);
   }
 
