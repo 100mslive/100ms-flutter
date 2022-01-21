@@ -62,26 +62,24 @@ class _VideoTileState extends State<VideoTile> {
           trackStatus[peerId] = (widget.audioView)
               ? HMSTrackUpdate.trackMuted
               : filteredList[index].track?.isMute ?? true
-              ? HMSTrackUpdate.trackMuted
-              : HMSTrackUpdate.trackUnMuted;
+                  ? HMSTrackUpdate.trackMuted
+                  : HMSTrackUpdate.trackUnMuted;
         }
       },
       key: Key(filteredList[index].peerId),
       child: InkWell(
         onLongPress: () {
-          if (!mutePermission || !unMutePermission ||
-              !removePeerPermission)
+          if (!mutePermission || !unMutePermission || !removePeerPermission)
             return;
           if (!widget.audioView &&
               filteredList[index].peerId != _meetingStore.localPeer!.peerId)
             showDialog(
                 context: context,
-                builder: (_) =>
-                    Column(
+                builder: (_) => Column(
                       children: [
                         ChangeTrackOptionDialog(
                             isAudioMuted:
-                            filteredList[index].audioTrack?.isMute,
+                                filteredList[index].audioTrack?.isMute,
                             isVideoMuted: filteredList[index].track == null
                                 ? true
                                 : filteredList[index].track?.isMute,
@@ -102,8 +100,8 @@ class _VideoTileState extends State<VideoTile> {
                                   peerId: filteredList[index].peerId);
                               _meetingStore.removePeerFromRoom(peer!);
                             },
-                            mute : mutePermission,
-                            unMute :unMutePermission,
+                            mute: mutePermission,
+                            unMute: unMutePermission,
                             removeOthers: removePeerPermission),
                       ],
                     ));
@@ -118,7 +116,7 @@ class _VideoTileState extends State<VideoTile> {
               isVideoMuted: (widget.audioView)
                   ? true
                   : (trackStatus[filteredList[index].peerId]) ==
-                  HMSTrackUpdate.trackMuted);
+                      HMSTrackUpdate.trackMuted);
         }),
       ),
     );
