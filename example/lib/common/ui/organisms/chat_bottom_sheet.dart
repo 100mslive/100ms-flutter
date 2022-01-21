@@ -257,8 +257,11 @@ class _ChatWidgetState extends State<ChatWidget> {
                                         HMSMessageRecipientType.BROADCAST),
                               ));
                             } else if (rolesName.contains(this.valueChoose)) {
+                              List<HMSRole> selectedRoles = [];
+                              selectedRoles.add(hmsRoles.firstWhere(
+                                  (role) => role.name == this.valueChoose));
                               _meetingStore.sendGroupMessage(
-                                  message, this.valueChoose);
+                                  message, selectedRoles);
                               _meetingStore.addMessage(HMSMessage(
                                 sender: _meetingStore.localPeer!,
                                 message: message,

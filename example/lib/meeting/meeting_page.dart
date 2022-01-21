@@ -147,6 +147,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
   @override
   void dispose() {
     disposeAllListeners();
+    _meetingStore.stopScreenShare();
     super.dispose();
   }
 
@@ -286,6 +287,21 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                     appBar: AppBar(
                       title: Text(widget.roomId),
                       actions: [
+                        _meetingStore.isRecordingStarted
+                            ? Observer(
+                                builder: (_) => Container(
+                                      decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          border: Border.all(
+                                              width: 2,
+                                              color: Colors.red.shade600)),
+                                      child: Icon(
+                                        Icons.circle,
+                                        color: Colors.red,
+                                        size: 15,
+                                      ),
+                                    ))
+                            : Container(),
                         Observer(
                           builder: (_) => IconButton(
                             iconSize: 32,
@@ -312,47 +328,51 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                               ),
                               value: 1,
                             ),
-                            PopupMenuItem(
-                              child: Observer(
-                                  builder: (_) => Row(
-                                      mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(
-                                            _meetingStore
-                                                .isRecordingStarted
-                                                ? "Recording "
-                                                : "Record",
-                                            style: TextStyle(
-                                              color: _meetingStore
-                                                  .isRecordingStarted
-                                                  ? Colors.red
-                                                  : Colors.blue,
-                                            )),
-                                        Icon(
-                                          Icons.circle,
-                                          color: _meetingStore
-                                              .isRecordingStarted
-                                              ? Colors.red
-                                              : Colors.blue,
-                                        ),
-                                      ])),
-                              value: 2,
-                            ),
-                            PopupMenuItem(
-                              child: Row(
-                                  mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      "Toggle Camera  ",
-                                      style: TextStyle(color: Colors.blue),
-                                    ),
-                                    Icon(Icons.switch_camera,
-                                        color: Colors.blue),
-                                  ]),
-                              value: 3,
-                            ),
+                            if (!_meetingStore.localPeer!.role.name
+                                .contains("hls-"))
+                              PopupMenuItem(
+                                child: Observer(
+                                    builder: (_) => Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                  _meetingStore
+                                                          .isRecordingStarted
+                                                      ? "Recording "
+                                                      : "Record",
+                                                  style: TextStyle(
+                                                    color: _meetingStore
+                                                            .isRecordingStarted
+                                                        ? Colors.red
+                                                        : Colors.blue,
+                                                  )),
+                                              Icon(
+                                                Icons.circle,
+                                                color: _meetingStore
+                                                        .isRecordingStarted
+                                                    ? Colors.red
+                                                    : Colors.blue,
+                                              ),
+                                            ])),
+                                value: 2,
+                              ),
+                            if (!_meetingStore.localPeer!.role.name
+                                .contains("hls-"))
+                              PopupMenuItem(
+                                child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        "Toggle Camera  ",
+                                        style: TextStyle(color: Colors.blue),
+                                      ),
+                                      Icon(Icons.switch_camera,
+                                          color: Colors.blue),
+                                    ]),
+                                value: 3,
+                              ),
                             PopupMenuItem(
                               child: Row(
                                   mainAxisAlignment:
@@ -431,6 +451,27 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                   ]),
                               value: 8,
                             ),
+                            if (!_meetingStore.localPeer!.role.name
+                                .contains("hls-"))
+                              PopupMenuItem(
+                                child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        _meetingStore.hasHlsStarted
+                                            ? "Stop HLS"
+                                            : "Start HLS",
+                                        style: TextStyle(
+                                          color: _meetingStore.hasHlsStarted
+                                              ? Colors.red
+                                              : Colors.blue,
+                                        ),
+                                      ),
+                                      Icon(Icons.stream, color: Colors.blue),
+                                    ]),
+                                value: 9,
+                              ),
                             if (_meetingStore
                                 .localPeer!.role.permissions.endRoom!)
                               PopupMenuItem(
@@ -475,9 +516,10 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                     isVideoMuted: false,
                                     peerTracKNode: new PeerTracKNode(
                                         peerId: _meetingStore.screenSharePeerId,
-                                        track: _meetingStore.screenShareTrack!,
-                                        name: _meetingStore
-                                                .screenShareTrack?.peer?.name ??
+                                        track: _meetingStore.screenShareTrack
+                                            ?.first as HMSVideoTrack,
+                                        name: _meetingStore.screenShareTrack
+                                                .first?.peer?.name ??
                                             ""),
                                   ),
                                 ),
@@ -512,8 +554,8 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                     gridDelegate:
                                         SliverGridDelegateWithFixedCrossAxisCount(
                                       crossAxisCount: (!audioViewOn &&
-                                              _meetingStore.screenShareTrack !=
-                                                  null)
+                                              _meetingStore
+                                                  .screenShareTrack.isNotEmpty)
                                           ? 1
                                           : 2,
                                       mainAxisExtent: itemWidth,
@@ -637,6 +679,24 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                   chatMessages(context, _meetingStore);
                                 },
                                 icon: Icon(Icons.chat_bubble)),
+                          ),
+                          Container(
+                            padding: EdgeInsets.all(8),
+                            child: IconButton(
+                                tooltip: 'Share',
+                                iconSize: 32,
+                                onPressed: () {
+                                  if (!_meetingStore.isScreenShareOn)
+                                    _meetingStore.startScreenShare();
+                                  else
+                                    _meetingStore.stopScreenShare();
+                                },
+                                icon: Icon(
+                                  Icons.screen_share,
+                                  color: _meetingStore.isScreenShareOn
+                                      ? Colors.blue
+                                      : Colors.black,
+                                )),
                           ),
                           Container(
                             padding: EdgeInsets.all(8),

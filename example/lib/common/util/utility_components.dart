@@ -53,7 +53,7 @@ class UtilityComponents {
     if (answer == "OK") {
       MeetingStore meetingStore =
           Provider.of<MeetingStore>(context, listen: false);
-      meetingStore.acceptChangeRole();
+      meetingStore.acceptChangeRole(event);
       UtilityComponents.showSnackBarWithString(
           (event as HMSException).description, context);
     }
