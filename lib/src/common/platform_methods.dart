@@ -179,7 +179,7 @@ extension PlatformMethodValues on PlatformMethod {
       case PlatformMethod.removeHMSLogger:
         return "remove_hms_logger";
       case PlatformMethod.changeTrackStateForRole:
-        return "change_track_state";
+        return "change_track_state_for_role";
       case PlatformMethod.startRtmpOrRecording:
         return "start_rtmp_or_recording";
       case PlatformMethod.getRoom:

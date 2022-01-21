@@ -8,13 +8,20 @@ class ChangeTrackOptionDialog extends StatefulWidget {
   final Function(bool, bool) changeVideoTrack;
   final Function(bool, bool) changeAudioTrack;
   final Function() removePeer;
+  final mute;
+  final unMute;
+  final removeOthers;
   const ChangeTrackOptionDialog(
       {required this.isVideoMuted,
       required this.isAudioMuted,
       required this.changeVideoTrack,
       required this.changeAudioTrack,
       required this.peerName,
-      required this.removePeer});
+      required this.removePeer,
+      required this.mute,
+      required this.unMute,
+      required this.removeOthers
+      });
 
   @override
   _ChangeTrackOptionDialogState createState() =>
@@ -31,6 +38,7 @@ class _ChangeTrackOptionDialogState extends State<ChangeTrackOptionDialog> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            if((widget.isVideoMuted && widget.unMute) || (!widget.isVideoMuted && widget.mute))
             Container(
               padding: EdgeInsets.only(bottom: 20.0),
               child: GestureDetector(
@@ -53,6 +61,7 @@ class _ChangeTrackOptionDialogState extends State<ChangeTrackOptionDialog> {
             SizedBox(
               width: 20,
             ),
+            if((widget.isAudioMuted && widget.unMute) || (!widget.isAudioMuted && widget.mute))
             Padding(
               padding: const EdgeInsets.only(bottom: 20.0),
               child: GestureDetector(
@@ -73,6 +82,8 @@ class _ChangeTrackOptionDialogState extends State<ChangeTrackOptionDialog> {
             SizedBox(
               width: 20,
             ),
+
+            if(widget.removeOthers)
             Padding(
               padding: const EdgeInsets.only(bottom: 20.0),
               child: GestureDetector(
