@@ -17,7 +17,6 @@ import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:hmssdk_flutter_example/preview/preview_page.dart';
 import 'package:hmssdk_flutter_example/service/deeplink_service.dart';
-import 'package:input_history_text_field/input_history_text_field.dart';
 import './logs/custom_singleton_logger.dart';
 
 void main() async {
