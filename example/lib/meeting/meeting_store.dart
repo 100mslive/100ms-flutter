@@ -802,6 +802,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
         this.event = "Name Changed to ${localPeer!.name}";
         break;
       case HMSActionResultListenerMethod.sendBroadcastMessage:
+        print("sendBroadcastMessage success");
         break;
       case HMSActionResultListenerMethod.sendGroupMessage:
         break;
@@ -865,6 +866,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
         break;
       case HMSActionResultListenerMethod.sendBroadcastMessage:
         // TODO: Handle this case.
+        print("sendBroadcastMessage failure");
         break;
       case HMSActionResultListenerMethod.sendGroupMessage:
         // TODO: Handle this case.

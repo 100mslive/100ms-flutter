@@ -245,6 +245,7 @@ class _ChatWidgetState extends State<ChatWidget> {
 
                             if (this.valueChoose == "Everyone") {
                               _meetingStore.sendBroadcastMessage(message);
+                              // TODO: should listen to action result listener instead of creating message object here
                               _meetingStore.addMessage(HMSMessage(
                                 sender: _meetingStore.localPeer!,
                                 message: message,

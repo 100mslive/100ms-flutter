@@ -221,16 +221,17 @@ class HMSSDK {
     var result = await PlatformService.invokeMethod(
         PlatformMethod.sendBroadcastMessage,
         arguments: arguments);
+
     if (hmsActionResultListener != null) {
-      if (result == null) {
-        hmsActionResultListener.onSuccess(
-            methodType: HMSActionResultListenerMethod.sendBroadcastMessage,
-            arguments: arguments);
-      } else {
+      if (result["error"] != null) {
         hmsActionResultListener.onException(
             methodType: HMSActionResultListenerMethod.sendBroadcastMessage,
             arguments: arguments,
             hmsException: HMSException.fromMap(result["error"]));
+      } else {
+        hmsActionResultListener.onSuccess(
+            methodType: HMSActionResultListenerMethod.sendBroadcastMessage,
+            arguments: arguments);
       }
     }
   }
@@ -250,16 +251,17 @@ class HMSSDK {
     var result = await PlatformService.invokeMethod(
         PlatformMethod.sendGroupMessage,
         arguments: arguments);
+
     if (hmsActionResultListener != null) {
-      if (result == null) {
-        hmsActionResultListener.onSuccess(
-            methodType: HMSActionResultListenerMethod.sendGroupMessage,
-            arguments: {"message": message, "type": type, "roles": hmsRolesTo});
-      } else {
+      if (result["error"] != null) {
         hmsActionResultListener.onException(
             methodType: HMSActionResultListenerMethod.sendGroupMessage,
             arguments: {"message": message, "type": type, "roles": hmsRolesTo},
             hmsException: HMSException.fromMap(result["error"]));
+      } else {
+        hmsActionResultListener.onSuccess(
+            methodType: HMSActionResultListenerMethod.sendGroupMessage,
+            arguments: {"message": message, "type": type, "roles": hmsRolesTo});
       }
     }
   }
@@ -280,16 +282,17 @@ class HMSSDK {
     var result = await PlatformService.invokeMethod(
         PlatformMethod.sendDirectMessage,
         arguments: arguments);
+
     if (hmsActionResultListener != null) {
-      if (result == null) {
-        hmsActionResultListener.onSuccess(
-            methodType: HMSActionResultListenerMethod.sendDirectMessage,
-            arguments: {"message": message, "peer": peerTo, "type": type});
-      } else {
+      if (result["error"] != null) {
         hmsActionResultListener.onException(
             methodType: HMSActionResultListenerMethod.sendDirectMessage,
             arguments: {"message": message, "peer": peerTo, "type": type},
             hmsException: HMSException.fromMap(result["error"]));
+      } else {
+        hmsActionResultListener.onSuccess(
+            methodType: HMSActionResultListenerMethod.sendDirectMessage,
+            arguments: {"message": message, "peer": peerTo, "type": type});
       }
     }
   }
