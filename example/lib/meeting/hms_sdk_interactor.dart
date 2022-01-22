@@ -1,4 +1,6 @@
 //Project imports
+import 'dart:io';
+
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 class HMSSDKInteractor {
@@ -33,7 +35,11 @@ class HMSSDKInteractor {
   }
 
   Future<bool> isScreenShareActive() async {
-    return await hmsSDK.isScreenShareActive();
+    if (Platform.isAndroid) {
+      return await hmsSDK.isScreenShareActive();
+    } else {
+      return false;
+    }
   }
 
   void sendBroadcastMessage(
