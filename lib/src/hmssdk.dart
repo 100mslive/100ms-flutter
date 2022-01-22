@@ -223,7 +223,7 @@ class HMSSDK {
         arguments: arguments);
 
     if (hmsActionResultListener != null) {
-      if (result["error"] != null) {
+      if (result != null && result["error"] != null) {
         hmsActionResultListener.onException(
             methodType: HMSActionResultListenerMethod.sendBroadcastMessage,
             arguments: arguments,
@@ -253,7 +253,7 @@ class HMSSDK {
         arguments: arguments);
 
     if (hmsActionResultListener != null) {
-      if (result["error"] != null) {
+      if (result != null && result["error"] != null) {
         hmsActionResultListener.onException(
             methodType: HMSActionResultListenerMethod.sendGroupMessage,
             arguments: {"message": message, "type": type, "roles": hmsRolesTo},
@@ -284,7 +284,7 @@ class HMSSDK {
         arguments: arguments);
 
     if (hmsActionResultListener != null) {
-      if (result["error"] != null) {
+      if (result != null && result["error"] != null) {
         hmsActionResultListener.onException(
             methodType: HMSActionResultListenerMethod.sendDirectMessage,
             arguments: {"message": message, "peer": peerTo, "type": type},
