@@ -759,6 +759,11 @@ abstract class MeetingStoreBase extends ChangeNotifier
     await _hmssdkInteractor.stopHLSStreaming(hmsActionResultListener: this);
   }
 
+  void changeTrackStateForRole(bool mute, List<HMSRole>? roles) {
+    _hmssdkInteractor.changeTrackStateForRole(
+        true, HMSTrackKind.kHMSTrackKindAudio, "regular", roles, this);
+  }
+
   @override
   void onSuccess(
       {HMSActionResultListenerMethod methodType =
@@ -787,6 +792,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
         // TODO: Handle this case.
         break;
       case HMSActionResultListenerMethod.changeTrackStateForRole:
+        this.event = arguments!['roles']==null?"Successfully Muted All":"Successfully Muted Role";
         // TODO: Handle this case.
         break;
       case HMSActionResultListenerMethod.startRtmpOrRecording:
@@ -847,6 +853,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
         // TODO: Handle this case.
         break;
       case HMSActionResultListenerMethod.changeTrackStateForRole:
+        this.event = "Failed to Mute";
         // TODO: Handle this case.
         break;
       case HMSActionResultListenerMethod.startRtmpOrRecording:

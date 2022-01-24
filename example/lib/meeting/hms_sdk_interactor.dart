@@ -238,4 +238,10 @@ class HMSSDKInteractor {
     await hmsSDK.stopHlsStreaming(
         hmsActionResultListener: hmsActionResultListener);
   }
+
+  void changeTrackStateForRole(bool mute, HMSTrackKind? kind, String? source,
+      List<HMSRole>? roles, HMSActionResultListener? hmsActionResultListener) {
+    hmsSDK.changeTrackStateForRole(
+        mute: mute, kind: kind, source: source, roles: roles,hmsActionResultListener: hmsActionResultListener);
+  }
 }
