@@ -235,63 +235,23 @@ class _ChatWidgetState extends State<ChatWidget> {
                             String message = messageTextController.text;
                             if (message.isEmpty) return;
 
-                            DateTime currentTime = DateTime.now();
-                            final DateFormat formatter =
-                                DateFormat('d MMM y h:mm:ss a');
-
                             List<String> rolesName = <String>[];
                             for (int i = 0; i < hmsRoles.length; i++)
                               rolesName.add(hmsRoles[i].name);
 
                             if (this.valueChoose == "Everyone") {
                               _meetingStore.sendBroadcastMessage(message);
-                              // TODO: should listen to action result listener instead of creating message object here
-                              _meetingStore.addMessage(HMSMessage(
-                                sender: _meetingStore.localPeer!,
-                                message: message,
-                                type: "chat",
-                                time: formatter.format(currentTime),
-                                hmsMessageRecipient: HMSMessageRecipient(
-                                    recipientPeer: null,
-                                    recipientRoles: null,
-                                    hmsMessageRecipientType:
-                                        HMSMessageRecipientType.BROADCAST),
-                              ));
                             } else if (rolesName.contains(this.valueChoose)) {
                               List<HMSRole> selectedRoles = [];
                               selectedRoles.add(hmsRoles.firstWhere(
                                   (role) => role.name == this.valueChoose));
                               _meetingStore.sendGroupMessage(
                                   message, selectedRoles);
-                              _meetingStore.addMessage(HMSMessage(
-                                sender: _meetingStore.localPeer!,
-                                message: message,
-                                type: "chat",
-                                time: formatter.format(currentTime),
-                                hmsMessageRecipient: HMSMessageRecipient(
-                                    recipientPeer: null,
-                                    recipientRoles: null,
-                                    hmsMessageRecipientType:
-                                        HMSMessageRecipientType.ROLES),
-                              ));
                             } else if (_meetingStore.localPeer!.peerId !=
                                 this.valueChoose) {
                               var peer = await _meetingStore.getPeer(
                                   peerId: this.valueChoose);
-                              _meetingStore.sendDirectMessage(message, peer!);
-
-                              // TODO: add messages based on action listener success/failure
-                              _meetingStore.addMessage(HMSMessage(
-                                sender: _meetingStore.localPeer!,
-                                message: message,
-                                type: "chat",
-                                time: formatter.format(currentTime),
-                                hmsMessageRecipient: HMSMessageRecipient(
-                                    recipientPeer: null,
-                                    recipientRoles: null,
-                                    hmsMessageRecipientType:
-                                        HMSMessageRecipientType.PEER),
-                              ));
+                              _meetingStore.sendDirectMessage(message, peer!);                              
                             }
 
                             messageTextController.clear();

@@ -1,6 +1,7 @@
 //Package imports
 import 'package:flutter/cupertino.dart';
 import 'package:mobx/mobx.dart';
+import 'package:intl/intl.dart';
 
 //Project imports
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
@@ -109,6 +110,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
   HMSRoom? hmsRoom;
 
   int firstTimeBuild = 0;
+  final DateFormat formatter = DateFormat('d MMM y h:mm:ss a');
 
   @action
   void startListen() {
@@ -760,6 +762,11 @@ abstract class MeetingStoreBase extends ChangeNotifier
     await _hmssdkInteractor.stopHLSStreaming(hmsActionResultListener: this);
   }
 
+  void changeTrackStateForRole(bool mute, List<HMSRole>? roles) {
+    _hmssdkInteractor.changeTrackStateForRole(
+        true, HMSTrackKind.kHMSTrackKindAudio, "REGULAR", roles, this);
+  }
+
   @override
   void onSuccess(
       {HMSActionResultListenerMethod methodType =
@@ -803,11 +810,40 @@ abstract class MeetingStoreBase extends ChangeNotifier
         this.event = "Name Changed to ${localPeer!.name}";
         break;
       case HMSActionResultListenerMethod.sendBroadcastMessage:
-        print("sendBroadcastMessage success");
+        var message = HMSMessage(
+            sender: localPeer,
+            message: arguments!['message'],
+            type: arguments['type'],
+            time: formatter.format(DateTime.now()),
+            hmsMessageRecipient: HMSMessageRecipient(
+                recipientPeer: null,
+                recipientRoles: null,
+                hmsMessageRecipientType: HMSMessageRecipientType.BROADCAST));
+        addMessage(message);
         break;
       case HMSActionResultListenerMethod.sendGroupMessage:
+        var message = HMSMessage(
+            sender: localPeer,
+            message: arguments!['message'],
+            type: arguments['type'],
+            time: formatter.format(DateTime.now()),
+            hmsMessageRecipient: HMSMessageRecipient(
+                recipientPeer: null,
+                recipientRoles: arguments['roles'],
+                hmsMessageRecipientType: HMSMessageRecipientType.GROUP));
+        addMessage(message);
         break;
       case HMSActionResultListenerMethod.sendDirectMessage:
+        var message = HMSMessage(
+            sender: localPeer,
+            message: arguments!['message'],
+            type: arguments['type'],
+            time: formatter.format(DateTime.now()),
+            hmsMessageRecipient: HMSMessageRecipient(
+                recipientPeer: arguments['peer'],
+                recipientRoles: null,
+                hmsMessageRecipientType: HMSMessageRecipientType.DIRECT));
+        addMessage(message);
         break;
       case HMSActionResultListenerMethod.hlsStreamingStarted:
         // TODO: Handle this case.
