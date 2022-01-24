@@ -242,7 +242,6 @@ extension PlatformMethodValues on PlatformMethod {
 
       case PlatformMethod.startHlsStreaming:
         return "hls_start_streaming";
-
       case PlatformMethod.stopHlsStreaming:
         return "hls_stop_streaming";
 

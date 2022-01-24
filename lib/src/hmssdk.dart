@@ -5,7 +5,6 @@
 ///All methods related to meeting, preview and their listeners are present here.
 
 // Project imports:
-
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter/src/manager/hms_sdk_manager.dart';
 import 'package:hmssdk_flutter/src/service/platform_service.dart';
@@ -670,4 +669,6 @@ class HMSSDK {
   void removeLogListener({required HMSLogListener hmsLogListener}) {
     PlatformService.removeLogsListener(hmsLogListener);
   }
+
+
 }
