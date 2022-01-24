@@ -139,4 +139,34 @@ class UtilityComponents {
 
     return answer;
   }
+
+  static Future<List<HMSRole>> showRoleList(
+      BuildContext context, List<HMSRole> roles) async {
+    List<HMSRole> _selectedRoles = [];
+    HMSRole? selectedRole = await showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              content: Container(
+                height: 200,
+                width: 200,
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: roles.length,
+                  itemBuilder: (BuildContext context, int role) {
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context, roles[role]);
+                      },
+                      child: ListTile(
+                        title: Text(roles[role].name),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ));
+      if(selectedRole != null)
+      _selectedRoles.add(selectedRole);
+    return _selectedRoles;
+  }
 }

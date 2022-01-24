@@ -761,6 +761,16 @@ abstract class MeetingStoreBase extends ChangeNotifier
     await _hmssdkInteractor.stopHLSStreaming(hmsActionResultListener: this);
   }
 
+  void changeTrackStateForRole(bool mute,
+      List<HMSRole>? roles) {
+    _hmssdkInteractor.changeTrackStateForRole(
+        true,
+        HMSTrackKind.kHMSTrackKindAudio,
+        "REGULAR",
+        roles,
+        this);
+  }
+
   @override
   void onSuccess(
       {HMSActionResultListenerMethod methodType =
@@ -805,15 +815,15 @@ abstract class MeetingStoreBase extends ChangeNotifier
         break;
       case HMSActionResultListenerMethod.sendBroadcastMessage:
         var message = HMSMessage(
-            sender: localPeer,
-            message: arguments!['message'],
-            type: arguments['type'],
-            time: formatter.format(DateTime.now()),
-            hmsMessageRecipient: HMSMessageRecipient(
-                                    recipientPeer: null,
-                                    recipientRoles: null,
-                                    hmsMessageRecipientType:
-                                        HMSMessageRecipientType.BROADCAST),);
+          sender: localPeer,
+          message: arguments!['message'],
+          type: arguments['type'],
+          time: formatter.format(DateTime.now()),
+          hmsMessageRecipient: HMSMessageRecipient(
+              recipientPeer: null,
+              recipientRoles: null,
+              hmsMessageRecipientType: HMSMessageRecipientType.BROADCAST),
+        );
         addMessage(message);
         break;
       case HMSActionResultListenerMethod.sendGroupMessage:

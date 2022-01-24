@@ -253,6 +253,15 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
         }
         break;
       case 10:
+        List<HMSRole> roles = await _meetingStore.getRoles();
+        List<HMSRole> selectedRoles =
+            await UtilityComponents.showRoleList(context, roles);
+        if (selectedRoles.isNotEmpty)
+          _meetingStore.changeTrackStateForRole(true, selectedRoles);
+        break;
+      case 11:
+        break;
+      case 12:
         _meetingStore.endRoom(false, "Room Ended From Flutter");
         if (_meetingStore.isRoomEnded) {
           Navigator.pop(context);
@@ -463,6 +472,36 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                     ]),
                                 value: 9,
                               ),
+                            PopupMenuItem(
+                              child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      "Mute Roles",
+                                      style: TextStyle(
+                                        color: Colors.blue,
+                                      ),
+                                    ),
+                                    Icon(Icons.stream, color: Colors.blue),
+                                  ]),
+                              value: 10,
+                            ),
+                            PopupMenuItem(
+                              child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      "Mute All",
+                                      style: TextStyle(
+                                        color: Colors.blue,
+                                      ),
+                                    ),
+                                    Icon(Icons.stream, color: Colors.blue),
+                                  ]),
+                              value: 11,
+                            ),
                             if (_meetingStore
                                 .localPeer!.role.permissions.endRoom!)
                               PopupMenuItem(
@@ -477,7 +516,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                       Icon(Icons.cancel_schedule_send,
                                           color: Colors.blue),
                                     ]),
-                                value: 10,
+                                value: 12,
                               ),
                           ],
                           onSelected: handleMenu,
