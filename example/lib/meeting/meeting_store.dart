@@ -770,7 +770,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
 
   void changeTrackStateForRole(bool mute, List<HMSRole>? roles) {
     _hmssdkInteractor.changeTrackStateForRole(
-        true, HMSTrackKind.kHMSTrackKindAudio, "REGULAR", roles, this);
+        true, HMSTrackKind.kHMSTrackKindAudio, "regular", roles, this);
   }
 
   @override
@@ -801,7 +801,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
         // TODO: Handle this case.
         break;
       case HMSActionResultListenerMethod.changeTrackStateForRole:
-        // TODO: Handle this case.
+        this.event = arguments!['roles']==null?"Successfully Muted All":"Successfully Muted Role";
         break;
       case HMSActionResultListenerMethod.startRtmpOrRecording:
         //TODO: HmsException?.code == 400(To see what this means)
@@ -812,7 +812,6 @@ abstract class MeetingStoreBase extends ChangeNotifier
       case HMSActionResultListenerMethod.unknown:
         break;
       case HMSActionResultListenerMethod.changeName:
-        // TODO: Handle this case.
         this.event = "Name Changed to ${localPeer!.name}";
         break;
       case HMSActionResultListenerMethod.sendBroadcastMessage:
@@ -891,7 +890,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
         // TODO: Handle this case.
         break;
       case HMSActionResultListenerMethod.changeTrackStateForRole:
-        // TODO: Handle this case.
+        this.event = "Failed to Mute";
         break;
       case HMSActionResultListenerMethod.startRtmpOrRecording:
         if (hmsException.code?.errorCode == "400") {

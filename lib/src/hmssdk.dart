@@ -423,7 +423,7 @@ class HMSSDK {
       "type": HMSTrackKindValue.getValueFromHMSTrackKind(
           kind ?? HMSTrackKind.unknown),
       "source": source,
-      "roles": rolesMap
+      "roles": roles==null?roles:rolesMap
     };
     var result = await PlatformService.invokeMethod(
         PlatformMethod.changeTrackStateForRole,

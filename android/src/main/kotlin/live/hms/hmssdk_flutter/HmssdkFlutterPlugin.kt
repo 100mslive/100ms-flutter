@@ -488,9 +488,9 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         val roles: List<String>? = call.argument<List<String>>("roles")
         val type = call.argument<String>("type") ?: "chat"
 
-        val realRoles = hmssdk.getRoles().filter { roles?.contains(it.name)!! }
+        val hmsRoles = hmssdk.getRoles().filter { roles?.contains(it.name)!! }
 
-        hmssdk?.sendGroupMessage(message!!, type, realRoles, this.hmsMessageResultListener)
+        hmssdk?.sendGroupMessage(message!!, type, hmsRoles, this.hmsMessageResultListener)
     }
 
     private fun preview(call: MethodCall, result: Result) {
@@ -708,14 +708,18 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         val type = call.argument<String>("type")
         val source = call.argument<String>("source")
         val roles: List<String>? = call.argument<List<String>>("roles")
-
-        val realRoles = hmssdk.getRoles().filter { roles?.contains(it.name)!! }
-
+        val hmsRoles : List<HMSRole>?;
+        if(roles != null){
+            hmsRoles = hmssdk.getRoles().filter { roles?.contains(it.name)!! }
+        }
+        else{
+            hmsRoles = null;
+        }
         hmssdk.changeTrackState(
             mute = mute!!,
             type = HMSTrackExtension.getStringFromKind(type),
             source = source,
-            roles = realRoles,
+            roles = hmsRoles,
             hmsActionResultListener = this.actionListener
         )
     }

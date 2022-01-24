@@ -39,6 +39,7 @@ dependencies:
   connectivity_checker: ^1.0.0
   dropdown_button2: ^1.0.7
   video_player:
+  clickable_list_wheel_view: ^0.0.4
 
 dev_dependencies:
   flutter_test:
