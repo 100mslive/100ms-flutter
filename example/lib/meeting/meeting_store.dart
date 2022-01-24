@@ -761,14 +761,9 @@ abstract class MeetingStoreBase extends ChangeNotifier
     await _hmssdkInteractor.stopHLSStreaming(hmsActionResultListener: this);
   }
 
-  void changeTrackStateForRole(bool mute,
-      List<HMSRole>? roles) {
+  void changeTrackStateForRole(bool mute, List<HMSRole>? roles) {
     _hmssdkInteractor.changeTrackStateForRole(
-        true,
-        HMSTrackKind.kHMSTrackKindAudio,
-        "REGULAR",
-        roles,
-        this);
+        true, HMSTrackKind.kHMSTrackKindAudio, "REGULAR", roles, this);
   }
 
   @override
@@ -815,28 +810,26 @@ abstract class MeetingStoreBase extends ChangeNotifier
         break;
       case HMSActionResultListenerMethod.sendBroadcastMessage:
         var message = HMSMessage(
-          sender: localPeer,
-          message: arguments!['message'],
-          type: arguments['type'],
-          time: formatter.format(DateTime.now()),
-          hmsMessageRecipient: HMSMessageRecipient(
-              recipientPeer: null,
-              recipientRoles: null,
-              hmsMessageRecipientType: HMSMessageRecipientType.BROADCAST),
-        );
+            sender: localPeer,
+            message: arguments!['message'],
+            type: arguments['type'],
+            time: formatter.format(DateTime.now()),
+            hmsMessageRecipient: HMSMessageRecipient(
+                recipientPeer: null,
+                recipientRoles: null,
+                hmsMessageRecipientType: HMSMessageRecipientType.BROADCAST));
         addMessage(message);
         break;
       case HMSActionResultListenerMethod.sendGroupMessage:
         var message = HMSMessage(
-          sender: localPeer,
-          message: arguments!['message'],
-          type: arguments['type'],
-          time: formatter.format(DateTime.now()),
-          hmsMessageRecipient: HMSMessageRecipient(
-              recipientPeer: null,
-              recipientRoles: null,
-              hmsMessageRecipientType: HMSMessageRecipientType.ROLES),
-        );
+            sender: localPeer,
+            message: arguments!['message'],
+            type: arguments['type'],
+            time: formatter.format(DateTime.now()),
+            hmsMessageRecipient: HMSMessageRecipient(
+                recipientPeer: null,
+                recipientRoles: arguments['roles'],
+                hmsMessageRecipientType: HMSMessageRecipientType.GROUP));
         addMessage(message);
         break;
       case HMSActionResultListenerMethod.sendDirectMessage:
@@ -846,9 +839,9 @@ abstract class MeetingStoreBase extends ChangeNotifier
             type: arguments['type'],
             time: formatter.format(DateTime.now()),
             hmsMessageRecipient: HMSMessageRecipient(
-                recipientPeer: null,
+                recipientPeer: arguments['peer'],
                 recipientRoles: null,
-                hmsMessageRecipientType: HMSMessageRecipientType.PEER));
+                hmsMessageRecipientType: HMSMessageRecipientType.DIRECT));
         addMessage(message);
         break;
       case HMSActionResultListenerMethod.hlsStreamingStarted:

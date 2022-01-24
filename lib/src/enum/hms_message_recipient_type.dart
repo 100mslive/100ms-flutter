@@ -1,4 +1,4 @@
-enum HMSMessageRecipientType { BROADCAST, PEER, ROLES, unKnown }
+enum HMSMessageRecipientType { BROADCAST, DIRECT, GROUP, unKnown }
 
 extension HMSMessageRecipientValues on HMSMessageRecipientType {
   static HMSMessageRecipientType getHMSMessageRecipientFromName(String name) {
@@ -6,9 +6,9 @@ extension HMSMessageRecipientValues on HMSMessageRecipientType {
       case 'broadCast':
         return HMSMessageRecipientType.BROADCAST;
       case 'peer':
-        return HMSMessageRecipientType.PEER;
+        return HMSMessageRecipientType.DIRECT;
       case 'roles':
-        return HMSMessageRecipientType.ROLES;
+        return HMSMessageRecipientType.GROUP;
       default:
         return HMSMessageRecipientType.unKnown;
     }
@@ -19,9 +19,9 @@ extension HMSMessageRecipientValues on HMSMessageRecipientType {
     switch (hmsMessageRecipientType) {
       case HMSMessageRecipientType.BROADCAST:
         return 'broadCast';
-      case HMSMessageRecipientType.ROLES:
+      case HMSMessageRecipientType.GROUP:
         return 'roles';
-      case HMSMessageRecipientType.PEER:
+      case HMSMessageRecipientType.DIRECT:
         return 'peer';
       case HMSMessageRecipientType.unKnown:
         return '';

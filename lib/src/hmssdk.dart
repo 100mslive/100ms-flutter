@@ -631,12 +631,12 @@ class HMSSDK {
   }
 
   ///add MeetingListener it will add all the listeners.
-  void addMeetingListener({required HMSUpdateListener listener}) {
+  void addUpdateListener({required HMSUpdateListener listener}) {
     PlatformService.addMeetingListener(listener);
   }
 
   ///remove a meetListener.
-  void removeMeetingListener({required HMSUpdateListener listener}) {
+  void removeUpdateListener({required HMSUpdateListener listener}) {
     PlatformService.removeMeetingListener(listener);
   }
 
