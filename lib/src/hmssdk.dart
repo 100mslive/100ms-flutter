@@ -36,10 +36,20 @@ class HMSSDK {
     return await HmsSdkManager().createHMSSdk(hmsTrackSetting);
   }
 
+  ///add MeetingListener it will add all the listeners.
+  void addUpdateListener({required HMSUpdateListener listener}) {
+    PlatformService.addUpdateListener(listener);
+  }
+
   /// Join the room with configuration options passed as a [HMSConfig] object
   Future<void> join({required HMSConfig config}) async {
     return await PlatformService.invokeMethod(PlatformMethod.join,
         arguments: {...config.getJson()});
+  }
+
+  ///add one or more previewListeners.
+  void addPreviewListener({required HMSPreviewListener listener}) {
+    PlatformService.addPreviewListener(listener);
   }
 
   /// Begin a preview so that the local peer's audio and video can be displayed to them before they join a call.
@@ -108,25 +118,6 @@ class HMSSDK {
   Future<void> switchCamera() async {
     return await PlatformService.invokeMethod(
       PlatformMethod.switchCamera,
-    );
-  }
-
-  /// start screen share for the meeting
-  void startScreenShare() async {
-    await PlatformService.invokeMethod(
-      PlatformMethod.startScreenShare,
-    );
-  }
-
-  Future<bool> isScreenShareActive() async {
-    return await PlatformService.invokeMethod(
-      PlatformMethod.isScreenShareActive,
-    );
-  }
-
-  Future<void> stopScreenShare() async {
-    return await PlatformService.invokeMethod(
-      PlatformMethod.stopScreenShare,
     );
   }
 
@@ -629,19 +620,30 @@ class HMSSDK {
     }
   }
 
-  ///add MeetingListener it will add all the listeners.
-  void addUpdateListener({required HMSUpdateListener listener}) {
-    PlatformService.addMeetingListener(listener);
+
+    /// start screen share for the meeting
+  void startScreenShare() async {
+    await PlatformService.invokeMethod(
+      PlatformMethod.startScreenShare,
+    );
   }
+
+  Future<bool> isScreenShareActive() async {
+    return await PlatformService.invokeMethod(
+      PlatformMethod.isScreenShareActive,
+    );
+  }
+
+  Future<void> stopScreenShare() async {
+    return await PlatformService.invokeMethod(
+      PlatformMethod.stopScreenShare,
+    );
+  }
+
 
   ///remove a meetListener.
   void removeUpdateListener({required HMSUpdateListener listener}) {
-    PlatformService.removeMeetingListener(listener);
-  }
-
-  ///add one or more previewListeners.
-  void addPreviewListener({required HMSPreviewListener listener}) {
-    PlatformService.addPreviewListener(listener);
+    PlatformService.removeUpdateListener(listener);
   }
 
   ///remove a previewListener.

@@ -127,6 +127,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.3.5"
+  clickable_list_wheel_view:
+    dependency: "direct main"
+    description:
+      name: clickable_list_wheel_view
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.4"
   clock:
     dependency: transitive
     description:

@@ -89,11 +89,11 @@ class HMSSDKInteractor {
     hmsSDK.removeLogListener(hmsLogListener: hmsLogListener);
   }
 
-  void addMeetingListener(HMSUpdateListener listener) {
+  void addUpdateListener(HMSUpdateListener listener) {
     hmsSDK.addUpdateListener(listener: listener);
   }
 
-  void removeMeetingListener(HMSUpdateListener listener) {
+  void removeUpdateListener(HMSUpdateListener listener) {
     hmsSDK.removeUpdateListener(listener: listener);
   }
 

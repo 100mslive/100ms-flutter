@@ -116,15 +116,14 @@ abstract class MeetingStoreBase extends ChangeNotifier
 
   @action
   void startListen() {
-    HmsSdkManager.hmsSdkInteractor?.addMeetingListener(this);
+    HmsSdkManager.hmsSdkInteractor?.addUpdateListener(this);
     // startHMSLogger(HMSLogLevel.VERBOSE, HMSLogLevel.VERBOSE);
     // addLogsListener();
   }
 
   @action
-  void removeListenerMeeting() {
-    _hmssdkInteractor.removeMeetingListener(this);
-    // removeLogsListener();
+  void removeUpdateListener() {
+    _hmssdkInteractor.removeUpdateListener(this);
   }
 
   @action
