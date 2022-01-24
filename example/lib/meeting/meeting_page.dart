@@ -1,4 +1,6 @@
 //Package imports
+import 'dart:io';
+
 import 'package:connectivity_checker/connectivity_checker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -680,7 +682,8 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                           if (_meetingStore.localPeer != null &&
                               _meetingStore
                                   .localPeer!.role.publishSettings!.allowed
-                                  .contains("screen"))
+                                  .contains("screen") &&
+                              Platform.isAndroid)
                             Container(
                               padding: EdgeInsets.all(8),
                               child: IconButton(
