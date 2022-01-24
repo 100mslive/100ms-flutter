@@ -259,12 +259,24 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
         }
         break;
       case 9:
+        if (_meetingStore.hasHlsStarted) {
+          _meetingStore.stopHLSStreaming();
+        } else {
+          String url = await UtilityComponents.showInputDialog(
+              context: context,
+              placeholder: "Enter HLS Url",
+              prefilledValue: widget.roomId + "?token=beam_recording");
+          if (url.isNotEmpty) {
+            _meetingStore.startHLSStreaming(url);
+          }
+        }
+        break;
+      case 10:
         _meetingStore.endRoom(false, "Room Ended From Flutter");
         if (_meetingStore.isRoomEnded) {
           Navigator.pop(context);
         }
         break;
-
       default:
         break;
     }
