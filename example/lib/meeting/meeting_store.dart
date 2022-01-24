@@ -405,6 +405,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
       if (index != -1) peerTracks[index].audioTrack = track;
       return;
     }
+
     if (track.source == "REGULAR") {
       int index =
           peerTracks.indexWhere((element) => element.peerId == peer.peerId);
@@ -917,5 +918,10 @@ abstract class MeetingStoreBase extends ChangeNotifier
         // TODO: Handle this case.
         break;
     }
+  }
+
+
+  Future<List<HMSPeer>?> getPeers() async{
+    return await _hmssdkInteractor.getPeers();
   }
 }

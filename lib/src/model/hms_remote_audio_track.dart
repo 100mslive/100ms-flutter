@@ -33,7 +33,7 @@ class HMSRemoteAudioTrack extends HMSAudioTrack {
     var result = await PlatformService.invokeMethod(PlatformMethod.setVolume,
         arguments: {"track_id": trackId, "volume": volume.toDouble()});
 
-    if (result) {
+    if (result == null) {
       return null;
     } else {
       return HMSException.fromMap(result["error"]);
