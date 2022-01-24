@@ -398,12 +398,6 @@ abstract class MeetingStoreBase extends ChangeNotifier
     }
 
     if (track.kind == HMSTrackKind.kHMSTrackKindAudio) {
-      int indexAudio = peerTracks.indexWhere((element) => element.peerId == peer.peerId);
-      if(indexAudio == -1)
-        audioTracks.add(track);
-
-
-
       int index =
           peerTracks.indexWhere((element) => element.peerId == peer.peerId);
       if (index != -1) peerTracks[index].audioTrack = track;
