@@ -1,4 +1,6 @@
 //Package imports
+import 'dart:io';
+
 import 'package:connectivity_checker/connectivity_checker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -147,6 +149,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
   @override
   void dispose() {
     disposeAllListeners();
+    _meetingStore.stopScreenShare();
     super.dispose();
   }
 
@@ -169,7 +172,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
         // StaticLogger.logger?.close();
         // ShareExtend.share(CustomLogger.file?.path ?? '', 'file');
         // logger.getCustomLogger();
-
+        UtilityComponents.showSnackBarWithString("Coming Soon...", context);
         break;
 
       case 2:
@@ -230,6 +233,26 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
         }
         setState(() {});
         break;
+      case 6:
+        // if(!_meetingStore.isActiveSpeakerMode){
+        //     _meetingStore.activeSpeakerPeerTracksStore = _meetingStore.peerTracks;
+        //     _meetingStore.isActiveSpeakerMode = true;
+        //     _pageController.animateToPage(0,duration: Duration(seconds: 1),curve: Curves.decelerate);
+        //     setState(() {});
+        //     UtilityComponents.showSnackBarWithString(
+        //           "Active Speaker Mode", context);
+        // }
+        UtilityComponents.showSnackBarWithString("Coming Soon...", context);
+        break;
+      case 7:
+        // if (_meetingStore.isActiveSpeakerMode) {
+        //   _meetingStore.isActiveSpeakerMode = false;
+        //   setState(() {});
+        //   UtilityComponents.showSnackBarWithString(
+        //       "Switched to Hero Mode", context);
+        // }
+        UtilityComponents.showSnackBarWithString("Coming Soon...", context);
+        break;
       case 8:
         String name = await UtilityComponents.showInputDialog(
             context: context, placeholder: "Enter Name");
@@ -241,7 +264,14 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
         if (_meetingStore.hasHlsStarted) {
           _meetingStore.stopHLSStreaming();
         } else {
-          _meetingStore.startHLSStreaming(Constant.meetingUrl);
+          String url = await UtilityComponents.showInputDialog(
+              context: context,
+              placeholder: "Enter HLS Url",
+              prefilledValue: widget.roomId + "?token=beam_recording");
+          if (url.isNotEmpty) {
+            url.replaceAll("meeting", "preview");
+            _meetingStore.startHLSStreaming(url);
+          }
         }
         break;
       
@@ -316,7 +346,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                             PopupMenuItem(
                               child: Row(
                                 mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text("Send Logs",
                                       style: TextStyle(color: Colors.blue)),
@@ -325,50 +355,55 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                               ),
                               value: 1,
                             ),
-                            PopupMenuItem(
-                              child: Observer(
-                                  builder: (_) => Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(
-                                                _meetingStore.isRecordingStarted
-                                                    ? "Recording "
-                                                    : "Record",
-                                                style: TextStyle(
-                                                  color: _meetingStore
+                            if (!_meetingStore.localPeer!.role.name
+                                .contains("hls-"))
+                              PopupMenuItem(
+                                child: Observer(
+                                    builder: (_) => Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                  _meetingStore
                                                           .isRecordingStarted
-                                                      ? Colors.red
-                                                      : Colors.blue,
-                                                )),
-                                            Icon(
-                                              Icons.circle,
-                                              color: _meetingStore
-                                                      .isRecordingStarted
-                                                  ? Colors.red
-                                                  : Colors.blue,
-                                            ),
-                                          ])),
-                              value: 2,
-                            ),
+                                                      ? "Recording "
+                                                      : "Record",
+                                                  style: TextStyle(
+                                                    color: _meetingStore
+                                                            .isRecordingStarted
+                                                        ? Colors.red
+                                                        : Colors.blue,
+                                                  )),
+                                              Icon(
+                                                Icons.circle,
+                                                color: _meetingStore
+                                                        .isRecordingStarted
+                                                    ? Colors.red
+                                                    : Colors.blue,
+                                              ),
+                                            ])),
+                                value: 2,
+                              ),
+                            if (!_meetingStore.localPeer!.role.name
+                                .contains("hls-"))
+                              PopupMenuItem(
+                                child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        "Toggle Camera  ",
+                                        style: TextStyle(color: Colors.blue),
+                                      ),
+                                      Icon(Icons.switch_camera,
+                                          color: Colors.blue),
+                                    ]),
+                                value: 3,
+                              ),
                             PopupMenuItem(
                               child: Row(
                                   mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      "Toggle Camera  ",
-                                      style: TextStyle(color: Colors.blue),
-                                    ),
-                                    Icon(Icons.switch_camera,
-                                        color: Colors.blue),
-                                  ]),
-                              value: 3,
-                            ),
-                            PopupMenuItem(
-                              child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                  MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
                                       "Participants  ",
@@ -382,10 +417,12 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                             PopupMenuItem(
                               child: Row(
                                   mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                  MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      audioViewOn ? "Video View" : "Audio View",
+                                      audioViewOn
+                                          ? "Video View"
+                                          : "Audio View",
                                       style: TextStyle(color: Colors.blue),
                                     ),
                                     Image.asset(
@@ -402,7 +439,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                             PopupMenuItem(
                               child: Row(
                                   mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                  MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
                                       "Active Speaker Mode ",
@@ -416,7 +453,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                             PopupMenuItem(
                               child: Row(
                                   mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                  MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
                                       "Hero Mode ",
@@ -430,7 +467,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                             PopupMenuItem(
                               child: Row(
                                   mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                  MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
                                       "Change Name",
@@ -492,12 +529,13 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                   ]),
                               value: 11,
                             ),
+
                             if (_meetingStore
                                 .localPeer!.role.permissions.endRoom!)
                               PopupMenuItem(
                                 child: Row(
                                     mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                    MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
                                         "End Room",
@@ -510,7 +548,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                               ),
                           ],
                           onSelected: handleMenu,
-                        )
+                        ),
                       ],
                     ),
                     body: Padding(
@@ -636,40 +674,45 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                     bottomNavigationBar: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Container(
-                            padding: EdgeInsets.all(8),
-                            child: Observer(builder: (context) {
-                              return IconButton(
-                                  tooltip: 'Video',
-                                  iconSize: 32,
-                                  onPressed:
-                                      (audioViewOn || _meetingStore.isHLSLink)
-                                          ? null
-                                          : () {
-                                              _meetingStore.switchVideo();
-                                              countOfVideoOnBetweenTwo++;
-                                            },
-                                  icon: Icon(_meetingStore.isVideoOn
-                                      ? Icons.videocam
-                                      : Icons.videocam_off));
-                            }),
-                          ),
-                          Container(
-                            padding: EdgeInsets.all(8),
-                            child: Observer(builder: (context) {
-                              return IconButton(
-                                  tooltip: 'Audio',
-                                  iconSize: 32,
-                                  onPressed: (_meetingStore.isHLSLink)
-                                      ? null
-                                      : () {
-                                          _meetingStore.switchAudio();
-                                        },
-                                  icon: Icon(_meetingStore.isMicOn
-                                      ? Icons.mic
-                                      : Icons.mic_off));
-                            }),
-                          ),
+                          if (_meetingStore.localPeer != null &&
+                              _meetingStore
+                                  .localPeer!.role.publishSettings!.allowed
+                                  .contains("video"))
+                            Container(
+                              padding: EdgeInsets.all(8),
+                              child: Observer(builder: (context) {
+                                return IconButton(
+                                    tooltip: 'Video',
+                                    iconSize: 32,
+                                    onPressed: (audioViewOn)
+                                        ? null
+                                        : () {
+                                            _meetingStore.switchVideo();
+                                            countOfVideoOnBetweenTwo++;
+                                          },
+                                    icon: Icon(_meetingStore.isVideoOn
+                                        ? Icons.videocam
+                                        : Icons.videocam_off));
+                              }),
+                            ),
+                          if (_meetingStore.localPeer != null &&
+                              _meetingStore
+                                  .localPeer!.role.publishSettings!.allowed
+                                  .contains("audio"))
+                            Container(
+                              padding: EdgeInsets.all(8),
+                              child: Observer(builder: (context) {
+                                return IconButton(
+                                    tooltip: 'Audio',
+                                    iconSize: 32,
+                                    onPressed: () {
+                                      _meetingStore.switchAudio();
+                                    },
+                                    icon: Icon(_meetingStore.isMicOn
+                                        ? Icons.mic
+                                        : Icons.mic_off));
+                              }),
+                            ),
                           Container(
                               padding: EdgeInsets.all(8),
                               child: IconButton(
@@ -703,24 +746,29 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                 },
                                 icon: Icon(Icons.chat_bubble)),
                           ),
-                          Container(
-                            padding: EdgeInsets.all(8),
-                            child: IconButton(
-                                tooltip: 'Share',
-                                iconSize: 32,
-                                onPressed: () {
-                                  if (!_meetingStore.isScreenShareOn)
-                                    _meetingStore.startScreenShare();
-                                  else
-                                    _meetingStore.stopScreenShare();
-                                },
-                                icon: Icon(
-                                  Icons.screen_share,
-                                  color: _meetingStore.isScreenShareOn
-                                      ? Colors.blue
-                                      : Colors.black,
-                                )),
-                          ),
+                          if (_meetingStore.localPeer != null &&
+                              _meetingStore
+                                  .localPeer!.role.publishSettings!.allowed
+                                  .contains("screen") &&
+                              Platform.isAndroid)
+                            Container(
+                              padding: EdgeInsets.all(8),
+                              child: IconButton(
+                                  tooltip: 'Share',
+                                  iconSize: 32,
+                                  onPressed: () {
+                                    if (!_meetingStore.isScreenShareOn)
+                                      _meetingStore.startScreenShare();
+                                    else
+                                      _meetingStore.stopScreenShare();
+                                  },
+                                  icon: Icon(
+                                    Icons.screen_share,
+                                    color: _meetingStore.isScreenShareOn
+                                        ? Colors.blue
+                                        : Colors.black,
+                                  )),
+                            ),
                           Container(
                             padding: EdgeInsets.all(8),
                             child: IconButton(
@@ -744,9 +792,22 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
   }
 
   @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
+  void didChangeAppLifecycleState(AppLifecycleState state) async{
     super.didChangeAppLifecycleState(state);
     if (state == AppLifecycleState.resumed) {
+      List<HMSPeer>? peersList = await _meetingStore.getPeers();
+
+      peersList?.forEach((element) {
+        if(!element.isLocal){
+          (element.audioTrack as HMSRemoteAudioTrack?)?.setVolume(10.0);
+          element.auxiliaryTracks?.forEach((element) {
+            if(element.kind == HMSTrackKind.kHMSTrackKindAudio){
+              (element as HMSRemoteAudioTrack?)?.setVolume(10.0);
+            }
+          });
+        }
+      });
+
       if (_meetingStore.isVideoOn) {
         _meetingStore.startCapturing();
       } else {

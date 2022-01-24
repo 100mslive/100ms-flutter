@@ -5,7 +5,6 @@
 ///All methods related to meeting, preview and their listeners are present here.
 
 // Project imports:
-
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter/src/manager/hms_sdk_manager.dart';
 import 'package:hmssdk_flutter/src/service/platform_service.dart';
@@ -221,16 +220,17 @@ class HMSSDK {
     var result = await PlatformService.invokeMethod(
         PlatformMethod.sendBroadcastMessage,
         arguments: arguments);
+
     if (hmsActionResultListener != null) {
-      if (result == null) {
-        hmsActionResultListener.onSuccess(
-            methodType: HMSActionResultListenerMethod.sendBroadcastMessage,
-            arguments: arguments);
-      } else {
+      if (result != null && result["error"] != null) {
         hmsActionResultListener.onException(
             methodType: HMSActionResultListenerMethod.sendBroadcastMessage,
             arguments: arguments,
             hmsException: HMSException.fromMap(result["error"]));
+      } else {
+        hmsActionResultListener.onSuccess(
+            methodType: HMSActionResultListenerMethod.sendBroadcastMessage,
+            arguments: arguments);
       }
     }
   }
@@ -250,16 +250,17 @@ class HMSSDK {
     var result = await PlatformService.invokeMethod(
         PlatformMethod.sendGroupMessage,
         arguments: arguments);
+
     if (hmsActionResultListener != null) {
-      if (result == null) {
-        hmsActionResultListener.onSuccess(
-            methodType: HMSActionResultListenerMethod.sendGroupMessage,
-            arguments: {"message": message, "type": type, "roles": hmsRolesTo});
-      } else {
+      if (result != null && result["error"] != null) {
         hmsActionResultListener.onException(
             methodType: HMSActionResultListenerMethod.sendGroupMessage,
             arguments: {"message": message, "type": type, "roles": hmsRolesTo},
             hmsException: HMSException.fromMap(result["error"]));
+      } else {
+        hmsActionResultListener.onSuccess(
+            methodType: HMSActionResultListenerMethod.sendGroupMessage,
+            arguments: {"message": message, "type": type, "roles": hmsRolesTo});
       }
     }
   }
@@ -280,16 +281,17 @@ class HMSSDK {
     var result = await PlatformService.invokeMethod(
         PlatformMethod.sendDirectMessage,
         arguments: arguments);
+
     if (hmsActionResultListener != null) {
-      if (result == null) {
-        hmsActionResultListener.onSuccess(
-            methodType: HMSActionResultListenerMethod.sendDirectMessage,
-            arguments: {"message": message, "peer": peerTo, "type": type});
-      } else {
+      if (result != null && result["error"] != null) {
         hmsActionResultListener.onException(
             methodType: HMSActionResultListenerMethod.sendDirectMessage,
             arguments: {"message": message, "peer": peerTo, "type": type},
             hmsException: HMSException.fromMap(result["error"]));
+      } else {
+        hmsActionResultListener.onSuccess(
+            methodType: HMSActionResultListenerMethod.sendDirectMessage,
+            arguments: {"message": message, "peer": peerTo, "type": type});
       }
     }
   }
@@ -628,12 +630,12 @@ class HMSSDK {
   }
 
   ///add MeetingListener it will add all the listeners.
-  void addMeetingListener({required HMSUpdateListener listener}) {
+  void addUpdateListener({required HMSUpdateListener listener}) {
     PlatformService.addMeetingListener(listener);
   }
 
   ///remove a meetListener.
-  void removeMeetingListener({required HMSUpdateListener listener}) {
+  void removeUpdateListener({required HMSUpdateListener listener}) {
     PlatformService.removeMeetingListener(listener);
   }
 
@@ -667,4 +669,6 @@ class HMSSDK {
   void removeLogListener({required HMSLogListener hmsLogListener}) {
     PlatformService.removeLogsListener(hmsLogListener);
   }
+
+
 }

@@ -19,6 +19,7 @@ class VideoTile extends StatefulWidget {
   final Map<String, HMSTrackUpdate> trackStatus;
   final Map<String, String> observerMap;
   final bool audioView;
+
   VideoTile({
     Key? key,
     required this.tileIndex,
@@ -40,6 +41,12 @@ class _VideoTileState extends State<VideoTile> {
     MeetingStore _meetingStore = context.read<MeetingStore>();
     var index = widget.tileIndex;
     var filteredList = widget.filteredList;
+    bool mutePermission =
+        _meetingStore.localPeer!.role.permissions.mute ?? false;
+    bool unMutePermission =
+        _meetingStore.localPeer!.role.permissions.unMute ?? false;
+    bool removePeerPermission =
+        _meetingStore.localPeer!.role.permissions.removeOthers ?? false;
 
     if (index >= filteredList.length) return SizedBox();
 
@@ -62,6 +69,8 @@ class _VideoTileState extends State<VideoTile> {
       key: Key(filteredList[index].peerId),
       child: InkWell(
         onLongPress: () {
+          if (!mutePermission || !unMutePermission || !removePeerPermission)
+            return;
           if (!widget.audioView &&
               filteredList[index].peerId != _meetingStore.localPeer!.peerId)
             showDialog(
@@ -90,7 +99,10 @@ class _VideoTileState extends State<VideoTile> {
                               var peer = await _meetingStore.getPeer(
                                   peerId: filteredList[index].peerId);
                               _meetingStore.removePeerFromRoom(peer!);
-                            }),
+                            },
+                            mute: mutePermission,
+                            unMute: unMutePermission,
+                            removeOthers: removePeerPermission),
                       ],
                     ));
         },

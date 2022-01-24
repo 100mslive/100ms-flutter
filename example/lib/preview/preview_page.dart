@@ -1,9 +1,9 @@
 //Package imports
 import 'package:connectivity_checker/connectivity_checker.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:mobx/mobx.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
 //Project imports
@@ -50,6 +50,7 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
             });
   }
 
+
   void initPreview() async {
     _previewStore.startListen();
     bool ans = await _previewStore.startPreview();
@@ -64,7 +65,6 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
     var size = MediaQuery.of(context).size;
     final double itemHeight = (size.height - kToolbarHeight - 24);
     final double itemWidth = size.width;
-
     return ConnectivityAppWrapper(
       app: ConnectivityWidgetWrapper(
         offlineWidget: OfflineWidget(),
@@ -104,7 +104,7 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                               track: _previewStore.localTracks.isEmpty
                                   ? null
                                   : _previewStore.localTracks[0]),
-                          isVideoMuted: false,
+                          isVideoMuted: !_previewStore.videoOn,
                         ),
                       );
                     },
@@ -114,26 +114,30 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                   height: 16,
                 ),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Expanded(
-                      child: Observer(builder: (context) {
-                        return GestureDetector(
-                          onTap: _previewStore.isHLSLink ||
-                                  _previewStore.localTracks.isEmpty
-                              ? null
-                              : () async {
-                                  _previewStore.switchVideo();
-                                },
-                          child: Icon(
-                              _previewStore.videoOn && !_previewStore.isHLSLink
-                                  ? Icons.videocam
-                                  : Icons.videocam_off,
-                              size: 48),
-                        );
-                      }),
-                    ),
-                    Expanded(
-                        child: ElevatedButton(
+                    // if (_previewStore.peer != null &&
+                    //     _previewStore.peer!.role.publishSettings!.allowed
+                    //         .contains("video"))
+                    Observer(builder: (context) {
+                      return (_previewStore.peer != null &&
+                              _previewStore.peer!.role.publishSettings!.allowed
+                                  .contains("video"))
+                          ? GestureDetector(
+                              onTap: _previewStore.localTracks.isEmpty
+                                  ? null
+                                  : () async {
+                                      _previewStore.switchVideo();
+                                    },
+                              child: Icon(
+                                  _previewStore.videoOn
+                                      ? Icons.videocam
+                                      : Icons.videocam_off,
+                                  size: 48),
+                            )
+                          : Container();
+                    }),
+                    ElevatedButton(
                       onPressed: () {
                         _previewStore.removeListener();
                         Navigator.of(context).pushReplacement(MaterialPageRoute(
@@ -149,21 +153,23 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                         'Join Now',
                         style: TextStyle(height: 1, fontSize: 18),
                       ),
-                    )),
-                    Expanded(child: Observer(builder: (context) {
-                      return GestureDetector(
-                        onTap: _previewStore.isHLSLink
-                            ? null
-                            : () async {
+                    ),
+                    Observer(builder: (context) {
+                      return (_previewStore.peer != null &&
+                              _previewStore.peer!.role.publishSettings!.allowed
+                                  .contains("audio"))
+                          ? GestureDetector(
+                              onTap: () async {
                                 _previewStore.switchAudio();
                               },
-                        child: Icon(
-                            (_previewStore.audioOn && !_previewStore.isHLSLink)
-                                ? Icons.mic
-                                : Icons.mic_off,
-                            size: 48),
-                      );
-                    }))
+                              child: Icon(
+                                  (_previewStore.audioOn)
+                                      ? Icons.mic
+                                      : Icons.mic_off,
+                                  size: 48),
+                            )
+                          : Container();
+                    })
                   ],
                 ),
                 SizedBox(

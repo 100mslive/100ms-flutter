@@ -1,4 +1,6 @@
 //Project imports
+import 'dart:io';
+
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 class HMSSDKInteractor {
@@ -33,7 +35,11 @@ class HMSSDKInteractor {
   }
 
   Future<bool> isScreenShareActive() async {
-    return await hmsSDK.isScreenShareActive();
+    if (Platform.isAndroid) {
+      return await hmsSDK.isScreenShareActive();
+    } else {
+      return false;
+    }
   }
 
   void sendBroadcastMessage(
@@ -84,11 +90,11 @@ class HMSSDKInteractor {
   }
 
   void addMeetingListener(HMSUpdateListener listener) {
-    hmsSDK.addMeetingListener(listener: listener);
+    hmsSDK.addUpdateListener(listener: listener);
   }
 
   void removeMeetingListener(HMSUpdateListener listener) {
-    hmsSDK.removeMeetingListener(listener: listener);
+    hmsSDK.removeUpdateListener(listener: listener);
   }
 
   void addPreviewListener(HMSPreviewListener listener) {
@@ -228,8 +234,7 @@ class HMSSDKInteractor {
 
   Future<void> startHLSStreaming(String meetingUrl,
       HMSActionResultListener hmsActionResultListener) async {
-    await hmsSDK.startHlsStreaming(
-        meetingUrl + "?token=beam_recording", "meta data",
+    await hmsSDK.startHlsStreaming(meetingUrl, "meta data",
         hmsActionResultListener: hmsActionResultListener);
   }
 
@@ -244,4 +249,10 @@ class HMSSDKInteractor {
     hmsSDK.changeTrackStateForRole(
         mute: mute, kind: kind, source: source, roles: roles,hmsActionResultListener: hmsActionResultListener);
   }
+
+  Future<List<HMSPeer>?> getPeers() async{
+    return await hmsSDK.getPeers();
+  }
+
+
 }

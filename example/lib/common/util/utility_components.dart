@@ -146,6 +146,7 @@ class UtilityComponents {
       BuildContext context, List<HMSRole> roles) async {
     List<HMSRole> _selectedRoles = [];
     FixedExtentScrollController _scrollController = FixedExtentScrollController();
+
     HMSRole? selectedRole = await showDialog(
         context: context,
         builder: (context) => AlertDialog(

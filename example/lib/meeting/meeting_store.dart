@@ -1,6 +1,7 @@
 //Package imports
 import 'package:flutter/cupertino.dart';
 import 'package:mobx/mobx.dart';
+import 'package:intl/intl.dart';
 
 //Project imports
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
@@ -17,9 +18,11 @@ abstract class MeetingStoreBase extends ChangeNotifier
     with Store
     implements HMSUpdateListener, HMSActionResultListener {
   late HMSSDKInteractor _hmssdkInteractor;
+
   MeetingStoreBase() {
     _hmssdkInteractor = HmsSdkManager.hmsSdkInteractor!;
   }
+
   // HMSLogListener
   @observable
   bool isSpeakerOn = true;
@@ -109,6 +112,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
   HMSRoom? hmsRoom;
 
   int firstTimeBuild = 0;
+  final DateFormat formatter = DateFormat('d MMM y h:mm:ss a');
 
   @action
   void startListen() {
@@ -353,7 +357,10 @@ abstract class MeetingStoreBase extends ChangeNotifier
         isRecordingStarted = room.hmsRtmpStreamingState?.running ?? false;
         break;
       case HMSRoomUpdate.hlsStreamingStateUpdated:
+        print(
+            "${hasHlsStarted} hasHLSStarted ${room.hmshlsStreamingState?.running ?? false}");
         hasHlsStarted = room.hmshlsStreamingState?.running ?? false;
+
         streamUrl = hasHlsStarted
             ? room.hmshlsStreamingState?.variants[0]?.hlsStreamUrl ?? ""
             : "";
@@ -403,6 +410,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
       if (index != -1) peerTracks[index].audioTrack = track;
       return;
     }
+
     if (track.source == "REGULAR") {
       int index =
           peerTracks.indexWhere((element) => element.peerId == peer.peerId);
@@ -732,6 +740,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
   }
 
   bool isRaisedHand = false;
+
   void changeMetadata() {
     isRaisedHand = !isRaisedHand;
     String value = isRaisedHand ? "true" : "false";
@@ -808,10 +817,40 @@ abstract class MeetingStoreBase extends ChangeNotifier
         this.event = "Name Changed to ${localPeer!.name}";
         break;
       case HMSActionResultListenerMethod.sendBroadcastMessage:
+        var message = HMSMessage(
+            sender: localPeer,
+            message: arguments!['message'],
+            type: arguments['type'],
+            time: formatter.format(DateTime.now()),
+            hmsMessageRecipient: HMSMessageRecipient(
+                recipientPeer: null,
+                recipientRoles: null,
+                hmsMessageRecipientType: HMSMessageRecipientType.BROADCAST));
+        addMessage(message);
         break;
       case HMSActionResultListenerMethod.sendGroupMessage:
+        var message = HMSMessage(
+            sender: localPeer,
+            message: arguments!['message'],
+            type: arguments['type'],
+            time: formatter.format(DateTime.now()),
+            hmsMessageRecipient: HMSMessageRecipient(
+                recipientPeer: null,
+                recipientRoles: arguments['roles'],
+                hmsMessageRecipientType: HMSMessageRecipientType.GROUP));
+        addMessage(message);
         break;
       case HMSActionResultListenerMethod.sendDirectMessage:
+        var message = HMSMessage(
+            sender: localPeer,
+            message: arguments!['message'],
+            type: arguments['type'],
+            time: formatter.format(DateTime.now()),
+            hmsMessageRecipient: HMSMessageRecipient(
+                recipientPeer: arguments['peer'],
+                recipientRoles: null,
+                hmsMessageRecipientType: HMSMessageRecipientType.DIRECT));
+        addMessage(message);
         break;
       case HMSActionResultListenerMethod.hlsStreamingStarted:
         // TODO: Handle this case.
@@ -872,6 +911,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
         break;
       case HMSActionResultListenerMethod.sendBroadcastMessage:
         // TODO: Handle this case.
+        print("sendBroadcastMessage failure");
         break;
       case HMSActionResultListenerMethod.sendGroupMessage:
         // TODO: Handle this case.
@@ -886,5 +926,10 @@ abstract class MeetingStoreBase extends ChangeNotifier
         // TODO: Handle this case.
         break;
     }
+  }
+
+
+  Future<List<HMSPeer>?> getPeers() async{
+    return await _hmssdkInteractor.getPeers();
   }
 }

@@ -123,7 +123,6 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             }
             "start_capturing" -> {
                 startCapturing()
-                result.success("start_capturing")
             }
             "send_broadcast_message" -> {
                 sendBroadCastMessage(call)
@@ -261,7 +260,6 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
 
     override fun onAttachedToActivity(binding: ActivityPluginBinding) {
         this.activity = binding.activity
-
     }
 
     override fun onDetachedFromActivityForConfigChanges() {
@@ -1116,8 +1114,8 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             }
         }
 
-        var map = HashMap<String,Map<String,String>>()
-        var error = HashMap<String, String>()
+        val map = HashMap<String,Map<String,String>>()
+        val error = HashMap<String, String>()
         error["message"] = "Could not set volume"
         error["action"] = "NONE"
         error["description"] = "Track not found for setting volume"
@@ -1146,5 +1144,8 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
     private fun stopHLSStreaming(){
         hmssdk.stopHLSStreaming(null, hmsActionResultListener = this.actionListener)
     }
+
+
+
 
 }
