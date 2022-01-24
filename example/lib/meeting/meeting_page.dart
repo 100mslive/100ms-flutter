@@ -248,6 +248,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
               placeholder: "Enter HLS Url",
               prefilledValue: widget.roomId + "?token=beam_recording");
           if (url.isNotEmpty) {
+            url.replaceAll("meeting", "preview");
             _meetingStore.startHLSStreaming(url);
           }
         }

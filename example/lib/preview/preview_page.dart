@@ -48,25 +48,8 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
               UtilityComponents.showSnackBarWithString(
                   (event as HMSException).message, context)
             });
-    reaction(
-            (_) => _previewStore.error,
-            (event) => {
-          UtilityComponents.showSnackBarWithString(
-              (event as HMSException).message, context)
-        });
   }
 
-  void getPermissions() async {
-    await Permission.camera.request();
-    await Permission.microphone.request();
-
-    while ((await Permission.camera.isDenied)) {
-      await Permission.camera.request();
-    }
-    while ((await Permission.microphone.isDenied)) {
-      await Permission.microphone.request();
-    }
-  }
 
   void initPreview() async {
     _previewStore.startListen();
