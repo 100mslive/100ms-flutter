@@ -1,8 +1,11 @@
+//Package imports
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
+
+//Project imports
+import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 
 class HLSViewer extends StatefulWidget {
   final String streamUrl;

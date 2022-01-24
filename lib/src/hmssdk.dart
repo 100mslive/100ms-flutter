@@ -423,7 +423,7 @@ class HMSSDK {
       "type": HMSTrackKindValue.getValueFromHMSTrackKind(
           kind ?? HMSTrackKind.unknown),
       "source": source,
-      "roles": roles==null?roles:rolesMap
+      "roles": roles == null ? roles : rolesMap
     };
     var result = await PlatformService.invokeMethod(
         PlatformMethod.changeTrackStateForRole,
@@ -669,6 +669,4 @@ class HMSSDK {
   void removeLogListener({required HMSLogListener hmsLogListener}) {
     PlatformService.removeLogsListener(hmsLogListener);
   }
-
-
 }
