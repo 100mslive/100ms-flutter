@@ -795,18 +795,18 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) async{
     super.didChangeAppLifecycleState(state);
     if (state == AppLifecycleState.resumed) {
-      List<HMSPeer>? peersList = await _meetingStore.getPeers();
+      // List<HMSPeer>? peersList = await _meetingStore.getPeers();
 
-      peersList?.forEach((element) {
-        if(!element.isLocal){
-          (element.audioTrack as HMSRemoteAudioTrack?)?.setVolume(10.0);
-          element.auxiliaryTracks?.forEach((element) {
-            if(element.kind == HMSTrackKind.kHMSTrackKindAudio){
-              (element as HMSRemoteAudioTrack?)?.setVolume(10.0);
-            }
-          });
-        }
-      });
+      // peersList?.forEach((element) {
+      //   if(!element.isLocal){
+      //     (element.audioTrack as HMSRemoteAudioTrack?)?.setVolume(10.0);
+      //     element.auxiliaryTracks?.forEach((element) {
+      //       if(element.kind == HMSTrackKind.kHMSTrackKindAudio){
+      //         (element as HMSRemoteAudioTrack?)?.setVolume(10.0);
+      //       }
+      //     });
+      //   }
+      // });
 
       if (_meetingStore.isVideoOn) {
         _meetingStore.startCapturing();

@@ -184,12 +184,12 @@ class HMSSDKInteractor {
     hmsSDK.muteAll();
   }
 
-  void startScreenShare() {
-    hmsSDK.startScreenShare();
+  void startScreenShare({HMSActionResultListener? hmsActionResultListener}) {
+    hmsSDK.startScreenShare(hmsActionResultListener: hmsActionResultListener);
   }
 
-  void stopScreenShare() {
-    hmsSDK.stopScreenShare();
+  void stopScreenShare({HMSActionResultListener? hmsActionResultListener}) {
+    hmsSDK.stopScreenShare(hmsActionResultListener: hmsActionResultListener);
   }
 
   void unMuteAll() {

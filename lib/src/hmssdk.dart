@@ -621,11 +621,21 @@ class HMSSDK {
   }
 
 
-    /// start screen share for the meeting
-  void startScreenShare() async {
-    await PlatformService.invokeMethod(
-      PlatformMethod.startScreenShare,
+  /// start screen share for the meeting
+  void startScreenShare({HMSActionResultListener? hmsActionResultListener}) async {
+    var result = await PlatformService.invokeMethod(
+        PlatformMethod.startScreenShare,
     );
+
+    if (hmsActionResultListener != null) {
+      if (result == null) {
+        hmsActionResultListener.onSuccess(methodType: HMSActionResultListenerMethod.startScreenShare);
+      }
+      else {
+        hmsActionResultListener.onException(
+            methodType: HMSActionResultListenerMethod.startScreenShare, hmsException: HMSException.fromMap(result["error"]));
+      }
+    }
   }
 
   Future<bool> isScreenShareActive() async {
@@ -634,19 +644,27 @@ class HMSSDK {
     );
   }
 
-  Future<void> stopScreenShare() async {
-    return await PlatformService.invokeMethod(
+  void stopScreenShare({HMSActionResultListener? hmsActionResultListener}) async {
+    var result = await PlatformService.invokeMethod(
       PlatformMethod.stopScreenShare,
     );
+    if (hmsActionResultListener != null) {
+      if (result == null) {
+        hmsActionResultListener.onSuccess(methodType: HMSActionResultListenerMethod.stopScreenShare);
+      } else {
+        hmsActionResultListener.onException(
+            methodType: HMSActionResultListenerMethod.stopScreenShare, hmsException: HMSException.fromMap(result["error"]));
+      }
+    }
   }
 
 
-  ///remove a meetListener.
+  ///remove a update listener
   void removeUpdateListener({required HMSUpdateListener listener}) {
     PlatformService.removeUpdateListener(listener);
   }
 
-  ///remove a previewListener.
+  ///remove a preview listener
   void removePreviewListener({required HMSPreviewListener listener}) {
     PlatformService.removePreviewListener(listener);
   }
@@ -671,6 +689,4 @@ class HMSSDK {
   void removeLogListener({required HMSLogListener hmsLogListener}) {
     PlatformService.removeLogsListener(hmsLogListener);
   }
-
-
 }

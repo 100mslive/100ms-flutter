@@ -1144,7 +1144,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         hmssdk.stopHLSStreaming(null, hmsActionResultListener = this.actionListener)
     }
 
-     private fun startScreenShare() {
+    private fun startScreenShare() {
         val mediaProjectionManager: MediaProjectionManager? = activity.getSystemService(
             Context.MEDIA_PROJECTION_SERVICE
         ) as MediaProjectionManager

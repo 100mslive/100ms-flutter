@@ -2,7 +2,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:clickable_list_wheel_view/clickable_list_wheel_widget.dart';
-import 'package:clickable_list_wheel_view/measure_size.dart';
 
 //Project imports
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';

@@ -670,16 +670,6 @@ abstract class MeetingStoreBase extends ChangeNotifier
     _hmssdkInteractor.removePeer(peer, this);
   }
 
-  void startScreenShare() {
-    _hmssdkInteractor.startScreenShare();
-    isScreenShareActive();
-  }
-
-  void stopScreenShare() {
-    _hmssdkInteractor.stopScreenShare();
-    isScreenShareActive();
-  }
-
   void muteAll() {
     _hmssdkInteractor.muteAll();
   }
@@ -772,6 +762,16 @@ abstract class MeetingStoreBase extends ChangeNotifier
         true, HMSTrackKind.kHMSTrackKindAudio, "regular", roles, this);
   }
 
+   void startScreenShare() {
+    _hmssdkInteractor.startScreenShare(hmsActionResultListener: this);
+    isScreenShareActive();
+  }
+
+  void stopScreenShare() {
+    _hmssdkInteractor.stopScreenShare(hmsActionResultListener: this);
+    isScreenShareActive();
+  }
+
   @override
   void onSuccess(
       {HMSActionResultListenerMethod methodType =
@@ -855,6 +855,12 @@ abstract class MeetingStoreBase extends ChangeNotifier
       case HMSActionResultListenerMethod.hlsStreamingStopped:
         // TODO: Handle this case.
         break;
+      case HMSActionResultListenerMethod.startScreenShare:
+        print("HMSActionResultListenerMethod.startScreenShare: success");
+        break;
+      case HMSActionResultListenerMethod.stopScreenShare:
+        print("HMSActionResultListenerMethod.stopScreenShare: success");
+        break;
     }
   }
 
@@ -921,11 +927,17 @@ abstract class MeetingStoreBase extends ChangeNotifier
       case HMSActionResultListenerMethod.hlsStreamingStopped:
         // TODO: Handle this case.
         break;
+      case HMSActionResultListenerMethod.startScreenShare:
+        print("HMSActionResultListenerMethod.startScreenShare: exception");
+        break;
+      case HMSActionResultListenerMethod.stopScreenShare:
+        print("HMSActionResultListenerMethod.stopScreenShare: exception");
+        break;
     }
   }
 
 
-  Future<List<HMSPeer>?> getPeers() async{
+  Future<List<HMSPeer>?>? getPeers() async{
     return await _hmssdkInteractor.getPeers();
   }
 }
