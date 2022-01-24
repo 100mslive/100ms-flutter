@@ -243,4 +243,9 @@ class HMSSDKInteractor {
     await hmsSDK.stopHlsStreaming(
         hmsActionResultListener: hmsActionResultListener);
   }
+
+  Future<List<HMSPeer>?> getPeers() async{
+    return await hmsSDK.getPeers();
+  }
+
 }

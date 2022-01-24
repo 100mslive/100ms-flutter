@@ -149,6 +149,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
   @override
   void dispose() {
     disposeAllListeners();
+    _meetingStore.stopScreenShare();
     super.dispose();
   }
 
@@ -171,7 +172,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
         // StaticLogger.logger?.close();
         // ShareExtend.share(CustomLogger.file?.path ?? '', 'file');
         // logger.getCustomLogger();
-
+        UtilityComponents.showSnackBarWithString("Coming Soon...", context);
         break;
 
       case 2:
@@ -231,6 +232,26 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                 !(_meetingStore.localTrack?.isMute ?? true);
         }
         setState(() {});
+        break;
+      case 6:
+        // if(!_meetingStore.isActiveSpeakerMode){
+        //     _meetingStore.activeSpeakerPeerTracksStore = _meetingStore.peerTracks;
+        //     _meetingStore.isActiveSpeakerMode = true;
+        //     _pageController.animateToPage(0,duration: Duration(seconds: 1),curve: Curves.decelerate);
+        //     setState(() {});
+        //     UtilityComponents.showSnackBarWithString(
+        //           "Active Speaker Mode", context);
+        // }
+        UtilityComponents.showSnackBarWithString("Coming Soon...", context);
+        break;
+      case 7:
+        // if (_meetingStore.isActiveSpeakerMode) {
+        //   _meetingStore.isActiveSpeakerMode = false;
+        //   setState(() {});
+        //   UtilityComponents.showSnackBarWithString(
+        //       "Switched to Hero Mode", context);
+        // }
+        UtilityComponents.showSnackBarWithString("Coming Soon...", context);
         break;
       case 8:
         String name = await UtilityComponents.showInputDialog(
@@ -312,7 +333,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                             PopupMenuItem(
                               child: Row(
                                 mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text("Send Logs",
                                       style: TextStyle(color: Colors.blue)),
@@ -369,7 +390,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                             PopupMenuItem(
                               child: Row(
                                   mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                  MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
                                       "Participants  ",
@@ -383,10 +404,12 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                             PopupMenuItem(
                               child: Row(
                                   mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                  MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      audioViewOn ? "Video View" : "Audio View",
+                                      audioViewOn
+                                          ? "Video View"
+                                          : "Audio View",
                                       style: TextStyle(color: Colors.blue),
                                     ),
                                     Image.asset(
@@ -403,7 +426,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                             PopupMenuItem(
                               child: Row(
                                   mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                  MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
                                       "Active Speaker Mode ",
@@ -417,7 +440,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                             PopupMenuItem(
                               child: Row(
                                   mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                  MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
                                       "Hero Mode ",
@@ -431,7 +454,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                             PopupMenuItem(
                               child: Row(
                                   mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                  MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
                                       "Change Name",
@@ -468,7 +491,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                               PopupMenuItem(
                                 child: Row(
                                     mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                    MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
                                         "End Room",
@@ -477,11 +500,11 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                       Icon(Icons.cancel_schedule_send,
                                           color: Colors.blue),
                                     ]),
-                                value: 10,
+                                value: 9,
                               ),
                           ],
                           onSelected: handleMenu,
-                        )
+                        ),
                       ],
                     ),
                     body: Padding(
@@ -725,9 +748,22 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
   }
 
   @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
+  void didChangeAppLifecycleState(AppLifecycleState state) async{
     super.didChangeAppLifecycleState(state);
     if (state == AppLifecycleState.resumed) {
+      List<HMSPeer>? peersList = await _meetingStore.getPeers();
+
+      peersList?.forEach((element) {
+        if(!element.isLocal){
+          (element.audioTrack as HMSRemoteAudioTrack?)?.setVolume(10.0);
+          element.auxiliaryTracks?.forEach((element) {
+            if(element.kind == HMSTrackKind.kHMSTrackKindAudio){
+              (element as HMSRemoteAudioTrack?)?.setVolume(10.0);
+            }
+          });
+        }
+      });
+
       if (_meetingStore.isVideoOn) {
         _meetingStore.startCapturing();
       } else {
