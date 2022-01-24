@@ -3,6 +3,7 @@ import 'package:connectivity_checker/connectivity_checker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:mobx/mobx.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
 //Project imports
@@ -49,6 +50,7 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
             });
   }
 
+
   void initPreview() async {
     _previewStore.startListen();
     bool ans = await _previewStore.startPreview();
@@ -63,7 +65,6 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
     var size = MediaQuery.of(context).size;
     final double itemHeight = (size.height - kToolbarHeight - 24);
     final double itemWidth = size.width;
-
     return ConnectivityAppWrapper(
       app: ConnectivityWidgetWrapper(
         offlineWidget: OfflineWidget(),

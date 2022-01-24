@@ -18,9 +18,11 @@ abstract class MeetingStoreBase extends ChangeNotifier
     with Store
     implements HMSUpdateListener, HMSActionResultListener {
   late HMSSDKInteractor _hmssdkInteractor;
+
   MeetingStoreBase() {
     _hmssdkInteractor = HmsSdkManager.hmsSdkInteractor!;
   }
+
   // HMSLogListener
   @observable
   bool isSpeakerOn = true;
@@ -355,7 +357,10 @@ abstract class MeetingStoreBase extends ChangeNotifier
         isRecordingStarted = room.hmsRtmpStreamingState?.running ?? false;
         break;
       case HMSRoomUpdate.hlsStreamingStateUpdated:
+        print(
+            "${hasHlsStarted} hasHLSStarted ${room.hmshlsStreamingState?.running ?? false}");
         hasHlsStarted = room.hmshlsStreamingState?.running ?? false;
+
         streamUrl = hasHlsStarted
             ? room.hmshlsStreamingState?.variants[0]?.hlsStreamUrl ?? ""
             : "";
@@ -735,6 +740,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
   }
 
   bool isRaisedHand = false;
+
   void changeMetadata() {
     isRaisedHand = !isRaisedHand;
     String value = isRaisedHand ? "true" : "false";

@@ -60,7 +60,7 @@ class _HomePageState extends State<HomePage> {
     buildSignature: 'Unknown',
   );
 
-  void getPermissions() async {
+  Future<bool> getPermissions() async {
     await Permission.camera.request();
     await Permission.microphone.request();
 
@@ -70,13 +70,13 @@ class _HomePageState extends State<HomePage> {
     while ((await Permission.microphone.isDenied)) {
       await Permission.microphone.request();
     }
+    return true;
   }
 
   @override
   void initState() {
     super.initState();
     logger.getCustomLogger();
-    getPermissions();
     _initPackageInfo();
   }
 
@@ -164,18 +164,22 @@ class _HomePageState extends State<HomePage> {
                             String user = await showDialog(
                                 context: context,
                                 builder: (_) => UserNameDialogOrganism());
-                            if (user.isNotEmpty)
-                              FocusManager.instance.primaryFocus?.unfocus();
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (_) =>
-                                    ListenableProvider<MeetingStore>(
-                                      create: (ctx) => MeetingStore(),
-                                      child: PreviewPage(
-                                        roomId: roomIdController.text,
-                                        user: user,
-                                        flow: MeetingFlow.join,
-                                      ),
-                                    )));
+                            if (user.isNotEmpty) {
+                              bool res = await getPermissions();
+                              if (res) {
+                                FocusManager.instance.primaryFocus?.unfocus();
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (_) =>
+                                        ListenableProvider<MeetingStore>(
+                                          create: (ctx) => MeetingStore(),
+                                          child: PreviewPage(
+                                            roomId: roomIdController.text,
+                                            user: user,
+                                            flow: MeetingFlow.join,
+                                          ),
+                                        )));
+                              }
+                            }
                           },
                           child: Container(
                             padding: const EdgeInsets.all(4.0),
