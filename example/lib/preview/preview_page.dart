@@ -3,6 +3,7 @@ import 'package:connectivity_checker/connectivity_checker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:mobx/mobx.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
 //Project imports
@@ -47,6 +48,24 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
               UtilityComponents.showSnackBarWithString(
                   (event as HMSException).message, context)
             });
+    reaction(
+            (_) => _previewStore.error,
+            (event) => {
+          UtilityComponents.showSnackBarWithString(
+              (event as HMSException).message, context)
+        });
+  }
+
+  void getPermissions() async {
+    await Permission.camera.request();
+    await Permission.microphone.request();
+
+    while ((await Permission.camera.isDenied)) {
+      await Permission.camera.request();
+    }
+    while ((await Permission.microphone.isDenied)) {
+      await Permission.microphone.request();
+    }
   }
 
   void initPreview() async {
@@ -63,7 +82,6 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
     var size = MediaQuery.of(context).size;
     final double itemHeight = (size.height - kToolbarHeight - 24);
     final double itemWidth = size.width;
-
     return ConnectivityAppWrapper(
       app: ConnectivityWidgetWrapper(
         offlineWidget: OfflineWidget(),
