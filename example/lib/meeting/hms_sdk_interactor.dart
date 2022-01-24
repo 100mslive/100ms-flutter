@@ -244,4 +244,10 @@ class HMSSDKInteractor {
         hmsActionResultListener: hmsActionResultListener);
   }
 
+
+  Future<List<HMSPeer>?> getPeers() async{
+    return await hmsSDK.getPeers();
+  }
+
+
 }
