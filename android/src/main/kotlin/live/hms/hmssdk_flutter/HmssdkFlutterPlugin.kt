@@ -93,64 +93,80 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             "getPlatformVersion" -> {
                 result.success("Android ${Build.VERSION.RELEASE}")
             }
+
             "join" -> {
                 join(call, result)
             }
+            
             "leave" -> {
                 leave()
             }
+            
             "switch_audio" -> {
                 switchAudio(call, result)
             }
+            
             "switch_video" -> {
                 switchVideo(call, result)
             }
-            "is_screen_share_active" -> {
-                result.success(hmssdk.isScreenShared())
-            }
+            
             "switch_camera" -> {
                 switchCamera()
                 result.success("switch_camera")
             }
+            
             "is_video_mute" -> {
                 result.success(isVideoMute(call))
             }
+            
             "is_audio_mute" -> {
                 result.success(isAudioMute(call))
             }
+            
             "stop_capturing" -> {
                 stopCapturing(result)
             }
+            
             "start_capturing" -> {
                 startCapturing()
             }
+            
             "send_broadcast_message" -> {
                 sendBroadCastMessage(call)
             }
+            
             "send_direct_message" -> {
                 sendDirectMessage(call)
             }
+            
             "send_group_message" -> {
                 sendGroupMessage(call)
             }
+            
             "preview" -> {
                 preview(call, result)
             }
+            
             "change_role" -> {
                 changeRole(call)
             }
+            
             "get_roles" -> {
                 getRoles(result)
             }
+            
             "accept_change_role" -> {
                 acceptChangeRole()
             }
+            
             "get_remote_peers" -> {
                 getRemotePeers(result)
             }
+            
             "get_peers" -> {
                 getPeers(result)
             }
+            
             "on_change_track_state_request" -> {
                 changeTrackState(call)
             }
@@ -158,6 +174,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             "end_room" -> {
                 endRoom(call, result)
             }
+            
             "remove_peer" -> {
                 removePeer(call)
             }
@@ -165,6 +182,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             "mute_all" -> {
                 muteAll(result)
             }
+            
             "un_mute_all" -> {
                 unMuteAll(result)
             }
@@ -176,51 +194,71 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             "start_hms_logger" -> {
                 startHMSLogger(call)
             }
+            
             "remove_hms_logger" -> {
                 removeHMSLogger()
             }
+            
             "change_track_state_for_role" -> {
                 changeTrackStateForRole(call)
             }
+            
             "start_rtmp_or_recording" -> {
                 startRtmpOrRecording(call)
             }
+            
             "stop_rtmp_and_recording" -> {
                 stopRtmpAndRecording()
             }
-            "start_screen_share" -> {
-                startScreenShare()
-            }
-            "stop_screen_share" -> {
-                stopScreenShare()
-            }
+            
             "build" -> {
                 build(this.activity, call, result)
             }
+            
             "get_room" -> {
                 getRoom(result)
             }
+            
             "update_hms_video_track_settings" -> {
                 updateHMSLocalTrackSetting(call)
             }
+            
             "change_metadata"->{
                 changeMetadata(call)
             }
+            
             "set_playback_allowed"->{
                 setPlayBackAllowed(call)
             }
+            
             "set_volume"->{
                 setVolume(call, result)
             }
+            
             "change_name"->{
                 changeName(call)
             }
+            
             "hls_start_streaming"->{
                 hlsStreaming(call)
             }
+            
             "hls_stop_streaming"->{
                 stopHLSStreaming()
             }
+            
+            "start_screen_share" -> {
+                startScreenShare()
+            }
+            
+            "stop_screen_share" -> {
+                stopScreenShare()
+            }
+
+            "is_screen_share_active" -> {
+                result.success(hmssdk.isScreenShared())
+            }
+
             else -> {
                 result.notImplemented()
             }
@@ -636,30 +674,6 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         result.success(HMSPeerExtension.toDictionary(getLocalPeer()))
     }
 
-
-    private fun startScreenShare() {
-        val mediaProjectionManager: MediaProjectionManager? = activity.getSystemService(
-            Context.MEDIA_PROJECTION_SERVICE
-        ) as MediaProjectionManager
-        activity.startActivityForResult(
-            mediaProjectionManager?.createScreenCaptureIntent(),
-            Constants.SCREEN_SHARE_INTENT_REQUEST_CODE
-        )
-    }
-
-    private fun stopScreenShare() {
-
-        hmssdk.stopScreenshare(object :HMSActionResultListener{
-            override fun onError(error: HMSException) {
-            }
-
-            override fun onSuccess() {
-
-            }
-
-        })
-    }
-
     private fun muteAll(result: Result) {
         val peersList = hmssdk.getRemotePeers()
 
@@ -1023,21 +1037,6 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         }
     }
 
-    fun requestScreenShare(data: Intent?) {
-        hmssdk.startScreenshare(object : HMSActionResultListener {
-            override fun onError(error: HMSException) {
-                // error
-
-            }
-
-            override fun onSuccess() {
-                // success
-                
-            }
-        }, data)
-
-    }
-
     var finalargs = mutableListOf<Any?>()
     private val hmsLoggerListener = object : HMSLogger.Loggable {
         override fun onLogMessage(
@@ -1145,7 +1144,21 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         hmssdk.stopHLSStreaming(null, hmsActionResultListener = this.actionListener)
     }
 
+     private fun startScreenShare() {
+        val mediaProjectionManager: MediaProjectionManager? = activity.getSystemService(
+            Context.MEDIA_PROJECTION_SERVICE
+        ) as MediaProjectionManager
+        activity.startActivityForResult(
+            mediaProjectionManager?.createScreenCaptureIntent(),
+            Constants.SCREEN_SHARE_INTENT_REQUEST_CODE
+        )
+    }
 
+    fun requestScreenShare(data: Intent?) {
+        hmssdk.startScreenshare(this.actionListener, data)
+    }
 
-
+    private fun stopScreenShare() {
+        hmssdk.stopScreenshare(this.actionListener)
+    }
 }
