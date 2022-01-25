@@ -538,7 +538,7 @@ class HMSSDK {
     }
   }
 
-  Future<void> startHlsStreaming(String meetingUrl, String metadata,
+  void startHlsStreaming(String meetingUrl, String metadata,
       {HMSActionResultListener? hmsActionResultListener}) async {
     var result = await PlatformService.invokeMethod(
         PlatformMethod.startHlsStreaming,
@@ -554,7 +554,7 @@ class HMSSDK {
     }
   }
 
-  Future<void> stopHlsStreaming(
+  void stopHlsStreaming(
       {HMSActionResultListener? hmsActionResultListener}) async {
     var result = await PlatformService.invokeMethod(
       PlatformMethod.stopHlsStreaming,
@@ -621,7 +621,7 @@ class HMSSDK {
   }
 
   /// start screen share for the meeting
-  Future<void> startScreenShare(
+  void startScreenShare(
       {HMSActionResultListener? hmsActionResultListener}) async {
     var result = await PlatformService.invokeMethod(
       PlatformMethod.startScreenShare,
@@ -645,7 +645,7 @@ class HMSSDK {
     );
   }
 
-  Future<void> stopScreenShare(
+  void stopScreenShare(
       {HMSActionResultListener? hmsActionResultListener}) async {
     var result = await PlatformService.invokeMethod(
       PlatformMethod.stopScreenShare,
