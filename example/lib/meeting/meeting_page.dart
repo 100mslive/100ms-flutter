@@ -496,6 +496,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                     ]),
                                 value: 9,
                               ),
+                              if(_meetingStore.localPeer?.role.permissions.changeRole??false)
                             PopupMenuItem(
                               child: Row(
                                   mainAxisAlignment:
@@ -512,6 +513,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                   ]),
                               value: 10,
                             ),
+                              if(_meetingStore.localPeer?.role.permissions.changeRole??false)
                             PopupMenuItem(
                               child: Row(
                                   mainAxisAlignment:
