@@ -250,7 +250,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                                 this.valueChoose) {
                               var peer = await _meetingStore.getPeer(
                                   peerId: this.valueChoose);
-                              _meetingStore.sendDirectMessage(message, peer!);                              
+                              _meetingStore.sendDirectMessage(message, peer!);
                             }
 
                             messageTextController.clear();

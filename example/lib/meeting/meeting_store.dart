@@ -116,14 +116,15 @@ abstract class MeetingStoreBase extends ChangeNotifier
 
   @action
   void startListen() {
-    HmsSdkManager.hmsSdkInteractor?.addUpdateListener(this);
+    HmsSdkManager.hmsSdkInteractor?.addMeetingListener(this);
     // startHMSLogger(HMSLogLevel.VERBOSE, HMSLogLevel.VERBOSE);
     // addLogsListener();
   }
 
   @action
-  void removeUpdateListener() {
-    _hmssdkInteractor.removeUpdateListener(this);
+  void removeListenerMeeting() {
+    _hmssdkInteractor.removeMeetingListener(this);
+    // removeLogsListener();
   }
 
   @action
@@ -356,8 +357,6 @@ abstract class MeetingStoreBase extends ChangeNotifier
         isRecordingStarted = room.hmsRtmpStreamingState?.running ?? false;
         break;
       case HMSRoomUpdate.hlsStreamingStateUpdated:
-        print(
-            "${hasHlsStarted} hasHLSStarted ${room.hmshlsStreamingState?.running ?? false}");
         hasHlsStarted = room.hmshlsStreamingState?.running ?? false;
 
         streamUrl = hasHlsStarted
@@ -670,6 +669,16 @@ abstract class MeetingStoreBase extends ChangeNotifier
     _hmssdkInteractor.removePeer(peer, this);
   }
 
+  void startScreenShare() {
+    _hmssdkInteractor.startScreenShare();
+    isScreenShareActive();
+  }
+
+  void stopScreenShare() {
+    _hmssdkInteractor.stopScreenShare();
+    isScreenShareActive();
+  }
+
   void muteAll() {
     _hmssdkInteractor.muteAll();
   }
@@ -762,16 +771,6 @@ abstract class MeetingStoreBase extends ChangeNotifier
         true, HMSTrackKind.kHMSTrackKindAudio, "regular", roles, this);
   }
 
-   void startScreenShare() {
-    _hmssdkInteractor.startScreenShare(hmsActionResultListener: this);
-    isScreenShareActive();
-  }
-
-  void stopScreenShare() {
-    _hmssdkInteractor.stopScreenShare(hmsActionResultListener: this);
-    isScreenShareActive();
-  }
-
   @override
   void onSuccess(
       {HMSActionResultListenerMethod methodType =
@@ -800,7 +799,9 @@ abstract class MeetingStoreBase extends ChangeNotifier
         // TODO: Handle this case.
         break;
       case HMSActionResultListenerMethod.changeTrackStateForRole:
-        this.event = arguments!['roles']==null?"Successfully Muted All":"Successfully Muted Role";
+        this.event = arguments!['roles'] == null
+            ? "Successfully Muted All"
+            : "Successfully Muted Role";
         break;
       case HMSActionResultListenerMethod.startRtmpOrRecording:
         //TODO: HmsException?.code == 400(To see what this means)
@@ -854,12 +855,6 @@ abstract class MeetingStoreBase extends ChangeNotifier
         break;
       case HMSActionResultListenerMethod.hlsStreamingStopped:
         // TODO: Handle this case.
-        break;
-      case HMSActionResultListenerMethod.startScreenShare:
-        print("HMSActionResultListenerMethod.startScreenShare: success");
-        break;
-      case HMSActionResultListenerMethod.stopScreenShare:
-        print("HMSActionResultListenerMethod.stopScreenShare: success");
         break;
     }
   }
@@ -927,17 +922,10 @@ abstract class MeetingStoreBase extends ChangeNotifier
       case HMSActionResultListenerMethod.hlsStreamingStopped:
         // TODO: Handle this case.
         break;
-      case HMSActionResultListenerMethod.startScreenShare:
-        print("HMSActionResultListenerMethod.startScreenShare: exception");
-        break;
-      case HMSActionResultListenerMethod.stopScreenShare:
-        print("HMSActionResultListenerMethod.stopScreenShare: exception");
-        break;
     }
   }
 
-
-  Future<List<HMSPeer>?>? getPeers() async{
+  Future<List<HMSPeer>?> getPeers() async {
     return await _hmssdkInteractor.getPeers();
   }
 }

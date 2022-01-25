@@ -274,7 +274,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
           }
         }
         break;
-      
+
       case 10:
         List<HMSRole> roles = await _meetingStore.getRoles();
         List<HMSRole> selectedRoles =
@@ -283,7 +283,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
           _meetingStore.changeTrackStateForRole(true, selectedRoles);
         break;
       case 11:
-          _meetingStore.changeTrackStateForRole(true, null);
+        _meetingStore.changeTrackStateForRole(true, null);
         break;
 
       case 12:
@@ -346,7 +346,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                             PopupMenuItem(
                               child: Row(
                                 mainAxisAlignment:
-                                MainAxisAlignment.spaceBetween,
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text("Send Logs",
                                       style: TextStyle(color: Colors.blue)),
@@ -403,7 +403,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                             PopupMenuItem(
                               child: Row(
                                   mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
                                       "Participants  ",
@@ -417,12 +417,10 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                             PopupMenuItem(
                               child: Row(
                                   mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      audioViewOn
-                                          ? "Video View"
-                                          : "Audio View",
+                                      audioViewOn ? "Video View" : "Audio View",
                                       style: TextStyle(color: Colors.blue),
                                     ),
                                     Image.asset(
@@ -439,7 +437,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                             PopupMenuItem(
                               child: Row(
                                   mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
                                       "Active Speaker Mode ",
@@ -453,7 +451,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                             PopupMenuItem(
                               child: Row(
                                   mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
                                       "Hero Mode ",
@@ -467,7 +465,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                             PopupMenuItem(
                               child: Row(
                                   mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
                                       "Change Name",
@@ -499,7 +497,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                     ]),
                                 value: 9,
                               ),
-                              PopupMenuItem(
+                            PopupMenuItem(
                               child: Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
@@ -510,7 +508,8 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                         color: Colors.blue,
                                       ),
                                     ),
-                                    Icon(Icons.mic_off_sharp, color: Colors.blue),
+                                    Icon(Icons.mic_off_sharp,
+                                        color: Colors.blue),
                                   ]),
                               value: 10,
                             ),
@@ -529,13 +528,12 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                   ]),
                               value: 11,
                             ),
-
                             if (_meetingStore
                                 .localPeer!.role.permissions.endRoom!)
                               PopupMenuItem(
                                 child: Row(
                                     mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
                                         "End Room",
@@ -792,21 +790,21 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
   }
 
   @override
-  void didChangeAppLifecycleState(AppLifecycleState state) async{
+  void didChangeAppLifecycleState(AppLifecycleState state) async {
     super.didChangeAppLifecycleState(state);
     if (state == AppLifecycleState.resumed) {
-      // List<HMSPeer>? peersList = await _meetingStore.getPeers();
+      List<HMSPeer>? peersList = await _meetingStore.getPeers();
 
-      // peersList?.forEach((element) {
-      //   if(!element.isLocal){
-      //     (element.audioTrack as HMSRemoteAudioTrack?)?.setVolume(10.0);
-      //     element.auxiliaryTracks?.forEach((element) {
-      //       if(element.kind == HMSTrackKind.kHMSTrackKindAudio){
-      //         (element as HMSRemoteAudioTrack?)?.setVolume(10.0);
-      //       }
-      //     });
-      //   }
-      // });
+      peersList?.forEach((element) {
+        if (!element.isLocal) {
+          (element.audioTrack as HMSRemoteAudioTrack?)?.setVolume(10.0);
+          element.auxiliaryTracks?.forEach((element) {
+            if (element.kind == HMSTrackKind.kHMSTrackKindAudio) {
+              (element as HMSRemoteAudioTrack?)?.setVolume(10.0);
+            }
+          });
+        }
+      });
 
       if (_meetingStore.isVideoOn) {
         _meetingStore.startCapturing();

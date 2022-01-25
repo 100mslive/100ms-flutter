@@ -414,7 +414,7 @@ class HMSSDK {
       "type": HMSTrackKindValue.getValueFromHMSTrackKind(
           kind ?? HMSTrackKind.unknown),
       "source": source,
-      "roles": roles==null?roles:rolesMap
+      "roles": roles == null ? roles : rolesMap
     };
     var result = await PlatformService.invokeMethod(
         PlatformMethod.changeTrackStateForRole,
@@ -620,20 +620,21 @@ class HMSSDK {
     }
   }
 
-
   /// start screen share for the meeting
-  void startScreenShare({HMSActionResultListener? hmsActionResultListener}) async {
+  void startScreenShare(
+      {HMSActionResultListener? hmsActionResultListener}) async {
     var result = await PlatformService.invokeMethod(
-        PlatformMethod.startScreenShare,
+      PlatformMethod.startScreenShare,
     );
 
     if (hmsActionResultListener != null) {
       if (result == null) {
-        hmsActionResultListener.onSuccess(methodType: HMSActionResultListenerMethod.startScreenShare);
-      }
-      else {
+        hmsActionResultListener.onSuccess(
+            methodType: HMSActionResultListenerMethod.startScreenShare);
+      } else {
         hmsActionResultListener.onException(
-            methodType: HMSActionResultListenerMethod.startScreenShare, hmsException: HMSException.fromMap(result["error"]));
+            methodType: HMSActionResultListenerMethod.startScreenShare,
+            hmsException: HMSException.fromMap(result["error"]));
       }
     }
   }
@@ -644,20 +645,22 @@ class HMSSDK {
     );
   }
 
-  void stopScreenShare({HMSActionResultListener? hmsActionResultListener}) async {
+  void stopScreenShare(
+      {HMSActionResultListener? hmsActionResultListener}) async {
     var result = await PlatformService.invokeMethod(
       PlatformMethod.stopScreenShare,
     );
     if (hmsActionResultListener != null) {
       if (result == null) {
-        hmsActionResultListener.onSuccess(methodType: HMSActionResultListenerMethod.stopScreenShare);
+        hmsActionResultListener.onSuccess(
+            methodType: HMSActionResultListenerMethod.stopScreenShare);
       } else {
         hmsActionResultListener.onException(
-            methodType: HMSActionResultListenerMethod.stopScreenShare, hmsException: HMSException.fromMap(result["error"]));
+            methodType: HMSActionResultListenerMethod.stopScreenShare,
+            hmsException: HMSException.fromMap(result["error"]));
       }
     }
   }
-
 
   ///remove a update listener
   void removeUpdateListener({required HMSUpdateListener listener}) {
