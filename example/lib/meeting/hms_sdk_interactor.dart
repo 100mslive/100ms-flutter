@@ -184,12 +184,12 @@ class HMSSDKInteractor {
     hmsSDK.muteAll();
   }
 
-  void startScreenShare({HMSActionResultListener? hmsActionResultListener}) {
-    hmsSDK.startScreenShare(hmsActionResultListener: hmsActionResultListener);
+  Future<void> startScreenShare({HMSActionResultListener? hmsActionResultListener}) async {
+    await hmsSDK.startScreenShare(hmsActionResultListener: hmsActionResultListener);
   }
 
-  void stopScreenShare({HMSActionResultListener? hmsActionResultListener}) {
-    hmsSDK.stopScreenShare(hmsActionResultListener: hmsActionResultListener);
+  Future<void> stopScreenShare({HMSActionResultListener? hmsActionResultListener}) async {
+    await hmsSDK.stopScreenShare(hmsActionResultListener: hmsActionResultListener);
   }
 
   void unMuteAll() {

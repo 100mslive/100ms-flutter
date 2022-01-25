@@ -621,7 +621,7 @@ class HMSSDK {
   }
 
   /// start screen share for the meeting
-  void startScreenShare(
+  Future<void> startScreenShare(
       {HMSActionResultListener? hmsActionResultListener}) async {
     var result = await PlatformService.invokeMethod(
       PlatformMethod.startScreenShare,
@@ -645,7 +645,7 @@ class HMSSDK {
     );
   }
 
-  void stopScreenShare(
+  Future<void> stopScreenShare(
       {HMSActionResultListener? hmsActionResultListener}) async {
     var result = await PlatformService.invokeMethod(
       PlatformMethod.stopScreenShare,

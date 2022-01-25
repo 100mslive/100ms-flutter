@@ -115,15 +115,15 @@ abstract class MeetingStoreBase extends ChangeNotifier
   final DateFormat formatter = DateFormat('d MMM y h:mm:ss a');
 
   @action
-  void startListen() {
-    HmsSdkManager.hmsSdkInteractor?.addMeetingListener(this);
+  void addUpdateListener() {
+    HmsSdkManager.hmsSdkInteractor?.addUpdateListener(this);
     // startHMSLogger(HMSLogLevel.VERBOSE, HMSLogLevel.VERBOSE);
     // addLogsListener();
   }
 
   @action
-  void removeListenerMeeting() {
-    _hmssdkInteractor.removeMeetingListener(this);
+  void removeUpdateListener() {
+    _hmssdkInteractor.removeUpdateListener(this);
     // removeLogsListener();
   }
 
@@ -142,6 +142,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
     return true;
   }
 
+// TODO: add await to resolve crash on leave?
   void leave() async {
     if (isScreenShareOn) {
       isScreenShareOn = false;
@@ -383,7 +384,6 @@ abstract class MeetingStoreBase extends ChangeNotifier
     } else {
       muteAll();
     }
-    isScreenShareActive();
 
     if (peer.isLocal &&
         trackUpdate == HMSTrackUpdate.trackMuted &&
@@ -626,6 +626,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
           screenShareTrack.add(track);
           this.curentScreenShareTrack = screenShareTrack.first;
           screenSharePeerId = screenShareTrack.first?.peer?.peerId ?? "";
+          isScreenShareActive();
         }
         break;
       case HMSTrackUpdate.trackRemoved:
@@ -634,12 +635,14 @@ abstract class MeetingStoreBase extends ChangeNotifier
               .removeWhere((element) => element?.trackId == track.trackId);
           if (this.screenShareTrack.length >= 1) {
             curentScreenShareTrack = screenShareTrack.first;
+            screenSharePeerId = peer.peerId;
           } else {
             curentScreenShareTrack = null;
+            screenSharePeerId = "";
           }
-          screenSharePeerId = screenShareTrack.first?.peer?.peerId ?? "";
         } else {
           peerTracks.removeWhere((element) => element.peerId == peer.peerId);
+          isScreenShareActive();
         }
         break;
       case HMSTrackUpdate.trackMuted:
@@ -669,13 +672,13 @@ abstract class MeetingStoreBase extends ChangeNotifier
     _hmssdkInteractor.removePeer(peer, this);
   }
 
-  void startScreenShare() {
-    _hmssdkInteractor.startScreenShare();
+  Future<void> startScreenShare() async {
+    await _hmssdkInteractor.startScreenShare(); 
     isScreenShareActive();
   }
 
-  void stopScreenShare() {
-    _hmssdkInteractor.stopScreenShare();
+  Future<void> stopScreenShare() async {
+    await _hmssdkInteractor.stopScreenShare();
     isScreenShareActive();
   }
 
@@ -856,6 +859,14 @@ abstract class MeetingStoreBase extends ChangeNotifier
       case HMSActionResultListenerMethod.hlsStreamingStopped:
         // TODO: Handle this case.
         break;
+
+      case HMSActionResultListenerMethod.startScreenShare:
+        print("startScreenShare success");
+        break;
+
+      case HMSActionResultListenerMethod.stopScreenShare:
+        print("stopScreenShare success");
+        break;
     }
   }
 
@@ -921,6 +932,14 @@ abstract class MeetingStoreBase extends ChangeNotifier
         break;
       case HMSActionResultListenerMethod.hlsStreamingStopped:
         // TODO: Handle this case.
+        break;
+
+      case HMSActionResultListenerMethod.startScreenShare:
+        print("startScreenShare exception");
+        break;
+
+      case HMSActionResultListenerMethod.stopScreenShare:
+        print("stopScreenShare exception");
         break;
     }
   }

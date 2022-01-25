@@ -256,7 +256,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             }
 
             "is_screen_share_active" -> {
-                result.success(hmssdk.isScreenShared())
+               result.success(hmssdk.isScreenShared())
             }
 
             else -> {
@@ -1155,10 +1155,36 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
     }
 
     fun requestScreenShare(data: Intent?) {
-        hmssdk.startScreenshare(this.actionListener, data)
+
+        hmssdk.startScreenshare(object: HMSActionResultListener{
+
+            override fun onError(error: HMSException) {
+                CoroutineScope(Dispatchers.Main).launch {
+                   result?.success(HMSExceptionExtension.toDictionary(error))
+                }
+            }
+
+            override fun onSuccess() {
+                CoroutineScope(Dispatchers.Main).launch {
+                    result?.success(null)
+                }
+            }
+        }, data)
     }
 
     private fun stopScreenShare() {
-        hmssdk.stopScreenshare(this.actionListener)
+        hmssdk.stopScreenshare(object :HMSActionResultListener{
+            override fun onError(error: HMSException) {
+                CoroutineScope(Dispatchers.Main).launch {
+                   result?.success(HMSExceptionExtension.toDictionary(error))
+                }
+            }
+
+            override fun onSuccess() {
+                CoroutineScope(Dispatchers.Main).launch {
+                    result?.success(null)
+                }
+            }
+        })
     }
 }
