@@ -496,39 +496,43 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                     ]),
                                 value: 9,
                               ),
-                              if(_meetingStore.localPeer?.role.permissions.changeRole??false)
-                            PopupMenuItem(
-                              child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      "Mute Roles",
-                                      style: TextStyle(
-                                        color: Colors.blue,
+                            if (_meetingStore
+                                    .localPeer?.role.permissions.changeRole ??
+                                false)
+                              PopupMenuItem(
+                                child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        "Mute Roles",
+                                        style: TextStyle(
+                                          color: Colors.blue,
+                                        ),
                                       ),
-                                    ),
-                                    Icon(Icons.mic_off_sharp,
-                                        color: Colors.blue),
-                                  ]),
-                              value: 10,
-                            ),
-                              if(_meetingStore.localPeer?.role.permissions.changeRole??false)
-                            PopupMenuItem(
-                              child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      "Mute All",
-                                      style: TextStyle(
-                                        color: Colors.blue,
+                                      Icon(Icons.mic_off_sharp,
+                                          color: Colors.blue),
+                                    ]),
+                                value: 10,
+                              ),
+                            if (_meetingStore
+                                    .localPeer?.role.permissions.changeRole ??
+                                false)
+                              PopupMenuItem(
+                                child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        "Mute All",
+                                        style: TextStyle(
+                                          color: Colors.blue,
+                                        ),
                                       ),
-                                    ),
-                                    Icon(Icons.mic_off, color: Colors.blue),
-                                  ]),
-                              value: 11,
-                            ),
+                                      Icon(Icons.mic_off, color: Colors.blue),
+                                    ]),
+                                value: 11,
+                              ),
                             if (_meetingStore
                                 .localPeer!.role.permissions.endRoom!)
                               PopupMenuItem(
