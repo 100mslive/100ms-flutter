@@ -1,5 +1,6 @@
 //Dart imports
 import 'dart:async';
+import 'dart:io';
 
 //Package imports
 import 'package:firebase_core/firebase_core.dart';
@@ -61,6 +62,7 @@ class _HomePageState extends State<HomePage> {
   );
 
   Future<bool> getPermissions() async {
+    if (Platform.isIOS) return true;
     await Permission.camera.request();
     await Permission.microphone.request();
 
@@ -144,6 +146,10 @@ class _HomePageState extends State<HomePage> {
                               keyboardType: TextInputType.url,
                               decoration: InputDecoration(
                                   hintText: 'Enter Room URL',
+                                  suffixIcon: IconButton(
+                                    onPressed: roomIdController.clear,
+                                    icon: Icon(Icons.clear),
+                                  ),
                                   border: OutlineInputBorder(
                                       borderRadius: BorderRadius.all(
                                           Radius.circular(16)))),
