@@ -1,4 +1,6 @@
 //Package imports
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:mobx/mobx.dart';
 import 'package:intl/intl.dart';
@@ -146,7 +148,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
   void leave() async {
     if (isScreenShareOn) {
       isScreenShareOn = false;
-      _hmssdkInteractor.stopScreenShare();
+      if (Platform.isAndroid) _hmssdkInteractor.stopScreenShare();
     }
     _hmssdkInteractor.leave(hmsActionResultListener: this);
     isRoomEnded = true;
@@ -673,7 +675,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
   }
 
   Future<void> startScreenShare() async {
-    await _hmssdkInteractor.startScreenShare(hmsActionResultListener: this); 
+    await _hmssdkInteractor.startScreenShare(hmsActionResultListener: this);
     isScreenShareActive();
   }
 

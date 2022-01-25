@@ -98,6 +98,52 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             
             // MARK:  Room Actions
             
+        case "build","preview","join","leave","get_room","get_local_peer","get_remote_peers","get_peers":
+            roomActions(call,result: result)
+            
+            // MARK: - Audio Helpers
+            
+        case "switch_audio","is_audio_mute","mute_all","un_mute_all","set_volume":
+            audioActions(call, result: result)
+            
+            // MARK: - Video Helpers
+            
+        case "switch_video","switch_camera","start_capturing","stop_capturing","is_video_mute","set_playback_allowed":
+            videoActions(call, result: result)
+            
+            // MARK: - Messaging
+            
+        case "send_broadcast_message","send_direct_message","send_group_message":
+            messageActions(call, result: result)
+            
+            // MARK: - Role based Actions
+            
+        case "get_roles","change_role","accept_change_role","end_room","remove_peer","on_change_track_state_request","change_track_state_for_role","change_metadata","change_name":
+            roleActions(call, result: result)
+            
+            // MARK: - Recording
+            
+        case "start_rtmp_or_recording","stop_rtmp_and_recording":
+            recordingActions(call, result: result)
+            
+            //MARK: - HLS
+        
+        case "hls_start_streaming","hls_stop_streaming":
+            hlsActions(call, result: result)
+            
+            // MARK: - Logging
+            
+        case "start_hms_logger","remove_hms_logger":
+            loggingActions(call, result: result)
+            
+        default:
+            result(FlutterMethodNotImplemented)
+        }
+    }
+    
+    // MARK:  Room Actions
+    private func roomActions(_ call: FlutterMethodCall, result: @escaping FlutterResult){
+        switch call.method {
         case "build":
             build(call, result)
             
@@ -121,113 +167,146 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             
         case "get_peers":
             getPeers(result)
-            
-            // MARK: - Audio Helpers
-            
-        case "switch_audio":
-            switchAudio(call, result)
-            
-        case "is_audio_mute":
-            isAudioMute(call, result)
-            
-        case "mute_all":
-            toggleAudioMuteAll(result, shouldMute: true)
-            
-        case "un_mute_all":
-            toggleAudioMuteAll(result, shouldMute: false)
-            
-        case "set_volume":
-            setVolume(call, result)
-            
-            // MARK: - Video Helpers
-            
-        case "switch_video":
-            switchVideo(call, result)
-            
-        case "switch_camera":
-            switchCamera(result)
-            
-        case "start_capturing":
-            startCapturing(result)
-            
-        case "stop_capturing":
-            stopCapturing(result)
-            
-        case "is_video_mute":
-            isVideoMute(call, result)
-            
-        case "set_playback_allowed":
-            setPlaybackAllowed(call, result)
-            
-            // MARK: - Messaging
-            
-        case "send_broadcast_message":
-            sendBroadcastMessage(call, result)
-            
-        case "send_direct_message":
-            sendDirectMessage(call, result)
-            
-        case "send_group_message":
-            sendGroupMessage(call, result)
-            
-            // MARK: - Role based Actions
-            
-        case "get_roles":
-            getRoles(call, result)
-            
-        case "change_role":
-            changeRole(call, result)
-            
-        case "accept_change_role":
-            acceptChangeRole(result)
-            
-        case "end_room":
-            endRoom(call, result)
-            
-        case "remove_peer":
-            removePeer(call, result)
-            
-        case "on_change_track_state_request":
-            changeTrackState(call, result)
-            
-        case "change_track_state_for_role":
-            changeTrackStateForRole(call, result)
-            
-        case "change_metadata":
-            changeMetadata(call, result)
-            
-        case "change_name":
-            changeName(call, result)
-            
-            // MARK: - Recording
-            
-        case "start_rtmp_or_recording":
-            startRtmpOrRecording(call, result)
-            
-        case "stop_rtmp_and_recording":
-            stopRtmpAndRecording(result)
-            
-            //MARK: - HLS
-        
-        case "hls_start_streaming":
-            startHlsStreaming(call, result)
-        
-        case "hls_stop_streaming":
-            stopHlsStreaming(result)
-            
-            // MARK: - Logging
-            
-        case "start_hms_logger":
-            startHMSLogger(call)
-            
-        case "remove_hms_logger":
-            removeHMSLogger()
-            
         default:
             result(FlutterMethodNotImplemented)
         }
     }
     
+    // MARK: - Audio Helpers
+    private func audioActions(_ call: FlutterMethodCall, result: @escaping FlutterResult){
+    switch call.method {
+    case "switch_audio":
+        switchAudio(call, result)
+        
+    case "is_audio_mute":
+        isAudioMute(call, result)
+        
+    case "mute_all":
+        toggleAudioMuteAll(result, shouldMute: true)
+        
+    case "un_mute_all":
+        toggleAudioMuteAll(result, shouldMute: false)
+        
+    case "set_volume":
+        setVolume(call, result)
+    default:
+        result(FlutterMethodNotImplemented)
+        }
+    }
+
+    // MARK: - Video Helpers
+    private func videoActions(_ call: FlutterMethodCall, result: @escaping FlutterResult){
+    switch call.method {
+    case "switch_video":
+        switchVideo(call, result)
+        
+    case "switch_camera":
+        switchCamera(result)
+        
+    case "start_capturing":
+        startCapturing(result)
+        
+    case "stop_capturing":
+        stopCapturing(result)
+        
+    case "is_video_mute":
+        isVideoMute(call, result)
+        
+    case "set_playback_allowed":
+        setPlaybackAllowed(call, result)
+    default:
+        result(FlutterMethodNotImplemented)
+        }
+    }
+    
+    // MARK: - Messaging
+    private func messageActions(_ call: FlutterMethodCall, result: @escaping FlutterResult){
+    switch call.method {
+    case "send_broadcast_message":
+        sendBroadcastMessage(call, result)
+        
+    case "send_direct_message":
+        sendDirectMessage(call, result)
+        
+    case "send_group_message":
+        sendGroupMessage(call, result)
+    default:
+        result(FlutterMethodNotImplemented)
+        }
+    }
+    
+    // MARK: - Role based Actions
+    private func roleActions(_ call: FlutterMethodCall, result: @escaping FlutterResult){
+    switch call.method {
+    case "get_roles":
+        getRoles(call, result)
+        
+    case "change_role":
+        changeRole(call, result)
+        
+    case "accept_change_role":
+        acceptChangeRole(result)
+        
+    case "end_room":
+        endRoom(call, result)
+        
+    case "remove_peer":
+        removePeer(call, result)
+        
+    case "on_change_track_state_request":
+        changeTrackState(call, result)
+        
+    case "change_track_state_for_role":
+        changeTrackStateForRole(call, result)
+        
+    case "change_metadata":
+        changeMetadata(call, result)
+        
+    case "change_name":
+        changeName(call, result)
+    default:
+        result(FlutterMethodNotImplemented)
+        }
+    }
+    
+    // MARK: - Recording
+    private func recordingActions(_ call: FlutterMethodCall, result: @escaping FlutterResult){
+    switch call.method {
+    case "start_rtmp_or_recording":
+        startRtmpOrRecording(call, result)
+        
+    case "stop_rtmp_and_recording":
+        stopRtmpAndRecording(result)
+    default:
+        result(FlutterMethodNotImplemented)
+        }
+    }
+    
+    //MARK: - HLS
+    private func hlsActions(_ call: FlutterMethodCall, result: @escaping FlutterResult){
+    switch call.method {
+    case "hls_start_streaming":
+        startHlsStreaming(call, result)
+    
+    case "hls_stop_streaming":
+        stopHlsStreaming(result)
+    default:
+        result(FlutterMethodNotImplemented)
+        }
+    }
+    
+    //MARK: - Logging
+    private func loggingActions(_ call: FlutterMethodCall, result: @escaping FlutterResult){
+    switch call.method {
+    case "start_hms_logger":
+        startHMSLogger(call)
+        
+    case "remove_hms_logger":
+        removeHMSLogger()
+    default:
+        result(FlutterMethodNotImplemented)
+        }
+    }
     
     // MARK: - Room Actions
     
