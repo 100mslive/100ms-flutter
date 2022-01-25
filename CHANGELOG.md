@@ -1,3 +1,16 @@
+## 0.6.0 - 2022-01-25
+ ### Breaking Change 
+ - Updated Change Role APIs argument types
+ - Changed Messaging APIs argument types
+ - Updated argument types of `changeTrackState`, `changeRole`, `acceptRoleChange`, `changeTrackStateForRoles` APIs
+
+### Added
+- Added HLS Support. Now you can Start/Stop HLS Streaming from Flutter SDK
+- Added support to do ScreenShare from Android device
+  
+### Changed
+- Updated callbacks for Permission based action APIs
+
 ## 0.5.0 - 2022-01-15
  ### Breaking Change 
  - Renamed SDK Public interface to `HMSSDK` class

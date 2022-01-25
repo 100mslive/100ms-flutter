@@ -61,19 +61,22 @@ class _ParticipantOrganismState extends State<ParticipantOrganism> {
                   ),
                 GestureDetector(
                   onTap: () {
-                    showDialog(
-                        context: context,
-                        builder: (_) => ChangeRoleOptionDialog(
-                              peerName: peer.name,
-                              getRoleFunction: widget.meetingStore.getRoles(),
-                              changeRole: (role, forceChange) {
-                                Navigator.pop(context);
-                                widget.meetingStore.changeRole(
-                                    peer: peer,
-                                    roleName: role.name,
-                                    forceChange: forceChange);
-                              },
-                            ));
+                    if (widget.meetingStore.localPeer!.role.permissions
+                            .changeRole ??
+                        false)
+                      showDialog(
+                          context: context,
+                          builder: (_) => ChangeRoleOptionDialog(
+                                peerName: peer.name,
+                                getRoleFunction: widget.meetingStore.getRoles(),
+                                changeRole: (role, forceChange) {
+                                  Navigator.pop(context);
+                                  widget.meetingStore.changeRole(
+                                      peer: peer,
+                                      roleName: role,
+                                      forceChange: forceChange);
+                                },
+                              ));
                   },
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
@@ -84,7 +87,7 @@ class _ParticipantOrganismState extends State<ParticipantOrganism> {
                         borderRadius: BorderRadius.circular(5.0),
                       ),
                       child: Text(
-                        "${peer.role!.name}",
+                        "${peer.role.name}",
                         style: TextStyle(
                             color: Colors.white,
                             fontSize: 20.0,

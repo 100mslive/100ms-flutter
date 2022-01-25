@@ -13,6 +13,7 @@ class RoomService {
     if (codeAndDomain.length == 0) {
       return null;
     }
+    Constant.meetingCode = codeAndDomain[1] ?? '';
     Uri endPoint = codeAndDomain[2] == "true"
         ? Uri.parse(Constant.prodTokenEndpoint)
         : Uri.parse(Constant.qaTokenEndPoint);

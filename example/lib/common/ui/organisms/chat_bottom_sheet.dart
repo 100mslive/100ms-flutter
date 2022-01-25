@@ -2,7 +2,7 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:intl/intl.dart';
+import 'package:collection/collection.dart';
 
 //Project imports
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
@@ -79,13 +79,18 @@ class _ChatWidgetState extends State<ChatWidget> {
                                         child: Text("Everyone"),
                                         value: "Everyone",
                                       ),
-                                      ..._meetingStore.peers.map((peer) {
-                                        return DropdownMenuItem<String>(
-                                          child: Text(
-                                              "${peer.name} ${peer.isLocal ? "(You)" : ""}"),
-                                          value: peer.peerId,
-                                        );
-                                      }).toList(),
+                                      ..._meetingStore.peers
+                                          .map((peer) {
+                                            return !peer.isLocal
+                                                ? DropdownMenuItem<String>(
+                                                    child: Text(
+                                                        "${peer.name} ${peer.isLocal ? "(You)" : ""}"),
+                                                    value: peer.peerId,
+                                                  )
+                                                : null;
+                                          })
+                                          .whereNotNull()
+                                          .toList(),
                                       ...roles
                                           .map((role) =>
                                               DropdownMenuItem<String>(
@@ -229,59 +234,23 @@ class _ChatWidgetState extends State<ChatWidget> {
                             String message = messageTextController.text;
                             if (message.isEmpty) return;
 
-                            DateTime currentTime = DateTime.now();
-                            final DateFormat formatter =
-                                DateFormat('d MMM y h:mm:ss a');
-
                             List<String> rolesName = <String>[];
                             for (int i = 0; i < hmsRoles.length; i++)
                               rolesName.add(hmsRoles[i].name);
 
                             if (this.valueChoose == "Everyone") {
                               _meetingStore.sendBroadcastMessage(message);
-                              _meetingStore.addMessage(HMSMessage(
-                                sender: _meetingStore.localPeer!,
-                                message: message,
-                                type: "chat",
-                                time: formatter.format(currentTime),
-                                hmsMessageRecipient: HMSMessageRecipient(
-                                    recipientPeer: null,
-                                    recipientRoles: null,
-                                    hmsMessageRecipientType:
-                                        HMSMessageRecipientType.BROADCAST),
-                              ));
                             } else if (rolesName.contains(this.valueChoose)) {
+                              List<HMSRole> selectedRoles = [];
+                              selectedRoles.add(hmsRoles.firstWhere(
+                                  (role) => role.name == this.valueChoose));
                               _meetingStore.sendGroupMessage(
-                                  message, this.valueChoose);
-                              _meetingStore.addMessage(HMSMessage(
-                                sender: _meetingStore.localPeer!,
-                                message: message,
-                                type: "chat",
-                                time: formatter.format(currentTime),
-                                hmsMessageRecipient: HMSMessageRecipient(
-                                    recipientPeer: null,
-                                    recipientRoles: null,
-                                    hmsMessageRecipientType:
-                                        HMSMessageRecipientType.ROLES),
-                              ));
+                                  message, selectedRoles);
                             } else if (_meetingStore.localPeer!.peerId !=
                                 this.valueChoose) {
                               var peer = await _meetingStore.getPeer(
                                   peerId: this.valueChoose);
                               _meetingStore.sendDirectMessage(message, peer!);
-
-                              // TODO: add messages based on action listener success/failure
-                              _meetingStore.addMessage(HMSMessage(
-                                sender: _meetingStore.localPeer!,
-                                message: message,
-                                type: "chat",
-                                time: formatter.format(currentTime),
-                                hmsMessageRecipient: HMSMessageRecipient(
-                                    recipientPeer: null,
-                                    recipientRoles: null,
-                                    hmsMessageRecipientType:
-                                        HMSMessageRecipientType.PEER),
-                              ));
                             }
 
                             messageTextController.clear();

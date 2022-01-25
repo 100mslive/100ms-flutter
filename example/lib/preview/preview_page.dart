@@ -1,6 +1,5 @@
 //Package imports
 import 'package:connectivity_checker/connectivity_checker.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:mobx/mobx.dart';
@@ -51,7 +50,7 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
   }
 
   void initPreview() async {
-    _previewStore.startListen();
+    _previewStore.addPreviewListener();
     bool ans = await _previewStore.startPreview();
     if (ans == false) {
       UtilityComponents.showSnackBarWithString("Unable to preview", context);
@@ -64,7 +63,6 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
     var size = MediaQuery.of(context).size;
     final double itemHeight = (size.height - kToolbarHeight - 24);
     final double itemWidth = size.width;
-
     return ConnectivityAppWrapper(
       app: ConnectivityWidgetWrapper(
         offlineWidget: OfflineWidget(),
@@ -82,15 +80,15 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                   fit: FlexFit.tight,
                   child: Observer(
                     builder: (_) {
-                      if (_previewStore.localTracks.isEmpty) {
-                        return Column(children: [
-                          CupertinoActivityIndicator(radius: 124),
-                          SizedBox(
-                            height: 64.0,
-                          ),
-                          Text("No preview available") //
-                        ]);
-                      }
+                      // if (_previewStore.localTracks.isEmpty) {
+                      //   return Column(children: [
+                      //     CupertinoActivityIndicator(radius: 124),
+                      //     SizedBox(
+                      //       height: 64.0,
+                      //     ),
+                      //     Text("No preview available") //
+                      //   ]);
+                      // }
                       return Provider<MeetingStore>(
                         create: (ctx) => MeetingStore(),
                         child: PeerItemOrganism(
@@ -100,9 +98,11 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                           width: itemWidth,
                           peerTracKNode: new PeerTracKNode(
                               peerId: _previewStore.peer?.peerId ?? "",
-                              name: _previewStore.peer?.name ?? "",
-                              track: _previewStore.localTracks[0]),
-                          isVideoMuted: false,
+                              name: _previewStore.peer?.name ?? widget.user,
+                              track: _previewStore.localTracks.isEmpty
+                                  ? null
+                                  : _previewStore.localTracks[0]),
+                          isVideoMuted: !_previewStore.videoOn,
                         ),
                       );
                     },
@@ -112,23 +112,30 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                   height: 16,
                 ),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
+                    // if (_previewStore.peer != null &&
+                    //     _previewStore.peer!.role.publishSettings!.allowed
+                    //         .contains("video"))
                     Observer(builder: (context) {
-                      return Expanded(
-                        child: GestureDetector(
-                          onTap: () async {
-                            _previewStore.switchVideo();
-                          },
-                          child: Icon(
-                              _previewStore.videoOn
-                                  ? Icons.videocam
-                                  : Icons.videocam_off,
-                              size: 48),
-                        ),
-                      );
+                      return (_previewStore.peer != null &&
+                              _previewStore.peer!.role.publishSettings!.allowed
+                                  .contains("video"))
+                          ? GestureDetector(
+                              onTap: _previewStore.localTracks.isEmpty
+                                  ? null
+                                  : () async {
+                                      _previewStore.switchVideo();
+                                    },
+                              child: Icon(
+                                  _previewStore.videoOn
+                                      ? Icons.videocam
+                                      : Icons.videocam_off,
+                                  size: 48),
+                            )
+                          : Container();
                     }),
-                    Expanded(
-                        child: ElevatedButton(
+                    ElevatedButton(
                       onPressed: () {
                         _previewStore.removeListener();
                         Navigator.of(context).pushReplacement(MaterialPageRoute(
@@ -144,17 +151,22 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                         'Join Now',
                         style: TextStyle(height: 1, fontSize: 18),
                       ),
-                    )),
+                    ),
                     Observer(builder: (context) {
-                      return Expanded(
-                          child: GestureDetector(
-                        onTap: () async {
-                          _previewStore.switchAudio();
-                        },
-                        child: Icon(
-                            _previewStore.audioOn ? Icons.mic : Icons.mic_off,
-                            size: 48),
-                      ));
+                      return (_previewStore.peer != null &&
+                              _previewStore.peer!.role.publishSettings!.allowed
+                                  .contains("audio"))
+                          ? GestureDetector(
+                              onTap: () async {
+                                _previewStore.switchAudio();
+                              },
+                              child: Icon(
+                                  (_previewStore.audioOn)
+                                      ? Icons.mic
+                                      : Icons.mic_off,
+                                  size: 48),
+                            )
+                          : Container();
                     })
                   ],
                 ),
@@ -172,17 +184,19 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
-    if (state == AppLifecycleState.resumed) {
-      if (_previewStore.videoOn) {
-        _previewStore.previewController.startCapturing();
-      }
-    } else if (state == AppLifecycleState.paused) {
-      if (_previewStore.videoOn) {
-        _previewStore.previewController.stopCapturing();
-      }
-    } else if (state == AppLifecycleState.inactive) {
-      if (_previewStore.videoOn) {
-        _previewStore.previewController.stopCapturing();
+    if (mounted) {
+      if (state == AppLifecycleState.resumed) {
+        if (_previewStore.videoOn) {
+          _previewStore.previewController.startCapturing();
+        }
+      } else if (state == AppLifecycleState.paused) {
+        if (_previewStore.videoOn) {
+          _previewStore.previewController.stopCapturing();
+        }
+      } else if (state == AppLifecycleState.inactive) {
+        if (_previewStore.videoOn) {
+          _previewStore.previewController.stopCapturing();
+        }
       }
     }
   }

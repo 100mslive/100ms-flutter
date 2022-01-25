@@ -30,7 +30,7 @@ class HMSRemotePeer extends HMSPeer {
   }
 
   ///role of the peer in the room.
-  final HMSRole? role;
+  final HMSRole role;
   final String? customerUserId;
   final String? metadata;
   HMSRemoteAudioTrack? audioRemoteTrack;
@@ -41,7 +41,7 @@ class HMSRemotePeer extends HMSPeer {
     required this.peerId,
     required this.name,
     required this.isLocal,
-    this.role,
+    required this.role,
     this.customerUserId,
     this.metadata,
     this.audioRemoteTrack,
@@ -71,8 +71,7 @@ class HMSRemotePeer extends HMSPeer {
 
   factory HMSRemotePeer.fromMap(Map map) {
     if (Platform.isAndroid) {
-      HMSRole? role;
-      if (map['role'] != null) role = HMSRole.fromMap(map['role']);
+      HMSRole role = HMSRole.fromMap(map['role']);
       return HMSRemotePeer(
         peerId: map['peer_id'],
         name: map['name'],
@@ -82,9 +81,7 @@ class HMSRemotePeer extends HMSPeer {
         customerUserId: map['customer_user_id'],
       );
     } else {
-      HMSRole? role;
-
-      if (map['role'] != null) role = HMSRole.fromMap(map['role']);
+      HMSRole role = HMSRole.fromMap(map['role']);
 
       // TODO: add auxiliary tracks
 

@@ -1,4 +1,6 @@
 //Project imports
+import 'dart:io';
+
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 class HMSSDKInteractor {
@@ -32,6 +34,14 @@ class HMSSDKInteractor {
     return await hmsSDK.switchCamera();
   }
 
+  Future<bool> isScreenShareActive() async {
+    if (Platform.isAndroid) {
+      return await hmsSDK.isScreenShareActive();
+    } else {
+      return false;
+    }
+  }
+
   void sendBroadcastMessage(
       String message, HMSActionResultListener hmsActionResultListener) {
     hmsSDK.sendBroadcastMessage(
@@ -40,20 +50,20 @@ class HMSSDKInteractor {
         hmsActionResultListener: hmsActionResultListener);
   }
 
-  void sendDirectMessage(String message, HMSPeer peer,
+  void sendDirectMessage(String message, HMSPeer peerTo,
       HMSActionResultListener hmsActionResultListener) async {
     hmsSDK.sendDirectMessage(
         message: message,
-        peer: peer,
+        peerTo: peerTo,
         type: "chat",
         hmsActionResultListener: hmsActionResultListener);
   }
 
-  void sendGroupMessage(String message, String roleName,
+  void sendGroupMessage(String message, List<HMSRole> hmsRolesTo,
       HMSActionResultListener hmsActionResultListener) async {
     hmsSDK.sendGroupMessage(
         message: message,
-        roleName: roleName,
+        hmsRolesTo: hmsRolesTo,
         type: "chat",
         hmsActionResultListener: hmsActionResultListener);
   }
@@ -79,12 +89,12 @@ class HMSSDKInteractor {
     hmsSDK.removeLogListener(hmsLogListener: hmsLogListener);
   }
 
-  void addMeetingListener(HMSUpdateListener listener) {
-    hmsSDK.addMeetingListener(listener: listener);
+  void addUpdateListener(HMSUpdateListener listener) {
+    hmsSDK.addUpdateListener(listener: listener);
   }
 
-  void removeMeetingListener(HMSUpdateListener listener) {
-    hmsSDK.removeMeetingListener(listener: listener);
+  void removeUpdateListener(HMSUpdateListener listener) {
+    hmsSDK.removeUpdateListener(listener: listener);
   }
 
   void addPreviewListener(HMSPreviewListener listener) {
@@ -95,8 +105,11 @@ class HMSSDKInteractor {
     hmsSDK.removePreviewListener(listener: listener);
   }
 
-  void acceptChangeRole(HMSActionResultListener hmsActionResultListener) {
-    hmsSDK.acceptChangeRole(hmsActionResultListener: hmsActionResultListener);
+  void acceptChangeRole(HMSRoleChangeRequest hmsRoleChangeRequest,
+      HMSActionResultListener hmsActionResultListener) {
+    hmsSDK.acceptChangeRole(
+        hmsRoleChangeRequest: hmsRoleChangeRequest,
+        hmsActionResultListener: hmsActionResultListener);
   }
 
   void stopCapturing() {
@@ -117,12 +130,11 @@ class HMSSDKInteractor {
     return peers?.firstWhere((element) => element.peerId == peerId);
   }
 
-  void changeTrackState(HMSPeer peer, bool mute, bool isVideoTrack,
+  void changeTrackState(HMSTrack forRemoteTrack, bool mute,
       HMSActionResultListener hmsActionResultListener) {
     hmsSDK.changeTrackState(
-        peer: peer,
+        forRemoteTrack: forRemoteTrack,
         mute: mute,
-        isVideoTrack: isVideoTrack,
         hmsActionResultListener: hmsActionResultListener);
   }
 
@@ -143,14 +155,14 @@ class HMSSDKInteractor {
   }
 
   void changeRole(
-      {required HMSPeer peer,
-      required String roleName,
-      bool forceChange = false,
+      {required HMSPeer forPeer,
+      required HMSRole toRole,
+      bool force = false,
       required HMSActionResultListener hmsActionResultListener}) {
     hmsSDK.changeRole(
-        peer: peer,
-        roleName: roleName,
-        forceChange: forceChange,
+        forPeer: forPeer,
+        toRole: toRole,
+        force: force,
         hmsActionResultListener: hmsActionResultListener);
   }
 
@@ -170,6 +182,14 @@ class HMSSDKInteractor {
   void muteAll() {
     // TODO: add permission checks in exmaple app UI
     hmsSDK.muteAll();
+  }
+
+  void startScreenShare({HMSActionResultListener? hmsActionResultListener}) {
+    hmsSDK.startScreenShare(hmsActionResultListener: hmsActionResultListener);
+  }
+
+  void stopScreenShare({HMSActionResultListener? hmsActionResultListener}) {
+    hmsSDK.stopScreenShare(hmsActionResultListener: hmsActionResultListener);
   }
 
   void unMuteAll() {
@@ -210,5 +230,30 @@ class HMSSDKInteractor {
       required HMSActionResultListener hmsActionResultListener}) {
     hmsSDK.changeName(
         name: name, hmsActionResultListener: hmsActionResultListener);
+  }
+
+  void startHLSStreaming(
+      String meetingUrl, HMSActionResultListener hmsActionResultListener) {
+    hmsSDK.startHlsStreaming(meetingUrl, "HLS started from Flutter",
+        hmsActionResultListener: hmsActionResultListener);
+  }
+
+  void stopHLSStreaming(
+      {required HMSActionResultListener hmsActionResultListener}) {
+    hmsSDK.stopHlsStreaming(hmsActionResultListener: hmsActionResultListener);
+  }
+
+  void changeTrackStateForRole(bool mute, HMSTrackKind? kind, String? source,
+      List<HMSRole>? roles, HMSActionResultListener? hmsActionResultListener) {
+    hmsSDK.changeTrackStateForRole(
+        mute: mute,
+        kind: kind,
+        source: source,
+        roles: roles,
+        hmsActionResultListener: hmsActionResultListener);
+  }
+
+  Future<List<HMSPeer>?> getPeers() async {
+    return await hmsSDK.getPeers();
   }
 }

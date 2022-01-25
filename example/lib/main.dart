@@ -1,5 +1,6 @@
 //Dart imports
 import 'dart:async';
+import 'dart:io';
 
 //Package imports
 import 'package:firebase_core/firebase_core.dart';
@@ -17,7 +18,6 @@ import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:hmssdk_flutter_example/preview/preview_page.dart';
 import 'package:hmssdk_flutter_example/service/deeplink_service.dart';
-import 'package:input_history_text_field/input_history_text_field.dart';
 import './logs/custom_singleton_logger.dart';
 
 void main() async {
@@ -61,7 +61,8 @@ class _HomePageState extends State<HomePage> {
     buildSignature: 'Unknown',
   );
 
-  void getPermissions() async {
+  Future<bool> getPermissions() async {
+    if (Platform.isIOS) return true;
     await Permission.camera.request();
     await Permission.microphone.request();
 
@@ -71,13 +72,13 @@ class _HomePageState extends State<HomePage> {
     while ((await Permission.microphone.isDenied)) {
       await Permission.microphone.request();
     }
+    return true;
   }
 
   @override
   void initState() {
     super.initState();
     logger.getCustomLogger();
-    getPermissions();
     _initPackageInfo();
   }
 
@@ -139,14 +140,16 @@ class _HomePageState extends State<HomePage> {
                                 roomIdController.text = url;
                               }
                             }
-                            return InputHistoryTextField(
-                              historyKey: "key-01",
-                              textEditingController: roomIdController,
-                              enableOpacityGradient: true,
+                            return TextField(
+                              controller: roomIdController,
                               autofocus: true,
                               keyboardType: TextInputType.url,
                               decoration: InputDecoration(
                                   hintText: 'Enter Room URL',
+                                  suffixIcon: IconButton(
+                                    onPressed: roomIdController.clear,
+                                    icon: Icon(Icons.clear),
+                                  ),
                                   border: OutlineInputBorder(
                                       borderRadius: BorderRadius.all(
                                           Radius.circular(16)))),
@@ -167,18 +170,22 @@ class _HomePageState extends State<HomePage> {
                             String user = await showDialog(
                                 context: context,
                                 builder: (_) => UserNameDialogOrganism());
-                            if (user.isNotEmpty)
-                              FocusManager.instance.primaryFocus?.unfocus();
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (_) =>
-                                    ListenableProvider<MeetingStore>(
-                                      create: (ctx) => MeetingStore(),
-                                      child: PreviewPage(
-                                        roomId: roomIdController.text,
-                                        user: user,
-                                        flow: MeetingFlow.join,
-                                      ),
-                                    )));
+                            if (user.isNotEmpty) {
+                              bool res = await getPermissions();
+                              if (res) {
+                                FocusManager.instance.primaryFocus?.unfocus();
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (_) =>
+                                        ListenableProvider<MeetingStore>(
+                                          create: (ctx) => MeetingStore(),
+                                          child: PreviewPage(
+                                            roomId: roomIdController.text,
+                                            user: user,
+                                            flow: MeetingFlow.join,
+                                          ),
+                                        )));
+                              }
+                            }
                           },
                           child: Container(
                             padding: const EdgeInsets.all(4.0),

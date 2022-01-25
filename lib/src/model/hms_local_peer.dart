@@ -7,7 +7,7 @@ class HMSLocalPeer extends HMSPeer {
     required String peerId,
     required String name,
     required bool isLocal,
-    HMSRole? role,
+    required HMSRole role,
     String? customerUserId,
     String? metadata,
     HMSLocalAudioTrack? audioTrack,

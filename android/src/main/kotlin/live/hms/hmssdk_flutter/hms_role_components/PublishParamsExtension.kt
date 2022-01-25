@@ -5,9 +5,14 @@ import live.hms.video.sdk.models.role.PublishParams
 
 class PublishParamsExtension {
     companion object{
+        
         fun toDictionary(publishParams: PublishParams?):HashMap<String,Any?>?{
             val args=HashMap<String,Any?>()
             if(publishParams==null)return null
+
+            publishParams.allowed?.let {
+                args["allowed"] = publishParams.allowed
+            }
 
             publishParams.audio?.let {
                 args.put("audio",AudioParamsExtension.toDictionary(publishParams.audio!!))
