@@ -538,6 +538,9 @@ class HMSSDK {
     }
   }
 
+  /// Starts HLS streaming for the [meetingUrl] room.
+  /// You can set a custom [metadata] for the HLS Stream
+  /// [hmsActionResultListener] is callback whose [HMSActionResultListener.onSuccess] will be called when the the action completes successfully.
   void startHlsStreaming(String meetingUrl, String metadata,
       {HMSActionResultListener? hmsActionResultListener}) async {
     var result = await PlatformService.invokeMethod(
@@ -554,6 +557,8 @@ class HMSSDK {
     }
   }
 
+  /// Stops ongoing HLS streaming in the room
+  /// [hmsActionResultListener] is callback whose [HMSActionResultListener.onSuccess] will be called when the the action completes successfully.
   void stopHlsStreaming(
       {HMSActionResultListener? hmsActionResultListener}) async {
     var result = await PlatformService.invokeMethod(
@@ -573,7 +578,6 @@ class HMSSDK {
   /// Change the metadata that appears inside [HMSPeer.metadata]. This change is persistent and all peers joining after the change will still see these values.
   /// [metadata] is the string data to be set now
   /// [hmsActionResultListener] is callback whose [HMSActionResultListener.onSuccess] will be called when the the action completes successfully.
-
   void changeMetadata(
       {required String metadata,
       HMSActionResultListener? hmsActionResultListener}) async {
@@ -599,7 +603,6 @@ class HMSSDK {
   /// Change the name that appears inside [HMSPeer.name] This change is persistent and all peers joining after the change will still see these values.
   /// [name] is the string which is to be set as the [HMSPeer.name]
   /// [hmsActionResultListener] is the callback whose [HMSActionResultListener.onSuccess] will be called when the the action completes successfully.
-
   void changeName(
       {required String name,
       HMSActionResultListener? hmsActionResultListener}) async {
@@ -620,7 +623,9 @@ class HMSSDK {
     }
   }
 
-  /// start screen share for the meeting
+  /// API to start screen share of your android device. Note: This API is not available on iOS.
+  /// [hmsActionResultListener] is a callback instance on which [HMSActionResultListener.onSuccess]
+  ///  and [HMSActionResultListener.onException] will be called
   void startScreenShare(
       {HMSActionResultListener? hmsActionResultListener}) async {
     var result = await PlatformService.invokeMethod(
@@ -639,12 +644,16 @@ class HMSSDK {
     }
   }
 
+  /// A method to check if the screen share is currently active on device i.e. is this Android device doing screen share. Note: This API is not available on iOS.
   Future<bool> isScreenShareActive() async {
     return await PlatformService.invokeMethod(
       PlatformMethod.isScreenShareActive,
     );
   }
 
+  /// API to stop screen share
+  /// [hmsActionResultListener] is a callback instance on which [HMSActionResultListener.onSuccess]
+  ///  and [HMSActionResultListener.onException] will be called
   void stopScreenShare(
       {HMSActionResultListener? hmsActionResultListener}) async {
     var result = await PlatformService.invokeMethod(
