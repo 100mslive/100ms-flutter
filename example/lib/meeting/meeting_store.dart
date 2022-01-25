@@ -673,7 +673,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
   }
 
   Future<void> startScreenShare() async {
-    await _hmssdkInteractor.startScreenShare(hmsActionResultListener: this); 
+    await _hmssdkInteractor.startScreenShare(hmsActionResultListener: this);
     isScreenShareActive();
   }
 
@@ -785,6 +785,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
         break;
       case HMSActionResultListenerMethod.changeTrackState:
         // TODO: Handle this case.
+        this.event = "Track Change Successful";
         break;
       case HMSActionResultListenerMethod.changeMetadata:
         print("raised hand");
@@ -794,6 +795,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
         break;
       case HMSActionResultListenerMethod.removePeer:
         // TODO: Handle this case.
+        this.event = "Removed Peer Successfully";
         break;
       case HMSActionResultListenerMethod.acceptChangeRole:
         // TODO: Handle this case.
@@ -807,13 +809,10 @@ abstract class MeetingStoreBase extends ChangeNotifier
             : "Successfully Muted Role";
         break;
       case HMSActionResultListenerMethod.startRtmpOrRecording:
-        //TODO: HmsException?.code == 400(To see what this means)
-        //isRecordingStarted = true;
         break;
       case HMSActionResultListenerMethod.stopRtmpAndRecording:
         break;
-      case HMSActionResultListenerMethod.unknown:
-        break;
+
       case HMSActionResultListenerMethod.changeName:
         this.event = "Name Changed to ${localPeer!.name}";
         break;
@@ -854,9 +853,11 @@ abstract class MeetingStoreBase extends ChangeNotifier
         addMessage(message);
         break;
       case HMSActionResultListenerMethod.hlsStreamingStarted:
+        this.event = "HLS Started...";
         // TODO: Handle this case.
         break;
       case HMSActionResultListenerMethod.hlsStreamingStopped:
+        this.event = "HLS Stopped";
         // TODO: Handle this case.
         break;
 
@@ -866,6 +867,8 @@ abstract class MeetingStoreBase extends ChangeNotifier
 
       case HMSActionResultListenerMethod.stopScreenShare:
         print("stopScreenShare success");
+        break;
+      case HMSActionResultListenerMethod.unknown:
         break;
     }
   }
@@ -911,9 +914,6 @@ abstract class MeetingStoreBase extends ChangeNotifier
       case HMSActionResultListenerMethod.stopRtmpAndRecording:
         // TODO: Handle this case.
         break;
-      case HMSActionResultListenerMethod.unknown:
-        print("Unknown Method Called");
-        break;
       case HMSActionResultListenerMethod.changeName:
         // TODO: Handle this case.
         break;
@@ -933,13 +933,15 @@ abstract class MeetingStoreBase extends ChangeNotifier
       case HMSActionResultListenerMethod.hlsStreamingStopped:
         // TODO: Handle this case.
         break;
-
       case HMSActionResultListenerMethod.startScreenShare:
         print("startScreenShare exception");
         break;
 
       case HMSActionResultListenerMethod.stopScreenShare:
         print("stopScreenShare exception");
+        break;
+      case HMSActionResultListenerMethod.unknown:
+        print("Unknown Method Called");
         break;
     }
   }
