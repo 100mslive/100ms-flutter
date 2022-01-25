@@ -673,12 +673,12 @@ abstract class MeetingStoreBase extends ChangeNotifier
   }
 
   Future<void> startScreenShare() async {
-    await _hmssdkInteractor.startScreenShare(); 
+    await _hmssdkInteractor.startScreenShare(hmsActionResultListener: this); 
     isScreenShareActive();
   }
 
   Future<void> stopScreenShare() async {
-    await _hmssdkInteractor.stopScreenShare();
+    await _hmssdkInteractor.stopScreenShare(hmsActionResultListener: this);
     isScreenShareActive();
   }
 
