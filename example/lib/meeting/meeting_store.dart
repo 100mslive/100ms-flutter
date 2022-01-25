@@ -672,14 +672,12 @@ abstract class MeetingStoreBase extends ChangeNotifier
     _hmssdkInteractor.removePeer(peer, this);
   }
 
-  Future<void> startScreenShare() async {
-    await _hmssdkInteractor.startScreenShare(hmsActionResultListener: this); 
-    isScreenShareActive();
+  void startScreenShare() {
+    _hmssdkInteractor.startScreenShare(hmsActionResultListener: this);
   }
 
-  Future<void> stopScreenShare() async {
-    await _hmssdkInteractor.stopScreenShare(hmsActionResultListener: this);
-    isScreenShareActive();
+  void stopScreenShare() {
+    _hmssdkInteractor.stopScreenShare(hmsActionResultListener: this);
   }
 
   void muteAll() {
@@ -761,12 +759,12 @@ abstract class MeetingStoreBase extends ChangeNotifier
     _hmssdkInteractor.changeName(name: name, hmsActionResultListener: this);
   }
 
-  Future<void> startHLSStreaming(String meetingUrl) async {
-    await _hmssdkInteractor.startHLSStreaming(meetingUrl, this);
+  void startHLSStreaming(String meetingUrl) {
+    _hmssdkInteractor.startHLSStreaming(meetingUrl, this);
   }
 
-  Future<void> stopHLSStreaming() async {
-    await _hmssdkInteractor.stopHLSStreaming(hmsActionResultListener: this);
+  void stopHLSStreaming() {
+    _hmssdkInteractor.stopHLSStreaming(hmsActionResultListener: this);
   }
 
   void changeTrackStateForRole(bool mute, List<HMSRole>? roles) {
@@ -862,10 +860,12 @@ abstract class MeetingStoreBase extends ChangeNotifier
 
       case HMSActionResultListenerMethod.startScreenShare:
         print("startScreenShare success");
+        isScreenShareActive();
         break;
 
       case HMSActionResultListenerMethod.stopScreenShare:
         print("stopScreenShare success");
+        isScreenShareActive();
         break;
     }
   }
@@ -936,10 +936,12 @@ abstract class MeetingStoreBase extends ChangeNotifier
 
       case HMSActionResultListenerMethod.startScreenShare:
         print("startScreenShare exception");
+        isScreenShareActive();
         break;
 
       case HMSActionResultListenerMethod.stopScreenShare:
         print("stopScreenShare exception");
+        isScreenShareActive();
         break;
     }
   }
