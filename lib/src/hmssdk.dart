@@ -36,10 +36,20 @@ class HMSSDK {
     return await HmsSdkManager().createHMSSdk(hmsTrackSetting);
   }
 
+  ///add MeetingListener it will add all the listeners.
+  void addUpdateListener({required HMSUpdateListener listener}) {
+    PlatformService.addUpdateListener(listener);
+  }
+
   /// Join the room with configuration options passed as a [HMSConfig] object
   Future<void> join({required HMSConfig config}) async {
     return await PlatformService.invokeMethod(PlatformMethod.join,
         arguments: {...config.getJson()});
+  }
+
+  ///add one or more previewListeners.
+  void addPreviewListener({required HMSPreviewListener listener}) {
+    PlatformService.addPreviewListener(listener);
   }
 
   /// Begin a preview so that the local peer's audio and video can be displayed to them before they join a call.
@@ -108,25 +118,6 @@ class HMSSDK {
   Future<void> switchCamera() async {
     return await PlatformService.invokeMethod(
       PlatformMethod.switchCamera,
-    );
-  }
-
-  /// start screen share for the meeting
-  void startScreenShare() async {
-    await PlatformService.invokeMethod(
-      PlatformMethod.startScreenShare,
-    );
-  }
-
-  Future<bool> isScreenShareActive() async {
-    return await PlatformService.invokeMethod(
-      PlatformMethod.isScreenShareActive,
-    );
-  }
-
-  Future<void> stopScreenShare() async {
-    return await PlatformService.invokeMethod(
-      PlatformMethod.stopScreenShare,
     );
   }
 
@@ -629,22 +620,54 @@ class HMSSDK {
     }
   }
 
-  ///add MeetingListener it will add all the listeners.
-  void addUpdateListener({required HMSUpdateListener listener}) {
-    PlatformService.addMeetingListener(listener);
+  /// start screen share for the meeting
+  Future<void> startScreenShare(
+      {HMSActionResultListener? hmsActionResultListener}) async {
+    var result = await PlatformService.invokeMethod(
+      PlatformMethod.startScreenShare,
+    );
+
+    if (hmsActionResultListener != null) {
+      if (result == null) {
+        hmsActionResultListener.onSuccess(
+            methodType: HMSActionResultListenerMethod.startScreenShare);
+      } else {
+        hmsActionResultListener.onException(
+            methodType: HMSActionResultListenerMethod.startScreenShare,
+            hmsException: HMSException.fromMap(result["error"]));
+      }
+    }
   }
 
-  ///remove a meetListener.
+  Future<bool> isScreenShareActive() async {
+    return await PlatformService.invokeMethod(
+      PlatformMethod.isScreenShareActive,
+    );
+  }
+
+  Future<void> stopScreenShare(
+      {HMSActionResultListener? hmsActionResultListener}) async {
+    var result = await PlatformService.invokeMethod(
+      PlatformMethod.stopScreenShare,
+    );
+    if (hmsActionResultListener != null) {
+      if (result == null) {
+        hmsActionResultListener.onSuccess(
+            methodType: HMSActionResultListenerMethod.stopScreenShare);
+      } else {
+        hmsActionResultListener.onException(
+            methodType: HMSActionResultListenerMethod.stopScreenShare,
+            hmsException: HMSException.fromMap(result["error"]));
+      }
+    }
+  }
+
+  ///remove a update listener
   void removeUpdateListener({required HMSUpdateListener listener}) {
-    PlatformService.removeMeetingListener(listener);
+    PlatformService.removeUpdateListener(listener);
   }
 
-  ///add one or more previewListeners.
-  void addPreviewListener({required HMSPreviewListener listener}) {
-    PlatformService.addPreviewListener(listener);
-  }
-
-  ///remove a previewListener.
+  ///remove a preview listener
   void removePreviewListener({required HMSPreviewListener listener}) {
     PlatformService.removePreviewListener(listener);
   }

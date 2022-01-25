@@ -27,7 +27,7 @@ class PreviewController {
     return true;
   }
 
-  void startListen(HMSPreviewListener listener) {
+  void addPreviewListener(HMSPreviewListener listener) {
     HmsSdkManager.hmsSdkInteractor?.addPreviewListener(listener);
   }
 

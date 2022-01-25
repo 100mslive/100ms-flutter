@@ -50,7 +50,7 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
   }
 
   void initPreview() async {
-    _previewStore.startListen();
+    _previewStore.addPreviewListener();
     bool ans = await _previewStore.startPreview();
     if (ans == false) {
       UtilityComponents.showSnackBarWithString("Unable to preview", context);
@@ -184,17 +184,19 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
-    if (state == AppLifecycleState.resumed) {
-      if (_previewStore.videoOn) {
-        _previewStore.previewController.startCapturing();
-      }
-    } else if (state == AppLifecycleState.paused) {
-      if (_previewStore.videoOn) {
-        _previewStore.previewController.stopCapturing();
-      }
-    } else if (state == AppLifecycleState.inactive) {
-      if (_previewStore.videoOn) {
-        _previewStore.previewController.stopCapturing();
+    if (mounted) {
+      if (state == AppLifecycleState.resumed) {
+        if (_previewStore.videoOn) {
+          _previewStore.previewController.startCapturing();
+        }
+      } else if (state == AppLifecycleState.paused) {
+        if (_previewStore.videoOn) {
+          _previewStore.previewController.stopCapturing();
+        }
+      } else if (state == AppLifecycleState.inactive) {
+        if (_previewStore.videoOn) {
+          _previewStore.previewController.stopCapturing();
+        }
       }
     }
   }

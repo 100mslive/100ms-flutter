@@ -42,11 +42,11 @@ class _VideoTileState extends State<VideoTile> {
     var index = widget.tileIndex;
     var filteredList = widget.filteredList;
     bool mutePermission =
-        _meetingStore.localPeer!.role.permissions.mute ?? false;
+        _meetingStore.localPeer?.role.permissions.mute ?? false;
     bool unMutePermission =
-        _meetingStore.localPeer!.role.permissions.unMute ?? false;
+        _meetingStore.localPeer?.role.permissions.unMute ?? false;
     bool removePeerPermission =
-        _meetingStore.localPeer!.role.permissions.removeOthers ?? false;
+        _meetingStore.localPeer?.role.permissions.removeOthers ?? false;
 
     if (index >= filteredList.length) return SizedBox();
 

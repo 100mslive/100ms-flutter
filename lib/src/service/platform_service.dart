@@ -35,7 +35,7 @@ class PlatformService {
       const EventChannel("logs_event_channel");
 
   ///add meeting listeners.
-  static List<HMSUpdateListener> meetingListeners = [];
+  static List<HMSUpdateListener> updateListeners = [];
 
   static List<HMSLogListener> logsListeners = [];
 
@@ -44,13 +44,13 @@ class PlatformService {
   static bool isStartedListening = false;
 
   ///add meetingListener
-  static void addMeetingListener(HMSUpdateListener newListener) {
-    meetingListeners.add(newListener);
+  static void addUpdateListener(HMSUpdateListener newListener) {
+    updateListeners.add(newListener);
   }
 
   ///remove meetingListener just pass the listener instance you want to remove.
-  static void removeMeetingListener(HMSUpdateListener listener) {
-    if (meetingListeners.contains(listener)) meetingListeners.remove(listener);
+  static void removeUpdateListener(HMSUpdateListener listener) {
+    if (updateListeners.contains(listener)) updateListeners.remove(listener);
   }
 
   ///add previewListener
@@ -106,7 +106,7 @@ class PlatformService {
       switch (method) {
         case HMSUpdateListenerMethod.onJoinRoom:
           HMSRoom? room = HMSRoom.fromMap(data['room']);
-          notifyMeetingListeners(method, {'room': room});
+          notifyUpdateListeners(method, {'room': room});
           break;
 
         case HMSUpdateListenerMethod.onUpdateRoom:
@@ -115,14 +115,14 @@ class PlatformService {
 
           HMSRoomUpdate? update =
               HMSRoomUpdateValues.getHMSRoomUpdateFromName(data['update']);
-          notifyMeetingListeners(method, {'room': room, 'update': update});
+          notifyUpdateListeners(method, {'room': room, 'update': update});
           break;
 
         case HMSUpdateListenerMethod.onPeerUpdate:
           HMSPeer? peer = HMSPeer.fromMap(data['peer']);
           HMSPeerUpdate? update =
               HMSPeerUpdateValues.getHMSPeerUpdateFromName(data['update']);
-          notifyMeetingListeners(method, {'peer': peer, 'update': update});
+          notifyUpdateListeners(method, {'peer': peer, 'update': update});
           break;
 
         case HMSUpdateListenerMethod.onTrackUpdate:
@@ -133,18 +133,18 @@ class PlatformService {
 
           HMSTrackUpdate? update =
               HMSTrackUpdateValues.getHMSTrackUpdateFromName(data['update']);
-          notifyMeetingListeners(
+          notifyUpdateListeners(
               method, {'track': track, 'peer': peer, 'update': update});
           break;
 
         case HMSUpdateListenerMethod.onError:
           HMSException error = HMSException.fromMap(data['error'] as Map);
-          notifyMeetingListeners(method, {'error': error});
+          notifyUpdateListeners(method, {'error': error});
           break;
 
         case HMSUpdateListenerMethod.onMessage:
           HMSMessage message = HMSMessage.fromMap(data['message']);
-          notifyMeetingListeners(method, {'message': message});
+          notifyUpdateListeners(method, {'message': message});
           break;
 
         case HMSUpdateListenerMethod.onUpdateSpeaker:
@@ -157,21 +157,21 @@ class PlatformService {
             }
           }
 
-          notifyMeetingListeners(method, {'speakers': speakers});
+          notifyUpdateListeners(method, {'speakers': speakers});
           break;
 
         case HMSUpdateListenerMethod.onReconnecting:
-          notifyMeetingListeners(method, {});
+          notifyUpdateListeners(method, {});
           break;
 
         case HMSUpdateListenerMethod.onReconnected:
-          notifyMeetingListeners(method, {});
+          notifyUpdateListeners(method, {});
           break;
 
         case HMSUpdateListenerMethod.onRoleChangeRequest:
           HMSRoleChangeRequest? roleChangeRequest =
               HMSRoleChangeRequest.fromMap(data['role_change_request']);
-          notifyMeetingListeners(
+          notifyUpdateListeners(
               method, {'role_change_request': roleChangeRequest});
           break;
 
@@ -179,7 +179,7 @@ class PlatformService {
           HMSTrackChangeRequest trackChangeRequest =
               HMSTrackChangeRequest.fromMap(
                   data['track_change_request'] as Map);
-          notifyMeetingListeners(
+          notifyUpdateListeners(
               method, {'track_change_request': trackChangeRequest});
           break;
 
@@ -189,7 +189,7 @@ class PlatformService {
         case HMSUpdateListenerMethod.onRemovedFromRoom:
           HMSPeerRemovedFromPeer hmsPeerRemovedFromPeer =
               HMSPeerRemovedFromPeer.fromMap(data['removed_from_room'] as Map);
-          notifyMeetingListeners(
+          notifyUpdateListeners(
               method, {'removed_from_room': hmsPeerRemovedFromPeer});
           break;
       }
@@ -299,56 +299,56 @@ class PlatformService {
     }
   }
 
-  ///notifying all meetingListeners attached about updates
-  static void notifyMeetingListeners(
+  ///notifying all updateListeners attached about updates
+  static void notifyUpdateListeners(
       HMSUpdateListenerMethod method, Map<String, dynamic> arguments) {
     switch (method) {
       case HMSUpdateListenerMethod.onJoinRoom:
-        meetingListeners.forEach((e) => e.onJoin(room: arguments['room']));
+        updateListeners.forEach((e) => e.onJoin(room: arguments['room']));
         break;
       case HMSUpdateListenerMethod.onUpdateRoom:
-        meetingListeners.forEach((e) => e.onRoomUpdate(
+        updateListeners.forEach((e) => e.onRoomUpdate(
             room: arguments['room'], update: arguments['update']));
         break;
       case HMSUpdateListenerMethod.onPeerUpdate:
-        meetingListeners.forEach((e) => e.onPeerUpdate(
+        updateListeners.forEach((e) => e.onPeerUpdate(
             peer: arguments['peer'], update: arguments['update']));
         break;
       case HMSUpdateListenerMethod.onTrackUpdate:
-        meetingListeners.forEach((e) => e.onTrackUpdate(
+        updateListeners.forEach((e) => e.onTrackUpdate(
             track: arguments['track'],
             trackUpdate: arguments['update'],
             peer: arguments['peer']));
         break;
       case HMSUpdateListenerMethod.onError:
-        meetingListeners.forEach((e) => e.onError(error: arguments['error']));
+        updateListeners.forEach((e) => e.onError(error: arguments['error']));
         break;
       case HMSUpdateListenerMethod.onMessage:
-        meetingListeners
+        updateListeners
             .forEach((e) => e.onMessage(message: arguments['message']));
         break;
       case HMSUpdateListenerMethod.onUpdateSpeaker:
-        meetingListeners.forEach(
+        updateListeners.forEach(
             (e) => e.onUpdateSpeakers(updateSpeakers: arguments['speakers']));
         break;
       case HMSUpdateListenerMethod.onReconnecting:
-        meetingListeners.forEach((e) => e.onReconnecting());
+        updateListeners.forEach((e) => e.onReconnecting());
         break;
       case HMSUpdateListenerMethod.onReconnected:
-        meetingListeners.forEach((e) => e.onReconnected());
+        updateListeners.forEach((e) => e.onReconnected());
         break;
       case HMSUpdateListenerMethod.onRoleChangeRequest:
-        meetingListeners.forEach((e) => e.onRoleChangeRequest(
+        updateListeners.forEach((e) => e.onRoleChangeRequest(
             roleChangeRequest: arguments['role_change_request']));
         break;
       case HMSUpdateListenerMethod.onChangeTrackStateRequest:
-        meetingListeners.forEach((e) => e.onChangeTrackStateRequest(
+        updateListeners.forEach((e) => e.onChangeTrackStateRequest(
             hmsTrackChangeRequest: arguments['track_change_request']));
         break;
 
       case HMSUpdateListenerMethod.onRemovedFromRoom:
-        if (meetingListeners.isEmpty) break;
-        meetingListeners.forEach((element) {
+        if (updateListeners.isEmpty) break;
+        updateListeners.forEach((element) {
           element.onRemovedFromRoom(
               hmsPeerRemovedFromPeer: arguments['removed_from_room']);
         });

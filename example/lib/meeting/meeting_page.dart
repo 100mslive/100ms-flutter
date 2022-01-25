@@ -55,6 +55,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
   int countOfVideoOnBetweenTwo = 1;
   bool videoPreviousState = false;
   bool isRecordingStarted = false;
+  bool isScreenSharingFromAndroid = false;
 
   @override
   void initState() {
@@ -130,7 +131,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
       UtilityComponents.showSnackBarWithString("Unable to Join", context);
       Navigator.of(context).pop();
     }
-    _meetingStore.startListen();
+    _meetingStore.addUpdateListener();
   }
 
   @override
@@ -754,11 +755,15 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                               child: IconButton(
                                   tooltip: 'Share',
                                   iconSize: 32,
-                                  onPressed: () {
-                                    if (!_meetingStore.isScreenShareOn)
-                                      _meetingStore.startScreenShare();
-                                    else
-                                      _meetingStore.stopScreenShare();
+                                  onPressed: () async {
+                                    if (!_meetingStore.isScreenShareOn) {
+                                      isScreenSharingFromAndroid = true;
+                                      await _meetingStore.startScreenShare();
+                                    }
+                                    else {
+                                      isScreenSharingFromAndroid = false;
+                                      await _meetingStore.stopScreenShare();
+                                    }
                                   },
                                   icon: Icon(
                                     Icons.screen_share,
@@ -792,6 +797,8 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) async {
     super.didChangeAppLifecycleState(state);
+    if (isScreenSharingFromAndroid) return;
+      
     if (state == AppLifecycleState.resumed) {
       List<HMSPeer>? peersList = await _meetingStore.getPeers();
 

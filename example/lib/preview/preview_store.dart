@@ -53,8 +53,8 @@ abstract class PreviewStoreBase
     this.localTracks = ObservableList.of(videoTracks);
   }
 
-  void startListen() {
-    previewController.startListen(this);
+  void addPreviewListener() {
+    previewController.addPreviewListener(this);
     addLogsListener();
   }
 
