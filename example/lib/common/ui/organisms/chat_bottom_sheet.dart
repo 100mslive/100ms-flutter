@@ -2,7 +2,6 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:intl/intl.dart';
 import 'package:collection/collection.dart';
 
 //Project imports
@@ -251,7 +250,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                                 this.valueChoose) {
                               var peer = await _meetingStore.getPeer(
                                   peerId: this.valueChoose);
-                              _meetingStore.sendDirectMessage(message, peer!);                              
+                              _meetingStore.sendDirectMessage(message, peer!);
                             }
 
                             messageTextController.clear();

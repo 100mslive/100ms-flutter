@@ -2,7 +2,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:clickable_list_wheel_view/clickable_list_wheel_widget.dart';
-import 'package:clickable_list_wheel_view/measure_size.dart';
 
 //Project imports
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
@@ -145,39 +144,39 @@ class UtilityComponents {
   static Future<List<HMSRole>> showRoleList(
       BuildContext context, List<HMSRole> roles) async {
     List<HMSRole> _selectedRoles = [];
-    FixedExtentScrollController _scrollController = FixedExtentScrollController();
+    FixedExtentScrollController _scrollController =
+        FixedExtentScrollController();
 
     HMSRole? selectedRole = await showDialog(
         context: context,
         builder: (context) => AlertDialog(
               content: Container(
-                height: 100,
-                child:ClickableListWheelScrollView(scrollController: _scrollController,
-                 itemHeight: 50, 
-                 itemCount: roles.length,
-                 onItemTapCallback: (index){
+                  height: 100,
+                  child: ClickableListWheelScrollView(
+                      scrollController: _scrollController,
+                      itemHeight: 50,
+                      itemCount: roles.length,
+                      onItemTapCallback: (index) {
                         Navigator.pop(context, roles[index]);
-                 },
-                child: ListWheelScrollView.useDelegate(
-                  controller: _scrollController,
-                  physics: FixedExtentScrollPhysics(),
-                  overAndUnderCenterOpacity: 0.5,
-                  perspective: 0.002,
-                  itemExtent: 50, 
-                  childDelegate: ListWheelChildBuilderDelegate(
-                    childCount: roles.length,
-                    builder: (context,index){
-                    return Container(
-                      height: 50,
-                      child: ListTile(
-                          title: Text(roles[index].name),
-                        ),
-                    );
-                  })))
-              ),
+                      },
+                      child: ListWheelScrollView.useDelegate(
+                          controller: _scrollController,
+                          physics: FixedExtentScrollPhysics(),
+                          overAndUnderCenterOpacity: 0.5,
+                          perspective: 0.002,
+                          itemExtent: 50,
+                          childDelegate: ListWheelChildBuilderDelegate(
+                              childCount: roles.length,
+                              builder: (context, index) {
+                                return Container(
+                                  height: 50,
+                                  child: ListTile(
+                                    title: Text(roles[index].name),
+                                  ),
+                                );
+                              })))),
             ));
-      if(selectedRole != null)
-      _selectedRoles.add(selectedRole);
+    if (selectedRole != null) _selectedRoles.add(selectedRole);
     return _selectedRoles;
   }
 }

@@ -357,8 +357,6 @@ abstract class MeetingStoreBase extends ChangeNotifier
         isRecordingStarted = room.hmsRtmpStreamingState?.running ?? false;
         break;
       case HMSRoomUpdate.hlsStreamingStateUpdated:
-        print(
-            "${hasHlsStarted} hasHLSStarted ${room.hmshlsStreamingState?.running ?? false}");
         hasHlsStarted = room.hmshlsStreamingState?.running ?? false;
 
         streamUrl = hasHlsStarted
@@ -801,7 +799,9 @@ abstract class MeetingStoreBase extends ChangeNotifier
         // TODO: Handle this case.
         break;
       case HMSActionResultListenerMethod.changeTrackStateForRole:
-        this.event = arguments!['roles']==null?"Successfully Muted All":"Successfully Muted Role";
+        this.event = arguments!['roles'] == null
+            ? "Successfully Muted All"
+            : "Successfully Muted Role";
         break;
       case HMSActionResultListenerMethod.startRtmpOrRecording:
         //TODO: HmsException?.code == 400(To see what this means)
@@ -925,8 +925,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
     }
   }
 
-
-  Future<List<HMSPeer>?> getPeers() async{
+  Future<List<HMSPeer>?> getPeers() async {
     return await _hmssdkInteractor.getPeers();
   }
 }
