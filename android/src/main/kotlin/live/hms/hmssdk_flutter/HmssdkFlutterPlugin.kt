@@ -1137,11 +1137,35 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
 
         val hlsConfig = HMSHLSConfig(listOf(meetingUrlVariant1))
 
-        hmssdk.startHLSStreaming(hlsConfig, hmsActionResultListener = this.actionListener)
+        hmssdk.startHLSStreaming(hlsConfig, hmsActionResultListener = object : HMSActionResultListener {
+            override fun onError(error: HMSException) {
+                CoroutineScope(Dispatchers.Main).launch {
+                    result?.success(HMSExceptionExtension.toDictionary(error))
+                }
+            }
+
+            override fun onSuccess() {
+                CoroutineScope(Dispatchers.Main).launch {
+                    result?.success(null)
+                }
+            }
+        })
     }
 
     private fun stopHLSStreaming(){
-        hmssdk.stopHLSStreaming(null, hmsActionResultListener = this.actionListener)
+        hmssdk.stopHLSStreaming(null, hmsActionResultListener = object : HMSActionResultListener {
+            override fun onError(error: HMSException) {
+                CoroutineScope(Dispatchers.Main).launch {
+                    result?.success(HMSExceptionExtension.toDictionary(error))
+                }
+            }
+
+            override fun onSuccess() {
+                CoroutineScope(Dispatchers.Main).launch {
+                    result?.success(null)
+                }
+            }
+        })
     }
 
     private fun startScreenShare() {
