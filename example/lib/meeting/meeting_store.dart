@@ -148,7 +148,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
   void leave() async {
     if (isScreenShareOn) {
       isScreenShareOn = false;
-      if (Platform.isAndroid) _hmssdkInteractor.stopScreenShare();
+      _hmssdkInteractor.stopScreenShare();
     }
     _hmssdkInteractor.leave(hmsActionResultListener: this);
     isRoomEnded = true;

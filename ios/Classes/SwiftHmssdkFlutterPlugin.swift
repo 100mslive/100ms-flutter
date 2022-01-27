@@ -98,7 +98,12 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             
             // MARK:  Room Actions
             
-        case "build","preview","join","leave","get_room","get_local_peer","get_remote_peers","get_peers":
+        case "build","preview","join","leave":
+            buildActions(call,result: result)
+            
+            // MARK: Room Actions
+            
+        case "get_room","get_local_peer","get_remote_peers","get_peers":
             roomActions(call,result: result)
             
             // MARK: - Audio Helpers
@@ -118,8 +123,12 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             
             // MARK: - Role based Actions
             
-        case "get_roles","change_role","accept_change_role","end_room","remove_peer","on_change_track_state_request","change_track_state_for_role","change_metadata","change_name":
+        case "get_roles","change_role","accept_change_role","end_room","remove_peer","on_change_track_state_request","change_track_state_for_role":
             roleActions(call, result: result)
+            
+            // MARK: - Peer Action
+        case "change_metadata","change_name":
+            peerActions(call,result: result)
             
             // MARK: - Recording
             
@@ -135,6 +144,26 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             
         case "start_hms_logger","remove_hms_logger":
             loggingActions(call, result: result)
+            
+        default:
+            result(FlutterMethodNotImplemented)
+        }
+    }
+    
+    // MARK:  Build Actions
+    private func buildActions(_ call: FlutterMethodCall, result: @escaping FlutterResult){
+        switch call.method {
+        case "build":
+            build(call, result)
+            
+        case "preview":
+            preview(call, result)
+            
+        case "join":
+            join(call, result)
+            
+        case "leave":
+            leave(result)
             
         default:
             result(FlutterMethodNotImplemented)
@@ -259,6 +288,19 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     case "change_track_state_for_role":
         changeTrackStateForRole(call, result)
         
+    case "change_metadata":
+        changeMetadata(call, result)
+        
+    case "change_name":
+        changeName(call, result)
+    default:
+        result(FlutterMethodNotImplemented)
+        }
+    }
+    
+    // MARK: - Peer
+    private func peerActions(_ call: FlutterMethodCall, result: @escaping FlutterResult){
+    switch call.method {
     case "change_metadata":
         changeMetadata(call, result)
         
