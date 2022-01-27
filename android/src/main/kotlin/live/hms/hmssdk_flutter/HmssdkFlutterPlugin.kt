@@ -243,7 +243,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             }
             
             "hls_stop_streaming"->{
-                stopHLSStreaming(result)
+                stopHLSStreaming(call,result)
             }
             
             "start_screen_share" -> {
@@ -1096,21 +1096,45 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
 
     // TODO: add support for sending multiple MeetingURLVariant
     private fun hlsStreaming(call: MethodCall, result: Result) {
-        val meetingUrl = call.argument<String>("meeting_url")
-        val metadata   = call.argument<String>("meta_data")
-        val meetingUrlVariant1 = HMSHLSMeetingURLVariant(
-            meetingUrl = meetingUrl!!,
-            metadata = metadata!!
-        )
+        val meetingUrlVariantsList = call.argument<List<Map<String,String>>>("meeting_url_variants")
 
-        val hlsConfig = HMSHLSConfig(listOf(meetingUrlVariant1))
+        Log.i("hlsStreaming",meetingUrlVariantsList.toString())
+        val meetingUrlVariant1 : ArrayList<HMSHLSMeetingURLVariant> = ArrayList()
 
-        hmssdk.startHLSStreaming(hlsConfig, hmsActionResultListener = getActionListener(result))
+        meetingUrlVariantsList?.forEach {
+            meetingUrlVariant1.add(
+                HMSHLSMeetingURLVariant(
+                    meetingUrl = it["meeting_url"]!!,
+                    metadata = it["meta_data"]!!
+                )
+            )
+        }
+
+        val hlsConfig = HMSHLSConfig(meetingUrlVariant1)
+
+        hmssdk.startHLSStreaming(config = hlsConfig, hmsActionResultListener = getActionListener(result))
     }
 
 
-    private fun stopHLSStreaming(result: Result) {
-        hmssdk.stopHLSStreaming(null, hmsActionResultListener = getActionListener(result))
+    private fun stopHLSStreaming(call: MethodCall,result: Result) {
+        val meetingUrlVariantsList = call.argument<List<Map<String,String>>>("meeting_url_variants")
+
+        val meetingUrlVariant1 : ArrayList<HMSHLSMeetingURLVariant> = ArrayList()
+
+        meetingUrlVariantsList?.forEach {
+            meetingUrlVariant1.add(
+                HMSHLSMeetingURLVariant(
+                    meetingUrl = it["meeting_url"]!!,
+                    metadata = it["meta_data"]!!
+                )
+            )
+        }
+
+        var hlsConfig : HMSHLSConfig? = null
+        if(meetingUrlVariant1.isNotEmpty())
+             hlsConfig = HMSHLSConfig(meetingUrlVariant1)
+
+        hmssdk.stopHLSStreaming(config = hlsConfig, hmsActionResultListener = getActionListener(result))
     }
 
 
