@@ -55,7 +55,6 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
   int countOfVideoOnBetweenTwo = 1;
   bool videoPreviousState = false;
   bool isRecordingStarted = false;
-  bool isScreenSharingFromAndroid = false;
 
   @override
   void initState() {
@@ -268,9 +267,8 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
           String url = await UtilityComponents.showInputDialog(
               context: context,
               placeholder: "Enter HLS Url",
-              prefilledValue: widget.roomId + "?token=beam_recording");
+              prefilledValue: Constant.rtmpUrl);
           if (url.isNotEmpty) {
-            url.replaceAll("meeting", "preview");
             _meetingStore.startHLSStreaming(url);
           }
         }
@@ -498,37 +496,43 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                     ]),
                                 value: 9,
                               ),
-                            PopupMenuItem(
-                              child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      "Mute Roles",
-                                      style: TextStyle(
-                                        color: Colors.blue,
+                            if (_meetingStore
+                                    .localPeer?.role.permissions.changeRole ??
+                                false)
+                              PopupMenuItem(
+                                child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        "Mute Roles",
+                                        style: TextStyle(
+                                          color: Colors.blue,
+                                        ),
                                       ),
-                                    ),
-                                    Icon(Icons.mic_off_sharp,
-                                        color: Colors.blue),
-                                  ]),
-                              value: 10,
-                            ),
-                            PopupMenuItem(
-                              child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      "Mute All",
-                                      style: TextStyle(
-                                        color: Colors.blue,
+                                      Icon(Icons.mic_off_sharp,
+                                          color: Colors.blue),
+                                    ]),
+                                value: 10,
+                              ),
+                            if (_meetingStore
+                                    .localPeer?.role.permissions.changeRole ??
+                                false)
+                              PopupMenuItem(
+                                child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        "Mute All",
+                                        style: TextStyle(
+                                          color: Colors.blue,
+                                        ),
                                       ),
-                                    ),
-                                    Icon(Icons.mic_off, color: Colors.blue),
-                                  ]),
-                              value: 11,
-                            ),
+                                      Icon(Icons.mic_off, color: Colors.blue),
+                                    ]),
+                                value: 11,
+                              ),
                             if (_meetingStore
                                 .localPeer!.role.permissions.endRoom!)
                               PopupMenuItem(
@@ -755,14 +759,11 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                               child: IconButton(
                                   tooltip: 'Share',
                                   iconSize: 32,
-                                  onPressed: () async {
+                                  onPressed: () {
                                     if (!_meetingStore.isScreenShareOn) {
-                                      isScreenSharingFromAndroid = true;
-                                      await _meetingStore.startScreenShare();
-                                    }
-                                    else {
-                                      isScreenSharingFromAndroid = false;
-                                      await _meetingStore.stopScreenShare();
+                                      _meetingStore.startScreenShare();
+                                    } else {
+                                      _meetingStore.stopScreenShare();
                                     }
                                   },
                                   icon: Icon(
@@ -797,8 +798,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) async {
     super.didChangeAppLifecycleState(state);
-    if (isScreenSharingFromAndroid) return;
-      
+
     if (state == AppLifecycleState.resumed) {
       List<HMSPeer>? peersList = await _meetingStore.getPeers();
 

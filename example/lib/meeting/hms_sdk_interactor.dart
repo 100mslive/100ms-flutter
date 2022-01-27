@@ -184,12 +184,12 @@ class HMSSDKInteractor {
     hmsSDK.muteAll();
   }
 
-  Future<void> startScreenShare({HMSActionResultListener? hmsActionResultListener}) async {
-    await hmsSDK.startScreenShare(hmsActionResultListener: hmsActionResultListener);
+  void startScreenShare({HMSActionResultListener? hmsActionResultListener}) {
+    hmsSDK.startScreenShare(hmsActionResultListener: hmsActionResultListener);
   }
 
-  Future<void> stopScreenShare({HMSActionResultListener? hmsActionResultListener}) async {
-    await hmsSDK.stopScreenShare(hmsActionResultListener: hmsActionResultListener);
+  void stopScreenShare({HMSActionResultListener? hmsActionResultListener}) {
+    hmsSDK.stopScreenShare(hmsActionResultListener: hmsActionResultListener);
   }
 
   void unMuteAll() {
@@ -232,16 +232,15 @@ class HMSSDKInteractor {
         name: name, hmsActionResultListener: hmsActionResultListener);
   }
 
-  Future<void> startHLSStreaming(String meetingUrl,
-      HMSActionResultListener hmsActionResultListener) async {
-    await hmsSDK.startHlsStreaming(meetingUrl, "meta data",
+  void startHLSStreaming(
+      String meetingUrl, HMSActionResultListener hmsActionResultListener) {
+    hmsSDK.startHlsStreaming(meetingUrl, "HLS started from Flutter",
         hmsActionResultListener: hmsActionResultListener);
   }
 
-  Future<void> stopHLSStreaming(
-      {required HMSActionResultListener hmsActionResultListener}) async {
-    await hmsSDK.stopHlsStreaming(
-        hmsActionResultListener: hmsActionResultListener);
+  void stopHLSStreaming(
+      {required HMSActionResultListener hmsActionResultListener}) {
+    hmsSDK.stopHlsStreaming(hmsActionResultListener: hmsActionResultListener);
   }
 
   void changeTrackStateForRole(bool mute, HMSTrackKind? kind, String? source,
