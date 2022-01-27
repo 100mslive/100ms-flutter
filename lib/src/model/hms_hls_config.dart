@@ -1,15 +1,15 @@
 import 'package:hmssdk_flutter/src/model/hms_hls_meeting_url_variant.dart';
 
 class HMSHLSConfig {
-  List<HMSHLSMeetingURLVariant> meetingURLVariants;
+  List<HMSHLSMeetingURLVariant> variants;
 
-  HMSHLSConfig(this.meetingURLVariants);
+  HMSHLSConfig(this.variants);
 
   Map<String, dynamic> toMap() {
 
     List<Map<String,String>> list = [];
 
-    meetingURLVariants.forEach((element) {
+    variants.forEach((element) {
       list.add(element.toMap());
     });
 

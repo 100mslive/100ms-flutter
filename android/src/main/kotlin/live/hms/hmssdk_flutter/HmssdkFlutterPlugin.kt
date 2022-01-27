@@ -1094,7 +1094,6 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         hmssdk.changeName(name=name!!, hmsActionResultListener = getActionListener(result));
     }
 
-    // TODO: add support for sending multiple MeetingURLVariant
     private fun hlsStreaming(call: MethodCall, result: Result) {
         val meetingUrlVariantsList = call.argument<List<Map<String,String>>>("meeting_url_variants")
 
