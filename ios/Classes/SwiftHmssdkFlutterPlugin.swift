@@ -895,7 +895,6 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     
     private func startHlsStreaming(_ call: FlutterMethodCall, _ result: @escaping FlutterResult){
         let arguments = call.arguments as! [AnyHashable: Any]
-        print(">>>>>>>>>>>>>>ios")
         guard let meetingUrlVariantsList = arguments["meeting_url_variants"] as? [[String:String]]
         else {
             let error = getError(message: "Wrong Paramenter found in \(#function)",
@@ -919,24 +918,24 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
     
     private func stopHlsStreaming(_ call: FlutterMethodCall,_ result: @escaping FlutterResult){
-        guard let arguments = call.arguments as? [AnyHashable: Any],
-              let meetingUrlVariantsList = arguments["meeting_url_variants"] as? [[String:String]] else{
-                  hmsSDK?.stopHLSStreaming { success, error in
-                      if let error = error {
-                          result(HMSErrorExtension.toDictionary(error))
-                      } else {
-                          result(nil)
-                      }
-                  }
-                  return
-              }
+        if let arguments = call.arguments as? [AnyHashable: Any],
+              let meetingUrlVariantsList = arguments["meeting_url_variants"] as? [[String:String]] {
+            var meetingUrlVariant = [HMSHLSMeetingURLVariant]()
+            meetingUrlVariantsList.forEach{ meetingUrlVariant.append(HMSHLSMeetingURLVariant(meetingURL: URL(string:$0["meeting_url"]!)!, metadata: $0["meta_data"] ?? "")) }
             
-        var meetingUrlVariant = [HMSHLSMeetingURLVariant]()
-        meetingUrlVariantsList.forEach{ meetingUrlVariant.append(HMSHLSMeetingURLVariant(meetingURL: URL(string:$0["meeting_url"]!)!, metadata: $0["meta_data"] ?? "")) }
-        
-        let hlsConfig = HMSHLSConfig(variants: meetingUrlVariant)
-        
-        hmsSDK?.stopHLSStreaming(config: hlsConfig) { success, error in
+            let hlsConfig = HMSHLSConfig(variants: meetingUrlVariant)
+            
+            hmsSDK?.stopHLSStreaming(config: hlsConfig) { success, error in
+                if let error = error {
+                    result(HMSErrorExtension.toDictionary(error))
+                } else {
+                    result(nil)
+                }
+            }
+                  return
+            }
+            
+        hmsSDK?.stopHLSStreaming { success, error in
             if let error = error {
                 result(HMSErrorExtension.toDictionary(error))
             } else {
