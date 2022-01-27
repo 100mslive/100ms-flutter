@@ -1027,8 +1027,6 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     
     
     public func on(room: HMSRoom, update: HMSRoomUpdate) {
-        print(">>>>>>>>>ios")
-        print(#function, update)
         let data = [
             "event_name": "on_room_update",
             "data": [
