@@ -918,31 +918,26 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
     
     private func stopHlsStreaming(_ call: FlutterMethodCall,_ result: @escaping FlutterResult){
-        if let arguments = call.arguments as? [AnyHashable: Any],
-              let meetingUrlVariantsList = arguments["meeting_url_variants"] as? [[String:String]] {
-            var meetingUrlVariant = [HMSHLSMeetingURLVariant]()
-            meetingUrlVariantsList.forEach{ meetingUrlVariant.append(HMSHLSMeetingURLVariant(meetingURL: URL(string:$0["meeting_url"]!)!, metadata: $0["meta_data"] ?? "")) }
-            
-            let hlsConfig = HMSHLSConfig(variants: meetingUrlVariant)
-            
-            hmsSDK?.stopHLSStreaming(config: hlsConfig) { success, error in
-                if let error = error {
-                    result(HMSErrorExtension.toDictionary(error))
-                } else {
-                    result(nil)
-                }
-            }
-                  return
-            }
-            
-        hmsSDK?.stopHLSStreaming { success, error in
+        let arguments = call.arguments as? [AnyHashable: Any]
+        let config = getHLSConfig(from: arguments)
+        hmsSDK?.stopHLSStreaming(config: config) { success, error in
             if let error = error {
                 result(HMSErrorExtension.toDictionary(error))
             } else {
                 result(nil)
             }
         }
+    }
         
+    
+    private func getHLSConfig(from arguments: [AnyHashable: Any]?) -> HMSHLSConfig?{
+        guard let meetingUrlVariantsList = arguments?["meeting_url_variants"] as? [[String:String]] else{
+            return nil
+        }
+        var meetingUrlVariant = [HMSHLSMeetingURLVariant]()
+        meetingUrlVariantsList.forEach{ meetingUrlVariant.append(HMSHLSMeetingURLVariant(meetingURL: URL(string:$0["meeting_url"]!)!, metadata: $0["meta_data"] ?? "")) }
+        
+        return HMSHLSConfig(variants: meetingUrlVariant)
     }
     
     
@@ -1032,7 +1027,8 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     
     
     public func on(room: HMSRoom, update: HMSRoomUpdate) {
-        
+        print(">>>>>>>>>ios")
+        print(#function, update)
         let data = [
             "event_name": "on_room_update",
             "data": [
