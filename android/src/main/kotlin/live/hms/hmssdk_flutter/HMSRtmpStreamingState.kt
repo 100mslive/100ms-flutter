@@ -1,3 +1,4 @@
+import android.util.Log
 import live.hms.hmssdk_flutter.HMSExceptionExtension
 import live.hms.hmssdk_flutter.HMSHLSVariantExtension
 import live.hms.video.sdk.models.HMSBrowserRecordingState
@@ -35,6 +36,7 @@ class HMSStreamingState {
             val map = HashMap<String,Any?>()
             if(hmsHlsStreamingState == null)return null
             map["running"] = hmsHlsStreamingState.running
+            Log.i("runningAndroid",hmsHlsStreamingState.running.toString())
             val args=ArrayList<Any>()
             hmsHlsStreamingState.variants?.forEach {
                 args.add(HMSHLSVariantExtension.toDictionary(it)!!)
