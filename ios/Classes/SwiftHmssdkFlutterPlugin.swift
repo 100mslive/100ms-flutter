@@ -173,18 +173,6 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     // MARK:  Room Actions
     private func roomActions(_ call: FlutterMethodCall, result: @escaping FlutterResult){
         switch call.method {
-        case "build":
-            build(call, result)
-            
-        case "preview":
-            preview(call, result)
-            
-        case "join":
-            join(call, result)
-            
-        case "leave":
-            leave(result)
-            
         case "get_room":
             getRoom(result)
             
@@ -288,11 +276,6 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     case "change_track_state_for_role":
         changeTrackStateForRole(call, result)
         
-    case "change_metadata":
-        changeMetadata(call, result)
-        
-    case "change_name":
-        changeName(call, result)
     default:
         result(FlutterMethodNotImplemented)
         }
