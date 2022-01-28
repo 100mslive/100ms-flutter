@@ -676,7 +676,6 @@ abstract class MeetingStoreBase extends ChangeNotifier
 
   void startScreenShare() {
     _hmssdkInteractor.startScreenShare(hmsActionResultListener: this);
-
   }
 
   void stopScreenShare() {
@@ -855,19 +854,21 @@ abstract class MeetingStoreBase extends ChangeNotifier
         addMessage(message);
         break;
       case HMSActionResultListenerMethod.hlsStreamingStarted:
+        this.event = "HLS Streaming Started";
         // TODO: Handle this case.
         break;
       case HMSActionResultListenerMethod.hlsStreamingStopped:
+        this.event = "HLS Streaming Stopped";
         // TODO: Handle this case.
         break;
 
       case HMSActionResultListenerMethod.startScreenShare:
-        print("startScreenShare success");
+        this.event = "Screen Share Started";
         isScreenShareActive();
         break;
 
       case HMSActionResultListenerMethod.stopScreenShare:
-        print("stopScreenShare success");
+        this.event = "Screen Share Stopped";
         isScreenShareActive();
         break;
     }
