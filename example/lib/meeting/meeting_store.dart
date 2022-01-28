@@ -1,4 +1,6 @@
 //Package imports
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:mobx/mobx.dart';
 import 'package:intl/intl.dart';
@@ -674,6 +676,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
 
   void startScreenShare() {
     _hmssdkInteractor.startScreenShare(hmsActionResultListener: this);
+
   }
 
   void stopScreenShare() {
