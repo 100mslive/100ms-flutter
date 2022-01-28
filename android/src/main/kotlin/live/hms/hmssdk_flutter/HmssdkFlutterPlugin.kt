@@ -92,170 +92,63 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             "getPlatformVersion" -> {
                 result.success("Android ${Build.VERSION.RELEASE}")
             }
-
-            "join" -> {
-                join(call, result)
-            }
-            
-            "leave" -> {
-                leave(result)
-            }
-            
-            "switch_audio" -> {
-                switchAudio(call, result)
-            }
-            
-            "switch_video" -> {
-                switchVideo(call, result)
-            }
-            
-            "switch_camera" -> {
-                switchCamera()
-                result.success("switch_camera")
-            }
-            
-            "is_video_mute" -> {
-                result.success(isVideoMute(call))
-            }
-            
-            "is_audio_mute" -> {
-                result.success(isAudioMute(call))
-            }
-            
-            "stop_capturing" -> {
-                stopCapturing(result)
-            }
-            
-            "start_capturing" -> {
-                startCapturing(result)
-            }
-            
-            "send_broadcast_message" -> {
-                sendBroadCastMessage(call, result)
-            }
-            
-            "send_direct_message" -> {
-                sendDirectMessage(call, result)
-            }
-            
-            "send_group_message" -> {
-                sendGroupMessage(call, result)
-            }
-            
-            "preview" -> {
-                preview(call, result)
-            }
-            
-            "change_role" -> {
-                changeRole(call, result)
-            }
-            
-            "get_roles" -> {
-                getRoles(result)
-            }
-            
-            "accept_change_role" -> {
-                acceptChangeRole(result)
-            }
-            
-            "get_remote_peers" -> {
-                getRemotePeers(result)
-            }
-            
-            "get_peers" -> {
-                getPeers(result)
-            }
-            
-            "on_change_track_state_request" -> {
-                changeTrackState(call, result)
+            // MARK: Build Actions
+            "build","preview","join","leave" -> {
+                buildActions(call,result)
             }
 
-            "end_room" -> {
-                endRoom(call, result)
-            }
-            
-            "remove_peer" -> {
-                removePeer(call, result)
+            // MARK: Room Actions
+            "get_room","get_local_peer","get_remote_peers","get_peers" -> {
+                roomActions(call,result)
             }
 
-            "mute_all" -> {
-                muteAll(result)
-            }
-            
-            "un_mute_all" -> {
-                unMuteAll(result)
+            // MARK: Audio Helpers
+            "switch_audio","is_audio_mute","mute_all","un_mute_all","set_volume" -> {
+                audioActions(call,result)
             }
 
-            "get_local_peer" -> {
-                localPeer(result)
+            // MARK: Video Helpers
+            "switch_video","switch_camera","start_capturing","stop_capturing","is_video_mute","set_playback_allowed" -> {
+                videoActions(call, result)
             }
 
-            "start_hms_logger" -> {
-                startHMSLogger(call)
+            // MARK: Messaging
+            "send_broadcast_message","send_direct_message","send_group_message" -> {
+                messageActions(call, result)
             }
-            
-            "remove_hms_logger" -> {
-                removeHMSLogger()
+
+            // MARK: Role based Actions
+            "get_roles","change_role","accept_change_role","end_room","remove_peer","on_change_track_state_request","change_track_state_for_role" -> {
+                roleActions(call, result)
             }
-            
-            "change_track_state_for_role" -> {
-                changeTrackStateForRole(call, result)
+
+            // MARK: Peer Actions
+            "change_metadata","change_name"->{
+                peerActions(call, result)
             }
-            
-            "start_rtmp_or_recording" -> {
-                startRtmpOrRecording(call, result)
+
+            // MARK: Recording
+            "start_rtmp_or_recording","stop_rtmp_and_recording" -> {
+                recordingActions(call, result)
             }
-            
-            "stop_rtmp_and_recording" -> {
-                stopRtmpAndRecording(result)
+
+            // MARK: HLS
+            "hls_start_streaming","hls_stop_streaming"->{
+                hlsActions(call, result)
             }
-            
-            "build" -> {
-                build(this.activity, call, result)
+
+            // MARK: Logger
+            "start_hms_logger","remove_hms_logger" -> {
+                loggerActions(call, result)
             }
-            
-            "get_room" -> {
-                getRoom(result)
+
+            // MARK: Screenshare
+            "start_screen_share","stop_screen_share","is_screen_share_active" -> {
+                screenshareActions(call,result)
             }
-            
+
             "update_hms_video_track_settings" -> {
-                updateHMSLocalTrackSetting(call)
-            }
-            
-            "change_metadata"->{
-                changeMetadata(call, result)
-            }
-            
-            "set_playback_allowed"->{
-                setPlayBackAllowed(call, result)
-            }
-            
-            "set_volume"->{
-                setVolume(call, result)
-            }
-            
-            "change_name"->{
-                changeName(call, result)
-            }
-            
-            "hls_start_streaming"->{
-                hlsStreaming(call, result)
-            }
-            
-            "hls_stop_streaming"->{
-                stopHLSStreaming(call,result)
-            }
-            
-            "start_screen_share" -> {
-                startScreenShare(result)
-            }
-            
-            "stop_screen_share" -> {
-                stopScreenShare(result)
-            }
-
-            "is_screen_share_active" -> {
-               result.success(hmssdk.isScreenShared())
+                updateHMSLocalTrackSetting(call,result)
             }
 
             else -> {
@@ -264,7 +157,236 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         }
     }
 
-// TODO: check behaviour when room is not joined
+    // MARK: Build Actions
+    buildActions(call: MethodCall, result: Result){
+        when (call.method) {
+            "build" -> {
+                build(this.activity, call, result)
+            }
+            "preview" -> {
+                preview(call, result)
+            }
+            "join" -> {
+                join(call, result)
+            }
+            "leave" -> {
+                leave(result)
+            }
+            else -> {
+                result.notImplemented()
+            }
+        }
+    }
+
+    // MARK: Room Actions
+    roomActions(call: MethodCall, result: Result){
+        when (call.method) {
+            "get_room" -> {
+                getRoom(result)
+            }
+            "get_local_peer" -> {
+                localPeer(result)
+            }
+            "get_remote_peers" -> {
+                getRemotePeers(result)
+            }
+            "get_peers" -> {
+                getPeers(result)
+            }
+            else -> {
+                result.notImplemented()
+            }
+        }
+    }
+
+    // MARK: Audio Actions
+    audioActions(call: MethodCall, result: Result){
+        when (call.method) {
+            "switch_audio" -> {
+                switchAudio(call, result)
+            }
+            "is_audio_mute" -> {
+                result.success(isAudioMute(call))
+            }
+            "mute_all" -> {
+                muteAll(result)
+            }
+            "un_mute_all" -> {
+                unMuteAll(result)
+            }
+            "set_volume"->{
+                setVolume(call, result)
+            }
+            else -> {
+                result.notImplemented()
+            }
+        }
+    }
+
+    // MARK: Video Actions
+    videoActions(call: MethodCall, result: Result){
+        when (call.method) {
+            "switch_video" -> {
+                switchVideo(call, result)
+            }
+
+            "switch_camera" -> {
+                switchCamera()
+                result.success("switch_camera")
+            }
+
+            "start_capturing" -> {
+                startCapturing(result)
+            }
+
+            "stop_capturing" -> {
+                stopCapturing(result)
+            }
+
+            "is_video_mute" -> {
+                result.success(isVideoMute(call))
+            }
+
+            "set_playback_allowed"->{
+                setPlayBackAllowed(call, result)
+            }
+            else -> {
+                result.notImplemented()
+            }
+        }
+    }
+
+    // MARK: Messaging
+    messageActions(call: MethodCall, result: Result){
+        when (call.method) {
+            "send_broadcast_message" -> {
+                sendBroadCastMessage(call, result)
+            }
+            "send_direct_message" -> {
+                sendDirectMessage(call, result)
+            }
+            "send_group_message" -> {
+                sendGroupMessage(call, result)
+            }
+            else -> {
+                result.notImplemented()
+            }
+        }
+    }
+
+    // MARK: Role based Actions
+    roleActions(call: MethodCall, result: Result){
+        when (call.method) {
+            "get_roles" -> {
+                getRoles(result)
+            }
+            "change_role" -> {
+                changeRole(call, result)
+            }
+            "accept_change_role" -> {
+                acceptChangeRole(result)
+            }
+            "end_room" -> {
+                endRoom(call, result)
+            }
+            "remove_peer" -> {
+                removePeer(call, result)
+            }
+            "on_change_track_state_request" -> {
+                changeTrackState(call, result)
+            }
+            "change_track_state_for_role" -> {
+                changeTrackStateForRole(call, result)
+            }
+            else -> {
+                result.notImplemented()
+            }
+        }
+    }
+
+    // MARK: Peer Actions
+    peerActions(call: MethodCall, result: Result){
+        when (call.method) {
+            "change_metadata"-> {
+                changeMetadata(call, result)
+            }
+            "change_name"->{
+                changeName(call, result)
+            }
+            
+            else -> {
+                result.notImplemented()
+            }
+        }
+    }
+
+    // MARK: Recording
+    recordingActions(call: MethodCall, result: Result){
+        when (call.method) {
+            "start_rtmp_or_recording" -> {
+                startRtmpOrRecording(call, result)
+            }
+            "stop_rtmp_and_recording" -> {
+                stopRtmpAndRecording(result)
+            }
+            else -> {
+                result.notImplemented()
+            }
+        }
+    }
+
+    // MARK: HLS
+    hlsActions(call: MethodCall, result: Result){
+        when (call.method) {
+            "hls_start_streaming"->{
+                hlsStreaming(call, result)
+            }
+            "hls_stop_streaming"->{
+                stopHLSStreaming(call,result)
+            }
+            else -> {
+                result.notImplemented()
+            }
+        }
+    }
+
+    // MARK: Logger
+    loggerActions(call: MethodCall, result: Result){
+        when (call.method) {
+            "start_hms_logger" -> {
+                startHMSLogger(call)
+            }
+            "remove_hms_logger" -> {
+                removeHMSLogger()
+            }
+            else -> {
+                result.notImplemented()
+            }
+        }
+    }
+
+
+    // MARK: Screenshare
+    screenshareActions(call: MethodCall, result: Result){
+        when (call.method) {
+            "start_screen_share" -> {
+                startScreenShare(result)
+            }
+
+            "stop_screen_share" -> {
+                stopScreenShare(result)
+            }
+
+            "is_screen_share_active" -> {
+                result.success(hmssdk.isScreenShared())
+            }
+            else -> {
+                result.notImplemented()
+            }
+        }
+    }
+
+    // TODO: check behaviour when room is not joined
     private fun getPeers(result: Result) {
         val peersList = hmssdk.getPeers()
         val peersMapList = ArrayList<HashMap<String, Any?>?>()

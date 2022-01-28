@@ -173,7 +173,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     // MARK:  Room Actions
     private func roomActions(_ call: FlutterMethodCall, result: @escaping FlutterResult){
         switch call.method {
-            
+
         case "get_room":
             getRoom(result)
             
