@@ -173,17 +173,6 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     // MARK:  Room Actions
     private func roomActions(_ call: FlutterMethodCall, result: @escaping FlutterResult){
         switch call.method {
-        case "build":
-            build(call, result)
-            
-        case "preview":
-            preview(call, result)
-            
-        case "join":
-            join(call, result)
-            
-        case "leave":
-            leave(result)
             
         case "get_room":
             getRoom(result)
@@ -288,11 +277,6 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     case "change_track_state_for_role":
         changeTrackStateForRole(call, result)
         
-    case "change_metadata":
-        changeMetadata(call, result)
-        
-    case "change_name":
-        changeName(call, result)
     default:
         result(FlutterMethodNotImplemented)
         }
@@ -1016,9 +1000,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     
     private func startHlsStreaming(_ call: FlutterMethodCall, _ result: @escaping FlutterResult){
         let arguments = call.arguments as! [AnyHashable: Any]
-        
-        guard let meetingUrl = arguments["meeting_url"] as? String,
-              let metadata = arguments["meta_data"] as? String
+        guard let meetingUrlVariantsList = arguments["meeting_url_variants"] as? [[String:String]]
         else {
             let error = getError(message: "Wrong Paramenter found in \(#function)",
                                  description: "Paramenter is nil",
@@ -1026,7 +1008,10 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             result(HMSErrorExtension.toDictionary(error))
             return
         }
-        let hlsConfig = HMSHLSConfig(variants: [HMSHLSMeetingURLVariant(meetingURL: URL(string:meetingUrl)!, metadata: metadata)])
+        var meetingUrlVariant = [HMSHLSMeetingURLVariant]()
+        meetingUrlVariantsList.forEach{ meetingUrlVariant.append(HMSHLSMeetingURLVariant(meetingURL: URL(string:$0["meeting_url"]!)!, metadata: $0["meta_data"] ?? "")) }
+        
+        let hlsConfig = HMSHLSConfig(variants: meetingUrlVariant)
         hmsSDK?.startHLSStreaming(config: hlsConfig) { success, error in
             if let error = error {
                 result(HMSErrorExtension.toDictionary(error))
@@ -1037,14 +1022,27 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     }
 
     
-    private func stopHlsStreaming(_ result: @escaping FlutterResult){
-        hmsSDK?.stopHLSStreaming { success, error in
+    private func stopHlsStreaming(_ call: FlutterMethodCall,_ result: @escaping FlutterResult){
+        let arguments = call.arguments as? [AnyHashable: Any]
+        let config = getHLSConfig(from: arguments)
+        hmsSDK?.stopHLSStreaming(config: config) { success, error in
             if let error = error {
                 result(HMSErrorExtension.toDictionary(error))
             } else {
                 result(nil)
             }
         }
+    }
+        
+    
+    private func getHLSConfig(from arguments: [AnyHashable: Any]?) -> HMSHLSConfig?{
+        guard let meetingUrlVariantsList = arguments?["meeting_url_variants"] as? [[String:String]] else{
+            return nil
+        }
+        var meetingUrlVariant = [HMSHLSMeetingURLVariant]()
+        meetingUrlVariantsList.forEach{ meetingUrlVariant.append(HMSHLSMeetingURLVariant(meetingURL: URL(string:$0["meeting_url"]!)!, metadata: $0["meta_data"] ?? "")) }
+        
+        return HMSHLSConfig(variants: meetingUrlVariant)
     }
     
     
@@ -1134,7 +1132,6 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     
     
     public func on(room: HMSRoom, update: HMSRoomUpdate) {
-        
         let data = [
             "event_name": "on_room_update",
             "data": [

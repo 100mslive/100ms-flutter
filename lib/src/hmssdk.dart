@@ -7,6 +7,7 @@
 // Project imports:
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter/src/manager/hms_sdk_manager.dart';
+import 'package:hmssdk_flutter/src/model/hms_hls_config.dart';
 import 'package:hmssdk_flutter/src/service/platform_service.dart';
 import '../hmssdk_flutter.dart';
 
@@ -541,11 +542,11 @@ class HMSSDK {
   /// Starts HLS streaming for the [meetingUrl] room.
   /// You can set a custom [metadata] for the HLS Stream
   /// [hmsActionResultListener] is callback whose [HMSActionResultListener.onSuccess] will be called when the the action completes successfully.
-  void startHlsStreaming(String meetingUrl, String metadata,
-      {HMSActionResultListener? hmsActionResultListener}) async {
+  void startHlsStreaming({required HMSHLSConfig hmshlsConfig,
+      HMSActionResultListener? hmsActionResultListener}) async {
     var result = await PlatformService.invokeMethod(
         PlatformMethod.startHlsStreaming,
-        arguments: {"meeting_url": meetingUrl, "meta_data": metadata});
+        arguments: hmshlsConfig.toMap());
     if (hmsActionResultListener != null) {
       if (result == null)
         hmsActionResultListener.onSuccess(
@@ -559,11 +560,11 @@ class HMSSDK {
 
   /// Stops ongoing HLS streaming in the room
   /// [hmsActionResultListener] is callback whose [HMSActionResultListener.onSuccess] will be called when the the action completes successfully.
-  void stopHlsStreaming(
-      {HMSActionResultListener? hmsActionResultListener}) async {
+  void stopHlsStreaming({HMSHLSConfig? hmshlsConfig,
+      HMSActionResultListener? hmsActionResultListener}) async {
     var result = await PlatformService.invokeMethod(
-      PlatformMethod.stopHlsStreaming,
-    );
+        PlatformMethod.stopHlsStreaming,
+        arguments: hmshlsConfig != null ? hmshlsConfig.toMap() : null);
     if (hmsActionResultListener != null) {
       if (result == null)
         hmsActionResultListener.onSuccess(
