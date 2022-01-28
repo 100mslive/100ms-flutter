@@ -173,7 +173,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     // MARK:  Room Actions
     private func roomActions(_ call: FlutterMethodCall, result: @escaping FlutterResult){
         switch call.method {
-            
+
         case "get_room":
             getRoom(result)
             
@@ -315,7 +315,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         startHlsStreaming(call, result)
     
     case "hls_stop_streaming":
-        stopHlsStreaming(result)
+        stopHlsStreaming(call, result)
     default:
         result(FlutterMethodNotImplemented)
         }
@@ -1022,7 +1022,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     }
 
     
-    private func stopHlsStreaming(_ call: FlutterMethodCall,_ result: @escaping FlutterResult){
+    private func stopHlsStreaming(_ call: FlutterMethodCall,_ result: @escaping FlutterResult) {
         let arguments = call.arguments as? [AnyHashable: Any]
         let config = getHLSConfig(from: arguments)
         hmsSDK?.stopHLSStreaming(config: config) { success, error in
