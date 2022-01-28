@@ -68,6 +68,9 @@ abstract class MeetingStoreBase extends ChangeNotifier
   String event = '';
 
   @observable
+  String description = "Meeting Ended";
+
+  @observable
   HMSTrackChangeRequest? hmsTrackChangeRequest;
   @observable
   List<HMSRole> roles = [];
@@ -144,7 +147,6 @@ abstract class MeetingStoreBase extends ChangeNotifier
     return true;
   }
 
-// TODO: add await to resolve crash on leave?
   void leave() async {
     if (isScreenShareOn) {
       isScreenShareOn = false;
@@ -516,6 +518,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
   @override
   void onRemovedFromRoom(
       {required HMSPeerRemovedFromPeer hmsPeerRemovedFromPeer}) {
+    description = "Removed by ${hmsPeerRemovedFromPeer.peerWhoRemoved.name}";
     peerTracks.clear();
     isRoomEnded = true;
   }
