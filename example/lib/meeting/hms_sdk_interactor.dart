@@ -1,4 +1,5 @@
 //Project imports
+import 'dart:ffi';
 import 'dart:io';
 
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
@@ -234,7 +235,13 @@ class HMSSDKInteractor {
 
   void startHLSStreaming(
       String meetingUrl, HMSActionResultListener hmsActionResultListener) {
-    hmsSDK.startHlsStreaming(meetingUrl, "HLS started from Flutter",
+
+    List<HMSHLSMeetingURLVariant> hmsHlsMeetingUrls = [];
+
+    hmsHlsMeetingUrls.add(HMSHLSMeetingURLVariant(meetingUrl: meetingUrl, metadata:  "HLS started from Flutter"));
+
+    HMSHLSConfig hmshlsConfig = new HMSHLSConfig(hmsHlsMeetingUrls);
+    hmsSDK.startHlsStreaming(hmshlsConfig: hmshlsConfig,
         hmsActionResultListener: hmsActionResultListener);
   }
 
