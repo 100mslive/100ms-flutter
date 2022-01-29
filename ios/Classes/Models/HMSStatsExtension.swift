@@ -24,11 +24,11 @@ class HMSStatsExtension {
     static func toDictionary(_ hmsLocalVideoStats: HMSLocalVideoStats) -> [String:Any] {
         
         var dict = [String: Any]()
-    
+
         dict["round_trip_time"] =  hmsLocalVideoStats.roundTripTime
         dict["bytes_sent"] =  hmsLocalVideoStats.bytesSent
         dict["bitrate"] =  hmsLocalVideoStats.bitrate
-        dict["resolution"] = hmsLocalVideoStats.resolution
+        dict["resolution"] = HMSVideoResolutionExtension.toDictionary(hmsLocalVideoStats.resolution)
         dict["frame_rate"] = hmsLocalVideoStats.frameRate
 
         return dict
@@ -56,7 +56,7 @@ class HMSStatsExtension {
         dict["bitrate"] =  hmsRemoteVideoStats.bitrate
         dict["packets_received"] =  hmsRemoteVideoStats.packetsReceived
         dict["packets_lost"] =  hmsRemoteVideoStats.packetsLost
-        dict["resolution"] = hmsRemoteVideoStats.resolution
+        dict["resolution"] = HMSVideoResolutionExtension.toDictionary(hmsRemoteVideoStats.resolution)
         dict["frame_rate"] = hmsRemoteVideoStats.frameRate
 
         return dict
@@ -66,9 +66,9 @@ class HMSStatsExtension {
         
         var dict = [String: Any]()
     
-        dict["combined"] =  hmsRTCStatsReport.combined
-        dict["audio"] =  hmsRTCStatsReport.audio
-        dict["video"] =  hmsRTCStatsReport.video
+        dict["combined"] =  HMSStatsExtension.toDictionary(hmsRTCStatsReport.combined)
+        dict["audio"] =  HMSStatsExtension.toDictionary(hmsRTCStatsReport.audio)
+        dict["video"] =  HMSStatsExtension.toDictionary(hmsRTCStatsReport.video)
 
         return dict
     }

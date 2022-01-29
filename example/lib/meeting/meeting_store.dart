@@ -676,7 +676,6 @@ abstract class MeetingStoreBase extends ChangeNotifier
 
   void startScreenShare() {
     _hmssdkInteractor.startScreenShare(hmsActionResultListener: this);
-
   }
 
   void stopScreenShare() {
@@ -773,6 +772,43 @@ abstract class MeetingStoreBase extends ChangeNotifier
   void changeTrackStateForRole(bool mute, List<HMSRole>? roles) {
     _hmssdkInteractor.changeTrackStateForRole(
         true, HMSTrackKind.kHMSTrackKindAudio, "regular", roles, this);
+  }
+
+  @override
+  void onLocalAudioStats(
+      {required HMSLocalAudioStats hmsLocalAudioStats,
+      required HMSLocalAudioTrack track,
+      required HMSPeer peer}) {
+    //   print(hmsLocalAudioStats);
+  }
+
+  @override
+  void onLocalVideoStats(
+      {required HMSLocalVideoStats hmsLocalVideoStats,
+      required HMSLocalVideoTrack track,
+      required HMSPeer peer}) {
+    //  print(hmsLocalVideoStats);
+  }
+
+  @override
+  void onRemoteAudioStats(
+      {required HMSRemoteAudioStats hmsRemoteAudioStats,
+      required HMSRemoteAudioTrack track,
+      required HMSPeer peer}) {
+    print(hmsRemoteAudioStats);
+  }
+
+  @override
+  void onRemoteVideoStats(
+      {required HMSRemoteVideoStats hmsRemoteVideoStats,
+      required HMSRemoteVideoTrack track,
+      required HMSPeer peer}) {
+    //  print(hmsRemoteVideoStats);
+  }
+
+  @override
+  void onRTCStats({required HMSRTCStats hmsrtcStats}) {
+    //   print(hmsrtcStats);
   }
 
   @override
