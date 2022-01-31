@@ -5,7 +5,7 @@
 ///All methods related to meeting, preview and their listeners are present here.
 
 // Project imports:
-
+import 'package:flutter/widgets.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter/src/manager/hms_sdk_manager.dart';
 import 'package:hmssdk_flutter/src/service/platform_service.dart';
@@ -24,12 +24,14 @@ import '../hmssdk_flutter.dart';
 /// **Broadcast** - A local peer can send any message/data to all remote peers in the room
 ///
 /// HMSSDK has other methods which the client app can use to get more info about the Room, Peer and Tracks
-class HMSSDK {
+class HMSSDK with WidgetsBindingObserver{
   ///join meeting by passing HMSConfig instance to it.
 
   HMSTrackSetting? hmsTrackSetting;
 
-  HMSSDK({this.hmsTrackSetting});
+  HMSSDK({this.hmsTrackSetting}){
+    WidgetsBinding.instance!.addObserver(this);
+  }
 
   /// The build function should be called after creating an instance of the [HMSSDK].
   /// Await the result & if true then create [HMSConfig] object to join or preview a room.
@@ -70,6 +72,7 @@ class HMSSDK {
     var result = await PlatformService.invokeMethod(PlatformMethod.leave);
     if (hmsActionResultListener != null) {
       if (result == null) {
+        WidgetsBinding.instance!.removeObserver(this);
         hmsActionResultListener.onSuccess(
             methodType: HMSActionResultListenerMethod.leave);
       }
@@ -703,6 +706,27 @@ class HMSSDK {
 
   void removeLogListener({required HMSLogListener hmsLogListener}) {
     PlatformService.removeLogsListener(hmsLogListener);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) async {
+    super.didChangeAppLifecycleState(state);
+
+    if (state == AppLifecycleState.resumed) {
+      List<HMSPeer>? peersList = await getPeers();
+
+      peersList?.forEach((element) {
+        if (!element.isLocal) {
+          (element.audioTrack as HMSRemoteAudioTrack?)?.setVolume(10.0);
+          element.auxiliaryTracks?.forEach((element) {
+            if (element.kind == HMSTrackKind.kHMSTrackKindAudio) {
+              (element as HMSRemoteAudioTrack?)?.setVolume(10.0);
+            }
+          });
+        }
+      });
+
+    }
   }
 
 }
