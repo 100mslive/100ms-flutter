@@ -36,7 +36,6 @@ class HMSStreamingState {
             val map = HashMap<String,Any?>()
             if(hmsHlsStreamingState == null)return null
             map["running"] = hmsHlsStreamingState.running
-            Log.i("runningAndroid",hmsHlsStreamingState.running.toString())
             val args=ArrayList<Any>()
             hmsHlsStreamingState.variants?.forEach {
                 args.add(HMSHLSVariantExtension.toDictionary(it)!!)
