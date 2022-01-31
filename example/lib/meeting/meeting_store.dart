@@ -363,19 +363,17 @@ abstract class MeetingStoreBase extends ChangeNotifier
         break;
       case HMSRoomUpdate.hlsStreamingStateUpdated:
         hasHlsStarted = room.hmshlsStreamingState?.running ?? false;
-     
         streamUrl = hasHlsStarted
             ? room.hmshlsStreamingState?.variants[0]?.hlsStreamUrl ?? ""
             : "";
         break;
       default:
-        print('on room update ${update.toString()}');
+        break;
     }
   }
 
   @override
   void onPeerUpdate({required HMSPeer peer, required HMSPeerUpdate update}) {
-    print("peerUpdateFlutter ${peer.role.name}");
     peerOperation(peer, update);
   }
 
