@@ -363,7 +363,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
         break;
       case HMSRoomUpdate.hlsStreamingStateUpdated:
         hasHlsStarted = room.hmshlsStreamingState?.running ?? false;
-        print("hmsroomupdate ${room.hmshlsStreamingState?.running ?? false}");
+     
         streamUrl = hasHlsStarted
             ? room.hmshlsStreamingState?.variants[0]?.hlsStreamUrl ?? ""
             : "";
