@@ -63,3 +63,8 @@ export 'src/enum/hms_action_result_listener_method.dart';
 export 'src/model/hms_remote_peer.dart';
 export 'src/model/hms_hls_config.dart';
 export 'src/model/hms_hls_meeting_url_variant.dart';
+export 'src/model/hms_local_audio_stats.dart';
+export 'src/model/hms_local_video_stats.dart';
+export 'src/model/hms_remote_audio_stats.dart';
+export 'src/model/hms_remote_video_stats.dart';
+export 'src/model/hms_rtc_stats.dart';

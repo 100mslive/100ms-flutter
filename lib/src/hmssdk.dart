@@ -8,7 +8,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter/src/manager/hms_sdk_manager.dart';
-import 'package:hmssdk_flutter/src/model/hms_hls_config.dart';
 import 'package:hmssdk_flutter/src/service/platform_service.dart';
 import '../hmssdk_flutter.dart';
 
@@ -708,8 +707,6 @@ class HMSSDK with WidgetsBindingObserver{
   void removeLogListener({required HMSLogListener hmsLogListener}) {
     PlatformService.removeLogsListener(hmsLogListener);
   }
-
-
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) async {

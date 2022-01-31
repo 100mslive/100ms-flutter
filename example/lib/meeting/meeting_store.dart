@@ -368,7 +368,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
             : "";
         break;
       default:
-        print('on room update ${update.toString()}');
+        break;
     }
   }
 
@@ -678,7 +678,6 @@ abstract class MeetingStoreBase extends ChangeNotifier
 
   void startScreenShare() {
     _hmssdkInteractor.startScreenShare(hmsActionResultListener: this);
-
   }
 
   void stopScreenShare() {
@@ -778,6 +777,43 @@ abstract class MeetingStoreBase extends ChangeNotifier
   }
 
   @override
+  void onLocalAudioStats(
+      {required HMSLocalAudioStats hmsLocalAudioStats,
+      required HMSLocalAudioTrack track,
+      required HMSPeer peer}) {
+    //   print(hmsLocalAudioStats);
+  }
+
+  @override
+  void onLocalVideoStats(
+      {required HMSLocalVideoStats hmsLocalVideoStats,
+      required HMSLocalVideoTrack track,
+      required HMSPeer peer}) {
+    //  print(hmsLocalVideoStats);
+  }
+
+  @override
+  void onRemoteAudioStats(
+      {required HMSRemoteAudioStats hmsRemoteAudioStats,
+      required HMSRemoteAudioTrack track,
+      required HMSPeer peer}) {
+    print(hmsRemoteAudioStats);
+  }
+
+  @override
+  void onRemoteVideoStats(
+      {required HMSRemoteVideoStats hmsRemoteVideoStats,
+      required HMSRemoteVideoTrack track,
+      required HMSPeer peer}) {
+    //  print(hmsRemoteVideoStats);
+  }
+
+  @override
+  void onRTCStats({required HMSRTCStats hmsrtcStats}) {
+    //   print(hmsrtcStats);
+  }
+
+  @override
   void onSuccess(
       {HMSActionResultListenerMethod methodType =
           HMSActionResultListenerMethod.unknown,
@@ -857,19 +893,21 @@ abstract class MeetingStoreBase extends ChangeNotifier
         addMessage(message);
         break;
       case HMSActionResultListenerMethod.hlsStreamingStarted:
+        this.event = "HLS Streaming Started";
         // TODO: Handle this case.
         break;
       case HMSActionResultListenerMethod.hlsStreamingStopped:
+        this.event = "HLS Streaming Stopped";
         // TODO: Handle this case.
         break;
 
       case HMSActionResultListenerMethod.startScreenShare:
-        print("startScreenShare success");
+        this.event = "Screen Share Started";
         isScreenShareActive();
         break;
 
       case HMSActionResultListenerMethod.stopScreenShare:
-        print("stopScreenShare success");
+        this.event = "Screen Share Stopped";
         isScreenShareActive();
         break;
     }
