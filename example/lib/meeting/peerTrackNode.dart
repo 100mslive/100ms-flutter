@@ -6,6 +6,7 @@ class PeerTracKNode {
   String peerId;
   String name;
   bool isRaiseHand;
+  bool isBRB;
   @observable
   HMSVideoTrack? track;
   HMSTrack? audioTrack;
@@ -14,7 +15,8 @@ class PeerTracKNode {
       this.track,
       this.name = "",
       this.audioTrack,
-      this.isRaiseHand = false});
+      this.isRaiseHand = false,
+      this.isBRB = false});
 
   @override
   bool operator ==(Object other) =>

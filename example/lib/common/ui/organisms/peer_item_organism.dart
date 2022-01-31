@@ -109,11 +109,21 @@ class _PeerItemOrganismState extends State<PeerItemOrganism> {
             ),
           ),
           Align(
+            alignment: Alignment.topCenter,
+            child: widget.peerTracKNode.isBRB
+                ? Container(
+                    decoration: BoxDecoration(border: Border.all(width: 1)),
+                    child: Text("BRB"),
+                  )
+                : Container(),
+          )
+          Align(
               alignment: Alignment.topRight,
               child: widget.peerTracKNode.isRaiseHand
                   ? Image.asset('assets/icons/raise_hand.png',
                       color: Colors.amber.shade300)
                   : Container())
+
         ],
       ),
     );

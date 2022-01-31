@@ -59,6 +59,14 @@ class _ParticipantOrganismState extends State<ParticipantOrganism> {
                       height: 20,
                     ),
                   ),
+                if (peer.metadata!.contains("\"isBRBOn\":true"))
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
+                    child: Container(
+                      decoration: BoxDecoration(border: Border.all(width: 1)),
+                      child: Text("BRB"),
+                    ),
+                  ),
                 GestureDetector(
                   onTap: () {
                     if (widget.meetingStore.localPeer!.role.permissions
