@@ -5,9 +5,9 @@
 ///All methods related to meeting, preview and their listeners are present here.
 
 // Project imports:
+
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter/src/manager/hms_sdk_manager.dart';
-import 'package:hmssdk_flutter/src/model/hms_hls_config.dart';
 import 'package:hmssdk_flutter/src/service/platform_service.dart';
 import '../hmssdk_flutter.dart';
 
@@ -69,13 +69,15 @@ class HMSSDK {
   void leave({HMSActionResultListener? hmsActionResultListener}) async {
     var result = await PlatformService.invokeMethod(PlatformMethod.leave);
     if (hmsActionResultListener != null) {
-      if (result == null)
+      if (result == null) {
         hmsActionResultListener.onSuccess(
             methodType: HMSActionResultListenerMethod.leave);
-      else
+      }
+      else {
         hmsActionResultListener.onException(
             methodType: HMSActionResultListenerMethod.leave,
             hmsException: HMSException.fromMap(result["error"]));
+      }
     }
   }
 
@@ -702,4 +704,5 @@ class HMSSDK {
   void removeLogListener({required HMSLogListener hmsLogListener}) {
     PlatformService.removeLogsListener(hmsLogListener);
   }
+
 }

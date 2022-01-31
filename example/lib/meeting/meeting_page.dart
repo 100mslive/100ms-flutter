@@ -102,9 +102,11 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
         (event) => {
               if ((event as bool) == true)
                 {
+                  UtilityComponents.showSnackBarWithString(
+                      _meetingStore.description, context),
                   Navigator.of(context).popUntil((route) => route.isFirst),
                   UtilityComponents.showSnackBarWithString(
-                      "Meeting Ended", context),
+                      _meetingStore.description, context),
                 },
               _meetingStore.isRoomEnded = false,
             });
