@@ -561,7 +561,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Observer(builder: (_) {
-                            if (!_meetingStore.isHLSLink &&
+                            if (!_meetingStore.hasHlsStarted &&
                                 _meetingStore.curentScreenShareTrack != null &&
                                 !audioViewOn) {
                               return SizedBox(
@@ -596,7 +596,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                             child: Observer(builder: (_) {
                               // if (!_meetingStore.isMeetingStarted)
                               //   return SizedBox();
-                              if (!_meetingStore.isHLSLink) {
+                              if (!_meetingStore.hasHlsStarted) {
                                 if (_meetingStore.peerTracks.isEmpty)
                                   return Center(
                                       child:
@@ -645,18 +645,6 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                           Observer(builder: (_) {
                             print(
                                 "hasHLSStarted ${_meetingStore.hasHlsStarted}");
-                            if (_meetingStore.isHLSLink &&
-                                _meetingStore.hasHlsStarted == false) {
-                              return Flexible(
-                                child: Container(
-                                  child: Center(
-                                      child: Text(
-                                    "Waiting for the HLS Streaming to start...",
-                                    style: TextStyle(fontSize: 30.0),
-                                  )),
-                                ),
-                              );
-                            }
                             if (_meetingStore.isHLSLink &&
                                 _meetingStore.hasHlsStarted) {
                               return Flexible(
