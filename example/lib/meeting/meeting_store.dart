@@ -583,8 +583,13 @@ abstract class MeetingStoreBase extends ChangeNotifier
         int index =
             peerTracks.indexWhere((element) => element.peerId == peer.peerId);
         if (index != -1) {
-          peerTracks[index].isRaiseHand =
+          PeerTracKNode peerTracKNode = peerTracks[index];
+          peerTracKNode.isRaiseHand =
               (peer.metadata == "{\"isHandRaised\":true}");
+          peerTracks.removeAt(index);
+          peerTracks.insert(index, peerTracKNode);
+          // peerTracks[index].isRaiseHand =
+          //     (peer.metadata == "{\"isHandRaised\":true}");
         }
         if (peer.isLocal) {
           localPeer = peer;
