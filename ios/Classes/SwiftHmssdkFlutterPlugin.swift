@@ -1267,6 +1267,68 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         eventSink?(data)
     }
     
+    public func on(localAudioStats: HMSLocalAudioStats, track: HMSLocalAudioTrack, peer: HMSPeer){
+        let data = [
+            "event_name": "on_local_audio_stats",
+            "data": [
+                "local_audio_stats": HMSStatsExtension.toDictionary(localAudioStats),
+                "track": HMSTrackExtension.toDictionary(track),
+                "peer": HMSPeerExtension.toDictionary(peer)
+            ]
+        ] as [String: Any]
+        
+        eventSink?(data)
+    }
+
+    public func on(localVideoStats: HMSLocalVideoStats, track: HMSLocalVideoTrack, peer: HMSPeer){
+        let data = [
+            "event_name": "on_local_video_stats",
+            "data": [
+                "local_video_stats": HMSStatsExtension.toDictionary(localVideoStats),
+                "track": HMSTrackExtension.toDictionary(track),
+                "peer": HMSPeerExtension.toDictionary(peer)
+            ]
+        ] as [String: Any]
+        
+        eventSink?(data)
+    }
+
+    public func on(remoteAudioStats: HMSRemoteAudioStats, track: HMSRemoteAudioTrack, peer: HMSPeer){
+        let data = [
+            "event_name": "on_remote_audio_stats",
+            "data": [
+                "remote_audio_stats": HMSStatsExtension.toDictionary(remoteAudioStats),
+                "track": HMSTrackExtension.toDictionary(track),
+                "peer": HMSPeerExtension.toDictionary(peer)
+            ]
+        ] as [String: Any]
+        
+        eventSink?(data)
+    }
+
+    public func on(remoteVideoStats: HMSRemoteVideoStats, track: HMSRemoteVideoTrack, peer: HMSPeer){
+        let data = [
+            "event_name": "on_remote_video_stats",
+            "data": [
+                "remote_video_stats": HMSStatsExtension.toDictionary(remoteVideoStats),
+                "track": HMSTrackExtension.toDictionary(track),
+                "peer": HMSPeerExtension.toDictionary(peer)
+            ]
+        ] as [String: Any]
+        
+        eventSink?(data)
+    }
+
+    public func on(rtcStats: HMSRTCStatsReport){
+        let data = [
+            "event_name": "on_rtc_stats_report",
+            "data": [
+                "rtc_stats_report": HMSStatsExtension.toDictionary(rtcStats)
+            ]
+        ] as [String: Any]
+        
+        eventSink?(data)
+    }
     
     // MARK: - Helper Functions
     

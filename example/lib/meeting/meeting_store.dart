@@ -777,6 +777,43 @@ abstract class MeetingStoreBase extends ChangeNotifier
   }
 
   @override
+  void onLocalAudioStats(
+      {required HMSLocalAudioStats hmsLocalAudioStats,
+      required HMSLocalAudioTrack track,
+      required HMSPeer peer}) {
+    //   print(hmsLocalAudioStats);
+  }
+
+  @override
+  void onLocalVideoStats(
+      {required HMSLocalVideoStats hmsLocalVideoStats,
+      required HMSLocalVideoTrack track,
+      required HMSPeer peer}) {
+    //  print(hmsLocalVideoStats);
+  }
+
+  @override
+  void onRemoteAudioStats(
+      {required HMSRemoteAudioStats hmsRemoteAudioStats,
+      required HMSRemoteAudioTrack track,
+      required HMSPeer peer}) {
+    print(hmsRemoteAudioStats);
+  }
+
+  @override
+  void onRemoteVideoStats(
+      {required HMSRemoteVideoStats hmsRemoteVideoStats,
+      required HMSRemoteVideoTrack track,
+      required HMSPeer peer}) {
+    //  print(hmsRemoteVideoStats);
+  }
+
+  @override
+  void onRTCStats({required HMSRTCStats hmsrtcStats}) {
+    //   print(hmsrtcStats);
+  }
+
+  @override
   void onSuccess(
       {HMSActionResultListenerMethod methodType =
           HMSActionResultListenerMethod.unknown,

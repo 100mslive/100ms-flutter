@@ -192,6 +192,60 @@ class PlatformService {
           notifyUpdateListeners(
               method, {'removed_from_room': hmsPeerRemovedFromPeer});
           break;
+        case HMSUpdateListenerMethod.onLocalAudioStats:
+          HMSPeer? peer = HMSPeer.fromMap(data['peer']);
+          HMSLocalAudioTrack? track =
+              HMSLocalAudioTrack.fromMap(map: data['track'], peer: peer);
+          HMSLocalAudioStats localAudioStats =
+              HMSLocalAudioStats.fromMap(data['local_audio_stats'] as Map);
+          notifyUpdateListeners(method, {
+            'local_audio_stats': localAudioStats,
+            "track": track,
+            "peer": peer
+          });
+          break;
+        case HMSUpdateListenerMethod.onLocalVideoStats:
+          HMSPeer? peer = HMSPeer.fromMap(data['peer']);
+          HMSLocalVideoTrack? track =
+              HMSLocalVideoTrack.fromMap(map: data['track'], peer: peer);
+          HMSLocalVideoStats localVideoStats =
+              HMSLocalVideoStats.fromMap(data['local_video_stats'] as Map);
+          notifyUpdateListeners(method, {
+            'local_video_stats': localVideoStats,
+            "track": track,
+            "peer": peer
+          });
+          break;
+        case HMSUpdateListenerMethod.onRemoteAudioStats:
+          HMSPeer? peer = HMSPeer.fromMap(data['peer']);
+          HMSRemoteAudioTrack? track =
+              HMSRemoteAudioTrack.fromMap(map: data['track'], peer: peer);
+          HMSRemoteAudioStats remoteAudioStats =
+              HMSRemoteAudioStats.fromMap(data['remote_audio_stats'] as Map);
+          notifyUpdateListeners(method, {
+            'remote_audio_stats': remoteAudioStats,
+            "track": track,
+            "peer": peer
+          });
+          break;
+
+        case HMSUpdateListenerMethod.onRemoteVideoStats:
+          HMSPeer? peer = HMSPeer.fromMap(data['peer']);
+          HMSRemoteVideoTrack? track =
+              HMSRemoteVideoTrack.fromMap(map: data['track'], peer: peer);
+          HMSRemoteVideoStats remoteVideoStats =
+              HMSRemoteVideoStats.fromMap(data['remote_video_stats'] as Map);
+          notifyUpdateListeners(method, {
+            'remote_video_stats': remoteVideoStats,
+            "track": track,
+            "peer": peer
+          });
+          break;
+        case HMSUpdateListenerMethod.onRtcStats:
+          HMSRTCStats rtcStats =
+              HMSRTCStats.fromMap(data['rtc_stats_report'] as Map);
+          notifyUpdateListeners(method, {'rtc_stats_report': rtcStats});
+          break;
       }
     });
 
@@ -352,6 +406,34 @@ class PlatformService {
           element.onRemovedFromRoom(
               hmsPeerRemovedFromPeer: arguments['removed_from_room']);
         });
+        break;
+      case HMSUpdateListenerMethod.onLocalAudioStats:
+        updateListeners.forEach((e) => e.onLocalAudioStats(
+            hmsLocalAudioStats: arguments['local_audio_stats'],
+            track: arguments["track"],
+            peer: arguments["peer"]));
+        break;
+      case HMSUpdateListenerMethod.onLocalVideoStats:
+        updateListeners.forEach((e) => e.onLocalVideoStats(
+            hmsLocalVideoStats: arguments['local_video_stats'],
+            track: arguments["track"],
+            peer: arguments["peer"]));
+        break;
+      case HMSUpdateListenerMethod.onRemoteAudioStats:
+        updateListeners.forEach((e) => e.onRemoteAudioStats(
+            hmsRemoteAudioStats: arguments['remote_audio_stats'],
+            track: arguments["track"],
+            peer: arguments["peer"]));
+        break;
+      case HMSUpdateListenerMethod.onRemoteVideoStats:
+        updateListeners.forEach((e) => e.onRemoteVideoStats(
+            hmsRemoteVideoStats: arguments['remote_video_stats'],
+            track: arguments["track"],
+            peer: arguments["peer"]));
+        break;
+      case HMSUpdateListenerMethod.onRtcStats:
+        updateListeners.forEach(
+            (e) => e.onRTCStats(hmsrtcStats: arguments['rtc_stats_report']));
         break;
       case HMSUpdateListenerMethod.unknown:
         break;
