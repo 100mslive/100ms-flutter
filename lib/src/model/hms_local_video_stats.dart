@@ -1,5 +1,4 @@
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-import 'package:hmssdk_flutter/src/model/hms_local_audio_track.dart';
 
 class HMSLocalVideoStats {
   double roundTripTime;
