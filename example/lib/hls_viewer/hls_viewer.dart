@@ -1,6 +1,5 @@
 //Package imports
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 
@@ -38,7 +37,7 @@ class _HLSViewerState extends State<HLSViewer> {
 
   @override
   Widget build(BuildContext context) {
-    MeetingStore meetingStore = context.watch<MeetingStore>();
+    context.watch<MeetingStore>();
     return Scaffold(
       body: Center(
         child: _controller.value.isInitialized

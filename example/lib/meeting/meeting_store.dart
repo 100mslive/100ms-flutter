@@ -1,6 +1,4 @@
 //Package imports
-import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:mobx/mobx.dart';
 import 'package:intl/intl.dart';
@@ -142,8 +140,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
         userName: user,
         endPoint: token[1] == "true" ? "" : "https://qa-init.100ms.live/init");
 
-    await HmsSdkManager.hmsSdkInteractor?.join(config: config);
-    isMeetingStarted = true;
+    HmsSdkManager.hmsSdkInteractor?.join(config: config);
     return true;
   }
 
@@ -304,6 +301,8 @@ abstract class MeetingStoreBase extends ChangeNotifier
 
   @override
   void onJoin({required HMSRoom room}) async {
+    
+    isMeetingStarted = true;
     hmsRoom = room;
 
     if (room.hmshlsStreamingState?.running ?? false) {
@@ -583,10 +582,18 @@ abstract class MeetingStoreBase extends ChangeNotifier
         int index =
             peerTracks.indexWhere((element) => element.peerId == peer.peerId);
         if (index != -1) {
-          peerTracks[index].isRaiseHand =
+          PeerTracKNode peerTracKNode = peerTracks[index];
+          peerTracKNode.isRaiseHand =
               (peer.metadata == "{\"isHandRaised\":true}");
+          
           peerTracks[index].isBRB =
               (peer.metadata == "{\"isHandRaised\":false,\"isBRBOn\":true}");
+
+          peerTracks.removeAt(index);
+          peerTracks.insert(index, peerTracKNode);
+          // peerTracks[index].isRaiseHand =
+          //     (peer.metadata == "{\"isHandRaised\":true}");
+
         }
         if (peer.isLocal) {
           localPeer = peer;
