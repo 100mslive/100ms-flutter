@@ -108,6 +108,15 @@ class _PeerItemOrganismState extends State<PeerItemOrganism> {
               overflow: TextOverflow.ellipsis,
             ),
           ),
+          Align(
+            alignment: Alignment.topCenter,
+            child: widget.peerTracKNode.isBRB
+                ? Container(
+                    decoration: BoxDecoration(border: Border.all(width: 1)),
+                    child: Text("BRB"),
+                  )
+                : Container(),
+          )
         ],
       ),
     );

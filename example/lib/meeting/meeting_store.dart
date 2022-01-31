@@ -585,6 +585,8 @@ abstract class MeetingStoreBase extends ChangeNotifier
         if (index != -1) {
           peerTracks[index].isRaiseHand =
               (peer.metadata == "{\"isHandRaised\":true}");
+          peerTracks[index].isBRB =
+              (peer.metadata == "{\"isHandRaised\":false,\"isBRBOn\":true}");
         }
         if (peer.isLocal) {
           localPeer = peer;
@@ -746,9 +748,26 @@ abstract class MeetingStoreBase extends ChangeNotifier
 
   void changeMetadata() {
     isRaisedHand = !isRaisedHand;
+    isBRB = false;
     String value = isRaisedHand ? "true" : "false";
     _hmssdkInteractor.changeMetadata(
         metadata: "{\"isHandRaised\":$value}", hmsActionResultListener: this);
+  }
+
+  bool isBRB = false;
+  void changeMetadataBRB() {
+    isBRB = !isBRB;
+    isRaisedHand = false;
+    String value = isBRB ? "true" : "false";
+    _hmssdkInteractor.changeMetadata(
+        metadata: "{\"isHandRaised\":false,\"isBRBOn\":$value}",
+        hmsActionResultListener: this);
+    if (isMicOn) {
+      switchAudio();
+    }
+    if (isVideoOn) {
+      switchVideo();
+    }
   }
 
   void setPlayBackAllowed(bool allow) {

@@ -55,7 +55,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
   int countOfVideoOnBetweenTwo = 1;
   bool videoPreviousState = false;
   bool isRecordingStarted = false;
-
+  bool isBRB = false;
   @override
   void initState() {
     super.initState();
@@ -286,8 +286,12 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
       case 11:
         _meetingStore.changeTrackStateForRole(true, null);
         break;
-
       case 12:
+        _meetingStore.changeMetadataBRB();
+        raisedHand = false;
+        isBRB = !isBRB;
+        break;
+      case 13:
         _meetingStore.endRoom(false, "Room Ended From Flutter");
         if (_meetingStore.isRoomEnded) {
           Navigator.pop(context);
@@ -535,6 +539,35 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                     ]),
                                 value: 11,
                               ),
+                            PopupMenuItem(
+                              child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      "BRB",
+                                      style: TextStyle(
+                                          color:
+                                              isBRB ? Colors.red : Colors.blue),
+                                    ),
+                                    Container(
+                                      decoration: BoxDecoration(
+                                          border: Border.all(
+                                              width: 1,
+                                              color: isBRB
+                                                  ? Colors.red
+                                                  : Colors.blue)),
+                                      child: Text(
+                                        "BRB",
+                                        style: TextStyle(
+                                            color: isBRB
+                                                ? Colors.red
+                                                : Colors.blue),
+                                      ),
+                                    ),
+                                  ]),
+                              value: 12,
+                            ),
                             if (_meetingStore
                                 .localPeer!.role.permissions.endRoom!)
                               PopupMenuItem(
@@ -549,7 +582,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                       Icon(Icons.cancel_schedule_send,
                                           color: Colors.blue),
                                     ]),
-                                value: 12,
+                                value: 13,
                               ),
                           ],
                           onSelected: handleMenu,
@@ -709,6 +742,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                 onPressed: () {
                                   setState(() {
                                     raisedHand = !raisedHand;
+                                    isBRB = false;
                                   });
                                   _meetingStore.changeMetadata();
                                   UtilityComponents.showSnackBarWithString(
