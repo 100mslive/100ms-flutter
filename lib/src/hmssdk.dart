@@ -29,9 +29,7 @@ class HMSSDK with WidgetsBindingObserver{
 
   HMSTrackSetting? hmsTrackSetting;
 
-  HMSSDK({this.hmsTrackSetting}){
-    WidgetsBinding.instance!.addObserver(this);
-  }
+  HMSSDK({this.hmsTrackSetting});
 
   /// The build function should be called after creating an instance of the [HMSSDK].
   /// Await the result & if true then create [HMSConfig] object to join or preview a room.
@@ -45,7 +43,8 @@ class HMSSDK with WidgetsBindingObserver{
   }
 
   /// Join the room with configuration options passed as a [HMSConfig] object
-  Future<void> join({required HMSConfig config}) async {
+  void join({required HMSConfig config}) async {
+    WidgetsBinding.instance!.addObserver(this);
     return await PlatformService.invokeMethod(PlatformMethod.join,
         arguments: {...config.getJson()});
   }
@@ -72,7 +71,6 @@ class HMSSDK with WidgetsBindingObserver{
     var result = await PlatformService.invokeMethod(PlatformMethod.leave);
     if (hmsActionResultListener != null) {
       if (result == null) {
-        WidgetsBinding.instance!.removeObserver(this);
         hmsActionResultListener.onSuccess(
             methodType: HMSActionResultListenerMethod.leave);
       }
@@ -82,6 +80,7 @@ class HMSSDK with WidgetsBindingObserver{
             hmsException: HMSException.fromMap(result["error"]));
       }
     }
+    WidgetsBinding.instance!.removeObserver(this);
   }
 
   /// To switch local peer's audio on/off.
