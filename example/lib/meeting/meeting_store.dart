@@ -1,6 +1,4 @@
 //Package imports
-import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:mobx/mobx.dart';
 import 'package:intl/intl.dart';
@@ -66,6 +64,9 @@ abstract class MeetingStoreBase extends ChangeNotifier
   bool isRecordingStarted = false;
   @observable
   String event = '';
+
+  @observable
+  String description = "Meeting Ended";
 
   @observable
   HMSTrackChangeRequest? hmsTrackChangeRequest;
@@ -139,12 +140,10 @@ abstract class MeetingStoreBase extends ChangeNotifier
         userName: user,
         endPoint: token[1] == "true" ? "" : "https://qa-init.100ms.live/init");
 
-    await HmsSdkManager.hmsSdkInteractor?.join(config: config);
-    isMeetingStarted = true;
+    HmsSdkManager.hmsSdkInteractor?.join(config: config);
     return true;
   }
 
-// TODO: add await to resolve crash on leave?
   void leave() async {
     if (isScreenShareOn) {
       isScreenShareOn = false;
@@ -302,6 +301,8 @@ abstract class MeetingStoreBase extends ChangeNotifier
 
   @override
   void onJoin({required HMSRoom room}) async {
+    
+    isMeetingStarted = true;
     hmsRoom = room;
 
     if (room.hmshlsStreamingState?.running ?? false) {
@@ -361,13 +362,12 @@ abstract class MeetingStoreBase extends ChangeNotifier
         break;
       case HMSRoomUpdate.hlsStreamingStateUpdated:
         hasHlsStarted = room.hmshlsStreamingState?.running ?? false;
-
         streamUrl = hasHlsStarted
             ? room.hmshlsStreamingState?.variants[0]?.hlsStreamUrl ?? ""
             : "";
         break;
       default:
-        print('on room update ${update.toString()}');
+        break;
     }
   }
 
@@ -515,6 +515,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
   @override
   void onRemovedFromRoom(
       {required HMSPeerRemovedFromPeer hmsPeerRemovedFromPeer}) {
+    description = "Removed by ${hmsPeerRemovedFromPeer.peerWhoRemoved?.name}";
     peerTracks.clear();
     isRoomEnded = true;
   }
@@ -581,8 +582,18 @@ abstract class MeetingStoreBase extends ChangeNotifier
         int index =
             peerTracks.indexWhere((element) => element.peerId == peer.peerId);
         if (index != -1) {
-          peerTracks[index].isRaiseHand =
+          PeerTracKNode peerTracKNode = peerTracks[index];
+          peerTracKNode.isRaiseHand =
               (peer.metadata == "{\"isHandRaised\":true}");
+          
+          peerTracks[index].isBRB =
+              (peer.metadata == "{\"isHandRaised\":false,\"isBRBOn\":true}");
+
+          peerTracks.removeAt(index);
+          peerTracks.insert(index, peerTracKNode);
+          // peerTracks[index].isRaiseHand =
+          //     (peer.metadata == "{\"isHandRaised\":true}");
+
         }
         if (peer.isLocal) {
           localPeer = peer;
@@ -744,9 +755,26 @@ abstract class MeetingStoreBase extends ChangeNotifier
 
   void changeMetadata() {
     isRaisedHand = !isRaisedHand;
+    isBRB = false;
     String value = isRaisedHand ? "true" : "false";
     _hmssdkInteractor.changeMetadata(
         metadata: "{\"isHandRaised\":$value}", hmsActionResultListener: this);
+  }
+
+  bool isBRB = false;
+  void changeMetadataBRB() {
+    isBRB = !isBRB;
+    isRaisedHand = false;
+    String value = isBRB ? "true" : "false";
+    _hmssdkInteractor.changeMetadata(
+        metadata: "{\"isHandRaised\":false,\"isBRBOn\":$value}",
+        hmsActionResultListener: this);
+    if (isMicOn) {
+      switchAudio();
+    }
+    if (isVideoOn) {
+      switchVideo();
+    }
   }
 
   void setPlayBackAllowed(bool allow) {
@@ -772,6 +800,43 @@ abstract class MeetingStoreBase extends ChangeNotifier
   void changeTrackStateForRole(bool mute, List<HMSRole>? roles) {
     _hmssdkInteractor.changeTrackStateForRole(
         true, HMSTrackKind.kHMSTrackKindAudio, "regular", roles, this);
+  }
+
+  @override
+  void onLocalAudioStats(
+      {required HMSLocalAudioStats hmsLocalAudioStats,
+      required HMSLocalAudioTrack track,
+      required HMSPeer peer}) {
+    //   print(hmsLocalAudioStats);
+  }
+
+  @override
+  void onLocalVideoStats(
+      {required HMSLocalVideoStats hmsLocalVideoStats,
+      required HMSLocalVideoTrack track,
+      required HMSPeer peer}) {
+    //  print(hmsLocalVideoStats);
+  }
+
+  @override
+  void onRemoteAudioStats(
+      {required HMSRemoteAudioStats hmsRemoteAudioStats,
+      required HMSRemoteAudioTrack track,
+      required HMSPeer peer}) {
+    // print(hmsRemoteAudioStats);
+  }
+
+  @override
+  void onRemoteVideoStats(
+      {required HMSRemoteVideoStats hmsRemoteVideoStats,
+      required HMSRemoteVideoTrack track,
+      required HMSPeer peer}) {
+    //  print(hmsRemoteVideoStats);
+  }
+
+  @override
+  void onRTCStats({required HMSRTCStats hmsrtcStats}) {
+    //   print(hmsrtcStats);
   }
 
   @override

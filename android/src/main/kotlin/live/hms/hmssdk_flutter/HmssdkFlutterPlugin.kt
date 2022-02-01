@@ -148,7 +148,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             }
 
             "update_hms_video_track_settings" -> {
-                updateHMSLocalTrackSetting(call,result)
+                updateHMSLocalTrackSetting(call)
             }
 
             else -> {
@@ -158,7 +158,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
     }
 
     // MARK: Build Actions
-    buildActions(call: MethodCall, result: Result){
+    private fun buildActions(call: MethodCall, result: Result){
         when (call.method) {
             "build" -> {
                 build(this.activity, call, result)
@@ -179,7 +179,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
     }
 
     // MARK: Room Actions
-    roomActions(call: MethodCall, result: Result){
+    private fun roomActions(call: MethodCall, result: Result){
         when (call.method) {
             "get_room" -> {
                 getRoom(result)
@@ -200,7 +200,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
     }
 
     // MARK: Audio Actions
-    audioActions(call: MethodCall, result: Result){
+    private fun audioActions(call: MethodCall, result: Result){
         when (call.method) {
             "switch_audio" -> {
                 switchAudio(call, result)
@@ -224,7 +224,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
     }
 
     // MARK: Video Actions
-    videoActions(call: MethodCall, result: Result){
+    private fun videoActions(call: MethodCall, result: Result){
         when (call.method) {
             "switch_video" -> {
                 switchVideo(call, result)
@@ -257,7 +257,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
     }
 
     // MARK: Messaging
-    messageActions(call: MethodCall, result: Result){
+    private fun messageActions(call: MethodCall, result: Result){
         when (call.method) {
             "send_broadcast_message" -> {
                 sendBroadCastMessage(call, result)
@@ -275,7 +275,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
     }
 
     // MARK: Role based Actions
-    roleActions(call: MethodCall, result: Result){
+    private fun roleActions(call: MethodCall, result: Result){
         when (call.method) {
             "get_roles" -> {
                 getRoles(result)
@@ -305,7 +305,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
     }
 
     // MARK: Peer Actions
-    peerActions(call: MethodCall, result: Result){
+    private fun peerActions(call: MethodCall, result: Result){
         when (call.method) {
             "change_metadata"-> {
                 changeMetadata(call, result)
@@ -321,7 +321,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
     }
 
     // MARK: Recording
-    recordingActions(call: MethodCall, result: Result){
+    private fun recordingActions(call: MethodCall, result: Result){
         when (call.method) {
             "start_rtmp_or_recording" -> {
                 startRtmpOrRecording(call, result)
@@ -336,7 +336,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
     }
 
     // MARK: HLS
-    hlsActions(call: MethodCall, result: Result){
+    private fun hlsActions(call: MethodCall, result: Result){
         when (call.method) {
             "hls_start_streaming"->{
                 hlsStreaming(call, result)
@@ -351,7 +351,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
     }
 
     // MARK: Logger
-    loggerActions(call: MethodCall, result: Result){
+    private fun loggerActions(call: MethodCall, result: Result){
         when (call.method) {
             "start_hms_logger" -> {
                 startHMSLogger(call)
@@ -367,7 +367,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
 
 
     // MARK: Screenshare
-    screenshareActions(call: MethodCall, result: Result){
+    private fun screenshareActions(call: MethodCall, result: Result){
         when (call.method) {
             "start_screen_share" -> {
                 startScreenShare(result)
@@ -946,7 +946,6 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             val maxFrameRate = hmsVideoTrackHashMap["max_frame_rate"] as Int?
             val videoCodec =
                 VideoParamsExtension.getValueOfHMSAudioCodecFromString(hmsVideoTrackHashMap["video_codec"] as String?) as HMSVideoCodec?
-
 
             if (maxBitRate != null) {
                 hmsVideoTrackSettings = hmsVideoTrackSettings.maxBitrate(maxBitRate)

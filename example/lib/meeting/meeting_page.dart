@@ -1,6 +1,5 @@
 //Package imports
 import 'dart:io';
-
 import 'package:connectivity_checker/connectivity_checker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -55,7 +54,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
   int countOfVideoOnBetweenTwo = 1;
   bool videoPreviousState = false;
   bool isRecordingStarted = false;
-
+  bool isBRB = false;
   @override
   void initState() {
     super.initState();
@@ -102,9 +101,11 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
         (event) => {
               if ((event as bool) == true)
                 {
+                  UtilityComponents.showSnackBarWithString(
+                      _meetingStore.description, context),
                   Navigator.of(context).popUntil((route) => route.isFirst),
                   UtilityComponents.showSnackBarWithString(
-                      "Meeting Ended", context),
+                      _meetingStore.description, context),
                 },
               _meetingStore.isRoomEnded = false,
             });
@@ -284,8 +285,12 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
       case 11:
         _meetingStore.changeTrackStateForRole(true, null);
         break;
-
       case 12:
+        _meetingStore.changeMetadataBRB();
+        raisedHand = false;
+        isBRB = !isBRB;
+        break;
+      case 13:
         _meetingStore.endRoom(false, "Room Ended From Flutter");
         if (_meetingStore.isRoomEnded) {
           Navigator.pop(context);
@@ -533,6 +538,35 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                     ]),
                                 value: 11,
                               ),
+                            PopupMenuItem(
+                              child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      "BRB",
+                                      style: TextStyle(
+                                          color:
+                                              isBRB ? Colors.red : Colors.blue),
+                                    ),
+                                    Container(
+                                      decoration: BoxDecoration(
+                                          border: Border.all(
+                                              width: 1,
+                                              color: isBRB
+                                                  ? Colors.red
+                                                  : Colors.blue)),
+                                      child: Text(
+                                        "BRB",
+                                        style: TextStyle(
+                                            color: isBRB
+                                                ? Colors.red
+                                                : Colors.blue),
+                                      ),
+                                    ),
+                                  ]),
+                              value: 12,
+                            ),
                             if (_meetingStore
                                 .localPeer!.role.permissions.endRoom!)
                               PopupMenuItem(
@@ -547,7 +581,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                       Icon(Icons.cancel_schedule_send,
                                           color: Colors.blue),
                                     ]),
-                                value: 12,
+                                value: 13,
                               ),
                           ],
                           onSelected: handleMenu,
@@ -559,9 +593,10 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                           horizontal: 5.0, vertical: 5.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Observer(builder: (_) {
-                            if (!_meetingStore.isHLSLink &&
+                            if (!_meetingStore.hasHlsStarted &&
                                 _meetingStore.curentScreenShareTrack != null &&
                                 !audioViewOn) {
                               return SizedBox(
@@ -645,28 +680,22 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                           Observer(builder: (_) {
                             print(
                                 "hasHLSStarted ${_meetingStore.hasHlsStarted}");
-                            if (_meetingStore.isHLSLink &&
-                                _meetingStore.hasHlsStarted == false) {
-                              return Flexible(
-                                child: Container(
+                            if (_meetingStore.isHLSLink) {
+                              if (_meetingStore.hasHlsStarted) {
+                                return Flexible(
                                   child: Center(
-                                      child: Text(
-                                    "Waiting for the HLS Streaming to start...",
-                                    style: TextStyle(fontSize: 30.0),
-                                  )),
-                                ),
-                              );
-                            }
-                            if (_meetingStore.isHLSLink &&
-                                _meetingStore.hasHlsStarted) {
-                              return Flexible(
-                                child: Center(
-                                  child: Container(
-                                    child: HLSViewer(
-                                        streamUrl: _meetingStore.streamUrl),
+                                    child: Container(
+                                      child: HLSViewer(
+                                          streamUrl: _meetingStore.streamUrl),
+                                    ),
                                   ),
-                                ),
-                              );
+                                );
+                              } else {
+                                return Text(
+                                  "Waiting for HLS to start...",
+                                  style: TextStyle(fontSize: 30),
+                                );
+                              }
                             } else {
                               return SizedBox();
                             }
@@ -724,6 +753,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                 onPressed: () {
                                   setState(() {
                                     raisedHand = !raisedHand;
+                                    isBRB = false;
                                   });
                                   _meetingStore.changeMetadata();
                                   UtilityComponents.showSnackBarWithString(
@@ -800,19 +830,6 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
     super.didChangeAppLifecycleState(state);
 
     if (state == AppLifecycleState.resumed) {
-      List<HMSPeer>? peersList = await _meetingStore.getPeers();
-
-      peersList?.forEach((element) {
-        if (!element.isLocal) {
-          (element.audioTrack as HMSRemoteAudioTrack?)?.setVolume(10.0);
-          element.auxiliaryTracks?.forEach((element) {
-            if (element.kind == HMSTrackKind.kHMSTrackKindAudio) {
-              (element as HMSRemoteAudioTrack?)?.setVolume(10.0);
-            }
-          });
-        }
-      });
-
       if (_meetingStore.isVideoOn) {
         _meetingStore.startCapturing();
       } else {

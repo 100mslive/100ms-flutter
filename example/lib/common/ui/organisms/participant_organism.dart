@@ -59,6 +59,15 @@ class _ParticipantOrganismState extends State<ParticipantOrganism> {
                       height: 20,
                     ),
                   ),
+                if (peer.metadata ==
+                    "{\"isHandRaised\":false,\"isBRBOn\":true}")
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
+                    child: Container(
+                      decoration: BoxDecoration(border: Border.all(width: 1)),
+                      child: Text("BRB"),
+                    ),
+                  ),
                 GestureDetector(
                   onTap: () {
                     if (widget.meetingStore.localPeer!.role.permissions
@@ -75,6 +84,12 @@ class _ParticipantOrganismState extends State<ParticipantOrganism> {
                                       peer: peer,
                                       roleName: role,
                                       forceChange: forceChange);
+                                  if (!peer.isLocal) return;
+                                  if (role.name.contains("hls-")) {
+                                    widget.meetingStore.isHLSLink = true;
+                                  } else {
+                                    widget.meetingStore.isHLSLink = false;
+                                  }
                                 },
                               ));
                   },
