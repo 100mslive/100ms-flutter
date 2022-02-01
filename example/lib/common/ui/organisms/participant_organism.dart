@@ -59,7 +59,8 @@ class _ParticipantOrganismState extends State<ParticipantOrganism> {
                       height: 20,
                     ),
                   ),
-                if (peer.metadata!.contains("\"isBRBOn\":true"))
+                if (peer.metadata ==
+                    "{\"isHandRaised\":false,\"isBRBOn\":true}")
                   Padding(
                     padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
                     child: Container(
@@ -83,6 +84,12 @@ class _ParticipantOrganismState extends State<ParticipantOrganism> {
                                       peer: peer,
                                       roleName: role,
                                       forceChange: forceChange);
+                                  if (!peer.isLocal) return;
+                                  if (role.name.contains("hls-")) {
+                                    widget.meetingStore.isHLSLink = true;
+                                  } else {
+                                    widget.meetingStore.isHLSLink = false;
+                                  }
                                 },
                               ));
                   },
