@@ -68,7 +68,7 @@ class HMSSDKInteractor {
         hmsActionResultListener: hmsActionResultListener);
   }
 
-  Future<void> preview({required HMSConfig config}) async {
+  Future<dynamic> preview({required HMSConfig config}) async {
     this.config = config;
     return hmsSDK.preview(config: config);
   }
@@ -234,13 +234,14 @@ class HMSSDKInteractor {
 
   void startHLSStreaming(
       String meetingUrl, HMSActionResultListener hmsActionResultListener) {
-
     List<HMSHLSMeetingURLVariant> hmsHlsMeetingUrls = [];
 
-    hmsHlsMeetingUrls.add(HMSHLSMeetingURLVariant(meetingUrl: meetingUrl, metadata:  "HLS started from Flutter"));
+    hmsHlsMeetingUrls.add(HMSHLSMeetingURLVariant(
+        meetingUrl: meetingUrl, metadata: "HLS started from Flutter"));
 
     HMSHLSConfig hmshlsConfig = new HMSHLSConfig(hmsHlsMeetingUrls);
-    hmsSDK.startHlsStreaming(hmshlsConfig: hmshlsConfig,
+    hmsSDK.startHlsStreaming(
+        hmshlsConfig: hmshlsConfig,
         hmsActionResultListener: hmsActionResultListener);
   }
 
