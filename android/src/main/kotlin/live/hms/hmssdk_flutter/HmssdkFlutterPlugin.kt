@@ -148,7 +148,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             }
 
             "update_hms_video_track_settings" -> {
-                updateHMSLocalTrackSetting(call,result)
+                updateHMSLocalTrackSetting(call)
             }
 
             else -> {
@@ -946,7 +946,6 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             val maxFrameRate = hmsVideoTrackHashMap["max_frame_rate"] as Int?
             val videoCodec =
                 VideoParamsExtension.getValueOfHMSAudioCodecFromString(hmsVideoTrackHashMap["video_codec"] as String?) as HMSVideoCodec?
-
 
             if (maxBitRate != null) {
                 hmsVideoTrackSettings = hmsVideoTrackSettings.maxBitrate(maxBitRate)
