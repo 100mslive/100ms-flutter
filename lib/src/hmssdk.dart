@@ -24,10 +24,11 @@ import '../hmssdk_flutter.dart';
 /// **Broadcast** - A local peer can send any message/data to all remote peers in the room
 ///
 /// HMSSDK has other methods which the client app can use to get more info about the Room, Peer and Tracks
-class HMSSDK with WidgetsBindingObserver{
+class HMSSDK with WidgetsBindingObserver {
   ///join meeting by passing HMSConfig instance to it.
 
   HMSTrackSetting? hmsTrackSetting;
+  bool previewState = false;
 
   HMSSDK({this.hmsTrackSetting});
 
@@ -43,7 +44,15 @@ class HMSSDK with WidgetsBindingObserver{
   }
 
   /// Join the room with configuration options passed as a [HMSConfig] object
-  void join({required HMSConfig config}) async {
+  dynamic join({required HMSConfig config}) async {
+    if (previewState) {
+      return HMSException(
+          message: "Preview in progress",
+          description: "Preview in progress",
+          action: "PREVIEW",
+          isTerminal: false,
+          params: {...config.getJson()});
+    }
     WidgetsBinding.instance!.addObserver(this);
     return await PlatformService.invokeMethod(PlatformMethod.join,
         arguments: {...config.getJson()});
@@ -59,10 +68,12 @@ class HMSSDK with WidgetsBindingObserver{
   Future<void> preview({
     required HMSConfig config,
   }) async {
-    return await PlatformService.invokeMethod(PlatformMethod.preview,
-        arguments: {
-          ...config.getJson(),
-        });
+    previewState = true;
+    await PlatformService.invokeMethod(PlatformMethod.preview, arguments: {
+      ...config.getJson(),
+    });
+    previewState = false;
+    return null;
   }
 
   /// Call this method to leave the room
@@ -73,8 +84,7 @@ class HMSSDK with WidgetsBindingObserver{
       if (result == null) {
         hmsActionResultListener.onSuccess(
             methodType: HMSActionResultListenerMethod.leave);
-      }
-      else {
+      } else {
         hmsActionResultListener.onException(
             methodType: HMSActionResultListenerMethod.leave,
             hmsException: HMSException.fromMap(result["error"]));
@@ -546,7 +556,8 @@ class HMSSDK with WidgetsBindingObserver{
   /// Starts HLS streaming for the [meetingUrl] room.
   /// You can set a custom [metadata] for the HLS Stream
   /// [hmsActionResultListener] is callback whose [HMSActionResultListener.onSuccess] will be called when the the action completes successfully.
-  void startHlsStreaming({required HMSHLSConfig hmshlsConfig,
+  void startHlsStreaming(
+      {required HMSHLSConfig hmshlsConfig,
       HMSActionResultListener? hmsActionResultListener}) async {
     var result = await PlatformService.invokeMethod(
         PlatformMethod.startHlsStreaming,
@@ -564,7 +575,8 @@ class HMSSDK with WidgetsBindingObserver{
 
   /// Stops ongoing HLS streaming in the room
   /// [hmsActionResultListener] is callback whose [HMSActionResultListener.onSuccess] will be called when the the action completes successfully.
-  void stopHlsStreaming({HMSHLSConfig? hmshlsConfig,
+  void stopHlsStreaming(
+      {HMSHLSConfig? hmshlsConfig,
       HMSActionResultListener? hmsActionResultListener}) async {
     var result = await PlatformService.invokeMethod(
         PlatformMethod.stopHlsStreaming,
@@ -724,8 +736,6 @@ class HMSSDK with WidgetsBindingObserver{
           });
         }
       });
-
     }
   }
-
 }
