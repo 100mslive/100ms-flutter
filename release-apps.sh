@@ -38,6 +38,14 @@ while read line; do
     fi
 done <example/android/app/build.gradle
 
+# set debug to true in example/lib/main.dart
+
+cd example
+while read line do
+    if [[ $line =~ ^.DEBUG.$ ]]; then
+        echo "const DEBUG = true" >> $line
+    fi
+done <example/lib/main.dart 
 
 git add example/android/app/build.gradle
 git add example/ios/Podfile.lock

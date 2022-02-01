@@ -2,6 +2,7 @@
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 //Project imports
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:hmssdk_flutter_example/main.dart';
 import 'package:hmssdk_flutter_example/manager/HmsSdkManager.dart';
 import 'package:hmssdk_flutter_example/service/room_service.dart';
 
@@ -17,7 +18,11 @@ class PreviewController {
 
     if (token == null) return false;
     if (token[0] == null) return false;
-    FirebaseCrashlytics.instance.setUserIdentifier(token[0]!);
+    
+    if (DEBUG) {
+      FirebaseCrashlytics.instance.setUserIdentifier(user);
+    }
+
     HMSConfig config = HMSConfig(
         authToken: token[0]!,
         userName: user,

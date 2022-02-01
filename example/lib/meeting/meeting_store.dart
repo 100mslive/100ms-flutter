@@ -1,4 +1,5 @@
 //Package imports
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:mobx/mobx.dart';
 import 'package:intl/intl.dart';
@@ -705,7 +706,9 @@ abstract class MeetingStoreBase extends ChangeNotifier
   // @override
   // void onLogMessage({required dynamic HMSLogList}) async {
   // StaticLogger.logger?.v(HMSLogList.toString());
+  // if (DEBUG) {
   //   FirebaseCrashlytics.instance.log(HMSLogList.toString());
+  // }
   // }
 
   // void startHMSLogger(HMSLogLevel webRtclogLevel, HMSLogLevel logLevel) {

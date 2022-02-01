@@ -20,14 +20,20 @@ import 'package:hmssdk_flutter_example/preview/preview_page.dart';
 import 'package:hmssdk_flutter_example/service/deeplink_service.dart';
 import './logs/custom_singleton_logger.dart';
 
+const DEBUG = false;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
   Wakelock.enable();
   Provider.debugCheckInvalidValueType = null;
-  runZonedGuarded(
-      () => runApp(HMSExampleApp()), FirebaseCrashlytics.instance.recordError);
+
+  if (DEBUG) {
+    await Firebase.initializeApp();
+    FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
+    runZonedGuarded(
+    () => runApp(HMSExampleApp()), FirebaseCrashlytics.instance.recordError);
+  } else {
+    runApp(HMSExampleApp());
+  }
 }
 
 class HMSExampleApp extends StatelessWidget {
@@ -50,8 +56,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  TextEditingController roomIdController =
-      TextEditingController(text: Constant.defaultRoomID);
+  TextEditingController roomIdController = TextEditingController(text: Constant.defaultRoomID);
   CustomLogger logger = CustomLogger();
   PackageInfo _packageInfo = PackageInfo(
     appName: 'Unknown',
@@ -123,11 +128,7 @@ class _HomePageState extends State<HomePage> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text('Join a Meeting',
-                          style: TextStyle(
-                              height: 1,
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold)),
+                      Text('Join a Meeting', style: TextStyle(height: 1, fontSize: 24, fontWeight: FontWeight.bold)),
                       SizedBox(
                         height: 8,
                       ),
@@ -150,9 +151,7 @@ class _HomePageState extends State<HomePage> {
                                     onPressed: roomIdController.clear,
                                     icon: Icon(Icons.clear),
                                   ),
-                                  border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(16)))),
+                                  border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(16)))),
                             );
                           }),
                       SizedBox(
@@ -160,23 +159,18 @@ class _HomePageState extends State<HomePage> {
                       ),
                       ElevatedButton(
                           style: ButtonStyle(
-                              shape: MaterialStateProperty.all<
-                                      RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
+                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(16.0),
                           ))),
                           onPressed: () async {
                             setRTMPUrl(roomIdController.text);
-                            String user = await showDialog(
-                                context: context,
-                                builder: (_) => UserNameDialogOrganism());
+                            String user = await showDialog(context: context, builder: (_) => UserNameDialogOrganism());
                             if (user.isNotEmpty) {
                               bool res = await getPermissions();
                               if (res) {
                                 FocusManager.instance.primaryFocus?.unfocus();
                                 Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (_) =>
-                                        ListenableProvider<MeetingStore>(
+                                    builder: (_) => ListenableProvider<MeetingStore>(
                                           create: (ctx) => MeetingStore(),
                                           child: PreviewPage(
                                             roomId: roomIdController.text,
@@ -189,9 +183,7 @@ class _HomePageState extends State<HomePage> {
                           },
                           child: Container(
                             padding: const EdgeInsets.all(4.0),
-                            decoration: BoxDecoration(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(16))),
+                            decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(16))),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
@@ -199,8 +191,7 @@ class _HomePageState extends State<HomePage> {
                                 SizedBox(
                                   width: 8,
                                 ),
-                                Text('Join Meeting',
-                                    style: TextStyle(height: 1, fontSize: 24))
+                                Text('Join Meeting', style: TextStyle(height: 1, fontSize: 24))
                               ],
                             ),
                           )),

@@ -1,6 +1,7 @@
 //Package imports
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:hmssdk_flutter_example/main.dart';
 import 'package:hmssdk_flutter_example/preview/preview_controller.dart';
 import 'package:mobx/mobx.dart';
 
@@ -92,7 +93,9 @@ abstract class PreviewStoreBase
 
   @override
   void onLogMessage({required dynamic hmsLogList}) {
-    FirebaseCrashlytics.instance.log(hmsLogList.toString());
+    if (DEBUG) {
+      FirebaseCrashlytics.instance.log(hmsLogList.toString());
+    }
   }
 
   void addLogsListener() {
