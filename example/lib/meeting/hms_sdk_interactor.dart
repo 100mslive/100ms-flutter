@@ -68,7 +68,7 @@ class HMSSDKInteractor {
         hmsActionResultListener: hmsActionResultListener);
   }
 
-  Future<dynamic> preview({required HMSConfig config}) async {
+  Future<void> preview({required HMSConfig config}) async {
     this.config = config;
     return hmsSDK.preview(config: config);
   }

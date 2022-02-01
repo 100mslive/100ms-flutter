@@ -44,7 +44,15 @@ class HMSSDK with WidgetsBindingObserver {
   }
 
   /// Join the room with configuration options passed as a [HMSConfig] object
-  void join({required HMSConfig config}) async {
+  dynamic join({required HMSConfig config}) async {
+    if (previewState) {
+      return HMSException(
+          message: "Preview in progress",
+          description: "Preview in progress",
+          action: "PREVIEW",
+          isTerminal: false,
+          params: {...config.getJson()});
+    }
     WidgetsBinding.instance!.addObserver(this);
     return await PlatformService.invokeMethod(PlatformMethod.join,
         arguments: {...config.getJson()});
@@ -57,17 +65,9 @@ class HMSSDK with WidgetsBindingObserver {
 
   /// Begin a preview so that the local peer's audio and video can be displayed to them before they join a call.
   /// The details of the call they want to join is passed using [HMSConfig]. This may affect whether they are allowed to publish audio or video at all.
-  Future<dynamic> preview({
+  Future<void> preview({
     required HMSConfig config,
   }) async {
-    if (previewState) {
-      return HMSException(
-          message: "Preview in progress",
-          description: "Preview in progress",
-          action: "PREVIEW",
-          isTerminal: false,
-          params: {...config.getJson()});
-    }
     previewState = true;
     await PlatformService.invokeMethod(PlatformMethod.preview, arguments: {
       ...config.getJson(),
