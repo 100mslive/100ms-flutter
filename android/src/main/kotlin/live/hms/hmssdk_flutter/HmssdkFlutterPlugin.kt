@@ -92,6 +92,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             "getPlatformVersion" -> {
                 result.success("Android ${Build.VERSION.RELEASE}")
             }
+
             // MARK: Build Actions
             "build","preview","join","leave" -> {
                 buildActions(call,result)

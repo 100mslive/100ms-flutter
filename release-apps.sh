@@ -26,7 +26,7 @@ pod install --verbose
 
 bundle install --verbose
 
-bundle exec fastlane release_on_firebase
+bundle exec fastlane distribute_app
 
 cd .. ; cd ..
 
