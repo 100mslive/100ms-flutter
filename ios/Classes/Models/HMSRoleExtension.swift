@@ -8,9 +8,8 @@
 import Foundation
 import HMSSDK
 
-
 class HMSRoleExtension {
-    
+
     static func toDictionary(_ role: HMSRole) -> [String: Any] {
         [
             "name": role.name,

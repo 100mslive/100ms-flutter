@@ -9,7 +9,7 @@ import Foundation
 import HMSSDK
 
 class  HMSSimulcastLayerSettingsPolicyExtension {
-    
+
     static func toDictionary(_ policy: HMSSimulcastLayerSettingsPolicy) -> [String: Any] {
         [
             "rid": policy.rid,

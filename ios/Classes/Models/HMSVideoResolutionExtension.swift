@@ -9,11 +9,11 @@ import Foundation
 import HMSSDK
 
 class HMSVideoResolutionExtension {
-            
-        static func toDictionary(_ hmsVideoResolution: HMSVideoResolution) -> [String:Any] {
-            
+
+        static func toDictionary(_ hmsVideoResolution: HMSVideoResolution) -> [String: Any] {
+
             var dict = [String: Any]()
-        
+
             dict["height"] =  hmsVideoResolution.height
             dict["width"] =  hmsVideoResolution.width
 

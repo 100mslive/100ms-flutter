@@ -9,42 +9,41 @@ import Foundation
 import HMSSDK
 
 class  HMSPeerExtension {
-    
+
     static func toDictionary(_ peer: HMSPeer) -> [String: Any] {
-        
+
         var dict = [
-            "peer_id":peer.peerID,
-            "name":peer.name,
-            "is_local":peer.isLocal,
-            "customer_description":peer.metadata ?? "",
-            "customer_user_id":peer.customerUserID ?? "",
+            "peer_id": peer.peerID,
+            "name": peer.name,
+            "is_local": peer.isLocal,
+            "customer_description": peer.metadata ?? "",
+            "customer_user_id": peer.customerUserID ?? ""
         ] as [String: Any]
-        
+
         if let metadata = peer.metadata {
             dict["metadata"] = metadata
         }
         if let role = peer.role {
             dict["role"] = HMSRoleExtension.toDictionary(role)
         }
-        
-        if let audioTrack = peer.audioTrack{
+
+        if let audioTrack = peer.audioTrack {
             dict["audio_track"] = HMSTrackExtension.toDictionary(audioTrack)
         }
-        
-        if let videoTrack = peer.videoTrack{
+
+        if let videoTrack = peer.videoTrack {
             dict["video_track"] = HMSTrackExtension.toDictionary(videoTrack)
         }
-        
+
         if let aux = peer.auxiliaryTracks {
             var auxilaryTracks = [[String: Any]]()
             aux.forEach { auxilaryTracks.append(HMSTrackExtension.toDictionary($0)) }
             dict["auxilary_tracks"] = auxilaryTracks
         }
-        
+
         return dict
     }
-    
-    
+
     static func getValueOf(_ update: HMSPeerUpdate) -> String {
         switch update {
         case .peerJoined:
