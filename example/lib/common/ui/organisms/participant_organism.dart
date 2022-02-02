@@ -84,12 +84,6 @@ class _ParticipantOrganismState extends State<ParticipantOrganism> {
                                       peer: peer,
                                       roleName: role,
                                       forceChange: forceChange);
-                                  if (!peer.isLocal) return;
-                                  if (role.name.contains("hls-")) {
-                                    widget.meetingStore.isHLSLink = true;
-                                  } else {
-                                    widget.meetingStore.isHLSLink = false;
-                                  }
                                 },
                               ));
                   },

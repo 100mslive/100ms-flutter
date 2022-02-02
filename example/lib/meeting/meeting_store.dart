@@ -301,7 +301,6 @@ abstract class MeetingStoreBase extends ChangeNotifier
 
   @override
   void onJoin({required HMSRoom room}) async {
-    
     isMeetingStarted = true;
     hmsRoom = room;
 
@@ -564,8 +563,14 @@ abstract class MeetingStoreBase extends ChangeNotifier
       case HMSPeerUpdate.roleUpdated:
         if (peer.isLocal) {
           localPeer = peer;
-          if (!peer.role.name.contains("hls-")) {
+          if (peer.role.name.contains("hls-")) {
+            isHLSLink = true;
+          } else {
             isHLSLink = false;
+            if (!isMicOn)
+              HmsSdkManager.hmsSdkInteractor!.switchAudio(isOn: true);
+            if (!isVideoOn)
+              HmsSdkManager.hmsSdkInteractor!.switchVideo(isOn: true);
           }
         }
         if (peer.role.name.contains("hls-") == false) {
@@ -585,7 +590,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
           PeerTracKNode peerTracKNode = peerTracks[index];
           peerTracKNode.isRaiseHand =
               (peer.metadata == "{\"isHandRaised\":true}");
-          
+
           peerTracks[index].isBRB =
               (peer.metadata == "{\"isHandRaised\":false,\"isBRBOn\":true}");
 
@@ -654,7 +659,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
             screenSharePeerId = "";
           }
         } else {
-          peerTracks.removeWhere((element) => element.peerId == peer.peerId);
+          // peerTracks.removeWhere((element) => element.peerId == peer.peerId);
           isScreenShareActive();
         }
         break;
