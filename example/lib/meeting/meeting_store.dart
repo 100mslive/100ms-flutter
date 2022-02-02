@@ -567,6 +567,10 @@ abstract class MeetingStoreBase extends ChangeNotifier
             isHLSLink = true;
           } else {
             isHLSLink = false;
+            if (!isMicOn)
+              HmsSdkManager.hmsSdkInteractor!.switchAudio(isOn: true);
+            if (!isVideoOn)
+              HmsSdkManager.hmsSdkInteractor!.switchVideo(isOn: true);
           }
         }
         if (peer.role.name.contains("hls-") == false) {
@@ -655,7 +659,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
             screenSharePeerId = "";
           }
         } else {
-          peerTracks.removeWhere((element) => element.peerId == peer.peerId);
+          // peerTracks.removeWhere((element) => element.peerId == peer.peerId);
           isScreenShareActive();
         }
         break;
