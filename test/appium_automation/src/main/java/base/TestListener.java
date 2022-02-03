@@ -27,20 +27,6 @@ public class TestListener implements ITestListener{
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             }
-        }else
-        if(Platform.contains("android_rn")){
-            try {
-                AppFactory.Android_ReactNative_LaunchApp();
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
-        }else
-        if(Platform.contains("ios_rn")){
-            try {
-                AppFactory.iOS_ReactNative_LaunchApp();
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
         }
     }
 

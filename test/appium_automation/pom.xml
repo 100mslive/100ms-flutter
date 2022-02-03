@@ -55,8 +55,6 @@
                     <suiteXmlFiles>
                         <suiteXmlFile>$flutter_android.xml</suiteXmlFile>
                         <suiteXmlFile>$flutter_ios.xml</suiteXmlFile>
-                        <suiteXmlFile>$rn_android.xml</suiteXmlFile>
-                        <suiteXmlFile>$rn_ios.xml</suiteXmlFile>
                     </suiteXmlFiles>
                 </configuration>
             </plugin>

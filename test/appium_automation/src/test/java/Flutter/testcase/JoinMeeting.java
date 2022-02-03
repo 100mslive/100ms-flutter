@@ -6,8 +6,8 @@ import org.testng.annotations.Test;
 
 public class JoinMeeting {
 
-    //@Test
-    public void JoinMeetings() throws InterruptedException {
+    @Test
+    public void Test_JoinMeetings() throws InterruptedException {
         String meeting_url = "https://ronitroy-xyz.app.100ms.live/meeting/kfg-ahl-lxm";
         String participant_name = "Ronit Roy";
         System.out.println("Just testing the app");
@@ -26,11 +26,6 @@ public class JoinMeeting {
         previewPage.click_camBtn();
         previewPage.click_micBtn();
         previewPage.click_joinNowBtn();
-    }
-
-    @Test
-    public void Test_JoinMeeting() throws InterruptedException {
-        JoinMeetings();
     }
 
 }
