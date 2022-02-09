@@ -1,5 +1,6 @@
 //Package imports
 import 'package:connectivity_checker/connectivity_checker.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:mobx/mobx.dart';
@@ -13,7 +14,7 @@ import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_page.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
-import 'package:hmssdk_flutter_example/meeting/peerTrackNode.dart';
+import 'package:hmssdk_flutter_example/meeting/peer_track_node_store.dart';
 import 'package:hmssdk_flutter_example/preview/preview_controller.dart';
 import 'package:hmssdk_flutter_example/preview/preview_store.dart';
 
@@ -80,29 +81,24 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                   fit: FlexFit.tight,
                   child: Observer(
                     builder: (_) {
-                      // if (_previewStore.localTracks.isEmpty) {
-                      //   return Column(children: [
-                      //     CupertinoActivityIndicator(radius: 124),
-                      //     SizedBox(
-                      //       height: 64.0,
-                      //     ),
-                      //     Text("No preview available") //
-                      //   ]);
-                      // }
+                      if (_previewStore.localTracks.isEmpty) {
+                        return Column(children: [
+                          CupertinoActivityIndicator(radius: 124),
+                          SizedBox(
+                            height: 64.0,
+                          ),
+                          Text("No preview available") //
+                        ]);
+                      }
                       return Provider<MeetingStore>(
                         create: (ctx) => MeetingStore(),
                         child: PeerItemOrganism(
-                          observableMap: {"highestAudio": ""},
-                          key: UniqueKey(),
                           height: itemHeight,
                           width: itemWidth,
-                          peerTracKNode: new PeerTracKNode(
-                              peerId: _previewStore.peer?.peerId ?? "",
-                              name: _previewStore.peer?.name ?? widget.user,
-                              track: _previewStore.localTracks.isEmpty
-                                  ? null
-                                  : _previewStore.localTracks[0]),
-                          isVideoMuted: !_previewStore.videoOn,
+                          peerTrackNodeStore: new PeerTrackNodeStore(
+                              peer: _previewStore.peer!,
+                              uid: _previewStore.peer!.peerId,
+                              track: _previewStore.localTracks[0]),
                         ),
                       );
                     },

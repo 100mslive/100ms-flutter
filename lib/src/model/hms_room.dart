@@ -20,6 +20,7 @@ class HMSRoom {
   String? id;
   String? name;
   String? metaData;
+  HMSPeer hmsLocalPeer;
   HMSBrowserRecordingState? hmsBrowserRecordingState;
   HMSRtmpStreamingState? hmsRtmpStreamingState;
   HMSServerRecordingState? hmsServerRecordingState;
@@ -34,6 +35,7 @@ class HMSRoom {
       required this.peers,
       this.metaData,
       this.hmsServerRecordingState,
+      required this.hmsLocalPeer,
       this.hmsRtmpStreamingState,
       this.hmsBrowserRecordingState,
       this.hmshlsStreamingState});
@@ -67,7 +69,10 @@ class HMSRoom {
         id: map['id'],
         name: map['name'],
         peers: peers,
-        metaData: map['meta_data']);
+        metaData: map['meta_data'],
+        hmsLocalPeer: HMSPeer.fromMap(
+          map["local_peer"],
+        ));
   }
 
   @override
