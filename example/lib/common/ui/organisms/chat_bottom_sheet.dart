@@ -66,7 +66,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                               if (roles.length > 0) {
                                 return DropdownButtonHideUnderline(
                                   child: DropdownButton2(
-                                    itemWidth: 150,
+                                    buttonWidth: 150,
                                     value: valueChoose,
                                     iconEnabledColor: Colors.black,
                                     onChanged: (newvalue) {
