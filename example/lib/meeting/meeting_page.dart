@@ -55,6 +55,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
   bool videoPreviousState = false;
   bool isRecordingStarted = false;
   bool isBRB = false;
+
   @override
   void initState() {
     super.initState();
@@ -318,21 +319,22 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                     appBar: AppBar(
                       title: Text(Constant.meetingCode),
                       actions: [
-                        _meetingStore.isRecordingStarted
-                            ? Observer(
-                                builder: (_) => Container(
-                                      decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          border: Border.all(
-                                              width: 2,
-                                              color: Colors.red.shade600)),
-                                      child: Icon(
-                                        Icons.circle,
-                                        color: Colors.red,
-                                        size: 15,
-                                      ),
-                                    ))
-                            : Container(),
+                        Observer(
+                          builder: (_) => _meetingStore.isRecordingStarted
+                              ? Container(
+                                  decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      border: Border.all(
+                                          width: 2,
+                                          color: Colors.red.shade600)),
+                                  child: Icon(
+                                    Icons.circle,
+                                    color: Colors.red,
+                                    size: 15,
+                                  ),
+                                )
+                              : Container(),
+                        ),
                         Observer(
                           builder: (_) => IconButton(
                             iconSize: 32,
@@ -643,13 +645,15 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                     itemBuilder: (ctx, index) {
                                       return Observer(builder: (context) {
                                         PeerTrackNodeStore peerTrackNodeStore =
-                                        _meetingStore.peerTracks[index];
+                                            _meetingStore.peerTracks[index];
                                         print(
-                                            "${peerTrackNodeStore.track} buildingVideoTile ${peerTrackNodeStore.peer.name} ${_meetingStore.isVideoOn}");
+                                            "${peerTrackNodeStore.track} buildingVideoTile "
+                                            "${peerTrackNodeStore.peer.name} "
+                                            "${peerTrackNodeStore.isVideoOn} ");
                                         return VideoTile(
                                           audioView: audioViewOn,
                                           peerTrackNodeStore:
-                                          peerTrackNodeStore,
+                                              peerTrackNodeStore,
                                         );
                                       });
                                     });

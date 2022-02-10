@@ -5,9 +5,7 @@ part 'peer_track_node_store.g.dart';
 
 class PeerTrackNodeStore = PeerTracKNodeStoreBase with _$PeerTrackNodeStore;
 
-
-abstract class PeerTracKNodeStoreBase with Store{
-
+abstract class PeerTracKNodeStoreBase with Store {
   @observable
   HMSPeer peer;
 
@@ -16,15 +14,22 @@ abstract class PeerTracKNodeStoreBase with Store{
   @observable
   HMSVideoTrack? track;
 
+  @observable
+  bool? isVideoOn;
 
+  @observable
+  bool isHighestAudio;
 
-  PeerTracKNodeStoreBase({required this.peer, this.track,required this.uid});
-
-
+  PeerTracKNodeStoreBase(
+      {required this.peer,
+      this.track,
+      required this.uid,
+      required this.isVideoOn,
+      this.isHighestAudio = false});
 
   @override
   String toString() {
-    return 'PeerTracKNode{peerId: ${peer.peerId}, name: ${peer.name}, track: $track}';
+    return 'PeerTracKNode{peerId: ${peer.peerId}, name: ${peer.name}, track: $track}, isVideoOn: $isVideoOn }';
   }
 
   @override

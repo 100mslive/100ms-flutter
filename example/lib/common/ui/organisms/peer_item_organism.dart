@@ -1,5 +1,6 @@
 // Flutter imports
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 
 // SDK imports
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
@@ -7,7 +8,6 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 // Package imports
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:hmssdk_flutter_example/meeting/peer_track_node_store.dart';
-import 'package:provider/provider.dart';
 
 class PeerItemOrganism extends StatefulWidget {
   final double height;
@@ -18,12 +18,12 @@ class PeerItemOrganism extends StatefulWidget {
 
   PeerItemOrganism(
       {Key? key,
-        //required this.peerTracKNode,
-        this.height = 200.0,
-        this.width = 200.0,
-        this.isLocal = false,
-        this.setMirror = false,
-        required this.peerTrackNodeStore})
+      //required this.peerTracKNode,
+      this.height = 200.0,
+      this.width = 200.0,
+      this.isLocal = false,
+      this.setMirror = false,
+      required this.peerTrackNodeStore})
       : super(key: key);
 
   @override
@@ -43,30 +43,24 @@ class _PeerItemOrganismState extends State<PeerItemOrganism> {
   @override
   Widget build(BuildContext context) {
     print("PeerItemOrganism ${widget.peerTrackNodeStore.track.toString()}");
-    MeetingStore meetingStore = Provider.of<MeetingStore>(context);
+
     return Container(
+      color: Colors.transparent,
       key: key,
       padding: EdgeInsets.all(2),
       margin: EdgeInsets.all(2),
-      height: widget.height + 20,
+      height: widget.height + 110,
       width: widget.width - 5.0,
-      decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey, width: 1.0),
-          borderRadius: BorderRadius.all(Radius.circular(10))),
       child: Stack(
         children: [
           LayoutBuilder(
             builder: (context, constraints) {
-              if ((widget.peerTrackNodeStore.peer.isLocal &&
-                  !meetingStore.isVideoOn) ||
-                  (widget.peerTrackNodeStore.track == null ||
-                      (widget.peerTrackNodeStore.track?.isMute ?? false))) {
+              if ((widget.peerTrackNodeStore.track == null) ||
+                  !(widget.peerTrackNodeStore.isVideoOn ?? true)) {
                 List<String>? parts =
-                widget.peerTrackNodeStore.peer.name.split(" ");
-
+                    widget.peerTrackNodeStore.peer.name.split(" ");
                 if (parts.length == 1) {
-                  parts[0] += " ";
-                  name = parts[0][0] + parts[0][1];
+                  name = parts[0][0];
                 } else if (parts.length >= 2) {
                   name = parts[0][0];
                   if (parts[1] == "" || parts[1] == " ") {
@@ -111,7 +105,22 @@ class _PeerItemOrganismState extends State<PeerItemOrganism> {
               ),
               top: 5.0,
               left: 5.0,
-            )
+            ),
+          Observer(builder: (context) {
+            print("${widget.peerTrackNodeStore.isHighestAudio}");
+            return Container(
+              height: widget.height + 110,
+              width: widget.width - 4,
+              decoration: BoxDecoration(
+                  border: Border.all(
+                      color: widget.peerTrackNodeStore.isHighestAudio
+                          ? Colors.blue
+                          : Colors.grey,
+                      width:
+                          widget.peerTrackNodeStore.isHighestAudio ? 5.0 : 1.0),
+                  borderRadius: BorderRadius.all(Radius.circular(10))),
+            );
+          })
         ],
       ),
     );

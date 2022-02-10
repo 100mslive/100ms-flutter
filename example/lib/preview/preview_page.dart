@@ -98,7 +98,9 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                           peerTrackNodeStore: new PeerTrackNodeStore(
                               peer: _previewStore.peer!,
                               uid: _previewStore.peer!.peerId,
-                              track: _previewStore.localTracks[0]),
+                              track: _previewStore.localTracks[0],
+                              isVideoOn:!_previewStore.localTracks[0].isMute
+                          ),
                         ),
                       );
                     },

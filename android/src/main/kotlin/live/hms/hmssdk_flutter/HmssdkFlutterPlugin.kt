@@ -1054,7 +1054,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         override fun onTrackUpdate(type: HMSTrackUpdate, track: HMSTrack, peer: HMSPeer) {
             val args = HashMap<String, Any?>()
             args.put("event_name", "on_track_update")
-
+           // Log.i("onTrackUpdateAndroid","${peer.name} ${track.type}")
             args.put("data", HMSTrackUpdateExtension.toDictionary(peer, track, type))
             if (args["data"] != null)
                 CoroutineScope(Dispatchers.Main).launch {
