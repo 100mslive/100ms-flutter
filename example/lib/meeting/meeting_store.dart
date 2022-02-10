@@ -441,22 +441,24 @@ abstract class MeetingStoreBase extends ChangeNotifier
   @override
   void onUpdateSpeakers({required List<HMSSpeaker> updateSpeakers}) {
     if (updateSpeakers.isEmpty) {
-      previousHighestTrackNodeStore?.isHighestAudio = false;
+      // previousHighestTrackNodeStore?.isHighestAudio = false;
+       for (var element in peerTracks) {
+          element.isHighestAudio = false;
+      }
+      // previousHighestTrackNodeStore = null;
       return;
-    }
-    else{
-      HMSSpeaker hmsSpeaker = updateSpeakers[0];
-
-      for(var element in peerTracks){
-        if(element.uid == hmsSpeaker.peer.peerId+"mainVideo"){
+    } else {
+      updateSpeakers.forEach((speaker) {
+      for (var element in peerTracks) {
+        if (element.uid == speaker.peer.peerId + "mainVideo") {
           element.isHighestAudio = true;
-          previousHighestTrackNodeStore = element;
           break;
         }
       }
+      });
+      
 
     }
-
   }
 
   @override

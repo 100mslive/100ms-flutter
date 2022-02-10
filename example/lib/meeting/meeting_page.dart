@@ -649,7 +649,8 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                         print(
                                             "${peerTrackNodeStore.track} buildingVideoTile "
                                             "${peerTrackNodeStore.peer.name} "
-                                            "${peerTrackNodeStore.isVideoOn} ");
+                                            "${peerTrackNodeStore.isVideoOn} "
+                                            );
                                         return VideoTile(
                                           audioView: audioViewOn,
                                           peerTrackNodeStore:
