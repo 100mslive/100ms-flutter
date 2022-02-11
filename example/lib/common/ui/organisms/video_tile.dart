@@ -94,8 +94,6 @@ class _VideoTileState extends State<VideoTile> {
                     ));
         },
         child: Observer(builder: (context) {
-          print("${widget.peerTrackNodeStore.isVideoOn} ");
-
           return Container(
             color: Colors.transparent,
             key: key,

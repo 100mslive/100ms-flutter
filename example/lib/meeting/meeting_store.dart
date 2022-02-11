@@ -93,7 +93,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
   bool isActiveSpeakerMode = false;
 
   @observable
-  ObservableList<PeerTrackNode> activeSpeakerPeerTracksStore =
+  ObservableList<PeerTrackNode> activeSpeakerPeerTrackNodeList =
       ObservableList.of([]);
 
   @observable
@@ -120,7 +120,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
   HMSRoom? hmsRoom;
 
   @observable
-  PeerTrackNode? localPeerTrackNodeStore;
+  PeerTrackNode? localpeerTrackNode;
 
   int firstTimeBuild = 0;
   final DateFormat formatter = DateFormat('d MMM y h:mm:ss a');
@@ -172,9 +172,9 @@ abstract class MeetingStoreBase extends ChangeNotifier
   Future<void> switchVideo() async {
     await _hmssdkInteractor.switchVideo(isOn: isVideoOn);
     if (isVideoOn)
-      localPeerTrackNodeStore?.isVideoOn = false;
+      localpeerTrackNode?.isVideoOn = false;
     else
-      localPeerTrackNodeStore?.isVideoOn = true;
+      localpeerTrackNode?.isVideoOn = true;
 
     isVideoOn = !isVideoOn;
   }
@@ -317,9 +317,9 @@ abstract class MeetingStoreBase extends ChangeNotifier
         int index = peerTracks
             .indexWhere((element) => element.uid == each.peerId + "mainVideo");
         if (index == -1) {
-          localPeerTrackNodeStore = PeerTrackNode(
+          localpeerTrackNode = PeerTrackNode(
               peer: each, uid: each.peerId + "mainVideo", isVideoOn: false);
-          peerTracks.add(localPeerTrackNodeStore!);
+          peerTracks.add(localpeerTrackNode!);
         }
         localPeer = each;
         addPeer(localPeer!);
@@ -412,12 +412,20 @@ abstract class MeetingStoreBase extends ChangeNotifier
           .indexWhere((element) => element.uid == peer.peerId + "mainVideo");
       //print("onTrackUpdateFlutter ${peer.name} ${track.kind} $index");
       if (index != -1) {
-        PeerTrackNode peerTrackNodeStore = peerTracks[index];
-        peerTrackNodeStore.track = track as HMSVideoTrack;
-        peerTrackNodeStore.isVideoOn = !peerTrackNodeStore.track!.isMute;
+        PeerTrackNode peerTrackNode = peerTracks[index];
+        peerTrackNode.track = track as HMSVideoTrack;
+        peerTrackNode.isVideoOn = !peerTrackNode.track!.isMute;
+      }
+      if (isActiveSpeakerMode) {
+        int index = activeSpeakerPeerTrackNodeList
+            .indexWhere((element) => element.uid == peer.peerId + "mainVideo");
+        if (index != -1) {
+          PeerTrackNode peerTrackNode = activeSpeakerPeerTrackNodeList[index];
+          peerTrackNode.track = track as HMSVideoTrack;
+          peerTrackNode.isVideoOn = !peerTrackNode.track!.isMute;
+        }
       }
     }
-
     peerOperationWithTrack(peer, trackUpdate, track);
   }
 
@@ -443,7 +451,21 @@ abstract class MeetingStoreBase extends ChangeNotifier
 
   @override
   void onUpdateSpeakers({required List<HMSSpeaker> updateSpeakers}) {
-    if (updateSpeakers.isEmpty) {
+    if (isActiveSpeakerMode) {
+      updateSpeakers.forEach((speaker) {
+        int index = activeSpeakerPeerTrackNodeList.indexWhere(
+            (currentSpeaker) =>
+                currentSpeaker.uid == speaker.peer.peerId + "mainVideo");
+        if (index == -1) {
+          int index = peerTracks.indexWhere((currentSpeaker) =>
+              currentSpeaker.uid == speaker.peer.peerId + "mainVideo");
+          activeSpeakerPeerTrackNodeList.insert(0, peerTracks[index]);
+          if (activeSpeakerPeerTrackNodeList.length > 4)
+            activeSpeakerPeerTrackNodeList.removeLast();
+        }
+      });
+    } else {
+      if (updateSpeakers.isEmpty) {
         activeSpeakerIds.clear();
         return;
       } else {
@@ -451,6 +473,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
           activeSpeakerIds.add(speaker.peer.peerId + "mainVideo");
         });
       }
+    }
   }
 
   @override
@@ -523,11 +546,14 @@ abstract class MeetingStoreBase extends ChangeNotifier
         addPeer(peer);
         break;
       case HMSPeerUpdate.peerLeft:
-        peerTracks
-            .removeWhere((element) => element.uid == peer.peerId + "mainVideo");
+        peerTracks.removeWhere(
+            (leftPeer) => leftPeer.uid == peer.peerId + "mainVideo");
         removePeer(peer);
+        if (isActiveSpeakerMode) {
+          activeSpeakerPeerTrackNodeList.clear();
+          setActiveSpeakerList();
+        }
         break;
-
       case HMSPeerUpdate.audioToggled:
         break;
       case HMSPeerUpdate.videoToggled:
@@ -561,12 +587,12 @@ abstract class MeetingStoreBase extends ChangeNotifier
             .indexWhere((element) => element.uid == peer.peerId + "mainVideo");
         if (index != -1 &&
             peer.metadata == "{\"isHandRaised\":true,\"isBRBOn\":false}") {
-          PeerTrackNode peerTrackNodeStore = peerTracks[index];
-          peerTrackNodeStore.peer = peer;
+          PeerTrackNode peerTrackNode = peerTracks[index];
+          peerTrackNode.peer = peer;
         } else if (index != -1 &&
             peer.metadata == "{\"isHandRaised\":false,\"isBRBOn\":false}") {
-          PeerTrackNode peerTrackNodeStore = peerTracks[index];
-          peerTrackNodeStore.peer = peer;
+          PeerTrackNode peerTrackNode = peerTracks[index];
+          peerTrackNode.peer = peer;
         }
         updatePeerAt(peer);
         break;
@@ -575,16 +601,16 @@ abstract class MeetingStoreBase extends ChangeNotifier
           int localPeerIndex = peerTracks.indexWhere(
               (element) => element.uid == localPeer!.peerId + "mainVideo");
           if (localPeerIndex != -1) {
-            PeerTrackNode peerTrackNodeStore = peerTracks[localPeerIndex];
-            peerTrackNodeStore.peer = peer;
+            PeerTrackNode peerTrackNode = peerTracks[localPeerIndex];
+            peerTrackNode.peer = peer;
             localPeer = peer;
           }
         } else {
           int remotePeerIndex = peerTracks.indexWhere(
               (element) => element.uid == peer.peerId + "mainVideo");
           if (remotePeerIndex != -1) {
-            PeerTrackNode peerTrackNodeStore = peerTracks[remotePeerIndex];
-            peerTrackNodeStore.peer = peer;
+            PeerTrackNode peerTrackNode = peerTracks[remotePeerIndex];
+            peerTrackNode.peer = peer;
           }
         }
 
@@ -814,7 +840,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
   }
 
   void setActiveSpeakerList() {
-    activeSpeakerPeerTracksStore.addAll(peerTracks.take(4));
+    activeSpeakerPeerTrackNodeList.addAll(peerTracks.take(4));
   }
 
   bool isActiveSpeaker(String uid) {

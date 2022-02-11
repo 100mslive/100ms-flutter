@@ -236,18 +236,18 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
         // setState(() {});
         break;
       case 6:
-        // if (!_meetingStore.isActiveSpeakerMode) {
-        //   _meetingStore.setActiveSpeakerList();
-        //   _meetingStore.isActiveSpeakerMode = true;
-        //   setState(() {});
-        //   UtilityComponents.showSnackBarWithString(
-        //       "Active Speaker Mode", context);
-        // }
-        // else{
-        //   _meetingStore.isActiveSpeakerMode = false;
-        // }
-        UtilityComponents.showSnackBarWithString(
-              "Coming Soon...", context);
+        if (!_meetingStore.isActiveSpeakerMode) {
+          _meetingStore.setActiveSpeakerList();
+          _meetingStore.isActiveSpeakerMode = true;
+          setState(() {});
+          UtilityComponents.showSnackBarWithString(
+              "Active Speaker Mode", context);
+        } else {
+          _meetingStore.activeSpeakerPeerTrackNodeList.clear();
+          _meetingStore.isActiveSpeakerMode = false;
+        }
+        // UtilityComponents.showSnackBarWithString(
+        //       "Coming Soon...", context);
         break;
       case 7:
         // if (_meetingStore.isActiveSpeakerMode) {
@@ -613,7 +613,8 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                       itemHeight:
                                           MediaQuery.of(context).size.height /
                                               2,
-                                      itemWidth: MediaQuery.of(context).size.width,
+                                      itemWidth:
+                                          MediaQuery.of(context).size.width,
                                       peerTrackNodeStore: PeerTrackNode(
                                           uid: _meetingStore
                                                   .screenSharePeer!.peerId +
@@ -624,7 +625,8 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                                   .curentScreenShareTrack
                                               as HMSVideoTrack,
                                           isVideoOn: true,
-                                          peer: _meetingStore.screenSharePeer!), audioView: audioViewOn,
+                                          peer: _meetingStore.screenSharePeer!),
+                                      audioView: audioViewOn,
                                     ),
                                   ));
                             } else {
@@ -652,7 +654,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                     addAutomaticKeepAlives: false,
                                     itemCount: _meetingStore.isActiveSpeakerMode
                                         ? _meetingStore
-                                            .activeSpeakerPeerTracksStore.length
+                                            .activeSpeakerPeerTrackNodeList.length
                                         : _meetingStore.peerTracks.length,
                                     shrinkWrap: true,
                                     cacheExtent: 2,
@@ -660,7 +662,8 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                         SliverGridDelegateWithFixedCrossAxisCount(
                                       crossAxisCount: (!audioViewOn &&
                                               _meetingStore
-                                                  .curentScreenShareTrack != null)
+                                                      .curentScreenShareTrack !=
+                                                  null )
                                           ? 1
                                           : 2,
                                       mainAxisExtent: itemWidth,
@@ -669,17 +672,15 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                       return Observer(builder: (context) {
                                         PeerTrackNode peerTrackNodeStore;
                                         if (_meetingStore.isActiveSpeakerMode) {
-                                          
-            peerTrackNodeStore = _meetingStore
-                                                      .activeSpeakerPeerTracksStore[
-                                                  index];
+                                          peerTrackNodeStore = _meetingStore
+                                                  .activeSpeakerPeerTrackNodeList[
+                                              index];
                                           print(
                                               "${peerTrackNodeStore.track} buildingVideoTile "
                                               "${peerTrackNodeStore.peer.name} "
                                               "${peerTrackNodeStore.isVideoOn} ");
                                         } else {
-                                          
-                                              peerTrackNodeStore =
+                                          peerTrackNodeStore =
                                               _meetingStore.peerTracks[index];
                                           print(
                                               "${peerTrackNodeStore.track} buildingVideoTile "
