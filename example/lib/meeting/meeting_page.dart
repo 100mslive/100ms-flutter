@@ -236,18 +236,16 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
         // setState(() {});
         break;
       case 6:
-        if (!_meetingStore.isActiveSpeakerMode) {
-          _meetingStore.setActiveSpeakerList();
-          _meetingStore.isActiveSpeakerMode = true;
-          setState(() {});
-          UtilityComponents.showSnackBarWithString(
-              "Active Speaker Mode", context);
-        } else {
-          _meetingStore.activeSpeakerPeerTrackNodeList.clear();
-          _meetingStore.isActiveSpeakerMode = false;
-        }
-        // UtilityComponents.showSnackBarWithString(
-        //       "Coming Soon...", context);
+        // if (!_meetingStore.isActiveSpeakerMode) {
+        //   _meetingStore.setActiveSpeakerList();
+        //   _meetingStore.isActiveSpeakerMode = true;
+        //   UtilityComponents.showSnackBarWithString(
+        //       "Active Speaker Mode", context);
+        // } else {
+        //   _meetingStore.activeSpeakerPeerTrackNodeList.clear();
+        //   _meetingStore.isActiveSpeakerMode = false;
+        // }
+        UtilityComponents.showSnackBarWithString("Coming Soon...", context);
         break;
       case 7:
         // if (_meetingStore.isActiveSpeakerMode) {
@@ -615,7 +613,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                               2,
                                       itemWidth:
                                           MediaQuery.of(context).size.width,
-                                      peerTrackNodeStore: PeerTrackNode(
+                                      peerTrackNode: PeerTrackNode(
                                           uid: _meetingStore
                                                   .screenSharePeer!.peerId +
                                               _meetingStore
@@ -642,20 +640,12 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                   return Center(
                                       child:
                                           Text('Waiting for others to join!'));
-                                // List<PeerTrackNodeStore> peerFilteredList =
-                                //     _meetingStore.isActiveSpeakerMode
-                                //         ? _meetingStore
-                                //             .activeSpeakerPeerTracksStore
-                                //         : _meetingStore.peerTracks;
-
                                 return GridView.builder(
                                     physics: PageScrollPhysics(),
                                     scrollDirection: Axis.horizontal,
                                     addAutomaticKeepAlives: false,
-                                    itemCount: _meetingStore.isActiveSpeakerMode
-                                        ? _meetingStore
-                                            .activeSpeakerPeerTrackNodeList.length
-                                        : _meetingStore.peerTracks.length,
+                                    itemCount: 
+                                         _meetingStore.peerTracks.length,
                                     shrinkWrap: true,
                                     cacheExtent: 2,
                                     gridDelegate:
@@ -671,26 +661,15 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                     itemBuilder: (ctx, index) {
                                       return Observer(builder: (context) {
                                         PeerTrackNode peerTrackNodeStore;
-                                        if (_meetingStore.isActiveSpeakerMode) {
-                                          peerTrackNodeStore = _meetingStore
-                                                  .activeSpeakerPeerTrackNodeList[
-                                              index];
-                                          print(
-                                              "${peerTrackNodeStore.track} buildingVideoTile "
-                                              "${peerTrackNodeStore.peer.name} "
-                                              "${peerTrackNodeStore.isVideoOn} ");
-                                        } else {
                                           peerTrackNodeStore =
                                               _meetingStore.peerTracks[index];
                                           print(
                                               "${peerTrackNodeStore.track} buildingVideoTile "
                                               "${peerTrackNodeStore.peer.name} "
                                               "${peerTrackNodeStore.isVideoOn} ");
-                                        }
-
                                         return VideoTile(
                                           audioView: audioViewOn,
-                                          peerTrackNodeStore:
+                                          peerTrackNode:
                                               peerTrackNodeStore,
                                         );
                                       });

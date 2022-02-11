@@ -12,17 +12,16 @@ import 'package:visibility_detector/visibility_detector.dart';
 import 'package:provider/provider.dart';
 
 class VideoTile extends StatefulWidget {
-  // final List<PeerTracKNode> filteredList;
   final double itemHeight;
   final double itemWidth;
-  final PeerTrackNode peerTrackNodeStore;
+  final PeerTrackNode peerTrackNode;
   final bool audioView;
 
   VideoTile({
     Key? key,
     this.itemHeight = 200.0,
     this.itemWidth = 200.0,
-    required this.peerTrackNodeStore,
+    required this.peerTrackNode,
     required this.audioView,
   }) : super(key: key);
 
@@ -35,31 +34,32 @@ class _VideoTileState extends State<VideoTile> {
   GlobalKey key = GlobalKey();
   @override
   Widget build(BuildContext context) {
+
     MeetingStore _meetingStore = context.read<MeetingStore>();
     bool mutePermission =
-        widget.peerTrackNodeStore.peer.role.permissions.mute ?? false;
+        widget.peerTrackNode.peer.role.permissions.mute ?? false;
     bool unMutePermission =
-        widget.peerTrackNodeStore.peer.role.permissions.unMute ?? false;
+        widget.peerTrackNode.peer.role.permissions.unMute ?? false;
     bool removePeerPermission =
-        widget.peerTrackNodeStore.peer.role.permissions.removeOthers ?? false;
+        widget.peerTrackNode.peer.role.permissions.removeOthers ?? false;
 
     return VisibilityDetector(
-      key: Key(widget.peerTrackNodeStore.uid),
+      key: Key(widget.peerTrackNode.uid),
       onVisibilityChanged: (info) {
         var visiblePercentage = info.visibleFraction * 100;
 
         if (visiblePercentage <= 40) {
-          widget.peerTrackNodeStore.isVideoOn = false;
+          widget.peerTrackNode.isVideoOn = false;
         } else {
-          widget.peerTrackNodeStore.isVideoOn =
-              !(widget.peerTrackNodeStore.track?.isMute ?? true);
+          widget.peerTrackNode.isVideoOn =
+              !(widget.peerTrackNode.track?.isMute ?? true);
         }
       },
       child: InkWell(
         onLongPress: () {
           if (!mutePermission || !unMutePermission || !removePeerPermission)
             return;
-          if (!widget.audioView && (!(widget.peerTrackNodeStore.peer.isLocal)))
+          if (!widget.audioView && (!(widget.peerTrackNode.peer.isLocal)))
             showDialog(
                 context: context,
                 builder: (_) => Column(
@@ -105,10 +105,10 @@ class _VideoTileState extends State<VideoTile> {
               children: [
                 LayoutBuilder(
                   builder: (context, constraints) {
-                    if ((widget.peerTrackNodeStore.track == null) ||
-                        !(widget.peerTrackNodeStore.isVideoOn ?? true)) {
+                    if ((widget.peerTrackNode.track == null) ||
+                        !(widget.peerTrackNode.isVideoOn ?? true)) {
                       List<String>? parts =
-                          widget.peerTrackNodeStore.peer.name.split(" ");
+                          widget.peerTrackNode.peer.name.split(" ");
                       if (parts.length == 1) {
                         name = parts[0][0];
                       } else if (parts.length >= 2) {
@@ -131,7 +131,7 @@ class _VideoTileState extends State<VideoTile> {
                       width: widget.itemWidth - 5,
                       padding: EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 15.0),
                       child: HMSVideoView(
-                        track: widget.peerTrackNodeStore.track!,
+                        track: widget.peerTrackNode.track!,
                         setMirror: false,
                         matchParent: false,
                       ),
@@ -141,9 +141,9 @@ class _VideoTileState extends State<VideoTile> {
                 Align(
                   alignment: Alignment.bottomCenter,
                   child: Text(
-                      "${widget.peerTrackNodeStore.peer.name} ${widget.peerTrackNodeStore.peer.isLocal ? "(You)" : ""}"),
+                      "${widget.peerTrackNode.peer.name} ${widget.peerTrackNode.peer.isLocal ? "(You)" : ""}"),
                 ),
-                if (widget.peerTrackNodeStore.peer.metadata ==
+                if (widget.peerTrackNode.peer.metadata ==
                     "{\"isHandRaised\":true,\"isBRBOn\":false}")
                   Positioned(
                     child: Padding(
@@ -159,7 +159,7 @@ class _VideoTileState extends State<VideoTile> {
                 Observer(builder: (context) {
                   print("${_meetingStore.activeSpeakerIds}");
                   bool isHighestSpeaker = _meetingStore
-                      .isActiveSpeaker(widget.peerTrackNodeStore.uid);
+                      .isActiveSpeaker(widget.peerTrackNode.uid);
                   return Container(
                     height: widget.itemHeight + 110,
                     width: widget.itemWidth - 4,

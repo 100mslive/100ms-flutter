@@ -97,7 +97,7 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                           itemHeight: itemHeight,
                           itemWidth: itemWidth,
                           
-                          peerTrackNodeStore: new PeerTrackNode(
+                          peerTrackNode: new PeerTrackNode(
                               peer: _previewStore.peer!,
                               uid: _previewStore.peer!.peerId,
                               track: _previewStore.localTracks[0],
