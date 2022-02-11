@@ -3,6 +3,7 @@ import 'package:connectivity_checker/connectivity_checker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:hmssdk_flutter_example/common/ui/organisms/video_tile.dart';
 import 'package:mobx/mobx.dart';
 import 'package:provider/provider.dart';
 
@@ -14,7 +15,7 @@ import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_page.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
-import 'package:hmssdk_flutter_example/meeting/peer_track_node_store.dart';
+import 'package:hmssdk_flutter_example/meeting/peer_track_node.dart';
 import 'package:hmssdk_flutter_example/preview/preview_controller.dart';
 import 'package:hmssdk_flutter_example/preview/preview_store.dart';
 
@@ -92,15 +93,16 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                       }
                       return Provider<MeetingStore>(
                         create: (ctx) => MeetingStore(),
-                        child: PeerItemOrganism(
-                          height: itemHeight,
-                          width: itemWidth,
-                          peerTrackNodeStore: new PeerTrackNodeStore(
+                        child: VideoTile(
+                          itemHeight: itemHeight,
+                          itemWidth: itemWidth,
+                          
+                          peerTrackNodeStore: new PeerTrackNode(
                               peer: _previewStore.peer!,
                               uid: _previewStore.peer!.peerId,
                               track: _previewStore.localTracks[0],
                               isVideoOn:!_previewStore.localTracks[0].isMute
-                          ),
+                          ), audioView: false,
                         ),
                       );
                     },

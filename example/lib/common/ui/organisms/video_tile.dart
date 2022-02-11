@@ -7,7 +7,7 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/change_track_options.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/peer_item_organism.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
-import 'package:hmssdk_flutter_example/meeting/peer_track_node_store.dart';
+import 'package:hmssdk_flutter_example/meeting/peer_track_node.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 import 'package:provider/provider.dart';
 
@@ -15,7 +15,7 @@ class VideoTile extends StatefulWidget {
   // final List<PeerTracKNode> filteredList;
   final double itemHeight;
   final double itemWidth;
-  final PeerTrackNodeStore peerTrackNodeStore;
+  final PeerTrackNode peerTrackNodeStore;
   final bool audioView;
 
   VideoTile({
@@ -31,8 +31,11 @@ class VideoTile extends StatefulWidget {
 }
 
 class _VideoTileState extends State<VideoTile> {
+  String name = "";
+  GlobalKey key = GlobalKey();
   @override
   Widget build(BuildContext context) {
+    MeetingStore _meetingStore = context.read<MeetingStore>();
     bool mutePermission =
         widget.peerTrackNodeStore.peer.role.permissions.mute ?? false;
     bool unMutePermission =
@@ -49,7 +52,7 @@ class _VideoTileState extends State<VideoTile> {
           widget.peerTrackNodeStore.isVideoOn = false;
         } else {
           widget.peerTrackNodeStore.isVideoOn =
-              !(widget.peerTrackNodeStore.track?.isMute??true);
+              !(widget.peerTrackNodeStore.track?.isMute ?? true);
         }
       },
       child: InkWell(
@@ -90,19 +93,89 @@ class _VideoTileState extends State<VideoTile> {
                       ],
                     ));
         },
-        child: Observer(
+        child: Observer(builder: (context) {
+          print("${widget.peerTrackNodeStore.isVideoOn} ");
 
-          builder: (context) {
-            print("${widget.peerTrackNodeStore.isVideoOn}");
+          return Container(
+            color: Colors.transparent,
+            key: key,
+            padding: EdgeInsets.all(2),
+            margin: EdgeInsets.all(2),
+            height: widget.itemHeight + 110,
+            width: widget.itemWidth - 5.0,
+            child: Stack(
+              children: [
+                LayoutBuilder(
+                  builder: (context, constraints) {
+                    if ((widget.peerTrackNodeStore.track == null) ||
+                        !(widget.peerTrackNodeStore.isVideoOn ?? true)) {
+                      List<String>? parts =
+                          widget.peerTrackNodeStore.peer.name.split(" ");
+                      if (parts.length == 1) {
+                        name = parts[0][0];
+                      } else if (parts.length >= 2) {
+                        name = parts[0][0];
+                        if (parts[1] == "" || parts[1] == " ") {
+                          name += parts[0][1];
+                        } else {
+                          name += parts[1][0];
+                        }
+                      }
+                      return Container(
+                        height: widget.itemHeight + 100,
+                        width: widget.itemWidth - 5,
+                        child: Center(child: CircleAvatar(child: Text(name))),
+                      );
+                    }
 
-            return PeerItemOrganism(
-              key: Key(widget.peerTrackNodeStore.uid.toString()),
-              height: widget.itemHeight,
-              width: widget.itemWidth,
-              peerTrackNodeStore: widget.peerTrackNodeStore,
-            );
-          }
-        ),
+                    return Container(
+                      height: widget.itemHeight + 100,
+                      width: widget.itemWidth - 5,
+                      padding: EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 15.0),
+                      child: HMSVideoView(
+                        track: widget.peerTrackNodeStore.track!,
+                        setMirror: false,
+                        matchParent: false,
+                      ),
+                    );
+                  },
+                ),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Text(
+                      "${widget.peerTrackNodeStore.peer.name} ${widget.peerTrackNodeStore.peer.isLocal ? "(You)" : ""}"),
+                ),
+                if (widget.peerTrackNodeStore.peer.metadata ==
+                    "{\"isHandRaised\":true,\"isBRBOn\":false}")
+                  Positioned(
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
+                      child: Image.asset(
+                        'assets/icons/raise_hand.png',
+                        color: Colors.amber.shade300,
+                      ),
+                    ),
+                    top: 5.0,
+                    left: 5.0,
+                  ),
+                Observer(builder: (context) {
+                  print("${_meetingStore.activeSpeakerIds}");
+                  bool isHighestSpeaker = _meetingStore
+                      .isActiveSpeaker(widget.peerTrackNodeStore.uid);
+                  return Container(
+                    height: widget.itemHeight + 110,
+                    width: widget.itemWidth - 4,
+                    decoration: BoxDecoration(
+                        border: Border.all(
+                            color: isHighestSpeaker ? Colors.blue : Colors.grey,
+                            width: isHighestSpeaker ? 3.0 : 1.0),
+                        borderRadius: BorderRadius.all(Radius.circular(10))),
+                  );
+                })
+              ],
+            ),
+          );
+        }),
       ),
     );
   }
