@@ -34,7 +34,6 @@ class _VideoTileState extends State<VideoTile> {
   GlobalKey key = GlobalKey();
   @override
   Widget build(BuildContext context) {
-
     MeetingStore _meetingStore = context.read<MeetingStore>();
     bool mutePermission =
         widget.peerTrackNode.peer.role.permissions.mute ?? false;
@@ -158,8 +157,8 @@ class _VideoTileState extends State<VideoTile> {
                   ),
                 Observer(builder: (context) {
                   print("${_meetingStore.activeSpeakerIds}");
-                  bool isHighestSpeaker = _meetingStore
-                      .isActiveSpeaker(widget.peerTrackNode.uid);
+                  bool isHighestSpeaker =
+                      _meetingStore.isActiveSpeaker(widget.peerTrackNode.uid);
                   return Container(
                     height: widget.itemHeight + 110,
                     width: widget.itemWidth - 4,

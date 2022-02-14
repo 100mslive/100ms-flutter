@@ -409,6 +409,8 @@ abstract class MeetingStoreBase extends ChangeNotifier
         PeerTrackNode peerTrackNode = peerTracks[index];
         peerTrackNode.track = track as HMSVideoTrack;
         peerTrackNode.isVideoOn = !peerTrackNode.track!.isMute;
+      } else {
+        return;
       }
     }
     peerOperationWithTrack(peer, trackUpdate, track);
@@ -437,13 +439,13 @@ abstract class MeetingStoreBase extends ChangeNotifier
   @override
   void onUpdateSpeakers({required List<HMSSpeaker> updateSpeakers}) {
     if (updateSpeakers.isEmpty) {
-        activeSpeakerIds.clear();
-        return;
-      } else {
-        updateSpeakers.forEach((speaker) {
-          activeSpeakerIds.add(speaker.peer.peerId + "mainVideo");
-        });
-      }
+      activeSpeakerIds.clear();
+      return;
+    } else {
+      updateSpeakers.forEach((speaker) {
+        activeSpeakerIds.add(speaker.peer.peerId + "mainVideo");
+      });
+    }
   }
 
   @override
@@ -519,7 +521,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
         peerTracks.removeWhere(
             (leftPeer) => leftPeer.uid == peer.peerId + "mainVideo");
         removePeer(peer);
-        
+
         break;
       case HMSPeerUpdate.audioToggled:
         break;
@@ -597,29 +599,27 @@ abstract class MeetingStoreBase extends ChangeNotifier
     switch (update) {
       case HMSTrackUpdate.trackAdded:
         if (track.source == "REGULAR") {
-          trackStatus[peer.peerId] = track.isMute
-              ? HMSTrackUpdate.trackMuted
-              : HMSTrackUpdate.trackUnMuted;
         } else {
-          screenShareTrack.add(track);
-          this.curentScreenShareTrack = screenShareTrack.first;
-          screenSharePeer = screenShareTrack.first?.peer;
+          if (peerTracks[0].track!.source != "REGULAR") {
+            peerTracks[0] = PeerTrackNode(
+                isVideoOn: true, peer: peer, uid: peer.peerId + track.trackId,track: track as HMSVideoTrack);
+          } else {
+            peerTracks.insert(
+                0,
+                PeerTrackNode(
+                    isVideoOn: true,
+                    peer: peer,
+                    uid: peer.peerId + track.trackId,
+                    track: track as HMSVideoTrack));
+          }
           isScreenShareActive();
         }
         break;
       case HMSTrackUpdate.trackRemoved:
         if (track.source != "REGULAR") {
-          screenShareTrack
-              .removeWhere((element) => element?.trackId == track.trackId);
-          if (this.screenShareTrack.length >= 1) {
-            curentScreenShareTrack = screenShareTrack.first;
-            screenSharePeer = peer;
-          } else {
-            curentScreenShareTrack = null;
-            screenSharePeer = null;
-          }
+          peerTracks.removeWhere(
+              (element) => element.uid == peer.peerId + track.trackId);
         } else {
-          // peerTracks.removeWhere((element) => element.peerId == peer.peerId);
           isScreenShareActive();
         }
         break;

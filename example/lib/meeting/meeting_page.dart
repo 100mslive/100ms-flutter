@@ -4,6 +4,7 @@ import 'package:connectivity_checker/connectivity_checker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:hmssdk_flutter_example/hls_viewer/hls_viewer.dart';
 import 'package:mobx/mobx.dart';
 
@@ -598,82 +599,50 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Observer(builder: (_) {
-                            if (!_meetingStore.hasHlsStarted &&
-                                _meetingStore.curentScreenShareTrack != null &&
-                                !audioViewOn) {
-                              return SizedBox(
-                                  width: double.infinity,
-                                  height:
-                                      MediaQuery.of(context).size.height / 2.5,
-                                  child: InteractiveViewer(
-                                    child: VideoTile(
-                                      itemHeight:
-                                          MediaQuery.of(context).size.height /
-                                              2,
-                                      itemWidth:
-                                          MediaQuery.of(context).size.width,
-                                      peerTrackNode: PeerTrackNode(
-                                          uid: _meetingStore
-                                                  .screenSharePeer!.peerId +
-                                              _meetingStore
-                                                  .curentScreenShareTrack!
-                                                  .trackId,
-                                          track: _meetingStore
-                                                  .curentScreenShareTrack
-                                              as HMSVideoTrack,
-                                          isVideoOn: true,
-                                          peer: _meetingStore.screenSharePeer!),
-                                      audioView: audioViewOn,
-                                    ),
-                                  ));
-                            } else {
-                              return Container();
-                            }
-                          }),
                           Flexible(
                             child: Observer(builder: (_) {
-                              // if (!_meetingStore.isMeetingStarted)
-                              //   return SizedBox();
+                              
                               if (!_meetingStore.isHLSLink) {
                                 if (_meetingStore.peerTracks.isEmpty)
                                   return Center(
                                       child:
                                           Text('Waiting for others to join!'));
-                                return GridView.builder(
-                                    physics: PageScrollPhysics(),
+                                return StaggeredGridView.countBuilder(
+                                    key: ObjectKey(
+                                        _meetingStore.peerTracks.length),
                                     scrollDirection: Axis.horizontal,
-                                    addAutomaticKeepAlives: false,
-                                    itemCount: 
-                                         _meetingStore.peerTracks.length,
-                                    shrinkWrap: true,
-                                    cacheExtent: 2,
-                                    gridDelegate:
-                                        SliverGridDelegateWithFixedCrossAxisCount(
-                                      crossAxisCount: (!audioViewOn &&
-                                              _meetingStore
-                                                      .curentScreenShareTrack !=
-                                                  null )
-                                          ? 1
-                                          : 2,
-                                      mainAxisExtent: itemWidth,
-                                    ),
+                                    physics: PageScrollPhysics(),
+                                    itemCount: _meetingStore.peerTracks.length,
+                                    crossAxisCount: 2,
                                     itemBuilder: (ctx, index) {
                                       return Observer(builder: (context) {
                                         PeerTrackNode peerTrackNodeStore;
-                                          peerTrackNodeStore =
-                                              _meetingStore.peerTracks[index];
-                                          print(
-                                              "${peerTrackNodeStore.track} buildingVideoTile "
-                                              "${peerTrackNodeStore.peer.name} "
-                                              "${peerTrackNodeStore.isVideoOn} ");
+                                        peerTrackNodeStore =
+                                            _meetingStore.peerTracks[index];
+                                        print(
+                                            "${peerTrackNodeStore.track} buildingVideoTile "
+                                            "${peerTrackNodeStore.peer.name} "
+                                            "${peerTrackNodeStore.isVideoOn} ");
                                         return VideoTile(
+                                          itemHeight: MediaQuery.of(context)
+                                              .size
+                                              .height,
+                                          itemWidth: 2 * itemWidth,
                                           audioView: audioViewOn,
-                                          peerTrackNode:
-                                              peerTrackNodeStore,
+                                          peerTrackNode: peerTrackNodeStore,
                                         );
                                       });
-                                    });
+                                    },
+                                    staggeredTileBuilder: (int index) =>
+                                        StaggeredTile.extent(
+                                            _meetingStore.peerTracks[index]
+                                                        .track?.source !=
+                                                    'REGULAR'? 2 : 1,
+                                            _meetingStore.peerTracks[index]
+                                                        .track?.source !=
+                                                    'REGULAR'
+                                                ? 2 * itemWidth
+                                                : itemWidth));
                               } else {
                                 return SizedBox();
                               }
