@@ -607,9 +607,8 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                   return Center(
                                       child:
                                           Text('Waiting for others to join!'));
-                                return StaggeredGridView.countBuilder(
-                                    key: ObjectKey(
-                                        _meetingStore.peerTracks.length),
+                                return MasonryGridView.count(
+
                                     scrollDirection: Axis.horizontal,
                                     physics: PageScrollPhysics(),
                                     itemCount: _meetingStore.peerTracks.length,
@@ -621,28 +620,19 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                             _meetingStore.peerTracks[index];
                                         print(
                                             "${peerTrackNodeStore.track} buildingVideoTile "
-                                            "${peerTrackNodeStore.peer.name} "
+                                            "${peerTrackNodeStore.peer} "
                                             "${peerTrackNodeStore.isVideoOn} ");
                                         return VideoTile(
                                           itemHeight: MediaQuery.of(context)
                                               .size
                                               .height,
-                                          itemWidth: 2 * itemWidth,
+                                          itemWidth: itemWidth,
                                           audioView: audioViewOn,
                                           peerTrackNode: peerTrackNodeStore,
                                         );
                                       });
                                     },
-                                    staggeredTileBuilder: (int index) =>
-                                        StaggeredTile.extent(
-                                            _meetingStore.peerTracks[index]
-                                                        .track?.source !=
-                                                    'REGULAR'? 2 : 1,
-                                            _meetingStore.peerTracks[index]
-                                                        .track?.source !=
-                                                    'REGULAR'
-                                                ? 2 * itemWidth
-                                                : itemWidth));
+                                    );
                               } else {
                                 return SizedBox();
                               }

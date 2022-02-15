@@ -32,6 +32,7 @@ class VideoTile extends StatefulWidget {
 class _VideoTileState extends State<VideoTile> {
   String name = "";
   GlobalKey key = GlobalKey();
+
   @override
   Widget build(BuildContext context) {
     MeetingStore _meetingStore = context.read<MeetingStore>();
@@ -142,19 +143,25 @@ class _VideoTileState extends State<VideoTile> {
                   child: Text(
                       "${widget.peerTrackNode.peer.name} ${widget.peerTrackNode.peer.isLocal ? "(You)" : ""}"),
                 ),
-                if (widget.peerTrackNode.peer.metadata ==
-                    "{\"isHandRaised\":true,\"isBRBOn\":false}")
-                  Positioned(
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
-                      child: Image.asset(
-                        'assets/icons/raise_hand.png',
-                        color: Colors.amber.shade300,
+                Observer(builder: (context) {
+                  print(
+                      "Building hand raise ${widget.peerTrackNode.peer.metadata}");
+                  if (widget.peerTrackNode.peer.metadata ==
+                      "{\"isHandRaised\":true}")
+                    return Positioned(
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
+                        child: Image.asset(
+                          'assets/icons/raise_hand.png',
+                          color: Colors.amber.shade300,
+                        ),
                       ),
-                    ),
-                    top: 5.0,
-                    left: 5.0,
-                  ),
+                      top: 5.0,
+                      left: 5.0,
+                    );
+                  else
+                    return Container();
+                }),
                 Observer(builder: (context) {
                   print("${_meetingStore.activeSpeakerIds}");
                   bool isHighestSpeaker =

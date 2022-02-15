@@ -555,11 +555,11 @@ abstract class MeetingStoreBase extends ChangeNotifier
         int index = peerTracks
             .indexWhere((element) => element.uid == peer.peerId + "mainVideo");
         if (index != -1 &&
-            peer.metadata == "{\"isHandRaised\":true,\"isBRBOn\":false}") {
+            peer.metadata == "{\"isHandRaised\":true") {
           PeerTrackNode peerTrackNode = peerTracks[index];
           peerTrackNode.peer = peer;
         } else if (index != -1 &&
-            peer.metadata == "{\"isHandRaised\":false,\"isBRBOn\":false}") {
+            peer.metadata == "{\"isHandRaised\":false") {
           PeerTrackNode peerTrackNode = peerTracks[index];
           peerTrackNode.peer = peer;
         }
