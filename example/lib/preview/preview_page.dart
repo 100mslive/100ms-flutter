@@ -2,7 +2,9 @@
 import 'package:connectivity_checker/connectivity_checker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/video_tile.dart';
+import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:provider/provider.dart';
 
 //Project imports
@@ -63,135 +65,128 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
 
   @override
   void dispose() {
-    // context.read<PreviewStore>().removePreviewListener();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    final double itemHeight = (size.height - kToolbarHeight - 24);
+    final double itemHeight = size.height;
     final double itemWidth = size.width;
+    final _previewStore = context.watch<PreviewStore>();
     return ConnectivityAppWrapper(
       app: ConnectivityWidgetWrapper(
         offlineWidget: OfflineWidget(),
         disableInteraction: true,
         child: Scaffold(
-          appBar: AppBar(
-            title: Text("Preview"),
-          ),
-          body: Container(
-            height: itemHeight,
-            width: itemWidth,
-            child: Column(
-              children: [
-                Flexible(
-                    fit: FlexFit.tight,
-                    child: (context.read<PreviewStore>().localTracks.isEmpty)
-                        ? Column(children: [
-                            CupertinoActivityIndicator(radius: 124),
-                            SizedBox(
-                              height: 64.0,
-                            ),
-                            Text("No preview available") //
-                          ])
-                        : Provider<MeetingStore>(
-                            create: (ctx) => MeetingStore(),
-                            child: VideoTile(
-                              itemHeight: itemHeight,
-                              itemWidth: itemWidth,
-                              peerTrackNode: PeerTrackNode(
-                                  peer: context.watch<PreviewStore>().peer!,
-                                  uid: context
-                                      .watch<PreviewStore>()
-                                      .peer!
-                                      .peerId,
-                                  track: context
-                                      .watch<PreviewStore>()
-                                      .localTracks[0],
-                                  isVideoOn: context
-                                      .watch<PreviewStore>()
-                                      .localTracks[0]
-                                      .isMute),
-                              audioView: false,
-                            ),
-                          )),
-                SizedBox(
-                  height: 16,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    // if (context.read<PreviewStore>().peer != null &&
-                    //     context.read<PreviewStore>().peer!.role.publishSettings!.allowed
-                    //         .contains("video"))
-                    (context.watch<PreviewStore>().peer != null &&
-                            context
-                                .watch<PreviewStore>()
-                                .peer!
-                                .role
-                                .publishSettings!
-                                .allowed
-                                .contains("video"))
-                        ? GestureDetector(
-                            onTap: context
-                                    .read<PreviewStore>()
-                                    .localTracks
-                                    .isEmpty
-                                ? null
-                                : () async {
-                                    context.read<PreviewStore>().switchVideo();
-                                  },
-                            child: Icon(
-                                context.watch<PreviewStore>().videoOn
-                                    ? Icons.videocam
-                                    : Icons.videocam_off,
-                                size: 48),
-                          )
-                        : Container(),
-                    ElevatedButton(
-                      onPressed: () {
-                        context.read<PreviewStore>().removePreviewListener();
-                        Navigator.of(context).pushReplacement(MaterialPageRoute(
-                            builder: (_) => Provider<MeetingStore>(
-                                  create: (_) => MeetingStore(),
-                                  child: MeetingPage(
-                                      roomId: widget.roomId,
-                                      flow: widget.flow,
-                                      user: widget.user),
-                                )));
-                      },
-                      child: Text(
-                        'Join Now',
-                        style: TextStyle(height: 1, fontSize: 18),
-                      ),
+          body: Stack(
+            children: [
+              (_previewStore.localTracks.isEmpty)
+                  ? Align(
+                    alignment: Alignment.center,
+                    child: CupertinoActivityIndicator(radius: 50))
+                  : Container(
+                      height: itemHeight,
+                      width: itemWidth,
+                      child: 
+                    (_previewStore.isVideoOn)?
+                      HMSVideoView(
+                        track: _previewStore.localTracks[0],
+                        setMirror: false,
+                        matchParent: false,
+                      ):Container(
+                    height: itemHeight,
+                    width: itemWidth,
+                    child: Center(child: CircleAvatar(child: Text(Utilities.getAvatarTitle(_previewStore.peer!.name)))),
+                  ),
                     ),
-                    (context.watch<PreviewStore>().peer != null &&
-                            context
-                                .read<PreviewStore>()
-                                .peer!
-                                .role
-                                .publishSettings!
-                                .allowed
-                                .contains("audio"))
-                        ? GestureDetector(
-                            onTap: () async {
-                              context.read<PreviewStore>().switchAudio();
-                            },
-                            child: Icon(
-                                (context.watch<PreviewStore>().audioOn)
-                                    ? Icons.mic
-                                    : Icons.mic_off,
-                                size: 48),
-                          )
-                        : Container(),
-                  ],
+              
+              Padding(
+                padding: const EdgeInsets.only(bottom: 20),
+                child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      // if (context.read<PreviewStore>().peer != null &&
+                      //     context.read<PreviewStore>().peer!.role.publishSettings!.allowed
+                      //         .contains("video"))
+                      (_previewStore.peer != null &&
+                              _previewStore
+                                  .peer!
+                                  .role
+                                  .publishSettings!
+                                  .allowed
+                                  .contains("video"))
+                          ? GestureDetector(
+                              onTap: _previewStore
+                                      .localTracks
+                                      .isEmpty
+                                  ? null
+                                  : () async {
+                                      _previewStore.switchVideo(isOn:_previewStore.isVideoOn);
+                                    },
+                              child: CircleAvatar(
+                                radius: 25,
+                                backgroundColor:
+                                    Colors.transparent.withOpacity(0.2),
+                                child: Icon(
+                                    _previewStore.isVideoOn
+                                        ? Icons.videocam
+                                        : Icons.videocam_off,
+                                        color: Colors.blue
+                                    ),
+                              ),
+                            )
+                          : Container(),
+                      _previewStore.peer != null?ElevatedButton(
+                        style: ElevatedButton.styleFrom(primary: Colors.blue),
+                        onPressed: () {
+                          context.read<PreviewStore>().removePreviewListener();
+                          Navigator.of(context).pushReplacement(MaterialPageRoute(
+                              builder: (_) => Provider<MeetingStore>(
+                                    create: (_) => MeetingStore(),
+                                    child: MeetingPage(
+                                        roomId: widget.roomId,
+                                        flow: widget.flow,
+                                        user: widget.user),
+                                  )));
+                        },
+                        child: Text(
+                          'Join Now',
+                          style: TextStyle(height: 1, fontSize: 18),
+                        ),
+                      ):Container(),
+                      (_previewStore.peer != null &&
+                              context
+                                  .read<PreviewStore>()
+                                  .peer!
+                                  .role
+                                  .publishSettings!
+                                  .allowed
+                                  .contains("audio"))
+                          ? GestureDetector(
+                              onTap: () async {
+                                _previewStore.switchAudio();
+                              },
+                              child: CircleAvatar(
+                                radius : 25,
+                                backgroundColor:
+                                    Colors.transparent.withOpacity(0.2),
+                                child: Icon(
+                                    (_previewStore.isAudioOn)
+                                        ? Icons.mic
+                                        : Icons.mic_off,
+                                    color: Colors.blue,
+                                    ),
+                              ),
+                            )
+                          : Container(),
+                    ],
+                  ),
                 ),
-                SizedBox(
-                  height: 16,
-                )
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
@@ -203,15 +198,15 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
     super.didChangeAppLifecycleState(state);
     if (mounted) {
       if (state == AppLifecycleState.resumed) {
-        if (context.watch<PreviewStore>().videoOn) {
+        if (context.watch<PreviewStore>().isVideoOn) {
           context.read<PreviewStore>().startCapturing();
         }
       } else if (state == AppLifecycleState.paused) {
-        if (context.watch<PreviewStore>().videoOn) {
+        if (context.watch<PreviewStore>().isVideoOn) {
           context.read<PreviewStore>().stopCapturing();
         }
       } else if (state == AppLifecycleState.inactive) {
-        if (context.watch<PreviewStore>().videoOn) {
+        if (context.watch<PreviewStore>().isVideoOn) {
           context.read<PreviewStore>().stopCapturing();
         }
       }

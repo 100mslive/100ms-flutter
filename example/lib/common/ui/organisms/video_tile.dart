@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 // Project imports
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/change_track_options.dart';
+import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:hmssdk_flutter_example/meeting/peer_track_node.dart';
 import 'package:visibility_detector/visibility_detector.dart';
@@ -105,22 +106,11 @@ class _VideoTileState extends State<VideoTile> {
                   builder: (context, constraints) {
                     if ((widget.peerTrackNode.track == null) ||
                         !(widget.peerTrackNode.isVideoOn ?? true)) {
-                      List<String>? parts =
-                          widget.peerTrackNode.peer.name.split(" ");
-                      if (parts.length == 1) {
-                        name = parts[0][0];
-                      } else if (parts.length >= 2) {
-                        name = parts[0][0];
-                        if (parts[1] == "" || parts[1] == " ") {
-                          name += parts[0][1];
-                        } else {
-                          name += parts[1][0];
-                        }
-                      }
+                      
                       return Container(
                         height: widget.itemHeight + 100,
                         width: widget.itemWidth - 5,
-                        child: Center(child: CircleAvatar(child: Text(name))),
+                        child: Center(child: CircleAvatar(child: Text(Utilities.getAvatarTitle(widget.peerTrackNode.peer.name)))),
                       );
                     }
 

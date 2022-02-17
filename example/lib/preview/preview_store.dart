@@ -16,9 +16,9 @@ class PreviewStore extends ChangeNotifier
   bool isHLSLink = false;
   HMSRoom? room;
 
-  bool videoOn = true;
+  bool isVideoOn = true;
 
-  bool audioOn = true;
+  bool isAudioOn = true;
 
   @override
   void onError({required HMSException error}) {
@@ -82,13 +82,13 @@ class PreviewStore extends ChangeNotifier
 
   void switchVideo({bool isOn = false}) {
     HmsSdkManager.hmsSdkInteractor?.switchVideo(isOn: isOn);
-    videoOn = !videoOn;
+    isVideoOn = !isVideoOn;
     notifyListeners();
   }
 
   void switchAudio({bool isOn = false}) {
     HmsSdkManager.hmsSdkInteractor?.switchAudio(isOn: isOn);
-    audioOn = !audioOn;
+    isAudioOn = !isAudioOn;
     notifyListeners();
   }
 
