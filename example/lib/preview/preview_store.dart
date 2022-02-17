@@ -82,10 +82,14 @@ class PreviewStore extends ChangeNotifier
 
   void switchVideo({bool isOn = false}) {
     HmsSdkManager.hmsSdkInteractor?.switchVideo(isOn: isOn);
+    videoOn = !videoOn;
+    notifyListeners();
   }
 
   void switchAudio({bool isOn = false}) {
     HmsSdkManager.hmsSdkInteractor?.switchAudio(isOn: isOn);
+    audioOn = !audioOn;
+    notifyListeners();
   }
 
   void addLogsListener(HMSLogListener hmsLogListener) {
