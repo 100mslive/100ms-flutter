@@ -1,12 +1,12 @@
 //Package imports
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:collection/collection.dart';
 
 //Project imports
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
+import 'package:provider/provider.dart';
 
 class ChatWidget extends StatefulWidget {
   final MeetingStore meetingStore;
@@ -61,7 +61,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                             SizedBox(
                               width: 5,
                             ),
-                            Observer(builder: (ctx) {
+                            Consumer<MeetingStore>(builder: (context, _meetingStore, _) {
                               List<HMSRole> roles = _meetingStore.roles;
                               if (roles.length > 0) {
                                 return DropdownButtonHideUnderline(
@@ -121,8 +121,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                     ),
                   ),
                   Expanded(
-                    child: Observer(
-                      builder: (_) {
+                    child: Consumer<MeetingStore>(builder: (context, _meetingStore, _) {
                         if (!_meetingStore.isMeetingStarted) return SizedBox();
                         if (_meetingStore.messages.isEmpty)
                           return Center(child: Text('No messages'));

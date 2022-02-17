@@ -2,15 +2,12 @@
 import 'package:connectivity_checker/connectivity_checker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/video_tile.dart';
-import 'package:mobx/mobx.dart';
 import 'package:provider/provider.dart';
 
 //Project imports
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/offline_screen.dart';
-import 'package:hmssdk_flutter_example/common/ui/organisms/peer_item_organism.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_page.dart';
@@ -43,12 +40,12 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
         PreviewController(roomId: widget.roomId, user: widget.user);
     super.initState();
     initPreview();
-    reaction(
-        (_) => _previewStore.error,
-        (event) => {
-              UtilityComponents.showSnackBarWithString(
-                  (event as HMSException).message, context)
-            });
+    // reaction(
+    //     (_) => _previewStore.error,
+    //     (event) => {
+    //           UtilityComponents.showSnackBarWithString(
+    //               (event as HMSException).message, context)
+    //         });
   }
 
   void initPreview() async {
@@ -62,6 +59,7 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
+
     var size = MediaQuery.of(context).size;
     final double itemHeight = (size.height - kToolbarHeight - 24);
     final double itemWidth = size.width;
@@ -80,34 +78,30 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
               children: [
                 Flexible(
                   fit: FlexFit.tight,
-                  child: Observer(
-                    builder: (_) {
-                      if (_previewStore.localTracks.isEmpty) {
-                        return Column(children: [
+                  child: (_previewStore.localTracks.isEmpty)?
+                        Column(children: [
                           CupertinoActivityIndicator(radius: 124),
                           SizedBox(
                             height: 64.0,
                           ),
                           Text("No preview available") //
-                        ]);
-                      }
-                      return Provider<MeetingStore>(
+                        ])
+                      :
+                      Provider<MeetingStore>(
                         create: (ctx) => MeetingStore(),
                         child: VideoTile(
                           itemHeight: itemHeight,
                           itemWidth: itemWidth,
-                          
                           peerTrackNode: new PeerTrackNode(
                               peer: _previewStore.peer!,
                               uid: _previewStore.peer!.peerId,
                               track: _previewStore.localTracks[0],
-                              isVideoOn:!_previewStore.localTracks[0].isMute
-                          ), audioView: false,
+                              isVideoOn: _previewStore.localTracks[0].isMute),
+                          audioView: false,
                         ),
-                      );
-                    },
+                      )
                   ),
-                ),
+                
                 SizedBox(
                   height: 16,
                 ),
@@ -117,8 +111,7 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                     // if (_previewStore.peer != null &&
                     //     _previewStore.peer!.role.publishSettings!.allowed
                     //         .contains("video"))
-                    Observer(builder: (context) {
-                      return (_previewStore.peer != null &&
+                    (_previewStore.peer != null &&
                               _previewStore.peer!.role.publishSettings!.allowed
                                   .contains("video"))
                           ? GestureDetector(
@@ -133,11 +126,10 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                                       : Icons.videocam_off,
                                   size: 48),
                             )
-                          : Container();
-                    }),
+                          : Container(),
                     ElevatedButton(
                       onPressed: () {
-                        _previewStore.removeListener();
+                        _previewStore.removePreviewListener();
                         Navigator.of(context).pushReplacement(MaterialPageRoute(
                             builder: (_) => Provider<MeetingStore>(
                                   create: (_) => MeetingStore(),
@@ -152,8 +144,7 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                         style: TextStyle(height: 1, fontSize: 18),
                       ),
                     ),
-                    Observer(builder: (context) {
-                      return (_previewStore.peer != null &&
+                    (_previewStore.peer != null &&
                               _previewStore.peer!.role.publishSettings!.allowed
                                   .contains("audio"))
                           ? GestureDetector(
@@ -166,8 +157,7 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                                       : Icons.mic_off,
                                   size: 48),
                             )
-                          : Container();
-                    })
+                          : Container(),
                   ],
                 ),
                 SizedBox(

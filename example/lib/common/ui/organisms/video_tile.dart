@@ -1,11 +1,9 @@
 // Package imports
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 
 // Project imports
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/change_track_options.dart';
-import 'package:hmssdk_flutter_example/common/ui/organisms/peer_item_organism.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:hmssdk_flutter_example/meeting/peer_track_node.dart';
 import 'package:visibility_detector/visibility_detector.dart';
@@ -93,7 +91,7 @@ class _VideoTileState extends State<VideoTile> {
                       ],
                     ));
         },
-        child: Observer(builder: (context) {
+        child:Consumer<MeetingStore>(builder: (context, _meetingStore, _) {
           return Container(
             color: Colors.transparent,
             key: key,
@@ -143,7 +141,7 @@ class _VideoTileState extends State<VideoTile> {
                   child: Text(
                       "${widget.peerTrackNode.peer.name} ${widget.peerTrackNode.peer.isLocal ? "(You)" : ""}"),
                 ),
-                Observer(builder: (context) {
+                Consumer<MeetingStore>(builder: (context, _meetingStore, _){
                   print(
                       "Building hand raise ${widget.peerTrackNode.peer.metadata}");
                   if (widget.peerTrackNode.peer.metadata ==
@@ -162,7 +160,7 @@ class _VideoTileState extends State<VideoTile> {
                   else
                     return Container();
                 }),
-                Observer(builder: (context) {
+                Consumer<MeetingStore>(builder: (context, _meetingStore, _) {
                   print("${_meetingStore.activeSpeakerIds}");
                   bool isHighestSpeaker =
                       _meetingStore.isActiveSpeaker(widget.peerTrackNode.uid);

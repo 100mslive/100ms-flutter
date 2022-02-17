@@ -4,15 +4,13 @@ import 'package:flutter/material.dart';
 //Project imports
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
+import 'package:provider/provider.dart';
 import 'change_role_options.dart';
 
 class ParticipantOrganism extends StatefulWidget {
   final HMSPeer peer;
-  final MeetingStore meetingStore;
 
-  const ParticipantOrganism(
-      {Key? key, required this.peer, required this.meetingStore})
-      : super(key: key);
+  const ParticipantOrganism({Key? key, required this.peer}) : super(key: key);
 
   @override
   _ParticipantOrganismState createState() => _ParticipantOrganismState();
@@ -21,7 +19,7 @@ class ParticipantOrganism extends StatefulWidget {
 class _ParticipantOrganismState extends State<ParticipantOrganism> {
   bool isVideoOn = false, isAudioOn = false;
   Color isOffColor = Colors.red.shade300, isOnColor = Colors.green.shade300;
-
+  late MeetingStore _meetingStore;
   @override
   void initState() {
     super.initState();
@@ -30,6 +28,7 @@ class _ParticipantOrganismState extends State<ParticipantOrganism> {
 
   @override
   Widget build(BuildContext context) {
+    _meetingStore = Provider.of<MeetingStore>(context);
     final width = MediaQuery.of(context).size.width;
     HMSPeer peer = widget.peer;
     return Card(
@@ -70,17 +69,16 @@ class _ParticipantOrganismState extends State<ParticipantOrganism> {
                   ),
                 GestureDetector(
                   onTap: () {
-                    if (widget.meetingStore.localPeer!.role.permissions
-                            .changeRole ??
+                    if (_meetingStore.localPeer!.role.permissions.changeRole ??
                         false)
                       showDialog(
                           context: context,
                           builder: (_) => ChangeRoleOptionDialog(
                                 peerName: peer.name,
-                                getRoleFunction: widget.meetingStore.getRoles(),
+                                getRoleFunction: _meetingStore.getRoles(),
                                 changeRole: (role, forceChange) {
                                   Navigator.pop(context);
-                                  widget.meetingStore.changeRole(
+                                  _meetingStore.changeRole(
                                       peer: peer,
                                       roleName: role,
                                       forceChange: forceChange);
@@ -136,8 +134,8 @@ class _ParticipantOrganismState extends State<ParticipantOrganism> {
   }
 
   void checkButtons() async {
-    this.isAudioOn = !await widget.meetingStore.isAudioMute(widget.peer);
-    this.isVideoOn = !await widget.meetingStore.isVideoMute(widget.peer);
+    this.isAudioOn = !await _meetingStore.isAudioMute(widget.peer);
+    this.isVideoOn = !await _meetingStore.isVideoMute(widget.peer);
     setState(() {});
   }
 }

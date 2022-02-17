@@ -1,30 +1,24 @@
 //Package imports
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/preview/preview_controller.dart';
-import 'package:mobx/mobx.dart';
 
-part 'preview_store.g.dart';
-
-class PreviewStore = PreviewStoreBase with _$PreviewStore;
-
-abstract class PreviewStoreBase
-    with Store
+class PreviewStore extends ChangeNotifier
     implements HMSPreviewListener, HMSLogListener {
   late PreviewController previewController;
 
-  @observable
   List<HMSVideoTrack> localTracks = [];
-  @observable
+
   HMSPeer? peer;
-  @observable
+
   HMSException? error;
-  @observable
+
   bool isHLSLink = false;
   HMSRoom? room;
-  @observable
+
   bool videoOn = true;
-  @observable
+
   bool audioOn = true;
 
   @override
@@ -50,7 +44,8 @@ abstract class PreviewStoreBase
         videoTracks.add(track as HMSVideoTrack);
       }
     }
-    this.localTracks = ObservableList.of(videoTracks);
+    this.localTracks = videoTracks;
+     notifyListeners();
   }
 
   void addPreviewListener() {
@@ -58,7 +53,7 @@ abstract class PreviewStoreBase
     addLogsListener();
   }
 
-  void removeListener() {
+  void removePreviewListener() {
     previewController.removeListener(this);
     removeLogsListener();
   }
@@ -85,7 +80,6 @@ abstract class PreviewStoreBase
     audioOn = !audioOn;
   }
 
-  @action
   void updateError(HMSException error) {
     this.error = error;
   }

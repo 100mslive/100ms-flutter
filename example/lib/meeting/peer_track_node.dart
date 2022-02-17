@@ -1,24 +1,17 @@
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-import 'package:mobx/mobx.dart';
 
-part 'peer_track_node.g.dart';
-
-class PeerTrackNode = PeerTracKNodeBase with _$PeerTrackNode;
-
-abstract class PeerTracKNodeBase with Store {
-  @observable
+class PeerTrackNode{
+  
   HMSPeer peer;
 
   String uid;
 
-  @observable
   HMSVideoTrack? track;
 
-  @observable
   bool? isVideoOn;
 
 
-  PeerTracKNodeBase(
+  PeerTrackNode(
       {required this.peer,
       this.track,
       required this.uid,
@@ -27,7 +20,7 @@ abstract class PeerTracKNodeBase with Store {
 
   @override
   String toString() {
-    return 'PeerTracKNode{peerId: ${peer.peerId}, name: ${peer.name}, track: $track}, isVideoOn: $isVideoOn }';
+    return 'PeerTrackNode{peerId: ${peer.peerId}, name: ${peer.name}, track: $track}, isVideoOn: $isVideoOn }';
   }
 
   @override

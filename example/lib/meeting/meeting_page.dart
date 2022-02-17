@@ -3,23 +3,21 @@ import 'dart:io';
 import 'package:connectivity_checker/connectivity_checker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:hmssdk_flutter_example/hls_viewer/hls_viewer.dart';
-import 'package:mobx/mobx.dart';
 
 //Project imports
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/constant.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/chat_bottom_sheet.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/offline_screen.dart';
-import 'package:hmssdk_flutter_example/common/ui/organisms/peer_item_organism.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/video_tile.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
 import 'package:hmssdk_flutter_example/logs/custom_singleton_logger.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:hmssdk_flutter_example/meeting/peer_track_node.dart';
+import 'package:provider/provider.dart';
 
 // ignore: implementation_imports
 import 'package:provider/src/provider.dart';
@@ -38,16 +36,8 @@ class MeetingPage extends StatefulWidget {
   _MeetingPageState createState() => _MeetingPageState();
 }
 
-class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
+class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver{
   late MeetingStore _meetingStore;
-  late ReactionDisposer _roleChangerequestDisposer,
-      _hmsExceptionDisposer,
-      _trackChangerequestDisposer,
-      _reconnectingDisposer,
-      _eventOccuredDisposer;
-  late ReactionDisposer _recordingDisposer,
-      _reconnectedDisposer,
-      _roomEndedDisposer;
   CustomLogger logger = CustomLogger();
   int appBarIndex = 0;
   bool raisedHand = false;
@@ -62,69 +52,8 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
     super.initState();
     WidgetsBinding.instance!.addObserver(this);
     _meetingStore = context.read<MeetingStore>();
-    allListeners();
     initMeeting();
     checkButtons();
-  }
-
-  void allListeners() {
-    _eventOccuredDisposer =
-        reaction((_) => _meetingStore.event, (eventOccured) {
-      return UtilityComponents.showSnackBarWithString(eventOccured, context);
-    });
-    _roleChangerequestDisposer = reaction(
-        (_) => _meetingStore.roleChangeRequest,
-        (event) => {
-              if ((event as HMSRoleChangeRequest).suggestedBy !=
-                  _meetingStore.localPeer)
-                UtilityComponents.showRoleChangeDialog(event, context)
-            });
-    _trackChangerequestDisposer = reaction(
-        (_) => _meetingStore.hmsTrackChangeRequest,
-        (event) => {UtilityComponents.showTrackChangeDialog(event, context)});
-
-    _recordingDisposer = reaction(
-        (_) => _meetingStore.isRecordingStarted,
-        (event) => {
-              UtilityComponents.showSnackBarWithString(
-                  event == true ? "Recording Started" : "Recording Stopped",
-                  context)
-            });
-    _reconnectedDisposer = reaction(
-        (_) => _meetingStore.reconnected,
-        (event) => {
-              if ((event as bool) == true)
-                UtilityComponents.showSnackBarWithString(
-                    "reconnected", context),
-              _meetingStore.reconnected = false
-            });
-    _roomEndedDisposer = reaction(
-        (_) => _meetingStore.isRoomEnded,
-        (event) => {
-              if ((event as bool) == true)
-                {
-                  UtilityComponents.showSnackBarWithString(
-                      _meetingStore.description, context),
-                  Navigator.of(context).popUntil((route) => route.isFirst),
-                  UtilityComponents.showSnackBarWithString(
-                      _meetingStore.description, context),
-                },
-              _meetingStore.isRoomEnded = false,
-            });
-    _reconnectingDisposer = reaction(
-        (_) => _meetingStore.reconnecting,
-        (event) => {
-              if ((event as bool) == true)
-                UtilityComponents.showSnackBarWithString(
-                    "reconnecting", context),
-            });
-
-    _hmsExceptionDisposer = reaction(
-        (_) => _meetingStore.hmsException,
-        (event) => {
-              if ((event as HMSException?) != null)
-                UtilityComponents.showonExceptionDialog(event, context),
-            });
   }
 
   void initMeeting() async {
@@ -151,20 +80,8 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
 
   @override
   void dispose() {
-    disposeAllListeners();
     _meetingStore.stopScreenShare();
     super.dispose();
-  }
-
-  void disposeAllListeners() {
-    _roleChangerequestDisposer.reaction.dispose();
-    _trackChangerequestDisposer.reaction.dispose();
-    _recordingDisposer.reaction.dispose();
-    _roomEndedDisposer.reaction.dispose();
-    _reconnectedDisposer.reaction.dispose();
-    _reconnectingDisposer.reaction.dispose();
-    _hmsExceptionDisposer.reaction.dispose();
-    _eventOccuredDisposer.reaction.dispose();
   }
 
   void handleMenu(int value) async {
@@ -204,9 +121,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
       case 4:
         Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (_) => ParticipantsList(
-              meetingStore: _meetingStore,
-            ),
+            builder: (_) => ParticipantsList(),
           ),
         );
         break;
@@ -313,7 +228,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
       child: ConnectivityWidgetWrapper(
           disableInteraction: true,
           offlineWidget: OfflineWidget(),
-          child: Observer(builder: (_) {
+          child: Consumer<MeetingStore>(builder: (context, _meetingStore, _) {
             return _meetingStore.reconnecting
                 ? OfflineWidget()
                 : Scaffold(
@@ -321,24 +236,25 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                     appBar: AppBar(
                       title: Text(Constant.meetingCode),
                       actions: [
-                        Observer(
-                          builder: (_) => _meetingStore.isRecordingStarted
-                              ? Container(
-                                  decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      border: Border.all(
-                                          width: 2,
-                                          color: Colors.red.shade600)),
-                                  child: Icon(
-                                    Icons.circle,
-                                    color: Colors.red,
-                                    size: 15,
-                                  ),
-                                )
-                              : Container(),
+                        Consumer<MeetingStore>(
+                          builder: (context, _meetingStore, _) =>
+                              _meetingStore.isRecordingStarted
+                                  ? Container(
+                                      decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          border: Border.all(
+                                              width: 2,
+                                              color: Colors.red.shade600)),
+                                      child: Icon(
+                                        Icons.circle,
+                                        color: Colors.red,
+                                        size: 15,
+                                      ),
+                                    )
+                                  : Container(),
                         ),
-                        Observer(
-                          builder: (_) => IconButton(
+                        Consumer<MeetingStore>(
+                          builder: (context, _meetingStore, _) => IconButton(
                             iconSize: 32,
                             onPressed: () {
                               _meetingStore.toggleSpeaker();
@@ -366,8 +282,8 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                             if (!_meetingStore.localPeer!.role.name
                                 .contains("hls-"))
                               PopupMenuItem(
-                                child: Observer(
-                                    builder: (_) => Row(
+                                child: Consumer<MeetingStore>(
+                                    builder: (context, _meetingStore, _) => Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
                                             children: [
@@ -600,45 +516,42 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Flexible(
-                            child: Observer(builder: (_) {
-                              
+                            child:  Consumer<MeetingStore>(builder: (context,_meetingStore,_) {
                               if (!_meetingStore.isHLSLink) {
                                 if (_meetingStore.peerTracks.isEmpty)
                                   return Center(
                                       child:
                                           Text('Waiting for others to join!'));
                                 return MasonryGridView.count(
-
-                                    scrollDirection: Axis.horizontal,
-                                    physics: PageScrollPhysics(),
-                                    itemCount: _meetingStore.peerTracks.length,
-                                    crossAxisCount: 2,
-                                    itemBuilder: (ctx, index) {
-                                      return Observer(builder: (context) {
-                                        PeerTrackNode peerTrackNodeStore;
-                                        peerTrackNodeStore =
-                                            _meetingStore.peerTracks[index];
-                                        print(
-                                            "${peerTrackNodeStore.track} buildingVideoTile "
-                                            "${peerTrackNodeStore.peer} "
-                                            "${peerTrackNodeStore.isVideoOn} ");
-                                        return VideoTile(
-                                          itemHeight: MediaQuery.of(context)
-                                              .size
-                                              .height,
-                                          itemWidth: itemWidth,
-                                          audioView: audioViewOn,
-                                          peerTrackNode: peerTrackNodeStore,
-                                        );
-                                      });
-                                    },
-                                    );
+                                  scrollDirection: Axis.horizontal,
+                                  physics: PageScrollPhysics(),
+                                  itemCount: _meetingStore.peerTracks.length,
+                                  crossAxisCount: 2,
+                                  itemBuilder: (ctx, index) {
+                                    return  Consumer<MeetingStore>(builder: (context,_meetingStore,_) {
+                                      PeerTrackNode peerTrackNodeStore;
+                                      peerTrackNodeStore =
+                                          _meetingStore.peerTracks[index];
+                                      print(
+                                          "${peerTrackNodeStore.track} buildingVideoTile "
+                                          "${peerTrackNodeStore.peer} "
+                                          "${peerTrackNodeStore.isVideoOn} ");
+                                      return VideoTile(
+                                        itemHeight:
+                                            MediaQuery.of(context).size.height,
+                                        itemWidth: itemWidth,
+                                        audioView: audioViewOn,
+                                        peerTrackNode: peerTrackNodeStore,
+                                      );
+                                    });
+                                  },
+                                );
                               } else {
                                 return SizedBox();
                               }
                             }),
                           ),
-                          Observer(builder: (_) {
+                           Consumer<MeetingStore>(builder: (context,_meetingStore,_) {
                             print(
                                 "hasHLSStarted ${_meetingStore.hasHlsStarted}");
                             if (_meetingStore.isHLSLink) {
@@ -673,7 +586,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                   .contains("video"))
                             Container(
                               padding: EdgeInsets.all(8),
-                              child: Observer(builder: (context) {
+                              child:  Consumer<MeetingStore>(builder: (context,_meetingStore,_) {
                                 return IconButton(
                                     tooltip: 'Video',
                                     iconSize: 32,
@@ -694,7 +607,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                   .contains("audio"))
                             Container(
                               padding: EdgeInsets.all(8),
-                              child: Observer(builder: (context) {
+                              child:  Consumer<MeetingStore>(builder: (context,_meetingStore,_) {
                                 return IconButton(
                                     tooltip: 'Audio',
                                     iconSize: 32,
