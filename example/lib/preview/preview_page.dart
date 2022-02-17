@@ -30,7 +30,6 @@ class PreviewPage extends StatefulWidget {
 }
 
 class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
-  // late PreviewStore context.read<PreviewStore>();
 
   @override
   void initState() {
@@ -38,15 +37,9 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
     MultiProvider(
       providers: [ChangeNotifierProvider(create: (_) => PreviewStore())],
     );
-    // context.read<PreviewStore>() = PreviewStore();
     super.initState();
     initPreview();
-    // reaction(
-    //     (_) => context.read<PreviewStore>().error,
-    //     (event) => {
-    //           UtilityComponents.showSnackBarWithString(
-    //               (event as HMSException).message, context)
-    //         });
+
   }
 
   void initPreview() async {
@@ -54,9 +47,6 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
     bool ans = await context
         .read<PreviewStore>()
         .startPreview(user: widget.user, roomId: widget.roomId);
-    // context.read<PreviewStore>().addPreviewListener();
-    // bool ans = await context.read<PreviewStore>().startPreview(
-    //     roomId: widget.roomId, user: widget.user);
     if (ans == false) {
       UtilityComponents.showSnackBarWithString("Unable to preview", context);
       Navigator.of(context).pop();
@@ -144,8 +134,8 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                         onPressed: () {
                           context.read<PreviewStore>().removePreviewListener();
                           Navigator.of(context).pushReplacement(MaterialPageRoute(
-                              builder: (_) => Provider<MeetingStore>(
-                                    create: (_) => MeetingStore(),
+                              builder: (_) =>  ListenableProvider.value(
+                                    value:  MeetingStore(),
                                     child: MeetingPage(
                                         roomId: widget.roomId,
                                         flow: widget.flow,

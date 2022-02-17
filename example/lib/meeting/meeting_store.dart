@@ -92,20 +92,17 @@ class MeetingStore extends ChangeNotifier
   int firstTimeBuild = 0;
   final DateFormat formatter = DateFormat('d MMM y h:mm:ss a');
 
-  
   void addUpdateListener() {
     HmsSdkManager.hmsSdkInteractor?.addUpdateListener(this);
     // startHMSLogger(HMSLogLevel.VERBOSE, HMSLogLevel.VERBOSE);
     // addLogsListener();
   }
 
-  
   void removeUpdateListener() {
     _hmssdkInteractor.removeUpdateListener(this);
     // removeLogsListener();
   }
 
-  
   Future<bool> join(String user, String roomUrl) async {
     List<String?>? token =
         await RoomService().getToken(user: user, room: roomUrl);
@@ -129,13 +126,13 @@ class MeetingStore extends ChangeNotifier
     peerTracks.clear();
   }
 
-  
   Future<void> switchAudio() async {
     await _hmssdkInteractor.switchAudio(isOn: isMicOn);
     isMicOn = !isMicOn;
+    notifyListeners();
+
   }
 
-  
   Future<void> switchVideo() async {
     await _hmssdkInteractor.switchVideo(isOn: isVideoOn);
     if (isVideoOn)
@@ -144,14 +141,14 @@ class MeetingStore extends ChangeNotifier
       localpeerTrackNode?.isVideoOn = true;
 
     isVideoOn = !isVideoOn;
+    notifyListeners();
   }
 
-  
   Future<void> switchCamera() async {
     await _hmssdkInteractor.switchCamera();
+    
   }
 
-  
   void sendBroadcastMessage(String message) {
     _hmssdkInteractor.sendBroadcastMessage(message, this);
   }
@@ -164,7 +161,6 @@ class MeetingStore extends ChangeNotifier
     _hmssdkInteractor.sendGroupMessage(message, roles, this);
   }
 
-  
   void toggleSpeaker() {
     if (isSpeakerOn) {
       muteAll();
@@ -192,39 +188,32 @@ class MeetingStore extends ChangeNotifier
     _hmssdkInteractor.stopCapturing();
   }
 
-  
   void removePeer(HMSPeer peer) {
     peers.remove(peer);
     removeTrackWithPeerId(peer.peerId);
   }
 
-  
   void addPeer(HMSPeer peer) {
     if (!peers.contains(peer)) peers.add(peer);
   }
 
-  
   void removeTrackWithTrackId(String trackId) {
     tracks.removeWhere((eachTrack) => eachTrack.trackId == trackId);
   }
 
-  
   void removeTrackWithPeerId(String peerId) {
     tracks.removeWhere((eachTrack) => eachTrack.peer?.peerId == peerId);
   }
 
-  
   void removeTrackWithPeerIdExtra(String trackId) {
     var index = tracks.indexWhere((element) => trackId == element.trackId);
     tracks.removeAt(index);
   }
 
-  
   int insertTrackWithPeerId(HMSPeer peer) {
     return tracks.indexWhere((element) => peer.peerId == element.peer!.peerId);
   }
 
-  
   void addTrack(HMSTrack track, HMSPeer peer) {
     var index = -1;
     if (track.source.trim() == "REGULAR") index = insertTrackWithPeerId(peer);
@@ -241,35 +230,29 @@ class MeetingStore extends ChangeNotifier
     }
   }
 
-  
   void onRoleUpdated(int index, HMSPeer peer) {
     peers[index] = peer;
   }
 
-  
   void updateRoleChangeRequest(HMSRoleChangeRequest roleChangeRequest) {
     this.roleChangeRequest = roleChangeRequest;
   }
 
-  
   void addMessage(HMSMessage message) {
     this.messages.add(message);
   }
 
-  
   void addTrackChangeRequestInstance(
       HMSTrackChangeRequest hmsTrackChangeRequest) {
     this.hmsTrackChangeRequest = hmsTrackChangeRequest;
   }
 
-  
   void updatePeerAt(peer) {
     int index = this.peers.indexOf(peer);
     this.peers.removeAt(index);
     this.peers.insert(index, peer);
   }
 
-  
   Future<void> isScreenShareActive() async {
     this.isScreenShareOn = await _hmssdkInteractor.isScreenShareActive();
   }
@@ -311,6 +294,7 @@ class MeetingStore extends ChangeNotifier
       }
     }
     roles = await getRoles();
+    notifyListeners();
   }
 
   @override
@@ -341,6 +325,7 @@ class MeetingStore extends ChangeNotifier
   @override
   void onPeerUpdate({required HMSPeer peer, required HMSPeerUpdate update}) {
     peerOperation(peer, update);
+    notifyListeners();
   }
 
   @override
@@ -386,26 +371,29 @@ class MeetingStore extends ChangeNotifier
       }
     }
     peerOperationWithTrack(peer, trackUpdate, track);
+    notifyListeners();
   }
 
   @override
   void onError({required HMSException error}) {
     this.hmsException = hmsException;
+    notifyListeners();
   }
 
   @override
   void onMessage({required HMSMessage message}) {
     addMessage(message);
+    notifyListeners();
   }
 
   @override
   void onRoleChangeRequest({required HMSRoleChangeRequest roleChangeRequest}) {
     updateRoleChangeRequest(roleChangeRequest);
+    notifyListeners();
   }
 
   PeerTrackNode? previousHighestTrackNodeStore;
   int previousHighestIndex = -1;
-
 
   @override
   void onUpdateSpeakers({required List<HMSSpeaker> updateSpeakers}) {
@@ -417,6 +405,7 @@ class MeetingStore extends ChangeNotifier
         activeSpeakerIds.add(speaker.peer.peerId + "mainVideo");
       });
     }
+    notifyListeners();
   }
 
   @override
@@ -475,7 +464,6 @@ class MeetingStore extends ChangeNotifier
     return HmsSdkManager.hmsSdkInteractor?.changeTrackState(track, mute, this);
   }
 
-  
   void peerOperation(HMSPeer peer, HMSPeerUpdate update) {
     switch (update) {
       case HMSPeerUpdate.peerJoined:
@@ -564,7 +552,6 @@ class MeetingStore extends ChangeNotifier
     }
   }
 
-  
   void peerOperationWithTrack(
       HMSPeer peer, HMSTrackUpdate update, HMSTrack track) {
     switch (update) {

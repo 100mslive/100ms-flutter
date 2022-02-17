@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/change_track_options.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
-import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:hmssdk_flutter_example/meeting/peer_track_node.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 import 'package:provider/provider.dart';
@@ -34,7 +33,7 @@ class _VideoTileState extends State<VideoTile> {
 
   @override
   Widget build(BuildContext context) {
-    MeetingStore _meetingStore = context.read<MeetingStore>();
+    
     bool mutePermission =
         widget.peerTrackNode.peer.role.permissions.mute ?? false;
     bool unMutePermission =
@@ -92,8 +91,7 @@ class _VideoTileState extends State<VideoTile> {
                       ],
                     ));
         },
-        child:Consumer<MeetingStore>(builder: (context, _meetingStore, _) {
-          return Container(
+        child:Container(
             color: Colors.transparent,
             key: key,
             padding: EdgeInsets.all(2),
@@ -131,12 +129,9 @@ class _VideoTileState extends State<VideoTile> {
                   child: Text(
                       "${widget.peerTrackNode.peer.name} ${widget.peerTrackNode.peer.isLocal ? "(You)" : ""}"),
                 ),
-                Consumer<MeetingStore>(builder: (context, _meetingStore, _){
-                  print(
-                      "Building hand raise ${widget.peerTrackNode.peer.metadata}");
-                  if (widget.peerTrackNode.peer.metadata ==
-                      "{\"isHandRaised\":true}")
-                    return Positioned(
+                (widget.peerTrackNode.peer.metadata ==
+                      "{\"isHandRaised\":true}")?
+                   Positioned(
                       child: Padding(
                         padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
                         child: Image.asset(
@@ -146,28 +141,26 @@ class _VideoTileState extends State<VideoTile> {
                       ),
                       top: 5.0,
                       left: 5.0,
-                    );
-                  else
-                    return Container();
-                }),
-                Consumer<MeetingStore>(builder: (context, _meetingStore, _) {
-                  print("${_meetingStore.activeSpeakerIds}");
-                  bool isHighestSpeaker =
-                      _meetingStore.isActiveSpeaker(widget.peerTrackNode.uid);
-                  return Container(
-                    height: widget.itemHeight + 110,
-                    width: widget.itemWidth - 4,
-                    decoration: BoxDecoration(
-                        border: Border.all(
-                            color: isHighestSpeaker ? Colors.blue : Colors.grey,
-                            width: isHighestSpeaker ? 3.0 : 1.0),
-                        borderRadius: BorderRadius.all(Radius.circular(10))),
-                  );
-                })
+                    ):
+                  Container(),
+                // Consumer<MeetingStore>(builder: (context, _meetingStore, _) {
+                //   print("${_meetingStore.activeSpeakerIds}");
+                //   bool isHighestSpeaker =
+                //       _meetingStore.isActiveSpeaker(widget.peerTrackNode.uid);
+                //   return Container(
+                //     height: widget.itemHeight + 110,
+                //     width: widget.itemWidth - 4,
+                //     decoration: BoxDecoration(
+                //         border: Border.all(
+                //             color: isHighestSpeaker ? Colors.blue : Colors.grey,
+                //             width: isHighestSpeaker ? 3.0 : 1.0),
+                //         borderRadius: BorderRadius.all(Radius.circular(10))),
+                //   );
+                // })
               ],
             ),
-          );
-        }),
+          ),
+       
       ),
     );
   }
