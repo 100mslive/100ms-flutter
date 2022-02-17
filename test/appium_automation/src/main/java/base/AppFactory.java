@@ -17,15 +17,15 @@ public class AppFactory {
     public static void Android_Flutter_LaunchApp() throws MalformedURLException {
         cap = new DesiredCapabilities();
         cap.setCapability("platformName", "Android");
-        cap.setCapability("deviceName", "Pixle 4");
-        cap.setCapability("platformVersion", "12.0");
+        cap.setCapability("deviceName", "Pixle 5");
+        cap.setCapability("platformVersion", "11.0");
         cap.setCapability("automationName", "UiAutomator2");
         //cap.setCapability("appPackage", "com.android.calculator2");
         //cap.setCapability("appActivity", ".Calculator");
         cap.setCapability("appPackage", "live.hms.flutter");
         cap.setCapability("appActivity", ".MainActivity");
         //cap.setCapability("app", "/Users/ronitroy/Appium_extra/app-release.apk ");
-        cap.setCapability("avd", "Pixel_4_API_31");
+        cap.setCapability("avd", "Pixel_5_API_30");
         driver = new AndroidDriver<MobileElement>(new URL("http://0.0.0.0:4723/wd/hub"), cap);
         AppDriver.setDriver(driver);
         System.out.println("Android Flutter driver is set");

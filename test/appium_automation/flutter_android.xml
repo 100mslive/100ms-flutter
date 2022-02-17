@@ -8,8 +8,19 @@
     <test name="android_flutter">
         <parameter name="platform" value="android_flutter"/>
         <classes>
-            <class name="Flutter.testcase.JoinMeeting" >
-            </class>
+<!--            <class name="Flutter.testcase.HomePageTest"></class>-->
+<!--            <class name="Flutter.testcase.PreviewPageTest"></class>-->
+<!--            <class name="Flutter.testcase.MeetingRoomTest.TopToolBarTest"></class>-->
+<!--            <class name="Flutter.testcase.MeetingRoomTest.BottomToolBarTest.RaiseHandTest"></class>-->
+<!--            <class name="Flutter.testcase.MeetingRoomTest.BottomToolBarTest.LeaveRoomTest"></class>-->
+<!--            <class name="Flutter.testcase.MeetingRoomTest.BottomToolBarTest.ScreenShareTest"></class>-->
+<!--            <class name="Flutter.testcase.MeetingRoomTest.MenuDropDownTest.EndRoomTest"></class>-->
+<!--            <class name="Flutter.testcase.MeetingRoomTest.MenuDropDownTest.RecordTest"></class>-->
+<!--            <class name="Flutter.testcase.MeetingRoomTest.MenuDropDownTest.MuteAllTest"></class>-->
+<!--            <class name="Flutter.testcase.MeetingRoomTest.MenuDropDownTest.ChangeNameTest"></class>-->
+            <class name="Flutter.testcase.MeetingRoomTest.MenuDropDownTest.AudioVideoViewTest"></class>
+
+
         </classes>
     </test>
 </suite>

@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.example</groupId>
-    <artifactId>appium_automation_100ms</artifactId>
+    <artifactId>appium_automation</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>
@@ -53,8 +53,8 @@
                 <version>2.22.0</version>
                 <configuration>
                     <suiteXmlFiles>
-                        <suiteXmlFile>$flutter_android.xml</suiteXmlFile>
-                        <suiteXmlFile>$flutter_ios.xml</suiteXmlFile>
+                        <suiteXmlFile>flutter_android.xml</suiteXmlFile>
+                        <suiteXmlFile>flutter_ios.xml</suiteXmlFile>
                     </suiteXmlFiles>
                 </configuration>
             </plugin>
