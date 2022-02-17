@@ -61,12 +61,13 @@ class _ChatWidgetState extends State<ChatWidget> {
                             SizedBox(
                               width: 5,
                             ),
-                            Consumer<MeetingStore>(builder: (context, _meetingStore, _) {
+                            Consumer<MeetingStore>(
+                                builder: (context, _meetingStore, _) {
                               List<HMSRole> roles = _meetingStore.roles;
                               if (roles.length > 0) {
                                 return DropdownButtonHideUnderline(
                                   child: DropdownButton2(
-                                    itemWidth: 150,
+                                    buttonWidth: 150,
                                     value: valueChoose,
                                     iconEnabledColor: Colors.black,
                                     onChanged: (newvalue) {
@@ -121,7 +122,8 @@ class _ChatWidgetState extends State<ChatWidget> {
                     ),
                   ),
                   Expanded(
-                    child: Consumer<MeetingStore>(builder: (context, _meetingStore, _) {
+                    child: Consumer<MeetingStore>(
+                      builder: (context, _meetingStore, _) {
                         if (!_meetingStore.isMeetingStarted) return SizedBox();
                         if (_meetingStore.messages.isEmpty)
                           return Center(child: Text('No messages'));

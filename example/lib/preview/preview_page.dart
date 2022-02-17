@@ -6,14 +6,12 @@ import 'package:hmssdk_flutter_example/common/ui/organisms/video_tile.dart';
 import 'package:provider/provider.dart';
 
 //Project imports
-import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/offline_screen.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_page.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:hmssdk_flutter_example/meeting/peer_track_node.dart';
-import 'package:hmssdk_flutter_example/preview/preview_controller.dart';
 import 'package:hmssdk_flutter_example/preview/preview_store.dart';
 
 class PreviewPage extends StatefulWidget {
@@ -30,18 +28,19 @@ class PreviewPage extends StatefulWidget {
 }
 
 class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
-  late PreviewStore _previewStore;
+  // late PreviewStore context.read<PreviewStore>();
 
   @override
   void initState() {
     WidgetsBinding.instance!.addObserver(this);
-    _previewStore = PreviewStore();
-    _previewStore.previewController =
-        PreviewController(roomId: widget.roomId, user: widget.user);
+    MultiProvider(
+      providers: [ChangeNotifierProvider(create: (_) => PreviewStore())],
+    );
+    // context.read<PreviewStore>() = PreviewStore();
     super.initState();
     initPreview();
     // reaction(
-    //     (_) => _previewStore.error,
+    //     (_) => context.read<PreviewStore>().error,
     //     (event) => {
     //           UtilityComponents.showSnackBarWithString(
     //               (event as HMSException).message, context)
@@ -49,8 +48,13 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
   }
 
   void initPreview() async {
-    _previewStore.addPreviewListener();
-    bool ans = await _previewStore.startPreview();
+    context.read<PreviewStore>().addPreviewListener();
+    bool ans = await context
+        .read<PreviewStore>()
+        .startPreview(user: widget.user, roomId: widget.roomId);
+    // context.read<PreviewStore>().addPreviewListener();
+    // bool ans = await context.read<PreviewStore>().startPreview(
+    //     roomId: widget.roomId, user: widget.user);
     if (ans == false) {
       UtilityComponents.showSnackBarWithString("Unable to preview", context);
       Navigator.of(context).pop();
@@ -58,8 +62,13 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
   }
 
   @override
-  Widget build(BuildContext context) {
+  void dispose() {
+    // context.read<PreviewStore>().removePreviewListener();
+    super.dispose();
+  }
 
+  @override
+  Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     final double itemHeight = (size.height - kToolbarHeight - 24);
     final double itemWidth = size.width;
@@ -77,59 +86,72 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
             child: Column(
               children: [
                 Flexible(
-                  fit: FlexFit.tight,
-                  child: (_previewStore.localTracks.isEmpty)?
-                        Column(children: [
-                          CupertinoActivityIndicator(radius: 124),
-                          SizedBox(
-                            height: 64.0,
-                          ),
-                          Text("No preview available") //
-                        ])
-                      :
-                      Provider<MeetingStore>(
-                        create: (ctx) => MeetingStore(),
-                        child: VideoTile(
-                          itemHeight: itemHeight,
-                          itemWidth: itemWidth,
-                          peerTrackNode: new PeerTrackNode(
-                              peer: _previewStore.peer!,
-                              uid: _previewStore.peer!.peerId,
-                              track: _previewStore.localTracks[0],
-                              isVideoOn: _previewStore.localTracks[0].isMute),
-                          audioView: false,
-                        ),
-                      )
-                  ),
-                
+                    fit: FlexFit.tight,
+                    child: (context.read<PreviewStore>().localTracks.isEmpty)
+                        ? Column(children: [
+                            CupertinoActivityIndicator(radius: 124),
+                            SizedBox(
+                              height: 64.0,
+                            ),
+                            Text("No preview available") //
+                          ])
+                        : Provider<MeetingStore>(
+                            create: (ctx) => MeetingStore(),
+                            child: VideoTile(
+                              itemHeight: itemHeight,
+                              itemWidth: itemWidth,
+                              peerTrackNode: PeerTrackNode(
+                                  peer: context.watch<PreviewStore>().peer!,
+                                  uid: context
+                                      .watch<PreviewStore>()
+                                      .peer!
+                                      .peerId,
+                                  track: context
+                                      .watch<PreviewStore>()
+                                      .localTracks[0],
+                                  isVideoOn: context
+                                      .watch<PreviewStore>()
+                                      .localTracks[0]
+                                      .isMute),
+                              audioView: false,
+                            ),
+                          )),
                 SizedBox(
                   height: 16,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    // if (_previewStore.peer != null &&
-                    //     _previewStore.peer!.role.publishSettings!.allowed
+                    // if (context.read<PreviewStore>().peer != null &&
+                    //     context.read<PreviewStore>().peer!.role.publishSettings!.allowed
                     //         .contains("video"))
-                    (_previewStore.peer != null &&
-                              _previewStore.peer!.role.publishSettings!.allowed
-                                  .contains("video"))
-                          ? GestureDetector(
-                              onTap: _previewStore.localTracks.isEmpty
-                                  ? null
-                                  : () async {
-                                      _previewStore.switchVideo();
-                                    },
-                              child: Icon(
-                                  _previewStore.videoOn
-                                      ? Icons.videocam
-                                      : Icons.videocam_off,
-                                  size: 48),
-                            )
-                          : Container(),
+                    (context.watch<PreviewStore>().peer != null &&
+                            context
+                                .watch<PreviewStore>()
+                                .peer!
+                                .role
+                                .publishSettings!
+                                .allowed
+                                .contains("video"))
+                        ? GestureDetector(
+                            onTap: context
+                                    .read<PreviewStore>()
+                                    .localTracks
+                                    .isEmpty
+                                ? null
+                                : () async {
+                                    context.read<PreviewStore>().switchVideo();
+                                  },
+                            child: Icon(
+                                context.watch<PreviewStore>().videoOn
+                                    ? Icons.videocam
+                                    : Icons.videocam_off,
+                                size: 48),
+                          )
+                        : Container(),
                     ElevatedButton(
                       onPressed: () {
-                        _previewStore.removePreviewListener();
+                        context.read<PreviewStore>().removePreviewListener();
                         Navigator.of(context).pushReplacement(MaterialPageRoute(
                             builder: (_) => Provider<MeetingStore>(
                                   create: (_) => MeetingStore(),
@@ -144,20 +166,25 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                         style: TextStyle(height: 1, fontSize: 18),
                       ),
                     ),
-                    (_previewStore.peer != null &&
-                              _previewStore.peer!.role.publishSettings!.allowed
-                                  .contains("audio"))
-                          ? GestureDetector(
-                              onTap: () async {
-                                _previewStore.switchAudio();
-                              },
-                              child: Icon(
-                                  (_previewStore.audioOn)
-                                      ? Icons.mic
-                                      : Icons.mic_off,
-                                  size: 48),
-                            )
-                          : Container(),
+                    (context.watch<PreviewStore>().peer != null &&
+                            context
+                                .read<PreviewStore>()
+                                .peer!
+                                .role
+                                .publishSettings!
+                                .allowed
+                                .contains("audio"))
+                        ? GestureDetector(
+                            onTap: () async {
+                              context.read<PreviewStore>().switchAudio();
+                            },
+                            child: Icon(
+                                (context.watch<PreviewStore>().audioOn)
+                                    ? Icons.mic
+                                    : Icons.mic_off,
+                                size: 48),
+                          )
+                        : Container(),
                   ],
                 ),
                 SizedBox(
@@ -176,16 +203,16 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
     super.didChangeAppLifecycleState(state);
     if (mounted) {
       if (state == AppLifecycleState.resumed) {
-        if (_previewStore.videoOn) {
-          _previewStore.previewController.startCapturing();
+        if (context.watch<PreviewStore>().videoOn) {
+          context.read<PreviewStore>().startCapturing();
         }
       } else if (state == AppLifecycleState.paused) {
-        if (_previewStore.videoOn) {
-          _previewStore.previewController.stopCapturing();
+        if (context.watch<PreviewStore>().videoOn) {
+          context.read<PreviewStore>().stopCapturing();
         }
       } else if (state == AppLifecycleState.inactive) {
-        if (_previewStore.videoOn) {
-          _previewStore.previewController.stopCapturing();
+        if (context.watch<PreviewStore>().videoOn) {
+          context.read<PreviewStore>().stopCapturing();
         }
       }
     }
