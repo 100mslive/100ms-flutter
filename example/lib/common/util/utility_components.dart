@@ -43,7 +43,7 @@ class UtilityComponents {
         ],
       ),
     );
-  }
+  } 
 
   static void showRoleChangeDialog(event, context) async {
     event = event as HMSRoleChangeRequest;

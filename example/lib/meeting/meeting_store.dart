@@ -2,6 +2,7 @@
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
+import 'package:hmssdk_flutter_example/meeting/peer_track_node_store.dart';
 import 'package:intl/intl.dart';
 
 //Project imports
@@ -89,6 +90,8 @@ class MeetingStore extends ChangeNotifier
 
   PeerTrackNode? localpeerTrackNode;
 
+
+
   int firstTimeBuild = 0;
   final DateFormat formatter = DateFormat('d MMM y h:mm:ss a');
 
@@ -130,7 +133,6 @@ class MeetingStore extends ChangeNotifier
     await _hmssdkInteractor.switchAudio(isOn: isMicOn);
     isMicOn = !isMicOn;
     notifyListeners();
-
   }
 
   Future<void> switchVideo() async {
@@ -146,7 +148,6 @@ class MeetingStore extends ChangeNotifier
 
   Future<void> switchCamera() async {
     await _hmssdkInteractor.switchCamera();
-    
   }
 
   void sendBroadcastMessage(String message) {
@@ -522,6 +523,7 @@ class MeetingStore extends ChangeNotifier
           PeerTrackNode peerTrackNode = peerTracks[index];
           peerTrackNode.peer = peer;
         }
+        PeerTrackNodeStore().handRaise();
         updatePeerAt(peer);
         break;
       case HMSPeerUpdate.nameChanged:

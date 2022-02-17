@@ -17,6 +17,7 @@ import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
 import 'package:hmssdk_flutter_example/logs/custom_singleton_logger.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:hmssdk_flutter_example/meeting/peer_track_node.dart';
+import 'package:hmssdk_flutter_example/meeting/peer_track_node_store.dart';
 import 'package:provider/provider.dart';
 
 // ignore: implementation_imports
@@ -230,7 +231,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
     var size = MediaQuery.of(context).size;
     final double itemWidth = (size.width - 12) / 2;
     final _meetingStore = context.watch<MeetingStore>();
-    
+
     return ConnectivityAppWrapper(
         app: WillPopScope(
       child: ConnectivityWidgetWrapper(
@@ -524,14 +525,20 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                             _meetingStore.peerTracks.length,
                                         crossAxisCount: 2,
                                         itemBuilder: (ctx, index) {
-                                          return VideoTile(
-                                            itemHeight: MediaQuery.of(context)
-                                                .size
-                                                .height,
-                                            itemWidth: itemWidth,
-                                            audioView: audioViewOn,
-                                            peerTrackNode:
-                                                _meetingStore.peerTracks[index],
+                                          return 
+                                          Provider(
+                                            create: (context) => PeerTrackNodeStore(),
+                                            builder: (context,_) {
+                                              return VideoTile(
+                                                itemHeight: MediaQuery.of(context)
+                                                    .size
+                                                    .height,
+                                                itemWidth: itemWidth,
+                                                audioView: audioViewOn,
+                                                peerTrackNode:
+                                                    _meetingStore.peerTracks[index],
+                                              );
+                                            }
                                           );
                                         },
                                       )
