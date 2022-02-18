@@ -1,7 +1,7 @@
+import 'package:flutter/foundation.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
-class PeerTrackNode{
-  
+class PeerTrackNode extends ChangeNotifier {
   HMSPeer peer;
 
   String uid;
@@ -10,13 +10,12 @@ class PeerTrackNode{
 
   bool? isVideoOn;
 
-
-  PeerTrackNode(
-      {required this.peer,
-      this.track,
-      required this.uid,
-      required this.isVideoOn,
-      });
+  PeerTrackNode({
+    required this.peer,
+    this.track,
+    required this.uid,
+    required this.isVideoOn,
+  });
 
   @override
   String toString() {
@@ -25,4 +24,9 @@ class PeerTrackNode{
 
   @override
   int get hashCode => peer.peerId.hashCode;
+
+  void notify() {
+    notifyListeners();
+  }
+
 }

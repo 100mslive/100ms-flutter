@@ -535,17 +535,18 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                             context.select<MeetingStore,int>((meetingStore) => meetingStore.peerTracks.length),
                                         crossAxisCount: 2,
                                         itemBuilder: (ctx, index) {
-
-                                          // PeerTrackNode peerTrackNode = ctx.select<MeetingStore,PeerTrackNode>((meetingStore) => meetingStore.peerTracks[index]);
-                                          return VideoTile(
-                                                itemHeight: MediaQuery.of(context)
-                                                    .size
-                                                    .height,
-                                                itemWidth: itemWidth,
-                                                audioView: audioViewOn,
-                                                index : index,
-                                                peerTrackNode: context.read<MeetingStore>().peerTracks[index]
-                                              );
+                                          return ListenableProvider.value(
+                                            value: context.read<MeetingStore>().peerTracks[index],
+                                            child: VideoTile(
+                                                  itemHeight: MediaQuery.of(context)
+                                                      .size
+                                                      .height,
+                                                  itemWidth: itemWidth,
+                                                  audioView: audioViewOn,
+                                                  index : index,
+                                                  peerTrackNode: context.read<MeetingStore>().peerTracks[index]
+                                                ),
+                                          );
                                         },
                                       )
                                 : SizedBox()),

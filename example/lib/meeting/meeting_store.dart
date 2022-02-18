@@ -324,7 +324,6 @@ class MeetingStore extends ChangeNotifier
   @override
   void onPeerUpdate({required HMSPeer peer, required HMSPeerUpdate update}) {
     peerOperation(peer, update);
-    notifyListeners();
   }
 
   @override
@@ -365,12 +364,12 @@ class MeetingStore extends ChangeNotifier
         PeerTrackNode peerTrackNode = peerTracks[index];
         peerTrackNode.track = track as HMSVideoTrack;
         peerTrackNode.isVideoOn = !peerTrackNode.track!.isMute;
+        peerTrackNode.notify();
       } else {
         return;
       }
     }
     peerOperationWithTrack(peer, trackUpdate, track);
-    notifyListeners();
   }
 
   @override
@@ -472,6 +471,7 @@ class MeetingStore extends ChangeNotifier
           if (index == -1)
             peerTracks.add(new PeerTrackNode(
                 peer: peer, uid: peer.peerId + "mainVideo", isVideoOn: false));
+          notifyListeners();
         }
         addPeer(peer);
         break;
@@ -479,7 +479,7 @@ class MeetingStore extends ChangeNotifier
         peerTracks.removeWhere(
             (leftPeer) => leftPeer.uid == peer.peerId + "mainVideo");
         removePeer(peer);
-
+        notifyListeners();
         break;
       case HMSPeerUpdate.audioToggled:
         break;
@@ -507,6 +507,7 @@ class MeetingStore extends ChangeNotifier
                 peer: peer, uid: peer.peerId + "mainVideo", isVideoOn: false));
         }
         updatePeerAt(peer);
+        notifyListeners();
         break;
       case HMSPeerUpdate.metadataChanged:
         print("metadata ${peer.toString()}");
@@ -516,10 +517,12 @@ class MeetingStore extends ChangeNotifier
             (peer.metadata?.contains("\"isHandRaised\":true") ?? false)) {
           PeerTrackNode peerTrackNode = peerTracks[index];
           peerTrackNode.peer = peer;
+          peerTrackNode.notify();
         } else if (index != -1 &&
             (peer.metadata?.contains("\"isHandRaised\":false") ?? false)) {
           PeerTrackNode peerTrackNode = peerTracks[index];
           peerTrackNode.peer = peer;
+          peerTrackNode.notify();
         }
         updatePeerAt(peer);
         break;
@@ -531,6 +534,7 @@ class MeetingStore extends ChangeNotifier
             PeerTrackNode peerTrackNode = peerTracks[localPeerIndex];
             peerTrackNode.peer = peer;
             localPeer = peer;
+            peerTrackNode.notify();
           }
         } else {
           int remotePeerIndex = peerTracks.indexWhere(
@@ -538,6 +542,7 @@ class MeetingStore extends ChangeNotifier
           if (remotePeerIndex != -1) {
             PeerTrackNode peerTrackNode = peerTracks[remotePeerIndex];
             peerTrackNode.peer = peer;
+            peerTrackNode.notify();
           }
         }
 
@@ -563,6 +568,7 @@ class MeetingStore extends ChangeNotifier
                 peer: peer,
                 uid: peer.peerId + track.trackId,
                 track: track as HMSVideoTrack);
+            notifyListeners();
           } else {
             peerTracks.insert(
                 0,
@@ -571,6 +577,7 @@ class MeetingStore extends ChangeNotifier
                     peer: peer,
                     uid: peer.peerId + track.trackId,
                     track: track as HMSVideoTrack));
+            notifyListeners();
           }
           isScreenShareActive();
         }
@@ -579,6 +586,7 @@ class MeetingStore extends ChangeNotifier
         if (track.source != "REGULAR") {
           peerTracks.removeWhere(
               (element) => element.uid == peer.peerId + track.trackId);
+          notifyListeners();
         } else {
           isScreenShareActive();
         }
