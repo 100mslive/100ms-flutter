@@ -90,8 +90,6 @@ class MeetingStore extends ChangeNotifier
 
   PeerTrackNode? localpeerTrackNode;
 
-
-
   int firstTimeBuild = 0;
   final DateFormat formatter = DateFormat('d MMM y h:mm:ss a');
 
@@ -523,7 +521,6 @@ class MeetingStore extends ChangeNotifier
           PeerTrackNode peerTrackNode = peerTracks[index];
           peerTrackNode.peer = peer;
         }
-        PeerTrackNodeStore().handRaise();
         updatePeerAt(peer);
         break;
       case HMSPeerUpdate.nameChanged:

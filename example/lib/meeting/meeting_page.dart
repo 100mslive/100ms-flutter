@@ -230,21 +230,22 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     final double itemWidth = (size.width - 12) / 2;
-    final _meetingStore = context.watch<MeetingStore>();
 
     return ConnectivityAppWrapper(
         app: WillPopScope(
       child: ConnectivityWidgetWrapper(
           disableInteraction: true,
           offlineWidget: OfflineWidget(),
-          child: _meetingStore.reconnecting
+          child: context.select<MeetingStore, bool>(
+                  (meetingStore) => meetingStore.reconnecting)
               ? OfflineWidget()
               : Scaffold(
                   resizeToAvoidBottomInset: false,
                   appBar: AppBar(
                     title: Text(Constant.meetingCode),
                     actions: [
-                      _meetingStore.isRecordingStarted
+                      context.select<MeetingStore, bool>(
+                              (meetingStore) => meetingStore.isRecordingStarted)
                           ? Container(
                               decoration: BoxDecoration(
                                   shape: BoxShape.circle,
@@ -260,9 +261,10 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                       IconButton(
                         iconSize: 32,
                         onPressed: () {
-                          _meetingStore.toggleSpeaker();
+                          context.read<MeetingStore>().toggleSpeaker();
                         },
-                        icon: Icon(_meetingStore.isSpeakerOn
+                        icon: Icon(context.select<MeetingStore, bool>(
+                                (meetingStore) => meetingStore.isSpeakerOn)
                             ? Icons.volume_up
                             : Icons.volume_off),
                       ),
@@ -280,34 +282,44 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                             ),
                             value: 1,
                           ),
-                          if (!_meetingStore.localPeer!.role.name
-                              .contains("hls-"))
+                          if (context.select<MeetingStore, bool>(
+                              (meetingStore) => meetingStore
+                                  .localPeer!.role.name
+                                  .contains("hls-")))
                             PopupMenuItem(
                               child: Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                        _meetingStore.isRecordingStarted
+                                        context.select<MeetingStore, bool>(
+                                                (meetingStore) => meetingStore
+                                                    .isRecordingStarted)
                                             ? "Recording "
                                             : "Record",
                                         style: TextStyle(
-                                          color:
-                                              _meetingStore.isRecordingStarted
-                                                  ? Colors.red
-                                                  : Colors.blue,
+                                          color: context.select<MeetingStore,
+                                                      bool>(
+                                                  (meetingStore) => meetingStore
+                                                      .isRecordingStarted)
+                                              ? Colors.red
+                                              : Colors.blue,
                                         )),
                                     Icon(
                                       Icons.circle,
-                                      color: _meetingStore.isRecordingStarted
+                                      color: context.select<MeetingStore, bool>(
+                                              (meetingStore) => meetingStore
+                                                  .isRecordingStarted)
                                           ? Colors.red
                                           : Colors.blue,
                                     ),
                                   ]),
                               value: 2,
                             ),
-                          if (!_meetingStore.localPeer!.role.name
-                              .contains("hls-"))
+                          if (!context.select<MeetingStore, bool>(
+                              (meetingStore) => meetingStore
+                                  .localPeer!.role.name
+                                  .contains("hls-")))
                             PopupMenuItem(
                               child: Row(
                                   mainAxisAlignment:
@@ -398,19 +410,19 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                 ]),
                             value: 8,
                           ),
-                          if (!_meetingStore.localPeer!.role.name
-                              .contains("hls-"))
+                          if (!context.select<MeetingStore,bool>((meetingStore) => meetingStore.localPeer!.role.name
+                              .contains("hls-")))
                             PopupMenuItem(
                               child: Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      _meetingStore.hasHlsStarted
+                                      context.select<MeetingStore,bool>((meetingStore) => meetingStore.hasHlsStarted)
                                           ? "Stop HLS"
                                           : "Start HLS",
                                       style: TextStyle(
-                                        color: _meetingStore.hasHlsStarted
+                                        color: context.select<MeetingStore,bool>((meetingStore) => meetingStore.hasHlsStarted)
                                             ? Colors.red
                                             : Colors.blue,
                                       ),
@@ -419,9 +431,8 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                   ]),
                               value: 9,
                             ),
-                          if (_meetingStore
-                                  .localPeer?.role.permissions.changeRole ??
-                              false)
+                          if (context.select<MeetingStore,bool>((meetingStore) => meetingStore.localPeer?.role.permissions.changeRole ??
+                              false))
                             PopupMenuItem(
                               child: Row(
                                   mainAxisAlignment:
@@ -438,9 +449,9 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                   ]),
                               value: 10,
                             ),
-                          if (_meetingStore
+                          if (context.select<MeetingStore,bool>((meetingStore) => meetingStore
                                   .localPeer?.role.permissions.changeRole ??
-                              false)
+                              false))
                             PopupMenuItem(
                               child: Row(
                                   mainAxisAlignment:
@@ -484,8 +495,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                 ]),
                             value: 12,
                           ),
-                          if (_meetingStore
-                              .localPeer!.role.permissions.endRoom!)
+                          if (context.select<MeetingStore,bool>((meetingStore) => meetingStore.localPeer!.role.permissions.endRoom!))
                             PopupMenuItem(
                               child: Row(
                                   mainAxisAlignment:
@@ -513,8 +523,8 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Flexible(
-                            child: (!_meetingStore.isHLSLink)
-                                ? (_meetingStore.peerTracks.isEmpty)
+                            child: (!context.select<MeetingStore,bool>((meetingStore) => meetingStore.isHLSLink))
+                                ? (context.select<MeetingStore,bool>((meetingStore) => meetingStore.peerTracks.isEmpty))
                                     ? Center(
                                         child:
                                             Text('Waiting for others to join!'))
@@ -522,34 +532,30 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                         scrollDirection: Axis.horizontal,
                                         physics: PageScrollPhysics(),
                                         itemCount:
-                                            _meetingStore.peerTracks.length,
+                                            context.select<MeetingStore,int>((meetingStore) => meetingStore.peerTracks.length),
                                         crossAxisCount: 2,
                                         itemBuilder: (ctx, index) {
-                                          return 
-                                          Provider(
-                                            create: (context) => PeerTrackNodeStore(),
-                                            builder: (context,_) {
-                                              return VideoTile(
+
+                                          // PeerTrackNode peerTrackNode = ctx.select<MeetingStore,PeerTrackNode>((meetingStore) => meetingStore.peerTracks[index]);
+                                          return VideoTile(
                                                 itemHeight: MediaQuery.of(context)
                                                     .size
                                                     .height,
                                                 itemWidth: itemWidth,
                                                 audioView: audioViewOn,
-                                                peerTrackNode:
-                                                    _meetingStore.peerTracks[index],
+                                                index : index,
+                                                peerTrackNode: context.read<MeetingStore>().peerTracks[index]
                                               );
-                                            }
-                                          );
                                         },
                                       )
                                 : SizedBox()),
-                        (_meetingStore.isHLSLink)
-                            ? (_meetingStore.hasHlsStarted)
+                        (context.select<MeetingStore,bool>((meetingStore) => meetingStore.isHLSLink))
+                            ? (context.select<MeetingStore,bool>((meetingStore) => meetingStore.hasHlsStarted))
                                 ? Flexible(
                                     child: Center(
                                       child: Container(
                                         child: HLSViewer(
-                                            streamUrl: _meetingStore.streamUrl),
+                                            streamUrl: context.select<MeetingStore,String>((meetingStore) => meetingStore.streamUrl)),
                                       ),
                                     ),
                                   )
@@ -564,10 +570,9 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                   bottomNavigationBar: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        if (_meetingStore.localPeer != null &&
-                            _meetingStore
-                                .localPeer!.role.publishSettings!.allowed
-                                .contains("video"))
+                        if (context.select<MeetingStore,bool>((meetingStore) => meetingStore.localPeer != null) &&
+                            context.select<MeetingStore,bool>((meetingStore) => meetingStore.localPeer!.role.publishSettings!.allowed
+                                .contains("video")))
                           Container(
                               padding: EdgeInsets.all(8),
                               child: IconButton(
@@ -576,25 +581,27 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                   onPressed: (audioViewOn)
                                       ? null
                                       : () {
-                                          _meetingStore.switchVideo();
+                                          context
+                                              .read<MeetingStore>()
+                                              .switchVideo();
                                           countOfVideoOnBetweenTwo++;
                                         },
-                                  icon: Icon(_meetingStore.isVideoOn
+                                  icon: Icon(context.select<MeetingStore,bool>((meetingStore) => meetingStore.isVideoOn)
                                       ? Icons.videocam
                                       : Icons.videocam_off))),
-                        if (_meetingStore.localPeer != null &&
-                            _meetingStore
-                                .localPeer!.role.publishSettings!.allowed
-                                .contains("audio"))
+                        if (context.select<MeetingStore,bool>((meetingStore) => meetingStore.localPeer != null) &&
+                            context.select<MeetingStore,bool>((meetingStore) => meetingStore.
+                                localPeer!.role.publishSettings!.allowed
+                                .contains("audio")))
                           Container(
                               padding: EdgeInsets.all(8),
                               child: IconButton(
                                   tooltip: 'Audio',
                                   iconSize: 32,
                                   onPressed: () {
-                                    _meetingStore.switchAudio();
+                                    context.read<MeetingStore>().switchAudio();
                                   },
-                                  icon: Icon(_meetingStore.isMicOn
+                                  icon: Icon(context.select<MeetingStore,bool>((meetingStore) => meetingStore.isMicOn)
                                       ? Icons.mic
                                       : Icons.mic_off))),
                         Container(
@@ -607,7 +614,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                   raisedHand = !raisedHand;
                                   isBRB = false;
                                 });
-                                _meetingStore.changeMetadata();
+                                context.read<MeetingStore>().changeMetadata();
                                 UtilityComponents.showSnackBarWithString(
                                     raisedHand
                                         ? "Raised Hand ON"
@@ -627,14 +634,14 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                               tooltip: 'Chat',
                               iconSize: 32,
                               onPressed: () {
-                                chatMessages(context, _meetingStore);
+                                // chatMessages(context, _meetingStore);
                               },
                               icon: Icon(Icons.chat_bubble)),
                         ),
-                        if (_meetingStore.localPeer != null &&
-                            _meetingStore
-                                .localPeer!.role.publishSettings!.allowed
-                                .contains("screen") &&
+                        if (context.select<MeetingStore,bool>((meetingStore) => meetingStore.localPeer != null) &&
+                            context.select<MeetingStore,bool>((meetingStore) => meetingStore.
+                                localPeer!.role.publishSettings!.allowed
+                                .contains("screen")) &&
                             Platform.isAndroid)
                           Container(
                             padding: EdgeInsets.all(8),
@@ -642,15 +649,19 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                 tooltip: 'Share',
                                 iconSize: 32,
                                 onPressed: () {
-                                  if (!_meetingStore.isScreenShareOn) {
-                                    _meetingStore.startScreenShare();
+                                  if (!context.select<MeetingStore,bool>((meetingStore) => meetingStore.isScreenShareOn)) {
+                                    context
+                                        .read<MeetingStore>()
+                                        .startScreenShare();
                                   } else {
-                                    _meetingStore.stopScreenShare();
+                                    context
+                                        .read<MeetingStore>()
+                                        .stopScreenShare();
                                   }
                                 },
                                 icon: Icon(
                                   Icons.screen_share,
-                                  color: _meetingStore.isScreenShareOn
+                                  color: context.select<MeetingStore,bool>((meetingStore) => meetingStore.isScreenShareOn)
                                       ? Colors.blue
                                       : Colors.black,
                                 )),

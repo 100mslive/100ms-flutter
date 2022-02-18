@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/change_track_options.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
+import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:hmssdk_flutter_example/meeting/peer_track_node.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 import 'package:provider/provider.dart';
@@ -14,6 +15,7 @@ class VideoTile extends StatefulWidget {
   final double itemWidth;
   final PeerTrackNode peerTrackNode;
   final bool audioView;
+  final int index;
 
   VideoTile({
     Key? key,
@@ -21,6 +23,7 @@ class VideoTile extends StatefulWidget {
     this.itemWidth = 200.0,
     required this.peerTrackNode,
     required this.audioView,
+    required this.index,
   }) : super(key: key);
 
   @override
@@ -33,31 +36,32 @@ class _VideoTileState extends State<VideoTile> {
 
   @override
   Widget build(BuildContext context) {
-    
-    bool mutePermission =
-        widget.peerTrackNode.peer.role.permissions.mute ?? false;
-    bool unMutePermission =
-        widget.peerTrackNode.peer.role.permissions.unMute ?? false;
+    // final data = context.watch<MeetingStore>().peerTracks[widget.index];
+    final data = context.select<MeetingStore, PeerTrackNode>(
+        (meetingStore) => meetingStore.peerTracks[widget.index]);
+    print("Rebuilding.... ${data.peer.name}");
+
+    bool mutePermission = data.peer.role.permissions.mute ?? false;
+    bool unMutePermission = data.peer.role.permissions.unMute ?? false;
     bool removePeerPermission =
-        widget.peerTrackNode.peer.role.permissions.removeOthers ?? false;
+        data.peer.role.permissions.removeOthers ?? false;
 
     return VisibilityDetector(
-      key: Key(widget.peerTrackNode.uid),
+      key: Key(data.uid),
       onVisibilityChanged: (info) {
         var visiblePercentage = info.visibleFraction * 100;
 
         if (visiblePercentage <= 40) {
-          widget.peerTrackNode.isVideoOn = false;
+          data.isVideoOn = false;
         } else {
-          widget.peerTrackNode.isVideoOn =
-              !(widget.peerTrackNode.track?.isMute ?? true);
+          data.isVideoOn = !(data.track?.isMute ?? true);
         }
       },
       child: InkWell(
         onLongPress: () {
           if (!mutePermission || !unMutePermission || !removePeerPermission)
             return;
-          if (!widget.audioView && (!(widget.peerTrackNode.peer.isLocal)))
+          if (!widget.audioView && (!(data.peer.isLocal)))
             showDialog(
                 context: context,
                 builder: (_) => Column(
@@ -91,47 +95,47 @@ class _VideoTileState extends State<VideoTile> {
                       ],
                     ));
         },
-        child:Container(
-            color: Colors.transparent,
-            key: key,
-            padding: EdgeInsets.all(2),
-            margin: EdgeInsets.all(2),
-            height: widget.itemHeight + 110,
-            width: widget.itemWidth - 5.0,
-            child: Stack(
-              children: [
-                LayoutBuilder(
-                  builder: (context, constraints) {
-                    if ((widget.peerTrackNode.track == null) ||
-                        !(widget.peerTrackNode.isVideoOn ?? true)) {
-                      
-                      return Container(
-                        height: widget.itemHeight + 100,
-                        width: widget.itemWidth - 5,
-                        child: Center(child: CircleAvatar(child: Text(Utilities.getAvatarTitle(widget.peerTrackNode.peer.name)))),
-                      );
-                    }
-
+        child: Container(
+          color: Colors.transparent,
+          key: key,
+          padding: EdgeInsets.all(2),
+          margin: EdgeInsets.all(2),
+          height: widget.itemHeight + 110,
+          width: widget.itemWidth - 5.0,
+          child: Stack(
+            children: [
+              LayoutBuilder(
+                builder: (context, constraints) {
+                  if ((data.track == null) || !(data.isVideoOn ?? true)) {
                     return Container(
                       height: widget.itemHeight + 100,
                       width: widget.itemWidth - 5,
-                      padding: EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 15.0),
-                      child: HMSVideoView(
-                        track: widget.peerTrackNode.track!,
-                        setMirror: false,
-                        matchParent: false,
-                      ),
+                      child: Center(
+                          child: CircleAvatar(
+                              child: Text(
+                                  Utilities.getAvatarTitle(data.peer.name)))),
                     );
-                  },
-                ),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Text(
-                      "${widget.peerTrackNode.peer.name} ${widget.peerTrackNode.peer.isLocal ? "(You)" : ""}"),
-                ),
-                (widget.peerTrackNode.peer.metadata ==
-                      "{\"isHandRaised\":true}")?
-                   Positioned(
+                  }
+
+                  return Container(
+                    height: widget.itemHeight + 100,
+                    width: widget.itemWidth - 5,
+                    padding: EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 15.0),
+                    child: HMSVideoView(
+                      track: data.track!,
+                      setMirror: false,
+                      matchParent: false,
+                    ),
+                  );
+                },
+              ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Text(
+                    "${data.peer.name} ${data.peer.isLocal ? "(You)" : ""}"),
+              ),
+              (data.peer.metadata == "{\"isHandRaised\":true}")
+                  ? Positioned(
                       child: Padding(
                         padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
                         child: Image.asset(
@@ -141,26 +145,25 @@ class _VideoTileState extends State<VideoTile> {
                       ),
                       top: 5.0,
                       left: 5.0,
-                    ):
-                  Container(),
-                // Consumer<MeetingStore>(builder: (context, _meetingStore, _) {
-                //   print("${_meetingStore.activeSpeakerIds}");
-                //   bool isHighestSpeaker =
-                //       _meetingStore.isActiveSpeaker(widget.peerTrackNode.uid);
-                //   return Container(
-                //     height: widget.itemHeight + 110,
-                //     width: widget.itemWidth - 4,
-                //     decoration: BoxDecoration(
-                //         border: Border.all(
-                //             color: isHighestSpeaker ? Colors.blue : Colors.grey,
-                //             width: isHighestSpeaker ? 3.0 : 1.0),
-                //         borderRadius: BorderRadius.all(Radius.circular(10))),
-                //   );
-                // })
-              ],
-            ),
+                    )
+                  : Container(),
+              // Consumer<MeetingStore>(builder: (context, _meetingStore, _) {
+              //   print("${_meetingStore.activeSpeakerIds}");
+              //   bool isHighestSpeaker =
+              //       _meetingStore.isActiveSpeaker(data.uid);
+              //   return Container(
+              //     height: widget.itemHeight + 110,
+              //     width: widget.itemWidth - 4,
+              //     decoration: BoxDecoration(
+              //         border: Border.all(
+              //             color: isHighestSpeaker ? Colors.blue : Colors.grey,
+              //             width: isHighestSpeaker ? 3.0 : 1.0),
+              //         borderRadius: BorderRadius.all(Radius.circular(10))),
+              //   );
+              // })
+            ],
           ),
-       
+        ),
       ),
     );
   }
