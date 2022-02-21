@@ -17,7 +17,6 @@ import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
 import 'package:hmssdk_flutter_example/logs/custom_singleton_logger.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:hmssdk_flutter_example/meeting/peer_track_node.dart';
-import 'package:hmssdk_flutter_example/meeting/peer_track_node_store.dart';
 import 'package:provider/provider.dart';
 
 // ignore: implementation_imports
@@ -529,6 +528,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                         child:
                                             Text('Waiting for others to join!'))
                                     : MasonryGridView.count(
+                                      cacheExtent: 1,
                                         scrollDirection: Axis.horizontal,
                                         physics: PageScrollPhysics(),
                                         itemCount:

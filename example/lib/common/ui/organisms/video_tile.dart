@@ -34,7 +34,6 @@ class _VideoTileState extends State<VideoTile> {
 
   @override
   Widget build(BuildContext context) {
-
     return VisibilityDetector(
       key: Key(context
           .select<PeerTrackNode, String>((peerTrackNode) => peerTrackNode.uid)),
@@ -107,64 +106,16 @@ class _VideoTileState extends State<VideoTile> {
           width: widget.itemWidth - 5.0,
           child: Stack(
             children: [
-              LayoutBuilder(
-                builder: (context, constraints) {
-                  HMSVideoTrack? track =
-                      context.select<PeerTrackNode, HMSVideoTrack?>(
-                          (peerTrackNode) => peerTrackNode.track);
-
-                  bool isVideoOn = (context.select<PeerTrackNode, bool?>(
-                          (peerTrackNode) => peerTrackNode.isVideoOn) ??
-                      true);
-                  if ((track == null) || !isVideoOn) {
-                    return Container(
-                      height: widget.itemHeight + 100,
-                      width: widget.itemWidth - 5,
-                      child: Center(
-                          child: CircleAvatar(
-                              child: Text(Utilities.getAvatarTitle(
-                                  context.select<PeerTrackNode, String>(
-                                      (peerTrackNode) =>
-                                          peerTrackNode.peer.name))))),
-                    );
-                  }
-
-                  return Container(
-                    height: widget.itemHeight + 100,
-                    width: widget.itemWidth - 5,
-                    padding: EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 15.0),
-                    child: HMSVideoView(
-                      track: track,
-                      setMirror: false,
-                      matchParent: false,
-                    ),
-                  );
-                },
-              ),
-              LayoutBuilder(builder: (context, _) {
-                final peer = context.select<PeerTrackNode, HMSPeer>(
-                    (peerTrackNode) => peerTrackNode.peer);
-                return Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Text("${peer.name} ${peer.isLocal ? "(You)" : ""}"),
-                );
-              }),
-              (context.select<PeerTrackNode, bool>((peerTrackNode) =>
-                      peerTrackNode.peer.metadata
-                          ?.contains("\"isHandRaised\":true") ??
-                      false))
-                  ? Positioned(
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
-                        child: Image.asset(
-                          'assets/icons/raise_hand.png',
-                          color: Colors.amber.shade300,
-                        ),
-                      ),
-                      top: 5.0,
-                      left: 5.0,
-                    )
-                  : Container(),
+              videoView(context),
+              peerName(context),
+              handRaise(context),
+              Container(
+                height: widget.itemHeight + 110,
+                width: widget.itemWidth - 4,
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey, width: 1.0),
+                    borderRadius: BorderRadius.all(Radius.circular(10))),
+              )
               // Consumer<MeetingStore>(builder: (context, _meetingStore, _) {
               //   print("${_meetingStore.activeSpeakerIds}");
               //   bool isHighestSpeaker =
@@ -185,4 +136,65 @@ class _VideoTileState extends State<VideoTile> {
       ),
     );
   }
+}
+
+Widget handRaise(BuildContext context) {
+  return (context.select<PeerTrackNode, bool>((peerTrackNode) =>
+          peerTrackNode.peer.metadata?.contains("\"isHandRaised\":true") ??
+          false))
+      ? Positioned(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
+            child: Image.asset(
+              'assets/icons/raise_hand.png',
+              color: Colors.amber.shade300,
+            ),
+          ),
+          top: 5.0,
+          left: 5.0,
+        )
+      : Container();
+}
+
+Widget peerName(BuildContext context) {
+  return LayoutBuilder(builder: (context, _) {
+    final peer = context
+        .select<PeerTrackNode, HMSPeer>((peerTrackNode) => peerTrackNode.peer);
+    return Align(
+      alignment: Alignment.bottomCenter,
+      child: Text("${peer.name} ${peer.isLocal ? "(You)" : ""}"),
+    );
+  });
+}
+
+Widget videoView(BuildContext context,
+    {double itemHeight = 200, double itemWidth = 200}) {
+  HMSVideoTrack? track = context.select<PeerTrackNode, HMSVideoTrack?>(
+      (peerTrackNode) => peerTrackNode.track);
+
+  bool isVideoOn = (context.select<PeerTrackNode, bool?>(
+          (peerTrackNode) => peerTrackNode.isVideoOn) ??
+      true);
+  print("Video Rebuilt ....");
+  if ((track == null) || !isVideoOn) {
+    return Container(
+      height: itemHeight + 100,
+      width: itemWidth - 5,
+      child: Center(
+          child: CircleAvatar(
+              child: Text(Utilities.getAvatarTitle(
+                  context.select<PeerTrackNode, String>(
+                      (peerTrackNode) => peerTrackNode.peer.name))))),
+    );
+  }
+  return Container(
+    height: itemHeight + 100,
+    width: itemWidth - 5,
+    padding: EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 15.0),
+    child: HMSVideoView(
+      track: track,
+      setMirror: false,
+      matchParent: false,
+    ),
+  );
 }
