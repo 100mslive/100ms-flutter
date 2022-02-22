@@ -14,11 +14,12 @@ class HMSStreamingStateExtension {
         var dict = [String: Any]()
 
         dict["running"] = rtmp.running
-
+        if let startedAt = rtmp.startedAt {
+            dict["started_at"] = "\(startedAt)"
+        }
         if let error = rtmp.error {
             dict.merge(HMSErrorExtension.toDictionary(error)) { (_, new) in new }
         }
-
         return dict
     }
 

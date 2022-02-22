@@ -2,6 +2,7 @@ package live.hms.hmssdk_flutter
 
 import live.hms.video.sdk.models.HMSMessage
 import live.hms.video.sdk.models.HMSPeer
+import java.text.SimpleDateFormat
 
 class HMSMessageExtension {
     companion object{
@@ -9,7 +10,7 @@ class HMSMessageExtension {
             val args=HashMap<String,Any>()
             if(message==null)return null
             args.put("message",message.message)
-            args.put("time",message.serverReceiveTime.toLocaleString())
+            args.put("time",SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(message.serverReceiveTime).toString())
             args.put("type",message.type)
             args.put("sender",HMSPeerExtension.toDictionary(message.sender)!!)
             args.put("hms_message_recipient",HMSMessageRecipientExtension.toDictionary(message.recipient)!!)
@@ -17,5 +18,5 @@ class HMSMessageExtension {
             messageArgs.put("message",args)
             return messageArgs
         }
-    }
+    }    
 }
