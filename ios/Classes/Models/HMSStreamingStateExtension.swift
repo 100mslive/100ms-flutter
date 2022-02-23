@@ -28,7 +28,9 @@ class HMSStreamingStateExtension {
         var dict = [String: Any]()
 
         dict["running"] = server.running
-
+        if let startedAt = server.startedAt {
+            dict["started_at"] = "\(startedAt)"
+        }
         if let error = server.error {
             dict.merge(HMSErrorExtension.toDictionary(error)) { (_, new) in new }
         }
@@ -41,7 +43,9 @@ class HMSStreamingStateExtension {
         var dict = [String: Any]()
 
         dict["running"] = browser.running
-
+        if let startedAt = browser.startedAt {
+            dict["started_at"] = "\(startedAt)"
+        }
         if let error = browser.error {
             dict.merge(HMSErrorExtension.toDictionary(error)) { (_, new) in new }
         }

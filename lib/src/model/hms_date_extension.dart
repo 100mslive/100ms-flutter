@@ -1,5 +1,5 @@
 class HMSDateExtension {
-  DateTime convertDate(String date) {
+  static DateTime convertDate(String date) {
     List<String> dateTimeSeprate = date.split(" ");
     List<String> dateList = dateTimeSeprate[0].split("-");
     List<String> timeList = dateTimeSeprate[1].split(":");
