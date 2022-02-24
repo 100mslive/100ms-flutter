@@ -53,6 +53,16 @@ abstract class PreviewStoreBase
     this.localTracks = ObservableList.of(videoTracks);
   }
 
+  @override
+  void onPeerUpdate({required HMSPeer peer, required HMSPeerUpdate update}) {
+    // TODO: implement onPeerUpdate
+  }
+
+  @override
+  void onRoomUpdate({required HMSRoom room, required HMSRoomUpdate update}) {
+    // TODO: implement onRoomUpdate
+  }
+
   void addPreviewListener() {
     previewController.addPreviewListener(this);
     addLogsListener();

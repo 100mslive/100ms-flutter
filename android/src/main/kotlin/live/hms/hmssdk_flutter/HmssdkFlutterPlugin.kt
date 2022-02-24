@@ -795,10 +795,33 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
                 }
         }
 
+        override fun onPeerUpdate(type: HMSPeerUpdate, peer: HMSPeer) {
+            val args = HashMap<String, Any?>()
+            args["event_name"] = "on_peer_update"
+
+            args["data"] = HMSPeerUpdateExtension.toDictionary(peer, type)
+
+            if (args["data"] != null)
+                CoroutineScope(Dispatchers.Main).launch {
+                    previewSink?.success(args)
+                }
+        }
+
         override fun onPreview(room: HMSRoom, localTracks: Array<HMSTrack>) {
             val args = HashMap<String, Any?>()
-            args.put("event_name", "preview_video")
-            args.put("data", HMSPreviewExtension.toDictionary(room, localTracks))
+            args["event_name"] = "preview_video"
+            args["data"] = HMSPreviewExtension.toDictionary(room, localTracks)
+            if (args["data"] != null)
+                CoroutineScope(Dispatchers.Main).launch {
+                    previewSink?.success(args)
+                }
+        }
+
+        override fun onRoomUpdate(type: HMSRoomUpdate, hmsRoom: HMSRoom) {
+            val args = HashMap<String, Any?>()
+            args["event_name"] = "on_room_update"
+            args["data"] = HMSRoomUpdateExtension.toDictionary(hmsRoom, type)
+
             if (args["data"] != null)
                 CoroutineScope(Dispatchers.Main).launch {
                     previewSink?.success(args)
