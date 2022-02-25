@@ -371,7 +371,9 @@ abstract class MeetingStoreBase extends ChangeNotifier
   }
 
   @override
-  void onPeerUpdate({required HMSPeer peer, required HMSPeerUpdate update}) {
+  void onPeerUpdate(
+      {required HMSPeer peer, required HMSPeerUpdate update}) async {
+
     peerOperation(peer, update);
   }
 
@@ -767,6 +769,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
   }
 
   bool isBRB = false;
+
   void changeMetadataBRB() {
     isBRB = !isBRB;
     isRaisedHand = false;

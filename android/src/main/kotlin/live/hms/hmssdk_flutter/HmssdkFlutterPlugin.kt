@@ -151,7 +151,12 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             "update_hms_video_track_settings" -> {
                 updateHMSLocalTrackSetting(call)
             }
-
+            "get_track_by_id"->{
+                getTrackById(call,result)
+            }
+            "get_all_tracks"->{
+                getAllTracks(call,result)
+            }
             else -> {
                 result.notImplemented()
             }
@@ -903,5 +908,26 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
 
     private fun stopScreenShare(result: Result) {
         hmssdk.stopScreenshare(HMSCommonAction.getActionListener(result))
+    }
+
+
+    private fun getAllTracks(call: MethodCall,result: Result){
+        val peerId : String? = call.argument<String>("peer_id")
+        val peer : HMSPeer? = getPeerById(peerId!!)
+
+        val args=ArrayList<Any>()
+
+        peer?.getAllTracks()?.forEach {
+            Log.i("peertracks",it.toString())
+            args.add(HMSTrackExtension.toDictionary(it)!!)
+        }
+        result.success(args)
+    }
+
+    private fun getTrackById(call: MethodCall,result: Result){
+        val peerId : String? = call.argument<String>("peer_id")
+        val trackId : String? = call.argument<String>("track_id")
+        val peer : HMSPeer? = getPeerById(peerId!!)
+        result.success(HMSTrackExtension.toDictionary(peer?.getTrackById(trackId!!)))
     }
 }
