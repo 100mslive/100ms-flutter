@@ -527,26 +527,31 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
                                     ? Center(
                                         child:
                                             Text('Waiting for others to join!'))
-                                    : MasonryGridView.count(
-                                      cacheExtent: 1,
+                                    : MasonryGridView.count(                    
                                         scrollDirection: Axis.horizontal,
                                         physics: PageScrollPhysics(),
                                         itemCount:
                                             context.select<MeetingStore,int>((meetingStore) => meetingStore.peerTracks.length),
                                         crossAxisCount: 2,
                                         itemBuilder: (ctx, index) {
-                                          return ListenableProvider.value(
-                                            value: context.read<MeetingStore>().peerTracks[index],
-                                            child: VideoTile(
+                                          return 
+                                          MultiProvider(providers: [
+                                            ChangeNotifierProvider(
+                                            create: (_) => context.watch<MeetingStore>().peerTracks[index]),
+                                            
+                                          ],
+                                         child: VideoTile(
                                                   itemHeight: MediaQuery.of(context)
                                                       .size
                                                       .height,
                                                   itemWidth: itemWidth,
                                                   audioView: audioViewOn,
                                                   index : index,
-                                                  peerTrackNode: context.read<MeetingStore>().peerTracks[index]
-                                                ),
-                                          );
+    
+                                                ) );
+                                          
+                                          
+                                                                                  
                                         },
                                       )
                                 : SizedBox()),

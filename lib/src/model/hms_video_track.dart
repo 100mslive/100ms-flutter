@@ -1,7 +1,8 @@
 // Project imports:
+import 'package:flutter/foundation.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
-class HMSVideoTrack extends HMSTrack {
+class HMSVideoTrack extends HMSTrack{
   final bool isDegraded;
 
   HMSVideoTrack(
@@ -25,4 +26,9 @@ class HMSVideoTrack extends HMSTrack {
         ? HMSRemoteVideoTrack.fromMap(map: map, peer: peer)
         : HMSLocalVideoTrack.fromMap(map: map, peer: peer);
   }
+
+  // void notifyTrack() {
+  //   notifyListeners();
+  // }
+
 }

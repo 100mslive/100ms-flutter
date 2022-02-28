@@ -8,7 +8,7 @@ class PeerTrackNode extends ChangeNotifier {
 
   HMSVideoTrack? track;
 
-  bool? isVideoOn;
+  bool isVideoOn;
 
   PeerTrackNode({
     required this.peer,
@@ -28,5 +28,4 @@ class PeerTrackNode extends ChangeNotifier {
   void notify() {
     notifyListeners();
   }
-
 }
