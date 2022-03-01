@@ -37,11 +37,18 @@ class _VideoTileState extends State<VideoTile> {
     return VisibilityDetector(
       onVisibilityChanged: (VisibilityInfo info) {
         var visiblePercentage = info.visibleFraction * 100;
+        var peerTrackNode = context.read<PeerTrackNode>();
         if (visiblePercentage <= 40) {
-          context.read<PeerTrackNode>().isVideoOn = false;
+          print(
+              "Peer Name :${context.read<PeerTrackNode>().peer.name}----${context.read<PeerTrackNode>().isVideoOn}");
+          peerTrackNode.setIsVideoOn(false);
+          print(
+              "Peer Name after updation :${context.read<PeerTrackNode>().peer.name}----${context.read<PeerTrackNode>().isVideoOn}");
         } else {
-          context.read<PeerTrackNode>().isVideoOn =
-              !(context.read<PeerTrackNode>().track?.isMute??true);   
+          print(
+              "Peer Name previous state:${context.read<PeerTrackNode>().peer.name}----${context.read<PeerTrackNode>().isVideoOn}");
+          peerTrackNode.setIsVideoOn(
+              !(context.read<PeerTrackNode>().track?.isMute ?? true));
         }
       },
       key: Key(context.read<PeerTrackNode>().uid),
@@ -124,5 +131,3 @@ class _VideoTileState extends State<VideoTile> {
     );
   }
 }
-
-

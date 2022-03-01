@@ -166,6 +166,7 @@ class MeetingStore extends ChangeNotifier
       unMuteAll();
     }
     isSpeakerOn = !isSpeakerOn;
+    notifyListeners();
   }
 
   Future<bool> isAudioMute(HMSPeer? peer) async {
@@ -268,6 +269,7 @@ class MeetingStore extends ChangeNotifier
           localpeerTrackNode = PeerTrackNode(
               peer: each, uid: each.peerId + "mainVideo", isVideoOn: false);
           peerTracks.add(localpeerTrackNode!);
+          localpeerTrackNode!.notify();
         }
         localPeer = each;
         addPeer(localPeer!);

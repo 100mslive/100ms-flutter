@@ -4,6 +4,8 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:hmssdk_flutter_example/meeting/peer_track_node.dart';
 import 'package:provider/provider.dart';
+import 'package:tuple/tuple.dart';
+import 'package:visibility_detector/visibility_detector.dart';
 
 class VideoView extends StatefulWidget {
   final matchParent;
@@ -30,13 +32,10 @@ class VideoView extends StatefulWidget {
 class _VideoViewState extends State<VideoView> {
   @override
   Widget build(BuildContext context) {
-     final isVideoOn = context.select<PeerTrackNode,bool>(
-            (peerTrackNode)=> peerTrackNode.isVideoOn);
-    return Selector<PeerTrackNode, HMSVideoTrack?>(
-        builder: (_, track, __) {
-         
-          print("Video Built Again");
-          if ((track == null) || !isVideoOn) {
+    return Selector<PeerTrackNode, Tuple2<HMSVideoTrack?,bool>>(
+        builder: (_, data, __) {
+          print("Video Built Again for ${data.item1?.peer?.name??"null"}");
+          if ((data.item1 == null) || !data.item2) {
             return Container(
                 height: widget.itemHeight + 100,
                 width: widget.itemWidth - 5,
@@ -50,13 +49,13 @@ class _VideoViewState extends State<VideoView> {
               width: widget.itemWidth - 5,
               padding: EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 15.0),
               child: HMSVideoView(
-                track: track,
+                track: data.item1!,
                 setMirror: false,
                 matchParent: false,
               ),
             );
           }
         },
-        selector: (_, peerTrackNode) => peerTrackNode.track);
+        selector: (_, peerTrackNode) =>Tuple2(peerTrackNode.track, peerTrackNode.isVideoOn) );
   }
 }

@@ -28,4 +28,9 @@ class PeerTrackNode extends ChangeNotifier {
   void notify() {
     notifyListeners();
   }
+
+  void setIsVideoOn(bool isVideoOn) {
+    this.isVideoOn = isVideoOn;
+    notify();
+  }
 }
