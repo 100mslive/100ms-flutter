@@ -138,9 +138,8 @@ class MeetingStore extends ChangeNotifier
       localpeerTrackNode?.isVideoOn = false;
     else
       localpeerTrackNode?.isVideoOn = true;
-
     isVideoOn = !isVideoOn;
-    notifyListeners();
+    localpeerTrackNode!.notify();
   }
 
   Future<void> switchCamera() async {
@@ -320,6 +319,7 @@ class MeetingStore extends ChangeNotifier
       default:
         break;
     }
+    notifyListeners();
   }
 
   @override
@@ -340,7 +340,7 @@ class MeetingStore extends ChangeNotifier
     }
 
     if (peer.isLocal &&
-        trackUpdate == HMSTrackUpdate.trackMuted &&
+        (trackUpdate == HMSTrackUpdate.trackMuted) &&
         track.kind == HMSTrackKind.kHMSTrackKindAudio) {
       this.isMicOn = false;
     }
@@ -787,12 +787,14 @@ class MeetingStore extends ChangeNotifier
     switch (methodType) {
       case HMSActionResultListenerMethod.leave:
         isRoomEnded = true;
+        notifyListeners();
         break;
       case HMSActionResultListenerMethod.changeTrackState:
         // TODO: Handle this case.
         break;
       case HMSActionResultListenerMethod.changeMetadata:
         print("raised hand");
+        notifyListeners();
         break;
       case HMSActionResultListenerMethod.endRoom:
         isRoomEnded = true;
@@ -813,14 +815,14 @@ class MeetingStore extends ChangeNotifier
         break;
       case HMSActionResultListenerMethod.startRtmpOrRecording:
         //TODO: HmsException?.code == 400(To see what this means)
-        //isRecordingStarted = true;
+
         break;
       case HMSActionResultListenerMethod.stopRtmpAndRecording:
         break;
       case HMSActionResultListenerMethod.unknown:
         break;
       case HMSActionResultListenerMethod.changeName:
-        this.event = "Name Changed to ${localPeer!.name}";
+        // this.event = "Name Changed to ${localPeer!.name}";
         break;
       case HMSActionResultListenerMethod.sendBroadcastMessage:
         var message = HMSMessage(
@@ -860,10 +862,13 @@ class MeetingStore extends ChangeNotifier
         break;
       case HMSActionResultListenerMethod.hlsStreamingStarted:
         this.event = "HLS Streaming Started";
+        notifyListeners();
         // TODO: Handle this case.
         break;
       case HMSActionResultListenerMethod.hlsStreamingStopped:
         this.event = "HLS Streaming Stopped";
+        notifyListeners();
+
         // TODO: Handle this case.
         break;
 

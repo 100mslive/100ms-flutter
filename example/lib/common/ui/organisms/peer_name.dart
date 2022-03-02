@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/meeting/peer_track_node.dart';
 import 'package:provider/provider.dart';
+import 'package:tuple/tuple.dart';
 
 class PeerName extends StatefulWidget {
   @override
@@ -11,13 +12,13 @@ class PeerName extends StatefulWidget {
 class _PeerNameState extends State<PeerName> {
   @override
   Widget build(BuildContext context) {
-    return Selector<PeerTrackNode, String>(
-        selector: (_, peerTrackNode) => peerTrackNode.peer.name,
-        builder: (_, name, __) {
+    return Selector<PeerTrackNode, Tuple2<String,bool>>(
+        selector: (_, peerTrackNode) => Tuple2(peerTrackNode.peer.name,peerTrackNode.track?.isDegraded??true),
+        builder: (_, data, __) {
           print("Built Again");
           return Align(
             alignment: Alignment.bottomCenter,
-            child: Text("${name} ${false ? "(You)" : ""}"),
+            child: Text("${data.item1} ${ data.item2? "Degraded" : ""}"),
           );
         });
   }

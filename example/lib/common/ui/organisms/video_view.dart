@@ -32,10 +32,10 @@ class VideoView extends StatefulWidget {
 class _VideoViewState extends State<VideoView> {
   @override
   Widget build(BuildContext context) {
-    return Selector<PeerTrackNode, Tuple2<HMSVideoTrack?,bool>>(
+    return Selector<PeerTrackNode, Tuple3<HMSVideoTrack?,bool,bool>>(
         builder: (_, data, __) {
           print("Video Built Again for ${data.item1?.peer?.name??"null"}");
-          if ((data.item1 == null) || !data.item2) {
+          if ((data.item1 == null) || !data.item2 || data.item3) {
             return Container(
                 height: widget.itemHeight + 100,
                 width: widget.itemWidth - 5,
@@ -56,6 +56,6 @@ class _VideoViewState extends State<VideoView> {
             );
           }
         },
-        selector: (_, peerTrackNode) =>Tuple2(peerTrackNode.track, peerTrackNode.isVideoOn) );
+        selector: (_, peerTrackNode) =>Tuple3(peerTrackNode.track, peerTrackNode.isVideoOn,peerTrackNode.track?.isDegraded??true) );
   }
 }

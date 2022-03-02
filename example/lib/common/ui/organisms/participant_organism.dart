@@ -19,7 +19,7 @@ class ParticipantOrganism extends StatefulWidget {
 class _ParticipantOrganismState extends State<ParticipantOrganism> {
   bool isVideoOn = false, isAudioOn = false;
   Color isOffColor = Colors.red.shade300, isOnColor = Colors.green.shade300;
-  late MeetingStore _meetingStore;
+  MeetingStore? _meetingStore;
   @override
   void initState() {
     super.initState();
@@ -69,16 +69,16 @@ class _ParticipantOrganismState extends State<ParticipantOrganism> {
                   ),
                 GestureDetector(
                   onTap: () {
-                    if (_meetingStore.localPeer!.role.permissions.changeRole ??
+                    if (_meetingStore?.localPeer!.role.permissions.changeRole ??
                         false)
                       showDialog(
                           context: context,
                           builder: (_) => ChangeRoleOptionDialog(
                                 peerName: peer.name,
-                                getRoleFunction: _meetingStore.getRoles(),
+                                getRoleFunction: _meetingStore!.getRoles(),
                                 changeRole: (role, forceChange) {
                                   Navigator.pop(context);
-                                  _meetingStore.changeRole(
+                                  _meetingStore!.changeRole(
                                       peer: peer,
                                       roleName: role,
                                       forceChange: forceChange);
@@ -134,8 +134,8 @@ class _ParticipantOrganismState extends State<ParticipantOrganism> {
   }
 
   void checkButtons() async {
-    this.isAudioOn = !await _meetingStore.isAudioMute(widget.peer);
-    this.isVideoOn = !await _meetingStore.isVideoMute(widget.peer);
+    this.isAudioOn = !await _meetingStore!.isAudioMute(widget.peer);
+    this.isVideoOn = !await _meetingStore!.isVideoMute(widget.peer);
     setState(() {});
   }
 }
