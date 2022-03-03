@@ -1,6 +1,7 @@
 //Package imports
 import 'dart:io';
 
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 
@@ -442,6 +443,7 @@ class MeetingStore extends ChangeNotifier
     description = "Removed by ${hmsPeerRemovedFromPeer.peerWhoRemoved?.name}";
     peerTracks.clear();
     isRoomEnded = true;
+    notifyListeners();
   }
 
   void changeRole(
@@ -797,7 +799,8 @@ class MeetingStore extends ChangeNotifier
         notifyListeners();
         break;
       case HMSActionResultListenerMethod.endRoom:
-        isRoomEnded = true;
+        this.isRoomEnded = true;
+        notifyListeners();
         break;
       case HMSActionResultListenerMethod.removePeer:
         // TODO: Handle this case.
@@ -891,6 +894,7 @@ class MeetingStore extends ChangeNotifier
       Map<String, dynamic>? arguments,
       required HMSException hmsException}) {
     this.hmsException = hmsException;
+    FirebaseCrashlytics.instance.log(hmsException.toString());
     switch (methodType) {
       case HMSActionResultListenerMethod.leave:
         // TODO: Handle this case.

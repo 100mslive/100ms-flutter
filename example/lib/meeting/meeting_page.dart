@@ -219,7 +219,7 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
         break;
       case 13:
         meetingsStoreInstance.endRoom(false, "Room Ended From Flutter");
-        if (context.watch<MeetingStore>().isRoomEnded) {
+        if (_meetingStore.isRoomEnded) {
           Navigator.pop(context);
         }
         break;
@@ -238,10 +238,15 @@ class _MeetingPageState extends State<MeetingPage> with WidgetsBindingObserver {
       child: ConnectivityWidgetWrapper(
           disableInteraction: true,
           offlineWidget: OfflineWidget(),
-          child: Selector<MeetingStore, bool>(
-            selector: (_, meetingStore) => meetingStore.reconnecting,
-            builder: (_, reconnecting, __) {
-              return reconnecting
+          child: Selector<MeetingStore,Tuple2<bool,bool>>(
+            selector: (_, meetingStore) => Tuple2(meetingStore.reconnecting,meetingStore.isRoomEnded),
+            builder: (_, data, __) {
+              if(data.item2){
+                Navigator.of(context).popUntil((route) => route.isFirst);
+                  UtilityComponents.showSnackBarWithString(
+                      "Meeting Ended", context);
+                }
+              return data.item1
                   ? OfflineWidget()
                   : Scaffold(
                       resizeToAvoidBottomInset: false,
