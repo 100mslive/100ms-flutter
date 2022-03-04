@@ -840,7 +840,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
   }
 
   @override
-  void onRTCStats({required HMSRTCStats hmsrtcStats}) {
+  void onRTCStats({required HMSRTCStatsReport hmsrtcStatsReport}) {
     //   print(hmsrtcStats);
   }
 
