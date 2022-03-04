@@ -1,13 +1,20 @@
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 class HMSRemoteVideoStats {
-  int bytesReceived;
-  double bitrate;
+	// Packet Jitter measured in seconds for this track. Calculated as defined in section 6.4.1. of RFC3550.
   double jitter;
+	// Total bytes received by this track in the current session.
+  int bytesReceived;
+	// Incoming bitrate of this track observed since previous report in Kb/s.
+	double bitrate;
+	// Total packets received by this track in the current session.
   int packetsReceived;
-  int packetsLost;
-  double frameRate;
-  HMSVideoResolution resolution;
+	// Total packets lost by this track in the current session.
+	int packetsLost;
+	// Resolution of video frames being received.
+	HMSVideoResolution resolution;
+	// Frame rate of video frames being received (FPS).
+	double frameRate;
 
   HMSRemoteVideoStats(
       {required this.bytesReceived,
