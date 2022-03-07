@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 // Project imports
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:hmssdk_flutter_example/common/ui/organisms/brb_tag.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/hand_raise.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/peer_name.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/video_view.dart';
@@ -103,6 +104,7 @@ class _VideoTileState extends State<VideoTile> {
               VideoView(),
               PeerName(),
               HandRaise(),
+              BRBTag(),
               Container(
                 height: widget.itemHeight + 110,
                 width: widget.itemWidth - 4,

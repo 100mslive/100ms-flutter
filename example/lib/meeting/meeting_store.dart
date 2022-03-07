@@ -141,6 +141,7 @@ class MeetingStore extends ChangeNotifier
       localpeerTrackNode?.isVideoOn = true;
     isVideoOn = !isVideoOn;
     localpeerTrackNode!.notify();
+    notifyListeners();
   }
 
   Future<void> switchCamera() async {

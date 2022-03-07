@@ -1,6 +1,6 @@
+import 'package:flutter/material.dart';
+
 class Utilities {
-
-
   static String getAvatarTitle(String name) {
     List<String>? parts = name.split(" ");
     if (parts.length == 1) {
@@ -15,5 +15,18 @@ class Utilities {
     }
     return name;
   }
-  
+
+  static List<Color> colors =[
+  Colors.red,
+  Colors.pink,
+  Colors.purple,
+  Colors.deepPurple,
+  Colors.indigo,
+  Colors.blue,
+  Colors.lightBlue,
+  Colors.teal,
+  Colors.green,
+  Colors.deepOrange,
+];
+
 }

@@ -1,4 +1,6 @@
 //Package imports
+import 'dart:math';
+
 import 'package:connectivity_checker/connectivity_checker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -87,7 +89,10 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                       ):Container(
                     height: itemHeight,
                     width: itemWidth,
-                    child: Center(child: CircleAvatar(child: Text(Utilities.getAvatarTitle(_previewStore.peer!.name)))),
+                    child: Center(child: CircleAvatar(
+                      backgroundColor: Utilities.colors[Random().nextInt(Utilities.colors.length)],
+                      radius: 36,
+                      child: Text(Utilities.getAvatarTitle(_previewStore.peer!.name),style: TextStyle(fontSize: 36,color: Colors.white),))),
                   ),
                     ),
               
