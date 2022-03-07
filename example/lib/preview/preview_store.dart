@@ -26,6 +26,10 @@ abstract class PreviewStoreBase
   bool videoOn = true;
   @observable
   bool audioOn = true;
+  @observable
+  bool isRecordingStarted = false;
+  @observable
+  ObservableList<HMSPeer> peers = ObservableList.of([]);
 
   @override
   void onError({required HMSException error}) {
@@ -55,12 +59,42 @@ abstract class PreviewStoreBase
 
   @override
   void onPeerUpdate({required HMSPeer peer, required HMSPeerUpdate update}) {
-    // TODO: implement onPeerUpdate
+    switch (update) {
+      case HMSPeerUpdate.peerJoined:
+        peers.add(peer);
+        break;
+      case HMSPeerUpdate.peerLeft:
+        peers.remove(peer);
+        break;
+      case HMSPeerUpdate.roleUpdated:
+        int index = peers.indexOf(peer);
+        peers[index] = peer;
+        break;
+      default:
+        break;
+    }
   }
 
   @override
   void onRoomUpdate({required HMSRoom room, required HMSRoomUpdate update}) {
-    // TODO: implement onRoomUpdate
+    switch (update) {
+      case HMSRoomUpdate.browserRecordingStateUpdated:
+        isRecordingStarted = room.hmsBrowserRecordingState?.running ?? false;
+        break;
+
+      case HMSRoomUpdate.serverRecordingStateUpdated:
+        isRecordingStarted = room.hmsServerRecordingState?.running ?? false;
+        break;
+
+      case HMSRoomUpdate.rtmpStreamingStateUpdated:
+        isRecordingStarted = room.hmsRtmpStreamingState?.running ?? false;
+        break;
+      case HMSRoomUpdate.hlsStreamingStateUpdated:
+        isRecordingStarted = room.hmshlsStreamingState?.running ?? false;
+        break;
+      default:
+        break;
+    }
   }
 
   void addPreviewListener() {
