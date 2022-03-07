@@ -485,10 +485,6 @@ class MeetingStore extends ChangeNotifier
         removePeer(peer);
         notifyListeners();
         break;
-      case HMSPeerUpdate.audioToggled:
-        break;
-      case HMSPeerUpdate.videoToggled:
-        break;
       case HMSPeerUpdate.roleUpdated:
         if (peer.isLocal) {
           localPeer = peer;
