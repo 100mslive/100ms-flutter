@@ -44,7 +44,7 @@ class _VideoViewState extends State<VideoView> {
                 width: widget.itemWidth - 5,
                 child: Center(
                     child: CircleAvatar(
-                      backgroundColor: Utilities.colors[Random().nextInt(Utilities.colors.length)],
+                      backgroundColor: Utilities.colors[context.read<PeerTrackNode>().peer.name.toLowerCase().codeUnitAt(0)%Utilities.colors.length],
                       radius: 36,
                         child: Text(Utilities.getAvatarTitle(
                             context.read<PeerTrackNode>().peer.name),style: TextStyle(fontSize: 36,color: Colors.white),))));
