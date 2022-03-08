@@ -1,0 +1,31 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+
+<suite name="Suite" verbose="1" >
+    <listeners>
+        <listener class-name="com.qa.listeners.TestListener"/>
+    </listeners>
+
+    <parameter name="emulator" value="true" />
+    <parameter name="platformName" value="Android" />
+    <!--        <parameter name="udid" value="replace_with_device_udid" />-->
+    <parameter name="deviceName" value="Pixel_5_API_30" />
+    <parameter name="systemPort" value="10000" />
+    <parameter name="chromeDriverPort" value="11000" />
+
+  <test name="Android_Flutter">
+
+        <classes>
+<!--                        <class name="com.qa.tests.HomePageTest"></class>-->
+                        <class name="com.qa.tests.PreviewPageTest"></class>
+            <!--            <class name="Flutter.testcase.MeetingRoomTest.TopToolBarTest"></class>-->
+            <!--            <class name="Flutter.testcase.MeetingRoomTest.BottomToolBarTest.RaiseHandTest"></class>-->
+            <!--            <class name="Flutter.testcase.MeetingRoomTest.BottomToolBarTest.LeaveRoomTest"></class>-->
+            <!--            <class name="Flutter.testcase.MeetingRoomTest.BottomToolBarTest.ScreenShareTest"></class>-->
+            <!--            <class name="Flutter.testcase.MeetingRoomTest.MenuDropDownTest.EndRoomTest"></class>-->
+            <!--            <class name="Flutter.testcase.MeetingRoomTest.MenuDropDownTest.RecordTest"></class>-->
+            <!--            <class name="Flutter.testcase.MeetingRoomTest.MenuDropDownTest.MuteAllTest"></class>-->
+            <!--            <class name="Flutter.testcase.MeetingRoomTest.MenuDropDownTest.ChangeNameTest"></class>-->
+<!--            <class name="Flutter.testcase.MeetingRoomTest.MenuDropDownTest.AudioVideoViewTest"></class>-->
+        </classes>
+    </test>
+</suite>

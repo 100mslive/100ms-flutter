@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<!-- Home page Text -->
+    <string name="empty_meeting_url">Enter Room URL</string>
+  <string name="empty_name_space">Enter your Name</string>
+  <string name="end_room_heading">End Room</string>
+
+
+
+
+</resources>

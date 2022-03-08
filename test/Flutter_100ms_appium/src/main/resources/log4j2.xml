@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="ERROR">
+  <Appenders>
+    <Console name="STDOUT" target="SYSTEM_OUT">
+      <PatternLayout pattern="[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} %c:%L - %m%n"/>
+    </Console>
+    <Routing name="MyRoutingAppender">
+      <Routes pattern="$${ctx:ROUTINGKEY}">
+        <Route>
+    		<RollingFile
+    			name="appender-${ctx:ROUTINGKEY}"
+    			fileName="${ctx:ROUTINGKEY}/application.log"
+    			filePattern="${ctx:ROUTINGKEY}/$${date:yyyy-MM-dd}/application-%d{yyyy-MM-dd}-%i.log">
+    			<PatternLayout>
+        			<Pattern>[${ctx:ROUTINGKEY} %-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} %c{1}:%L - %m%n</Pattern>
+    			</PatternLayout>
+    			<Policies>
+        			<TimeBasedTriggeringPolicy />
+        			<SizeBasedTriggeringPolicy size="10MB" />
+    			</Policies>
+    			<DefaultRolloverStrategy max="5" />
+			</RollingFile>
+        </Route>
+      </Routes>
+    </Routing>
+  </Appenders>
+  <Loggers>
+    <Logger name="com.qa" level="debug" additivity="false">
+      <AppenderRef ref="STDOUT"/>
+      <AppenderRef ref="MyRoutingAppender"/>
+    </Logger>
+    <Root level="info">
+      <AppenderRef ref="STDOUT"/>
+    </Root>
+  </Loggers>
+</Configuration>

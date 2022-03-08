@@ -1,0 +1,20 @@
+{
+	"invalid":{
+		"username":"Ronit",
+		"meeting_url":"https://ronitroy-xyz.app.100ms.live/meeting/kfg-ahl-lxm"
+	},
+
+	"valid":{
+		"username":"Ronit",
+		"meeting_url":"https://ronitroy-xyz.app.100ms.live/meeting/kfg-ahl-lxm"
+	},
+
+  "camera":{
+    "ON":"on",
+    "OFF":"off"
+  },
+  "mic":{
+    "ON":"on",
+    "OFF":"off"
+  }
+}
