@@ -242,9 +242,9 @@ class PlatformService {
           });
           break;
         case HMSUpdateListenerMethod.onRtcStats:
-          HMSRTCStats rtcStats =
-              HMSRTCStats.fromMap(data['rtc_stats_report'] as Map);
-          notifyUpdateListeners(method, {'rtc_stats_report': rtcStats});
+          HMSRTCStatsReport rtcStatsReport =
+              HMSRTCStatsReport.fromMap(data['rtc_stats_report'] as Map);
+          notifyUpdateListeners(method, {'rtc_stats_report': rtcStatsReport});
           break;
       }
     });
@@ -460,7 +460,7 @@ class PlatformService {
         break;
       case HMSUpdateListenerMethod.onRtcStats:
         updateListeners.forEach(
-            (e) => e.onRTCStats(hmsrtcStats: arguments['rtc_stats_report']));
+            (e) => e.onRTCStats(hmsrtcStatsReport: arguments['rtc_stats_report']));
         break;
       case HMSUpdateListenerMethod.unknown:
         break;

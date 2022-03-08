@@ -832,6 +832,14 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
                     previewSink?.success(args)
                 }
         }
+
+        override fun onPeerUpdate(type: HMSPeerUpdate, peer: HMSPeer) {
+            TODO("Not yet implemented")
+        }
+
+        override fun onRoomUpdate(type: HMSRoomUpdate, hmsRoom: HMSRoom) {
+            TODO("Not yet implemented")
+        }
     }
 
     var finalargs = mutableListOf<Any?>()

@@ -843,7 +843,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
   }
 
   @override
-  void onRTCStats({required HMSRTCStats hmsrtcStats}) {
+  void onRTCStats({required HMSRTCStatsReport hmsrtcStatsReport}) {
     //   print(hmsrtcStats);
   }
 
@@ -895,7 +895,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
             sender: localPeer,
             message: arguments!['message'],
             type: arguments['type'],
-            time: formatter.format(DateTime.now()),
+            time: DateTime.now(),
             hmsMessageRecipient: HMSMessageRecipient(
                 recipientPeer: null,
                 recipientRoles: null,
@@ -907,7 +907,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
             sender: localPeer,
             message: arguments!['message'],
             type: arguments['type'],
-            time: formatter.format(DateTime.now()),
+            time: DateTime.now(),
             hmsMessageRecipient: HMSMessageRecipient(
                 recipientPeer: null,
                 recipientRoles: arguments['roles'],
@@ -919,7 +919,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
             sender: localPeer,
             message: arguments!['message'],
             type: arguments['type'],
-            time: formatter.format(DateTime.now()),
+            time: DateTime.now(),
             hmsMessageRecipient: HMSMessageRecipient(
                 recipientPeer: arguments['peer'],
                 recipientRoles: null,

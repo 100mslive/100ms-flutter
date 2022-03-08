@@ -1,9 +1,14 @@
 class HMSRemoteAudioStats {
-  int bytesReceived;
-  double bitrate;
+ 	// Packet Jitter measured in seconds for this track. Calculated as defined in section 6.4.1. of RFC3550.
   double jitter;
+	// Total bytes received by this track in the current session.
+  int bytesReceived;
+	// Incoming bitrate of this track observed since previous report in Kb/s.
+  double bitrate;
+	// Total packets received by this track in the current session.
   int packetsReceived;
-  int packetsLost;
+	// Total packets lost by this track in the current session.
+	int packetsLost;
 
   HMSRemoteAudioStats(
       {required this.bytesReceived,
