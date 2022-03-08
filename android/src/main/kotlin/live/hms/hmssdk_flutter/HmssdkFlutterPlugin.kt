@@ -94,68 +94,68 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             }
 
             // MARK: Build Actions
-            "build","preview","join","leave" -> {
-                buildActions(call,result)
+            "build", "preview", "join", "leave" -> {
+                buildActions(call, result)
             }
 
             // MARK: Room Actions
-            "get_room","get_local_peer","get_remote_peers","get_peers" -> {
-                HMSRoomAction.roomActions(call,result,hmssdk)
+            "get_room", "get_local_peer", "get_remote_peers", "get_peers" -> {
+                HMSRoomAction.roomActions(call, result, hmssdk)
             }
 
             // MARK: Audio Helpers
-            "switch_audio","is_audio_mute","mute_all","un_mute_all","set_volume" -> {
-                HMSAudioAction.audioActions(call,result,hmssdk)
+            "switch_audio", "is_audio_mute", "mute_all", "un_mute_all", "set_volume" -> {
+                HMSAudioAction.audioActions(call, result, hmssdk)
             }
 
             // MARK: Video Helpers
-            "switch_video","switch_camera","start_capturing","stop_capturing","is_video_mute","set_playback_allowed" -> {
-                HMSVideoAction.videoActions(call, result,hmssdk)
+            "switch_video", "switch_camera", "start_capturing", "stop_capturing", "is_video_mute", "set_playback_allowed" -> {
+                HMSVideoAction.videoActions(call, result, hmssdk)
             }
 
             // MARK: Messaging
-            "send_broadcast_message","send_direct_message","send_group_message" -> {
-                HMSMessageAction.messageActions(call, result,hmssdk)
+            "send_broadcast_message", "send_direct_message", "send_group_message" -> {
+                HMSMessageAction.messageActions(call, result, hmssdk)
             }
 
             // MARK: Role based Actions
-            "get_roles","change_role","accept_change_role","end_room","remove_peer","on_change_track_state_request","change_track_state_for_role" -> {
+            "get_roles", "change_role", "accept_change_role", "end_room", "remove_peer", "on_change_track_state_request", "change_track_state_for_role" -> {
                 roleActions(call, result)
             }
 
             // MARK: Peer Actions
-            "change_metadata","change_name"->{
+            "change_metadata", "change_name" -> {
                 peerActions(call, result)
             }
 
             // MARK: Recording
-            "start_rtmp_or_recording","stop_rtmp_and_recording" -> {
-                HMSRecordingAction.recordingActions(call, result,hmssdk)
+            "start_rtmp_or_recording", "stop_rtmp_and_recording" -> {
+                HMSRecordingAction.recordingActions(call, result, hmssdk)
             }
 
             // MARK: HLS
-            "hls_start_streaming","hls_stop_streaming"->{
-                HMSHLSAction.hlsActions(call, result,hmssdk)
+            "hls_start_streaming", "hls_stop_streaming" -> {
+                HMSHLSAction.hlsActions(call, result, hmssdk)
             }
 
             // MARK: Logger
-            "start_hms_logger","remove_hms_logger" -> {
+            "start_hms_logger", "remove_hms_logger" -> {
                 loggerActions(call, result)
             }
 
             // MARK: Screenshare
-            "start_screen_share","stop_screen_share","is_screen_share_active" -> {
-                screenshareActions(call,result)
+            "start_screen_share", "stop_screen_share", "is_screen_share_active" -> {
+                screenshareActions(call, result)
             }
 
             "update_hms_video_track_settings" -> {
                 updateHMSLocalTrackSetting(call)
             }
-            "get_track_by_id"->{
-                getTrackById(call,result)
+            "get_track_by_id" -> {
+                getTrackById(call, result)
             }
-            "get_all_tracks"->{
-                getAllTracks(call,result)
+            "get_all_tracks" -> {
+                getAllTracks(call, result)
             }
             else -> {
                 result.notImplemented()
@@ -164,7 +164,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
     }
 
     // MARK: Build Actions
-    private fun buildActions(call: MethodCall, result: Result){
+    private fun buildActions(call: MethodCall, result: Result) {
         when (call.method) {
             "build" -> {
                 build(this.activity, call, result)
@@ -185,7 +185,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
     }
 
     // MARK: Role based Actions
-    private fun roleActions(call: MethodCall, result: Result){
+    private fun roleActions(call: MethodCall, result: Result) {
         when (call.method) {
             "get_roles" -> {
                 getRoles(result)
@@ -215,15 +215,15 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
     }
 
     // MARK: Peer Actions
-    private fun peerActions(call: MethodCall, result: Result){
+    private fun peerActions(call: MethodCall, result: Result) {
         when (call.method) {
-            "change_metadata"-> {
+            "change_metadata" -> {
                 changeMetadata(call, result)
             }
-            "change_name"->{
+            "change_name" -> {
                 changeName(call, result)
             }
-            
+
             else -> {
                 result.notImplemented()
             }
@@ -231,7 +231,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
     }
 
     // MARK: Logger
-    private fun loggerActions(call: MethodCall, result: Result){
+    private fun loggerActions(call: MethodCall, result: Result) {
         when (call.method) {
             "start_hms_logger" -> {
                 startHMSLogger(call)
@@ -247,7 +247,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
 
 
     // MARK: Screenshare
-    private fun screenshareActions(call: MethodCall, result: Result){
+    private fun screenshareActions(call: MethodCall, result: Result) {
         when (call.method) {
             "start_screen_share" -> {
                 startScreenShare(result)
@@ -300,7 +300,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
 
         val userName = call.argument<String>("user_name")
         val authToken = call.argument<String>("auth_token")
-        val metaData = call.argument<String>("meta_data")?: ""
+        val metaData = call.argument<String>("meta_data") ?: ""
         val endPoint = call.argument<String>("end_point")
 
         if (endPoint != null && endPoint!!.isNotEmpty()) {
@@ -371,37 +371,37 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         return null
     }
 
-    private fun getAudioTracks():ArrayList<HMSTrack>{
+    private fun getAudioTracks(): ArrayList<HMSTrack> {
         val audioTracks = ArrayList<HMSTrack>();
         val peers = hmssdk.getPeers()
-        peers.forEach{
-            if(it.audioTrack != null)
+        peers.forEach {
+            if (it.audioTrack != null)
                 audioTracks.add(it.audioTrack!!)
         }
         return audioTracks;
     }
 
-    private fun getVideoTracks():ArrayList<HMSTrack>{
+    private fun getVideoTracks(): ArrayList<HMSTrack> {
         val videoTracks = ArrayList<HMSTrack>();
         val peers = hmssdk.getPeers()
-        peers.forEach{
-            if(it.videoTrack != null)
+        peers.forEach {
+            if (it.videoTrack != null)
                 videoTracks.add(it.videoTrack!!)
         }
         return videoTracks;
     }
 
-    private fun getAuxiliaryTracks():ArrayList<HMSTrack>{
+    private fun getAuxiliaryTracks(): ArrayList<HMSTrack> {
         val auxiliaryTracks = ArrayList<HMSTrack>();
         val peers = hmssdk.getPeers()
-        peers.forEach{
-            if(it.auxiliaryTracks != null)
+        peers.forEach {
+            if (it.auxiliaryTracks != null)
                 auxiliaryTracks.addAll(it.auxiliaryTracks!!)
         }
         return auxiliaryTracks;
     }
 
-    private fun getAllTracks():ArrayList<HMSTrack>{
+    private fun getAllTracks(): ArrayList<HMSTrack> {
         val allTracks = ArrayList<HMSTrack>()
         allTracks.addAll(getAudioTracks())
         allTracks.addAll(getVideoTracks())
@@ -475,7 +475,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             val speakersMap = HashMap<String, Any>()
             speakersMap["speakers"] = speakersList
 
-            val hashMap : HashMap<String,Any?> = HashMap()
+            val hashMap: HashMap<String, Any?> = HashMap()
             hashMap["event_name"] = "on_update_speaker"
             hashMap["data"] = speakersMap
 
@@ -492,11 +492,15 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
 
         val tracks = getAllTracks()
 
-        val track  = tracks.first {
+        val track = tracks.first {
             it.trackId == trackId
         }
 
-        hmssdk.changeTrackState(track, mute!!, hmsActionResultListener = HMSCommonAction.getActionListener(result))
+        hmssdk.changeTrackState(
+            track,
+            mute!!,
+            hmsActionResultListener = HMSCommonAction.getActionListener(result)
+        )
     }
 
 
@@ -537,11 +541,10 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         val type = call.argument<String>("type")
         val source = call.argument<String>("source")
         val roles: List<String>? = call.argument<List<String>>("roles")
-        val hmsRoles : List<HMSRole>?;
-        if(roles != null){
+        val hmsRoles: List<HMSRole>?;
+        if (roles != null) {
             hmsRoles = hmssdk.getRoles().filter { roles?.contains(it.name)!! }
-        }
-        else{
+        } else {
             hmsRoles = null;
         }
         hmssdk.changeTrackState(
@@ -650,13 +653,16 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         }
     }
 
-    private var hasChangedMetadata:Boolean = false
+    private var hasChangedMetadata: Boolean = false
 
-    private fun changeMetadata(call:MethodCall, result: Result) {
+    private fun changeMetadata(call: MethodCall, result: Result) {
         hasChangedMetadata = !hasChangedMetadata
         val metadata = call.argument<String>("metadata")
 
-        hmssdk.changeMetadata(metadata!!, hmsActionResultListener = HMSCommonAction.getActionListener(result))
+        hmssdk.changeMetadata(
+            metadata!!,
+            hmsActionResultListener = HMSCommonAction.getActionListener(result)
+        )
     }
 
 
@@ -712,6 +718,13 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         }
 
         override fun onPeerUpdate(type: HMSPeerUpdate, peer: HMSPeer) {
+
+            if (type == HMSPeerUpdate.AUDIO_TOGGLED || type == HMSPeerUpdate.VIDEO_TOGGLED
+                || type == HMSPeerUpdate.BECAME_DOMINANT_SPEAKER || type == HMSPeerUpdate.NO_DOMINANT_SPEAKER
+                || type == HMSPeerUpdate.RESIGNED_DOMINANT_SPEAKER || type == HMSPeerUpdate.STARTED_SPEAKING
+                || type == HMSPeerUpdate.STOPPED_SPEAKING
+            )
+                return
 
             val args = HashMap<String, Any?>()
             args["event_name"] = "on_peer_update"
@@ -801,7 +814,17 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         }
 
         override fun onPeerUpdate(type: HMSPeerUpdate, peer: HMSPeer) {
+
+            if (type == HMSPeerUpdate.AUDIO_TOGGLED || type == HMSPeerUpdate.VIDEO_TOGGLED
+                || type == HMSPeerUpdate.BECAME_DOMINANT_SPEAKER || type == HMSPeerUpdate.NO_DOMINANT_SPEAKER
+                || type == HMSPeerUpdate.RESIGNED_DOMINANT_SPEAKER || type == HMSPeerUpdate.STARTED_SPEAKING
+                || type == HMSPeerUpdate.STOPPED_SPEAKING
+            )
+                return
+
+
             val args = HashMap<String, Any?>()
+
             args["event_name"] = "on_peer_update"
 
             args["data"] = HMSPeerUpdateExtension.toDictionary(peer, type)
@@ -833,13 +856,6 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
                 }
         }
 
-        override fun onPeerUpdate(type: HMSPeerUpdate, peer: HMSPeer) {
-            TODO("Not yet implemented")
-        }
-
-        override fun onRoomUpdate(type: HMSRoomUpdate, hmsRoom: HMSRoom) {
-            TODO("Not yet implemented")
-        }
     }
 
     var finalargs = mutableListOf<Any?>()
@@ -860,11 +876,10 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             logArgs["log"] = HMSLogsExtension.toDictionary(level, tag, message, isWebRtCLog)
             args["data"] = logArgs
 
-            if(finalargs.size < 1000){
+            if (finalargs.size < 1000) {
                 finalargs.add(args)
-            }
-            else{
-                var copyfinalargs = mutableListOf<Any?> ();
+            } else {
+                var copyfinalargs = mutableListOf<Any?>();
                 copyfinalargs.addAll(finalargs);
                 CoroutineScope(Dispatchers.Main).launch {
                     logsSink?.success(copyfinalargs);
@@ -876,12 +891,15 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
 
     }
 
-    private fun changeName(call:MethodCall, result: Result){
+    private fun changeName(call: MethodCall, result: Result) {
         val name = call.argument<String>("name");
-        hmssdk.changeName(name=name!!, hmsActionResultListener = HMSCommonAction.getActionListener(result));
+        hmssdk.changeName(
+            name = name!!,
+            hmsActionResultListener = HMSCommonAction.getActionListener(result)
+        );
     }
 
-    private  var androidScreenshareResult: Result? = null
+    private var androidScreenshareResult: Result? = null
 
     private fun startScreenShare(result: Result) {
         androidScreenshareResult = result
@@ -896,7 +914,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
 
     fun requestScreenShare(data: Intent?) {
 
-        hmssdk.startScreenshare(object: HMSActionResultListener{
+        hmssdk.startScreenshare(object : HMSActionResultListener {
 
             override fun onError(error: HMSException) {
                 CoroutineScope(Dispatchers.Main).launch {
@@ -919,23 +937,23 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
     }
 
 
-    private fun getAllTracks(call: MethodCall,result: Result){
-        val peerId : String? = call.argument<String>("peer_id")
-        val peer : HMSPeer? = getPeerById(peerId!!)
+    private fun getAllTracks(call: MethodCall, result: Result) {
+        val peerId: String? = call.argument<String>("peer_id")
+        val peer: HMSPeer? = getPeerById(peerId!!)
 
-        val args=ArrayList<Any>()
+        val args = ArrayList<Any>()
 
         peer?.getAllTracks()?.forEach {
-            Log.i("peertracks",it.toString())
+            Log.i("peertracks", it.toString())
             args.add(HMSTrackExtension.toDictionary(it)!!)
         }
         result.success(args)
     }
 
-    private fun getTrackById(call: MethodCall,result: Result){
-        val peerId : String? = call.argument<String>("peer_id")
-        val trackId : String? = call.argument<String>("track_id")
-        val peer : HMSPeer? = getPeerById(peerId!!)
+    private fun getTrackById(call: MethodCall, result: Result) {
+        val peerId: String? = call.argument<String>("peer_id")
+        val trackId: String? = call.argument<String>("track_id")
+        val peer: HMSPeer? = getPeerById(peerId!!)
         result.success(HMSTrackExtension.toDictionary(peer?.getTrackById(trackId!!)))
     }
 }
