@@ -38,9 +38,6 @@ extension HMSRoomUpdateValues on HMSRoomUpdate {
       case "room_peer_count_updated":
         return HMSRoomUpdate.RoomPeerCountUpdated;
 
-      case "room_id_updated":
-        return HMSRoomUpdate.RoomIdUpdated;
-
       default:
         return HMSRoomUpdate.defaultUpdate;
     }
@@ -71,9 +68,6 @@ extension HMSRoomUpdateValues on HMSRoomUpdate {
 
       case HMSRoomUpdate.RoomPeerCountUpdated:
         return "room_peer_count_updated";
-
-      case HMSRoomUpdate.RoomIdUpdated:
-        return "room_id_updated";
 
       default:
         return 'defaultUpdate';

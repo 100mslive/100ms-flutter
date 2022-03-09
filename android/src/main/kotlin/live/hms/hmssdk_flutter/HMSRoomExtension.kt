@@ -39,7 +39,6 @@ class HMSRoomExtension {
                 HMSRoomUpdate.RTMP_STREAMING_STATE_UPDATED-> "rtmp_streaming_state_updated"
                 HMSRoomUpdate.HLS_STREAMING_STATE_UPDATED-> "hls_streaming_state_updated"
                 HMSRoomUpdate.BROWSER_RECORDING_STATE_UPDATED-> "browser_recording_state_updated"
-                HMSRoomUpdate.ROOM_ID_UPDATED->"room_id_updated"
                 HMSRoomUpdate.ROOM_NAME_UPDATED->"room_name_updated"
                 HMSRoomUpdate.ROOM_PEER_COUNT_UPDATED->"room_peer_count_updated"
                 else-> "defaultUpdate"
