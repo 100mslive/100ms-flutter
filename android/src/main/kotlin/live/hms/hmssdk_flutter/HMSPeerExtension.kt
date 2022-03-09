@@ -37,8 +37,6 @@ class HMSPeerExtension {
             return when(update){
                 HMSPeerUpdate.PEER_JOINED-> "peerJoined"
                 HMSPeerUpdate.PEER_LEFT-> "peerLeft"
-                HMSPeerUpdate.AUDIO_TOGGLED-> "audioToggled"
-                HMSPeerUpdate.VIDEO_TOGGLED-> "videoToggled"
                 HMSPeerUpdate.ROLE_CHANGED-> "roleUpdated"
                 HMSPeerUpdate.METADATA_CHANGED-> "metadataChanged"
                 HMSPeerUpdate.NAME_CHANGED-> "nameChanged"
