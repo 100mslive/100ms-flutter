@@ -5,7 +5,6 @@ enum HMSRoomUpdate {
   browserRecordingStateUpdated,
   rtmpStreamingStateUpdated,
   hlsStreamingStateUpdated,
-  RoomIdUpdated,
   RoomNameUpdated,
   RoomPeerCountUpdated,
   defaultUpdate
