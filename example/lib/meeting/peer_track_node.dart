@@ -7,12 +7,14 @@ class PeerTrackNode extends ChangeNotifier {
   String uid;
 
   HMSVideoTrack? track;
+  HMSAudioTrack? audioTrack;
 
   bool isVideoOn;
 
   PeerTrackNode({
     required this.peer,
     this.track,
+    this.audioTrack,
     required this.uid,
     required this.isVideoOn,
   });

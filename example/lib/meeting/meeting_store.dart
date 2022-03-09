@@ -358,7 +358,16 @@ class MeetingStore extends ChangeNotifier
       }
     }
 
-    if (track.kind == HMSTrackKind.kHMSTrackKindAudio) return;
+    if (track.kind == HMSTrackKind.kHMSTrackKindAudio) {
+      int index = peerTracks
+          .indexWhere((element) => element.uid == peer.peerId + "mainVideo");
+      if (index != -1) {
+        PeerTrackNode peerTrackNode = peerTracks[index];
+        peerTrackNode.audioTrack = track as HMSAudioTrack;
+        peerTrackNode.notify();
+      }
+      return;
+    }
 
     if (track.source == "REGULAR") {
       int index = peerTracks
@@ -383,6 +392,7 @@ class MeetingStore extends ChangeNotifier
 
   @override
   void onMessage({required HMSMessage message}) {
+    print("onMessageUpdate");
     addMessage(message);
     notifyListeners();
   }

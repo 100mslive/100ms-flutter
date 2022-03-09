@@ -4,10 +4,12 @@ import 'package:flutter/material.dart';
 // Project imports
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/brb_tag.dart';
+import 'package:hmssdk_flutter_example/common/ui/organisms/change_track_options.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/hand_raise.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/peer_name.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/video_view.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
+import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:hmssdk_flutter_example/meeting/peer_track_node.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 import 'package:provider/provider.dart';
@@ -35,6 +37,15 @@ class _VideoTileState extends State<VideoTile> {
   GlobalKey key = GlobalKey();
   @override
   Widget build(BuildContext context) {
+    MeetingStore _meetingStore = context.read<MeetingStore>();
+
+    bool mutePermission =
+        _meetingStore.localPeer?.role.permissions.mute ?? false;
+    bool unMutePermission =
+        _meetingStore.localPeer?.role.permissions.unMute ?? false;
+    bool removePeerPermission =
+        _meetingStore.localPeer?.role.permissions.removeOthers ?? false;
+
     return VisibilityDetector(
       onVisibilityChanged: (VisibilityInfo info) {
         var visiblePercentage = info.visibleFraction * 100;
@@ -55,42 +66,44 @@ class _VideoTileState extends State<VideoTile> {
       key: Key(context.read<PeerTrackNode>().uid),
       child: InkWell(
         onLongPress: () {
-          // if (!mutePermission || !unMutePermission || !removePeerPermission)
-          //   return;
-          // if (!widget.audioView &&
-          //     filteredList[index].peerId != _meetingStore.localPeer!.peerId)
-          //   showDialog(
-          //       context: context,
-          //       builder: (_) => Column(
-          //             children: [
-          //               ChangeTrackOptionDialog(
-          //                   isAudioMuted:
-          //                       filteredList[index].audioTrack?.isMute,
-          //                   isVideoMuted: filteredList[index].track == null
-          //                       ? true
-          //                       : filteredList[index].track?.isMute,
-          //                   peerName: filteredList[index].name,
-          //                   changeVideoTrack: (mute, isVideoTrack) {
-          //                     Navigator.pop(context);
-          //                     _meetingStore.changeTrackState(
-          //                         filteredList[index].track!, mute);
-          //                   },
-          //                   changeAudioTrack: (mute, isAudioTrack) {
-          //                     Navigator.pop(context);
-          //                     _meetingStore.changeTrackState(
-          //                         filteredList[index].audioTrack!, mute);
-          //                   },
-          //                   removePeer: () async {
-          //                     Navigator.pop(context);
-          //                     var peer = await _meetingStore.getPeer(
-          //                         peerId: filteredList[index].peerId);
-          //                     _meetingStore.removePeerFromRoom(peer!);
-          //                   },
-          //                   mute: mutePermission,
-          //                   unMute: unMutePermission,
-          //                   removeOthers: removePeerPermission),
-          //             ],
-          //           ));
+          var peerTrackNode = context.read<PeerTrackNode>();
+          HMSPeer peerNode = peerTrackNode.peer;
+          if (!mutePermission || !unMutePermission || !removePeerPermission)
+            return;
+          if (!widget.audioView &&
+              peerTrackNode.peer.peerId != _meetingStore.localPeer!.peerId)
+            showDialog(
+                context: context,
+                builder: (_) => Column(
+                      children: [
+                        ChangeTrackOptionDialog(
+                            isAudioMuted:
+                                peerTrackNode.audioTrack?.isMute,
+                            isVideoMuted: peerTrackNode.track == null
+                                ? true
+                                : peerTrackNode.track!.isMute,
+                            peerName: peerNode.name,
+                            changeVideoTrack: (mute, isVideoTrack) {
+                              Navigator.pop(context);
+                              _meetingStore.changeTrackState(
+                                  peerTrackNode.track!, mute);
+                            },
+                            changeAudioTrack: (mute, isAudioTrack) {
+                              Navigator.pop(context);
+                              _meetingStore.changeTrackState(
+                                  peerTrackNode.audioTrack!, mute);
+                            },
+                            removePeer: () async {
+                              Navigator.pop(context);
+                              var peer = await _meetingStore.getPeer(
+                                  peerId: peerNode.peerId);
+                              _meetingStore.removePeerFromRoom(peer!);
+                            },
+                            mute: mutePermission,
+                            unMute: unMutePermission,
+                            removeOthers: removePeerPermission),
+                      ],
+                    ));
         },
         child: Container(
           color: Colors.transparent,

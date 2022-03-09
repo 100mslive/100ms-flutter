@@ -564,7 +564,7 @@ class _MeetingPageState extends State<MeetingPage>
                               tooltip: 'Chat',
                               iconSize: 24,
                               onPressed: () {
-                                // chatMessages(context, _meetingStore);
+                                chatMessages(context);
                               },
                               icon:
                                   Icon(Icons.chat_bubble, color: Colors.grey.shade900)),
