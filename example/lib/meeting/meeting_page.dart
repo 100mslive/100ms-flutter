@@ -454,7 +454,6 @@ class _MeetingPageState extends State<MeetingPage>
                                                   context
                                                       .read<MeetingStore>()
                                                       .switchVideo();
-                                                  countOfVideoOnBetweenTwo++;
                                                 },
                                           icon: Icon(
                                             data.item2

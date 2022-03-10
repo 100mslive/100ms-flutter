@@ -61,6 +61,6 @@ class _VideoViewState extends State<VideoView> {
             );
           }
         },
-        selector: (_, peerTrackNode) =>Tuple3(peerTrackNode.track, peerTrackNode.isVideoOn,peerTrackNode.track?.isDegraded??true) );
+        selector: (_, peerTrackNode) =>Tuple3(peerTrackNode.track, peerTrackNode.isVideoOn,peerTrackNode.track?.isDegraded??false) );
   }
 }

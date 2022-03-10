@@ -272,9 +272,10 @@ class MeetingStore extends ChangeNotifier
       if (each.isLocal) {
         int index =
             peerTracks.indexWhere((element) => element.uid == each.peerId + "mainVideo");
-        if (index == -1)
-          peerTracks
-              .add(new PeerTrackNode(peer: each, uid: each.peerId + "mainVideo", isVideoOn: false));
+        if (index == -1){
+          localpeerTrackNode = new PeerTrackNode(peer: each, uid: each.peerId + "mainVideo", isVideoOn: false);
+          peerTracks.add(localpeerTrackNode!);
+        }
         localPeer = each;
         addPeer(localPeer!);
         if (localPeer!.role.name.contains("hls-") == true) isHLSLink = true;
