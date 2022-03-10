@@ -514,7 +514,7 @@ class MeetingStore extends ChangeNotifier
         }
         if (peer.role.name.contains("hls-") == false) {
           int index = peerTracks.indexWhere(
-              (element) => element.peer.peerId == peer.peerId + "mainVideo");
+              (element) => element.uid == peer.peerId + "mainVideo");
           //if (index != -1) peerTracks[index].track = track;
           if (index == -1)
             peerTracks.add(new PeerTrackNode(
