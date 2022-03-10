@@ -1,14 +1,10 @@
-import 'dart:math';
-import 'dart:ui';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:hmssdk_flutter_example/meeting/peer_track_node.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
-import 'package:visibility_detector/visibility_detector.dart';
 
 class VideoView extends StatefulWidget {
   final matchParent;
@@ -49,14 +45,18 @@ class _VideoViewState extends State<VideoView> {
                         child: Text(Utilities.getAvatarTitle(
                             context.read<PeerTrackNode>().peer.name),style: TextStyle(fontSize: 36,color: Colors.white),))));
           } else {
-            return Container(
-              height: widget.itemHeight + 100,
-              width: widget.itemWidth - 5,
-              padding: EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 15.0),
-              child: HMSVideoView(
-                track: data.item1!,
-                setMirror: false,
-                matchParent: false,
+            return ClipRRect
+            (
+              borderRadius: BorderRadius.only(topLeft:Radius.circular(10) ,topRight: Radius.circular(10)),
+              child: Container(
+                height: widget.itemHeight + 100,
+                width: widget.itemWidth - 5,
+                padding: EdgeInsets.fromLTRB(0, 0, 0, 15.0),
+                child: HMSVideoView(
+                  track: data.item1!,
+                  setMirror: false,
+                  matchParent: false,
+                ),
               ),
             );
           }

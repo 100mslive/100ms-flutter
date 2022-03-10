@@ -144,7 +144,8 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                                     child: MeetingPage(
                                         roomId: widget.roomId,
                                         flow: widget.flow,
-                                        user: widget.user),
+                                        user: widget.user,
+                                        isAudioOn:_previewStore.isAudioOn),
                                   )));
                         },
                         child: Text(

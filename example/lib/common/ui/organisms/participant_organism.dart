@@ -22,13 +22,14 @@ class _ParticipantOrganismState extends State<ParticipantOrganism> {
   MeetingStore? _meetingStore;
   @override
   void initState() {
+    _meetingStore = context.read<MeetingStore>();
     super.initState();
     checkButtons();
   }
 
   @override
   Widget build(BuildContext context) {
-    _meetingStore = Provider.of<MeetingStore>(context);
+    // _meetingStore = Provider.of<MeetingStore>(context);
     final width = MediaQuery.of(context).size.width;
     HMSPeer peer = widget.peer;
     return Card(

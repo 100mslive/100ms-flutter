@@ -29,9 +29,14 @@ class MeetingPage extends StatefulWidget {
   final String roomId;
   final MeetingFlow flow;
   final String user;
+ final bool isAudioOn;
 
   const MeetingPage(
-      {Key? key, required this.roomId, required this.flow, required this.user})
+      {Key? key,
+      required this.roomId,
+      required this.flow,
+      required this.user,
+      required this.isAudioOn})
       : super(key: key);
 
   @override
@@ -59,7 +64,7 @@ class _MeetingPageState extends State<MeetingPage>
       providers: [ChangeNotifierProvider(create: (_) => meetingsStoreInstance)],
     );
     initMeeting();
-    checkButtons();
+    checkAudioState();
   }
 
   void initMeeting() async {
@@ -75,16 +80,10 @@ class _MeetingPageState extends State<MeetingPage>
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    checkButtons();
   }
 
-  void checkButtons() async {
-    context.read<MeetingStore>().isVideoOn = !(await context
-        .read<MeetingStore>()
-        .isVideoMute(context.read<MeetingStore>().localPeer));
-    context.read<MeetingStore>().isMicOn = !(await context
-        .read<MeetingStore>()
-        .isAudioMute(context.read<MeetingStore>().localPeer));
+ void checkAudioState() async {
+    if (!widget.isAudioOn) context.read<MeetingStore>().switchAudio();
   }
 
   @override
@@ -464,7 +463,7 @@ class _MeetingPageState extends State<MeetingPage>
                                             data.item2
                                                 ? Icons.videocam
                                                 : Icons.videocam_off,
-                                            color: Colors.grey.shade900,
+                                            // color: Colors.grey.shade900,
                                           )))
                                   : Container();
                             },
@@ -490,7 +489,8 @@ class _MeetingPageState extends State<MeetingPage>
                                               data.item2
                                                   ? Icons.mic
                                                   : Icons.mic_off,
-                                              color: Colors.grey.shade900)))
+                                              // color: Colors.grey.shade900
+                                              )))
                                   : Container();
                             },
                           ),
@@ -510,7 +510,8 @@ class _MeetingPageState extends State<MeetingPage>
                                   icon: AnimatedIcon(
                                       progress: _controller,
                                       icon: AnimatedIcons.menu_close,
-                                      color: Colors.grey.shade900))),
+                                      // color: Colors.grey.shade900
+                                      ))),
                                       Container(
                           padding: EdgeInsets.all(8),
                           child: IconButton(
@@ -520,7 +521,9 @@ class _MeetingPageState extends State<MeetingPage>
                                 chatMessages(context);
                               },
                               icon:
-                                  Icon(Icons.chat_bubble, color: Colors.grey.shade900)),
+                                  Icon(Icons.chat_bubble, 
+                                  // color: Colors.grey.shade900
+                                  )),
                         ),
                           
                           Container(
@@ -534,7 +537,9 @@ class _MeetingPageState extends State<MeetingPage>
                                       context);
                                 },
                                 icon:
-                                    Icon(Icons.call_end, color: Colors.grey.shade900)),
+                                    Icon(Icons.call_end,
+                                    //  color: Colors.grey.shade900
+                                     )),
                           ),
                         ]),
                     Row(
@@ -563,7 +568,8 @@ class _MeetingPageState extends State<MeetingPage>
                                       'assets/icons/raise_hand.png',
                                       color: raisedHand
                                           ? Colors.amber.shade300
-                                          : Colors.grey.shade900,
+                                          : MediaQuery.of(context).platformBrightness==Brightness.light?
+                                          Colors.grey.shade900:Colors.white,
                                     ),
                                   ));
                             },
@@ -596,7 +602,8 @@ class _MeetingPageState extends State<MeetingPage>
                                                 Icons.screen_share,
                                                 color: isScreenShareOn
                                                     ? Colors.blue
-                                                    : Colors.grey.shade900,
+                                                    : MediaQuery.of(context).platformBrightness==Brightness.light?
+                                          Colors.grey.shade900:Colors.white,
                                               ));
                                         },
                                         selector: (_, meetingStore) =>
