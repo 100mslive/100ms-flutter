@@ -849,6 +849,7 @@ class MeetingStore extends ChangeNotifier
                 recipientRoles: null,
                 hmsMessageRecipientType: HMSMessageRecipientType.BROADCAST));
         addMessage(message);
+        notifyListeners();
         break;
       case HMSActionResultListenerMethod.sendGroupMessage:
         var message = HMSMessage(

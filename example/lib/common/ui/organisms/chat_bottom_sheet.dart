@@ -119,17 +119,17 @@ class _ChatWidgetState extends State<ChatWidget> {
                     ),
                   ),
                   Expanded(
-                    child: Selector<MeetingStore, List<HMSMessage>>(
-                      selector: (_, meetingStore) => meetingStore.messages,
-                      builder: (context, messages, _) {
+                    child: Selector<MeetingStore, Tuple2<List<HMSMessage>,int>>(
+                      selector: (_, meetingStore) => Tuple2(meetingStore.messages,meetingStore.messages.length),
+                      builder: (context, data, _) {
                         // if (!_meetingStore.isMeetingStarted) return SizedBox();
                         print("message added");
-                        if (messages.isEmpty)
+                        if (data.item2== 0)
                           return Center(child: Text('No messages'));
 
                         return ListView(
                           children: List.generate(
-                            messages.length,
+                            data.item2,
                             (index) => Container(
                               padding: EdgeInsets.symmetric(
                                   vertical: 3, horizontal: 10),
@@ -142,7 +142,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                                     children: [
                                       Expanded(
                                         child: Text(
-                                          messages[index].sender?.name ?? "",
+                                          data.item1[index].sender?.name ?? "",
                                           style: TextStyle(
                                               fontSize: 14.0,
                                               color: Colors.grey[700],
@@ -150,7 +150,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                                         ),
                                       ),
                                       Text(
-                                        messages[index].time.toString(),
+                                        data.item1[index].time.toString(),
                                         style: TextStyle(
                                             fontSize: 10.0,
                                             color: Colors.black,
@@ -166,7 +166,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                                     children: [
                                       Flexible(
                                         child: Text(
-                                          messages[index].message.toString(),
+                                          data.item1[index].message.toString(),
                                           style: TextStyle(
                                               fontSize: 14.0,
                                               color: Colors.black,
@@ -176,7 +176,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                                       Text(
                                         HMSMessageRecipientValues
                                                 .getValueFromHMSMessageRecipientType(
-                                                    messages[index]
+                                                    data.item1[index]
                                                         .hmsMessageRecipient!
                                                         .hmsMessageRecipientType)
                                             .toLowerCase(),
@@ -226,9 +226,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                         ),
                         GestureDetector(
                           onTap: () async {
-                            MeetingStore _meetingStore =
-                                context.read<MeetingStore>();
-                            List<HMSRole> hmsRoles = _meetingStore.roles;
+                            List<HMSRole> hmsRoles = widget.meetingStore.roles;
                             String message = messageTextController.text;
                             if (message.isEmpty) return;
 
@@ -237,20 +235,19 @@ class _ChatWidgetState extends State<ChatWidget> {
                               rolesName.add(hmsRoles[i].name);
 
                             if (this.valueChoose == "Everyone") {
-                              _meetingStore.sendBroadcastMessage(message);
+                              widget.meetingStore.sendBroadcastMessage(message);
                             } else if (rolesName.contains(this.valueChoose)) {
                               List<HMSRole> selectedRoles = [];
                               selectedRoles.add(hmsRoles.firstWhere(
                                   (role) => role.name == this.valueChoose));
-                              _meetingStore.sendGroupMessage(
+                              widget.meetingStore.sendGroupMessage(
                                   message, selectedRoles);
-                            } else if (_meetingStore.localPeer!.peerId !=
+                            } else if (widget.meetingStore.localPeer!.peerId !=
                                 this.valueChoose) {
-                              var peer = await _meetingStore.getPeer(
+                              var peer = await widget.meetingStore.getPeer(
                                   peerId: this.valueChoose);
-                              _meetingStore.sendDirectMessage(message, peer!);
+                              widget.meetingStore.sendDirectMessage(message, peer!);
                             }
-                            setState(() {});
                             messageTextController.clear();
                           },
                           child: Icon(

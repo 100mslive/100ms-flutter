@@ -48,6 +48,7 @@ class _MeetingPageState extends State<MeetingPage>
   bool isRecordingStarted = false;
   bool isBRB = false;
   late MeetingStore meetingsStoreInstance;
+  final scrollController = DraggableScrollableController();
 
   @override
   void initState() {
@@ -411,7 +412,6 @@ class _MeetingPageState extends State<MeetingPage>
 
   Widget expandModalBottomSheet() {
     final meetingStore = context.read<MeetingStore>();
-    final scrollController = DraggableScrollableController();
     Duration _duration = Duration(milliseconds: 300);
     Tween<Offset> _tween = Tween(begin: Offset(0, 1), end: Offset(0, 0));
     AnimationController _controller =
@@ -419,7 +419,6 @@ class _MeetingPageState extends State<MeetingPage>
     bool isExpanded = false;
 
     return DraggableScrollableSheet(
-        
         controller: scrollController,
         expand: false,
         minChildSize: 0.1,
@@ -432,7 +431,6 @@ class _MeetingPageState extends State<MeetingPage>
               controller: scrollableController,
               physics: NeverScrollableScrollPhysics(),
               child: Container(
-                // color: Colors.black,
                 // color: Utilities.menuColor,
                 // height: ,
                 width: MediaQuery.of(context).size.width,
@@ -513,7 +511,36 @@ class _MeetingPageState extends State<MeetingPage>
                                       progress: _controller,
                                       icon: AnimatedIcons.menu_close,
                                       color: Colors.grey.shade900))),
-                          Selector<MeetingStore, bool>(
+                                      Container(
+                          padding: EdgeInsets.all(8),
+                          child: IconButton(
+                              tooltip: 'Chat',
+                              iconSize: 24,
+                              onPressed: () {
+                                chatMessages(context);
+                              },
+                              icon:
+                                  Icon(Icons.chat_bubble, color: Colors.grey.shade900)),
+                        ),
+                          
+                          Container(
+                            padding: EdgeInsets.all(8),
+                            child: IconButton(
+                                color: Colors.red,
+                                tooltip: 'Leave Or End',
+                                iconSize: 24,
+                                onPressed: () async {
+                                  await UtilityComponents.onBackPressed(
+                                      context);
+                                },
+                                icon:
+                                    Icon(Icons.call_end, color: Colors.grey.shade900)),
+                          ),
+                        ]),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Selector<MeetingStore, bool>(
                             selector: (_, meetingStore) =>
                                 meetingStore.isRaisedHand,
                             builder: (_, raisedHand, __) {
@@ -541,34 +568,6 @@ class _MeetingPageState extends State<MeetingPage>
                                   ));
                             },
                           ),
-                          Container(
-                            padding: EdgeInsets.all(8),
-                            child: IconButton(
-                                color: Colors.red,
-                                tooltip: 'Leave Or End',
-                                iconSize: 24,
-                                onPressed: () async {
-                                  await UtilityComponents.onBackPressed(
-                                      context);
-                                },
-                                icon:
-                                    Icon(Icons.call_end, color: Colors.grey.shade900)),
-                          ),
-                        ]),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Container(
-                          padding: EdgeInsets.all(8),
-                          child: IconButton(
-                              tooltip: 'Chat',
-                              iconSize: 24,
-                              onPressed: () {
-                                chatMessages(context);
-                              },
-                              icon:
-                                  Icon(Icons.chat_bubble, color: Colors.grey.shade900)),
-                        ),
                         Selector<MeetingStore, HMSPeer?>(
                           selector: (_, meetingStore) => meetingStore.localPeer,
                           builder: (_, localPeer, __) {

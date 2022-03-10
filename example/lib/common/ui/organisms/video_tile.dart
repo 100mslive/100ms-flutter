@@ -78,7 +78,7 @@ class _VideoTileState extends State<VideoTile> {
                       children: [
                         ChangeTrackOptionDialog(
                             isAudioMuted:
-                                peerTrackNode.audioTrack?.isMute,
+                                peerTrackNode.audioTrack?.isMute??true,
                             isVideoMuted: peerTrackNode.track == null
                                 ? true
                                 : peerTrackNode.track!.isMute,
