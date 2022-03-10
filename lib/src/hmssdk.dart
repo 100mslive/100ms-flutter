@@ -738,4 +738,5 @@ class HMSSDK with WidgetsBindingObserver {
       });
     }
   }
+
 }

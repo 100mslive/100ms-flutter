@@ -242,9 +242,9 @@ class PlatformService {
           });
           break;
         case HMSUpdateListenerMethod.onRtcStats:
-          HMSRTCStats rtcStats =
-              HMSRTCStats.fromMap(data['rtc_stats_report'] as Map);
-          notifyUpdateListeners(method, {'rtc_stats_report': rtcStats});
+          HMSRTCStatsReport rtcStatsReport =
+              HMSRTCStatsReport.fromMap(data['rtc_stats_report'] as Map);
+          notifyUpdateListeners(method, {'rtc_stats_report': rtcStatsReport});
           break;
       }
     });
@@ -293,6 +293,21 @@ class PlatformService {
           break;
 
         case HMSPreviewUpdateListenerMethod.unknown:
+          break;
+        case HMSPreviewUpdateListenerMethod.onPeerUpdate:
+          HMSPeer? peer = HMSPeer.fromMap(event.data['peer']);
+          HMSPeerUpdate? update = HMSPeerUpdateValues.getHMSPeerUpdateFromName(
+              event.data['update']);
+          notifyPreviewListeners(method, {'peer': peer, 'update': update});
+          break;
+        case HMSPreviewUpdateListenerMethod.onRoomUpdate:
+          HMSRoom? room = event.data['room'] != null
+              ? HMSRoom.fromMap(event.data['room'])
+              : null;
+
+          HMSRoomUpdate? update = HMSRoomUpdateValues.getHMSRoomUpdateFromName(
+              event.data['update']);
+          notifyPreviewListeners(method, {'room': room, 'update': update});
           break;
       }
     });
@@ -349,6 +364,18 @@ class PlatformService {
         });
         break;
       case HMSPreviewUpdateListenerMethod.unknown:
+        break;
+      case HMSPreviewUpdateListenerMethod.onPeerUpdate:
+        previewListeners.forEach((e) {
+          e.onPeerUpdate(
+              peer: arguments['peer'], update: arguments['update']);
+        });
+        break;
+      case HMSPreviewUpdateListenerMethod.onRoomUpdate:
+        previewListeners.forEach((e) {
+          e.onRoomUpdate(
+              room: arguments['room'], update: arguments['update']);
+        });
         break;
     }
   }
@@ -433,7 +460,7 @@ class PlatformService {
         break;
       case HMSUpdateListenerMethod.onRtcStats:
         updateListeners.forEach(
-            (e) => e.onRTCStats(hmsrtcStats: arguments['rtc_stats_report']));
+            (e) => e.onRTCStats(hmsrtcStatsReport: arguments['rtc_stats_report']));
         break;
       case HMSUpdateListenerMethod.unknown:
         break;

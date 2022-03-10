@@ -14,6 +14,7 @@ import 'dart:core';
 
 // Project imports:
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:hmssdk_flutter/src/model/hms_date_extension.dart';
 
 class HMSMessage {
   ///[sender] id basically it is the peerId who is sending message.
@@ -26,7 +27,7 @@ class HMSMessage {
   final String type;
 
   ///[time] at which [sender] sent the [message]
-  final String time;
+  final DateTime time;
 
   HMSMessageRecipient? hmsMessageRecipient;
   HMSMessage(
@@ -45,7 +46,7 @@ class HMSMessage {
         sender: sender,
         message: messageMap['message'] as String,
         type: messageMap['type'] as String,
-        time: messageMap['time'] as String,
+        time: HMSDateExtension.convertDate(messageMap['time']),
         hmsMessageRecipient: recipient);
   }
 

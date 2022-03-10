@@ -20,6 +20,11 @@ class PreviewStore extends ChangeNotifier
 
   bool isAudioOn = true;
 
+  bool isRecordingStarted = false;
+
+  List<HMSPeer> peers = [];
+
+
   @override
   void onError({required HMSException error}) {
     updateError(error);
@@ -62,6 +67,46 @@ class PreviewStore extends ChangeNotifier
 
     HmsSdkManager.hmsSdkInteractor?.preview(config: config);
     return true;
+  }
+
+  @override
+  void onPeerUpdate({required HMSPeer peer, required HMSPeerUpdate update}) {
+    switch (update) {
+      case HMSPeerUpdate.peerJoined:
+        peers.add(peer);
+        break;
+      case HMSPeerUpdate.peerLeft:
+        peers.remove(peer);
+        break;
+      case HMSPeerUpdate.roleUpdated:
+        int index = peers.indexOf(peer);
+        peers[index] = peer;
+        break;
+      default:
+        break;
+    }
+  }
+
+  @override
+  void onRoomUpdate({required HMSRoom room, required HMSRoomUpdate update}) {
+    switch (update) {
+      case HMSRoomUpdate.browserRecordingStateUpdated:
+        isRecordingStarted = room.hmsBrowserRecordingState?.running ?? false;
+        break;
+
+      case HMSRoomUpdate.serverRecordingStateUpdated:
+        isRecordingStarted = room.hmsServerRecordingState?.running ?? false;
+        break;
+
+      case HMSRoomUpdate.rtmpStreamingStateUpdated:
+        isRecordingStarted = room.hmsRtmpStreamingState?.running ?? false;
+        break;
+      case HMSRoomUpdate.hlsStreamingStateUpdated:
+        isRecordingStarted = room.hmshlsStreamingState?.running ?? false;
+        break;
+      default:
+        break;
+    }
   }
 
   void addPreviewListener() {

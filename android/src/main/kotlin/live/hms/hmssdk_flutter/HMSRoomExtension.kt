@@ -16,7 +16,6 @@ class HMSRoomExtension {
 
             val args=ArrayList<Any>()
             room.peerList.forEach {
-                io.flutter.Log.i("OnJoinAndroidSDk",it.toString())
                 args.add(HMSPeerExtension.toDictionary(it)!!)
             }
             hashMap["local_peer"] = HMSPeerExtension.toDictionary(room.localPeer)
@@ -25,6 +24,8 @@ class HMSRoomExtension {
             hashMap["browser_recording_state"] = HMSStreamingState.toDictionary(room.browserRecordingState)
             hashMap["server_recording_state"] = HMSStreamingState.toDictionary(room.serverRecordingState)
             hashMap["hls_streaming_state"] = HMSStreamingState.toDictionary(room.hlsStreamingState)
+            hashMap["peer_count"] = room.peerCount
+            hashMap["started_at"] = room.startedAt?:-1
             return hashMap
         }
 
@@ -38,6 +39,8 @@ class HMSRoomExtension {
                 HMSRoomUpdate.RTMP_STREAMING_STATE_UPDATED-> "rtmp_streaming_state_updated"
                 HMSRoomUpdate.HLS_STREAMING_STATE_UPDATED-> "hls_streaming_state_updated"
                 HMSRoomUpdate.BROWSER_RECORDING_STATE_UPDATED-> "browser_recording_state_updated"
+                HMSRoomUpdate.ROOM_NAME_UPDATED->"room_name_updated"
+                HMSRoomUpdate.ROOM_PEER_COUNT_UPDATED->"room_peer_count_updated"
                 else-> "defaultUpdate"
             }
         }

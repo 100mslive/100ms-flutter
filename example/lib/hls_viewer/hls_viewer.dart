@@ -21,6 +21,7 @@ class _HLSViewerState extends State<HLSViewer> {
   @override
   void initState() {
     super.initState();
+
     _controller = VideoPlayerController.network(
       widget.streamUrl,
     )..initialize().then((_) {

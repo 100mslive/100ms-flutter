@@ -1,10 +1,15 @@
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 class HMSLocalVideoStats {
+	// Round trip time observed since previous report.
   double roundTripTime;
-  int bytesSent;
+	// Total bytes sent by this track in the current session.
+	int bytesSent;
+	// Outgoing bitrate of this track observed since previous report in Kb/s.
   double bitrate;
-  double frameRate;
+	// Resolution of video frames being sent.
+	double frameRate;
+	// Frame rate of video frames being sent (FPS).
   HMSVideoResolution resolution;
 
   HMSLocalVideoStats({

@@ -255,41 +255,78 @@ class MeetingStore extends ChangeNotifier
 
   @override
   void onJoin({required HMSRoom room}) async {
+    isMeetingStarted = true;
     hmsRoom = room;
-    if (Platform.isAndroid) {
-      print("members ${room.peers!.length}");
-      HMSPeer each = room.hmsLocalPeer;
+     if (room.hmshlsStreamingState?.running ?? false) {
+      hasHlsStarted = true;
+      streamUrl = room.hmshlsStreamingState?.variants[0]?.hlsStreamUrl ?? "";
+    } else {
+      hasHlsStarted = false;
+    }
+    if (room.hmsBrowserRecordingState?.running == true)
+      isRecordingStarted = true;
+    else
+      isRecordingStarted = false;
+
+        for (HMSPeer each in room.peers!) {
       if (each.isLocal) {
-        int index = peerTracks
-            .indexWhere((element) => element.uid == each.peerId + "mainVideo");
-        if (index == -1) {
-          localpeerTrackNode = PeerTrackNode(
-              peer: each, uid: each.peerId + "mainVideo", isVideoOn: false);
-          peerTracks.add(localpeerTrackNode!);
-          localpeerTrackNode!.notify();
-        }
+        int index =
+            peerTracks.indexWhere((element) => element.uid == each.peerId + "mainVideo");
+        if (index == -1)
+          peerTracks
+              .add(new PeerTrackNode(peer: each, uid: each.peerId + "mainVideo", isVideoOn: false));
         localPeer = each;
         addPeer(localPeer!);
-        print('on join ${localPeer!.peerId}');
-      }
-    } else {
-      for (HMSPeer each in room.peers!) {
-        addPeer(each);
-        if (each.isLocal) {
-          localPeer = each;
-          print('on join ${localPeer!.name}  ${localPeer!.peerId}');
-          if (each.videoTrack != null) {
-            // trackStatus[each.videoTrack!.trackId] = HMSTrackUpdate.trackMuted;
-            // tracks.insert(0, each.videoTrack!);
-          }
-        } else {
-          if (each.videoTrack != null) {
-            // trackStatus[each.videoTrack!.trackId] = HMSTrackUpdate.trackMuted;
-            // tracks.insert(0, each.videoTrack!);
+        if (localPeer!.role.name.contains("hls-") == true) isHLSLink = true;
+
+        if (each.videoTrack != null) {
+          if (each.videoTrack!.kind == HMSTrackKind.kHMSTrackKindVideo) {
+            int index = peerTracks
+                .indexWhere((element) => element.uid == each.peerId + "mainVideo");
+            peerTracks[index].track = each.videoTrack!;
+            if (each.videoTrack!.isMute) {
+              this.isVideoOn = false;
+            }
           }
         }
+        break;
       }
     }
+
+    // if (Platform.isAndroid) {
+    //   print("members ${room.peers!.length}");
+    //   HMSPeer each = room.hmsLocalPeer;
+    //   if (each.isLocal) {
+    //     int index = peerTracks
+    //         .indexWhere((element) => element.uid == each.peerId + "mainVideo");
+    //     if (index == -1) {
+    //       localpeerTrackNode = PeerTrackNode(
+    //           peer: each, uid: each.peerId + "mainVideo", isVideoOn: false);
+    //       peerTracks.add(localpeerTrackNode!);
+    //       localpeerTrackNode!.notify();
+    //     }
+    //     localPeer = each;
+    //     addPeer(localPeer!);
+    //     print('on join ${localPeer!.peerId}');
+    //   }
+    // } else {
+    //   for (HMSPeer each in room.peers!) {
+    //     addPeer(each);
+    //     if (each.isLocal) {
+    //       localPeer = each;
+    //       print('on join ${localPeer!.name}  ${localPeer!.peerId}');
+    //       if (each.videoTrack != null) {
+    //         // trackStatus[each.videoTrack!.trackId] = HMSTrackUpdate.trackMuted;
+    //         // tracks.insert(0, each.videoTrack!);
+    //       }
+    //     } else {
+    //       if (each.videoTrack != null) {
+    //         // trackStatus[each.videoTrack!.trackId] = HMSTrackUpdate.trackMuted;
+    //         // tracks.insert(0, each.videoTrack!);
+    //       }
+    //     }
+    //   }
+    // }
     roles = await getRoles();
     notifyListeners();
   }
@@ -321,7 +358,9 @@ class MeetingStore extends ChangeNotifier
   }
 
   @override
-  void onPeerUpdate({required HMSPeer peer, required HMSPeerUpdate update}) {
+  void onPeerUpdate(
+      {required HMSPeer peer, required HMSPeerUpdate update}) async {
+
     peerOperation(peer, update);
   }
 
@@ -489,10 +528,6 @@ class MeetingStore extends ChangeNotifier
             (leftPeer) => leftPeer.uid == peer.peerId + "mainVideo");
         removePeer(peer);
         notifyListeners();
-        break;
-      case HMSPeerUpdate.audioToggled:
-        break;
-      case HMSPeerUpdate.videoToggled:
         break;
       case HMSPeerUpdate.roleUpdated:
         if (peer.isLocal) {
@@ -779,7 +814,7 @@ class MeetingStore extends ChangeNotifier
   }
 
   @override
-  void onRTCStats({required HMSRTCStats hmsrtcStats}) {
+  void onRTCStats({required HMSRTCStatsReport hmsrtcStatsReport}) {
     //   print(hmsrtcStats);
   }
 
@@ -839,7 +874,7 @@ class MeetingStore extends ChangeNotifier
             sender: localPeer,
             message: arguments!['message'],
             type: arguments['type'],
-            time: formatter.format(DateTime.now()),
+            time: DateTime.now(),
             hmsMessageRecipient: HMSMessageRecipient(
                 recipientPeer: null,
                 recipientRoles: null,
@@ -852,7 +887,7 @@ class MeetingStore extends ChangeNotifier
             sender: localPeer,
             message: arguments!['message'],
             type: arguments['type'],
-            time: formatter.format(DateTime.now()),
+            time: DateTime.now(),
             hmsMessageRecipient: HMSMessageRecipient(
                 recipientPeer: null,
                 recipientRoles: arguments['roles'],
@@ -866,7 +901,7 @@ class MeetingStore extends ChangeNotifier
             sender: localPeer,
             message: arguments!['message'],
             type: arguments['type'],
-            time: formatter.format(DateTime.now()),
+            time: DateTime.now(),
             hmsMessageRecipient: HMSMessageRecipient(
                 recipientPeer: arguments['peer'],
                 recipientRoles: null,

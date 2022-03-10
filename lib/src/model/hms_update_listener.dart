@@ -115,6 +115,6 @@ abstract class HMSUpdateListener {
       required HMSPeer peer});
 
   void onRTCStats({
-    required HMSRTCStats hmsrtcStats,
+    required HMSRTCStatsReport hmsrtcStatsReport,
   });
 }

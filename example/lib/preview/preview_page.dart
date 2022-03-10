@@ -41,7 +41,6 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
     );
     super.initState();
     initPreview();
-
   }
 
   void initPreview() async {
