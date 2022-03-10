@@ -69,9 +69,7 @@ class MeetingStore extends ChangeNotifier
   List<HMSPeer> peers = [];
 
   HMSPeer? localPeer;
-
-  HMSTrack? localTrack;
-
+  
   HMSTrack? screenTrack;
 
   bool isActiveSpeakerMode = false;
@@ -123,8 +121,6 @@ class MeetingStore extends ChangeNotifier
       _hmssdkInteractor.stopScreenShare();
     }
     _hmssdkInteractor.leave(hmsActionResultListener: this);
-    isRoomEnded = true;
-    peerTracks.clear();
   }
 
   Future<void> switchAudio() async {
@@ -351,7 +347,6 @@ class MeetingStore extends ChangeNotifier
       localPeer = peer;
 
       if (track.kind == HMSTrackKind.kHMSTrackKindVideo) {
-        localTrack = track;
         if (track.isMute) {
           this.isVideoOn = false;
         }
@@ -582,7 +577,7 @@ class MeetingStore extends ChangeNotifier
                 peer: peer,
                 uid: peer.peerId + track.trackId,
                 track: track as HMSVideoTrack);
-            notifyListeners();
+            peerTracks[0].notify();
           } else {
             peerTracks.insert(
                 0,
@@ -799,6 +794,7 @@ class MeetingStore extends ChangeNotifier
       Map<String, dynamic>? arguments}) {
     switch (methodType) {
       case HMSActionResultListenerMethod.leave:
+        peerTracks.clear();
         isRoomEnded = true;
         notifyListeners();
         break;
@@ -862,6 +858,8 @@ class MeetingStore extends ChangeNotifier
                 recipientRoles: arguments['roles'],
                 hmsMessageRecipientType: HMSMessageRecipientType.GROUP));
         addMessage(message);
+        notifyListeners();
+
         break;
       case HMSActionResultListenerMethod.sendDirectMessage:
         var message = HMSMessage(
@@ -874,6 +872,8 @@ class MeetingStore extends ChangeNotifier
                 recipientRoles: null,
                 hmsMessageRecipientType: HMSMessageRecipientType.DIRECT));
         addMessage(message);
+        notifyListeners();
+
         break;
       case HMSActionResultListenerMethod.hlsStreamingStarted:
         this.event = "HLS Streaming Started";

@@ -292,8 +292,6 @@ class _MeetingPageState extends State<MeetingPage>
                         ],
                       ),
                       body: Stack(
-                        // crossAxisAlignment: CrossAxisAlignment.start,
-                        // mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Container(
                             height : MediaQuery.of(context).size.height * 0.78,
@@ -323,6 +321,7 @@ class _MeetingPageState extends State<MeetingPage>
                                                         value: data
                                                             .item1[index],
                                                         child: VideoTile(
+                                                          key: Key(data.item1[index].uid),
                                                           itemHeight:
                                                               MediaQuery.of(
                                                                       context)
@@ -375,8 +374,6 @@ class _MeetingPageState extends State<MeetingPage>
                               )
                         ],
                       ),
-                      
-                      //Later this row will be replaced with modalBottomSheet
                        );
             },
           )),
