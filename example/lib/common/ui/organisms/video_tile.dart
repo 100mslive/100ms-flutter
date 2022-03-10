@@ -48,7 +48,8 @@ class _VideoTileState extends State<VideoTile> {
 
     return VisibilityDetector(
       onVisibilityChanged: (VisibilityInfo info) {
-        
+        if(_meetingStore.isRoomEnded)
+        return;
         var visiblePercentage = info.visibleFraction * 100;
         var peerTrackNode = context.read<PeerTrackNode>();
         if (visiblePercentage <= 40) {
