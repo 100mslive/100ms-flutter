@@ -47,6 +47,13 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
               UtilityComponents.showSnackBarWithString(
                   (event as HMSException).message, context)
             });
+    reaction(
+        (_) => _previewStore.isRecordingStarted,
+        (event) => {
+              UtilityComponents.showSnackBarWithString(
+                  event == true ? "Recording Started" : "Recording Stopped",
+                  context)
+            });
   }
 
   void initPreview() async {
@@ -70,6 +77,36 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
         child: Scaffold(
           appBar: AppBar(
             title: Text("Preview"),
+            actions: [
+              IconButton(
+                  onPressed: () {
+                    showModalBottomSheet<void>(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return Container(
+                          height: MediaQuery.of(context).size.height / 2,
+                          child: _previewStore.peers.isNotEmpty
+                              ? ListView.separated(
+                                  itemBuilder: (context, index) {
+                                    HMSPeer peer = _previewStore.peers[index];
+                                    return ListTile(
+                                      title: Text(peer.name),
+                                      leading: Text(peer.role.name),
+                                    );
+                                  },
+                                  separatorBuilder: (context, index) {
+                                    return Divider();
+                                  },
+                                  itemCount: _previewStore.peers.length)
+                              : Center(
+                                  child: Text("Waiting for others to join!"),
+                                ),
+                        );
+                      },
+                    );
+                  },
+                  icon: Icon(Icons.person))
+            ],
           ),
           body: Container(
             height: itemHeight,

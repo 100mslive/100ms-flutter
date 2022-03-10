@@ -13,6 +13,7 @@ import 'dart:io';
 
 // Project imports:
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:hmssdk_flutter/src/service/platform_service.dart';
 
 class HMSPeer {
   ///id of the peer
@@ -124,4 +125,27 @@ class HMSPeer {
     List<HMSPeer> peers = peersMap.map((e) => HMSPeer.fromMap(e)).toList();
     return peers;
   }
+
+  Future<List<HMSTrack>> getAllTracks() async {
+    var result = await PlatformService.invokeMethod(
+        PlatformMethod.getAllTracks,
+        arguments: {"peer_id": this.peerId});
+    print(result);
+    List<HMSTrack> tracks = [];
+    result.forEach((element) {
+      HMSTrack hmsTrack = HMSTrack.fromMap(map: element);
+      tracks.add(hmsTrack);
+    });
+
+    return tracks;
+  }
+
+  Future<HMSTrack> getTrackById({required String trackId}) async {
+    var result = await PlatformService.invokeMethod(PlatformMethod.getTrackById,
+        arguments: {"peer_id": this.peerId, "track_id": trackId});
+
+    HMSTrack hmsTrack = HMSTrack.fromMap(map: result);
+    return hmsTrack;
+  }
+
 }
