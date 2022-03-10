@@ -45,18 +45,18 @@ class UtilityComponents {
     );
   } 
 
-  static void showRoleChangeDialog(event, context) async {
+  static void showRoleChangeDialog(HMSRoleChangeRequest? event, context) async {
     event = event as HMSRoleChangeRequest;
     String answer = await showDialog(
         barrierDismissible: false,
         context: context,
-        builder: (ctx) => RoleChangeDialogOrganism(roleChangeRequest: event));
+        builder: (ctx) => RoleChangeDialogOrganism(roleChangeRequest: event!));
     if (answer == "OK") {
       MeetingStore meetingStore =
           Provider.of<MeetingStore>(context, listen: false);
       meetingStore.acceptChangeRole(event);
       UtilityComponents.showSnackBarWithString(
-          (event as HMSException).description, context);
+          "Role Change to "+event.suggestedRole.name, context);
     }
   }
 

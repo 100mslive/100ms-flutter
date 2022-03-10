@@ -1,5 +1,4 @@
 //Package imports
-import 'dart:io';
 
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/cupertino.dart';
@@ -86,8 +85,6 @@ class MeetingStore extends ChangeNotifier
 
   HMSRoom? hmsRoom;
 
-  PeerTrackNode? localpeerTrackNode;
-
   int firstTimeBuild = 0;
   final DateFormat formatter = DateFormat('d MMM y h:mm:ss a');
 
@@ -131,12 +128,7 @@ class MeetingStore extends ChangeNotifier
 
   Future<void> switchVideo() async {
     await _hmssdkInteractor.switchVideo(isOn: isVideoOn);
-    if (isVideoOn)
-      localpeerTrackNode?.isVideoOn = false;
-    else
-      localpeerTrackNode?.isVideoOn = true;
     isVideoOn = !isVideoOn;
-    localpeerTrackNode!.notify();
     notifyListeners();
   }
 
@@ -241,6 +233,7 @@ class MeetingStore extends ChangeNotifier
   void addTrackChangeRequestInstance(
       HMSTrackChangeRequest hmsTrackChangeRequest) {
     this.hmsTrackChangeRequest = hmsTrackChangeRequest;
+    notifyListeners();
   }
 
   void updatePeerAt(peer) {
@@ -272,10 +265,8 @@ class MeetingStore extends ChangeNotifier
       if (each.isLocal) {
         int index =
             peerTracks.indexWhere((element) => element.uid == each.peerId + "mainVideo");
-        if (index == -1){
-          localpeerTrackNode = new PeerTrackNode(peer: each, uid: each.peerId + "mainVideo", isVideoOn: false);
-          peerTracks.add(localpeerTrackNode!);
-        }
+        if (index == -1)
+          peerTracks.add(PeerTrackNode(peer: each, uid: each.peerId + "mainVideo", isVideoOn: false));        
         localPeer = each;
         addPeer(localPeer!);
         if (localPeer!.role.name.contains("hls-") == true) isHLSLink = true;
@@ -473,6 +464,14 @@ class MeetingStore extends ChangeNotifier
       {required HMSTrackChangeRequest hmsTrackChangeRequest}) {
     if (!hmsTrackChangeRequest.mute)
       addTrackChangeRequestInstance(hmsTrackChangeRequest);
+      else{
+        if(hmsTrackChangeRequest.track.kind==HMSTrackKind.kHMSTrackKindVideo){
+          isVideoOn = false;
+        }else{
+          isMicOn = false;
+        }
+        notifyListeners();
+      }
   }
 
   void changeTracks(HMSTrackChangeRequest hmsTrackChangeRequest) {
@@ -481,6 +480,7 @@ class MeetingStore extends ChangeNotifier
     } else {
       switchAudio();
     }
+    notifyListeners();
   }
 
   @override

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:connectivity_checker/connectivity_checker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:hmssdk_flutter_example/hls_viewer/hls_viewer.dart';
@@ -52,16 +53,14 @@ class _MeetingPageState extends State<MeetingPage>
   bool videoPreviousState = false;
   bool isRecordingStarted = false;
   bool isBRB = false;
-  late MeetingStore meetingsStoreInstance;
   final scrollController = DraggableScrollableController();
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance!.addObserver(this);
-    meetingsStoreInstance = MeetingStore();
     MultiProvider(
-      providers: [ChangeNotifierProvider(create: (_) => meetingsStoreInstance)],
+      providers: [ChangeNotifierProvider(create: (_) => MeetingStore())],
     );
     initMeeting();
     checkAudioState();
@@ -105,7 +104,7 @@ class _MeetingPageState extends State<MeetingPage>
 
       case 2:
         if (_meetingStore.isRecordingStarted) {
-          meetingsStoreInstance.stopRtmpAndRecording();
+          _meetingStore.stopRtmpAndRecording();
           isRecordingStarted = false;
         } else {
           if (isRecordingStarted == false) {
@@ -114,7 +113,7 @@ class _MeetingPageState extends State<MeetingPage>
                 placeholder: "Enter RTMP Url",
                 prefilledValue: Constant.rtmpUrl);
             if (url.isNotEmpty) {
-              meetingsStoreInstance.startRtmpOrRecording(
+              _meetingStore.startRtmpOrRecording(
                   meetingUrl: url, toRecord: true, rtmpUrls: null);
               isRecordingStarted = true;
             }
@@ -123,7 +122,7 @@ class _MeetingPageState extends State<MeetingPage>
         break;
 
       case 3:
-        if (_meetingStore.isVideoOn) meetingsStoreInstance.switchCamera();
+        if (_meetingStore.isVideoOn) _meetingStore.switchCamera();
 
         break;
       case 4:
@@ -159,6 +158,7 @@ class _MeetingPageState extends State<MeetingPage>
         //         !(_meetingStore.localTrack?.isMute ?? true);
         // }
         // setState(() {});
+        UtilityComponents.showSnackBarWithString("Coming Soon...", context);
         break;
       case 6:
         // if (!_meetingStore.isActiveSpeakerMode) {
@@ -185,40 +185,40 @@ class _MeetingPageState extends State<MeetingPage>
         String name = await UtilityComponents.showInputDialog(
             context: context, placeholder: "Enter Name");
         if (name.isNotEmpty) {
-          meetingsStoreInstance.changeName(name: name);
+          _meetingStore.changeName(name: name);
         }
         break;
       case 9:
         if (_meetingStore.hasHlsStarted) {
-          meetingsStoreInstance.stopHLSStreaming();
+          _meetingStore.stopHLSStreaming();
         } else {
           String url = await UtilityComponents.showInputDialog(
               context: context,
               placeholder: "Enter HLS Url",
               prefilledValue: Constant.rtmpUrl);
           if (url.isNotEmpty) {
-            meetingsStoreInstance.startHLSStreaming(url);
+            _meetingStore.startHLSStreaming(url);
           }
         }
         break;
 
       case 10:
-        List<HMSRole> roles = await meetingsStoreInstance.getRoles();
+        List<HMSRole> roles = await _meetingStore.getRoles();
         List<HMSRole> selectedRoles =
             await UtilityComponents.showRoleList(context, roles);
         if (selectedRoles.isNotEmpty)
-          meetingsStoreInstance.changeTrackStateForRole(true, selectedRoles);
+          _meetingStore.changeTrackStateForRole(true, selectedRoles);
         break;
       case 11:
-        meetingsStoreInstance.changeTrackStateForRole(true, null);
+        _meetingStore.changeTrackStateForRole(true, null);
         break;
       case 12:
-        meetingsStoreInstance.changeMetadataBRB();
+        _meetingStore.changeMetadataBRB();
         // raisedHand = false;
         isBRB = !isBRB;
         break;
       case 13:
-        meetingsStoreInstance.endRoom(false, "Room Ended From Flutter");
+        _meetingStore.endRoom(false, "Room Ended From Flutter");
         if (_meetingStore.isRoomEnded) {
           Navigator.pop(context);
         }
@@ -238,14 +238,24 @@ class _MeetingPageState extends State<MeetingPage>
       child: ConnectivityWidgetWrapper(
           disableInteraction: true,
           offlineWidget: OfflineWidget(),
-          child: Selector<MeetingStore, Tuple2<bool, bool>>(
+          child: Selector<MeetingStore, Tuple4<bool, bool,HMSRoleChangeRequest?,HMSTrackChangeRequest?>>(
             selector: (_, meetingStore) =>
-                Tuple2(meetingStore.reconnecting, meetingStore.isRoomEnded),
+                Tuple4(meetingStore.reconnecting, meetingStore.isRoomEnded,meetingStore.roleChangeRequest,meetingStore.hmsTrackChangeRequest),
             builder: (_, data, __) {
               if (data.item2) {
                 Navigator.of(context).popUntil((route) => route.isFirst);
                 UtilityComponents.showSnackBarWithString(
                     "Meeting Ended", context);
+              }
+              if(data.item3!=null){
+                SchedulerBinding.instance!.addPostFrameCallback((_) {
+                 UtilityComponents.showRoleChangeDialog(data.item3, context);
+                });
+              }
+              if(data.item4!=null){
+                SchedulerBinding.instance!.addPostFrameCallback((_) {
+                 UtilityComponents.showTrackChangeDialog(data.item4, context);
+                });
               }
               return data.item1
                   ? OfflineWidget()
@@ -315,6 +325,7 @@ class _MeetingPageState extends State<MeetingPage>
                                               physics: PageScrollPhysics(),
                                               itemCount: data.item3,
                                               crossAxisCount: 2,
+                                              mainAxisSpacing: 10,
                                               itemBuilder: (ctx, index) {
                                                 return ChangeNotifierProvider
                                                     .value(
@@ -438,7 +449,7 @@ class _MeetingPageState extends State<MeetingPage>
                         children: [
                           Selector<MeetingStore, Tuple2<HMSPeer?, bool>>(
                             selector: (_, meetingStore) => Tuple2(
-                                meetingStore.localPeer, meetingStore.localpeerTrackNode?.isVideoOn??false),
+                                meetingStore.localPeer, meetingStore.isVideoOn),
                             builder: (_, data, __) {
                               return ((data.item1 != null) &&
                                       data.item1!.role.publishSettings!.allowed

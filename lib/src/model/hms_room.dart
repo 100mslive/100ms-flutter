@@ -68,7 +68,10 @@ class HMSRoom {
         id: map['id'],
         name: map['name'],
         peers: peers,
-        metaData: map['meta_data'],peerCount: map["peer_count"],startedAt:map["started_at"]);
+        metaData: map['meta_data'],
+        peerCount: map["peer_count"]!=null?map["peer_count"]:0,
+        startedAt:map["started_at"]!=null?map["started_at"]:0
+        );
   }
 
   @override
