@@ -616,7 +616,6 @@ class _MeetingPageState extends State<MeetingPage>
                                                   meetingStore
                                                       .stopScreenShare();
                                                 }
-                                                Navigator.pop(context);
                                               },
                                               icon: Icon(
                                                 Icons.screen_share,
