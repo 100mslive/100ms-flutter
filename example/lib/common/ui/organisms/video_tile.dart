@@ -53,10 +53,9 @@ class _VideoTileState extends State<VideoTile> {
         var visiblePercentage = info.visibleFraction * 100;
         var peerTrackNode = context.read<PeerTrackNode>();
         if (visiblePercentage <= 40) {
-          peerTrackNode.setIsVideoOn(false);
+          peerTrackNode.setOffScreenStatus(true);
         } else {
-          peerTrackNode.setIsVideoOn(
-              !(context.read<PeerTrackNode>().track?.isMute ?? true));
+          peerTrackNode.setOffScreenStatus(false);
         }
       },
       key: Key(context.read<PeerTrackNode>().uid),

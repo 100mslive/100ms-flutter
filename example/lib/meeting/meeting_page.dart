@@ -49,7 +49,6 @@ class _MeetingPageState extends State<MeetingPage>
   CustomLogger logger = CustomLogger();
   int appBarIndex = 0;
   bool audioViewOn = false;
-  int countOfVideoOnBetweenTwo = 1;
   bool videoPreviousState = false;
   bool isRecordingStarted = false;
   bool isBRB = false;
@@ -59,9 +58,6 @@ class _MeetingPageState extends State<MeetingPage>
   void initState() {
     super.initState();
     WidgetsBinding.instance!.addObserver(this);
-    MultiProvider(
-      providers: [ChangeNotifierProvider(create: (_) => MeetingStore())],
-    );
     initMeeting();
     checkAudioState();
   }
@@ -231,31 +227,21 @@ class _MeetingPageState extends State<MeetingPage>
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    final double itemWidth = (size.width - 12) / 2;
+    final double itemWidth = (size.width - 4) / 2;
 
     return ConnectivityAppWrapper(
         app: WillPopScope(
       child: ConnectivityWidgetWrapper(
           disableInteraction: true,
           offlineWidget: OfflineWidget(),
-          child: Selector<MeetingStore, Tuple4<bool, bool,HMSRoleChangeRequest?,HMSTrackChangeRequest?>>(
+          child: Selector<MeetingStore, Tuple2<bool, bool>>(
             selector: (_, meetingStore) =>
-                Tuple4(meetingStore.reconnecting, meetingStore.isRoomEnded,meetingStore.roleChangeRequest,meetingStore.hmsTrackChangeRequest),
+                Tuple2(meetingStore.reconnecting, meetingStore.isRoomEnded),
             builder: (_, data, __) {
               if (data.item2) {
                 Navigator.of(context).popUntil((route) => route.isFirst);
                 UtilityComponents.showSnackBarWithString(
                     "Meeting Ended", context);
-              }
-              if(data.item3!=null){
-                SchedulerBinding.instance!.addPostFrameCallback((_) {
-                 UtilityComponents.showRoleChangeDialog(data.item3, context);
-                });
-              }
-              if(data.item4!=null){
-                SchedulerBinding.instance!.addPostFrameCallback((_) {
-                 UtilityComponents.showTrackChangeDialog(data.item4, context);
-                });
               }
               return data.item1
                   ? OfflineWidget()
@@ -322,10 +308,11 @@ class _MeetingPageState extends State<MeetingPage>
                                               addAutomaticKeepAlives: false,
                                               scrollDirection:
                                                   Axis.horizontal,
+                                              shrinkWrap: true,
                                               physics: PageScrollPhysics(),
                                               itemCount: data.item3,
                                               crossAxisCount: 2,
-                                              mainAxisSpacing: 10,
+                                              mainAxisSpacing: 5,
                                               itemBuilder: (ctx, index) {
                                                 return ChangeNotifierProvider
                                                     .value(
@@ -382,7 +369,33 @@ class _MeetingPageState extends State<MeetingPage>
                                 alignment: Alignment.bottomCenter,
                             child:expandModalBottomSheet(),
 
-                              )
+                              ),
+                              Selector<MeetingStore, HMSRoleChangeRequest?>(
+                              selector: (_, meetingStore) =>
+                                  meetingStore.roleChangeRequest,
+                              builder: (_, roleChangeRequest, __) {
+                                if (roleChangeRequest != null) {
+                                  WidgetsBinding.instance!
+                                      .addPostFrameCallback((_) {
+                                    UtilityComponents.showRoleChangeDialog(
+                                        roleChangeRequest, context);
+                                  });
+                                }
+                                return Container();
+                              }),
+                          Selector<MeetingStore, HMSTrackChangeRequest?>(
+                              selector: (_, meetingStore) =>
+                                  meetingStore.hmsTrackChangeRequest,
+                              builder: (_, hmsTrackChangeRequest, __) {
+                                if (hmsTrackChangeRequest != null) {
+                                  WidgetsBinding.instance!
+                                      .addPostFrameCallback((_) {
+                                    UtilityComponents.showTrackChangeDialog(
+                                        hmsTrackChangeRequest, context);
+                                  });
+                                }
+                                return Container();
+                              }),
                         ],
                       ),
                        );
@@ -420,7 +433,6 @@ class _MeetingPageState extends State<MeetingPage>
   Widget expandModalBottomSheet() {
     final meetingStore = context.read<MeetingStore>();
     Duration _duration = Duration(milliseconds: 300);
-    Tween<Offset> _tween = Tween(begin: Offset(0, 1), end: Offset(0, 0));
     AnimationController _controller =
         AnimationController(vsync: this, duration: _duration);
     bool isExpanded = false;
@@ -428,8 +440,8 @@ class _MeetingPageState extends State<MeetingPage>
     return DraggableScrollableSheet(
         controller: scrollController,
         expand: false,
-        minChildSize: 0.1,
-        initialChildSize: 0.1,
+        minChildSize: 0.08,
+        initialChildSize: 0.08,
         maxChildSize: 0.20,
         builder: (context, ScrollController scrollableController) {
           return ChangeNotifierProvider.value(
@@ -438,6 +450,7 @@ class _MeetingPageState extends State<MeetingPage>
               controller: scrollableController,
               physics: NeverScrollableScrollPhysics(),
               child: Container(
+                color: Colors.transparent.withOpacity(0.2),
                 // color: Utilities.menuColor,
                 // height: ,
                 width: MediaQuery.of(context).size.width,
@@ -638,7 +651,7 @@ class _MeetingPageState extends State<MeetingPage>
 
   void animatedView(
       DraggableScrollableController scrollableController, bool isExpanded) {
-    double maxChildSize = 0.20, minChildSize = 0.1;
+    double maxChildSize = 0.20, minChildSize = 0.08;
     scrollableController.animateTo(
       isExpanded ? minChildSize : maxChildSize,
       duration: const Duration(milliseconds: 300),
@@ -778,7 +791,9 @@ class _MeetingPageState extends State<MeetingPage>
                             : Colors.blue,
                       ),
                     ),
-                    Icon(Icons.stream, color: Colors.blue),
+                    Icon(Icons.stream, color: meetingStore.hasHlsStarted
+                            ? Colors.red
+                            : Colors.blue),
                   ]),
               value: 9,
             ),
@@ -818,15 +833,15 @@ class _MeetingPageState extends State<MeetingPage>
                 children: [
                   Text(
                     "BRB",
-                    style: TextStyle(color: isBRB ? Colors.red : Colors.blue),
+                    style: TextStyle(color: meetingStore.isBRB ? Colors.red : Colors.blue),
                   ),
                   Container(
                     decoration: BoxDecoration(
                         border: Border.all(
-                            width: 1, color: isBRB ? Colors.red : Colors.blue)),
+                            width: 1, color: meetingStore.isBRB ? Colors.red : Colors.blue)),
                     child: Text(
                       "BRB",
-                      style: TextStyle(color: isBRB ? Colors.red : Colors.blue),
+                      style: TextStyle(color: meetingStore.isBRB ? Colors.red : Colors.blue),
                     ),
                   ),
                 ]),

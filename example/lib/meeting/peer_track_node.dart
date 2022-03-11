@@ -9,19 +9,19 @@ class PeerTrackNode extends ChangeNotifier {
   HMSVideoTrack? track;
   HMSAudioTrack? audioTrack;
 
-  bool isVideoOn;
+  bool isOffscreen;
 
   PeerTrackNode({
     required this.peer,
     this.track,
     this.audioTrack,
     required this.uid,
-    required this.isVideoOn,
+    this.isOffscreen = false,
   });
 
   @override
   String toString() {
-    return 'PeerTrackNode{peerId: ${peer.peerId}, name: ${peer.name}, track: $track}, isVideoOn: $isVideoOn }';
+    return 'PeerTrackNode{peerId: ${peer.peerId}, name: ${peer.name}, track: $track}, isVideoOn: $isOffscreen }';
   }
 
   @override
@@ -31,8 +31,8 @@ class PeerTrackNode extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setIsVideoOn(bool isVideoOn) {
-    this.isVideoOn = isVideoOn;
+  void setOffScreenStatus(bool currentState) {
+    this.isOffscreen = currentState;
     notify();
   }
 }
