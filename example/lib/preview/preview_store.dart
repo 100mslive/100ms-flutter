@@ -80,11 +80,12 @@ class PreviewStore extends ChangeNotifier
         break;
       case HMSPeerUpdate.roleUpdated:
         int index = peers.indexOf(peer);
-        peers[index] = peer;
+        if (index != -1) peers[index] = peer;
         break;
       default:
         break;
     }
+    notifyListeners();
   }
 
   @override
@@ -107,6 +108,7 @@ class PreviewStore extends ChangeNotifier
       default:
         break;
     }
+    notifyListeners();
   }
 
   void addPreviewListener() {
