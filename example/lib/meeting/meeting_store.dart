@@ -356,6 +356,7 @@ class MeetingStore extends ChangeNotifier
       if (index != -1) {
         PeerTrackNode peerTrackNode = peerTracks[index];
         peerTrackNode.audioTrack = track as HMSAudioTrack;
+        peerTrackNode.isMicMuted = track.isMute;
         peerTrackNode.notify();
       }
       return;

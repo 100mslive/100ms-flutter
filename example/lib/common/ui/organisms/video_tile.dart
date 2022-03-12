@@ -6,9 +6,9 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/brb_tag.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/change_track_options.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/hand_raise.dart';
+import 'package:hmssdk_flutter_example/common/ui/organisms/mute_status.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/peer_name.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/video_view.dart';
-import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:hmssdk_flutter_example/meeting/peer_track_node.dart';
 import 'package:visibility_detector/visibility_detector.dart';
@@ -113,6 +113,7 @@ class _VideoTileState extends State<VideoTile> {
               PeerName(),
               HandRaise(),
               BRBTag(),
+              MuteStatus(),
               Container(
                 height: widget.itemHeight + 110,
                 width: widget.itemWidth - 4,
