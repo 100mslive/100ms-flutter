@@ -12,23 +12,19 @@ class HMSVideoTrack extends HMSTrack{
       required String trackId,
       required String trackDescription,
       required bool isMute,
-      HMSPeer? peer})
+      })
       : super(
             kind: kind,
             source: source,
             trackDescription: trackDescription,
             trackId: trackId,
             isMute: isMute,
-            peer: peer);
+            );
 
-  factory HMSVideoTrack.fromMap({required Map map, HMSPeer? peer}) {
+  factory HMSVideoTrack.fromMap({required Map map}) {
     return map['hms_video_track_settings'] == null
-        ? HMSRemoteVideoTrack.fromMap(map: map, peer: peer)
-        : HMSLocalVideoTrack.fromMap(map: map, peer: peer);
+        ? HMSRemoteVideoTrack.fromMap(map: map)
+        : HMSLocalVideoTrack.fromMap(map: map);
   }
-
-  // void notifyTrack() {
-  //   notifyListeners();
-  // }
 
 }

@@ -228,7 +228,7 @@ class _MeetingPageState extends State<MeetingPage>
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     final double itemWidth = (size.width - 4) / 2;
-
+    final double itemHeight = (size.height - (size.height)*0.08 -kToolbarHeight - 5)/2; 
     return ConnectivityAppWrapper(
         app: WillPopScope(
       child: ConnectivityWidgetWrapper(
@@ -320,11 +320,8 @@ class _MeetingPageState extends State<MeetingPage>
                                                             .item1[index],
                                                         child: VideoTile(
                                                           key: Key(data.item1[index].uid),
-                                                          itemHeight:
-                                                              MediaQuery.of(
-                                                                      context)
-                                                                  .size
-                                                                  .height,
+                                                          itemHeight:itemHeight
+                                                              ,
                                                           itemWidth:
                                                               itemWidth,
                                                           audioView:

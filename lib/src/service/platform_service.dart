@@ -128,8 +128,8 @@ class PlatformService {
         case HMSUpdateListenerMethod.onTrackUpdate:
           HMSPeer? peer = HMSPeer.fromMap(event.data['peer']);
           HMSTrack? track = data['track']['instance_of']
-              ? HMSVideoTrack.fromMap(map: data['track'], peer: peer)
-              : HMSAudioTrack.fromMap(map: data['track'], peer: peer);
+              ? HMSVideoTrack.fromMap(map: data['track'])
+              : HMSAudioTrack.fromMap(map: data['track']);
 
           HMSTrackUpdate? update =
               HMSTrackUpdateValues.getHMSTrackUpdateFromName(data['update']);
@@ -195,7 +195,7 @@ class PlatformService {
         case HMSUpdateListenerMethod.onLocalAudioStats:
           HMSPeer? peer = HMSPeer.fromMap(data['peer']);
           HMSLocalAudioTrack? track =
-              HMSLocalAudioTrack.fromMap(map: data['track'], peer: peer);
+              HMSLocalAudioTrack.fromMap(map: data['track']);
           HMSLocalAudioStats localAudioStats =
               HMSLocalAudioStats.fromMap(data['local_audio_stats'] as Map);
           notifyUpdateListeners(method, {
@@ -207,7 +207,7 @@ class PlatformService {
         case HMSUpdateListenerMethod.onLocalVideoStats:
           HMSPeer? peer = HMSPeer.fromMap(data['peer']);
           HMSLocalVideoTrack? track =
-              HMSLocalVideoTrack.fromMap(map: data['track'], peer: peer);
+              HMSLocalVideoTrack.fromMap(map: data['track']);
           HMSLocalVideoStats localVideoStats =
               HMSLocalVideoStats.fromMap(data['local_video_stats'] as Map);
           notifyUpdateListeners(method, {
@@ -219,7 +219,7 @@ class PlatformService {
         case HMSUpdateListenerMethod.onRemoteAudioStats:
           HMSPeer? peer = HMSPeer.fromMap(data['peer']);
           HMSRemoteAudioTrack? track =
-              HMSRemoteAudioTrack.fromMap(map: data['track'], peer: peer);
+              HMSRemoteAudioTrack.fromMap(map: data['track']);
           HMSRemoteAudioStats remoteAudioStats =
               HMSRemoteAudioStats.fromMap(data['remote_audio_stats'] as Map);
           notifyUpdateListeners(method, {
@@ -232,7 +232,7 @@ class PlatformService {
         case HMSUpdateListenerMethod.onRemoteVideoStats:
           HMSPeer? peer = HMSPeer.fromMap(data['peer']);
           HMSRemoteVideoTrack? track =
-              HMSRemoteVideoTrack.fromMap(map: data['track'], peer: peer);
+              HMSRemoteVideoTrack.fromMap(map: data['track']);
           HMSRemoteVideoStats remoteVideoStats =
               HMSRemoteVideoStats.fromMap(data['remote_video_stats'] as Map);
           notifyUpdateListeners(method, {

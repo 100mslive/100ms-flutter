@@ -18,8 +18,9 @@ class _PeerNameState extends State<PeerName> {
           return Align(
             alignment: Alignment.bottomCenter,
             child: Padding(
-              padding: const EdgeInsets.symmetric(vertical:3.0),
-              child: Text("${data.item1} ${ data.item2? "Degraded" : ""}"),
+              padding: const EdgeInsets.symmetric(vertical:5.0),
+              child: Text("${data.item1} ${ data.item2? " Degraded" : ""}",maxLines: 1,
+                overflow: TextOverflow.ellipsis,style: TextStyle(fontWeight: FontWeight.w400),),
             ),
           );
         });

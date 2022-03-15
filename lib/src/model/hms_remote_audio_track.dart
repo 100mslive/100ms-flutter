@@ -9,23 +9,22 @@ class HMSRemoteAudioTrack extends HMSAudioTrack {
       required String trackId,
       required String trackDescription,
       required bool isMute,
-      HMSPeer? peer})
+      })
       : super(
             kind: kind,
             source: source,
             trackDescription: trackDescription,
             trackId: trackId,
             isMute: isMute,
-            peer: peer);
+            );
 
-  factory HMSRemoteAudioTrack.fromMap({required Map map, HMSPeer? peer}) {
+  factory HMSRemoteAudioTrack.fromMap({required Map map}) {
     return HMSRemoteAudioTrack(
       trackId: map['track_id'],
       trackDescription: map['track_description'],
       source: map['track_source'],
       kind: HMSTrackKindValue.getHMSTrackKindFromName(map['track_kind']),
       isMute: map['track_mute'],
-      peer: peer,
     );
   }
 

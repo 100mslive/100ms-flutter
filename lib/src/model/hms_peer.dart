@@ -107,12 +107,12 @@ class HMSPeer{
 
       if (map['audio_track'] != null) {
         peer.audioTrack =
-            HMSAudioTrack.fromMap(map: map['audio_track']!, peer: peer);
+            HMSAudioTrack.fromMap(map: map['audio_track']!);
       }
 
       if (map['video_track'] != null) {
         peer.videoTrack =
-            HMSVideoTrack.fromMap(map: map['video_track']!, peer: peer);
+            HMSVideoTrack.fromMap(map: map['video_track']!);
       }
 
       return peer;
