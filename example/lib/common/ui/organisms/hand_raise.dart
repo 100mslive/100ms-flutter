@@ -7,7 +7,6 @@ class HandRaise extends StatelessWidget {
   Widget build(BuildContext context) {
     return Selector<PeerTrackNode, String?>(
         builder: (_,metadata,__){
-          print("HanRaised...");
          return  metadata?.contains("\"isHandRaised\":true")??false?
           Positioned(
           child: Padding(

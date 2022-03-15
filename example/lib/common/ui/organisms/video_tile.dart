@@ -6,7 +6,7 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/brb_tag.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/change_track_options.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/hand_raise.dart';
-import 'package:hmssdk_flutter_example/common/ui/organisms/mute_status.dart';
+import 'package:hmssdk_flutter_example/common/ui/organisms/audio_mute_status.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/peer_name.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/video_view.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
@@ -109,11 +109,11 @@ class _VideoTileState extends State<VideoTile> {
           width: widget.itemWidth - 5.0,
           child: Stack(
             children: [
-              VideoView(),
+              VideoView(itemHeight: widget.itemHeight,itemWidth: widget.itemWidth,),
               PeerName(),
               HandRaise(),
               BRBTag(),
-              MuteStatus(),
+              AudioMuteStatus(),
               Container(
                 height: widget.itemHeight + 110,
                 width: widget.itemWidth - 4,

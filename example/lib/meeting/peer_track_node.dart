@@ -10,7 +10,6 @@ class PeerTrackNode extends ChangeNotifier {
   HMSAudioTrack? audioTrack;
 
   bool isOffscreen;
-  bool isMicMuted;
 
   PeerTrackNode({
     required this.peer,
@@ -18,7 +17,6 @@ class PeerTrackNode extends ChangeNotifier {
     this.audioTrack,
     required this.uid,
     this.isOffscreen = false,
-    this.isMicMuted = false
   });
 
   @override
