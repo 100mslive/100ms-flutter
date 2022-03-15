@@ -33,7 +33,7 @@ class _VideoViewState extends State<VideoView> {
   Widget build(BuildContext context) {
     return Selector<PeerTrackNode, Tuple4<HMSVideoTrack?,bool,bool,bool>>(
         builder: (_, data, __) {
-          print("Video Built Again for ${data.item1?.peer?.name??"null"} ${data.item2}");
+          // print("Video Built Again for ${data.item1?.peer?.name??"null"} ${data.item2}");
           if ((data.item1 == null) || data.item2 || data.item3 || data.item4) {
             return Container(
                 height: widget.itemHeight + 100,
@@ -53,6 +53,7 @@ class _VideoViewState extends State<VideoView> {
                 width: widget.itemWidth - 5,
                 padding: EdgeInsets.fromLTRB(0, 0, 0, 15.0),
                 child: HMSVideoView(
+                  scaleType: ScaleType.SCALE_ASPECT_FILL,
                   track: data.item1!,
                   setMirror: false,
                   matchParent: false,

@@ -73,7 +73,7 @@ class MeetingStore extends ChangeNotifier
 
   bool isActiveSpeakerMode = false;
 
-  List<HMSTrack> tracks = [];
+  // List<HMSTrack> tracks = [];
 
   List<HMSTrack> audioTracks = [];
 
@@ -178,45 +178,45 @@ class MeetingStore extends ChangeNotifier
 
   void removePeer(HMSPeer peer) {
     peers.remove(peer);
-    removeTrackWithPeerId(peer.peerId);
+    // removeTrackWithPeerId(peer.peerId);
   }
 
   void addPeer(HMSPeer peer) {
     if (!peers.contains(peer)) peers.add(peer);
   }
 
-  void removeTrackWithTrackId(String trackId) {
-    tracks.removeWhere((eachTrack) => eachTrack.trackId == trackId);
-  }
+  // void removeTrackWithTrackId(String trackId) {
+  //   tracks.removeWhere((eachTrack) => eachTrack.trackId == trackId);
+  // }
 
-  void removeTrackWithPeerId(String peerId) {
-    tracks.removeWhere((eachTrack) => eachTrack.peer?.peerId == peerId);
-  }
+  // void removeTrackWithPeerId(String peerId) {
+  //   tracks.removeWhere((eachTrack) => eachTrack.peer?.peerId == peerId);
+  // }
 
-  void removeTrackWithPeerIdExtra(String trackId) {
-    var index = tracks.indexWhere((element) => trackId == element.trackId);
-    tracks.removeAt(index);
-  }
+  // void removeTrackWithPeerIdExtra(String trackId) {
+  //   var index = tracks.indexWhere((element) => trackId == element.trackId);
+  //   tracks.removeAt(index);
+  // }
 
-  int insertTrackWithPeerId(HMSPeer peer) {
-    return tracks.indexWhere((element) => peer.peerId == element.peer!.peerId);
-  }
+  // int insertTrackWithPeerId(HMSPeer peer) {
+  //   return tracks.indexWhere((element) => peer.peerId == element.peer!.peerId);
+  // }
 
-  void addTrack(HMSTrack track, HMSPeer peer) {
-    var index = -1;
-    if (track.source.trim() == "REGULAR") index = insertTrackWithPeerId(peer);
+  // void addTrack(HMSTrack track, HMSPeer peer) {
+  //   var index = -1;
+  //   if (track.source.trim() == "REGULAR") index = insertTrackWithPeerId(peer);
 
-    if (index >= 0) {
-      if (track.kind == HMSTrackKind.kHMSTrackKindVideo) {
-        tracks.insert(index, track);
-        tracks.removeAt(index + 1);
-      }
-    } else if (index == -1 && track.source.trim() != "REGULAR") {
-      tracks.insert(0, track);
-    } else {
-      tracks.add(track);
-    }
-  }
+  //   if (index >= 0) {
+  //     if (track.kind == HMSTrackKind.kHMSTrackKindVideo) {
+  //       tracks.insert(index, track);
+  //       tracks.removeAt(index + 1);
+  //     }
+  //   } else if (index == -1 && track.source.trim() != "REGULAR") {
+  //     tracks.insert(0, track);
+  //   } else {
+  //     tracks.add(track);
+  //   }
+  // }
 
   void onRoleUpdated(int index, HMSPeer peer) {
     peers[index] = peer;
