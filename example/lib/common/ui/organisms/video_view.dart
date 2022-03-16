@@ -60,7 +60,6 @@ class _VideoViewState extends State<VideoView> {
             Container(
               height: widget.itemHeight,
               width: widget.itemWidth,
-              color: Colors.white,
               child: Center(
                 child: InteractiveViewer(
                   child: ClipRRect(
