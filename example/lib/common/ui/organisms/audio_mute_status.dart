@@ -19,7 +19,7 @@ class _AudioMuteStatusState extends State<AudioMuteStatus> {
             right: 0,
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical:3.0),
-              child: data? Icon(Icons.mic_off,color: Colors.red,):Container()
+              child: data? CircleAvatar(backgroundColor: Colors.transparent.withOpacity(0.2),child: Icon(Icons.mic_off,color: Colors.red,)):Container()
             ),
           );
         });

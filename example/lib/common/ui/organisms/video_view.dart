@@ -12,6 +12,7 @@ class VideoView extends StatefulWidget {
 
   final bool setMirror;
   final double itemHeight;
+  final ScaleType scaleType;
   final double itemWidth;
 
   VideoView({
@@ -21,6 +22,7 @@ class VideoView extends StatefulWidget {
     this.matchParent = true,
     this.itemHeight = 200,
     this.itemWidth = 200,
+    this.scaleType = ScaleType.SCALE_ASPECT_FILL
   }) : super(key: key);
 
   @override
@@ -36,8 +38,8 @@ class _VideoViewState extends State<VideoView> {
               "Height of Video is ${widget.itemHeight}"); // print("Video Built Again for ${data.item1?.peer?.name??"null"} ${data.item2}");
           if ((data.item1 == null) || data.item2 || data.item3 || data.item4) {
             return Container(
-                height: widget.itemHeight,
-                width: widget.itemWidth,
+                // height: widget.itemHeight,
+                // width: widget.itemWidth,
                 child: Center(
                     child: CircleAvatar(
                         backgroundColor: Utilities.colors[context
@@ -54,15 +56,32 @@ class _VideoViewState extends State<VideoView> {
                           style: TextStyle(fontSize: 36, color: Colors.white),
                         ))));
           } else {
-            return ClipRRect(
-              borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(10), topRight: Radius.circular(10)),
+            return (data.item1?.source !="REGULAR")?
+            Container(
+              height: widget.itemHeight,
+              width: widget.itemWidth,
+              color: Colors.white,
+              child: Center(
+                child: InteractiveViewer(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                    child: HMSVideoView(
+                      scaleType: widget.scaleType,
+                      track: data.item1!,
+                      setMirror: false,
+                      matchParent: false, 
+                    ),
+                  ),
+                ),
+              ),
+            )
+            :ClipRRect(
+              borderRadius: BorderRadius.all(Radius.circular(10)),
               child: Container(
-                height: widget.itemHeight - 40,
+                height: widget.itemHeight,
                 width: widget.itemWidth,
-                padding: EdgeInsets.fromLTRB(0, 0, 0, 15.0),
                 child: HMSVideoView(
-                  scaleType: ScaleType.SCALE_ASPECT_FILL,
+                  scaleType: widget.scaleType,
                   track: data.item1!,
                   setMirror: false,
                   matchParent: false,

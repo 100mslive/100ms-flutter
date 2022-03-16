@@ -528,7 +528,7 @@ class MeetingStore extends ChangeNotifier
         print("metadata ${peer.toString()}");
         int index = peerTracks
             .indexWhere((element) => element.uid == peer.peerId + "mainVideo");
-        if(index != -1){
+        if (index != -1) {
           PeerTrackNode peerTrackNode = peerTracks[index];
           peerTrackNode.peer = peer;
           peerTrackNode.notify();
@@ -571,6 +571,7 @@ class MeetingStore extends ChangeNotifier
       case HMSTrackUpdate.trackAdded:
         if (track.source == "REGULAR") {
         } else {
+          screenTrack = track as HMSVideoTrack;
           if (peerTracks[0].track!.source != "REGULAR") {
             peerTracks[0] = PeerTrackNode(
                 peer: peer,
@@ -591,6 +592,7 @@ class MeetingStore extends ChangeNotifier
         break;
       case HMSTrackUpdate.trackRemoved:
         if (track.source != "REGULAR") {
+          screenTrack = null;
           peerTracks.removeWhere(
               (element) => element.uid == peer.peerId + track.trackId);
           notifyListeners();

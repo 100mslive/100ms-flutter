@@ -19,6 +19,7 @@ class VideoTile extends StatefulWidget {
   final double itemWidth;
   final bool audioView;
   final int index;
+  final ScaleType scaleType;
 
   VideoTile({
     Key? key,
@@ -26,6 +27,7 @@ class VideoTile extends StatefulWidget {
     this.itemWidth = 200.0,
     required this.audioView,
     required this.index,
+    this.scaleType = ScaleType.SCALE_ASPECT_FILL
   }) : super(key: key);
 
   @override
@@ -48,8 +50,7 @@ class _VideoTileState extends State<VideoTile> {
 
     return VisibilityDetector(
       onVisibilityChanged: (VisibilityInfo info) {
-        if(_meetingStore.isRoomEnded)
-        return;
+        if (_meetingStore.isRoomEnded) return;
         var visiblePercentage = info.visibleFraction * 100;
         var peerTrackNode = context.read<PeerTrackNode>();
         if (visiblePercentage <= 40) {
@@ -73,7 +74,7 @@ class _VideoTileState extends State<VideoTile> {
                       children: [
                         ChangeTrackOptionDialog(
                             isAudioMuted:
-                                peerTrackNode.audioTrack?.isMute??true,
+                                peerTrackNode.audioTrack?.isMute ?? true,
                             isVideoMuted: peerTrackNode.track == null
                                 ? true
                                 : peerTrackNode.track!.isMute,
@@ -109,7 +110,11 @@ class _VideoTileState extends State<VideoTile> {
           width: widget.itemWidth - 5.0,
           child: Stack(
             children: [
-              VideoView(itemHeight: widget.itemHeight,itemWidth: widget.itemWidth,),
+              VideoView(
+                scaleType: widget.scaleType,
+                itemHeight: widget.itemHeight,
+                itemWidth: widget.itemWidth,
+              ),
               PeerName(),
               HandRaise(),
               BRBTag(),

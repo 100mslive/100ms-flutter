@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:hmssdk_flutter_example/meeting/peer_track_node.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
@@ -20,7 +21,7 @@ class _PeerNameState extends State<PeerName> {
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical:5.0),
               child: Text("${data.item1} ${ data.item2? " Degraded" : ""}",maxLines: 1,
-                overflow: TextOverflow.ellipsis,style: TextStyle(fontWeight: FontWeight.w400),),
+                overflow: TextOverflow.ellipsis,style: TextStyle(fontWeight: FontWeight.w500,color: Colors.white,fontSize: 16),),
             ),
           );
         });
