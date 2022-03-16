@@ -226,7 +226,7 @@ class _MeetingPageState extends State<MeetingPage>
     var size = MediaQuery.of(context).size;
     final double itemWidth = (size.width) / 2;
     final double itemHeight =
-        (size.height - (size.height) * 0.08 - kToolbarHeight - 5) / 2;
+        (size.height) / 2;
     return ConnectivityAppWrapper(
         app: WillPopScope(
       child: ConnectivityWidgetWrapper(
@@ -342,7 +342,7 @@ class _MeetingPageState extends State<MeetingPage>
                                                   gridDelegate:
                                                       SliverGridDelegateWithFixedCrossAxisCount(
                                                     crossAxisCount: 2,
-                                                    childAspectRatio: 1.55,
+                                                    mainAxisExtent: itemWidth
                                                   ),
                                                   delegate:
                                                       SliverChildBuilderDelegate(
