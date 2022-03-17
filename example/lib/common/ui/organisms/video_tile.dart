@@ -60,7 +60,8 @@ class _VideoTileState extends State<VideoTile> {
         }
       },
       key: Key(context.read<PeerTrackNode>().uid),
-      child: InkWell(
+      child: context.read<PeerTrackNode>().uid.contains("mainVideo")?
+      InkWell(
         onLongPress: () {
           var peerTrackNode = context.read<PeerTrackNode>();
           HMSPeer peerNode = peerTrackNode.peer;
@@ -143,7 +144,46 @@ class _VideoTileState extends State<VideoTile> {
             ],
           ),
         ),
-      ),
+      ):
+      Container(
+          color: Colors.transparent,
+          key: key,
+          padding: EdgeInsets.all(2),
+          margin: EdgeInsets.all(2),
+          height: widget.itemHeight + 110,
+          width: widget.itemWidth - 5.0,
+          child: Stack(
+            children: [
+              VideoView(
+                scaleType: widget.scaleType,
+                itemHeight: widget.itemHeight,
+                itemWidth: widget.itemWidth,
+              ),
+              PeerName(),
+              Container(
+                height: widget.itemHeight + 110,
+                width: widget.itemWidth - 4,
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey, width: 1.0),
+                    borderRadius: BorderRadius.all(Radius.circular(10))),
+              )
+              // Consumer<MeetingStore>(builder: (context, _meetingStore, _) {
+              //   print("${_meetingStore.activeSpeakerIds}");
+              //   bool isHighestSpeaker =
+              //       _meetingStore.isActiveSpeaker(data.uid);
+              //   return Container(
+              //     height: widget.itemHeight + 110,
+              //     width: widget.itemWidth - 4,
+              //     decoration: BoxDecoration(
+              //         border: Border.all(
+              //             color: isHighestSpeaker ? Colors.blue : Colors.grey,
+              //             width: isHighestSpeaker ? 3.0 : 1.0),
+              //         borderRadius: BorderRadius.all(Radius.circular(10))),
+              //   );
+              // })
+            ],
+          ),
+        ),
     );
   }
 }

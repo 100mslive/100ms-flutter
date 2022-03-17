@@ -61,9 +61,9 @@ class _VideoViewState extends State<VideoView> {
               height: widget.itemHeight,
               width: widget.itemWidth,
               child: Center(
-                child: InteractiveViewer(
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                  child: InteractiveViewer(
                     child: HMSVideoView(
                       scaleType: widget.scaleType,
                       track: data.item1!,

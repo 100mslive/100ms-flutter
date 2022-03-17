@@ -371,6 +371,8 @@ class _MeetingPageState extends State<MeetingPage>
                                                     childCount: data.item4
                                                         ? data.item1.length - 1
                                                         : data.item1.length,
+                                                        addAutomaticKeepAlives: false,
+                                                        
                                                   ),
                                                 ),
                                               ],
