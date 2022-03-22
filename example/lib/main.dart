@@ -37,8 +37,7 @@ class HMSExampleApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData.light(),
-      darkTheme: ThemeData(
+      theme: ThemeData(
           brightness: Brightness.dark,
           primaryColor: Color.fromARGB(255, 13, 107, 184),
       ),
