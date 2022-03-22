@@ -5,7 +5,6 @@
 /// just pass the videotracks of local or remote peer and internally it passes [peer_id], [is_local] and [track_id] to specific views.
 ///
 /// if you want to pass height and width you can pass as a map.
-
 // Dart imports:
 import 'dart:io' show Platform;
 
@@ -24,15 +23,16 @@ class HMSVideoView extends StatelessWidget {
 
   /// [HMSVideoView] will use viewSize to get height and width of rendered video. If not passed, it will take whatever size is available to the widget.
   final Size? viewSize;
-
+  final ScaleType scaleType;
   final bool setMirror;
 
   HMSVideoView(
       {Key? key,
-      required this.track,
-      this.viewSize,
-      this.setMirror = false,
-      this.matchParent = true})
+        required this.track,
+        this.viewSize,
+        this.setMirror = false,
+        this.matchParent = true,
+        this.scaleType = ScaleType.SCALE_ASPECT_FIT})
       : super(key: key);
 
   @override
@@ -40,19 +40,19 @@ class HMSVideoView extends StatelessWidget {
     final tempViewSize = viewSize;
     if (tempViewSize != null) {
       return _PlatformView(
-        track: track,
-        matchParent: this.matchParent,
-        viewSize: tempViewSize,
-        setMirror: setMirror,
-      );
+          track: track,
+          matchParent: this.matchParent,
+          viewSize: tempViewSize,
+          setMirror: setMirror,
+          scaleType: this.scaleType);
     } else
       return LayoutBuilder(builder: (_, constraints) {
         return _PlatformView(
-          track: track,
-          matchParent: this.matchParent,
-          viewSize: Size(constraints.maxWidth, constraints.maxHeight),
-          setMirror: setMirror,
-        );
+            track: track,
+            matchParent: this.matchParent,
+            viewSize: Size(constraints.maxWidth, constraints.maxHeight),
+            setMirror: setMirror,
+            scaleType: this.scaleType);
       });
   }
 }
@@ -63,6 +63,7 @@ class _PlatformView extends StatelessWidget {
 
   final bool setMirror;
   final bool matchParent;
+  final ScaleType scaleType;
 
   _PlatformView({
     Key? key,
@@ -70,6 +71,7 @@ class _PlatformView extends StatelessWidget {
     required this.viewSize,
     this.setMirror = false,
     this.matchParent = true,
+    required this.scaleType,
   }) : super(key: key);
 
   void onPlatformViewCreated(int id) {
@@ -85,20 +87,16 @@ class _PlatformView extends StatelessWidget {
         onPlatformViewCreated: onPlatformViewCreated,
         creationParamsCodec: StandardMessageCodec(),
         creationParams: {
-          'peer_id': track.peer?.peerId,
-          'is_local': track.peer?.isLocal,
           'track_id': track.trackId,
           'is_aux': track.source != "REGULAR",
           'screen_share': track.source != "REGULAR",
           'set_mirror': track.source != "REGULAR" ? false : setMirror,
-          'scale_type': track.source != "REGULAR"
-              ? ScalingType.SCALE_ASPECT_FIT.value
-              : ScalingType.SCALE_ASPECT_FILL.value,
+          'scale_type': scaleType.value,
           'match_parent': matchParent,
         }..addAll({
-            'height': viewSize.height,
-            'width': viewSize.width,
-          }),
+          'height': viewSize.height,
+          'width': viewSize.width,
+        }),
         gestureRecognizers: {},
       );
     } else if (Platform.isIOS) {
@@ -108,20 +106,16 @@ class _PlatformView extends StatelessWidget {
         onPlatformViewCreated: onPlatformViewCreated,
         creationParamsCodec: StandardMessageCodec(),
         creationParams: {
-          'peer_id': track.peer?.peerId,
-          'is_local': track.peer?.isLocal,
           'track_id': track.trackId,
           'is_aux': track.source != "REGULAR",
           'screen_share': track.source != "REGULAR",
           'set_mirror': track.source != "REGULAR" ? false : setMirror,
-          'scale_type': track.source != "REGULAR"
-              ? ScalingType.SCALE_ASPECT_FIT.value
-              : ScalingType.SCALE_ASPECT_FILL.value,
+          'scale_type': scaleType.value,
           'match_parent': matchParent,
         }..addAll({
-            'height': viewSize.height,
-            'width': viewSize.width,
-          }),
+          'height': viewSize.height,
+          'width': viewSize.width,
+        }),
         gestureRecognizers: {},
       );
     } else {

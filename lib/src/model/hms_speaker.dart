@@ -12,8 +12,8 @@ class HMSSpeaker {
       track: data["track"] == null
           ? null
           : data['track']['instance_of']
-              ? HMSVideoTrack.fromMap(map: data['track'], peer: null)
-              : HMSAudioTrack.fromMap(map: data['track'], peer: null),
+              ? HMSVideoTrack.fromMap(map: data['track'])
+              : HMSAudioTrack.fromMap(map: data['track']),
       audioLevel: data['audioLevel'] as int,
     );
   }

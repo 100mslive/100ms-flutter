@@ -9,7 +9,7 @@ class HMSRemoteVideoTrack extends HMSVideoTrack {
       required String trackId,
       required String trackDescription,
       required bool isMute,
-      HMSPeer? peer})
+      })
       : super(
             isDegraded: isDegraded,
             kind: kind,
@@ -17,9 +17,9 @@ class HMSRemoteVideoTrack extends HMSVideoTrack {
             trackDescription: trackDescription,
             trackId: trackId,
             isMute: isMute,
-            peer: peer);
+            );
 
-  factory HMSRemoteVideoTrack.fromMap({required Map map, HMSPeer? peer}) {
+  factory HMSRemoteVideoTrack.fromMap({required Map map}) {
     return HMSRemoteVideoTrack(
       trackId: map['track_id'],
       trackDescription: map['track_description'],
@@ -27,7 +27,6 @@ class HMSRemoteVideoTrack extends HMSVideoTrack {
       kind: HMSTrackKindValue.getHMSTrackKindFromName(map['track_kind']),
       isMute: map['track_mute'],
       isDegraded: map['is_degraded'],
-      peer: peer,
     );
   }
 }

@@ -17,7 +17,7 @@ import 'hms_rtmp_streaming_state.dart';
 
 class HMSRoom {
   ///[id] of the room
-  String? id;
+  String id;
   String? name;
   String? metaData;
   HMSBrowserRecordingState? hmsBrowserRecordingState;
@@ -30,7 +30,7 @@ class HMSRoom {
   final List<HMSPeer>? peers;
 
   HMSRoom(
-      {this.id,
+      {required this.id,
       this.name,
       required this.peers,
       this.metaData,

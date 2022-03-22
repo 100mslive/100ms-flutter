@@ -65,8 +65,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                                       child: DropdownButton2(
                                         buttonWidth: 150,
                                         value: valueChoose,
-                                        iconEnabledColor: MediaQuery.of(context).platformBrightness==Brightness.light?
-                                          Colors.black:Colors.white,
+                                        iconEnabledColor: Colors.white,
                                         onChanged: (newvalue) {
                                           setState(() {
                                             this.valueChoose =
@@ -102,8 +101,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                                     );
                                   } else
                                     return CircularProgressIndicator(
-                                      color: MediaQuery.of(context).platformBrightness==Brightness.light?
-                                          Colors.black:Colors.white,
+                                      color: Colors.white,
                                     );
                                 }),
                           ],
@@ -156,8 +154,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                                         data.item1[index].time.toString(),
                                         style: TextStyle(
                                             fontSize: 10.0,
-                                            color: MediaQuery.of(context).platformBrightness==Brightness.light?
-                                          Colors.black:Colors.white,
+                                            color: Colors.white,
                                             fontWeight: FontWeight.w900),
                                       )
                                     ],
@@ -173,8 +170,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                                           data.item1[index].message.toString(),
                                           style: TextStyle(
                                               fontSize: 14.0,
-                                              color: MediaQuery.of(context).platformBrightness==Brightness.light?
-                                          Colors.black:Colors.white,
+                                              color: Colors.white,
                                               fontWeight: FontWeight.w700),
                                         ),
                                       ),

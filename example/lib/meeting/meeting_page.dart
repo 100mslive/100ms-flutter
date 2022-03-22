@@ -3,9 +3,6 @@ import 'dart:io';
 import 'package:connectivity_checker/connectivity_checker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:hmssdk_flutter_example/hls_viewer/hls_viewer.dart';
 
 //Project imports
@@ -30,7 +27,7 @@ class MeetingPage extends StatefulWidget {
   final String roomId;
   final MeetingFlow flow;
   final String user;
- final bool isAudioOn;
+  final bool isAudioOn;
 
   const MeetingPage(
       {Key? key,
@@ -49,7 +46,6 @@ class _MeetingPageState extends State<MeetingPage>
   CustomLogger logger = CustomLogger();
   int appBarIndex = 0;
   bool audioViewOn = false;
-  int countOfVideoOnBetweenTwo = 1;
   bool videoPreviousState = false;
   bool isRecordingStarted = false;
   bool isBRB = false;
@@ -59,9 +55,6 @@ class _MeetingPageState extends State<MeetingPage>
   void initState() {
     super.initState();
     WidgetsBinding.instance!.addObserver(this);
-    MultiProvider(
-      providers: [ChangeNotifierProvider(create: (_) => MeetingStore())],
-    );
     initMeeting();
     checkAudioState();
   }
@@ -81,13 +74,28 @@ class _MeetingPageState extends State<MeetingPage>
     super.didChangeDependencies();
   }
 
- void checkAudioState() async {
+  void checkAudioState() async {
     if (!widget.isAudioOn) context.read<MeetingStore>().switchAudio();
   }
 
   @override
   void dispose() {
     super.dispose();
+  }
+
+  List<int> computeIndexes(int numberOfPeers) {
+    List<int> gridStructure = [-1, -1, -1];
+    int multipleOfFour = numberOfPeers >> 2;
+    int modulo = numberOfPeers % 4;
+    gridStructure[0] = 4 * multipleOfFour;
+    if (modulo == 2) {
+      gridStructure[1] = 4 * multipleOfFour;
+    } else if (modulo == 1) {
+      gridStructure[2] = 4 * multipleOfFour;
+    } else {
+      gridStructure[0] = numberOfPeers;
+    } 
+    return gridStructure;
   }
 
   void handleMenu(int value) async {
@@ -231,31 +239,21 @@ class _MeetingPageState extends State<MeetingPage>
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    final double itemWidth = (size.width - 12) / 2;
-
+    final double itemWidth = (size.width) / 2;
+    final double itemHeight = (size.height) / 2;
     return ConnectivityAppWrapper(
         app: WillPopScope(
       child: ConnectivityWidgetWrapper(
           disableInteraction: true,
           offlineWidget: OfflineWidget(),
-          child: Selector<MeetingStore, Tuple4<bool, bool,HMSRoleChangeRequest?,HMSTrackChangeRequest?>>(
+          child: Selector<MeetingStore, Tuple2<bool, bool>>(
             selector: (_, meetingStore) =>
-                Tuple4(meetingStore.reconnecting, meetingStore.isRoomEnded,meetingStore.roleChangeRequest,meetingStore.hmsTrackChangeRequest),
+                Tuple2(meetingStore.reconnecting, meetingStore.isRoomEnded),
             builder: (_, data, __) {
               if (data.item2) {
                 Navigator.of(context).popUntil((route) => route.isFirst);
                 UtilityComponents.showSnackBarWithString(
                     "Meeting Ended", context);
-              }
-              if(data.item3!=null){
-                SchedulerBinding.instance!.addPostFrameCallback((_) {
-                 UtilityComponents.showRoleChangeDialog(data.item3, context);
-                });
-              }
-              if(data.item4!=null){
-                SchedulerBinding.instance!.addPostFrameCallback((_) {
-                 UtilityComponents.showTrackChangeDialog(data.item4, context);
-                });
               }
               return data.item1
                   ? OfflineWidget()
@@ -304,47 +302,165 @@ class _MeetingPageState extends State<MeetingPage>
                       body: Stack(
                         children: [
                           Container(
-                            height : MediaQuery.of(context).size.height * 0.78,
-                            child: Selector<MeetingStore,
-                                    Tuple3<List<PeerTrackNode>, bool, int>>(
-                                selector: (_, meetingStore) => Tuple3(
+                            height: MediaQuery.of(context).size.height * 0.78,
+                            child: Selector<
+                                    MeetingStore,
+                                    Tuple4<List<PeerTrackNode>, bool, int,
+                                        bool>>(
+                                selector: (_, meetingStore) => Tuple4(
                                     meetingStore.peerTracks,
                                     meetingStore.isHLSLink,
-                                    meetingStore.peerTracks.length),
+                                    meetingStore.peerTracks.length,
+                                    meetingStore.screenTrack != null),
                                 builder: (_, data, __) {
+                                  List<int> indexes =
+                                      computeIndexes(data.item4?data.item3 -1:data.item3);
                                   return !data.item2
                                       ? data.item3 == 0
                                           ? Center(
                                               child: Text(
                                                   'Waiting for others to join!'))
-                                          : MasonryGridView.count(
-                                              cacheExtent: 0,
-                                              addAutomaticKeepAlives: false,
-                                              scrollDirection:
-                                                  Axis.horizontal,
+                                          : CustomScrollView(
                                               physics: PageScrollPhysics(),
-                                              itemCount: data.item3,
-                                              crossAxisCount: 2,
-                                              mainAxisSpacing: 10,
-                                              itemBuilder: (ctx, index) {
-                                                return ChangeNotifierProvider
-                                                    .value(
-                                                        value: data
-                                                            .item1[index],
+                                              scrollDirection: Axis.horizontal,
+                                              slivers: [
+                                                if (data.item4)
+                                                  SliverToBoxAdapter(
+                                                    child: Container(
+                                                      height:
+                                                          MediaQuery.of(context)
+                                                              .size
+                                                              .height,
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                              .size
+                                                              .width,
+                                                      child:
+                                                          ChangeNotifierProvider
+                                                              .value(
+                                                        value: data.item1[0],
                                                         child: VideoTile(
-                                                          key: Key(data.item1[index].uid),
+                                                          key: Key(data
+                                                              .item1[0].uid),
                                                           itemHeight:
-                                                              MediaQuery.of(
-                                                                      context)
-                                                                  .size
-                                                                  .height,
-                                                          itemWidth:
-                                                              itemWidth,
+                                                              size.height,
+                                                          itemWidth: size.width,
                                                           audioView:
                                                               audioViewOn,
-                                                          index: index,
-                                                        ));
-                                              },
+                                                          scaleType: ScaleType
+                                                              .SCALE_ASPECT_FIT,
+                                                          index: 0,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                if(indexes[0] != -1)
+                                                SliverGrid(
+                                                  gridDelegate:
+                                                      SliverGridDelegateWithFixedCrossAxisCount(
+                                                          crossAxisCount: 2,
+                                                          mainAxisExtent:
+                                                              itemWidth),
+                                                  delegate:
+                                                      SliverChildBuilderDelegate(
+                                                    (context, index) {
+                                                      index = data.item4
+                                                          ? index + 1
+                                                          : index;
+                                                      return ChangeNotifierProvider
+                                                          .value(
+                                                              value: data
+                                                                  .item1[index],
+                                                              child: VideoTile(
+                                                                key: Key(data
+                                                                    .item1[
+                                                                        index]
+                                                                    .uid),
+                                                                itemHeight:
+                                                                    itemHeight,
+                                                                itemWidth:
+                                                                    itemWidth,
+                                                                audioView:
+                                                                    audioViewOn,
+                                                                index: index,
+                                                              ));
+                                                    },
+                                                    childCount: indexes[0],
+                                                    addAutomaticKeepAlives:
+                                                        false,
+                                                  ),
+                                                ),
+                                                if(indexes[1] != -1)
+                                                SliverGrid(
+                                                  gridDelegate:
+                                                      SliverGridDelegateWithFixedCrossAxisCount(
+                                                          crossAxisCount: 2,
+                                                          mainAxisExtent:
+                                                              size.width),
+                                                  delegate:
+                                                      SliverChildBuilderDelegate(
+                                                    (context, index) {
+                                                      index = data.item4
+                                                          ? index + 1
+                                                          : index;
+                                                      return ChangeNotifierProvider
+                                                          .value(
+                                                              value: data
+                                                                  .item1[indexes[1]+index],
+                                                              child: VideoTile(
+                                                                key: Key(data
+                                                                    .item1[
+                                                                        index]
+                                                                    .uid),
+                                                                itemHeight: itemHeight,
+                                                                itemWidth:size.width,
+                                                                audioView:
+                                                                    audioViewOn,
+                                                                index: index,
+                                                              ));
+                                                    },
+                                                    childCount: 2,
+                                                    addAutomaticKeepAlives:
+                                                        false,
+                                                  ),
+                                                ),
+                                                if(indexes[2] != -1)
+                                                SliverGrid(
+                                                  gridDelegate:
+                                                      SliverGridDelegateWithFixedCrossAxisCount(
+                                                          crossAxisCount: 1,
+                                                          mainAxisExtent:
+                                                              size.width),
+                                                  delegate:
+                                                      SliverChildBuilderDelegate(
+                                                    (context, index) {
+                                                      index = data.item4
+                                                          ? index + 1
+                                                          : index;
+                                                      return ChangeNotifierProvider
+                                                          .value(
+                                                              value: data
+                                                                  .item1[indexes[2]+index],
+                                                              child: VideoTile(
+                                                                key: Key(data
+                                                                    .item1[
+                                                                        index]
+                                                                    .uid),
+                                                                itemHeight:
+                                                                    size.height,
+                                                                itemWidth:
+                                                                    size.width,
+                                                                audioView:
+                                                                    audioViewOn,
+                                                                index: index,
+                                                              ));
+                                                    },
+                                                    childCount: 1,
+                                                    addAutomaticKeepAlives:
+                                                        false,
+                                                  ),
+                                                ),
+                                              ],
                                             )
                                       : SizedBox();
                                 }),
@@ -378,14 +494,39 @@ class _MeetingPageState extends State<MeetingPage>
                                         })
                                     : SizedBox();
                               }),
-                              Align(
-                                alignment: Alignment.bottomCenter,
-                            child:expandModalBottomSheet(),
-
-                              )
+                          Align(
+                            alignment: Alignment.bottomCenter,
+                            child: expandModalBottomSheet(),
+                          ),
+                          Selector<MeetingStore, HMSRoleChangeRequest?>(
+                              selector: (_, meetingStore) =>
+                                  meetingStore.roleChangeRequest,
+                              builder: (_, roleChangeRequest, __) {
+                                if (roleChangeRequest != null) {
+                                  WidgetsBinding.instance!
+                                      .addPostFrameCallback((_) {
+                                    UtilityComponents.showRoleChangeDialog(
+                                        roleChangeRequest, context);
+                                  });
+                                }
+                                return Container();
+                              }),
+                          Selector<MeetingStore, HMSTrackChangeRequest?>(
+                              selector: (_, meetingStore) =>
+                                  meetingStore.hmsTrackChangeRequest,
+                              builder: (_, hmsTrackChangeRequest, __) {
+                                if (hmsTrackChangeRequest != null) {
+                                  WidgetsBinding.instance!
+                                      .addPostFrameCallback((_) {
+                                    UtilityComponents.showTrackChangeDialog(
+                                        hmsTrackChangeRequest, context);
+                                  });
+                                }
+                                return Container();
+                              }),
                         ],
                       ),
-                       );
+                    );
             },
           )),
       onWillPop: () async {
@@ -419,8 +560,7 @@ class _MeetingPageState extends State<MeetingPage>
 
   Widget expandModalBottomSheet() {
     final meetingStore = context.read<MeetingStore>();
-    Duration _duration = Duration(milliseconds: 300);
-    Tween<Offset> _tween = Tween(begin: Offset(0, 1), end: Offset(0, 0));
+    Duration _duration = Duration(milliseconds: 50);
     AnimationController _controller =
         AnimationController(vsync: this, duration: _duration);
     bool isExpanded = false;
@@ -428,8 +568,8 @@ class _MeetingPageState extends State<MeetingPage>
     return DraggableScrollableSheet(
         controller: scrollController,
         expand: false,
-        minChildSize: 0.1,
-        initialChildSize: 0.1,
+        minChildSize: 0.08,
+        initialChildSize: 0.08,
         maxChildSize: 0.20,
         builder: (context, ScrollController scrollableController) {
           return ChangeNotifierProvider.value(
@@ -438,6 +578,7 @@ class _MeetingPageState extends State<MeetingPage>
               controller: scrollableController,
               physics: NeverScrollableScrollPhysics(),
               child: Container(
+                color: Colors.transparent.withOpacity(0.2),
                 // color: Utilities.menuColor,
                 // height: ,
                 width: MediaQuery.of(context).size.width,
@@ -493,11 +634,11 @@ class _MeetingPageState extends State<MeetingPage>
                                                 .switchAudio();
                                           },
                                           icon: Icon(
-                                              data.item2
-                                                  ? Icons.mic
-                                                  : Icons.mic_off,
-                                              // color: Colors.grey.shade900
-                                              )))
+                                            data.item2
+                                                ? Icons.mic
+                                                : Icons.mic_off,
+                                            // color: Colors.grey.shade900
+                                          )))
                                   : Container();
                             },
                           ),
@@ -515,72 +656,71 @@ class _MeetingPageState extends State<MeetingPage>
                                       _controller.reverse();
                                   },
                                   icon: AnimatedIcon(
-                                      progress: _controller,
-                                      icon: AnimatedIcons.menu_close,
-                                      // color: Colors.grey.shade900
-                                      ))),
-                                      Container(
-                          padding: EdgeInsets.all(8),
-                          child: IconButton(
-                              tooltip: 'Chat',
-                              iconSize: 24,
-                              onPressed: () {
-                                chatMessages(context);
-                              },
-                              icon:
-                                  Icon(Icons.chat_bubble, 
-                                  // color: Colors.grey.shade900
-                                  )),
-                        ),
-                          
+                                    progress: _controller,
+                                    icon: AnimatedIcons.menu_close,
+                                    // color: Colors.grey.shade900
+                                  ))),
                           Container(
                             padding: EdgeInsets.all(8),
                             child: IconButton(
-                                color: Colors.red,
+                                tooltip: 'Chat',
+                                iconSize: 24,
+                                onPressed: () {
+                                  chatMessages(context);
+                                },
+                                icon: Icon(
+                                  Icons.chat_bubble,
+                                  // color: Colors.grey.shade900
+                                )),
+                          ),
+                          Container(
+                            padding: EdgeInsets.all(8),
+                            child: IconButton(
+                                color: Colors.white,
                                 tooltip: 'Leave Or End',
                                 iconSize: 24,
                                 onPressed: () async {
                                   await UtilityComponents.onBackPressed(
                                       context);
                                 },
-                                icon:
-                                    Icon(Icons.call_end,
-                                    //  color: Colors.grey.shade900
-                                     )),
+                                icon: CircleAvatar(
+                                  backgroundColor: Colors.red,
+                                  child:
+                                      Icon(Icons.call_end, color: Colors.white),
+                                )),
                           ),
                         ]),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         Selector<MeetingStore, bool>(
-                            selector: (_, meetingStore) =>
-                                meetingStore.isRaisedHand,
-                            builder: (_, raisedHand, __) {
-                              return Container(
-                                  padding: EdgeInsets.all(8),
-                                  child: IconButton(
-                                    tooltip: 'RaiseHand',
-                                    iconSize: 20,
-                                    onPressed: () {
-                                      context
-                                          .read<MeetingStore>()
-                                          .changeMetadata();
-                                      UtilityComponents.showSnackBarWithString(
-                                          !raisedHand
-                                              ? "Raised Hand ON"
-                                              : "Raised Hand OFF",
-                                          context);
-                                    },
-                                    icon: Image.asset(
-                                      'assets/icons/raise_hand.png',
-                                      color: raisedHand
-                                          ? Colors.amber.shade300
-                                          : MediaQuery.of(context).platformBrightness==Brightness.light?
-                                          Colors.grey.shade900:Colors.white,
-                                    ),
-                                  ));
-                            },
-                          ),
+                          selector: (_, meetingStore) =>
+                              meetingStore.isRaisedHand,
+                          builder: (_, raisedHand, __) {
+                            return Container(
+                                padding: EdgeInsets.all(8),
+                                child: IconButton(
+                                  tooltip: 'RaiseHand',
+                                  iconSize: 20,
+                                  onPressed: () {
+                                    context
+                                        .read<MeetingStore>()
+                                        .changeMetadata();
+                                    UtilityComponents.showSnackBarWithString(
+                                        !raisedHand
+                                            ? "Raised Hand ON"
+                                            : "Raised Hand OFF",
+                                        context);
+                                  },
+                                  icon: Image.asset(
+                                    'assets/icons/raise_hand.png',
+                                    color: raisedHand
+                                        ? Colors.amber.shade300
+                                        : Colors.white,
+                                  ),
+                                ));
+                          },
+                        ),
                         Selector<MeetingStore, HMSPeer?>(
                           selector: (_, meetingStore) => meetingStore.localPeer,
                           builder: (_, localPeer, __) {
@@ -603,14 +743,12 @@ class _MeetingPageState extends State<MeetingPage>
                                                   meetingStore
                                                       .stopScreenShare();
                                                 }
-                                                Navigator.pop(context);
                                               },
                                               icon: Icon(
                                                 Icons.screen_share,
                                                 color: isScreenShareOn
                                                     ? Colors.blue
-                                                    : MediaQuery.of(context).platformBrightness==Brightness.light?
-                                          Colors.grey.shade900:Colors.white,
+                                                    : Colors.white,
                                               ));
                                         },
                                         selector: (_, meetingStore) =>
@@ -638,10 +776,10 @@ class _MeetingPageState extends State<MeetingPage>
 
   void animatedView(
       DraggableScrollableController scrollableController, bool isExpanded) {
-    double maxChildSize = 0.20, minChildSize = 0.1;
+    double maxChildSize = 0.20, minChildSize = 0.08;
     scrollableController.animateTo(
       isExpanded ? minChildSize : maxChildSize,
-      duration: const Duration(milliseconds: 300),
+      duration: const Duration(milliseconds: 50),
       curve: isExpanded ? Curves.easeInBack : Curves.easeOutBack,
     );
   }
@@ -778,7 +916,10 @@ class _MeetingPageState extends State<MeetingPage>
                             : Colors.blue,
                       ),
                     ),
-                    Icon(Icons.stream, color: Colors.blue),
+                    Icon(Icons.stream,
+                        color: meetingStore.hasHlsStarted
+                            ? Colors.red
+                            : Colors.blue),
                   ]),
               value: 9,
             ),
@@ -818,15 +959,19 @@ class _MeetingPageState extends State<MeetingPage>
                 children: [
                   Text(
                     "BRB",
-                    style: TextStyle(color: isBRB ? Colors.red : Colors.blue),
+                    style: TextStyle(
+                        color: meetingStore.isBRB ? Colors.red : Colors.blue),
                   ),
                   Container(
                     decoration: BoxDecoration(
                         border: Border.all(
-                            width: 1, color: isBRB ? Colors.red : Colors.blue)),
+                            width: 1,
+                            color:
+                                meetingStore.isBRB ? Colors.red : Colors.blue)),
                     child: Text(
                       "BRB",
-                      style: TextStyle(color: isBRB ? Colors.red : Colors.blue),
+                      style: TextStyle(
+                          color: meetingStore.isBRB ? Colors.red : Colors.blue),
                     ),
                   ),
                 ]),

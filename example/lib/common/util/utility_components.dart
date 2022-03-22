@@ -11,7 +11,7 @@ import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 
 class UtilityComponents {
   static void showSnackBarWithString(event, context) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(event)));
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(event,style: TextStyle(color: Colors.white),),backgroundColor: Colors.black87,));
   }
 
   static Future<dynamic> onBackPressed(BuildContext context) {
@@ -43,7 +43,7 @@ class UtilityComponents {
         ],
       ),
     );
-  } 
+  }
 
   static void showRoleChangeDialog(HMSRoleChangeRequest? event, context) async {
     event = event as HMSRoleChangeRequest;
@@ -51,12 +51,14 @@ class UtilityComponents {
         barrierDismissible: false,
         context: context,
         builder: (ctx) => RoleChangeDialogOrganism(roleChangeRequest: event!));
+    MeetingStore meetingStore =
+        Provider.of<MeetingStore>(context, listen: false);
     if (answer == "OK") {
-      MeetingStore meetingStore =
-          Provider.of<MeetingStore>(context, listen: false);
       meetingStore.acceptChangeRole(event);
       UtilityComponents.showSnackBarWithString(
-          "Role Change to "+event.suggestedRole.name, context);
+          "Role Change to " + event.suggestedRole.name, context);
+    } else {
+      meetingStore.roleChangeRequest = null;
     }
   }
 
@@ -66,10 +68,12 @@ class UtilityComponents {
         barrierDismissible: false,
         context: context,
         builder: (ctx) => TrackChangeDialogOrganism(trackChangeRequest: event));
+    MeetingStore meetingStore =
+        Provider.of<MeetingStore>(context, listen: false);
     if (answer == "OK") {
-      MeetingStore meetingStore =
-          Provider.of<MeetingStore>(context, listen: false);
       meetingStore.changeTracks(event);
+    } else {
+      meetingStore.hmsTrackChangeRequest = null;
     }
   }
 
