@@ -611,7 +611,8 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             ]
         ] as [String: Any]
 
-        eventSink?(data)
+            previewSink?(data)
+            eventSink?(data)
     }
 
     public func on(peer: HMSPeer, update: HMSPeerUpdate) {
@@ -624,7 +625,8 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             ]
         ] as [String: Any]
 
-        eventSink?(data)
+            previewSink?(data)
+            eventSink?(data)
     }
 
     public func on(track: HMSTrack, update: HMSTrackUpdate, for peer: HMSPeer) {
