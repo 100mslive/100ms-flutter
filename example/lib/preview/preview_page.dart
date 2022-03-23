@@ -1,11 +1,9 @@
 //Package imports
-import 'dart:math';
 
 import 'package:connectivity_checker/connectivity_checker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-import 'package:hmssdk_flutter_example/common/ui/organisms/video_tile.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:provider/provider.dart';
 
@@ -15,7 +13,6 @@ import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_page.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
-import 'package:hmssdk_flutter_example/meeting/peer_track_node.dart';
 import 'package:hmssdk_flutter_example/preview/preview_store.dart';
 
 class PreviewPage extends StatefulWidget {
@@ -81,6 +78,7 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                       width: itemWidth,
                       child: (_previewStore.isVideoOn)
                           ? HMSVideoView(
+                            scaleType: ScaleType.SCALE_ASPECT_FILL,
                               track: _previewStore.localTracks[0],
                               setMirror: false,
                               matchParent: false,
@@ -120,6 +118,7 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                                   borderRadius: BorderRadius.circular(5)),
                               child: Icon(Icons.circle, color: Colors.red,size: 24,),
                             ),
+                          if(_previewStore.peers.isNotEmpty)
                           IconButton(
                             padding: EdgeInsets.all(5),
                               onPressed: () {
@@ -134,8 +133,7 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                                           MediaQuery.of(context).size.height /
                                               2,
                                       padding: EdgeInsets.only(top: 15),
-                                      child: _previewStore.peers.isNotEmpty
-                                          ? ListView.separated(
+                                      child:ListView.separated(
                                               itemBuilder: (context, index) {
                                                 HMSPeer peer =
                                                     _previewStore.peers[index];
@@ -176,10 +174,6 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                                               },
                                               itemCount:
                                                   _previewStore.peers.length)
-                                          : Center(
-                                              child: Text(
-                                                  "Waiting for others to join!"),
-                                            ),
                                     );
                                   },
                                 );

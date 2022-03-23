@@ -19,7 +19,6 @@ import 'package:hmssdk_flutter_example/meeting/peer_track_node.dart';
 import 'package:provider/provider.dart';
 
 // ignore: implementation_imports
-import 'package:provider/src/provider.dart';
 import 'package:tuple/tuple.dart';
 import 'meeting_participants_list.dart';
 

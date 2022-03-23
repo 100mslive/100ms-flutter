@@ -14,7 +14,6 @@ import 'package:flutter/services.dart' show StandardMessageCodec;
 
 // Project imports:
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-import 'package:hmssdk_flutter/src/enum/hms_video_scale_type.dart';
 
 class HMSVideoView extends StatelessWidget {
   /// [HMSVideoView] will render video using trackId from HMSTrack
