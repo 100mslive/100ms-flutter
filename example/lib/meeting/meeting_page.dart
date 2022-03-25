@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:connectivity_checker/connectivity_checker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hmssdk_flutter_example/common/ui/organisms/grid_video_view.dart';
 import 'package:hmssdk_flutter_example/hls_viewer/hls_viewer.dart';
 
 //Project imports
@@ -93,7 +94,7 @@ class _MeetingPageState extends State<MeetingPage>
       gridStructure[2] = 4 * multipleOfFour;
     } else {
       gridStructure[0] = numberOfPeers;
-    } 
+    }
     return gridStructure;
   }
 
@@ -250,7 +251,8 @@ class _MeetingPageState extends State<MeetingPage>
                 Tuple2(meetingStore.reconnecting, meetingStore.isRoomEnded),
             builder: (_, data, __) {
               if (data.item2) {
-                Navigator.of(context).popUntil((route) => route.isFirst);
+                if(mounted)
+                  Navigator.of(context).popUntil((route) => route.isFirst);
                 UtilityComponents.showSnackBarWithString(
                     "Meeting Ended", context);
               }
@@ -312,8 +314,10 @@ class _MeetingPageState extends State<MeetingPage>
                                     meetingStore.peerTracks.length,
                                     meetingStore.screenTrack != null),
                                 builder: (_, data, __) {
-                                  List<int> indexes =
-                                      computeIndexes(data.item4?data.item3 -1:data.item3);
+                                  List<int> indexes = computeIndexes(
+                                      data.item4 ? data.item3 - 1 : data.item3);
+                                  int index = data.item4 ? 0 : -1;
+
                                   return !data.item2
                                       ? data.item3 == 0
                                           ? Center(
@@ -322,6 +326,7 @@ class _MeetingPageState extends State<MeetingPage>
                                           : CustomScrollView(
                                               physics: PageScrollPhysics(),
                                               scrollDirection: Axis.horizontal,
+                                              cacheExtent: 1000,
                                               slivers: [
                                                 if (data.item4)
                                                   SliverToBoxAdapter(
@@ -353,112 +358,113 @@ class _MeetingPageState extends State<MeetingPage>
                                                       ),
                                                     ),
                                                   ),
-                                                if(indexes[0] != -1)
-                                                SliverGrid(
-                                                  gridDelegate:
-                                                      SliverGridDelegateWithFixedCrossAxisCount(
-                                                          crossAxisCount: 2,
-                                                          mainAxisExtent:
-                                                              itemWidth),
-                                                  delegate:
-                                                      SliverChildBuilderDelegate(
-                                                    (context, index) {
-                                                      index = data.item4
-                                                          ? index + 1
-                                                          : index;
-                                                      return ChangeNotifierProvider
-                                                          .value(
-                                                              value: data
-                                                                  .item1[index],
-                                                              child: VideoTile(
-                                                                key: Key(data
-                                                                    .item1[
-                                                                        index]
-                                                                    .uid),
-                                                                itemHeight:
-                                                                    itemHeight,
-                                                                itemWidth:
-                                                                    itemWidth,
-                                                                audioView:
-                                                                    audioViewOn,
-                                                                index: index,
-                                                              ));
-                                                    },
-                                                    childCount: indexes[0],
-                                                    addAutomaticKeepAlives:
-                                                        false,
-                                                  ),
-                                                ),
-                                                if(indexes[1] != -1)
-                                                SliverGrid(
-                                                  gridDelegate:
-                                                      SliverGridDelegateWithFixedCrossAxisCount(
-                                                          crossAxisCount: 2,
-                                                          mainAxisExtent:
-                                                              size.width),
-                                                  delegate:
-                                                      SliverChildBuilderDelegate(
-                                                    (context, index) {
-                                                      index = data.item4
-                                                          ? index + 1
-                                                          : index;
-                                                      return ChangeNotifierProvider
-                                                          .value(
-                                                              value: data
-                                                                  .item1[indexes[1]+index],
-                                                              child: VideoTile(
-                                                                key: Key(data
-                                                                    .item1[
-                                                                        index]
-                                                                    .uid),
-                                                                itemHeight: itemHeight,
-                                                                itemWidth:size.width,
-                                                                audioView:
-                                                                    audioViewOn,
-                                                                index: index,
-                                                              ));
-                                                    },
-                                                    childCount: 2,
-                                                    addAutomaticKeepAlives:
-                                                        false,
-                                                  ),
-                                                ),
-                                                if(indexes[2] != -1)
-                                                SliverGrid(
-                                                  gridDelegate:
-                                                      SliverGridDelegateWithFixedCrossAxisCount(
-                                                          crossAxisCount: 1,
-                                                          mainAxisExtent:
-                                                              size.width),
-                                                  delegate:
-                                                      SliverChildBuilderDelegate(
-                                                    (context, index) {
-                                                      index = data.item4
-                                                          ? index + 1
-                                                          : index;
-                                                      return ChangeNotifierProvider
-                                                          .value(
-                                                              value: data
-                                                                  .item1[indexes[2]+index],
-                                                              child: VideoTile(
-                                                                key: Key(data
-                                                                    .item1[
-                                                                        index]
-                                                                    .uid),
-                                                                itemHeight:
-                                                                    size.height,
-                                                                itemWidth:
-                                                                    size.width,
-                                                                audioView:
-                                                                    audioViewOn,
-                                                                index: index,
-                                                              ));
-                                                    },
-                                                    childCount: 1,
-                                                    addAutomaticKeepAlives:
-                                                        false,
-                                                  ),
-                                                ),
+                                                GridVideoView(peerTracks: data.item1,audioViewOn: audioViewOn,itemCount: data.item3,screenShareOn:data.item4)
+                                                // if(indexes[0] != -1)
+                                                // SliverGrid(
+                                                //   gridDelegate:
+                                                //       SliverGridDelegateWithFixedCrossAxisCount(
+                                                //           crossAxisCount: 2,
+                                                //           mainAxisExtent:
+                                                //               itemWidth),
+                                                //   delegate:
+                                                //       SliverChildBuilderDelegate(
+                                                //     (context, index) {
+                                                //       index = data.item4
+                                                //           ? index + 1
+                                                //           : index;
+                                                //       return ChangeNotifierProvider
+                                                //           .value(
+                                                //               value: data
+                                                //                   .item1[index],
+                                                //               child: VideoTile(
+                                                //                 key: Key(data
+                                                //                     .item1[
+                                                //                         index]
+                                                //                     .uid),
+                                                //                 itemHeight:
+                                                //                     itemHeight,
+                                                //                 itemWidth:
+                                                //                     itemWidth,
+                                                //                 audioView:
+                                                //                     audioViewOn,
+                                                //                 index: index,
+                                                //               ));
+                                                //     },
+                                                //     childCount: indexes[0],
+                                                //     addAutomaticKeepAlives:
+                                                //         false,
+                                                //   ),
+                                                // ),
+                                                // if(indexes[1] != -1)
+                                                // SliverGrid(
+                                                //   gridDelegate:
+                                                //       SliverGridDelegateWithFixedCrossAxisCount(
+                                                //           crossAxisCount: 2,
+                                                //           mainAxisExtent:
+                                                //               size.width),
+                                                //   delegate:
+                                                //       SliverChildBuilderDelegate(
+                                                //     (context, index) {
+                                                //       index = data.item4
+                                                //           ? index + 1
+                                                //           : index;
+                                                //       return ChangeNotifierProvider
+                                                //           .value(
+                                                //               value: data
+                                                //                   .item1[indexes[1]+index],
+                                                //               child: VideoTile(
+                                                //                 key: Key(data
+                                                //                     .item1[
+                                                //                         index]
+                                                //                     .uid),
+                                                //                 itemHeight: itemHeight,
+                                                //                 itemWidth:size.width,
+                                                //                 audioView:
+                                                //                     audioViewOn,
+                                                //                 index: index,
+                                                //               ));
+                                                //     },
+                                                //     childCount: 2,
+                                                //     addAutomaticKeepAlives:
+                                                //         false,
+                                                //   ),
+                                                // ),
+                                                // if(indexes[2] != -1)
+                                                // SliverGrid(
+                                                //   gridDelegate:
+                                                //       SliverGridDelegateWithFixedCrossAxisCount(
+                                                //           crossAxisCount: 1,
+                                                //           mainAxisExtent:
+                                                //               size.width),
+                                                //   delegate:
+                                                //       SliverChildBuilderDelegate(
+                                                //     (context, index) {
+                                                //       index = data.item4
+                                                //           ? index + 1
+                                                //           : index;
+                                                //       return ChangeNotifierProvider
+                                                //           .value(
+                                                //               value: data
+                                                //                   .item1[indexes[2]+index],
+                                                //               child: VideoTile(
+                                                //                 key: Key(data
+                                                //                     .item1[
+                                                //                         index]
+                                                //                     .uid),
+                                                //                 itemHeight:
+                                                //                     size.height,
+                                                //                 itemWidth:
+                                                //                     size.width,
+                                                //                 audioView:
+                                                //                     audioViewOn,
+                                                //                 index: index,
+                                                //               ));
+                                                //     },
+                                                //     childCount: 1,
+                                                //     addAutomaticKeepAlives:
+                                                //         false,
+                                                //   ),
+                                                // ),
                                               ],
                                             )
                                       : SizedBox();
@@ -775,7 +781,7 @@ class _MeetingPageState extends State<MeetingPage>
 
   void animatedView(
       DraggableScrollableController scrollableController, bool isExpanded) {
-    double maxChildSize = 0.20, minChildSize = 0.08;
+    double maxChildSize = 0.15, minChildSize = 0.08;
     scrollableController.animateTo(
       isExpanded ? minChildSize : maxChildSize,
       duration: const Duration(milliseconds: 50),
