@@ -19,7 +19,16 @@ List<Widget> gridVideoView(
         width: size.width,
         child: ChangeNotifierProvider.value(
           value: peerTracks[0],
-          child: VideoTile(
+          child: peerTracks[0].peer.isLocal?
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.file_upload_outlined),
+              Text("You are sharing your screen"),
+                           
+            ],
+          )
+          :VideoTile(
             key: Key(peerTracks[0].uid),
             itemHeight: size.height,
             itemWidth: size.width,
