@@ -625,7 +625,7 @@ class _MeetingPageState extends State<MeetingPage>
 
   void animatedView(
       DraggableScrollableController scrollableController, bool isExpanded) {
-    double maxChildSize = 0.15, minChildSize = 0.08;
+    double maxChildSize = 0.19, minChildSize = 0.08;
     scrollableController.animateTo(
       isExpanded ? minChildSize : maxChildSize,
       duration: const Duration(milliseconds: 50),
@@ -643,8 +643,8 @@ class _MeetingPageState extends State<MeetingPage>
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text("Send Logs", style: TextStyle(color: Colors.blue)),
-                Icon(Icons.bug_report, color: Colors.blue),
+                Text("Send Logs"),
+                Icon(Icons.bug_report),
               ],
             ),
             value: 1,
@@ -661,13 +661,13 @@ class _MeetingPageState extends State<MeetingPage>
                         style: TextStyle(
                           color: meetingStore.isRecordingStarted
                               ? Colors.red
-                              : Colors.blue,
+                              : Colors.white,
                         )),
                     Icon(
                       Icons.circle,
                       color: meetingStore.isRecordingStarted
                           ? Colors.red
-                          : Colors.blue,
+                          : Colors.white,
                     ),
                   ]),
               value: 2,
@@ -679,9 +679,9 @@ class _MeetingPageState extends State<MeetingPage>
                   children: [
                     Text(
                       "Toggle Camera  ",
-                      style: TextStyle(color: Colors.blue),
+                     
                     ),
-                    Icon(Icons.switch_camera, color: Colors.blue),
+                    Icon(Icons.switch_camera),
                   ]),
               value: 3,
             ),
@@ -691,9 +691,9 @@ class _MeetingPageState extends State<MeetingPage>
                 children: [
                   Text(
                     "Participants  ",
-                    style: TextStyle(color: Colors.blue),
+                    
                   ),
-                  Icon(CupertinoIcons.person_3_fill, color: Colors.blue),
+                  Icon(CupertinoIcons.person_3_fill),
                 ]),
             value: 4,
           ),
@@ -703,13 +703,13 @@ class _MeetingPageState extends State<MeetingPage>
                 children: [
                   Text(
                     audioViewOn ? "Video View" : "Audio View",
-                    style: TextStyle(color: Colors.blue),
+                    
                   ),
                   Image.asset(
                     audioViewOn
                         ? 'assets/icons/video.png'
                         : 'assets/icons/audio.png',
-                    color: Colors.blue,
+                    color: Colors.white,
                     height: 24.0,
                     width: 24.0,
                   ),
@@ -722,9 +722,9 @@ class _MeetingPageState extends State<MeetingPage>
                 children: [
                   Text(
                     "Active Speaker Mode ",
-                    style: TextStyle(color: Colors.blue),
+                    
                   ),
-                  Icon(CupertinoIcons.person_3_fill, color: Colors.blue),
+                  Icon(CupertinoIcons.person_3_fill),
                 ]),
             value: 6,
           ),
@@ -734,9 +734,9 @@ class _MeetingPageState extends State<MeetingPage>
                 children: [
                   Text(
                     "Hero Mode ",
-                    style: TextStyle(color: Colors.blue),
+                    
                   ),
-                  Icon(CupertinoIcons.person_3_fill, color: Colors.blue),
+                  Icon(CupertinoIcons.person_3_fill),
                 ]),
             value: 7,
           ),
@@ -746,9 +746,9 @@ class _MeetingPageState extends State<MeetingPage>
                 children: [
                   Text(
                     "Change Name",
-                    style: TextStyle(color: Colors.blue),
+                    
                   ),
-                  Icon(Icons.create_rounded, color: Colors.blue),
+                  Icon(Icons.create_rounded),
                 ]),
             value: 8,
           ),
@@ -762,13 +762,13 @@ class _MeetingPageState extends State<MeetingPage>
                       style: TextStyle(
                         color: meetingStore.hasHlsStarted
                             ? Colors.red
-                            : Colors.blue,
+                            : Colors.white,
                       ),
                     ),
                     Icon(Icons.stream,
                         color: meetingStore.hasHlsStarted
                             ? Colors.red
-                            : Colors.blue),
+                            : Colors.white),
                   ]),
               value: 9,
             ),
@@ -779,11 +779,9 @@ class _MeetingPageState extends State<MeetingPage>
                   children: [
                     Text(
                       "Mute Roles",
-                      style: TextStyle(
-                        color: Colors.blue,
-                      ),
+                      
                     ),
-                    Icon(Icons.mic_off_sharp, color: Colors.blue),
+                    Icon(Icons.mic_off_sharp),
                   ]),
               value: 10,
             ),
@@ -794,11 +792,9 @@ class _MeetingPageState extends State<MeetingPage>
                   children: [
                     Text(
                       "Mute All",
-                      style: TextStyle(
-                        color: Colors.blue,
-                      ),
+                      
                     ),
-                    Icon(Icons.mic_off, color: Colors.blue),
+                    Icon(Icons.mic_off),
                   ]),
               value: 11,
             ),
@@ -809,18 +805,18 @@ class _MeetingPageState extends State<MeetingPage>
                   Text(
                     "BRB",
                     style: TextStyle(
-                        color: meetingStore.isBRB ? Colors.red : Colors.blue),
+                        color: meetingStore.isBRB ? Colors.red : Colors.white),
                   ),
                   Container(
                     decoration: BoxDecoration(
                         border: Border.all(
                             width: 1,
                             color:
-                                meetingStore.isBRB ? Colors.red : Colors.blue)),
+                                meetingStore.isBRB ? Colors.red : Colors.white)),
                     child: Text(
                       "BRB",
                       style: TextStyle(
-                          color: meetingStore.isBRB ? Colors.red : Colors.blue),
+                          color: meetingStore.isBRB ? Colors.red : Colors.white),
                     ),
                   ),
                 ]),
@@ -833,9 +829,9 @@ class _MeetingPageState extends State<MeetingPage>
                   children: [
                     Text(
                       "End Room",
-                      style: TextStyle(color: Colors.blue),
+                      
                     ),
-                    Icon(Icons.cancel_schedule_send, color: Colors.blue),
+                    Icon(Icons.cancel_schedule_send),
                   ]),
               value: 13,
             ),
