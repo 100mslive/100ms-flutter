@@ -18,7 +18,6 @@ class VideoTile extends StatefulWidget {
   final double itemHeight;
   final double itemWidth;
   final bool audioView;
-  final int index;
   final ScaleType scaleType;
 
   VideoTile({
@@ -26,7 +25,6 @@ class VideoTile extends StatefulWidget {
     this.itemHeight = 200.0,
     this.itemWidth = 200.0,
     required this.audioView,
-    required this.index,
     this.scaleType = ScaleType.SCALE_ASPECT_FILL
   }) : super(key: key);
 
