@@ -12,7 +12,7 @@ class _PeerNameState extends State<PeerName> {
   @override
   Widget build(BuildContext context) {
     return Selector<PeerTrackNode, Tuple2<String,bool>>(
-        selector: (_, peerTrackNode) => Tuple2(peerTrackNode.peer.name,peerTrackNode.track?.isDegraded??true),
+        selector: (_, peerTrackNode) => Tuple2(peerTrackNode.peer.name,peerTrackNode.track?.isDegraded??false),
         builder: (_, data, __) {
           print("Built Again");
           return Align(

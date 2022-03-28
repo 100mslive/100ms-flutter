@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:connectivity_checker/connectivity_checker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hmssdk_flutter_example/common/ui/organisms/grid_video_view.dart';
 import 'package:hmssdk_flutter_example/hls_viewer/hls_viewer.dart';
 
 //Project imports
@@ -80,21 +81,6 @@ class _MeetingPageState extends State<MeetingPage>
   @override
   void dispose() {
     super.dispose();
-  }
-
-  List<int> computeIndexes(int numberOfPeers) {
-    List<int> gridStructure = [-1, -1, -1];
-    int multipleOfFour = numberOfPeers >> 2;
-    int modulo = numberOfPeers % 4;
-    gridStructure[0] = 4 * multipleOfFour;
-    if (modulo == 2) {
-      gridStructure[1] = 4 * multipleOfFour;
-    } else if (modulo == 1) {
-      gridStructure[2] = 4 * multipleOfFour;
-    } else {
-      gridStructure[0] = numberOfPeers;
-    } 
-    return gridStructure;
   }
 
   void handleMenu(int value) async {
@@ -238,8 +224,6 @@ class _MeetingPageState extends State<MeetingPage>
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    final double itemWidth = (size.width) / 2;
-    final double itemHeight = (size.height) / 2;
     return ConnectivityAppWrapper(
         app: WillPopScope(
       child: ConnectivityWidgetWrapper(
@@ -250,7 +234,8 @@ class _MeetingPageState extends State<MeetingPage>
                 Tuple2(meetingStore.reconnecting, meetingStore.isRoomEnded),
             builder: (_, data, __) {
               if (data.item2) {
-                Navigator.of(context).popUntil((route) => route.isFirst);
+                if (mounted)
+                  Navigator.of(context).popUntil((route) => route.isFirst);
                 UtilityComponents.showSnackBarWithString(
                     "Meeting Ended", context);
               }
@@ -312,155 +297,20 @@ class _MeetingPageState extends State<MeetingPage>
                                     meetingStore.peerTracks.length,
                                     meetingStore.screenTrack != null),
                                 builder: (_, data, __) {
-                                  List<int> indexes =
-                                      computeIndexes(data.item4?data.item3 -1:data.item3);
                                   return !data.item2
                                       ? data.item3 == 0
                                           ? Center(
                                               child: Text(
                                                   'Waiting for others to join!'))
-                                          : CustomScrollView(
+                                          : PageView(
                                               physics: PageScrollPhysics(),
                                               scrollDirection: Axis.horizontal,
-                                              slivers: [
-                                                if (data.item4)
-                                                  SliverToBoxAdapter(
-                                                    child: Container(
-                                                      height:
-                                                          MediaQuery.of(context)
-                                                              .size
-                                                              .height,
-                                                      width:
-                                                          MediaQuery.of(context)
-                                                              .size
-                                                              .width,
-                                                      child:
-                                                          ChangeNotifierProvider
-                                                              .value(
-                                                        value: data.item1[0],
-                                                        child: VideoTile(
-                                                          key: Key(data
-                                                              .item1[0].uid),
-                                                          itemHeight:
-                                                              size.height,
-                                                          itemWidth: size.width,
-                                                          audioView:
-                                                              audioViewOn,
-                                                          scaleType: ScaleType
-                                                              .SCALE_ASPECT_FIT,
-                                                          index: 0,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                if(indexes[0] != -1)
-                                                SliverGrid(
-                                                  gridDelegate:
-                                                      SliverGridDelegateWithFixedCrossAxisCount(
-                                                          crossAxisCount: 2,
-                                                          mainAxisExtent:
-                                                              itemWidth),
-                                                  delegate:
-                                                      SliverChildBuilderDelegate(
-                                                    (context, index) {
-                                                      index = data.item4
-                                                          ? index + 1
-                                                          : index;
-                                                      return ChangeNotifierProvider
-                                                          .value(
-                                                              value: data
-                                                                  .item1[index],
-                                                              child: VideoTile(
-                                                                key: Key(data
-                                                                    .item1[
-                                                                        index]
-                                                                    .uid),
-                                                                itemHeight:
-                                                                    itemHeight,
-                                                                itemWidth:
-                                                                    itemWidth,
-                                                                audioView:
-                                                                    audioViewOn,
-                                                                index: index,
-                                                              ));
-                                                    },
-                                                    childCount: indexes[0],
-                                                    addAutomaticKeepAlives:
-                                                        false,
-                                                  ),
-                                                ),
-                                                if(indexes[1] != -1)
-                                                SliverGrid(
-                                                  gridDelegate:
-                                                      SliverGridDelegateWithFixedCrossAxisCount(
-                                                          crossAxisCount: 2,
-                                                          mainAxisExtent:
-                                                              size.width),
-                                                  delegate:
-                                                      SliverChildBuilderDelegate(
-                                                    (context, index) {
-                                                      index = data.item4
-                                                          ? index + 1
-                                                          : index;
-                                                      return ChangeNotifierProvider
-                                                          .value(
-                                                              value: data
-                                                                  .item1[indexes[1]+index],
-                                                              child: VideoTile(
-                                                                key: Key(data
-                                                                    .item1[
-                                                                        index]
-                                                                    .uid),
-                                                                itemHeight: itemHeight,
-                                                                itemWidth:size.width,
-                                                                audioView:
-                                                                    audioViewOn,
-                                                                index: index,
-                                                              ));
-                                                    },
-                                                    childCount: 2,
-                                                    addAutomaticKeepAlives:
-                                                        false,
-                                                  ),
-                                                ),
-                                                if(indexes[2] != -1)
-                                                SliverGrid(
-                                                  gridDelegate:
-                                                      SliverGridDelegateWithFixedCrossAxisCount(
-                                                          crossAxisCount: 1,
-                                                          mainAxisExtent:
-                                                              size.width),
-                                                  delegate:
-                                                      SliverChildBuilderDelegate(
-                                                    (context, index) {
-                                                      index = data.item4
-                                                          ? index + 1
-                                                          : index;
-                                                      return ChangeNotifierProvider
-                                                          .value(
-                                                              value: data
-                                                                  .item1[indexes[2]+index],
-                                                              child: VideoTile(
-                                                                key: Key(data
-                                                                    .item1[
-                                                                        index]
-                                                                    .uid),
-                                                                itemHeight:
-                                                                    size.height,
-                                                                itemWidth:
-                                                                    size.width,
-                                                                audioView:
-                                                                    audioViewOn,
-                                                                index: index,
-                                                              ));
-                                                    },
-                                                    childCount: 1,
-                                                    addAutomaticKeepAlives:
-                                                        false,
-                                                  ),
-                                                ),
-                                              ],
-                                            )
+                                              children: gridVideoView(
+                                                  peerTracks: data.item1,
+                                                  audioViewOn: audioViewOn,
+                                                  itemCount: data.item3,
+                                                  screenShareOn: data.item4,
+                                                  size: size))
                                       : SizedBox();
                                 }),
                           ),
@@ -775,7 +625,7 @@ class _MeetingPageState extends State<MeetingPage>
 
   void animatedView(
       DraggableScrollableController scrollableController, bool isExpanded) {
-    double maxChildSize = 0.20, minChildSize = 0.08;
+    double maxChildSize = 0.15, minChildSize = 0.08;
     scrollableController.animateTo(
       isExpanded ? minChildSize : maxChildSize,
       duration: const Duration(milliseconds: 50),
