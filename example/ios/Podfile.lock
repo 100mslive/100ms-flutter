@@ -103,11 +103,11 @@ PODS:
     - GoogleUtilities/Logger
   - GoogleUtilities/UserDefaults (7.7.0):
     - GoogleUtilities/Logger
-  - HMSSDK (0.2.8):
+  - HMSSDK (0.2.9):
     - HMSWebRTC (= 1.0.4518)
   - hmssdk_flutter (0.6.1):
     - Flutter
-    - HMSSDK (= 0.2.8)
+    - HMSSDK (= 0.2.9)
   - HMSWebRTC (1.0.4518)
   - nanopb (2.30908.0):
     - nanopb/decode (= 2.30908.0)
@@ -190,8 +190,8 @@ SPEC CHECKSUMS:
   GoogleAppMeasurement: aa3cb422fab2b05d2efac543a5720d1a85b9dea5
   GoogleDataTransport: 629c20a4d363167143f30ea78320d5a7eb8bd940
   GoogleUtilities: e0913149f6b0625b553d70dae12b49fc62914fd1
-  HMSSDK: 287a8574524a314352761229195b227ac56b3a20
-  hmssdk_flutter: ab4432cf9659f63ee87a243b7578b64065b9cb02
+  HMSSDK: 080a5ebfbe96fa5a4005e9a43c9c6673e4d8181a
+  hmssdk_flutter: a4c860303803c733c37707e4385bcea8493244c3
   HMSWebRTC: 599fb1d886daecd6e58984f84224d708bce8b565
   nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
   package_info_plus: 6c92f08e1f853dc01228d6f553146438dafcd14e
@@ -203,4 +203,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 4243bd56b6b40b83d3e32bd65fa10fffb54f8ea7
 
-COCOAPODS: 1.11.2
+COCOAPODS: 1.11.3
