@@ -2,7 +2,7 @@
 #alias rel='sh -x release-apps.sh'
 
 set -e
-# set -x
+set -x
 
 echo "🌳🍀 git branch: $(git rev-parse --abbrev-ref HEAD)"
 
@@ -11,8 +11,6 @@ git pull --verbose
 flutter pub get
 
 cd ./example
-
-flutter packages pub run build_runner build --delete-conflicting-outputs
 
 cd ./android
 
