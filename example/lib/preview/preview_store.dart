@@ -63,7 +63,7 @@ class PreviewStore extends ChangeNotifier
     HMSConfig config = HMSConfig(
         authToken: token[0]!,
         userName: user,
-        endPoint: token[1] == "true" ? "" : "https://qa-init.100ms.live/init");
+        endPoint: token[1] == "true" ? "" : "https://qa-init.100ms.live/init",captureNetworkQualityInPreview: true);
 
     HmsSdkManager.hmsSdkInteractor?.preview(config: config);
     return true;
@@ -77,6 +77,9 @@ class PreviewStore extends ChangeNotifier
         break;
       case HMSPeerUpdate.peerLeft:
         peers.remove(peer);
+        break;
+      case HMSPeerUpdate.networkQualityUpdated:
+        print("onPreview networkQuality ${peer.networkQuality.toString()}");
         break;
       case HMSPeerUpdate.roleUpdated:
         int index = peers.indexOf(peer);

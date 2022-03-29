@@ -44,7 +44,7 @@ class HMSSDK with WidgetsBindingObserver {
   }
 
   /// Join the room with configuration options passed as a [HMSConfig] object
-  dynamic join({required HMSConfig config}) async {
+  dynamic join({required HMSConfig config,}) async {
     if (previewState) {
       return HMSException(
           message: "Preview in progress",

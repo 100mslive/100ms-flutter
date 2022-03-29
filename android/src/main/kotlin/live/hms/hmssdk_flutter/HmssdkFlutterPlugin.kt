@@ -23,6 +23,8 @@ import kotlinx.coroutines.launch
 import live.hms.hmssdk_flutter.hms_role_components.AudioParamsExtension
 import live.hms.hmssdk_flutter.hms_role_components.VideoParamsExtension
 import live.hms.hmssdk_flutter.views.HMSVideoViewFactory
+import live.hms.video.connection.stats.quality.HMSNetworkObserver
+import live.hms.video.connection.stats.quality.HMSNetworkQuality
 import live.hms.video.error.HMSException
 import live.hms.video.media.codec.HMSAudioCodec
 import live.hms.video.media.codec.HMSVideoCodec
@@ -45,13 +47,16 @@ import java.lang.Exception
 @SuppressLint("StaticFieldLeak")
 class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
     EventChannel.StreamHandler {
+
     private lateinit var channel: MethodChannel
     private lateinit var meetingEventChannel: EventChannel
     private lateinit var previewChannel: EventChannel
     private lateinit var logsEventChannel: EventChannel
+    private lateinit var networkEventChannel: EventChannel
     private var eventSink: EventChannel.EventSink? = null
     private var previewSink: EventChannel.EventSink? = null
     private var logsSink: EventChannel.EventSink? = null
+    private var networkSink: EventChannel.EventSink? = null
     private lateinit var activity: Activity
     lateinit var hmssdk: HMSSDK
     private lateinit var hmsVideoFactory: HMSVideoViewFactory
@@ -71,11 +76,14 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         this.logsEventChannel =
             EventChannel(flutterPluginBinding.binaryMessenger, "logs_event_channel")
 
+        this.networkEventChannel =
+            EventChannel(flutterPluginBinding.binaryMessenger, "network_event_channel")
+
         this.meetingEventChannel.setStreamHandler(this)
         this.channel.setMethodCallHandler(this)
         this.previewChannel.setStreamHandler(this)
         this.logsEventChannel.setStreamHandler(this)
-
+        this.networkEventChannel.setStreamHandler(this)
         this.hmsVideoFactory = HMSVideoViewFactory(this)
 
         flutterPluginBinding.platformViewRegistry.registerViewFactory(
@@ -271,6 +279,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         meetingEventChannel.setStreamHandler(null)
         previewChannel.setStreamHandler(null)
         logsEventChannel.setStreamHandler(null)
+        previewChannel.setStreamHandler(null)
         hmssdkFlutterPlugin = null
     }
 
@@ -296,23 +305,34 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         result.success(null)
     }
 
-    private fun getConfig(call: MethodCall): HMSConfig {
+    private fun getConfig(
+        call: MethodCall,
+    ): HMSConfig {
 
         val userName = call.argument<String>("user_name")
         val authToken = call.argument<String>("auth_token")
         val metaData = call.argument<String>("meta_data") ?: ""
         val endPoint = call.argument<String>("end_point")
+        val captureNetworkQualityInPreview = call.argument<Boolean>("capture_network_quality_in_preview") ?: false
 
-        if (endPoint != null && endPoint!!.isNotEmpty()) {
+        Log.i("captureNetworkQualityInPreview",captureNetworkQualityInPreview.toString())
+
+        if (endPoint != null && endPoint.isNotEmpty()) {
             return HMSConfig(
                 userName = userName!!,
                 authtoken = authToken!!,
                 metadata = metaData,
-                initEndpoint = endPoint.trim()
+                initEndpoint = endPoint.trim(),
+                captureNetworkQualityInPreview = captureNetworkQualityInPreview
             )
         }
 
-        return HMSConfig(userName = userName!!, authtoken = authToken!!, metadata = metaData)
+        return HMSConfig(
+            userName = userName!!,
+            authtoken = authToken!!,
+            metadata = metaData,
+            captureNetworkQualityInPreview = captureNetworkQualityInPreview
+        )
     }
 
     private fun startHMSLogger(call: MethodCall) {
@@ -354,6 +374,8 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             this.previewSink = events
         } else if (nameOfEventSink == "logs") {
             this.logsSink = events
+        } else if (nameOfEventSink == "network") {
+            this.networkSink = events
         }
     }
 
@@ -409,6 +431,8 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
 
         return allTracks
     }
+
+
 
     private fun preview(call: MethodCall, result: Result) {
 
@@ -726,6 +750,8 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             )
                 return
 
+            Log.i("onPeerUpdateJoin ${type.name}",peer.networkQuality?.toString()?:"")
+
             val args = HashMap<String, Any?>()
             args["event_name"] = "on_peer_update"
 
@@ -752,7 +778,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         override fun onTrackUpdate(type: HMSTrackUpdate, track: HMSTrack, peer: HMSPeer) {
             val args = HashMap<String, Any?>()
             args.put("event_name", "on_track_update")
-           // Log.i("onTrackUpdateAndroid","${peer.name} ${track.type}")
+            // Log.i("onTrackUpdateAndroid","${peer.name} ${track.type}")
             args.put("data", HMSTrackUpdateExtension.toDictionary(peer, track, type))
             if (args["data"] != null)
                 CoroutineScope(Dispatchers.Main).launch {
@@ -787,6 +813,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             CoroutineScope(Dispatchers.Main).launch {
                 eventSink?.success(args)
             }
+
         }
 
         override fun onRoleChangeRequest(request: HMSRoleChangeRequest) {
@@ -799,6 +826,26 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
                     eventSink?.success(args)
                 }
         }
+    }
+
+    private val hmsNetworkObserver = object : HMSNetworkObserver {
+        override fun onNetworkQuality(quality: HMSNetworkQuality, peer: HMSPeer?) {
+
+            val args1 = HashMap<String, Any?>()
+            args1["quality"] = quality
+            args1["peer"] = HMSPeerExtension.toDictionary(peer)
+
+            val args = HashMap<String, Any?>()
+            args["event_name"] = "on_network_quality"
+            args["data"] = args1
+
+            Log.i("hmsNetworkObserver","same")
+
+            CoroutineScope(Dispatchers.Main).launch {
+                networkSink?.success(args)
+            }
+        }
+
     }
 
     private val hmsPreviewListener = object : HMSPreviewListener {
@@ -822,7 +869,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             )
                 return
 
-
+            Log.i("onPeerUpdate ${type.name}",peer.networkQuality?.toString()?:"")
             val args = HashMap<String, Any?>()
 
             args["event_name"] = "on_peer_update"
@@ -843,6 +890,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
                 CoroutineScope(Dispatchers.Main).launch {
                     previewSink?.success(args)
                 }
+
         }
 
         override fun onRoomUpdate(type: HMSRoomUpdate, hmsRoom: HMSRoom) {

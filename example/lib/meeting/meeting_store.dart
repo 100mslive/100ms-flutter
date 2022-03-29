@@ -106,7 +106,8 @@ class MeetingStore extends ChangeNotifier
     HMSConfig config = HMSConfig(
         authToken: token[0]!,
         userName: user,
-        endPoint: token[1] == "true" ? "" : "https://qa-init.100ms.live/init");
+        endPoint: token[1] == "true" ? "" : "https://qa-init.100ms.live/init",
+        captureNetworkQualityInPreview: true);
 
     HmsSdkManager.hmsSdkInteractor?.join(config: config);
     return true;
@@ -493,6 +494,9 @@ class MeetingStore extends ChangeNotifier
           notifyListeners();
         }
         addPeer(peer);
+        break;
+      case HMSPeerUpdate.networkQualityUpdated:
+        print("onJoin networkQuality ${peer.networkQuality.toString()}");
         break;
       case HMSPeerUpdate.peerLeft:
         peerTracks.removeWhere(

@@ -36,18 +36,20 @@ class HMSRemotePeer extends HMSPeer {
   HMSRemoteAudioTrack? audioRemoteTrack;
   HMSRemoteVideoTrack? videoRemoteTrack;
   final List<HMSTrack>? auxiliaryTracks;
+  final HMSNetworkQuality? networkQuality;
 
-  HMSRemotePeer({
-    required this.peerId,
-    required this.name,
-    required this.isLocal,
-    required this.role,
-    this.customerUserId,
-    this.metadata,
-    this.audioRemoteTrack,
-    this.videoRemoteTrack,
-    this.auxiliaryTracks,
-  }) : super(
+  HMSRemotePeer(
+      {required this.peerId,
+      required this.name,
+      required this.isLocal,
+      required this.role,
+      this.customerUserId,
+      this.metadata,
+      this.audioRemoteTrack,
+      this.videoRemoteTrack,
+      this.auxiliaryTracks,
+      this.networkQuality})
+      : super(
             peerId: peerId,
             name: name,
             isLocal: isLocal,
@@ -56,7 +58,8 @@ class HMSRemotePeer extends HMSPeer {
             metadata: metadata,
             audioTrack: audioRemoteTrack,
             videoTrack: videoRemoteTrack,
-            auxiliaryTracks: auxiliaryTracks);
+            auxiliaryTracks: auxiliaryTracks,
+            networkQuality: networkQuality);
 
   ///important to compare using [peerId]
   @override
@@ -73,37 +76,39 @@ class HMSRemotePeer extends HMSPeer {
     if (Platform.isAndroid) {
       HMSRole role = HMSRole.fromMap(map['role']);
       return HMSRemotePeer(
-        peerId: map['peer_id'],
-        name: map['name'],
-        isLocal: map['is_local'],
-        role: role,
-        metadata: map['metadata'],
-        customerUserId: map['customer_user_id'],
-      );
+          peerId: map['peer_id'],
+          name: map['name'],
+          isLocal: map['is_local'],
+          role: role,
+          metadata: map['metadata'],
+          customerUserId: map['customer_user_id'],
+          networkQuality: map["network_quality"] != null
+              ? HMSNetworkQuality.fromMap(map["network_quality"])
+              : null);
     } else {
       HMSRole role = HMSRole.fromMap(map['role']);
 
       // TODO: add auxiliary tracks
 
       HMSRemotePeer peer = HMSRemotePeer(
-        peerId: map['peer_id'],
-        name: map['name'],
-        isLocal: map['is_local'],
-        role: role,
-        metadata: map['customer_description'],
-        customerUserId: map['customer_user_id'],
-      );
+          peerId: map['peer_id'],
+          name: map['name'],
+          isLocal: map['is_local'],
+          role: role,
+          metadata: map['customer_description'],
+          customerUserId: map['customer_user_id'],
+          networkQuality: map["network_quality"] != null
+              ? HMSNetworkQuality.fromMap(map["network_quality"])
+              : null);
 
       if (map['audio_track'] != null) {
-        peer.audioRemoteTrack =
-            HMSAudioTrack.fromMap(map: map['audio_track']!)
-                as HMSRemoteAudioTrack;
+        peer.audioRemoteTrack = HMSAudioTrack.fromMap(map: map['audio_track']!)
+            as HMSRemoteAudioTrack;
       }
 
       if (map['video_track'] != null) {
-        peer.videoRemoteTrack =
-            HMSVideoTrack.fromMap(map: map['video_track']!)
-                as HMSRemoteVideoTrack;
+        peer.videoRemoteTrack = HMSVideoTrack.fromMap(map: map['video_track']!)
+            as HMSRemoteVideoTrack;
       }
 
       return peer;
