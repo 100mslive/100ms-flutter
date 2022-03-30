@@ -276,7 +276,6 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         meetingEventChannel.setStreamHandler(null)
         previewChannel.setStreamHandler(null)
         logsEventChannel.setStreamHandler(null)
-        previewChannel.setStreamHandler(null)
         hmssdkFlutterPlugin = null
     }
 
