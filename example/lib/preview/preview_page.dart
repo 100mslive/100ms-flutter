@@ -80,7 +80,7 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                           ? HMSVideoView(
                             scaleType: ScaleType.SCALE_ASPECT_FILL,
                               track: _previewStore.localTracks[0],
-                              setMirror: false,
+                              setMirror: true,
                               matchParent: false,
                             )
                           : Container(
