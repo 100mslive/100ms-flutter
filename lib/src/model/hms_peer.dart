@@ -101,6 +101,9 @@ class HMSPeer {
               role: role,
               metadata: map['metadata'],
               customerUserId: map['customer_user_id'],
+              networkQuality: map['network_quality'] == null
+                ? null
+                : HMSNetworkQuality.fromMap(map['network_quality'])
             )
           : HMSRemotePeer(
               peerId: map['peer_id'],
@@ -109,6 +112,9 @@ class HMSPeer {
               role: role,
               metadata: map['metadata'],
               customerUserId: map['customer_user_id'],
+              networkQuality: map['network_quality'] == null
+                ? null
+                : HMSNetworkQuality.fromMap(map['network_quality'])
             );
 
       if (map['audio_track'] != null) {
