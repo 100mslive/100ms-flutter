@@ -52,11 +52,9 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
     private lateinit var meetingEventChannel: EventChannel
     private lateinit var previewChannel: EventChannel
     private lateinit var logsEventChannel: EventChannel
-    private lateinit var networkEventChannel: EventChannel
     private var eventSink: EventChannel.EventSink? = null
     private var previewSink: EventChannel.EventSink? = null
     private var logsSink: EventChannel.EventSink? = null
-    private var networkSink: EventChannel.EventSink? = null
     private lateinit var activity: Activity
     lateinit var hmssdk: HMSSDK
     private lateinit var hmsVideoFactory: HMSVideoViewFactory
@@ -76,14 +74,13 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         this.logsEventChannel =
             EventChannel(flutterPluginBinding.binaryMessenger, "logs_event_channel")
 
-        this.networkEventChannel =
-            EventChannel(flutterPluginBinding.binaryMessenger, "network_event_channel")
+
 
         this.meetingEventChannel.setStreamHandler(this)
         this.channel.setMethodCallHandler(this)
         this.previewChannel.setStreamHandler(this)
         this.logsEventChannel.setStreamHandler(this)
-        this.networkEventChannel.setStreamHandler(this)
+
         this.hmsVideoFactory = HMSVideoViewFactory(this)
 
         flutterPluginBinding.platformViewRegistry.registerViewFactory(
@@ -374,8 +371,6 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             this.previewSink = events
         } else if (nameOfEventSink == "logs") {
             this.logsSink = events
-        } else if (nameOfEventSink == "network") {
-            this.networkSink = events
         }
     }
 
@@ -828,25 +823,6 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         }
     }
 
-    private val hmsNetworkObserver = object : HMSNetworkObserver {
-        override fun onNetworkQuality(quality: HMSNetworkQuality, peer: HMSPeer?) {
-
-            val args1 = HashMap<String, Any?>()
-            args1["quality"] = quality
-            args1["peer"] = HMSPeerExtension.toDictionary(peer)
-
-            val args = HashMap<String, Any?>()
-            args["event_name"] = "on_network_quality"
-            args["data"] = args1
-
-            Log.i("hmsNetworkObserver","same")
-
-            CoroutineScope(Dispatchers.Main).launch {
-                networkSink?.success(args)
-            }
-        }
-
-    }
 
     private val hmsPreviewListener = object : HMSPreviewListener {
         override fun onError(error: HMSException) {

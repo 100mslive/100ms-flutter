@@ -35,8 +35,6 @@ class PlatformService {
   static const EventChannel _logsEventChannel =
       const EventChannel("logs_event_channel");
 
-  static const EventChannel _networkEventChannel =
-      const EventChannel('network_event_channel');
 
   ///add meeting listeners.
   static List<HMSUpdateListener> updateListeners = [];
@@ -46,17 +44,9 @@ class PlatformService {
   ///add preview listeners.
   static List<HMSPreviewListener> previewListeners = [];
 
-  static List<HMSNetworkListener> networkListeners = [];
 
   static bool isStartedListening = false;
 
-  static void addNetworkListener(HMSNetworkListener networkListener) {
-    networkListeners.add(networkListener);
-  }
-
-  static void removeNetworkListener(HMSNetworkListener networkListener) {
-    networkListeners.remove(networkListener);
-  }
 
   ///add meetingListener
   static void addUpdateListener(HMSUpdateListener newListener) {
@@ -352,45 +342,6 @@ class PlatformService {
       }
     });
 
-    _networkEventChannel
-        .receiveBroadcastStream({'name': 'network'}).map((event) {
-      Map<String, dynamic>? data = {};
-      if (event is Map && event['data'] != null && event['data'] is Map) {
-        (event['data'] as Map).forEach((key, value) {
-          data[key.toString()] = value;
-        });
-      }
-
-      HMSNetworkUpdateListenerMethod method =
-      HMSSNetworkUpdateListenerMethodValues.getMethodFromName(event['event_name']);
-      return HMSNetworkUpdateListenerMethodResponse(
-          method: method, data: data, response: event);
-    }).listen((event) {
-      HMSNetworkUpdateListenerMethod method = event.method;
-      Map<String, dynamic>? data = event.data;
-      switch (method) {
-        case HMSNetworkUpdateListenerMethod.onNetworkQuality:
-          notifyNetworkUpdateListeners(method, data);
-          break;
-        case HMSNetworkUpdateListenerMethod.unknown:
-          break;
-      }
-    });
-  }
-
-  static void notifyNetworkUpdateListeners(
-      HMSNetworkUpdateListenerMethod method, Map<String, dynamic> arguments) {
-    switch (method) {
-      case HMSNetworkUpdateListenerMethod.onNetworkQuality:
-        networkListeners.forEach((element) {
-          element.onNetworkQuality(
-              quality: arguments['quality'],
-              peer: HMSPeer.fromMap(arguments['peer']));
-        });
-        break;
-      case HMSNetworkUpdateListenerMethod.unknown:
-        break;
-    }
   }
 
   static void notifyLogsUpdateListeners(
