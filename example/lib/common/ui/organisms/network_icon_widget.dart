@@ -7,17 +7,17 @@ class NetworkIconWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Selector<PeerTrackNode, int?>(
         builder: (_, networkQuality, __) {
-          return Positioned(
+          return networkQuality!=-1?Positioned(
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
+              padding: const EdgeInsets.fromLTRB(5, 5, 0, 0),
               child: Image.asset(
                 'assets/icons/network_$networkQuality.png',
-                color: Colors.amber.shade300,
+                scale: 2,
               ),
             ),
-            bottom : 5.0,
-            right: 5.0,
-          );
+            top : 5.0,
+            left: 5.0,
+          ):Container();
         },
         selector: (_, peerTrackNode) => peerTrackNode.networkQuality);
   }

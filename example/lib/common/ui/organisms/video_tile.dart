@@ -119,10 +119,10 @@ class _VideoTileState extends State<VideoTile> {
                       itemWidth: widget.itemWidth,
                     ),
                     PeerName(),
-                    HandRaise(),
-                    BRBTag(),
-                    NetworkIconWidget(),
-                    AudioMuteStatus(),
+                    HandRaise(),    //bottom left
+                    BRBTag(),       //top right
+                    NetworkIconWidget(),    //top left
+                    AudioMuteStatus(),    //bottom center
                     Container(
                       height: widget.itemHeight + 110,
                       width: widget.itemWidth - 4,
