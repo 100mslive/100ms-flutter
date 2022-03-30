@@ -24,6 +24,8 @@ class PreviewStore extends ChangeNotifier
 
   List<HMSPeer> peers = [];
 
+  int? networkQuality;
+
 
   @override
   void onError({required HMSException error}) {
@@ -79,7 +81,10 @@ class PreviewStore extends ChangeNotifier
         peers.remove(peer);
         break;
       case HMSPeerUpdate.networkQualityUpdated:
-        print("onPreview networkQuality ${peer.networkQuality.toString()}");
+        if(peer.isLocal){
+          networkQuality = peer.networkQuality?.quality;
+          notifyListeners();
+        }
         break;
       case HMSPeerUpdate.roleUpdated:
         int index = peers.indexOf(peer);

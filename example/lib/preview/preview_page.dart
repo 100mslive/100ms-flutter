@@ -102,6 +102,17 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                                       ))),
                             ),
                     ),
+              if(_previewStore.networkQuality!=null && _previewStore.networkQuality!=-1)      
+              Padding(
+                padding: const EdgeInsets.only(top: 40, left: 20),
+                child: Align(
+                  alignment: Alignment.topLeft,
+                  child: Image.asset(
+                  'assets/icons/network_${_previewStore.networkQuality}.png',
+                  scale: 2,
+                ),
+                ),
+              ),
               Padding(
                   padding: const EdgeInsets.only(top: 40, right: 20),
                   child: Align(
@@ -238,7 +249,9 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                                                   flow: widget.flow,
                                                   user: widget.user,
                                                   isAudioOn:
-                                                      _previewStore.isAudioOn),
+                                                      _previewStore.isAudioOn,
+                                                      localPeerNetworkQuality: _previewStore.networkQuality,
+                                                      ),
                                             )));
                               },
                               child: Text(

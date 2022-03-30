@@ -85,6 +85,8 @@ class MeetingStore extends ChangeNotifier
 
   HMSRoom? hmsRoom;
 
+  int? localPeerNetworkQuality;
+
   int firstTimeBuild = 0;
   final DateFormat formatter = DateFormat('d MMM y h:mm:ss a');
 
@@ -268,7 +270,7 @@ class MeetingStore extends ChangeNotifier
             .indexWhere((element) => element.uid == each.peerId + "mainVideo");
         if (index == -1)
           peerTracks
-              .add(PeerTrackNode(peer: each, uid: each.peerId + "mainVideo"));
+              .add(PeerTrackNode(peer: each, uid: each.peerId + "mainVideo",networkQuality: localPeerNetworkQuality));
         localPeer = each;
         addPeer(localPeer!);
         if (localPeer!.role.name.contains("hls-") == true) isHLSLink = true;
@@ -496,6 +498,7 @@ class MeetingStore extends ChangeNotifier
         addPeer(peer);
         break;
       case HMSPeerUpdate.networkQualityUpdated:
+        print("onPeerUpdate networkQuality ${peer.name} ${peer.networkQuality?.quality}");
         int index = peerTracks.indexWhere(
                 (element) => element.uid == peer.peerId + "mainVideo");
         if(index != -1){
