@@ -496,7 +496,12 @@ class MeetingStore extends ChangeNotifier
         addPeer(peer);
         break;
       case HMSPeerUpdate.networkQualityUpdated:
-        print("onJoin networkQuality ${peer.networkQuality.toString()}");
+        int index = peerTracks.indexWhere(
+                (element) => element.uid == peer.peerId + "mainVideo");
+        if(index != -1){
+          peerTracks[index].networkQuality = peer.networkQuality?.quality;
+          peerTracks[index].notify();
+        }
         break;
       case HMSPeerUpdate.peerLeft:
         peerTracks.removeWhere(
