@@ -17,6 +17,7 @@ import 'package:flutter/services.dart';
 // Project imports:
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter/src/enum/hms_logs_update_listener.dart';
+import 'package:hmssdk_flutter/src/enum/hms_network_update_listener_method.dart';
 import 'package:hmssdk_flutter/src/model/hms_log_list.dart';
 
 class PlatformService {
@@ -34,6 +35,7 @@ class PlatformService {
   static const EventChannel _logsEventChannel =
       const EventChannel("logs_event_channel");
 
+
   ///add meeting listeners.
   static List<HMSUpdateListener> updateListeners = [];
 
@@ -41,7 +43,10 @@ class PlatformService {
 
   ///add preview listeners.
   static List<HMSPreviewListener> previewListeners = [];
+
+
   static bool isStartedListening = false;
+
 
   ///add meetingListener
   static void addUpdateListener(HMSUpdateListener newListener) {
@@ -122,6 +127,7 @@ class PlatformService {
           HMSPeer? peer = HMSPeer.fromMap(data['peer']);
           HMSPeerUpdate? update =
               HMSPeerUpdateValues.getHMSPeerUpdateFromName(data['update']);
+          print("platformSercvice ${update.toString()} ${peer.networkQuality.toString()}");
           notifyUpdateListeners(method, {'peer': peer, 'update': update});
           break;
 
@@ -298,6 +304,9 @@ class PlatformService {
           HMSPeer? peer = HMSPeer.fromMap(event.data['peer']);
           HMSPeerUpdate? update = HMSPeerUpdateValues.getHMSPeerUpdateFromName(
               event.data['update']);
+
+          print("platformSercvice ${update.toString()} ${peer.networkQuality.toString()}");
+
           notifyPreviewListeners(method, {'peer': peer, 'update': update});
           break;
         case HMSPreviewUpdateListenerMethod.onRoomUpdate:
@@ -332,6 +341,7 @@ class PlatformService {
           break;
       }
     });
+
   }
 
   static void notifyLogsUpdateListeners(
@@ -367,14 +377,12 @@ class PlatformService {
         break;
       case HMSPreviewUpdateListenerMethod.onPeerUpdate:
         previewListeners.forEach((e) {
-          e.onPeerUpdate(
-              peer: arguments['peer'], update: arguments['update']);
+          e.onPeerUpdate(peer: arguments['peer'], update: arguments['update']);
         });
         break;
       case HMSPreviewUpdateListenerMethod.onRoomUpdate:
         previewListeners.forEach((e) {
-          e.onRoomUpdate(
-              room: arguments['room'], update: arguments['update']);
+          e.onRoomUpdate(room: arguments['room'], update: arguments['update']);
         });
         break;
     }
@@ -459,8 +467,8 @@ class PlatformService {
             peer: arguments["peer"]));
         break;
       case HMSUpdateListenerMethod.onRtcStats:
-        updateListeners.forEach(
-            (e) => e.onRTCStats(hmsrtcStatsReport: arguments['rtc_stats_report']));
+        updateListeners.forEach((e) =>
+            e.onRTCStats(hmsrtcStatsReport: arguments['rtc_stats_report']));
         break;
       case HMSUpdateListenerMethod.unknown:
         break;

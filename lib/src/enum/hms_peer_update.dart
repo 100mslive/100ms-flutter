@@ -10,7 +10,8 @@ enum HMSPeerUpdate {
   roleUpdated,
   metadataChanged,
   nameChanged,
-  defaultUpdate
+  defaultUpdate,
+  networkQualityUpdated
 }
 
 extension HMSPeerUpdateValues on HMSPeerUpdate {
@@ -26,6 +27,8 @@ extension HMSPeerUpdateValues on HMSPeerUpdate {
         return HMSPeerUpdate.metadataChanged;
       case 'nameChanged':
         return HMSPeerUpdate.nameChanged;
+      case 'networkQualityUpdated':
+        return HMSPeerUpdate.networkQualityUpdated;
       case 'defaultUpdate':
         return HMSPeerUpdate.defaultUpdate;
       default:
@@ -52,6 +55,8 @@ extension HMSPeerUpdateValues on HMSPeerUpdate {
 
       case HMSPeerUpdate.defaultUpdate:
         return 'defaultUpdate';
+      case HMSPeerUpdate.networkQualityUpdated:
+        return 'networkQualityUpdated';
     }
   }
 }

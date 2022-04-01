@@ -805,6 +805,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         }
 
         let shouldSkipPIIEvents = arguments["should_skip_pii_events"] as? Bool ?? false
+        let captureNetworkQualityInPreview = arguments["capture_network_quality_in_preview"] as? Bool ?? false
         let metaData = arguments["meta_data"] as? String
 
         var endPoint: String?
@@ -816,7 +817,8 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                          authToken: authToken,
                          shouldSkipPIIEvents: shouldSkipPIIEvents,
                          metadata: metaData,
-                         endpoint: endPoint)
+                         endpoint: endPoint,
+                         captureNetworkQualityInPreview: captureNetworkQualityInPreview)
     }
 
     private func getError(message: String, description: String? = nil, params: [String: Any]) -> HMSError {
