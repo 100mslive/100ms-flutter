@@ -15,40 +15,26 @@ import 'dart:io';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 class HMSRemotePeer extends HMSPeer {
-  ///id of the peer
-  late final String peerId;
-
-  ///name of the peer in the room.
-  final String name;
-
-  ///returns whether peer is local or not.
-  final bool isLocal;
 
   @override
   String toString() {
     return 'HMSPeer{name: $name, isLocal: $isLocal}';
   }
 
-  ///role of the peer in the room.
-  final HMSRole role;
-  final String? customerUserId;
-  final String? metadata;
   HMSRemoteAudioTrack? audioRemoteTrack;
   HMSRemoteVideoTrack? videoRemoteTrack;
-  final List<HMSTrack>? auxiliaryTracks;
-  final HMSNetworkQuality? networkQuality;
 
   HMSRemotePeer(
-      {required this.peerId,
-      required this.name,
-      required this.isLocal,
-      required this.role,
-      this.customerUserId,
-      this.metadata,
+      {required String peerId,
+      required String name,
+      bool isLocal = false,
+      required HMSRole role,
+      String? customerUserId,
+      String? metadata,
       this.audioRemoteTrack,
       this.videoRemoteTrack,
-      this.auxiliaryTracks,
-      this.networkQuality})
+      List<HMSTrack>? auxiliaryTracks,
+      HMSNetworkQuality? networkQuality})
       : super(
             peerId: peerId,
             name: name,
