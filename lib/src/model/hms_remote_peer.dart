@@ -8,9 +8,6 @@
 ///
 ///This library depends only on core Dart libraries and hms_audio_track.dart, hms_role.dart, hms_track.dart, hms_video_track.dart library.
 
-// Dart imports:
-import 'dart:io';
-
 // Project imports:
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
@@ -59,29 +56,14 @@ class HMSRemotePeer extends HMSPeer {
   int get hashCode => peerId.hashCode;
 
   factory HMSRemotePeer.fromMap(Map map) {
-    if (Platform.isAndroid) {
       HMSRole role = HMSRole.fromMap(map['role']);
-      return HMSRemotePeer(
-          peerId: map['peer_id'],
-          name: map['name'],
-          isLocal: map['is_local'],
-          role: role,
-          metadata: map['metadata'],
-          customerUserId: map['customer_user_id'],
-          networkQuality: map["network_quality"] != null
-              ? HMSNetworkQuality.fromMap(map["network_quality"])
-              : null);
-    } else {
-      HMSRole role = HMSRole.fromMap(map['role']);
-
       // TODO: add auxiliary tracks
-
       HMSRemotePeer peer = HMSRemotePeer(
           peerId: map['peer_id'],
           name: map['name'],
           isLocal: map['is_local'],
           role: role,
-          metadata: map['customer_description'],
+          metadata: map['metadata'],
           customerUserId: map['customer_user_id'],
           networkQuality: map["network_quality"] != null
               ? HMSNetworkQuality.fromMap(map["network_quality"])
@@ -98,7 +80,7 @@ class HMSRemotePeer extends HMSPeer {
       }
 
       return peer;
-    }
+    
   }
 
   // TODO: add HMSRemotePeer class
