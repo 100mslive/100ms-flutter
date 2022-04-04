@@ -60,7 +60,6 @@ class HMSVideoViewWidget(context: Context, id: Int, creationParams: Map<String?,
             peer.videoTrack.let {
                 if (it?.trackId == trackId || peer.isLocal) {
                     hmsVideoView.setVideoTrack(it)
-                    Log.i("HMSVideoViewFactory","### renderVideo regular ${peer!!.name} <> ${it!!.source} <> ${it!!.trackId} <> $trackId")
                 }
             }
         }

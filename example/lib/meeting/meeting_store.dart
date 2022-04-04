@@ -326,7 +326,6 @@ class MeetingStore extends ChangeNotifier
       {required HMSTrack track,
       required HMSTrackUpdate trackUpdate,
       required HMSPeer peer}) {
-    print("onTrackUpdateFlutter ${peer.name} ${track.kind} ");
     if (isSpeakerOn) {
       unMuteAll();
     } else {
@@ -383,7 +382,6 @@ class MeetingStore extends ChangeNotifier
 
   @override
   void onMessage({required HMSMessage message}) {
-    print("onMessageUpdate");
     addMessage(message);
     notifyListeners();
   }
@@ -525,7 +523,6 @@ class MeetingStore extends ChangeNotifier
         notifyListeners();
         break;
       case HMSPeerUpdate.metadataChanged:
-        print("metadata ${peer.toString()}");
         int index = peerTracks
             .indexWhere((element) => element.uid == peer.peerId + "mainVideo");
         if (index != -1) {
@@ -558,10 +555,8 @@ class MeetingStore extends ChangeNotifier
         updatePeerAt(peer);
         break;
       case HMSPeerUpdate.defaultUpdate:
-        print("Some default update or untouched case");
         break;
       default:
-        print("Some default update or untouched case");
     }
   }
 
@@ -615,7 +610,6 @@ class MeetingStore extends ChangeNotifier
       case HMSTrackUpdate.defaultUpdate:
         break;
       default:
-        print("Some default update or untouched case");
     }
   }
 
@@ -754,7 +748,6 @@ class MeetingStore extends ChangeNotifier
       {required HMSLocalAudioStats hmsLocalAudioStats,
       required HMSLocalAudioTrack track,
       required HMSPeer peer}) {
-    //   print(hmsLocalAudioStats);
   }
 
   @override
@@ -762,7 +755,6 @@ class MeetingStore extends ChangeNotifier
       {required HMSLocalVideoStats hmsLocalVideoStats,
       required HMSLocalVideoTrack track,
       required HMSPeer peer}) {
-    //  print(hmsLocalVideoStats);
   }
 
   @override
@@ -770,7 +762,6 @@ class MeetingStore extends ChangeNotifier
       {required HMSRemoteAudioStats hmsRemoteAudioStats,
       required HMSRemoteAudioTrack track,
       required HMSPeer peer}) {
-    // print(hmsRemoteAudioStats);
   }
 
   @override
@@ -778,12 +769,10 @@ class MeetingStore extends ChangeNotifier
       {required HMSRemoteVideoStats hmsRemoteVideoStats,
       required HMSRemoteVideoTrack track,
       required HMSPeer peer}) {
-    //  print(hmsRemoteVideoStats);
   }
 
   @override
   void onRTCStats({required HMSRTCStatsReport hmsrtcStatsReport}) {
-    //   print(hmsrtcStats);
   }
 
   bool isActiveSpeaker(String uid) {
@@ -805,7 +794,6 @@ class MeetingStore extends ChangeNotifier
         // TODO: Handle this case.
         break;
       case HMSActionResultListenerMethod.changeMetadata:
-        print("raised hand");
         notifyListeners();
         break;
       case HMSActionResultListenerMethod.endRoom:
@@ -922,7 +910,6 @@ class MeetingStore extends ChangeNotifier
         break;
       case HMSActionResultListenerMethod.endRoom:
         // TODO: Handle this case.
-        print("HMSException ${hmsException.message}");
         break;
       case HMSActionResultListenerMethod.removePeer:
         // TODO: Handle this case.
@@ -945,14 +932,12 @@ class MeetingStore extends ChangeNotifier
         // TODO: Handle this case.
         break;
       case HMSActionResultListenerMethod.unknown:
-        print("Unknown Method Called");
         break;
       case HMSActionResultListenerMethod.changeName:
         // TODO: Handle this case.
         break;
       case HMSActionResultListenerMethod.sendBroadcastMessage:
         // TODO: Handle this case.
-        print("sendBroadcastMessage failure");
         break;
       case HMSActionResultListenerMethod.sendGroupMessage:
         // TODO: Handle this case.
@@ -968,12 +953,10 @@ class MeetingStore extends ChangeNotifier
         break;
 
       case HMSActionResultListenerMethod.startScreenShare:
-        print("startScreenShare exception");
         isScreenShareActive();
         break;
 
       case HMSActionResultListenerMethod.stopScreenShare:
-        print("stopScreenShare exception");
         isScreenShareActive();
         break;
     }

@@ -7,7 +7,6 @@ class BRBTag extends StatelessWidget {
   Widget build(BuildContext context) {
     return Selector<PeerTrackNode, String?>(
         builder: (_,metadata,__){
-          print("BRB...");
          return  metadata?.contains("\"isBRBOn\":true")??false?
           Positioned(
           child: Padding(

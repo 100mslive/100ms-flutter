@@ -125,20 +125,7 @@ class _VideoTileState extends State<VideoTile> {
                     border: Border.all(color: Colors.grey, width: 1.0),
                     borderRadius: BorderRadius.all(Radius.circular(10))),
               )
-              // Consumer<MeetingStore>(builder: (context, _meetingStore, _) {
-              //   print("${_meetingStore.activeSpeakerIds}");
-              //   bool isHighestSpeaker =
-              //       _meetingStore.isActiveSpeaker(data.uid);
-              //   return Container(
-              //     height: widget.itemHeight + 110,
-              //     width: widget.itemWidth - 4,
-              //     decoration: BoxDecoration(
-              //         border: Border.all(
-              //             color: isHighestSpeaker ? Colors.blue : Colors.grey,
-              //             width: isHighestSpeaker ? 3.0 : 1.0),
-              //         borderRadius: BorderRadius.all(Radius.circular(10))),
-              //   );
-              // })
+
             ],
           ),
         ),
@@ -165,20 +152,7 @@ class _VideoTileState extends State<VideoTile> {
                     border: Border.all(color: Colors.grey, width: 1.0),
                     borderRadius: BorderRadius.all(Radius.circular(10))),
               )
-              // Consumer<MeetingStore>(builder: (context, _meetingStore, _) {
-              //   print("${_meetingStore.activeSpeakerIds}");
-              //   bool isHighestSpeaker =
-              //       _meetingStore.isActiveSpeaker(data.uid);
-              //   return Container(
-              //     height: widget.itemHeight + 110,
-              //     width: widget.itemWidth - 4,
-              //     decoration: BoxDecoration(
-              //         border: Border.all(
-              //             color: isHighestSpeaker ? Colors.blue : Colors.grey,
-              //             width: isHighestSpeaker ? 3.0 : 1.0),
-              //         borderRadius: BorderRadius.all(Radius.circular(10))),
-              //   );
-              // })
+
             ],
           ),
         ),

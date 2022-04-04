@@ -74,7 +74,6 @@ class _PlatformView extends StatelessWidget {
   }) : super(key: key);
 
   void onPlatformViewCreated(int id) {
-    print('On PlatformView Created:: id:$id');
   }
 
   @override

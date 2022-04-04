@@ -123,7 +123,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                       selector: (_, meetingStore) => Tuple2(meetingStore.messages,meetingStore.messages.length),
                       builder: (context, data, _) {
                         // if (!_meetingStore.isMeetingStarted) return SizedBox();
-                        print("message added");
+
                         if (data.item2== 0)
                           return Center(child: Text('No messages'));
 

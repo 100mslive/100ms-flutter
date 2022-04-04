@@ -14,7 +14,6 @@ class _PeerNameState extends State<PeerName> {
     return Selector<PeerTrackNode, Tuple2<String,bool>>(
         selector: (_, peerTrackNode) => Tuple2(peerTrackNode.peer.name,peerTrackNode.track?.isDegraded??false),
         builder: (_, data, __) {
-          print("Built Again");
           return Align(
             alignment: Alignment.bottomCenter,
             child: Padding(

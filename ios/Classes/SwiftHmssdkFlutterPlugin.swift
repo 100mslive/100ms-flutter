@@ -527,7 +527,6 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         let arguments = call.arguments as! [AnyHashable: Any]
 
         guard let level = arguments["log_level"] as? String else {
-            print(#function, "Could not find `log_level` argument")
             return
         }
 
@@ -827,30 +826,6 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                  params: params)
     }
 
-    private func logSpeakers(_ speakers: [HMSSpeaker]) {
-//        let date = Date()
-//        let calendar = Calendar.current
-//        let hour = calendar.component(.hour, from: date)
-//        let minutes = calendar.component(.minute, from: date)
-//        let second = calendar.component(.second, from: date)
-//        let dateString = "\(hour):\(minutes):\(second)"
-
-        // print(#function, "Speaker update " + dateString, speakers.map { $0.peer.name },
-        //       speakers.map { kindString(from: $0.track.kind) },
-        //       speakers.map { $0.track.source })
-    }
-
-
-//    private func kindString(from kind: HMSTrackKind) -> String {
-//        switch kind {
-//        case .audio:
-//            return "KHmsTrackAudio"
-//        case .video:
-//            return "KHmsTrackVideo"
-//        default:
-//            return "Unknown Kind"
-//        }
-//    }
 
     private func kind(from string: String) -> HMSTrackKind {
         switch string {

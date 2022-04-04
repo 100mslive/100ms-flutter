@@ -34,8 +34,6 @@ class _VideoViewState extends State<VideoView> {
   Widget build(BuildContext context) {
     return Selector<PeerTrackNode, Tuple4<HMSVideoTrack?, bool, bool, bool>>(
         builder: (_, data, __) {
-          print(
-              "Height of Video is ${widget.itemHeight}"); // print("Video Built Again for ${data.item1?.peer?.name??"null"} ${data.item2}");
           if ((data.item1 == null) || data.item2 || data.item3 || data.item4) {
             return Container(
                 // height: widget.itemHeight,

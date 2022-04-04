@@ -130,7 +130,6 @@ class HMSPeer{
     var result = await PlatformService.invokeMethod(
         PlatformMethod.getAllTracks,
         arguments: {"peer_id": this.peerId});
-    print(result);
     List<HMSTrack> tracks = [];
     result.forEach((element) {
       HMSTrack hmsTrack = HMSTrack.fromMap(map: element);
