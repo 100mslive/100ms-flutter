@@ -44,7 +44,9 @@ class HMSSDK with WidgetsBindingObserver {
   }
 
   /// Join the room with configuration options passed as a [HMSConfig] object
-  dynamic join({required HMSConfig config,}) async {
+  dynamic join({
+    required HMSConfig config,
+  }) async {
     if (previewState) {
       return HMSException(
           message: "Preview in progress",
@@ -719,6 +721,7 @@ class HMSSDK with WidgetsBindingObserver {
     PlatformService.removeLogsListener(hmsLogListener);
   }
 
+  bool isLocalVideoOn = false;
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) async {
     super.didChangeAppLifecycleState(state);
@@ -734,9 +737,23 @@ class HMSSDK with WidgetsBindingObserver {
               (element as HMSRemoteAudioTrack?)?.setVolume(10.0);
             }
           });
+        } else {
+          if ((element.videoTrack != null && isLocalVideoOn)) startCapturing();
+          isLocalVideoOn = false;
         }
       });
+    } else if (state == AppLifecycleState.paused) {
+      HMSLocalPeer? localPeer = await getLocalPeer();
+      if (localPeer != null && !(localPeer.videoTrack?.isMute ?? true)) {
+        isLocalVideoOn = true;
+        stopCapturing();
+      }
+    } else if (state == AppLifecycleState.inactive) {
+      HMSLocalPeer? localPeer = await getLocalPeer();
+      if (localPeer != null && !(localPeer.videoTrack?.isMute ?? true)) {
+        isLocalVideoOn = true;
+        stopCapturing();
+      }
     }
   }
-
 }

@@ -392,27 +392,6 @@ class _MeetingPageState extends State<MeetingPage>
     ));
   }
 
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) async {
-    super.didChangeAppLifecycleState(state);
-    final _readMeetingStore = context.read<MeetingStore>();
-    final _watchMeetingStore = context.watch<MeetingStore>();
-    if (state == AppLifecycleState.resumed) {
-      if (_watchMeetingStore.isVideoOn) {
-        _readMeetingStore.startCapturing();
-      } else {
-        _readMeetingStore.stopCapturing();
-      }
-    } else if (state == AppLifecycleState.paused) {
-      if (_watchMeetingStore.isVideoOn) {
-        _readMeetingStore.stopCapturing();
-      }
-    } else if (state == AppLifecycleState.inactive) {
-      if (_watchMeetingStore.isVideoOn) {
-        _readMeetingStore.stopCapturing();
-      }
-    }
-  }
 
   Widget expandModalBottomSheet() {
     final meetingStore = context.read<MeetingStore>();

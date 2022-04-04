@@ -348,8 +348,11 @@ class MeetingStore extends ChangeNotifier
       if (track.kind == HMSTrackKind.kHMSTrackKindVideo) {
         if (track.isMute) {
           this.isVideoOn = false;
-          notifyListeners();
         }
+        else{
+          this.isVideoOn = true;
+        }
+        notifyListeners();
       }
     }
 
