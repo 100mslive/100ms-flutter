@@ -23,6 +23,8 @@ import kotlinx.coroutines.launch
 import live.hms.hmssdk_flutter.hms_role_components.AudioParamsExtension
 import live.hms.hmssdk_flutter.hms_role_components.VideoParamsExtension
 import live.hms.hmssdk_flutter.views.HMSVideoViewFactory
+import live.hms.video.connection.stats.quality.HMSNetworkObserver
+import live.hms.video.connection.stats.quality.HMSNetworkQuality
 import live.hms.video.error.HMSException
 import live.hms.video.media.codec.HMSAudioCodec
 import live.hms.video.media.codec.HMSVideoCodec
@@ -45,6 +47,7 @@ import java.lang.Exception
 @SuppressLint("StaticFieldLeak")
 class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
     EventChannel.StreamHandler {
+
     private lateinit var channel: MethodChannel
     private lateinit var meetingEventChannel: EventChannel
     private lateinit var previewChannel: EventChannel
@@ -70,6 +73,8 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
 
         this.logsEventChannel =
             EventChannel(flutterPluginBinding.binaryMessenger, "logs_event_channel")
+
+
 
         this.meetingEventChannel.setStreamHandler(this)
         this.channel.setMethodCallHandler(this)
@@ -296,23 +301,32 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         result.success(null)
     }
 
-    private fun getConfig(call: MethodCall): HMSConfig {
+    private fun getConfig(
+        call: MethodCall,
+    ): HMSConfig {
 
         val userName = call.argument<String>("user_name")
         val authToken = call.argument<String>("auth_token")
         val metaData = call.argument<String>("meta_data") ?: ""
         val endPoint = call.argument<String>("end_point")
+        val captureNetworkQualityInPreview = call.argument<Boolean>("capture_network_quality_in_preview") ?: false
 
-        if (endPoint != null && endPoint!!.isNotEmpty()) {
+        if (endPoint != null && endPoint.isNotEmpty()) {
             return HMSConfig(
                 userName = userName!!,
                 authtoken = authToken!!,
                 metadata = metaData,
-                initEndpoint = endPoint.trim()
+                initEndpoint = endPoint.trim(),
+                captureNetworkQualityInPreview = captureNetworkQualityInPreview
             )
         }
 
-        return HMSConfig(userName = userName!!, authtoken = authToken!!, metadata = metaData)
+        return HMSConfig(
+            userName = userName!!,
+            authtoken = authToken!!,
+            metadata = metaData,
+            captureNetworkQualityInPreview = captureNetworkQualityInPreview
+        )
     }
 
     private fun startHMSLogger(call: MethodCall) {
@@ -409,6 +423,8 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
 
         return allTracks
     }
+
+
 
     private fun preview(call: MethodCall, result: Result) {
 
@@ -786,6 +802,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             CoroutineScope(Dispatchers.Main).launch {
                 eventSink?.success(args)
             }
+
         }
 
         override fun onRoleChangeRequest(request: HMSRoleChangeRequest) {
@@ -799,6 +816,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
                 }
         }
     }
+
 
     private val hmsPreviewListener = object : HMSPreviewListener {
         override fun onError(error: HMSException) {
@@ -842,6 +860,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
                 CoroutineScope(Dispatchers.Main).launch {
                     previewSink?.success(args)
                 }
+
         }
 
         override fun onRoomUpdate(type: HMSRoomUpdate, hmsRoom: HMSRoom) {
@@ -943,6 +962,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         val args = ArrayList<Any>()
 
         peer?.getAllTracks()?.forEach {
+            Log.i("peertracks", it.toString())
             args.add(HMSTrackExtension.toDictionary(it)!!)
         }
         result.success(args)

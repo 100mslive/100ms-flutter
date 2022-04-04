@@ -8,46 +8,31 @@
 ///
 ///This library depends only on core Dart libraries and hms_audio_track.dart, hms_role.dart, hms_track.dart, hms_video_track.dart library.
 
-// Dart imports:
-import 'dart:io';
-
 // Project imports:
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 class HMSRemotePeer extends HMSPeer {
-  ///id of the peer
-  late final String peerId;
-
-  ///name of the peer in the room.
-  final String name;
-
-  ///returns whether peer is local or not.
-  final bool isLocal;
 
   @override
   String toString() {
     return 'HMSPeer{name: $name, isLocal: $isLocal}';
   }
 
-  ///role of the peer in the room.
-  final HMSRole role;
-  final String? customerUserId;
-  final String? metadata;
   HMSRemoteAudioTrack? audioRemoteTrack;
   HMSRemoteVideoTrack? videoRemoteTrack;
-  final List<HMSTrack>? auxiliaryTracks;
 
-  HMSRemotePeer({
-    required this.peerId,
-    required this.name,
-    required this.isLocal,
-    required this.role,
-    this.customerUserId,
-    this.metadata,
-    this.audioRemoteTrack,
-    this.videoRemoteTrack,
-    this.auxiliaryTracks,
-  }) : super(
+  HMSRemotePeer(
+      {required String peerId,
+      required String name,
+      bool isLocal = false,
+      required HMSRole role,
+      String? customerUserId,
+      String? metadata,
+      this.audioRemoteTrack,
+      this.videoRemoteTrack,
+      List<HMSTrack>? auxiliaryTracks,
+      HMSNetworkQuality? networkQuality})
+      : super(
             peerId: peerId,
             name: name,
             isLocal: isLocal,
@@ -56,7 +41,8 @@ class HMSRemotePeer extends HMSPeer {
             metadata: metadata,
             audioTrack: audioRemoteTrack,
             videoTrack: videoRemoteTrack,
-            auxiliaryTracks: auxiliaryTracks);
+            auxiliaryTracks: auxiliaryTracks,
+            networkQuality: networkQuality);
 
   ///important to compare using [peerId]
   @override
@@ -70,44 +56,31 @@ class HMSRemotePeer extends HMSPeer {
   int get hashCode => peerId.hashCode;
 
   factory HMSRemotePeer.fromMap(Map map) {
-    if (Platform.isAndroid) {
       HMSRole role = HMSRole.fromMap(map['role']);
-      return HMSRemotePeer(
-        peerId: map['peer_id'],
-        name: map['name'],
-        isLocal: map['is_local'],
-        role: role,
-        metadata: map['metadata'],
-        customerUserId: map['customer_user_id'],
-      );
-    } else {
-      HMSRole role = HMSRole.fromMap(map['role']);
-
       // TODO: add auxiliary tracks
-
       HMSRemotePeer peer = HMSRemotePeer(
-        peerId: map['peer_id'],
-        name: map['name'],
-        isLocal: map['is_local'],
-        role: role,
-        metadata: map['customer_description'],
-        customerUserId: map['customer_user_id'],
-      );
+          peerId: map['peer_id'],
+          name: map['name'],
+          isLocal: map['is_local'],
+          role: role,
+          metadata: map['metadata'],
+          customerUserId: map['customer_user_id'],
+          networkQuality: map["network_quality"] != null
+              ? HMSNetworkQuality.fromMap(map["network_quality"])
+              : null);
 
       if (map['audio_track'] != null) {
-        peer.audioRemoteTrack =
-            HMSAudioTrack.fromMap(map: map['audio_track']!)
-                as HMSRemoteAudioTrack;
+        peer.audioRemoteTrack = HMSAudioTrack.fromMap(map: map['audio_track']!)
+            as HMSRemoteAudioTrack;
       }
 
       if (map['video_track'] != null) {
-        peer.videoRemoteTrack =
-            HMSVideoTrack.fromMap(map: map['video_track']!)
-                as HMSRemoteVideoTrack;
+        peer.videoRemoteTrack = HMSVideoTrack.fromMap(map: map['video_track']!)
+            as HMSRemoteVideoTrack;
       }
 
       return peer;
-    }
+    
   }
 
   // TODO: add HMSRemotePeer class

@@ -8,14 +8,11 @@
 ///
 ///This library depends only on core Dart libraries and hms_audio_track.dart, hms_role.dart, hms_track.dart, hms_video_track.dart library.
 
-// Dart imports:
-import 'dart:io';
-
 // Project imports:
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter/src/service/platform_service.dart';
 
-class HMSPeer{
+class HMSPeer {
   ///id of the peer
   late final String peerId;
 
@@ -37,6 +34,7 @@ class HMSPeer{
   HMSAudioTrack? audioTrack;
   HMSVideoTrack? videoTrack;
   final List<HMSTrack>? auxiliaryTracks;
+  final HMSNetworkQuality? networkQuality;
 
   HMSPeer({
     required this.peerId,
@@ -48,6 +46,7 @@ class HMSPeer{
     this.audioTrack,
     this.videoTrack,
     this.auxiliaryTracks,
+    this.networkQuality,
   });
 
   ///important to compare using [peerId]
@@ -62,27 +61,6 @@ class HMSPeer{
   int get hashCode => peerId.hashCode;
 
   factory HMSPeer.fromMap(Map map) {
-    if (Platform.isAndroid) {
-      HMSRole role = HMSRole.fromMap(map['role']);
-      if (map['is_local'] == true) {
-        return HMSLocalPeer(
-          peerId: map['peer_id'],
-          name: map['name'],
-          isLocal: map['is_local'],
-          role: role,
-          metadata: map['metadata'],
-          customerUserId: map['customer_user_id'],
-        );
-      }
-      return HMSRemotePeer(
-        peerId: map['peer_id'],
-        name: map['name'],
-        isLocal: map['is_local'],
-        role: role,
-        metadata: map['metadata'],
-        customerUserId: map['customer_user_id'],
-      );
-    } else {
       HMSRole role = HMSRole.fromMap(map['role']);
 
       // TODO: add auxiliary tracks
@@ -95,6 +73,9 @@ class HMSPeer{
               role: role,
               metadata: map['metadata'],
               customerUserId: map['customer_user_id'],
+              networkQuality: map['network_quality'] == null
+                ? null
+                : HMSNetworkQuality.fromMap(map['network_quality'])
             )
           : HMSRemotePeer(
               peerId: map['peer_id'],
@@ -103,20 +84,21 @@ class HMSPeer{
               role: role,
               metadata: map['metadata'],
               customerUserId: map['customer_user_id'],
+              networkQuality: map['network_quality'] == null
+                ? null
+                : HMSNetworkQuality.fromMap(map['network_quality'])
             );
 
       if (map['audio_track'] != null) {
-        peer.audioTrack =
-            HMSAudioTrack.fromMap(map: map['audio_track']!);
+        peer.audioTrack = HMSAudioTrack.fromMap(map: map['audio_track']!);
       }
 
       if (map['video_track'] != null) {
-        peer.videoTrack =
-            HMSVideoTrack.fromMap(map: map['video_track']!);
+        peer.videoTrack = HMSVideoTrack.fromMap(map: map['video_track']!);
       }
 
       return peer;
-    }
+    
   }
 
   // TODO: add HMSRemotePeer class
@@ -127,8 +109,7 @@ class HMSPeer{
   }
 
   Future<List<HMSTrack>> getAllTracks() async {
-    var result = await PlatformService.invokeMethod(
-        PlatformMethod.getAllTracks,
+    var result = await PlatformService.invokeMethod(PlatformMethod.getAllTracks,
         arguments: {"peer_id": this.peerId});
     List<HMSTrack> tracks = [];
     result.forEach((element) {
@@ -146,5 +127,4 @@ class HMSPeer{
     HMSTrack hmsTrack = HMSTrack.fromMap(map: result);
     return hmsTrack;
   }
-
 }

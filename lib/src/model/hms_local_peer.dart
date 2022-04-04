@@ -3,17 +3,18 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 ///HMSLocalPeer instance of the localPeer means your instance in the room.
 class HMSLocalPeer extends HMSPeer {
-  HMSLocalPeer({
-    required String peerId,
-    required String name,
-    required bool isLocal,
-    required HMSRole role,
-    String? customerUserId,
-    String? metadata,
-    HMSLocalAudioTrack? audioTrack,
-    HMSLocalVideoTrack? videoTrack,
-    List<HMSTrack>? auxiliaryTracks,
-  }) : super(
+  HMSLocalPeer(
+      {required String peerId,
+      required String name,
+      required bool isLocal,
+      required HMSRole role,
+      String? customerUserId,
+      String? metadata,
+      HMSLocalAudioTrack? audioTrack,
+      HMSLocalVideoTrack? videoTrack,
+      List<HMSTrack>? auxiliaryTracks,
+      HMSNetworkQuality? networkQuality})
+      : super(
             isLocal: isLocal,
             name: name,
             peerId: peerId,
@@ -22,7 +23,8 @@ class HMSLocalPeer extends HMSPeer {
             role: role,
             audioTrack: audioTrack,
             videoTrack: videoTrack,
-            auxiliaryTracks: auxiliaryTracks);
+            auxiliaryTracks: auxiliaryTracks,
+            networkQuality: networkQuality);
 
   factory HMSLocalPeer.fromMap(Map map) {
     return HMSLocalPeer(
@@ -37,6 +39,9 @@ class HMSLocalPeer extends HMSPeer {
             : null,
         videoTrack: map["video_track"] != null
             ? HMSLocalVideoTrack.fromMap(map: map["video_track"])
+            : null,
+        networkQuality: map["network_quality"] != null
+            ? HMSNetworkQuality.fromMap(map["network_quality"])
             : null);
   }
 }

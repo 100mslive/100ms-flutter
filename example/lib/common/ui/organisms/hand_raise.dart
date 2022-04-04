@@ -16,7 +16,7 @@ class HandRaise extends StatelessWidget {
               color: Colors.amber.shade300,
             ),
           ),
-          top: 5.0,
+          bottom: 5.0,
           left: 5.0,
         )
       : Container();

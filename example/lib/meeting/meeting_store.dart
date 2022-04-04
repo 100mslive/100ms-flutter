@@ -85,6 +85,8 @@ class MeetingStore extends ChangeNotifier
 
   HMSRoom? hmsRoom;
 
+  int? localPeerNetworkQuality;
+
   int firstTimeBuild = 0;
   final DateFormat formatter = DateFormat('d MMM y h:mm:ss a');
 
@@ -106,7 +108,8 @@ class MeetingStore extends ChangeNotifier
     HMSConfig config = HMSConfig(
         authToken: token[0]!,
         userName: user,
-        endPoint: token[1] == "true" ? "" : "https://qa-init.100ms.live/init");
+        endPoint: token[1] == "true" ? "" : "https://qa-init.100ms.live/init",
+        captureNetworkQualityInPreview: true);
 
     HmsSdkManager.hmsSdkInteractor?.join(config: config);
     return true;
@@ -267,7 +270,7 @@ class MeetingStore extends ChangeNotifier
             .indexWhere((element) => element.uid == each.peerId + "mainVideo");
         if (index == -1)
           peerTracks
-              .add(PeerTrackNode(peer: each, uid: each.peerId + "mainVideo"));
+              .add(PeerTrackNode(peer: each, uid: each.peerId + "mainVideo",networkQuality: localPeerNetworkQuality));
         localPeer = each;
         addPeer(localPeer!);
         if (localPeer!.role.name.contains("hls-") == true) isHLSLink = true;
@@ -344,8 +347,11 @@ class MeetingStore extends ChangeNotifier
       if (track.kind == HMSTrackKind.kHMSTrackKindVideo) {
         if (track.isMute) {
           this.isVideoOn = false;
-          notifyListeners();
         }
+        else{
+          this.isVideoOn = true;
+        }
+        notifyListeners();
       }
     }
 
@@ -491,6 +497,15 @@ class MeetingStore extends ChangeNotifier
           notifyListeners();
         }
         addPeer(peer);
+        break;
+      case HMSPeerUpdate.networkQualityUpdated:
+        print("onPeerUpdate networkQuality ${peer.name} ${peer.networkQuality?.quality}");
+        int index = peerTracks.indexWhere(
+                (element) => element.uid == peer.peerId + "mainVideo");
+        if(index != -1){
+          peerTracks[index].networkQuality = peer.networkQuality?.quality;
+          peerTracks[index].notify();
+        }
         break;
       case HMSPeerUpdate.peerLeft:
         peerTracks.removeWhere(

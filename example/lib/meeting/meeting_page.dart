@@ -28,13 +28,15 @@ class MeetingPage extends StatefulWidget {
   final MeetingFlow flow;
   final String user;
   final bool isAudioOn;
+  final int? localPeerNetworkQuality;
 
   const MeetingPage(
       {Key? key,
       required this.roomId,
       required this.flow,
       required this.user,
-      required this.isAudioOn})
+      required this.isAudioOn,
+      this.localPeerNetworkQuality})
       : super(key: key);
 
   @override
@@ -57,6 +59,7 @@ class _MeetingPageState extends State<MeetingPage>
     WidgetsBinding.instance!.addObserver(this);
     initMeeting();
     checkAudioState();
+    setNetworkQuality();
   }
 
   void initMeeting() async {
@@ -76,6 +79,10 @@ class _MeetingPageState extends State<MeetingPage>
 
   void checkAudioState() async {
     if (!widget.isAudioOn) context.read<MeetingStore>().switchAudio();
+  }
+
+  void setNetworkQuality() async{
+    context.read<MeetingStore>().localPeerNetworkQuality = widget.localPeerNetworkQuality;
   }
 
   @override
@@ -385,27 +392,6 @@ class _MeetingPageState extends State<MeetingPage>
     ));
   }
 
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) async {
-    super.didChangeAppLifecycleState(state);
-    final _readMeetingStore = context.read<MeetingStore>();
-    final _watchMeetingStore = context.watch<MeetingStore>();
-    if (state == AppLifecycleState.resumed) {
-      if (_watchMeetingStore.isVideoOn) {
-        _readMeetingStore.startCapturing();
-      } else {
-        _readMeetingStore.stopCapturing();
-      }
-    } else if (state == AppLifecycleState.paused) {
-      if (_watchMeetingStore.isVideoOn) {
-        _readMeetingStore.stopCapturing();
-      }
-    } else if (state == AppLifecycleState.inactive) {
-      if (_watchMeetingStore.isVideoOn) {
-        _readMeetingStore.stopCapturing();
-      }
-    }
-  }
 
   Widget expandModalBottomSheet() {
     final meetingStore = context.read<MeetingStore>();
