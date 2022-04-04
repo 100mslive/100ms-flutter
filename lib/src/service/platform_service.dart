@@ -127,7 +127,6 @@ class PlatformService {
           HMSPeer? peer = HMSPeer.fromMap(data['peer']);
           HMSPeerUpdate? update =
               HMSPeerUpdateValues.getHMSPeerUpdateFromName(data['update']);
-          print("platformSercvice ${update.toString()} ${peer.networkQuality.toString()}");
           notifyUpdateListeners(method, {'peer': peer, 'update': update});
           break;
 

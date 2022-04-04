@@ -28,8 +28,6 @@ class HMSHLSAction {
 
         private fun hlsStreaming(call: MethodCall, result: Result,hmssdk:HMSSDK) {
             val meetingUrlVariantsList = call.argument<List<Map<String,String>>>("meeting_url_variants")
-
-            Log.i("hlsStreaming",meetingUrlVariantsList.toString())
             val meetingUrlVariant1 : ArrayList<HMSHLSMeetingURLVariant> = ArrayList()
 
             meetingUrlVariantsList?.forEach {

@@ -962,7 +962,6 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         val args = ArrayList<Any>()
 
         peer?.getAllTracks()?.forEach {
-            Log.i("peertracks", it.toString())
             args.add(HMSTrackExtension.toDictionary(it)!!)
         }
         result.success(args)
