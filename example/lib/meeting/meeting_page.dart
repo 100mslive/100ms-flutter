@@ -297,12 +297,12 @@ class _MeetingPageState extends State<MeetingPage>
                             child: Selector<
                                     MeetingStore,
                                     Tuple4<List<PeerTrackNode>, bool, int,
-                                        bool>>(
+                                        int>>(
                                 selector: (_, meetingStore) => Tuple4(
                                     meetingStore.peerTracks,
                                     meetingStore.isHLSLink,
                                     meetingStore.peerTracks.length,
-                                    meetingStore.screenTrack != null),
+                                    meetingStore.screenShareCount),
                                 builder: (_, data, __) {
                                   return !data.item2
                                       ? data.item3 == 0

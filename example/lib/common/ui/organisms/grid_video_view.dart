@@ -8,28 +8,36 @@ List<Widget> gridVideoView(
     {required List<PeerTrackNode> peerTracks,
     required bool audioViewOn,
     required int itemCount,
-    required bool screenShareOn,
+    required int screenShareOn,
     required Size size}) {
-  int index = screenShareOn ? 1 : 0;
+  int index = screenShareOn;
   List<Widget> gridView = [];
-  if (screenShareOn)
+  for(int i=0;i<screenShareOn;i++){
+    if(peerTracks[i].track?.source!="REGULAR")
     gridView.add(
       Container(
         height: size.height,
         width: size.width,
         child: ChangeNotifierProvider.value(
-          value: peerTracks[0],
-          child: peerTracks[0].peer.isLocal?
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.file_upload_outlined),
-              Text("You are sharing your screen"),
-                           
-            ],
+          value: peerTracks[i],
+          child: peerTracks[i].peer.isLocal?
+          Container(
+            margin: EdgeInsets.all(2),
+            height: size.height,
+                      width: size.width,
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey, width: 1.0),
+                          borderRadius: BorderRadius.all(Radius.circular(10))),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.screen_share),
+                Text("You are sharing your screen"),             
+              ],
+            ),
           )
           :VideoTile(
-            key: Key(peerTracks[0].uid),
+            key: Key(peerTracks[i].uid),
             itemHeight: size.height,
             itemWidth: size.width,
             audioView: audioViewOn,
@@ -38,7 +46,9 @@ List<Widget> gridVideoView(
         ),
       ),
     );
-  int numberofPages = ((itemCount ~/ 4).toInt() + (itemCount % 4 == 0 ? 0 : 1));
+  }
+
+  int numberofPages = (((itemCount-index) ~/ 4).toInt() + ((itemCount-index) % 4 == 0 ? 0 : 1));
   for (int i = 0; i < numberofPages; i++) {
     if (index + 4 < itemCount) {
       gridView.add(

@@ -23,7 +23,7 @@ class MeetingStore extends ChangeNotifier
 
   bool isSpeakerOn = true;
 
-  HMSPeer? screenSharePeer;
+  int screenShareCount = 0;
 
   HMSException? hmsException;
 
@@ -69,11 +69,7 @@ class MeetingStore extends ChangeNotifier
 
   HMSPeer? localPeer;
 
-  HMSTrack? screenTrack;
-
   bool isActiveSpeakerMode = false;
-
-  // List<HMSTrack> tracks = [];
 
   List<HMSTrack> audioTracks = [];
 
@@ -578,30 +574,21 @@ class MeetingStore extends ChangeNotifier
       HMSPeer peer, HMSTrackUpdate update, HMSTrack track) {
     switch (update) {
       case HMSTrackUpdate.trackAdded:
-        if (track.source == "REGULAR") {
-        } else {
-          screenTrack = track as HMSVideoTrack;
-          if (peerTracks[0].track!.source != "REGULAR") {
-            peerTracks[0] = PeerTrackNode(
-                peer: peer,
-                uid: peer.peerId + track.trackId,
-                track: track as HMSVideoTrack);
-            peerTracks[0].notify();
-          } else {
-            peerTracks.insert(
+        if (track.source != "REGULAR") {
+          screenShareCount++;
+          peerTracks.insert(
                 0,
                 PeerTrackNode(
                     peer: peer,
                     uid: peer.peerId + track.trackId,
                     track: track as HMSVideoTrack));
             notifyListeners();
-          }
           isScreenShareActive();
         }
         break;
       case HMSTrackUpdate.trackRemoved:
         if (track.source != "REGULAR") {
-          screenTrack = null;
+          screenShareCount--;
           peerTracks.removeWhere(
               (element) => element.uid == peer.peerId + track.trackId);
           notifyListeners();
