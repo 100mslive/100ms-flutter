@@ -11,7 +11,6 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/constant.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/chat_bottom_sheet.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/offline_screen.dart';
-import 'package:hmssdk_flutter_example/common/ui/organisms/video_tile.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
 import 'package:hmssdk_flutter_example/logs/custom_singleton_logger.dart';
@@ -72,17 +71,13 @@ class _MeetingPageState extends State<MeetingPage>
     context.read<MeetingStore>().addUpdateListener();
   }
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-  }
-
   void checkAudioState() async {
     if (!widget.isAudioOn) context.read<MeetingStore>().switchAudio();
   }
 
-  void setNetworkQuality() async{
-    context.read<MeetingStore>().localPeerNetworkQuality = widget.localPeerNetworkQuality;
+  void setNetworkQuality() async {
+    context.read<MeetingStore>().localPeerNetworkQuality =
+        widget.localPeerNetworkQuality;
   }
 
   @override
@@ -241,10 +236,11 @@ class _MeetingPageState extends State<MeetingPage>
                 Tuple2(meetingStore.reconnecting, meetingStore.isRoomEnded),
             builder: (_, data, __) {
               if (data.item2) {
-                if (mounted)
+                WidgetsBinding.instance?.addPostFrameCallback((_) {
+                  UtilityComponents.showSnackBarWithString(
+                      context.read<MeetingStore>().description, context);
                   Navigator.of(context).popUntil((route) => route.isFirst);
-                UtilityComponents.showSnackBarWithString(
-                    "Meeting Ended", context);
+                });
               }
               return data.item1
                   ? OfflineWidget()
@@ -391,7 +387,6 @@ class _MeetingPageState extends State<MeetingPage>
       },
     ));
   }
-
 
   Widget expandModalBottomSheet() {
     final meetingStore = context.read<MeetingStore>();
@@ -665,7 +660,6 @@ class _MeetingPageState extends State<MeetingPage>
                   children: [
                     Text(
                       "Toggle Camera  ",
-                     
                     ),
                     Icon(Icons.switch_camera),
                   ]),
@@ -677,7 +671,6 @@ class _MeetingPageState extends State<MeetingPage>
                 children: [
                   Text(
                     "Participants  ",
-                    
                   ),
                   Icon(CupertinoIcons.person_3_fill),
                 ]),
@@ -689,7 +682,6 @@ class _MeetingPageState extends State<MeetingPage>
                 children: [
                   Text(
                     audioViewOn ? "Video View" : "Audio View",
-                    
                   ),
                   Image.asset(
                     audioViewOn
@@ -708,7 +700,6 @@ class _MeetingPageState extends State<MeetingPage>
                 children: [
                   Text(
                     "Active Speaker Mode ",
-                    
                   ),
                   Icon(CupertinoIcons.person_3_fill),
                 ]),
@@ -720,7 +711,6 @@ class _MeetingPageState extends State<MeetingPage>
                 children: [
                   Text(
                     "Hero Mode ",
-                    
                   ),
                   Icon(CupertinoIcons.person_3_fill),
                 ]),
@@ -732,7 +722,6 @@ class _MeetingPageState extends State<MeetingPage>
                 children: [
                   Text(
                     "Change Name",
-                    
                   ),
                   Icon(Icons.create_rounded),
                 ]),
@@ -765,7 +754,6 @@ class _MeetingPageState extends State<MeetingPage>
                   children: [
                     Text(
                       "Mute Roles",
-                      
                     ),
                     Icon(Icons.mic_off_sharp),
                   ]),
@@ -778,7 +766,6 @@ class _MeetingPageState extends State<MeetingPage>
                   children: [
                     Text(
                       "Mute All",
-                      
                     ),
                     Icon(Icons.mic_off),
                   ]),
@@ -797,12 +784,14 @@ class _MeetingPageState extends State<MeetingPage>
                     decoration: BoxDecoration(
                         border: Border.all(
                             width: 1,
-                            color:
-                                meetingStore.isBRB ? Colors.red : Colors.white)),
+                            color: meetingStore.isBRB
+                                ? Colors.red
+                                : Colors.white)),
                     child: Text(
                       "BRB",
                       style: TextStyle(
-                          color: meetingStore.isBRB ? Colors.red : Colors.white),
+                          color:
+                              meetingStore.isBRB ? Colors.red : Colors.white),
                     ),
                   ),
                 ]),
@@ -815,7 +804,6 @@ class _MeetingPageState extends State<MeetingPage>
                   children: [
                     Text(
                       "End Room",
-                      
                     ),
                     Icon(Icons.cancel_schedule_send),
                   ]),
