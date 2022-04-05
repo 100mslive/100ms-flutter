@@ -654,8 +654,6 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
     public func on(updated speakers: [HMSSpeaker]) {
 
-        logSpeakers(speakers)
-
         var speakersDict = [[String: Any]]()
         speakers.forEach { speakersDict.append(HMSSpeakerExtension.toDictionary($0)) }
 
