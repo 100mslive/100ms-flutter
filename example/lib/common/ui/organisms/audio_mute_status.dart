@@ -11,16 +11,23 @@ class _AudioMuteStatusState extends State<AudioMuteStatus> {
   @override
   Widget build(BuildContext context) {
     return Selector<PeerTrackNode, bool>(
-        selector: (_, peerTrackNode) => peerTrackNode.audioTrack?.isMute??true,
+        selector: (_, peerTrackNode) =>
+            peerTrackNode.audioTrack?.isMute ?? true,
         builder: (_, data, __) {
           return Positioned(
             bottom: 20,
             left: 0,
             right: 0,
             child: Padding(
-              padding: const EdgeInsets.symmetric(vertical:3.0),
-              child: data? CircleAvatar(backgroundColor: Colors.transparent.withOpacity(0.2),child: Icon(Icons.mic_off,color: Colors.red,)):Container()
-            ),
+                padding: const EdgeInsets.symmetric(vertical: 3.0),
+                child: data
+                    ? CircleAvatar(
+                        backgroundColor: Colors.transparent.withOpacity(0.2),
+                        child: Icon(
+                          Icons.mic_off,
+                          color: Colors.red,
+                        ))
+                    : Container()),
           );
         });
   }

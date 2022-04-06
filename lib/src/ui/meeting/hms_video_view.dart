@@ -27,11 +27,11 @@ class HMSVideoView extends StatelessWidget {
 
   HMSVideoView(
       {Key? key,
-        required this.track,
-        this.viewSize,
-        this.setMirror = false,
-        this.matchParent = true,
-        this.scaleType = ScaleType.SCALE_ASPECT_FIT})
+      required this.track,
+      this.viewSize,
+      this.setMirror = false,
+      this.matchParent = true,
+      this.scaleType = ScaleType.SCALE_ASPECT_FIT})
       : super(key: key);
 
   @override
@@ -73,8 +73,7 @@ class _PlatformView extends StatelessWidget {
     required this.scaleType,
   }) : super(key: key);
 
-  void onPlatformViewCreated(int id) {
-  }
+  void onPlatformViewCreated(int id) {}
 
   @override
   Widget build(BuildContext context) {
@@ -90,9 +89,9 @@ class _PlatformView extends StatelessWidget {
           'scale_type': scaleType.value,
           'match_parent': matchParent,
         }..addAll({
-          'height': viewSize.height,
-          'width': viewSize.width,
-        }),
+            'height': viewSize.height,
+            'width': viewSize.width,
+          }),
         gestureRecognizers: {},
       );
     } else if (Platform.isIOS) {
@@ -107,9 +106,9 @@ class _PlatformView extends StatelessWidget {
           'scale_type': scaleType.value,
           'match_parent': matchParent,
         }..addAll({
-          'height': viewSize.height,
-          'width': viewSize.width,
-        }),
+            'height': viewSize.height,
+            'width': viewSize.width,
+          }),
         gestureRecognizers: {},
       );
     } else {

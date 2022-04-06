@@ -2,22 +2,21 @@
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 class HMSRemoteVideoTrack extends HMSVideoTrack {
-  HMSRemoteVideoTrack(
-      {required bool isDegraded,
-      required HMSTrackKind kind,
-      required String source,
-      required String trackId,
-      required String trackDescription,
-      required bool isMute,
-      })
-      : super(
-            isDegraded: isDegraded,
-            kind: kind,
-            source: source,
-            trackDescription: trackDescription,
-            trackId: trackId,
-            isMute: isMute,
-            );
+  HMSRemoteVideoTrack({
+    required bool isDegraded,
+    required HMSTrackKind kind,
+    required String source,
+    required String trackId,
+    required String trackDescription,
+    required bool isMute,
+  }) : super(
+          isDegraded: isDegraded,
+          kind: kind,
+          source: source,
+          trackDescription: trackDescription,
+          trackId: trackId,
+          isMute: isMute,
+        );
 
   factory HMSRemoteVideoTrack.fromMap({required Map map}) {
     return HMSRemoteVideoTrack(

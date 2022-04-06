@@ -37,8 +37,8 @@ class HMSExampleApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
-          brightness: Brightness.dark,
-          primaryColor: Color.fromARGB(255, 13, 107, 184),
+        brightness: Brightness.dark,
+        primaryColor: Color.fromARGB(255, 13, 107, 184),
       ),
       scaffoldMessengerKey: GlobalKey<ScaffoldMessengerState>(),
       home: HomePage(),
@@ -179,9 +179,8 @@ class _HomePageState extends State<HomePage> {
                               if (res) {
                                 FocusManager.instance.primaryFocus?.unfocus();
                                 Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (_) =>
-                                        ListenableProvider.value(
-                                          value:PreviewStore(),
+                                    builder: (_) => ListenableProvider.value(
+                                          value: PreviewStore(),
                                           child: PreviewPage(
                                             roomId: roomIdController.text,
                                             user: user,

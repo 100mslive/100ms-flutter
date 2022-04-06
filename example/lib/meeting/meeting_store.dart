@@ -255,8 +255,10 @@ class MeetingStore extends ChangeNotifier
     } else {
       hasHlsStarted = false;
     }
-    if (room.hmsBrowserRecordingState?.running == true || room.hmsServerRecordingState?.running == true ||
-        room.hmsRtmpStreamingState?.running == true || room.hmshlsStreamingState?.running == true)
+    if (room.hmsBrowserRecordingState?.running == true ||
+        room.hmsServerRecordingState?.running == true ||
+        room.hmsRtmpStreamingState?.running == true ||
+        room.hmshlsStreamingState?.running == true)
       isRecordingStarted = true;
     else
       isRecordingStarted = false;
@@ -508,13 +510,17 @@ class MeetingStore extends ChangeNotifier
       case HMSPeerUpdate.roleUpdated:
         if (peer.role.name.contains("hls-")) {
           isHLSLink = peer.isLocal;
-          peerTracks.removeWhere((leftPeer) => leftPeer.uid == peer.peerId + "mainVideo");
+          peerTracks.removeWhere(
+              (leftPeer) => leftPeer.uid == peer.peerId + "mainVideo");
         } else {
           if (peer.isLocal) {
             isHLSLink = false;
           }
-          int index = peerTracks.indexWhere((element) => element.uid == peer.peerId + "mainVideo");
-          if (index == -1) peerTracks.add(new PeerTrackNode(peer: peer, uid: peer.peerId + "mainVideo"));
+          int index = peerTracks.indexWhere(
+              (element) => element.uid == peer.peerId + "mainVideo");
+          if (index == -1)
+            peerTracks.add(
+                new PeerTrackNode(peer: peer, uid: peer.peerId + "mainVideo"));
         }
 
         updatePeerAt(peer);
@@ -555,13 +561,15 @@ class MeetingStore extends ChangeNotifier
         break;
 
       case HMSPeerUpdate.networkQualityUpdated:
-        print("onPeerUpdate networkQuality ${peer.name} ${peer.networkQuality?.quality}");
-        int index = peerTracks.indexWhere((element) => element.uid == peer.peerId + "mainVideo");
+        print(
+            "onPeerUpdate networkQuality ${peer.name} ${peer.networkQuality?.quality}");
+        int index = peerTracks
+            .indexWhere((element) => element.uid == peer.peerId + "mainVideo");
         if (index != -1) {
           peerTracks[index].networkQuality = peer.networkQuality?.quality;
           peerTracks[index].notify();
         }
-      break;
+        break;
 
       case HMSPeerUpdate.defaultUpdate:
         break;
@@ -577,12 +585,12 @@ class MeetingStore extends ChangeNotifier
         if (track.source != "REGULAR") {
           screenShareCount++;
           peerTracks.insert(
-                0,
-                PeerTrackNode(
-                    peer: peer,
-                    uid: peer.peerId + track.trackId,
-                    track: track as HMSVideoTrack));
-            notifyListeners();
+              0,
+              PeerTrackNode(
+                  peer: peer,
+                  uid: peer.peerId + track.trackId,
+                  track: track as HMSVideoTrack));
+          notifyListeners();
           isScreenShareActive();
         }
         break;
@@ -748,33 +756,28 @@ class MeetingStore extends ChangeNotifier
   void onLocalAudioStats(
       {required HMSLocalAudioStats hmsLocalAudioStats,
       required HMSLocalAudioTrack track,
-      required HMSPeer peer}) {
-  }
+      required HMSPeer peer}) {}
 
   @override
   void onLocalVideoStats(
       {required HMSLocalVideoStats hmsLocalVideoStats,
       required HMSLocalVideoTrack track,
-      required HMSPeer peer}) {
-  }
+      required HMSPeer peer}) {}
 
   @override
   void onRemoteAudioStats(
       {required HMSRemoteAudioStats hmsRemoteAudioStats,
       required HMSRemoteAudioTrack track,
-      required HMSPeer peer}) {
-  }
+      required HMSPeer peer}) {}
 
   @override
   void onRemoteVideoStats(
       {required HMSRemoteVideoStats hmsRemoteVideoStats,
       required HMSRemoteVideoTrack track,
-      required HMSPeer peer}) {
-  }
+      required HMSPeer peer}) {}
 
   @override
-  void onRTCStats({required HMSRTCStatsReport hmsrtcStatsReport}) {
-  }
+  void onRTCStats({required HMSRTCStatsReport hmsrtcStatsReport}) {}
 
   bool isActiveSpeaker(String uid) {
     return activeSpeakerIds.contains(uid);

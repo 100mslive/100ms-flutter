@@ -119,12 +119,14 @@ class _ChatWidgetState extends State<ChatWidget> {
                     ),
                   ),
                   Expanded(
-                    child: Selector<MeetingStore, Tuple2<List<HMSMessage>,int>>(
-                      selector: (_, meetingStore) => Tuple2(meetingStore.messages,meetingStore.messages.length),
+                    child:
+                        Selector<MeetingStore, Tuple2<List<HMSMessage>, int>>(
+                      selector: (_, meetingStore) => Tuple2(
+                          meetingStore.messages, meetingStore.messages.length),
                       builder: (context, data, _) {
                         // if (!_meetingStore.isMeetingStarted) return SizedBox();
 
-                        if (data.item2== 0)
+                        if (data.item2 == 0)
                           return Center(child: Text('No messages'));
 
                         return ListView(
@@ -145,8 +147,11 @@ class _ChatWidgetState extends State<ChatWidget> {
                                           data.item1[index].sender?.name ?? "",
                                           style: TextStyle(
                                               fontSize: 14.0,
-                                              color: MediaQuery.of(context).platformBrightness==Brightness.light?
-                                          Colors.grey:Colors.white70,
+                                              color: MediaQuery.of(context)
+                                                          .platformBrightness ==
+                                                      Brightness.light
+                                                  ? Colors.grey
+                                                  : Colors.white70,
                                               fontWeight: FontWeight.w600),
                                         ),
                                       ),
@@ -177,7 +182,8 @@ class _ChatWidgetState extends State<ChatWidget> {
                                       Text(
                                         HMSMessageRecipientValues
                                                 .getValueFromHMSMessageRecipientType(
-                                                    data.item1[index]
+                                                    data
+                                                        .item1[index]
                                                         .hmsMessageRecipient!
                                                         .hmsMessageRecipientType)
                                             .toLowerCase(),
@@ -241,13 +247,14 @@ class _ChatWidgetState extends State<ChatWidget> {
                               List<HMSRole> selectedRoles = [];
                               selectedRoles.add(hmsRoles.firstWhere(
                                   (role) => role.name == this.valueChoose));
-                              widget.meetingStore.sendGroupMessage(
-                                  message, selectedRoles);
+                              widget.meetingStore
+                                  .sendGroupMessage(message, selectedRoles);
                             } else if (widget.meetingStore.localPeer!.peerId !=
                                 this.valueChoose) {
-                              var peer = await widget.meetingStore.getPeer(
-                                  peerId: this.valueChoose);
-                              widget.meetingStore.sendDirectMessage(message, peer!);
+                              var peer = await widget.meetingStore
+                                  .getPeer(peerId: this.valueChoose);
+                              widget.meetingStore
+                                  .sendDirectMessage(message, peer!);
                             }
                             messageTextController.clear();
                           },

@@ -1,6 +1,4 @@
-
-
-class HMSNetworkQuality{
+class HMSNetworkQuality {
   int quality;
 
   HMSNetworkQuality({required this.quality});

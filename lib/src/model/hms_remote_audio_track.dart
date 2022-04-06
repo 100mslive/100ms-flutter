@@ -3,20 +3,19 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter/src/service/platform_service.dart';
 
 class HMSRemoteAudioTrack extends HMSAudioTrack {
-  HMSRemoteAudioTrack(
-      {required HMSTrackKind kind,
-      required String source,
-      required String trackId,
-      required String trackDescription,
-      required bool isMute,
-      })
-      : super(
-            kind: kind,
-            source: source,
-            trackDescription: trackDescription,
-            trackId: trackId,
-            isMute: isMute,
-            );
+  HMSRemoteAudioTrack({
+    required HMSTrackKind kind,
+    required String source,
+    required String trackId,
+    required String trackDescription,
+    required bool isMute,
+  }) : super(
+          kind: kind,
+          source: source,
+          trackDescription: trackDescription,
+          trackId: trackId,
+          isMute: isMute,
+        );
 
   factory HMSRemoteAudioTrack.fromMap({required Map map}) {
     return HMSRemoteAudioTrack(

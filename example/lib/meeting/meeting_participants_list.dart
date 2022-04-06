@@ -38,7 +38,6 @@ class _ParticipantsListState extends State<ParticipantsList> {
                     children: data.item1
                         .map((peer) => ParticipantOrganism(
                               peer: peer,
-                              
                             ))
                         .toList(),
                   );

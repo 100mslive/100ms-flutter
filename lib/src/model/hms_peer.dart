@@ -61,44 +61,41 @@ class HMSPeer {
   int get hashCode => peerId.hashCode;
 
   factory HMSPeer.fromMap(Map map) {
-      HMSRole role = HMSRole.fromMap(map['role']);
+    HMSRole role = HMSRole.fromMap(map['role']);
 
-      // TODO: add auxiliary tracks
+    // TODO: add auxiliary tracks
 
-      HMSPeer peer = (map['is_local'] == true)
-          ? HMSLocalPeer(
-              peerId: map['peer_id'],
-              name: map['name'],
-              isLocal: map['is_local'],
-              role: role,
-              metadata: map['metadata'],
-              customerUserId: map['customer_user_id'],
-              networkQuality: map['network_quality'] == null
+    HMSPeer peer = (map['is_local'] == true)
+        ? HMSLocalPeer(
+            peerId: map['peer_id'],
+            name: map['name'],
+            isLocal: map['is_local'],
+            role: role,
+            metadata: map['metadata'],
+            customerUserId: map['customer_user_id'],
+            networkQuality: map['network_quality'] == null
                 ? null
-                : HMSNetworkQuality.fromMap(map['network_quality'])
-            )
-          : HMSRemotePeer(
-              peerId: map['peer_id'],
-              name: map['name'],
-              isLocal: map['is_local'],
-              role: role,
-              metadata: map['metadata'],
-              customerUserId: map['customer_user_id'],
-              networkQuality: map['network_quality'] == null
+                : HMSNetworkQuality.fromMap(map['network_quality']))
+        : HMSRemotePeer(
+            peerId: map['peer_id'],
+            name: map['name'],
+            isLocal: map['is_local'],
+            role: role,
+            metadata: map['metadata'],
+            customerUserId: map['customer_user_id'],
+            networkQuality: map['network_quality'] == null
                 ? null
-                : HMSNetworkQuality.fromMap(map['network_quality'])
-            );
+                : HMSNetworkQuality.fromMap(map['network_quality']));
 
-      if (map['audio_track'] != null) {
-        peer.audioTrack = HMSAudioTrack.fromMap(map: map['audio_track']!);
-      }
+    if (map['audio_track'] != null) {
+      peer.audioTrack = HMSAudioTrack.fromMap(map: map['audio_track']!);
+    }
 
-      if (map['video_track'] != null) {
-        peer.videoTrack = HMSVideoTrack.fromMap(map: map['video_track']!);
-      }
+    if (map['video_track'] != null) {
+      peer.videoTrack = HMSVideoTrack.fromMap(map: map['video_track']!);
+    }
 
-      return peer;
-    
+    return peer;
   }
 
   // TODO: add HMSRemotePeer class

@@ -12,7 +12,6 @@
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 class HMSRemotePeer extends HMSPeer {
-
   @override
   String toString() {
     return 'HMSPeer{name: $name, isLocal: $isLocal}';
@@ -56,31 +55,30 @@ class HMSRemotePeer extends HMSPeer {
   int get hashCode => peerId.hashCode;
 
   factory HMSRemotePeer.fromMap(Map map) {
-      HMSRole role = HMSRole.fromMap(map['role']);
-      // TODO: add auxiliary tracks
-      HMSRemotePeer peer = HMSRemotePeer(
-          peerId: map['peer_id'],
-          name: map['name'],
-          isLocal: map['is_local'],
-          role: role,
-          metadata: map['metadata'],
-          customerUserId: map['customer_user_id'],
-          networkQuality: map["network_quality"] != null
-              ? HMSNetworkQuality.fromMap(map["network_quality"])
-              : null);
+    HMSRole role = HMSRole.fromMap(map['role']);
+    // TODO: add auxiliary tracks
+    HMSRemotePeer peer = HMSRemotePeer(
+        peerId: map['peer_id'],
+        name: map['name'],
+        isLocal: map['is_local'],
+        role: role,
+        metadata: map['metadata'],
+        customerUserId: map['customer_user_id'],
+        networkQuality: map["network_quality"] != null
+            ? HMSNetworkQuality.fromMap(map["network_quality"])
+            : null);
 
-      if (map['audio_track'] != null) {
-        peer.audioRemoteTrack = HMSAudioTrack.fromMap(map: map['audio_track']!)
-            as HMSRemoteAudioTrack;
-      }
+    if (map['audio_track'] != null) {
+      peer.audioRemoteTrack = HMSAudioTrack.fromMap(map: map['audio_track']!)
+          as HMSRemoteAudioTrack;
+    }
 
-      if (map['video_track'] != null) {
-        peer.videoRemoteTrack = HMSVideoTrack.fromMap(map: map['video_track']!)
-            as HMSRemoteVideoTrack;
-      }
+    if (map['video_track'] != null) {
+      peer.videoRemoteTrack = HMSVideoTrack.fromMap(map: map['video_track']!)
+          as HMSRemoteVideoTrack;
+    }
 
-      return peer;
-    
+    return peer;
   }
 
   // TODO: add HMSRemotePeer class
