@@ -86,8 +86,6 @@ class _PlatformView extends StatelessWidget {
         creationParamsCodec: StandardMessageCodec(),
         creationParams: {
           'track_id': track.trackId,
-          'is_aux': track.source != "REGULAR",
-          'screen_share': track.source != "REGULAR",
           'set_mirror': track.source != "REGULAR" ? false : setMirror,
           'scale_type': scaleType.value,
           'match_parent': matchParent,
@@ -105,8 +103,6 @@ class _PlatformView extends StatelessWidget {
         creationParamsCodec: StandardMessageCodec(),
         creationParams: {
           'track_id': track.trackId,
-          'is_aux': track.source != "REGULAR",
-          'screen_share': track.source != "REGULAR",
           'set_mirror': track.source != "REGULAR" ? false : setMirror,
           'scale_type': scaleType.value,
           'match_parent': matchParent,
