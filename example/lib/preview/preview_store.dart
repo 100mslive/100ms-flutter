@@ -26,7 +26,6 @@ class PreviewStore extends ChangeNotifier
 
   int? networkQuality;
 
-
   @override
   void onError({required HMSException error}) {
     updateError(error);
@@ -40,6 +39,7 @@ class PreviewStore extends ChangeNotifier
         peer = each;
         if (each.role.name.indexOf("hls-") == 0) {
           isHLSLink = true;
+          notifyListeners();
         }
         break;
       }
@@ -65,7 +65,8 @@ class PreviewStore extends ChangeNotifier
     HMSConfig config = HMSConfig(
         authToken: token[0]!,
         userName: user,
-        endPoint: token[1] == "true" ? "" : "https://qa-init.100ms.live/init",captureNetworkQualityInPreview: true);
+        endPoint: token[1] == "true" ? "" : "https://qa-init.100ms.live/init",
+        captureNetworkQualityInPreview: true);
 
     HmsSdkManager.hmsSdkInteractor?.preview(config: config);
     return true;
@@ -81,7 +82,7 @@ class PreviewStore extends ChangeNotifier
         peers.remove(peer);
         break;
       case HMSPeerUpdate.networkQualityUpdated:
-        if(peer.isLocal){
+        if (peer.isLocal) {
           networkQuality = peer.networkQuality?.quality;
           notifyListeners();
         }

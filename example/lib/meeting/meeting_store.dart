@@ -255,7 +255,8 @@ class MeetingStore extends ChangeNotifier
     } else {
       hasHlsStarted = false;
     }
-    if (room.hmsBrowserRecordingState?.running == true)
+    if (room.hmsBrowserRecordingState?.running == true || room.hmsServerRecordingState?.running == true ||
+        room.hmsRtmpStreamingState?.running == true || room.hmshlsStreamingState?.running == true)
       isRecordingStarted = true;
     else
       isRecordingStarted = false;
@@ -265,8 +266,10 @@ class MeetingStore extends ChangeNotifier
         int index = peerTracks
             .indexWhere((element) => element.uid == each.peerId + "mainVideo");
         if (index == -1)
-          peerTracks
-              .add(PeerTrackNode(peer: each, uid: each.peerId + "mainVideo",networkQuality: localPeerNetworkQuality));
+          peerTracks.add(PeerTrackNode(
+              peer: each,
+              uid: each.peerId + "mainVideo",
+              networkQuality: localPeerNetworkQuality));
         localPeer = each;
         addPeer(localPeer!);
         if (localPeer!.role.name.contains("hls-") == true) isHLSLink = true;
@@ -303,6 +306,7 @@ class MeetingStore extends ChangeNotifier
         isRecordingStarted = room.hmsRtmpStreamingState?.running ?? false;
         break;
       case HMSRoomUpdate.hlsStreamingStateUpdated:
+        isRecordingStarted = room.hmshlsStreamingState?.running ?? false;
         hasHlsStarted = room.hmshlsStreamingState?.running ?? false;
         streamUrl = hasHlsStarted
             ? room.hmshlsStreamingState?.variants[0]?.hlsStreamUrl ?? ""
@@ -343,8 +347,7 @@ class MeetingStore extends ChangeNotifier
       if (track.kind == HMSTrackKind.kHMSTrackKindVideo) {
         if (track.isMute) {
           this.isVideoOn = false;
-        }
-        else{
+        } else {
           this.isVideoOn = true;
         }
         notifyListeners();
@@ -495,9 +498,11 @@ class MeetingStore extends ChangeNotifier
         addPeer(peer);
         break;
       case HMSPeerUpdate.networkQualityUpdated:
-        int index = peerTracks.indexWhere(
-                (element) => element.uid == peer.peerId + "mainVideo");
-        if(index != -1){
+        print(
+            "onPeerUpdate networkQuality ${peer.name} ${peer.networkQuality?.quality}");
+        int index = peerTracks
+            .indexWhere((element) => element.uid == peer.peerId + "mainVideo");
+        if (index != -1) {
           peerTracks[index].networkQuality = peer.networkQuality?.quality;
           peerTracks[index].notify();
         }
@@ -869,10 +874,12 @@ class MeetingStore extends ChangeNotifier
         break;
       case HMSActionResultListenerMethod.hlsStreamingStarted:
         this.event = "HLS Streaming Started";
+        hasHlsStarted = true;
         notifyListeners();
         // TODO: Handle this case.
         break;
       case HMSActionResultListenerMethod.hlsStreamingStopped:
+        hasHlsStarted = false;
         this.event = "HLS Streaming Stopped";
         notifyListeners();
 

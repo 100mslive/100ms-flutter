@@ -70,7 +70,9 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
           body: Stack(
             children: [
               (_previewStore.localTracks.isEmpty)
-                  ? Align(
+                  ?
+                    _previewStore.isHLSLink?Container(height: itemHeight,width: itemWidth,):
+                   Align(
                       alignment: Alignment.center,
                       child: CupertinoActivityIndicator(radius: 50))
                   : Container(
@@ -232,7 +234,39 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                             )
                           : Container(),
                       _previewStore.peer != null
-                          ? ElevatedButton(
+                          ? 
+                            _previewStore.isHLSLink?
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  primary: Colors.blue,
+                                  padding: EdgeInsets.all(14)
+                                  ),
+                              onPressed: () {
+                                context
+                                    .read<PreviewStore>()
+                                    .removePreviewListener();
+                                Navigator.of(context).pushReplacement(
+                                    MaterialPageRoute(
+                                        builder: (_) =>
+                                            ListenableProvider.value(
+                                              value: MeetingStore(),
+                                              child: MeetingPage(
+                                                  roomId: widget.roomId,
+                                                  flow: widget.flow,
+                                                  user: widget.user,
+                                                  isAudioOn:
+                                                      _previewStore.isAudioOn,
+                                                      localPeerNetworkQuality: _previewStore.networkQuality,
+                                                      ),
+                                            )));
+                              },
+                              child: Text(
+                                'Join HLS ',
+                                style: TextStyle(height: 1, fontSize: 18),
+                              ),
+                            )
+                            :
+                          ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                   primary: Colors.blue),
                               onPressed: () {

@@ -8,7 +8,7 @@ import io.flutter.plugin.platform.PlatformView
 import io.flutter.plugin.common.StandardMessageCodec
 import io.flutter.plugin.platform.PlatformViewFactory
 import live.hms.hmssdk_flutter.HmssdkFlutterPlugin
-import live.hms.video.media.tracks.HMSLocalTrack
+ import live.hms.video.media.tracks.HMSLocalTrack
 import live.hms.video.media.tracks.HMSLocalVideoTrack
 import live.hms.video.media.tracks.HMSVideoTrack
 import live.hms.video.sdk.models.HMSPeer
@@ -26,6 +26,7 @@ class HMSVideoViewWidget(context: Context, id: Int, creationParams: Map<String?,
     }
 
     private fun renderVideo() {
+        Log.i("Init called","Here");
 
         var frameLayoutParams = FrameLayout.LayoutParams(
             FrameLayout.LayoutParams.MATCH_PARENT,
@@ -76,6 +77,7 @@ class HMSVideoViewWidget(context: Context, id: Int, creationParams: Map<String?,
     private fun release() {
         if (hmsVideoView.currentVideoTrack != null) {
             if (hmsVideoView.currentVideoTrack!!.trackId == trackId) { // peer?.isLocal == true
+                Log.i("Release called","Here");
                 hmsVideoView.currentVideoTrack!!.removeSink(hmsVideoView.surfaceViewRenderer)
                 hmsVideoView.surfaceViewRenderer.release()
                 hmsVideoView.currentVideoTrack = null
@@ -90,6 +92,7 @@ class HMSVideoViewFactory(private val plugin: HmssdkFlutterPlugin) :
     PlatformViewFactory(StandardMessageCodec.INSTANCE) {
 
     override fun create(context: Context, viewId: Int, args: Any?): PlatformView {
+        Log.i("Create ke just neeche Here","Called")
 
         val creationParams = args as Map<String?, Any?>?
 
@@ -99,9 +102,21 @@ class HMSVideoViewFactory(private val plugin: HmssdkFlutterPlugin) :
         val scaleType = args!!["scale_type"] as? Int
         val screenShare = args!!["screen_share"] as? Boolean
         val matchParent = args!!["match_parent"] as? Boolean
+        Log.i("Called trackId are",trackId.toString());
+        Log.i("Called peers length are",plugin.hmssdk.getPeers().size.toString());
 
         val peer : HMSPeer = plugin.hmssdk.getPeers().first {
-            it.getTrackById(trackId?.trim()!!)?.trackId?.trim() == trackId.trim()
+            val matchedTrack : HMStrack = it.getAllTracks().first{
+                Log.i(" Called here",it.name + " ----> "+ it.trackId)
+                it.trackId?.trim()!! == trackId?.trim()
+            }
+            return (matchedTrack != null)
+//            return true;
+//            it.getTrackById(trackId?.trim()!!)?.trackId?.trim() == trackId.trim()
+        }
+        Log.i("Peer Called",peer.toString())
+        if(peer == null){
+        Log.i("Peer Null hai Here","Called");
         }
         return HMSVideoViewWidget(context, viewId, creationParams,peer,trackId!!,isAuxiliary!!,setMirror!!,scaleType,screenShare,matchParent)
     }
