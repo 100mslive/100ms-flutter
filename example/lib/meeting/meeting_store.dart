@@ -497,46 +497,30 @@ class MeetingStore extends ChangeNotifier
         }
         addPeer(peer);
         break;
-      case HMSPeerUpdate.networkQualityUpdated:
-        print(
-            "onPeerUpdate networkQuality ${peer.name} ${peer.networkQuality?.quality}");
-        int index = peerTracks
-            .indexWhere((element) => element.uid == peer.peerId + "mainVideo");
-        if (index != -1) {
-          peerTracks[index].networkQuality = peer.networkQuality?.quality;
-          peerTracks[index].notify();
-        }
-        break;
+
       case HMSPeerUpdate.peerLeft:
         peerTracks.removeWhere(
             (leftPeer) => leftPeer.uid == peer.peerId + "mainVideo");
         removePeer(peer);
         notifyListeners();
         break;
+
       case HMSPeerUpdate.roleUpdated:
-        if (peer.isLocal) {
-          localPeer = peer;
-          if (peer.role.name.contains("hls-")) {
-            isHLSLink = true;
-          } else {
+        if (peer.role.name.contains("hls-")) {
+          isHLSLink = peer.isLocal;
+          peerTracks.removeWhere((leftPeer) => leftPeer.uid == peer.peerId + "mainVideo");
+        } else {
+          if (peer.isLocal) {
             isHLSLink = false;
-            if (!isMicOn)
-              HmsSdkManager.hmsSdkInteractor!.switchAudio(isOn: true);
-            if (!isVideoOn)
-              HmsSdkManager.hmsSdkInteractor!.switchVideo(isOn: true);
           }
+          int index = peerTracks.indexWhere((element) => element.uid == peer.peerId + "mainVideo");
+          if (index == -1) peerTracks.add(new PeerTrackNode(peer: peer, uid: peer.peerId + "mainVideo"));
         }
-        if (peer.role.name.contains("hls-") == false) {
-          int index = peerTracks.indexWhere(
-              (element) => element.uid == peer.peerId + "mainVideo");
-          //if (index != -1) peerTracks[index].track = track;
-          if (index == -1)
-            peerTracks.add(
-                new PeerTrackNode(peer: peer, uid: peer.peerId + "mainVideo"));
-        }
+
         updatePeerAt(peer);
         notifyListeners();
         break;
+
       case HMSPeerUpdate.metadataChanged:
         int index = peerTracks
             .indexWhere((element) => element.uid == peer.peerId + "mainVideo");
@@ -547,6 +531,7 @@ class MeetingStore extends ChangeNotifier
         }
         updatePeerAt(peer);
         break;
+
       case HMSPeerUpdate.nameChanged:
         if (peer.isLocal) {
           int localPeerIndex = peerTracks.indexWhere(
@@ -566,11 +551,21 @@ class MeetingStore extends ChangeNotifier
             peerTrackNode.notify();
           }
         }
-
         updatePeerAt(peer);
         break;
+
+      case HMSPeerUpdate.networkQualityUpdated:
+        print("onPeerUpdate networkQuality ${peer.name} ${peer.networkQuality?.quality}");
+        int index = peerTracks.indexWhere((element) => element.uid == peer.peerId + "mainVideo");
+        if (index != -1) {
+          peerTracks[index].networkQuality = peer.networkQuality?.quality;
+          peerTracks[index].notify();
+        }
+      break;
+
       case HMSPeerUpdate.defaultUpdate:
         break;
+
       default:
     }
   }
