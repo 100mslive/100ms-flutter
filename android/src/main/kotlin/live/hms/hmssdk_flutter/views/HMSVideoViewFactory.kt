@@ -63,8 +63,8 @@ class HMSVideoViewFactory(private val plugin: HmssdkFlutterPlugin) :
 
         val creationParams = args as Map<String?, Any?>?
 
-        val setMirror=args!!["set_mirror"] as? Boolean
-        val trackId=args!!["track_id"] as? String
+        val setMirror = args!!["set_mirror"] as? Boolean
+        val trackId = args!!["track_id"] as? String
 
         val scaleType = args!!["scale_type"] as? Int
 
