@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/brb_tag.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/change_track_options.dart';
+import 'package:hmssdk_flutter_example/common/ui/organisms/degrade_tile.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/hand_raise.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/audio_mute_status.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/network_icon_widget.dart';
@@ -115,6 +116,10 @@ class _VideoTileState extends State<VideoTile> {
                   children: [
                     VideoView(
                       scaleType: widget.scaleType,
+                      itemHeight: widget.itemHeight,
+                      itemWidth: widget.itemWidth,
+                    ),
+                    DegradeTile(
                       itemHeight: widget.itemHeight,
                       itemWidth: widget.itemWidth,
                     ),
