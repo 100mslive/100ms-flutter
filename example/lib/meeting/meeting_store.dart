@@ -337,11 +337,6 @@ class MeetingStore extends ChangeNotifier
       muteAll();
     }
 
-    // if (peer.isLocal &&
-    //     (trackUpdate == HMSTrackUpdate.trackMuted) &&
-    //     track.kind == HMSTrackKind.kHMSTrackKindAudio) {
-    //   this.isMicOn = false;
-    // }
 
     if (peer.isLocal) {
       localPeer = peer;
