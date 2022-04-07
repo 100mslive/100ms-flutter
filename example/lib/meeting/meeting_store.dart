@@ -337,23 +337,23 @@ class MeetingStore extends ChangeNotifier
       muteAll();
     }
 
-    if (peer.isLocal &&
-        (trackUpdate == HMSTrackUpdate.trackMuted) &&
-        track.kind == HMSTrackKind.kHMSTrackKindAudio) {
-      this.isMicOn = false;
-    }
+    // if (peer.isLocal &&
+    //     (trackUpdate == HMSTrackUpdate.trackMuted) &&
+    //     track.kind == HMSTrackKind.kHMSTrackKindAudio) {
+    //   this.isMicOn = false;
+    // }
 
     if (peer.isLocal) {
       localPeer = peer;
 
-      if (track.kind == HMSTrackKind.kHMSTrackKindVideo) {
-        if (track.isMute) {
-          this.isVideoOn = false;
-        } else {
-          this.isVideoOn = true;
-        }
-        notifyListeners();
+      if(track.kind == HMSTrackKind.kHMSTrackKindAudio){
+        this.isMicOn = !track.isMute;      
       }
+
+      if (track.kind == HMSTrackKind.kHMSTrackKindVideo) {
+        this.isVideoOn = !track.isMute;
+      }
+      notifyListeners();
     }
 
     if (track.kind == HMSTrackKind.kHMSTrackKindAudio) {
