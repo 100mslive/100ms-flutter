@@ -17,7 +17,6 @@ import 'package:flutter/services.dart';
 // Project imports:
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter/src/enum/hms_logs_update_listener.dart';
-import 'package:hmssdk_flutter/src/enum/hms_network_update_listener_method.dart';
 import 'package:hmssdk_flutter/src/model/hms_log_list.dart';
 
 class PlatformService {
@@ -35,7 +34,6 @@ class PlatformService {
   static const EventChannel _logsEventChannel =
       const EventChannel("logs_event_channel");
 
-
   ///add meeting listeners.
   static List<HMSUpdateListener> updateListeners = [];
 
@@ -44,9 +42,7 @@ class PlatformService {
   ///add preview listeners.
   static List<HMSPreviewListener> previewListeners = [];
 
-
   static bool isStartedListening = false;
-
 
   ///add meetingListener
   static void addUpdateListener(HMSUpdateListener newListener) {
@@ -304,7 +300,8 @@ class PlatformService {
           HMSPeerUpdate? update = HMSPeerUpdateValues.getHMSPeerUpdateFromName(
               event.data['update']);
 
-          print("platformSercvice ${update.toString()} ${peer.networkQuality.toString()}");
+          print(
+              "platformSercvice ${update.toString()} ${peer.networkQuality.toString()}");
 
           notifyPreviewListeners(method, {'peer': peer, 'update': update});
           break;
@@ -340,7 +337,6 @@ class PlatformService {
           break;
       }
     });
-
   }
 
   static void notifyLogsUpdateListeners(

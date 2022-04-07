@@ -11,7 +11,13 @@ import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 
 class UtilityComponents {
   static void showSnackBarWithString(event, context) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(event,style: TextStyle(color: Colors.white),),backgroundColor: Colors.black87,));
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(
+        event,
+        style: TextStyle(color: Colors.white),
+      ),
+      backgroundColor: Colors.black87,
+    ));
   }
 
   static Future<dynamic> onBackPressed(BuildContext context) {

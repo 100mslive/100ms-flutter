@@ -5,23 +5,22 @@ import 'package:hmssdk_flutter/src/service/platform_service.dart';
 class HMSLocalVideoTrack extends HMSVideoTrack {
   HMSVideoTrackSetting setting;
 
-  HMSLocalVideoTrack(
-      {required this.setting,
-      required bool isDegraded,
-      required HMSTrackKind kind,
-      required String source,
-      required String trackId,
-      required String trackDescription,
-      required bool isMute,
-      })
-      : super(
-            isDegraded: isDegraded,
-            kind: kind,
-            source: source,
-            trackDescription: trackDescription,
-            trackId: trackId,
-            isMute: isMute,
-            );
+  HMSLocalVideoTrack({
+    required this.setting,
+    required bool isDegraded,
+    required HMSTrackKind kind,
+    required String source,
+    required String trackId,
+    required String trackDescription,
+    required bool isMute,
+  }) : super(
+          isDegraded: isDegraded,
+          kind: kind,
+          source: source,
+          trackDescription: trackDescription,
+          trackId: trackId,
+          isMute: isMute,
+        );
 
   Future<void> startCapturing() async {
     await PlatformService.invokeMethod(PlatformMethod.startCapturing);

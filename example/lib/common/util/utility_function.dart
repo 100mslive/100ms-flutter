@@ -16,17 +16,16 @@ class Utilities {
     return name;
   }
 
-  static List<Color> colors =[
-  Colors.red,
-  Colors.pink,
-  Colors.purple,
-  Colors.deepPurple,
-  Colors.indigo,
-  Colors.blue,
-  Colors.lightBlue,
-  Colors.teal,
-  Colors.green,
-  Colors.deepOrange,
-];
-
+  static List<Color> colors = [
+    Colors.red,
+    Colors.pink,
+    Colors.purple,
+    Colors.deepPurple,
+    Colors.indigo,
+    Colors.blue,
+    Colors.lightBlue,
+    Colors.teal,
+    Colors.green,
+    Colors.deepOrange,
+  ];
 }

@@ -17,15 +17,20 @@ class TrackChangeDialogOrganism extends StatefulWidget {
 class _RoleChangeDialogOrganismState extends State<TrackChangeDialogOrganism> {
   @override
   Widget build(BuildContext context) {
-    String message = widget.trackChangeRequest.requestBy.name.toString() + " requested to " + ((widget.trackChangeRequest.mute)?"mute":"unmute") + " your "
-                     + ((widget.trackChangeRequest.track.kind == HMSTrackKind.kHMSTrackKindAudio)?"audio":"video");
+    String message = widget.trackChangeRequest.requestBy.name.toString() +
+        " requested to " +
+        ((widget.trackChangeRequest.mute) ? "mute" : "unmute") +
+        " your " +
+        ((widget.trackChangeRequest.track.kind ==
+                HMSTrackKind.kHMSTrackKindAudio)
+            ? "audio"
+            : "video");
     return AlertDialog(
       content: Container(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(message
-            ),
+            Text(message),
           ],
         ),
       ),

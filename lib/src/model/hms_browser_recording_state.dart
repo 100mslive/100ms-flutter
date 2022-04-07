@@ -6,13 +6,15 @@ class HMSBrowserRecordingState {
   final HMSException? error;
   final bool running;
   DateTime? startedAt;
-  HMSBrowserRecordingState({required this.error, required this.running,this.startedAt});
+  HMSBrowserRecordingState(
+      {required this.error, required this.running, this.startedAt});
 
   factory HMSBrowserRecordingState.fromMap(Map map) {
     return HMSBrowserRecordingState(
-      error: map["error"] != null ? HMSException.fromMap(map) : null,
-      running: map['running'],
-      startedAt: map['started_at'] != null ? HMSDateExtension.convertDate(map['started_at']) : null
-    );
+        error: map["error"] != null ? HMSException.fromMap(map) : null,
+        running: map['running'],
+        startedAt: map['started_at'] != null
+            ? HMSDateExtension.convertDate(map['started_at'])
+            : null);
   }
 }

@@ -1,9 +1,9 @@
 class HMSLocalAudioStats {
- 	// Round trip time observed since previous report.
-	double roundTripTime;
-	// Total bytes sent by this track in the current session.
-	int bytesSent;
-	// Outgoing bitrate of this track observed since previous report in Kb/s.
+  // Round trip time observed since previous report.
+  double roundTripTime;
+  // Total bytes sent by this track in the current session.
+  int bytesSent;
+  // Outgoing bitrate of this track observed since previous report in Kb/s.
   double bitrate;
 
   HMSLocalAudioStats({

@@ -26,6 +26,7 @@ class HMSRoom {
   HMSHLSStreamingState? hmshlsStreamingState;
   int peerCount;
   int startedAt;
+
   ///[peers] list which are in the room.
   final List<HMSPeer>? peers;
 
@@ -37,7 +38,9 @@ class HMSRoom {
       this.hmsServerRecordingState,
       this.hmsRtmpStreamingState,
       this.hmsBrowserRecordingState,
-      this.hmshlsStreamingState,this.peerCount=0,this.startedAt=0});
+      this.hmshlsStreamingState,
+      this.peerCount = 0,
+      this.startedAt = 0});
 
   factory HMSRoom.fromMap(Map map) {
     List<HMSPeer> peers = [];
@@ -69,9 +72,8 @@ class HMSRoom {
         name: map['name'],
         peers: peers,
         metaData: map['meta_data'],
-        peerCount: map["peer_count"]!=null?map["peer_count"]:0,
-        startedAt:map["started_at"]!=null?map["started_at"]:0
-        );
+        peerCount: map["peer_count"] != null ? map["peer_count"] : 0,
+        startedAt: map["started_at"] != null ? map["started_at"] : 0);
   }
 
   @override

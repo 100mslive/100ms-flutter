@@ -21,7 +21,6 @@ abstract class HMSPreviewListener {
   ///   - localTracks: local audio/video tracks list
   void onPreview({required HMSRoom room, required List<HMSTrack> localTracks});
 
-
   /// This is called when there is a change in any property of the Room
   ///
   /// - Parameters:
@@ -37,5 +36,4 @@ abstract class HMSPreviewListener {
   ///   - peer: the peer who joined/left or was updated
   ///   - update: the triggered update type. Should be used to perform different UI Actions
   void onPeerUpdate({required HMSPeer peer, required HMSPeerUpdate update});
-
 }

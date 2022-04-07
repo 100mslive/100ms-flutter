@@ -15,15 +15,15 @@ class VideoView extends StatefulWidget {
   final ScaleType scaleType;
   final double itemWidth;
 
-  VideoView({
-    Key? key,
-    this.viewSize,
-    this.setMirror = false,
-    this.matchParent = true,
-    this.itemHeight = 200,
-    this.itemWidth = 200,
-    this.scaleType = ScaleType.SCALE_ASPECT_FILL
-  }) : super(key: key);
+  VideoView(
+      {Key? key,
+      this.viewSize,
+      this.setMirror = false,
+      this.matchParent = true,
+      this.itemHeight = 200,
+      this.itemWidth = 200,
+      this.scaleType = ScaleType.SCALE_ASPECT_FILL})
+      : super(key: key);
 
   @override
   State<VideoView> createState() => _VideoViewState();
@@ -32,9 +32,9 @@ class VideoView extends StatefulWidget {
 class _VideoViewState extends State<VideoView> {
   @override
   Widget build(BuildContext context) {
-    return Selector<PeerTrackNode, Tuple4<HMSVideoTrack?, bool, bool, bool>>(
+    return Selector<PeerTrackNode, Tuple3<HMSVideoTrack?, bool, bool>>(
         builder: (_, data, __) {
-          if ((data.item1 == null) || data.item2 || data.item3 || data.item4) {
+          if ((data.item1 == null) || data.item2 || data.item3) {
             return Container(
                 // height: widget.itemHeight,
                 // width: widget.itemWidth,
@@ -54,43 +54,42 @@ class _VideoViewState extends State<VideoView> {
                           style: TextStyle(fontSize: 36, color: Colors.white),
                         ))));
           } else {
-            return (data.item1?.source !="REGULAR")?
-            Container(
-              height: widget.itemHeight,
-              width: widget.itemWidth,
-              child: Center(
-                child: ClipRRect(
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                  child: InteractiveViewer(
-                    child: HMSVideoView(
-                      scaleType: widget.scaleType,
-                      track: data.item1!,
-                      setMirror: false,
-                      matchParent: false, 
+            return (data.item1?.source != "REGULAR")
+                ? Container(
+                    height: widget.itemHeight,
+                    width: widget.itemWidth,
+                    child: Center(
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                        child: InteractiveViewer(
+                          child: HMSVideoView(
+                            scaleType: widget.scaleType,
+                            track: data.item1!,
+                            setMirror: false,
+                            matchParent: false,
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-              ),
-            )
-            :ClipRRect(
-              borderRadius: BorderRadius.all(Radius.circular(10)),
-              child: Container(
-                height: widget.itemHeight,
-                width: widget.itemWidth,
-                child: HMSVideoView(
-                  scaleType: widget.scaleType,
-                  track: data.item1!,
-                  setMirror: false,
-                  matchParent: false,
-                ),
-              ),
-            );
+                  )
+                : ClipRRect(
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                    child: Container(
+                      height: widget.itemHeight,
+                      width: widget.itemWidth,
+                      child: HMSVideoView(
+                        scaleType: widget.scaleType,
+                        track: data.item1!,
+                        setMirror: false,
+                        matchParent: false,
+                      ),
+                    ),
+                  );
           }
         },
-        selector: (_, peerTrackNode) => Tuple4(
+        selector: (_, peerTrackNode) => Tuple3(
             peerTrackNode.track,
             (peerTrackNode.isOffscreen),
-            (peerTrackNode.track?.isMute ?? true),
-            peerTrackNode.track?.isDegraded ?? false));
+            (peerTrackNode.track?.isMute ?? true)));
   }
 }

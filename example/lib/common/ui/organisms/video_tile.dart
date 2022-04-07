@@ -119,10 +119,10 @@ class _VideoTileState extends State<VideoTile> {
                       itemWidth: widget.itemWidth,
                     ),
                     PeerName(),
-                    HandRaise(),    //bottom left
-                    BRBTag(),       //top right
-                    NetworkIconWidget(),    //top left
-                    AudioMuteStatus(),    //bottom center
+                    HandRaise(), //bottom left
+                    BRBTag(), //top right
+                    NetworkIconWidget(), //top left
+                    AudioMuteStatus(), //bottom center
                     Container(
                       height: widget.itemHeight + 110,
                       width: widget.itemWidth - 4,
@@ -130,7 +130,6 @@ class _VideoTileState extends State<VideoTile> {
                           border: Border.all(color: Colors.grey, width: 1.0),
                           borderRadius: BorderRadius.all(Radius.circular(10))),
                     )
-
                   ],
                 ),
               ),
@@ -157,7 +156,6 @@ class _VideoTileState extends State<VideoTile> {
                         border: Border.all(color: Colors.grey, width: 1.0),
                         borderRadius: BorderRadius.all(Radius.circular(10))),
                   )
-
                 ],
               ),
             ),

@@ -1,7 +1,5 @@
-
 //Package Imports
 import 'package:flutter/foundation.dart';
-
 
 //Project Imports
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
@@ -17,14 +15,13 @@ class PeerTrackNode extends ChangeNotifier {
   bool isOffscreen;
   int? networkQuality;
 
-  PeerTrackNode({
-    required this.peer,
-    this.track,
-    this.audioTrack,
-    required this.uid,
-    this.isOffscreen = false,
-    this.networkQuality = -1
-  });
+  PeerTrackNode(
+      {required this.peer,
+      this.track,
+      this.audioTrack,
+      required this.uid,
+      this.isOffscreen = false,
+      this.networkQuality = -1});
 
   @override
   String toString() {

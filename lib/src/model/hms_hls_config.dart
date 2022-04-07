@@ -6,8 +6,7 @@ class HMSHLSConfig {
   HMSHLSConfig(this.variants);
 
   Map<String, dynamic> toMap() {
-
-    List<Map<String,String>> list = [];
+    List<Map<String, String>> list = [];
 
     variants.forEach((element) {
       list.add(element.toMap());

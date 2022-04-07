@@ -5,22 +5,21 @@ import 'package:hmssdk_flutter/src/service/platform_service.dart';
 class HMSLocalAudioTrack extends HMSAudioTrack {
   final HMSAudioTrackSetting setting;
   double? volume;
-  HMSLocalAudioTrack(
-      {required this.setting,
-      required HMSTrackKind kind,
-      required String source,
-      required String trackId,
-      required String trackDescription,
-      required bool isMute,
-      this.volume,
-      })
-      : super(
-            kind: kind,
-            source: source,
-            trackDescription: trackDescription,
-            trackId: trackId,
-            isMute: isMute,
-            );
+  HMSLocalAudioTrack({
+    required this.setting,
+    required HMSTrackKind kind,
+    required String source,
+    required String trackId,
+    required String trackDescription,
+    required bool isMute,
+    this.volume,
+  }) : super(
+          kind: kind,
+          source: source,
+          trackDescription: trackDescription,
+          trackId: trackId,
+          isMute: isMute,
+        );
 
   Future<HMSException?> setVolume(double volume) async {
     var result = await PlatformService.invokeMethod(PlatformMethod.setVolume,

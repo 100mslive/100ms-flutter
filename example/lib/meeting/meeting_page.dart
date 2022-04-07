@@ -314,41 +314,129 @@ class _MeetingPageState extends State<MeetingPage>
                                                   itemCount: data.item3,
                                                   screenShareOn: data.item4,
                                                   size: size))
-                                      : SizedBox();
+                                      : Selector<MeetingStore, bool>(
+                                          selector: (_, meetingStore) =>
+                                              meetingStore.hasHlsStarted,
+                                          builder: (_, hasHlsStarted, __) {
+                                            return hasHlsStarted
+                                                ? Flexible(
+                                                    child: Center(
+                                                      child: Container(
+                                                        child: HLSViewer(
+                                                            streamUrl: context
+                                                                .read<
+                                                                    MeetingStore>()
+                                                                .streamUrl),
+                                                      ),
+                                                    ),
+                                                  )
+                                                : Center(
+                                                    child: Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .only(
+                                                                  bottom: 8.0),
+                                                          child: Text(
+                                                            "Waiting for HLS to start...",
+                                                            style: TextStyle(
+                                                                fontSize: 20),
+                                                          ),
+                                                        ),
+                                                        CircularProgressIndicator(
+                                                          strokeWidth: 1,
+                                                        )
+                                                      ],
+                                                    ),
+                                                  );
+                                          });
                                 }),
                           ),
-                          Selector<MeetingStore, bool>(
-                              selector: (_, meetingStore) =>
-                                  meetingStore.isHLSLink,
-                              builder: (_, isHLSLink, __) {
-                                return isHLSLink
-                                    ? Selector<MeetingStore, bool>(
-                                        selector: (_, meetingStore) =>
-                                            meetingStore.hasHlsStarted,
-                                        builder: (_, hasHlsStarted, __) {
-                                          return hasHlsStarted
-                                              ? Flexible(
-                                                  child: Center(
-                                                    child: Container(
-                                                      child: HLSViewer(
-                                                          streamUrl: context
-                                                              .read<
-                                                                  MeetingStore>()
-                                                              .streamUrl),
-                                                    ),
-                                                  ),
-                                                )
-                                              : Text(
-                                                  "Waiting for HLS to start...",
-                                                  style:
-                                                      TextStyle(fontSize: 30),
-                                                );
-                                        })
-                                    : SizedBox();
-                              }),
                           Align(
                             alignment: Alignment.bottomCenter,
-                            child: expandModalBottomSheet(),
+                            child: Selector<MeetingStore, bool>(
+                                selector: (_, meetingStore) =>
+                                    meetingStore.isHLSLink,
+                                builder: (_, isHlsRunning, __) {
+                                  return isHlsRunning
+                                      ? Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          children: [
+                                              Selector<MeetingStore, bool>(
+                                                selector: (_, meetingStore) =>
+                                                    meetingStore.isRaisedHand,
+                                                builder: (_, raisedHand, __) {
+                                                  return Container(
+                                                      padding:
+                                                          EdgeInsets.all(8),
+                                                      child: IconButton(
+                                                        tooltip: 'RaiseHand',
+                                                        iconSize: 20,
+                                                        onPressed: () {
+                                                          context
+                                                              .read<
+                                                                  MeetingStore>()
+                                                              .changeMetadata();
+                                                          UtilityComponents
+                                                              .showSnackBarWithString(
+                                                                  !raisedHand
+                                                                      ? "Raised Hand ON"
+                                                                      : "Raised Hand OFF",
+                                                                  context);
+                                                        },
+                                                        icon: Image.asset(
+                                                          'assets/icons/raise_hand.png',
+                                                          color: raisedHand
+                                                              ? Colors.amber
+                                                                  .shade300
+                                                              : Colors.white,
+                                                        ),
+                                                      ));
+                                                },
+                                              ),
+                                              Container(
+                                                padding: EdgeInsets.all(8),
+                                                child: IconButton(
+                                                    tooltip: 'Chat',
+                                                    iconSize: 24,
+                                                    onPressed: () {
+                                                      chatMessages(context);
+                                                    },
+                                                    icon: Icon(
+                                                      Icons.chat_bubble,
+                                                      // color: Colors.grey.shade900
+                                                    )),
+                                              ),
+                                              Container(
+                                                padding: EdgeInsets.all(8),
+                                                child: IconButton(
+                                                    color: Colors.white,
+                                                    tooltip: 'Leave Or End',
+                                                    iconSize: 24,
+                                                    onPressed: () async {
+                                                      await UtilityComponents
+                                                          .onBackPressed(
+                                                              context);
+                                                    },
+                                                    icon: CircleAvatar(
+                                                      backgroundColor:
+                                                          Colors.red,
+                                                      child: Icon(
+                                                          Icons.call_end,
+                                                          color: Colors.white),
+                                                    )),
+                                              ),
+                                            ])
+                                      : expandModalBottomSheet();
+                                }),
                           ),
                           Selector<MeetingStore, HMSRoleChangeRequest?>(
                               selector: (_, meetingStore) =>
@@ -413,14 +501,18 @@ class _MeetingPageState extends State<MeetingPage>
                 // height: ,
                 width: MediaQuery.of(context).size.width,
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Selector<MeetingStore, Tuple2<HMSPeer?, bool>>(
-                            selector: (_, meetingStore) => Tuple2(
-                                meetingStore.localPeer, meetingStore.isVideoOn),
+                          Selector<MeetingStore, Tuple3<HMSPeer?, bool, bool>>(
+                            selector: (_, meetingStore) => Tuple3(
+                                meetingStore.localPeer,
+                                meetingStore.isVideoOn,
+                                meetingStore.localPeer?.role.publishSettings
+                                        ?.allowed
+                                        .contains("video") ??
+                                    false),
                             builder: (_, data, __) {
                               return ((data.item1 != null) &&
                                       data.item1!.role.publishSettings!.allowed
@@ -446,9 +538,14 @@ class _MeetingPageState extends State<MeetingPage>
                                   : Container();
                             },
                           ),
-                          Selector<MeetingStore, Tuple2<HMSPeer?, bool>>(
-                            selector: (_, meetingStore) => Tuple2(
-                                meetingStore.localPeer, meetingStore.isMicOn),
+                          Selector<MeetingStore, Tuple3<HMSPeer?, bool, bool>>(
+                            selector: (_, meetingStore) => Tuple3(
+                                meetingStore.localPeer,
+                                meetingStore.isMicOn,
+                                meetingStore.localPeer?.role.publishSettings
+                                        ?.allowed
+                                        .contains("audio") ??
+                                    false),
                             builder: (_, data, __) {
                               return ((data.item1 != null) &&
                                       data.item1!.role.publishSettings!.allowed
