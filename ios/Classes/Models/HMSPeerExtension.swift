@@ -40,7 +40,10 @@ class  HMSPeerExtension {
             aux.forEach { auxilaryTracks.append(HMSTrackExtension.toDictionary($0)) }
             dict["auxilary_tracks"] = auxilaryTracks
         }
-
+        
+        if let quality = peer.networkQuality {
+            dict["network_quality"] = HMSNetworkQualityExtension.toDictionary(quality)
+        }
         return dict
     }
 
@@ -58,6 +61,8 @@ class  HMSPeerExtension {
             return "nameChanged"
         case .metadataUpdated:
             return "metadataChanged"
+        case .networkQualityUpdated:
+            return "networkQualityUpdated"
         @unknown default:
             return "defaultUpdate"
         }

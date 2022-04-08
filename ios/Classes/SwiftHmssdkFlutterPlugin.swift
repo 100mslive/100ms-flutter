@@ -527,7 +527,6 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         let arguments = call.arguments as! [AnyHashable: Any]
 
         guard let level = arguments["log_level"] as? String else {
-            print(#function, "Could not find `log_level` argument")
             return
         }
 
@@ -611,7 +610,8 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             ]
         ] as [String: Any]
 
-        eventSink?(data)
+            previewSink?(data)
+            eventSink?(data)
     }
 
     public func on(peer: HMSPeer, update: HMSPeerUpdate) {
@@ -624,7 +624,8 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             ]
         ] as [String: Any]
 
-        eventSink?(data)
+            previewSink?(data)
+            eventSink?(data)
     }
 
     public func on(track: HMSTrack, update: HMSTrackUpdate, for peer: HMSPeer) {
@@ -652,8 +653,6 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     }
 
     public func on(updated speakers: [HMSSpeaker]) {
-
-        logSpeakers(speakers)
 
         var speakersDict = [[String: Any]]()
         speakers.forEach { speakersDict.append(HMSSpeakerExtension.toDictionary($0)) }
@@ -803,6 +802,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         }
 
         let shouldSkipPIIEvents = arguments["should_skip_pii_events"] as? Bool ?? false
+        let captureNetworkQualityInPreview = arguments["capture_network_quality_in_preview"] as? Bool ?? false
         let metaData = arguments["meta_data"] as? String
 
         var endPoint: String?
@@ -814,7 +814,8 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                          authToken: authToken,
                          shouldSkipPIIEvents: shouldSkipPIIEvents,
                          metadata: metaData,
-                         endpoint: endPoint)
+                         endpoint: endPoint,
+                         captureNetworkQualityInPreview: captureNetworkQualityInPreview)
     }
 
     private func getError(message: String, description: String? = nil, params: [String: Any]) -> HMSError {
@@ -825,30 +826,6 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                  params: params)
     }
 
-    private func logSpeakers(_ speakers: [HMSSpeaker]) {
-//        let date = Date()
-//        let calendar = Calendar.current
-//        let hour = calendar.component(.hour, from: date)
-//        let minutes = calendar.component(.minute, from: date)
-//        let second = calendar.component(.second, from: date)
-//        let dateString = "\(hour):\(minutes):\(second)"
-
-        // print(#function, "Speaker update " + dateString, speakers.map { $0.peer.name },
-        //       speakers.map { kindString(from: $0.track.kind) },
-        //       speakers.map { $0.track.source })
-    }
-
-
-//    private func kindString(from kind: HMSTrackKind) -> String {
-//        switch kind {
-//        case .audio:
-//            return "KHmsTrackAudio"
-//        case .video:
-//            return "KHmsTrackVideo"
-//        default:
-//            return "Unknown Kind"
-//        }
-//    }
 
     private func kind(from string: String) -> HMSTrackKind {
         switch string {

@@ -17,17 +17,16 @@ class RoleChangeDialogOrganism extends StatefulWidget {
 class _RoleChangeDialogOrganismState extends State<RoleChangeDialogOrganism> {
   @override
   Widget build(BuildContext context) {
+    String message =
+        (widget.roleChangeRequest.suggestedBy?.name ?? "Anonymus") +
+            " requested to change your role to " +
+            widget.roleChangeRequest.suggestedRole.name;
     return AlertDialog(
       content: Container(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(
-              "Change Role request",
-              style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
-            ),
-            Text(widget.roleChangeRequest.suggestedBy?.name ?? "No name"),
-            Text(widget.roleChangeRequest.suggestedRole.name)
+            Text(message),
           ],
         ),
       ),

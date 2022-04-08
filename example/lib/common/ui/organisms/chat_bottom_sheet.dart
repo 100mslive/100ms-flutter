@@ -1,12 +1,13 @@
 //Package imports
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:collection/collection.dart';
 
 //Project imports
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
+import 'package:provider/provider.dart';
+import 'package:tuple/tuple.dart';
 
 class ChatWidget extends StatefulWidget {
   final MeetingStore meetingStore;
@@ -18,21 +19,13 @@ class ChatWidget extends StatefulWidget {
 }
 
 class _ChatWidgetState extends State<ChatWidget> {
-  late MeetingStore _meetingStore;
   late double widthOfScreen;
-  late List<HMSRole> hmsRoles;
   TextEditingController messageTextController = TextEditingController();
   String valueChoose = "Everyone";
 
   @override
   void initState() {
     super.initState();
-    _meetingStore = widget.meetingStore;
-    getRoles();
-  }
-
-  void getRoles() async {
-    hmsRoles = await _meetingStore.getRoles();
   }
 
   @override
@@ -61,51 +54,56 @@ class _ChatWidgetState extends State<ChatWidget> {
                             SizedBox(
                               width: 5,
                             ),
-                            Observer(builder: (ctx) {
-                              List<HMSRole> roles = _meetingStore.roles;
-                              if (roles.length > 0) {
-                                return DropdownButtonHideUnderline(
-                                  child: DropdownButton2(
-                                    buttonWidth: 150,
-                                    value: valueChoose,
-                                    iconEnabledColor: Colors.black,
-                                    onChanged: (newvalue) {
-                                      setState(() {
-                                        this.valueChoose = newvalue as String;
-                                      });
-                                    },
-                                    items: [
-                                      DropdownMenuItem<String>(
-                                        child: Text("Everyone"),
-                                        value: "Everyone",
+                            Selector<MeetingStore,
+                                    Tuple2<List<HMSRole>, List<HMSPeer>>>(
+                                selector: (_, meetingStore) => Tuple2(
+                                    meetingStore.roles, meetingStore.peers),
+                                builder: (context, data, _) {
+                                  List<HMSRole> roles = data.item1;
+                                  if (roles.length > 0) {
+                                    return DropdownButtonHideUnderline(
+                                      child: DropdownButton2(
+                                        buttonWidth: 150,
+                                        value: valueChoose,
+                                        iconEnabledColor: Colors.white,
+                                        onChanged: (newvalue) {
+                                          setState(() {
+                                            this.valueChoose =
+                                                newvalue as String;
+                                          });
+                                        },
+                                        items: [
+                                          DropdownMenuItem<String>(
+                                            child: Text("Everyone"),
+                                            value: "Everyone",
+                                          ),
+                                          ...data.item2
+                                              .map((peer) {
+                                                return !peer.isLocal
+                                                    ? DropdownMenuItem<String>(
+                                                        child: Text(
+                                                            "${peer.name} ${peer.isLocal ? "(You)" : ""}"),
+                                                        value: peer.peerId,
+                                                      )
+                                                    : null;
+                                              })
+                                              .whereNotNull()
+                                              .toList(),
+                                          ...roles
+                                              .map((role) =>
+                                                  DropdownMenuItem<String>(
+                                                    child: Text("${role.name}"),
+                                                    value: role.name,
+                                                  ))
+                                              .toList()
+                                        ],
                                       ),
-                                      ..._meetingStore.peers
-                                          .map((peer) {
-                                            return !peer.isLocal
-                                                ? DropdownMenuItem<String>(
-                                                    child: Text(
-                                                        "${peer.name} ${peer.isLocal ? "(You)" : ""}"),
-                                                    value: peer.peerId,
-                                                  )
-                                                : null;
-                                          })
-                                          .whereNotNull()
-                                          .toList(),
-                                      ...roles
-                                          .map((role) =>
-                                              DropdownMenuItem<String>(
-                                                child: Text("${role.name}"),
-                                                value: role.name,
-                                              ))
-                                          .toList()
-                                    ],
-                                  ),
-                                );
-                              } else
-                                return CircularProgressIndicator(
-                                  color: Colors.black,
-                                );
-                            }),
+                                    );
+                                  } else
+                                    return CircularProgressIndicator(
+                                      color: Colors.white,
+                                    );
+                                }),
                           ],
                         ),
                         GestureDetector(
@@ -121,15 +119,19 @@ class _ChatWidgetState extends State<ChatWidget> {
                     ),
                   ),
                   Expanded(
-                    child: Observer(
-                      builder: (_) {
-                        if (!_meetingStore.isMeetingStarted) return SizedBox();
-                        if (_meetingStore.messages.isEmpty)
+                    child:
+                        Selector<MeetingStore, Tuple2<List<HMSMessage>, int>>(
+                      selector: (_, meetingStore) => Tuple2(
+                          meetingStore.messages, meetingStore.messages.length),
+                      builder: (context, data, _) {
+                        // if (!_meetingStore.isMeetingStarted) return SizedBox();
+
+                        if (data.item2 == 0)
                           return Center(child: Text('No messages'));
 
                         return ListView(
                           children: List.generate(
-                            _meetingStore.messages.length,
+                            data.item2,
                             (index) => Container(
                               padding: EdgeInsets.symmetric(
                                   vertical: 3, horizontal: 10),
@@ -142,21 +144,22 @@ class _ChatWidgetState extends State<ChatWidget> {
                                     children: [
                                       Expanded(
                                         child: Text(
-                                          _meetingStore.messages[index].sender
-                                                  ?.name ??
-                                              "",
+                                          data.item1[index].sender?.name ?? "",
                                           style: TextStyle(
                                               fontSize: 14.0,
-                                              color: Colors.grey[700],
+                                              color: MediaQuery.of(context)
+                                                          .platformBrightness ==
+                                                      Brightness.light
+                                                  ? Colors.grey
+                                                  : Colors.white70,
                                               fontWeight: FontWeight.w600),
                                         ),
                                       ),
                                       Text(
-                                        _meetingStore.messages[index].time
-                                            .toString(),
+                                        data.item1[index].time.toString(),
                                         style: TextStyle(
                                             fontSize: 10.0,
-                                            color: Colors.black,
+                                            color: Colors.white,
                                             fontWeight: FontWeight.w900),
                                       )
                                     ],
@@ -169,19 +172,18 @@ class _ChatWidgetState extends State<ChatWidget> {
                                     children: [
                                       Flexible(
                                         child: Text(
-                                          _meetingStore.messages[index].message
-                                              .toString(),
+                                          data.item1[index].message.toString(),
                                           style: TextStyle(
                                               fontSize: 14.0,
-                                              color: Colors.black,
+                                              color: Colors.white,
                                               fontWeight: FontWeight.w700),
                                         ),
                                       ),
                                       Text(
                                         HMSMessageRecipientValues
                                                 .getValueFromHMSMessageRecipientType(
-                                                    _meetingStore
-                                                        .messages[index]
+                                                    data
+                                                        .item1[index]
                                                         .hmsMessageRecipient!
                                                         .hmsMessageRecipientType)
                                             .toLowerCase(),
@@ -231,6 +233,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                         ),
                         GestureDetector(
                           onTap: () async {
+                            List<HMSRole> hmsRoles = widget.meetingStore.roles;
                             String message = messageTextController.text;
                             if (message.isEmpty) return;
 
@@ -239,20 +242,20 @@ class _ChatWidgetState extends State<ChatWidget> {
                               rolesName.add(hmsRoles[i].name);
 
                             if (this.valueChoose == "Everyone") {
-                              _meetingStore.sendBroadcastMessage(message);
+                              widget.meetingStore.sendBroadcastMessage(message);
                             } else if (rolesName.contains(this.valueChoose)) {
                               List<HMSRole> selectedRoles = [];
                               selectedRoles.add(hmsRoles.firstWhere(
                                   (role) => role.name == this.valueChoose));
-                              _meetingStore.sendGroupMessage(
-                                  message, selectedRoles);
-                            } else if (_meetingStore.localPeer!.peerId !=
+                              widget.meetingStore
+                                  .sendGroupMessage(message, selectedRoles);
+                            } else if (widget.meetingStore.localPeer!.peerId !=
                                 this.valueChoose) {
-                              var peer = await _meetingStore.getPeer(
-                                  peerId: this.valueChoose);
-                              _meetingStore.sendDirectMessage(message, peer!);
+                              var peer = await widget.meetingStore
+                                  .getPeer(peerId: this.valueChoose);
+                              widget.meetingStore
+                                  .sendDirectMessage(message, peer!);
                             }
-
                             messageTextController.clear();
                           },
                           child: Icon(
@@ -271,9 +274,11 @@ class _ChatWidgetState extends State<ChatWidget> {
   }
 }
 
-void chatMessages(BuildContext context, MeetingStore meetingStore) {
+void chatMessages(BuildContext context) {
+  MeetingStore meetingStore = context.read<MeetingStore>();
   showModalBottomSheet(
       context: context,
-      builder: (ctx) => ChatWidget(meetingStore),
+      builder: (ctx) => ChangeNotifierProvider.value(
+          value: meetingStore, child: ChatWidget(meetingStore)),
       isScrollControlled: true);
 }

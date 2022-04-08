@@ -48,7 +48,7 @@ class _HLSViewerState extends State<HLSViewer> {
               )
             : Text(
                 "Waiting for the HLS Streaming to start...",
-                style: TextStyle(fontSize: 30.0),
+                style: TextStyle(fontSize: 20.0),
               ),
       ),
     );
