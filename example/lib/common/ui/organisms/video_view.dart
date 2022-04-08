@@ -74,7 +74,7 @@ class _VideoViewState extends State<VideoView> {
                         scaleType: widget.scaleType,
                         track: data.item1!,
                         setMirror: false,
-                        matchParent: true,
+                        matchParent: false,
                       ),
                     ),
                   );
