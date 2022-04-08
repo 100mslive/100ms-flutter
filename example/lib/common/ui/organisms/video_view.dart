@@ -40,13 +40,12 @@ class _VideoViewState extends State<VideoView> {
                 // width: widget.itemWidth,
                 child: Center(
                     child: CircleAvatar(
-                        backgroundColor: Utilities.colors[context
+                        backgroundColor: 
+                        Utilities.getBackgroundColour(context
                                 .read<PeerTrackNode>()
                                 .peer
-                                .name
-                                .toLowerCase()
-                                .codeUnitAt(0) %
-                            Utilities.colors.length],
+                                .name)
+                        ,
                         radius: 36,
                         child: Text(
                           Utilities.getAvatarTitle(
@@ -55,23 +54,17 @@ class _VideoViewState extends State<VideoView> {
                         ))));
           } else {
             return (data.item1?.source != "REGULAR")
-                ? Container(
-                    height: widget.itemHeight,
-                    width: widget.itemWidth,
-                    child: Center(
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                        child: InteractiveViewer(
-                          child: HMSVideoView(
-                            scaleType: widget.scaleType,
-                            track: data.item1!,
-                            setMirror: false,
-                            matchParent: false,
-                          ),
-                        ),
-                      ),
+                ? ClipRRect(
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                  child: InteractiveViewer(
+                    child: HMSVideoView(
+                      scaleType: widget.scaleType,
+                      track: data.item1!,
+                      setMirror: false,
+                      matchParent: false
                     ),
-                  )
+                  ),
+                )
                 : ClipRRect(
                     borderRadius: BorderRadius.all(Radius.circular(10)),
                     child: Container(
@@ -81,7 +74,7 @@ class _VideoViewState extends State<VideoView> {
                         scaleType: widget.scaleType,
                         track: data.item1!,
                         setMirror: false,
-                        matchParent: false,
+                        matchParent: true,
                       ),
                     ),
                   );

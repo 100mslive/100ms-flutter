@@ -32,13 +32,10 @@ class _DegradeTileState extends State<DegradeTile> {
                           borderRadius: BorderRadius.all(Radius.circular(10))),
                   child: Center(
                       child: CircleAvatar(
-                          backgroundColor: Utilities.colors[context
-                                  .read<PeerTrackNode>()
-                                  .peer
-                                  .name
-                                  .toLowerCase()
-                                  .codeUnitAt(0) %
-                              Utilities.colors.length],
+                          backgroundColor: Utilities.getBackgroundColour(context
+                                .read<PeerTrackNode>()
+                                .peer
+                                .name),
                           radius: 36,
                           child: Text(
                             Utilities.getAvatarTitle(
