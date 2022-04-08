@@ -341,11 +341,11 @@ class MeetingStore extends ChangeNotifier
     if (peer.isLocal) {
       localPeer = peer;
 
-      if(track.kind == HMSTrackKind.kHMSTrackKindAudio){
+      if(track.kind == HMSTrackKind.kHMSTrackKindAudio  && track.source=="REGULAR"){
         this.isMicOn = !track.isMute;      
       }
 
-      if (track.kind == HMSTrackKind.kHMSTrackKindVideo) {
+      if (track.kind == HMSTrackKind.kHMSTrackKindVideo && track.source=="REGULAR") {
         this.isVideoOn = !track.isMute;
       }
       notifyListeners();
