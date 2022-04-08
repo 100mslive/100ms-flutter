@@ -43,8 +43,8 @@ android {
         applicationId "live.hms.flutter"
         minSdkVersion 21
         targetSdkVersion 32
-        versionCode 55
-        versionName "1.1.5"
+        versionCode 57
+        versionName "1.1.7"
 
     }
 
