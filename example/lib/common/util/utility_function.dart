@@ -16,6 +16,11 @@ class Utilities {
     return name;
   }
 
+  static Color getBackgroundColour(String name) {
+    return Utilities
+        .colors[name.toLowerCase().codeUnitAt(0) % Utilities.colors.length];
+  }
+
   static List<Color> colors = [
     Colors.red,
     Colors.pink,
