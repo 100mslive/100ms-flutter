@@ -343,24 +343,4 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
       ),
     );
   }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    super.didChangeAppLifecycleState(state);
-    if (mounted) {
-      if (state == AppLifecycleState.resumed) {
-        if (context.watch<PreviewStore>().isVideoOn) {
-          context.read<PreviewStore>().startCapturing();
-        }
-      } else if (state == AppLifecycleState.paused) {
-        if (context.watch<PreviewStore>().isVideoOn) {
-          context.read<PreviewStore>().stopCapturing();
-        }
-      } else if (state == AppLifecycleState.inactive) {
-        if (context.watch<PreviewStore>().isVideoOn) {
-          context.read<PreviewStore>().stopCapturing();
-        }
-      }
-    }
-  }
 }
