@@ -319,15 +319,13 @@ class _MeetingPageState extends State<MeetingPage>
                                               meetingStore.hasHlsStarted,
                                           builder: (_, hasHlsStarted, __) {
                                             return hasHlsStarted
-                                                ? Flexible(
-                                                    child: Center(
-                                                      child: Container(
-                                                        child: HLSViewer(
-                                                            streamUrl: context
-                                                                .read<
-                                                                    MeetingStore>()
-                                                                .streamUrl),
-                                                      ),
+                                                ? Center(
+                                                    child: Container(
+                                                      child: HLSViewer(
+                                                          streamUrl: context
+                                                              .read<
+                                                                  MeetingStore>()
+                                                              .streamUrl),
                                                     ),
                                                   )
                                                 : Center(
