@@ -11,7 +11,7 @@ import 'package:hmssdk_flutter/src/manager/hms_sdk_manager.dart';
 import 'package:hmssdk_flutter/src/service/platform_service.dart';
 import '../hmssdk_flutter.dart';
 
-/// /// The public interface of 100ms SDK. Create an instance of HMSSDK to start using the SDK.
+/// The public interface of 100ms SDK. Create an instance of HMSSDK to start using the SDK.
 ///
 /// **Key Concepts**
 ///

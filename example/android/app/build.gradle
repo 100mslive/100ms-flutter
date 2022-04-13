@@ -39,12 +39,11 @@ android {
 
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "live.hms.flutter"
         minSdkVersion 21
         targetSdkVersion 32
-        versionCode 57
-        versionName "1.1.7"
+        versionCode 58
+        versionName "1.1.8"
 
     }
 
