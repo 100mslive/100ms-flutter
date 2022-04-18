@@ -3,7 +3,7 @@ name: 100ms-flutter
 on:
   push:
     branches:
-    - test-release
+    - main
 
 jobs:
   build:
