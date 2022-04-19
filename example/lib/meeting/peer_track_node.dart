@@ -39,4 +39,10 @@ class PeerTrackNode extends ChangeNotifier {
     this.isOffscreen = currentState;
     notify();
   }
+
+  @override
+  bool operator ==(Object other) {
+    // TODO: implement ==
+    return super == other;
+  }
 }
