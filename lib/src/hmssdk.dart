@@ -5,12 +5,13 @@
 ///All methods related to meeting, preview and their listeners are present here.
 
 // Project imports:
+import 'package:flutter/widgets.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter/src/manager/hms_sdk_manager.dart';
 import 'package:hmssdk_flutter/src/service/platform_service.dart';
 import '../hmssdk_flutter.dart';
 
-/// /// The public interface of 100ms SDK. Create an instance of HMSSDK to start using the SDK.
+/// The public interface of 100ms SDK. Create an instance of HMSSDK to start using the SDK.
 ///
 /// **Key Concepts**
 ///
@@ -23,10 +24,11 @@ import '../hmssdk_flutter.dart';
 /// **Broadcast** - A local peer can send any message/data to all remote peers in the room
 ///
 /// HMSSDK has other methods which the client app can use to get more info about the Room, Peer and Tracks
-class HMSSDK {
+class HMSSDK with WidgetsBindingObserver {
   ///join meeting by passing HMSConfig instance to it.
 
   HMSTrackSetting? hmsTrackSetting;
+  bool previewState = false;
 
   HMSSDK({this.hmsTrackSetting});
 
@@ -42,7 +44,18 @@ class HMSSDK {
   }
 
   /// Join the room with configuration options passed as a [HMSConfig] object
-  Future<void> join({required HMSConfig config}) async {
+  dynamic join({
+    required HMSConfig config,
+  }) async {
+    if (previewState) {
+      return HMSException(
+          message: "Preview in progress",
+          description: "Preview in progress",
+          action: "PREVIEW",
+          isTerminal: false,
+          params: {...config.getJson()});
+    }
+    WidgetsBinding.instance!.addObserver(this);
     return await PlatformService.invokeMethod(PlatformMethod.join,
         arguments: {...config.getJson()});
   }
@@ -57,10 +70,12 @@ class HMSSDK {
   Future<void> preview({
     required HMSConfig config,
   }) async {
-    return await PlatformService.invokeMethod(PlatformMethod.preview,
-        arguments: {
-          ...config.getJson(),
-        });
+    previewState = true;
+    await PlatformService.invokeMethod(PlatformMethod.preview, arguments: {
+      ...config.getJson(),
+    });
+    previewState = false;
+    return null;
   }
 
   /// Call this method to leave the room
@@ -68,14 +83,16 @@ class HMSSDK {
   void leave({HMSActionResultListener? hmsActionResultListener}) async {
     var result = await PlatformService.invokeMethod(PlatformMethod.leave);
     if (hmsActionResultListener != null) {
-      if (result == null)
+      if (result == null) {
         hmsActionResultListener.onSuccess(
             methodType: HMSActionResultListenerMethod.leave);
-      else
+      } else {
         hmsActionResultListener.onException(
             methodType: HMSActionResultListenerMethod.leave,
             hmsException: HMSException.fromMap(result["error"]));
+      }
     }
+    WidgetsBinding.instance!.removeObserver(this);
   }
 
   /// To switch local peer's audio on/off.
@@ -541,11 +558,12 @@ class HMSSDK {
   /// Starts HLS streaming for the [meetingUrl] room.
   /// You can set a custom [metadata] for the HLS Stream
   /// [hmsActionResultListener] is callback whose [HMSActionResultListener.onSuccess] will be called when the the action completes successfully.
-  void startHlsStreaming(String meetingUrl, String metadata,
-      {HMSActionResultListener? hmsActionResultListener}) async {
+  void startHlsStreaming(
+      {required HMSHLSConfig hmshlsConfig,
+      HMSActionResultListener? hmsActionResultListener}) async {
     var result = await PlatformService.invokeMethod(
         PlatformMethod.startHlsStreaming,
-        arguments: {"meeting_url": meetingUrl, "meta_data": metadata});
+        arguments: hmshlsConfig.toMap());
     if (hmsActionResultListener != null) {
       if (result == null)
         hmsActionResultListener.onSuccess(
@@ -560,10 +578,11 @@ class HMSSDK {
   /// Stops ongoing HLS streaming in the room
   /// [hmsActionResultListener] is callback whose [HMSActionResultListener.onSuccess] will be called when the the action completes successfully.
   void stopHlsStreaming(
-      {HMSActionResultListener? hmsActionResultListener}) async {
+      {HMSHLSConfig? hmshlsConfig,
+      HMSActionResultListener? hmsActionResultListener}) async {
     var result = await PlatformService.invokeMethod(
-      PlatformMethod.stopHlsStreaming,
-    );
+        PlatformMethod.stopHlsStreaming,
+        arguments: hmshlsConfig != null ? hmshlsConfig.toMap() : null);
     if (hmsActionResultListener != null) {
       if (result == null)
         hmsActionResultListener.onSuccess(
@@ -700,5 +719,41 @@ class HMSSDK {
 
   void removeLogListener({required HMSLogListener hmsLogListener}) {
     PlatformService.removeLogsListener(hmsLogListener);
+  }
+
+  bool isLocalVideoOn = false;
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) async {
+    super.didChangeAppLifecycleState(state);
+
+    if (state == AppLifecycleState.resumed) {
+      List<HMSPeer>? peersList = await getPeers();
+
+      peersList?.forEach((element) {
+        if (!element.isLocal) {
+          (element.audioTrack as HMSRemoteAudioTrack?)?.setVolume(10.0);
+          element.auxiliaryTracks?.forEach((element) {
+            if (element.kind == HMSTrackKind.kHMSTrackKindAudio) {
+              (element as HMSRemoteAudioTrack?)?.setVolume(10.0);
+            }
+          });
+        } else {
+          if ((element.videoTrack != null && isLocalVideoOn)) startCapturing();
+          isLocalVideoOn = false;
+        }
+      });
+    } else if (state == AppLifecycleState.paused) {
+      HMSLocalPeer? localPeer = await getLocalPeer();
+      if (localPeer != null && !(localPeer.videoTrack?.isMute ?? true)) {
+        isLocalVideoOn = true;
+        stopCapturing();
+      }
+    } else if (state == AppLifecycleState.inactive) {
+      HMSLocalPeer? localPeer = await getLocalPeer();
+      if (localPeer != null && !(localPeer.videoTrack?.isMute ?? true)) {
+        isLocalVideoOn = true;
+        stopCapturing();
+      }
+    }
   }
 }

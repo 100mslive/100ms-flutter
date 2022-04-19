@@ -97,6 +97,8 @@ enum PlatformMethod {
   changeName,
   startHlsStreaming,
   stopHlsStreaming,
+  getAllTracks,
+  getTrackById,
 }
 
 extension PlatformMethodValues on PlatformMethod {
@@ -253,7 +255,10 @@ extension PlatformMethodValues on PlatformMethod {
 
       case PlatformMethod.isScreenShareActive:
         return 'is_screen_share_active';
-
+      case PlatformMethod.getAllTracks:
+        return "get_all_tracks";
+      case PlatformMethod.getTrackById:
+        return "get_track_by_id";
       default:
         return 'unknown';
     }
@@ -416,7 +421,10 @@ extension PlatformMethodValues on PlatformMethod {
 
       case 'is_screen_share_active':
         return PlatformMethod.isScreenShareActive;
-
+      case "get_track_by_id":
+        return PlatformMethod.getTrackById;
+      case "get_all_tracks":
+        return PlatformMethod.getAllTracks;
       default:
         return PlatformMethod.unknown;
     }

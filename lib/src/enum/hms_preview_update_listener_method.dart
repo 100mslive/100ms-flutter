@@ -1,4 +1,10 @@
-enum HMSPreviewUpdateListenerMethod { onPreviewVideo, onError, unknown }
+enum HMSPreviewUpdateListenerMethod {
+  onPreviewVideo,
+  onError,
+  onPeerUpdate,
+  onRoomUpdate,
+  unknown
+}
 
 extension HMSPreviewUpdateListenerMethodValues
     on HMSPreviewUpdateListenerMethod {
@@ -8,6 +14,10 @@ extension HMSPreviewUpdateListenerMethodValues
         return HMSPreviewUpdateListenerMethod.onPreviewVideo;
       case 'on_error':
         return HMSPreviewUpdateListenerMethod.onError;
+      case 'on_peer_update':
+        return HMSPreviewUpdateListenerMethod.onPeerUpdate;
+      case 'on_room_update':
+        return HMSPreviewUpdateListenerMethod.onRoomUpdate;
       default:
         return HMSPreviewUpdateListenerMethod.unknown;
     }
