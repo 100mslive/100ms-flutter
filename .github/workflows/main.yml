@@ -1,0 +1,51 @@
+name: 100ms-flutter
+
+on:
+  push:
+    branches:
+    - script-test
+
+jobs:
+  build:
+    runs-on: macos-latest
+    defaults:
+      run:
+        working-directory: ./example/android
+    steps:
+    - uses: actions/checkout@v1
+    - uses: subosito/flutter-action@v2
+      with:
+        flutter-version: '2.10.4'
+    - uses: actions/setup-java@v2
+      with:
+        distribution: 'zulu'
+        java-version: '11'
+    - run: |
+        echo "$GOOGLE_SERVICES_JSON" > firebase_credentials.json.b64
+        base64 -d -i firebase_credentials.json.b64 > app/google-services.json
+      env:
+          GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
+    - run: |
+        echo "$STORE_KEY" > 100msKeyStore.b64
+        base64 -d -i 100msKeyStore.b64 > app/100msKeyStore
+      env:
+          STORE_KEY: ${{ secrets.STORE_KEY }}
+          
+    - run: |
+        echo "$KEY_PROPERTIES" > key.properties.b64
+        base64 -d -i key.properties.b64 > key.properties
+      env:
+          KEY_PROPERTIES: ${{ secrets.KEY_PROPERTIES }}
+          
+    - run: |
+        echo "$FASTLANE_ANDROID" > Fastfile.b64
+        base64 -d -i Fastfile.b64 > fastlane/Fastfile
+      env:
+          FASTLANE_ANDROID: ${{ secrets.FASTLANE_ANDROID }}
+          
+          
+    - run: flutter pub get
+    - run: gradle wrapper
+    - run: bundle install --verbose
+    - run: fastlane add_plugin firebase_app_distribution
+    - run: bundle exec fastlane release_on_firebase 
