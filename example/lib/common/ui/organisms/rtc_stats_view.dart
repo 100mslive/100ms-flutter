@@ -26,11 +26,12 @@ class Stats extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return isLocal
-        ? Selector<PeerTrackNode, Tuple3<double?, double?, RTCStats?>>(
-            selector: (_, peerTrackNode) => Tuple3(
+        ? Selector<PeerTrackNode, Tuple4<double?, double?, RTCStats?, int?>>(
+            selector: (_, peerTrackNode) => Tuple4(
                 peerTrackNode.stats?.hmsLocalVideoStats?.bitrate,
                 peerTrackNode.stats?.hmsLocalAudioStats?.bitrate,
-                peerTrackNode.stats),
+                peerTrackNode.stats,
+                peerTrackNode.networkQuality),
             builder: (_, data, __) {
               return Container(
                 width: MediaQuery.of(context).size.width,
@@ -52,15 +53,17 @@ class Stats extends StatelessWidget {
                         "Bitrate(V)\t ${data.item3?.hmsLocalVideoStats?.bitrate.toStringAsFixed(2) ?? "0.00"}"),
                     Text(
                         "Bitrate(A)\t ${data.item3?.hmsLocalAudioStats?.bitrate.toStringAsFixed(2) ?? "0.00"}"),
+                    Text("Downlink\t ${data.item4 ?? "-1"}"),
                   ],
                 ),
               );
             })
-        : Selector<PeerTrackNode, Tuple3<double?, double?, RTCStats?>>(
-            selector: (_, peerTrackNode) => Tuple3(
+        : Selector<PeerTrackNode, Tuple4<double?, double?, RTCStats?, int?>>(
+            selector: (_, peerTrackNode) => Tuple4(
                 peerTrackNode.stats?.hmsRemoteVideoStats?.bitrate,
                 peerTrackNode.stats?.hmsRemoteAudioStats?.bitrate,
-                peerTrackNode.stats),
+                peerTrackNode.stats,
+                peerTrackNode.networkQuality),
             builder: (_, data, __) {
               return Container(
                 width: MediaQuery.of(context).size.width,
@@ -86,6 +89,7 @@ class Stats extends StatelessWidget {
                         "Jitter(V)\t ${data.item3?.hmsRemoteVideoStats?.jitter.toStringAsFixed(2) ?? "0.00"}"),
                     Text(
                         "Jitter(A)\t ${data.item3?.hmsRemoteAudioStats?.jitter.toStringAsFixed(2) ?? "0.00"}"),
+                    Text("Downlink\t ${data.item4 ?? "-1"}"),
                   ],
                 ),
               );
