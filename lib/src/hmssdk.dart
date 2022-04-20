@@ -721,6 +721,10 @@ class HMSSDK with WidgetsBindingObserver {
     PlatformService.removeLogsListener(hmsLogListener);
   }
 
+  void startRtcStats() {
+    PlatformService.startRtcStats();
+  }
+
   bool isLocalVideoOn = false;
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) async {

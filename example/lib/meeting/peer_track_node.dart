@@ -24,7 +24,7 @@ class PeerTrackNode extends ChangeNotifier {
       required this.uid,
       this.isOffscreen = false,
       this.networkQuality = -1,
-      this.stats});
+      this.stats });
 
   @override
   String toString() {

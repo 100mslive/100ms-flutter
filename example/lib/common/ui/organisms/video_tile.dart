@@ -126,7 +126,7 @@ class _VideoTileState extends State<VideoTile> {
                       itemWidth: widget.itemWidth,
                     ),
                     PeerName(),
-                    RTCStatsView(),
+                    RTCStatsView(isLocal:context.read<PeerTrackNode>().peer.isLocal?true:false),
                     HandRaise(), //bottom left
                     BRBTag(), //top right
                     NetworkIconWidget(), //top left

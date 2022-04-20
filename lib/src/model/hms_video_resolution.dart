@@ -1,6 +1,6 @@
 class HMSVideoResolution {
-  final double height;
-  final double width;
+  final int height;
+  final int width;
 
   HMSVideoResolution({required this.height, required this.width});
 
