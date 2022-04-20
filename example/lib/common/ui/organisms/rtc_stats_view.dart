@@ -49,11 +49,11 @@ class Stats extends StatelessWidget {
                         "Height\t ${data.item3?.hmsLocalVideoStats?.resolution.height.toStringAsFixed(2) ?? "0.00"}"),
                     Text(
                         "FPS\t ${data.item3?.hmsLocalVideoStats?.frameRate.toStringAsFixed(2) ?? "0.00"}"),
+                    Text("Downlink\t ${data.item4 ?? "-1"}"),
                     Text(
                         "Bitrate(V)\t ${data.item3?.hmsLocalVideoStats?.bitrate.toStringAsFixed(2) ?? "0.00"}"),
                     Text(
                         "Bitrate(A)\t ${data.item3?.hmsLocalAudioStats?.bitrate.toStringAsFixed(2) ?? "0.00"}"),
-                    Text("Downlink\t ${data.item4 ?? "-1"}"),
                   ],
                 ),
               );
@@ -81,6 +81,7 @@ class Stats extends StatelessWidget {
                         "Height\t ${data.item3?.hmsRemoteVideoStats?.resolution.height.toStringAsFixed(2) ?? "0.00"}"),
                     Text(
                         "FPS\t ${data.item3?.hmsRemoteVideoStats?.frameRate.toStringAsFixed(2) ?? "0.00"}"),
+                    Text("Downlink\t ${data.item4 ?? "-1"}"),
                     Text(
                         "Bitrate(V)\t ${data.item3?.hmsRemoteVideoStats?.bitrate.toStringAsFixed(2) ?? "0.00"}"),
                     Text(
@@ -89,7 +90,6 @@ class Stats extends StatelessWidget {
                         "Jitter(V)\t ${data.item3?.hmsRemoteVideoStats?.jitter.toStringAsFixed(2) ?? "0.00"}"),
                     Text(
                         "Jitter(A)\t ${data.item3?.hmsRemoteAudioStats?.jitter.toStringAsFixed(2) ?? "0.00"}"),
-                    Text("Downlink\t ${data.item4 ?? "-1"}"),
                   ],
                 ),
               );
