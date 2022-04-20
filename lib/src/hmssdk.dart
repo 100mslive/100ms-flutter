@@ -699,7 +699,7 @@ class HMSSDK with WidgetsBindingObserver {
   void removePreviewListener({required HMSPreviewListener listener}) {
     PlatformService.removePreviewListener(listener);
   }
-
+///Method to start HMSLogger for logs
   void startHMSLogger(
       {required HMSLogLevel webRtclogLevel, required HMSLogLevel logLevel}) {
     PlatformService.invokeMethod(PlatformMethod.startHMSLogger, arguments: {
@@ -709,22 +709,20 @@ class HMSSDK with WidgetsBindingObserver {
     });
   }
 
+///Method to remove attached HMSLogger
   void removeHMSLogger() {
     PlatformService.invokeMethod(PlatformMethod.removeHMSLogger);
   }
-
+///Method to add Log Listener to listen to the logs
   void addLogListener({required HMSLogListener hmsLogListener}) {
     PlatformService.addLogsListener(hmsLogListener);
   }
-
+///Method to remove Log Listener
   void removeLogListener({required HMSLogListener hmsLogListener}) {
     PlatformService.removeLogsListener(hmsLogListener);
   }
 
-  void startRtcStats() {
-    PlatformService.startRtcStats();
-  }
-
+///To maintain the app state in background and foreground state
   bool isLocalVideoOn = false;
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) async {

@@ -264,7 +264,4 @@ class HMSSDKInteractor {
     return await hmsSDK.getPeers();
   }
 
-  void startRtcStats() {
-    hmsSDK.startRtcStats();
-  }
 }

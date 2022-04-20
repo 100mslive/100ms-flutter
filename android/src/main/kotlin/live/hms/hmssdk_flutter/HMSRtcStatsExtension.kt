@@ -64,7 +64,7 @@ class HMSRtcStatsExtension {
             hmsLocalAudioStatsMap["bytes_received"] = hmsLocalAudioStats.bytesSent
             hmsLocalAudioStatsMap["bitrate"]  = hmsLocalAudioStats.bitrate
             hmsLocalAudioStatsMap["round_trip_time"] = hmsLocalAudioStats.roundTripTime
-            args.put("remote_audio_stats",hmsLocalAudioStatsMap)
+            args.put("local_audio_stats",hmsLocalAudioStatsMap)
             return args;
         }
 
@@ -82,7 +82,7 @@ class HMSRtcStatsExtension {
             hmsLocaVideoStatsMap["round_trip_time"] = hmsLocalVideoStats.roundTripTime
             hmsLocaVideoStatsMap["frame_rate"] = hmsLocalVideoStats.frameRate
             hmsLocaVideoStatsMap["resolution"] = HMSVideoResolutionExtension.toDictionary(hmsLocalVideoStats.resolution)
-            args.put("remote_audio_stats",hmsLocaVideoStatsMap)
+            args.put("local_video_stats",hmsLocaVideoStatsMap)
             return args;
         }
 

@@ -14,9 +14,9 @@ class HMSLocalAudioStats {
 
   factory HMSLocalAudioStats.fromMap(Map map) {
     return HMSLocalAudioStats(
-      roundTripTime: map["round_trip_time"],
-      bytesSent: map["bytes_sent"],
-      bitrate: map["bitrate"],
+      roundTripTime: map["round_trip_time"]??0.0,
+      bytesSent: map["bytes_sent"]??0,
+      bitrate: map["bitrate"]??0.0,
     );
   }
 }

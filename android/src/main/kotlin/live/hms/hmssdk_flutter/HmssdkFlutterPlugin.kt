@@ -1021,7 +1021,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
 
             val args = HashMap<String, Any?>()
             args.put("event_name", "on_local_video_stats")
-            args.put("data", HMSRtcStatsExtension.toDictionary(hmsLocalVideoStats = hmsLocalVideoStats, peer = peer, track = track))
+            args.put("data", HMSRtcStatsExtension.toDictionary(hmsLocalVideoStats = hmsLocalVideoStats, peer = getLocalPeer(), track = track))
 
             Log.i("data...",args.toString())
             if (args["data"] != null)
@@ -1040,8 +1040,8 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
 
             val args = HashMap<String, Any?>()
             args.put("event_name", "on_local_audio_stats")
-            args.put("data", HMSRtcStatsExtension.toDictionary(hmsLocalAudioStats = hmsLocalAudioStats, peer = peer, track = track))
-            Log.i("data...",args.toString())
+            args.put("data", HMSRtcStatsExtension.toDictionary(hmsLocalAudioStats = hmsLocalAudioStats, peer = getLocalPeer(), track = track))
+            
 
             if (args["data"] != null)
                 CoroutineScope(Dispatchers.Main).launch {

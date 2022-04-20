@@ -10,8 +10,8 @@ class HMSVideoResolutionExtension {
 
             val args=HashMap<String,Any?>()
             if(hmsVideoResolution == null) return null
-            args["height"] = hmsVideoResolution.height
-            args["width"] = hmsVideoResolution.width
+            args["height"] = hmsVideoResolution.height/1.0
+            args["width"] = hmsVideoResolution.width/1.0
 
             return args;
         }
