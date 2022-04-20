@@ -66,8 +66,7 @@ class PlatformService {
 
   static void startRtcStats() {
     _channel.invokeMethod(
-      PlatformMethodValues.getName(PlatformMethod.startRtcStats)
-      );
+        PlatformMethodValues.getName(PlatformMethod.startRtcStats));
   }
 
   static void addLogsListener(
@@ -305,9 +304,6 @@ class PlatformService {
           HMSPeer? peer = HMSPeer.fromMap(event.data['peer']);
           HMSPeerUpdate? update = HMSPeerUpdateValues.getHMSPeerUpdateFromName(
               event.data['update']);
-
-          print(
-              "platformSercvice ${update.toString()} ${peer.networkQuality.toString()}");
 
           notifyPreviewListeners(method, {'peer': peer, 'update': update});
           break;

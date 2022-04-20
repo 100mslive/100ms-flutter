@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:hmssdk_flutter_example/meeting/peer_track_node.dart';
 import 'package:hmssdk_flutter_example/model/rtc_stats.dart';
 import 'package:provider/provider.dart';
@@ -8,6 +9,20 @@ class RTCStatsView extends StatelessWidget {
   final bool isLocal;
 
   RTCStatsView({required this.isLocal});
+  @override
+  Widget build(BuildContext context) {
+    return Selector<MeetingStore, bool>(
+        builder: (_, statsVisible, __) {
+          return statsVisible ? Stats(isLocal: isLocal) : SizedBox();
+        },
+        selector: (_, _meetingStore) => _meetingStore.statsVisible);
+  }
+}
+
+class Stats extends StatelessWidget {
+  final isLocal;
+  const Stats({Key? key, required this.isLocal}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return isLocal

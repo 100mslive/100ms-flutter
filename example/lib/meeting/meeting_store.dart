@@ -84,6 +84,8 @@ class MeetingStore extends ChangeNotifier
 
   int? localPeerNetworkQuality;
 
+  bool statsVisible = false;
+
   int firstTimeBuild = 0;
   final DateFormat formatter = DateFormat('d MMM y h:mm:ss a');
 
@@ -244,6 +246,11 @@ class MeetingStore extends ChangeNotifier
 
   Future<void> isScreenShareActive() async {
     this.isScreenShareOn = await _hmssdkInteractor.isScreenShareActive();
+  }
+
+  void changeStatsVisible() {
+    statsVisible = !statsVisible;
+    notifyListeners();
   }
 
   @override
@@ -488,8 +495,8 @@ class MeetingStore extends ChangeNotifier
           int index = peerTracks.indexWhere(
               (element) => element.uid == peer.peerId + "mainVideo");
           if (index == -1)
-            peerTracks.add(
-                new PeerTrackNode(peer: peer, uid: peer.peerId + "mainVideo",stats: RTCStats()));
+            peerTracks.add(new PeerTrackNode(
+                peer: peer, uid: peer.peerId + "mainVideo", stats: RTCStats()));
           notifyListeners();
         }
         addPeer(peer);
@@ -515,8 +522,8 @@ class MeetingStore extends ChangeNotifier
           int index = peerTracks.indexWhere(
               (element) => element.uid == peer.peerId + "mainVideo");
           if (index == -1)
-            peerTracks.add(
-                new PeerTrackNode(peer: peer, uid: peer.peerId + "mainVideo",stats: RTCStats()));
+            peerTracks.add(new PeerTrackNode(
+                peer: peer, uid: peer.peerId + "mainVideo", stats: RTCStats()));
         }
 
         updatePeerAt(peer);
@@ -557,8 +564,6 @@ class MeetingStore extends ChangeNotifier
         break;
 
       case HMSPeerUpdate.networkQualityUpdated:
-        print(
-            "onPeerUpdate networkQuality ${peer.name} ${peer.networkQuality?.quality}");
         int index = peerTracks
             .indexWhere((element) => element.uid == peer.peerId + "mainVideo");
         if (index != -1) {
@@ -753,7 +758,6 @@ class MeetingStore extends ChangeNotifier
       {required HMSLocalAudioStats hmsLocalAudioStats,
       required HMSLocalAudioTrack track,
       required HMSPeer peer}) {
-    print("Stats Found");
     int index = -1;
     if (track.source != "REGULAR") {
       index = peerTracks
