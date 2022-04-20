@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 
 class RTCStatsView extends StatelessWidget {
-  bool isLocal;
+  final bool isLocal;
 
   RTCStatsView({required this.isLocal});
   @override
@@ -18,20 +18,25 @@ class RTCStatsView extends StatelessWidget {
                 peerTrackNode.stats),
             builder: (_, data, __) {
               return Container(
-                color: Colors.black38.withOpacity(0.3),
+                width: MediaQuery.of(context).size.width,
+                padding: EdgeInsets.only(left: 5),
+                decoration: BoxDecoration(
+                    color: Colors.black38.withOpacity(0.3),
+                    borderRadius: BorderRadius.all(Radius.circular(10))),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Text(
-                        "Width\t ${data.item3?.hmsLocalVideoStats?.resolution.width}"),
+                        "Width\t ${data.item3?.hmsLocalVideoStats?.resolution.width.toStringAsFixed(2) ?? "0.00"}"),
                     Text(
-                        "Height\t ${data.item3?.hmsLocalVideoStats?.resolution.height}"),
-                    Text("FPS\t ${data.item3?.hmsLocalVideoStats?.frameRate}"),
+                        "Height\t ${data.item3?.hmsLocalVideoStats?.resolution.height.toStringAsFixed(2) ?? "0.00"}"),
                     Text(
-                        "Bitrate(V)\t ${data.item3?.hmsLocalVideoStats?.bitrate}"),
+                        "FPS\t ${data.item3?.hmsLocalVideoStats?.frameRate.toStringAsFixed(2) ?? "0.00"}"),
                     Text(
-                        "Bitrate(A)\t ${data.item3?.hmsLocalAudioStats?.bitrate}"),
+                        "Bitrate(V)\t ${data.item3?.hmsLocalVideoStats?.bitrate.toStringAsFixed(2) ?? "0.00"}"),
+                    Text(
+                        "Bitrate(A)\t ${data.item3?.hmsLocalAudioStats?.bitrate.toStringAsFixed(2) ?? "0.00"}"),
                   ],
                 ),
               );
@@ -43,24 +48,29 @@ class RTCStatsView extends StatelessWidget {
                 peerTrackNode.stats),
             builder: (_, data, __) {
               return Container(
-                color: Colors.black38.withOpacity(0.3),
+                width: MediaQuery.of(context).size.width,
+                padding: EdgeInsets.only(left: 5),
+                decoration: BoxDecoration(
+                    color: Colors.black38.withOpacity(0.3),
+                    borderRadius: BorderRadius.all(Radius.circular(10))),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Text(
-                        "Width\t ${data.item3?.hmsRemoteVideoStats?.resolution.width}"),
+                        "Width\t ${data.item3?.hmsRemoteVideoStats?.resolution.width.toStringAsFixed(2) ?? "0.00"}"),
                     Text(
-                        "Height\t ${data.item3?.hmsRemoteVideoStats?.resolution.height}"),
-                    Text("FPS\t ${data.item3?.hmsRemoteVideoStats?.frameRate}"),
+                        "Height\t ${data.item3?.hmsRemoteVideoStats?.resolution.height.toStringAsFixed(2) ?? "0.00"}"),
                     Text(
-                        "Bitrate(V)\t ${data.item3?.hmsRemoteVideoStats?.bitrate}"),
+                        "FPS\t ${data.item3?.hmsRemoteVideoStats?.frameRate.toStringAsFixed(2) ?? "0.00"}"),
                     Text(
-                        "Bitrate(A)\t ${data.item3?.hmsRemoteAudioStats?.bitrate}"),
+                        "Bitrate(V)\t ${data.item3?.hmsRemoteVideoStats?.bitrate.toStringAsFixed(2) ?? "0.00"}"),
                     Text(
-                        "Jitter(V)\t ${data.item3?.hmsRemoteVideoStats?.jitter}"),
+                        "Bitrate(A)\t ${data.item3?.hmsRemoteAudioStats?.bitrate.toStringAsFixed(2) ?? "0.00"}"),
                     Text(
-                        "Jitter(A)\t ${data.item3?.hmsRemoteAudioStats?.jitter}"),
+                        "Jitter(V)\t ${data.item3?.hmsRemoteVideoStats?.jitter.toStringAsFixed(2) ?? "0.00"}"),
+                    Text(
+                        "Jitter(A)\t ${data.item3?.hmsRemoteAudioStats?.jitter.toStringAsFixed(2) ?? "0.00"}"),
                   ],
                 ),
               );
