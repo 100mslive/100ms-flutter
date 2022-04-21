@@ -1,9 +1,13 @@
+///100ms HMSLocalAudioStats
+/// [HMSLocalAudioStats] contains the stats for local peer audio stats.
 class HMSLocalAudioStats {
-  // Round trip time observed since previous report.
+  /// Round trip time observed since previous report.
   double roundTripTime;
-  // Total bytes sent by this track in the current session.
+
+  /// Total bytes sent by this track in the current session.
   int bytesSent;
-  // Outgoing bitrate of this track observed since previous report in Kb/s.
+
+  /// Outgoing bitrate of this track observed since previous report in Kb/s.
   double bitrate;
 
   HMSLocalAudioStats({

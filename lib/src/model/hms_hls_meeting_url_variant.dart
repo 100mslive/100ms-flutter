@@ -1,3 +1,5 @@
+///100ms HMSHLSMeetingURLVariant
+///[HMSHLSMeetingURLVariant] contains information about the meeting Url and metadata about the HMS HLS Meeting.
 class HMSHLSMeetingURLVariant {
   String meetingUrl;
   String metadata;

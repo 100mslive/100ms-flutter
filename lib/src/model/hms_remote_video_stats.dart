@@ -1,19 +1,28 @@
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
+///100ms HMSRemoteVideoStats
+///
+/// [HMSRemoteVideoStats] contains the stats for remote peer video stats.
 class HMSRemoteVideoStats {
-  // Packet Jitter measured in seconds for this track. Calculated as defined in section 6.4.1. of RFC3550.
+  /// Packet Jitter measured in seconds for this track. Calculated as defined in section 6.4.1. of RFC3550.
   double jitter;
-  // Total bytes received by this track in the current session.
+
+  /// Total bytes received by this track in the current session.
   int bytesReceived;
-  // Incoming bitrate of this track observed since previous report in Kb/s.
+
+  /// Incoming bitrate of this track observed since previous report in Kb/s.
   double bitrate;
-  // Total packets received by this track in the current session.
+
+  /// Total packets received by this track in the current session.
   int packetsReceived;
-  // Total packets lost by this track in the current session.
+
+  /// Total packets lost by this track in the current session.
   int packetsLost;
-  // Resolution of video frames being received.
+
+  /// Resolution of video frames being received.
   HMSVideoResolution resolution;
-  // Frame rate of video frames being received (FPS).
+
+  /// Frame rate of video frames being received (FPS).
   double frameRate;
 
   HMSRemoteVideoStats(

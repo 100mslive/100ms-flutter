@@ -1,10 +1,3 @@
-///VideoView used to render video in ios and android devices
-///
-/// To use,import package:`hmssdk_flutter/ui/meeting/video_view.dart`.
-///
-/// just pass the videotracks of local or remote peer and internally it passes [peer_id], [is_local] and [track_id] to specific views.
-///
-/// if you want to pass height and width you can pass as a map.
 // Dart imports:
 import 'dart:io' show Platform;
 
@@ -15,6 +8,15 @@ import 'package:flutter/services.dart' show StandardMessageCodec;
 // Project imports:
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
+///100ms HMSVideoView
+///
+///HMSVideoView used to render video in ios and android devices
+///
+/// To use,import package:`hmssdk_flutter/ui/meeting/hms_video_view.dart`.
+///
+/// just pass the videotracks of local or remote peer and internally it passes [peer_id], [is_local] and [track_id] to specific views.
+///
+/// if you want to pass height and width you can pass as a map.
 class HMSVideoView extends StatelessWidget {
   /// [HMSVideoView] will render video using trackId from HMSTrack
   final HMSVideoTrack track;

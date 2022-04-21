@@ -23,9 +23,13 @@ enum PlatformMethod {
   onError,
   onMessage,
 
-  ///when you want to send a message.
+  ///when you want to send a broadcast message.
   sendBroadcastMessage,
+
+  ///when you want to send a direct message.
   sendDirectMessage,
+
+  ///when you want to send a group message.
   sendGroupMessage,
   onUpdateSpeaker,
 
@@ -37,6 +41,8 @@ enum PlatformMethod {
 
   ///switch mic on/off.
   switchAudio,
+
+  ///switch video on/off
   switchVideo,
 
   ///switch your camera.
@@ -75,29 +81,55 @@ enum PlatformMethod {
   ///get list of roles using this.
   getRoles,
   changeTrackState,
+
+  ///end room
   endRoom,
+
+  ///remove peer from room
   removePeer,
+  //mute all peers in room
   muteAll,
+  //send unmute request to all peer
   unMuteAll,
+
+  //get local peer
   getLocalPeer,
+  //get list of all remote peers
   getRemotePeers,
+  //get list of all peers
   getPeers,
   unknown,
   startHMSLogger,
   removeHMSLogger,
   changeTrackStateForRole,
+
+  ///start rtmp or recording
   startRtmpOrRecording,
+
+  ///stop rtmp and recording
   stopRtmpAndRecording,
   build,
   getRoom,
   updateHMSLocalVideoTrackSettings,
+
+  ///change metadata for local peer
   changeMetadata,
   setPlayBackAllowed,
   setVolume,
+
+  ///change name of local peer
   changeName,
+
+  ///start HLS Streaming
   startHlsStreaming,
+
+  ///stop HLS Streaming
   stopHlsStreaming,
+
+  ///Get List all tracks
   getAllTracks,
+
+  ///Get track with the help of trackId
   getTrackById,
 }
 
