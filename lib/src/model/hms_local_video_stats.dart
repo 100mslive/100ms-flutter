@@ -1,6 +1,7 @@
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 ///100ms HMSLocalVideoStats
+///
 /// [HMSLocalVideoStats] contains the stats for local peer video stats.
 class HMSLocalVideoStats {
   /// Round trip time observed since previous report.

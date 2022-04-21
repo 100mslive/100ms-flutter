@@ -1,4 +1,5 @@
 ///100ms HMSLocalAudioStats
+///
 /// [HMSLocalAudioStats] contains the stats for local peer audio stats.
 class HMSLocalAudioStats {
   /// Round trip time observed since previous report.

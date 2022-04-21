@@ -1,4 +1,5 @@
 ///100ms HMSRTCStats
+///
 ///[HMSRTCStats] containes bytesSent, bytesReceived, packetReceived,packetsLost, bitrateSent, bitrateReceived and roundTripTime.
 class HMSRTCStats {
   /// Total bytes sent in the current session.

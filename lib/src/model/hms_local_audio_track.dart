@@ -3,6 +3,7 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter/src/service/platform_service.dart';
 
 ///100ms HMSLocalAudioTrack
+///
 ///[HMSLocalAudioTrack] contains the local peer audio track infomation.
 class HMSLocalAudioTrack extends HMSAudioTrack {
   final HMSAudioTrackSetting setting;

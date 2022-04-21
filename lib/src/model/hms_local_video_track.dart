@@ -3,6 +3,7 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter/src/service/platform_service.dart';
 
 ///100ms HMSLocalVideoTrack
+///
 ///[HMSLocalVideoTrack] contains the local peer video track infomation.
 class HMSLocalVideoTrack extends HMSVideoTrack {
   HMSVideoTrackSetting setting;

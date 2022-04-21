@@ -1,4 +1,5 @@
 ///100ms HMSRemoteAudioStats
+///
 /// [HMSRemoteAudioStats] contains the stats for remote peer audio stats.
 class HMSRemoteAudioStats {
   /// Packet Jitter measured in seconds for this track. Calculated as defined in section 6.4.1. of RFC3550.

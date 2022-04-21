@@ -1,6 +1,7 @@
 import 'package:hmssdk_flutter/src/model/hms_hls_meeting_url_variant.dart';
 
 ///100ms HMSHLSConfig
+///
 ///[HMSHLSConfig] contains a list of [HMSHLSMeetingURLVariant].
 class HMSHLSConfig {
   List<HMSHLSMeetingURLVariant> variants;
