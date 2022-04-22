@@ -40,12 +40,8 @@ class _VideoViewState extends State<VideoView> {
                 // width: widget.itemWidth,
                 child: Center(
                     child: CircleAvatar(
-                        backgroundColor: 
-                        Utilities.getBackgroundColour(context
-                                .read<PeerTrackNode>()
-                                .peer
-                                .name)
-                        ,
+                        backgroundColor: Utilities.getBackgroundColour(
+                            context.read<PeerTrackNode>().peer.name),
                         radius: 36,
                         child: Text(
                           Utilities.getAvatarTitle(
@@ -55,16 +51,15 @@ class _VideoViewState extends State<VideoView> {
           } else {
             return (data.item1?.source != "REGULAR")
                 ? ClipRRect(
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                  child: InteractiveViewer(
-                    child: HMSVideoView(
-                      scaleType: widget.scaleType,
-                      track: data.item1!,
-                      setMirror: false,
-                      matchParent: false
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                    child: InteractiveViewer(
+                      child: HMSVideoView(
+                          scaleType: widget.scaleType,
+                          track: data.item1!,
+                          setMirror: false,
+                          matchParent: false),
                     ),
-                  ),
-                )
+                  )
                 : ClipRRect(
                     borderRadius: BorderRadius.all(Radius.circular(10)),
                     child: Container(
@@ -73,7 +68,7 @@ class _VideoViewState extends State<VideoView> {
                       child: HMSVideoView(
                         scaleType: widget.scaleType,
                         track: data.item1!,
-                        setMirror: data.item1.runtimeType==HMSLocalVideoTrack,
+                        setMirror: data.item1.runtimeType == HMSLocalVideoTrack,
                         matchParent: false,
                       ),
                     ),
