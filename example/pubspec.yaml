@@ -16,7 +16,6 @@ dependencies:
     path: ../
 
   wakelock: ^0.6.1+1
-  visibility_detector: ^0.2.2
   cupertino_icons: ^1.0.2
   provider: ^6.0.2
   http: ^0.13.3
@@ -33,6 +32,7 @@ dependencies:
   dropdown_button2: ^1.1.1
   video_player:
   clickable_list_wheel_view: ^0.0.4
+  focus_detector: ^2.0.1
   tuple:
 
 dev_dependencies:
