@@ -29,10 +29,10 @@ class HMSLocalVideoStats {
 
   factory HMSLocalVideoStats.fromMap(Map map) {
     return HMSLocalVideoStats(
-        roundTripTime: map["round_trip_time"],
-        bytesSent: map["bytes_sent"],
-        bitrate: map["bitrate"],
-        frameRate: map["frame_rate"],
+        roundTripTime: map["round_trip_time"]??0.00,
+        bytesSent: map["bytes_sent"]??0,
+        bitrate: map["bitrate"]??0.00,
+        frameRate: map["frame_rate"]??0.0,
         resolution: HMSVideoResolution.fromMap(map['resolution']));
   }
 }

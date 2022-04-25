@@ -131,6 +131,7 @@ enum PlatformMethod {
 
   ///Get track with the help of trackId
   getTrackById,
+  startRtcStats
 }
 
 extension PlatformMethodValues on PlatformMethod {
@@ -291,6 +292,8 @@ extension PlatformMethodValues on PlatformMethod {
         return "get_all_tracks";
       case PlatformMethod.getTrackById:
         return "get_track_by_id";
+      case PlatformMethod.startRtcStats:
+        return "start_rtc_stats";
       default:
         return 'unknown';
     }
@@ -457,6 +460,8 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.getTrackById;
       case "get_all_tracks":
         return PlatformMethod.getAllTracks;
+      case "start_rtc_stats":
+        return PlatformMethod.startRtcStats;
       default:
         return PlatformMethod.unknown;
     }
