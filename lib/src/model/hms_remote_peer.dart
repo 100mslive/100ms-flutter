@@ -1,12 +1,12 @@
-///100ms HMSPeer.
+///100ms HMSRemotePeer.
 ///
-/// To use, import `package:hmssdk_flutter/model/hms_peer.dart`.
+/// To use, import `package:hmssdk_flutter/model/hms__remote_peer.dart`.
 ///
-///[HMSPeer] model contains everything about a peer and it's tracks information.
+///[HMSRemotePeer] model contains everything about a remote peer and it's tracks information.
 ///
 /// A [peer] is the object returned by 100ms SDKs that contains all information about a user - name, role, video track etc.
 ///
-///This library depends only on core Dart libraries and hms_audio_track.dart, hms_role.dart, hms_track.dart, hms_video_track.dart library.
+///This library depends only on core Dart libraries and hms_remote_audio_track.dart, hms_role.dart, hms_track.dart, hms_remote_video_track.dart library.
 
 // Project imports:
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';

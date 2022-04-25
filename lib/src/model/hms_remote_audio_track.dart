@@ -2,6 +2,9 @@
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter/src/service/platform_service.dart';
 
+///100ms HMSRemoteAudioTrack
+///
+///[HMSLocalVideoTrack] contains the remote peer audio track infomation.
 class HMSRemoteAudioTrack extends HMSAudioTrack {
   HMSRemoteAudioTrack({
     required HMSTrackKind kind,

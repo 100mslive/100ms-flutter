@@ -1,11 +1,9 @@
-///[HMSRoleChangeRequest] contains the info about the role suggested recieved by you
-///
-///you can accept the role change or you can decline it.
-///
-
 // Project imports:
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
+///[HMSRoleChangeRequest] contains the info about the role suggested recieved by you
+///
+///you can accept the role change or you can decline it.
 class HMSRoleChangeRequest {
   final HMSRole suggestedRole;
   final HMSPeer? suggestedBy;

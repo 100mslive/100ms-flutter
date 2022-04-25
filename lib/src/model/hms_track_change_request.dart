@@ -1,6 +1,11 @@
 // Project imports:
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
+///100ms HMSTrackChangeRequest
+///
+///when someone requests for track change of yours be it video or audio this will be triggered
+///
+/// [HMSTrackChangeRequest] request instance consisting of all the required info about track change
 class HMSTrackChangeRequest {
   bool mute;
   HMSPeer requestBy;

@@ -1,17 +1,26 @@
+///100ms HMSRTCStats
+///
+///[HMSRTCStats] containes bytesSent, bytesReceived, packetReceived,packetsLost, bitrateSent, bitrateReceived and roundTripTime.
 class HMSRTCStats {
-  // Total bytes sent in the current session.
+  /// Total bytes sent in the current session.
   int bytesSent;
-  // Total bytes received in the current session.
+
+  /// Total bytes received in the current session.
   int bytesReceived;
-  // Total packets received in the current session.
+
+  /// Total packets received in the current session.
   int packetsReceived;
-  // Total packets lost in the current session.
+
+  /// Total packets lost in the current session.
   int packetsLost;
-  // Total outgoing bitrate observed since previous report.
+
+  /// Total outgoing bitrate observed since previous report.
   double bitrateSent;
-  // Total incoming bitrate observed since previous report in Kb/s.
+
+  /// Total incoming bitrate observed since previous report in Kb/s.
   double bitrateReceived;
-  // Average round trip time observed since previous report in Kb/s.
+
+  /// Average round trip time observed since previous report in Kb/s.
   double roundTripTime;
 
   HMSRTCStats(
@@ -35,6 +44,7 @@ class HMSRTCStats {
   }
 }
 
+///[HMSRTCStatsReport] contains stats for [HMSroom].
 class HMSRTCStatsReport {
   // Combined audio + video values
   HMSRTCStats combined;
