@@ -79,14 +79,23 @@ public class LeaveRoomTest extends BaseTest {
 
       waitForVisibility(leaveRoom.leaveRoomPopupText);
       sa.assertTrue(leaveRoom.leaveRoomPopupText.isDisplayed());
+<<<<<<< HEAD
         String leave_room_heading = getText(leaveRoom.leaveRoomPopupText, "Leave Room popup Heading - ");
         String flag = getStrings().get("end_room_heading");;
+=======
+        String leave_room_heading = leaveRoom.leaveRoomPopupText.getAttribute("content-desc");
+        String flag = getStrings().get("Leave_room_heading");;
+>>>>>>> newapp
         Assert.assertEquals(leave_room_heading, flag);
 
         sa.assertTrue(leaveRoom.leaveRoomCancelBtn.isDisplayed());
       click(leaveRoom.leaveRoomCancelBtn);
         sa.assertTrue(leaveRoom.leaveRoomBtn.isDisplayed());
         //add more button checks later
+<<<<<<< HEAD
+=======
+      leaveRoom.leave_withoutEndingRoom();
+>>>>>>> newapp
     }
 
   @Test
@@ -101,12 +110,18 @@ public class LeaveRoomTest extends BaseTest {
     waitForVisibility(leaveRoom.leaveRoomBtn);
     sa.assertTrue(leaveRoom.leaveRoomBtn.isDisplayed());
     click(leaveRoom.leaveRoomBtn);
+<<<<<<< HEAD
     sa.assertTrue(leaveRoom.leaveWithoutEndingRoom.isDisplayed());
     click(leaveRoom.leaveWithoutEndingRoom);
+=======
+    sa.assertTrue(leaveRoom.leaveRoomYesBtn.isDisplayed());
+    click(leaveRoom.leaveRoomYesBtn);
+>>>>>>> newapp
     Thread.sleep(2000);
     sa.assertTrue(homePage.joinMeetingBtn.isDisplayed());
   }
 
+<<<<<<< HEAD
   @Test
   public void Test_LeaveRoom_EndRoomForAll() throws InterruptedException {
     System.out.println("Verify Participant Leave Room EndRoomForAll option");
@@ -130,5 +145,30 @@ public class LeaveRoomTest extends BaseTest {
 
     sa.assertTrue(homePage.joinMeetingBtn.isDisplayed());
   }
+=======
+//  @Test
+//  public void Test_LeaveRoom_EndRoomForAll() throws InterruptedException {
+//    System.out.println("Verify Participant Leave Room EndRoomForAll option");
+//
+//    meetingRoom = meetingRoom.goto_meetingRoom_mic_cam(meetingDetail.getJSONObject("valid").getString("meeting_url"),
+//      meetingDetail.getJSONObject("valid").getString("username"),
+//      meetingDetail.getJSONObject("camera").getString("ON"),
+//      meetingDetail.getJSONObject("mic").getString("ON"));
+//
+////    Thread.sleep(2000);
+//    waitForVisibility(leaveRoom.leaveRoomBtn);
+//    sa.assertTrue(leaveRoom.leaveRoomBtn.isDisplayed());
+//    click(leaveRoom.leaveRoomBtn);
+//    Thread.sleep(2000);
+////    waitForVisibility(leaveRoom.endRoomForAll);
+//
+////    sa.assertTrue(leaveRoom.endRoomForAll.isDisplayed());
+////    click(leaveRoom.endRoomForAll);
+//    Thread.sleep(2000);
+////    waitForVisibility(homePage.joinMeetingBtn);
+//
+//    sa.assertTrue(homePage.joinMeetingBtn.isDisplayed());
+//  }
+>>>>>>> newapp
 
 }

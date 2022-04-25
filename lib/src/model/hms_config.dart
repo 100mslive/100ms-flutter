@@ -10,13 +10,15 @@ class HMSConfig {
   ///[endPoint] where you have to make post request to get token.
   final String? endPoint;
   final bool shouldSkipPIIEvents;
+  final bool captureNetworkQualityInPreview;
 
   HMSConfig(
       {this.userName = 'Flutter User',
       required this.authToken,
       this.metaData,
       this.endPoint,
-      this.shouldSkipPIIEvents = false});
+      this.shouldSkipPIIEvents = false,
+      this.captureNetworkQualityInPreview = false});
 
   Map<String, dynamic> getJson() {
     return {
@@ -24,7 +26,8 @@ class HMSConfig {
       'auth_token': authToken,
       'meta_data': metaData,
       'should_skip_pii_events': shouldSkipPIIEvents,
-      'end_point': endPoint
+      'end_point': endPoint,
+      'capture_network_quality_in_preview': captureNetworkQualityInPreview
     };
   }
 }

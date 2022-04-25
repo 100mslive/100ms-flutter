@@ -53,7 +53,11 @@ public class HomePage extends PagesCommon{
 
     //HomePage Participant name Popup
     @iOSXCUITFindBy(accessibility = "Enter your Name")
+<<<<<<< HEAD
     @AndroidFindBy(xpath = "/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.view.View/android.view.View/android.view.View[1]/android.view.View/android.view.View/android.widget.EditText")
+=======
+    @AndroidFindBy(xpath = "//android.view.View/android.view.View[1]/android.view.View/android.view.View/android.widget.EditText")
+>>>>>>> newapp
     public WebElement participantNameField;
 
     @iOSXCUITFindBy(accessibility = "OK")

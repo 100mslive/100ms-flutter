@@ -46,6 +46,10 @@ public class PreviewPage extends HomePage {
       {click(micBtn); click(camBtn);}
 
       click(joinNowBtn);
+<<<<<<< HEAD
+=======
+      Thread.sleep(2000);
+>>>>>>> newapp
       return new MeetingRoom();
     }
 }

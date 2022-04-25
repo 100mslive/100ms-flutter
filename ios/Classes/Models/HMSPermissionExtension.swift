@@ -9,7 +9,7 @@ import Foundation
 import HMSSDK
 
 class  HMSPermissionExtension {
-    
+
     static func toDictionary(_ permission: HMSPermissions) -> [String: Bool] {
         [
             "change_role": permission.changeRole ?? false,

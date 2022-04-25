@@ -33,6 +33,14 @@
             <artifactId>selenium-java</artifactId>
             <version>3.14.0</version>
         </dependency>
+<<<<<<< HEAD
+=======
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-api</artifactId>
+            <version>3.141.59</version>
+        </dependency>
+>>>>>>> newapp
 
     </dependencies>
 

@@ -8,7 +8,11 @@
     <test name="android_flutter">
         <parameter name="platform" value="android_flutter"/>
         <classes>
+<<<<<<< HEAD
 <!--            <class name="Flutter.testcase.HomePageTest"></class>-->
+=======
+            <class name="Flutter.testcase.HomePageTest"></class>
+>>>>>>> newapp
 <!--            <class name="Flutter.testcase.PreviewPageTest"></class>-->
 <!--            <class name="Flutter.testcase.MeetingRoomTest.TopToolBarTest"></class>-->
 <!--            <class name="Flutter.testcase.MeetingRoomTest.BottomToolBarTest.RaiseHandTest"></class>-->
@@ -18,7 +22,11 @@
 <!--            <class name="Flutter.testcase.MeetingRoomTest.MenuDropDownTest.RecordTest"></class>-->
 <!--            <class name="Flutter.testcase.MeetingRoomTest.MenuDropDownTest.MuteAllTest"></class>-->
 <!--            <class name="Flutter.testcase.MeetingRoomTest.MenuDropDownTest.ChangeNameTest"></class>-->
+<<<<<<< HEAD
             <class name="Flutter.testcase.MeetingRoomTest.MenuDropDownTest.AudioVideoViewTest"></class>
+=======
+<!--            <class name="Flutter.testcase.MeetingRoomTest.MenuDropDownTest.AudioVideoViewTest"></class>-->
+>>>>>>> newapp
 
 
         </classes>

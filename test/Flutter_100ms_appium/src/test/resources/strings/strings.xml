@@ -2,8 +2,28 @@
 <resources>
 <!-- Home page Text -->
     <string name="empty_meeting_url">Enter Room URL</string>
+<<<<<<< HEAD
   <string name="empty_name_space">Enter your Name</string>
   <string name="end_room_heading">End Room</string>
+=======
+    <string name="empty_name_space">Enter your Name</string>
+    <string name="Leave_room_heading">Leave Room?</string>
+    <string name="raise_hand_on">Raised Hand ON</string>
+    <string name="raise_hand_off">Raised Hand OFF</string>
+    <string name="screen_share_started">Screen Share Started</string>
+    <string name="screen_share_stopped">Screen Share Stopped</string>
+    <string name="mute_all_notification">Successfully Muted All</string>
+    <string name="tile_name_(You)"> (You)</string>
+    <string name="name_changed_to">Name Changed to </string>
+    <string name="token_beam">?token=beam_recording, Enter RTMP Url</string>
+    <string name="recording_started">Recording Started</string>
+    <string name="recording_stopped">Recording Stopped</string>
+    <string name="true">true</string>
+    <string name="false">false</string>
+
+
+
+>>>>>>> newapp
 
 
 

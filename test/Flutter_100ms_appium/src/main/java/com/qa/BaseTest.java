@@ -21,7 +21,10 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
+<<<<<<< HEAD
 import org.openqa.selenium.remote.RemoteWebDriver;
+=======
+>>>>>>> newapp
 import org.openqa.selenium.remote.RemoteWebElement;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -353,6 +356,24 @@ public class BaseTest {
 	  return txt;
   }
 
+<<<<<<< HEAD
+=======
+	public String getContextDesc(MobileElement e, String msg) {
+		String txt = null;
+		switch(getPlatform()) {
+			case "Android":
+				txt = getAttribute(e, "content-desc");
+				break;
+			case "iOS":
+				txt = getAttribute(e, "label");
+				break;
+		}
+		utils.log().info(msg + txt);
+		ExtentReport.getTest().log(Status.INFO, msg + txt);
+		return txt;
+	}
+
+>>>>>>> newapp
   public void closeApp() {
 	  ((InteractsWithApps) getDriver()).closeApp();
   }

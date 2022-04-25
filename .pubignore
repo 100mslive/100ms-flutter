@@ -17,3 +17,5 @@ example/ios/pods/
 
 example/android/app/google-services.json
 example/ios/Runner/GoogleService-Info.plist
+*.p8
+release-apps.sh

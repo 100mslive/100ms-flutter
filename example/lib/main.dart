@@ -6,6 +6,7 @@ import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
+import 'package:hmssdk_flutter_example/preview/preview_store.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:wakelock/wakelock.dart';
@@ -15,7 +16,6 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:hmssdk_flutter_example/common/constant.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/user_name_dialog_organism.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
-import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:hmssdk_flutter_example/preview/preview_page.dart';
 import 'package:hmssdk_flutter_example/service/deeplink_service.dart';
 import './logs/custom_singleton_logger.dart';
@@ -36,6 +36,10 @@ class HMSExampleApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData(
+        brightness: Brightness.dark,
+        primaryColor: Color.fromARGB(255, 13, 107, 184),
+      ),
       scaffoldMessengerKey: GlobalKey<ScaffoldMessengerState>(),
       home: HomePage(),
     );
@@ -175,9 +179,8 @@ class _HomePageState extends State<HomePage> {
                               if (res) {
                                 FocusManager.instance.primaryFocus?.unfocus();
                                 Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (_) =>
-                                        ListenableProvider<MeetingStore>(
-                                          create: (ctx) => MeetingStore(),
+                                    builder: (_) => ListenableProvider.value(
+                                          value: PreviewStore(),
                                           child: PreviewPage(
                                             roomId: roomIdController.text,
                                             user: user,

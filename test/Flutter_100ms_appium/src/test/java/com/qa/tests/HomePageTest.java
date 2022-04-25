@@ -61,7 +61,11 @@ public class HomePageTest extends BaseTest {
     }
 
 
+<<<<<<< HEAD
     //@Test
+=======
+    @Test
+>>>>>>> newapp
     public void Test_HomePage() throws InterruptedException, IOException {
       System.out.println("Verify Meeting url space Visible");
         Thread.sleep(2000);

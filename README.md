@@ -25,9 +25,8 @@ Here you will find everything you need to build experiences with video using 100
  The Example app can be found [here](https://github.com/100mslive/100ms-flutter/tree/main/example).
 
  1. In project root, run `flutter pub get`
- 2. Change directory to `example` folder, run `flutter packages pub run build_runner build --delete-conflicting-outputs`
- 3. Run either `flutter build ios` OR `flutter build apk`
- 4. Finally, `flutter run`
+ 2. Change directory to `example` folder & run either `flutter build ios` OR `flutter build apk`
+ 3. Finally, `flutter run`
 
 ## 🚂 Setup Guide
 
@@ -75,6 +74,8 @@ Add following permissions in Android AndroidManifest.xml file
 <uses-permission android:name="android.permission.INTERNET"/>
 
 <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+
+<uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 ```
 
 

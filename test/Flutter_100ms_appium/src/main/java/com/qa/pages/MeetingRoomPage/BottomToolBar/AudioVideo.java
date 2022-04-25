@@ -8,6 +8,7 @@ import org.testng.Assert;
 
 public class AudioVideo extends BaseTest {
 
+<<<<<<< HEAD
     @iOSXCUITFindBy(accessibility = "videoMute")
     @AndroidFindBy(accessibility = "videoMute")
     public static WebElement camBtn;
@@ -28,4 +29,14 @@ public class AudioVideo extends BaseTest {
         Thread.sleep(3000);
     }
 
+=======
+    @iOSXCUITFindBy(accessibility = "Video")
+    @AndroidFindBy(accessibility = "Video")
+    public static WebElement camBtn;
+
+    @iOSXCUITFindBy(accessibility = "Audio")
+    @AndroidFindBy(accessibility = "Audio")
+    public WebElement micBtn;
+
+>>>>>>> newapp
 }

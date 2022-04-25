@@ -61,13 +61,18 @@ public class RaiseHandTest extends BaseTest {
     public void afterMethod() throws InterruptedException {
       sa.assertAll();
       LeaveRoom leaveRoom = new LeaveRoom();
+<<<<<<< HEAD
       leaveRoom.leave_endRoomForAll();
+=======
+      leaveRoom.leave_withoutEndingRoom();
+>>>>>>> newapp
     }
 
     @Test
     public void Test_RaiseHand() throws InterruptedException {
         System.out.println("Verify Raise Hand Feature");
         Thread.sleep(2000);
+<<<<<<< HEAD
       meetingRoom = meetingRoom.goto_meetingRoom_mic_cam(meetingDetail.getJSONObject("valid").getString("meeting_url"),
         meetingDetail.getJSONObject("valid").getString("username"),
         meetingDetail.getJSONObject("camera").getString("ON"),
@@ -80,6 +85,27 @@ public class RaiseHandTest extends BaseTest {
         sa.assertTrue(raiseHand.raiseHandOnTile.isDisplayed());
 
       click(raiseHand.raiseHandOnTile);
+=======
+        meetingRoom = meetingRoom.goto_meetingRoom_mic_cam(meetingDetail.getJSONObject("valid").getString("meeting_url"),
+            meetingDetail.getJSONObject("valid").getString("username"),
+            meetingDetail.getJSONObject("camera").getString("ON"),
+            meetingDetail.getJSONObject("mic").getString("ON"));
+
+        sa.assertTrue(raiseHand.raiseHandBtn.isDisplayed());
+
+        click(raiseHand.raiseHandBtn);
+        sa.assertTrue(raiseHand.raiseHandOnNotifictaion.isDisplayed());
+        String raise_hand_flag = raiseHand.raiseHandOnNotifictaion.getAttribute("content-desc");
+        String raise_hand_text = getStrings().get("raise_hand_on");;
+        sa.assertEquals(raise_hand_flag, raise_hand_text);
+
+        Thread.sleep(2000);
+        click(raiseHand.raiseHandBtn);
+        sa.assertTrue(raiseHand.raiseHandOffNotifictaion.isDisplayed());
+        raise_hand_flag = raiseHand.raiseHandOffNotifictaion.getAttribute("content-desc");
+        raise_hand_text = getStrings().get("raise_hand_off");
+        sa.assertEquals(raise_hand_flag, raise_hand_text);
+>>>>>>> newapp
 
 //        Add negative case
 //        Assert.assertFalse(raiseHand.raiseHandOnTile.isDisplayed());
