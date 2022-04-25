@@ -25,7 +25,7 @@ Here you will find everything you need to build experiences with video using 100
  The Example app can be found [here](https://github.com/100mslive/100ms-flutter/tree/main/example).
 
  1. In project root, run `flutter pub get`
- 2. Run either `flutter build ios` OR `flutter build apk`
+ 2. Change directory to `example` folder & run either `flutter build ios` OR `flutter build apk`
  3. Finally, `flutter run`
 
 ## 🚂 Setup Guide
