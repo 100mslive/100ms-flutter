@@ -6,14 +6,12 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 class PeerTrackNode extends ChangeNotifier {
   HMSPeer peer;
-
   String uid;
-
   HMSVideoTrack? track;
   HMSAudioTrack? audioTrack;
-
   bool isOffscreen;
   int? networkQuality;
+  bool isHighestSpeaker;
 
   PeerTrackNode(
       {required this.peer,
@@ -21,7 +19,8 @@ class PeerTrackNode extends ChangeNotifier {
       this.audioTrack,
       required this.uid,
       this.isOffscreen = false,
-      this.networkQuality = -1});
+      this.networkQuality = -1,
+      this.isHighestSpeaker= false});
 
   @override
   String toString() {

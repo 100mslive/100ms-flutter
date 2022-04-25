@@ -86,6 +86,8 @@ class MeetingStore extends ChangeNotifier
   int firstTimeBuild = 0;
   final DateFormat formatter = DateFormat('d MMM y h:mm:ss a');
 
+  bool isAudioViewOn = false;
+
   void addUpdateListener() {
     HmsSdkManager.hmsSdkInteractor?.addUpdateListener(this);
     // startHMSLogger(HMSLogLevel.VERBOSE, HMSLogLevel.VERBOSE);
@@ -397,15 +399,27 @@ class MeetingStore extends ChangeNotifier
 
   @override
   void onUpdateSpeakers({required List<HMSSpeaker> updateSpeakers}) {
-    if (updateSpeakers.isEmpty) {
-      activeSpeakerIds.clear();
-      return;
-    } else {
+    activeSpeakerIds.forEach((id) {
+      int index = -1;
+      index = peerTracks.indexWhere((peer) => id == peer.uid);
+      if (index != -1) {
+        peerTracks[index].isHighestSpeaker = false;
+        peerTracks[index].notify();
+      }
+    });
+    activeSpeakerIds.clear();
+    if (updateSpeakers.isEmpty != true) {
       updateSpeakers.forEach((speaker) {
-        activeSpeakerIds.add(speaker.peer.peerId + "mainVideo");
+        int index = -1;
+        index = peerTracks.indexWhere(
+            (peer) => speaker.peer.peerId + "mainVideo" == peer.uid);
+        if (index != -1) {
+          peerTracks[index].isHighestSpeaker = true;
+          activeSpeakerIds.add(speaker.peer.peerId + "mainVideo");
+          peerTracks[index].notify();
+        }
       });
     }
-    notifyListeners();
   }
 
   @override
@@ -744,6 +758,11 @@ class MeetingStore extends ChangeNotifier
   void changeTrackStateForRole(bool mute, List<HMSRole>? roles) {
     _hmssdkInteractor.changeTrackStateForRole(
         true, HMSTrackKind.kHMSTrackKindAudio, "regular", roles, this);
+  }
+
+  void setAudioViewStatus() {
+    this.isAudioViewOn = !this.isAudioViewOn;
+    notifyListeners();
   }
 
   @override

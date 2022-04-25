@@ -129,31 +129,12 @@ class _MeetingPageState extends State<MeetingPage>
         );
         break;
       case 5:
-        // audioViewOn = !audioViewOn;
-        // if (audioViewOn) {
-        //   countOfVideoOnBetweenTwo = 0;
-        //   _meetingStore.trackStatus.forEach((key, value) {
-        //     _meetingStore.trackStatus[key] = HMSTrackUpdate.trackMuted;
-        //   });
-        //   videoPreviousState = _meetingStore.isVideoOn;
-        //   _meetingStore.isVideoOn = false;
-        //   _meetingStore.setPlayBackAllowed(false);
-        // } else {
-        //   _meetingStore.peerTracks.forEach((element) {
-        //     _meetingStore.trackStatus[element.peerId] =
-        //         element.track?.isMute ?? false
-        //             ? HMSTrackUpdate.trackMuted
-        //             : HMSTrackUpdate.trackUnMuted;
-        //   });
-        //   _meetingStore.setPlayBackAllowed(true);
-        //   if (countOfVideoOnBetweenTwo == 0) {
-        //     _meetingStore.isVideoOn = videoPreviousState;
-        //   } else
-        //     _meetingStore.isVideoOn =
-        //         !(_meetingStore.localTrack?.isMute ?? true);
-        // }
-        // setState(() {});
-        UtilityComponents.showSnackBarWithString("Coming Soon...", context);
+        _meetingStore.setAudioViewStatus();
+        if (_meetingStore.isAudioViewOn) {
+          _meetingStore.setPlayBackAllowed(false);
+        } else {
+          _meetingStore.setPlayBackAllowed(true);
+        }    
         break;
       case 6:
         // if (!_meetingStore.isActiveSpeakerMode) {
@@ -292,28 +273,48 @@ class _MeetingPageState extends State<MeetingPage>
                             height: MediaQuery.of(context).size.height * 0.78,
                             child: Selector<
                                     MeetingStore,
-                                    Tuple4<List<PeerTrackNode>, bool, int,
-                                        int>>(
-                                selector: (_, meetingStore) => Tuple4(
+                                    Tuple5<List<PeerTrackNode>, bool, int,
+                                        int,bool>>(
+                                selector: (_, meetingStore) => Tuple5(
                                     meetingStore.peerTracks,
                                     meetingStore.isHLSLink,
                                     meetingStore.peerTracks.length,
-                                    meetingStore.screenShareCount),
+                                    meetingStore.screenShareCount,
+                                    meetingStore.isAudioViewOn),
                                 builder: (_, data, __) {
                                   return !data.item2
                                       ? data.item3 == 0
                                           ? Center(
                                               child: Text(
                                                   'Waiting for others to join!'))
-                                          : PageView(
+                                          : data.item5?PageView(
+                                                    physics: PageScrollPhysics(),
+                                                    scrollDirection: Axis.horizontal,
+                                                    children:    
+                                                        gridVideoView(
+                                                            peerTracks:
+                                                                data.item1,
+                                                            audioViewOn:
+                                                                data.item5,
+                                                            itemCount: data.item3,
+                                                            screenShareOn:
+                                                                data.item4,
+                                                            size: size)
+                                                  )
+                                                  :PageView(
                                               physics: PageScrollPhysics(),
                                               scrollDirection: Axis.horizontal,
-                                              children: gridVideoView(
-                                                  peerTracks: data.item1,
-                                                  audioViewOn: audioViewOn,
-                                                  itemCount: data.item3,
-                                                  screenShareOn: data.item4,
-                                                  size: size))
+                                              children:    
+                                                  gridVideoView(
+                                                      peerTracks:
+                                                          data.item1,
+                                                      audioViewOn:
+                                                          data.item5,
+                                                      itemCount: data.item3,
+                                                      screenShareOn:
+                                                          data.item4,
+                                                      size: size)
+                                                ) 
                                       : Selector<MeetingStore, bool>(
                                           selector: (_, meetingStore) =>
                                               meetingStore.hasHlsStarted,
@@ -520,7 +521,7 @@ class _MeetingPageState extends State<MeetingPage>
                                       child: IconButton(
                                           tooltip: 'Video',
                                           iconSize: 24,
-                                          onPressed: (audioViewOn)
+                                          onPressed: (meetingStore.isAudioViewOn)
                                               ? null
                                               : () {
                                                   context
@@ -776,10 +777,10 @@ class _MeetingPageState extends State<MeetingPage>
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    audioViewOn ? "Video View" : "Audio View",
+                    meetingStore.isAudioViewOn ? "Video View" : "Audio View",
                   ),
                   Image.asset(
-                    audioViewOn
+                    meetingStore.isAudioViewOn
                         ? 'assets/icons/video.png'
                         : 'assets/icons/audio.png',
                     color: Colors.white,

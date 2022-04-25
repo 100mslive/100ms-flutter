@@ -10,6 +10,7 @@ import 'package:hmssdk_flutter_example/common/ui/organisms/hand_raise.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/audio_mute_status.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/network_icon_widget.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/peer_name.dart';
+import 'package:hmssdk_flutter_example/common/ui/organisms/video_tile_border.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/video_view.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:hmssdk_flutter_example/meeting/peer_track_node.dart';
@@ -115,6 +116,7 @@ class _VideoTileState extends State<VideoTile> {
                 child: Stack(
                   children: [
                     VideoView(
+                      audioView: widget.audioView,
                       scaleType: widget.scaleType,
                       itemHeight: widget.itemHeight,
                       itemWidth: widget.itemWidth,
@@ -127,14 +129,9 @@ class _VideoTileState extends State<VideoTile> {
                     HandRaise(), //bottom left
                     BRBTag(), //top right
                     NetworkIconWidget(), //top left
-                    AudioMuteStatus(), //bottom center
-                    Container(
-                      height: widget.itemHeight + 110,
-                      width: widget.itemWidth - 4,
-                      decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey, width: 1.0),
-                          borderRadius: BorderRadius.all(Radius.circular(10))),
-                    )
+                    AudioMuteStatus(), 
+                    //bottom center
+                    VideoTileBorder(itemHeight: widget.itemHeight,itemWidth: widget.itemWidth,),
                   ],
                 ),
               ),
