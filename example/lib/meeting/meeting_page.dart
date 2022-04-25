@@ -213,11 +213,15 @@ class _MeetingPageState extends State<MeetingPage>
         isBRB = !isBRB;
         break;
       case 13:
+        _meetingStore.changeStatsVisible();
+        break;
+      case 14:
         _meetingStore.endRoom(false, "Room Ended From Flutter");
         if (_meetingStore.isRoomEnded) {
           Navigator.pop(context);
         }
         break;
+
       default:
         break;
     }
@@ -892,6 +896,19 @@ class _MeetingPageState extends State<MeetingPage>
                 ]),
             value: 12,
           ),
+          PopupMenuItem(
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Stats",
+                    style: TextStyle(
+                        color: meetingStore.isBRB ? Colors.red : Colors.white),
+                  ),
+                  Icon(Icons.bar_chart_outlined),
+                ]),
+            value: 13,
+          ),
           if (meetingStore.localPeer!.role.permissions.endRoom!)
             PopupMenuItem(
               child: Row(
@@ -902,7 +919,7 @@ class _MeetingPageState extends State<MeetingPage>
                     ),
                     Icon(Icons.cancel_schedule_send),
                   ]),
-              value: 13,
+              value: 14,
             ),
         ];
       },
