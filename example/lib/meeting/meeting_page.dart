@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:connectivity_checker/connectivity_checker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hmssdk_flutter_example/common/ui/organisms/grid_audio_view.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/grid_video_view.dart';
 import 'package:hmssdk_flutter_example/hls_viewer/hls_viewer.dart';
 
@@ -134,7 +135,7 @@ class _MeetingPageState extends State<MeetingPage>
           _meetingStore.setPlayBackAllowed(false);
         } else {
           _meetingStore.setPlayBackAllowed(true);
-        }    
+        }
         break;
       case 6:
         // if (!_meetingStore.isActiveSpeakerMode) {
@@ -273,8 +274,8 @@ class _MeetingPageState extends State<MeetingPage>
                             height: MediaQuery.of(context).size.height * 0.78,
                             child: Selector<
                                     MeetingStore,
-                                    Tuple5<List<PeerTrackNode>, bool, int,
-                                        int,bool>>(
+                                    Tuple5<List<PeerTrackNode>, bool, int, int,
+                                        bool>>(
                                 selector: (_, meetingStore) => Tuple5(
                                     meetingStore.peerTracks,
                                     meetingStore.isHLSLink,
@@ -287,34 +288,27 @@ class _MeetingPageState extends State<MeetingPage>
                                           ? Center(
                                               child: Text(
                                                   'Waiting for others to join!'))
-                                          : data.item5?PageView(
-                                                    physics: PageScrollPhysics(),
-                                                    scrollDirection: Axis.horizontal,
-                                                    children:    
-                                                        gridVideoView(
-                                                            peerTracks:
-                                                                data.item1,
-                                                            audioViewOn:
-                                                                data.item5,
-                                                            itemCount: data.item3,
-                                                            screenShareOn:
-                                                                data.item4,
-                                                            size: size)
-                                                  )
-                                                  :PageView(
-                                              physics: PageScrollPhysics(),
-                                              scrollDirection: Axis.horizontal,
-                                              children:    
-                                                  gridVideoView(
-                                                      peerTracks:
-                                                          data.item1,
-                                                      audioViewOn:
-                                                          data.item5,
+                                          : data.item5
+                                              ? PageView(
+                                                  physics: PageScrollPhysics(),
+                                                  scrollDirection:
+                                                      Axis.horizontal,
+                                                  children: gridAudioView(
+                                                      peerTracks: data.item1,
+                                                      audioViewOn: data.item5,
                                                       itemCount: data.item3,
-                                                      screenShareOn:
-                                                          data.item4,
-                                                      size: size)
-                                                ) 
+                                                      screenShareOn: data.item4,
+                                                      size: size))
+                                              : PageView(
+                                                  physics: PageScrollPhysics(),
+                                                  scrollDirection:
+                                                      Axis.horizontal,
+                                                  children: gridVideoView(
+                                                      peerTracks: data.item1,
+                                                      audioViewOn: data.item5,
+                                                      itemCount: data.item3,
+                                                      screenShareOn: data.item4,
+                                                      size: size))
                                       : Selector<MeetingStore, bool>(
                                           selector: (_, meetingStore) =>
                                               meetingStore.hasHlsStarted,
@@ -521,13 +515,14 @@ class _MeetingPageState extends State<MeetingPage>
                                       child: IconButton(
                                           tooltip: 'Video',
                                           iconSize: 24,
-                                          onPressed: (meetingStore.isAudioViewOn)
-                                              ? null
-                                              : () {
-                                                  context
-                                                      .read<MeetingStore>()
-                                                      .switchVideo();
-                                                },
+                                          onPressed:
+                                              (meetingStore.isAudioViewOn)
+                                                  ? null
+                                                  : () {
+                                                      context
+                                                          .read<MeetingStore>()
+                                                          .switchVideo();
+                                                    },
                                           icon: Icon(
                                             data.item2
                                                 ? Icons.videocam
