@@ -75,6 +75,8 @@ Add following permissions in Android AndroidManifest.xml file
 <uses-permission android:name="android.permission.INTERNET"/>
 
 <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+
+<uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 ```
 
 

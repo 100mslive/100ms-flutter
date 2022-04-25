@@ -64,6 +64,11 @@ class PlatformService {
     if (previewListeners.contains(listener)) previewListeners.remove(listener);
   }
 
+  static void startRtcStats() {
+    _channel.invokeMethod(
+        PlatformMethodValues.getName(PlatformMethod.startRtcStats));
+  }
+
   static void addLogsListener(
     HMSLogListener hmsLogListener,
   ) {
@@ -299,9 +304,6 @@ class PlatformService {
           HMSPeer? peer = HMSPeer.fromMap(event.data['peer']);
           HMSPeerUpdate? update = HMSPeerUpdateValues.getHMSPeerUpdateFromName(
               event.data['update']);
-
-          print(
-              "platformSercvice ${update.toString()} ${peer.networkQuality.toString()}");
 
           notifyPreviewListeners(method, {'peer': peer, 'update': update});
           break;
