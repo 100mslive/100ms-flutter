@@ -4,6 +4,7 @@ import 'package:connectivity_checker/connectivity_checker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/grid_audio_view.dart';
+import 'package:hmssdk_flutter_example/common/ui/organisms/grid_hero_view.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/grid_video_view.dart';
 import 'package:hmssdk_flutter_example/hls_viewer/hls_viewer.dart';
 
@@ -138,16 +139,9 @@ class _MeetingPageState extends State<MeetingPage>
         }
         break;
       case 6:
-        // if (!_meetingStore.isActiveSpeakerMode) {
-        //   _meetingStore.setActiveSpeakerList();
-        //   _meetingStore.isActiveSpeakerMode = true;
-        //   UtilityComponents.showSnackBarWithString(
-        //       "Active Speaker Mode", context);
-        // } else {
-        //   _meetingStore.activeSpeakerPeerTrackNodeList.clear();
-        //   _meetingStore.isActiveSpeakerMode = false;
-        // }
         UtilityComponents.showSnackBarWithString("Coming Soon...", context);
+
+        // _meetingStore.setActiveSpeakerMode();
         break;
       case 7:
         // if (_meetingStore.isActiveSpeakerMode) {
@@ -281,7 +275,8 @@ class _MeetingPageState extends State<MeetingPage>
                                     meetingStore.isHLSLink,
                                     meetingStore.peerTracks.length,
                                     meetingStore.screenShareCount,
-                                    meetingStore.isAudioViewOn),
+                                    meetingStore.isAudioViewOn
+                                    ),
                                 builder: (_, data, __) {
                                   return !data.item2
                                       ? data.item3 == 0

@@ -4,10 +4,12 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.media.projection.MediaProjectionManager
 import android.os.Build
+import android.util.Log
 import androidx.annotation.NonNull
-import io.flutter.Log
 
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
@@ -20,6 +22,7 @@ import io.flutter.plugin.common.MethodChannel.Result
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import live.hms.hmssdk_flutter.hms_role_components.AudioParamsExtension
 import live.hms.hmssdk_flutter.hms_role_components.VideoParamsExtension
 import live.hms.hmssdk_flutter.views.HMSVideoViewFactory
@@ -40,6 +43,9 @@ import live.hms.video.sdk.models.enums.HMSTrackUpdate
 import live.hms.video.sdk.models.role.HMSRole
 import live.hms.video.sdk.models.trackchangerequest.HMSChangeTrackStateRequest
 import live.hms.video.utils.HMSLogger
+import live.hms.video.virtualbackground.HMSVirtualBackground
+import java.io.IOException
+import java.io.InputStream
 import java.lang.Exception
 
 
@@ -911,6 +917,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
 
     private fun changeName(call: MethodCall, result: Result) {
         val name = call.argument<String>("name");
+        addVirtualBackGround();
         hmssdk.changeName(
             name = name!!,
             hmsActionResultListener = HMSCommonAction.getActionListener(result)
@@ -973,4 +980,61 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         val peer: HMSPeer? = getPeerById(peerId!!)
         result.success(HMSTrackExtension.toDictionary(peer?.getTrackById(trackId!!)))
     }
+
+    private fun addVirtualBackGround() {
+        val imageBitmap = getBitmapFromAsset(activity.applicationContext,"flutter_assets/assets/icons/1.jpg")
+        Log.i("imageBitmap",(imageBitmap).toString())
+        val virtualBackgroundPlugin = HMSVirtualBackground(hmssdk, imageBitmap!!)
+        try {
+            virtualBackgroundPlugin.init()
+            virtualBackgroundPlugin.setBackground(imageBitmap)
+            Log.i("Background set",(imageBitmap).toString())
+            hmssdk.addPlugin(virtualBackgroundPlugin, object : HMSActionResultListener{
+                override fun onError(error: HMSException) {
+                    // an error occurred
+                }
+                override fun onSuccess() {
+                    // added successfully
+                }
+            })
+        } catch (e: Exception) {
+            Log.i("Exception", e.toString())
+        }
+
+    }
+
+    private fun getBitmapFromAsset(context: Context, filename: String): Bitmap? {
+
+        val assetManager = context.assets
+        val instr: InputStream
+        var bitmap: Bitmap? = null
+        try {
+            context.assets.list("flutter_assets/assets")?.forEach {
+                Log.i("Assets_flutter",it)
+            }
+            context.assets.list("flutter_assets/assets/icons")?.forEach {
+                Log.i("Assets_flutter_1",it)
+            }
+            instr = assetManager.open(filename)
+            bitmap = BitmapFactory.decodeStream(instr)
+        } catch (e: IOException) {
+            // error reading virtual background image
+        }
+        return bitmap
+    }
+
+//    fun getBitmapFromURL(src: String?): Bitmap? {
+//        return try {
+//            val url = URL(src)
+//            val connection: HttpURLConnection = url
+//                .openConnection() as HttpURLConnection
+//            connection.setDoInput(true)
+//            connection.connect()
+//            val input: InputStream = connection.getInputStream()
+//            BitmapFactory.decodeStream(input)
+//        } catch (e: IOException) {
+//            e.printStackTrace()
+//            null
+//        }
+//    }
 }
