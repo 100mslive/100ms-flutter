@@ -14,6 +14,7 @@ enum HMSLogLevel {
   Unknown
 }
 
+///HMSLogLevel for android and ios
 extension HMSLogLevelValue on HMSLogLevel {
   static HMSLogLevel getHMSTrackKindFromName(String name) {
     switch (name) {

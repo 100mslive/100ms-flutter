@@ -8,9 +8,15 @@ enum HMSPeerUpdate {
 
   ///when peer's role is changed
   roleUpdated,
+
+  ///when peer's metadata changed
   metadataChanged,
+
+  ///when peer's name change
   nameChanged,
   defaultUpdate,
+
+  ///Peer's network quality updates
   networkQualityUpdated
 }
 

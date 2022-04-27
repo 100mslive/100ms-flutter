@@ -1,6 +1,9 @@
 // Project imports:
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
+///100ms HMSRemotelVideoTrack
+///
+///[HMSLocalVideoTrack] contains the remote peer video track infomation.
 class HMSRemoteVideoTrack extends HMSVideoTrack {
   HMSRemoteVideoTrack({
     required bool isDegraded,

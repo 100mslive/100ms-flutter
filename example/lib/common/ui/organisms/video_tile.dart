@@ -10,11 +10,13 @@ import 'package:hmssdk_flutter_example/common/ui/organisms/hand_raise.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/audio_mute_status.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/network_icon_widget.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/peer_name.dart';
+import 'package:hmssdk_flutter_example/common/ui/organisms/rtc_stats_view.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/video_view.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:hmssdk_flutter_example/meeting/peer_track_node.dart';
-import 'package:visibility_detector/visibility_detector.dart';
+import 'package:hmssdk_flutter_example/model/rtc_stats.dart';
 import 'package:provider/provider.dart';
+import 'package:focus_detector/focus_detector.dart';
 
 class VideoTile extends StatefulWidget {
   final double itemHeight;
@@ -49,16 +51,15 @@ class _VideoTileState extends State<VideoTile> {
     bool removePeerPermission =
         _meetingStore.localPeer?.role.permissions.removeOthers ?? false;
 
-    return VisibilityDetector(
-      onVisibilityChanged: (VisibilityInfo info) {
-        if (_meetingStore.isRoomEnded) return;
-        var visiblePercentage = info.visibleFraction * 100;
-        var peerTrackNode = Provider.of<PeerTrackNode>(context, listen: false);
-        if (visiblePercentage <= 40) {
-          peerTrackNode.setOffScreenStatus(true);
-        } else {
-          peerTrackNode.setOffScreenStatus(false);
-        }
+    return FocusDetector(
+      onFocusLost: () {
+        if(mounted)
+        Provider.of<PeerTrackNode>(context, listen: false)
+            .setOffScreenStatus(true);
+      },
+      onFocusGained: () {
+        Provider.of<PeerTrackNode>(context, listen: false)
+            .setOffScreenStatus(false);
       },
       key: Key(context.read<PeerTrackNode>().uid),
       child: context.read<PeerTrackNode>().uid.contains("mainVideo")
@@ -128,6 +129,8 @@ class _VideoTileState extends State<VideoTile> {
                     BRBTag(), //top right
                     NetworkIconWidget(), //top left
                     AudioMuteStatus(), //bottom center
+                    RTCStatsView(
+                        isLocal: context.read<PeerTrackNode>().peer.isLocal),
                     Container(
                       height: widget.itemHeight + 110,
                       width: widget.itemWidth - 4,
