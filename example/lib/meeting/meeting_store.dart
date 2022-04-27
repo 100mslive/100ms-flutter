@@ -89,6 +89,8 @@ class MeetingStore extends ChangeNotifier
   int firstTimeBuild = 0;
   final DateFormat formatter = DateFormat('d MMM y h:mm:ss a');
 
+  bool isVirtualBackgroundActive = false;
+
   void addUpdateListener() {
     HmsSdkManager.hmsSdkInteractor?.addUpdateListener(this);
     // startHMSLogger(HMSLogLevel.VERBOSE, HMSLogLevel.VERBOSE);
@@ -753,6 +755,15 @@ class MeetingStore extends ChangeNotifier
         true, HMSTrackKind.kHMSTrackKindAudio, "regular", roles, this);
   }
 
+  void switchVirtualBackground() {
+    if (isVirtualBackgroundActive) {
+      _hmssdkInteractor.removeVirtualBackground(this);
+    } else {
+      _hmssdkInteractor.addVirtualBackground(this);
+    }
+    isVirtualBackgroundActive = !isVirtualBackgroundActive;
+  }
+
   @override
   void onLocalAudioStats(
       {required HMSLocalAudioStats hmsLocalAudioStats,
@@ -946,6 +957,12 @@ class MeetingStore extends ChangeNotifier
         this.event = "Screen Share Stopped";
         isScreenShareActive();
         break;
+      case HMSActionResultListenerMethod.addVirtualBackground:
+        // TODO: Handle this case.
+        break;
+      case HMSActionResultListenerMethod.removeVirtualBackground:
+        // TODO: Handle this case.
+        break;
     }
   }
 
@@ -1017,6 +1034,12 @@ class MeetingStore extends ChangeNotifier
 
       case HMSActionResultListenerMethod.stopScreenShare:
         isScreenShareActive();
+        break;
+      case HMSActionResultListenerMethod.addVirtualBackground:
+        // TODO: Handle this case.
+        break;
+      case HMSActionResultListenerMethod.removeVirtualBackground:
+        // TODO: Handle this case.
         break;
     }
   }

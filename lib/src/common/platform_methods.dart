@@ -131,7 +131,9 @@ enum PlatformMethod {
 
   ///Get track with the help of trackId
   getTrackById,
-  startRtcStats
+  startRtcStats,
+  addVirtualBackground,
+  removeVirtualBackground
 }
 
 extension PlatformMethodValues on PlatformMethod {
@@ -294,6 +296,10 @@ extension PlatformMethodValues on PlatformMethod {
         return "get_track_by_id";
       case PlatformMethod.startRtcStats:
         return "start_rtc_stats";
+      case PlatformMethod.addVirtualBackground:
+        return "add_virtual_background";
+      case PlatformMethod.removeVirtualBackground:
+        return "remove_virtual_background";
       default:
         return 'unknown';
     }
@@ -462,6 +468,10 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.getAllTracks;
       case "start_rtc_stats":
         return PlatformMethod.startRtcStats;
+      case "add_virtual_background":
+        return PlatformMethod.addVirtualBackground;
+      case "remove_virtual_background":
+        return PlatformMethod.removeVirtualBackground;
       default:
         return PlatformMethod.unknown;
     }

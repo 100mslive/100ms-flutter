@@ -264,4 +264,11 @@ class HMSSDKInteractor {
     return await hmsSDK.getPeers();
   }
 
+  void addVirtualBackground(HMSActionResultListener hmsActionResultListener) {
+    hmsSDK.addVirtualBackground(hmsActionResultListener:hmsActionResultListener);
+  }
+
+  void removeVirtualBackground(HMSActionResultListener hmsActionResultListener) {
+    hmsSDK.removeVirtualBackground(hmsActionResultListener:hmsActionResultListener);
+  }
 }

@@ -17,5 +17,7 @@ enum HMSActionResultListenerMethod {
   hlsStreamingStopped,
   startScreenShare,
   stopScreenShare,
+  addVirtualBackground,
+  removeVirtualBackground,
   unknown
 }

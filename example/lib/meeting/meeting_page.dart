@@ -221,7 +221,9 @@ class _MeetingPageState extends State<MeetingPage>
           Navigator.pop(context);
         }
         break;
-
+      case 15:
+        _meetingStore.switchVirtualBackground();
+        break;
       default:
         break;
     }
@@ -920,6 +922,18 @@ class _MeetingPageState extends State<MeetingPage>
                     Icon(Icons.cancel_schedule_send),
                   ]),
               value: 14,
+            ),
+            if(Platform.isAndroid)
+            PopupMenuItem(
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      meetingStore.isVirtualBackgroundActive?"Disable VB":"Enable VB",
+                    ),
+                    Icon(Icons.blur_on),
+                  ]),
+              value: 15,
             ),
         ];
       },

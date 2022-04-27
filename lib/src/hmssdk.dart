@@ -700,7 +700,7 @@ class HMSSDK with WidgetsBindingObserver {
     PlatformService.removePreviewListener(listener);
   }
 
-///Method to start HMSLogger for logs
+  ///Method to start HMSLogger for logs
   void startHMSLogger(
       {required HMSLogLevel webRtclogLevel, required HMSLogLevel logLevel}) {
     PlatformService.invokeMethod(PlatformMethod.startHMSLogger, arguments: {
@@ -720,12 +720,50 @@ class HMSSDK with WidgetsBindingObserver {
     PlatformService.addLogsListener(hmsLogListener);
   }
 
-///Method to remove Log Listener
+  ///Method to remove Log Listener
   void removeLogListener({required HMSLogListener hmsLogListener}) {
     PlatformService.removeLogsListener(hmsLogListener);
   }
 
-///To maintain the app state in background and foreground state
+  ///To add Virtual Background for local Peer
+  void addVirtualBackground(
+      {HMSActionResultListener? hmsActionResultListener}) async{
+        
+        var result = await PlatformService.invokeMethod(
+        PlatformMethod.addVirtualBackground,);
+
+    if (hmsActionResultListener != null) {
+      if (result == null)
+        hmsActionResultListener.onSuccess(arguments: {
+           "message":"Virtual Background Added Successfully"
+        }, methodType: HMSActionResultListenerMethod.addVirtualBackground);
+      else
+        hmsActionResultListener.onException(
+            methodType: HMSActionResultListenerMethod.addVirtualBackground,
+            hmsException: HMSException.fromMap(result["error"]));
+    }
+  }
+
+  ///To remove Virtual Background for local Peer
+  void removeVirtualBackground(
+      {HMSActionResultListener? hmsActionResultListener}) async{
+        
+        var result = await PlatformService.invokeMethod(
+        PlatformMethod.removeVirtualBackground,);
+
+    if (hmsActionResultListener != null) {
+      if (result == null)
+        hmsActionResultListener.onSuccess(arguments: {
+           "message":"Virtual Background removed Successfully"
+        }, methodType: HMSActionResultListenerMethod.removeVirtualBackground);
+      else
+        hmsActionResultListener.onException(
+            methodType: HMSActionResultListenerMethod.removeVirtualBackground,
+            hmsException: HMSException.fromMap(result["error"]));
+    }
+  }
+
+  ///To maintain the app state in background and foreground state
   bool isLocalVideoOn = false;
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) async {
