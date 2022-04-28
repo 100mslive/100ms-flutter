@@ -5,7 +5,6 @@ import com.qa.pages.MeetingRoomPage.MeetingRoom;
 import io.appium.java_client.MobileElement;
 import io.appium.java_client.pagefactory.AndroidFindBy;
 import io.appium.java_client.pagefactory.iOSXCUITFindBy;
-import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 
 public class ScreenShare extends MeetingRoom {
@@ -33,6 +32,10 @@ public class ScreenShare extends MeetingRoom {
     @iOSXCUITFindBy(accessibility = "Screen Share Stopped")
     @AndroidFindBy(accessibility = "Screen Share Stopped")
     public MobileElement screenShareOffNotifictaion;
+
+    @iOSXCUITFindBy(accessibility = "Raised Hand OFF")
+    @AndroidFindBy(accessibility = "Expand")
+    public MobileElement expand;
 
     public void ss_start_now_permission() throws InterruptedException {
         String platform = BaseTest.selectPlatform();

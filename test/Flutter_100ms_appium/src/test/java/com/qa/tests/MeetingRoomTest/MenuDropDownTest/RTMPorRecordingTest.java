@@ -5,11 +5,9 @@ import com.qa.BaseTest;
 import com.qa.pages.MeetingRoomPage.BottomToolBar.LeaveRoom;
 import com.qa.pages.MeetingRoomPage.MenuDropDown.ScreenShare;
 import com.qa.pages.MeetingRoomPage.TopToolBar;
-import com.qa.pages.PageFlowFunc;
 import com.qa.utils.TestUtils;
 import org.json.JSONObject;
 import org.json.JSONTokener;
-import org.testng.Assert;
 import org.testng.annotations.*;
 import org.testng.asserts.SoftAssert;
 
@@ -59,7 +57,7 @@ public class RTMPorRecordingTest extends BaseTest {
     public void afterMethod() throws InterruptedException {
       sa.assertAll();
       LeaveRoom leaveRoom = new LeaveRoom();
-      leaveRoom.leave_endRoomForAll();
+      leaveRoom.leave_withoutEndingRoom();
     }
 
     @Test

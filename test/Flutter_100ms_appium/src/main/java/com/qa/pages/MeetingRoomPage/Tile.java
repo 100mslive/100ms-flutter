@@ -3,7 +3,6 @@ package com.qa.pages.MeetingRoomPage;
 import io.appium.java_client.MobileElement;
 import io.appium.java_client.pagefactory.AndroidFindBy;
 import io.appium.java_client.pagefactory.iOSXCUITFindBy;
-import org.openqa.selenium.WebElement;
 
 public class Tile extends MeetingRoom {
 
@@ -31,5 +30,7 @@ public class Tile extends MeetingRoom {
     @AndroidFindBy(accessibility =  "Remove Peer" )
     public static MobileElement peer_remove_peer;
 
-
+    @iOSXCUITFindBy(accessibility = "Remove Peer")
+    @AndroidFindBy(accessibility =  "Remove Peer" )
+    public static MobileElement rasieHand_myTile;
 }

@@ -4,10 +4,7 @@ import com.qa.BaseTest;
 import io.appium.java_client.MobileElement;
 import io.appium.java_client.pagefactory.AndroidFindBy;
 import io.appium.java_client.pagefactory.iOSXCUITFindBy;
-<<<<<<< HEAD
-import org.openqa.selenium.WebElement;
-=======
->>>>>>> newapp
+
 import org.testng.Assert;
 
 public class HomePage extends BaseTest {
@@ -74,10 +71,7 @@ public class HomePage extends BaseTest {
       put_participant_name(name);
       click(nameOKbtn);
       accept_permission();
-<<<<<<< HEAD
-=======
       Thread.sleep(5000);
->>>>>>> newapp
       return new PreviewPage();
     }
 

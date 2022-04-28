@@ -2,10 +2,7 @@
 <resources>
 <!-- Home page Text -->
     <string name="empty_meeting_url">Enter Room URL</string>
-<<<<<<< HEAD
-  <string name="empty_name_space">Enter your Name</string>
-  <string name="end_room_heading">End Room</string>
-=======
+
     <string name="empty_name_space">Enter your Name</string>
     <string name="Leave_room_heading">Leave Room?</string>
     <string name="raise_hand_on">Raised Hand ON</string>
@@ -20,12 +17,6 @@
     <string name="recording_stopped">Recording Stopped</string>
     <string name="true">true</string>
     <string name="false">false</string>
-
-
-
->>>>>>> newapp
-
-
 
 
 </resources>

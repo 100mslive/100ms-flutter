@@ -64,7 +64,7 @@ public class ChangeNameTest extends BaseTest {
         leaveRoom.leave_withoutEndingRoom();
     }
 
-    @Test
+    //@Test
     public void Test_ChangeName() throws InterruptedException {
         System.out.println("Verify Change Name");
         Thread.sleep(2000);

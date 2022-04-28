@@ -3,12 +3,9 @@ package com.qa.tests;
 
 import com.qa.BaseTest;
 import com.qa.pages.HomePage;
-import com.qa.pages.PageFlowFunc;
-import com.qa.pages.PreviewPage;
 import com.qa.utils.TestUtils;
 import org.json.JSONObject;
 import org.json.JSONTokener;
-import org.testng.Assert;
 import org.testng.annotations.*;
 import org.testng.asserts.SoftAssert;
 
@@ -61,11 +58,7 @@ public class HomePageTest extends BaseTest {
     }
 
 
-<<<<<<< HEAD
-    //@Test
-=======
     @Test
->>>>>>> newapp
     public void Test_HomePage() throws InterruptedException, IOException {
       System.out.println("Verify Meeting url space Visible");
         Thread.sleep(2000);

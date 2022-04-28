@@ -4,7 +4,6 @@ import com.qa.BaseTest;
 import io.appium.java_client.pagefactory.AndroidFindBy;
 import io.appium.java_client.pagefactory.iOSXCUITFindBy;
 import org.openqa.selenium.WebElement;
-import org.testng.Assert;
 
 public class RTMPorRecording extends BaseTest {
 
@@ -33,7 +32,7 @@ public class RTMPorRecording extends BaseTest {
     public WebElement recordCancelBtn;
 
     @iOSXCUITFindBy(accessibility = "b beam")
-    @AndroidFindBy(accessibility = "b beam")
+    @AndroidFindBy(accessibility = "B Beam")
     public WebElement beamBot;
 
     @iOSXCUITFindBy(accessibility = "Recording Started")

@@ -4,7 +4,6 @@ import com.qa.BaseTest;
 import io.appium.java_client.pagefactory.AndroidFindBy;
 import io.appium.java_client.pagefactory.iOSXCUITFindBy;
 import org.openqa.selenium.WebElement;
-import org.testng.Assert;
 
 public class Chat extends BaseTest {
 
@@ -29,12 +28,4 @@ public class Chat extends BaseTest {
     @AndroidFindBy(accessibility = "Everyone")
     public WebElement chatCrossBtn;
 
-<<<<<<< HEAD
-    public void click_chatBtn() throws InterruptedException {
-        Assert.assertTrue(chatBtn.isDisplayed());
-        chatBtn.click();
-        Thread.sleep(3000);
-    }
-=======
->>>>>>> newapp
 }

@@ -69,6 +69,8 @@ public class ScreenShareTest extends BaseTest {
           meetingDetail.getJSONObject("camera").getString("ON"),
           meetingDetail.getJSONObject("mic").getString("ON"));
 
+        sa.assertTrue(screenShare.expand.isDisplayed());
+        click(screenShare.expand);
         sa.assertTrue(screenShare.screenShareBtn.isDisplayed());
         click(screenShare.screenShareBtn);
 
@@ -81,22 +83,29 @@ public class ScreenShareTest extends BaseTest {
 //        sa.assertFalse(screenShare.screenShareTile.isDisplayed());
 
 //        sa.assertFalse(screenShare.screenShareLogo.isDisplayed());
+      sa.assertTrue(screenShare.expand.isDisplayed());
+      click(screenShare.expand);
+      click(screenShare.expand);
       click(screenShare.screenShareBtn);
       sa.assertTrue(screenShare.screenShareStartNowBtn.isDisplayed());
       click(screenShare.screenShareStartNowBtn);
+
+      click(screenShare.expand);
       sa.assertTrue(screenShare.screenShareTile.isDisplayed());
 
-      sa.assertTrue(screenShare.screenShareOnNotifictaion.isDisplayed());
-      String flag = screenShare.screenShareOnNotifictaion.getAttribute("content-desc");
-      String screen_share_text = getStrings().get("screen_share_started");;
-      sa.assertEquals(flag, screen_share_text);
+//      sa.assertTrue(screenShare.screenShareOnNotifictaion.isDisplayed());
+//      String flag = screenShare.screenShareOnNotifictaion.getAttribute("content-desc");
+//      String screen_share_text = getStrings().get("screen_share_started");;
+//      sa.assertEquals(flag, screen_share_text);
 
       Thread.sleep(5000);
+      click(screenShare.expand);
       click(screenShare.screenShareBtn);
-      sa.assertTrue(screenShare.screenShareOffNotifictaion.isDisplayed());
-      flag = screenShare.screenShareOffNotifictaion.getAttribute("content-desc");
-      screen_share_text = getStrings().get("screen_share_stopped");;
-      sa.assertEquals(flag, screen_share_text);
+      click(screenShare.expand);
+//      sa.assertTrue(screenShare.screenShareOffNotifictaion.isDisplayed());
+//      flag = screenShare.screenShareOffNotifictaion.getAttribute("content-desc");
+//      screen_share_text = getStrings().get("screen_share_stopped");;
+//      sa.assertEquals(flag, screen_share_text);
 
     }
 

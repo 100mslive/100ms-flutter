@@ -2,12 +2,11 @@ package com.qa.tests;
 
 import com.qa.BaseTest;
 import com.qa.pages.HomePage;
-import com.qa.pages.PageFlowFunc;
+import com.qa.pages.MeetingRoomPage.BottomToolBar.LeaveRoom;
 import com.qa.pages.PreviewPage;
 import com.qa.utils.TestUtils;
 import org.json.JSONObject;
 import org.json.JSONTokener;
-import org.testng.Assert;
 import org.testng.annotations.*;
 import org.testng.asserts.SoftAssert;
 
@@ -54,8 +53,10 @@ public class PreviewPageTest extends BaseTest {
     }
 
     @AfterMethod
-    public void afterMethod() {
+    public void afterMethod() throws InterruptedException {
       sa.assertAll();
+      LeaveRoom leaveRoom = new LeaveRoom();
+      leaveRoom.leave_withoutEndingRoom();
     }
 
     @Test
@@ -72,8 +73,8 @@ public class PreviewPageTest extends BaseTest {
 
         sa.assertTrue(previewPage.micBtn.isDisplayed());
         sa.assertTrue(previewPage.joinNowBtn.isDisplayed());
-        sa.assertTrue(previewPage.backBtn.isDisplayed());
-        sa.assertTrue(previewPage.previewPageHeading.isDisplayed());
+//        sa.assertTrue(previewPage.backBtn.isDisplayed());
+//        sa.assertTrue(previewPage.previewPageHeading.isDisplayed());
 
         click(previewPage.camBtn);
         click(previewPage.micBtn);

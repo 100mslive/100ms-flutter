@@ -6,11 +6,8 @@
 
 	"valid":{
 		"username":"Ronit",
-<<<<<<< HEAD
-=======
         "new_username": "Ronit New Name",
->>>>>>> newapp
-		"meeting_url":"https://ronitroy-xyz.app.100ms.live/meeting/kfg-ahl-lxm"
+		"meeting_url":"https://qaroy1.qa-app.100ms.live/meeting/ocu-ubk-oyu"
 	},
 
   "camera":{

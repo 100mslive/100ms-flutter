@@ -72,11 +72,7 @@ public class TestListener implements ITestListener {
 		BaseTest base = new BaseTest();
 		ExtentReport.startTest(result.getName(), result.getMethod().getDescription())
 		.assignCategory(base.getPlatform() + "_" + base.getDeviceName())
-<<<<<<< HEAD
-		.assignAuthor("100ms_RN");
-=======
 		.assignAuthor("100ms_Flutter");
->>>>>>> newapp
 	}
 
 	@Override

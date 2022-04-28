@@ -1,0 +1,33 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+
+<suite name="Suite" verbose="1">
+    <listeners>
+        <listener class-name="com.qa.listeners.TestListener" />
+    </listeners>
+    <test name="flutter">
+
+        <parameter name="emulator" value="true" />
+        <parameter name="platformName" value="Android" />
+<!--        <parameter name="udid" value="replace_with_device_udid" />-->
+        <parameter name="deviceName" value="Pixel_5_API_30" />
+        <parameter name="systemPort" value="10000" />
+        <parameter name="chromeDriverPort" value="11000" />
+
+
+        <classes>
+            <class name="com.qa.tests.HomePageTest" ></class>
+        </classes>
+    </test>
+<!--    <test name="iPhone11">-->
+<!--        <listeners>-->
+<!--            <listener class-name="com.qa.listeners.TestListener" />-->
+<!--        </listeners>-->
+<!--        <parameter name="platformName" value="iOS" />-->
+<!--        <parameter name="udid" value="63E2D54C-CA63-4ECA-89C2-61F2F41EE2F7" />-->
+<!--        <parameter name="deviceName" value="iPhone 12 Pro Max" />-->
+<!--        <parameter name="wdaLocalPort" value="10001" />-->
+<!--        <parameter name="webkitDebugProxyPort" value="11001" />-->
+<!--        <classes>-->
+<!--        </classes>-->
+<!--    </test>-->
+</suite> <!-- Suite -->
