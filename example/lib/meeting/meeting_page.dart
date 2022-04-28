@@ -1,5 +1,6 @@
 //Package imports
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:connectivity_checker/connectivity_checker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -21,6 +22,7 @@ import 'package:provider/provider.dart';
 // ignore: implementation_imports
 import 'package:tuple/tuple.dart';
 import 'meeting_participants_list.dart';
+import 'package:image_picker/image_picker.dart';
 
 class MeetingPage extends StatefulWidget {
   final String roomId;
@@ -222,7 +224,16 @@ class _MeetingPageState extends State<MeetingPage>
         }
         break;
       case 15:
-        _meetingStore.switchVirtualBackground();
+        if (_meetingStore.isVirtualBackgroundActive) {
+          _meetingStore.removeVirtualBackground();
+        } else {
+          final image =
+              await ImagePicker().pickImage(source: ImageSource.gallery);
+          if (image == null) return;
+          Uint8List imageBitmap = await image.readAsBytes();
+          _meetingStore.addVirtualBackground(imageBitmap);
+        }
+
         break;
       default:
         break;
@@ -923,15 +934,17 @@ class _MeetingPageState extends State<MeetingPage>
                   ]),
               value: 14,
             ),
-            if(Platform.isAndroid)
+          if (Platform.isAndroid)
             PopupMenuItem(
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      meetingStore.isVirtualBackgroundActive?"Disable VB":"Enable VB",
+                      meetingStore.isVirtualBackgroundActive
+                          ? "Disable VB"
+                          : "Enable VB",
                     ),
-                    Icon(Icons.blur_on),
+                    Icon(meetingStore.isVirtualBackgroundActive?Icons.blur_off:Icons.blur_on),
                   ]),
               value: 15,
             ),

@@ -170,7 +170,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
                 getAllTracks(call, result)
             }
             "add_virtual_background" -> {
-                addVirtualBackGround(result)
+                addVirtualBackGround(call,result)
             }
             "remove_virtual_background" -> {
                 removeVirtualBackground(result)
@@ -1085,61 +1085,27 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
     }
 
     private var virtualBackgroundPlugin : HMSVirtualBackground? = null ;
+    private fun addVirtualBackGround(call: MethodCall, result: Result) {
+        var pluginFrameRate : Int? = call.argument<Int?>("plugin-frame-rate")
+        var imageUint : ByteArray? = call.argument<ByteArray?>("image_bitmap")
+        val imageBitmap = BitmapFactory.decodeByteArray(imageUint!!,0,imageUint!!.size);
 
-    private fun addVirtualBackGround(result: Result) {
-        val imageBitmap = getBitmapFromAsset(activity.applicationContext,"flutter_assets/assets/icons/1.jpg")
-        Log.i("imageBitmap",(imageBitmap).toString())
         virtualBackgroundPlugin  = HMSVirtualBackground(hmssdk, imageBitmap!!)
         try {
-            virtualBackgroundPlugin!!.init()
             virtualBackgroundPlugin!!.setBackground(imageBitmap)
             Log.i("Background set",(imageBitmap).toString())
 
             hmssdk.addPlugin(virtualBackgroundPlugin!!,
-                hmsActionResultListener = HMSCommonAction.getActionListener(result))
+                hmsActionResultListener = HMSCommonAction.getActionListener(result),pluginFrameRate!!)
         } catch (e: Exception) {
             Log.i("Exception", e.toString())
         }
 
     }
 
-
     private fun removeVirtualBackground(result:Result){
         hmssdk.removePlugin(virtualBackgroundPlugin!!,hmsActionResultListener = HMSCommonAction.getActionListener(result));
     }
-    private fun getBitmapFromAsset(context: Context, filename: String): Bitmap? {
 
-        val assetManager = context.assets
-        val instr: InputStream
-        var bitmap: Bitmap? = null
-        try {
-            context.assets.list("flutter_assets/assets")?.forEach {
-                Log.i("Assets_flutter",it)
-            }
-            context.assets.list("flutter_assets/assets/icons")?.forEach {
-                Log.i("Assets_flutter_1",it)
-            }
-            instr = assetManager.open(filename)
-            bitmap = BitmapFactory.decodeStream(instr)
-        } catch (e: IOException) {
-            // error reading virtual background image
-        }
-        return bitmap
-    }
-
-//    fun getBitmapFromURL(src: String?): Bitmap? {
-//        return try {
-//            val url = URL(src)
-//            val connection: HttpURLConnection = url
-//                .openConnection() as HttpURLConnection
-//            connection.setDoInput(true)
-//            connection.connect()
-//            val input: InputStream = connection.getInputStream()
-//            BitmapFactory.decodeStream(input)
-//        } catch (e: IOException) {
-//            e.printStackTrace()
-//            null
-//        }
-//    }
 
     }

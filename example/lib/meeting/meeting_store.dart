@@ -1,7 +1,10 @@
 //Package imports
 
+import 'dart:typed_data';
+
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'package:hmssdk_flutter_example/model/rtc_stats.dart';
 import 'package:intl/intl.dart';
 
@@ -11,6 +14,7 @@ import 'package:hmssdk_flutter_example/meeting/hms_sdk_interactor.dart';
 import 'package:hmssdk_flutter_example/meeting/peer_track_node.dart';
 import 'package:hmssdk_flutter_example/manager/HmsSdkManager.dart';
 import 'package:hmssdk_flutter_example/service/room_service.dart';
+import 'package:path_provider/path_provider.dart';
 
 class MeetingStore extends ChangeNotifier
     implements HMSUpdateListener, HMSActionResultListener {
@@ -755,13 +759,14 @@ class MeetingStore extends ChangeNotifier
         true, HMSTrackKind.kHMSTrackKindAudio, "regular", roles, this);
   }
 
-  void switchVirtualBackground() {
-    if (isVirtualBackgroundActive) {
+  void addVirtualBackground(Uint8List imageBitmap)async{
+      _hmssdkInteractor.addVirtualBackground(imageBitmap,10,this);
+      isVirtualBackgroundActive = !isVirtualBackgroundActive;
+  }
+
+  void removeVirtualBackground() async {
+      isVirtualBackgroundActive = !isVirtualBackgroundActive;
       _hmssdkInteractor.removeVirtualBackground(this);
-    } else {
-      _hmssdkInteractor.addVirtualBackground(this);
-    }
-    isVirtualBackgroundActive = !isVirtualBackgroundActive;
   }
 
   @override

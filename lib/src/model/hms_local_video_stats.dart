@@ -33,6 +33,6 @@ class HMSLocalVideoStats {
         bytesSent: map["bytes_sent"]??0,
         bitrate: map["bitrate"]??0.00,
         frameRate: map["frame_rate"]??0.0,
-        resolution: HMSVideoResolution.fromMap(map['resolution']));
+        resolution: map['resolution']==null?HMSVideoResolution(height: 0, width: 0):HMSVideoResolution.fromMap(map['resolution']));
   }
 }

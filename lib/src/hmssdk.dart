@@ -5,6 +5,7 @@
 ///All methods related to meeting, preview and their listeners are present here.
 
 // Project imports:
+import 'dart:typed_data';
 import 'package:flutter/widgets.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter/src/manager/hms_sdk_manager.dart';
@@ -727,10 +728,18 @@ class HMSSDK with WidgetsBindingObserver {
 
   ///To add Virtual Background for local Peer
   void addVirtualBackground(
-      {HMSActionResultListener? hmsActionResultListener}) async{
+      { required Uint8List imageBitmap,
+        int? pluginFrameRate,
+        HMSActionResultListener? hmsActionResultListener}) async{
         
+      var arguments = {
+      "image_bitmap":imageBitmap,
+      "plugin-frame-rate":pluginFrameRate??10
+      };
+
         var result = await PlatformService.invokeMethod(
-        PlatformMethod.addVirtualBackground,);
+        PlatformMethod.addVirtualBackground,
+        arguments: arguments);
 
     if (hmsActionResultListener != null) {
       if (result == null)

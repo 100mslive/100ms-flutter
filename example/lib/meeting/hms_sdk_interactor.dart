@@ -1,5 +1,6 @@
 //Project imports
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
@@ -264,8 +265,8 @@ class HMSSDKInteractor {
     return await hmsSDK.getPeers();
   }
 
-  void addVirtualBackground(HMSActionResultListener hmsActionResultListener) {
-    hmsSDK.addVirtualBackground(hmsActionResultListener:hmsActionResultListener);
+  void addVirtualBackground(Uint8List imageBitmap,int? pluginFrameRate,HMSActionResultListener hmsActionResultListener) {
+    hmsSDK.addVirtualBackground(imageBitmap: imageBitmap,pluginFrameRate:pluginFrameRate,hmsActionResultListener:hmsActionResultListener);
   }
 
   void removeVirtualBackground(HMSActionResultListener hmsActionResultListener) {
