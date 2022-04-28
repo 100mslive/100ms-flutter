@@ -44,7 +44,7 @@ jobs:
         target: ${{ matrix.target }}
         arch: x86_64
         profile: Nexus 6
-#         script: mvn clean run -Pandroid
+        script: mvn clean run -Pandroid
 
   
     - name: Build with Maven
