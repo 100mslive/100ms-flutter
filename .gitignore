@@ -29,3 +29,9 @@ example/ios/fastlane/README.md
 /example/ios/fastlane/report.xml
 example/ios/Runner/GoogleService-Info.plist
 *.p8
+
+test/Flutter_100ms_appium/logs
+test/Flutter_100ms_appium/Screenshots
+test/Flutter_100ms_appium/ServerLogs
+test/Flutter_100ms_appium/target
+test/Flutter_100ms_appium/videos
