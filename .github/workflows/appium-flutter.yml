@@ -33,7 +33,7 @@ jobs:
     
     - name: Install and Run Appium Server
       run: |
-          cd /test/Flutter_100ms_appium
+          cd test/Flutter_100ms_appium
           npm install -g appium@v1.22.2
           appium -v
           appium &>/dev/null &
