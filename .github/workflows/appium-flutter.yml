@@ -33,6 +33,7 @@ jobs:
     
     - name: Install and Run Appium Server
       run: |
+          cd /test/Flutter_100ms_appium
           npm install -g appium@v1.22.2
           appium -v
           appium &>/dev/null &
@@ -47,5 +48,5 @@ jobs:
         script: mvn clean run -Pandroid
 
   
-    - name: Build with Maven
-      run: mvn -B package --file pom.xml
+#     - name: Build with Maven
+#       run: mvn -B package --file pom.xml
