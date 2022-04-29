@@ -91,6 +91,12 @@
             <version>3.0.0-M6</version>
             <type>maven-plugin</type>
         </dependency>
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>1.18.24</version>
+                <scope>provided</scope>
+            </dependency>
 
 <!--      &lt;!&ndash; https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java &ndash;&gt;-->
 <!--      <dependency>-->
