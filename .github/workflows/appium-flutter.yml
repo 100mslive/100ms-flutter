@@ -49,6 +49,7 @@ jobs:
         arch: x86_64
         profile: Nexus 6
         script: mvn test
+        working-directory: ./test/Flutter_100ms_appium
 #         script: mvn clean run -Pandroid
 
   
