@@ -16,6 +16,9 @@ jobs:
       matrix: 
         api-level: [25]
         target: [default]
+    defaults:
+      run:
+        working-directory: ./test/Flutter_100ms_appium
 
     steps:
     - uses: actions/checkout@v3
@@ -33,7 +36,6 @@ jobs:
     
     - name: Install and Run Appium Server
       run: |
-          cd test/Flutter_100ms_appium
           npm install -g appium@v1.22.2
           appium -v
           appium &>/dev/null &
