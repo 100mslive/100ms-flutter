@@ -39,6 +39,7 @@ jobs:
           npm install -g appium@v1.22.2
           appium -v
           appium &>/dev/null &
+          ls
           
     - name: Android Emulator Runner
       uses: ReactiveCircus/android-emulator-runner@v2.23.0
