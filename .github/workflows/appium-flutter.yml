@@ -15,7 +15,7 @@ jobs:
 #     defaults:
 #       run:
 #         working-directory: ./test/Flutter_100ms_appium
-#     strategy:
+    strategy:
       matrix: 
         api-level: [29]
         target: [default]
