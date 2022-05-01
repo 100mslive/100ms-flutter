@@ -1,12 +1,9 @@
 package com.qa.pages.MeetingRoomPage.MenuDropDown;
 
-import com.qa.BaseTest;
 import com.qa.pages.MeetingRoomPage.MeetingRoom;
 import io.appium.java_client.MobileElement;
 import io.appium.java_client.pagefactory.AndroidFindBy;
 import io.appium.java_client.pagefactory.iOSXCUITFindBy;
-import org.openqa.selenium.WebElement;
-import org.testng.Assert;
 
 public class ScreenShare extends MeetingRoom {
 

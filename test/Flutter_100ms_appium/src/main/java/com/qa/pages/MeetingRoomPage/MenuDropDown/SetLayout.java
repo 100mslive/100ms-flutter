@@ -3,38 +3,38 @@ package com.qa.pages.MeetingRoomPage.MenuDropDown;
 import com.qa.BaseTest;
 import io.appium.java_client.pagefactory.AndroidFindBy;
 import io.appium.java_client.pagefactory.iOSXCUITFindBy;
-import org.openqa.selenium.WebElement;
+import io.appium.java_client.MobileElement;
 import org.testng.Assert;
 
 public class SetLayout extends BaseTest {
 
     @iOSXCUITFindBy(accessibility = "Audio View")
     @AndroidFindBy(xpath = "//android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[2]")
-    public WebElement setLayoutBtn;
+    public MobileElement setLayoutBtn;
 
     @iOSXCUITFindBy(accessibility = "Video View")
     @AndroidFindBy(xpath = "//android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[1]/android.widget.TextView")
-    public WebElement layoutModalPopup;
+    public MobileElement layoutModalPopup;
 
     @iOSXCUITFindBy(accessibility = "Audio View")
     @AndroidFindBy(xpath = "//android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.widget.Spinner")
-    public WebElement dropDownArrow;
+    public MobileElement dropDownArrow;
 
     @iOSXCUITFindBy(accessibility = "Audio View")
     @AndroidFindBy(xpath = "//android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[2]")
-    public WebElement normalBtn;
+    public MobileElement normalBtn;
 
     @iOSXCUITFindBy(accessibility = "Audio View")
     @AndroidFindBy(xpath = "//android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[2]")
-    public WebElement audioBtn;
+    public MobileElement audioBtn;
 
     @iOSXCUITFindBy(accessibility = "Audio View")
     @AndroidFindBy(xpath = "//android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[2]/android.view.ViewGroup[1]")
-    public WebElement cancelBtn;
+    public MobileElement cancelBtn;
 
     @iOSXCUITFindBy(accessibility = "Audio View")
     @AndroidFindBy(xpath = "//android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[2]/android.view.ViewGroup[2]")
-    public WebElement setBtn;
+    public MobileElement setBtn;
 
     public void click_setLayoutBtn() throws InterruptedException {
         Assert.assertTrue(setLayoutBtn.isDisplayed());

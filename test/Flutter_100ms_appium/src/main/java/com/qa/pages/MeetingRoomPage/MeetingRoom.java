@@ -4,7 +4,6 @@ import com.qa.pages.PreviewPage;
 import io.appium.java_client.MobileElement;
 import io.appium.java_client.pagefactory.AndroidFindBy;
 import io.appium.java_client.pagefactory.iOSXCUITFindBy;
-import org.openqa.selenium.WebElement;
 
 public class MeetingRoom extends PreviewPage {
 
