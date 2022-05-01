@@ -8,7 +8,7 @@
     <parameter name="emulator" value="true" />
     <parameter name="platformName" value="Android" />
     <!--        <parameter name="udid" value="replace_with_device_udid" />-->
-    <parameter name="deviceName" value="Nexus 6" />
+    <parameter name="deviceName" value="test" />
     <parameter name="systemPort" value="10000" />
     <parameter name="chromeDriverPort" value="11000" />
 
