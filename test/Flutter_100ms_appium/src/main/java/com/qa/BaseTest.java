@@ -256,11 +256,11 @@ public class BaseTest {
 				}
 				desiredCapabilities.setCapability("systemPort", systemPort);
 				desiredCapabilities.setCapability("chromeDriverPort", chromeDriverPort);
-//				String androidAppUrl = System.getProperty("user.dir") + File.separator + "src" + File.separator + "test"
-//							+ File.separator + "resources" + File.separator + "app" + File.separator + "100ms-RN";
+				String androidAppUrl = System.getProperty("user.dir") + File.separator + "src" + File.separator + "test"
+							+ File.separator + "resources" + File.separator + "app" + File.separator + "app-release.apk";
 //				String androidAppUrl = getClass().getResource(props.getProperty("androidAppLocation")).getFile();
-//				utils.log().info("appUrl is" + androidAppUrl);
-//				desiredCapabilities.setCapability("app", androidAppUrl);
+				utils.log().info("appUrl is" + androidAppUrl);
+				desiredCapabilities.setCapability("app", androidAppUrl);
 
 				driver = new AndroidDriver(url, desiredCapabilities);
 				break;
