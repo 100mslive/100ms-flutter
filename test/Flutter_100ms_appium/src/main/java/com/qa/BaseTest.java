@@ -188,7 +188,8 @@ public class BaseTest {
 		environment.put("ANDROID_HOME", "/Users/ronitroy/Library/Android/sdk");
 		return AppiumDriverLocalService.buildService(new AppiumServiceBuilder()
 				.usingDriverExecutable(new File("/usr/local/bin/node"))
-				.withAppiumJS(new File("/Applications/Appium Server GUI.app/Contents/Resources/app/node_modules/appium/build/lib/main.js"))
+//				.withAppiumJS(new File("/Applications/Appium Server GUI.app/Contents/Resources/app/node_modules/appium/build/lib/main.js"))
+				.withAppiumJS(new File("/usr/local/lib/node_modules/appium/build/lib/main.js"))
 				.usingPort(4723)
 				.withArgument(GeneralServerFlag.SESSION_OVERRIDE)
 //				.withArgument(() -> "--allow-insecure","chromedriver_autodownload")
