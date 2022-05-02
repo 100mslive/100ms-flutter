@@ -61,6 +61,7 @@ jobs:
     - name: Allure
     - run: npm run allure:generate
 
+    - name: Allure
     - uses: actions/upload-artifact@master
       with:
         name: allure-results
