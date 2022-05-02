@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_reorderable_grid_view/widgets/widgets.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/video_tile.dart';
 import 'package:hmssdk_flutter_example/meeting/peer_track_node.dart';
 import 'package:provider/provider.dart';
@@ -59,26 +58,26 @@ Widget gridActiveSpeakerView(
 //                       : 2 / 1.15),
 //         );
 
-List<StaggeredTile> pattern(int itemCount, int screenShareCount) {
-  List<StaggeredTile> tiles = [];
-  for (int i = 0; i < screenShareCount; i++) {
-    tiles.add(StaggeredTile.count(4, 2.3));
-  }
-  int normalTile = (itemCount - screenShareCount);
-  int gridView = normalTile ~/ 4;
-  int tileLeft = normalTile - (gridView * 4);
-  for (int i = 0; i < (normalTile - tileLeft); i++) {
-    tiles.add(StaggeredTile.count(2, 1.15));
-  }
-  if (tileLeft == 1) {
-    tiles.add(StaggeredTile.count(4, 2.3));
-  } else if (tileLeft == 2) {
-    tiles.add(StaggeredTile.count(2, 2.3));
-    tiles.add(StaggeredTile.count(2, 2.3));
-  } else {
-    tiles.add(StaggeredTile.count(2, 1.15));
-    tiles.add(StaggeredTile.count(2, 1.15));
-    tiles.add(StaggeredTile.count(2, 1.15));
-  }
-  return tiles;
-}
+// List<StaggeredTile> pattern(int itemCount, int screenShareCount) {
+//   List<StaggeredTile> tiles = [];
+//   for (int i = 0; i < screenShareCount; i++) {
+//     tiles.add(StaggeredTile.count(4, 2.3));
+//   }
+//   int normalTile = (itemCount - screenShareCount);
+//   int gridView = normalTile ~/ 4;
+//   int tileLeft = normalTile - (gridView * 4);
+//   for (int i = 0; i < (normalTile - tileLeft); i++) {
+//     tiles.add(StaggeredTile.count(2, 1.15));
+//   }
+//   if (tileLeft == 1) {
+//     tiles.add(StaggeredTile.count(4, 2.3));
+//   } else if (tileLeft == 2) {
+//     tiles.add(StaggeredTile.count(2, 2.3));
+//     tiles.add(StaggeredTile.count(2, 2.3));
+//   } else {
+//     tiles.add(StaggeredTile.count(2, 1.15));
+//     tiles.add(StaggeredTile.count(2, 1.15));
+//     tiles.add(StaggeredTile.count(2, 1.15));
+//   }
+//   return tiles;
+// }

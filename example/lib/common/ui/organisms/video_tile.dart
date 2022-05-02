@@ -14,7 +14,6 @@ import 'package:hmssdk_flutter_example/common/ui/organisms/rtc_stats_view.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/video_view.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:hmssdk_flutter_example/meeting/peer_track_node.dart';
-import 'package:hmssdk_flutter_example/model/rtc_stats.dart';
 import 'package:provider/provider.dart';
 import 'package:focus_detector/focus_detector.dart';
 
@@ -55,9 +54,9 @@ class _VideoTileState extends State<VideoTile> {
 
     return FocusDetector(
       onFocusLost: () {
-        if(mounted)
-        Provider.of<PeerTrackNode>(context, listen: false)
-            .setOffScreenStatus(true);
+        if (mounted)
+          Provider.of<PeerTrackNode>(context, listen: false)
+              .setOffScreenStatus(true);
       },
       onFocusGained: () {
         Provider.of<PeerTrackNode>(context, listen: false)
@@ -108,7 +107,6 @@ class _VideoTileState extends State<VideoTile> {
                             ],
                           ));
               },
-
               child: Container(
                 color: Colors.transparent,
                 key: key,
@@ -138,11 +136,9 @@ class _VideoTileState extends State<VideoTile> {
                     RTCStatsView(
                         isLocal: context.read<PeerTrackNode>().peer.isLocal),
                     VideoTileBorder(
-                      itemHeight: widget.itemHeight,
-                      itemWidth: widget.itemWidth,
-                      uid: context.read<PeerTrackNode>().uid
-                    ),
-                    )
+                        itemHeight: widget.itemHeight,
+                        itemWidth: widget.itemWidth,
+                        uid: context.read<PeerTrackNode>().uid)
                   ],
                 ),
               ),
