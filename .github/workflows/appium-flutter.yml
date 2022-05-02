@@ -17,7 +17,7 @@ jobs:
 #         working-directory: ./test/Flutter_100ms_appium
     strategy:
       matrix: 
-        api-level: [29]
+        api-level: [30]
         target: [default]
 
     steps:
@@ -47,7 +47,7 @@ jobs:
         api-level: ${{ matrix.api-level }}
         target: ${{ matrix.target }}
         arch: x86_64
-        profile: avdmanager list device
+#         profile: avdmanager list device
 #         force-avd-creation: false
 #         emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -no-boot-anim none
         script: mvn test
