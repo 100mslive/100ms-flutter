@@ -432,7 +432,7 @@ class MeetingStore extends ChangeNotifier
             (peer) => activeSpeaker[i].peer.peerId + "mainVideo" == peer.uid);
         if (index != -1) {
           PeerTrackNode peerTrackNode = peerTracks.removeAt(index);
-          peerTracks.insert(0, peerTrackNode);
+          peerTracks.insert(screenShareCount, peerTrackNode);
         }
       }
       uiUpdate++;
