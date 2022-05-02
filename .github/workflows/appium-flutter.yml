@@ -44,11 +44,10 @@ jobs:
     - name: Android Emulator Runner
       uses: ReactiveCircus/android-emulator-runner@v2.23.0
       with:
-        run: avdmanager list device
         api-level: ${{ matrix.api-level }}
         target: ${{ matrix.target }}
         arch: x86_64
-#         profile: Nexus 6
+        profile: avdmanager list device
 #         force-avd-creation: false
 #         emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -no-boot-anim none
         script: mvn test
