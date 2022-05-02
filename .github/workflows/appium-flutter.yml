@@ -58,60 +58,60 @@ jobs:
 #     - name: Build with Maven
 #       run: mvn -B package --file pom.xml
 
-    - name: Allure
-    - run: npm run allure:generate
+#     - name: Allure
+#     - run: npm run allure:generate
 
-    - name: Allure
-    - uses: actions/upload-artifact@master
-      with:
-        name: allure-results
-        path: allure-results
-        retention-days: 20
+#     - name: Allure
+#     - uses: actions/upload-artifact@master
+#       with:
+#         name: allure-results
+#         path: allure-results
+#         retention-days: 20
 
-    - name: Get Allure history
-      uses: actions/checkout@v2
-      if: always()
-        continue-on-error:true
-      with:
-          ref: gh-pages
-          path: gh-pages
+#     - name: Get Allure history
+#       uses: actions/checkout@v2
+#       if: always()
+#         continue-on-error:true
+#       with:
+#           ref: gh-pages
+#           path: gh-pages
 
-    - name: Test marketplace action
-      uses: simple-elf/allure-report-action@master
-      if: always()
-      id: allure-report
-      with:
-          allure_results: allure-results
-          gh_pages: gh-pages
-          allure_report: allure-report
-          allure_history: allure-history
-          keep_reports: 20
+#     - name: Test marketplace action
+#       uses: simple-elf/allure-report-action@master
+#       if: always()
+#       id: allure-report
+#       with:
+#           allure_results: allure-results
+#           gh_pages: gh-pages
+#           allure_report: allure-report
+#           allure_history: allure-history
+#           keep_reports: 20
 
-    - name: Deploy report to Github Pages
-      if: always()
-      uses: peaceiris/actions-gh-pages@v2
-      env:
-          PERSONAL_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PUBLISH_BRANCH: gh-pages
-          PUBLISH_DIR: allure-history
+#     - name: Deploy report to Github Pages
+#       if: always()
+#       uses: peaceiris/actions-gh-pages@v2
+#       env:
+#           PERSONAL_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#           PUBLISH_BRANCH: gh-pages
+#           PUBLISH_DIR: allure-history
 
-    - name: Send custom test result
-      if: always()
-      id: slack
-      uses: slackapi/slack-github-action@v1.18.0
-      with:
-          payload: |
-            {
-              "text": "Web-Automation build result PROD-EU: ${{ job.status }}\n https://100mslive.github.io/web-automation/${{github.run_number}}/",
-              "blocks": [
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "Web-Automation build result PROD-EU: ${{ job.status }}\n https://100mslive.github.io/web-automation/${{github.run_number}}/"
-                  }
-                }
-              ]
-            }
-      env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+#     - name: Send custom test result
+#       if: always()
+#       id: slack
+#       uses: slackapi/slack-github-action@v1.18.0
+#       with:
+#           payload: |
+#             {
+#               "text": "Web-Automation build result PROD-EU: ${{ job.status }}\n https://100mslive.github.io/web-automation/${{github.run_number}}/",
+#               "blocks": [
+#                 {
+#                   "type": "section",
+#                   "text": {
+#                     "type": "mrkdwn",
+#                     "text": "Web-Automation build result PROD-EU: ${{ job.status }}\n https://100mslive.github.io/web-automation/${{github.run_number}}/"
+#                   }
+#                 }
+#               ]
+#             }
+#       env:
+#           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
