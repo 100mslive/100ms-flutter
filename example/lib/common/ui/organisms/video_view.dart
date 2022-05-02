@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
+import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:hmssdk_flutter_example/meeting/peer_track_node.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
@@ -68,7 +69,9 @@ class _VideoViewState extends State<VideoView> {
                       child: HMSVideoView(
                         scaleType: widget.scaleType,
                         track: data.item1!,
-                        setMirror: data.item1.runtimeType == HMSLocalVideoTrack,
+                        setMirror: data.item1.runtimeType == HMSLocalVideoTrack
+                            ? context.read<MeetingStore>().isMirror
+                            : false,
                         matchParent: false,
                       ),
                     ),

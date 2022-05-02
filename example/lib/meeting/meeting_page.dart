@@ -14,7 +14,6 @@ import 'package:hmssdk_flutter_example/common/ui/organisms/offline_screen.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
 import 'package:hmssdk_flutter_example/logs/custom_singleton_logger.dart';
-import 'package:hmssdk_flutter_example/meeting/hms_sdk_interactor.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:hmssdk_flutter_example/meeting/peer_track_node.dart';
 import 'package:provider/provider.dart';
@@ -29,6 +28,8 @@ class MeetingPage extends StatefulWidget {
   final String user;
   final bool isAudioOn;
   final int? localPeerNetworkQuality;
+  final bool mirror;
+  final bool showStats;
 
   const MeetingPage(
       {Key? key,
@@ -36,8 +37,9 @@ class MeetingPage extends StatefulWidget {
       required this.flow,
       required this.user,
       required this.isAudioOn,
-      this.localPeerNetworkQuality,
-      })
+      this.localPeerNetworkQuality = -1,
+      this.showStats = false,
+      this.mirror = false})
       : super(key: key);
 
   @override
@@ -60,7 +62,7 @@ class _MeetingPageState extends State<MeetingPage>
     WidgetsBinding.instance!.addObserver(this);
     initMeeting();
     checkAudioState();
-    setNetworkQuality();
+    setInitValues();
   }
 
   void initMeeting() async {
@@ -76,9 +78,11 @@ class _MeetingPageState extends State<MeetingPage>
     if (!widget.isAudioOn) context.read<MeetingStore>().switchAudio();
   }
 
-  void setNetworkQuality() async {
+  void setInitValues() async {
     context.read<MeetingStore>().localPeerNetworkQuality =
         widget.localPeerNetworkQuality;
+    context.read<MeetingStore>().isMirror = widget.mirror;
+    context.read<MeetingStore>().statsVisible = widget.showStats;
   }
 
   @override

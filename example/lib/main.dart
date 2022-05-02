@@ -5,7 +5,11 @@ import 'dart:io';
 //Package imports
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hmssdk_flutter_example/meeting/hms_sdk_interactor.dart';
+import 'package:hmssdk_flutter_example/meeting/meeting_page.dart';
+import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:hmssdk_flutter_example/preview/preview_store.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
@@ -57,6 +61,9 @@ class _HomePageState extends State<HomePage> {
   TextEditingController roomIdController =
       TextEditingController(text: Constant.defaultRoomID);
   CustomLogger logger = CustomLogger();
+  bool skipPreview = false;
+  bool mirrorCamera = true;
+  bool showStats = false;
   PackageInfo _packageInfo = PackageInfo(
     appName: 'Unknown',
     packageName: 'Unknown',
@@ -109,6 +116,22 @@ class _HomePageState extends State<HomePage> {
     Constant.rtmpUrl = urlSplit.join('/') + "?token=beam_recording";
   }
 
+  void handleClick(int value) {
+    switch (value) {
+      case 1:
+        skipPreview = !skipPreview;
+        break;
+      case 2:
+        mirrorCamera = !mirrorCamera;
+        break;
+      case 3:
+        showStats = !showStats;
+        break;
+      case 4:
+        break;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -116,6 +139,74 @@ class _HomePageState extends State<HomePage> {
       child: Scaffold(
           appBar: AppBar(
             title: Text('100ms'),
+            actions: [
+              PopupMenuButton<int>(
+                onSelected: handleClick,
+                icon: Icon(CupertinoIcons.gear),
+                itemBuilder: (BuildContext context) {
+                  return [
+                    PopupMenuItem(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          if (skipPreview)
+                            Text("Don't Skip Preview")
+                          else
+                            Text("Skip Preview"),
+                          Icon(Icons.preview),
+                        ],
+                      ),
+                      value: 1,
+                    ),
+                    PopupMenuItem(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          if (mirrorCamera)
+                            Text("Don't Mirror Camera")
+                          else
+                            Text("Mirror Camera"),
+                          Icon(Icons.camera_front),
+                        ],
+                      ),
+                      value: 2,
+                    ),
+                    PopupMenuItem(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          if (showStats)
+                            Text("Don't Show Stats")
+                          else
+                            Text("Show Stats"),
+                          Icon(Icons.bar_chart),
+                        ],
+                      ),
+                      value: 3,
+                    ),
+                    PopupMenuItem(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text("Share Logs"),
+                          Icon(Icons.bug_report),
+                        ],
+                      ),
+                      value: 4,
+                    ),
+                    PopupMenuItem(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text("Version ${_packageInfo.version}"),
+                        ],
+                      ),
+                      value: 4,
+                    ),
+                  ];
+                },
+              ),
+            ],
           ),
           body: Provider<DeepLinkBloc>(
             create: (context) => _bloc,
@@ -178,15 +269,35 @@ class _HomePageState extends State<HomePage> {
                               bool res = await getPermissions();
                               if (res) {
                                 FocusManager.instance.primaryFocus?.unfocus();
-                                Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (_) => ListenableProvider.value(
-                                          value: PreviewStore(),
-                                          child: PreviewPage(
-                                            roomId: roomIdController.text,
-                                            user: user,
+                                if (skipPreview) {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (_) => ListenableProvider.value(
+                                          value: MeetingStore(
+                                              hmsSDKInteractor:
+                                                  HMSSDKInteractor()),
+                                          child: MeetingPage(
+                                            roomId:
+                                                roomIdController.text.trim(),
                                             flow: MeetingFlow.join,
-                                          ),
-                                        )));
+                                            user: user,
+                                            isAudioOn: true,
+                                            mirror: mirrorCamera,
+                                            showStats: showStats,
+                                          ))));
+                                } else {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (_) => ListenableProvider.value(
+                                            value: PreviewStore(),
+                                            child: PreviewPage(
+                                              roomId:
+                                                  roomIdController.text.trim(),
+                                              user: user,
+                                              flow: MeetingFlow.join,
+                                              mirror: mirrorCamera,
+                                              showStats: showStats,
+                                            ),
+                                          )));
+                                }
                               }
                             }
                           },
@@ -209,9 +320,6 @@ class _HomePageState extends State<HomePage> {
                           )),
                       SizedBox(
                         height: 50.0,
-                      ),
-                      Container(
-                        child: Text("Version: ${_packageInfo.version}"),
                       ),
                     ],
                   ),

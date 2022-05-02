@@ -19,9 +19,16 @@ class PreviewPage extends StatefulWidget {
   final String roomId;
   final MeetingFlow flow;
   final String user;
+  final bool mirror;
+  final bool showStats;
 
   const PreviewPage(
-      {Key? key, required this.roomId, required this.flow, required this.user})
+      {Key? key,
+      required this.roomId,
+      required this.flow,
+      required this.user,
+      this.showStats = false,
+      this.mirror = true})
       : super(key: key);
 
   @override
@@ -88,7 +95,7 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                             ? HMSVideoView(
                                 scaleType: ScaleType.SCALE_ASPECT_FILL,
                                 track: _previewStore.localTracks[0],
-                                setMirror: true,
+                                setMirror: widget.mirror,
                                 matchParent: false,
                               )
                             : Container(
@@ -271,18 +278,22 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                                               builder: (_) =>
                                                   ListenableProvider.value(
                                                     value: MeetingStore(
-                                                      hmsSDKInteractor:_previewStore.hmsSDKInteractor,
+                                                      hmsSDKInteractor:
+                                                          _previewStore
+                                                              .hmsSDKInteractor,
                                                     ),
                                                     child: MeetingPage(
-                                                            roomId: widget.roomId,
-                                                      flow: widget.flow,
-                                                      user: widget.user,
-                                                      isAudioOn: _previewStore
-                                                          .isAudioOn,
-                                                      localPeerNetworkQuality:
-                                                          _previewStore
-                                                              .networkQuality,
-                                                    ),
+                                                        roomId: widget.roomId,
+                                                        flow: widget.flow,
+                                                        user: widget.user,
+                                                        isAudioOn: _previewStore
+                                                            .isAudioOn,
+                                                        localPeerNetworkQuality:
+                                                            _previewStore
+                                                                .networkQuality,
+                                                        mirror: widget.mirror,
+                                                        showStats:
+                                                            widget.showStats),
                                                   )));
                                     },
                                     child: Text(
@@ -302,7 +313,9 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                                               builder: (_) =>
                                                   ListenableProvider.value(
                                                     value: MeetingStore(
-                                                      hmsSDKInteractor:_previewStore.hmsSDKInteractor,
+                                                      hmsSDKInteractor:
+                                                          _previewStore
+                                                              .hmsSDKInteractor,
                                                     ),
                                                     child: MeetingPage(
                                                       roomId: widget.roomId,

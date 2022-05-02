@@ -86,7 +86,10 @@ class MeetingStore extends ChangeNotifier
   bool statsVisible = false;
 
   int firstTimeBuild = 0;
+
   final DateFormat formatter = DateFormat('d MMM y h:mm:ss a');
+
+  bool isMirror = false;
 
   void addUpdateListener() {
     _hmsSDKInteractor.addUpdateListener(this);
