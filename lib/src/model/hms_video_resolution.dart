@@ -1,3 +1,6 @@
+///100ms HMSVideoResolution
+///
+///[HMSVideoResolution] contains height and width of peer's video.
 class HMSVideoResolution {
   final double height;
   final double width;

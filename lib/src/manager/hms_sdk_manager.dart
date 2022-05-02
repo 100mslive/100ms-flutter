@@ -2,6 +2,7 @@
 import 'package:hmssdk_flutter/src/service/platform_service.dart';
 import '../../hmssdk_flutter.dart';
 
+///100ms HmsSdkManager
 class HmsSdkManager {
   Future<bool> createInstance(HMSTrackSetting? hmsTrackSetting) async {
     bool isCreated = await createHMSSdk(hmsTrackSetting);

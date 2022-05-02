@@ -1,6 +1,9 @@
 //Dart imports
 import 'dart:core';
 
+///100ms HMSHLSVarient
+///
+///[HMSHLSVariant] contains the information about HLS Streaming Url, meeting Url, metadata and startedAt.
 class HMSHLSVariant {
   final String? hlsStreamUrl;
   final String? meetingUrl;

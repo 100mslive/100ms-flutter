@@ -2,6 +2,7 @@
 
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:hmssdk_flutter_example/model/rtc_stats.dart';
 import 'package:intl/intl.dart';
 
 //Project imports
@@ -84,6 +85,8 @@ class MeetingStore extends ChangeNotifier
   int? localPeerNetworkQuality;
 
   int uiUpdate = 0;
+
+  bool statsVisible = false;
 
   int firstTimeBuild = 0;
   final DateFormat formatter = DateFormat('d MMM y h:mm:ss a');
@@ -249,6 +252,11 @@ class MeetingStore extends ChangeNotifier
     this.isScreenShareOn = await _hmssdkInteractor.isScreenShareActive();
   }
 
+  void changeStatsVisible() {
+    statsVisible = !statsVisible;
+    notifyListeners();
+  }
+
   @override
   void onJoin({required HMSRoom room}) async {
     isMeetingStarted = true;
@@ -275,7 +283,8 @@ class MeetingStore extends ChangeNotifier
           peerTracks.add(PeerTrackNode(
               peer: each,
               uid: each.peerId + "mainVideo",
-              networkQuality: localPeerNetworkQuality));
+              networkQuality: localPeerNetworkQuality,
+              stats: RTCStats()));
         localPeer = each;
         addPeer(localPeer!);
         if (localPeer!.role.name.contains("hls-") == true) isHLSLink = true;
@@ -509,8 +518,8 @@ class MeetingStore extends ChangeNotifier
           int index = peerTracks.indexWhere(
               (element) => element.uid == peer.peerId + "mainVideo");
           if (index == -1)
-            peerTracks.add(
-                new PeerTrackNode(peer: peer, uid: peer.peerId + "mainVideo"));
+            peerTracks.add(new PeerTrackNode(
+                peer: peer, uid: peer.peerId + "mainVideo", stats: RTCStats()));
           notifyListeners();
         }
         addPeer(peer);
@@ -536,8 +545,8 @@ class MeetingStore extends ChangeNotifier
           int index = peerTracks.indexWhere(
               (element) => element.uid == peer.peerId + "mainVideo");
           if (index == -1)
-            peerTracks.add(
-                new PeerTrackNode(peer: peer, uid: peer.peerId + "mainVideo"));
+            peerTracks.add(new PeerTrackNode(
+                peer: peer, uid: peer.peerId + "mainVideo", stats: RTCStats()));
         }
 
         updatePeerAt(peer);
@@ -578,8 +587,6 @@ class MeetingStore extends ChangeNotifier
         break;
 
       case HMSPeerUpdate.networkQualityUpdated:
-        print(
-            "onPeerUpdate networkQuality ${peer.name} ${peer.networkQuality?.quality}");
         int index = peerTracks
             .indexWhere((element) => element.uid == peer.peerId + "mainVideo");
         if (index != -1) {
@@ -783,25 +790,77 @@ class MeetingStore extends ChangeNotifier
   void onLocalAudioStats(
       {required HMSLocalAudioStats hmsLocalAudioStats,
       required HMSLocalAudioTrack track,
-      required HMSPeer peer}) {}
+      required HMSPeer peer}) {
+    int index = -1;
+    if (track.source != "REGULAR") {
+      index = peerTracks
+          .indexWhere((element) => element.uid == peer.peerId + track.trackId);
+    } else {
+      index = peerTracks
+          .indexWhere((element) => element.uid == peer.peerId + "mainVideo");
+    }
+    if (index != -1) {
+      peerTracks[index].stats?.hmsLocalAudioStats = hmsLocalAudioStats;
+      peerTracks[index].notify();
+    }
+  }
 
   @override
   void onLocalVideoStats(
       {required HMSLocalVideoStats hmsLocalVideoStats,
       required HMSLocalVideoTrack track,
-      required HMSPeer peer}) {}
+      required HMSPeer peer}) {
+    int index = -1;
+    if (track.source != "REGULAR") {
+      index = peerTracks
+          .indexWhere((element) => element.uid == peer.peerId + track.trackId);
+    } else {
+      index = peerTracks
+          .indexWhere((element) => element.uid == peer.peerId + "mainVideo");
+    }
+    if (index != -1) {
+      peerTracks[index].stats?.hmsLocalVideoStats = hmsLocalVideoStats;
+      peerTracks[index].notify();
+    }
+  }
 
   @override
   void onRemoteAudioStats(
       {required HMSRemoteAudioStats hmsRemoteAudioStats,
       required HMSRemoteAudioTrack track,
-      required HMSPeer peer}) {}
+      required HMSPeer peer}) {
+    int index = -1;
+    if (track.source != "REGULAR") {
+      index = peerTracks
+          .indexWhere((element) => element.uid == peer.peerId + track.trackId);
+    } else {
+      index = peerTracks
+          .indexWhere((element) => element.uid == peer.peerId + "mainVideo");
+    }
+    if (index != -1) {
+      peerTracks[index].stats?.hmsRemoteAudioStats = hmsRemoteAudioStats;
+      peerTracks[index].notify();
+    }
+  }
 
   @override
   void onRemoteVideoStats(
       {required HMSRemoteVideoStats hmsRemoteVideoStats,
       required HMSRemoteVideoTrack track,
-      required HMSPeer peer}) {}
+      required HMSPeer peer}) {
+    int index = -1;
+    if (track.source != "REGULAR") {
+      index = peerTracks
+          .indexWhere((element) => element.uid == peer.peerId + track.trackId);
+    } else {
+      index = peerTracks
+          .indexWhere((element) => element.uid == peer.peerId + "mainVideo");
+    }
+    if (index != -1) {
+      peerTracks[index].stats?.hmsRemoteVideoStats = hmsRemoteVideoStats;
+      peerTracks[index].notify();
+    }
+  }
 
   @override
   void onRTCStats({required HMSRTCStatsReport hmsrtcStatsReport}) {}

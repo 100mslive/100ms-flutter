@@ -1,5 +1,6 @@
 enum ScaleType { SCALE_ASPECT_FIT, SCALE_ASPECT_FILL, SCALE_ASPECT_BALANCED }
 
+///Video ScaleType [SCALE_ASPECT_FIT],[SCALE_ASPECT_FILL] and [SCALE_ASPECT_BALANCED].
 extension ScalingTypeExtension on ScaleType {
   int get value {
     switch (this) {

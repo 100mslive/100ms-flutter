@@ -1,3 +1,6 @@
+///100ms HMSDateExtension
+///
+///[HMSDateExtension] is used to covert android and ios native time format to DateTime format.
 class HMSDateExtension {
   static DateTime convertDate(String date) {
     List<String> dateTimeSeprate = date.split(" ");

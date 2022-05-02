@@ -1,5 +1,6 @@
 enum HMSMessageRecipientType { BROADCAST, DIRECT, GROUP, unKnown }
 
+///HMSMessageRecipient
 extension HMSMessageRecipientValues on HMSMessageRecipientType {
   static HMSMessageRecipientType getHMSMessageRecipientFromName(String name) {
     switch (name) {

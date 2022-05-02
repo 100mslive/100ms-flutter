@@ -1,6 +1,9 @@
 // Project imports:
 import 'package:hmssdk_flutter/src/model/hms_custom_log.dart';
 
+///100ms HMSLogList
+///
+///HMSLogList contains the list of [HMSCustomLog].
 class HMSLogList {
   late List<HMSCustomLog> hmsLog;
 

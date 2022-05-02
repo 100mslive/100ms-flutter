@@ -198,13 +198,20 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  focus_detector:
+    dependency: "direct main"
+    description:
+      name: focus_detector
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.1"
   hmssdk_flutter:
     dependency: "direct main"
     description:
       path: ".."
       relative: true
     source: path
-    version: "0.7.0"
+    version: "0.7.1"
   html:
     dependency: transitive
     description:
@@ -540,7 +547,7 @@ packages:
     source: hosted
     version: "2.0.7"
   visibility_detector:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: visibility_detector
       url: "https://pub.dartlang.org"

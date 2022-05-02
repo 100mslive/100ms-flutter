@@ -1,3 +1,6 @@
+///100ms HMSRecordingConfg
+///
+///[HMSRecordingConfig] contains meeting Url, record status anf rtmp Urls list.
 class HMSRecordingConfig {
   final String meetingUrl;
   final bool toRecord;
