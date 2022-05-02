@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 // Project imports
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/brb_tag.dart';
-import 'package:hmssdk_flutter_example/common/ui/organisms/change_track_options.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/degrade_tile.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/hand_raise.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/audio_mute_status.dart';
@@ -16,6 +15,8 @@ import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:hmssdk_flutter_example/meeting/peer_track_node.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 import 'package:provider/provider.dart';
+
+import 'change_track_options.dart';
 
 class VideoTile extends StatefulWidget {
   final double itemHeight;
@@ -106,6 +107,7 @@ class _VideoTileState extends State<VideoTile> {
                             ],
                           ));
               },
+
               child: Container(
                 color: Colors.transparent,
                 key: key,
@@ -129,9 +131,13 @@ class _VideoTileState extends State<VideoTile> {
                     HandRaise(), //bottom left
                     BRBTag(), //top right
                     NetworkIconWidget(), //top left
-                    AudioMuteStatus(), 
+                    AudioMuteStatus(),
                     //bottom center
-                    VideoTileBorder(itemHeight: widget.itemHeight,itemWidth: widget.itemWidth,),
+                    VideoTileBorder(
+                      itemHeight: widget.itemHeight,
+                      itemWidth: widget.itemWidth,
+                      uid: context.read<PeerTrackNode>().uid
+                    ),
                   ],
                 ),
               ),

@@ -77,11 +77,13 @@ class MeetingStore extends ChangeNotifier
 
   List<PeerTrackNode> peerTracks = [];
 
-  List<String> activeSpeakerIds = [];
+  Map<String, bool> activeSpeakerIds = {};
 
   HMSRoom? hmsRoom;
 
   int? localPeerNetworkQuality;
+
+  int uiUpdate = 0;
 
   int firstTimeBuild = 0;
   final DateFormat formatter = DateFormat('d MMM y h:mm:ss a');
@@ -399,27 +401,34 @@ class MeetingStore extends ChangeNotifier
 
   @override
   void onUpdateSpeakers({required List<HMSSpeaker> updateSpeakers}) {
-    activeSpeakerIds.forEach((id) {
-      int index = -1;
-      index = peerTracks.indexWhere((peer) => id == peer.uid);
-      if (index != -1) {
-        peerTracks[index].isHighestSpeaker = false;
-        peerTracks[index].notify();
-      }
-    });
     activeSpeakerIds.clear();
-    if (updateSpeakers.isEmpty != true) {
-      updateSpeakers.forEach((speaker) {
-        int index = -1;
-        index = peerTracks.indexWhere(
-            (peer) => speaker.peer.peerId + "mainVideo" == peer.uid);
-        if (index != -1) {
-          peerTracks[index].isHighestSpeaker = true;
-          activeSpeakerIds.add(speaker.peer.peerId + "mainVideo");
-          peerTracks[index].notify();
+    updateSpeakers.forEach((element) {
+      activeSpeakerIds[element.peer.peerId + "mainVideo"] = true;
+    });
+    if (isActiveSpeakerMode && peerTracks.length > 4) {
+      List<HMSSpeaker> activeSpeaker = [];
+      if (updateSpeakers.length > 4) {
+        activeSpeaker.addAll(updateSpeakers.sublist(0, 4));
+      } else {
+        activeSpeaker.addAll(updateSpeakers);
+      }
+      for (int i = activeSpeaker.length - 1; i > -1; i--) {
+        List<PeerTrackNode> tempTracks = peerTracks.sublist(0, 4);
+        int indexTrack = tempTracks.indexWhere(
+            (peer) => activeSpeaker[i].peer.peerId + "mainVideo" == peer.uid);
+        if (indexTrack != -1) {
+          continue;
         }
-      });
+        int index = peerTracks.indexWhere(
+            (peer) => activeSpeaker[i].peer.peerId + "mainVideo" == peer.uid);
+        if (index != -1) {
+          PeerTrackNode peerTrackNode = peerTracks.removeAt(index);
+          peerTracks.insert(0, peerTrackNode);
+        }
+      }
+      uiUpdate++;
     }
+    notifyListeners();
   }
 
   @override
@@ -765,6 +774,11 @@ class MeetingStore extends ChangeNotifier
     notifyListeners();
   }
 
+  void setActiveSpeakerMode() {
+    this.isActiveSpeakerMode = !this.isActiveSpeakerMode;
+    notifyListeners();
+  }
+
   @override
   void onLocalAudioStats(
       {required HMSLocalAudioStats hmsLocalAudioStats,
@@ -793,7 +807,7 @@ class MeetingStore extends ChangeNotifier
   void onRTCStats({required HMSRTCStatsReport hmsrtcStatsReport}) {}
 
   bool isActiveSpeaker(String uid) {
-    return activeSpeakerIds.contains(uid);
+    return activeSpeakerIds.containsKey(uid);
   }
 
   @override

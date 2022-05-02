@@ -11,16 +11,15 @@ class PeerTrackNode extends ChangeNotifier {
   HMSAudioTrack? audioTrack;
   bool isOffscreen;
   int? networkQuality;
-  bool isHighestSpeaker;
 
-  PeerTrackNode(
-      {required this.peer,
-      this.track,
-      this.audioTrack,
-      required this.uid,
-      this.isOffscreen = false,
-      this.networkQuality = -1,
-      this.isHighestSpeaker= false});
+  PeerTrackNode({
+    required this.peer,
+    this.track,
+    this.audioTrack,
+    required this.uid,
+    this.isOffscreen = false,
+    this.networkQuality = -1,
+  });
 
   @override
   String toString() {

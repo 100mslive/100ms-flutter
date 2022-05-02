@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:connectivity_checker/connectivity_checker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hmssdk_flutter_example/common/ui/organisms/grid_active_speaker_view.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/grid_audio_view.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/grid_video_view.dart';
 import 'package:hmssdk_flutter_example/hls_viewer/hls_viewer.dart';
@@ -138,16 +139,7 @@ class _MeetingPageState extends State<MeetingPage>
         }
         break;
       case 6:
-        // if (!_meetingStore.isActiveSpeakerMode) {
-        //   _meetingStore.setActiveSpeakerList();
-        //   _meetingStore.isActiveSpeakerMode = true;
-        //   UtilityComponents.showSnackBarWithString(
-        //       "Active Speaker Mode", context);
-        // } else {
-        //   _meetingStore.activeSpeakerPeerTrackNodeList.clear();
-        //   _meetingStore.isActiveSpeakerMode = false;
-        // }
-        UtilityComponents.showSnackBarWithString("Coming Soon...", context);
+        _meetingStore.setActiveSpeakerMode();
         break;
       case 7:
         // if (_meetingStore.isActiveSpeakerMode) {
@@ -274,82 +266,94 @@ class _MeetingPageState extends State<MeetingPage>
                             height: MediaQuery.of(context).size.height * 0.78,
                             child: Selector<
                                     MeetingStore,
-                                    Tuple5<List<PeerTrackNode>, bool, int, int,
-                                        bool>>(
-                                selector: (_, meetingStore) => Tuple5(
+                                    Tuple7<List<PeerTrackNode>, bool, int, int,
+                                        bool, bool, int>>(
+                                selector: (_, meetingStore) => Tuple7(
                                     meetingStore.peerTracks,
                                     meetingStore.isHLSLink,
                                     meetingStore.peerTracks.length,
                                     meetingStore.screenShareCount,
-                                    meetingStore.isAudioViewOn),
+                                    meetingStore.isAudioViewOn,
+                                    meetingStore.isActiveSpeakerMode,
+                                    meetingStore.uiUpdate),
                                 builder: (_, data, __) {
-                                  return !data.item2
-                                      ? data.item3 == 0
-                                          ? Center(
-                                              child: Text(
-                                                  'Waiting for others to join!'))
-                                          : data.item5
-                                              ? PageView(
-                                                  physics: PageScrollPhysics(),
-                                                  scrollDirection:
-                                                      Axis.horizontal,
-                                                  children: gridAudioView(
-                                                      peerTracks: data.item1,
-                                                      audioViewOn: data.item5,
-                                                      itemCount: data.item3,
-                                                      screenShareOn: data.item4,
-                                                      size: size))
-                                              : PageView(
-                                                  physics: PageScrollPhysics(),
-                                                  scrollDirection:
-                                                      Axis.horizontal,
-                                                  children: gridVideoView(
-                                                      peerTracks: data.item1,
-                                                      audioViewOn: data.item5,
-                                                      itemCount: data.item3,
-                                                      screenShareOn: data.item4,
-                                                      size: size))
-                                      : Selector<MeetingStore, bool>(
-                                          selector: (_, meetingStore) =>
-                                              meetingStore.hasHlsStarted,
-                                          builder: (_, hasHlsStarted, __) {
-                                            return hasHlsStarted
-                                                ? Center(
-                                                    child: Container(
-                                                      child: HLSViewer(
-                                                          streamUrl: context
-                                                              .read<
-                                                                  MeetingStore>()
-                                                              .streamUrl),
-                                                    ),
-                                                  )
-                                                : Center(
-                                                    child: Column(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .center,
-                                                      children: [
-                                                        Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                      .only(
-                                                                  bottom: 8.0),
-                                                          child: Text(
-                                                            "Waiting for HLS to start...",
-                                                            style: TextStyle(
-                                                                fontSize: 20),
-                                                          ),
+                                  if (data.item2) {
+                                    return Selector<MeetingStore, bool>(
+                                        selector: (_, meetingStore) =>
+                                            meetingStore.hasHlsStarted,
+                                        builder: (_, hasHlsStarted, __) {
+                                          return hasHlsStarted
+                                              ? Center(
+                                                  child: Container(
+                                                    child: HLSViewer(
+                                                        streamUrl: context
+                                                            .read<
+                                                                MeetingStore>()
+                                                            .streamUrl),
+                                                  ),
+                                                )
+                                              : Center(
+                                                  child: Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .only(
+                                                                bottom: 8.0),
+                                                        child: Text(
+                                                          "Waiting for HLS to start...",
+                                                          style: TextStyle(
+                                                              fontSize: 20),
                                                         ),
-                                                        CircularProgressIndicator(
-                                                          strokeWidth: 1,
-                                                        )
-                                                      ],
-                                                    ),
-                                                  );
-                                          });
+                                                      ),
+                                                      CircularProgressIndicator(
+                                                        strokeWidth: 1,
+                                                      )
+                                                    ],
+                                                  ),
+                                                );
+                                        });
+                                  }
+                                  if (data.item3 == 0) {
+                                    return Center(
+                                        child: Text(
+                                            'Waiting for others to join!'));
+                                  }
+
+                                  if (data.item5) {
+                                    return PageView(
+                                        physics: PageScrollPhysics(),
+                                        scrollDirection: Axis.horizontal,
+                                        children: gridAudioView(
+                                            peerTracks: data.item1,
+                                            audioViewOn: data.item5,
+                                            itemCount: data.item3,
+                                            screenShareOn: data.item4,
+                                            size: size));
+                                  }
+                                  if (data.item6) {
+                                    return gridActiveSpeakerView(
+                                        peerTracks: data.item1,
+                                        audioViewOn: data.item5,
+                                        itemCount: data.item3,
+                                        screenShareOn: data.item4,
+                                        size: size);
+                                  }
+                                  return PageView(
+                                      physics: PageScrollPhysics(),
+                                      scrollDirection: Axis.horizontal,
+                                      children: gridVideoView(
+                                          peerTracks: data.item1,
+                                          audioViewOn: data.item5,
+                                          itemCount: data.item3,
+                                          screenShareOn: data.item4,
+                                          size: size));
                                 }),
                           ),
                           Align(
