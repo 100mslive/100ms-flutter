@@ -414,15 +414,17 @@ class MeetingStore extends ChangeNotifier
     updateSpeakers.forEach((element) {
       activeSpeakerIds[element.peer.peerId + "mainVideo"] = true;
     });
-    if (isActiveSpeakerMode && peerTracks.length > 4) {
+    int firstScreenPeersCount = isAudioViewOn ? 6 : 4;
+    if (isActiveSpeakerMode && peerTracks.length > firstScreenPeersCount) {
       List<HMSSpeaker> activeSpeaker = [];
-      if (updateSpeakers.length > 4) {
-        activeSpeaker.addAll(updateSpeakers.sublist(0, 4));
+      if (updateSpeakers.length > firstScreenPeersCount) {
+        activeSpeaker.addAll(updateSpeakers.sublist(0, firstScreenPeersCount));
       } else {
         activeSpeaker.addAll(updateSpeakers);
       }
       for (int i = activeSpeaker.length - 1; i > -1; i--) {
-        List<PeerTrackNode> tempTracks = peerTracks.sublist(0, 4);
+        List<PeerTrackNode> tempTracks =
+            peerTracks.sublist(0, firstScreenPeersCount);
         int indexTrack = tempTracks.indexWhere(
             (peer) => activeSpeaker[i].peer.peerId + "mainVideo" == peer.uid);
         if (indexTrack != -1) {
@@ -433,9 +435,9 @@ class MeetingStore extends ChangeNotifier
         if (index != -1) {
           PeerTrackNode peerTrackNode = peerTracks.removeAt(index);
           peerTracks.insert(screenShareCount, peerTrackNode);
+          uiUpdate++;
         }
       }
-      uiUpdate++;
     }
     notifyListeners();
   }

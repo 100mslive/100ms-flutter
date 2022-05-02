@@ -153,7 +153,7 @@ class _VideoTileState extends State<VideoTile> {
               child: Stack(
                 children: [
                   VideoView(
-                    scaleType: ScaleType.SCALE_ASPECT_FIT,
+                    scaleType: widget.scaleType,
                     itemHeight: widget.itemHeight,
                     itemWidth: widget.itemWidth,
                   ),
