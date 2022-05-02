@@ -77,11 +77,13 @@ class MeetingStore extends ChangeNotifier
 
   List<PeerTrackNode> peerTracks = [];
 
-  List<String> activeSpeakerIds = [];
+  Map<String, bool> activeSpeakerIds = {};
 
   HMSRoom? hmsRoom;
 
   int? localPeerNetworkQuality;
+
+  int uiUpdate = 0;
 
   bool statsVisible = false;
 
@@ -90,6 +92,8 @@ class MeetingStore extends ChangeNotifier
   final DateFormat formatter = DateFormat('d MMM y h:mm:ss a');
 
   bool isMirror = false;
+  bool isAudioViewOn = false;
+
 
   void addUpdateListener() {
     _hmsSDKInteractor.addUpdateListener(this);
@@ -409,13 +413,32 @@ class MeetingStore extends ChangeNotifier
 
   @override
   void onUpdateSpeakers({required List<HMSSpeaker> updateSpeakers}) {
-    if (updateSpeakers.isEmpty) {
-      activeSpeakerIds.clear();
-      return;
-    } else {
-      updateSpeakers.forEach((speaker) {
-        activeSpeakerIds.add(speaker.peer.peerId + "mainVideo");
-      });
+    activeSpeakerIds.clear();
+    updateSpeakers.forEach((element) {
+      activeSpeakerIds[element.peer.peerId + "mainVideo"] = true;
+    });
+    if (isActiveSpeakerMode && peerTracks.length > 4) {
+      List<HMSSpeaker> activeSpeaker = [];
+      if (updateSpeakers.length > 4) {
+        activeSpeaker.addAll(updateSpeakers.sublist(0, 4));
+      } else {
+        activeSpeaker.addAll(updateSpeakers);
+      }
+      for (int i = activeSpeaker.length - 1; i > -1; i--) {
+        List<PeerTrackNode> tempTracks = peerTracks.sublist(0, 4);
+        int indexTrack = tempTracks.indexWhere(
+            (peer) => activeSpeaker[i].peer.peerId + "mainVideo" == peer.uid);
+        if (indexTrack != -1) {
+          continue;
+        }
+        int index = peerTracks.indexWhere(
+            (peer) => activeSpeaker[i].peer.peerId + "mainVideo" == peer.uid);
+        if (index != -1) {
+          PeerTrackNode peerTrackNode = peerTracks.removeAt(index);
+          peerTracks.insert(0, peerTrackNode);
+        }
+      }
+      uiUpdate++;
     }
     notifyListeners();
   }
@@ -756,6 +779,16 @@ class MeetingStore extends ChangeNotifier
         true, HMSTrackKind.kHMSTrackKindAudio, "regular", roles, this);
   }
 
+  void setAudioViewStatus() {
+    this.isAudioViewOn = !this.isAudioViewOn;
+    notifyListeners();
+  }
+
+  void setActiveSpeakerMode() {
+    this.isActiveSpeakerMode = !this.isActiveSpeakerMode;
+    notifyListeners();
+  }
+
   @override
   void onLocalAudioStats(
       {required HMSLocalAudioStats hmsLocalAudioStats,
@@ -836,7 +869,7 @@ class MeetingStore extends ChangeNotifier
   void onRTCStats({required HMSRTCStatsReport hmsrtcStatsReport}) {}
 
   bool isActiveSpeaker(String uid) {
-    return activeSpeakerIds.contains(uid);
+    return activeSpeakerIds.containsKey(uid);
   }
 
   @override
