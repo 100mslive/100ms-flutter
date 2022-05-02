@@ -17,7 +17,7 @@ jobs:
 #         working-directory: ./test/Flutter_100ms_appium
     strategy:
       matrix: 
-        api-level: [30]
+        api-level: [29]
         target: [default]
 
     steps:
