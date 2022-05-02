@@ -150,10 +150,10 @@ class _HomePageState extends State<HomePage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           if (skipPreview)
-                            Text("Don't Skip Preview")
+                            Text("Enable Preview")
                           else
-                            Text("Skip Preview"),
-                          Icon(Icons.preview),
+                            Text("Disable Preview",style: TextStyle(color: Colors.blue),),
+                          Icon(Icons.preview,color: skipPreview?Colors.white:Colors.blue),
                         ],
                       ),
                       value: 1,
@@ -163,10 +163,10 @@ class _HomePageState extends State<HomePage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           if (mirrorCamera)
-                            Text("Don't Mirror Camera")
+                            Text("Disable Mirroring",style: TextStyle(color: Colors.blue))
                           else
-                            Text("Mirror Camera"),
-                          Icon(Icons.camera_front),
+                            Text("Enable Mirroring"),
+                          Icon(Icons.camera_front,color: mirrorCamera?Colors.blue:Colors.white,),
                         ],
                       ),
                       value: 2,
@@ -176,23 +176,13 @@ class _HomePageState extends State<HomePage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           if (showStats)
-                            Text("Don't Show Stats")
+                            Text("Disable Stats",style: TextStyle(color: Colors.blue))
                           else
-                            Text("Show Stats"),
-                          Icon(Icons.bar_chart),
+                            Text("Enable Stats"),
+                          Icon(Icons.bar_chart,color: showStats?Colors.blue:Colors.white),
                         ],
                       ),
                       value: 3,
-                    ),
-                    PopupMenuItem(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text("Share Logs"),
-                          Icon(Icons.bug_report),
-                        ],
-                      ),
-                      value: 4,
                     ),
                     PopupMenuItem(
                       child: Row(

@@ -288,12 +288,7 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                                                         user: widget.user,
                                                         isAudioOn: _previewStore
                                                             .isAudioOn,
-                                                        localPeerNetworkQuality:
-                                                            _previewStore
-                                                                .networkQuality,
-                                                        mirror: widget.mirror,
-                                                        showStats:
-                                                            widget.showStats),
+                                                        ),
                                                   )));
                                     },
                                     child: Text(
@@ -326,6 +321,9 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                                                       localPeerNetworkQuality:
                                                           _previewStore
                                                               .networkQuality,
+                                                              mirror: widget.mirror,
+                                                        showStats:
+                                                            widget.showStats
                                                     ),
                                                   )));
                                     },
