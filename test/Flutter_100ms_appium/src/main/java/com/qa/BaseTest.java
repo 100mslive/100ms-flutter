@@ -201,10 +201,10 @@ public class BaseTest {
 				.withLogFile(new File("ServerLogs/server.log")));
 	}
 
-  @Parameters({"emulator", "platformName", /*"udid",*/ "deviceName", "systemPort",
+  @Parameters({"emulator", "platformName", "udid", "deviceName", "systemPort",
 	  "chromeDriverPort", "wdaLocalPort", "webkitDebugProxyPort"})
   @BeforeTest
-  public void beforeTest(@Optional("androidOnly")String emulator, String platformName, /*String udid,*/ String deviceName,
+  public void beforeTest(@Optional("androidOnly")String emulator, String platformName, String udid, String deviceName,
 		  @Optional("androidOnly")String systemPort, @Optional("androidOnly")String chromeDriverPort,
 		  @Optional("iOSOnly")String wdaLocalPort, @Optional("iOSOnly")String webkitDebugProxyPort) throws Exception {
 	  setDateTime(utils.dateTime());
@@ -242,7 +242,7 @@ public class BaseTest {
 			DesiredCapabilities desiredCapabilities = new DesiredCapabilities();
 			desiredCapabilities.setCapability("platformName", platformName);
 			desiredCapabilities.setCapability("deviceName", deviceName);
-//			desiredCapabilities.setCapability("udid", udid);
+			desiredCapabilities.setCapability("udid", udid);
 			url = new URL(props.getProperty("appiumURL"));
 
 			switch(platformName) {
