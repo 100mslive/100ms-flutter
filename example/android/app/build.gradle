@@ -34,7 +34,6 @@ android {
         targetSdkVersion 32
         versionCode 61
         versionName "1.1.11"
-
     }
 
     signingConfigs {
