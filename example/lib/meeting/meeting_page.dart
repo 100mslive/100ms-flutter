@@ -14,6 +14,7 @@ import 'package:hmssdk_flutter_example/common/ui/organisms/offline_screen.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
 import 'package:hmssdk_flutter_example/logs/custom_singleton_logger.dart';
+import 'package:hmssdk_flutter_example/meeting/hms_sdk_interactor.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:hmssdk_flutter_example/meeting/peer_track_node.dart';
 import 'package:provider/provider.dart';
@@ -35,7 +36,8 @@ class MeetingPage extends StatefulWidget {
       required this.flow,
       required this.user,
       required this.isAudioOn,
-      this.localPeerNetworkQuality})
+      this.localPeerNetworkQuality,
+      })
       : super(key: key);
 
   @override
@@ -68,7 +70,6 @@ class _MeetingPageState extends State<MeetingPage>
       UtilityComponents.showSnackBarWithString("Unable to Join", context);
       Navigator.of(context).pop();
     }
-    context.read<MeetingStore>().addUpdateListener();
   }
 
   void checkAudioState() async {
