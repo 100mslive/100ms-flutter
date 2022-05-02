@@ -44,12 +44,13 @@ jobs:
     - name: Android Emulator Runner
       uses: ReactiveCircus/android-emulator-runner@v2.23.0
       with:
+        run: avdmanager list device
         api-level: ${{ matrix.api-level }}
         target: ${{ matrix.target }}
         arch: x86_64
 #         profile: Nexus 6
-        force-avd-creation: false
-        emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -no-boot-anim none
+#         force-avd-creation: false
+#         emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -no-boot-anim none
         script: mvn test
         working-directory: ./test/Flutter_100ms_appium
 #         script: mvn clean run -Pandroid
