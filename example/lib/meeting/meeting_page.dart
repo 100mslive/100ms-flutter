@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:connectivity_checker/connectivity_checker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:hmssdk_flutter_example/common/ui/organisms/grid_active_speaker_view.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/grid_audio_view.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/grid_video_view.dart';
 import 'package:hmssdk_flutter_example/hls_viewer/hls_viewer.dart';
@@ -31,15 +30,14 @@ class MeetingPage extends StatefulWidget {
   final bool isAudioOn;
   final int? localPeerNetworkQuality;
 
-  const MeetingPage(
-      {Key? key,
-      required this.roomId,
-      required this.flow,
-      required this.user,
-      required this.isAudioOn,
-      this.localPeerNetworkQuality,
-      })
-      : super(key: key);
+  const MeetingPage({
+    Key? key,
+    required this.roomId,
+    required this.flow,
+    required this.user,
+    required this.isAudioOn,
+    this.localPeerNetworkQuality,
+  }) : super(key: key);
 
   @override
   _MeetingPageState createState() => _MeetingPageState();
@@ -270,15 +268,14 @@ class _MeetingPageState extends State<MeetingPage>
                             height: MediaQuery.of(context).size.height * 0.78,
                             child: Selector<
                                     MeetingStore,
-                                    Tuple7<List<PeerTrackNode>, bool, int, int,
-                                        bool, bool, int>>(
-                                selector: (_, meetingStore) => Tuple7(
+                                    Tuple6<List<PeerTrackNode>, bool, int, int,
+                                        bool, int>>(
+                                selector: (_, meetingStore) => Tuple6(
                                     meetingStore.peerTracks,
                                     meetingStore.isHLSLink,
                                     meetingStore.peerTracks.length,
                                     meetingStore.screenShareCount,
                                     meetingStore.isAudioViewOn,
-                                    meetingStore.isActiveSpeakerMode,
                                     meetingStore.uiUpdate),
                                 builder: (_, data, __) {
                                   if (data.item2) {
@@ -329,35 +326,18 @@ class _MeetingPageState extends State<MeetingPage>
                                         child: Text(
                                             'Waiting for others to join!'));
                                   }
-
                                   if (data.item5) {
-                                    return PageView(
-                                        physics: PageScrollPhysics(),
-                                        scrollDirection: Axis.horizontal,
-                                        children: gridAudioView(
-                                            peerTracks: data.item1,
-                                            audioViewOn: data.item5,
-                                            itemCount: data.item3,
-                                            screenShareOn: data.item4,
-                                            size: size));
-                                  }
-                                  if (data.item6) {
-                                    return gridActiveSpeakerView(
-                                        peerTracks: data.item1,
-                                        audioViewOn: data.item5,
+                                    return gridAudioView(
+                                        peerTracks:
+                                            data.item1.sublist(data.item4),
                                         itemCount: data.item3,
-                                        screenShareOn: data.item4,
                                         size: size);
                                   }
-                                  return PageView(
-                                      physics: PageScrollPhysics(),
-                                      scrollDirection: Axis.horizontal,
-                                      children: gridVideoView(
-                                          peerTracks: data.item1,
-                                          audioViewOn: data.item5,
-                                          itemCount: data.item3,
-                                          screenShareOn: data.item4,
-                                          size: size));
+                                  return gridVideoView(
+                                      peerTracks: data.item1,
+                                      itemCount: data.item3,
+                                      screenShareOn: data.item4,
+                                      size: size);
                                 }),
                           ),
                           Align(
@@ -506,14 +486,16 @@ class _MeetingPageState extends State<MeetingPage>
                     Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Selector<MeetingStore, Tuple3<HMSPeer?, bool, bool>>(
-                            selector: (_, meetingStore) => Tuple3(
+                          Selector<MeetingStore,
+                              Tuple4<HMSPeer?, bool, bool, bool>>(
+                            selector: (_, meetingStore) => Tuple4(
                                 meetingStore.localPeer,
                                 meetingStore.isVideoOn,
                                 meetingStore.localPeer?.role.publishSettings
                                         ?.allowed
                                         .contains("video") ??
-                                    false),
+                                    false,
+                                meetingStore.isAudioViewOn),
                             builder: (_, data, __) {
                               return ((data.item1 != null) &&
                                       data.item1!.role.publishSettings!.allowed
@@ -523,14 +505,13 @@ class _MeetingPageState extends State<MeetingPage>
                                       child: IconButton(
                                           tooltip: 'Video',
                                           iconSize: 24,
-                                          onPressed:
-                                              (meetingStore.isAudioViewOn)
-                                                  ? null
-                                                  : () {
-                                                      context
-                                                          .read<MeetingStore>()
-                                                          .switchVideo();
-                                                    },
+                                          onPressed: (data.item4)
+                                              ? null
+                                              : () {
+                                                  context
+                                                      .read<MeetingStore>()
+                                                      .switchVideo();
+                                                },
                                           icon: Icon(
                                             data.item2
                                                 ? Icons.videocam

@@ -989,7 +989,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             val args = HashMap<String, Any?>()
             args.put("event_name", "on_remote_video_stats")
             args.put("data", HMSRtcStatsExtension.toDictionary(hmsRemoteVideoStats = hmsRemoteVideoStats, peer = peer, track = track))
-            Log.i("data...",args.toString())
+            
             if (args["data"] != null)
                 CoroutineScope(Dispatchers.Main).launch {
                     eventSink?.success(args)
@@ -1005,7 +1005,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             val args = HashMap<String, Any?>()
             args.put("event_name", "on_remote_audio_stats")
             args.put("data", HMSRtcStatsExtension.toDictionary(hmsRemoteAudioStats = hmsRemoteAudioStats, peer = peer, track = track))
-            Log.i("data...",args.toString())
+            
 
             if (args["data"] != null)
                 CoroutineScope(Dispatchers.Main).launch {
@@ -1023,7 +1023,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             args.put("event_name", "on_local_video_stats")
             args.put("data", HMSRtcStatsExtension.toDictionary(hmsLocalVideoStats = hmsLocalVideoStats, peer = getLocalPeer(), track = track))
 
-            Log.i("data...",args.toString())
+            
             if (args["data"] != null)
                 CoroutineScope(Dispatchers.Main).launch {
                     eventSink?.success(args)

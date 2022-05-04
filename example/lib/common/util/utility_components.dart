@@ -70,13 +70,19 @@ class UtilityComponents {
 
   static showTrackChangeDialog(event, context) async {
     event = event as HMSTrackChangeRequest;
+    MeetingStore meetingStore =
+        Provider.of<MeetingStore>(context, listen: false);
     String answer = await showDialog(
         barrierDismissible: false,
         context: context,
-        builder: (ctx) => TrackChangeDialogOrganism(trackChangeRequest: event));
-    MeetingStore meetingStore =
-        Provider.of<MeetingStore>(context, listen: false);
+        builder: (ctx) => TrackChangeDialogOrganism(
+              trackChangeRequest: event,
+              isAudioModeOn: meetingStore.isAudioViewOn,
+            ));
     if (answer == "OK") {
+      if (meetingStore.isAudioViewOn) {
+        meetingStore.setAudioViewStatus();
+      }
       meetingStore.changeTracks(event);
     } else {
       meetingStore.hmsTrackChangeRequest = null;

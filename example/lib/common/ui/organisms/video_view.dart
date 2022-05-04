@@ -9,7 +9,6 @@ class VideoView extends StatefulWidget {
   final matchParent;
 
   final Size? viewSize;
-  bool audioView;
   final bool setMirror;
   final double itemHeight;
   final ScaleType scaleType;
@@ -18,7 +17,6 @@ class VideoView extends StatefulWidget {
   VideoView(
       {Key? key,
       this.viewSize,
-      this.audioView = false,
       this.setMirror = false,
       this.matchParent = true,
       this.itemHeight = 200,
@@ -35,7 +33,7 @@ class _VideoViewState extends State<VideoView> {
   Widget build(BuildContext context) {
     return Selector<PeerTrackNode, Tuple3<HMSVideoTrack?, bool, bool>>(
         builder: (_, data, __) {
-          if ((data.item1 == null) || data.item2 || data.item3 ||widget.audioView) {
+          if ((data.item1 == null) || data.item2 || data.item3) {
             return Container(
                 child: Center(
                     child: CircleAvatar(

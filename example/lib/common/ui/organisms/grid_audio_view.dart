@@ -1,150 +1,68 @@
 import 'package:flutter/material.dart';
-import 'package:hmssdk_flutter_example/common/ui/organisms/video_tile.dart';
+import 'package:flutter_reorderable_grid_view/widgets/widgets.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:hmssdk_flutter_example/common/ui/organisms/audio_tile.dart';
 import 'package:hmssdk_flutter_example/meeting/peer_track_node.dart';
 import 'package:provider/provider.dart';
 
-List<Widget> gridAudioView(
+Widget gridAudioView(
     {required List<PeerTrackNode> peerTracks,
-    required bool audioViewOn,
     required int itemCount,
-    required int screenShareOn,
     required Size size}) {
-  int index = screenShareOn;
-  List<Widget> gridView = [];
-
-  int numberofPages = (((itemCount - index) ~/ 6).toInt() +
-      ((itemCount - index) % 6 == 0 ? 0 : 1));
-  for (int i = 0; i < numberofPages; i++) {
-    if (index + 6 < itemCount) {
-      gridView.add(
-          customGrid(peerTracks.sublist(index, index + 6), audioViewOn, size));
-      index += 6;
-    } else {
-      gridView.add(
-          customGrid(peerTracks.sublist(index, itemCount), audioViewOn, size));
-    }
-  }
-  return gridView;
+  return ReorderableBuilder(
+      enableDraggable: false,
+      enableLongPress: false,
+      children: List.generate(itemCount, (index) {
+        return ChangeNotifierProvider.value(
+            key: ValueKey(peerTracks[index].uid),
+            value: peerTracks[index],
+            child: AudioTile(
+              key: ValueKey(peerTracks[index].uid),
+              itemHeight: size.height,
+              itemWidth: size.width,
+            ));
+      }),
+      builder: (children, scrollController) {
+        return GridView(
+            shrinkWrap: true,
+            scrollDirection: Axis.horizontal,
+            controller: scrollController,
+            physics: PageScrollPhysics(),
+            children: children,
+            gridDelegate: SliverStairedGridDelegate(
+                startCrossAxisDirectionReversed: true,
+                pattern: pattern(itemCount, size)));
+      });
 }
 
-Widget customGrid(List<PeerTrackNode> peerTracks, audioViewOn, Size size) {
-  return Container(
-    child: Column(
-      children: [
-        Expanded(
-          flex: 2,
-          child: Row(
-            children: [
-              if (peerTracks.length > 0)
-                Flexible(
-                    child: Column(
-                  children: [
-                    Flexible(
-                      child: Container(
-                        child: ChangeNotifierProvider.value(
-                            value: peerTracks[0],
-                            child: VideoTile(
-                              key: Key(peerTracks[0].uid),
-                              audioView: audioViewOn,
-                              itemHeight: size.height,
-                              itemWidth: size.width,
-                            )),
-                      ),
-                    ),
-                    if (peerTracks.length > 1)
-                      Flexible(
-                        child: Container(
-                          child: ChangeNotifierProvider.value(
-                              value: peerTracks[1],
-                              child: VideoTile(
-                                key: Key(peerTracks[1].uid),
-                                audioView: audioViewOn,
-                                itemHeight: size.height,
-                                itemWidth: size.width,
-                              )),
-                        ),
-                      ),
-                    if (peerTracks.length == 3)
-                      Flexible(
-                        child: Container(
-                          child: ChangeNotifierProvider.value(
-                              value: peerTracks[2],
-                              child: VideoTile(
-                                key: Key(peerTracks[2].uid),
-                                audioView: audioViewOn,
-                                itemHeight: size.height,
-                                itemWidth: size.width,
-                              )),
-                        ),
-                      ),
-                  ],
-                )),
-              if (peerTracks.length > 3)
-                Flexible(
-                  child: Column(
-                    children: [
-                      Flexible(
-                        child: Container(
-                          child: ChangeNotifierProvider.value(
-                              value: peerTracks[2],
-                              child: VideoTile(
-                                key: Key(peerTracks[2].uid),
-                                audioView: audioViewOn,
-                                itemHeight: size.height,
-                                itemWidth: size.width,
-                              )),
-                        ),
-                      ),
-                      Flexible(
-                          child: Container(
-                        child: ChangeNotifierProvider.value(
-                            value: peerTracks[3],
-                            child: VideoTile(
-                              key: Key(peerTracks[3].uid),
-                              audioView: audioViewOn,
-                              itemHeight: size.height,
-                              itemWidth: size.width,
-                            )),
-                      ))
-                    ],
-                  ),
-                ),
-            ],
-          ),
-        ),
-        if (peerTracks.length > 4)
-          Expanded(
-            flex: 1,
-            child: Row(
-              children: [
-                Flexible(
-                  child: Container(
-                    child: ChangeNotifierProvider.value(
-                        value: peerTracks[4],
-                        child: VideoTile(
-                          key: Key(peerTracks[4].uid),
-                          audioView: audioViewOn,
-                          itemHeight: size.height,
-                          itemWidth: size.width,
-                        )),
-                  ),
-                ),
-                if (peerTracks.length > 5)
-                  Flexible(
-                      child: Container(
-                    child: ChangeNotifierProvider.value(
-                        value: peerTracks[5],
-                        child: VideoTile(
-                          key: Key(peerTracks[5].uid),
-                          audioView: audioViewOn,
-                          itemHeight: size.height,
-                          itemWidth: size.width,
-                        )),
-                  ))
-              ],
-            ),
-          ),
-      ],
-    ),
-  );
+List<StairedGridTile> pattern(int itemCount, Size size) {
+  double ratio = (size.height - 4 * kToolbarHeight) / (size.width - 20);
+  List<StairedGridTile> tiles = [];
+  int gridView = itemCount ~/ 6;
+  int tileLeft = itemCount - (gridView * 6);
+  for (int i = 0; i < (itemCount - tileLeft); i++) {
+    tiles.add(StairedGridTile(1 / 3, ratio / 1.5));
+  }
+  if (tileLeft == 1) {
+    tiles.add(StairedGridTile(1, ratio));
+  } else if (tileLeft == 2) {
+    tiles.add(StairedGridTile(0.5, ratio / 2));
+    tiles.add(StairedGridTile(0.5, ratio / 2));
+  } else if (tileLeft == 3) {
+    tiles.add(StairedGridTile(1 / 3, ratio / 3));
+    tiles.add(StairedGridTile(1 / 3, ratio / 3));
+    tiles.add(StairedGridTile(1 / 3, ratio / 3));
+  } else if (tileLeft == 4) {
+    tiles.add(StairedGridTile(0.5, ratio));
+    tiles.add(StairedGridTile(0.5, ratio));
+    tiles.add(StairedGridTile(0.5, ratio));
+    tiles.add(StairedGridTile(0.5, ratio));
+  } else if (tileLeft == 5) {
+    tiles.add(StairedGridTile(1 / 3, ratio / 1.5));
+    tiles.add(StairedGridTile(1 / 3, ratio / 1.5));
+    tiles.add(StairedGridTile(1 / 3, ratio / 1.5));
+    tiles.add(StairedGridTile(1 / 3, ratio / 1.5));
+    tiles.add(StairedGridTile(1 / 3, ratio / 1.5));
+  }
+  return tiles;
 }

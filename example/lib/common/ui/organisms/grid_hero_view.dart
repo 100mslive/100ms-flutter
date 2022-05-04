@@ -1,182 +1,89 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_reorderable_grid_view/widgets/widgets.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/video_tile.dart';
 import 'package:hmssdk_flutter_example/meeting/peer_track_node.dart';
 import 'package:provider/provider.dart';
 
-List<Widget> gridHeroView(
+Widget gridHeroView(
     {required List<PeerTrackNode> peerTracks,
-    required bool audioViewOn,
     required int itemCount,
     required int screenShareOn,
     required Size size}) {
-  int index = 0;
-  List<Widget> gridView = [];
-
-  int numberofPages = (((itemCount - index) ~/ 4).toInt() +
-      ((itemCount - index) % 4 == 0 ? 0 : 1));
-  for (int i = 0; i < numberofPages; i++) {
-    if (i == 0) {
-      gridView.add(customHeroGrid(
-          peerTracks.sublist(
-              index, (index + 4 < itemCount) ? index + 4 : itemCount),
-          audioViewOn,
-          size,
-          screenShareOn > 0));
-      index += 4;
-    } else {
-      gridView.add(customGrid(
-          peerTracks.sublist(
-              index, (index + 4 < itemCount) ? index + 4 : itemCount),
-          audioViewOn,
-          size));
-      index += 4;
-    }
-  }
-  return gridView;
-}
-
-Widget customHeroGrid(List<PeerTrackNode> peerTracks, audioViewOn, Size size,
-    bool screenShareOn) {
-  return Container(
-    child: Column(
-      children: [
-        Expanded(
-          flex: 2,
-          child: Container(
-            child: ChangeNotifierProvider.value(
-                value: peerTracks[0],
-                child: VideoTile(
-                  key: Key(peerTracks[0].uid),
-                  audioView: audioViewOn,
-                  itemHeight: size.height,
-                  itemWidth: size.width,
-                  scaleType: screenShareOn
-                      ? ScaleType.SCALE_ASPECT_FIT
-                      : ScaleType.SCALE_ASPECT_FILL,
-                )),
-          ),
-        ),
-        if (peerTracks.length > 1)
-          Expanded(
-            flex: 1,
-            child: Row(
-              children: [
-                Flexible(
-                  child: Container(
-                    child: ChangeNotifierProvider.value(
-                        value: peerTracks[1],
-                        child: VideoTile(
-                          key: Key(peerTracks[1].uid),
-                          audioView: audioViewOn,
-                          itemHeight: size.height,
-                          itemWidth: size.width,
-                        )),
-                  ),
-                ),
-                if (peerTracks.length > 2)
-                  Flexible(
-                    child: Container(
-                      child: ChangeNotifierProvider.value(
-                          value: peerTracks[2],
-                          child: VideoTile(
-                            key: Key(peerTracks[2].uid),
-                            audioView: audioViewOn,
-                            itemHeight: size.height,
-                            itemWidth: size.width,
-                          )),
-                    ),
-                  ),
-                if (peerTracks.length > 3)
-                  Flexible(
-                    child: Container(
-                      child: ChangeNotifierProvider.value(
-                          value: peerTracks[3],
-                          child: VideoTile(
-                            key: Key(peerTracks[3].uid),
-                            audioView: audioViewOn,
-                            itemHeight: size.height,
-                            itemWidth: size.width,
-                          )),
+  return ReorderableBuilder(
+      enableDraggable: false,
+      enableLongPress: false,
+      children: List.generate(itemCount, (index) {
+        if (peerTracks[index].track?.source != "REGULAR") {
+          return ChangeNotifierProvider.value(
+            key: ValueKey(peerTracks[index].uid),
+            value: peerTracks[index],
+            child: peerTracks[index].peer.isLocal
+                ? Container(
+                    margin: EdgeInsets.all(2),
+                    height: size.height,
+                    width: size.width,
+                    decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey, width: 1.0),
+                        borderRadius: BorderRadius.all(Radius.circular(10))),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.screen_share),
+                        Text("You are sharing your screen"),
+                      ],
                     ),
                   )
-              ],
-            ),
-          )
-      ],
-    ),
-  );
+                : VideoTile(
+                    key: Key(peerTracks[index].uid),
+                    itemHeight: size.height,
+                    itemWidth: size.width,
+                    scaleType: ScaleType.SCALE_ASPECT_FIT,
+                  ),
+          );
+        }
+        return ChangeNotifierProvider.value(
+            key: ValueKey(peerTracks[index].uid),
+            value: peerTracks[index],
+            child: VideoTile(
+              key: ValueKey(peerTracks[index].uid),
+              itemHeight: size.height,
+              itemWidth: size.width,
+            ));
+      }),
+      builder: (children, scrollController) {
+        return GridView(
+            shrinkWrap: true,
+            scrollDirection: Axis.vertical,
+            controller: scrollController,
+            physics: PageScrollPhysics(),
+            children: children,
+            gridDelegate: SliverStairedGridDelegate(
+                startCrossAxisDirectionReversed: false,
+                pattern: pattern(itemCount, screenShareOn, size)));
+      });
 }
 
-Widget customGrid(List<PeerTrackNode> peerTracks, audioViewOn, Size size) {
-  return Container(
-    child: Row(
-      children: [
-        if (peerTracks.length > 0)
-          Flexible(
-              child: Column(
-            children: [
-              Flexible(
-                child: Container(
-                  child: ChangeNotifierProvider.value(
-                      value: peerTracks[0],
-                      child: VideoTile(
-                        key: Key(peerTracks[0].uid),
-                        audioView: audioViewOn,
-                        itemHeight: size.height,
-                        itemWidth: size.width,
-                      )),
-                ),
-              ),
-              if (peerTracks.length > 1)
-                Flexible(
-                  child: Container(
-                    child: ChangeNotifierProvider.value(
-                        value: peerTracks[1],
-                        child: VideoTile(
-                          key: Key(peerTracks[1].uid),
-                          audioView: audioViewOn,
-                          itemHeight: size.height,
-                          itemWidth: size.width,
-                        )),
-                  ),
-                )
-            ],
-          )),
-        if (peerTracks.length > 2)
-          Flexible(
-            child: Column(
-              children: [
-                Flexible(
-                  child: Container(
-                    child: ChangeNotifierProvider.value(
-                        value: peerTracks[2],
-                        child: VideoTile(
-                          key: Key(peerTracks[2].uid),
-                          audioView: audioViewOn,
-                          itemHeight: size.height,
-                          itemWidth: size.width,
-                        )),
-                  ),
-                ),
-                Flexible(
-                  child: (peerTracks.length > 3)
-                      ? Container(
-                          child: ChangeNotifierProvider.value(
-                              value: peerTracks[3],
-                              child: VideoTile(
-                                key: Key(peerTracks[3].uid),
-                                audioView: audioViewOn,
-                                itemHeight: size.height,
-                                itemWidth: size.width,
-                              )),
-                        )
-                      : Container(),
-                )
-              ],
-            ),
-          )
-      ],
-    ),
-  );
+List<StairedGridTile> pattern(int itemCount, int screenShareCount, Size size) {
+  double ratio = (size.width - 20) / (size.height - 4 * kToolbarHeight);
+  List<StairedGridTile> tiles = [];
+  for (int i = 0; i < screenShareCount; i++) {
+    tiles.add(StairedGridTile(1, ratio));
+  }
+  int normalTile = (itemCount - screenShareCount);
+  int gridView = normalTile ~/ 4;
+  int tileLeft = normalTile - (gridView * 4);
+  // for (int i = 0; i < (normalTile - tileLeft); i++) {
+  //   tiles.add(StairedGridTile(0.5, ratio));
+  // }
+  if (tileLeft == 1) {
+    tiles.add(StairedGridTile(1, ratio));
+  } else {
+    tiles.add(StairedGridTile(1, ratio / 0.8));
+    tiles.add(StairedGridTile(0.33, ratio / 0.6));
+    tiles.add(StairedGridTile(0.33, ratio / 0.6));
+    tiles.add(StairedGridTile(0.33, ratio / 0.6));
+  }
+  return tiles;
 }

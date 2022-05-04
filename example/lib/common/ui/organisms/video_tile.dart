@@ -22,14 +22,12 @@ import 'change_track_options.dart';
 class VideoTile extends StatefulWidget {
   final double itemHeight;
   final double itemWidth;
-  final bool audioView;
   final ScaleType scaleType;
 
   VideoTile(
       {Key? key,
       this.itemHeight = 200.0,
       this.itemWidth = 200.0,
-      required this.audioView,
       this.scaleType = ScaleType.SCALE_ASPECT_FILL})
       : super(key: key);
 
@@ -71,9 +69,8 @@ class _VideoTileState extends State<VideoTile> {
                 if (!mutePermission ||
                     !unMutePermission ||
                     !removePeerPermission) return;
-                if (!widget.audioView &&
-                    peerTrackNode.peer.peerId !=
-                        _meetingStore.localPeer!.peerId)
+                if (peerTrackNode.peer.peerId !=
+                    _meetingStore.localPeer!.peerId)
                   showDialog(
                       context: context,
                       builder: (_) => Column(
@@ -117,7 +114,6 @@ class _VideoTileState extends State<VideoTile> {
                 child: Stack(
                   children: [
                     VideoView(
-                      audioView: widget.audioView,
                       scaleType: widget.scaleType,
                       itemHeight: widget.itemHeight,
                       itemWidth: widget.itemWidth,
@@ -130,8 +126,6 @@ class _VideoTileState extends State<VideoTile> {
                     HandRaise(), //bottom left
                     BRBTag(), //top right
                     NetworkIconWidget(), //top left
-                    AudioMuteStatus(),
-                    //bottom center
                     AudioMuteStatus(), //bottom center
                     RTCStatsView(
                         isLocal: context.read<PeerTrackNode>().peer.isLocal),
