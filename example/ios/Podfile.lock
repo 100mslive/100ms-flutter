@@ -1,27 +1,27 @@
 PODS:
-  - Firebase/Analytics (8.11.0):
+  - Firebase/Analytics (8.15.0):
     - Firebase/Core
-  - Firebase/Core (8.11.0):
+  - Firebase/Core (8.15.0):
     - Firebase/CoreOnly
-    - FirebaseAnalytics (~> 8.11.0)
-  - Firebase/CoreOnly (8.11.0):
-    - FirebaseCore (= 8.11.0)
-  - Firebase/Crashlytics (8.11.0):
+    - FirebaseAnalytics (~> 8.15.0)
+  - Firebase/CoreOnly (8.15.0):
+    - FirebaseCore (= 8.15.0)
+  - Firebase/Crashlytics (8.15.0):
     - Firebase/CoreOnly
-    - FirebaseCrashlytics (~> 8.11.0)
-  - firebase_analytics (9.1.0):
-    - Firebase/Analytics (= 8.11.0)
+    - FirebaseCrashlytics (~> 8.15.0)
+  - firebase_analytics (9.1.6):
+    - Firebase/Analytics (= 8.15.0)
     - firebase_core
     - Flutter
-  - firebase_core (1.12.0):
-    - Firebase/CoreOnly (= 8.11.0)
+  - firebase_core (1.15.0):
+    - Firebase/CoreOnly (= 8.15.0)
     - Flutter
-  - firebase_crashlytics (2.5.1):
-    - Firebase/Crashlytics (= 8.11.0)
+  - firebase_crashlytics (2.7.1):
+    - Firebase/Crashlytics (= 8.15.0)
     - firebase_core
     - Flutter
-  - FirebaseAnalytics (8.11.0):
-    - FirebaseAnalytics/AdIdSupport (= 8.11.0)
+  - FirebaseAnalytics (8.15.0):
+    - FirebaseAnalytics/AdIdSupport (= 8.15.0)
     - FirebaseCore (~> 8.0)
     - FirebaseInstallations (~> 8.0)
     - GoogleUtilities/AppDelegateSwizzler (~> 7.7)
@@ -29,16 +29,16 @@ PODS:
     - GoogleUtilities/Network (~> 7.7)
     - "GoogleUtilities/NSData+zlib (~> 7.7)"
     - nanopb (~> 2.30908.0)
-  - FirebaseAnalytics/AdIdSupport (8.11.0):
+  - FirebaseAnalytics/AdIdSupport (8.15.0):
     - FirebaseCore (~> 8.0)
     - FirebaseInstallations (~> 8.0)
-    - GoogleAppMeasurement (= 8.11.0)
+    - GoogleAppMeasurement (= 8.15.0)
     - GoogleUtilities/AppDelegateSwizzler (~> 7.7)
     - GoogleUtilities/MethodSwizzler (~> 7.7)
     - GoogleUtilities/Network (~> 7.7)
     - "GoogleUtilities/NSData+zlib (~> 7.7)"
     - nanopb (~> 2.30908.0)
-  - FirebaseCore (8.11.0):
+  - FirebaseCore (8.15.0):
     - FirebaseCoreDiagnostics (~> 8.0)
     - GoogleUtilities/Environment (~> 7.7)
     - GoogleUtilities/Logger (~> 7.7)
@@ -47,7 +47,7 @@ PODS:
     - GoogleUtilities/Environment (~> 7.7)
     - GoogleUtilities/Logger (~> 7.7)
     - nanopb (~> 2.30908.0)
-  - FirebaseCrashlytics (8.11.0):
+  - FirebaseCrashlytics (8.15.0):
     - FirebaseCore (~> 8.0)
     - FirebaseInstallations (~> 8.0)
     - GoogleDataTransport (~> 9.1)
@@ -60,21 +60,21 @@ PODS:
     - GoogleUtilities/UserDefaults (~> 7.7)
     - PromisesObjC (< 3.0, >= 1.2)
   - Flutter (1.0.0)
-  - GoogleAppMeasurement (8.11.0):
-    - GoogleAppMeasurement/AdIdSupport (= 8.11.0)
+  - GoogleAppMeasurement (8.15.0):
+    - GoogleAppMeasurement/AdIdSupport (= 8.15.0)
     - GoogleUtilities/AppDelegateSwizzler (~> 7.7)
     - GoogleUtilities/MethodSwizzler (~> 7.7)
     - GoogleUtilities/Network (~> 7.7)
     - "GoogleUtilities/NSData+zlib (~> 7.7)"
     - nanopb (~> 2.30908.0)
-  - GoogleAppMeasurement/AdIdSupport (8.11.0):
-    - GoogleAppMeasurement/WithoutAdIdSupport (= 8.11.0)
+  - GoogleAppMeasurement/AdIdSupport (8.15.0):
+    - GoogleAppMeasurement/WithoutAdIdSupport (= 8.15.0)
     - GoogleUtilities/AppDelegateSwizzler (~> 7.7)
     - GoogleUtilities/MethodSwizzler (~> 7.7)
     - GoogleUtilities/Network (~> 7.7)
     - "GoogleUtilities/NSData+zlib (~> 7.7)"
     - nanopb (~> 2.30908.0)
-  - GoogleAppMeasurement/WithoutAdIdSupport (8.11.0):
+  - GoogleAppMeasurement/WithoutAdIdSupport (8.15.0):
     - GoogleUtilities/AppDelegateSwizzler (~> 7.7)
     - GoogleUtilities/MethodSwizzler (~> 7.7)
     - GoogleUtilities/Network (~> 7.7)
@@ -103,11 +103,11 @@ PODS:
     - GoogleUtilities/Logger
   - GoogleUtilities/UserDefaults (7.7.0):
     - GoogleUtilities/Logger
-  - HMSSDK (0.2.9):
+  - HMSSDK (0.2.11):
     - HMSWebRTC (= 1.0.4518)
-  - hmssdk_flutter (0.6.1):
+  - hmssdk_flutter (0.7.1):
     - Flutter
-    - HMSSDK (= 0.2.9)
+    - HMSSDK (= 0.2.11)
   - HMSWebRTC (1.0.4518)
   - nanopb (2.30908.0):
     - nanopb/decode (= 2.30908.0)
@@ -118,7 +118,7 @@ PODS:
     - Flutter
   - path_provider_ios (0.0.1):
     - Flutter
-  - "permission_handler (5.1.0+2)":
+  - permission_handler_apple (9.0.4):
     - Flutter
   - PromisesObjC (2.1.0)
   - video_player_avfoundation (0.0.1):
@@ -134,7 +134,7 @@ DEPENDENCIES:
   - hmssdk_flutter (from `.symlinks/plugins/hmssdk_flutter/ios`)
   - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
   - path_provider_ios (from `.symlinks/plugins/path_provider_ios/ios`)
-  - permission_handler (from `.symlinks/plugins/permission_handler/ios`)
+  - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
   - video_player_avfoundation (from `.symlinks/plugins/video_player_avfoundation/ios`)
   - wakelock (from `.symlinks/plugins/wakelock/ios`)
 
@@ -169,34 +169,34 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/package_info_plus/ios"
   path_provider_ios:
     :path: ".symlinks/plugins/path_provider_ios/ios"
-  permission_handler:
-    :path: ".symlinks/plugins/permission_handler/ios"
+  permission_handler_apple:
+    :path: ".symlinks/plugins/permission_handler_apple/ios"
   video_player_avfoundation:
     :path: ".symlinks/plugins/video_player_avfoundation/ios"
   wakelock:
     :path: ".symlinks/plugins/wakelock/ios"
 
 SPEC CHECKSUMS:
-  Firebase: 44dd9724c84df18b486639e874f31436eaa9a20c
-  firebase_analytics: b267e923ba3cdc892bdcadc01efab50f3b8b7441
-  firebase_core: 443bccfd6aa6b42f07be365b500773dc69db2d87
-  firebase_crashlytics: 0df152ee2d96f5a4aeddf2288fb277bbd0833b18
-  FirebaseAnalytics: 4e4b13031034e6561ed3bd1d47b6fdabbd6487c6
-  FirebaseCore: 2f4f85b453cc8fea4bb2b37e370007d2bcafe3f0
+  Firebase: 5f8193dff4b5b7c5d5ef72ae54bb76c08e2b841d
+  firebase_analytics: 79e91b70c5698a941bdc8b813f40d3c444a58034
+  firebase_core: fa19947d8db1c0a62d8872c45039b3113829cd2e
+  firebase_crashlytics: 5a0fd2de31fb603460f7937cd6b6038dc5a0ac4c
+  FirebaseAnalytics: 7761cbadb00a717d8d0939363eb46041526474fa
+  FirebaseCore: 5743c5785c074a794d35f2fff7ecc254a91e08b1
   FirebaseCoreDiagnostics: 92e07a649aeb66352b319d43bdd2ee3942af84cb
-  FirebaseCrashlytics: 62268addefae79601057818156e8bc69d71fee41
+  FirebaseCrashlytics: feb07e4e9187be3c23c6a846cce4824e5ce2dd0b
   FirebaseInstallations: 40bd9054049b2eae9a2c38ef1c3dd213df3605cd
   Flutter: 50d75fe2f02b26cc09d224853bb45737f8b3214a
-  GoogleAppMeasurement: aa3cb422fab2b05d2efac543a5720d1a85b9dea5
+  GoogleAppMeasurement: 4c19f031220c72464d460c9daa1fb5d1acce958e
   GoogleDataTransport: 629c20a4d363167143f30ea78320d5a7eb8bd940
   GoogleUtilities: e0913149f6b0625b553d70dae12b49fc62914fd1
-  HMSSDK: 080a5ebfbe96fa5a4005e9a43c9c6673e4d8181a
-  hmssdk_flutter: a4c860303803c733c37707e4385bcea8493244c3
+  HMSSDK: b923aa800e01fe30af1403cbf2174a61fb31e023
+  hmssdk_flutter: 1e0b45939d1d06ea2029161b9dc7785017b97f98
   HMSWebRTC: 599fb1d886daecd6e58984f84224d708bce8b565
   nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
   package_info_plus: 6c92f08e1f853dc01228d6f553146438dafcd14e
-  path_provider_ios: 7d7ce634493af4477d156294792024ec3485acd5
-  permission_handler: ccb20a9fad0ee9b1314a52b70b76b473c5f8dab0
+  path_provider_ios: 14f3d2fd28c4fdb42f44e0f751d12861c43cee02
+  permission_handler_apple: 44366e37eaf29454a1e7b1b7d736c2cceaeb17ce
   PromisesObjC: 99b6f43f9e1044bd87a95a60beff28c2c44ddb72
   video_player_avfoundation: e489aac24ef5cf7af82702979ed16f2a5ef84cff
   wakelock: d0fc7c864128eac40eba1617cb5264d9c940b46f

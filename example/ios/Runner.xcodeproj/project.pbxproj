@@ -160,7 +160,7 @@
 		97C146E61CF9000F007C117D /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1300;
+				LastUpgradeCheck = 1330;
 				ORGANIZATIONNAME = 100ms;
 				TargetAttributes = {
 					97C146ED1CF9000F007C117D = {
@@ -363,7 +363,9 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 60;
+
+				CURRENT_PROJECT_VERSION = 62;
+
 				DEVELOPMENT_TEAM = 5N85PP82A9;
 				ENABLE_BITCODE = YES;
 				INFOPLIST_FILE = Runner/Info.plist;
@@ -501,7 +503,9 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 60;
+
+				CURRENT_PROJECT_VERSION = 62;
+
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 5N85PP82A9;
 				ENABLE_BITCODE = YES;
@@ -534,7 +538,9 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 60;
+
+				CURRENT_PROJECT_VERSION = 62;
+
 				DEVELOPMENT_TEAM = 5N85PP82A9;
 				ENABLE_BITCODE = YES;
 				INFOPLIST_FILE = Runner/Info.plist;

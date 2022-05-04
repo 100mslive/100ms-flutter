@@ -7,12 +7,9 @@ import 'package:hmssdk_flutter_example/model/rtc_stats.dart';
 
 class PeerTrackNode extends ChangeNotifier {
   HMSPeer peer;
-
   String uid;
-
   HMSVideoTrack? track;
   HMSAudioTrack? audioTrack;
-
   bool isOffscreen;
   int? networkQuality;
   RTCStats? stats;
@@ -25,6 +22,7 @@ class PeerTrackNode extends ChangeNotifier {
       this.isOffscreen = false,
       this.networkQuality = -1,
       this.stats });
+
 
   @override
   String toString() {
