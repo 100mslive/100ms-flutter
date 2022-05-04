@@ -26,7 +26,6 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Wait;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.ITestResult;
 import org.testng.annotations.*;
 
@@ -296,7 +295,11 @@ public class BaseTest {
   }
 
   public void waitForVisibility(MobileElement e) {
-	  WebDriverWait wait = new WebDriverWait(getDriver(), TestUtils.WAIT);
+//	  WebDriverWait wait = new WebDriverWait(getDriver(), TestUtils.WAIT);
+	  Wait<WebDriver> wait = new FluentWait<WebDriver>(getDriver())
+			  .withTimeout(Duration.ofSeconds(30))
+			  .pollingEvery(Duration.ofSeconds(5))
+			  .ignoring(NoSuchElementException.class);
 	  wait.until(ExpectedConditions.visibilityOf(e));
   }
 
