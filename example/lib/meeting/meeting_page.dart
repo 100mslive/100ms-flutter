@@ -471,7 +471,7 @@ class _MeetingPageState extends State<MeetingPage>
         expand: false,
         minChildSize: 0.08,
         initialChildSize: 0.08,
-        maxChildSize: 0.20,
+        maxChildSize: 0.16,
         builder: (context, ScrollController scrollableController) {
           return ChangeNotifierProvider.value(
             value: meetingStore,
@@ -479,9 +479,7 @@ class _MeetingPageState extends State<MeetingPage>
               controller: scrollableController,
               physics: NeverScrollableScrollPhysics(),
               child: Container(
-                color: Colors.transparent.withOpacity(0.2),
-                // color: Utilities.menuColor,
-                // height: ,
+                color: Colors.black,
                 width: MediaQuery.of(context).size.width,
                 child: Column(
                   children: [
@@ -572,19 +570,34 @@ class _MeetingPageState extends State<MeetingPage>
                                     icon: AnimatedIcons.menu_close,
                                     // color: Colors.grey.shade900
                                   ))),
-                          Container(
-                            padding: EdgeInsets.all(8),
-                            child: IconButton(
-                                tooltip: 'Chat',
-                                iconSize: 24,
-                                onPressed: () {
-                                  chatMessages(context);
-                                },
-                                icon: Icon(
-                                  Icons.chat_bubble,
-                                  // color: Colors.grey.shade900
-                                )),
-                          ),
+                          Selector<MeetingStore, bool>(
+                              selector: (_, meetingStore) =>
+                                  meetingStore.isNewMessageReceived,
+                              builder: (_, isNewMessageReceived, __) {
+                                return Container(
+                                  padding: EdgeInsets.all(8),
+                                  child: IconButton(
+                                    tooltip: 'Chat',
+                                    iconSize: 24,
+                                    onPressed: () {
+                                      chatMessages(context);
+                                      context
+                                          .read<MeetingStore>()
+                                          .setNewMessageFalse();
+                                    },
+                                    icon: Stack(children: [
+                                      Icon(Icons.chat_bubble),
+                                      if (isNewMessageReceived)
+                                        Positioned(
+                                          top: -1,
+                                          right: -1,
+                                          child: new Icon(Icons.brightness_1,
+                                              size: 14.0, color: Colors.red),
+                                        )
+                                    ]),
+                                  ),
+                                );
+                              }),
                           Container(
                             padding: EdgeInsets.all(8),
                             child: IconButton(
@@ -688,7 +701,7 @@ class _MeetingPageState extends State<MeetingPage>
 
   void animatedView(
       DraggableScrollableController scrollableController, bool isExpanded) {
-    double maxChildSize = 0.19, minChildSize = 0.08;
+    double maxChildSize = 0.16, minChildSize = 0.08;
     scrollableController.animateTo(
       isExpanded ? minChildSize : maxChildSize,
       duration: const Duration(milliseconds: 50),

@@ -89,6 +89,8 @@ class MeetingStore extends ChangeNotifier
 
   bool isHeroMode = false;
 
+  bool isNewMessageReceived = false;
+
   int firstTimeBuild = 0;
   final DateFormat formatter = DateFormat('d MMM y h:mm:ss a');
 
@@ -398,6 +400,7 @@ class MeetingStore extends ChangeNotifier
   @override
   void onMessage({required HMSMessage message}) {
     addMessage(message);
+    isNewMessageReceived = true;
     notifyListeners();
   }
 
@@ -798,6 +801,12 @@ class MeetingStore extends ChangeNotifier
   void setHeroMode() {
     this.isHeroMode = !this.isHeroMode;
     this.isActiveSpeakerMode = false;
+    notifyListeners();
+  }
+
+  void setNewMessageFalse() {
+    if (!isNewMessageReceived) return;
+    this.isNewMessageReceived = false;
     notifyListeners();
   }
 
