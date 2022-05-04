@@ -66,24 +66,35 @@ Widget gridHeroView(
 }
 
 List<StairedGridTile> pattern(int itemCount, int screenShareCount, Size size) {
-  double ratio = (size.width - 20) / (size.height - 4 * kToolbarHeight);
+  double ratio = (size.width) / (size.height * 0.82);
+
   List<StairedGridTile> tiles = [];
   for (int i = 0; i < screenShareCount; i++) {
     tiles.add(StairedGridTile(1, ratio));
   }
   int normalTile = (itemCount - screenShareCount);
-  int gridView = normalTile ~/ 4;
-  int tileLeft = normalTile - (gridView * 4);
-  // for (int i = 0; i < (normalTile - tileLeft); i++) {
-  //   tiles.add(StairedGridTile(0.5, ratio));
-  // }
-  if (tileLeft == 1) {
+  if (normalTile == 1) {
     tiles.add(StairedGridTile(1, ratio));
   } else {
     tiles.add(StairedGridTile(1, ratio / 0.8));
     tiles.add(StairedGridTile(0.33, ratio / 0.6));
     tiles.add(StairedGridTile(0.33, ratio / 0.6));
     tiles.add(StairedGridTile(0.33, ratio / 0.6));
+  }
+  int gridView = normalTile ~/ 4;
+  int tileLeft = normalTile - (gridView * 4);
+  for (int i = 0; i < (normalTile - tileLeft - 4); i++) {
+    tiles.add(StairedGridTile(0.5, ratio));
+  }
+  if (tileLeft == 1) {
+    tiles.add(StairedGridTile(1, ratio));
+  } else if (tileLeft == 2) {
+    tiles.add(StairedGridTile(1, ratio / 0.5));
+    tiles.add(StairedGridTile(1, ratio / 0.5));
+  } else {
+    tiles.add(StairedGridTile(1, ratio / (1 / 3)));
+    tiles.add(StairedGridTile(1, ratio / (1 / 3)));
+    tiles.add(StairedGridTile(1, ratio / (1 / 3)));
   }
   return tiles;
 }

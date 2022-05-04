@@ -4,6 +4,7 @@ import 'package:connectivity_checker/connectivity_checker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/grid_audio_view.dart';
+import 'package:hmssdk_flutter_example/common/ui/organisms/grid_hero_view.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/grid_video_view.dart';
 import 'package:hmssdk_flutter_example/hls_viewer/hls_viewer.dart';
 
@@ -140,13 +141,7 @@ class _MeetingPageState extends State<MeetingPage>
         _meetingStore.setActiveSpeakerMode();
         break;
       case 7:
-        // if (_meetingStore.isActiveSpeakerMode) {
-        //   _meetingStore.isActiveSpeakerMode = false;
-        //   setState(() {});
-        //   UtilityComponents.showSnackBarWithString(
-        //       "Switched to Hero Mode", context);
-        // }
-        UtilityComponents.showSnackBarWithString("Coming Soon...", context);
+        _meetingStore.setHeroMode();
         break;
       case 8:
         String name = await UtilityComponents.showInputDialog(
@@ -201,7 +196,6 @@ class _MeetingPageState extends State<MeetingPage>
 
   @override
   Widget build(BuildContext context) {
-    var size = MediaQuery.of(context).size;
     return ConnectivityAppWrapper(
         app: WillPopScope(
       child: ConnectivityWidgetWrapper(
@@ -265,17 +259,18 @@ class _MeetingPageState extends State<MeetingPage>
                       body: Stack(
                         children: [
                           Container(
-                            height: MediaQuery.of(context).size.height * 0.78,
+                            height: MediaQuery.of(context).size.height * 0.82,
                             child: Selector<
                                     MeetingStore,
-                                    Tuple6<List<PeerTrackNode>, bool, int, int,
-                                        bool, int>>(
-                                selector: (_, meetingStore) => Tuple6(
+                                    Tuple7<List<PeerTrackNode>, bool, int, int,
+                                        bool, bool, int>>(
+                                selector: (_, meetingStore) => Tuple7(
                                     meetingStore.peerTracks,
                                     meetingStore.isHLSLink,
                                     meetingStore.peerTracks.length,
                                     meetingStore.screenShareCount,
                                     meetingStore.isAudioViewOn,
+                                    meetingStore.isHeroMode,
                                     meetingStore.uiUpdate),
                                 builder: (_, data, __) {
                                   if (data.item2) {
@@ -326,18 +321,25 @@ class _MeetingPageState extends State<MeetingPage>
                                         child: Text(
                                             'Waiting for others to join!'));
                                   }
+                                  if (data.item6) {
+                                    return gridHeroView(
+                                        peerTracks: data.item1,
+                                        itemCount: data.item3,
+                                        screenShareOn: data.item4,
+                                        size: MediaQuery.of(context).size);
+                                  }
                                   if (data.item5) {
                                     return gridAudioView(
                                         peerTracks:
                                             data.item1.sublist(data.item4),
                                         itemCount: data.item3,
-                                        size: size);
+                                        size: MediaQuery.of(context).size);
                                   }
                                   return gridVideoView(
                                       peerTracks: data.item1,
                                       itemCount: data.item3,
                                       screenShareOn: data.item4,
-                                      size: size);
+                                      size: MediaQuery.of(context).size);
                                 }),
                           ),
                           Align(
@@ -797,10 +799,15 @@ class _MeetingPageState extends State<MeetingPage>
             child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    "Hero Mode ",
+                  Text("Hero Mode",
+                      style: TextStyle(
+                        color:
+                            meetingStore.isHeroMode ? Colors.red : Colors.white,
+                      )),
+                  Icon(
+                    CupertinoIcons.person_3_fill,
+                    color: meetingStore.isHeroMode ? Colors.red : Colors.white,
                   ),
-                  Icon(CupertinoIcons.person_3_fill),
                 ]),
             value: 7,
           ),
@@ -892,9 +899,14 @@ class _MeetingPageState extends State<MeetingPage>
                   Text(
                     "Stats",
                     style: TextStyle(
-                        color: meetingStore.isBRB ? Colors.red : Colors.white),
+                        color: meetingStore.isStatsVisible
+                            ? Colors.red
+                            : Colors.white),
                   ),
-                  Icon(Icons.bar_chart_outlined),
+                  Icon(Icons.bar_chart_outlined,
+                      color: meetingStore.isStatsVisible
+                          ? Colors.red
+                          : Colors.white),
                 ]),
             value: 13,
           ),

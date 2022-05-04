@@ -65,7 +65,7 @@ class _VideoViewState extends State<VideoView> {
                       height: widget.itemHeight,
                       width: widget.itemWidth,
                       child: HMSVideoView(
-                        scaleType: widget.scaleType,
+                        scaleType: ScaleType.SCALE_ASPECT_FILL,
                         track: data.item1!,
                         setMirror: data.item1.runtimeType == HMSLocalVideoTrack,
                         matchParent: false,

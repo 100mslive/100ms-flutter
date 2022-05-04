@@ -85,7 +85,9 @@ class MeetingStore extends ChangeNotifier
 
   int uiUpdate = 0;
 
-  bool statsVisible = false;
+  bool isStatsVisible = false;
+
+  bool isHeroMode = false;
 
   int firstTimeBuild = 0;
   final DateFormat formatter = DateFormat('d MMM y h:mm:ss a');
@@ -253,7 +255,7 @@ class MeetingStore extends ChangeNotifier
   }
 
   void changeStatsVisible() {
-    statsVisible = !statsVisible;
+    isStatsVisible = !isStatsVisible;
     notifyListeners();
   }
 
@@ -415,7 +417,8 @@ class MeetingStore extends ChangeNotifier
       activeSpeakerIds[element.peer.peerId + "mainVideo"] = true;
     });
     int firstScreenPeersCount = isAudioViewOn ? 6 : 4;
-    if (isActiveSpeakerMode && peerTracks.length > firstScreenPeersCount) {
+    if ((isActiveSpeakerMode && peerTracks.length > firstScreenPeersCount) ||
+        isHeroMode) {
       List<HMSSpeaker> activeSpeaker = [];
       if (updateSpeakers.length > firstScreenPeersCount) {
         activeSpeaker.addAll(updateSpeakers.sublist(0, firstScreenPeersCount));
@@ -423,12 +426,14 @@ class MeetingStore extends ChangeNotifier
         activeSpeaker.addAll(updateSpeakers);
       }
       for (int i = activeSpeaker.length - 1; i > -1; i--) {
-        List<PeerTrackNode> tempTracks =
-            peerTracks.sublist(0, firstScreenPeersCount);
-        int indexTrack = tempTracks.indexWhere(
-            (peer) => activeSpeaker[i].peer.peerId + "mainVideo" == peer.uid);
-        if (indexTrack != -1) {
-          continue;
+        if (isActiveSpeakerMode) {
+          List<PeerTrackNode> tempTracks =
+              peerTracks.sublist(0, firstScreenPeersCount);
+          int indexTrack = tempTracks.indexWhere(
+              (peer) => activeSpeaker[i].peer.peerId + "mainVideo" == peer.uid);
+          if (indexTrack != -1) {
+            continue;
+          }
         }
         int index = peerTracks.indexWhere(
             (peer) => activeSpeaker[i].peer.peerId + "mainVideo" == peer.uid);
@@ -780,11 +785,19 @@ class MeetingStore extends ChangeNotifier
 
   void setAudioViewStatus() {
     this.isAudioViewOn = !this.isAudioViewOn;
+    this.isHeroMode = false;
     notifyListeners();
   }
 
   void setActiveSpeakerMode() {
     this.isActiveSpeakerMode = !this.isActiveSpeakerMode;
+    this.isHeroMode = false;
+    notifyListeners();
+  }
+
+  void setHeroMode() {
+    this.isHeroMode = !this.isHeroMode;
+    this.isActiveSpeakerMode = false;
     notifyListeners();
   }
 

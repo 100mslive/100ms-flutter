@@ -15,7 +15,7 @@ class RTCStatsView extends StatelessWidget {
         builder: (_, statsVisible, __) {
           return statsVisible ? Stats(isLocal: isLocal) : SizedBox();
         },
-        selector: (_, _meetingStore) => _meetingStore.statsVisible);
+        selector: (_, _meetingStore) => _meetingStore.isStatsVisible);
   }
 }
 

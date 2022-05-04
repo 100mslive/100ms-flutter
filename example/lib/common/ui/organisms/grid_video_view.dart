@@ -66,7 +66,7 @@ Widget gridVideoView(
 }
 
 List<StairedGridTile> pattern(int itemCount, int screenShareCount, Size size) {
-  double ratio = (size.height - 4 * kToolbarHeight) / (size.width - 20);
+  double ratio = (size.height * 0.82) / (size.width);
   List<StairedGridTile> tiles = [];
   for (int i = 0; i < screenShareCount; i++) {
     tiles.add(StairedGridTile(1, ratio));
@@ -83,9 +83,9 @@ List<StairedGridTile> pattern(int itemCount, int screenShareCount, Size size) {
     tiles.add(StairedGridTile(0.5, ratio / 2));
     tiles.add(StairedGridTile(0.5, ratio / 2));
   } else {
-    tiles.add(StairedGridTile(0.33, ratio / 3));
-    tiles.add(StairedGridTile(0.33, ratio / 3));
-    tiles.add(StairedGridTile(0.33, ratio / 3));
+    tiles.add(StairedGridTile(1 / 3, ratio / 3));
+    tiles.add(StairedGridTile(1 / 3, ratio / 3));
+    tiles.add(StairedGridTile(1 / 3, ratio / 3));
   }
   return tiles;
 }
