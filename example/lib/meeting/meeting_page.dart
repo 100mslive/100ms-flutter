@@ -83,8 +83,7 @@ class _MeetingPageState extends State<MeetingPage>
   void setInitValues() async {
     context.read<MeetingStore>().localPeerNetworkQuality =
         widget.localPeerNetworkQuality;
-    context.read<MeetingStore>().isMirror = widget.mirror;
-    context.read<MeetingStore>().statsVisible = widget.showStats;
+    context.read<MeetingStore>().setSettings(widget.mirror,widget.showStats);
   }
 
   @override
@@ -908,9 +907,9 @@ class _MeetingPageState extends State<MeetingPage>
                   Text(
                     "Stats",
                     style: TextStyle(
-                        color: meetingStore.isBRB ? Colors.red : Colors.white),
+                        color: meetingStore.statsVisible ? Colors.blue : Colors.white),
                   ),
-                  Icon(Icons.bar_chart_outlined),
+                  Icon(Icons.bar_chart_outlined,color: meetingStore.statsVisible ? Colors.blue:Colors.white,),
                 ]),
             value: 13,
           ),

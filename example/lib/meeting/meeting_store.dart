@@ -94,7 +94,6 @@ class MeetingStore extends ChangeNotifier
   bool isMirror = false;
   bool isAudioViewOn = false;
 
-
   void addUpdateListener() {
     _hmsSDKInteractor.addUpdateListener(this);
     // startHMSLogger(HMSLogLevel.VERBOSE, HMSLogLevel.VERBOSE);
@@ -786,6 +785,14 @@ class MeetingStore extends ChangeNotifier
 
   void setActiveSpeakerMode() {
     this.isActiveSpeakerMode = !this.isActiveSpeakerMode;
+    notifyListeners();
+  }
+
+  void setSettings(bool mirror, bool showStats) {
+    isMirror = mirror;
+    statsVisible = showStats;
+    _hmsSDKInteractor.mirrorCamera = mirror;
+    _hmsSDKInteractor.showStats = showStats;
     notifyListeners();
   }
 

@@ -7,6 +7,8 @@ class HMSSDKInteractor {
   late HMSConfig config;
   late List<HMSMessage> messages;
   late HMSSDK hmsSDK;
+  bool mirrorCamera = true;
+  bool showStats = false;
 
   HMSSDKInteractor() {
     hmsSDK = HMSSDK();
@@ -263,5 +265,4 @@ class HMSSDKInteractor {
   Future<List<HMSPeer>?> getPeers() async {
     return await hmsSDK.getPeers();
   }
-
 }
