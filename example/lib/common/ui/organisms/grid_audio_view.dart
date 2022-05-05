@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_reorderable_grid_view/widgets/widgets.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/audio_tile.dart';
 import 'package:hmssdk_flutter_example/meeting/peer_track_node.dart';
@@ -9,30 +8,24 @@ Widget gridAudioView(
     {required List<PeerTrackNode> peerTracks,
     required int itemCount,
     required Size size}) {
-  return ReorderableBuilder(
-      enableDraggable: false,
-      enableLongPress: false,
-      children: List.generate(itemCount, (index) {
-        return ChangeNotifierProvider.value(
+  return GridView.builder(
+    itemBuilder: ((context, index) {
+      return ChangeNotifierProvider.value(
+          key: ValueKey(peerTracks[index].uid),
+          value: peerTracks[index],
+          child: AudioTile(
             key: ValueKey(peerTracks[index].uid),
-            value: peerTracks[index],
-            child: AudioTile(
-              key: ValueKey(peerTracks[index].uid),
-              itemHeight: size.height,
-              itemWidth: size.width,
-            ));
-      }),
-      builder: (children, scrollController) {
-        return GridView(
-            shrinkWrap: true,
-            scrollDirection: Axis.horizontal,
-            controller: scrollController,
-            physics: PageScrollPhysics(),
-            children: children,
-            gridDelegate: SliverStairedGridDelegate(
-                startCrossAxisDirectionReversed: true,
-                pattern: pattern(itemCount, size)));
-      });
+            itemHeight: size.height,
+            itemWidth: size.width,
+          ));
+    }),
+    gridDelegate: SliverStairedGridDelegate(
+        startCrossAxisDirectionReversed: true,
+        pattern: pattern(itemCount, size)),
+    itemCount: itemCount,
+    physics: PageScrollPhysics(),
+scrollDirection: Axis.horizontal,
+  );
 }
 
 List<StairedGridTile> pattern(int itemCount, Size size) {

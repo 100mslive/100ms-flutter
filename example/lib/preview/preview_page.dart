@@ -209,8 +209,7 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                                     );
                                   },
                                   child: Container(
-                                      height: 35,
-                                      width: 45,
+                                      padding: EdgeInsets.all(5),
                                       decoration: BoxDecoration(
                                           color: Colors.transparent
                                               .withOpacity(0.2),

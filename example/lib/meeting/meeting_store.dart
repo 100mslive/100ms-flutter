@@ -94,6 +94,8 @@ class MeetingStore extends ChangeNotifier
 
   bool isAudioViewOn = false;
 
+  ScrollController controller = ScrollController();
+
   void addUpdateListener() {
     _hmsSDKInteractor.addUpdateListener(this);
     // startHMSLogger(HMSLogLevel.VERBOSE, HMSLogLevel.VERBOSE);
@@ -428,8 +430,8 @@ class MeetingStore extends ChangeNotifier
       }
       for (int i = activeSpeaker.length - 1; i > -1; i--) {
         if (isActiveSpeakerMode) {
-          List<PeerTrackNode> tempTracks =
-              peerTracks.sublist(0, firstScreenPeersCount);
+          List<PeerTrackNode> tempTracks = peerTracks.sublist(
+              screenShareCount, screenShareCount + firstScreenPeersCount);
           int indexTrack = tempTracks.indexWhere(
               (peer) => activeSpeaker[i].peer.peerId + "mainVideo" == peer.uid);
           if (indexTrack != -1) {

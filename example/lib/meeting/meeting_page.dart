@@ -271,7 +271,10 @@ class _MeetingPageState extends State<MeetingPage>
                                     meetingStore.screenShareCount,
                                     meetingStore.isAudioViewOn,
                                     meetingStore.isHeroMode,
-                                    meetingStore.peerTracks.length>0?meetingStore.peerTracks[meetingStore.screenShareCount]:null),
+                                    meetingStore.peerTracks.length > 0
+                                        ? meetingStore.peerTracks[
+                                            meetingStore.screenShareCount]
+                                        : null),
                                 builder: (_, data, __) {
                                   if (data.item2) {
                                     return Selector<MeetingStore, bool>(
@@ -321,25 +324,30 @@ class _MeetingPageState extends State<MeetingPage>
                                         child: Text(
                                             'Waiting for others to join!'));
                                   }
+                                  Size size = MediaQuery.of(context).size;
                                   if (data.item6) {
                                     return gridHeroView(
                                         peerTracks: data.item1,
                                         itemCount: data.item3,
-                                        screenShareOn: data.item4,
-                                        size: MediaQuery.of(context).size);
+                                        screenShareCount: data.item4,
+                                        context: context,
+                                        size: size);
                                   }
                                   if (data.item5) {
                                     return gridAudioView(
                                         peerTracks:
                                             data.item1.sublist(data.item4),
-                                        itemCount: data.item3,
-                                        size: MediaQuery.of(context).size);
+                                        itemCount: data.item1
+                                            .sublist(data.item4)
+                                            .length,
+                                        size: size);
                                   }
                                   return gridVideoView(
                                       peerTracks: data.item1,
                                       itemCount: data.item3,
-                                      screenShareOn: data.item4,
-                                      size: MediaQuery.of(context).size);
+                                      screenShareCount: data.item4,
+                                      context: context,
+                                      size: size);
                                 }),
                           ),
                           Align(
