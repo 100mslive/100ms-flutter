@@ -70,7 +70,7 @@ public class HomePage extends BaseTest {
       goto_enterName(meetingUrl);
       put_participant_name(name);
       click(nameOKbtn);
-      accept_permission();
+//      accept_permission();
       Thread.sleep(5000);
       return new PreviewPage();
     }
