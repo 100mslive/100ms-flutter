@@ -9,7 +9,7 @@ import org.testng.Assert;
 import org.testng.asserts.SoftAssert;
 
 public class HomePage extends BaseTest {
-    SoftAssert sa;
+    SoftAssert sa = new SoftAssert();
     //Landing Page
     @iOSXCUITFindBy(accessibility = "Enter Room URL")
     @AndroidFindBy(className = "android.widget.EditText")
