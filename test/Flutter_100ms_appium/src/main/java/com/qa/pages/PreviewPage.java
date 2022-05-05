@@ -8,7 +8,7 @@ import io.appium.java_client.pagefactory.iOSXCUITFindBy;
 public class PreviewPage extends HomePage {
 
     @iOSXCUITFindBy(xpath = "//XCUIElementTypeOther[@name='platform_view[0]']/XCUIElementTypeOther/XCUIElementTypeOther")
-    @AndroidFindBy(xpath = "//android.view.View[1]")
+    @AndroidFindBy(xpath = "//android.view.View[1]/android.widget.FrameLayout")
     public MobileElement videoTile;
 
     @iOSXCUITFindBy(xpath = "//XCUIElementTypeApplication[@name='Flutter 100ms']/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther[2]/XCUIElementTypeOther[2]/XCUIElementTypeOther[2]/XCUIElementTypeOther[4]")
