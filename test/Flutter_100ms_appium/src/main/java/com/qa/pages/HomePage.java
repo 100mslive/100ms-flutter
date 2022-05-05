@@ -6,9 +6,10 @@ import io.appium.java_client.pagefactory.AndroidFindBy;
 import io.appium.java_client.pagefactory.iOSXCUITFindBy;
 
 import org.testng.Assert;
+import org.testng.asserts.SoftAssert;
 
 public class HomePage extends BaseTest {
-
+    SoftAssert sa;
     //Landing Page
     @iOSXCUITFindBy(accessibility = "Enter Room URL")
     @AndroidFindBy(className = "android.widget.EditText")
@@ -35,6 +36,7 @@ public class HomePage extends BaseTest {
     }
 
     public HomePage put_meeting_url(String meetingUrl) throws InterruptedException {
+        sa.assertTrue(meetingUrlField.isDisplayed());
         clear(meetingUrlField);
         meetingUrlField.clear();
         sendKeys(meetingUrlField, meetingUrl, "login with " + meetingUrl);
@@ -42,8 +44,9 @@ public class HomePage extends BaseTest {
     }
 
     public HomePage goto_enterName(String meetingUrl) throws InterruptedException {
-      put_meeting_url(meetingUrl);
-      click(joinMeetingBtn);
+        put_meeting_url(meetingUrl);
+        sa.assertTrue(joinMeetingBtn.isDisplayed());
+        click(joinMeetingBtn);
       return this;
     }
 
@@ -62,6 +65,7 @@ public class HomePage extends BaseTest {
 
     public HomePage put_participant_name(String name) throws InterruptedException {
       Thread.sleep(2000);
+        sa.assertTrue(participantNameField.isDisplayed());
         clear(participantNameField);
       sendKeys(participantNameField, name, "Participant name- " + name);
       return this;
@@ -70,7 +74,8 @@ public class HomePage extends BaseTest {
     public PreviewPage goto_previewPage(String meetingUrl, String name) throws InterruptedException {
       goto_enterName(meetingUrl);
       put_participant_name(name);
-      click(nameOKbtn);
+        sa.assertTrue(nameOKbtn.isDisplayed());
+        click(nameOKbtn);
 //      accept_permission();
       Thread.sleep(5000);
       return new PreviewPage();
