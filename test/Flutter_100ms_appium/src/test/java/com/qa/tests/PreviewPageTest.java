@@ -64,10 +64,10 @@ public class PreviewPageTest extends BaseTest {
         System.out.println("Verify Preview page locators");
         Thread.sleep(2000);
 
-      previewPage = homePage.goto_previewPage(meetingDetail.getJSONObject("valid").getString("meeting_url"), meetingDetail.getJSONObject("valid").getString("username"));
+        previewPage = homePage.goto_previewPage(meetingDetail.getJSONObject("valid").getString("meeting_url"), meetingDetail.getJSONObject("valid").getString("username"));
         Thread.sleep(5000);
 
-      sa.assertTrue(previewPage.videoTile.isDisplayed());
+        sa.assertTrue(previewPage.videoTile.isDisplayed());
         sa.assertTrue(previewPage.camBtn.isDisplayed());
         Thread.sleep(2000);
 
