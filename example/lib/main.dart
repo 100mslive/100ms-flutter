@@ -260,19 +260,21 @@ class _HomePageState extends State<HomePage> {
                               if (res) {
                                 FocusManager.instance.primaryFocus?.unfocus();
                                 if (skipPreview) {
+                                  HMSSDKInteractor _hmsSDKInteractor = HMSSDKInteractor();
+                                  _hmsSDKInteractor.showStats = showStats;
+                                  _hmsSDKInteractor.mirrorCamera = mirrorCamera;
+                                  _hmsSDKInteractor.skipPreview = true;
                                   Navigator.of(context).push(MaterialPageRoute(
                                       builder: (_) => ListenableProvider.value(
                                           value: MeetingStore(
-                                              hmsSDKInteractor:
-                                                  HMSSDKInteractor()),
+                                              hmsSDKInteractor: _hmsSDKInteractor
+                                                  ),
                                           child: MeetingPage(
                                             roomId:
                                                 roomIdController.text.trim(),
                                             flow: MeetingFlow.join,
                                             user: user,
-                                            isAudioOn: true,
-                                            mirror: mirrorCamera,
-                                            showStats: showStats,
+                                            isAudioOn: true
                                           ))));
                                 } else {
                                   Navigator.of(context).push(MaterialPageRoute(

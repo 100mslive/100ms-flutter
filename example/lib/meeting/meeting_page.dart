@@ -30,8 +30,6 @@ class MeetingPage extends StatefulWidget {
   final String user;
   final bool isAudioOn;
   final int? localPeerNetworkQuality;
-  final bool mirror;
-  final bool showStats;
 
   const MeetingPage(
       {Key? key,
@@ -40,8 +38,7 @@ class MeetingPage extends StatefulWidget {
       required this.user,
       required this.isAudioOn,
       this.localPeerNetworkQuality = -1,
-      this.showStats = false,
-      this.mirror = false})
+      })
       : super(key: key);
 
   @override
@@ -83,7 +80,7 @@ class _MeetingPageState extends State<MeetingPage>
   void setInitValues() async {
     context.read<MeetingStore>().localPeerNetworkQuality =
         widget.localPeerNetworkQuality;
-    context.read<MeetingStore>().setSettings(widget.mirror,widget.showStats);
+    context.read<MeetingStore>().setSettings();
   }
 
   @override

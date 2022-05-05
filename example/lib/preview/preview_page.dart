@@ -273,36 +273,12 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                                       context
                                           .read<PreviewStore>()
                                           .removePreviewListener();
-                                      Navigator.of(context).pushReplacement(
-                                          MaterialPageRoute(
-                                              builder: (_) =>
-                                                  ListenableProvider.value(
-                                                    value: MeetingStore(
-                                                      hmsSDKInteractor:
-                                                          _previewStore
-                                                              .hmsSDKInteractor,
-                                                    ),
-                                                    child: MeetingPage(
-                                                        roomId: widget.roomId,
-                                                        flow: widget.flow,
-                                                        user: widget.user,
-                                                        isAudioOn: _previewStore
-                                                            .isAudioOn,
-                                                        ),
-                                                  )));
-                                    },
-                                    child: Text(
-                                      'Join HLS ',
-                                      style: TextStyle(height: 1, fontSize: 18),
-                                    ),
-                                  )
-                                : ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                        primary: Colors.blue),
-                                    onPressed: () {
-                                      context
-                                          .read<PreviewStore>()
-                                          .removePreviewListener();
+                                      _previewStore.hmsSDKInteractor
+                                          .mirrorCamera = widget.mirror;
+                                      _previewStore.hmsSDKInteractor.showStats =
+                                          widget.showStats;
+                                      _previewStore
+                                          .hmsSDKInteractor.skipPreview = false;
                                       Navigator.of(context).pushReplacement(
                                           MaterialPageRoute(
                                               builder: (_) =>
@@ -318,13 +294,46 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                                                       user: widget.user,
                                                       isAudioOn: _previewStore
                                                           .isAudioOn,
-                                                      localPeerNetworkQuality:
-                                                          _previewStore
-                                                              .networkQuality,
-                                                              mirror: widget.mirror,
-                                                        showStats:
-                                                            widget.showStats
                                                     ),
+                                                  )));
+                                    },
+                                    child: Text(
+                                      'Join HLS ',
+                                      style: TextStyle(height: 1, fontSize: 18),
+                                    ),
+                                  )
+                                : ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                        primary: Colors.blue),
+                                    onPressed: () {
+                                      context
+                                          .read<PreviewStore>()
+                                          .removePreviewListener();
+                                      _previewStore.hmsSDKInteractor
+                                          .mirrorCamera = widget.mirror;
+                                      _previewStore.hmsSDKInteractor.showStats =
+                                          widget.showStats;
+                                      _previewStore
+                                          .hmsSDKInteractor.skipPreview = false;
+                                      Navigator.of(context).pushReplacement(
+                                          MaterialPageRoute(
+                                              builder: (_) =>
+                                                  ListenableProvider.value(
+                                                    value: MeetingStore(
+                                                      hmsSDKInteractor:
+                                                          _previewStore
+                                                              .hmsSDKInteractor,
+                                                    ),
+                                                    child: MeetingPage(
+                                                        roomId: widget.roomId,
+                                                        flow: widget.flow,
+                                                        user: widget.user,
+                                                        isAudioOn: _previewStore
+                                                            .isAudioOn,
+                                                        localPeerNetworkQuality:
+                                                            _previewStore
+                                                                .networkQuality,
+                                                        ),
                                                   )));
                                     },
                                     child: Text(

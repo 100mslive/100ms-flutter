@@ -7,8 +7,13 @@ class HMSSDKInteractor {
   late HMSConfig config;
   late List<HMSMessage> messages;
   late HMSSDK hmsSDK;
+  
+  //Contains the default local camera mirroring settings
   bool mirrorCamera = true;
+  //Contains the default RTC stats setting
   bool showStats = false;
+  //Contains the default setting to jump directly in meeting i.e. skipping preview
+  bool skipPreview = false;
 
   HMSSDKInteractor() {
     hmsSDK = HMSSDK();
