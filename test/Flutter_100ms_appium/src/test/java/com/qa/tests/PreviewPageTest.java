@@ -19,7 +19,7 @@ public class PreviewPageTest extends BaseTest {
     PreviewPage previewPage;
     JSONObject meetingDetail;
     TestUtils utils = new TestUtils();
-    SoftAssert sa;
+    SoftAssert sa = new SoftAssert();;
 
     @BeforeClass
     public void beforeClass() throws Exception {
@@ -48,7 +48,7 @@ public class PreviewPageTest extends BaseTest {
       closeApp();
       launchApp();
       utils.log().info("\n" + "****** starting test:" + m.getName() + "******" + "\n");
-      sa = new SoftAssert();
+
       homePage = new HomePage();
     }
 
