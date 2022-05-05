@@ -83,8 +83,6 @@ class MeetingStore extends ChangeNotifier
 
   int? localPeerNetworkQuality;
 
-  int uiUpdate = 0;
-
   bool isStatsVisible = false;
 
   bool isHeroMode = false;
@@ -443,7 +441,6 @@ class MeetingStore extends ChangeNotifier
         if (index != -1) {
           PeerTrackNode peerTrackNode = peerTracks.removeAt(index);
           peerTracks.insert(screenShareCount, peerTrackNode);
-          uiUpdate++;
         }
       }
     }
