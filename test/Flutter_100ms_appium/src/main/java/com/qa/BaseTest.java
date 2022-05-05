@@ -260,7 +260,7 @@ public class BaseTest {
 //				String androidAppUrl = getClass().getResource(props.getProperty("androidAppLocation")).getFile();
 				utils.log().info("appUrl is" + androidAppUrl);
 				desiredCapabilities.setCapability("app", androidAppUrl);
-
+				desiredCapabilities.setCapability("autoGrantPermissions", "true");
 				driver = new AndroidDriver(url, desiredCapabilities);
 				break;
 			case "iOS":
