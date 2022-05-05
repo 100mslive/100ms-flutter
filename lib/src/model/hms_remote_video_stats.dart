@@ -42,6 +42,6 @@ class HMSRemoteVideoStats {
         packetsLost: map['packets_lost'],
         packetsReceived: map['packets_received'],
         frameRate: map["frame_rate"],
-        resolution: HMSVideoResolution.fromMap(map['resolution']));
+        resolution:map['resolution']==null?HMSVideoResolution(height: 0, width: 0): HMSVideoResolution.fromMap(map['resolution']));
   }
 }

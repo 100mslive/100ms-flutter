@@ -259,7 +259,7 @@ class _MeetingPageState extends State<MeetingPage>
                       body: Stack(
                         children: [
                           Container(
-                            height: MediaQuery.of(context).size.height * 0.82,
+                            height: MediaQuery.of(context).size.height * 0.81,
                             child: Selector<
                                     MeetingStore,
                                     Tuple7<List<PeerTrackNode>, bool, int, int,
@@ -418,7 +418,8 @@ class _MeetingPageState extends State<MeetingPage>
                                                     )),
                                               ),
                                             ])
-                                      : expandModalBottomSheet();
+                                      : expandModalBottomSheet(
+                                          MediaQuery.of(context).size.height);
                                 }),
                           ),
                           Selector<MeetingStore, HMSRoleChangeRequest?>(
@@ -459,7 +460,7 @@ class _MeetingPageState extends State<MeetingPage>
     ));
   }
 
-  Widget expandModalBottomSheet() {
+  Widget expandModalBottomSheet(double height) {
     final meetingStore = context.read<MeetingStore>();
     Duration _duration = Duration(milliseconds: 50);
     AnimationController _controller =
@@ -471,7 +472,7 @@ class _MeetingPageState extends State<MeetingPage>
         expand: false,
         minChildSize: 0.08,
         initialChildSize: 0.08,
-        maxChildSize: 0.16,
+        maxChildSize: 0.20,
         builder: (context, ScrollController scrollableController) {
           return ChangeNotifierProvider.value(
             value: meetingStore,
@@ -479,7 +480,8 @@ class _MeetingPageState extends State<MeetingPage>
               controller: scrollableController,
               physics: NeverScrollableScrollPhysics(),
               child: Container(
-                color: Colors.black,
+                height: height * 0.19,
+                color: Colors.transparent.withOpacity(0.2),
                 width: MediaQuery.of(context).size.width,
                 child: Column(
                   children: [
@@ -701,7 +703,7 @@ class _MeetingPageState extends State<MeetingPage>
 
   void animatedView(
       DraggableScrollableController scrollableController, bool isExpanded) {
-    double maxChildSize = 0.16, minChildSize = 0.08;
+    double maxChildSize = 0.19, minChildSize = 0.08;
     scrollableController.animateTo(
       isExpanded ? minChildSize : maxChildSize,
       duration: const Duration(milliseconds: 50),
