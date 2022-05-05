@@ -35,7 +35,8 @@ public class HomePage extends BaseTest {
     }
 
     public HomePage put_meeting_url(String meetingUrl) throws InterruptedException {
-        clear(meetingUrlField);
+//        clear(meetingUrlField);
+        meetingUrlField.clear();
         sendKeys(meetingUrlField, meetingUrl, "login with " + meetingUrl);
       return this;
     }
