@@ -144,9 +144,8 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                                 ),
                               ),
                             if (_previewStore.peers.isNotEmpty)
-                              IconButton(
-                                  padding: EdgeInsets.all(5),
-                                  onPressed: () {
+                              GestureDetector(
+                                  onTap: () {
                                     showModalBottomSheet<void>(
                                       shape: RoundedRectangleBorder(
                                         borderRadius:
@@ -209,17 +208,33 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                                       },
                                     );
                                   },
-                                  icon: Container(
+                                  child: Container(
                                       height: 35,
-                                      width: 35,
+                                      width: 45,
                                       decoration: BoxDecoration(
                                           color: Colors.transparent
                                               .withOpacity(0.2),
                                           borderRadius:
                                               BorderRadius.circular(5)),
-                                      child: Icon(
-                                        Icons.person,
-                                        size: 24,
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Icon(
+                                            Icons.person,
+                                            size: 24,
+                                          ),
+                                          SizedBox(
+                                            width: 2,
+                                          ),
+                                          Text(
+                                            _previewStore.peers.length
+                                                .toString(),
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16),
+                                          )
+                                        ],
                                       ))),
                           ],
                         ))),
