@@ -75,7 +75,7 @@ public class PreviewPageTest extends BaseTest {
 //        sa.assertTrue(previewPage.joinNowBtn.isDisplayed());
 //        sa.assertTrue(previewPage.backBtn.isDisplayed());
 //        sa.assertTrue(previewPage.previewPageHeading.isDisplayed());
-        previewPage.camBtn.click();
+        previewPage.joinNowBtn.click();
         click(previewPage.camBtn);
         click(previewPage.micBtn);
         click(previewPage.joinNowBtn);
