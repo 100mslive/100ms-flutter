@@ -81,7 +81,7 @@ public class HomePage extends BaseTest {
 
     //HomePage OS permission
 //    @AndroidFindBy(id = "com.android.permissioncontroller:id/permission_allow_foreground_only_button")
-    @AndroidFindBy(xpath = "//*[@class='android.widget.Button'][2]")
+    @AndroidFindBy(id = "com.android.packageinstaller:id/permission_allow_button")
     public MobileElement permissionCamMic;
 
     public void accept_permission() throws InterruptedException {
