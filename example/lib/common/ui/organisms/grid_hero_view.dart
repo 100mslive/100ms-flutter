@@ -1,182 +1,58 @@
 import 'package:flutter/material.dart';
-import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-import 'package:hmssdk_flutter_example/common/ui/organisms/video_tile.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
+import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:hmssdk_flutter_example/meeting/peer_track_node.dart';
 import 'package:provider/provider.dart';
 
-List<Widget> gridHeroView(
+Widget gridHeroView(
     {required List<PeerTrackNode> peerTracks,
-    required bool audioViewOn,
     required int itemCount,
-    required int screenShareOn,
+    required int screenShareCount,
+    required BuildContext context,
     required Size size}) {
-  int index = 0;
-  List<Widget> gridView = [];
+  List<Widget> children =
+      UtilityComponents.videoTileWidget(itemCount, peerTracks, size);
+  return GridView(
+      shrinkWrap: true,
+      physics: PageScrollPhysics(),
+      children: children,
+      controller: Provider.of<MeetingStore>(context).controller,
+      gridDelegate: SliverStairedGridDelegate(
+          startCrossAxisDirectionReversed: false,
+          pattern: pattern(itemCount, screenShareCount, size)));
+}
 
-  int numberofPages = (((itemCount - index) ~/ 4).toInt() +
-      ((itemCount - index) % 4 == 0 ? 0 : 1));
-  for (int i = 0; i < numberofPages; i++) {
-    if (i == 0) {
-      gridView.add(customHeroGrid(
-          peerTracks.sublist(
-              index, (index + 4 < itemCount) ? index + 4 : itemCount),
-          audioViewOn,
-          size,
-          screenShareOn > 0));
-      index += 4;
-    } else {
-      gridView.add(customGrid(
-          peerTracks.sublist(
-              index, (index + 4 < itemCount) ? index + 4 : itemCount),
-          audioViewOn,
-          size));
-      index += 4;
-    }
+List<StairedGridTile> pattern(int itemCount, int screenShareCount, Size size) {
+  double ratio = (size.width) / (size.height * 0.81);
+
+  List<StairedGridTile> tiles = [];
+  for (int i = 0; i < screenShareCount; i++) {
+    tiles.add(StairedGridTile(1, ratio));
   }
-  return gridView;
-}
-
-Widget customHeroGrid(List<PeerTrackNode> peerTracks, audioViewOn, Size size,
-    bool screenShareOn) {
-  return Container(
-    child: Column(
-      children: [
-        Expanded(
-          flex: 2,
-          child: Container(
-            child: ChangeNotifierProvider.value(
-                value: peerTracks[0],
-                child: VideoTile(
-                  key: Key(peerTracks[0].uid),
-                  audioView: audioViewOn,
-                  itemHeight: size.height,
-                  itemWidth: size.width,
-                  scaleType: screenShareOn
-                      ? ScaleType.SCALE_ASPECT_FIT
-                      : ScaleType.SCALE_ASPECT_FILL,
-                )),
-          ),
-        ),
-        if (peerTracks.length > 1)
-          Expanded(
-            flex: 1,
-            child: Row(
-              children: [
-                Flexible(
-                  child: Container(
-                    child: ChangeNotifierProvider.value(
-                        value: peerTracks[1],
-                        child: VideoTile(
-                          key: Key(peerTracks[1].uid),
-                          audioView: audioViewOn,
-                          itemHeight: size.height,
-                          itemWidth: size.width,
-                        )),
-                  ),
-                ),
-                if (peerTracks.length > 2)
-                  Flexible(
-                    child: Container(
-                      child: ChangeNotifierProvider.value(
-                          value: peerTracks[2],
-                          child: VideoTile(
-                            key: Key(peerTracks[2].uid),
-                            audioView: audioViewOn,
-                            itemHeight: size.height,
-                            itemWidth: size.width,
-                          )),
-                    ),
-                  ),
-                if (peerTracks.length > 3)
-                  Flexible(
-                    child: Container(
-                      child: ChangeNotifierProvider.value(
-                          value: peerTracks[3],
-                          child: VideoTile(
-                            key: Key(peerTracks[3].uid),
-                            audioView: audioViewOn,
-                            itemHeight: size.height,
-                            itemWidth: size.width,
-                          )),
-                    ),
-                  )
-              ],
-            ),
-          )
-      ],
-    ),
-  );
-}
-
-Widget customGrid(List<PeerTrackNode> peerTracks, audioViewOn, Size size) {
-  return Container(
-    child: Row(
-      children: [
-        if (peerTracks.length > 0)
-          Flexible(
-              child: Column(
-            children: [
-              Flexible(
-                child: Container(
-                  child: ChangeNotifierProvider.value(
-                      value: peerTracks[0],
-                      child: VideoTile(
-                        key: Key(peerTracks[0].uid),
-                        audioView: audioViewOn,
-                        itemHeight: size.height,
-                        itemWidth: size.width,
-                      )),
-                ),
-              ),
-              if (peerTracks.length > 1)
-                Flexible(
-                  child: Container(
-                    child: ChangeNotifierProvider.value(
-                        value: peerTracks[1],
-                        child: VideoTile(
-                          key: Key(peerTracks[1].uid),
-                          audioView: audioViewOn,
-                          itemHeight: size.height,
-                          itemWidth: size.width,
-                        )),
-                  ),
-                )
-            ],
-          )),
-        if (peerTracks.length > 2)
-          Flexible(
-            child: Column(
-              children: [
-                Flexible(
-                  child: Container(
-                    child: ChangeNotifierProvider.value(
-                        value: peerTracks[2],
-                        child: VideoTile(
-                          key: Key(peerTracks[2].uid),
-                          audioView: audioViewOn,
-                          itemHeight: size.height,
-                          itemWidth: size.width,
-                        )),
-                  ),
-                ),
-                Flexible(
-                  child: (peerTracks.length > 3)
-                      ? Container(
-                          child: ChangeNotifierProvider.value(
-                              value: peerTracks[3],
-                              child: VideoTile(
-                                key: Key(peerTracks[3].uid),
-                                audioView: audioViewOn,
-                                itemHeight: size.height,
-                                itemWidth: size.width,
-                              )),
-                        )
-                      : Container(),
-                )
-              ],
-            ),
-          )
-      ],
-    ),
-  );
+  int normalTile = (itemCount - screenShareCount);
+  if (normalTile == 1) {
+    tiles.add(StairedGridTile(1, ratio));
+  } else {
+    tiles.add(StairedGridTile(1, ratio / 0.8));
+    tiles.add(StairedGridTile(0.33, ratio / 0.6));
+    tiles.add(StairedGridTile(0.33, ratio / 0.6));
+    tiles.add(StairedGridTile(0.33, ratio / 0.6));
+  }
+  int gridView = normalTile ~/ 4;
+  int tileLeft = normalTile - (gridView * 4);
+  for (int i = 0; i < (normalTile - tileLeft - 4); i++) {
+    tiles.add(StairedGridTile(0.5, ratio));
+  }
+  if (tileLeft == 1) {
+    tiles.add(StairedGridTile(1, ratio));
+  } else if (tileLeft == 2) {
+    tiles.add(StairedGridTile(1, ratio / 0.5));
+    tiles.add(StairedGridTile(1, ratio / 0.5));
+  } else {
+    tiles.add(StairedGridTile(1, ratio / (1 / 3)));
+    tiles.add(StairedGridTile(1, ratio / (1 / 3)));
+    tiles.add(StairedGridTile(1, ratio / (1 / 3)));
+  }
+  return tiles;
 }

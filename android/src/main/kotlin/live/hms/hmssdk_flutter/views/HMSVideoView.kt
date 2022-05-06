@@ -107,7 +107,7 @@ class HMSVideoView(
     }
 
     override fun performClick(): Boolean {
-        Log.d("DraggableImageView", "click")
+        
         return super.performClick()
     }
 

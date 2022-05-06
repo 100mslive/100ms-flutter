@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:connectivity_checker/connectivity_checker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:hmssdk_flutter_example/common/ui/organisms/grid_active_speaker_view.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/grid_audio_view.dart';
+import 'package:hmssdk_flutter_example/common/ui/organisms/grid_hero_view.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/grid_video_view.dart';
 import 'package:hmssdk_flutter_example/hls_viewer/hls_viewer.dart';
 
@@ -40,6 +40,7 @@ class MeetingPage extends StatefulWidget {
       this.localPeerNetworkQuality = -1,
       })
       : super(key: key);
+
 
   @override
   _MeetingPageState createState() => _MeetingPageState();
@@ -143,13 +144,7 @@ class _MeetingPageState extends State<MeetingPage>
         _meetingStore.setActiveSpeakerMode();
         break;
       case 7:
-        // if (_meetingStore.isActiveSpeakerMode) {
-        //   _meetingStore.isActiveSpeakerMode = false;
-        //   setState(() {});
-        //   UtilityComponents.showSnackBarWithString(
-        //       "Switched to Hero Mode", context);
-        // }
-        UtilityComponents.showSnackBarWithString("Coming Soon...", context);
+        _meetingStore.setHeroMode();
         break;
       case 8:
         String name = await UtilityComponents.showInputDialog(
@@ -204,7 +199,6 @@ class _MeetingPageState extends State<MeetingPage>
 
   @override
   Widget build(BuildContext context) {
-    var size = MediaQuery.of(context).size;
     return ConnectivityAppWrapper(
         app: WillPopScope(
       child: ConnectivityWidgetWrapper(
@@ -268,19 +262,22 @@ class _MeetingPageState extends State<MeetingPage>
                       body: Stack(
                         children: [
                           Container(
-                            height: MediaQuery.of(context).size.height * 0.78,
+                            height: MediaQuery.of(context).size.height * 0.81,
                             child: Selector<
                                     MeetingStore,
                                     Tuple7<List<PeerTrackNode>, bool, int, int,
-                                        bool, bool, int>>(
+                                        bool, bool, PeerTrackNode?>>(
                                 selector: (_, meetingStore) => Tuple7(
                                     meetingStore.peerTracks,
                                     meetingStore.isHLSLink,
                                     meetingStore.peerTracks.length,
                                     meetingStore.screenShareCount,
                                     meetingStore.isAudioViewOn,
-                                    meetingStore.isActiveSpeakerMode,
-                                    meetingStore.uiUpdate),
+                                    meetingStore.isHeroMode,
+                                    meetingStore.peerTracks.length > 0
+                                        ? meetingStore.peerTracks[
+                                            meetingStore.screenShareCount]
+                                        : null),
                                 builder: (_, data, __) {
                                   if (data.item2) {
                                     return Selector<MeetingStore, bool>(
@@ -330,35 +327,30 @@ class _MeetingPageState extends State<MeetingPage>
                                         child: Text(
                                             'Waiting for others to join!'));
                                   }
-
-                                  if (data.item5) {
-                                    return PageView(
-                                        physics: PageScrollPhysics(),
-                                        scrollDirection: Axis.horizontal,
-                                        children: gridAudioView(
-                                            peerTracks: data.item1,
-                                            audioViewOn: data.item5,
-                                            itemCount: data.item3,
-                                            screenShareOn: data.item4,
-                                            size: size));
-                                  }
+                                  Size size = MediaQuery.of(context).size;
                                   if (data.item6) {
-                                    return gridActiveSpeakerView(
+                                    return gridHeroView(
                                         peerTracks: data.item1,
-                                        audioViewOn: data.item5,
                                         itemCount: data.item3,
-                                        screenShareOn: data.item4,
+                                        screenShareCount: data.item4,
+                                        context: context,
                                         size: size);
                                   }
-                                  return PageView(
-                                      physics: PageScrollPhysics(),
-                                      scrollDirection: Axis.horizontal,
-                                      children: gridVideoView(
-                                          peerTracks: data.item1,
-                                          audioViewOn: data.item5,
-                                          itemCount: data.item3,
-                                          screenShareOn: data.item4,
-                                          size: size));
+                                  if (data.item5) {
+                                    return gridAudioView(
+                                        peerTracks:
+                                            data.item1.sublist(data.item4),
+                                        itemCount: data.item1
+                                            .sublist(data.item4)
+                                            .length,
+                                        size: size);
+                                  }
+                                  return gridVideoView(
+                                      peerTracks: data.item1,
+                                      itemCount: data.item3,
+                                      screenShareCount: data.item4,
+                                      context: context,
+                                      size: size);
                                 }),
                           ),
                           Align(
@@ -437,7 +429,8 @@ class _MeetingPageState extends State<MeetingPage>
                                                     )),
                                               ),
                                             ])
-                                      : expandModalBottomSheet();
+                                      : expandModalBottomSheet(
+                                          MediaQuery.of(context).size.height);
                                 }),
                           ),
                           Selector<MeetingStore, HMSRoleChangeRequest?>(
@@ -478,7 +471,7 @@ class _MeetingPageState extends State<MeetingPage>
     ));
   }
 
-  Widget expandModalBottomSheet() {
+  Widget expandModalBottomSheet(double height) {
     final meetingStore = context.read<MeetingStore>();
     Duration _duration = Duration(milliseconds: 50);
     AnimationController _controller =
@@ -498,23 +491,24 @@ class _MeetingPageState extends State<MeetingPage>
               controller: scrollableController,
               physics: NeverScrollableScrollPhysics(),
               child: Container(
+                height: height * 0.19,
                 color: Colors.transparent.withOpacity(0.2),
-                // color: Utilities.menuColor,
-                // height: ,
                 width: MediaQuery.of(context).size.width,
                 child: Column(
                   children: [
                     Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Selector<MeetingStore, Tuple3<HMSPeer?, bool, bool>>(
-                            selector: (_, meetingStore) => Tuple3(
+                          Selector<MeetingStore,
+                              Tuple4<HMSPeer?, bool, bool, bool>>(
+                            selector: (_, meetingStore) => Tuple4(
                                 meetingStore.localPeer,
                                 meetingStore.isVideoOn,
                                 meetingStore.localPeer?.role.publishSettings
                                         ?.allowed
                                         .contains("video") ??
-                                    false),
+                                    false,
+                                meetingStore.isAudioViewOn),
                             builder: (_, data, __) {
                               return ((data.item1 != null) &&
                                       data.item1!.role.publishSettings!.allowed
@@ -524,14 +518,13 @@ class _MeetingPageState extends State<MeetingPage>
                                       child: IconButton(
                                           tooltip: 'Video',
                                           iconSize: 24,
-                                          onPressed:
-                                              (meetingStore.isAudioViewOn)
-                                                  ? null
-                                                  : () {
-                                                      context
-                                                          .read<MeetingStore>()
-                                                          .switchVideo();
-                                                    },
+                                          onPressed: (data.item4)
+                                              ? null
+                                              : () {
+                                                  context
+                                                      .read<MeetingStore>()
+                                                      .switchVideo();
+                                                },
                                           icon: Icon(
                                             data.item2
                                                 ? Icons.videocam
@@ -590,19 +583,34 @@ class _MeetingPageState extends State<MeetingPage>
                                     icon: AnimatedIcons.menu_close,
                                     // color: Colors.grey.shade900
                                   ))),
-                          Container(
-                            padding: EdgeInsets.all(8),
-                            child: IconButton(
-                                tooltip: 'Chat',
-                                iconSize: 24,
-                                onPressed: () {
-                                  chatMessages(context);
-                                },
-                                icon: Icon(
-                                  Icons.chat_bubble,
-                                  // color: Colors.grey.shade900
-                                )),
-                          ),
+                          Selector<MeetingStore, bool>(
+                              selector: (_, meetingStore) =>
+                                  meetingStore.isNewMessageReceived,
+                              builder: (_, isNewMessageReceived, __) {
+                                return Container(
+                                  padding: EdgeInsets.all(8),
+                                  child: IconButton(
+                                    tooltip: 'Chat',
+                                    iconSize: 24,
+                                    onPressed: () {
+                                      chatMessages(context);
+                                      context
+                                          .read<MeetingStore>()
+                                          .setNewMessageFalse();
+                                    },
+                                    icon: Stack(children: [
+                                      Icon(Icons.chat_bubble),
+                                      if (isNewMessageReceived)
+                                        Positioned(
+                                          top: -1,
+                                          right: -1,
+                                          child: new Icon(Icons.brightness_1,
+                                              size: 14.0, color: Colors.red),
+                                        )
+                                    ]),
+                                  ),
+                                );
+                              }),
                           Container(
                             padding: EdgeInsets.all(8),
                             child: IconButton(
@@ -798,10 +806,18 @@ class _MeetingPageState extends State<MeetingPage>
             child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    "Active Speaker Mode ",
+                  Text("Active Speaker Mode",
+                      style: TextStyle(
+                        color: meetingStore.isActiveSpeakerMode
+                            ? Colors.red
+                            : Colors.white,
+                      )),
+                  Icon(
+                    CupertinoIcons.person_3_fill,
+                    color: meetingStore.isActiveSpeakerMode
+                        ? Colors.red
+                        : Colors.white,
                   ),
-                  Icon(CupertinoIcons.person_3_fill),
                 ]),
             value: 6,
           ),
@@ -809,10 +825,15 @@ class _MeetingPageState extends State<MeetingPage>
             child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    "Hero Mode ",
+                  Text("Hero Mode",
+                      style: TextStyle(
+                        color:
+                            meetingStore.isHeroMode ? Colors.red : Colors.white,
+                      )),
+                  Icon(
+                    CupertinoIcons.person_3_fill,
+                    color: meetingStore.isHeroMode ? Colors.red : Colors.white,
                   ),
-                  Icon(CupertinoIcons.person_3_fill),
                 ]),
             value: 7,
           ),
@@ -904,9 +925,15 @@ class _MeetingPageState extends State<MeetingPage>
                   Text(
                     "Stats",
                     style: TextStyle(
-                        color: meetingStore.statsVisible ? Colors.blue : Colors.white),
+                        color: meetingStore.isStatsVisible
+                            ? Colors.red
+                            : Colors.white),
                   ),
-                  Icon(Icons.bar_chart_outlined,color: meetingStore.statsVisible ? Colors.blue:Colors.white,),
+                  Icon(Icons.bar_chart_outlined,
+                      color: meetingStore.isStatsVisible
+                          ? Colors.red
+                          : Colors.white),
+
                 ]),
             value: 13,
           ),

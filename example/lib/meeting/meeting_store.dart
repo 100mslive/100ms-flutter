@@ -83,9 +83,11 @@ class MeetingStore extends ChangeNotifier
 
   int? localPeerNetworkQuality;
 
-  int uiUpdate = 0;
+  bool isStatsVisible = false;
 
-  bool statsVisible = false;
+  bool isHeroMode = false;
+
+  bool isNewMessageReceived = false;
 
   int firstTimeBuild = 0;
 
@@ -93,6 +95,8 @@ class MeetingStore extends ChangeNotifier
 
   bool isMirror = false;
   bool isAudioViewOn = false;
+
+  ScrollController controller = ScrollController();
 
   void addUpdateListener() {
     _hmsSDKInteractor.addUpdateListener(this);
@@ -255,7 +259,7 @@ class MeetingStore extends ChangeNotifier
   }
 
   void changeStatsVisible() {
-    statsVisible = !statsVisible;
+    isStatsVisible = !isStatsVisible;
     notifyListeners();
   }
 
@@ -398,6 +402,7 @@ class MeetingStore extends ChangeNotifier
   @override
   void onMessage({required HMSMessage message}) {
     addMessage(message);
+    isNewMessageReceived = true;
     notifyListeners();
   }
 
@@ -416,28 +421,32 @@ class MeetingStore extends ChangeNotifier
     updateSpeakers.forEach((element) {
       activeSpeakerIds[element.peer.peerId + "mainVideo"] = true;
     });
-    if (isActiveSpeakerMode && peerTracks.length > 4) {
+    int firstScreenPeersCount = isAudioViewOn ? 6 : 4;
+    if ((isActiveSpeakerMode && peerTracks.length > firstScreenPeersCount) ||
+        isHeroMode) {
       List<HMSSpeaker> activeSpeaker = [];
-      if (updateSpeakers.length > 4) {
-        activeSpeaker.addAll(updateSpeakers.sublist(0, 4));
+      if (updateSpeakers.length > firstScreenPeersCount) {
+        activeSpeaker.addAll(updateSpeakers.sublist(0, firstScreenPeersCount));
       } else {
         activeSpeaker.addAll(updateSpeakers);
       }
       for (int i = activeSpeaker.length - 1; i > -1; i--) {
-        List<PeerTrackNode> tempTracks = peerTracks.sublist(0, 4);
-        int indexTrack = tempTracks.indexWhere(
-            (peer) => activeSpeaker[i].peer.peerId + "mainVideo" == peer.uid);
-        if (indexTrack != -1) {
-          continue;
+        if (isActiveSpeakerMode) {
+          List<PeerTrackNode> tempTracks = peerTracks.sublist(
+              screenShareCount, screenShareCount + firstScreenPeersCount);
+          int indexTrack = tempTracks.indexWhere(
+              (peer) => activeSpeaker[i].peer.peerId + "mainVideo" == peer.uid);
+          if (indexTrack != -1) {
+            continue;
+          }
         }
         int index = peerTracks.indexWhere(
             (peer) => activeSpeaker[i].peer.peerId + "mainVideo" == peer.uid);
         if (index != -1) {
           PeerTrackNode peerTrackNode = peerTracks.removeAt(index);
-          peerTracks.insert(0, peerTrackNode);
+          peerTracks.insert(screenShareCount, peerTrackNode);
         }
       }
-      uiUpdate++;
     }
     notifyListeners();
   }
@@ -780,11 +789,25 @@ class MeetingStore extends ChangeNotifier
 
   void setAudioViewStatus() {
     this.isAudioViewOn = !this.isAudioViewOn;
+    this.isHeroMode = false;
     notifyListeners();
   }
 
   void setActiveSpeakerMode() {
     this.isActiveSpeakerMode = !this.isActiveSpeakerMode;
+    this.isHeroMode = false;
+    notifyListeners();
+  }
+
+  void setHeroMode() {
+    this.isHeroMode = !this.isHeroMode;
+    this.isActiveSpeakerMode = false;
+    notifyListeners();
+  }
+
+  void setNewMessageFalse() {
+    if (!isNewMessageReceived) return;
+    this.isNewMessageReceived = false;
     notifyListeners();
   }
 

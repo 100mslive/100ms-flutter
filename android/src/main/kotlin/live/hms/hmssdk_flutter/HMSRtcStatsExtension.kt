@@ -18,7 +18,7 @@ class HMSRtcStatsExtension {
             if(peer==null || hmsRemoteVideoStats==null || track==null)return null
             args.put("peer", HMSPeerExtension.toDictionary(peer)!!)
             args.put("track",HMSTrackExtension.toDictionary(track)!!)
-            Log.i("args...",args.toString())
+            
             val hmsRemoteVideoStatsMap = HashMap<String,Any?>()
             if(hmsRemoteVideoStats==null) return null
             hmsRemoteVideoStatsMap["bytes_received"] = hmsRemoteVideoStats.bytesReceived
@@ -38,7 +38,7 @@ class HMSRtcStatsExtension {
             if(peer==null || hmsRemoteAudioStats==null || track==null)return null
             args.put("peer", HMSPeerExtension.toDictionary(peer)!!)
             args.put("track",HMSTrackExtension.toDictionary(track)!!)
-            Log.i("args...",args.toString())
+            
 
             val hmsRemoteAudioStatsMap = HashMap<String,Any?>()
             if(hmsRemoteAudioStats==null) return null
@@ -57,7 +57,7 @@ class HMSRtcStatsExtension {
             if(peer==null || hmsLocalAudioStats==null || track==null)return null
             args.put("peer", HMSPeerExtension.toDictionary(peer)!!)
             args.put("track",HMSTrackExtension.toDictionary(track)!!)
-            Log.i("args...",args.toString())
+            
 
             val hmsLocalAudioStatsMap = HashMap<String,Any?>()
             if(hmsLocalAudioStats==null) return null
@@ -73,7 +73,7 @@ class HMSRtcStatsExtension {
             if(peer==null || hmsLocalVideoStats==null || track==null)return null
             args.put("peer", HMSPeerExtension.toDictionary(peer)!!)
             args.put("track",HMSTrackExtension.toDictionary(track)!!)
-            Log.i("args...",args.toString())
+            
 
             val hmsLocaVideoStatsMap = HashMap<String,Any?>()
             if(hmsLocalVideoStats==null) return null
