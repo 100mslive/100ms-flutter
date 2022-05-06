@@ -8,8 +8,8 @@
     <parameter name="emulator" value="true" />
     <parameter name="platformName" value="Android" />
 <!--    <parameter name="udid" value="emulator-5554" />-->
-<!--    <parameter name="deviceName" value="test" />-->
-    <parameter name="deviceName" value="Nexus_6_API_29" />
+    <parameter name="deviceName" value="test" />
+<!--    <parameter name="deviceName" value="Nexus_6_API_29" />-->
     <parameter name="systemPort" value="10000" />
     <parameter name="chromeDriverPort" value="11000" />
 
