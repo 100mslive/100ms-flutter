@@ -378,6 +378,37 @@ class HMSSDK with WidgetsBindingObserver {
     }
   }
 
+  Future<PreviewForRole?> previewForRole(
+      {required HMSRole role,
+      HMSActionResultListener? hmsActionResultListener}) async {
+    var result = await PlatformService.invokeMethod(
+        PlatformMethod.previewForRole,
+        arguments: {
+          'role_name': role.name,
+        });
+    if (hmsActionResultListener != null) {
+      if (result["type"] == "error") {
+        hmsActionResultListener.onException(
+            arguments: {
+              "role_name": role.name,
+            },
+            methodType: HMSActionResultListenerMethod.changeTrackState,
+            hmsException: HMSException.fromMap(result["error"]));
+      } else {
+        Map map = {"video": null, "audio": null};
+        if (result["tracks"].containsKey("video")) {
+          map["video"] = result["tracks"]["video"];
+        }
+        if (result["tracks"].containsKey("audio")) {
+          map["audio"] = result["tracks"]["audio"];
+        }
+        PreviewForRole previewForRole = PreviewForRole.fromMap(map);
+        return previewForRole;
+      }
+    }
+    return null;
+  }
+
   /// To change the mute status of a single remote peer's track
   /// Set [mute] to true if the track needs to be muted, false otherwise.
   /// [hmsActionResultListener] - the callback that would be called by SDK in case of a success or failure.
@@ -700,7 +731,7 @@ class HMSSDK with WidgetsBindingObserver {
     PlatformService.removePreviewListener(listener);
   }
 
-///Method to start HMSLogger for logs
+  ///Method to start HMSLogger for logs
   void startHMSLogger(
       {required HMSLogLevel webRtclogLevel, required HMSLogLevel logLevel}) {
     PlatformService.invokeMethod(PlatformMethod.startHMSLogger, arguments: {
@@ -720,12 +751,12 @@ class HMSSDK with WidgetsBindingObserver {
     PlatformService.addLogsListener(hmsLogListener);
   }
 
-///Method to remove Log Listener
+  ///Method to remove Log Listener
   void removeLogListener({required HMSLogListener hmsLogListener}) {
     PlatformService.removeLogsListener(hmsLogListener);
   }
 
-///To maintain the app state in background and foreground state
+  ///To maintain the app state in background and foreground state
   bool isLocalVideoOn = false;
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) async {
