@@ -19,9 +19,16 @@ class PreviewPage extends StatefulWidget {
   final String roomId;
   final MeetingFlow flow;
   final String user;
+  final bool mirror;
+  final bool showStats;
 
   const PreviewPage(
-      {Key? key, required this.roomId, required this.flow, required this.user})
+      {Key? key,
+      required this.roomId,
+      required this.flow,
+      required this.user,
+      this.showStats = false,
+      this.mirror = true})
       : super(key: key);
 
   @override
@@ -88,7 +95,7 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                             ? HMSVideoView(
                                 scaleType: ScaleType.SCALE_ASPECT_FILL,
                                 track: _previewStore.localTracks[0],
-                                setMirror: true,
+                                setMirror: widget.mirror,
                                 matchParent: false,
                               )
                             : Container(
@@ -280,22 +287,27 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                                       context
                                           .read<PreviewStore>()
                                           .removePreviewListener();
+                                      _previewStore.hmsSDKInteractor
+                                          .mirrorCamera = widget.mirror;
+                                      _previewStore.hmsSDKInteractor.showStats =
+                                          widget.showStats;
+                                      _previewStore
+                                          .hmsSDKInteractor.skipPreview = false;
                                       Navigator.of(context).pushReplacement(
                                           MaterialPageRoute(
                                               builder: (_) =>
                                                   ListenableProvider.value(
                                                     value: MeetingStore(
-                                                      hmsSDKInteractor:_previewStore.hmsSDKInteractor,
+                                                      hmsSDKInteractor:
+                                                          _previewStore
+                                                              .hmsSDKInteractor,
                                                     ),
                                                     child: MeetingPage(
-                                                            roomId: widget.roomId,
+                                                      roomId: widget.roomId,
                                                       flow: widget.flow,
                                                       user: widget.user,
                                                       isAudioOn: _previewStore
                                                           .isAudioOn,
-                                                      localPeerNetworkQuality:
-                                                          _previewStore
-                                                              .networkQuality,
                                                     ),
                                                   )));
                                     },
@@ -311,23 +323,31 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                                       context
                                           .read<PreviewStore>()
                                           .removePreviewListener();
+                                      _previewStore.hmsSDKInteractor
+                                          .mirrorCamera = widget.mirror;
+                                      _previewStore.hmsSDKInteractor.showStats =
+                                          widget.showStats;
+                                      _previewStore
+                                          .hmsSDKInteractor.skipPreview = false;
                                       Navigator.of(context).pushReplacement(
                                           MaterialPageRoute(
                                               builder: (_) =>
                                                   ListenableProvider.value(
                                                     value: MeetingStore(
-                                                      hmsSDKInteractor:_previewStore.hmsSDKInteractor,
+                                                      hmsSDKInteractor:
+                                                          _previewStore
+                                                              .hmsSDKInteractor,
                                                     ),
                                                     child: MeetingPage(
-                                                      roomId: widget.roomId,
-                                                      flow: widget.flow,
-                                                      user: widget.user,
-                                                      isAudioOn: _previewStore
-                                                          .isAudioOn,
-                                                      localPeerNetworkQuality:
-                                                          _previewStore
-                                                              .networkQuality,
-                                                    ),
+                                                        roomId: widget.roomId,
+                                                        flow: widget.flow,
+                                                        user: widget.user,
+                                                        isAudioOn: _previewStore
+                                                            .isAudioOn,
+                                                        localPeerNetworkQuality:
+                                                            _previewStore
+                                                                .networkQuality,
+                                                        ),
                                                   )));
                                     },
                                     child: Text(

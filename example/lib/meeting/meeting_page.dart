@@ -31,14 +31,16 @@ class MeetingPage extends StatefulWidget {
   final bool isAudioOn;
   final int? localPeerNetworkQuality;
 
-  const MeetingPage({
-    Key? key,
-    required this.roomId,
-    required this.flow,
-    required this.user,
-    required this.isAudioOn,
-    this.localPeerNetworkQuality,
-  }) : super(key: key);
+  const MeetingPage(
+      {Key? key,
+      required this.roomId,
+      required this.flow,
+      required this.user,
+      required this.isAudioOn,
+      this.localPeerNetworkQuality = -1,
+      })
+      : super(key: key);
+
 
   @override
   _MeetingPageState createState() => _MeetingPageState();
@@ -60,7 +62,7 @@ class _MeetingPageState extends State<MeetingPage>
     WidgetsBinding.instance!.addObserver(this);
     initMeeting();
     checkAudioState();
-    setNetworkQuality();
+    setInitValues();
   }
 
   void initMeeting() async {
@@ -76,9 +78,10 @@ class _MeetingPageState extends State<MeetingPage>
     if (!widget.isAudioOn) context.read<MeetingStore>().switchAudio();
   }
 
-  void setNetworkQuality() async {
+  void setInitValues() async {
     context.read<MeetingStore>().localPeerNetworkQuality =
         widget.localPeerNetworkQuality;
+    context.read<MeetingStore>().setSettings();
   }
 
   @override
@@ -930,6 +933,7 @@ class _MeetingPageState extends State<MeetingPage>
                       color: meetingStore.isStatsVisible
                           ? Colors.red
                           : Colors.white),
+
                 ]),
             value: 13,
           ),

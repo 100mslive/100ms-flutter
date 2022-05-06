@@ -90,8 +90,10 @@ class MeetingStore extends ChangeNotifier
   bool isNewMessageReceived = false;
 
   int firstTimeBuild = 0;
+
   final DateFormat formatter = DateFormat('d MMM y h:mm:ss a');
 
+  bool isMirror = false;
   bool isAudioViewOn = false;
 
   ScrollController controller = ScrollController();
@@ -807,6 +809,11 @@ class MeetingStore extends ChangeNotifier
     if (!isNewMessageReceived) return;
     this.isNewMessageReceived = false;
     notifyListeners();
+  }
+
+  void setSettings() {
+    isMirror = _hmsSDKInteractor.mirrorCamera;
+    statsVisible = _hmsSDKInteractor.showStats;
   }
 
   @override
