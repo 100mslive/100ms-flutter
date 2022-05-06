@@ -4,6 +4,12 @@
 name: Appium CI
 
 on:
+  workflow_dispatch:
+    inputs:
+      logLevel:
+        description: "Log level"
+        required: true
+        default: "warning"
   push:
     branches: [ appium ]
   pull_request:
