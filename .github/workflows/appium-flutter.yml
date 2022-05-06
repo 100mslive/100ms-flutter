@@ -10,6 +10,8 @@ on:
         description: "Log level"
         required: true
         default: "warning"
+  schedule:
+    - cron: "0 0 * * *"
   push:
     branches: [ appium ]
   pull_request:
