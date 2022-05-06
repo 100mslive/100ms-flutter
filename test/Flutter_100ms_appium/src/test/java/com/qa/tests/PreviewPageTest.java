@@ -66,8 +66,8 @@ public class PreviewPageTest extends BaseTest {
 
       previewPage = homePage.goto_previewPage(meetingDetail.getJSONObject("valid").getString("meeting_url"), meetingDetail.getJSONObject("valid").getString("username"));
         Thread.sleep(5000);
-        click(previewPage.joinNowBtn);
-        sa.assertTrue(previewPage.videoTile.isDisplayed());
+//        click(previewPage.joinNowBtn);
+//        sa.assertTrue(previewPage.videoTile.isDisplayed());
         sa.assertTrue(previewPage.camBtn.isDisplayed());
         Thread.sleep(2000);
 
