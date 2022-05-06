@@ -9,7 +9,7 @@ import 'package:hmssdk_flutter_example/common/ui/organisms/hand_raise.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/audio_mute_status.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/network_icon_widget.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/peer_name.dart';
-import 'package:hmssdk_flutter_example/common/ui/organisms/video_tile_border.dart';
+import 'package:hmssdk_flutter_example/common/ui/organisms/tile_border.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/rtc_stats_view.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/video_view.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
@@ -129,9 +129,10 @@ class _VideoTileState extends State<VideoTile> {
                     AudioMuteStatus(), //bottom center
                     RTCStatsView(
                         isLocal: context.read<PeerTrackNode>().peer.isLocal),
-                    VideoTileBorder(
+                    TileBorder(
                         itemHeight: widget.itemHeight,
                         itemWidth: widget.itemWidth,
+                        name:context.read<PeerTrackNode>().peer.name,
                         uid: context.read<PeerTrackNode>().uid)
                   ],
                 ),

@@ -550,7 +550,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         )
     }
 
-    private fun isAllowedToEndMeeting(): Boolean {
+    private fun isAllowedToEndMeeting(): Boolean? {
         return hmssdk.getLocalPeer()!!.hmsRole.permission?.endRoom
     }
 
