@@ -4,8 +4,6 @@ import com.qa.BaseTest;
 import io.appium.java_client.MobileElement;
 import io.appium.java_client.pagefactory.AndroidFindBy;
 import io.appium.java_client.pagefactory.iOSXCUITFindBy;
-
-import org.testng.Assert;
 import org.testng.asserts.SoftAssert;
 
 public class HomePage extends BaseTest {
@@ -76,19 +74,20 @@ public class HomePage extends BaseTest {
       put_participant_name(name);
         sa.assertTrue(nameOKbtn.isDisplayed());
         click(nameOKbtn);
-//      accept_permission();
+      accept_permission();
       Thread.sleep(5000);
       return new PreviewPage();
     }
 
     //HomePage OS permission
-    @AndroidFindBy(id = "com.android.permissioncontroller:id/permission_allow_foreground_only_button")
+//    @AndroidFindBy(id = "com.android.permissioncontroller:id/permission_allow_foreground_only_button")
+    @AndroidFindBy(id = "com.android.packageinstaller:id/permission_allow_button")
     public MobileElement permissionCamMic;
 
     public void accept_permission() throws InterruptedException {
         String platform = BaseTest.selectPlatform();
         if (platform.equalsIgnoreCase("Android")) {
-          Assert.assertTrue(permissionCamMic.isDisplayed());
+          sa.assertTrue(permissionCamMic.isDisplayed());
           permissionCamMic.click();
             Thread.sleep(2000);
             permissionCamMic.click();
