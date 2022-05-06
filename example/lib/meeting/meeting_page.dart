@@ -16,7 +16,6 @@ import 'package:hmssdk_flutter_example/common/ui/organisms/offline_screen.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
 import 'package:hmssdk_flutter_example/logs/custom_singleton_logger.dart';
-import 'package:hmssdk_flutter_example/meeting/hms_sdk_interactor.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:hmssdk_flutter_example/meeting/peer_track_node.dart';
 import 'package:provider/provider.dart';
@@ -38,7 +37,7 @@ class MeetingPage extends StatefulWidget {
       required this.flow,
       required this.user,
       required this.isAudioOn,
-      this.localPeerNetworkQuality,
+      this.localPeerNetworkQuality = -1,
       })
       : super(key: key);
 
@@ -62,7 +61,7 @@ class _MeetingPageState extends State<MeetingPage>
     WidgetsBinding.instance!.addObserver(this);
     initMeeting();
     checkAudioState();
-    setNetworkQuality();
+    setInitValues();
   }
 
   void initMeeting() async {
@@ -78,9 +77,10 @@ class _MeetingPageState extends State<MeetingPage>
     if (!widget.isAudioOn) context.read<MeetingStore>().switchAudio();
   }
 
-  void setNetworkQuality() async {
+  void setInitValues() async {
     context.read<MeetingStore>().localPeerNetworkQuality =
         widget.localPeerNetworkQuality;
+    context.read<MeetingStore>().setSettings();
   }
 
   @override
@@ -904,9 +904,9 @@ class _MeetingPageState extends State<MeetingPage>
                   Text(
                     "Stats",
                     style: TextStyle(
-                        color: meetingStore.isBRB ? Colors.red : Colors.white),
+                        color: meetingStore.statsVisible ? Colors.blue : Colors.white),
                   ),
-                  Icon(Icons.bar_chart_outlined),
+                  Icon(Icons.bar_chart_outlined,color: meetingStore.statsVisible ? Colors.blue:Colors.white,),
                 ]),
             value: 13,
           ),

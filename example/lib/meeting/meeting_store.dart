@@ -88,8 +88,10 @@ class MeetingStore extends ChangeNotifier
   bool statsVisible = false;
 
   int firstTimeBuild = 0;
+
   final DateFormat formatter = DateFormat('d MMM y h:mm:ss a');
 
+  bool isMirror = false;
   bool isAudioViewOn = false;
 
   void addUpdateListener() {
@@ -784,6 +786,11 @@ class MeetingStore extends ChangeNotifier
   void setActiveSpeakerMode() {
     this.isActiveSpeakerMode = !this.isActiveSpeakerMode;
     notifyListeners();
+  }
+
+  void setSettings() {
+    isMirror = _hmsSDKInteractor.mirrorCamera;
+    statsVisible = _hmsSDKInteractor.showStats;
   }
 
   @override
