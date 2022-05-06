@@ -1,30 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:hmssdk_flutter_example/common/ui/organisms/audio_tile.dart';
+import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
 import 'package:hmssdk_flutter_example/meeting/peer_track_node.dart';
-import 'package:provider/provider.dart';
 
 Widget gridAudioView(
     {required List<PeerTrackNode> peerTracks,
     required int itemCount,
     required Size size}) {
-  return GridView.builder(
-    itemBuilder: ((context, index) {
-      return ChangeNotifierProvider.value(
-          key: ValueKey(peerTracks[index].uid),
-          value: peerTracks[index],
-          child: AudioTile(
-            key: ValueKey(peerTracks[index].uid),
-            itemHeight: size.height,
-            itemWidth: size.width,
-          ));
-    }),
+  List<Widget> children =
+      UtilityComponents.audioTileWidget(itemCount, peerTracks, size);
+
+  return GridView(
+    children: children,
     gridDelegate: SliverStairedGridDelegate(
         startCrossAxisDirectionReversed: true,
         pattern: pattern(itemCount, size)),
-    itemCount: itemCount,
     physics: PageScrollPhysics(),
-scrollDirection: Axis.horizontal,
+    scrollDirection: Axis.horizontal,
   );
 }
 
