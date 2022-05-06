@@ -8,8 +8,8 @@
     <parameter name="emulator" value="true" />
     <parameter name="platformName" value="Android" />
 <!--    <parameter name="udid" value="emulator-5554" />-->
-    <parameter name="deviceName" value="test" />
-<!--    <parameter name="deviceName" value="Pixle_5" />-->
+<!--    <parameter name="deviceName" value="test" />-->
+    <parameter name="deviceName" value="Nexus_6_API_29" />
     <parameter name="systemPort" value="10000" />
     <parameter name="chromeDriverPort" value="11000" />
 
@@ -17,8 +17,8 @@
 
         <classes>
 <!--                        <class name="com.qa.tests.HomePageTest"></class>-->
-                        <class name="com.qa.tests.PreviewPageTest"></class>
-<!--                        <class name="com.qa.tests.MeetingRoomTest.TopToolBarTest"></class>-->
+<!--                        <class name="com.qa.tests.PreviewPageTest"></class>-->
+                        <class name="com.qa.tests.MeetingRoomTest.TopToolBarTest"></class>
 <!--                        <class name="com.qa.tests.MeetingRoomTest.BottomToolBarTest.RaiseHandTest"></class>-->
 <!--                        <class name="com.qa.tests.MeetingRoomTest.BottomToolBarTest.LeaveRoomTest"></class>-->
 <!--                        <class name="com.qa.tests.MeetingRoomTest.BottomToolBarTest.ScreenShareTest"></class>-->
