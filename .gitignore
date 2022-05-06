@@ -35,3 +35,5 @@ test/Flutter_100ms_appium/Screenshots
 test/Flutter_100ms_appium/ServerLogs
 test/Flutter_100ms_appium/target
 test/Flutter_100ms_appium/videos
+test/Flutter_100ms_appium/src/main/java/com/qa/BaseTest.java
+test/Flutter_100ms_appium/flutter_android.xml
