@@ -813,7 +813,7 @@ class MeetingStore extends ChangeNotifier
 
   void setSettings() {
     isMirror = _hmsSDKInteractor.mirrorCamera;
-    statsVisible = _hmsSDKInteractor.showStats;
+    isStatsVisible = _hmsSDKInteractor.showStats;
   }
 
   @override
