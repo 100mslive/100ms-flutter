@@ -74,7 +74,7 @@ public class HomePage extends BaseTest {
       put_participant_name(name);
         sa.assertTrue(nameOKbtn.isDisplayed());
         click(nameOKbtn);
-//      accept_permission();
+      accept_permission();
       Thread.sleep(5000);
       return new PreviewPage();
     }
