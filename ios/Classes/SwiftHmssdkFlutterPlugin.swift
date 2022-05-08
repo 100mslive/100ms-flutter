@@ -117,7 +117,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
             // MARK: - Role based Actions
 
-        case "get_roles", "change_role", "accept_change_role", "end_room", "remove_peer", "on_change_track_state_request", "change_track_state_for_role","preview_for_role":
+        case "get_roles", "change_role", "accept_change_role", "end_room", "remove_peer", "on_change_track_state_request", "change_track_state_for_role","preview_for_role","cancel_preview":
             roleActions(call, result: result)
 
             // MARK: - Peer Action
@@ -190,6 +190,9 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         
     case "preview_for_role":
         previewForRole(call, result: result)
+    
+    case "cancel_preview":
+        cancelPreview(result)
 
     default:
         result(FlutterMethodNotImplemented)

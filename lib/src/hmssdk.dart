@@ -392,7 +392,7 @@ class HMSSDK with WidgetsBindingObserver {
             arguments: {
               "role_name": role.name,
             },
-            methodType: HMSActionResultListenerMethod.changeTrackState,
+            methodType: HMSActionResultListenerMethod.previewForRole,
             hmsException: HMSException.fromMap(result["error"]));
       } else {
         Map map = {"video": null, "audio": null};
@@ -407,6 +407,15 @@ class HMSSDK with WidgetsBindingObserver {
       }
     }
     return null;
+  }
+
+  void cancelPreview({HMSActionResultListener? hmsActionResultListener}) async {
+    var result =
+        await PlatformService.invokeMethod(PlatformMethod.cancelPreview);
+    if (hmsActionResultListener != null && result == null) {
+      hmsActionResultListener.onSuccess(
+          methodType: HMSActionResultListenerMethod.cancelPreview);
+    }
   }
 
   /// To change the mute status of a single remote peer's track

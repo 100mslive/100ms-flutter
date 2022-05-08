@@ -17,5 +17,7 @@ enum HMSActionResultListenerMethod {
   hlsStreamingStopped,
   startScreenShare,
   stopScreenShare,
+  previewForRole,
+  cancelPreview,
   unknown
 }
