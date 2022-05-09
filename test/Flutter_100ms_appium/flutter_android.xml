@@ -16,7 +16,7 @@
   <test name="tests.Android_Flutter">
 
         <classes>
-<class name="com.qa.tests.HomePageTest"></class>
+                        <class name="com.qa.tests.HomePageTest"></class>
                         <class name="com.qa.tests.PreviewPageTest"></class>
                         <class name="com.qa.tests.MeetingRoomTest.TopToolBarTest"></class>
                         <class name="com.qa.tests.MeetingRoomTest.BottomToolBarTest.RaiseHandTest"></class>
