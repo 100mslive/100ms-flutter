@@ -41,9 +41,10 @@ class HMSExampleApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
-        brightness: Brightness.dark,
-        primaryColor: Color.fromARGB(255, 13, 107, 184),
-      ),
+          brightness: Brightness.dark,
+          primaryColor: Color.fromARGB(255, 13, 107, 184),
+          appBarTheme: AppBarTheme(color: Colors.black),
+          scaffoldBackgroundColor: Colors.black),
       scaffoldMessengerKey: GlobalKey<ScaffoldMessengerState>(),
       home: HomePage(),
     );
@@ -152,8 +153,12 @@ class _HomePageState extends State<HomePage> {
                           if (skipPreview)
                             Text("Enable Preview")
                           else
-                            Text("Disable Preview",style: TextStyle(color: Colors.blue),),
-                          Icon(Icons.preview,color: skipPreview?Colors.white:Colors.blue),
+                            Text(
+                              "Disable Preview",
+                              style: TextStyle(color: Colors.blue),
+                            ),
+                          Icon(Icons.preview,
+                              color: skipPreview ? Colors.white : Colors.blue),
                         ],
                       ),
                       value: 1,
@@ -163,10 +168,14 @@ class _HomePageState extends State<HomePage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           if (mirrorCamera)
-                            Text("Disable Mirroring",style: TextStyle(color: Colors.blue))
+                            Text("Disable Mirroring",
+                                style: TextStyle(color: Colors.blue))
                           else
                             Text("Enable Mirroring"),
-                          Icon(Icons.camera_front,color: mirrorCamera?Colors.blue:Colors.white,),
+                          Icon(
+                            Icons.camera_front,
+                            color: mirrorCamera ? Colors.blue : Colors.white,
+                          ),
                         ],
                       ),
                       value: 2,
@@ -176,10 +185,12 @@ class _HomePageState extends State<HomePage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           if (showStats)
-                            Text("Disable Stats",style: TextStyle(color: Colors.blue))
+                            Text("Disable Stats",
+                                style: TextStyle(color: Colors.blue))
                           else
                             Text("Enable Stats"),
-                          Icon(Icons.bar_chart,color: showStats?Colors.blue:Colors.white),
+                          Icon(Icons.bar_chart,
+                              color: showStats ? Colors.blue : Colors.white),
                         ],
                       ),
                       value: 3,
@@ -208,6 +219,14 @@ class _HomePageState extends State<HomePage> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
+                      Image.asset(
+                        "assets/100ms.gif",
+                        width: 150,
+                        height: 150,
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
                       Text('Join a Meeting',
                           style: TextStyle(
                               height: 1,
@@ -260,22 +279,22 @@ class _HomePageState extends State<HomePage> {
                               if (res) {
                                 FocusManager.instance.primaryFocus?.unfocus();
                                 if (skipPreview) {
-                                  HMSSDKInteractor _hmsSDKInteractor = HMSSDKInteractor();
+                                  HMSSDKInteractor _hmsSDKInteractor =
+                                      HMSSDKInteractor();
                                   _hmsSDKInteractor.showStats = showStats;
                                   _hmsSDKInteractor.mirrorCamera = mirrorCamera;
                                   _hmsSDKInteractor.skipPreview = true;
                                   Navigator.of(context).push(MaterialPageRoute(
                                       builder: (_) => ListenableProvider.value(
                                           value: MeetingStore(
-                                              hmsSDKInteractor: _hmsSDKInteractor
-                                                  ),
+                                              hmsSDKInteractor:
+                                                  _hmsSDKInteractor),
                                           child: MeetingPage(
-                                            roomId:
-                                                roomIdController.text.trim(),
-                                            flow: MeetingFlow.join,
-                                            user: user,
-                                            isAudioOn: true
-                                          ))));
+                                              roomId:
+                                                  roomIdController.text.trim(),
+                                              flow: MeetingFlow.join,
+                                              user: user,
+                                              isAudioOn: true))));
                                 } else {
                                   Navigator.of(context).push(MaterialPageRoute(
                                       builder: (_) => ListenableProvider.value(
