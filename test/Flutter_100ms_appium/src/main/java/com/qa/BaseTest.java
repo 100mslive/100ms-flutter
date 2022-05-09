@@ -185,26 +185,17 @@ public class BaseTest {
 	// for Mac. Update the paths as per your Mac setup
 	public AppiumDriverLocalService getAppiumService() {
 		HashMap<String, String> environment = new HashMap<String, String>();
-<<<<<<< HEAD
+
 // 		environment.put("PATH", "/Library/Internet Plug-Ins/JavaAppletPlugin.plugin/Contents/Home/bin:/Users/ronitroy/Library/Android/sdk/tools:/Users/ronitroy/Library/Android/sdk/platform-tools:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/Apple/usr/bin" + System.getenv("PATH"));
 // 		environment.put("ANDROID_HOME", "/Users/ronitroy/Library/Android/sdk"); //Uncomment for local
-=======
-		environment.put("PATH", "/Library/Internet Plug-Ins/JavaAppletPlugin.plugin/Contents/Home/bin:/Users/ronitroy/Library/Android/sdk/tools:/Users/ronitroy/Library/Android/sdk/platform-tools:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/Apple/usr/bin" + System.getenv("PATH"));
-		environment.put("ANDROID_HOME", "/Users/ronitroy/Library/Android/sdk"); //Uncomment for local
->>>>>>> d5aabe0 (test case changes)
 
-//		environment.put("PATH", "/Library/Internet Plug-Ins/JavaAppletPlugin.plugin/Contents/Home/bin:/Users/runner/Library/Android/sdk/tools:/Users/runner/Library/Android/sdk/platform-tools:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/Apple/usr/bin" + System.getenv("PATH"));
-//		environment.put("ANDROID_HOME", "/Users/runner/Library/Android/sdk");
+		environment.put("PATH", "/Library/Internet Plug-Ins/JavaAppletPlugin.plugin/Contents/Home/bin:/Users/runner/Library/Android/sdk/tools:/Users/runner/Library/Android/sdk/platform-tools:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/Apple/usr/bin" + System.getenv("PATH"));
+		environment.put("ANDROID_HOME", "/Users/runner/Library/Android/sdk");
 
 		return AppiumDriverLocalService.buildService(new AppiumServiceBuilder()
 				.usingDriverExecutable(new File("/usr/local/bin/node"))
-<<<<<<< HEAD
 // 				.withAppiumJS(new File("/Applications/Appium Server GUI.app/Contents/Resources/app/node_modules/appium/build/lib/main.js"))  //Uncomment for local
 				.withAppiumJS(new File("/Users/runner/hostedtoolcache/node/11.15.0/x64/lib/node_modules/appium/build/lib/main.js"))
-=======
-				.withAppiumJS(new File("/Applications/Appium Server GUI.app/Contents/Resources/app/node_modules/appium/build/lib/main.js"))  //Uncomment for local
-//				.withAppiumJS(new File("/Users/runner/hostedtoolcache/node/11.15.0/x64/lib/node_modules/appium/build/lib/main.js"))
->>>>>>> d5aabe0 (test case changes)
 				.usingPort(4723)
 				.withArgument(GeneralServerFlag.SESSION_OVERRIDE)
 //				.withArgument(() -> "--allow-insecure","chromedriver_autodownload")
