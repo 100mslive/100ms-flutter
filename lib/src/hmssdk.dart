@@ -378,6 +378,11 @@ class HMSSDK with WidgetsBindingObserver {
     }
   }
 
+  ///Preview for Role (only available for ios)
+  ///
+  ///Call this preview API any time after joining in case you need to show a preview for a certain role. i.e before doing/accepting a role change request.
+  /// - Parameters:
+  /// - [HMSRole]: The role that would be used for checking which tracks would be required.
   Future<PreviewForRole?> previewForRole(
       {required HMSRole role,
       HMSActionResultListener? hmsActionResultListener}) async {
@@ -409,6 +414,9 @@ class HMSSDK with WidgetsBindingObserver {
     return null;
   }
 
+  /// Cancel Preview (only available for ios)
+  ///
+  /// Call this API in case the tracks obtained via preview(role:) API are no longer needed. There is no need to call this if role change happened. Call this if user has decided not to change role to release camera/mic.
   void cancelPreview({HMSActionResultListener? hmsActionResultListener}) async {
     var result =
         await PlatformService.invokeMethod(PlatformMethod.cancelPreview);
