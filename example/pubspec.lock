@@ -120,6 +120,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "6.1.2"
+  firebase:
+    dependency: transitive
+    description:
+      name: firebase
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "9.0.3"
   firebase_analytics:
     dependency: "direct main"
     description:
@@ -176,6 +183,27 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.2.5"
+  firebase_performance:
+    dependency: "direct main"
+    description:
+      name: firebase_performance
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.8.0+11"
+  firebase_performance_platform_interface:
+    dependency: transitive
+    description:
+      name: firebase_performance_platform_interface
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.1+5"
+  firebase_performance_web:
+    dependency: transitive
+    description:
+      name: firebase_performance_web
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.0+11"
   flutter:
     dependency: "direct main"
     description: flutter
