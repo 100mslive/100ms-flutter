@@ -32,8 +32,8 @@ android {
         applicationId "live.hms.flutter"
         minSdkVersion 21
         targetSdkVersion 32
-        versionCode 62
-        versionName "1.1.12"
+        versionCode 63
+        versionName "1.1.13"
     }
 
     signingConfigs {
@@ -67,4 +67,5 @@ dependencies {
     implementation 'com.google.firebase:firebase-crashlytics:18.2.10'
 }
 apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.firebase.firebase-perf'
 apply plugin: 'com.google.firebase.crashlytics'
