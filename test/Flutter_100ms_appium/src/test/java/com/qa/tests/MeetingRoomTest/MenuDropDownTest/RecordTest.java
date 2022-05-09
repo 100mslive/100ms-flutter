@@ -76,27 +76,27 @@ public class RecordTest extends BaseTest {
                 meetingDetail.getJSONObject("camera").getString("ON"),
                 meetingDetail.getJSONObject("mic").getString("ON"));
 
-        sa.assertTrue(record.recordBtn.isDisplayed());
+        assertTrue(record.recordBtn.isDisplayed(),"recordBtn","isDisplayed");
 
-        click(record.recordBtn);
+        click(record.recordBtn,"recordBtn");
 
-        sa.assertTrue(record.recordPopup.isDisplayed());
+        assertTrue(record.recordPopup.isDisplayed(),"recordPopup","isDisplayed");
 
-        sa.assertTrue(record.recordMeetingUrl.isDisplayed());
+        assertTrue(record.recordMeetingUrl.isDisplayed(),"recordMeetingUrl","isDisplayed");
         String beam_url_flag = record.recordMeetingUrl.getText();
         String beam_url_text = meetingDetail.getJSONObject("valid").getString("meeting_url").replace("meeting" , "preview") + getStrings().get("token_beam");
         sa.assertEquals(beam_url_flag, beam_url_text);
 
-        sa.assertTrue(record.recordCancelBtn.isDisplayed());
-        click(record.recordCancelBtn);
+        assertTrue(record.recordCancelBtn.isDisplayed(),"recordCancelBtn","isDisplayed");
+        click(record.recordCancelBtn,"recordCancelBtn");
 
         //add a false check || not working with assertfalse
         //Assert.assertFalse(record.recordingStartedNotification.isDisplayed());
 
-        click(topToolBar.menuBtn);
-        click(record.recordBtn);
+        click(topToolBar.menuBtn,"menuBtn");
+        click(record.recordBtn,"recordBtn");
 
-        click(record.recordOKBtn);
+        click(record.recordOKBtn,"recordOKBtn");
         Thread.sleep(40000);
 
 //        Add a check as below is not working due to non detection of id od beam tile
@@ -110,8 +110,8 @@ public class RecordTest extends BaseTest {
 //        String record_text = getStrings().get("recording_started");
 //        sa.assertEquals(record_flag, record_text);
 
-        click(topToolBar.menuBtn);
-        click(record.recordingBtn);
+        click(topToolBar.menuBtn,"menuBtn");
+        click(record.recordingBtn,"recordingBtn");
 
 //        sa.assertTrue(record.recordingStoppedNotification.isDisplayed());
 //        record_flag = getContextDesc(record.recordingStoppedNotification, "Recording Notification- ");

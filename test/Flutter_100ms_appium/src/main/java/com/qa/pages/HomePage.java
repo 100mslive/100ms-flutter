@@ -1,12 +1,16 @@
 package com.qa.pages;
 
+import com.aventstack.extentreports.Status;
 import com.qa.BaseTest;
+import com.qa.reports.ExtentReport;
+import com.qa.utils.TestUtils;
 import io.appium.java_client.MobileElement;
 import io.appium.java_client.pagefactory.AndroidFindBy;
 import io.appium.java_client.pagefactory.iOSXCUITFindBy;
 import org.testng.asserts.SoftAssert;
 
 public class HomePage extends BaseTest {
+    TestUtils utils = new TestUtils();
     SoftAssert sa = new SoftAssert();
     //Landing Page
     @iOSXCUITFindBy(accessibility = "Enter Room URL")
@@ -34,7 +38,7 @@ public class HomePage extends BaseTest {
     }
 
     public HomePage put_meeting_url(String meetingUrl) throws InterruptedException {
-        sa.assertTrue(meetingUrlField.isDisplayed());
+        assertTrue(meetingUrlField.isDisplayed(),"meetingUrlField","isDisplayed");
         clear(meetingUrlField);
         meetingUrlField.clear();
         sendKeys(meetingUrlField, meetingUrl, "login with " + meetingUrl);
@@ -43,8 +47,8 @@ public class HomePage extends BaseTest {
 
     public HomePage goto_enterName(String meetingUrl) throws InterruptedException {
         put_meeting_url(meetingUrl);
-        sa.assertTrue(joinMeetingBtn.isDisplayed());
-        click(joinMeetingBtn);
+        assertTrue(joinMeetingBtn.isDisplayed(),"joinMeetingBtn","isDisplayed");
+        click(joinMeetingBtn, "joinMeetingBtn");
       return this;
     }
 
@@ -63,8 +67,8 @@ public class HomePage extends BaseTest {
 
     public HomePage put_participant_name(String name) throws InterruptedException {
       Thread.sleep(2000);
-        sa.assertTrue(participantNameField.isDisplayed());
-        clear(participantNameField);
+      assertTrue(participantNameField.isDisplayed(),"participantNameField","isDisplayed");
+      clear(participantNameField);
       sendKeys(participantNameField, name, "Participant name- " + name);
       return this;
     }
@@ -72,10 +76,12 @@ public class HomePage extends BaseTest {
     public PreviewPage goto_previewPage(String meetingUrl, String name) throws InterruptedException {
       goto_enterName(meetingUrl);
       put_participant_name(name);
-        sa.assertTrue(nameOKbtn.isDisplayed());
-        click(nameOKbtn);
+      assertTrue(nameOKbtn.isDisplayed(),"nameOKbtn","isDisplayed");
+      click(nameOKbtn, "nameOKbtn");
 //      accept_permission();
-      Thread.sleep(5000);
+      Thread.sleep(2000);
+      utils.log().info("In Preview Page" );
+      ExtentReport.getTest().log(Status.INFO, "In Preview Page");
       return new PreviewPage();
     }
 

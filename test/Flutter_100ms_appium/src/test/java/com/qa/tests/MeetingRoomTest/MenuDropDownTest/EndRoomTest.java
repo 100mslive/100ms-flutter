@@ -4,7 +4,6 @@ import com.qa.BaseTest;
 import com.qa.pages.HomePage;
 import com.qa.pages.MeetingRoomPage.BottomToolBar.LeaveRoom;
 import com.qa.pages.MeetingRoomPage.MenuDropDown.EndRoom;
-import com.qa.pages.MeetingRoomPage.MenuDropDown.MuteAll;
 import com.qa.pages.MeetingRoomPage.TopToolBar;
 import com.qa.utils.TestUtils;
 import org.json.JSONObject;
@@ -75,14 +74,14 @@ public class EndRoomTest extends BaseTest {
                 meetingDetail.getJSONObject("mic").getString("ON"));
 
 
-        sa.assertTrue(endRoom.endRoomBtn.isDisplayed());
-        click(endRoom.endRoomBtn);
+        assertTrue(endRoom.endRoomBtn.isDisplayed(),"endRoomBtn","isDisplayed");
+        click(endRoom.endRoomBtn,"endRoomBtn");
 
         String meeting_ended_flag = leaveRoom.meetingEndedNotification.getAttribute("content-desc");
         String meeting_ended_text = "Meeting Ended";
         sa.assertEquals(meeting_ended_flag, meeting_ended_text);
 
-        sa.assertTrue(homePage.joinMeetingBtn.isDisplayed());
+        assertTrue(homePage.joinMeetingBtn.isDisplayed(),"joinMeetingBtn","isDisplayed");
     }
 
 }

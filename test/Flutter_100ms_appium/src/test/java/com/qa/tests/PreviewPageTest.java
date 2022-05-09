@@ -18,6 +18,7 @@ public class PreviewPageTest extends BaseTest {
     HomePage homePage;
     PreviewPage previewPage;
     JSONObject meetingDetail;
+    LeaveRoom leaveRoom;
     TestUtils utils = new TestUtils();
     SoftAssert sa;
 
@@ -50,6 +51,7 @@ public class PreviewPageTest extends BaseTest {
       utils.log().info("\n" + "****** starting test:" + m.getName() + "******" + "\n");
       sa = new SoftAssert();
       homePage = new HomePage();
+      leaveRoom = new LeaveRoom();
     }
 
     @AfterMethod
@@ -62,24 +64,19 @@ public class PreviewPageTest extends BaseTest {
     @Test
     public void Test_PreviewPage() throws InterruptedException {
         System.out.println("Verify Preview page locators");
-//        Thread.sleep(2000);
-
-      previewPage = homePage.goto_previewPage(meetingDetail.getJSONObject("valid").getString("meeting_url"), meetingDetail.getJSONObject("valid").getString("username"));
+        previewPage = homePage.goto_previewPage(meetingDetail.getJSONObject("valid").getString("meeting_url"), meetingDetail.getJSONObject("valid").getString("username"));
         Thread.sleep(5000);
-//        click(previewPage.joinNowBtn);
-        sa.assertTrue(previewPage.videoTile.isDisplayed());
-        sa.assertTrue(previewPage.camBtn.isDisplayed());
-        Thread.sleep(2000);
 
-        sa.assertTrue(previewPage.micBtn.isDisplayed());
-        sa.assertTrue(previewPage.joinNowBtn.isDisplayed());
+//        sa.assertTrue(previewPage.videoTile.isDisplayed());
+        assertTrue(previewPage.camBtn.isDisplayed(), "camBtn", "isDisplayed");
+        assertTrue(previewPage.micBtn.isDisplayed(), "micBtn", "isDisplayed");
+        assertTrue(previewPage.joinNowBtn.isDisplayed(), "joinNowBtn", "isDisplayed");
 //        sa.assertTrue(previewPage.backBtn.isDisplayed());
 //        sa.assertTrue(previewPage.previewPageHeading.isDisplayed());
-
-        click(previewPage.camBtn);
-        click(previewPage.micBtn);
-        click(previewPage.joinNowBtn);
-
+        click(previewPage.camBtn,"camBtn");
+        click(previewPage.micBtn,"micBtn");
+        click(previewPage.joinNowBtn,"joinNowBtn");
+        assertTrue(leaveRoom.leaveRoomBtn.isDisplayed(), "leaveRoomBtn", "isDisplayed");
     }
 
 }

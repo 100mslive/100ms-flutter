@@ -7,7 +7,6 @@ import com.qa.pages.MeetingRoomPage.MeetingRoom;
 import com.qa.utils.TestUtils;
 import org.json.JSONObject;
 import org.json.JSONTokener;
-import org.testng.Assert;
 import org.testng.annotations.*;
 import org.testng.asserts.SoftAssert;
 
@@ -71,21 +70,21 @@ public class LeaveRoomTest extends BaseTest {
         meetingDetail.getJSONObject("mic").getString("ON"));
 
       waitForVisibility(leaveRoom.leaveRoomBtn);
-      sa.assertTrue(leaveRoom.leaveRoomBtn.isDisplayed());
-        click(leaveRoom.leaveRoomBtn);
-        sa.assertTrue(leaveRoom.leaveRoomPopup.isDisplayed());
+      assertTrue(leaveRoom.leaveRoomBtn.isDisplayed(),"leaveRoomBtn","isDisplayed");
+      click(leaveRoom.leaveRoomBtn, "leaveRoomBtn");
+      assertTrue(leaveRoom.leaveRoomPopup.isDisplayed(),"leaveRoomPopup","isDisplayed");
 
       waitForVisibility(leaveRoom.leaveRoomPopupText);
-      sa.assertTrue(leaveRoom.leaveRoomPopupText.isDisplayed());
+      assertTrue(leaveRoom.leaveRoomPopupText.isDisplayed(),"leaveRoomPopupText","isDisplayed");
 
         String leave_room_heading = leaveRoom.leaveRoomPopupText.getAttribute("content-desc");
         String flag = getStrings().get("Leave_room_heading");;
 
-        Assert.assertEquals(leave_room_heading, flag);
+        sa.assertEquals(leave_room_heading, flag,"Equal Text");
+        assertTrue(leaveRoom.leaveRoomCancelBtn.isDisplayed(),"leaveRoomCancelBtn","isDisplayed");
 
-        sa.assertTrue(leaveRoom.leaveRoomCancelBtn.isDisplayed());
-      click(leaveRoom.leaveRoomCancelBtn);
-        sa.assertTrue(leaveRoom.leaveRoomBtn.isDisplayed());
+        click(leaveRoom.leaveRoomCancelBtn, "leaveRoomCancelBtn");
+        assertTrue(leaveRoom.leaveRoomBtn.isDisplayed(),"leaveRoomBtn","isDisplayed");
         //add more button checks later
 
       leaveRoom.leave_withoutEndingRoom();
@@ -102,14 +101,14 @@ public class LeaveRoomTest extends BaseTest {
       meetingDetail.getJSONObject("mic").getString("ON"));
 
     waitForVisibility(leaveRoom.leaveRoomBtn);
-    sa.assertTrue(leaveRoom.leaveRoomBtn.isDisplayed());
+    assertTrue(leaveRoom.leaveRoomBtn.isDisplayed(),"leaveRoomBtn","isDisplayed");
     click(leaveRoom.leaveRoomBtn);
 
-    sa.assertTrue(leaveRoom.leaveRoomYesBtn.isDisplayed());
+    assertTrue(leaveRoom.leaveRoomYesBtn.isDisplayed(),"leaveRoomYesBtn","isDisplayed");
     click(leaveRoom.leaveRoomYesBtn);
 
     Thread.sleep(2000);
-    sa.assertTrue(homePage.joinMeetingBtn.isDisplayed());
+    assertTrue(homePage.joinMeetingBtn.isDisplayed(),"joinMeetingBtn","isDisplayed");
   }
 
 //  @Test

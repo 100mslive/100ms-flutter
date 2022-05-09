@@ -71,14 +71,14 @@ public class RaiseHandTest extends BaseTest {
             meetingDetail.getJSONObject("camera").getString("ON"),
             meetingDetail.getJSONObject("mic").getString("ON"));
 
-        sa.assertTrue(raiseHand.expand.isDisplayed());
+        assertTrue(raiseHand.expand.isDisplayed(),"expand","isDisplayed");
         click(raiseHand.expand);
-        sa.assertTrue(raiseHand.raiseHandBtn.isDisplayed());
+        assertTrue(raiseHand.raiseHandBtn.isDisplayed(),"raiseHandBtn","isDisplayed");
 
         click(raiseHand.raiseHandBtn);
-        sa.assertTrue(raiseHand.expand.isDisplayed());
+        assertTrue(raiseHand.expand.isDisplayed(),"expand","isDisplayed");
         click(raiseHand.expand);
-        sa.assertTrue(raiseHand.raiseHandOnNotifictaion.isDisplayed());
+        assertTrue(raiseHand.raiseHandOnNotifictaion.isDisplayed(),"raiseHandOnNotifictaion","isDisplayed");
         String raise_hand_flag = raiseHand.raiseHandOnNotifictaion.getAttribute("content-desc");
         String raise_hand_text = getStrings().get("raise_hand_on");;
         sa.assertEquals(raise_hand_flag, raise_hand_text);
@@ -87,7 +87,7 @@ public class RaiseHandTest extends BaseTest {
         click(raiseHand.expand);
         click(raiseHand.raiseHandBtn);
         click(raiseHand.expand);
-        sa.assertTrue(raiseHand.raiseHandOffNotifictaion.isDisplayed());
+        assertTrue(raiseHand.raiseHandOffNotifictaion.isDisplayed(),"raiseHandOffNotifictaion","isDisplayed");
         raise_hand_flag = raiseHand.raiseHandOffNotifictaion.getAttribute("content-desc");
         raise_hand_text = getStrings().get("raise_hand_off");
         sa.assertEquals(raise_hand_flag, raise_hand_text);

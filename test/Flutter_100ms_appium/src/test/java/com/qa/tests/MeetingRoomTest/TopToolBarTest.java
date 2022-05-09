@@ -69,7 +69,7 @@ public class TopToolBarTest extends BaseTest {
           meetingDetail.getJSONObject("valid").getString("username"),
           meetingDetail.getJSONObject("camera").getString("ON"),
           meetingDetail.getJSONObject("mic").getString("ON"));
-        sa.assertTrue(topToolBar.speakerBtn.isDisplayed());
+        assertTrue(topToolBar.speakerBtn.isDisplayed(), "speakerBtn","isDisplayed");
         click(topToolBar.speakerBtn);
         leaveRoom.leave_withoutEndingRoom();
     }
@@ -85,10 +85,10 @@ public class TopToolBarTest extends BaseTest {
         meetingDetail.getJSONObject("mic").getString("ON"));
 
         Thread.sleep(2000);
-        sa.assertTrue(topToolBar.menuBtn.isDisplayed());
+        assertTrue(topToolBar.menuBtn.isDisplayed(), "menuBtn", "isDisplayed");
         click(topToolBar.menuBtn);
 
-        Thread.sleep(2000);
+//        Thread.sleep(2000);
 //      sa.assertTrue(topToolBar.settingPopupHeading.isDisplayed());
         default_back();
         leaveRoom.leave_withoutEndingRoom();
@@ -96,7 +96,7 @@ public class TopToolBarTest extends BaseTest {
 
     @Test
     public void Test_BackBtn() throws InterruptedException {
-        System.out.println("Verify Name space Visible");
+        System.out.println("Verify BackBtn");
         Thread.sleep(2000);
 
         meetingRoom = meetingRoom.goto_meetingRoom_mic_cam(meetingDetail.getJSONObject("valid").getString("meeting_url"),
@@ -104,22 +104,22 @@ public class TopToolBarTest extends BaseTest {
                 meetingDetail.getJSONObject("camera").getString("ON"),
                 meetingDetail.getJSONObject("mic").getString("ON"));
 
-        sa.assertTrue(topToolBar.backBtn.isDisplayed());
+        assertTrue(topToolBar.backBtn.isDisplayed(), "backBtn", "isDisplayed");
         click(topToolBar.backBtn);
-        sa.assertTrue(leaveRoom.leaveRoomPopup.isDisplayed());
+        assertTrue(leaveRoom.leaveRoomPopup.isDisplayed(), "leaveRoomPopup", "isDisplayed");
 
-        sa.assertTrue(leaveRoom.leaveRoomPopupText.isDisplayed());
+        assertTrue(leaveRoom.leaveRoomPopupText.isDisplayed(), "leaveRoomPopupText", "isDisplayed");
         String leave_room_flag = leaveRoom.leaveRoomPopupText.getAttribute("content-desc");
         String leave_room_text = "Leave Room?";
         sa.assertEquals(leave_room_flag, leave_room_text);
 
-        sa.assertTrue(leaveRoom.leaveRoomCancelBtn.isDisplayed());
+        assertTrue(leaveRoom.leaveRoomCancelBtn.isDisplayed(), "leaveRoomCancelBtn", "isDisplayed");
         click(leaveRoom.leaveRoomCancelBtn);
-        sa.assertTrue(topToolBar.backBtn.isDisplayed());
+        assertTrue(topToolBar.backBtn.isDisplayed(), "backBtn", "isDisplayed");
         //add more button checks later
 
         click(leaveRoom.leaveRoomBtn);
-        sa.assertTrue(leaveRoom.leaveRoomYesBtn.isDisplayed());
+        assertTrue(leaveRoom.leaveRoomYesBtn.isDisplayed(), "", "isDisplayed");
         click(leaveRoom.leaveRoomYesBtn);
 
 //        String meeting_ended_flag = leaveRoom.meetingEndedNotification.getAttribute("content-desc");

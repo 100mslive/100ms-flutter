@@ -69,13 +69,13 @@ public class ScreenShareTest extends BaseTest {
           meetingDetail.getJSONObject("camera").getString("ON"),
           meetingDetail.getJSONObject("mic").getString("ON"));
 
-        sa.assertTrue(screenShare.expand.isDisplayed());
-        click(screenShare.expand);
-        sa.assertTrue(screenShare.screenShareBtn.isDisplayed());
+        assertTrue(screenShare.expand.isDisplayed(),"expand","isDisplayed");
+        click(screenShare.expand,"expand");
+        assertTrue(screenShare.screenShareBtn.isDisplayed(),"screenShareBtn","isDisplayed");
         click(screenShare.screenShareBtn);
 
-        sa.assertTrue(screenShare.screenShareCancelBtn.isDisplayed());
-        click(screenShare.screenShareCancelBtn);
+        assertTrue(screenShare.screenShareCancelBtn.isDisplayed(),"screenShareCancelBtn","isDisplayed");
+        click(screenShare.screenShareCancelBtn,"screenShareCancelBtn");
 
 //      boolean x = screenShare.screenShareTile.isDisplayed();
 //        System.out.println(x);
@@ -83,15 +83,15 @@ public class ScreenShareTest extends BaseTest {
 //        sa.assertFalse(screenShare.screenShareTile.isDisplayed());
 
 //        sa.assertFalse(screenShare.screenShareLogo.isDisplayed());
-      sa.assertTrue(screenShare.expand.isDisplayed());
-      click(screenShare.expand);
-      click(screenShare.expand);
-      click(screenShare.screenShareBtn);
-      sa.assertTrue(screenShare.screenShareStartNowBtn.isDisplayed());
-      click(screenShare.screenShareStartNowBtn);
+      assertTrue(screenShare.expand.isDisplayed(),"expand","isDisplayed");
+      click(screenShare.expand,"expand");
+      click(screenShare.expand,"expand");
+      click(screenShare.screenShareBtn,"screenShareBtn");
+      assertTrue(screenShare.screenShareStartNowBtn.isDisplayed(),"screenShareStartNowBtn","isDisplayed");
+      click(screenShare.screenShareStartNowBtn,"screenShareStartNowBtn");
 
-      click(screenShare.expand);
-      sa.assertTrue(screenShare.screenShareTile.isDisplayed());
+      click(screenShare.expand,"expand");
+      assertTrue(screenShare.screenShareTile.isDisplayed(),"screenShareTile","isDisplayed");
 
 //      sa.assertTrue(screenShare.screenShareOnNotifictaion.isDisplayed());
 //      String flag = screenShare.screenShareOnNotifictaion.getAttribute("content-desc");
@@ -99,9 +99,9 @@ public class ScreenShareTest extends BaseTest {
 //      sa.assertEquals(flag, screen_share_text);
 
       Thread.sleep(5000);
-      click(screenShare.expand);
-      click(screenShare.screenShareBtn);
-      click(screenShare.expand);
+      click(screenShare.expand,"expand");
+      click(screenShare.screenShareBtn,"screenShareBtn");
+      click(screenShare.expand,"expand");
 //      sa.assertTrue(screenShare.screenShareOffNotifictaion.isDisplayed());
 //      flag = screenShare.screenShareOffNotifictaion.getAttribute("content-desc");
 //      screen_share_text = getStrings().get("screen_share_stopped");;

@@ -63,19 +63,19 @@ public class HomePageTest extends BaseTest {
       System.out.println("Verify Meeting url space Visible");
         Thread.sleep(2000);
 
-        sa.assertTrue(homePage.crossBtn.isDisplayed());
-        click(homePage.crossBtn);
+        assertTrue(homePage.crossBtn.isDisplayed(), "crossBtn", "isDisplayed");
+        click(homePage.crossBtn, "crossBtn");
         String meeting_url_text = getText(homePage.meetingUrlField, "meeting_url_text - ");
         String flag = getStrings().get("empty_meeting_url");
         sa.assertEquals(meeting_url_text, flag);
 
-        sa.assertTrue(homePage.meetingUrlField.isDisplayed());
+        assertTrue(homePage.meetingUrlField.isDisplayed(), "meetingUrlField", "isDisplayed");
         homePage.put_meeting_url(meetingDetail.getJSONObject("valid").getString("meeting_url"));
         meeting_url_text = getText(homePage.meetingUrlField, "meeting_url_text - ");
         flag = meetingDetail.getJSONObject("valid").getString("meeting_url");
         sa.assertEquals( meeting_url_text, flag + ", " +getStrings().get("empty_meeting_url"));
 
-        sa.assertTrue(homePage.joinMeetingBtn.isDisplayed());
+        assertTrue(homePage.joinMeetingBtn.isDisplayed(), "joinMeetingBtn", "isDisplayed");
     }
 
     @Test
@@ -86,18 +86,18 @@ public class HomePageTest extends BaseTest {
         homePage = homePage.goto_enterName(meetingDetail.getJSONObject("valid").getString("meeting_url"));
 
         Thread.sleep(2000);
-        sa.assertTrue(homePage.participantNameField.isDisplayed());
+        assertTrue(homePage.participantNameField.isDisplayed(), "participantNameField", "isDisplayed");
         String name_field_text = getText(homePage.participantNameField, "name_field_text - ");
         String flag = getStrings().get("empty_name_space");
         sa.assertEquals(name_field_text, flag);
 
         homePage.put_participant_name(meetingDetail.getJSONObject("valid").getString("username"));
         name_field_text = getText(homePage.participantNameField, "name_field_text - ");
-        flag = meetingDetail.getJSONObject("valid").getString("username");
-        sa.assertEquals(name_field_text, getText(homePage.participantNameField, "name_field_text - "));
+        flag = meetingDetail.getJSONObject("valid").getString("username") + ", Enter your Name";
+        sa.assertEquals(name_field_text, flag);
 
-        sa.assertTrue(homePage.nameOKbtn.isDisplayed());
-        sa.assertTrue(homePage.nameCancelbtn.isDisplayed());
+        assertTrue(homePage.nameOKbtn.isDisplayed(), "nameOKbtn", "isDisplayed");
+        assertTrue(homePage.nameCancelbtn.isDisplayed(), "nameCancelbtn", "isDisplayed");
     }
 
 }

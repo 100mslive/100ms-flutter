@@ -28,6 +28,7 @@ import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Wait;
 import org.testng.ITestResult;
 import org.testng.annotations.*;
+import org.testng.asserts.SoftAssert;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -49,6 +50,7 @@ public class BaseTest {
 	protected static ThreadLocal <String> deviceName = new ThreadLocal<String>();
 	private static AppiumDriverLocalService server;
 	TestUtils utils = new TestUtils();
+	SoftAssert sa = new SoftAssert();
 
 	  public static AppiumDriver getDriver() {
 		  return driver.get();
@@ -183,16 +185,16 @@ public class BaseTest {
 	// for Mac. Update the paths as per your Mac setup
 	public AppiumDriverLocalService getAppiumService() {
 		HashMap<String, String> environment = new HashMap<String, String>();
-//		environment.put("PATH", "/Library/Internet Plug-Ins/JavaAppletPlugin.plugin/Contents/Home/bin:/Users/ronitroy/Library/Android/sdk/tools:/Users/ronitroy/Library/Android/sdk/platform-tools:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/Apple/usr/bin" + System.getenv("PATH"));
-//		environment.put("ANDROID_HOME", "/Users/ronitroy/Library/Android/sdk"); //Uncomment for local
+		environment.put("PATH", "/Library/Internet Plug-Ins/JavaAppletPlugin.plugin/Contents/Home/bin:/Users/ronitroy/Library/Android/sdk/tools:/Users/ronitroy/Library/Android/sdk/platform-tools:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/Apple/usr/bin" + System.getenv("PATH"));
+		environment.put("ANDROID_HOME", "/Users/ronitroy/Library/Android/sdk"); //Uncomment for local
 
-		environment.put("PATH", "/Library/Internet Plug-Ins/JavaAppletPlugin.plugin/Contents/Home/bin:/Users/runner/Library/Android/sdk/tools:/Users/runner/Library/Android/sdk/platform-tools:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/Apple/usr/bin" + System.getenv("PATH"));
-		environment.put("ANDROID_HOME", "/Users/runner/Library/Android/sdk");
+//		environment.put("PATH", "/Library/Internet Plug-Ins/JavaAppletPlugin.plugin/Contents/Home/bin:/Users/runner/Library/Android/sdk/tools:/Users/runner/Library/Android/sdk/platform-tools:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/Apple/usr/bin" + System.getenv("PATH"));
+//		environment.put("ANDROID_HOME", "/Users/runner/Library/Android/sdk");
 
 		return AppiumDriverLocalService.buildService(new AppiumServiceBuilder()
 				.usingDriverExecutable(new File("/usr/local/bin/node"))
-//				.withAppiumJS(new File("/Applications/Appium Server GUI.app/Contents/Resources/app/node_modules/appium/build/lib/main.js"))  //Uncomment for local
-				.withAppiumJS(new File("/Users/runner/hostedtoolcache/node/11.15.0/x64/lib/node_modules/appium/build/lib/main.js"))
+				.withAppiumJS(new File("/Applications/Appium Server GUI.app/Contents/Resources/app/node_modules/appium/build/lib/main.js"))  //Uncomment for local
+//				.withAppiumJS(new File("/Users/runner/hostedtoolcache/node/11.15.0/x64/lib/node_modules/appium/build/lib/main.js"))
 				.usingPort(4723)
 				.withArgument(GeneralServerFlag.SESSION_OVERRIDE)
 //				.withArgument(() -> "--allow-insecure","chromedriver_autodownload")
@@ -324,8 +326,8 @@ public class BaseTest {
 
   public void click(MobileElement e, String msg) {
 	  waitForVisibility(e);
-	  utils.log().info(msg);
-	  ExtentReport.getTest().log(Status.INFO, msg);
+	  utils.log().info("Clicked: " + msg);
+	  ExtentReport.getTest().log(Status.INFO, "Clicked: "+ msg);
 	  e.click();
   }
 
@@ -374,6 +376,17 @@ public class BaseTest {
 		utils.log().info(msg + txt);
 		ExtentReport.getTest().log(Status.INFO, msg + txt);
 		return txt;
+	}
+
+	public void assertTrue(boolean b, String e, String condition) {
+		  if(b==true){
+			  utils.log().info(e + "- " + condition + " =" + b);
+			  ExtentReport.getTest().log(Status.INFO, e + "- " + condition + " =" + b);
+		  }
+		  else{
+			  utils.log().info(e + "- " + condition + " =" + b);
+			  ExtentReport.getTest().log(Status.INFO, e + "- " + condition + " =" + b);
+			}
 	}
 
   public void closeApp() {
