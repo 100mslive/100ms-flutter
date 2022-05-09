@@ -802,6 +802,10 @@ class MeetingStore extends ChangeNotifier
   void setHeroMode() {
     this.isHeroMode = !this.isHeroMode;
     this.isActiveSpeakerMode = false;
+    if (isAudioViewOn) {
+      this.isAudioViewOn = false;
+      setPlayBackAllowed(true);
+    }
     notifyListeners();
   }
 
