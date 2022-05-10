@@ -15,18 +15,17 @@ class HMSVideoViewWidget(context: Context, id: Int, creationParams: Map<String?,
                          private val scaleType : Int?,private val matchParent: Boolean? = true
 ) : PlatformView {
 
-    private val hmsVideoView: HMSVideoView = HMSVideoView(context,setMirror,scaleType)
+    private val viewContext: Context = context
+
+    private var hmsVideoView: HMSVideoView? = null
 
     override fun getView(): View {
-        return hmsVideoView
+        hmsVideoView = HMSVideoView(viewContext, setMirror, scaleType)
+        return hmsVideoView!!
     }
 
     override fun onFlutterViewAttached(flutterView: View) {
         super.onFlutterViewAttached(flutterView)
-        renderVideo()
-    }
-
-    private fun renderVideo() {
 
         var frameLayoutParams = FrameLayout.LayoutParams(
             FrameLayout.LayoutParams.MATCH_PARENT,
@@ -40,17 +39,18 @@ class HMSVideoViewWidget(context: Context, id: Int, creationParams: Map<String?,
         }
         view.layoutParams = frameLayoutParams
 
-        hmsVideoView.setVideoTrack(track)
+        hmsVideoView!!.setVideoTrack(track)
+    }
+
+    override fun onFlutterViewDetached() {
+        super.onFlutterViewDetached()
+
+        hmsVideoView!!.removeVideoTrack(track)
     }
 
     override fun dispose() {
-        release()
-    }
-
-    private fun release() {
-        hmsVideoView.currentVideoTrack!!.removeSink(hmsVideoView.surfaceViewRenderer)
-        hmsVideoView.surfaceViewRenderer.release()
-        hmsVideoView.currentVideoTrack = null
+        hmsVideoView!!.removeVideoTrack(track)
+        hmsVideoView = null
     }
 }
 
