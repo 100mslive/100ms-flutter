@@ -11,7 +11,7 @@ on:
         required: true
         default: "warning"
   schedule:
-    - cron: "0 0 * * *"
+    - cron: "0 1 * * *"
   push:
     branches: [ appium ]
   pull_request:
