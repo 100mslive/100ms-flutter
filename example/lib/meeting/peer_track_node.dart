@@ -37,8 +37,8 @@ class PeerTrackNode extends ChangeNotifier {
   }
 
   void setOffScreenStatus(bool currentState) {
-    this.isOffscreen = currentState;
-    notify();
+    // this.isOffscreen = currentState;
+    // notify();
   }
 
   @override
