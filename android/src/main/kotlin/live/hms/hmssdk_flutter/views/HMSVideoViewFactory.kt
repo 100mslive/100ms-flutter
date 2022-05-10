@@ -20,7 +20,9 @@ class HMSVideoViewWidget(context: Context, id: Int, creationParams: Map<String?,
     private var hmsVideoView: HMSVideoView? = null
 
     override fun getView(): View {
-        hmsVideoView = HMSVideoView(viewContext, setMirror, scaleType)
+        if (hmsVideoView == null) {
+            hmsVideoView = HMSVideoView(viewContext, setMirror, scaleType)
+        }
         return hmsVideoView!!
     }
 
