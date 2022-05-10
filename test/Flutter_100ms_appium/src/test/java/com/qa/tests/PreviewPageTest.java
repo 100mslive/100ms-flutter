@@ -68,13 +68,13 @@ public class PreviewPageTest extends BaseTest {
         Thread.sleep(5000);
 
 //        sa.assertTrue(previewPage.videoTile.isDisplayed());
-        assertTrue(previewPage.camBtn.isDisplayed(), "camBtn", "isDisplayed");
-        assertTrue(previewPage.micBtn.isDisplayed(), "micBtn", "isDisplayed");
+//        assertTrue(previewPage.camBtn.isDisplayed(), "camBtn", "isDisplayed");
+//        assertTrue(previewPage.micBtn.isDisplayed(), "micBtn", "isDisplayed");
         assertTrue(previewPage.joinNowBtn.isDisplayed(), "joinNowBtn", "isDisplayed");
 //        sa.assertTrue(previewPage.backBtn.isDisplayed());
 //        sa.assertTrue(previewPage.previewPageHeading.isDisplayed());
-        click(previewPage.camBtn,"camBtn");
-        click(previewPage.micBtn,"micBtn");
+//        click(previewPage.camBtn,"camBtn");
+//        click(previewPage.micBtn,"micBtn");
         click(previewPage.joinNowBtn,"joinNowBtn");
         assertTrue(leaveRoom.leaveRoomBtn.isDisplayed(), "leaveRoomBtn", "isDisplayed");
     }

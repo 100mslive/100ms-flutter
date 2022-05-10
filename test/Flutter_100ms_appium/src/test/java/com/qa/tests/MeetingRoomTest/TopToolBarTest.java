@@ -90,7 +90,8 @@ public class TopToolBarTest extends BaseTest {
 
 //        Thread.sleep(2000);
 //      sa.assertTrue(topToolBar.settingPopupHeading.isDisplayed());
-        default_back();
+//        default_back();
+        getDriver().navigate().back();
         leaveRoom.leave_withoutEndingRoom();
     }
 
