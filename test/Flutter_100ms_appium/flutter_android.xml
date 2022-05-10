@@ -18,7 +18,7 @@
         <classes>
                         <class name="com.qa.tests.HomePageTest"></class>
                         <class name="com.qa.tests.PreviewPageTest"></class>
-                        <class name="com.qa.tests.MeetingRoomTest.TopToolBarTest"></class>
+<!--                        <class name="com.qa.tests.MeetingRoomTest.TopToolBarTest"></class>-->
 <!--                        <class name="com.qa.tests.MeetingRoomTest.BottomToolBarTest.RaiseHandTest"></class>-->
 <!--                        <class name="com.qa.tests.MeetingRoomTest.BottomToolBarTest.LeaveRoomTest"></class>-->
 <!--                        <class name="com.qa.tests.MeetingRoomTest.BottomToolBarTest.ScreenShareTest"></class>-->
