@@ -50,7 +50,8 @@ public class PreviewPageTest extends BaseTest {
       launchApp();
       utils.log().info("\n" + "****** starting test:" + m.getName() + "******" + "\n");
       sa = new SoftAssert();
-      homePage = new HomePage();
+        previewPage = new PreviewPage();
+        homePage = new HomePage();
       leaveRoom = new LeaveRoom();
     }
 
