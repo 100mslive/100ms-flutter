@@ -21,8 +21,8 @@
 <!--                        <class name="com.qa.tests.MeetingRoomTest.TopToolBarTest"></class>-->
 <!--                        <class name="com.qa.tests.MeetingRoomTest.BottomToolBarTest.RaiseHandTest"></class>-->
 <!--                        <class name="com.qa.tests.MeetingRoomTest.BottomToolBarTest.LeaveRoomTest"></class>-->
-                        <class name="com.qa.tests.MeetingRoomTest.BottomToolBarTest.ScreenShareTest"></class>
-<!--                        <class name="com.qa.tests.MeetingRoomTest.MenuDropDownTest.EndRoomTest"></class>-->
+<!--                        <class name="com.qa.tests.MeetingRoomTest.BottomToolBarTest.ScreenShareTest"></class>-->
+                        <class name="com.qa.tests.MeetingRoomTest.MenuDropDownTest.EndRoomTest"></class>
 <!--                        <class name="com.qa.tests.MeetingRoomTest.MenuDropDownTest.RecordTest"></class>-->
 <!--                        <class name="com.qa.tests.MeetingRoomTest.MenuDropDownTest.MuteAllTest"></class>-->
 <!--                        <class name="com.qa.tests.MeetingRoomTest.MenuDropDownTest.ChangeNameTest"></class>-->
