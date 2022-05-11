@@ -65,7 +65,7 @@ public class PreviewPageTest extends BaseTest {
     public void Test_PreviewPage() throws InterruptedException {
         System.out.println("Verify Preview page locators");
         previewPage = homePage.goto_previewPage(meetingDetail.getJSONObject("valid").getString("meeting_url"), meetingDetail.getJSONObject("valid").getString("username"));
-        Thread.sleep(2000);
+        Thread.sleep(5000);
 
 //        sa.assertTrue(previewPage.videoTile.isDisplayed());
 //        assertTrue(previewPage.camBtn.isDisplayed(), "camBtn", "isDisplayed");
