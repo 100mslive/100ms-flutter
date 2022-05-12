@@ -16,12 +16,15 @@ class HMSVideoView(
     context: Context,
     setMirror: Boolean,
     scaleType: Int? = RendererCommon.ScalingType.SCALE_ASPECT_FIT.ordinal,
-    peerName: String
+    peerName: String,
+    track:HMSVideoTrack
 ) : FrameLayout(context, null) {
 
     private val surfaceViewRenderer: SurfaceViewRenderer
 
-    private  val myPeerName: String = peerName
+    private val myPeerName: String = peerName
+
+    private  val myTrack: HMSVideoTrack = track
 
     init {
         val inflater =
@@ -36,39 +39,36 @@ class HMSVideoView(
             surfaceViewRenderer.setScalingType(RendererCommon.ScalingType.values()[scaleType ?: 0])
         }
 
-        Log.i("debugVideo", "HMSVideoView init peerName: $myPeerName")
+        // Log.i("debugVideo", "HMSVideoView init peerName: $myPeerName")
     }
 
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        Log.i("debugVideo", "HMSVideoView onAttachedToWindow peerName: $myPeerName")
+        // Log.i("debugVideo", "HMSVideoView onAttachedToWindow peerName: $myPeerName")
+        surfaceViewRenderer.init(SharedEglContext.context, null)
+        myTrack.addSink(surfaceViewRenderer)
     }
 
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
-        Log.i("debugVideo", "HMSVideoView onDetachedFromWindow peerName: $myPeerName")
-    }
-
-
-
-    override fun onWindowVisibilityChanged(visibility: Int) {
-        super.onWindowVisibilityChanged(visibility)
-        Log.i("debugVideo", "HMSVideoView onWindowVisibilityChanged peerName: $myPeerName")
-    }
-
-    fun setVideoTrack(track: HMSVideoTrack) {
-        Log.i("debugVideo", "HMSVideoView setVideoTrack peerName: $myPeerName")
-        surfaceViewRenderer.init(SharedEglContext.context, null)
-        track.addSink(surfaceViewRenderer)
-    }
-
-    fun removeVideoTrack(track: HMSVideoTrack) {
-        Log.i("debugVideo", "HMSVideoView removeVideoTrack peerName: $myPeerName")
-        track.removeSink(surfaceViewRenderer)
+        // Log.i("debugVideo", "HMSVideoView onDetachedFromWindow peerName: $myPeerName")
+        myTrack.removeSink(surfaceViewRenderer)
         surfaceViewRenderer.release()
     }
+
+    // fun setVideoTrack(track: HMSVideoTrack) {
+    //     Log.i("debugVideo", "HMSVideoView setVideoTrack peerName: $myPeerName")
+    //     surfaceViewRenderer.init(SharedEglContext.context, null)
+    //     track.addSink(surfaceViewRenderer)
+    // }
+
+    // fun removeVideoTrack(track: HMSVideoTrack) {
+    //     Log.i("debugVideo", "HMSVideoView removeVideoTrack peerName: $myPeerName")
+    //     track.removeSink(surfaceViewRenderer)
+    //     surfaceViewRenderer.release()
+    // }
 }
 
 
