@@ -71,8 +71,9 @@ public class ScreenShareTest extends BaseTest {
 
         assertTrue(screenShare.expand.isDisplayed(),"expand","isDisplayed");
         click(screenShare.expand,"expand");
+        Thread.sleep(2000);
         assertTrue(screenShare.screenShareBtn.isDisplayed(),"screenShareBtn","isDisplayed");
-        click(screenShare.screenShareBtn);
+        click(screenShare.screenShareBtn,"screenShareBtn");
 
         assertTrue(screenShare.screenShareCancelBtn.isDisplayed(),"screenShareCancelBtn","isDisplayed");
         click(screenShare.screenShareCancelBtn,"screenShareCancelBtn");
