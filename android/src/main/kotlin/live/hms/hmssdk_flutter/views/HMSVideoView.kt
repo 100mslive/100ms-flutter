@@ -27,6 +27,7 @@ class HMSVideoView(
     private  val myTrack: HMSVideoTrack = track
 
     init {
+        Log.i("debugVideo", "HMSVideoView init peerName: $myPeerName")
         val inflater =
             getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val view = inflater.inflate(R.layout.hms_video_view, this)
@@ -39,13 +40,13 @@ class HMSVideoView(
             surfaceViewRenderer.setScalingType(RendererCommon.ScalingType.values()[scaleType ?: 0])
         }
 
-        // Log.i("debugVideo", "HMSVideoView init peerName: $myPeerName")
+
     }
 
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        // Log.i("debugVideo", "HMSVideoView onAttachedToWindow peerName: $myPeerName")
+         Log.i("debugVideo", "HMSVideoView onAttachedToWindow peerName: $myPeerName")
         surfaceViewRenderer.init(SharedEglContext.context, null)
         myTrack.addSink(surfaceViewRenderer)
     }
@@ -53,11 +54,15 @@ class HMSVideoView(
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
-        // Log.i("debugVideo", "HMSVideoView onDetachedFromWindow peerName: $myPeerName")
+         Log.i("debugVideo", "HMSVideoView onDetachedFromWindow peerName: $myPeerName")
         myTrack.removeSink(surfaceViewRenderer)
         surfaceViewRenderer.release()
     }
 
+    override fun onWindowVisibilityChanged(visibility: Int) {
+        super.onWindowVisibilityChanged(visibility)
+        Log.i("debugVideo", "HMSVideoView onWindowVisibilityChanged peerName: $myPeerName $visibility")
+    }
     // fun setVideoTrack(track: HMSVideoTrack) {
     //     Log.i("debugVideo", "HMSVideoView setVideoTrack peerName: $myPeerName")
     //     surfaceViewRenderer.init(SharedEglContext.context, null)

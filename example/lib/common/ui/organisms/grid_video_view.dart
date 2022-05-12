@@ -45,6 +45,9 @@ Widget gridVideoView(
                   ),
           );
         }
+        if (index < 4) {
+          peerTracks[index].setOffScreenStatus(false);
+        }
         return ChangeNotifierProvider.value(
             key: ValueKey(peerTracks[index].uid),
             value: peerTracks[index],
