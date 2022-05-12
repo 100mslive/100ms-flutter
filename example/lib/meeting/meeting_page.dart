@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/grid_audio_view.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/grid_hero_view.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/grid_video_view.dart';
+import 'package:hmssdk_flutter_example/common/ui/organisms/title_bar.dart';
 import 'package:hmssdk_flutter_example/hls_viewer/hls_viewer.dart';
 
 //Project imports
@@ -31,16 +32,14 @@ class MeetingPage extends StatefulWidget {
   final bool isAudioOn;
   final int? localPeerNetworkQuality;
 
-  const MeetingPage(
-      {Key? key,
-      required this.roomId,
-      required this.flow,
-      required this.user,
-      required this.isAudioOn,
-      this.localPeerNetworkQuality = -1,
-      })
-      : super(key: key);
-
+  const MeetingPage({
+    Key? key,
+    required this.roomId,
+    required this.flow,
+    required this.user,
+    required this.isAudioOn,
+    this.localPeerNetworkQuality = -1,
+  }) : super(key: key);
 
   @override
   _MeetingPageState createState() => _MeetingPageState();
@@ -220,7 +219,7 @@ class _MeetingPageState extends State<MeetingPage>
                   : Scaffold(
                       resizeToAvoidBottomInset: false,
                       appBar: AppBar(
-                        title: Text(Constant.meetingCode),
+                        title:TitleBar(),
                         actions: [
                           Selector<MeetingStore, bool>(
                             selector: (_, meetingStore) =>
@@ -933,7 +932,6 @@ class _MeetingPageState extends State<MeetingPage>
                       color: meetingStore.isStatsVisible
                           ? Colors.red
                           : Colors.white),
-
                 ]),
             value: 13,
           ),

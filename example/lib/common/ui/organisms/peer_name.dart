@@ -24,6 +24,7 @@ class _PeerNameState extends State<PeerName> {
               child: Text(
                 "${data.item3 ? "You (" : ""}${data.item1}${data.item3 ? ")" : ""} ${data.item2 ? " Degraded" : ""}",
                 maxLines: 1,
+                softWrap: true,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                     fontWeight: FontWeight.w500,
