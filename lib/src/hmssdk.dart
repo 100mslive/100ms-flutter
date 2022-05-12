@@ -55,7 +55,7 @@ class HMSSDK with WidgetsBindingObserver {
           isTerminal: false,
           params: {...config.getJson()});
     }
-    WidgetsBinding.instance!.addObserver(this);
+    WidgetsBinding.instance.addObserver(this);
     return await PlatformService.invokeMethod(PlatformMethod.join,
         arguments: {...config.getJson()});
   }
@@ -92,7 +92,7 @@ class HMSSDK with WidgetsBindingObserver {
             hmsException: HMSException.fromMap(result["error"]));
       }
     }
-    WidgetsBinding.instance!.removeObserver(this);
+    WidgetsBinding.instance.removeObserver(this);
   }
 
   /// To switch local peer's audio on/off.
