@@ -89,6 +89,7 @@ class MeetingStore extends ChangeNotifier
 
   bool isNewMessageReceived = false;
 
+  String? highestSpeaker;
   int firstTimeBuild = 0;
 
   final DateFormat formatter = DateFormat('d MMM y h:mm:ss a');
@@ -412,11 +413,13 @@ class MeetingStore extends ChangeNotifier
     notifyListeners();
   }
 
-  PeerTrackNode? previousHighestTrackNodeStore;
-  int previousHighestIndex = -1;
-
   @override
   void onUpdateSpeakers({required List<HMSSpeaker> updateSpeakers}) {
+    if (updateSpeakers.isNotEmpty) {
+      highestSpeaker = updateSpeakers[0].peer.name;
+    } else {
+      highestSpeaker = null;
+    }
     activeSpeakerIds.clear();
     updateSpeakers.forEach((element) {
       activeSpeakerIds[element.peer.peerId + "mainVideo"] = true;
