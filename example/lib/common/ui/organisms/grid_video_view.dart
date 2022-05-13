@@ -45,7 +45,10 @@ Widget gridVideoView(
                   ),
           );
         }
-        if (screenShareCount == 0 && index < 4) {
+
+        if (screenShareCount == 0 &&
+            index < 4 &&
+            peerTracks[index].isOffscreen) {
           peerTracks[index].setOffScreenStatus(false);
         }
         return ChangeNotifierProvider.value(
