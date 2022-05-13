@@ -52,27 +52,15 @@ class _VideoTileState extends State<VideoTile> {
 
     return FocusDetector(
       onFocusLost: () {
-        print("FocusDetector onFocusLost ${context.read<PeerTrackNode>().peer.name}");
-        if (mounted)
-          Provider.of<PeerTrackNode>(context, listen: false)
-              .setOffScreenStatus(true);
+        if (mounted) {
+          print("FocusDetector onFocusLost ${context.read<PeerTrackNode>().peer.name}");
+          Provider.of<PeerTrackNode>(context, listen: false).setOffScreenStatus(true);
+        }
       },
       onFocusGained: () {
         print("FocusDetector onFocusGained ${context.read<PeerTrackNode>().peer.name}" );
         Provider.of<PeerTrackNode>(context, listen: false)
             .setOffScreenStatus(false);
-      },
-      onVisibilityGained: () {
-        print("FocusDetector onVisibilityGained ${context.read<PeerTrackNode>().peer.name}");
-      },
-      onVisibilityLost: () {
-        print("FocusDetector onVisibilityLost ${context.read<PeerTrackNode>().peer.name}");
-      },
-      onForegroundGained: () {
-        print("FocusDetector onForegroundGained ${context.read<PeerTrackNode>().peer.name}");
-      },
-      onForegroundLost: () {
-        print("FocusDetector onForegroundLost ${context.read<PeerTrackNode>().peer.name}");
       },
       key: Key(context.read<PeerTrackNode>().uid),
       child: context.read<PeerTrackNode>().uid.contains("mainVideo")

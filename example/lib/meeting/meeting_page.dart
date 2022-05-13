@@ -220,6 +220,7 @@ class _MeetingPageState extends State<MeetingPage>
                       resizeToAvoidBottomInset: false,
                       appBar: AppBar(
                         title:TitleBar(),
+                        leadingWidth: 24,
                         actions: [
                           Selector<MeetingStore, bool>(
                             selector: (_, meetingStore) =>

@@ -14,7 +14,7 @@ Widget gridVideoView(
     required Size size}) {
   return GridView.builder(
       shrinkWrap: true,
-      cacheExtent: 600,
+      cacheExtent: size.width,
       itemCount: itemCount,
       scrollDirection: Axis.horizontal,
       physics: PageScrollPhysics(),

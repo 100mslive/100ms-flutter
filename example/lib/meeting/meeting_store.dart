@@ -198,39 +198,6 @@ class MeetingStore extends ChangeNotifier
     if (!peers.contains(peer)) peers.add(peer);
   }
 
-  // void removeTrackWithTrackId(String trackId) {
-  //   tracks.removeWhere((eachTrack) => eachTrack.trackId == trackId);
-  // }
-
-  // void removeTrackWithPeerId(String peerId) {
-  //   tracks.removeWhere((eachTrack) => eachTrack.peer?.peerId == peerId);
-  // }
-
-  // void removeTrackWithPeerIdExtra(String trackId) {
-  //   var index = tracks.indexWhere((element) => trackId == element.trackId);
-  //   tracks.removeAt(index);
-  // }
-
-  // int insertTrackWithPeerId(HMSPeer peer) {
-  //   return tracks.indexWhere((element) => peer.peerId == element.peer!.peerId);
-  // }
-
-  // void addTrack(HMSTrack track, HMSPeer peer) {
-  //   var index = -1;
-  //   if (track.source.trim() == "REGULAR") index = insertTrackWithPeerId(peer);
-
-  //   if (index >= 0) {
-  //     if (track.kind == HMSTrackKind.kHMSTrackKindVideo) {
-  //       tracks.insert(index, track);
-  //       tracks.removeAt(index + 1);
-  //     }
-  //   } else if (index == -1 && track.source.trim() != "REGULAR") {
-  //     tracks.insert(0, track);
-  //   } else {
-  //     tracks.add(track);
-  //   }
-  // }
-
   void onRoleUpdated(int index, HMSPeer peer) {
     peers[index] = peer;
   }
@@ -351,6 +318,7 @@ class MeetingStore extends ChangeNotifier
       {required HMSTrack track,
       required HMSTrackUpdate trackUpdate,
       required HMSPeer peer}) {
+    
     if (isSpeakerOn) {
       unMuteAll();
     } else {
@@ -628,8 +596,18 @@ class MeetingStore extends ChangeNotifier
                   peer: peer,
                   uid: peer.peerId + track.trackId,
                   track: track as HMSVideoTrack));
-          notifyListeners();
+          
           isScreenShareActive();
+          
+          for (var node in peerTracks) {
+            if (node.isOffscreen == false) {
+              node.setOffScreenStatus(true);
+            }
+          }
+
+          controller.jumpTo(0);
+          
+          notifyListeners();
         }
         break;
       case HMSTrackUpdate.trackRemoved:
