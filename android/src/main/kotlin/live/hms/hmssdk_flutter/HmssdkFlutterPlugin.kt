@@ -53,9 +53,11 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
     private lateinit var meetingEventChannel: EventChannel
     private lateinit var previewChannel: EventChannel
     private lateinit var logsEventChannel: EventChannel
+    private lateinit var rtcStatsChannel: EventChannel
     private var eventSink: EventChannel.EventSink? = null
     private var previewSink: EventChannel.EventSink? = null
     private var logsSink: EventChannel.EventSink? = null
+    private var rtcSink: EventChannel.EventSink? = null
     private lateinit var activity: Activity
     lateinit var hmssdk: HMSSDK
     private lateinit var hmsVideoFactory: HMSVideoViewFactory
@@ -75,13 +77,14 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         this.logsEventChannel =
             EventChannel(flutterPluginBinding.binaryMessenger, "logs_event_channel")
 
+        this.rtcStatsChannel = EventChannel(flutterPluginBinding.binaryMessenger, "rtc_event_channel")
 
 
         this.meetingEventChannel.setStreamHandler(this)
         this.channel.setMethodCallHandler(this)
         this.previewChannel.setStreamHandler(this)
         this.logsEventChannel.setStreamHandler(this)
-
+        this.rtcStatsChannel.setStreamHandler(this)
         this.hmsVideoFactory = HMSVideoViewFactory(this)
 
         flutterPluginBinding.platformViewRegistry.registerViewFactory(
@@ -277,6 +280,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         meetingEventChannel.setStreamHandler(null)
         previewChannel.setStreamHandler(null)
         logsEventChannel.setStreamHandler(null)
+        rtcStatsChannel.setStreamHandler(null)
         hmssdkFlutterPlugin = null
     }
 
@@ -370,6 +374,8 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             this.previewSink = events
         } else if (nameOfEventSink == "logs") {
             this.logsSink = events
+        } else if (nameOfEventSink == "rtc_stats") {
+            this.rtcSink = events
         }
     }
 
@@ -992,7 +998,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             
             if (args["data"] != null)
                 CoroutineScope(Dispatchers.Main).launch {
-                    eventSink?.success(args)
+                    rtcSink?.success(args)
                 }
         }
 
@@ -1009,7 +1015,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
 
             if (args["data"] != null)
                 CoroutineScope(Dispatchers.Main).launch {
-                    eventSink?.success(args)
+                    rtcSink?.success(args)
                 }
         }
 
@@ -1026,7 +1032,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             
             if (args["data"] != null)
                 CoroutineScope(Dispatchers.Main).launch {
-                    eventSink?.success(args)
+                    rtcSink?.success(args)
                 }
 
 
@@ -1045,7 +1051,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
 
             if (args["data"] != null)
                 CoroutineScope(Dispatchers.Main).launch {
-                    eventSink?.success(args)
+                    rtcSink?.success(args)
                 }
         }
 
@@ -1065,7 +1071,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             args.put("data",dict)
             if (args["data"] != null)
                 CoroutineScope(Dispatchers.Main).launch {
-                    eventSink?.success(args)
+                    rtcSink?.success(args)
                 }
 
         }
