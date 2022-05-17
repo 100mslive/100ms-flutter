@@ -8,10 +8,12 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     let meetingEventChannel: FlutterEventChannel
     let previewEventChannel: FlutterEventChannel
     let logsEventChannel: FlutterEventChannel
+    let rtcStatsEventChannel: FlutterEventChannel
 
     var eventSink: FlutterEventSink?
     var previewSink: FlutterEventSink?
     var logsSink: FlutterEventSink?
+    var rtcSink: FlutterEventSink?
     var roleChangeRequest: HMSRoleChangeRequest?
 
     internal var hmsSDK: HMSSDK?
@@ -25,11 +27,13 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         let eventChannel = FlutterEventChannel(name: "meeting_event_channel", binaryMessenger: registrar.messenger())
         let previewChannel = FlutterEventChannel(name: "preview_event_channel", binaryMessenger: registrar.messenger())
         let logsChannel = FlutterEventChannel(name: "logs_event_channel", binaryMessenger: registrar.messenger())
+        let rtcChannel = FlutterEventChannel(name: "rtc_event_channel", binaryMessenger: registrar.messenger())
 
         let instance = SwiftHmssdkFlutterPlugin(channel: channel,
                                                 meetingEventChannel: eventChannel,
                                                 previewEventChannel: previewChannel,
-                                                logsEventChannel: logsChannel)
+                                                logsEventChannel: logsChannel,
+                                                rtcStatsEventChannel: rtcChannel)
 
         let videoViewFactory = HMSFlutterPlatformViewFactory(plugin: instance)
         registrar.register(videoViewFactory, withId: "HMSFlutterPlatformView")
@@ -37,6 +41,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         eventChannel.setStreamHandler(instance)
         previewChannel.setStreamHandler(instance)
         logsChannel.setStreamHandler(instance)
+        rtcChannel.setStreamHandler(instance)
 
         registrar.addMethodCallDelegate(instance, channel: channel)
     }
@@ -44,12 +49,15 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     public init(channel: FlutterMethodChannel,
                 meetingEventChannel: FlutterEventChannel,
                 previewEventChannel: FlutterEventChannel,
-                logsEventChannel: FlutterEventChannel) {
+                logsEventChannel: FlutterEventChannel,
+                rtcStatsEventChannel: FlutterEventChannel
+    ) {
 
         self.channel = channel
         self.meetingEventChannel = meetingEventChannel
         self.previewEventChannel = previewEventChannel
         self.logsEventChannel = logsEventChannel
+        self.rtcStatsEventChannel = rtcStatsEventChannel
     }
 
     public func onListen(withArguments arguments: Any?, eventSink events: @escaping FlutterEventSink) -> FlutterError? {
@@ -66,6 +74,8 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             previewSink = events
         case "logs":
             logsSink = events
+        case "rtc_stats":
+            rtcSink = events
         default:
             return FlutterError(code: #function, message: "invalid event sink name", details: arguments)
         }
@@ -77,6 +87,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         eventSink = nil
         previewSink = nil
         logsSink = nil
+        rtcSink = nil
         return nil
     }
 
@@ -84,6 +95,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         meetingEventChannel.setStreamHandler(nil)
         previewEventChannel.setStreamHandler(nil)
         logsEventChannel.setStreamHandler(nil)
+        rtcStatsEventChannel.setStreamHandler(nil)
     }
 
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
@@ -739,7 +751,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             ]
         ] as [String: Any]
 
-        eventSink?(data)
+        rtcSink?(data)
     }
 
     public func on(localVideoStats: HMSLocalVideoStats, track: HMSLocalVideoTrack, peer: HMSPeer) {
@@ -752,7 +764,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             ]
         ] as [String: Any]
 
-        eventSink?(data)
+        rtcSink?(data)
     }
 
     public func on(remoteAudioStats: HMSRemoteAudioStats, track: HMSRemoteAudioTrack, peer: HMSPeer) {
@@ -765,7 +777,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             ]
         ] as [String: Any]
 
-        eventSink?(data)
+        rtcSink?(data)
     }
 
     public func on(remoteVideoStats: HMSRemoteVideoStats, track: HMSRemoteVideoTrack, peer: HMSPeer) {
@@ -778,7 +790,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             ]
         ] as [String: Any]
 
-        eventSink?(data)
+        rtcSink?(data)
     }
 
     public func on(rtcStats: HMSRTCStatsReport) {
@@ -789,7 +801,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             ]
         ] as [String: Any]
 
-        eventSink?(data)
+        rtcSink?(data)
     }
 
     // MARK: - Helper Functions

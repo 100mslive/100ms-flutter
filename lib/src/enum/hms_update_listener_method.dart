@@ -11,11 +11,6 @@ enum HMSUpdateListenerMethod {
   onRoleChangeRequest,
   onChangeTrackStateRequest,
   onRemovedFromRoom,
-  onLocalAudioStats,
-  onLocalVideoStats,
-  onRemoteAudioStats,
-  onRemoteVideoStats,
-  onRtcStats,
   unknown
 }
 
@@ -46,16 +41,6 @@ extension HMSUpdateListenerMethodValues on HMSUpdateListenerMethod {
         return HMSUpdateListenerMethod.onChangeTrackStateRequest;
       case 'on_removed_from_room':
         return HMSUpdateListenerMethod.onRemovedFromRoom;
-      case 'on_local_audio_stats':
-        return HMSUpdateListenerMethod.onLocalAudioStats;
-      case 'on_local_video_stats':
-        return HMSUpdateListenerMethod.onLocalVideoStats;
-      case 'on_remote_audio_stats':
-        return HMSUpdateListenerMethod.onRemoteAudioStats;
-      case 'on_remote_video_stats':
-        return HMSUpdateListenerMethod.onRemoteVideoStats;
-      case 'on_rtc_stats_report':
-        return HMSUpdateListenerMethod.onRtcStats;
       default:
         return HMSUpdateListenerMethod.unknown;
     }

@@ -12,7 +12,7 @@ import 'package:hmssdk_flutter_example/meeting/peer_track_node.dart';
 import 'package:hmssdk_flutter_example/service/room_service.dart';
 
 class MeetingStore extends ChangeNotifier
-    implements HMSUpdateListener, HMSActionResultListener {
+    implements HMSUpdateListener, HMSActionResultListener, HMSStatsListener {
   late HMSSDKInteractor _hmsSDKInteractor;
 
   MeetingStore({required HMSSDKInteractor hmsSDKInteractor}) {
@@ -99,17 +99,6 @@ class MeetingStore extends ChangeNotifier
 
   ScrollController controller = ScrollController();
 
-  void addUpdateListener() {
-    _hmsSDKInteractor.addUpdateListener(this);
-    // startHMSLogger(HMSLogLevel.VERBOSE, HMSLogLevel.VERBOSE);
-    // addLogsListener();
-  }
-
-  void removeUpdateListener() {
-    _hmsSDKInteractor.removeUpdateListener(this);
-    // removeLogsListener();
-  }
-
   Future<bool> join(String user, String roomUrl) async {
     List<String?>? token =
         await RoomService().getToken(user: user, room: roomUrl);
@@ -130,6 +119,7 @@ class MeetingStore extends ChangeNotifier
       isScreenShareOn = false;
       _hmsSDKInteractor.stopScreenShare();
     }
+    _hmsSDKInteractor.removeStatsListener(this);
     _hmsSDKInteractor.leave(hmsActionResultListener: this);
   }
 
@@ -260,6 +250,11 @@ class MeetingStore extends ChangeNotifier
   }
 
   void changeStatsVisible() {
+    if (!isStatsVisible) {
+      _hmsSDKInteractor.addStatsListener(this);
+    } else {
+      _hmsSDKInteractor.removeStatsListener(this);
+    }
     isStatsVisible = !isStatsVisible;
     notifyListeners();
   }
@@ -821,6 +816,9 @@ class MeetingStore extends ChangeNotifier
   void setSettings() {
     isMirror = _hmsSDKInteractor.mirrorCamera;
     isStatsVisible = _hmsSDKInteractor.showStats;
+    if (isStatsVisible) {
+      _hmsSDKInteractor.addStatsListener(this);
+    }
   }
 
   @override
