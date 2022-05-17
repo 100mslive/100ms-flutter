@@ -18,6 +18,9 @@ import 'package:flutter/services.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter/src/enum/hms_logs_update_listener.dart';
 import 'package:hmssdk_flutter/src/model/hms_log_list.dart';
+import 'package:hmssdk_flutter/src/model/hms_stats_listener.dart';
+
+import '../enum/hms_stats_listener_method.dart';
 
 class PlatformService {
   ///used to pass data to platform using methods
@@ -34,6 +37,10 @@ class PlatformService {
   static const EventChannel _logsEventChannel =
       const EventChannel("logs_event_channel");
 
+  ///used to get stream of rtc Stats
+  static const EventChannel _rtcStatsChannel =
+      const EventChannel("rtc_event_channel");
+
   ///add meeting listeners.
   static List<HMSUpdateListener> updateListeners = [];
 
@@ -42,6 +49,8 @@ class PlatformService {
   ///add preview listeners.
   static List<HMSPreviewListener> previewListeners = [];
 
+  ///List for event Listener
+  static List<HMSStatsListener> statsListeners = [];
   static bool isStartedListening = false;
 
   ///add meetingListener
@@ -62,6 +71,16 @@ class PlatformService {
   ///remove previewListener just pass the listener instance you want to remove.
   static void removePreviewListener(HMSPreviewListener listener) {
     if (previewListeners.contains(listener)) previewListeners.remove(listener);
+  }
+
+  ///add RTCStats Listener
+  static void addRTCStatsListener(HMSStatsListener listener) {
+    statsListeners.add(listener);
+  }
+
+  ///remove meetingListener just pass the listener instance you want to remove.
+  static void removeRTCStatsListener(HMSStatsListener listener) {
+    if (statsListeners.contains(listener)) statsListeners.remove(listener);
   }
 
   static void startRtcStats() {
@@ -198,60 +217,6 @@ class PlatformService {
           notifyUpdateListeners(
               method, {'removed_from_room': hmsPeerRemovedFromPeer});
           break;
-        case HMSUpdateListenerMethod.onLocalAudioStats:
-          HMSPeer? peer = HMSPeer.fromMap(data['peer']);
-          HMSLocalAudioTrack? track =
-              HMSLocalAudioTrack.fromMap(map: data['track']);
-          HMSLocalAudioStats localAudioStats =
-              HMSLocalAudioStats.fromMap(data['local_audio_stats'] as Map);
-          notifyUpdateListeners(method, {
-            'local_audio_stats': localAudioStats,
-            "track": track,
-            "peer": peer
-          });
-          break;
-        case HMSUpdateListenerMethod.onLocalVideoStats:
-          HMSPeer? peer = HMSPeer.fromMap(data['peer']);
-          HMSLocalVideoTrack? track =
-              HMSLocalVideoTrack.fromMap(map: data['track']);
-          HMSLocalVideoStats localVideoStats =
-              HMSLocalVideoStats.fromMap(data['local_video_stats'] as Map);
-          notifyUpdateListeners(method, {
-            'local_video_stats': localVideoStats,
-            "track": track,
-            "peer": peer
-          });
-          break;
-        case HMSUpdateListenerMethod.onRemoteAudioStats:
-          HMSPeer? peer = HMSPeer.fromMap(data['peer']);
-          HMSRemoteAudioTrack? track =
-              HMSRemoteAudioTrack.fromMap(map: data['track']);
-          HMSRemoteAudioStats remoteAudioStats =
-              HMSRemoteAudioStats.fromMap(data['remote_audio_stats'] as Map);
-          notifyUpdateListeners(method, {
-            'remote_audio_stats': remoteAudioStats,
-            "track": track,
-            "peer": peer
-          });
-          break;
-
-        case HMSUpdateListenerMethod.onRemoteVideoStats:
-          HMSPeer? peer = HMSPeer.fromMap(data['peer']);
-          HMSRemoteVideoTrack? track =
-              HMSRemoteVideoTrack.fromMap(map: data['track']);
-          HMSRemoteVideoStats remoteVideoStats =
-              HMSRemoteVideoStats.fromMap(data['remote_video_stats'] as Map);
-          notifyUpdateListeners(method, {
-            'remote_video_stats': remoteVideoStats,
-            "track": track,
-            "peer": peer
-          });
-          break;
-        case HMSUpdateListenerMethod.onRtcStats:
-          HMSRTCStatsReport rtcStatsReport =
-              HMSRTCStatsReport.fromMap(data['rtc_stats_report'] as Map);
-          notifyUpdateListeners(method, {'rtc_stats_report': rtcStatsReport});
-          break;
       }
     });
 
@@ -315,6 +280,85 @@ class PlatformService {
           HMSRoomUpdate? update = HMSRoomUpdateValues.getHMSRoomUpdateFromName(
               event.data['update']);
           notifyPreviewListeners(method, {'room': room, 'update': update});
+          break;
+      }
+    });
+
+    _rtcStatsChannel.receiveBroadcastStream(
+        {'name': 'rtc_stats'}).map<HMSStatsListenerMethodResponse>((event) {
+      Map<String, dynamic>? data = {};
+
+      if (event is Map && event['data'] is Map) {
+        (event['data'] as Map).forEach((key, value) {
+          data[key.toString()] = value;
+        });
+      }
+
+      HMSStatsListenerMethod method =
+          HMSStatsListenerMethodValues.getMethodFromName(event['event_name']);
+      return HMSStatsListenerMethodResponse(
+          method: method, data: data, response: event);
+    }).listen((event) {
+      HMSStatsListenerMethod method = event.method;
+      Map data = event.data;
+      switch (method) {
+        case HMSStatsListenerMethod.onLocalAudioStats:
+          HMSPeer? peer = HMSPeer.fromMap(data['peer']);
+          HMSLocalAudioTrack? track =
+              HMSLocalAudioTrack.fromMap(map: data['track']);
+          HMSLocalAudioStats localAudioStats =
+              HMSLocalAudioStats.fromMap(data['local_audio_stats'] as Map);
+          notifyStatsListeners(method, {
+            'local_audio_stats': localAudioStats,
+            "track": track,
+            "peer": peer
+          });
+          break;
+        case HMSStatsListenerMethod.onLocalVideoStats:
+          HMSPeer? peer = HMSPeer.fromMap(data['peer']);
+          HMSLocalVideoTrack? track =
+              HMSLocalVideoTrack.fromMap(map: data['track']);
+          HMSLocalVideoStats localVideoStats =
+              HMSLocalVideoStats.fromMap(data['local_video_stats'] as Map);
+          notifyStatsListeners(method, {
+            'local_video_stats': localVideoStats,
+            "track": track,
+            "peer": peer
+          });
+          break;
+        case HMSStatsListenerMethod.onRemoteAudioStats:
+          HMSPeer? peer = HMSPeer.fromMap(data['peer']);
+          HMSRemoteAudioTrack? track =
+              HMSRemoteAudioTrack.fromMap(map: data['track']);
+          HMSRemoteAudioStats remoteAudioStats =
+              HMSRemoteAudioStats.fromMap(data['remote_audio_stats'] as Map);
+          notifyStatsListeners(method, {
+            'remote_audio_stats': remoteAudioStats,
+            "track": track,
+            "peer": peer
+          });
+          break;
+
+        case HMSStatsListenerMethod.onRemoteVideoStats:
+          HMSPeer? peer = HMSPeer.fromMap(data['peer']);
+          HMSRemoteVideoTrack? track =
+              HMSRemoteVideoTrack.fromMap(map: data['track']);
+          HMSRemoteVideoStats remoteVideoStats =
+              HMSRemoteVideoStats.fromMap(data['remote_video_stats'] as Map);
+          notifyStatsListeners(method, {
+            'remote_video_stats': remoteVideoStats,
+            "track": track,
+            "peer": peer
+          });
+          break;
+        case HMSStatsListenerMethod.onRtcStats:
+          HMSRTCStatsReport rtcStatsReport =
+              HMSRTCStatsReport.fromMap(data['rtc_stats_report'] as Map);
+          notifyStatsListeners(method, {'rtc_stats_report': rtcStatsReport});
+          break;
+
+        case HMSStatsListenerMethod.unknown:
+          // TODO: Handle this case.
           break;
       }
     });
@@ -385,6 +429,43 @@ class PlatformService {
     }
   }
 
+  static void notifyStatsListeners(
+      HMSStatsListenerMethod method, Map<String, dynamic> arguments) {
+    switch (method) {
+      case HMSStatsListenerMethod.onLocalAudioStats:
+        updateListeners.forEach((e) => e.onLocalAudioStats(
+            hmsLocalAudioStats: arguments['local_audio_stats'],
+            track: arguments["track"],
+            peer: arguments["peer"]));
+        break;
+      case HMSStatsListenerMethod.onLocalVideoStats:
+        updateListeners.forEach((e) => e.onLocalVideoStats(
+            hmsLocalVideoStats: arguments['local_video_stats'],
+            track: arguments["track"],
+            peer: arguments["peer"]));
+        break;
+      case HMSStatsListenerMethod.onRemoteAudioStats:
+        updateListeners.forEach((e) => e.onRemoteAudioStats(
+            hmsRemoteAudioStats: arguments['remote_audio_stats'],
+            track: arguments["track"],
+            peer: arguments["peer"]));
+        break;
+      case HMSStatsListenerMethod.onRemoteVideoStats:
+        updateListeners.forEach((e) => e.onRemoteVideoStats(
+            hmsRemoteVideoStats: arguments['remote_video_stats'],
+            track: arguments["track"],
+            peer: arguments["peer"]));
+        break;
+      case HMSStatsListenerMethod.onRtcStats:
+        updateListeners.forEach((e) =>
+            e.onRTCStats(hmsrtcStatsReport: arguments['rtc_stats_report']));
+        break;
+      case HMSStatsListenerMethod.unknown:
+        // TODO: Handle this case.
+        break;
+    }
+  }
+
   ///notifying all updateListeners attached about updates
   static void notifyUpdateListeners(
       HMSUpdateListenerMethod method, Map<String, dynamic> arguments) {
@@ -438,34 +519,6 @@ class PlatformService {
           element.onRemovedFromRoom(
               hmsPeerRemovedFromPeer: arguments['removed_from_room']);
         });
-        break;
-      case HMSUpdateListenerMethod.onLocalAudioStats:
-        updateListeners.forEach((e) => e.onLocalAudioStats(
-            hmsLocalAudioStats: arguments['local_audio_stats'],
-            track: arguments["track"],
-            peer: arguments["peer"]));
-        break;
-      case HMSUpdateListenerMethod.onLocalVideoStats:
-        updateListeners.forEach((e) => e.onLocalVideoStats(
-            hmsLocalVideoStats: arguments['local_video_stats'],
-            track: arguments["track"],
-            peer: arguments["peer"]));
-        break;
-      case HMSUpdateListenerMethod.onRemoteAudioStats:
-        updateListeners.forEach((e) => e.onRemoteAudioStats(
-            hmsRemoteAudioStats: arguments['remote_audio_stats'],
-            track: arguments["track"],
-            peer: arguments["peer"]));
-        break;
-      case HMSUpdateListenerMethod.onRemoteVideoStats:
-        updateListeners.forEach((e) => e.onRemoteVideoStats(
-            hmsRemoteVideoStats: arguments['remote_video_stats'],
-            track: arguments["track"],
-            peer: arguments["peer"]));
-        break;
-      case HMSUpdateListenerMethod.onRtcStats:
-        updateListeners.forEach((e) =>
-            e.onRTCStats(hmsrtcStatsReport: arguments['rtc_stats_report']));
         break;
       case HMSUpdateListenerMethod.unknown:
         break;
