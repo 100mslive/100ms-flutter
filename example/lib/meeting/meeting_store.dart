@@ -99,13 +99,6 @@ class MeetingStore extends ChangeNotifier
 
   ScrollController controller = ScrollController();
 
-  void addStatsListener() {
-    _hmsSDKInteractor.addStatsListener(this);
-    // startHMSLogger(HMSLogLevel.VERBOSE, HMSLogLevel.VERBOSE);
-    // addLogsListener();
-  }
-
-
   Future<bool> join(String user, String roomUrl) async {
     List<String?>? token =
         await RoomService().getToken(user: user, room: roomUrl);
@@ -117,7 +110,6 @@ class MeetingStore extends ChangeNotifier
         captureNetworkQualityInPreview: true);
 
     _hmsSDKInteractor.addUpdateListener(this);
-    _hmsSDKInteractor.addStatsListener(this);
     _hmsSDKInteractor.join(config: config);
     return true;
   }
@@ -258,6 +250,11 @@ class MeetingStore extends ChangeNotifier
   }
 
   void changeStatsVisible() {
+    if (!isStatsVisible) {
+      _hmsSDKInteractor.addStatsListener(this);
+    } else {
+      _hmsSDKInteractor.removeStatsListener(this);
+    }
     isStatsVisible = !isStatsVisible;
     notifyListeners();
   }
@@ -820,6 +817,7 @@ class MeetingStore extends ChangeNotifier
     isMirror = _hmsSDKInteractor.mirrorCamera;
     isStatsVisible = _hmsSDKInteractor.showStats;
     if (isStatsVisible) {
+      _hmsSDKInteractor.addStatsListener(this);
     }
   }
 
