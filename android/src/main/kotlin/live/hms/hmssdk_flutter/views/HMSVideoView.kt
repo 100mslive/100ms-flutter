@@ -16,18 +16,14 @@ class HMSVideoView(
     context: Context,
     setMirror: Boolean,
     scaleType: Int? = RendererCommon.ScalingType.SCALE_ASPECT_FIT.ordinal,
-    peerName: String,
     track:HMSVideoTrack
 ) : FrameLayout(context, null) {
 
     private val surfaceViewRenderer: SurfaceViewRenderer
 
-    private val myPeerName: String = peerName
-
     private  val myTrack: HMSVideoTrack = track
 
     init {
-        Log.i("debugVideo", "HMSVideoView init peerName: $myPeerName")
         val inflater =
             getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val view = inflater.inflate(R.layout.hms_video_view, this)
@@ -40,40 +36,23 @@ class HMSVideoView(
             surfaceViewRenderer.setScalingType(RendererCommon.ScalingType.values()[scaleType ?: 0])
         }
 
-
     }
-
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-         Log.i("debugVideo", "HMSVideoView onAttachedToWindow peerName: $myPeerName")
         surfaceViewRenderer.init(SharedEglContext.context, null)
         myTrack.addSink(surfaceViewRenderer)
     }
 
-
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
-         Log.i("debugVideo", "HMSVideoView onDetachedFromWindow peerName: $myPeerName")
         myTrack.removeSink(surfaceViewRenderer)
         surfaceViewRenderer.release()
     }
 
     override fun onWindowVisibilityChanged(visibility: Int) {
         super.onWindowVisibilityChanged(visibility)
-        Log.i("debugVideo", "HMSVideoView onWindowVisibilityChanged peerName: $myPeerName $visibility")
     }
-    // fun setVideoTrack(track: HMSVideoTrack) {
-    //     Log.i("debugVideo", "HMSVideoView setVideoTrack peerName: $myPeerName")
-    //     surfaceViewRenderer.init(SharedEglContext.context, null)
-    //     track.addSink(surfaceViewRenderer)
-    // }
-
-    // fun removeVideoTrack(track: HMSVideoTrack) {
-    //     Log.i("debugVideo", "HMSVideoView removeVideoTrack peerName: $myPeerName")
-    //     track.removeSink(surfaceViewRenderer)
-    //     surfaceViewRenderer.release()
-    // }
 }
 
 
