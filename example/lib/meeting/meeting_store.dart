@@ -171,6 +171,14 @@ class MeetingStore extends ChangeNotifier
     notifyListeners();
   }
 
+  void toggleScreenShare() {
+    if (!isScreenShareOn) {
+      startScreenShare();
+    } else {
+      stopScreenShare();
+    }
+  }
+
   Future<bool> isAudioMute(HMSPeer? peer) async {
     // TODO: add permission checks in exmaple app UI
     return await _hmsSDKInteractor.isAudioMute(peer);
