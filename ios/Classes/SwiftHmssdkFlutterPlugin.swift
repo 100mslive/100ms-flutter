@@ -17,7 +17,8 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     var roleChangeRequest: HMSRoleChangeRequest?
 
     internal var hmsSDK: HMSSDK?
-
+    
+    var isStatsActive: Bool = false
     // MARK: - Flutter Setup
 
     public static func register(with registrar: FlutterPluginRegistrar) {
@@ -150,7 +151,12 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
         case "start_hms_logger", "remove_hms_logger":
             loggingActions(call, result: result)
+            
+            // MARK: - statsListener
 
+        case "start_stats_listener", "remove_stats_listener":
+            statsListenerAction(call, result: result)
+            
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -226,6 +232,18 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
     case "remove_hms_logger":
         removeHMSLogger()
+    default:
+        result(FlutterMethodNotImplemented)
+        }
+    }
+    
+    private func statsListenerAction(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
+    switch call.method {
+    case "start_stats_listener":
+        isStatsActive = true
+
+    case "remove_stats_listener":
+        isStatsActive = false
     default:
         result(FlutterMethodNotImplemented)
         }
@@ -742,66 +760,76 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     }
 
     public func on(localAudioStats: HMSLocalAudioStats, track: HMSLocalAudioTrack, peer: HMSPeer) {
-        let data = [
-            "event_name": "on_local_audio_stats",
-            "data": [
-                "local_audio_stats": HMSStatsExtension.toDictionary(localAudioStats),
-                "track": HMSTrackExtension.toDictionary(track),
-                "peer": HMSPeerExtension.toDictionary(peer)
-            ]
-        ] as [String: Any]
-
-        rtcSink?(data)
+        if(isStatsActive){
+            let data = [
+                "event_name": "on_local_audio_stats",
+                "data": [
+                    "local_audio_stats": HMSStatsExtension.toDictionary(localAudioStats),
+                    "track": HMSTrackExtension.toDictionary(track),
+                    "peer": HMSPeerExtension.toDictionary(peer)
+                ]
+            ] as [String: Any]
+            
+            rtcSink?(data)
+        }
     }
 
     public func on(localVideoStats: HMSLocalVideoStats, track: HMSLocalVideoTrack, peer: HMSPeer) {
-        let data = [
-            "event_name": "on_local_video_stats",
-            "data": [
-                "local_video_stats": HMSStatsExtension.toDictionary(localVideoStats),
-                "track": HMSTrackExtension.toDictionary(track),
-                "peer": HMSPeerExtension.toDictionary(peer)
-            ]
-        ] as [String: Any]
-
-        rtcSink?(data)
+        if(isStatsActive){
+            let data = [
+                "event_name": "on_local_video_stats",
+                "data": [
+                    "local_video_stats": HMSStatsExtension.toDictionary(localVideoStats),
+                    "track": HMSTrackExtension.toDictionary(track),
+                    "peer": HMSPeerExtension.toDictionary(peer)
+                ]
+            ] as [String: Any]
+            
+            rtcSink?(data)
+        }
     }
-
+    
     public func on(remoteAudioStats: HMSRemoteAudioStats, track: HMSRemoteAudioTrack, peer: HMSPeer) {
-        let data = [
-            "event_name": "on_remote_audio_stats",
-            "data": [
-                "remote_audio_stats": HMSStatsExtension.toDictionary(remoteAudioStats),
-                "track": HMSTrackExtension.toDictionary(track),
-                "peer": HMSPeerExtension.toDictionary(peer)
-            ]
-        ] as [String: Any]
-
-        rtcSink?(data)
+        if(isStatsActive){
+            let data = [
+                "event_name": "on_remote_audio_stats",
+                "data": [
+                    "remote_audio_stats": HMSStatsExtension.toDictionary(remoteAudioStats),
+                    "track": HMSTrackExtension.toDictionary(track),
+                    "peer": HMSPeerExtension.toDictionary(peer)
+                ]
+            ] as [String: Any]
+            
+            rtcSink?(data)
+        }
     }
-
+    
     public func on(remoteVideoStats: HMSRemoteVideoStats, track: HMSRemoteVideoTrack, peer: HMSPeer) {
-        let data = [
-            "event_name": "on_remote_video_stats",
-            "data": [
-                "remote_video_stats": HMSStatsExtension.toDictionary(remoteVideoStats),
-                "track": HMSTrackExtension.toDictionary(track),
-                "peer": HMSPeerExtension.toDictionary(peer)
-            ]
-        ] as [String: Any]
-
-        rtcSink?(data)
+        if(isStatsActive){
+            let data = [
+                "event_name": "on_remote_video_stats",
+                "data": [
+                    "remote_video_stats": HMSStatsExtension.toDictionary(remoteVideoStats),
+                    "track": HMSTrackExtension.toDictionary(track),
+                    "peer": HMSPeerExtension.toDictionary(peer)
+                ]
+            ] as [String: Any]
+            
+            rtcSink?(data)
+        }
     }
-
+    
     public func on(rtcStats: HMSRTCStatsReport) {
-        let data = [
-            "event_name": "on_rtc_stats_report",
-            "data": [
-                "rtc_stats_report": HMSStatsExtension.toDictionary(rtcStats)
-            ]
-        ] as [String: Any]
-
-        rtcSink?(data)
+        if(isStatsActive){
+            let data = [
+                "event_name": "on_rtc_stats_report",
+                "data": [
+                    "rtc_stats_report": HMSStatsExtension.toDictionary(rtcStats)
+                ]
+            ] as [String: Any]
+            
+            rtcSink?(data)
+        }
     }
 
     // MARK: - Helper Functions
