@@ -279,17 +279,24 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         }
     }
 
+    private var isStatsActive = false
+
     private  fun statsListenerAction(call: MethodCall, result: Result){
         when (call.method) {
             "start_stats_listener" -> {
-                if (this.hmsStatsListener == null) {
+                Log.i("hmsStatsListener", "hmsStatsListener: ${this.hmsStatsListener.toString()}")
+                if (this.hmsStatsListener == null && !isStatsActive) {
                     this.hmsStatsListener = HMSStatsInteractor(rtcSink!!, getLocalPeer()!!)
                     hmssdk.addRtcStatsObserver(this.hmsStatsListener!!)
+                    isStatsActive = true
                 }
+                Log.i("hmsStatsListener", "hmsStatsListener: ${this.hmsStatsListener.toString()}")
             }
 
             "remove_stats_listener" -> {
+                isStatsActive = false
                 this.hmsStatsListener = null
+                Log.i("hmsStatsListener", "hmsStatsListener: ${this.hmsStatsListener.toString()}")
             }
 
             else -> {
