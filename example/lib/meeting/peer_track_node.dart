@@ -19,10 +19,9 @@ class PeerTrackNode extends ChangeNotifier {
       this.track,
       this.audioTrack,
       required this.uid,
-      this.isOffscreen = false,
+      this.isOffscreen = true,
       this.networkQuality = -1,
-      this.stats });
-
+      this.stats});
 
   @override
   String toString() {

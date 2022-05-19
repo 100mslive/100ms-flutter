@@ -22,57 +22,46 @@ class HMSVideoView extends StatelessWidget {
   final HMSVideoTrack track;
   final matchParent;
 
-  /// [HMSVideoView] will use viewSize to get height and width of rendered video. If not passed, it will take whatever size is available to the widget.
-  final Size? viewSize;
   final ScaleType scaleType;
   final bool setMirror;
+
+  final String peerName;
 
   HMSVideoView(
       {Key? key,
       required this.track,
-      this.viewSize,
       this.setMirror = false,
       this.matchParent = true,
-      this.scaleType = ScaleType.SCALE_ASPECT_FIT})
+      this.scaleType = ScaleType.SCALE_ASPECT_FIT,
+      required this.peerName})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final tempViewSize = viewSize;
-    if (tempViewSize != null) {
-      return _PlatformView(
-          track: track,
-          matchParent: this.matchParent,
-          viewSize: tempViewSize,
-          setMirror: setMirror,
-          scaleType: this.scaleType);
-    } else
-      return LayoutBuilder(builder: (_, constraints) {
-        return _PlatformView(
-            track: track,
-            matchParent: this.matchParent,
-            viewSize: Size(constraints.maxWidth, constraints.maxHeight),
-            setMirror: setMirror,
-            scaleType: this.scaleType);
-      });
+   return _PlatformView(
+        track: track,
+        matchParent: this.matchParent,
+        setMirror: setMirror,
+        scaleType: this.scaleType,
+        peerName: this.peerName);
   }
 }
 
 class _PlatformView extends StatelessWidget {
   final HMSTrack track;
-  final Size viewSize;
 
   final bool setMirror;
   final bool matchParent;
   final ScaleType scaleType;
+  final String peerName;
 
   _PlatformView({
     Key? key,
     required this.track,
-    required this.viewSize,
     this.setMirror = false,
     this.matchParent = true,
     required this.scaleType,
+    required this.peerName,
   }) : super(key: key);
 
   void onPlatformViewCreated(int id) {}
@@ -90,10 +79,8 @@ class _PlatformView extends StatelessWidget {
           'set_mirror': track.source != "REGULAR" ? false : setMirror,
           'scale_type': scaleType.value,
           'match_parent': matchParent,
-        }..addAll({
-            'height': viewSize.height,
-            'width': viewSize.width,
-          }),
+          'peerName': peerName
+        },
         gestureRecognizers: {},
       );
     } else if (Platform.isIOS) {
@@ -107,10 +94,8 @@ class _PlatformView extends StatelessWidget {
           'set_mirror': track.source != "REGULAR" ? false : setMirror,
           'scale_type': scaleType.value,
           'match_parent': matchParent,
-        }..addAll({
-            'height': viewSize.height,
-            'width': viewSize.width,
-          }),
+          'peerName': peerName
+        },
         gestureRecognizers: {},
       );
     } else {

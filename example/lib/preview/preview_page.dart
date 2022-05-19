@@ -95,6 +95,7 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                             ? HMSVideoView(
                                 scaleType: ScaleType.SCALE_ASPECT_FILL,
                                 track: _previewStore.localTracks[0],
+                                peerName: _previewStore.peer!.name,
                                 setMirror: widget.mirror,
                                 matchParent: false,
                               )
@@ -339,15 +340,15 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                                                               .hmsSDKInteractor,
                                                     ),
                                                     child: MeetingPage(
-                                                        roomId: widget.roomId,
-                                                        flow: widget.flow,
-                                                        user: widget.user,
-                                                        isAudioOn: _previewStore
-                                                            .isAudioOn,
-                                                        localPeerNetworkQuality:
-                                                            _previewStore
-                                                                .networkQuality,
-                                                        ),
+                                                      roomId: widget.roomId,
+                                                      flow: widget.flow,
+                                                      user: widget.user,
+                                                      isAudioOn: _previewStore
+                                                          .isAudioOn,
+                                                      localPeerNetworkQuality:
+                                                          _previewStore
+                                                              .networkQuality,
+                                                    ),
                                                   )));
                                     },
                                     child: Text(

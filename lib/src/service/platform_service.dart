@@ -7,20 +7,14 @@
 ///You can add as many as [meeting_event_listeners] and [preview_event_listeners].
 ///
 ///[hmssdk_flutter] will send updates to all the listeners when there is any change in anything.
-
-// Dart imports:
 import 'dart:async';
 
 // Flutter imports:
 import 'package:flutter/services.dart';
-
 // Project imports:
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter/src/enum/hms_logs_update_listener.dart';
 import 'package:hmssdk_flutter/src/model/hms_log_list.dart';
-import 'package:hmssdk_flutter/src/model/hms_stats_listener.dart';
-
-import '../enum/hms_stats_listener_method.dart';
 
 class PlatformService {
   ///used to pass data to platform using methods
@@ -60,7 +54,9 @@ class PlatformService {
 
   ///remove meetingListener just pass the listener instance you want to remove.
   static void removeUpdateListener(HMSUpdateListener listener) {
-    if (updateListeners.contains(listener)) updateListeners.remove(listener);
+    if (updateListeners.contains(listener)) {
+      updateListeners.remove(listener);
+    }
   }
 
   ///add previewListener
@@ -75,17 +71,16 @@ class PlatformService {
 
   ///add RTCStats Listener
   static void addRTCStatsListener(HMSStatsListener listener) {
+    PlatformService.invokeMethod(PlatformMethod.startStatsListener);
     statsListeners.add(listener);
   }
 
   ///remove meetingListener just pass the listener instance you want to remove.
   static void removeRTCStatsListener(HMSStatsListener listener) {
-    if (statsListeners.contains(listener)) statsListeners.remove(listener);
-  }
-
-  static void startRtcStats() {
-    _channel.invokeMethod(
-        PlatformMethodValues.getName(PlatformMethod.startRtcStats));
+    if (statsListeners.contains(listener)) {
+      statsListeners.remove(listener);
+      PlatformService.invokeMethod(PlatformMethod.removeStatsListener);
+    }
   }
 
   static void addLogsListener(

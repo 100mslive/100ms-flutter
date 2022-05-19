@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
@@ -11,12 +9,11 @@ class TileBorder extends StatelessWidget {
   final String uid;
   final String name;
 
-  TileBorder({
-    required this.itemHeight,
-    required this.itemWidth,
-    required this.uid,
-    required this.name
-  });
+  TileBorder(
+      {required this.itemHeight,
+      required this.itemWidth,
+      required this.uid,
+      required this.name});
 
   @override
   Widget build(BuildContext context) {
@@ -27,13 +24,13 @@ class TileBorder extends StatelessWidget {
             height: itemHeight + 110,
             width: itemWidth - 4,
             decoration: BoxDecoration(
-                border: Border.all(
-                    color: isHighestSpeaker ? Utilities.getBackgroundColour(
-                        name) : Colors.grey,
-                    width: isHighestSpeaker ? 4.0 : 1.0
-                    ),
-                borderRadius: BorderRadius.all(Radius.circular(10)),
-                ),
+              border: Border.all(
+                  color: isHighestSpeaker
+                      ? Utilities.getBackgroundColour(name)
+                      : Colors.grey,
+                  width: isHighestSpeaker ? 4.0 : 1.0),
+              borderRadius: BorderRadius.all(Radius.circular(10)),
+            ),
           );
         });
   }
