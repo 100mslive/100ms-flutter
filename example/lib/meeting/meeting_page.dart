@@ -107,13 +107,20 @@ class _MeetingPageState extends State<MeetingPage>
           isRecordingStarted = false;
         } else {
           if (isRecordingStarted == false) {
-            String url = await UtilityComponents.showInputDialog(
-                context: context,
-                placeholder: "Enter RTMP Url",
-                prefilledValue: Constant.rtmpUrl);
-            if (url.isNotEmpty) {
+            Map<String, String> data =
+                await UtilityComponents.showRTMPInputDialog(
+                    context: context,
+                    placeholder: "Enter Comma separated RTMP Urls",
+                    isRecordingEnabled: false);
+            List<String>? urls;
+            if (data["url"]!.isNotEmpty) {
+              urls = data["url"]!.split(",");
+            }
+            if (data["toRecord"] == "true" || urls != null) {
               _meetingStore.startRtmpOrRecording(
-                  meetingUrl: url, toRecord: true, rtmpUrls: null);
+                  meetingUrl: Constant.rtmpUrl,
+                  toRecord: data["toRecord"] == "true" ? true : false,
+                  rtmpUrls: urls);
               isRecordingStarted = true;
             }
           }

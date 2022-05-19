@@ -199,6 +199,70 @@ class UtilityComponents {
     return _selectedRoles;
   }
 
+  static Future<Map<String,String>> showRTMPInputDialog(
+      {context,
+      String placeholder = "",
+      String prefilledValue = "",
+      bool isRecordingEnabled = false}) async {
+    TextEditingController textController = TextEditingController();
+    if (prefilledValue.isNotEmpty) {
+      textController.text = prefilledValue;
+    }
+    Map<String, String> answer = await showDialog(
+        context: context,
+        builder: (context) => StatefulBuilder(builder: (context, setState) {
+              return AlertDialog(
+                content: Container(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      TextField(
+                        autofocus: true,
+                        controller: textController,
+                        decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(16)),
+                            ),
+                            hintText: placeholder),
+                      ),
+                      CheckboxListTile(
+                          title: Text("Recording"),
+                          activeColor: Colors.blue,
+                          controlAffinity: ListTileControlAffinity.trailing,
+                          value: isRecordingEnabled,
+                          onChanged: (bool? value) {
+                            setState(() {
+                              isRecordingEnabled = value ?? false;
+                            });
+                          })
+                    ],
+                  ),
+                ),
+                actions: [
+                  ElevatedButton(
+                    child: Text('Cancel'),
+                    onPressed: () {
+                      Navigator.pop(context, {"url":"","toRecord":"false"});
+                    },
+                  ),
+                  ElevatedButton(
+                    
+                    child: Text('OK'),
+                    onPressed: () {
+                      if (textController.text == "" && !isRecordingEnabled) {
+                      } else {
+                        Navigator.pop(context, {"url" : textController.text,"toRecord":isRecordingEnabled.toString()});
+                      }
+                    },
+                  ),
+                ],
+              );
+            }));
+
+    return answer;
+  }
+
   static List<Widget> videoTileWidget(
       int itemCount, List<PeerTrackNode> peerTracks, Size size) {
     return List.generate(itemCount, (index) {
