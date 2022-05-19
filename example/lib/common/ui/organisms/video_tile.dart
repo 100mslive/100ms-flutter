@@ -1,5 +1,6 @@
 // Package imports
 import 'package:flutter/material.dart';
+import 'package:focus_detector/focus_detector.dart';
 
 // Project imports
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
@@ -15,7 +16,6 @@ import 'package:hmssdk_flutter_example/common/ui/organisms/video_view.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:hmssdk_flutter_example/meeting/peer_track_node.dart';
 import 'package:provider/provider.dart';
-import 'package:focus_detector/focus_detector.dart';
 
 import 'change_track_options.dart';
 
@@ -52,11 +52,13 @@ class _VideoTileState extends State<VideoTile> {
 
     return FocusDetector(
       onFocusLost: () {
-        if (mounted)
-          Provider.of<PeerTrackNode>(context, listen: false)
-              .setOffScreenStatus(true);
+        if (mounted) {
+          print("FocusDetector onFocusLost ${context.read<PeerTrackNode>().peer.name}");
+          Provider.of<PeerTrackNode>(context, listen: false).setOffScreenStatus(true);
+        }
       },
       onFocusGained: () {
+        print("FocusDetector onFocusGained ${context.read<PeerTrackNode>().peer.name}" );
         Provider.of<PeerTrackNode>(context, listen: false)
             .setOffScreenStatus(false);
       },
@@ -132,7 +134,7 @@ class _VideoTileState extends State<VideoTile> {
                     TileBorder(
                         itemHeight: widget.itemHeight,
                         itemWidth: widget.itemWidth,
-                        name:context.read<PeerTrackNode>().peer.name,
+                        name: context.read<PeerTrackNode>().peer.name,
                         uid: context.read<PeerTrackNode>().uid)
                   ],
                 ),

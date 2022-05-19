@@ -1,6 +1,7 @@
 package live.hms.hmssdk_flutter.views
 
 import android.content.Context
+import android.util.Log
 import android.view.View
 import android.widget.FrameLayout
 import io.flutter.plugin.platform.PlatformView
@@ -11,23 +12,25 @@ import live.hms.video.media.tracks.HMSVideoTrack
 import live.hms.video.utils.HmsUtilities
 
 
+
 class HMSVideoViewWidget(context: Context, id: Int, creationParams: Map<String?, Any?>?, private val track: HMSVideoTrack, private val setMirror:Boolean,
                          private val scaleType : Int?,private val matchParent: Boolean? = true
 ) : PlatformView {
 
-    private val hmsVideoView: HMSVideoView = HMSVideoView(context,setMirror,scaleType)
+    private val viewContext: Context = context
+    private val myTrack: HMSVideoTrack = track
 
-    override fun getView(): View {
-        return hmsVideoView
+    private var hmsVideoView: HMSVideoView? = null
+
+    override fun getView(): View {        
+        if (hmsVideoView == null) {
+            hmsVideoView = HMSVideoView(viewContext, setMirror, scaleType, myTrack)
+        }
+        return hmsVideoView!!
     }
 
     override fun onFlutterViewAttached(flutterView: View) {
         super.onFlutterViewAttached(flutterView)
-        renderVideo()
-    }
-
-    private fun renderVideo() {
-
         var frameLayoutParams = FrameLayout.LayoutParams(
             FrameLayout.LayoutParams.MATCH_PARENT,
             FrameLayout.LayoutParams.MATCH_PARENT
@@ -39,18 +42,14 @@ class HMSVideoViewWidget(context: Context, id: Int, creationParams: Map<String?,
             )
         }
         view.layoutParams = frameLayoutParams
+    }
 
-        hmsVideoView.setVideoTrack(track)
+    override fun onFlutterViewDetached() {
+        super.onFlutterViewDetached()
     }
 
     override fun dispose() {
-        release()
-    }
-
-    private fun release() {
-        hmsVideoView.currentVideoTrack!!.removeSink(hmsVideoView.surfaceViewRenderer)
-        hmsVideoView.surfaceViewRenderer.release()
-        hmsVideoView.currentVideoTrack = null
+        hmsVideoView = null
     }
 }
 

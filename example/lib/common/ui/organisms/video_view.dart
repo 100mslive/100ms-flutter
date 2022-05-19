@@ -54,6 +54,7 @@ class _VideoViewState extends State<VideoView> {
                       child: HMSVideoView(
                           scaleType: widget.scaleType,
                           track: data.item1!,
+                          peerName: context.read<PeerTrackNode>().peer.name,
                           setMirror: false,
                           matchParent: false),
                     ),
@@ -68,6 +69,7 @@ class _VideoViewState extends State<VideoView> {
                       child: HMSVideoView(
                         scaleType: ScaleType.SCALE_ASPECT_FILL,
                         track: data.item1!,
+                        peerName: context.read<PeerTrackNode>().peer.name,
                         setMirror: data.item1.runtimeType == HMSLocalVideoTrack
                             ? context.read<MeetingStore>().isMirror
                             : false,
