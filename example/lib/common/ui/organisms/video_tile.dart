@@ -53,12 +53,11 @@ class _VideoTileState extends State<VideoTile> {
     return FocusDetector(
       onFocusLost: () {
         if (mounted) {
-          print("FocusDetector onFocusLost ${context.read<PeerTrackNode>().peer.name}");
-          Provider.of<PeerTrackNode>(context, listen: false).setOffScreenStatus(true);
+          Provider.of<PeerTrackNode>(context, listen: false)
+              .setOffScreenStatus(true);
         }
       },
       onFocusGained: () {
-        print("FocusDetector onFocusGained ${context.read<PeerTrackNode>().peer.name}" );
         Provider.of<PeerTrackNode>(context, listen: false)
             .setOffScreenStatus(false);
       },
