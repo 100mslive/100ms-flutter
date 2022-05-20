@@ -89,18 +89,22 @@ class _ParticipantOrganismState extends State<ParticipantOrganism> {
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                     child: Container(
+                      width: width / 4,
                       padding: const EdgeInsets.all(5.0),
                       decoration: BoxDecoration(
                         color: Colors.blue,
                         borderRadius: BorderRadius.circular(5.0),
                       ),
-                      child: Text(
-                        "${peer.role.name}",
-                        overflow: TextOverflow.clip,
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 20.0,
-                            fontWeight: FontWeight.bold),
+                      child: Center(
+                        child: Text(
+                          "${peer.role.name}",
+                          overflow: TextOverflow.clip,
+                          maxLines: 1,
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20.0,
+                              fontWeight: FontWeight.bold),
+                        ),
                       ),
                     ),
                   ),
