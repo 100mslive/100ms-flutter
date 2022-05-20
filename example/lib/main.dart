@@ -103,8 +103,6 @@ class _HomePageState extends State<HomePage> {
     return Future.value(true);
   }
 
-  DeepLinkBloc _bloc = DeepLinkBloc();
-
   Future<void> _initPackageInfo() async {
     final info = await PackageInfo.fromPlatform();
     setState(() {
@@ -227,7 +225,9 @@ class _HomePageState extends State<HomePage> {
                   ),
                   Text('Join Meeting',
                       style: TextStyle(
-                          height: 1, fontSize: 24, fontWeight: FontWeight.bold)),
+                          height: 1,
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold)),
                   SizedBox(
                     height: 8,
                   ),
@@ -243,7 +243,8 @@ class _HomePageState extends State<HomePage> {
                             icon: Icon(Icons.clear),
                           ),
                           border: OutlineInputBorder(
-                              borderRadius: BorderRadius.all(Radius.circular(16)))),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(16)))),
                     ),
                   ),
                   SizedBox(
@@ -304,7 +305,8 @@ class _HomePageState extends State<HomePage> {
                         width: 250,
                         padding: const EdgeInsets.fromLTRB(4, 10, 4, 10),
                         decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(12))),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(12))),
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -315,7 +317,6 @@ class _HomePageState extends State<HomePage> {
                               width: 5,
                             ),
                             Icon(Icons.arrow_right_alt_outlined, size: 22),
-
                           ],
                         ),
                       )),

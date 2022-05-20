@@ -53,7 +53,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '19544678223',
     projectId: 'flutter-hms',
     storageBucket: 'flutter-hms.appspot.com',
-    iosClientId: '19544678223-lisp1tlhj2es8id94te05r4ss4n7og2f.apps.googleusercontent.com',
+    iosClientId:
+        '19544678223-lisp1tlhj2es8id94te05r4ss4n7og2f.apps.googleusercontent.com',
     iosBundleId: 'live.100ms.flutter',
   );
 }

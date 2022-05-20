@@ -20,13 +20,11 @@ class _ParticipantsListState extends State<ParticipantsList> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Selector<MeetingStore,int>(
-          selector: (_, meetingStore) =>
-              meetingStore.peers.length,
-          builder: (_,length,__) {
-            return Text("👥 Participants ($length)");
-          }
-        ),
+        title: Selector<MeetingStore, int>(
+            selector: (_, meetingStore) => meetingStore.peers.length,
+            builder: (_, length, __) {
+              return Text("👥 Participants ($length)");
+            }),
       ),
       body: Container(
         height: MediaQuery.of(context).size.height,
