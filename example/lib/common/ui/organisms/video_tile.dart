@@ -1,9 +1,10 @@
 // Package imports
 import 'package:flutter/material.dart';
 import 'package:focus_detector/focus_detector.dart';
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:provider/provider.dart';
 
 // Project imports
-import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/brb_tag.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/degrade_tile.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/hand_raise.dart';
@@ -15,9 +16,7 @@ import 'package:hmssdk_flutter_example/common/ui/organisms/rtc_stats_view.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/video_view.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:hmssdk_flutter_example/meeting/peer_track_node.dart';
-import 'package:provider/provider.dart';
-
-import 'change_track_options.dart';
+import 'package:hmssdk_flutter_example/common/ui/organisms/change_track_options.dart';
 
 class VideoTile extends StatefulWidget {
   final double itemHeight;

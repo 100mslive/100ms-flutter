@@ -9,7 +9,7 @@ enum HMSStatsListenerMethod {
 
 extension HMSStatsListenerMethodValues on HMSStatsListenerMethod {
   static HMSStatsListenerMethod getMethodFromName(String name) {
-    switch(name){
+    switch (name) {
       case 'on_local_audio_stats':
         return HMSStatsListenerMethod.onLocalAudioStats;
       case 'on_local_video_stats':

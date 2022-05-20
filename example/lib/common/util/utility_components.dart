@@ -8,9 +8,9 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/role_change_request_dialog.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/track_change_request_dialog.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
-import '../../meeting/peer_track_node.dart';
-import '../ui/organisms/audio_tile.dart';
-import '../ui/organisms/video_tile.dart';
+import 'package:hmssdk_flutter_example/meeting/peer_track_node.dart';
+import 'package:hmssdk_flutter_example/common/ui/organisms/audio_tile.dart';
+import 'package:hmssdk_flutter_example/common/ui/organisms/video_tile.dart';
 
 class UtilityComponents {
   static void showSnackBarWithString(event, context) {
@@ -199,7 +199,7 @@ class UtilityComponents {
     return _selectedRoles;
   }
 
-  static Future<Map<String,String>> showRTMPInputDialog(
+  static Future<Map<String, String>> showRTMPInputDialog(
       {context,
       String placeholder = "",
       String prefilledValue = "",
@@ -243,16 +243,18 @@ class UtilityComponents {
                   ElevatedButton(
                     child: Text('Cancel'),
                     onPressed: () {
-                      Navigator.pop(context, {"url":"","toRecord":"false"});
+                      Navigator.pop(context, {"url": "", "toRecord": "false"});
                     },
                   ),
                   ElevatedButton(
-                    
                     child: Text('OK'),
                     onPressed: () {
                       if (textController.text == "" && !isRecordingEnabled) {
                       } else {
-                        Navigator.pop(context, {"url" : textController.text,"toRecord":isRecordingEnabled.toString()});
+                        Navigator.pop(context, {
+                          "url": textController.text,
+                          "toRecord": isRecordingEnabled.toString()
+                        });
                       }
                     },
                   ),

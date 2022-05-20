@@ -1,5 +1,4 @@
 //Package imports
-
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:hmssdk_flutter_example/model/rtc_stats.dart';
@@ -321,7 +320,6 @@ class MeetingStore extends ChangeNotifier
       {required HMSTrack track,
       required HMSTrackUpdate trackUpdate,
       required HMSPeer peer}) {
-    
     if (isSpeakerOn) {
       unMuteAll();
     } else {
@@ -599,9 +597,9 @@ class MeetingStore extends ChangeNotifier
                   peer: peer,
                   uid: peer.peerId + track.trackId,
                   track: track as HMSVideoTrack));
-          
+
           isScreenShareActive();
-          
+
           for (var node in peerTracks) {
             if (node.isOffscreen == false) {
               node.setOffScreenStatus(true);
@@ -609,7 +607,7 @@ class MeetingStore extends ChangeNotifier
           }
 
           controller.jumpTo(0);
-          
+
           notifyListeners();
         }
         break;

@@ -1,9 +1,12 @@
+//Package imports
+import 'package:provider/provider.dart';
+import 'package:tuple/tuple.dart';
 import 'package:flutter/material.dart';
+
+//Project imports
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:hmssdk_flutter_example/meeting/peer_track_node.dart';
 import 'package:hmssdk_flutter_example/model/rtc_stats.dart';
-import 'package:provider/provider.dart';
-import 'package:tuple/tuple.dart';
 
 class RTCStatsView extends StatelessWidget {
   final bool isLocal;

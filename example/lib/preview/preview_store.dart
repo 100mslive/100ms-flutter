@@ -7,13 +7,12 @@ import 'package:hmssdk_flutter_example/service/room_service.dart';
 
 class PreviewStore extends ChangeNotifier
     implements HMSPreviewListener, HMSLogListener {
-  
   late HMSSDKInteractor hmsSDKInteractor;
 
   PreviewStore() {
     hmsSDKInteractor = HMSSDKInteractor();
   }
-  
+
   List<HMSVideoTrack> localTracks = [];
 
   HMSPeer? peer;
@@ -32,7 +31,6 @@ class PreviewStore extends ChangeNotifier
   List<HMSPeer> peers = [];
 
   int? networkQuality;
-
 
   @override
   void onError({required HMSException error}) {

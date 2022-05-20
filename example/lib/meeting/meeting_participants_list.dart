@@ -1,12 +1,12 @@
 //Package imports
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:tuple/tuple.dart';
 
 //Project imports
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/participant_organism.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
-import 'package:provider/provider.dart';
-import 'package:tuple/tuple.dart';
 
 class ParticipantsList extends StatefulWidget {
   const ParticipantsList({Key? key}) : super(key: key);

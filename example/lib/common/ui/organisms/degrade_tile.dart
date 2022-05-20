@@ -1,7 +1,10 @@
+//package imports
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+//Package imports
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:hmssdk_flutter_example/meeting/peer_track_node.dart';
-import 'package:provider/provider.dart';
 
 class DegradeTile extends StatefulWidget {
   final double itemHeight;

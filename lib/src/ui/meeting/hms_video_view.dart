@@ -38,7 +38,7 @@ class HMSVideoView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-   return _PlatformView(
+    return _PlatformView(
         track: track,
         matchParent: this.matchParent,
         setMirror: setMirror,
