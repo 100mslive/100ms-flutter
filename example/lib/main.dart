@@ -213,132 +213,113 @@ class _HomePageState extends State<HomePage> {
               ),
             ],
           ),
-          body: Provider<DeepLinkBloc>(
-            create: (context) => _bloc,
-            dispose: (context, bloc) => bloc.dispose(),
-            child: Center(
-              child: Container(
-                padding: EdgeInsets.all(8),
-                child: SingleChildScrollView(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Image.asset(
-                        "assets/100ms.gif",
-                        width: 150,
-                        height: 150,
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Text('Join a Meeting',
-                          style: TextStyle(
-                              height: 1,
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold)),
-                      SizedBox(
-                        height: 8,
-                      ),
-                      StreamBuilder(
-                          stream: _bloc.state,
-                          builder: (context, snapshot) {
-                            if (snapshot.hasData && snapshot.data is String) {
-                              var url = snapshot.data as String;
-                              if (url.isNotEmpty) {
-                                roomIdController.text = url;
-                              }
-                            }
-                            return TextField(
-                              controller: roomIdController,
-                              autofocus: true,
-                              keyboardType: TextInputType.url,
-                              decoration: InputDecoration(
-                                  hintText: 'Enter Room URL',
-                                  suffixIcon: IconButton(
-                                    onPressed: roomIdController.clear,
-                                    icon: Icon(Icons.clear),
-                                  ),
-                                  border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(16)))),
-                            );
-                          }),
-                      SizedBox(
-                        height: 8,
-                      ),
-                      ElevatedButton(
-                          style: ButtonStyle(
-                              shape: MaterialStateProperty.all<
-                                      RoundedRectangleBorder>(
+          body: Center(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  Image.asset(
+                    "assets/100ms.gif",
+                    width: 120,
+                    height: 120,
+                  ),
+                  SizedBox(
+                    height: 70,
+                  ),
+                  Text('Join Meeting',
+                      style: TextStyle(
+                          height: 1, fontSize: 24, fontWeight: FontWeight.bold)),
+                  SizedBox(
+                    height: 8,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: TextField(
+                      controller: roomIdController,
+                      keyboardType: TextInputType.url,
+                      decoration: InputDecoration(
+                          hintText: 'Enter Room URL',
+                          suffixIcon: IconButton(
+                            onPressed: roomIdController.clear,
+                            icon: Icon(Icons.clear),
+                          ),
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.all(Radius.circular(16)))),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 30,
+                  ),
+                  ElevatedButton(
+                      style: ButtonStyle(
+                          shadowColor: MaterialStateProperty.all(Colors.blue),
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
                                   RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(16.0),
                           ))),
-                          onPressed: () async {
-                            setRTMPUrl(roomIdController.text);
-                            String user = await showDialog(
-                                context: context,
-                                builder: (_) => UserNameDialogOrganism());
-                            if (user.isNotEmpty) {
-                              bool res = await getPermissions();
-                              if (res) {
-                                FocusManager.instance.primaryFocus?.unfocus();
-                                if (skipPreview) {
-                                  HMSSDKInteractor _hmsSDKInteractor =
-                                      HMSSDKInteractor();
-                                  _hmsSDKInteractor.showStats = showStats;
-                                  _hmsSDKInteractor.mirrorCamera = mirrorCamera;
-                                  _hmsSDKInteractor.skipPreview = true;
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (_) => ListenableProvider.value(
-                                          value: MeetingStore(
-                                              hmsSDKInteractor:
-                                                  _hmsSDKInteractor),
-                                          child: MeetingPage(
-                                              roomId:
-                                                  roomIdController.text.trim(),
-                                              flow: MeetingFlow.join,
-                                              user: user,
-                                              isAudioOn: true))));
-                                } else {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (_) => ListenableProvider.value(
-                                            value: PreviewStore(),
-                                            child: PreviewPage(
-                                              roomId:
-                                                  roomIdController.text.trim(),
-                                              user: user,
-                                              flow: MeetingFlow.join,
-                                              mirror: mirrorCamera,
-                                              showStats: showStats,
-                                            ),
-                                          )));
-                                }
-                              }
+                      onPressed: () async {
+                        if (roomIdController.text.isEmpty) {
+                          return;
+                        }
+                        setRTMPUrl(roomIdController.text);
+                        String user = await showDialog(
+                            context: context,
+                            builder: (_) => UserNameDialogOrganism());
+                        if (user.isNotEmpty) {
+                          bool res = await getPermissions();
+                          if (res) {
+                            FocusManager.instance.primaryFocus?.unfocus();
+                            if (skipPreview) {
+                              HMSSDKInteractor _hmsSDKInteractor =
+                                  HMSSDKInteractor();
+                              _hmsSDKInteractor.showStats = showStats;
+                              _hmsSDKInteractor.mirrorCamera = mirrorCamera;
+                              _hmsSDKInteractor.skipPreview = true;
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (_) => ListenableProvider.value(
+                                      value: MeetingStore(
+                                          hmsSDKInteractor: _hmsSDKInteractor),
+                                      child: MeetingPage(
+                                          roomId: roomIdController.text.trim(),
+                                          flow: MeetingFlow.join,
+                                          user: user,
+                                          isAudioOn: true))));
+                            } else {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (_) => ListenableProvider.value(
+                                        value: PreviewStore(),
+                                        child: PreviewPage(
+                                          roomId: roomIdController.text.trim(),
+                                          user: user,
+                                          flow: MeetingFlow.join,
+                                          mirror: mirrorCamera,
+                                          showStats: showStats,
+                                        ),
+                                      )));
                             }
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.all(4.0),
-                            decoration: BoxDecoration(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(16))),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(Icons.video_call_outlined, size: 48),
-                                SizedBox(
-                                  width: 8,
-                                ),
-                                Text('Join Meeting',
-                                    style: TextStyle(height: 1, fontSize: 24))
-                              ],
+                          }
+                        }
+                      },
+                      child: Container(
+                        width: 250,
+                        padding: const EdgeInsets.fromLTRB(4, 10, 4, 10),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(12))),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text('Join Meeting',
+                                style: TextStyle(height: 1, fontSize: 20)),
+                            SizedBox(
+                              width: 5,
                             ),
-                          )),
-                      SizedBox(
-                        height: 50.0,
-                      ),
-                    ],
-                  ),
-                ),
+                            Icon(Icons.arrow_right_alt_outlined, size: 22),
+
+                          ],
+                        ),
+                      )),
+                ],
               ),
             ),
           )),
