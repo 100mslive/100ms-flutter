@@ -1,5 +1,6 @@
 // Package imports
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 // Project imports
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
@@ -13,9 +14,7 @@ import 'package:hmssdk_flutter_example/common/ui/organisms/rtc_stats_view.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:hmssdk_flutter_example/meeting/peer_track_node.dart';
-import 'package:provider/provider.dart';
-
-import 'change_track_options.dart';
+import 'package:hmssdk_flutter_example/common/ui/organisms/change_track_options.dart';
 
 class AudioTile extends StatelessWidget {
   final double itemHeight;
@@ -101,7 +100,7 @@ class AudioTile extends StatelessWidget {
             AudioMuteStatus(), //bottom center
             RTCStatsView(isLocal: context.read<PeerTrackNode>().peer.isLocal),
             TileBorder(
-                name:context.read<PeerTrackNode>().peer.name,
+                name: context.read<PeerTrackNode>().peer.name,
                 itemHeight: itemHeight,
                 itemWidth: itemWidth,
                 uid: context.read<PeerTrackNode>().uid)

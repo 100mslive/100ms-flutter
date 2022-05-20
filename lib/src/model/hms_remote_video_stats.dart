@@ -36,13 +36,14 @@ class HMSRemoteVideoStats {
 
   factory HMSRemoteVideoStats.fromMap(Map map) {
     return HMSRemoteVideoStats(
-        bytesReceived: map["bytes_received"]??0,
-        jitter: map["jitter"]??0,
-        bitrate: map["bitrate"]??0,
-        packetsLost: map['packets_lost']??0,
-        packetsReceived: map['packets_received']??0,
-        frameRate: map["frame_rate"]??0,
-        resolution: map['resolution']==null?HMSVideoResolution(height: 0, width: 0):HMSVideoResolution.fromMap(map['resolution']));
-
+        bytesReceived: map["bytes_received"] ?? 0,
+        jitter: map["jitter"] ?? 0,
+        bitrate: map["bitrate"] ?? 0,
+        packetsLost: map['packets_lost'] ?? 0,
+        packetsReceived: map['packets_received'] ?? 0,
+        frameRate: map["frame_rate"] ?? 0,
+        resolution: map['resolution'] == null
+            ? HMSVideoResolution(height: 0, width: 0)
+            : HMSVideoResolution.fromMap(map['resolution']));
   }
 }

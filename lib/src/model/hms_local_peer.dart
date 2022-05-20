@@ -8,7 +8,6 @@
 ///
 ///This library depends only on core Dart libraries and hms_local_audio_track.dart, hms_role.dart, hms_track.dart, hms_local_video_track.dart library.
 
-
 // Project imports:
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 

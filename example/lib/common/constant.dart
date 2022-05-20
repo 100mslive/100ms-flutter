@@ -1,3 +1,4 @@
+//Class contains the constants used throughout the application
 class Constant {
   static String prodTokenEndpoint =
       "https://prod-in.100ms.live/hmsapi/get-token";

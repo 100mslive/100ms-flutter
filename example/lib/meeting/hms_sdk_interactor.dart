@@ -1,6 +1,7 @@
-//Project imports
+//Dart imports
 import 'dart:io';
 
+//Project imports
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 class HMSSDKInteractor {
@@ -278,5 +279,4 @@ class HMSSDKInteractor {
   void removeStatsListener(HMSStatsListener listener) {
     hmsSDK.removeStatsListener(listener: listener);
   }
-  
 }

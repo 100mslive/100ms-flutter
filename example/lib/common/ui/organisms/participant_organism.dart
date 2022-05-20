@@ -1,11 +1,11 @@
 //Package imports
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 //Project imports
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
-import 'package:provider/provider.dart';
-import 'change_role_options.dart';
+import 'package:hmssdk_flutter_example/common/ui/organisms/change_role_options.dart';
 
 class ParticipantOrganism extends StatefulWidget {
   final HMSPeer peer;
