@@ -130,7 +130,7 @@ PODS:
     - GoogleUtilities/Logger
   - HMSSDK (0.2.13):
     - HMSWebRTC (= 1.0.4518)
-  - hmssdk_flutter (0.7.1):
+  - hmssdk_flutter (0.7.2):
     - Flutter
     - HMSSDK (= 0.2.13)
   - HMSWebRTC (1.0.4518)
@@ -226,7 +226,7 @@ SPEC CHECKSUMS:
   GoogleDataTransport: 5fffe35792f8b96ec8d6775f5eccd83c998d5a3b
   GoogleUtilities: e0913149f6b0625b553d70dae12b49fc62914fd1
   HMSSDK: 45b5e25be25b74bb2ca71cce4c6128f57b7eccc4
-  hmssdk_flutter: a65db31490c1152b6aaf4ec2708d56e41a6f7167
+  hmssdk_flutter: 2e904fc421cc726447966dd16d14107114c5a4ba
   HMSWebRTC: 599fb1d886daecd6e58984f84224d708bce8b565
   nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
   package_info_plus: 6c92f08e1f853dc01228d6f553146438dafcd14e
