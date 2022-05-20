@@ -2,6 +2,9 @@
 import 'package:hmssdk_flutter/src/exceptions/hms_exception.dart';
 import 'package:hmssdk_flutter/src/model/hms_date_extension.dart';
 
+///100ms HMSRtmlStreamingState
+///
+///[HMSRtmpStreamingState] contains information about the rtmp streaming status.
 class HMSRtmpStreamingState {
   final HMSException? error;
   final bool running;

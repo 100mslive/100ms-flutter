@@ -1,15 +1,18 @@
+//Package imports
 import 'package:flutter/material.dart';
-import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
-import 'package:hmssdk_flutter_example/meeting/peer_track_node.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
+
+//Project imports
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
+import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
+import 'package:hmssdk_flutter_example/meeting/peer_track_node.dart';
 
 class VideoView extends StatefulWidget {
   final matchParent;
 
   final Size? viewSize;
-
   final bool setMirror;
   final double itemHeight;
   final ScaleType scaleType;
@@ -36,8 +39,6 @@ class _VideoViewState extends State<VideoView> {
         builder: (_, data, __) {
           if ((data.item1 == null) || data.item2 || data.item3) {
             return Container(
-                // height: widget.itemHeight,
-                // width: widget.itemWidth,
                 child: Center(
                     child: CircleAvatar(
                         backgroundColor: Utilities.getBackgroundColour(
@@ -56,19 +57,25 @@ class _VideoViewState extends State<VideoView> {
                       child: HMSVideoView(
                           scaleType: widget.scaleType,
                           track: data.item1!,
+                          peerName: context.read<PeerTrackNode>().peer.name,
                           setMirror: false,
                           matchParent: false),
                     ),
                   )
                 : ClipRRect(
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(10),
+                    ),
                     child: Container(
                       height: widget.itemHeight,
                       width: widget.itemWidth,
                       child: HMSVideoView(
-                        scaleType: widget.scaleType,
+                        scaleType: ScaleType.SCALE_ASPECT_FILL,
                         track: data.item1!,
-                        setMirror: data.item1.runtimeType == HMSLocalVideoTrack,
+                        peerName: context.read<PeerTrackNode>().peer.name,
+                        setMirror: data.item1.runtimeType == HMSLocalVideoTrack
+                            ? context.read<MeetingStore>().isMirror
+                            : false,
                         matchParent: false,
                       ),
                     ),

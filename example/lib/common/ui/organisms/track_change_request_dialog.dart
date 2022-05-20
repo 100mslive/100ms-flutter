@@ -6,8 +6,10 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 class TrackChangeDialogOrganism extends StatefulWidget {
   final HMSTrackChangeRequest trackChangeRequest;
-
-  const TrackChangeDialogOrganism({required this.trackChangeRequest}) : super();
+  final bool isAudioModeOn;
+  const TrackChangeDialogOrganism(
+      {required this.trackChangeRequest, this.isAudioModeOn = false})
+      : super();
 
   @override
   _RoleChangeDialogOrganismState createState() =>
@@ -24,7 +26,8 @@ class _RoleChangeDialogOrganismState extends State<TrackChangeDialogOrganism> {
         ((widget.trackChangeRequest.track.kind ==
                 HMSTrackKind.kHMSTrackKindAudio)
             ? "audio"
-            : "video");
+            : "video") +
+        ((widget.isAudioModeOn) ? " and switch to video view" : "");
     return AlertDialog(
       content: Container(
         child: Column(

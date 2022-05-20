@@ -1,3 +1,13 @@
+///100ms HMSLocalPeer.
+///
+/// To use, import `package:hmssdk_flutter/model/hms__local_peer.dart`.
+///
+///[HMSLocalPeer] model contains everything about a local peer and it's tracks information.
+///
+/// A [peer] is the object returned by 100ms SDKs that contains all information about a user - name, role, video track etc.
+///
+///This library depends only on core Dart libraries and hms_local_audio_track.dart, hms_role.dart, hms_track.dart, hms_local_video_track.dart library.
+
 // Project imports:
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 

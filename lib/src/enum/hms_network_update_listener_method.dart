@@ -1,5 +1,6 @@
 enum HMSNetworkUpdateListenerMethod { onNetworkQuality, unknown }
 
+///HMSNetworkUpdate
 extension HMSSNetworkUpdateListenerMethodValues
     on HMSNetworkUpdateListenerMethod {
   static HMSNetworkUpdateListenerMethod getMethodFromName(String name) {

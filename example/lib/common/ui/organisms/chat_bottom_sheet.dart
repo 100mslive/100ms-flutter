@@ -2,12 +2,13 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:collection/collection.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import 'package:tuple/tuple.dart';
 
 //Project imports
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
-import 'package:provider/provider.dart';
-import 'package:tuple/tuple.dart';
 
 class ChatWidget extends StatefulWidget {
   final MeetingStore meetingStore;
@@ -31,6 +32,7 @@ class _ChatWidgetState extends State<ChatWidget> {
   @override
   Widget build(BuildContext context) {
     widthOfScreen = MediaQuery.of(context).size.width;
+    final DateFormat formatter = DateFormat('yyyy-MM-dd hh:mm a');
     return FractionallySizedBox(
       heightFactor: 0.8,
       child: Container(
@@ -156,7 +158,8 @@ class _ChatWidgetState extends State<ChatWidget> {
                                         ),
                                       ),
                                       Text(
-                                        data.item1[index].time.toString(),
+                                        formatter
+                                            .format(data.item1[index].time),
                                         style: TextStyle(
                                             fontSize: 10.0,
                                             color: Colors.white,

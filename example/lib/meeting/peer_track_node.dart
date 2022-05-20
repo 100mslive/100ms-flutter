@@ -3,25 +3,25 @@ import 'package:flutter/foundation.dart';
 
 //Project Imports
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:hmssdk_flutter_example/model/rtc_stats.dart';
 
 class PeerTrackNode extends ChangeNotifier {
   HMSPeer peer;
-
   String uid;
-
   HMSVideoTrack? track;
   HMSAudioTrack? audioTrack;
-
   bool isOffscreen;
   int? networkQuality;
+  RTCStats? stats;
 
   PeerTrackNode(
       {required this.peer,
       this.track,
       this.audioTrack,
       required this.uid,
-      this.isOffscreen = false,
-      this.networkQuality = -1});
+      this.isOffscreen = true,
+      this.networkQuality = -1,
+      this.stats});
 
   @override
   String toString() {
