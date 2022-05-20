@@ -96,6 +96,7 @@ class _ParticipantOrganismState extends State<ParticipantOrganism> {
                       ),
                       child: Text(
                         "${peer.role.name}",
+                        overflow: TextOverflow.clip,
                         style: TextStyle(
                             color: Colors.white,
                             fontSize: 20.0,
