@@ -68,7 +68,7 @@ class MeetingStore extends ChangeNotifier
 
   HMSPeer? localPeer;
 
-  bool isActiveSpeakerMode = false;
+  bool isActiveSpeakerMode = true;
 
   List<HMSTrack> audioTracks = [];
 
