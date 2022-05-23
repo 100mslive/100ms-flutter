@@ -428,35 +428,34 @@ class PlatformService {
       HMSStatsListenerMethod method, Map<String, dynamic> arguments) {
     switch (method) {
       case HMSStatsListenerMethod.onLocalAudioStats:
-        updateListeners.forEach((e) => e.onLocalAudioStats(
+        statsListeners.forEach((e) => e.onLocalAudioStats(
             hmsLocalAudioStats: arguments['local_audio_stats'],
             track: arguments["track"],
             peer: arguments["peer"]));
         break;
       case HMSStatsListenerMethod.onLocalVideoStats:
-        updateListeners.forEach((e) => e.onLocalVideoStats(
+        statsListeners.forEach((e) => e.onLocalVideoStats(
             hmsLocalVideoStats: arguments['local_video_stats'],
             track: arguments["track"],
             peer: arguments["peer"]));
         break;
       case HMSStatsListenerMethod.onRemoteAudioStats:
-        updateListeners.forEach((e) => e.onRemoteAudioStats(
+        statsListeners.forEach((e) => e.onRemoteAudioStats(
             hmsRemoteAudioStats: arguments['remote_audio_stats'],
             track: arguments["track"],
             peer: arguments["peer"]));
         break;
       case HMSStatsListenerMethod.onRemoteVideoStats:
-        updateListeners.forEach((e) => e.onRemoteVideoStats(
+        statsListeners.forEach((e) => e.onRemoteVideoStats(
             hmsRemoteVideoStats: arguments['remote_video_stats'],
             track: arguments["track"],
             peer: arguments["peer"]));
         break;
       case HMSStatsListenerMethod.onRtcStats:
-        updateListeners.forEach((e) =>
+        statsListeners.forEach((e) =>
             e.onRTCStats(hmsrtcStatsReport: arguments['rtc_stats_report']));
         break;
       case HMSStatsListenerMethod.unknown:
-        // TODO: Handle this case.
         break;
     }
   }
