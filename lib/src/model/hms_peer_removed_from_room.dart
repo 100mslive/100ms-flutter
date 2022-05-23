@@ -2,7 +2,7 @@
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 /// 100ms HMSPeerRemovedFromPeer
-/// 
+///
 ///when someone kicks you out or when someone ends the room at that time it is triggered
 /// [hmsPeerRemovedFromPeer] it consists info about who removed you and why.
 class HMSPeerRemovedFromPeer {

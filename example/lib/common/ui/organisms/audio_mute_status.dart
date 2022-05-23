@@ -1,6 +1,9 @@
-import 'package:hmssdk_flutter_example/meeting/peer_track_node.dart';
+//Package imports
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
+
+//Project imports
+import 'package:hmssdk_flutter_example/meeting/peer_track_node.dart';
 
 class AudioMuteStatus extends StatefulWidget {
   @override

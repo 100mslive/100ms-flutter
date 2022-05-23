@@ -1,3 +1,11 @@
+## 0.7.1 - 2022-05-20
+
+- Added RTC Stats Listener which provides info about local & remote peer's audio/video quality
+- Improved video rendering performance for Android devices
+- Correct RTMP Streaming & Recording configuration settings
+- Added support for Server-side Subscribe Degradation
+- Updated to Native Android SDK 2.3.9 & Native iOS SDK 0.2.13
+
 ## 0.7.0 - 2022-04-19
 
 ### Added

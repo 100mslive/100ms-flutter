@@ -1,10 +1,13 @@
+//Package imports
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:tuple/tuple.dart';
+
+//Project imports
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:hmssdk_flutter_example/meeting/peer_track_node.dart';
-import 'package:provider/provider.dart';
-import 'package:tuple/tuple.dart';
 
 class VideoView extends StatefulWidget {
   final matchParent;
@@ -54,6 +57,7 @@ class _VideoViewState extends State<VideoView> {
                       child: HMSVideoView(
                           scaleType: widget.scaleType,
                           track: data.item1!,
+                          peerName: context.read<PeerTrackNode>().peer.name,
                           setMirror: false,
                           matchParent: false),
                     ),
@@ -68,6 +72,7 @@ class _VideoViewState extends State<VideoView> {
                       child: HMSVideoView(
                         scaleType: ScaleType.SCALE_ASPECT_FILL,
                         track: data.item1!,
+                        peerName: context.read<PeerTrackNode>().peer.name,
                         setMirror: data.item1.runtimeType == HMSLocalVideoTrack
                             ? context.read<MeetingStore>().isMirror
                             : false,

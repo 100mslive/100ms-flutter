@@ -1,5 +1,6 @@
 // Package imports
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 // Project imports
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
@@ -8,14 +9,12 @@ import 'package:hmssdk_flutter_example/common/ui/organisms/hand_raise.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/audio_mute_status.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/network_icon_widget.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/peer_name.dart';
-import 'package:hmssdk_flutter_example/common/ui/organisms/video_tile_border.dart';
+import 'package:hmssdk_flutter_example/common/ui/organisms/tile_border.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/rtc_stats_view.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:hmssdk_flutter_example/meeting/peer_track_node.dart';
-import 'package:provider/provider.dart';
-
-import 'change_track_options.dart';
+import 'package:hmssdk_flutter_example/common/ui/organisms/change_track_options.dart';
 
 class AudioTile extends StatelessWidget {
   final double itemHeight;
@@ -100,7 +99,8 @@ class AudioTile extends StatelessWidget {
             NetworkIconWidget(), //top left
             AudioMuteStatus(), //bottom center
             RTCStatsView(isLocal: context.read<PeerTrackNode>().peer.isLocal),
-            VideoTileBorder(
+            TileBorder(
+                name: context.read<PeerTrackNode>().peer.name,
                 itemHeight: itemHeight,
                 itemWidth: itemWidth,
                 uid: context.read<PeerTrackNode>().uid)

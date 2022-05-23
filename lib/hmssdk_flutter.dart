@@ -16,6 +16,7 @@ export 'src/enum/hms_update_listener_method.dart';
 export 'src/enum/hms_video_codec.dart';
 export 'src/enum/hms_message_recipient_type.dart';
 export 'src/enum/hms_log_level.dart';
+export 'src/enum/hms_stats_listener_method.dart';
 //EXCEPTIONS
 export 'src/exceptions/hms_exception.dart';
 export 'src/exceptions/hms_in_sufficient_data.dart';
@@ -71,3 +72,5 @@ export 'src/model/hms_rtc_stats.dart';
 export 'src/enum/hms_video_scale_type.dart';
 export 'src/model/hms_network_quality.dart';
 export 'src/model/hms_preview_for_role.dart';
+export 'src/model/hms_stats_listener.dart';
+

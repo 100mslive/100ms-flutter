@@ -2,6 +2,7 @@
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter/src/enum/hms_logs_update_listener.dart';
 import 'package:hmssdk_flutter/src/enum/hms_network_update_listener_method.dart';
+import 'package:hmssdk_flutter/src/enum/hms_stats_listener_method.dart';
 
 ///PlatformMethodResponse contains all the responses sent back from the platform
 ///
@@ -58,5 +59,13 @@ class HMSNetworkUpdateListenerMethodResponse {
   final Map<String, dynamic> data;
   final dynamic response;
   HMSNetworkUpdateListenerMethodResponse(
+      {required this.method, required this.data, required this.response});
+}
+
+class HMSStatsListenerMethodResponse {
+  final HMSStatsListenerMethod method;
+  final Map<String, dynamic> data;
+  final dynamic response;
+  HMSStatsListenerMethodResponse(
       {required this.method, required this.data, required this.response});
 }

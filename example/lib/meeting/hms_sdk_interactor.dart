@@ -1,13 +1,14 @@
-//Project imports
+//Dart imports
 import 'dart:io';
 
+//Project imports
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 class HMSSDKInteractor {
   late HMSConfig config;
   late List<HMSMessage> messages;
   late HMSSDK hmsSDK;
-  
+
   //Contains the default local camera mirroring settings
   bool mirrorCamera = true;
   //Contains the default RTC stats setting
@@ -269,5 +270,13 @@ class HMSSDKInteractor {
 
   Future<List<HMSPeer>?> getPeers() async {
     return await hmsSDK.getPeers();
+  }
+
+  void addStatsListener(HMSStatsListener listener) {
+    hmsSDK.addStatsListener(listener: listener);
+  }
+
+  void removeStatsListener(HMSStatsListener listener) {
+    hmsSDK.removeStatsListener(listener: listener);
   }
 }

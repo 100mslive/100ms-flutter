@@ -1,11 +1,11 @@
 //Package imports
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 //Project imports
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
-import 'package:provider/provider.dart';
-import 'change_role_options.dart';
+import 'package:hmssdk_flutter_example/common/ui/organisms/change_role_options.dart';
 
 class ParticipantOrganism extends StatefulWidget {
   final HMSPeer peer;
@@ -89,17 +89,22 @@ class _ParticipantOrganismState extends State<ParticipantOrganism> {
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                     child: Container(
+                      width: width / 4,
                       padding: const EdgeInsets.all(5.0),
                       decoration: BoxDecoration(
                         color: Colors.blue,
                         borderRadius: BorderRadius.circular(5.0),
                       ),
-                      child: Text(
-                        "${peer.role.name}",
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 20.0,
-                            fontWeight: FontWeight.bold),
+                      child: Center(
+                        child: Text(
+                          "${peer.role.name}",
+                          overflow: TextOverflow.clip,
+                          maxLines: 1,
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20.0,
+                              fontWeight: FontWeight.bold),
+                        ),
                       ),
                     ),
                   ),

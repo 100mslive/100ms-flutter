@@ -2,13 +2,13 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:collection/collection.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import 'package:tuple/tuple.dart';
 
 //Project imports
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
-import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
-import 'package:tuple/tuple.dart';
 
 class ChatWidget extends StatefulWidget {
   final MeetingStore meetingStore;

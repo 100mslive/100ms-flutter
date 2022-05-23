@@ -1,12 +1,12 @@
 //Package imports
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:tuple/tuple.dart';
 
 //Project imports
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/participant_organism.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
-import 'package:provider/provider.dart';
-import 'package:tuple/tuple.dart';
 
 class ParticipantsList extends StatefulWidget {
   const ParticipantsList({Key? key}) : super(key: key);
@@ -20,7 +20,11 @@ class _ParticipantsListState extends State<ParticipantsList> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Participants"),
+        title: Selector<MeetingStore, int>(
+            selector: (_, meetingStore) => meetingStore.peers.length,
+            builder: (_, length, __) {
+              return Text("👥 Participants ($length)");
+            }),
       ),
       body: Container(
         height: MediaQuery.of(context).size.height,

@@ -43,6 +43,14 @@ class HMSSDK with WidgetsBindingObserver {
     PlatformService.addUpdateListener(listener);
   }
 
+  void addStatsListener({required HMSStatsListener listener}) {
+    PlatformService.addRTCStatsListener(listener);
+  }
+
+  void removeStatsListener({required HMSStatsListener listener}) {
+    PlatformService.removeRTCStatsListener(listener);
+  }
+
   /// Join the room with configuration options passed as a [HMSConfig] object
   dynamic join({
     required HMSConfig config,
