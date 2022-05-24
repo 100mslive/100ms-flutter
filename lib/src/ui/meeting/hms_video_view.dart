@@ -25,15 +25,12 @@ class HMSVideoView extends StatelessWidget {
   final ScaleType scaleType;
   final bool setMirror;
 
-  final String peerName;
-
   HMSVideoView(
       {Key? key,
       required this.track,
       this.setMirror = false,
       this.matchParent = true,
-      this.scaleType = ScaleType.SCALE_ASPECT_FIT,
-      required this.peerName})
+      this.scaleType = ScaleType.SCALE_ASPECT_FIT})
       : super(key: key);
 
   @override
@@ -42,8 +39,7 @@ class HMSVideoView extends StatelessWidget {
         track: track,
         matchParent: this.matchParent,
         setMirror: setMirror,
-        scaleType: this.scaleType,
-        peerName: this.peerName);
+        scaleType: this.scaleType);
   }
 }
 
@@ -53,16 +49,14 @@ class _PlatformView extends StatelessWidget {
   final bool setMirror;
   final bool matchParent;
   final ScaleType scaleType;
-  final String peerName;
 
-  _PlatformView({
-    Key? key,
-    required this.track,
-    this.setMirror = false,
-    this.matchParent = true,
-    required this.scaleType,
-    required this.peerName,
-  }) : super(key: key);
+  _PlatformView(
+      {Key? key,
+      required this.track,
+      this.setMirror = false,
+      this.matchParent = true,
+      required this.scaleType})
+      : super(key: key);
 
   void onPlatformViewCreated(int id) {}
 
@@ -78,8 +72,7 @@ class _PlatformView extends StatelessWidget {
           'track_id': track.trackId,
           'set_mirror': track.source != "REGULAR" ? false : setMirror,
           'scale_type': scaleType.value,
-          'match_parent': matchParent,
-          'peerName': peerName
+          'match_parent': matchParent
         },
         gestureRecognizers: {},
       );
@@ -93,8 +86,7 @@ class _PlatformView extends StatelessWidget {
           'track_id': track.trackId,
           'set_mirror': track.source != "REGULAR" ? false : setMirror,
           'scale_type': scaleType.value,
-          'match_parent': matchParent,
-          'peerName': peerName
+          'match_parent': matchParent
         },
         gestureRecognizers: {},
       );
