@@ -2,7 +2,6 @@
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/audio_level_avatar.dart';
-import 'package:hmssdk_flutter_example/common/util/custom_painter.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 

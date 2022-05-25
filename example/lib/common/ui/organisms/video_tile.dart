@@ -2,7 +2,6 @@
 import 'package:flutter/material.dart';
 import 'package:focus_detector/focus_detector.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-import 'package:hmssdk_flutter_example/common/util/custom_painter.dart';
 import 'package:provider/provider.dart';
 
 // Project imports
