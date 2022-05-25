@@ -85,8 +85,6 @@ class MeetingStore extends ChangeNotifier
 
   bool isStatsVisible = false;
 
-  bool isHeroMode = false;
-
   bool isNewMessageReceived = false;
 
   String? highestSpeaker;
@@ -95,11 +93,8 @@ class MeetingStore extends ChangeNotifier
   final DateFormat formatter = DateFormat('d MMM y h:mm:ss a');
 
   bool isMirror = false;
-  bool isAudioViewOn = false;
 
   ScrollController controller = ScrollController();
-
-  bool isSingleTileMode = false;
 
   MeetingMode meetingMode = MeetingMode.Video;
 
@@ -361,7 +356,7 @@ class MeetingStore extends ChangeNotifier
         PeerTrackNode peerTrackNode = peerTracks[index];
         peerTrackNode.track = track as HMSVideoTrack;
         peerTrackNode.notify();
-        if (isSingleTileMode) {
+        if (meetingMode == MeetingMode.Single) {
           rearrangeTile(peerTrackNode, index);
         }
       } else {
@@ -401,9 +396,9 @@ class MeetingStore extends ChangeNotifier
     updateSpeakers.forEach((element) {
       activeSpeakerIds[element.peer.peerId + "mainVideo"] = true;
     });
-    int firstScreenPeersCount = isAudioViewOn ? 6 : 4;
+    int firstScreenPeersCount = (meetingMode == MeetingMode.Audio) ? 6 : 4;
     if ((isActiveSpeakerMode && peerTracks.length > firstScreenPeersCount) ||
-        isHeroMode) {
+        meetingMode == MeetingMode.Hero) {
       List<HMSSpeaker> activeSpeaker = [];
       if (updateSpeakers.length > firstScreenPeersCount) {
         activeSpeaker.addAll(updateSpeakers.sublist(0, firstScreenPeersCount));
@@ -778,33 +773,29 @@ class MeetingStore extends ChangeNotifier
   }
 
   void setMode(MeetingMode meetingMode) {
-    this.meetingMode = meetingMode;
     switch (meetingMode) {
       case MeetingMode.Video:
-        this.isAudioViewOn = false;
-        this.isSingleTileMode = false;
-        this.isHeroMode = false;
         setPlayBackAllowed(true);
+        this.meetingMode = meetingMode;
+
         break;
       case MeetingMode.Audio:
-        this.isAudioViewOn = true;
-        this.isSingleTileMode = false;
-        this.isHeroMode = false;
         setPlayBackAllowed(false);
+        this.meetingMode = meetingMode;
+
         break;
       case MeetingMode.Hero:
-        this.isHeroMode = !this.isHeroMode;
         this.isActiveSpeakerMode = false;
-        if (isAudioViewOn) {
-          this.isAudioViewOn = false;
+        if (this.meetingMode == MeetingMode.Audio) {
           setPlayBackAllowed(true);
+          this.meetingMode = meetingMode;
         }
-        if (!isHeroMode) {
+        if (this.meetingMode == MeetingMode.Hero) {
           this.meetingMode = MeetingMode.Video;
         }
         break;
       case MeetingMode.Single:
-        if (!this.isSingleTileMode) {
+        if (this.meetingMode != MeetingMode.Single) {
           int type0 = 0;
           int type1 = peerTracks.length - 1;
           while (type0 < type1) {
@@ -819,11 +810,9 @@ class MeetingStore extends ChangeNotifier
               type0++;
           }
           this.isActiveSpeakerMode = false;
-          this.isAudioViewOn = false;
-          this.isHeroMode = false;
+          this.meetingMode = MeetingMode.Single;
         } else
           this.meetingMode = MeetingMode.Video;
-        this.isSingleTileMode = !this.isSingleTileMode;
         break;
       default:
     }
@@ -832,7 +821,7 @@ class MeetingStore extends ChangeNotifier
 
   void setActiveSpeakerMode() {
     this.isActiveSpeakerMode = !this.isActiveSpeakerMode;
-    this.isHeroMode = false;
+    this.meetingMode = MeetingMode.Video;
     notifyListeners();
   }
 
