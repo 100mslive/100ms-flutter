@@ -1,5 +1,6 @@
 // Package imports
 import 'package:flutter/material.dart';
+import 'package:hmssdk_flutter_example/common/ui/organisms/audio_level_avatar.dart';
 import 'package:provider/provider.dart';
 
 // Project imports
@@ -84,15 +85,7 @@ class AudioTile extends StatelessWidget {
         child: Stack(
           children: [
             Center(
-                child: CircleAvatar(
-                    backgroundColor: Utilities.getBackgroundColour(
-                        context.read<PeerTrackNode>().peer.name),
-                    radius: 36,
-                    child: Text(
-                      Utilities.getAvatarTitle(
-                          context.read<PeerTrackNode>().peer.name),
-                      style: TextStyle(fontSize: 36, color: Colors.white),
-                    ))),
+                child: AudioLevelAvatar()),
             PeerName(),
             HandRaise(), //bottom left
             BRBTag(), //top right

@@ -114,10 +114,12 @@ class _VideoTileState extends State<VideoTile> {
                 child: Stack(
                   children: [
                     VideoView(
+                      uid :context.read<PeerTrackNode>().uid,
                       scaleType: widget.scaleType,
                       itemHeight: widget.itemHeight,
                       itemWidth: widget.itemWidth,
                     ),
+                    
                     DegradeTile(
                       itemHeight: widget.itemHeight,
                       itemWidth: widget.itemWidth,
@@ -148,6 +150,7 @@ class _VideoTileState extends State<VideoTile> {
               child: Stack(
                 children: [
                   VideoView(
+                    uid: context.read<PeerTrackNode>().uid,
                     scaleType: widget.scaleType,
                     itemHeight: widget.itemHeight,
                     itemWidth: widget.itemWidth,

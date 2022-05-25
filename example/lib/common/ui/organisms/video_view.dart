@@ -1,5 +1,7 @@
 //Package imports
+import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
+import 'package:hmssdk_flutter_example/common/ui/organisms/audio_level_avatar.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 
@@ -17,7 +19,7 @@ class VideoView extends StatefulWidget {
   final double itemHeight;
   final ScaleType scaleType;
   final double itemWidth;
-
+  final String uid;
   VideoView(
       {Key? key,
       this.viewSize,
@@ -25,6 +27,7 @@ class VideoView extends StatefulWidget {
       this.matchParent = true,
       this.itemHeight = 200,
       this.itemWidth = 200,
+      required this.uid,
       this.scaleType = ScaleType.SCALE_ASPECT_FILL})
       : super(key: key);
 
@@ -38,17 +41,7 @@ class _VideoViewState extends State<VideoView> {
     return Selector<PeerTrackNode, Tuple3<HMSVideoTrack?, bool, bool>>(
         builder: (_, data, __) {
           if ((data.item1 == null) || data.item2 || data.item3) {
-            return Container(
-                child: Center(
-                    child: CircleAvatar(
-                        backgroundColor: Utilities.getBackgroundColour(
-                            context.read<PeerTrackNode>().peer.name),
-                        radius: 36,
-                        child: Text(
-                          Utilities.getAvatarTitle(
-                              context.read<PeerTrackNode>().peer.name),
-                          style: TextStyle(fontSize: 36, color: Colors.white),
-                        ))));
+            return AudioLevelAvatar();
           } else {
             return (data.item1?.source != "REGULAR")
                 ? ClipRRect(

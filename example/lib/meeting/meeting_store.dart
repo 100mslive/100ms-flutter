@@ -77,7 +77,7 @@ class MeetingStore extends ChangeNotifier
 
   List<PeerTrackNode> peerTracks = [];
 
-  Map<String, bool> activeSpeakerIds = {};
+  Map<String, int> activeSpeakerIds = {};
 
   HMSRoom? hmsRoom;
 
@@ -123,6 +123,7 @@ class MeetingStore extends ChangeNotifier
       isScreenShareOn = false;
       _hmsSDKInteractor.stopScreenShare();
     }
+
     _hmsSDKInteractor.removeStatsListener(this);
     _hmsSDKInteractor.leave(hmsActionResultListener: this);
   }
@@ -399,7 +400,7 @@ class MeetingStore extends ChangeNotifier
     }
     activeSpeakerIds.clear();
     updateSpeakers.forEach((element) {
-      activeSpeakerIds[element.peer.peerId + "mainVideo"] = true;
+      activeSpeakerIds[element.peer.peerId + "mainVideo"] = element.audioLevel;
     });
     int firstScreenPeersCount = isAudioViewOn ? 6 : 4;
     if ((isActiveSpeakerMode && peerTracks.length > firstScreenPeersCount) ||
@@ -950,8 +951,8 @@ class MeetingStore extends ChangeNotifier
   @override
   void onRTCStats({required HMSRTCStatsReport hmsrtcStatsReport}) {}
 
-  bool isActiveSpeaker(String uid) {
-    return activeSpeakerIds.containsKey(uid);
+  int isActiveSpeaker(String uid) {
+    return activeSpeakerIds.containsKey(uid) ? activeSpeakerIds[uid]! : -1;
   }
 
   @override
@@ -963,6 +964,7 @@ class MeetingStore extends ChangeNotifier
       case HMSActionResultListenerMethod.leave:
         peerTracks.clear();
         isRoomEnded = true;
+        screenShareCount = 0;
         notifyListeners();
         break;
       case HMSActionResultListenerMethod.changeTrackState:
