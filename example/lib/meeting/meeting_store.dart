@@ -1,6 +1,7 @@
 //Package imports
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:hmssdk_flutter_example/enum/meeting_mode.dart';
 import 'package:hmssdk_flutter_example/model/rtc_stats.dart';
 import 'package:intl/intl.dart';
 
@@ -97,6 +98,10 @@ class MeetingStore extends ChangeNotifier
   bool isAudioViewOn = false;
 
   ScrollController controller = ScrollController();
+
+  bool isSingleTileMode = false;
+
+  MeetingMode meetingMode = MeetingMode.Video;
 
   Future<bool> join(String user, String roomUrl) async {
     List<String?>? token =
@@ -356,6 +361,9 @@ class MeetingStore extends ChangeNotifier
         PeerTrackNode peerTrackNode = peerTracks[index];
         peerTrackNode.track = track as HMSVideoTrack;
         peerTrackNode.notify();
+        if (isSingleTileMode) {
+          rearrangeTile(peerTrackNode, index);
+        }
       } else {
         return;
       }
@@ -769,9 +777,56 @@ class MeetingStore extends ChangeNotifier
         true, HMSTrackKind.kHMSTrackKindAudio, "regular", roles, this);
   }
 
-  void setAudioViewStatus() {
-    this.isAudioViewOn = !this.isAudioViewOn;
-    this.isHeroMode = false;
+  void setMode(MeetingMode meetingMode) {
+    this.meetingMode = meetingMode;
+    switch (meetingMode) {
+      case MeetingMode.Video:
+        this.isAudioViewOn = false;
+        this.isSingleTileMode = false;
+        this.isHeroMode = false;
+        setPlayBackAllowed(true);
+        break;
+      case MeetingMode.Audio:
+        this.isAudioViewOn = true;
+        this.isSingleTileMode = false;
+        this.isHeroMode = false;
+        setPlayBackAllowed(false);
+        break;
+      case MeetingMode.Hero:
+        this.isHeroMode = !this.isHeroMode;
+        this.isActiveSpeakerMode = false;
+        if (isAudioViewOn) {
+          this.isAudioViewOn = false;
+          setPlayBackAllowed(true);
+        }
+        if (!isHeroMode) {
+          this.meetingMode = MeetingMode.Video;
+        }
+        break;
+      case MeetingMode.Single:
+        if (!this.isSingleTileMode) {
+          int type0 = 0;
+          int type1 = peerTracks.length - 1;
+          while (type0 < type1) {
+            if (peerTracks[type0].track!.isMute) {
+              if (peerTracks[type1].track!.isMute == false) {
+                PeerTrackNode peerTrackNode = peerTracks[type0];
+                peerTracks[type0] = peerTracks[type1];
+                peerTracks[type1] = peerTrackNode;
+              }
+              type1--;
+            } else
+              type0++;
+          }
+          this.isActiveSpeakerMode = false;
+          this.isAudioViewOn = false;
+          this.isHeroMode = false;
+        } else
+          this.meetingMode = MeetingMode.Video;
+        this.isSingleTileMode = !this.isSingleTileMode;
+        break;
+      default:
+    }
     notifyListeners();
   }
 
@@ -781,14 +836,25 @@ class MeetingStore extends ChangeNotifier
     notifyListeners();
   }
 
-  void setHeroMode() {
-    this.isHeroMode = !this.isHeroMode;
-    this.isActiveSpeakerMode = false;
-    if (isAudioViewOn) {
-      this.isAudioViewOn = false;
-      setPlayBackAllowed(true);
+  rearrangeTile(PeerTrackNode peerTrackNode, int index) {
+    if (peerTrackNode.track!.isMute) {
+      if (peerTracks.length - 1 > index &&
+          peerTracks[index + 1].track!.isMute) {
+        return;
+      } else {
+        peerTracks.removeAt(index);
+        peerTracks.add(peerTrackNode);
+        notifyListeners();
+      }
+    } else {
+      if (index != 0 && peerTracks[index - 1].track!.isMute == false) {
+        return;
+      } else {
+        peerTracks.removeAt(index);
+        peerTracks.insert(screenShareCount, peerTrackNode);
+        notifyListeners();
+      }
     }
-    notifyListeners();
   }
 
   void setNewMessageFalse() {

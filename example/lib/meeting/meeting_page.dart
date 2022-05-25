@@ -5,10 +5,12 @@ import 'dart:io';
 import 'package:connectivity_checker/connectivity_checker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hmssdk_flutter_example/common/ui/organisms/full_screen_view.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/grid_audio_view.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/grid_hero_view.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/grid_video_view.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/title_bar.dart';
+import 'package:hmssdk_flutter_example/enum/meeting_mode.dart';
 import 'package:hmssdk_flutter_example/hls_viewer/hls_viewer.dart';
 import 'package:provider/provider.dart';
 
@@ -141,27 +143,29 @@ class _MeetingPageState extends State<MeetingPage>
         );
         break;
       case 5:
-        _meetingStore.setAudioViewStatus();
         if (_meetingStore.isAudioViewOn) {
-          _meetingStore.setPlayBackAllowed(false);
+          _meetingStore.setMode(MeetingMode.Audio);
         } else {
-          _meetingStore.setPlayBackAllowed(true);
+          _meetingStore.setMode(MeetingMode.Video);
         }
         break;
       case 6:
         _meetingStore.setActiveSpeakerMode();
         break;
       case 7:
-        _meetingStore.setHeroMode();
+        _meetingStore.setMode(MeetingMode.Hero);
         break;
       case 8:
+        _meetingStore.setMode(MeetingMode.Single);
+        break;
+      case 9:
         String name = await UtilityComponents.showInputDialog(
             context: context, placeholder: "Enter Name");
         if (name.isNotEmpty) {
           _meetingStore.changeName(name: name);
         }
         break;
-      case 9:
+      case 10:
         if (_meetingStore.hasHlsStarted) {
           _meetingStore.stopHLSStreaming();
         } else {
@@ -175,28 +179,28 @@ class _MeetingPageState extends State<MeetingPage>
         }
         break;
 
-      case 10:
+      case 11:
         List<HMSRole> roles = await _meetingStore.getRoles();
         List<HMSRole> selectedRoles =
             await UtilityComponents.showRoleList(context, roles);
         if (selectedRoles.isNotEmpty)
           _meetingStore.changeTrackStateForRole(true, selectedRoles);
         break;
-      case 11:
+      case 12:
         _meetingStore.changeTrackStateForRole(true, null);
         break;
-      case 12:
+      case 13:
         _meetingStore.changeMetadataBRB();
         // raisedHand = false;
         isBRB = !isBRB;
         break;
-      case 13:
+      case 14:
         _meetingStore.changeStatsVisible();
         break;
-      case 14:
+      case 15:
         _meetingStore.toggleScreenShare();
         break;
-      case 15:
+      case 16:
         _meetingStore.endRoom(false, "Room Ended From Flutter");
         if (_meetingStore.isRoomEnded) {
           Navigator.pop(context);
@@ -276,15 +280,14 @@ class _MeetingPageState extends State<MeetingPage>
                             height: MediaQuery.of(context).size.height * 0.81,
                             child: Selector<
                                     MeetingStore,
-                                    Tuple7<List<PeerTrackNode>, bool, int, int,
-                                        bool, bool, PeerTrackNode?>>(
-                                selector: (_, meetingStore) => Tuple7(
+                                    Tuple6<List<PeerTrackNode>, bool, int, int,
+                                        MeetingMode, PeerTrackNode?>>(
+                                selector: (_, meetingStore) => Tuple6(
                                     meetingStore.peerTracks,
                                     meetingStore.isHLSLink,
                                     meetingStore.peerTracks.length,
                                     meetingStore.screenShareCount,
-                                    meetingStore.isAudioViewOn,
-                                    meetingStore.isHeroMode,
+                                    meetingStore.meetingMode,
                                     meetingStore.peerTracks.length > 0
                                         ? meetingStore.peerTracks[
                                             meetingStore.screenShareCount]
@@ -339,7 +342,7 @@ class _MeetingPageState extends State<MeetingPage>
                                             'Waiting for others to join!'));
                                   }
                                   Size size = MediaQuery.of(context).size;
-                                  if (data.item6) {
+                                  if (data.item5 == MeetingMode.Hero) {
                                     return gridHeroView(
                                         peerTracks: data.item1,
                                         itemCount: data.item3,
@@ -347,13 +350,21 @@ class _MeetingPageState extends State<MeetingPage>
                                         context: context,
                                         size: size);
                                   }
-                                  if (data.item5) {
+                                  if (data.item5 == MeetingMode.Audio) {
                                     return gridAudioView(
                                         peerTracks:
                                             data.item1.sublist(data.item4),
                                         itemCount: data.item1
                                             .sublist(data.item4)
                                             .length,
+                                        size: size);
+                                  }
+                                  if (data.item5 == MeetingMode.Single) {
+                                    return fullScreenView(
+                                        peerTracks: data.item1,
+                                        itemCount: data.item3,
+                                        screenShareCount: data.item4,
+                                        context: context,
                                         size: size);
                                   }
                                   return gridVideoView(
@@ -716,12 +727,31 @@ class _MeetingPageState extends State<MeetingPage>
             child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
+                  Text("Single Tile Mode",
+                      style: TextStyle(
+                        color: meetingStore.isSingleTileMode
+                            ? Colors.red
+                            : Colors.white,
+                      )),
+                  Icon(
+                    CupertinoIcons.person,
+                    color: meetingStore.isSingleTileMode
+                        ? Colors.red
+                        : Colors.white,
+                  ),
+                ]),
+            value: 8,
+          ),
+          PopupMenuItem(
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
                   Text(
                     "Change Name",
                   ),
                   Icon(Icons.create_rounded),
                 ]),
-            value: 8,
+            value: 9,
           ),
           if (!(meetingStore.localPeer?.role.name.contains("hls-") ?? true))
             PopupMenuItem(
@@ -741,7 +771,7 @@ class _MeetingPageState extends State<MeetingPage>
                             ? Colors.red
                             : Colors.white),
                   ]),
-              value: 9,
+              value: 10,
             ),
           if (meetingStore.localPeer?.role.permissions.changeRole ?? false)
             PopupMenuItem(
@@ -753,7 +783,7 @@ class _MeetingPageState extends State<MeetingPage>
                     ),
                     Icon(Icons.mic_off_sharp),
                   ]),
-              value: 10,
+              value: 11,
             ),
           if (meetingStore.localPeer?.role.permissions.changeRole ?? false)
             PopupMenuItem(
@@ -765,7 +795,7 @@ class _MeetingPageState extends State<MeetingPage>
                     ),
                     Icon(Icons.mic_off),
                   ]),
-              value: 11,
+              value: 12,
             ),
           PopupMenuItem(
             child: Row(
@@ -791,7 +821,7 @@ class _MeetingPageState extends State<MeetingPage>
                     ),
                   ),
                 ]),
-            value: 12,
+            value: 13,
           ),
           PopupMenuItem(
             child: Row(
@@ -809,7 +839,7 @@ class _MeetingPageState extends State<MeetingPage>
                           ? Colors.red
                           : Colors.white),
                 ]),
-            value: 13,
+            value: 14,
           ),
           if ((meetingStore.localPeer != null) &&
               meetingStore.localPeer!.role.publishSettings!.allowed
@@ -833,7 +863,7 @@ class _MeetingPageState extends State<MeetingPage>
                           : Colors.white,
                     ),
                   ]),
-              value: 14,
+              value: 15,
             ),
           if (meetingStore.localPeer!.role.permissions.endRoom!)
             PopupMenuItem(
@@ -845,7 +875,7 @@ class _MeetingPageState extends State<MeetingPage>
                     ),
                     Icon(Icons.cancel_schedule_send),
                   ]),
-              value: 15,
+              value: 16,
             ),
         ];
       },
