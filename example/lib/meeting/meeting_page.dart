@@ -156,16 +156,14 @@ class _MeetingPageState extends State<MeetingPage>
       case 7:
         if (_meetingStore.meetingMode != MeetingMode.Hero) {
           _meetingStore.setMode(MeetingMode.Hero);
-        }
-        else{
+        } else {
           _meetingStore.setMode(MeetingMode.Video);
         }
         break;
       case 8:
         if (_meetingStore.meetingMode != MeetingMode.Single) {
           _meetingStore.setMode(MeetingMode.Single);
-        }
-        else{
+        } else {
           _meetingStore.setMode(MeetingMode.Video);
         }
         break;
@@ -227,202 +225,205 @@ class _MeetingPageState extends State<MeetingPage>
   Widget build(BuildContext context) {
     return ConnectivityAppWrapper(
         app: WillPopScope(
-      child: ConnectivityWidgetWrapper(
-          disableInteraction: true,
-          offlineWidget: OfflineWidget(),
-          child: Selector<MeetingStore, Tuple2<bool, bool>>(
-            selector: (_, meetingStore) =>
-                Tuple2(meetingStore.reconnecting, meetingStore.isRoomEnded),
-            builder: (_, data, __) {
-              if (data.item2) {
-                WidgetsBinding.instance?.addPostFrameCallback((_) {
-                  UtilityComponents.showSnackBarWithString(
-                      context.read<MeetingStore>().description, context);
-                  Navigator.of(context).popUntil((route) => route.isFirst);
-                });
-              }
-              return data.item1
-                  ? OfflineWidget()
-                  : Scaffold(
-                      resizeToAvoidBottomInset: false,
-                      appBar: AppBar(
-                        title: TitleBar(),
-                        actions: [
-                          Selector<MeetingStore, bool>(
-                            selector: (_, meetingStore) =>
-                                meetingStore.isRecordingStarted,
-                            builder: (_, isRecordingStarted, __) {
-                              return isRecordingStarted
-                                  ? Container(
-                                      decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          border: Border.all(
-                                              width: 2,
-                                              color: Colors.red.shade600)),
-                                      child: Icon(
-                                        Icons.circle,
-                                        color: Colors.red,
-                                        size: 15,
-                                      ),
-                                    )
-                                  : Container();
-                            },
-                          ),
-                          IconButton(
-                              iconSize: 24,
-                              onPressed: () {
-                                context.read<MeetingStore>().toggleSpeaker();
+      child: SafeArea(
+        child: ConnectivityWidgetWrapper(
+            disableInteraction: true,
+            offlineWidget: OfflineWidget(),
+            child: Selector<MeetingStore, Tuple2<bool, bool>>(
+              selector: (_, meetingStore) =>
+                  Tuple2(meetingStore.reconnecting, meetingStore.isRoomEnded),
+              builder: (_, data, __) {
+                if (data.item2) {
+                  WidgetsBinding.instance?.addPostFrameCallback((_) {
+                    UtilityComponents.showSnackBarWithString(
+                        context.read<MeetingStore>().description, context);
+                    Navigator.of(context).popUntil((route) => route.isFirst);
+                  });
+                }
+                return data.item1
+                    ? OfflineWidget()
+                    : Scaffold(
+                        resizeToAvoidBottomInset: false,
+                        appBar: AppBar(
+                          title: TitleBar(),
+                          actions: [
+                            Selector<MeetingStore, bool>(
+                              selector: (_, meetingStore) =>
+                                  meetingStore.isRecordingStarted,
+                              builder: (_, isRecordingStarted, __) {
+                                return isRecordingStarted
+                                    ? Container(
+                                        decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            border: Border.all(
+                                                width: 2,
+                                                color: Colors.red.shade600)),
+                                        child: Icon(
+                                          Icons.circle,
+                                          color: Colors.red,
+                                          size: 15,
+                                        ),
+                                      )
+                                    : Container();
                               },
-                              icon: Selector<MeetingStore, bool>(
-                                selector: (_, meetingStore) =>
-                                    meetingStore.isSpeakerOn,
-                                builder: (_, isSpeakerOn, __) {
-                                  return Icon(isSpeakerOn
-                                      ? Icons.volume_up
-                                      : Icons.volume_off);
+                            ),
+                            IconButton(
+                                iconSize: 24,
+                                onPressed: () {
+                                  context.read<MeetingStore>().toggleSpeaker();
                                 },
-                              )),
-                          dropDownMenu(),
-                        ],
-                      ),
-                      body: Stack(
-                        children: [
-                          Container(
-                            height: MediaQuery.of(context).size.height * 0.81,
-                            child: Selector<
-                                    MeetingStore,
-                                    Tuple6<List<PeerTrackNode>, bool, int, int,
-                                        MeetingMode, PeerTrackNode?>>(
-                                selector: (_, meetingStore) => Tuple6(
-                                    meetingStore.peerTracks,
-                                    meetingStore.isHLSLink,
-                                    meetingStore.peerTracks.length,
-                                    meetingStore.screenShareCount,
-                                    meetingStore.meetingMode,
-                                    meetingStore.peerTracks.length > 0
-                                        ? meetingStore.peerTracks[
-                                            meetingStore.screenShareCount]
-                                        : null),
-                                builder: (_, data, __) {
-                                  if (data.item2) {
-                                    return Selector<MeetingStore, bool>(
-                                        selector: (_, meetingStore) =>
-                                            meetingStore.hasHlsStarted,
-                                        builder: (_, hasHlsStarted, __) {
-                                          return hasHlsStarted
-                                              ? Center(
-                                                  child: Container(
-                                                    child: HLSViewer(
-                                                        streamUrl: context
-                                                            .read<
-                                                                MeetingStore>()
-                                                            .streamUrl),
-                                                  ),
-                                                )
-                                              : Center(
-                                                  child: Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                    .only(
-                                                                bottom: 8.0),
-                                                        child: Text(
-                                                          "Waiting for HLS to start...",
-                                                          style: TextStyle(
-                                                              fontSize: 20),
+                                icon: Selector<MeetingStore, bool>(
+                                  selector: (_, meetingStore) =>
+                                      meetingStore.isSpeakerOn,
+                                  builder: (_, isSpeakerOn, __) {
+                                    return Icon(isSpeakerOn
+                                        ? Icons.volume_up
+                                        : Icons.volume_off);
+                                  },
+                                )),
+                            dropDownMenu(),
+                          ],
+                        ),
+                        body: Stack(
+                          children: [
+                            Container(
+                              height: MediaQuery.of(context).size.height * 0.81,
+                              child: Selector<
+                                      MeetingStore,
+                                      Tuple6<List<PeerTrackNode>, bool, int,
+                                          int, MeetingMode, PeerTrackNode?>>(
+                                  selector: (_, meetingStore) => Tuple6(
+                                      meetingStore.peerTracks,
+                                      meetingStore.isHLSLink,
+                                      meetingStore.peerTracks.length,
+                                      meetingStore.screenShareCount,
+                                      meetingStore.meetingMode,
+                                      meetingStore.peerTracks.length > 0
+                                          ? meetingStore.peerTracks[
+                                              meetingStore.screenShareCount]
+                                          : null),
+                                  builder: (_, data, __) {
+                                    if (data.item2) {
+                                      return Selector<MeetingStore, bool>(
+                                          selector: (_, meetingStore) =>
+                                              meetingStore.hasHlsStarted,
+                                          builder: (_, hasHlsStarted, __) {
+                                            return hasHlsStarted
+                                                ? Center(
+                                                    child: Container(
+                                                      child: HLSViewer(
+                                                          streamUrl: context
+                                                              .read<
+                                                                  MeetingStore>()
+                                                              .streamUrl),
+                                                    ),
+                                                  )
+                                                : Center(
+                                                    child: Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .only(
+                                                                  bottom: 8.0),
+                                                          child: Text(
+                                                            "Waiting for HLS to start...",
+                                                            style: TextStyle(
+                                                                fontSize: 20),
+                                                          ),
                                                         ),
-                                                      ),
-                                                      CircularProgressIndicator(
-                                                        strokeWidth: 1,
-                                                      )
-                                                    ],
-                                                  ),
-                                                );
-                                        });
-                                  }
-                                  if (data.item3 == 0) {
-                                    return Center(
-                                        child: Text(
-                                            'Waiting for others to join!'));
-                                  }
-                                  Size size = MediaQuery.of(context).size;
-                                  if (data.item5 == MeetingMode.Hero) {
-                                    return gridHeroView(
+                                                        CircularProgressIndicator(
+                                                          strokeWidth: 1,
+                                                        )
+                                                      ],
+                                                    ),
+                                                  );
+                                          });
+                                    }
+                                    if (data.item3 == 0) {
+                                      return Center(
+                                          child: Text(
+                                              'Waiting for others to join!'));
+                                    }
+                                    Size size = MediaQuery.of(context).size;
+                                    if (data.item5 == MeetingMode.Hero) {
+                                      return gridHeroView(
+                                          peerTracks: data.item1,
+                                          itemCount: data.item3,
+                                          screenShareCount: data.item4,
+                                          context: context,
+                                          size: size);
+                                    }
+                                    if (data.item5 == MeetingMode.Audio) {
+                                      return gridAudioView(
+                                          peerTracks:
+                                              data.item1.sublist(data.item4),
+                                          itemCount: data.item1
+                                              .sublist(data.item4)
+                                              .length,
+                                          size: size);
+                                    }
+                                    if (data.item5 == MeetingMode.Single) {
+                                      return fullScreenView(
+                                          peerTracks: data.item1,
+                                          itemCount: data.item3,
+                                          screenShareCount: data.item4,
+                                          context: context,
+                                          size: size);
+                                    }
+                                    return gridVideoView(
                                         peerTracks: data.item1,
                                         itemCount: data.item3,
                                         screenShareCount: data.item4,
                                         context: context,
                                         size: size);
+                                  }),
+                            ),
+                            Selector<MeetingStore, HMSRoleChangeRequest?>(
+                                selector: (_, meetingStore) =>
+                                    meetingStore.roleChangeRequest,
+                                builder: (_, roleChangeRequest, __) {
+                                  if (roleChangeRequest != null) {
+                                    WidgetsBinding.instance!
+                                        .addPostFrameCallback((_) {
+                                      UtilityComponents.showRoleChangeDialog(
+                                          roleChangeRequest, context);
+                                    });
                                   }
-                                  if (data.item5 == MeetingMode.Audio) {
-                                    return gridAudioView(
-                                        peerTracks:
-                                            data.item1.sublist(data.item4),
-                                        itemCount: data.item1
-                                            .sublist(data.item4)
-                                            .length,
-                                        size: size);
-                                  }
-                                  if (data.item5 == MeetingMode.Single) {
-                                    return fullScreenView(
-                                        peerTracks: data.item1,
-                                        itemCount: data.item3,
-                                        screenShareCount: data.item4,
-                                        context: context,
-                                        size: size);
-                                  }
-                                  return gridVideoView(
-                                      peerTracks: data.item1,
-                                      itemCount: data.item3,
-                                      screenShareCount: data.item4,
-                                      context: context,
-                                      size: size);
+                                  return Container();
                                 }),
-                          ),
-                          Selector<MeetingStore, HMSRoleChangeRequest?>(
-                              selector: (_, meetingStore) =>
-                                  meetingStore.roleChangeRequest,
-                              builder: (_, roleChangeRequest, __) {
-                                if (roleChangeRequest != null) {
-                                  WidgetsBinding.instance!
-                                      .addPostFrameCallback((_) {
-                                    UtilityComponents.showRoleChangeDialog(
-                                        roleChangeRequest, context);
-                                  });
-                                }
-                                return Container();
-                              }),
-                          Selector<MeetingStore, HMSTrackChangeRequest?>(
-                              selector: (_, meetingStore) =>
-                                  meetingStore.hmsTrackChangeRequest,
-                              builder: (_, hmsTrackChangeRequest, __) {
-                                if (hmsTrackChangeRequest != null) {
-                                  WidgetsBinding.instance!
-                                      .addPostFrameCallback((_) {
-                                    UtilityComponents.showTrackChangeDialog(
-                                        hmsTrackChangeRequest, context);
-                                  });
-                                }
-                                return Container();
-                              }),
-                        ],
-                      ),
-                      bottomNavigationBar: Selector<MeetingStore, bool>(
-                          selector: (_, meetingStore) => meetingStore.isHLSLink,
-                          builder: (_, isHlsRunning, __) {
-                            return isHlsRunning
-                                ? hlsBottomBarWidget()
-                                : normalBottomBarWidget();
-                          }));
-            },
-          )),
+                            Selector<MeetingStore, HMSTrackChangeRequest?>(
+                                selector: (_, meetingStore) =>
+                                    meetingStore.hmsTrackChangeRequest,
+                                builder: (_, hmsTrackChangeRequest, __) {
+                                  if (hmsTrackChangeRequest != null) {
+                                    WidgetsBinding.instance!
+                                        .addPostFrameCallback((_) {
+                                      UtilityComponents.showTrackChangeDialog(
+                                          hmsTrackChangeRequest, context);
+                                    });
+                                  }
+                                  return Container();
+                                }),
+                          ],
+                        ),
+                        bottomNavigationBar: Selector<MeetingStore, bool>(
+                            selector: (_, meetingStore) =>
+                                meetingStore.isHLSLink,
+                            builder: (_, isHlsRunning, __) {
+                              return isHlsRunning
+                                  ? hlsBottomBarWidget()
+                                  : normalBottomBarWidget();
+                            }));
+              },
+            )),
+      ),
       onWillPop: () async {
         bool ans = await UtilityComponents.onBackPressed(context) ?? false;
         return ans;

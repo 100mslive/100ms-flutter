@@ -1,5 +1,4 @@
 import 'package:avatar_glow/avatar_glow.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
@@ -26,8 +25,7 @@ class _AudioLevelAvatarState extends State<AudioLevelAvatar> {
                     backgroundColor: Utilities.getBackgroundColour(
                         context.read<PeerTrackNode>().peer.name),
                     radius: 36,
-                    child:
-                        Text(
+                    child: Text(
                       Utilities.getAvatarTitle(
                           context.read<PeerTrackNode>().peer.name),
                       style: TextStyle(fontSize: 36, color: Colors.white),
@@ -44,8 +42,7 @@ class _AudioLevelAvatarState extends State<AudioLevelAvatar> {
                         backgroundColor: Utilities.getBackgroundColour(
                             context.read<PeerTrackNode>().peer.name),
                         radius: 36,
-                        child:
-                            Text(
+                        child: Text(
                           Utilities.getAvatarTitle(
                               context.read<PeerTrackNode>().peer.name),
                           style: TextStyle(fontSize: 36, color: Colors.white),

@@ -787,19 +787,19 @@ class MeetingStore extends ChangeNotifier
           setPlayBackAllowed(true);
         }
         int type0 = 0;
-          int type1 = peerTracks.length - 1;
-          while (type0 < type1) {
-            if (peerTracks[type0].track!.isMute) {
-              if (peerTracks[type1].track!.isMute == false) {
-                PeerTrackNode peerTrackNode = peerTracks[type0];
-                peerTracks[type0] = peerTracks[type1];
-                peerTracks[type1] = peerTrackNode;
-              }
-              type1--;
-            } else
-              type0++;
-          }
-          this.isActiveSpeakerMode = false;
+        int type1 = peerTracks.length - 1;
+        while (type0 < type1) {
+          if (peerTracks[type0].track!.isMute) {
+            if (peerTracks[type1].track!.isMute == false) {
+              PeerTrackNode peerTrackNode = peerTracks[type0];
+              peerTracks[type0] = peerTracks[type1];
+              peerTracks[type1] = peerTrackNode;
+            }
+            type1--;
+          } else
+            type0++;
+        }
+        this.isActiveSpeakerMode = false;
         break;
       default:
     }

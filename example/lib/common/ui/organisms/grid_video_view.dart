@@ -24,7 +24,7 @@ Widget gridVideoView(
       itemBuilder: (context, index) {
         if (peerTracks[index].track?.source != "REGULAR") {
           return ChangeNotifierProvider.value(
-            key: ValueKey(peerTracks[index].uid),
+            key: ValueKey(peerTracks[index].uid + "video_view"),
             value: peerTracks[index],
             child: peerTracks[index].peer.isLocal
                 ? Container(
@@ -41,7 +41,7 @@ Widget gridVideoView(
                     ),
                   )
                 : VideoTile(
-                    key: Key(peerTracks[index].uid),
+                    key: Key(peerTracks[index].uid + "video_tile"),
                     scaleType: ScaleType.SCALE_ASPECT_FIT,
                     itemHeight: size.height,
                     itemWidth: size.width,
@@ -55,10 +55,10 @@ Widget gridVideoView(
           peerTracks[index].setOffScreenStatus(false);
         }
         return ChangeNotifierProvider.value(
-            key: ValueKey(peerTracks[index].uid),
+            key: ValueKey(peerTracks[index].uid + "video_view"),
             value: peerTracks[index],
             child: VideoTile(
-              key: ValueKey(peerTracks[index].uid),
+              key: ValueKey(peerTracks[index].uid + "audio_view"),
               itemHeight: size.height,
               itemWidth: size.width,
             ));
