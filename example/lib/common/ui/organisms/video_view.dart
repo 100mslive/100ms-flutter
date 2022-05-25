@@ -41,7 +41,7 @@ class _VideoViewState extends State<VideoView> {
     return Selector<PeerTrackNode, Tuple3<HMSVideoTrack?, bool, bool>>(
         builder: (_, data, __) {
           if ((data.item1 == null) || data.item2 || data.item3) {
-            return AudioLevelAvatar(key:Key(context.read<PeerTrackNode>().uid + "audio_level"));
+            return AudioLevelAvatar();
           } else {
             return (data.item1?.source != "REGULAR")
                 ? ClipRRect(

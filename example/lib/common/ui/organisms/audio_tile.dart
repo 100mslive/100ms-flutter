@@ -85,7 +85,7 @@ class AudioTile extends StatelessWidget {
         child: Stack(
           children: [
             Center(
-                child: AudioLevelAvatar(key:Key(context.read<PeerTrackNode>().uid + "audio_level"),)),
+                child: AudioLevelAvatar()),
             PeerName(),
             HandRaise(), //bottom left
             BRBTag(), //top right
