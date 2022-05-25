@@ -143,9 +143,10 @@ class _MeetingPageState extends State<MeetingPage>
         );
         break;
       case 5:
-        if (_meetingStore.meetingMode == MeetingMode.Video) {
+        if (_meetingStore.meetingMode != MeetingMode.Audio) {
           _meetingStore.setMode(MeetingMode.Audio);
         } else {
+          _meetingStore.setPlayBackAllowed(true);
           _meetingStore.setMode(MeetingMode.Video);
         }
         break;
@@ -153,10 +154,20 @@ class _MeetingPageState extends State<MeetingPage>
         _meetingStore.setActiveSpeakerMode();
         break;
       case 7:
-        _meetingStore.setMode(MeetingMode.Hero);
+        if (_meetingStore.meetingMode != MeetingMode.Hero) {
+          _meetingStore.setMode(MeetingMode.Hero);
+        }
+        else{
+          _meetingStore.setMode(MeetingMode.Video);
+        }
         break;
       case 8:
-        _meetingStore.setMode(MeetingMode.Single);
+        if (_meetingStore.meetingMode != MeetingMode.Single) {
+          _meetingStore.setMode(MeetingMode.Single);
+        }
+        else{
+          _meetingStore.setMode(MeetingMode.Video);
+        }
         break;
       case 9:
         String name = await UtilityComponents.showInputDialog(

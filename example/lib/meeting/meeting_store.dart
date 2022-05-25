@@ -601,17 +601,13 @@ class MeetingStore extends ChangeNotifier
                   peer: peer,
                   uid: peer.peerId + track.trackId,
                   track: track as HMSVideoTrack));
-
           isScreenShareActive();
-
-          for (var node in peerTracks) {
-            if (node.isOffscreen == false) {
-              node.setOffScreenStatus(true);
-            }
-          }
-
-          controller.jumpTo(0);
-
+          // for (var node in peerTracks) {
+          //   if (node.isOffscreen == false) {
+          //     node.setOffScreenStatus(true);
+          //   }
+          // }
+          // controller.jumpTo(0);
           notifyListeners();
         }
         break;
@@ -776,28 +772,21 @@ class MeetingStore extends ChangeNotifier
   void setMode(MeetingMode meetingMode) {
     switch (meetingMode) {
       case MeetingMode.Video:
-        setPlayBackAllowed(true);
-        this.meetingMode = meetingMode;
-
         break;
       case MeetingMode.Audio:
         setPlayBackAllowed(false);
-        this.meetingMode = meetingMode;
-
         break;
       case MeetingMode.Hero:
-        this.isActiveSpeakerMode = false;
         if (this.meetingMode == MeetingMode.Audio) {
           setPlayBackAllowed(true);
-          this.meetingMode = meetingMode;
         }
-        if (this.meetingMode == MeetingMode.Hero) {
-          this.meetingMode = MeetingMode.Video;
-        }
+        this.isActiveSpeakerMode = false;
         break;
       case MeetingMode.Single:
-        if (this.meetingMode != MeetingMode.Single) {
-          int type0 = 0;
+        if (this.meetingMode == MeetingMode.Audio) {
+          setPlayBackAllowed(true);
+        }
+        int type0 = 0;
           int type1 = peerTracks.length - 1;
           while (type0 < type1) {
             if (peerTracks[type0].track!.isMute) {
@@ -811,12 +800,10 @@ class MeetingStore extends ChangeNotifier
               type0++;
           }
           this.isActiveSpeakerMode = false;
-          this.meetingMode = MeetingMode.Single;
-        } else
-          this.meetingMode = MeetingMode.Video;
         break;
       default:
     }
+    this.meetingMode = meetingMode;
     notifyListeners();
   }
 
