@@ -143,7 +143,7 @@ class _MeetingPageState extends State<MeetingPage>
         );
         break;
       case 5:
-        if (_meetingStore.isAudioViewOn) {
+        if (_meetingStore.meetingMode == MeetingMode.Video) {
           _meetingStore.setMode(MeetingMode.Audio);
         } else {
           _meetingStore.setMode(MeetingMode.Video);
@@ -430,7 +430,7 @@ class _MeetingPageState extends State<MeetingPage>
               meetingStore.localPeer?.role.publishSettings?.allowed
                       .contains("video") ??
                   false,
-              meetingStore.isAudioViewOn),
+              meetingStore.meetingMode == MeetingMode.Audio),
           builder: (_, data, __) {
             return ((data.item1 != null) &&
                     data.item1!.role.publishSettings!.allowed.contains("video"))
@@ -675,10 +675,12 @@ class _MeetingPageState extends State<MeetingPage>
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    meetingStore.isAudioViewOn ? "Video View" : "Audio View",
+                    meetingStore.meetingMode == MeetingMode.Audio
+                        ? "Video View"
+                        : "Audio View",
                   ),
                   Image.asset(
-                    meetingStore.isAudioViewOn
+                    meetingStore.meetingMode == MeetingMode.Audio
                         ? 'assets/icons/video.png'
                         : 'assets/icons/audio.png',
                     color: Colors.white,
@@ -713,12 +715,15 @@ class _MeetingPageState extends State<MeetingPage>
                 children: [
                   Text("Hero Mode",
                       style: TextStyle(
-                        color:
-                            meetingStore.isHeroMode ? Colors.red : Colors.white,
+                        color: meetingStore.meetingMode == MeetingMode.Hero
+                            ? Colors.red
+                            : Colors.white,
                       )),
                   Icon(
                     CupertinoIcons.person_3_fill,
-                    color: meetingStore.isHeroMode ? Colors.red : Colors.white,
+                    color: meetingStore.meetingMode == MeetingMode.Hero
+                        ? Colors.red
+                        : Colors.white,
                   ),
                 ]),
             value: 7,
@@ -729,13 +734,13 @@ class _MeetingPageState extends State<MeetingPage>
                 children: [
                   Text("Single Tile Mode",
                       style: TextStyle(
-                        color: meetingStore.isSingleTileMode
+                        color: meetingStore.meetingMode == MeetingMode.Single
                             ? Colors.red
                             : Colors.white,
                       )),
                   Icon(
                     CupertinoIcons.person,
-                    color: meetingStore.isSingleTileMode
+                    color: meetingStore.meetingMode == MeetingMode.Single
                         ? Colors.red
                         : Colors.white,
                   ),
