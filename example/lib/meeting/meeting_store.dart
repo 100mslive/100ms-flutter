@@ -789,9 +789,7 @@ class MeetingStore extends ChangeNotifier
         int type0 = 0;
         int type1 = peerTracks.length - 1;
         while (type0 < type1) {
-          if (peerTracks[type0].track == null ||
-              (peerTracks[type0].track != null &&
-                  peerTracks[type0].track!.isMute)) {
+          if (peerTracks[type0].track?.isMute??true) {
             if (peerTracks[type1].track != null &&
                 peerTracks[type1].track!.isMute == false) {
               PeerTrackNode peerTrackNode = peerTracks[type0];
