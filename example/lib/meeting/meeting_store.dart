@@ -1,6 +1,8 @@
 //Package imports
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_mode.dart';
 import 'package:hmssdk_flutter_example/model/rtc_stats.dart';
 import 'package:intl/intl.dart';
@@ -55,8 +57,6 @@ class MeetingStore extends ChangeNotifier
 
   bool isRecordingStarted = false;
 
-  String event = '';
-
   String description = "Meeting Ended";
 
   HMSTrackChangeRequest? hmsTrackChangeRequest;
@@ -89,6 +89,8 @@ class MeetingStore extends ChangeNotifier
 
   String? highestSpeaker;
   int firstTimeBuild = 0;
+
+  String message = "";
 
   final DateFormat formatter = DateFormat('d MMM y h:mm:ss a');
 
@@ -789,7 +791,7 @@ class MeetingStore extends ChangeNotifier
         int type0 = 0;
         int type1 = peerTracks.length - 1;
         while (type0 < type1) {
-          if (peerTracks[type0].track?.isMute??true) {
+          if (peerTracks[type0].track?.isMute ?? true) {
             if (peerTracks[type1].track != null &&
                 peerTracks[type1].track!.isMute == false) {
               PeerTrackNode peerTrackNode = peerTracks[type0];
@@ -932,6 +934,10 @@ class MeetingStore extends ChangeNotifier
     return activeSpeakerIds.containsKey(uid) ? activeSpeakerIds[uid]! : -1;
   }
 
+  void showToast(String message) {
+    Fluttertoast.showToast(msg: message, backgroundColor: Colors.black87);
+  }
+
   @override
   void onSuccess(
       {HMSActionResultListenerMethod methodType =
@@ -946,6 +952,7 @@ class MeetingStore extends ChangeNotifier
         break;
       case HMSActionResultListenerMethod.changeTrackState:
         // TODO: Handle this case.
+        showToast("Track State Changed");
         break;
       case HMSActionResultListenerMethod.changeMetadata:
         notifyListeners();
@@ -959,25 +966,30 @@ class MeetingStore extends ChangeNotifier
         break;
       case HMSActionResultListenerMethod.acceptChangeRole:
         // TODO: Handle this case.
+        showToast("Accept role change successful");
         break;
       case HMSActionResultListenerMethod.changeRole:
         // TODO: Handle this case.
+        showToast("Change role successful");
         break;
       case HMSActionResultListenerMethod.changeTrackStateForRole:
-        this.event = arguments!['roles'] == null
+        message = arguments!['roles'] == null
             ? "Successfully Muted All"
             : "Successfully Muted Role";
+        showToast(message);
         break;
       case HMSActionResultListenerMethod.startRtmpOrRecording:
+        showToast("RTMP start successful");
         //TODO: HmsException?.code == 400(To see what this means)
 
         break;
       case HMSActionResultListenerMethod.stopRtmpAndRecording:
+        showToast("RTMP stop successful");
         break;
       case HMSActionResultListenerMethod.unknown:
         break;
       case HMSActionResultListenerMethod.changeName:
-        // this.event = "Name Changed to ${localPeer!.name}";
+        showToast("Change name successful");
         break;
       case HMSActionResultListenerMethod.sendBroadcastMessage:
         var message = HMSMessage(
@@ -1018,29 +1030,28 @@ class MeetingStore extends ChangeNotifier
                 hmsMessageRecipientType: HMSMessageRecipientType.DIRECT));
         addMessage(message);
         notifyListeners();
-
         break;
       case HMSActionResultListenerMethod.hlsStreamingStarted:
-        this.event = "HLS Streaming Started";
         hasHlsStarted = true;
+        showToast("HLS Streaming Started");
         notifyListeners();
         // TODO: Handle this case.
         break;
       case HMSActionResultListenerMethod.hlsStreamingStopped:
         hasHlsStarted = false;
-        this.event = "HLS Streaming Stopped";
+        showToast("HLS Streaming Stopped");
         notifyListeners();
 
         // TODO: Handle this case.
         break;
 
       case HMSActionResultListenerMethod.startScreenShare:
-        this.event = "Screen Share Started";
+        showToast("Screen Share Started");
         isScreenShareActive();
         break;
 
       case HMSActionResultListenerMethod.stopScreenShare:
-        this.event = "Screen Share Stopped";
+        showToast("Screen Share Stopped");
         isScreenShareActive();
         break;
     }
@@ -1057,40 +1068,49 @@ class MeetingStore extends ChangeNotifier
     switch (methodType) {
       case HMSActionResultListenerMethod.leave:
         // TODO: Handle this case.
+        showToast("Leave Operation failed");
         break;
       case HMSActionResultListenerMethod.changeTrackState:
         // TODO: Handle this case.
+        showToast("Change Track state failed");
         break;
       case HMSActionResultListenerMethod.changeMetadata:
         // TODO: Handle this case.
         break;
       case HMSActionResultListenerMethod.endRoom:
         // TODO: Handle this case.
+        showToast("End room failed");
         break;
       case HMSActionResultListenerMethod.removePeer:
         // TODO: Handle this case.
+        showToast("Remove peer failed");
         break;
       case HMSActionResultListenerMethod.acceptChangeRole:
         // TODO: Handle this case.
+        showToast("Accept change role failed");
         break;
       case HMSActionResultListenerMethod.changeRole:
         // TODO: Handle this case.
+        showToast("Change role failed");
         break;
       case HMSActionResultListenerMethod.changeTrackStateForRole:
-        this.event = "Failed to Mute";
+        showToast("Failed to change track state");
         break;
       case HMSActionResultListenerMethod.startRtmpOrRecording:
         if (hmsException.code?.errorCode == "400") {
           isRecordingStarted = true;
         }
+        showToast("Start RTMP Streaming failed");
         break;
       case HMSActionResultListenerMethod.stopRtmpAndRecording:
         // TODO: Handle this case.
+        showToast("Stop RTMP Streaming failed");
         break;
       case HMSActionResultListenerMethod.unknown:
         break;
       case HMSActionResultListenerMethod.changeName:
         // TODO: Handle this case.
+        showToast("Name change failed");
         break;
       case HMSActionResultListenerMethod.sendBroadcastMessage:
         // TODO: Handle this case.
@@ -1103,17 +1123,22 @@ class MeetingStore extends ChangeNotifier
         break;
       case HMSActionResultListenerMethod.hlsStreamingStarted:
         // TODO: Handle this case.
+        showToast("Start HLS failed");
         break;
       case HMSActionResultListenerMethod.hlsStreamingStopped:
         // TODO: Handle this case.
+        showToast("Stop HLS failed");
+
         break;
 
       case HMSActionResultListenerMethod.startScreenShare:
         isScreenShareActive();
+        showToast("Start screenshare failed");
         break;
 
       case HMSActionResultListenerMethod.stopScreenShare:
         isScreenShareActive();
+        showToast("Stop screenshare failed");
         break;
     }
   }

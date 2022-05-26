@@ -37,6 +37,7 @@ dependencies:
   tuple:
   firebase_performance: ^0.8.0+11
   avatar_glow: ^2.0.2
+  fluttertoast: ^8.0.9
   
 dev_dependencies:
   flutter_test:
