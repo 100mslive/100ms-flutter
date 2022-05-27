@@ -657,13 +657,13 @@ class _MeetingPageState extends State<MeetingPage>
                             : "Record",
                         style: TextStyle(
                           color: meetingStore.isRecordingStarted
-                              ? Colors.red
+                              ? Colors.blue
                               : Colors.white,
                         )),
                     Icon(
                       Icons.circle,
                       color: meetingStore.isRecordingStarted
-                          ? Colors.red
+                          ? Colors.blue
                           : Colors.white,
                     ),
                   ]),
@@ -719,13 +719,13 @@ class _MeetingPageState extends State<MeetingPage>
                   Text("Active Speaker Mode",
                       style: TextStyle(
                         color: meetingStore.isActiveSpeakerMode
-                            ? Colors.red
+                            ? Colors.blue
                             : Colors.white,
                       )),
                   Icon(
                     CupertinoIcons.person_3_fill,
                     color: meetingStore.isActiveSpeakerMode
-                        ? Colors.red
+                        ? Colors.blue
                         : Colors.white,
                   ),
                 ]),
@@ -738,13 +738,13 @@ class _MeetingPageState extends State<MeetingPage>
                   Text("Hero Mode",
                       style: TextStyle(
                         color: meetingStore.meetingMode == MeetingMode.Hero
-                            ? Colors.red
+                            ? Colors.blue
                             : Colors.white,
                       )),
                   Icon(
                     CupertinoIcons.person_3_fill,
                     color: meetingStore.meetingMode == MeetingMode.Hero
-                        ? Colors.red
+                        ? Colors.blue
                         : Colors.white,
                   ),
                 ]),
@@ -757,13 +757,13 @@ class _MeetingPageState extends State<MeetingPage>
                   Text("Single Tile Mode",
                       style: TextStyle(
                         color: meetingStore.meetingMode == MeetingMode.Single
-                            ? Colors.red
+                            ? Colors.blue
                             : Colors.white,
                       )),
                   Icon(
                     CupertinoIcons.person,
                     color: meetingStore.meetingMode == MeetingMode.Single
-                        ? Colors.red
+                        ? Colors.blue
                         : Colors.white,
                   ),
                 ]),
@@ -789,13 +789,13 @@ class _MeetingPageState extends State<MeetingPage>
                       meetingStore.hasHlsStarted ? "Stop HLS" : "Start HLS",
                       style: TextStyle(
                         color: meetingStore.hasHlsStarted
-                            ? Colors.red
+                            ? Colors.blue
                             : Colors.white,
                       ),
                     ),
                     Icon(Icons.stream,
                         color: meetingStore.hasHlsStarted
-                            ? Colors.red
+                            ? Colors.blue
                             : Colors.white),
                   ]),
               value: 10,
@@ -831,20 +831,20 @@ class _MeetingPageState extends State<MeetingPage>
                   Text(
                     "BRB",
                     style: TextStyle(
-                        color: meetingStore.isBRB ? Colors.red : Colors.white),
+                        color: meetingStore.isBRB ? Colors.blue : Colors.white),
                   ),
                   Container(
                     decoration: BoxDecoration(
                         border: Border.all(
                             width: 1,
                             color: meetingStore.isBRB
-                                ? Colors.red
+                                ? Colors.blue
                                 : Colors.white)),
                     child: Text(
                       "BRB",
                       style: TextStyle(
                           color:
-                              meetingStore.isBRB ? Colors.red : Colors.white),
+                              meetingStore.isBRB ? Colors.blue : Colors.white),
                     ),
                   ),
                 ]),
@@ -858,12 +858,12 @@ class _MeetingPageState extends State<MeetingPage>
                     "Stats",
                     style: TextStyle(
                         color: meetingStore.isStatsVisible
-                            ? Colors.red
+                            ? Colors.blue
                             : Colors.white),
                   ),
                   Icon(Icons.bar_chart_outlined,
                       color: meetingStore.isStatsVisible
-                          ? Colors.red
+                          ? Colors.blue
                           : Colors.white),
                 ]),
             value: 14,
