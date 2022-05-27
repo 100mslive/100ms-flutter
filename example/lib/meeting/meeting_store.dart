@@ -789,7 +789,7 @@ class MeetingStore extends ChangeNotifier
         int type0 = 0;
         int type1 = peerTracks.length - 1;
         while (type0 < type1) {
-          if (peerTracks[type0].track?.isMute??true) {
+          if (peerTracks[type0].track?.isMute ?? true) {
             if (peerTracks[type1].track != null &&
                 peerTracks[type1].track!.isMute == false) {
               PeerTrackNode peerTrackNode = peerTracks[type0];
@@ -817,7 +817,7 @@ class MeetingStore extends ChangeNotifier
   rearrangeTile(PeerTrackNode peerTrackNode, int index) {
     if (peerTrackNode.track!.isMute) {
       if (peerTracks.length - 1 > index &&
-          peerTracks[index + 1].track!.isMute) {
+          (peerTracks[index + 1].track?.isMute ?? true)) {
         return;
       } else {
         peerTracks.removeAt(index);
@@ -825,7 +825,9 @@ class MeetingStore extends ChangeNotifier
         notifyListeners();
       }
     } else {
-      if (index != 0 && peerTracks[index - 1].track!.isMute == false) {
+      if (index != 0 &&
+          (peerTracks[index - 1].track != null &&
+              peerTracks[index - 1].track!.isMute == false)) {
         return;
       } else {
         peerTracks.removeAt(index);
@@ -942,6 +944,7 @@ class MeetingStore extends ChangeNotifier
         peerTracks.clear();
         isRoomEnded = true;
         screenShareCount = 0;
+        this.meetingMode = MeetingMode.Video;
         notifyListeners();
         break;
       case HMSActionResultListenerMethod.changeTrackState:
