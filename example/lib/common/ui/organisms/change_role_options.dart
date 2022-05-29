@@ -1,4 +1,5 @@
 //Package imports
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 
 //Project imports
@@ -22,6 +23,7 @@ class ChangeRoleOptionDialog extends StatefulWidget {
 
 class _ChangeRoleOptionDialogState extends State<ChangeRoleOptionDialog> {
   late bool forceValue;
+  String valueChoose = "";
 
   @override
   void initState() {
@@ -40,28 +42,40 @@ class _ChangeRoleOptionDialogState extends State<ChangeRoleOptionDialog> {
             if (data.connectionState != ConnectionState.done) {
               return CircularProgressIndicator();
             } else if (data.hasData) {
+              if (valueChoose == "") {
+                valueChoose = data.data![0].name;
+              }
               return Container(
                 width: 300,
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Flexible(
-                      child: ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: data.data?.length,
-                          itemBuilder: (_, index) {
-                            return ListTile(
-                                title: Text(data.data![index].name),
-                                trailing: IconButton(
-                                  onPressed: () {
-                                    widget.changeRole(
-                                        data.data![index], forceValue);
-                                  },
-                                  icon: Icon(
-                                    Icons.done,
-                                  ),
-                                ));
-                          }),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text("Role To: "),
+                        Flexible(
+                          child: DropdownButton2(
+                            buttonWidth: MediaQuery.of(context).size.width / 2,
+                            value: valueChoose,
+                            iconEnabledColor: Colors.white,
+                            onChanged: (newvalue) {
+                              setState(() {
+                                valueChoose = newvalue as String;
+                              });
+                            },
+                            items: data.data!.map((role) {
+                              return DropdownMenuItem(
+                                child: Text(role.name),
+                                value: role.name,
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 10,
                     ),
                     GestureDetector(
                       onTap: () {
@@ -80,6 +94,29 @@ class _ChangeRoleOptionDialogState extends State<ChangeRoleOptionDialog> {
                         ],
                       ),
                     ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        ElevatedButton(
+                            style:
+                                ElevatedButton.styleFrom(primary: Colors.red),
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: Text("Cancel")),
+                        ElevatedButton(
+                            onPressed: () {
+                              widget.changeRole(
+                                  data.data!.firstWhere(
+                                      (element) => element.name == valueChoose),
+                                  forceValue);
+                            },
+                            child: Text("Change Role")),
+                      ],
+                    )
                   ],
                 ),
               );
