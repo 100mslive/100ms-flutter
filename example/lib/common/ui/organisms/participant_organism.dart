@@ -49,7 +49,7 @@ class _ParticipantOrganismState extends State<ParticipantOrganism> {
             ),
             Row(
               children: [
-                if (peer.metadata == "{\"isHandRaised\":true}")
+                if (peer.metadata?.contains("\"isHandRaised\":true") ?? false)
                   Padding(
                     padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
                     child: Image.asset(
@@ -59,13 +59,19 @@ class _ParticipantOrganismState extends State<ParticipantOrganism> {
                       height: 20,
                     ),
                   ),
-                if (peer.metadata ==
-                    "{\"isHandRaised\":false,\"isBRBOn\":true}")
+                if (peer.metadata?.contains("\"isBRBOn\":true") ?? false)
                   Padding(
                     padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
                     child: Container(
-                      decoration: BoxDecoration(border: Border.all(width: 1)),
-                      child: Text("BRB"),
+                      width: 25,
+                      decoration: BoxDecoration(
+                          border: Border.all(width: 1, color: Colors.red)),
+                      child: Center(
+                        child: Text(
+                          "BRB",
+                          style: TextStyle(color: Colors.red, fontSize: 10),
+                        ),
+                      ),
                     ),
                   ),
                 GestureDetector(
@@ -102,7 +108,7 @@ class _ParticipantOrganismState extends State<ParticipantOrganism> {
                           maxLines: 1,
                           style: TextStyle(
                               color: Colors.white,
-                              fontSize: 20.0,
+                              fontSize: 18.0,
                               fontWeight: FontWeight.bold),
                         ),
                       ),

@@ -170,6 +170,7 @@ class UtilityComponents {
     HMSRole? selectedRole = await showDialog(
         context: context,
         builder: (context) => AlertDialog(
+              title: Text("Select Role for Mute"),
               content: Container(
                   height: 100,
                   child: ClickableListWheelScrollView(

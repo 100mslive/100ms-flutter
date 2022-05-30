@@ -439,61 +439,57 @@ class _MeetingPageState extends State<MeetingPage>
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          Selector<MeetingStore, Tuple4<HMSPeer?, bool, bool, bool>>(
-            selector: (_, meetingStore) => Tuple4(
-                meetingStore.localPeer,
-                meetingStore.isVideoOn,
-                meetingStore.localPeer?.role.publishSettings?.allowed
-                        .contains("video") ??
-                    false,
-                meetingStore.meetingMode == MeetingMode.Audio),
-            builder: (_, data, __) {
-              return ((data.item1 != null) &&
-                      data.item1!.role.publishSettings!.allowed
-                          .contains("video"))
-                  ? Container(
-                      padding: EdgeInsets.all(8),
-                      child: IconButton(
-                          tooltip: 'Video',
-                          iconSize: 24,
-                          onPressed: (data.item4)
-                              ? null
-                              : () {
-                                  context.read<MeetingStore>().switchVideo();
-                                },
-                          icon: Icon(
-                            data.item2 ? Icons.videocam : Icons.videocam_off,
-                            // color: Colors.grey.shade900,
-                          )))
-                  : SizedBox();
-            },
-          ),
-          Selector<MeetingStore, Tuple3<HMSPeer?, bool, bool>>(
-            selector: (_, meetingStore) => Tuple3(
-                meetingStore.localPeer,
-                meetingStore.isMicOn,
-                meetingStore.localPeer?.role.publishSettings?.allowed
-                        .contains("audio") ??
-                    false),
-            builder: (_, data, __) {
-              return ((data.item1 != null) &&
-                      data.item1!.role.publishSettings!.allowed
-                          .contains("audio"))
-                  ? Container(
-                      padding: EdgeInsets.all(8),
-                      child: IconButton(
-                          tooltip: 'Audio',
-                          iconSize: 24,
-                          onPressed: () {
-                            context.read<MeetingStore>().switchAudio();
-                          },
-                          icon: Icon(
-                            data.item2 ? Icons.mic : Icons.mic_off,
-                            // color: Colors.grey.shade900
-                          )))
-                  : SizedBox();
-            },
-          ),
+          if (Provider.of<MeetingStore>(context).localPeer != null &&
+              (Provider.of<MeetingStore>(context)
+                      .localPeer
+                      ?.role
+                      .publishSettings
+                      ?.allowed
+                      .contains("video") ??
+                  false))
+            Selector<MeetingStore, Tuple2<bool, bool>>(
+              selector: (_, meetingStore) => Tuple2(meetingStore.isVideoOn,
+                  meetingStore.meetingMode == MeetingMode.Audio),
+              builder: (_, data, __) {
+                return Container(
+                    padding: EdgeInsets.all(8),
+                    child: IconButton(
+                        tooltip: 'Video',
+                        iconSize: 24,
+                        onPressed: (data.item2)
+                            ? null
+                            : () {
+                                context.read<MeetingStore>().switchVideo();
+                              },
+                        icon: Icon(
+                          data.item1 ? Icons.videocam : Icons.videocam_off,
+                        )));
+              },
+            ),
+          if (Provider.of<MeetingStore>(context).localPeer != null &&
+              (Provider.of<MeetingStore>(context)
+                      .localPeer
+                      ?.role
+                      .publishSettings
+                      ?.allowed
+                      .contains("audio") ??
+                  false))
+            Selector<MeetingStore, bool>(
+              selector: (_, meetingStore) => meetingStore.isMicOn,
+              builder: (_, isMicOn, __) {
+                return Container(
+                    padding: EdgeInsets.all(8),
+                    child: IconButton(
+                        tooltip: 'Audio',
+                        iconSize: 24,
+                        onPressed: () {
+                          context.read<MeetingStore>().switchAudio();
+                        },
+                        icon: Icon(
+                          isMicOn ? Icons.mic : Icons.mic_off,
+                        )));
+              },
+            ),
           Selector<MeetingStore, bool>(
             selector: (_, meetingStore) => meetingStore.isRaisedHand,
             builder: (_, raisedHand, __) {
