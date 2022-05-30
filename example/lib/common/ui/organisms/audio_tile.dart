@@ -12,7 +12,6 @@ import 'package:hmssdk_flutter_example/common/ui/organisms/network_icon_widget.d
 import 'package:hmssdk_flutter_example/common/ui/organisms/peer_name.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/tile_border.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/rtc_stats_view.dart';
-import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:hmssdk_flutter_example/meeting/peer_track_node.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/change_track_options.dart';
@@ -23,7 +22,6 @@ class AudioTile extends StatelessWidget {
   AudioTile({this.itemHeight = 200.0, this.itemWidth = 200.0, Key? key})
       : super(key: key);
 
-  final GlobalKey key = GlobalKey();
   @override
   Widget build(BuildContext context) {
     MeetingStore _meetingStore = context.read<MeetingStore>();
@@ -84,8 +82,7 @@ class AudioTile extends StatelessWidget {
         width: itemWidth - 5.0,
         child: Stack(
           children: [
-            Center(
-                child: AudioLevelAvatar()),
+            Center(child: AudioLevelAvatar()),
             PeerName(),
             HandRaise(), //bottom left
             BRBTag(), //top right

@@ -16,10 +16,10 @@ Widget gridAudioView(
     itemCount: itemCount,
     itemBuilder: (context, index) {
       return ChangeNotifierProvider.value(
-          key: ValueKey(peerTracks[index].uid),
+          key: ValueKey(peerTracks[index].uid + "audio_view"),
           value: peerTracks[index],
           child: AudioTile(
-            key: ValueKey(peerTracks[index].uid),
+            key: ValueKey(peerTracks[index].uid + "audio_tile"),
             itemHeight: size.height,
             itemWidth: size.width,
           ));

@@ -1,5 +1,6 @@
 //Package imports
 import 'package:flutter/material.dart';
+import 'package:hmssdk_flutter_example/enum/meeting_mode.dart';
 import 'package:provider/provider.dart';
 import 'package:clickable_list_wheel_view/clickable_list_wheel_widget.dart';
 
@@ -80,11 +81,11 @@ class UtilityComponents {
         context: context,
         builder: (ctx) => TrackChangeDialogOrganism(
               trackChangeRequest: event,
-              isAudioModeOn: meetingStore.isAudioViewOn,
+              isAudioModeOn: meetingStore.meetingMode == MeetingMode.Audio,
             ));
     if (answer == "OK") {
-      if (meetingStore.isAudioViewOn) {
-        meetingStore.setAudioViewStatus();
+      if (meetingStore.meetingMode == MeetingMode.Audio) {
+        meetingStore.setMode(MeetingMode.Audio);
       }
       meetingStore.changeTracks(event);
     } else {

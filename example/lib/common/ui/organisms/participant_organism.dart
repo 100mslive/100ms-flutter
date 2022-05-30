@@ -89,7 +89,7 @@ class _ParticipantOrganismState extends State<ParticipantOrganism> {
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                     child: Container(
-                      width: width / 4,
+                      width: width / 6,
                       padding: const EdgeInsets.all(5.0),
                       decoration: BoxDecoration(
                         color: Colors.blue,

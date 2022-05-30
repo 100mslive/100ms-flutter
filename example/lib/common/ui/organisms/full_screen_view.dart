@@ -9,7 +9,7 @@ import 'package:hmssdk_flutter_example/common/ui/organisms/video_tile.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:hmssdk_flutter_example/meeting/peer_track_node.dart';
 
-Widget gridVideoView(
+Widget fullScreenView(
     {required List<PeerTrackNode> peerTracks,
     required int itemCount,
     required int screenShareCount,
@@ -24,7 +24,7 @@ Widget gridVideoView(
       itemBuilder: (context, index) {
         if (peerTracks[index].track?.source != "REGULAR") {
           return ChangeNotifierProvider.value(
-            key: ValueKey(peerTracks[index].uid + "video_view"),
+            key: ValueKey(peerTracks[index].uid),
             value: peerTracks[index],
             child: peerTracks[index].peer.isLocal
                 ? Container(
@@ -41,7 +41,7 @@ Widget gridVideoView(
                     ),
                   )
                 : VideoTile(
-                    key: Key(peerTracks[index].uid + "video_tile"),
+                    key: Key(peerTracks[index].uid),
                     scaleType: ScaleType.SCALE_ASPECT_FIT,
                     itemHeight: size.height,
                     itemWidth: size.width,
@@ -55,10 +55,10 @@ Widget gridVideoView(
           peerTracks[index].setOffScreenStatus(false);
         }
         return ChangeNotifierProvider.value(
-            key: ValueKey(peerTracks[index].uid + "video_view"),
+            key: ValueKey(peerTracks[index].uid),
             value: peerTracks[index],
             child: VideoTile(
-              key: ValueKey(peerTracks[index].uid + "audio_view"),
+              key: ValueKey(peerTracks[index].uid),
               itemHeight: size.height,
               itemWidth: size.width,
             ));
@@ -66,30 +66,5 @@ Widget gridVideoView(
       controller: Provider.of<MeetingStore>(context).controller,
       gridDelegate: SliverStairedGridDelegate(
           startCrossAxisDirectionReversed: false,
-          pattern: pattern(itemCount, screenShareCount, size)));
-}
-
-List<StairedGridTile> pattern(int itemCount, int screenShareCount, Size size) {
-  double ratio = (size.height * 0.81) / (size.width);
-  List<StairedGridTile> tiles = [];
-  for (int i = 0; i < screenShareCount; i++) {
-    tiles.add(StairedGridTile(1, ratio));
-  }
-  int normalTile = (itemCount - screenShareCount);
-  int gridView = normalTile ~/ 4;
-  int tileLeft = normalTile - (gridView * 4);
-  for (int i = 0; i < (normalTile - tileLeft); i++) {
-    tiles.add(StairedGridTile(0.5, ratio));
-  }
-  if (tileLeft == 1) {
-    tiles.add(StairedGridTile(1, ratio));
-  } else if (tileLeft == 2) {
-    tiles.add(StairedGridTile(0.5, ratio / 2));
-    tiles.add(StairedGridTile(0.5, ratio / 2));
-  } else {
-    tiles.add(StairedGridTile(1 / 3, ratio / 3));
-    tiles.add(StairedGridTile(1 / 3, ratio / 3));
-    tiles.add(StairedGridTile(1 / 3, ratio / 3));
-  }
-  return tiles;
+          pattern: [StairedGridTile(1, (size.height * 0.81) / (size.width))]));
 }
