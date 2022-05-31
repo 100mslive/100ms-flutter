@@ -38,6 +38,7 @@ dependencies:
   tuple:
   avatar_glow: ^2.0.2
   fluttertoast: ^8.0.9
+  flutter_svg:
   
 dev_dependencies:
   flutter_test:

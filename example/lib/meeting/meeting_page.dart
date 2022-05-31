@@ -3,8 +3,8 @@ import 'dart:io';
 
 //Package imports
 import 'package:connectivity_checker/connectivity_checker.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/full_screen_view.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/grid_audio_view.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/grid_hero_view.dart';
@@ -199,17 +199,12 @@ class _MeetingPageState extends State<MeetingPage>
         _meetingStore.changeTrackStateForRole(true, null);
         break;
       case 13:
-        _meetingStore.changeMetadataBRB();
-        // raisedHand = false;
-        isBRB = !isBRB;
-        break;
-      case 14:
         _meetingStore.changeStatsVisible();
         break;
-      case 15:
+      case 14:
         _meetingStore.toggleScreenShare();
         break;
-      case 16:
+      case 15:
         _meetingStore.endRoom(false, "Room Ended From Flutter");
         if (_meetingStore.isRoomEnded) {
           Navigator.pop(context);
@@ -257,10 +252,9 @@ class _MeetingPageState extends State<MeetingPage>
                                           border: Border.all(
                                               width: 2,
                                               color: Colors.red.shade600)),
-                                      child: Icon(
-                                        Icons.circle,
+                                      child: SvgPicture.asset(
+                                        "assets/icons/record.svg",
                                         color: Colors.red,
-                                        size: 15,
                                       ),
                                     )
                                   : Container();
@@ -275,9 +269,13 @@ class _MeetingPageState extends State<MeetingPage>
                                 selector: (_, meetingStore) =>
                                     meetingStore.isSpeakerOn,
                                 builder: (_, isSpeakerOn, __) {
-                                  return Icon(isSpeakerOn
-                                      ? Icons.volume_up
-                                      : Icons.volume_off);
+                                  return (isSpeakerOn)
+                                      ? SvgPicture.asset(
+                                          "assets/icons/speaker_state_on.svg",
+                                        )
+                                      : SvgPicture.asset(
+                                          "assets/icons/speaker_state_off.svg",
+                                        );
                                 },
                               )),
                           dropDownMenu(),
@@ -286,7 +284,7 @@ class _MeetingPageState extends State<MeetingPage>
                       body: Stack(
                         children: [
                           Container(
-                            height: MediaQuery.of(context).size.height * 0.81,
+                            height: MediaQuery.of(context).size.height * 0.84,
                             child: Selector<
                                     MeetingStore,
                                     Tuple6<List<PeerTrackNode>, bool, int, int,
@@ -461,9 +459,10 @@ class _MeetingPageState extends State<MeetingPage>
                             : () {
                                 context.read<MeetingStore>().switchVideo();
                               },
-                        icon: Icon(
-                          data.item1 ? Icons.videocam : Icons.videocam_off,
-                        )));
+                        icon: data.item1
+                            ? SvgPicture.asset("assets/icons/cam_state_on.svg")
+                            : SvgPicture.asset(
+                                "assets/icons/cam_state_off.svg")));
               },
             ),
           if (Provider.of<MeetingStore>(context).localPeer != null &&
@@ -485,9 +484,10 @@ class _MeetingPageState extends State<MeetingPage>
                         onPressed: () {
                           context.read<MeetingStore>().switchAudio();
                         },
-                        icon: Icon(
-                          isMicOn ? Icons.mic : Icons.mic_off,
-                        )));
+                        icon: isMicOn
+                            ? SvgPicture.asset("assets/icons/mic_state_on.svg")
+                            : SvgPicture.asset(
+                                "assets/icons/mic_state_off.svg")));
               },
             ),
           Selector<MeetingStore, bool>(
@@ -496,19 +496,35 @@ class _MeetingPageState extends State<MeetingPage>
               return Container(
                   padding: EdgeInsets.all(8),
                   child: IconButton(
-                    tooltip: 'RaiseHand',
-                    iconSize: 20,
-                    onPressed: () {
-                      context.read<MeetingStore>().changeMetadata();
-                      UtilityComponents.showSnackBarWithString(
-                          !raisedHand ? "Raised Hand ON" : "Raised Hand OFF",
-                          context);
-                    },
-                    icon: Image.asset(
-                      'assets/icons/raise_hand.png',
-                      color: raisedHand ? Colors.amber.shade300 : Colors.white,
-                    ),
-                  ));
+                      tooltip: 'RaiseHand',
+                      iconSize: 20,
+                      onPressed: () {
+                        context.read<MeetingStore>().changeMetadata();
+                        // UtilityComponents.showSnackBarWithString(
+                        //     !raisedHand ? "Raised Hand ON" : "Raised Hand OFF",
+                        //     context);
+                      },
+                      icon: SvgPicture.asset(
+                        "assets/icons/hand_state_on.svg",
+                        color: raisedHand ? Colors.yellow : Colors.white,
+                      )));
+            },
+          ),
+          Selector<MeetingStore, bool>(
+            selector: (_, meetingStore) => meetingStore.isBRB,
+            builder: (_, isBRB, __) {
+              return Container(
+                  padding: EdgeInsets.all(8),
+                  child: IconButton(
+                      tooltip: 'BRB',
+                      iconSize: 20,
+                      onPressed: () {
+                        context.read<MeetingStore>().changeMetadataBRB();
+                      },
+                      icon: SvgPicture.asset(
+                        "assets/icons/brb.svg",
+                        color: isBRB ? Colors.red : Colors.white,
+                      )));
             },
           ),
           Selector<MeetingStore, bool>(
@@ -517,23 +533,17 @@ class _MeetingPageState extends State<MeetingPage>
                 return Container(
                   padding: EdgeInsets.all(8),
                   child: IconButton(
-                    tooltip: 'Chat',
-                    iconSize: 24,
-                    onPressed: () {
-                      chatMessages(context);
-                      context.read<MeetingStore>().setNewMessageFalse();
-                    },
-                    icon: Stack(children: [
-                      Icon(Icons.chat_bubble),
-                      if (isNewMessageReceived)
-                        Positioned(
-                          top: -1,
-                          right: -1,
-                          child: new Icon(Icons.brightness_1,
-                              size: 14.0, color: Colors.red),
-                        )
-                    ]),
-                  ),
+                      tooltip: 'Chat',
+                      iconSize: 24,
+                      onPressed: () {
+                        chatMessages(context);
+                        context.read<MeetingStore>().setNewMessageFalse();
+                      },
+                      icon: isNewMessageReceived
+                          ? SvgPicture.asset(
+                              "assets/icons/message_badge_on.svg")
+                          : SvgPicture.asset(
+                              "assets/icons/message_badge_off.svg")),
                 );
               }),
           Container(
@@ -547,7 +557,7 @@ class _MeetingPageState extends State<MeetingPage>
                 },
                 icon: CircleAvatar(
                   backgroundColor: Colors.red,
-                  child: Icon(Icons.call_end, color: Colors.white),
+                  child: SvgPicture.asset("assets/icons/leave.svg"),
                 )),
           ),
         ],
@@ -575,10 +585,14 @@ class _MeetingPageState extends State<MeetingPage>
                           !raisedHand ? "Raised Hand ON" : "Raised Hand OFF",
                           context);
                     },
-                    icon: Image.asset(
-                      'assets/icons/raise_hand.png',
-                      color: raisedHand ? Colors.amber.shade300 : Colors.white,
-                    ),
+                    icon: raisedHand
+                        ? SvgPicture.asset(
+                            'assets/icons/hand_state_on.svg',
+                            color: Colors.amber.shade300,
+                          )
+                        : SvgPicture.asset(
+                            'assets/icons/hand_state_off.svg',
+                          ),
                   ));
             },
           ),
@@ -588,23 +602,17 @@ class _MeetingPageState extends State<MeetingPage>
                 return Container(
                   padding: EdgeInsets.all(8),
                   child: IconButton(
-                    tooltip: 'Chat',
-                    iconSize: 24,
-                    onPressed: () {
-                      chatMessages(context);
-                      context.read<MeetingStore>().setNewMessageFalse();
-                    },
-                    icon: Stack(children: [
-                      Icon(Icons.chat_bubble),
-                      if (isNewMessageReceived)
-                        Positioned(
-                          top: -1,
-                          right: -1,
-                          child: new Icon(Icons.brightness_1,
-                              size: 14.0, color: Colors.red),
-                        )
-                    ]),
-                  ),
+                      tooltip: 'Chat',
+                      iconSize: 24,
+                      onPressed: () {
+                        chatMessages(context);
+                        context.read<MeetingStore>().setNewMessageFalse();
+                      },
+                      icon: isNewMessageReceived
+                          ? SvgPicture.asset(
+                              "assets/icons/message_badge_on.svg")
+                          : SvgPicture.asset(
+                              "assets/icons/message_badge_off.svg")),
                 );
               }),
           Container(
@@ -618,7 +626,7 @@ class _MeetingPageState extends State<MeetingPage>
                 },
                 icon: CircleAvatar(
                   backgroundColor: Colors.red,
-                  child: Icon(Icons.call_end, color: Colors.white),
+                  child: SvgPicture.asset("assets/icons/leave.svg"),
                 )),
           ),
         ],
@@ -628,7 +636,7 @@ class _MeetingPageState extends State<MeetingPage>
 
   Widget dropDownMenu() {
     return PopupMenuButton(
-      icon: Icon(CupertinoIcons.gear),
+      icon: SvgPicture.asset("assets/icons/settings.svg"),
       itemBuilder: (context) {
         final meetingStore = context.read<MeetingStore>();
         return [
@@ -637,7 +645,7 @@ class _MeetingPageState extends State<MeetingPage>
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text("Send Logs"),
-                Icon(Icons.bug_report),
+                SvgPicture.asset("assets/icons/bug.svg"),
               ],
             ),
             value: 1,
@@ -656,8 +664,8 @@ class _MeetingPageState extends State<MeetingPage>
                               ? Colors.blue
                               : Colors.white,
                         )),
-                    Icon(
-                      Icons.circle,
+                    SvgPicture.asset(
+                      "assets/icons/record.svg",
                       color: meetingStore.isRecordingStarted
                           ? Colors.blue
                           : Colors.white,
@@ -673,7 +681,7 @@ class _MeetingPageState extends State<MeetingPage>
                     Text(
                       "Toggle Camera  ",
                     ),
-                    Icon(Icons.switch_camera),
+                    SvgPicture.asset("assets/icons/camera.svg"),
                   ]),
               value: 3,
             ),
@@ -684,7 +692,7 @@ class _MeetingPageState extends State<MeetingPage>
                   Text(
                     "Participants  ",
                   ),
-                  Icon(CupertinoIcons.person_3_fill),
+                  SvgPicture.asset("assets/icons/participants.svg"),
                 ]),
             value: 4,
           ),
@@ -697,10 +705,10 @@ class _MeetingPageState extends State<MeetingPage>
                         ? "Video View"
                         : "Audio View",
                   ),
-                  Image.asset(
+                  SvgPicture.asset(
                     meetingStore.meetingMode == MeetingMode.Audio
-                        ? 'assets/icons/video.png'
-                        : 'assets/icons/audio.png',
+                        ? 'assets/icons/cam_state_on.svg'
+                        : 'assets/icons/mic_state_on.svg',
                     color: Colors.white,
                     height: 24.0,
                     width: 24.0,
@@ -718,8 +726,8 @@ class _MeetingPageState extends State<MeetingPage>
                             ? Colors.blue
                             : Colors.white,
                       )),
-                  Icon(
-                    CupertinoIcons.person_3_fill,
+                  SvgPicture.asset(
+                    "assets/icons/participants.svg",
                     color: meetingStore.isActiveSpeakerMode
                         ? Colors.blue
                         : Colors.white,
@@ -737,8 +745,8 @@ class _MeetingPageState extends State<MeetingPage>
                             ? Colors.blue
                             : Colors.white,
                       )),
-                  Icon(
-                    CupertinoIcons.person_3_fill,
+                  SvgPicture.asset(
+                    "assets/icons/participants.svg",
                     color: meetingStore.meetingMode == MeetingMode.Hero
                         ? Colors.blue
                         : Colors.white,
@@ -756,8 +764,8 @@ class _MeetingPageState extends State<MeetingPage>
                             ? Colors.blue
                             : Colors.white,
                       )),
-                  Icon(
-                    CupertinoIcons.person,
+                  SvgPicture.asset(
+                    "assets/icons/single_tile.svg",
                     color: meetingStore.meetingMode == MeetingMode.Single
                         ? Colors.blue
                         : Colors.white,
@@ -772,7 +780,7 @@ class _MeetingPageState extends State<MeetingPage>
                   Text(
                     "Change Name",
                   ),
-                  Icon(Icons.create_rounded),
+                  SvgPicture.asset("assets/icons/pencil.svg"),
                 ]),
             value: 9,
           ),
@@ -789,7 +797,7 @@ class _MeetingPageState extends State<MeetingPage>
                             : Colors.white,
                       ),
                     ),
-                    Icon(Icons.stream,
+                    SvgPicture.asset("assets/icons/hls.svg",
                         color: meetingStore.hasHlsStarted
                             ? Colors.blue
                             : Colors.white),
@@ -804,7 +812,7 @@ class _MeetingPageState extends State<MeetingPage>
                     Text(
                       "Mute Roles",
                     ),
-                    Icon(Icons.mic_off_sharp),
+                    SvgPicture.asset("assets/icons/mic_state_off.svg"),
                   ]),
               value: 11,
             ),
@@ -816,36 +824,10 @@ class _MeetingPageState extends State<MeetingPage>
                     Text(
                       "Mute All",
                     ),
-                    Icon(Icons.mic_off),
+                    SvgPicture.asset("assets/icons/mic_state_off.svg"),
                   ]),
               value: 12,
             ),
-          PopupMenuItem(
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "BRB",
-                    style: TextStyle(
-                        color: meetingStore.isBRB ? Colors.blue : Colors.white),
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                        border: Border.all(
-                            width: 1,
-                            color: meetingStore.isBRB
-                                ? Colors.blue
-                                : Colors.white)),
-                    child: Text(
-                      "BRB",
-                      style: TextStyle(
-                          color:
-                              meetingStore.isBRB ? Colors.blue : Colors.white),
-                    ),
-                  ),
-                ]),
-            value: 13,
-          ),
           PopupMenuItem(
             child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -857,12 +839,12 @@ class _MeetingPageState extends State<MeetingPage>
                             ? Colors.blue
                             : Colors.white),
                   ),
-                  Icon(Icons.bar_chart_outlined,
+                  SvgPicture.asset("assets/icons/stats.svg",
                       color: meetingStore.isStatsVisible
                           ? Colors.blue
                           : Colors.white),
                 ]),
-            value: 14,
+            value: 13,
           ),
           if ((meetingStore.localPeer != null) &&
               meetingStore.localPeer!.role.publishSettings!.allowed
@@ -879,14 +861,14 @@ class _MeetingPageState extends State<MeetingPage>
                               ? Colors.blue
                               : Colors.white),
                     ),
-                    Icon(
-                      Icons.screen_share,
+                    SvgPicture.asset(
+                      "assets/icons/screen_share.svg",
                       color: meetingStore.isScreenShareOn
                           ? Colors.blue
                           : Colors.white,
                     ),
                   ]),
-              value: 15,
+              value: 14,
             ),
           if (meetingStore.localPeer!.role.permissions.endRoom!)
             PopupMenuItem(
@@ -896,9 +878,9 @@ class _MeetingPageState extends State<MeetingPage>
                     Text(
                       "End Room",
                     ),
-                    Icon(Icons.cancel_schedule_send),
+                    SvgPicture.asset("assets/icons/end_room.svg"),
                   ]),
-              value: 16,
+              value: 15,
             ),
         ];
       },

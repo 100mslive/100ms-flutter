@@ -5,8 +5,8 @@ import 'dart:io';
 //Package imports
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:wakelock/wakelock.dart';
@@ -21,7 +21,6 @@ import 'package:hmssdk_flutter_example/common/constant.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/user_name_dialog_organism.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
 import 'package:hmssdk_flutter_example/preview/preview_page.dart';
-import 'package:hmssdk_flutter_example/service/deeplink_service.dart';
 import './logs/custom_singleton_logger.dart';
 
 void main() async {
@@ -145,7 +144,9 @@ class _HomePageState extends State<HomePage> {
             actions: [
               PopupMenuButton<int>(
                 onSelected: handleClick,
-                icon: Icon(CupertinoIcons.gear),
+                icon: SvgPicture.asset(
+                  'assets/icons/settings.svg',
+                ),
                 itemBuilder: (BuildContext context) {
                   return [
                     PopupMenuItem(
@@ -159,8 +160,15 @@ class _HomePageState extends State<HomePage> {
                               "Disable Preview",
                               style: TextStyle(color: Colors.blue),
                             ),
-                          Icon(Icons.preview,
-                              color: skipPreview ? Colors.white : Colors.blue),
+                          if (skipPreview)
+                            SvgPicture.asset(
+                              'assets/icons/preview_state_on.svg',
+                            )
+                          else
+                            SvgPicture.asset(
+                              'assets/icons/preview_state_off.svg',
+                              color: Colors.blue,
+                            ),
                         ],
                       ),
                       value: 1,
@@ -191,8 +199,10 @@ class _HomePageState extends State<HomePage> {
                                 style: TextStyle(color: Colors.blue))
                           else
                             Text("Enable Stats"),
-                          Icon(Icons.bar_chart,
-                              color: showStats ? Colors.blue : Colors.white),
+                          SvgPicture.asset(
+                            'assets/icons/stats.svg',
+                            color: showStats ? Colors.blue : Colors.white,
+                          ),
                         ],
                       ),
                       value: 3,

@@ -23,15 +23,10 @@ class Utilities {
   }
 
   static List<Color> colors = [
-    Colors.red,
-    Colors.pink,
-    Colors.purple,
-    Colors.deepPurple,
-    Colors.indigo,
-    Colors.blue,
-    Colors.lightBlue,
-    Colors.teal,
-    Colors.green,
-    Colors.deepOrange,
+    Color(0xFFFAC919),
+    Color(0xFF00AE63),
+    Color(0xFF6554C0),
+    Color(0xFFF69133),
+    Color(0xFF8FF5FB)
   ];
 }
