@@ -37,7 +37,10 @@ Widget gridVideoView(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(Icons.screen_share),
-                        Text("You are sharing your screen",style:  GoogleFonts.inter(),),
+                        Text(
+                          "You are sharing your screen",
+                          style: GoogleFonts.inter(),
+                        ),
                       ],
                     ),
                   )
@@ -71,7 +74,7 @@ Widget gridVideoView(
 }
 
 List<StairedGridTile> pattern(int itemCount, int screenShareCount, Size size) {
-  double ratio = (size.height * 0.84) / (size.width);
+  double ratio = (size.height * 0.83) / (size.width);
   List<StairedGridTile> tiles = [];
   for (int i = 0; i < screenShareCount; i++) {
     tiles.add(StairedGridTile(1, ratio));

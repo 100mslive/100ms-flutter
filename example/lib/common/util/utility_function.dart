@@ -14,12 +14,12 @@ class Utilities {
         name += parts[1][0];
       }
     }
-    return name;
+    return name.toUpperCase();
   }
 
   static Color getBackgroundColour(String name) {
     return Utilities
-        .colors[name.toLowerCase().codeUnitAt(0) % Utilities.colors.length];
+        .colors[name.toUpperCase().codeUnitAt(0) % Utilities.colors.length];
   }
 
   static List<Color> colors = [

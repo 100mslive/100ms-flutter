@@ -64,7 +64,7 @@ Widget gridHeroView(
 }
 
 List<StairedGridTile> pattern(int itemCount, int screenShareCount, Size size) {
-  double ratio = (size.width) / (size.height * 0.84);
+  double ratio = (size.width) / (size.height * 0.83);
 
   List<StairedGridTile> tiles = [];
   for (int i = 0; i < screenShareCount; i++) {

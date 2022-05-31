@@ -105,11 +105,9 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                                 width: itemWidth,
                                 child: Center(
                                     child: CircleAvatar(
-                                        backgroundColor: Utilities.colors[
-                                            _previewStore.peer!.name
-                                                    .toLowerCase()
-                                                    .codeUnitAt(0) %
-                                                Utilities.colors.length],
+                                        backgroundColor:
+                                            Utilities.getBackgroundColour(
+                                                _previewStore.peer!.name),
                                         radius: 36,
                                         child: Text(
                                           Utilities.getAvatarTitle(

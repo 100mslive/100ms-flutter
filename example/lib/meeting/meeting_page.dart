@@ -279,7 +279,7 @@ class _MeetingPageState extends State<MeetingPage>
                       body: Stack(
                         children: [
                           Container(
-                            height: MediaQuery.of(context).size.height * 0.84,
+                            height: MediaQuery.of(context).size.height * 0.83,
                             child: Selector<
                                     MeetingStore,
                                     Tuple6<List<PeerTrackNode>, bool, int, int,
