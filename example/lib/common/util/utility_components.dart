@@ -9,16 +9,13 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/role_change_request_dialog.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/track_change_request_dialog.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
-import 'package:hmssdk_flutter_example/meeting/peer_track_node.dart';
-import 'package:hmssdk_flutter_example/common/ui/organisms/audio_tile.dart';
-import 'package:hmssdk_flutter_example/common/ui/organisms/video_tile.dart';
 
 class UtilityComponents {
   static void showSnackBarWithString(event, context) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text(
         event,
-        style:  GoogleFonts.inter(color: Colors.white),
+        style: GoogleFonts.inter(color: Colors.white),
       ),
       backgroundColor: Colors.black87,
     ));
@@ -31,7 +28,7 @@ class UtilityComponents {
       builder: (ctx) => AlertDialog(
         title: Text(
           'Leave Room?',
-          style:  GoogleFonts.inter(fontSize: 24, fontWeight: FontWeight.w700),
+          style: GoogleFonts.inter(fontSize: 24, fontWeight: FontWeight.w700),
         ),
         actions: [
           ElevatedButton(
@@ -42,12 +39,12 @@ class UtilityComponents {
                     _meetingStore.leave(),
                     Navigator.popUntil(context, (route) => route.isFirst)
                   },
-              child: Text('Yes', style:  GoogleFonts.inter(fontSize: 24))),
+              child: Text('Yes', style: GoogleFonts.inter(fontSize: 24))),
           ElevatedButton(
             onPressed: () => Navigator.pop(context, false),
             child: Text(
               'Cancel',
-              style:  GoogleFonts.inter(fontSize: 24),
+              style: GoogleFonts.inter(fontSize: 24),
             ),
           ),
         ],
@@ -101,10 +98,16 @@ class UtilityComponents {
         context: context,
         builder: (context) {
           return AlertDialog(
-            content: Text(message,style:  GoogleFonts.inter(),),
+            content: Text(
+              message,
+              style: GoogleFonts.inter(),
+            ),
             actions: [
               ElevatedButton(
-                child: Text('OK',style:  GoogleFonts.inter(),),
+                child: Text(
+                  'OK',
+                  style: GoogleFonts.inter(),
+                ),
                 onPressed: () {
                   Navigator.pop(context);
                 },
@@ -141,13 +144,19 @@ class UtilityComponents {
               ),
               actions: [
                 ElevatedButton(
-                  child: Text('Cancel',style:  GoogleFonts.inter(),),
+                  child: Text(
+                    'Cancel',
+                    style: GoogleFonts.inter(),
+                  ),
                   onPressed: () {
                     Navigator.pop(context, '');
                   },
                 ),
                 ElevatedButton(
-                  child: Text('OK',style:  GoogleFonts.inter(),),
+                  child: Text(
+                    'OK',
+                    style: GoogleFonts.inter(),
+                  ),
                   onPressed: () {
                     if (textController.text == "") {
                     } else {
@@ -169,7 +178,10 @@ class UtilityComponents {
         context: context,
         builder: (context) => StatefulBuilder(builder: (context, setState) {
               return AlertDialog(
-                title: Text("Select Role for Mute",style:  GoogleFonts.inter(),),
+                title: Text(
+                  "Select Role for Mute",
+                  style: GoogleFonts.inter(),
+                ),
                 content: Container(
                     width: 300,
                     child: Column(
@@ -184,10 +196,14 @@ class UtilityComponents {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text(roles[index].name,style:  GoogleFonts.inter(),),
+                                    Text(
+                                      roles[index].name,
+                                      style: GoogleFonts.inter(),
+                                    ),
                                     Checkbox(
                                         value: _selectedRoles
                                             .contains(roles[index]),
+                                        activeColor: Colors.blue,
                                         onChanged: (bool? value) {
                                           if (value != null && value) {
                                             _selectedRoles.add(roles[index]);
@@ -204,9 +220,13 @@ class UtilityComponents {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text("Mute All",style:  GoogleFonts.inter(),),
+                            Text(
+                              "Mute All",
+                              style: GoogleFonts.inter(),
+                            ),
                             Checkbox(
                                 value: muteAll,
+                                activeColor: Colors.blue,
                                 onChanged: (bool? value) {
                                   if (value != null) {
                                     muteAll = value;
@@ -224,7 +244,10 @@ class UtilityComponents {
                                 onPressed: () {
                                   Navigator.pop(context);
                                 },
-                                child: Text("Cancel",style:  GoogleFonts.inter(),)),
+                                child: Text(
+                                  "Cancel",
+                                  style: GoogleFonts.inter(),
+                                )),
                             ElevatedButton(
                                 onPressed: () {
                                   if (muteAll) {
@@ -236,7 +259,10 @@ class UtilityComponents {
                                   }
                                   Navigator.pop(context);
                                 },
-                                child: Text("Mute Roles",style:  GoogleFonts.inter(),))
+                                child: Text(
+                                  "Mute Roles",
+                                  style: GoogleFonts.inter(),
+                                ))
                           ],
                         )
                       ],
@@ -273,7 +299,10 @@ class UtilityComponents {
                             hintText: placeholder),
                       ),
                       CheckboxListTile(
-                          title: Text("Recording",style:  GoogleFonts.inter(),),
+                          title: Text(
+                            "Recording",
+                            style: GoogleFonts.inter(),
+                          ),
                           activeColor: Colors.blue,
                           controlAffinity: ListTileControlAffinity.trailing,
                           value: isRecordingEnabled,
@@ -287,13 +316,19 @@ class UtilityComponents {
                 ),
                 actions: [
                   ElevatedButton(
-                    child: Text('Cancel',style:  GoogleFonts.inter(),),
+                    child: Text(
+                      'Cancel',
+                      style: GoogleFonts.inter(),
+                    ),
                     onPressed: () {
                       Navigator.pop(context, {"url": "", "toRecord": "false"});
                     },
                   ),
                   ElevatedButton(
-                    child: Text('OK',style:  GoogleFonts.inter(),),
+                    child: Text(
+                      'OK',
+                      style: GoogleFonts.inter(),
+                    ),
                     onPressed: () {
                       if (textController.text == "" && !isRecordingEnabled) {
                       } else {
@@ -310,5 +345,4 @@ class UtilityComponents {
 
     return answer;
   }
-
 }
