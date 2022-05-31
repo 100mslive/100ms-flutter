@@ -32,6 +32,8 @@ class PreviewStore extends ChangeNotifier
 
   int? networkQuality;
 
+  int peerCount = 0;
+
   @override
   void onError({required HMSException error}) {
     updateError(error);
@@ -119,6 +121,9 @@ class PreviewStore extends ChangeNotifier
         break;
       case HMSRoomUpdate.hlsStreamingStateUpdated:
         isRecordingStarted = room.hmshlsStreamingState?.running ?? false;
+        break;
+      case HMSRoomUpdate.RoomPeerCountUpdated:
+        peerCount = room.peerCount;
         break;
       default:
         break;
