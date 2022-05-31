@@ -53,7 +53,7 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
         .read<PreviewStore>()
         .startPreview(user: widget.user, roomId: widget.roomId);
     if (ans == false) {
-      UtilityComponents.showSnackBarWithString("Unable to preview", context);
+      UtilityComponents.showToastWithString("Unable to preview");
       Navigator.of(context).pop();
     }
   }

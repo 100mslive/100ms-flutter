@@ -66,7 +66,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                                   if (roles.length > 0) {
                                     return DropdownButtonHideUnderline(
                                       child: DropdownButton2(
-                                        buttonWidth: 150,
+                                        buttonWidth: 120,
                                         value: valueChoose,
                                         iconEnabledColor: Colors.white,
                                         onChanged: (newvalue) {
@@ -77,15 +77,20 @@ class _ChatWidgetState extends State<ChatWidget> {
                                         },
                                         items: [
                                           DropdownMenuItem<String>(
-                                            child: Text("Everyone",style:  GoogleFonts.inter(),),
+                                            child: Container(
+                                              width: 90,
+                                              child: Text("Everyone",style:  GoogleFonts.inter(),overflow: TextOverflow.clip,)),
                                             value: "Everyone",
                                           ),
                                           ...data.item2
                                               .map((peer) {
                                                 return !peer.isLocal
                                                     ? DropdownMenuItem<String>(
-                                                        child: Text(
-                                                            "${peer.name} ${peer.isLocal ? "(You)" : ""}",style:  GoogleFonts.inter(),),
+                                                        child: Container(
+                                                          width: 90,
+                                                          child: Text(
+                                                              "${peer.name} ${peer.isLocal ? "(You)" : ""}",style:  GoogleFonts.inter(),overflow: TextOverflow.clip,),
+                                                        ),
                                                         value: peer.peerId,
                                                       )
                                                     : null;
@@ -95,7 +100,11 @@ class _ChatWidgetState extends State<ChatWidget> {
                                           ...roles
                                               .map((role) =>
                                                   DropdownMenuItem<String>(
-                                                    child: Text("${role.name}",style:  GoogleFonts.inter(),),
+                                                    child: Container(
+                                                          width: 90,
+                                                      child: Text("${role.name}",
+                                                      overflow: TextOverflow.clip,
+                                                      style:  GoogleFonts.inter(),)),
                                                     value: role.name,
                                                   ))
                                               .toList()
