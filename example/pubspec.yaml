@@ -38,6 +38,7 @@ dependencies:
   avatar_glow: 
   fluttertoast:
   flutter_svg:
+  google_fonts:
   
 dev_dependencies:
   flutter_test:

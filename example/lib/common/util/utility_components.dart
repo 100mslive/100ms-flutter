@@ -1,5 +1,6 @@
 //Package imports
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_mode.dart';
 import 'package:provider/provider.dart';
 
@@ -17,7 +18,7 @@ class UtilityComponents {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text(
         event,
-        style: TextStyle(color: Colors.white),
+        style:  GoogleFonts.inter(color: Colors.white),
       ),
       backgroundColor: Colors.black87,
     ));
@@ -30,7 +31,7 @@ class UtilityComponents {
       builder: (ctx) => AlertDialog(
         title: Text(
           'Leave Room?',
-          style: TextStyle(fontSize: 24, fontWeight: FontWeight.w700),
+          style:  GoogleFonts.inter(fontSize: 24, fontWeight: FontWeight.w700),
         ),
         actions: [
           ElevatedButton(
@@ -41,12 +42,12 @@ class UtilityComponents {
                     _meetingStore.leave(),
                     Navigator.popUntil(context, (route) => route.isFirst)
                   },
-              child: Text('Yes', style: TextStyle(fontSize: 24))),
+              child: Text('Yes', style:  GoogleFonts.inter(fontSize: 24))),
           ElevatedButton(
             onPressed: () => Navigator.pop(context, false),
             child: Text(
               'Cancel',
-              style: TextStyle(fontSize: 24),
+              style:  GoogleFonts.inter(fontSize: 24),
             ),
           ),
         ],
@@ -100,10 +101,10 @@ class UtilityComponents {
         context: context,
         builder: (context) {
           return AlertDialog(
-            content: Text(message),
+            content: Text(message,style:  GoogleFonts.inter(),),
             actions: [
               ElevatedButton(
-                child: Text('OK'),
+                child: Text('OK',style:  GoogleFonts.inter(),),
                 onPressed: () {
                   Navigator.pop(context);
                 },
@@ -140,13 +141,13 @@ class UtilityComponents {
               ),
               actions: [
                 ElevatedButton(
-                  child: Text('Cancel'),
+                  child: Text('Cancel',style:  GoogleFonts.inter(),),
                   onPressed: () {
                     Navigator.pop(context, '');
                   },
                 ),
                 ElevatedButton(
-                  child: Text('OK'),
+                  child: Text('OK',style:  GoogleFonts.inter(),),
                   onPressed: () {
                     if (textController.text == "") {
                     } else {
@@ -168,7 +169,7 @@ class UtilityComponents {
         context: context,
         builder: (context) => StatefulBuilder(builder: (context, setState) {
               return AlertDialog(
-                title: Text("Select Role for Mute"),
+                title: Text("Select Role for Mute",style:  GoogleFonts.inter(),),
                 content: Container(
                     width: 300,
                     child: Column(
@@ -183,7 +184,7 @@ class UtilityComponents {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text(roles[index].name),
+                                    Text(roles[index].name,style:  GoogleFonts.inter(),),
                                     Checkbox(
                                         value: _selectedRoles
                                             .contains(roles[index]),
@@ -203,7 +204,7 @@ class UtilityComponents {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text("Mute All"),
+                            Text("Mute All",style:  GoogleFonts.inter(),),
                             Checkbox(
                                 value: muteAll,
                                 onChanged: (bool? value) {
@@ -223,7 +224,7 @@ class UtilityComponents {
                                 onPressed: () {
                                   Navigator.pop(context);
                                 },
-                                child: Text("Cancel")),
+                                child: Text("Cancel",style:  GoogleFonts.inter(),)),
                             ElevatedButton(
                                 onPressed: () {
                                   if (muteAll) {
@@ -235,7 +236,7 @@ class UtilityComponents {
                                   }
                                   Navigator.pop(context);
                                 },
-                                child: Text("Mute Roles"))
+                                child: Text("Mute Roles",style:  GoogleFonts.inter(),))
                           ],
                         )
                       ],
@@ -272,7 +273,7 @@ class UtilityComponents {
                             hintText: placeholder),
                       ),
                       CheckboxListTile(
-                          title: Text("Recording"),
+                          title: Text("Recording",style:  GoogleFonts.inter(),),
                           activeColor: Colors.blue,
                           controlAffinity: ListTileControlAffinity.trailing,
                           value: isRecordingEnabled,
@@ -286,13 +287,13 @@ class UtilityComponents {
                 ),
                 actions: [
                   ElevatedButton(
-                    child: Text('Cancel'),
+                    child: Text('Cancel',style:  GoogleFonts.inter(),),
                     onPressed: () {
                       Navigator.pop(context, {"url": "", "toRecord": "false"});
                     },
                   ),
                   ElevatedButton(
-                    child: Text('OK'),
+                    child: Text('OK',style:  GoogleFonts.inter(),),
                     onPressed: () {
                       if (textController.text == "" && !isRecordingEnabled) {
                       } else {
@@ -310,57 +311,4 @@ class UtilityComponents {
     return answer;
   }
 
-  static List<Widget> videoTileWidget(
-      int itemCount, List<PeerTrackNode> peerTracks, Size size) {
-    return List.generate(itemCount, (index) {
-      if (peerTracks[index].track?.source != "REGULAR") {
-        return ChangeNotifierProvider.value(
-          key: ValueKey(peerTracks[index].uid),
-          value: peerTracks[index],
-          child: peerTracks[index].peer.isLocal
-              ? Container(
-                  margin: EdgeInsets.all(2),
-                  decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey, width: 1.0),
-                      borderRadius: BorderRadius.all(Radius.circular(10))),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.screen_share),
-                      Text("You are sharing your screen"),
-                    ],
-                  ),
-                )
-              : VideoTile(
-                  key: Key(peerTracks[index].uid),
-                  scaleType: ScaleType.SCALE_ASPECT_FIT,
-                  itemHeight: size.height,
-                  itemWidth: size.width,
-                ),
-        );
-      }
-      return ChangeNotifierProvider.value(
-          key: ValueKey(peerTracks[index].uid),
-          value: peerTracks[index],
-          child: VideoTile(
-            key: ValueKey(peerTracks[index].uid),
-            itemHeight: size.height,
-            itemWidth: size.width,
-          ));
-    });
-  }
-
-  static List<Widget> audioTileWidget(
-      int itemCount, List<PeerTrackNode> peerTracks, Size size) {
-    return List.generate(itemCount, (index) {
-      return ChangeNotifierProvider.value(
-          key: ValueKey(peerTracks[index].uid),
-          value: peerTracks[index],
-          child: AudioTile(
-            key: ValueKey(peerTracks[index].uid),
-            itemHeight: size.height,
-            itemWidth: size.width,
-          ));
-    });
-  }
 }

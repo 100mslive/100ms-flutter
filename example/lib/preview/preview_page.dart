@@ -4,6 +4,7 @@ import 'package:connectivity_checker/connectivity_checker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:provider/provider.dart';
@@ -113,7 +114,7 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                                         child: Text(
                                           Utilities.getAvatarTitle(
                                               _previewStore.peer!.name),
-                                          style: TextStyle(
+                                          style: GoogleFonts.inter(
                                               fontSize: 36,
                                               color: Colors.white),
                                         ))),
@@ -189,15 +190,16 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                                                       children: [
                                                         Text(
                                                           peer.name,
-                                                          style: TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                              color:
-                                                                  Colors.white),
+                                                          style:
+                                                              GoogleFonts.inter(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  color: Colors
+                                                                      .white),
                                                         ),
                                                         Text(peer.role.name,
-                                                            style: TextStyle(
+                                                            style: GoogleFonts.inter(
                                                                 fontWeight:
                                                                     FontWeight
                                                                         .bold,
@@ -237,7 +239,7 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                                           Text(
                                             _previewStore.peers.length
                                                 .toString(),
-                                            style: TextStyle(
+                                            style: GoogleFonts.inter(
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 16),
                                           )
@@ -318,7 +320,8 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                                     },
                                     child: Text(
                                       'Join HLS ',
-                                      style: TextStyle(height: 1, fontSize: 18),
+                                      style: GoogleFonts.inter(
+                                          height: 1, fontSize: 18),
                                     ),
                                   )
                                 : ElevatedButton(
@@ -357,7 +360,8 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                                     },
                                     child: Text(
                                       'Join Now',
-                                      style: TextStyle(height: 1, fontSize: 18),
+                                      style: GoogleFonts.inter(
+                                          height: 1, fontSize: 18),
                                     ),
                                   )
                             : Container(),

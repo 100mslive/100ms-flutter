@@ -1,6 +1,7 @@
 //Package imports
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 //Project imports
@@ -43,7 +44,7 @@ class _ParticipantOrganismState extends State<ParticipantOrganism> {
               width: width / 3,
               child: Text(
                 peer.name,
-                style: TextStyle(fontSize: 20.0),
+                style: GoogleFonts.inter(fontSize: 20.0),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -99,7 +100,7 @@ class _ParticipantOrganismState extends State<ParticipantOrganism> {
                           "${peer.role.name}",
                           overflow: TextOverflow.clip,
                           maxLines: 1,
-                          style: TextStyle(
+                          style: GoogleFonts.inter(
                               color: Colors.white,
                               fontSize: 18.0,
                               fontWeight: FontWeight.bold),

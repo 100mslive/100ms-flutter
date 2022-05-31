@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:connectivity_checker/connectivity_checker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/full_screen_view.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/grid_audio_view.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/grid_hero_view.dart';
@@ -190,7 +191,7 @@ class _MeetingPageState extends State<MeetingPage>
 
       case 11:
         List<HMSRole> roles = await _meetingStore.getRoles();
-        UtilityComponents.showRoleList(context, roles,_meetingStore);
+        UtilityComponents.showRoleList(context, roles, _meetingStore);
         break;
       case 12:
         _meetingStore.changeStatsVisible();
@@ -325,8 +326,9 @@ class _MeetingPageState extends State<MeetingPage>
                                                                 bottom: 8.0),
                                                         child: Text(
                                                           "Waiting for HLS to start...",
-                                                          style: TextStyle(
-                                                              fontSize: 20),
+                                                          style:
+                                                              GoogleFonts.inter(
+                                                                  fontSize: 20),
                                                         ),
                                                       ),
                                                       CircularProgressIndicator(
@@ -340,7 +342,9 @@ class _MeetingPageState extends State<MeetingPage>
                                   if (data.item3 == 0) {
                                     return Center(
                                         child: Text(
-                                            'Waiting for others to join!'));
+                                      'Waiting for others to join!',
+                                      style: GoogleFonts.inter(),
+                                    ));
                                   }
                                   Size size = MediaQuery.of(context).size;
                                   if (data.item5 == MeetingMode.Hero) {
@@ -638,7 +642,10 @@ class _MeetingPageState extends State<MeetingPage>
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text("Send Logs"),
+                Text(
+                  "Send Logs",
+                  style: GoogleFonts.inter(),
+                ),
                 SvgPicture.asset("assets/icons/bug.svg"),
               ],
             ),
@@ -653,7 +660,7 @@ class _MeetingPageState extends State<MeetingPage>
                         meetingStore.isRecordingStarted
                             ? "Recording "
                             : "Record",
-                        style: TextStyle(
+                        style: GoogleFonts.inter(
                           color: meetingStore.isRecordingStarted
                               ? Colors.blue
                               : Colors.white,
@@ -674,6 +681,7 @@ class _MeetingPageState extends State<MeetingPage>
                   children: [
                     Text(
                       "Toggle Camera  ",
+                      style: GoogleFonts.inter(),
                     ),
                     SvgPicture.asset("assets/icons/camera.svg"),
                   ]),
@@ -685,6 +693,7 @@ class _MeetingPageState extends State<MeetingPage>
                 children: [
                   Text(
                     "Participants  ",
+                    style: GoogleFonts.inter(),
                   ),
                   SvgPicture.asset("assets/icons/participants.svg"),
                 ]),
@@ -698,6 +707,7 @@ class _MeetingPageState extends State<MeetingPage>
                     meetingStore.meetingMode == MeetingMode.Audio
                         ? "Video View"
                         : "Audio View",
+                    style: GoogleFonts.inter(),
                   ),
                   SvgPicture.asset(
                     meetingStore.meetingMode == MeetingMode.Audio
@@ -715,7 +725,7 @@ class _MeetingPageState extends State<MeetingPage>
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text("Active Speaker Mode",
-                      style: TextStyle(
+                      style: GoogleFonts.inter(
                         color: meetingStore.isActiveSpeakerMode
                             ? Colors.blue
                             : Colors.white,
@@ -734,7 +744,7 @@ class _MeetingPageState extends State<MeetingPage>
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text("Hero Mode",
-                      style: TextStyle(
+                      style: GoogleFonts.inter(
                         color: meetingStore.meetingMode == MeetingMode.Hero
                             ? Colors.blue
                             : Colors.white,
@@ -753,7 +763,7 @@ class _MeetingPageState extends State<MeetingPage>
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text("Single Tile Mode",
-                      style: TextStyle(
+                      style: GoogleFonts.inter(
                         color: meetingStore.meetingMode == MeetingMode.Single
                             ? Colors.blue
                             : Colors.white,
@@ -773,6 +783,7 @@ class _MeetingPageState extends State<MeetingPage>
                 children: [
                   Text(
                     "Change Name",
+                    style: GoogleFonts.inter(),
                   ),
                   SvgPicture.asset("assets/icons/pencil.svg"),
                 ]),
@@ -785,7 +796,7 @@ class _MeetingPageState extends State<MeetingPage>
                   children: [
                     Text(
                       meetingStore.hasHlsStarted ? "Stop HLS" : "Start HLS",
-                      style: TextStyle(
+                      style: GoogleFonts.inter(
                         color: meetingStore.hasHlsStarted
                             ? Colors.blue
                             : Colors.white,
@@ -805,6 +816,7 @@ class _MeetingPageState extends State<MeetingPage>
                   children: [
                     Text(
                       "Mute",
+                      style: GoogleFonts.inter(),
                     ),
                     SvgPicture.asset("assets/icons/mic_state_off.svg"),
                   ]),
@@ -816,7 +828,7 @@ class _MeetingPageState extends State<MeetingPage>
                 children: [
                   Text(
                     "Stats",
-                    style: TextStyle(
+                    style: GoogleFonts.inter(
                         color: meetingStore.isStatsVisible
                             ? Colors.blue
                             : Colors.white),
@@ -838,7 +850,7 @@ class _MeetingPageState extends State<MeetingPage>
                   children: [
                     Text(
                       "Screen share",
-                      style: TextStyle(
+                      style: GoogleFonts.inter(
                           color: meetingStore.isScreenShareOn
                               ? Colors.blue
                               : Colors.white),
@@ -859,6 +871,7 @@ class _MeetingPageState extends State<MeetingPage>
                   children: [
                     Text(
                       "End Room",
+                      style: GoogleFonts.inter(),
                     ),
                     SvgPicture.asset("assets/icons/end_room.svg"),
                   ]),

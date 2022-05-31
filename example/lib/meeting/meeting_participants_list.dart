@@ -1,6 +1,7 @@
 //Package imports
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 
@@ -27,7 +28,10 @@ class _ParticipantsListState extends State<ParticipantsList> {
               return Row(
                 children: [
                   SvgPicture.asset("assets/icons/participants.svg"),
-                  Text(" Participants ($length)"),
+                  Text(
+                    " Participants ($length)",
+                    style: GoogleFonts.inter(),
+                  ),
                 ],
               );
             }),
@@ -52,7 +56,10 @@ class _ParticipantsListState extends State<ParticipantsList> {
                         .toList(),
                   );
                 } else {
-                  return Text(("No Participants"));
+                  return Text(
+                    "No Participants",
+                    style: GoogleFonts.inter(),
+                  );
                 }
               }),
             );
