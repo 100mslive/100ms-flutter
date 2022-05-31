@@ -2,7 +2,6 @@
 import 'package:flutter/material.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_mode.dart';
 import 'package:provider/provider.dart';
-import 'package:clickable_list_wheel_view/clickable_list_wheel_widget.dart';
 
 //Project imports
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
@@ -161,44 +160,88 @@ class UtilityComponents {
     return answer;
   }
 
-  static Future<List<HMSRole>> showRoleList(
-      BuildContext context, List<HMSRole> roles) async {
+  static showRoleList(BuildContext context, List<HMSRole> roles,
+      MeetingStore _meetingStore) async {
     List<HMSRole> _selectedRoles = [];
-    FixedExtentScrollController _scrollController =
-        FixedExtentScrollController();
-
-    HMSRole? selectedRole = await showDialog(
+    bool muteAll = false;
+    showDialog(
         context: context,
-        builder: (context) => AlertDialog(
-              title: Text("Select Role for Mute"),
-              content: Container(
-                  height: 100,
-                  child: ClickableListWheelScrollView(
-                      scrollController: _scrollController,
-                      itemHeight: 50,
-                      itemCount: roles.length,
-                      onItemTapCallback: (index) {
-                        Navigator.pop(context, roles[index]);
-                      },
-                      child: ListWheelScrollView.useDelegate(
-                          controller: _scrollController,
-                          physics: FixedExtentScrollPhysics(),
-                          overAndUnderCenterOpacity: 0.5,
-                          perspective: 0.002,
-                          itemExtent: 50,
-                          childDelegate: ListWheelChildBuilderDelegate(
-                              childCount: roles.length,
-                              builder: (context, index) {
-                                return Container(
-                                  height: 50,
-                                  child: ListTile(
-                                    title: Text(roles[index].name),
-                                  ),
+        builder: (context) => StatefulBuilder(builder: (context, setState) {
+              return AlertDialog(
+                title: Text("Select Role for Mute"),
+                content: Container(
+                    width: 300,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Flexible(
+                          fit: FlexFit.tight,
+                          child: ListView.builder(
+                              itemCount: roles.length,
+                              itemBuilder: (context, index) {
+                                return Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(roles[index].name),
+                                    Checkbox(
+                                        value: _selectedRoles
+                                            .contains(roles[index]),
+                                        onChanged: (bool? value) {
+                                          if (value != null && value) {
+                                            _selectedRoles.add(roles[index]);
+                                          } else if (_selectedRoles
+                                              .contains(roles[index])) {
+                                            _selectedRoles.remove(roles[index]);
+                                          }
+                                          setState(() {});
+                                        }),
+                                  ],
                                 );
-                              })))),
-            ));
-    if (selectedRole != null) _selectedRoles.add(selectedRole);
-    return _selectedRoles;
+                              }),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text("Mute All"),
+                            Checkbox(
+                                value: muteAll,
+                                onChanged: (bool? value) {
+                                  if (value != null) {
+                                    muteAll = value;
+                                  }
+                                  setState(() {});
+                                }),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                    primary: Colors.red),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: Text("Cancel")),
+                            ElevatedButton(
+                                onPressed: () {
+                                  if (muteAll) {
+                                    _meetingStore.changeTrackStateForRole(
+                                        true, null);
+                                  } else if (_selectedRoles.isNotEmpty) {
+                                    _meetingStore.changeTrackStateForRole(
+                                        true, _selectedRoles);
+                                  }
+                                  Navigator.pop(context);
+                                },
+                                child: Text("Mute Roles"))
+                          ],
+                        )
+                      ],
+                    )),
+              );
+            }));
   }
 
   static Future<Map<String, String>> showRTMPInputDialog(

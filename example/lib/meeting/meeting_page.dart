@@ -190,21 +190,15 @@ class _MeetingPageState extends State<MeetingPage>
 
       case 11:
         List<HMSRole> roles = await _meetingStore.getRoles();
-        List<HMSRole> selectedRoles =
-            await UtilityComponents.showRoleList(context, roles);
-        if (selectedRoles.isNotEmpty)
-          _meetingStore.changeTrackStateForRole(true, selectedRoles);
+        UtilityComponents.showRoleList(context, roles,_meetingStore);
         break;
       case 12:
-        _meetingStore.changeTrackStateForRole(true, null);
-        break;
-      case 13:
         _meetingStore.changeStatsVisible();
         break;
-      case 14:
+      case 13:
         _meetingStore.toggleScreenShare();
         break;
-      case 15:
+      case 14:
         _meetingStore.endRoom(false, "Room Ended From Flutter");
         if (_meetingStore.isRoomEnded) {
           Navigator.pop(context);
@@ -810,23 +804,11 @@ class _MeetingPageState extends State<MeetingPage>
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      "Mute Roles",
+                      "Mute",
                     ),
                     SvgPicture.asset("assets/icons/mic_state_off.svg"),
                   ]),
               value: 11,
-            ),
-          if (meetingStore.localPeer?.role.permissions.changeRole ?? false)
-            PopupMenuItem(
-              child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Mute All",
-                    ),
-                    SvgPicture.asset("assets/icons/mic_state_off.svg"),
-                  ]),
-              value: 12,
             ),
           PopupMenuItem(
             child: Row(
@@ -844,7 +826,7 @@ class _MeetingPageState extends State<MeetingPage>
                           ? Colors.blue
                           : Colors.white),
                 ]),
-            value: 13,
+            value: 12,
           ),
           if ((meetingStore.localPeer != null) &&
               meetingStore.localPeer!.role.publishSettings!.allowed
@@ -868,7 +850,7 @@ class _MeetingPageState extends State<MeetingPage>
                           : Colors.white,
                     ),
                   ]),
-              value: 14,
+              value: 13,
             ),
           if (meetingStore.localPeer!.role.permissions.endRoom!)
             PopupMenuItem(
@@ -880,7 +862,7 @@ class _MeetingPageState extends State<MeetingPage>
                     ),
                     SvgPicture.asset("assets/icons/end_room.svg"),
                   ]),
-              value: 15,
+              value: 14,
             ),
         ];
       },

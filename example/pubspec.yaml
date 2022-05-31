@@ -32,7 +32,6 @@ dependencies:
   connectivity_checker: ^1.1.0
   dropdown_button2: ^1.1.1
   video_player:
-  clickable_list_wheel_view: ^0.0.4
   focus_detector: ^2.0.1
   flutter_staggered_grid_view: ^0.6.1
   tuple:
