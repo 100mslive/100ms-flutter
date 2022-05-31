@@ -241,17 +241,10 @@ class _MeetingPageState extends State<MeetingPage>
                                 meetingStore.isRecordingStarted,
                             builder: (_, isRecordingStarted, __) {
                               return isRecordingStarted
-                                  ? Container(
-                                      decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          border: Border.all(
-                                              width: 2,
-                                              color: Colors.red.shade600)),
-                                      child: SvgPicture.asset(
+                                  ? SvgPicture.asset(
                                         "assets/icons/record.svg",
                                         color: Colors.red,
-                                      ),
-                                    )
+                                      )
                                   : Container();
                             },
                           ),
