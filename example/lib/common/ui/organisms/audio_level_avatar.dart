@@ -1,5 +1,6 @@
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:hmssdk_flutter_example/meeting/peer_track_node.dart';
@@ -28,7 +29,8 @@ class _AudioLevelAvatarState extends State<AudioLevelAvatar> {
                     child: Text(
                       Utilities.getAvatarTitle(
                           context.read<PeerTrackNode>().peer.name),
-                      style: TextStyle(fontSize: 36, color: Colors.white),
+                      style:
+                          GoogleFonts.inter(fontSize: 36, color: Colors.white),
                     ))
                 : AvatarGlow(
                     repeat: true,
@@ -45,7 +47,8 @@ class _AudioLevelAvatarState extends State<AudioLevelAvatar> {
                         child: Text(
                           Utilities.getAvatarTitle(
                               context.read<PeerTrackNode>().peer.name),
-                          style: TextStyle(fontSize: 36, color: Colors.white),
+                          style: GoogleFonts.inter(
+                              fontSize: 36, color: Colors.white),
                         )),
                   );
           }),

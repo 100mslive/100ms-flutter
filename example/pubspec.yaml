@@ -32,12 +32,13 @@ dependencies:
   connectivity_checker: 
   dropdown_button2: 
   video_player:
-  clickable_list_wheel_view:
   focus_detector: 
   flutter_staggered_grid_view: 
   tuple:
   avatar_glow: 
   fluttertoast:
+  flutter_svg:
+  google_fonts:
   
 dev_dependencies:
   flutter_test:

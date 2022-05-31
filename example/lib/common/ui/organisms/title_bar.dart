@@ -1,5 +1,6 @@
 //Package imports
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_participants_list.dart';
 import 'package:provider/provider.dart';
 
@@ -20,8 +21,10 @@ class TitleBar extends StatelessWidget {
             return (speakerName != null)
                 ? Container(
                     width: 164,
-                    child: Text("🔊 $speakerName", overflow: TextOverflow.clip))
-                : Text("▼ " + Constant.meetingCode);
+                    child: Text("🔊 $speakerName",
+                        overflow: TextOverflow.clip,
+                        style: GoogleFonts.inter()))
+                : Text("▼ " + Constant.meetingCode, style: GoogleFonts.inter());
           }),
     );
   }

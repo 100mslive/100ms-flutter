@@ -1,5 +1,6 @@
 //Package imports
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 //Project imports
@@ -36,7 +37,10 @@ Widget gridVideoView(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(Icons.screen_share),
-                        Text("You are sharing your screen"),
+                        Text(
+                          "You are sharing your screen",
+                          style: GoogleFonts.inter(),
+                        ),
                       ],
                     ),
                   )
@@ -70,7 +74,7 @@ Widget gridVideoView(
 }
 
 List<StairedGridTile> pattern(int itemCount, int screenShareCount, Size size) {
-  double ratio = (size.height * 0.81) / (size.width);
+  double ratio = (size.height * 0.83) / (size.width);
   List<StairedGridTile> tiles = [];
   for (int i = 0; i < screenShareCount; i++) {
     tiles.add(StairedGridTile(1, ratio));

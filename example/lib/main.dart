@@ -5,8 +5,9 @@ import 'dart:io';
 //Package imports
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:wakelock/wakelock.dart';
@@ -21,7 +22,6 @@ import 'package:hmssdk_flutter_example/common/constant.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/user_name_dialog_organism.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
 import 'package:hmssdk_flutter_example/preview/preview_page.dart';
-import 'package:hmssdk_flutter_example/service/deeplink_service.dart';
 import './logs/custom_singleton_logger.dart';
 
 void main() async {
@@ -141,11 +141,16 @@ class _HomePageState extends State<HomePage> {
       onWillPop: _closeApp,
       child: Scaffold(
           appBar: AppBar(
-            title: Text('100ms'),
+            title: Text(
+              '100ms',
+              style: GoogleFonts.inter(),
+            ),
             actions: [
               PopupMenuButton<int>(
                 onSelected: handleClick,
-                icon: Icon(CupertinoIcons.gear),
+                icon: SvgPicture.asset(
+                  'assets/icons/settings.svg',
+                ),
                 itemBuilder: (BuildContext context) {
                   return [
                     PopupMenuItem(
@@ -153,14 +158,21 @@ class _HomePageState extends State<HomePage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           if (skipPreview)
-                            Text("Enable Preview")
+                            Text("Enable Preview", style: GoogleFonts.inter())
                           else
                             Text(
                               "Disable Preview",
-                              style: TextStyle(color: Colors.blue),
+                              style: GoogleFonts.inter(color: Colors.blue),
                             ),
-                          Icon(Icons.preview,
-                              color: skipPreview ? Colors.white : Colors.blue),
+                          if (skipPreview)
+                            SvgPicture.asset(
+                              'assets/icons/preview_state_on.svg',
+                            )
+                          else
+                            SvgPicture.asset(
+                              'assets/icons/preview_state_off.svg',
+                              color: Colors.blue,
+                            ),
                         ],
                       ),
                       value: 1,
@@ -171,9 +183,12 @@ class _HomePageState extends State<HomePage> {
                         children: [
                           if (mirrorCamera)
                             Text("Disable Mirroring",
-                                style: TextStyle(color: Colors.blue))
+                                style: GoogleFonts.inter(color: Colors.blue))
                           else
-                            Text("Enable Mirroring"),
+                            Text(
+                              "Enable Mirroring",
+                              style: GoogleFonts.inter(),
+                            ),
                           Icon(
                             Icons.camera_front,
                             color: mirrorCamera ? Colors.blue : Colors.white,
@@ -188,11 +203,16 @@ class _HomePageState extends State<HomePage> {
                         children: [
                           if (showStats)
                             Text("Disable Stats",
-                                style: TextStyle(color: Colors.blue))
+                                style: GoogleFonts.inter(color: Colors.blue))
                           else
-                            Text("Enable Stats"),
-                          Icon(Icons.bar_chart,
-                              color: showStats ? Colors.blue : Colors.white),
+                            Text(
+                              "Enable Stats",
+                              style: GoogleFonts.inter(),
+                            ),
+                          SvgPicture.asset(
+                            'assets/icons/stats.svg',
+                            color: showStats ? Colors.blue : Colors.white,
+                          ),
                         ],
                       ),
                       value: 3,
@@ -201,7 +221,8 @@ class _HomePageState extends State<HomePage> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text("Version ${_packageInfo.version}"),
+                          Text("Version ${_packageInfo.version}",
+                              style: GoogleFonts.inter()),
                         ],
                       ),
                       value: 4,
@@ -224,7 +245,7 @@ class _HomePageState extends State<HomePage> {
                     height: 70,
                   ),
                   Text('Join Meeting',
-                      style: TextStyle(
+                      style: GoogleFonts.inter(
                           height: 1,
                           fontSize: 24,
                           fontWeight: FontWeight.bold)),
@@ -234,10 +255,12 @@ class _HomePageState extends State<HomePage> {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: TextField(
+                      style: GoogleFonts.inter(),
                       controller: roomIdController,
                       keyboardType: TextInputType.url,
                       decoration: InputDecoration(
                           hintText: 'Enter Room URL',
+                          hintStyle: GoogleFonts.inter(),
                           suffixIcon: IconButton(
                             onPressed: roomIdController.clear,
                             icon: Icon(Icons.clear),
@@ -312,7 +335,7 @@ class _HomePageState extends State<HomePage> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text('Join Meeting',
-                                style: TextStyle(height: 1, fontSize: 20)),
+                                style:  GoogleFonts.inter(height: 1, fontSize: 20)),
                             SizedBox(
                               width: 5,
                             ),

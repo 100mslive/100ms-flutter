@@ -3,6 +3,8 @@
 import 'package:connectivity_checker/connectivity_checker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:provider/provider.dart';
@@ -103,16 +105,14 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                                 width: itemWidth,
                                 child: Center(
                                     child: CircleAvatar(
-                                        backgroundColor: Utilities.colors[
-                                            _previewStore.peer!.name
-                                                    .toLowerCase()
-                                                    .codeUnitAt(0) %
-                                                Utilities.colors.length],
+                                        backgroundColor:
+                                            Utilities.getBackgroundColour(
+                                                _previewStore.peer!.name),
                                         radius: 36,
                                         child: Text(
                                           Utilities.getAvatarTitle(
                                               _previewStore.peer!.name),
-                                          style: TextStyle(
+                                          style: GoogleFonts.inter(
                                               fontSize: 36,
                                               color: Colors.white),
                                         ))),
@@ -188,15 +188,16 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                                                       children: [
                                                         Text(
                                                           peer.name,
-                                                          style: TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                              color:
-                                                                  Colors.white),
+                                                          style:
+                                                              GoogleFonts.inter(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  color: Colors
+                                                                      .white),
                                                         ),
                                                         Text(peer.role.name,
-                                                            style: TextStyle(
+                                                            style: GoogleFonts.inter(
                                                                 fontWeight:
                                                                     FontWeight
                                                                         .bold,
@@ -236,7 +237,7 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                                           Text(
                                             _previewStore.peers.length
                                                 .toString(),
-                                            style: TextStyle(
+                                            style: GoogleFonts.inter(
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 16),
                                           )
@@ -269,11 +270,15 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                                   radius: 25,
                                   backgroundColor:
                                       Colors.transparent.withOpacity(0.2),
-                                  child: Icon(
-                                      _previewStore.isVideoOn
-                                          ? Icons.videocam
-                                          : Icons.videocam_off,
-                                      color: Colors.blue),
+                                  child: (_previewStore.isVideoOn)
+                                      ? SvgPicture.asset(
+                                          "assets/icons/cam_state_on.svg",
+                                          color: Colors.blue,
+                                        )
+                                      : SvgPicture.asset(
+                                          "assets/icons/cam_state_off.svg",
+                                          color: Colors.blue,
+                                        ),
                                 ),
                               )
                             : Container(),
@@ -313,7 +318,8 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                                     },
                                     child: Text(
                                       'Join HLS ',
-                                      style: TextStyle(height: 1, fontSize: 18),
+                                      style: GoogleFonts.inter(
+                                          height: 1, fontSize: 18),
                                     ),
                                   )
                                 : ElevatedButton(
@@ -352,7 +358,8 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                                     },
                                     child: Text(
                                       'Join Now',
-                                      style: TextStyle(height: 1, fontSize: 18),
+                                      style: GoogleFonts.inter(
+                                          height: 1, fontSize: 18),
                                     ),
                                   )
                             : Container(),
@@ -372,12 +379,15 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                                   radius: 25,
                                   backgroundColor:
                                       Colors.transparent.withOpacity(0.2),
-                                  child: Icon(
-                                    (_previewStore.isAudioOn)
-                                        ? Icons.mic
-                                        : Icons.mic_off,
-                                    color: Colors.blue,
-                                  ),
+                                  child: (_previewStore.isAudioOn)
+                                      ? SvgPicture.asset(
+                                          "assets/icons/mic_state_on.svg",
+                                          color: Colors.blue,
+                                        )
+                                      : SvgPicture.asset(
+                                          "assets/icons/mic_state_off.svg",
+                                          color: Colors.blue,
+                                        ),
                                 ),
                               )
                             : Container(),

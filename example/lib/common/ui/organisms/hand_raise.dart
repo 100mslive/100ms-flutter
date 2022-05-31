@@ -1,5 +1,6 @@
 //Package imports
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
 //Project imports
@@ -14,9 +15,10 @@ class HandRaise extends StatelessWidget {
               ? Positioned(
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
-                    child: Image.asset(
-                      'assets/icons/raise_hand.png',
-                      color: Colors.amber.shade300,
+                    child: SvgPicture.asset(
+                      "assets/icons/hand_state_on.svg",
+                      color: Colors.yellow,
+                      height: 50,
                     ),
                   ),
                   bottom: 5.0,

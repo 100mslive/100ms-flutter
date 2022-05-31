@@ -1,5 +1,6 @@
 //Package imports
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class ChangeTrackOptionDialog extends StatefulWidget {
   final String peerName;
@@ -31,7 +32,10 @@ class _ChangeTrackOptionDialogState extends State<ChangeTrackOptionDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(widget.peerName),
+      title: Text(
+        widget.peerName,
+        style: GoogleFonts.inter(),
+      ),
       content: Container(
         width: double.infinity,
         child: Column(
@@ -53,7 +57,10 @@ class _ChangeTrackOptionDialogState extends State<ChangeTrackOptionDialog> {
                       SizedBox(
                         width: 16,
                       ),
-                      Text("${widget.isVideoMuted ? "Unmute" : "Mute"} video")
+                      Text(
+                        "${widget.isVideoMuted ? "Unmute" : "Mute"} video",
+                        style: GoogleFonts.inter(),
+                      )
                     ],
                   ),
                 ),
@@ -77,7 +84,10 @@ class _ChangeTrackOptionDialogState extends State<ChangeTrackOptionDialog> {
                       SizedBox(
                         width: 16,
                       ),
-                      Text("${widget.isAudioMuted ? "Unmute" : "Mute"} audio")
+                      Text(
+                        "${widget.isAudioMuted ? "Unmute" : "Mute"} audio",
+                        style: GoogleFonts.inter(),
+                      ),
                     ],
                   ),
                 ),
@@ -98,7 +108,10 @@ class _ChangeTrackOptionDialogState extends State<ChangeTrackOptionDialog> {
                       SizedBox(
                         width: 16,
                       ),
-                      Text("Remove Peer")
+                      Text(
+                        "Remove Peer",
+                        style: GoogleFonts.inter(),
+                      )
                     ],
                   ),
                 ),

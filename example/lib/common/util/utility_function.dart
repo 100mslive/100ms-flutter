@@ -14,24 +14,19 @@ class Utilities {
         name += parts[1][0];
       }
     }
-    return name;
+    return name.toUpperCase();
   }
 
   static Color getBackgroundColour(String name) {
     return Utilities
-        .colors[name.toLowerCase().codeUnitAt(0) % Utilities.colors.length];
+        .colors[name.toUpperCase().codeUnitAt(0) % Utilities.colors.length];
   }
 
   static List<Color> colors = [
-    Colors.red,
-    Colors.pink,
-    Colors.purple,
-    Colors.deepPurple,
-    Colors.indigo,
-    Colors.blue,
-    Colors.lightBlue,
-    Colors.teal,
-    Colors.green,
-    Colors.deepOrange,
+    Color(0xFFFAC919),
+    Color(0xFF00AE63),
+    Color(0xFF6554C0),
+    Color(0xFFF69133),
+    Color(0xFF8FF5FB)
   ];
 }

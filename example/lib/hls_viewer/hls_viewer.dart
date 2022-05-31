@@ -1,5 +1,6 @@
 //Package imports
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 
@@ -48,7 +49,7 @@ class _HLSViewerState extends State<HLSViewer> {
               )
             : Text(
                 "Waiting for the HLS Streaming to start...",
-                style: TextStyle(fontSize: 20.0),
+                style: GoogleFonts.inter(fontSize: 20.0),
               ),
       ),
     );

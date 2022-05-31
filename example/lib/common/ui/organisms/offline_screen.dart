@@ -1,5 +1,6 @@
 //Package imports
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class OfflineWidget extends StatelessWidget {
   @override
@@ -27,7 +28,8 @@ class OfflineWidget extends StatelessWidget {
                 child: Center(
                   child: Text(
                     'Oops, No internet connection.\n\nReconnecting...',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    style: GoogleFonts.inter(
+                        fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                 ),
               ),

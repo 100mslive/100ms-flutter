@@ -1,24 +1,21 @@
 //Package imports
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_mode.dart';
 import 'package:provider/provider.dart';
-import 'package:clickable_list_wheel_view/clickable_list_wheel_widget.dart';
 
 //Project imports
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/role_change_request_dialog.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/track_change_request_dialog.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
-import 'package:hmssdk_flutter_example/meeting/peer_track_node.dart';
-import 'package:hmssdk_flutter_example/common/ui/organisms/audio_tile.dart';
-import 'package:hmssdk_flutter_example/common/ui/organisms/video_tile.dart';
 
 class UtilityComponents {
   static void showSnackBarWithString(event, context) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text(
         event,
-        style: TextStyle(color: Colors.white),
+        style: GoogleFonts.inter(color: Colors.white),
       ),
       backgroundColor: Colors.black87,
     ));
@@ -31,7 +28,7 @@ class UtilityComponents {
       builder: (ctx) => AlertDialog(
         title: Text(
           'Leave Room?',
-          style: TextStyle(fontSize: 24, fontWeight: FontWeight.w700),
+          style: GoogleFonts.inter(fontSize: 24, fontWeight: FontWeight.w700),
         ),
         actions: [
           ElevatedButton(
@@ -42,12 +39,12 @@ class UtilityComponents {
                     _meetingStore.leave(),
                     Navigator.popUntil(context, (route) => route.isFirst)
                   },
-              child: Text('Yes', style: TextStyle(fontSize: 24))),
+              child: Text('Yes', style: GoogleFonts.inter(fontSize: 24))),
           ElevatedButton(
             onPressed: () => Navigator.pop(context, false),
             child: Text(
               'Cancel',
-              style: TextStyle(fontSize: 24),
+              style: GoogleFonts.inter(fontSize: 24),
             ),
           ),
         ],
@@ -101,10 +98,16 @@ class UtilityComponents {
         context: context,
         builder: (context) {
           return AlertDialog(
-            content: Text(message),
+            content: Text(
+              message,
+              style: GoogleFonts.inter(),
+            ),
             actions: [
               ElevatedButton(
-                child: Text('OK'),
+                child: Text(
+                  'OK',
+                  style: GoogleFonts.inter(),
+                ),
                 onPressed: () {
                   Navigator.pop(context);
                 },
@@ -141,13 +144,19 @@ class UtilityComponents {
               ),
               actions: [
                 ElevatedButton(
-                  child: Text('Cancel'),
+                  child: Text(
+                    'Cancel',
+                    style: GoogleFonts.inter(),
+                  ),
                   onPressed: () {
                     Navigator.pop(context, '');
                   },
                 ),
                 ElevatedButton(
-                  child: Text('OK'),
+                  child: Text(
+                    'OK',
+                    style: GoogleFonts.inter(),
+                  ),
                   onPressed: () {
                     if (textController.text == "") {
                     } else {
@@ -161,44 +170,105 @@ class UtilityComponents {
     return answer;
   }
 
-  static Future<List<HMSRole>> showRoleList(
-      BuildContext context, List<HMSRole> roles) async {
+  static showRoleList(BuildContext context, List<HMSRole> roles,
+      MeetingStore _meetingStore) async {
     List<HMSRole> _selectedRoles = [];
-    FixedExtentScrollController _scrollController =
-        FixedExtentScrollController();
-
-    HMSRole? selectedRole = await showDialog(
+    bool muteAll = false;
+    showDialog(
         context: context,
-        builder: (context) => AlertDialog(
-              title: Text("Select Role for Mute"),
-              content: Container(
-                  height: 100,
-                  child: ClickableListWheelScrollView(
-                      scrollController: _scrollController,
-                      itemHeight: 50,
-                      itemCount: roles.length,
-                      onItemTapCallback: (index) {
-                        Navigator.pop(context, roles[index]);
-                      },
-                      child: ListWheelScrollView.useDelegate(
-                          controller: _scrollController,
-                          physics: FixedExtentScrollPhysics(),
-                          overAndUnderCenterOpacity: 0.5,
-                          perspective: 0.002,
-                          itemExtent: 50,
-                          childDelegate: ListWheelChildBuilderDelegate(
-                              childCount: roles.length,
-                              builder: (context, index) {
-                                return Container(
-                                  height: 50,
-                                  child: ListTile(
-                                    title: Text(roles[index].name),
-                                  ),
+        builder: (context) => StatefulBuilder(builder: (context, setState) {
+              return AlertDialog(
+                title: Text(
+                  "Select Role for Mute",
+                  style: GoogleFonts.inter(),
+                ),
+                content: Container(
+                    width: 300,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Flexible(
+                          fit: FlexFit.tight,
+                          child: ListView.builder(
+                              itemCount: roles.length,
+                              itemBuilder: (context, index) {
+                                return Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      roles[index].name,
+                                      style: GoogleFonts.inter(),
+                                    ),
+                                    Checkbox(
+                                        value: _selectedRoles
+                                            .contains(roles[index]),
+                                        activeColor: Colors.blue,
+                                        onChanged: (bool? value) {
+                                          if (value != null && value) {
+                                            _selectedRoles.add(roles[index]);
+                                          } else if (_selectedRoles
+                                              .contains(roles[index])) {
+                                            _selectedRoles.remove(roles[index]);
+                                          }
+                                          setState(() {});
+                                        }),
+                                  ],
                                 );
-                              })))),
-            ));
-    if (selectedRole != null) _selectedRoles.add(selectedRole);
-    return _selectedRoles;
+                              }),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Mute All",
+                              style: GoogleFonts.inter(),
+                            ),
+                            Checkbox(
+                                value: muteAll,
+                                activeColor: Colors.blue,
+                                onChanged: (bool? value) {
+                                  if (value != null) {
+                                    muteAll = value;
+                                  }
+                                  setState(() {});
+                                }),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                    primary: Colors.red),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: Text(
+                                  "Cancel",
+                                  style: GoogleFonts.inter(),
+                                )),
+                            ElevatedButton(
+                                onPressed: () {
+                                  if (muteAll) {
+                                    _meetingStore.changeTrackStateForRole(
+                                        true, null);
+                                  } else if (_selectedRoles.isNotEmpty) {
+                                    _meetingStore.changeTrackStateForRole(
+                                        true, _selectedRoles);
+                                  }
+                                  Navigator.pop(context);
+                                },
+                                child: Text(
+                                  "Mute Roles",
+                                  style: GoogleFonts.inter(),
+                                ))
+                          ],
+                        )
+                      ],
+                    )),
+              );
+            }));
   }
 
   static Future<Map<String, String>> showRTMPInputDialog(
@@ -229,7 +299,10 @@ class UtilityComponents {
                             hintText: placeholder),
                       ),
                       CheckboxListTile(
-                          title: Text("Recording"),
+                          title: Text(
+                            "Recording",
+                            style: GoogleFonts.inter(),
+                          ),
                           activeColor: Colors.blue,
                           controlAffinity: ListTileControlAffinity.trailing,
                           value: isRecordingEnabled,
@@ -243,13 +316,19 @@ class UtilityComponents {
                 ),
                 actions: [
                   ElevatedButton(
-                    child: Text('Cancel'),
+                    child: Text(
+                      'Cancel',
+                      style: GoogleFonts.inter(),
+                    ),
                     onPressed: () {
                       Navigator.pop(context, {"url": "", "toRecord": "false"});
                     },
                   ),
                   ElevatedButton(
-                    child: Text('OK'),
+                    child: Text(
+                      'OK',
+                      style: GoogleFonts.inter(),
+                    ),
                     onPressed: () {
                       if (textController.text == "" && !isRecordingEnabled) {
                       } else {
@@ -265,59 +344,5 @@ class UtilityComponents {
             }));
 
     return answer;
-  }
-
-  static List<Widget> videoTileWidget(
-      int itemCount, List<PeerTrackNode> peerTracks, Size size) {
-    return List.generate(itemCount, (index) {
-      if (peerTracks[index].track?.source != "REGULAR") {
-        return ChangeNotifierProvider.value(
-          key: ValueKey(peerTracks[index].uid),
-          value: peerTracks[index],
-          child: peerTracks[index].peer.isLocal
-              ? Container(
-                  margin: EdgeInsets.all(2),
-                  decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey, width: 1.0),
-                      borderRadius: BorderRadius.all(Radius.circular(10))),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.screen_share),
-                      Text("You are sharing your screen"),
-                    ],
-                  ),
-                )
-              : VideoTile(
-                  key: Key(peerTracks[index].uid),
-                  scaleType: ScaleType.SCALE_ASPECT_FIT,
-                  itemHeight: size.height,
-                  itemWidth: size.width,
-                ),
-        );
-      }
-      return ChangeNotifierProvider.value(
-          key: ValueKey(peerTracks[index].uid),
-          value: peerTracks[index],
-          child: VideoTile(
-            key: ValueKey(peerTracks[index].uid),
-            itemHeight: size.height,
-            itemWidth: size.width,
-          ));
-    });
-  }
-
-  static List<Widget> audioTileWidget(
-      int itemCount, List<PeerTrackNode> peerTracks, Size size) {
-    return List.generate(itemCount, (index) {
-      return ChangeNotifierProvider.value(
-          key: ValueKey(peerTracks[index].uid),
-          value: peerTracks[index],
-          child: AudioTile(
-            key: ValueKey(peerTracks[index].uid),
-            itemHeight: size.height,
-            itemWidth: size.width,
-          ));
-    });
   }
 }

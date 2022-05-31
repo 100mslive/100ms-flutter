@@ -1,5 +1,6 @@
 //Package imports
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 //Project imports
@@ -36,7 +37,10 @@ Widget fullScreenView(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(Icons.screen_share),
-                        Text("You are sharing your screen"),
+                        Text(
+                          "You are sharing your screen",
+                          style: GoogleFonts.inter(),
+                        ),
                       ],
                     ),
                   )
@@ -66,5 +70,5 @@ Widget fullScreenView(
       controller: Provider.of<MeetingStore>(context).controller,
       gridDelegate: SliverStairedGridDelegate(
           startCrossAxisDirectionReversed: false,
-          pattern: [StairedGridTile(1, (size.height * 0.81) / (size.width))]));
+          pattern: [StairedGridTile(1, (size.height * 0.83) / (size.width))]));
 }
