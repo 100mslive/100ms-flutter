@@ -184,12 +184,12 @@ class UtilityComponents {
                 ),
                 content: Container(
                     width: 300,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Flexible(
-                          fit: FlexFit.tight,
-                          child: ListView.builder(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          ListView.builder(
+                              shrinkWrap: true,
                               itemCount: roles.length,
                               itemBuilder: (context, index) {
                                 return Row(
@@ -216,56 +216,56 @@ class UtilityComponents {
                                   ],
                                 );
                               }),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "Mute All",
-                              style: GoogleFonts.inter(),
-                            ),
-                            Checkbox(
-                                value: muteAll,
-                                activeColor: Colors.blue,
-                                onChanged: (bool? value) {
-                                  if (value != null) {
-                                    muteAll = value;
-                                  }
-                                  setState(() {});
-                                }),
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                    primary: Colors.red),
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                                child: Text(
-                                  "Cancel",
-                                  style: GoogleFonts.inter(),
-                                )),
-                            ElevatedButton(
-                                onPressed: () {
-                                  if (muteAll) {
-                                    _meetingStore.changeTrackStateForRole(
-                                        true, null);
-                                  } else if (_selectedRoles.isNotEmpty) {
-                                    _meetingStore.changeTrackStateForRole(
-                                        true, _selectedRoles);
-                                  }
-                                  Navigator.pop(context);
-                                },
-                                child: Text(
-                                  "Mute Roles",
-                                  style: GoogleFonts.inter(),
-                                ))
-                          ],
-                        )
-                      ],
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "Mute All",
+                                style: GoogleFonts.inter(color: Colors.red),
+                              ),
+                              Checkbox(
+                                  value: muteAll,
+                                  activeColor: Colors.blue,
+                                  onChanged: (bool? value) {
+                                    if (value != null) {
+                                      muteAll = value;
+                                    }
+                                    setState(() {});
+                                  }),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                      primary: Colors.red),
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: Text(
+                                    "Cancel",
+                                    style: GoogleFonts.inter(),
+                                  )),
+                              ElevatedButton(
+                                  onPressed: () {
+                                    if (muteAll) {
+                                      _meetingStore.changeTrackStateForRole(
+                                          true, null);
+                                    } else if (_selectedRoles.isNotEmpty) {
+                                      _meetingStore.changeTrackStateForRole(
+                                          true, _selectedRoles);
+                                    }
+                                    Navigator.pop(context);
+                                  },
+                                  child: Text(
+                                    "Mute Roles",
+                                    style: GoogleFonts.inter(),
+                                  ))
+                            ],
+                          )
+                        ],
+                      ),
                     )),
               );
             }));
