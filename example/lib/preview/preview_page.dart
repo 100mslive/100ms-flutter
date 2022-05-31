@@ -124,9 +124,8 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                     padding: const EdgeInsets.only(top: 40, left: 20),
                     child: Align(
                       alignment: Alignment.topLeft,
-                      child: Image.asset(
-                        'assets/icons/network_${_previewStore.networkQuality}.png',
-                        scale: 2,
+                      child: SvgPicture.asset(
+                        'assets/icons/network_${_previewStore.networkQuality}.svg',
                       ),
                     ),
                   ),
