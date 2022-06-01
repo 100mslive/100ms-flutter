@@ -171,10 +171,11 @@ class _HomePageState extends State<HomePage> {
       onWillPop: _closeApp,
       child: Scaffold(
           appBar: AppBar(
+            backgroundColor: Constant.isDarkMode ? Colors.black : Colors.white,
             elevation: 0,
             title: Text(
               '100ms',
-              style: GoogleFonts.inter(),
+              style: GoogleFonts.inter(color: iconColor),
             ),
             actions: [
               IconButton(
@@ -188,14 +189,17 @@ class _HomePageState extends State<HomePage> {
                   icon: Constant.isDarkMode
                       ? SvgPicture.asset(
                           'assets/icons/light_mode.svg',
+                          color: iconColor,
                         )
                       : SvgPicture.asset(
                           'assets/icons/dark_mode.svg',
+                          color: iconColor,
                         )),
               PopupMenuButton<int>(
                 onSelected: handleClick,
                 icon: SvgPicture.asset(
                   'assets/icons/settings.svg',
+                  color: iconColor,
                 ),
                 itemBuilder: (BuildContext context) {
                   return [
