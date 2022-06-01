@@ -69,7 +69,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                                       child: DropdownButton2(
                                         buttonWidth: 120,
                                         value: valueChoose,
-                                        iconEnabledColor: Colors.black,
+                                        iconEnabledColor: iconColor,
                                         onChanged: (newvalue) {
                                           setState(() {
                                             this.valueChoose =
