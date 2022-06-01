@@ -73,7 +73,7 @@ class _MeetingPageState extends State<MeetingPage>
     bool ans =
         await context.read<MeetingStore>().join(widget.user, widget.roomId);
     if (!ans) {
-      UtilityComponents.showSnackBarWithString("Unable to Join", context);
+      UtilityComponents.showToastWithString("Unable to Join");
       Navigator.of(context).pop();
     }
   }
@@ -102,7 +102,7 @@ class _MeetingPageState extends State<MeetingPage>
         // StaticLogger.logger?.close();
         // ShareExtend.share(CustomLogger.file?.path ?? '', 'file');
         // logger.getCustomLogger();
-        UtilityComponents.showSnackBarWithString("Coming Soon...", context);
+        UtilityComponents.showToastWithString("Coming Soon...");
         break;
 
       case 2:
@@ -224,8 +224,8 @@ class _MeetingPageState extends State<MeetingPage>
             builder: (_, data, __) {
               if (data.item2) {
                 WidgetsBinding.instance?.addPostFrameCallback((_) {
-                  UtilityComponents.showSnackBarWithString(
-                      context.read<MeetingStore>().description, context);
+                  UtilityComponents.showToastWithString(
+                      context.read<MeetingStore>().description);
                   Navigator.of(context).popUntil((route) => route.isFirst);
                 });
               }
@@ -241,17 +241,10 @@ class _MeetingPageState extends State<MeetingPage>
                                 meetingStore.isRecordingStarted,
                             builder: (_, isRecordingStarted, __) {
                               return isRecordingStarted
-                                  ? Container(
-                                      decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          border: Border.all(
-                                              width: 2,
-                                              color: Colors.red.shade600)),
-                                      child: SvgPicture.asset(
+                                  ? SvgPicture.asset(
                                         "assets/icons/record.svg",
                                         color: Colors.red,
-                                      ),
-                                    )
+                                      )
                                   : Container();
                             },
                           ),
@@ -279,7 +272,7 @@ class _MeetingPageState extends State<MeetingPage>
                       body: Stack(
                         children: [
                           Container(
-                            height: MediaQuery.of(context).size.height * 0.83,
+                            height: MediaQuery.of(context).size.height * 0.82,
                             child: Selector<
                                     MeetingStore,
                                     Tuple6<List<PeerTrackNode>, bool, int, int,
@@ -448,7 +441,7 @@ class _MeetingPageState extends State<MeetingPage>
                   meetingStore.meetingMode == MeetingMode.Audio),
               builder: (_, data, __) {
                 return Container(
-                    padding: EdgeInsets.all(8),
+                    padding: EdgeInsets.all(5),
                     child: IconButton(
                         tooltip: 'Video',
                         iconSize: 24,
@@ -475,7 +468,7 @@ class _MeetingPageState extends State<MeetingPage>
               selector: (_, meetingStore) => meetingStore.isMicOn,
               builder: (_, isMicOn, __) {
                 return Container(
-                    padding: EdgeInsets.all(8),
+                    padding: EdgeInsets.all(5),
                     child: IconButton(
                         tooltip: 'Audio',
                         iconSize: 24,
@@ -492,15 +485,12 @@ class _MeetingPageState extends State<MeetingPage>
             selector: (_, meetingStore) => meetingStore.isRaisedHand,
             builder: (_, raisedHand, __) {
               return Container(
-                  padding: EdgeInsets.all(8),
+                  padding: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
                   child: IconButton(
                       tooltip: 'RaiseHand',
                       iconSize: 20,
                       onPressed: () {
                         context.read<MeetingStore>().changeMetadata();
-                        // UtilityComponents.showSnackBarWithString(
-                        //     !raisedHand ? "Raised Hand ON" : "Raised Hand OFF",
-                        //     context);
                       },
                       icon: SvgPicture.asset(
                         "assets/icons/hand_state_on.svg",
@@ -512,7 +502,7 @@ class _MeetingPageState extends State<MeetingPage>
             selector: (_, meetingStore) => meetingStore.isBRB,
             builder: (_, isBRB, __) {
               return Container(
-                  padding: EdgeInsets.all(8),
+                  padding: EdgeInsets.all(5),
                   child: IconButton(
                       tooltip: 'BRB',
                       iconSize: 20,
@@ -529,7 +519,7 @@ class _MeetingPageState extends State<MeetingPage>
               selector: (_, meetingStore) => meetingStore.isNewMessageReceived,
               builder: (_, isNewMessageReceived, __) {
                 return Container(
-                  padding: EdgeInsets.all(8),
+                  padding: EdgeInsets.all(5),
                   child: IconButton(
                       tooltip: 'Chat',
                       iconSize: 24,
@@ -545,7 +535,7 @@ class _MeetingPageState extends State<MeetingPage>
                 );
               }),
           Container(
-            padding: EdgeInsets.all(8),
+            padding: EdgeInsets.all(5),
             child: IconButton(
                 color: Colors.white,
                 tooltip: 'Leave Or End',
@@ -579,9 +569,9 @@ class _MeetingPageState extends State<MeetingPage>
                     iconSize: 20,
                     onPressed: () {
                       context.read<MeetingStore>().changeMetadata();
-                      UtilityComponents.showSnackBarWithString(
-                          !raisedHand ? "Raised Hand ON" : "Raised Hand OFF",
-                          context);
+                      UtilityComponents.showToastWithString(
+                          !raisedHand ? "Raised Hand ON" : "Raised Hand OFF"
+                          );
                     },
                     icon: raisedHand
                         ? SvgPicture.asset(

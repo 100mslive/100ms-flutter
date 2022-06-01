@@ -1,5 +1,6 @@
 //Package imports
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
 //Project imports
@@ -14,9 +15,8 @@ class NetworkIconWidget extends StatelessWidget {
               ? Positioned(
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(5, 5, 0, 0),
-                    child: Image.asset(
-                      'assets/icons/network_$networkQuality.png',
-                      scale: 2,
+                    child: SvgPicture.asset(
+                      'assets/icons/network_$networkQuality.svg',
                     ),
                   ),
                   top: 5.0,

@@ -29,4 +29,8 @@ class Utilities {
     Color(0xFFF69133),
     Color(0xFF8FF5FB)
   ];
+
+  static double getRatio(Size size) {
+    return  (size.height * 0.82) / (size.width);
+  }
 }

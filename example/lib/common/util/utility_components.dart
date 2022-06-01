@@ -1,5 +1,6 @@
 //Package imports
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_mode.dart';
 import 'package:provider/provider.dart';
@@ -11,14 +12,8 @@ import 'package:hmssdk_flutter_example/common/ui/organisms/track_change_request_
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 
 class UtilityComponents {
-  static void showSnackBarWithString(event, context) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text(
-        event,
-        style: GoogleFonts.inter(color: Colors.white),
-      ),
-      backgroundColor: Colors.black87,
-    ));
+  static void showToastWithString(String message) {
+    Fluttertoast.showToast(msg: message);
   }
 
   static Future<dynamic> onBackPressed(BuildContext context) {
@@ -62,8 +57,8 @@ class UtilityComponents {
         Provider.of<MeetingStore>(context, listen: false);
     if (answer == "OK") {
       meetingStore.acceptChangeRole(event);
-      UtilityComponents.showSnackBarWithString(
-          "Role Change to " + event.suggestedRole.name, context);
+      UtilityComponents.showToastWithString(
+          "Role Change to " + event.suggestedRole.name);
     } else {
       meetingStore.roleChangeRequest = null;
     }
@@ -259,7 +254,7 @@ class UtilityComponents {
                                     Navigator.pop(context);
                                   },
                                   child: Text(
-                                    "Mute Roles",
+                                    "Mute",
                                     style: GoogleFonts.inter(),
                                   ))
                             ],

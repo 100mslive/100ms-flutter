@@ -1,6 +1,7 @@
 //Package imports
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:provider/provider.dart';
 
 //Project imports
@@ -70,5 +71,5 @@ Widget fullScreenView(
       controller: Provider.of<MeetingStore>(context).controller,
       gridDelegate: SliverStairedGridDelegate(
           startCrossAxisDirectionReversed: false,
-          pattern: [StairedGridTile(1, (size.height * 0.83) / (size.width))]));
+          pattern: [StairedGridTile(1, Utilities.getRatio(size))]));
 }
