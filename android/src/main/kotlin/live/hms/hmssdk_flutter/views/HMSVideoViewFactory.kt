@@ -58,7 +58,7 @@ class HMSVideoViewFactory(private val plugin: HmssdkFlutterPlugin) :
 
     PlatformViewFactory(StandardMessageCodec.INSTANCE) {
 
-    override fun create(context: Context, viewId: Int, args: Any?): PlatformView {
+    override fun create(context: Context?, viewId: Int, args: Any?): PlatformView {
 
         val creationParams = args as Map<String?, Any?>?
 
@@ -73,6 +73,6 @@ class HMSVideoViewFactory(private val plugin: HmssdkFlutterPlugin) :
 
         val track = HmsUtilities.getVideoTrack(trackId!!, room!!)
 
-        return HMSVideoViewWidget(context, viewId, creationParams, track!!, setMirror!!, scaleType, matchParent)
+        return HMSVideoViewWidget(requireNotNull(context), viewId, creationParams, track!!, setMirror!!, scaleType, matchParent)
     }
 }
