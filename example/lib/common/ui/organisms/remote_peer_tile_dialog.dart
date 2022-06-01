@@ -4,19 +4,19 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 
-class ChangeTrackOptionDialog extends StatefulWidget {
+class RemotePeerTileDialog extends StatefulWidget {
   final String peerName;
-  final isVideoMuted;
-  final isAudioMuted;
+  final bool isVideoMuted;
+  final bool isAudioMuted;
+  final bool mute;
+  final bool unMute;
+  final bool removeOthers;
+  final bool roles;
   final Function(bool, bool) changeVideoTrack;
   final Function(bool, bool) changeAudioTrack;
   final Function() removePeer;
   final Function() changeRole;
-  final mute;
-  final unMute;
-  final removeOthers;
-  final roles;
-  const ChangeTrackOptionDialog({
+  const RemotePeerTileDialog({
     required this.isVideoMuted,
     required this.isAudioMuted,
     required this.changeVideoTrack,
@@ -31,17 +31,16 @@ class ChangeTrackOptionDialog extends StatefulWidget {
   });
 
   @override
-  _ChangeTrackOptionDialogState createState() =>
-      _ChangeTrackOptionDialogState();
+  _RemotePeerTileDialogState createState() => _RemotePeerTileDialogState();
 }
 
-class _ChangeTrackOptionDialogState extends State<ChangeTrackOptionDialog> {
+class _RemotePeerTileDialogState extends State<RemotePeerTileDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text(
         widget.peerName,
-        style: GoogleFonts.inter(color: iconColor),
+        style: GoogleFonts.inter(color: iconColor,fontWeight: FontWeight.bold),
       ),
       content: Container(
         width: double.infinity,
@@ -126,9 +125,9 @@ class _ChangeTrackOptionDialogState extends State<ChangeTrackOptionDialog> {
                   child: Row(
                     children: [
                       SvgPicture.asset(
-                          "assets/icons/peer_remove.svg",
-                          color: iconColor,
-                        ),
+                        "assets/icons/peer_remove.svg",
+                        color: iconColor,
+                      ),
                       SizedBox(
                         width: 16,
                       ),
@@ -150,9 +149,9 @@ class _ChangeTrackOptionDialogState extends State<ChangeTrackOptionDialog> {
                   child: Row(
                     children: [
                       SvgPicture.asset(
-                          "assets/icons/role_change.svg",
-                          color: iconColor,
-                        ),
+                        "assets/icons/role_change.svg",
+                        color: iconColor,
+                      ),
                       SizedBox(
                         width: 16,
                       ),

@@ -437,7 +437,7 @@ class _MeetingPageState extends State<MeetingPage>
                               )
                             : SvgPicture.asset(
                                 "assets/icons/cam_state_off.svg",
-                                color: iconColor,
+                                color: data.item2 ? Colors.grey : iconColor,
                               )));
               },
             ),
@@ -567,9 +567,9 @@ class _MeetingPageState extends State<MeetingPage>
                           !raisedHand ? "Raised Hand ON" : "Raised Hand OFF");
                     },
                     icon: SvgPicture.asset(
-                        "assets/icons/hand.svg",
-                        color: raisedHand ? Colors.yellow : iconColor,
-                      ),
+                      "assets/icons/hand.svg",
+                      color: raisedHand ? Colors.yellow : iconColor,
+                    ),
                   ));
             },
           ),
