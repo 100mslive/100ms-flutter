@@ -73,6 +73,6 @@ class HMSVideoViewFactory(private val plugin: HmssdkFlutterPlugin) :
 
         val track = HmsUtilities.getVideoTrack(trackId!!, room!!)
 
-        return HMSVideoViewWidget(requireNotNull(context), viewId, creationParams, track!!, setMirror!!, scaleType, matchParent)
+        return HMSVideoViewWidget(context, viewId, creationParams, track!!, setMirror!!, scaleType, matchParent)
     }
 }
