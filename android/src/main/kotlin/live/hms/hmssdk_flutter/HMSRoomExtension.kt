@@ -26,6 +26,7 @@ class HMSRoomExtension {
             hashMap["hls_streaming_state"] = HMSStreamingState.toDictionary(room.hlsStreamingState)
             hashMap["peer_count"] = room.peerCount
             hashMap["started_at"] = room.startedAt?:-1
+            hashMap["session_id"] = room.sessionId
             return hashMap
         }
 
