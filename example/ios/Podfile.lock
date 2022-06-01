@@ -131,12 +131,12 @@ PODS:
     - GoogleUtilities/Logger
   - GoogleUtilities/UserDefaults (7.7.0):
     - GoogleUtilities/Logger
-  - HMSSDK (0.2.13):
-    - HMSWebRTC (= 1.0.4518)
+  - HMSSDK (0.3.1):
+    - HMSWebRTC (= 1.0.4897)
   - hmssdk_flutter (0.7.2):
     - Flutter
-    - HMSSDK (= 0.2.13)
-  - HMSWebRTC (1.0.4518)
+    - HMSSDK (= 0.3.1)
+  - HMSWebRTC (1.0.4897)
   - nanopb (2.30908.0):
     - nanopb/decode (= 2.30908.0)
     - nanopb/encode (= 2.30908.0)
@@ -234,9 +234,9 @@ SPEC CHECKSUMS:
   GoogleAppMeasurement: 4c19f031220c72464d460c9daa1fb5d1acce958e
   GoogleDataTransport: 5fffe35792f8b96ec8d6775f5eccd83c998d5a3b
   GoogleUtilities: e0913149f6b0625b553d70dae12b49fc62914fd1
-  HMSSDK: 45b5e25be25b74bb2ca71cce4c6128f57b7eccc4
-  hmssdk_flutter: 2e904fc421cc726447966dd16d14107114c5a4ba
-  HMSWebRTC: 599fb1d886daecd6e58984f84224d708bce8b565
+  HMSSDK: 9780df180a4c8bd3446fd2981b338856fd02b3a4
+  hmssdk_flutter: 3fed63723ebebd88699728f9a6fd93984bf51c74
+  HMSWebRTC: aa317dbbf56a191463a90491e5e37f298f8fa29c
   nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
   package_info_plus: 6c92f08e1f853dc01228d6f553146438dafcd14e
   path_provider_ios: 14f3d2fd28c4fdb42f44e0f751d12861c43cee02
@@ -246,6 +246,6 @@ SPEC CHECKSUMS:
   video_player_avfoundation: e489aac24ef5cf7af82702979ed16f2a5ef84cff
   wakelock: d0fc7c864128eac40eba1617cb5264d9c940b46f
 
-PODFILE CHECKSUM: 4243bd56b6b40b83d3e32bd65fa10fffb54f8ea7
+PODFILE CHECKSUM: e57a6b233c1c6fff78fd48a8b8a1b5b9fcc1e3a5
 
 COCOAPODS: 1.11.3

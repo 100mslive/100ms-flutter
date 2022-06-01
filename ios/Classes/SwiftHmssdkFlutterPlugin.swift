@@ -280,7 +280,8 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                                                           maxBitrate: bitrate,
                                                           maxFrameRate: framerate,
                                                           cameraFacing: .front,
-                                                          trackDescription: desc)
+                                                          trackDescription: desc,
+                                                          videoPlugins: nil)
                 }
             }
             
