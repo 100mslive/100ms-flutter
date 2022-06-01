@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:focus_detector/focus_detector.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:hmssdk_flutter_example/common/ui/organisms/change_role_options.dart';
 import 'package:provider/provider.dart';
 
 // Project imports
@@ -48,6 +49,8 @@ class _VideoTileState extends State<VideoTile> {
         _meetingStore.localPeer?.role.permissions.unMute ?? false;
     bool removePeerPermission =
         _meetingStore.localPeer?.role.permissions.removeOthers ?? false;
+    bool changeRolePermission =
+        _meetingStore.localPeer!.role.permissions.changeRole ?? false;
 
     return FocusDetector(
       onFocusLost: () {
@@ -68,7 +71,8 @@ class _VideoTileState extends State<VideoTile> {
                 HMSPeer peerNode = peerTrackNode.peer;
                 if (!mutePermission ||
                     !unMutePermission ||
-                    !removePeerPermission) return;
+                    !removePeerPermission ||
+                    !changeRolePermission) return;
                 if (peerTrackNode.peer.peerId !=
                     _meetingStore.localPeer!.peerId)
                   showDialog(
@@ -76,31 +80,50 @@ class _VideoTileState extends State<VideoTile> {
                       builder: (_) => Column(
                             children: [
                               ChangeTrackOptionDialog(
-                                  isAudioMuted:
-                                      peerTrackNode.audioTrack?.isMute ?? true,
-                                  isVideoMuted: peerTrackNode.track == null
-                                      ? true
-                                      : peerTrackNode.track!.isMute,
-                                  peerName: peerNode.name,
-                                  changeVideoTrack: (mute, isVideoTrack) {
-                                    Navigator.pop(context);
-                                    _meetingStore.changeTrackState(
-                                        peerTrackNode.track!, mute);
-                                  },
-                                  changeAudioTrack: (mute, isAudioTrack) {
-                                    Navigator.pop(context);
-                                    _meetingStore.changeTrackState(
-                                        peerTrackNode.audioTrack!, mute);
-                                  },
-                                  removePeer: () async {
-                                    Navigator.pop(context);
-                                    var peer = await _meetingStore.getPeer(
-                                        peerId: peerNode.peerId);
-                                    _meetingStore.removePeerFromRoom(peer!);
-                                  },
-                                  mute: mutePermission,
-                                  unMute: unMutePermission,
-                                  removeOthers: removePeerPermission),
+                                isAudioMuted:
+                                    peerTrackNode.audioTrack?.isMute ?? true,
+                                isVideoMuted: peerTrackNode.track == null
+                                    ? true
+                                    : peerTrackNode.track!.isMute,
+                                peerName: peerNode.name,
+                                changeVideoTrack: (mute, isVideoTrack) {
+                                  Navigator.pop(context);
+                                  _meetingStore.changeTrackState(
+                                      peerTrackNode.track!, mute);
+                                },
+                                changeAudioTrack: (mute, isAudioTrack) {
+                                  Navigator.pop(context);
+                                  _meetingStore.changeTrackState(
+                                      peerTrackNode.audioTrack!, mute);
+                                },
+                                removePeer: () async {
+                                  Navigator.pop(context);
+                                  var peer = await _meetingStore.getPeer(
+                                      peerId: peerNode.peerId);
+                                  _meetingStore.removePeerFromRoom(peer!);
+                                },
+                                changeRole: () {
+                                  Navigator.pop(context);
+                                  showDialog(
+                                      context: context,
+                                      builder: (_) => ChangeRoleOptionDialog(
+                                            peerName: peerNode.name,
+                                            getRoleFunction:
+                                                _meetingStore.getRoles(),
+                                            changeRole: (role, forceChange) {
+                                              Navigator.pop(context);
+                                              _meetingStore.changeRole(
+                                                  peer: peerNode,
+                                                  roleName: role,
+                                                  forceChange: forceChange);
+                                            },
+                                          ));
+                                },
+                                mute: mutePermission,
+                                unMute: unMutePermission,
+                                removeOthers: removePeerPermission,
+                                roles: changeRolePermission,
+                              ),
                             ],
                           ));
               },
@@ -114,12 +137,12 @@ class _VideoTileState extends State<VideoTile> {
                 child: Stack(
                   children: [
                     VideoView(
-                      uid :context.read<PeerTrackNode>().uid,
+                      uid: context.read<PeerTrackNode>().uid,
                       scaleType: widget.scaleType,
                       itemHeight: widget.itemHeight,
                       itemWidth: widget.itemWidth,
                     ),
-                    
+
                     DegradeTile(
                       itemHeight: widget.itemHeight,
                       itemWidth: widget.itemWidth,
