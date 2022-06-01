@@ -3,6 +3,7 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:collection/collection.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
@@ -68,7 +69,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                                       child: DropdownButton2(
                                         buttonWidth: 120,
                                         value: valueChoose,
-                                        iconEnabledColor: Colors.white,
+                                        iconEnabledColor: Colors.black,
                                         onChanged: (newvalue) {
                                           setState(() {
                                             this.valueChoose =
@@ -89,7 +90,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                                                         child: Container(
                                                           width: 90,
                                                           child: Text(
-                                                              "${peer.name} ${peer.isLocal ? "(You)" : ""}",style:  GoogleFonts.inter(),overflow: TextOverflow.clip,),
+                                                              "${peer.name} ${peer.isLocal ? "(You)" : ""}",style:  GoogleFonts.inter(color:iconColor),overflow: TextOverflow.clip,),
                                                         ),
                                                         value: peer.peerId,
                                                       )
@@ -104,7 +105,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                                                           width: 90,
                                                       child: Text("${role.name}",
                                                       overflow: TextOverflow.clip,
-                                                      style:  GoogleFonts.inter(),)),
+                                                      style:  GoogleFonts.inter(color:iconColor),)),
                                                     value: role.name,
                                                   ))
                                               .toList()
@@ -139,7 +140,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                         // if (!_meetingStore.isMeetingStarted) return SizedBox();
 
                         if (data.item2 == 0)
-                          return Center(child: Text('No messages',style:  GoogleFonts.inter(),));
+                          return Center(child: Text('No messages',style:  GoogleFonts.inter(color:iconColor),));
 
                         return ListView(
                           children: List.generate(
@@ -159,11 +160,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                                           data.item1[index].sender?.name ?? "",
                                           style:  GoogleFonts.inter(
                                               fontSize: 14.0,
-                                              color: MediaQuery.of(context)
-                                                          .platformBrightness ==
-                                                      Brightness.light
-                                                  ? Colors.grey
-                                                  : Colors.white70,
+                                              color:iconColor,
                                               fontWeight: FontWeight.w600),
                                         ),
                                       ),
@@ -172,7 +169,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                                             .format(data.item1[index].time),
                                         style:  GoogleFonts.inter(
                                             fontSize: 10.0,
-                                            color: Colors.white,
+                                            color:iconColor,
                                             fontWeight: FontWeight.w900),
                                       )
                                     ],
@@ -188,7 +185,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                                           data.item1[index].message.toString(),
                                           style:  GoogleFonts.inter(
                                               fontSize: 14.0,
-                                              color: Colors.white,
+                                              color:iconColor,
                                               fontWeight: FontWeight.w700),
                                         ),
                                       ),
@@ -230,6 +227,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                           margin: EdgeInsets.only(bottom: 5.0, left: 5.0),
                           child: TextField(
                             autofocus: true,
+                            style: GoogleFonts.inter(color:iconColor),
                             controller: messageTextController,
                             decoration: new InputDecoration(
                                 border: InputBorder.none,

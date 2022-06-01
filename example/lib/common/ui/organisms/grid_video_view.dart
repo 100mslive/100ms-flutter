@@ -1,6 +1,8 @@
 //Package imports
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:provider/provider.dart';
 
@@ -37,10 +39,10 @@ Widget gridVideoView(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.screen_share),
+                        SvgPicture.asset("assets/icons/screen_share.svg",color:iconColor,),
                         Text(
                           "You are sharing your screen",
-                          style: GoogleFonts.inter(),
+                          style: GoogleFonts.inter(color:iconColor,),
                         ),
                       ],
                     ),

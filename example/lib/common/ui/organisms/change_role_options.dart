@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 //Project imports
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 
 class ChangeRoleOptionDialog extends StatefulWidget {
   final String peerName;
@@ -35,7 +36,7 @@ class _ChangeRoleOptionDialogState extends State<ChangeRoleOptionDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(widget.peerName,style:  GoogleFonts.inter(),),
+      title: Text(widget.peerName,style:  GoogleFonts.inter(color:iconColor),),
       content: Container(
         width: double.infinity,
         child: FutureBuilder<List<HMSRole>>(
@@ -54,7 +55,7 @@ class _ChangeRoleOptionDialogState extends State<ChangeRoleOptionDialog> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text("Role To: ",style:  GoogleFonts.inter(),),
+                        Text("Role To: ",style:  GoogleFonts.inter(color:iconColor),),
                         Flexible(
                           child: DropdownButton2(
                             buttonWidth: MediaQuery.of(context).size.width / 2,
@@ -67,7 +68,7 @@ class _ChangeRoleOptionDialogState extends State<ChangeRoleOptionDialog> {
                             },
                             items: data.data!.map((role) {
                               return DropdownMenuItem(
-                                child: Text(role.name,style:  GoogleFonts.inter(),),
+                                child: Text(role.name,style:  GoogleFonts.inter(color:iconColor),),
                                 value: role.name,
                               );
                             }).toList(),
@@ -91,7 +92,7 @@ class _ChangeRoleOptionDialogState extends State<ChangeRoleOptionDialog> {
                           SizedBox(
                             width: 16,
                           ),
-                          Text('Force change',style:  GoogleFonts.inter(),)
+                          Text('Force change',style:  GoogleFonts.inter(color:iconColor),)
                         ],
                       ),
                     ),

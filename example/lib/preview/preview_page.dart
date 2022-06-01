@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:provider/provider.dart';
 
@@ -114,7 +115,7 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                                               _previewStore.peer!.name),
                                           style: GoogleFonts.inter(
                                               fontSize: 36,
-                                              color: Colors.white),
+                                              color:Colors.white,),
                                         ))),
                               ),
                       ),
@@ -195,16 +196,14 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                                                                 fontWeight:
                                                                     FontWeight
                                                                         .bold,
-                                                                color: Colors
-                                                                    .white),
+                                                                color:Colors.white,),
                                                           ),
                                                           Text(peer.role.name,
                                                               style: GoogleFonts.inter(
                                                                   fontWeight:
                                                                       FontWeight
                                                                           .bold,
-                                                                  color: Colors
-                                                                      .white))
+                                                                  color:Colors.white,))
                                                         ],
                                                       ),
                                                     );
@@ -236,6 +235,7 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                                         children: [
                                           SvgPicture.asset(
                                             "assets/icons/participants.svg",
+                                            color:iconColor,
                                           ),
                                           SizedBox(
                                             width: 2,
@@ -243,6 +243,7 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                                           Text(
                                             _previewStore.peerCount.toString(),
                                             style: GoogleFonts.inter(
+                                              color:iconColor,
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 16),
                                           )

@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:provider/provider.dart';
 
 //Project imports
@@ -44,7 +45,9 @@ class _ParticipantOrganismState extends State<ParticipantOrganism> {
               width: width / 3,
               child: Text(
                 peer.name,
-                style: GoogleFonts.inter(fontSize: 20.0),
+                style: GoogleFonts.inter(fontSize: 20.0,
+                color:iconColor,
+                ),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -101,7 +104,7 @@ class _ParticipantOrganismState extends State<ParticipantOrganism> {
                           overflow: TextOverflow.clip,
                           maxLines: 1,
                           style: GoogleFonts.inter(
-                              color: Colors.white,
+                              color:Colors.white,
                               fontSize: 18.0,
                               fontWeight: FontWeight.bold),
                         ),

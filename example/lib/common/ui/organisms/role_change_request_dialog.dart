@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 // Project imports
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 
 class RoleChangeDialogOrganism extends StatefulWidget {
   final HMSRoleChangeRequest roleChangeRequest;
@@ -29,7 +30,9 @@ class _RoleChangeDialogOrganismState extends State<RoleChangeDialogOrganism> {
           children: [
             Text(
               message,
-              style: GoogleFonts.inter(),
+              style: GoogleFonts.inter(
+                color:iconColor,
+              ),
             ),
           ],
         ),

@@ -11,6 +11,7 @@ import 'package:hmssdk_flutter_example/common/ui/organisms/grid_audio_view.dart'
 import 'package:hmssdk_flutter_example/common/ui/organisms/grid_hero_view.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/grid_video_view.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/title_bar.dart';
+import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_mode.dart';
 import 'package:hmssdk_flutter_example/hls_viewer/hls_viewer.dart';
 import 'package:provider/provider.dart';
@@ -320,7 +321,7 @@ class _MeetingPageState extends State<MeetingPage>
                                                         child: Text(
                                                           "Waiting for HLS to start...",
                                                           style:
-                                                              GoogleFonts.inter(
+                                                              GoogleFonts.inter(color:iconColor,
                                                                   fontSize: 20),
                                                         ),
                                                       ),
@@ -336,7 +337,7 @@ class _MeetingPageState extends State<MeetingPage>
                                     return Center(
                                         child: Text(
                                       'Waiting for others to join!',
-                                      style: GoogleFonts.inter(),
+                                      style: GoogleFonts.inter(color:iconColor,),
                                     ));
                                   }
                                   Size size = MediaQuery.of(context).size;
@@ -451,9 +452,9 @@ class _MeetingPageState extends State<MeetingPage>
                                 context.read<MeetingStore>().switchVideo();
                               },
                         icon: data.item1
-                            ? SvgPicture.asset("assets/icons/cam_state_on.svg")
+                            ? SvgPicture.asset("assets/icons/cam_state_on.svg",color:iconColor,)
                             : SvgPicture.asset(
-                                "assets/icons/cam_state_off.svg")));
+                                "assets/icons/cam_state_off.svg",color:iconColor,)));
               },
             ),
           if (Provider.of<MeetingStore>(context).localPeer != null &&
@@ -476,9 +477,9 @@ class _MeetingPageState extends State<MeetingPage>
                           context.read<MeetingStore>().switchAudio();
                         },
                         icon: isMicOn
-                            ? SvgPicture.asset("assets/icons/mic_state_on.svg")
+                            ? SvgPicture.asset("assets/icons/mic_state_on.svg",color:iconColor,)
                             : SvgPicture.asset(
-                                "assets/icons/mic_state_off.svg")));
+                                "assets/icons/mic_state_off.svg",color:iconColor,)));
               },
             ),
           Selector<MeetingStore, bool>(
@@ -494,7 +495,7 @@ class _MeetingPageState extends State<MeetingPage>
                       },
                       icon: SvgPicture.asset(
                         "assets/icons/hand_state_on.svg",
-                        color: raisedHand ? Colors.yellow : Colors.white,
+                        color: raisedHand ? Colors.yellow : iconColor,
                       )));
             },
           ),
@@ -511,7 +512,7 @@ class _MeetingPageState extends State<MeetingPage>
                       },
                       icon: SvgPicture.asset(
                         "assets/icons/brb.svg",
-                        color: isBRB ? Colors.red : Colors.white,
+                        color: isBRB ? Colors.red : iconColor,
                       )));
             },
           ),
@@ -529,9 +530,9 @@ class _MeetingPageState extends State<MeetingPage>
                       },
                       icon: isNewMessageReceived
                           ? SvgPicture.asset(
-                              "assets/icons/message_badge_on.svg")
+                              "assets/icons/message_badge_on.svg",color:iconColor,)
                           : SvgPicture.asset(
-                              "assets/icons/message_badge_off.svg")),
+                              "assets/icons/message_badge_off.svg",color:iconColor,)),
                 );
               }),
           Container(
@@ -580,6 +581,7 @@ class _MeetingPageState extends State<MeetingPage>
                           )
                         : SvgPicture.asset(
                             'assets/icons/hand_state_off.svg',
+                            color:iconColor,
                           ),
                   ));
             },
@@ -598,9 +600,10 @@ class _MeetingPageState extends State<MeetingPage>
                       },
                       icon: isNewMessageReceived
                           ? SvgPicture.asset(
-                              "assets/icons/message_badge_on.svg")
+                              "assets/icons/message_badge_on.svg",color:iconColor,)
+
                           : SvgPicture.asset(
-                              "assets/icons/message_badge_off.svg")),
+                              "assets/icons/message_badge_off.svg",color:iconColor,)),
                 );
               }),
           Container(
@@ -634,9 +637,9 @@ class _MeetingPageState extends State<MeetingPage>
               children: [
                 Text(
                   "Send Logs",
-                  style: GoogleFonts.inter(),
+                  style: GoogleFonts.inter(color:iconColor,),
                 ),
-                SvgPicture.asset("assets/icons/bug.svg"),
+                SvgPicture.asset("assets/icons/bug.svg",color:iconColor,),
               ],
             ),
             value: 1,
@@ -653,13 +656,13 @@ class _MeetingPageState extends State<MeetingPage>
                         style: GoogleFonts.inter(
                           color: meetingStore.isRecordingStarted
                               ? Colors.blue
-                              : Colors.white,
+                              : iconColor,
                         )),
                     SvgPicture.asset(
                       "assets/icons/record.svg",
                       color: meetingStore.isRecordingStarted
-                          ? Colors.blue
-                          : Colors.white,
+                          ? Colors.red
+                          : iconColor,
                     ),
                   ]),
               value: 2,
@@ -671,9 +674,9 @@ class _MeetingPageState extends State<MeetingPage>
                   children: [
                     Text(
                       "Toggle Camera  ",
-                      style: GoogleFonts.inter(),
+                      style: GoogleFonts.inter(color:iconColor,),
                     ),
-                    SvgPicture.asset("assets/icons/camera.svg"),
+                    SvgPicture.asset("assets/icons/camera.svg",color:iconColor,),
                   ]),
               value: 3,
             ),
@@ -683,9 +686,9 @@ class _MeetingPageState extends State<MeetingPage>
                 children: [
                   Text(
                     "Participants  ",
-                    style: GoogleFonts.inter(),
+                    style: GoogleFonts.inter(color:iconColor,),
                   ),
-                  SvgPicture.asset("assets/icons/participants.svg"),
+                  SvgPicture.asset("assets/icons/participants.svg",color:iconColor,),
                 ]),
             value: 4,
           ),
@@ -697,13 +700,13 @@ class _MeetingPageState extends State<MeetingPage>
                     meetingStore.meetingMode == MeetingMode.Audio
                         ? "Video View"
                         : "Audio View",
-                    style: GoogleFonts.inter(),
+                    style: GoogleFonts.inter(color:iconColor,),
                   ),
                   SvgPicture.asset(
                     meetingStore.meetingMode == MeetingMode.Audio
                         ? 'assets/icons/cam_state_on.svg'
                         : 'assets/icons/mic_state_on.svg',
-                    color: Colors.white,
+                    color: iconColor,
                     height: 24.0,
                     width: 24.0,
                   ),
@@ -718,13 +721,13 @@ class _MeetingPageState extends State<MeetingPage>
                       style: GoogleFonts.inter(
                         color: meetingStore.isActiveSpeakerMode
                             ? Colors.blue
-                            : Colors.white,
+                            : iconColor,
                       )),
                   SvgPicture.asset(
                     "assets/icons/participants.svg",
                     color: meetingStore.isActiveSpeakerMode
                         ? Colors.blue
-                        : Colors.white,
+                        : iconColor,
                   ),
                 ]),
             value: 6,
@@ -737,13 +740,13 @@ class _MeetingPageState extends State<MeetingPage>
                       style: GoogleFonts.inter(
                         color: meetingStore.meetingMode == MeetingMode.Hero
                             ? Colors.blue
-                            : Colors.white,
+                            : iconColor,
                       )),
                   SvgPicture.asset(
                     "assets/icons/participants.svg",
                     color: meetingStore.meetingMode == MeetingMode.Hero
                         ? Colors.blue
-                        : Colors.white,
+                        : iconColor,
                   ),
                 ]),
             value: 7,
@@ -756,13 +759,13 @@ class _MeetingPageState extends State<MeetingPage>
                       style: GoogleFonts.inter(
                         color: meetingStore.meetingMode == MeetingMode.Single
                             ? Colors.blue
-                            : Colors.white,
+                            : iconColor,
                       )),
                   SvgPicture.asset(
                     "assets/icons/single_tile.svg",
                     color: meetingStore.meetingMode == MeetingMode.Single
                         ? Colors.blue
-                        : Colors.white,
+                        : iconColor,
                   ),
                 ]),
             value: 8,
@@ -773,9 +776,9 @@ class _MeetingPageState extends State<MeetingPage>
                 children: [
                   Text(
                     "Change Name",
-                    style: GoogleFonts.inter(),
+                    style: GoogleFonts.inter(color:iconColor,),
                   ),
-                  SvgPicture.asset("assets/icons/pencil.svg"),
+                  SvgPicture.asset("assets/icons/pencil.svg",color:iconColor,),
                 ]),
             value: 9,
           ),
@@ -789,13 +792,13 @@ class _MeetingPageState extends State<MeetingPage>
                       style: GoogleFonts.inter(
                         color: meetingStore.hasHlsStarted
                             ? Colors.blue
-                            : Colors.white,
+                            : iconColor,
                       ),
                     ),
                     SvgPicture.asset("assets/icons/hls.svg",
                         color: meetingStore.hasHlsStarted
                             ? Colors.blue
-                            : Colors.white),
+                            : iconColor),
                   ]),
               value: 10,
             ),
@@ -806,9 +809,9 @@ class _MeetingPageState extends State<MeetingPage>
                   children: [
                     Text(
                       "Mute",
-                      style: GoogleFonts.inter(),
+                      style: GoogleFonts.inter(color:iconColor,),
                     ),
-                    SvgPicture.asset("assets/icons/mic_state_off.svg"),
+                    SvgPicture.asset("assets/icons/mic_state_off.svg",color:iconColor,),
                   ]),
               value: 11,
             ),
@@ -821,12 +824,12 @@ class _MeetingPageState extends State<MeetingPage>
                     style: GoogleFonts.inter(
                         color: meetingStore.isStatsVisible
                             ? Colors.blue
-                            : Colors.white),
+                            : iconColor),
                   ),
                   SvgPicture.asset("assets/icons/stats.svg",
                       color: meetingStore.isStatsVisible
                           ? Colors.blue
-                          : Colors.white),
+                          : iconColor),
                 ]),
             value: 12,
           ),
@@ -843,13 +846,13 @@ class _MeetingPageState extends State<MeetingPage>
                       style: GoogleFonts.inter(
                           color: meetingStore.isScreenShareOn
                               ? Colors.blue
-                              : Colors.white),
+                              : iconColor),
                     ),
                     SvgPicture.asset(
                       "assets/icons/screen_share.svg",
                       color: meetingStore.isScreenShareOn
                           ? Colors.blue
-                          : Colors.white,
+                          : iconColor,
                     ),
                   ]),
               value: 13,
@@ -861,9 +864,9 @@ class _MeetingPageState extends State<MeetingPage>
                   children: [
                     Text(
                       "End Room",
-                      style: GoogleFonts.inter(),
+                      style: GoogleFonts.inter(color:iconColor,),
                     ),
-                    SvgPicture.asset("assets/icons/end_room.svg"),
+                    SvgPicture.asset("assets/icons/end_room.svg",color:iconColor,),
                   ]),
               value: 14,
             ),
