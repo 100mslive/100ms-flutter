@@ -483,7 +483,7 @@ class _MeetingPageState extends State<MeetingPage>
                         context.read<MeetingStore>().changeMetadata();
                       },
                       icon: SvgPicture.asset(
-                        "assets/icons/hand_state_on.svg",
+                        "assets/icons/hand.svg",
                         color: raisedHand ? Colors.yellow : iconColor,
                       )));
             },
@@ -566,15 +566,10 @@ class _MeetingPageState extends State<MeetingPage>
                       UtilityComponents.showToastWithString(
                           !raisedHand ? "Raised Hand ON" : "Raised Hand OFF");
                     },
-                    icon: raisedHand
-                        ? SvgPicture.asset(
-                            'assets/icons/hand_state_on.svg',
-                            color: Colors.amber.shade300,
-                          )
-                        : SvgPicture.asset(
-                            'assets/icons/hand_state_off.svg',
-                            color: iconColor,
-                          ),
+                    icon: SvgPicture.asset(
+                        "assets/icons/hand.svg",
+                        color: raisedHand ? Colors.yellow : iconColor,
+                      ),
                   ));
             },
           ),
