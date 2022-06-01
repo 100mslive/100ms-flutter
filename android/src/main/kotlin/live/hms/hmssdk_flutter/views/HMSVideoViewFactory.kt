@@ -58,7 +58,7 @@ class HMSVideoViewFactory(private val plugin: HmssdkFlutterPlugin) :
 
     PlatformViewFactory(StandardMessageCodec.INSTANCE) {
 
-    override fun create(context: Context?, viewId: Int, args: Any?): PlatformView {
+    override fun create(context: Context, viewId: Int, args: Any?): PlatformView {
 
         val creationParams = args as Map<String?, Any?>?
 
