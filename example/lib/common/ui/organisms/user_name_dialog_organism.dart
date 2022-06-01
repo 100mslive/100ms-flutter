@@ -1,6 +1,7 @@
 // Package imports
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 
 class UserNameDialogOrganism extends StatefulWidget {
   const UserNameDialogOrganism({Key? key}) : super(key: key);
@@ -28,7 +29,7 @@ class _UserNameDialogOrganismState extends State<UserNameDialogOrganism> {
                     borderRadius: BorderRadius.all(Radius.circular(16)),
                   ),
                   hintText: 'Enter your Name',
-                  hintStyle: GoogleFonts.inter()),
+                  hintStyle: GoogleFonts.inter(color:iconColor,)),
             ),
           ],
         ),

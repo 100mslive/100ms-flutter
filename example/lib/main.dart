@@ -8,6 +8,7 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:wakelock/wakelock.dart';
@@ -34,20 +35,48 @@ void main() async {
       () => runApp(HMSExampleApp()), FirebaseCrashlytics.instance.recordError);
 }
 
-class HMSExampleApp extends StatelessWidget {
-  const HMSExampleApp({Key? key}) : super(key: key);
+class HMSExampleApp extends StatefulWidget {
+  HMSExampleApp({Key? key}) : super(key: key);
+
+  @override
+  _HMSExampleAppState createState() => _HMSExampleAppState();
+  static _HMSExampleAppState of(BuildContext context) =>
+      context.findAncestorStateOfType<_HMSExampleAppState>()!;
+}
+
+class _HMSExampleAppState extends State<HMSExampleApp> {
+  ThemeMode _themeMode = ThemeMode.dark;
+
+  ThemeData _darkTheme = ThemeData(
+      brightness: Brightness.dark,
+      primaryColor: Color.fromARGB(255, 13, 107, 184),
+      backgroundColor: Colors.black,
+      scaffoldBackgroundColor: Colors.black);
+
+  ThemeData _lightTheme = ThemeData(
+    primaryColor: Color.fromARGB(255, 13, 107, 184),
+    brightness: Brightness.light,
+    scaffoldBackgroundColor: Colors.white,
+    backgroundColor: Colors.black,
+    dividerColor: Colors.white54,
+  );
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(
-          brightness: Brightness.dark,
-          primaryColor: Color.fromARGB(255, 13, 107, 184),
-          appBarTheme: AppBarTheme(color: Colors.black),
-          scaffoldBackgroundColor: Colors.black),
-      scaffoldMessengerKey: GlobalKey<ScaffoldMessengerState>(),
       home: HomePage(),
+      theme: _lightTheme,
+      darkTheme: _darkTheme,
+      themeMode: _themeMode,
     );
+  }
+
+  void changeTheme(ThemeMode themeMode) {
+    setState(() {
+      _themeMode = themeMode;
+      Constant.isDarkMode = _themeMode == ThemeMode.dark ? true : false;
+      updateColor();
+    });
   }
 }
 
@@ -65,6 +94,7 @@ class _HomePageState extends State<HomePage> {
   bool skipPreview = false;
   bool mirrorCamera = true;
   bool showStats = false;
+
   PackageInfo _packageInfo = PackageInfo(
     appName: 'Unknown',
     packageName: 'Unknown',
@@ -141,15 +171,35 @@ class _HomePageState extends State<HomePage> {
       onWillPop: _closeApp,
       child: Scaffold(
           appBar: AppBar(
+            backgroundColor: Constant.isDarkMode ? Colors.black : Colors.white,
+            elevation: 0,
             title: Text(
               '100ms',
-              style: GoogleFonts.inter(),
+              style: GoogleFonts.inter(color: iconColor),
             ),
             actions: [
+              IconButton(
+                  onPressed: () {
+                    if (Constant.isDarkMode) {
+                      HMSExampleApp.of(context).changeTheme(ThemeMode.light);
+                    } else {
+                      HMSExampleApp.of(context).changeTheme(ThemeMode.dark);
+                    }
+                  },
+                  icon: Constant.isDarkMode
+                      ? SvgPicture.asset(
+                          'assets/icons/light_mode.svg',
+                          color: iconColor,
+                        )
+                      : SvgPicture.asset(
+                          'assets/icons/dark_mode.svg',
+                          color: iconColor,
+                        )),
               PopupMenuButton<int>(
                 onSelected: handleClick,
                 icon: SvgPicture.asset(
                   'assets/icons/settings.svg',
+                  color: iconColor,
                 ),
                 itemBuilder: (BuildContext context) {
                   return [
@@ -158,7 +208,8 @@ class _HomePageState extends State<HomePage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           if (skipPreview)
-                            Text("Enable Preview", style: GoogleFonts.inter())
+                            Text("Enable Preview",
+                                style: GoogleFonts.inter(color: iconColor))
                           else
                             Text(
                               "Disable Preview",
@@ -166,8 +217,8 @@ class _HomePageState extends State<HomePage> {
                             ),
                           if (skipPreview)
                             SvgPicture.asset(
-                              'assets/icons/preview_state_on.svg',
-                            )
+                                'assets/icons/preview_state_on.svg',
+                                color: iconColor)
                           else
                             SvgPicture.asset(
                               'assets/icons/preview_state_off.svg',
@@ -187,11 +238,11 @@ class _HomePageState extends State<HomePage> {
                           else
                             Text(
                               "Enable Mirroring",
-                              style: GoogleFonts.inter(),
+                              style: GoogleFonts.inter(color: iconColor),
                             ),
                           Icon(
                             Icons.camera_front,
-                            color: mirrorCamera ? Colors.blue : Colors.white,
+                            color: mirrorCamera ? Colors.blue : iconColor,
                           ),
                         ],
                       ),
@@ -207,11 +258,11 @@ class _HomePageState extends State<HomePage> {
                           else
                             Text(
                               "Enable Stats",
-                              style: GoogleFonts.inter(),
+                              style: GoogleFonts.inter(color: iconColor),
                             ),
                           SvgPicture.asset(
                             'assets/icons/stats.svg',
-                            color: showStats ? Colors.blue : Colors.white,
+                            color: showStats ? Colors.blue : iconColor,
                           ),
                         ],
                       ),
@@ -222,7 +273,7 @@ class _HomePageState extends State<HomePage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text("Version ${_packageInfo.version}",
-                              style: GoogleFonts.inter()),
+                              style: GoogleFonts.inter(color: iconColor)),
                         ],
                       ),
                       value: 4,
@@ -274,75 +325,81 @@ class _HomePageState extends State<HomePage> {
                     height: 30,
                   ),
                   ElevatedButton(
-                      style: ButtonStyle(
-                          shadowColor: MaterialStateProperty.all(Colors.blue),
-                          shape:
-                              MaterialStateProperty.all<RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16.0),
-                          ))),
-                      onPressed: () async {
-                        if (roomIdController.text.isEmpty) {
-                          return;
-                        }
-                        setRTMPUrl(roomIdController.text);
-                        String user = await showDialog(
-                            context: context,
-                            builder: (_) => UserNameDialogOrganism());
-                        if (user.isNotEmpty) {
-                          bool res = await getPermissions();
-                          if (res) {
-                            FocusManager.instance.primaryFocus?.unfocus();
-                            if (skipPreview) {
-                              HMSSDKInteractor _hmsSDKInteractor =
-                                  HMSSDKInteractor();
-                              _hmsSDKInteractor.showStats = showStats;
-                              _hmsSDKInteractor.mirrorCamera = mirrorCamera;
-                              _hmsSDKInteractor.skipPreview = true;
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (_) => ListenableProvider.value(
-                                      value: MeetingStore(
-                                          hmsSDKInteractor: _hmsSDKInteractor),
-                                      child: MeetingPage(
-                                          roomId: roomIdController.text.trim(),
-                                          flow: MeetingFlow.join,
-                                          user: user,
-                                          isAudioOn: true))));
-                            } else {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (_) => ListenableProvider.value(
-                                        value: PreviewStore(),
-                                        child: PreviewPage(
-                                          roomId: roomIdController.text.trim(),
-                                          user: user,
-                                          flow: MeetingFlow.join,
-                                          mirror: mirrorCamera,
-                                          showStats: showStats,
-                                        ),
-                                      )));
-                            }
+                    style: ButtonStyle(
+                        shadowColor: MaterialStateProperty.all(Colors.blue),
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16.0),
+                        ))),
+                    onPressed: () async {
+                      if (roomIdController.text.isEmpty) {
+                        return;
+                      }
+                      setRTMPUrl(roomIdController.text);
+                      String user = await showDialog(
+                          context: context,
+                          builder: (_) => UserNameDialogOrganism());
+                      if (user.isNotEmpty) {
+                        bool res = await getPermissions();
+                        if (res) {
+                          FocusManager.instance.primaryFocus?.unfocus();
+                          if (skipPreview) {
+                            HMSSDKInteractor _hmsSDKInteractor =
+                                HMSSDKInteractor();
+                            _hmsSDKInteractor.showStats = showStats;
+                            _hmsSDKInteractor.mirrorCamera = mirrorCamera;
+                            _hmsSDKInteractor.skipPreview = true;
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (_) => ListenableProvider.value(
+                                    value: MeetingStore(
+                                        hmsSDKInteractor: _hmsSDKInteractor),
+                                    child: MeetingPage(
+                                        roomId: roomIdController.text.trim(),
+                                        flow: MeetingFlow.join,
+                                        user: user,
+                                        isAudioOn: true))));
+                          } else {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (_) => ListenableProvider.value(
+                                      value: PreviewStore(),
+                                      child: PreviewPage(
+                                        roomId: roomIdController.text.trim(),
+                                        user: user,
+                                        flow: MeetingFlow.join,
+                                        mirror: mirrorCamera,
+                                        showStats: showStats,
+                                      ),
+                                    )));
                           }
                         }
-                      },
-                      child: Container(
-                        width: 250,
-                        padding: const EdgeInsets.fromLTRB(4, 10, 4, 10),
-                        decoration: BoxDecoration(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(12))),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text('Join Meeting',
-                                style:  GoogleFonts.inter(height: 1, fontSize: 20)),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            Icon(Icons.arrow_right_alt_outlined, size: 22),
-                          ],
-                        ),
-                      )),
+                      }
+                    },
+                    child: Container(
+                      width: 250,
+                      padding: const EdgeInsets.fromLTRB(4, 10, 4, 10),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(12))),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text('Join Meeting',
+                              style:
+                                  GoogleFonts.inter(height: 1, fontSize: 20)),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Icon(Icons.arrow_right_alt_outlined, size: 22),
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 50,
+                  ),
+                  Text("Made with ❤️ by 100ms",
+                      style: GoogleFonts.inter(color: iconColor))
                 ],
               ),
             ),

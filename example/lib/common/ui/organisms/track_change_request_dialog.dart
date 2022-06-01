@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 // Project imports
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 
 class TrackChangeDialogOrganism extends StatefulWidget {
   final HMSTrackChangeRequest trackChangeRequest;
@@ -34,7 +35,7 @@ class _RoleChangeDialogOrganismState extends State<TrackChangeDialogOrganism> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(message,style: GoogleFonts.inter(),),
+            Text(message,style: GoogleFonts.inter(color:iconColor,),),
           ],
         ),
       ),

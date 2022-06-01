@@ -1,6 +1,7 @@
 //Package imports
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 
 class ChangeTrackOptionDialog extends StatefulWidget {
   final String peerName;
@@ -33,8 +34,9 @@ class _ChangeTrackOptionDialogState extends State<ChangeTrackOptionDialog> {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text(
+        
         widget.peerName,
-        style: GoogleFonts.inter(),
+        style: GoogleFonts.inter(color:iconColor),
       ),
       content: Container(
         width: double.infinity,
@@ -59,7 +61,7 @@ class _ChangeTrackOptionDialogState extends State<ChangeTrackOptionDialog> {
                       ),
                       Text(
                         "${widget.isVideoMuted ? "Unmute" : "Mute"} video",
-                        style: GoogleFonts.inter(),
+                        style: GoogleFonts.inter(color:iconColor),
                       )
                     ],
                   ),
@@ -86,7 +88,7 @@ class _ChangeTrackOptionDialogState extends State<ChangeTrackOptionDialog> {
                       ),
                       Text(
                         "${widget.isAudioMuted ? "Unmute" : "Mute"} audio",
-                        style: GoogleFonts.inter(),
+                        style: GoogleFonts.inter(color:iconColor),
                       ),
                     ],
                   ),
@@ -110,7 +112,7 @@ class _ChangeTrackOptionDialogState extends State<ChangeTrackOptionDialog> {
                       ),
                       Text(
                         "Remove Peer",
-                        style: GoogleFonts.inter(),
+                        style: GoogleFonts.inter(color:iconColor),
                       )
                     ],
                   ),

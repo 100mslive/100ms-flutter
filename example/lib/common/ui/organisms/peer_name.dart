@@ -1,6 +1,7 @@
 //Package imports
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 
@@ -32,7 +33,8 @@ class _PeerNameState extends State<PeerName> {
                 overflow: TextOverflow.ellipsis,
                 style: GoogleFonts.inter(
                     fontWeight: FontWeight.w500,
-                    color: Colors.white,
+                                    color:iconColor,
+
                     fontSize: 16),
               ),
             ),

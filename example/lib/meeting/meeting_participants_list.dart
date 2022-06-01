@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 
@@ -58,7 +59,7 @@ class _ParticipantsListState extends State<ParticipantsList> {
                 } else {
                   return Text(
                     "No Participants",
-                    style: GoogleFonts.inter(),
+                    style: GoogleFonts.inter(color:iconColor,),
                   );
                 }
               }),

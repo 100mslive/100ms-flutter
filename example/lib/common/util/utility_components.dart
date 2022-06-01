@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_mode.dart';
 import 'package:provider/provider.dart';
 
@@ -23,7 +24,7 @@ class UtilityComponents {
       builder: (ctx) => AlertDialog(
         title: Text(
           'Leave Room?',
-          style: GoogleFonts.inter(fontSize: 24, fontWeight: FontWeight.w700),
+          style: GoogleFonts.inter(color:iconColor,fontSize: 24, fontWeight: FontWeight.w700),
         ),
         actions: [
           ElevatedButton(
@@ -95,7 +96,7 @@ class UtilityComponents {
           return AlertDialog(
             content: Text(
               message,
-              style: GoogleFonts.inter(),
+              style: GoogleFonts.inter(color:iconColor,),
             ),
             actions: [
               ElevatedButton(
@@ -175,7 +176,7 @@ class UtilityComponents {
               return AlertDialog(
                 title: Text(
                   "Select Role for Mute",
-                  style: GoogleFonts.inter(),
+                  style: GoogleFonts.inter(color:iconColor,),
                 ),
                 content: Container(
                     width: 300,
@@ -193,7 +194,7 @@ class UtilityComponents {
                                   children: [
                                     Text(
                                       roles[index].name,
-                                      style: GoogleFonts.inter(),
+                                      style: GoogleFonts.inter(color:iconColor,),
                                     ),
                                     Checkbox(
                                         value: _selectedRoles
@@ -296,7 +297,7 @@ class UtilityComponents {
                       CheckboxListTile(
                           title: Text(
                             "Recording",
-                            style: GoogleFonts.inter(),
+                            style: GoogleFonts.inter(color:iconColor,),
                           ),
                           activeColor: Colors.blue,
                           controlAffinity: ListTileControlAffinity.trailing,
