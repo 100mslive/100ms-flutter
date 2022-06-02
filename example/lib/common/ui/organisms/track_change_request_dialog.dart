@@ -35,19 +35,30 @@ class _RoleChangeDialogOrganismState extends State<TrackChangeDialogOrganism> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(message,style: GoogleFonts.inter(color:iconColor,),),
+            Text(
+              message,
+              style: GoogleFonts.inter(
+                color: iconColor,
+              ),
+            ),
           ],
         ),
       ),
       actions: [
         ElevatedButton(
-          child: Text('Cancel',style: GoogleFonts.inter(),),
+          child: Text(
+            'Cancel',
+            style: GoogleFonts.inter(),
+          ),
           onPressed: () {
             Navigator.pop(context, '');
           },
         ),
         ElevatedButton(
-          child: Text('OK',style: GoogleFonts.inter(),),
+          child: Text(
+            'OK',
+            style: GoogleFonts.inter(),
+          ),
           onPressed: () {
             Navigator.pop(context, 'OK');
           },

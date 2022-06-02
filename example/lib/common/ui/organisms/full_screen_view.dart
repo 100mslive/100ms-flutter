@@ -39,10 +39,15 @@ Widget fullScreenView(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        SvgPicture.asset("assets/icons/screen_share.svg",color:iconColor,),
+                        SvgPicture.asset(
+                          "assets/icons/screen_share.svg",
+                          color: iconColor,
+                        ),
                         Text(
                           "You are sharing your screen",
-                          style: GoogleFonts.inter(color:iconColor,),
+                          style: GoogleFonts.inter(
+                            color: iconColor,
+                          ),
                         ),
                       ],
                     ),

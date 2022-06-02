@@ -40,7 +40,7 @@ class _RemotePeerTileDialogState extends State<RemotePeerTileDialog> {
     return AlertDialog(
       title: Text(
         widget.peerName,
-        style: GoogleFonts.inter(color: iconColor,fontWeight: FontWeight.bold),
+        style: GoogleFonts.inter(color: iconColor, fontWeight: FontWeight.bold),
       ),
       content: Container(
         width: double.infinity,

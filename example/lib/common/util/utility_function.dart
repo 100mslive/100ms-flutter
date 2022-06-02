@@ -31,6 +31,6 @@ class Utilities {
   ];
 
   static double getRatio(Size size) {
-    return  (size.height * 0.82) / (size.width);
+    return (size.height * 0.82) / (size.width);
   }
 }

@@ -50,7 +50,7 @@ class _HLSViewerState extends State<HLSViewer> {
               )
             : Text(
                 "Waiting for the HLS Streaming to start...",
-                style: GoogleFonts.inter(color:iconColor,fontSize: 20.0),
+                style: GoogleFonts.inter(color: iconColor, fontSize: 20.0),
               ),
       ),
     );

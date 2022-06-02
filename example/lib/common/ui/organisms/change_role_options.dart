@@ -36,7 +36,10 @@ class _ChangeRoleOptionDialogState extends State<ChangeRoleOptionDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(widget.peerName,style:  GoogleFonts.inter(color:iconColor),),
+      title: Text(
+        widget.peerName,
+        style: GoogleFonts.inter(color: iconColor),
+      ),
       content: Container(
         width: double.infinity,
         child: FutureBuilder<List<HMSRole>>(
@@ -55,7 +58,10 @@ class _ChangeRoleOptionDialogState extends State<ChangeRoleOptionDialog> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text("Role To: ",style:  GoogleFonts.inter(color:iconColor),),
+                        Text(
+                          "Role To: ",
+                          style: GoogleFonts.inter(color: iconColor),
+                        ),
                         Flexible(
                           child: DropdownButton2(
                             buttonWidth: MediaQuery.of(context).size.width / 2,
@@ -68,7 +74,10 @@ class _ChangeRoleOptionDialogState extends State<ChangeRoleOptionDialog> {
                             },
                             items: data.data!.map((role) {
                               return DropdownMenuItem(
-                                child: Text(role.name,style:  GoogleFonts.inter(color:iconColor),),
+                                child: Text(
+                                  role.name,
+                                  style: GoogleFonts.inter(color: iconColor),
+                                ),
                                 value: role.name,
                               );
                             }).toList(),
@@ -92,7 +101,10 @@ class _ChangeRoleOptionDialogState extends State<ChangeRoleOptionDialog> {
                           SizedBox(
                             width: 16,
                           ),
-                          Text('Force change',style:  GoogleFonts.inter(color:iconColor),)
+                          Text(
+                            'Force change',
+                            style: GoogleFonts.inter(color: iconColor),
+                          )
                         ],
                       ),
                     ),
@@ -108,7 +120,10 @@ class _ChangeRoleOptionDialogState extends State<ChangeRoleOptionDialog> {
                             onPressed: () {
                               Navigator.pop(context);
                             },
-                            child: Text("Cancel",style:  GoogleFonts.inter(),)),
+                            child: Text(
+                              "Cancel",
+                              style: GoogleFonts.inter(),
+                            )),
                         ElevatedButton(
                             onPressed: () {
                               widget.changeRole(
@@ -116,14 +131,20 @@ class _ChangeRoleOptionDialogState extends State<ChangeRoleOptionDialog> {
                                       (element) => element.name == valueChoose),
                                   forceValue);
                             },
-                            child: Text("Change Role",style:  GoogleFonts.inter(),)),
+                            child: Text(
+                              "Change Role",
+                              style: GoogleFonts.inter(),
+                            )),
                       ],
                     )
                   ],
                 ),
               );
             }
-            return Text('No roles available',style:  GoogleFonts.inter(),);
+            return Text(
+              'No roles available',
+              style: GoogleFonts.inter(),
+            );
           },
           future: widget.getRoleFunction,
         ),

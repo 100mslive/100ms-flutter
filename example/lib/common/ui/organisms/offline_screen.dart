@@ -29,8 +29,10 @@ class OfflineWidget extends StatelessWidget {
                 child: Center(
                   child: Text(
                     'Oops, No internet connection.\n\nReconnecting...',
-                    style: GoogleFonts.inter(color:iconColor,
-                        fontSize: 20, fontWeight: FontWeight.bold),
+                    style: GoogleFonts.inter(
+                        color: iconColor,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold),
                   ),
                 ),
               ),

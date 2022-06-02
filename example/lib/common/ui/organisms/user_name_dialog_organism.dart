@@ -29,7 +29,9 @@ class _UserNameDialogOrganismState extends State<UserNameDialogOrganism> {
                     borderRadius: BorderRadius.all(Radius.circular(16)),
                   ),
                   hintText: 'Enter your Name',
-                  hintStyle: GoogleFonts.inter(color:iconColor,)),
+                  hintStyle: GoogleFonts.inter(
+                    color: iconColor,
+                  )),
             ),
           ],
         ),

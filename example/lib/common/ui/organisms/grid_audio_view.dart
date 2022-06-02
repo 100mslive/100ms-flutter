@@ -34,7 +34,7 @@ Widget gridAudioView(
 }
 
 List<StairedGridTile> pattern(int itemCount, Size size) {
-    double ratio = Utilities.getRatio(size);
+  double ratio = Utilities.getRatio(size);
 
   List<StairedGridTile> tiles = [];
   int gridView = itemCount ~/ 6;

@@ -31,7 +31,7 @@ class _RoleChangeDialogOrganismState extends State<RoleChangeDialogOrganism> {
             Text(
               message,
               style: GoogleFonts.inter(
-                color:iconColor,
+                color: iconColor,
               ),
             ),
           ],

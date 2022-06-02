@@ -79,8 +79,12 @@ class _ChatWidgetState extends State<ChatWidget> {
                                         items: [
                                           DropdownMenuItem<String>(
                                             child: Container(
-                                              width: 90,
-                                              child: Text("Everyone",style:  GoogleFonts.inter(),overflow: TextOverflow.clip,)),
+                                                width: 90,
+                                                child: Text(
+                                                  "Everyone",
+                                                  style: GoogleFonts.inter(),
+                                                  overflow: TextOverflow.clip,
+                                                )),
                                             value: "Everyone",
                                           ),
                                           ...data.item2
@@ -90,7 +94,15 @@ class _ChatWidgetState extends State<ChatWidget> {
                                                         child: Container(
                                                           width: 90,
                                                           child: Text(
-                                                              "${peer.name} ${peer.isLocal ? "(You)" : ""}",style:  GoogleFonts.inter(color:iconColor),overflow: TextOverflow.clip,),
+                                                            "${peer.name} ${peer.isLocal ? "(You)" : ""}",
+                                                            style: GoogleFonts
+                                                                .inter(
+                                                                    color:
+                                                                        iconColor),
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .clip,
+                                                          ),
                                                         ),
                                                         value: peer.peerId,
                                                       )
@@ -102,10 +114,16 @@ class _ChatWidgetState extends State<ChatWidget> {
                                               .map((role) =>
                                                   DropdownMenuItem<String>(
                                                     child: Container(
-                                                          width: 90,
-                                                      child: Text("${role.name}",
-                                                      overflow: TextOverflow.clip,
-                                                      style:  GoogleFonts.inter(color:iconColor),)),
+                                                        width: 90,
+                                                        child: Text(
+                                                          "${role.name}",
+                                                          overflow:
+                                                              TextOverflow.clip,
+                                                          style:
+                                                              GoogleFonts.inter(
+                                                                  color:
+                                                                      iconColor),
+                                                        )),
                                                     value: role.name,
                                                   ))
                                               .toList()
@@ -140,7 +158,11 @@ class _ChatWidgetState extends State<ChatWidget> {
                         // if (!_meetingStore.isMeetingStarted) return SizedBox();
 
                         if (data.item2 == 0)
-                          return Center(child: Text('No messages',style:  GoogleFonts.inter(color:iconColor),));
+                          return Center(
+                              child: Text(
+                            'No messages',
+                            style: GoogleFonts.inter(color: iconColor),
+                          ));
 
                         return ListView(
                           children: List.generate(
@@ -158,18 +180,18 @@ class _ChatWidgetState extends State<ChatWidget> {
                                       Expanded(
                                         child: Text(
                                           data.item1[index].sender?.name ?? "",
-                                          style:  GoogleFonts.inter(
+                                          style: GoogleFonts.inter(
                                               fontSize: 14.0,
-                                              color:iconColor,
+                                              color: iconColor,
                                               fontWeight: FontWeight.w600),
                                         ),
                                       ),
                                       Text(
                                         formatter
                                             .format(data.item1[index].time),
-                                        style:  GoogleFonts.inter(
+                                        style: GoogleFonts.inter(
                                             fontSize: 10.0,
-                                            color:iconColor,
+                                            color: iconColor,
                                             fontWeight: FontWeight.w900),
                                       )
                                     ],
@@ -183,9 +205,9 @@ class _ChatWidgetState extends State<ChatWidget> {
                                       Flexible(
                                         child: Text(
                                           data.item1[index].message.toString(),
-                                          style:  GoogleFonts.inter(
+                                          style: GoogleFonts.inter(
                                               fontSize: 14.0,
-                                              color:iconColor,
+                                              color: iconColor,
                                               fontWeight: FontWeight.w700),
                                         ),
                                       ),
@@ -197,7 +219,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                                                         .hmsMessageRecipient!
                                                         .hmsMessageRecipientType)
                                             .toLowerCase(),
-                                        style:  GoogleFonts.inter(
+                                        style: GoogleFonts.inter(
                                             fontSize: 14.0,
                                             color: Colors.blue,
                                             fontWeight: FontWeight.w500),
@@ -227,7 +249,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                           margin: EdgeInsets.only(bottom: 5.0, left: 5.0),
                           child: TextField(
                             autofocus: true,
-                            style: GoogleFonts.inter(color:iconColor),
+                            style: GoogleFonts.inter(color: iconColor),
                             controller: messageTextController,
                             decoration: new InputDecoration(
                                 border: InputBorder.none,

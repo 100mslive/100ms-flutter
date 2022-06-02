@@ -59,7 +59,9 @@ class _ParticipantsListState extends State<ParticipantsList> {
                 } else {
                   return Text(
                     "No Participants",
-                    style: GoogleFonts.inter(color:iconColor,),
+                    style: GoogleFonts.inter(
+                      color: iconColor,
+                    ),
                   );
                 }
               }),

@@ -39,15 +39,15 @@ class _DegradeTileState extends State<DegradeTile> {
                 child: Stack(
                   children: [
                     Positioned(
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(5, 5, 0, 0),
-                    child: SvgPicture.asset(
-                      'assets/icons/degrade.svg',
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(5, 5, 0, 0),
+                        child: SvgPicture.asset(
+                          'assets/icons/degrade.svg',
+                        ),
+                      ),
+                      top: 10.0,
+                      right: 5.0,
                     ),
-                  ),
-                  top: 10.0,
-                  right: 5.0,
-                ),
                     AudioLevelAvatar()
                   ],
                 ),
