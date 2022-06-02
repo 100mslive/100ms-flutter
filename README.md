@@ -1,5 +1,5 @@
 <a href="https://100ms.live/">
-<img src="https://github.com/100mslive/100ms-flutter/blob/develop/100ms.gif" height=256/> 
+<img src="https://github.com/100mslive/100ms-flutter/blob/develop/100ms.gif" height=256/>
 <img src="https://github.com/100mslive/100ms-flutter/blob/develop/100ms.svg" title="100ms logo" float=center height=256>
 </a>
 
@@ -16,34 +16,36 @@
 
 Here you will find everything you need to build experiences with video using 100ms iOS/Android SDK. Dive into our SDKs, quick starts, add real-time video, voice, and screen sharing to your web and mobile applications.
 
-📲 Download the Sample iOS app here: https://testflight.apple.com/join/Uhzebmut
+📲 Download the Sample iOS app here: <https://testflight.apple.com/join/Uhzebmut>
 
-🤖 Download the Sample Android app here: https://appdistribution.firebase.dev/i/b623e5310929ab70
+🤖 Download the Sample Android app here: <https://appdistribution.firebase.dev/i/b623e5310929ab70>
   
- ## 🏃‍♀️ How to run the Sample App
-
- The Example app can be found [here](https://github.com/100mslive/100ms-flutter/tree/main/example).
-
- 1. In project root, run `flutter pub get`
- 2. Change directory to `example` folder & run either `flutter build ios` OR `flutter build apk`
- 3. Finally, `flutter run`
-
 ## 🚂 Setup Guide
 
-1. Sign up on https://dashboard.100ms.live/register & visit the Developer tab to access your credentials.
+1. Sign up on <https://dashboard.100ms.live/register> & visit the Developer tab to access your credentials.
 
 2. Get familiarized with [Tokens & Security here](https://docs.100ms.live/flutter/foundation/security-and-tokens)
 
 3. Complete the steps in [Auth Token Quick Start Guide](https://docs.100ms.live/flutter/guides/token)
 
-4. Get the HMSSDK via [pub.dev](https://pub.dev/packages/hmssdk_flutter). Add the `hmssdk_flutter` to your pubspec.yaml
+4. Get the HMSSDK via [pub.dev](https://pub.dev/packages/hmssdk_flutter). Add the `hmssdk_flutter` to your pubspec.yaml.
 
+    If you are running Flutter 3.0 or higher, use this branch to add the package: `flutter3.0` 
+    <https://github.com/100mslive/100ms-flutter/tree/flutter3.0>
+
+## 🏃‍♀️ How to run the Sample App
+
+The Example app can be found [here](https://github.com/100mslive/100ms-flutter/tree/main/example).
+
+1. In project root, run `flutter pub get`
+2. Change directory to `example` folder & run either `flutter build ios` OR `flutter build apk`
+3. Finally, `flutter run`
 
 ## ☝️ Pre-requisites
 
 - Support for Android API level 24 or higher
 - Support for Java 8
-- Support for iOS 10 or higher
+- Support for iOS 12 or higher
 - Xcode 12 or higher
 
 ## 📱 Supported Devices
@@ -54,7 +56,7 @@ iPhone & iPads with iOS version 10 or higher.
 
 ## Android Permissions
 
-Add following permissions in Android AndroidManifest.xml file
+Add the following permissions in the Android AndroidManifest.xml file
 
 ```xml
 <uses-feature android:name="android.hardware.camera"/>
@@ -78,10 +80,10 @@ Add following permissions in Android AndroidManifest.xml file
 <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 ```
 
-
 ## iOS Permissions
 
 Add following permissions in iOS Info.plist file
+
 ```xml
 <key>NSMicrophoneUsageDescription</key>
 <string>{YourAppName} wants to use your microphone</string>
@@ -93,14 +95,12 @@ Add following permissions in iOS Info.plist file
 <string>{YourAppName} App wants to use your local network</string>
 ```
 
-
 ## 🧐 Key Concepts
 
 - `Room` - A room represents real-time audio, video session, the basic building block of the 100mslive Video SDK
 - `Track` - A track represents either the audio or video that makes up a stream
 - `Peer` - A peer represents all participants connected to a room. Peers can be "local" or "remote"
-- `Broadcast` - A local peer can send any message/data to all remote peers in the room 
-
+- `Broadcast` - A local peer can send any message/data to all remote peers in the room
 
 ## Generating Auth Token
   
@@ -115,27 +115,28 @@ Add following permissions in iOS Info.plist file
           body: {'room_id': room, 'user_id': user, 'role': Constant.defaultRole});
   ```
 
-  after generating token parse it using json.
+  after generating the token parse it using JSON.
 
   ```dart
   var body = json.decode(response.body);
   String token = body['token'];
   ```
-  You will need this token later explained below.   
-    
+
+  You will need this token later explained below.
+
 ## ♻️ Setup event listeners
 
-100ms SDK provides callbacks to the client app about any change or update happening in the room after a user has joined by implementing `HMSUpdateListener`. These updates can be used to render the video on screen or to display other info regarding the room.
+100ms SDK provides callbacks to the client app about any change or update happening in the room after a user has joined by implementing `HMSUpdateListener`. These updates can be used to render the video on the screen or to display other info regarding the room.
 
 ```dart
 
 /// 100ms SDK provides callbacks to the client app about any change or update happening in the room after a user has joined by implementing HMSUpdateListener.
-/// These updates can be used to render the video on screen or to display other info regarding the room.
+/// These updates can be used to render the video on the screen or to display other info regarding the room.
 abstract class HMSUpdateListener {
 
   /// This will be called on a successful JOIN of the room by the user
   ///
-  /// This is the point where applications can stop showing its loading state
+  /// This is the point where applications can stop showing their loading state
   /// [room]: the room which was joined
   void onJoin({required HMSRoom room});
 
@@ -173,13 +174,13 @@ abstract class HMSUpdateListener {
   /// [message]: the received broadcast message
   void onMessage({required HMSMessage message});
 
-  /// This is called when someone asks for change or role
+  /// This is called when someone asks for a change or role
   ///
   /// for eg. admin can ask a peer to become host from guest.
   /// this triggers this call on peer's app
   void onRoleChangeRequest({required HMSRoleChangeRequest roleChangeRequest});
 
-  /// This is called every 1 second with list of active speakers
+  /// This is called every 1 second with a list of active speakers
   ///
   /// ## A HMSSpeaker object contains -
   ///    - peerId: the peer identifier of HMSPeer who is speaking
@@ -203,18 +204,19 @@ abstract class HMSUpdateListener {
   void onChangeTrackStateRequest({required HMSTrackChangeRequest hmsTrackChangeRequest});
 
   ///when someone kicks you out or when someone ends the room at that time it is triggered
-  /// [hmsPeerRemovedFromPeer] it consists info about who removed you and why.
+  /// [hmsPeerRemovedFromPeer] it consists of info about who removed you and why.
   void onRemovedFromRoom({required HMSPeerRemovedFromPeer hmsPeerRemovedFromPeer});
 }
 
 ```
 
-## 🤔 How to listen to Track, Peer and Room updates? 
+## 🤔 How to listen to Track, Peer and Room updates?
 
-  The HMS SDK sends updates to the application about any change in HMSPeer , HMSTrack or HMSRoom via the callbacks in HMSUpdateListener.
-  Application need to listen to the corresponding updates in onPeerUpdate , onTrackUpdate or onRoomUpdate
+  The HMS SDK sends updates to the application about any change in HMSPeer, HMSTrack or HMSRoom via the callbacks in HMSUpdateListener.
+  Application need to listen to the corresponding updates in onPeerUpdate, onTrackUpdate or onRoomUpdate
 
-  The following are the different types of updates that are emitted by the SDK - 
+  The following are the different types of updates that are emitted by the SDK -
+
 ```dart
 HMSPeerUpdate
   HMSPeerUpdate.peerJoined: A new peer joins the room
@@ -242,14 +244,14 @@ HMSRoomUpdate
   
 ## 🛤 How to know the type and source of Track?
 
-  HMSTrack contain a field called source which denotes the source of the Track. 
+  HMSTrack contains a field called source which denotes the source of the Track.
   Source can have the following values - regular (normal), screen (for screenshare)and plugin (for plugins)
 
   To know the type of track, check the value of type which would be one of the enum values - AUDIO or VIDEO
   
 ## 🤝 Provide joining configuration
 
-To join a room created by following the steps described in the above section, clients need to create a `HMSConfig` instance and use that instance to call `join` method of `HMSSDK`
+To join a room created by following the steps described in the above section, clients need to create an `HMSConfig` instance and use that instance to call the `join` method of `HMSSDK`
 
 ```dart
 // Create a new HMSConfig
@@ -257,8 +259,8 @@ HMSConfig config = HMSConfig(authToken: token,
                             userName: userName);
 ```
 
- `token`:  follow the above step 1 to generate token.
- `userName`: your name using which you want to join the room.   
+ `token`:  follow the above step 1 to generate a token.
+ `userName`: your name using which you want to join the room.
 
 ## 🙏 Join a room
 
@@ -314,6 +316,7 @@ HMSTrack
 ```
   
 ## 🎞 Display a Track
+
   To display a video track, first get the `HMSVideoTrack` & pass it on to `HMSVideoView` using `setVideoTrack` function. Ensure to attach the `HMSVideoView` to your UI hierarchy.
 
 ```dart
@@ -321,22 +324,25 @@ HMSVideoView(track: videoTrack);
 ```
 
 ## Change a Role
-  To change role, you will provide the selected peer and new roleName from roles. If forceChange is true, the system will prompt user for the change. If forceChange is false, user will get a prompt to accept/reject the role.
+
+  To change role, you will provide the selected peer and new roleName from roles. If forceChange is true, the system will prompt the user for the change. If forceChange is false, the user will get a prompt to accept/reject the role.
   After changeRole is called, HMSUpdateListener's onRoleChangeRequest will be called on selected user's end.
+
 ```dart
  hmsSDK.changeRole(peer: peer, roleName: roleName, forceChange: true);
 ```
 
 ## 📨 Chat Messaging
-You can send a chat or any other kind of message from local peer to all remote peers in the room.
+
+You can send a chat or any other kind of message from a local peer to all remote peers in the room.
 
 To send a message first create an instance of `HMSMessage` object.
 
 Add the information to be sent in the `message` property of `HMSMessage`.
 
-Then use the `void sendBroadcastMessage(message: String)` function on instance of HMSSDK.
+Then use the `void sendBroadcastMessage(message: String)` function on the instance of HMSSDK.
 
-When you(the local peer) receives a message from others(any remote peer), `  void onMessage({required HMSMessage message})` function of `HMSUpdateListener` is invoked.
+When you(the local peer) receives a message from others(any remote peer), `void onMessage({required HMSMessage message})` function of `HMSUpdateListener` is invoked.
   
 ```dart
 // following is an example implementation of chat messaging
@@ -357,25 +363,25 @@ void onMessage({required HMSMessage message}){
  🏃‍♀️ Checkout the sample implementation in the [Example app folder](https://github.com/100mslive/100ms-flutter/tree/main/example).
 
 ## 🎞 Preview
+
   You can use our preview feature to unmute/mute audio/video before joining the room.
   
   You can implement your own preview listener using this `abstract class HMSPreviewListener`
 
-```dart 
+```dart
 abstract class HMSPreviewListener {
 
   //you will get all error updates here
   void onError({required HMSException error});
 
-  //here you will get room instance where you are going to join and your own local tracks to render the video by checking the type of trackKind and then using the 
+  //here you will get a room instance where you are going to join and your own local tracks to render the video by checking the type of trackKind and then using the 
   //above mentioned VideoView widget
   void onPreview({required HMSRoom room, required List<HMSTrack> localTracks});
 }
 ```
 
+📖 Read the Complete Documentation here: <https://docs.100ms.live/flutter/v2/foundation/basics>
 
-📖 Read the Complete Documentation here: https://docs.100ms.live/flutter/v2/foundation/basics
+📲 Download the Sample iOS app here: <https://testflight.apple.com/join/Uhzebmut>
 
-📲 Download the Sample iOS app here: https://testflight.apple.com/join/Uhzebmut
-
-🤖 Download the Sample Android app here: https://appdistribution.firebase.dev/i/b623e5310929ab70
+🤖 Download the Sample Android app here: <https://appdistribution.firebase.dev/i/b623e5310929ab70>

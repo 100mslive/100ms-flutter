@@ -2,6 +2,8 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:collection/collection.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
@@ -65,9 +67,9 @@ class _ChatWidgetState extends State<ChatWidget> {
                                   if (roles.length > 0) {
                                     return DropdownButtonHideUnderline(
                                       child: DropdownButton2(
-                                        buttonWidth: 150,
+                                        buttonWidth: 120,
                                         value: valueChoose,
-                                        iconEnabledColor: Colors.white,
+                                        iconEnabledColor: iconColor,
                                         onChanged: (newvalue) {
                                           setState(() {
                                             this.valueChoose =
@@ -76,15 +78,32 @@ class _ChatWidgetState extends State<ChatWidget> {
                                         },
                                         items: [
                                           DropdownMenuItem<String>(
-                                            child: Text("Everyone"),
+                                            child: Container(
+                                                width: 90,
+                                                child: Text(
+                                                  "Everyone",
+                                                  style: GoogleFonts.inter(),
+                                                  overflow: TextOverflow.clip,
+                                                )),
                                             value: "Everyone",
                                           ),
                                           ...data.item2
                                               .map((peer) {
                                                 return !peer.isLocal
                                                     ? DropdownMenuItem<String>(
-                                                        child: Text(
-                                                            "${peer.name} ${peer.isLocal ? "(You)" : ""}"),
+                                                        child: Container(
+                                                          width: 90,
+                                                          child: Text(
+                                                            "${peer.name} ${peer.isLocal ? "(You)" : ""}",
+                                                            style: GoogleFonts
+                                                                .inter(
+                                                                    color:
+                                                                        iconColor),
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .clip,
+                                                          ),
+                                                        ),
                                                         value: peer.peerId,
                                                       )
                                                     : null;
@@ -94,7 +113,17 @@ class _ChatWidgetState extends State<ChatWidget> {
                                           ...roles
                                               .map((role) =>
                                                   DropdownMenuItem<String>(
-                                                    child: Text("${role.name}"),
+                                                    child: Container(
+                                                        width: 90,
+                                                        child: Text(
+                                                          "${role.name}",
+                                                          overflow:
+                                                              TextOverflow.clip,
+                                                          style:
+                                                              GoogleFonts.inter(
+                                                                  color:
+                                                                      iconColor),
+                                                        )),
                                                     value: role.name,
                                                   ))
                                               .toList()
@@ -129,7 +158,11 @@ class _ChatWidgetState extends State<ChatWidget> {
                         // if (!_meetingStore.isMeetingStarted) return SizedBox();
 
                         if (data.item2 == 0)
-                          return Center(child: Text('No messages'));
+                          return Center(
+                              child: Text(
+                            'No messages',
+                            style: GoogleFonts.inter(color: iconColor),
+                          ));
 
                         return ListView(
                           children: List.generate(
@@ -147,22 +180,18 @@ class _ChatWidgetState extends State<ChatWidget> {
                                       Expanded(
                                         child: Text(
                                           data.item1[index].sender?.name ?? "",
-                                          style: TextStyle(
+                                          style: GoogleFonts.inter(
                                               fontSize: 14.0,
-                                              color: MediaQuery.of(context)
-                                                          .platformBrightness ==
-                                                      Brightness.light
-                                                  ? Colors.grey
-                                                  : Colors.white70,
+                                              color: iconColor,
                                               fontWeight: FontWeight.w600),
                                         ),
                                       ),
                                       Text(
                                         formatter
                                             .format(data.item1[index].time),
-                                        style: TextStyle(
+                                        style: GoogleFonts.inter(
                                             fontSize: 10.0,
-                                            color: Colors.white,
+                                            color: iconColor,
                                             fontWeight: FontWeight.w900),
                                       )
                                     ],
@@ -176,9 +205,9 @@ class _ChatWidgetState extends State<ChatWidget> {
                                       Flexible(
                                         child: Text(
                                           data.item1[index].message.toString(),
-                                          style: TextStyle(
+                                          style: GoogleFonts.inter(
                                               fontSize: 14.0,
-                                              color: Colors.white,
+                                              color: iconColor,
                                               fontWeight: FontWeight.w700),
                                         ),
                                       ),
@@ -190,7 +219,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                                                         .hmsMessageRecipient!
                                                         .hmsMessageRecipientType)
                                             .toLowerCase(),
-                                        style: TextStyle(
+                                        style: GoogleFonts.inter(
                                             fontSize: 14.0,
                                             color: Colors.blue,
                                             fontWeight: FontWeight.w500),
@@ -220,6 +249,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                           margin: EdgeInsets.only(bottom: 5.0, left: 5.0),
                           child: TextField(
                             autofocus: true,
+                            style: GoogleFonts.inter(color: iconColor),
                             controller: messageTextController,
                             decoration: new InputDecoration(
                                 border: InputBorder.none,

@@ -1,9 +1,10 @@
 //package imports
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:hmssdk_flutter_example/common/ui/organisms/audio_level_avatar.dart';
 import 'package:provider/provider.dart';
 
 //Package imports
-import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:hmssdk_flutter_example/meeting/peer_track_node.dart';
 
 class DegradeTile extends StatefulWidget {
@@ -31,18 +32,23 @@ class _DegradeTileState extends State<DegradeTile> {
                 height: widget.itemHeight + 110,
                 width: widget.itemWidth - 4,
                 decoration: BoxDecoration(
-                    color: Colors.grey[800],
+                    color: Colors.black87,
                     borderRadius: BorderRadius.all(Radius.circular(10))),
-                child: Center(
-                    child: CircleAvatar(
-                        backgroundColor: Utilities.getBackgroundColour(
-                            context.read<PeerTrackNode>().peer.name),
-                        radius: 36,
-                        child: Text(
-                          Utilities.getAvatarTitle(
-                              context.read<PeerTrackNode>().peer.name),
-                          style: TextStyle(fontSize: 36, color: Colors.white),
-                        ))),
+                child: Stack(
+                  children: [
+                    Positioned(
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(5, 5, 0, 0),
+                        child: SvgPicture.asset(
+                          'assets/icons/degrade.svg',
+                        ),
+                      ),
+                      top: 10.0,
+                      right: 5.0,
+                    ),
+                    AudioLevelAvatar()
+                  ],
+                ),
               ));
         },
         selector: (_, peerTrackNode) =>

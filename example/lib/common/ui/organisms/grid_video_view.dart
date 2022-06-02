@@ -1,5 +1,9 @@
 //Package imports
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:hmssdk_flutter_example/common/util/app_color.dart';
+import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:provider/provider.dart';
 
 //Project imports
@@ -24,7 +28,7 @@ Widget gridVideoView(
       itemBuilder: (context, index) {
         if (peerTracks[index].track?.source != "REGULAR") {
           return ChangeNotifierProvider.value(
-            key: ValueKey(peerTracks[index].uid),
+            key: ValueKey(peerTracks[index].uid + "video_view"),
             value: peerTracks[index],
             child: peerTracks[index].peer.isLocal
                 ? Container(
@@ -35,13 +39,21 @@ Widget gridVideoView(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.screen_share),
-                        Text("You are sharing your screen"),
+                        SvgPicture.asset(
+                          "assets/icons/screen_share.svg",
+                          color: iconColor,
+                        ),
+                        Text(
+                          "You are sharing your screen",
+                          style: GoogleFonts.inter(
+                            color: iconColor,
+                          ),
+                        ),
                       ],
                     ),
                   )
                 : VideoTile(
-                    key: Key(peerTracks[index].uid),
+                    key: Key(peerTracks[index].uid + "video_tile"),
                     scaleType: ScaleType.SCALE_ASPECT_FIT,
                     itemHeight: size.height,
                     itemWidth: size.width,
@@ -55,10 +67,10 @@ Widget gridVideoView(
           peerTracks[index].setOffScreenStatus(false);
         }
         return ChangeNotifierProvider.value(
-            key: ValueKey(peerTracks[index].uid),
+            key: ValueKey(peerTracks[index].uid + "video_view"),
             value: peerTracks[index],
             child: VideoTile(
-              key: ValueKey(peerTracks[index].uid),
+              key: ValueKey(peerTracks[index].uid + "audio_view"),
               itemHeight: size.height,
               itemWidth: size.width,
             ));
@@ -70,7 +82,7 @@ Widget gridVideoView(
 }
 
 List<StairedGridTile> pattern(int itemCount, int screenShareCount, Size size) {
-  double ratio = (size.height * 0.81) / (size.width);
+  double ratio = Utilities.getRatio(size);
   List<StairedGridTile> tiles = [];
   for (int i = 0; i < screenShareCount; i++) {
     tiles.add(StairedGridTile(1, ratio));

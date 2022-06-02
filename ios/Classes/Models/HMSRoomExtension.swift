@@ -25,6 +25,10 @@ class  HMSRoomExtension {
         if let data = room.metaData {
             dict["meta_data"] = data
         }
+        
+        if let sessionId = room.sessionID {
+            dict["session_id"] = sessionId
+        }
 
         var peers = [[String: Any]]()
         room.peers.forEach { peers.append(HMSPeerExtension.toDictionary($0)) }

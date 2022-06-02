@@ -1,5 +1,8 @@
 //Package imports
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:provider/provider.dart';
 
 //Project imports
@@ -42,30 +45,31 @@ class _ParticipantOrganismState extends State<ParticipantOrganism> {
               width: width / 3,
               child: Text(
                 peer.name,
-                style: TextStyle(fontSize: 20.0),
+                style: GoogleFonts.inter(
+                  fontSize: 20.0,
+                  color: iconColor,
+                ),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
             ),
             Row(
               children: [
-                if (peer.metadata == "{\"isHandRaised\":true}")
+                if (peer.metadata?.contains("\"isHandRaised\":true") ?? false)
+                  Padding(
+                      padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
+                      child: SvgPicture.asset(
+                        "assets/icons/hand.svg",
+                        color: Colors.yellow,
+                        height: 25,
+                      )),
+                if (peer.metadata?.contains("\"isBRBOn\":true") ?? false)
                   Padding(
                     padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
-                    child: Image.asset(
-                      'assets/icons/raise_hand.png',
-                      color: Colors.amber.shade300,
-                      width: 20,
-                      height: 20,
-                    ),
-                  ),
-                if (peer.metadata ==
-                    "{\"isHandRaised\":false,\"isBRBOn\":true}")
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
-                    child: Container(
-                      decoration: BoxDecoration(border: Border.all(width: 1)),
-                      child: Text("BRB"),
+                    child: SvgPicture.asset(
+                      "assets/icons/brb.svg",
+                      color: Colors.red,
+                      width: 25,
                     ),
                   ),
                 GestureDetector(
@@ -89,7 +93,7 @@ class _ParticipantOrganismState extends State<ParticipantOrganism> {
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                     child: Container(
-                      width: width / 4,
+                      width: width / 6,
                       padding: const EdgeInsets.all(5.0),
                       decoration: BoxDecoration(
                         color: Colors.blue,
@@ -100,9 +104,9 @@ class _ParticipantOrganismState extends State<ParticipantOrganism> {
                           "${peer.role.name}",
                           overflow: TextOverflow.clip,
                           maxLines: 1,
-                          style: TextStyle(
+                          style: GoogleFonts.inter(
                               color: Colors.white,
-                              fontSize: 20.0,
+                              fontSize: 18.0,
                               fontWeight: FontWeight.bold),
                         ),
                       ),

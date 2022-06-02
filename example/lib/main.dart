@@ -5,8 +5,10 @@ import 'dart:io';
 //Package imports
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:wakelock/wakelock.dart';
@@ -21,7 +23,6 @@ import 'package:hmssdk_flutter_example/common/constant.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/user_name_dialog_organism.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
 import 'package:hmssdk_flutter_example/preview/preview_page.dart';
-import 'package:hmssdk_flutter_example/service/deeplink_service.dart';
 import './logs/custom_singleton_logger.dart';
 
 void main() async {
@@ -34,20 +35,49 @@ void main() async {
       () => runApp(HMSExampleApp()), FirebaseCrashlytics.instance.recordError);
 }
 
-class HMSExampleApp extends StatelessWidget {
-  const HMSExampleApp({Key? key}) : super(key: key);
+class HMSExampleApp extends StatefulWidget {
+  HMSExampleApp({Key? key}) : super(key: key);
+
+  @override
+  _HMSExampleAppState createState() => _HMSExampleAppState();
+  static _HMSExampleAppState of(BuildContext context) =>
+      context.findAncestorStateOfType<_HMSExampleAppState>()!;
+}
+
+class _HMSExampleAppState extends State<HMSExampleApp> {
+  ThemeMode _themeMode = ThemeMode.system;
+  bool isDarkMode =
+      WidgetsBinding.instance?.window.platformBrightness == Brightness.dark;
+  ThemeData _darkTheme = ThemeData(
+      brightness: Brightness.dark,
+      primaryColor: Color.fromARGB(255, 13, 107, 184),
+      backgroundColor: Colors.black,
+      scaffoldBackgroundColor: Colors.black);
+
+  ThemeData _lightTheme = ThemeData(
+    primaryColor: Color.fromARGB(255, 13, 107, 184),
+    brightness: Brightness.light,
+    scaffoldBackgroundColor: Colors.white,
+    backgroundColor: Colors.black,
+    dividerColor: Colors.white54,
+  );
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(
-          brightness: Brightness.dark,
-          primaryColor: Color.fromARGB(255, 13, 107, 184),
-          appBarTheme: AppBarTheme(color: Colors.black),
-          scaffoldBackgroundColor: Colors.black),
-      scaffoldMessengerKey: GlobalKey<ScaffoldMessengerState>(),
       home: HomePage(),
+      theme: _lightTheme,
+      darkTheme: _darkTheme,
+      themeMode: _themeMode,
     );
+  }
+
+  void changeTheme(ThemeMode themeMode) {
+    setState(() {
+      _themeMode = themeMode;
+      isDarkMode = themeMode == ThemeMode.dark;
+      updateColor(_themeMode);
+    });
   }
 }
 
@@ -65,6 +95,7 @@ class _HomePageState extends State<HomePage> {
   bool skipPreview = false;
   bool mirrorCamera = true;
   bool showStats = false;
+
   PackageInfo _packageInfo = PackageInfo(
     appName: 'Unknown',
     packageName: 'Unknown',
@@ -137,15 +168,41 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    bool isDarkMode = HMSExampleApp.of(context).isDarkMode;
     return WillPopScope(
       onWillPop: _closeApp,
       child: Scaffold(
           appBar: AppBar(
-            title: Text('100ms'),
+            backgroundColor: isDarkMode ? Colors.black : Colors.white,
+            elevation: 0,
+            title: Text(
+              '100ms',
+              style: GoogleFonts.inter(color: iconColor),
+            ),
             actions: [
+              IconButton(
+                  onPressed: () {
+                    if (isDarkMode) {
+                      HMSExampleApp.of(context).changeTheme(ThemeMode.light);
+                    } else {
+                      HMSExampleApp.of(context).changeTheme(ThemeMode.dark);
+                    }
+                  },
+                  icon: isDarkMode
+                      ? SvgPicture.asset(
+                          'assets/icons/light_mode.svg',
+                          color: iconColor,
+                        )
+                      : SvgPicture.asset(
+                          'assets/icons/dark_mode.svg',
+                          color: iconColor,
+                        )),
               PopupMenuButton<int>(
                 onSelected: handleClick,
-                icon: Icon(CupertinoIcons.gear),
+                icon: SvgPicture.asset(
+                  'assets/icons/settings.svg',
+                  color: iconColor,
+                ),
                 itemBuilder: (BuildContext context) {
                   return [
                     PopupMenuItem(
@@ -153,14 +210,22 @@ class _HomePageState extends State<HomePage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           if (skipPreview)
-                            Text("Enable Preview")
+                            Text("Enable Preview",
+                                style: GoogleFonts.inter(color: iconColor))
                           else
                             Text(
                               "Disable Preview",
-                              style: TextStyle(color: Colors.blue),
+                              style: GoogleFonts.inter(color: Colors.blue),
                             ),
-                          Icon(Icons.preview,
-                              color: skipPreview ? Colors.white : Colors.blue),
+                          if (skipPreview)
+                            SvgPicture.asset(
+                                'assets/icons/preview_state_on.svg',
+                                color: iconColor)
+                          else
+                            SvgPicture.asset(
+                              'assets/icons/preview_state_off.svg',
+                              color: Colors.blue,
+                            ),
                         ],
                       ),
                       value: 1,
@@ -171,12 +236,15 @@ class _HomePageState extends State<HomePage> {
                         children: [
                           if (mirrorCamera)
                             Text("Disable Mirroring",
-                                style: TextStyle(color: Colors.blue))
+                                style: GoogleFonts.inter(color: Colors.blue))
                           else
-                            Text("Enable Mirroring"),
+                            Text(
+                              "Enable Mirroring",
+                              style: GoogleFonts.inter(color: iconColor),
+                            ),
                           Icon(
                             Icons.camera_front,
-                            color: mirrorCamera ? Colors.blue : Colors.white,
+                            color: mirrorCamera ? Colors.blue : iconColor,
                           ),
                         ],
                       ),
@@ -188,11 +256,16 @@ class _HomePageState extends State<HomePage> {
                         children: [
                           if (showStats)
                             Text("Disable Stats",
-                                style: TextStyle(color: Colors.blue))
+                                style: GoogleFonts.inter(color: Colors.blue))
                           else
-                            Text("Enable Stats"),
-                          Icon(Icons.bar_chart,
-                              color: showStats ? Colors.blue : Colors.white),
+                            Text(
+                              "Enable Stats",
+                              style: GoogleFonts.inter(color: iconColor),
+                            ),
+                          SvgPicture.asset(
+                            'assets/icons/stats.svg',
+                            color: showStats ? Colors.blue : iconColor,
+                          ),
                         ],
                       ),
                       value: 3,
@@ -201,7 +274,8 @@ class _HomePageState extends State<HomePage> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text("Version ${_packageInfo.version}"),
+                          Text("Version ${_packageInfo.version}",
+                              style: GoogleFonts.inter(color: iconColor)),
                         ],
                       ),
                       value: 4,
@@ -224,7 +298,7 @@ class _HomePageState extends State<HomePage> {
                     height: 70,
                   ),
                   Text('Join Meeting',
-                      style: TextStyle(
+                      style: GoogleFonts.inter(
                           height: 1,
                           fontSize: 24,
                           fontWeight: FontWeight.bold)),
@@ -234,10 +308,12 @@ class _HomePageState extends State<HomePage> {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: TextField(
+                      style: GoogleFonts.inter(),
                       controller: roomIdController,
                       keyboardType: TextInputType.url,
                       decoration: InputDecoration(
                           hintText: 'Enter Room URL',
+                          hintStyle: GoogleFonts.inter(),
                           suffixIcon: IconButton(
                             onPressed: roomIdController.clear,
                             icon: Icon(Icons.clear),
@@ -251,75 +327,81 @@ class _HomePageState extends State<HomePage> {
                     height: 30,
                   ),
                   ElevatedButton(
-                      style: ButtonStyle(
-                          shadowColor: MaterialStateProperty.all(Colors.blue),
-                          shape:
-                              MaterialStateProperty.all<RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16.0),
-                          ))),
-                      onPressed: () async {
-                        if (roomIdController.text.isEmpty) {
-                          return;
-                        }
-                        setRTMPUrl(roomIdController.text);
-                        String user = await showDialog(
-                            context: context,
-                            builder: (_) => UserNameDialogOrganism());
-                        if (user.isNotEmpty) {
-                          bool res = await getPermissions();
-                          if (res) {
-                            FocusManager.instance.primaryFocus?.unfocus();
-                            if (skipPreview) {
-                              HMSSDKInteractor _hmsSDKInteractor =
-                                  HMSSDKInteractor();
-                              _hmsSDKInteractor.showStats = showStats;
-                              _hmsSDKInteractor.mirrorCamera = mirrorCamera;
-                              _hmsSDKInteractor.skipPreview = true;
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (_) => ListenableProvider.value(
-                                      value: MeetingStore(
-                                          hmsSDKInteractor: _hmsSDKInteractor),
-                                      child: MeetingPage(
-                                          roomId: roomIdController.text.trim(),
-                                          flow: MeetingFlow.join,
-                                          user: user,
-                                          isAudioOn: true))));
-                            } else {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (_) => ListenableProvider.value(
-                                        value: PreviewStore(),
-                                        child: PreviewPage(
-                                          roomId: roomIdController.text.trim(),
-                                          user: user,
-                                          flow: MeetingFlow.join,
-                                          mirror: mirrorCamera,
-                                          showStats: showStats,
-                                        ),
-                                      )));
-                            }
+                    style: ButtonStyle(
+                        shadowColor: MaterialStateProperty.all(Colors.blue),
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16.0),
+                        ))),
+                    onPressed: () async {
+                      if (roomIdController.text.isEmpty) {
+                        return;
+                      }
+                      setRTMPUrl(roomIdController.text);
+                      String user = await showDialog(
+                          context: context,
+                          builder: (_) => UserNameDialogOrganism());
+                      if (user.isNotEmpty) {
+                        bool res = await getPermissions();
+                        if (res) {
+                          FocusManager.instance.primaryFocus?.unfocus();
+                          if (skipPreview) {
+                            HMSSDKInteractor _hmsSDKInteractor =
+                                HMSSDKInteractor();
+                            _hmsSDKInteractor.showStats = showStats;
+                            _hmsSDKInteractor.mirrorCamera = mirrorCamera;
+                            _hmsSDKInteractor.skipPreview = true;
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (_) => ListenableProvider.value(
+                                    value: MeetingStore(
+                                        hmsSDKInteractor: _hmsSDKInteractor),
+                                    child: MeetingPage(
+                                        roomId: roomIdController.text.trim(),
+                                        flow: MeetingFlow.join,
+                                        user: user,
+                                        isAudioOn: true))));
+                          } else {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (_) => ListenableProvider.value(
+                                      value: PreviewStore(),
+                                      child: PreviewPage(
+                                        roomId: roomIdController.text.trim(),
+                                        user: user,
+                                        flow: MeetingFlow.join,
+                                        mirror: mirrorCamera,
+                                        showStats: showStats,
+                                      ),
+                                    )));
                           }
                         }
-                      },
-                      child: Container(
-                        width: 250,
-                        padding: const EdgeInsets.fromLTRB(4, 10, 4, 10),
-                        decoration: BoxDecoration(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(12))),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text('Join Meeting',
-                                style: TextStyle(height: 1, fontSize: 20)),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            Icon(Icons.arrow_right_alt_outlined, size: 22),
-                          ],
-                        ),
-                      )),
+                      }
+                    },
+                    child: Container(
+                      width: 250,
+                      padding: const EdgeInsets.fromLTRB(4, 10, 4, 10),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(12))),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text('Join Meeting',
+                              style:
+                                  GoogleFonts.inter(height: 1, fontSize: 20)),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Icon(Icons.arrow_right_alt_outlined, size: 22),
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 50,
+                  ),
+                  Text("Made with ❤️ by 100ms",
+                      style: GoogleFonts.inter(color: iconColor))
                 ],
               ),
             ),

@@ -20,7 +20,7 @@ class TileBorder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Selector<MeetingStore, bool>(
+    return Selector<MeetingStore, int>(
         selector: (_, meetingStore) => meetingStore.isActiveSpeaker(uid),
         builder: (_, isHighestSpeaker, __) {
           return Container(
@@ -28,10 +28,10 @@ class TileBorder extends StatelessWidget {
             width: itemWidth - 4,
             decoration: BoxDecoration(
               border: Border.all(
-                  color: isHighestSpeaker
+                  color: (isHighestSpeaker != -1)
                       ? Utilities.getBackgroundColour(name)
                       : Colors.grey,
-                  width: isHighestSpeaker ? 4.0 : 1.0),
+                  width: (isHighestSpeaker != -1) ? 4.0 : 1.0),
               borderRadius: BorderRadius.all(Radius.circular(10)),
             ),
           );

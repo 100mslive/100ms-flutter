@@ -1,5 +1,8 @@
 //Package imports
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:provider/provider.dart';
 
 //Project imports
@@ -34,8 +37,14 @@ Widget gridHeroView(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.screen_share),
-                        Text("You are sharing your screen"),
+                        SvgPicture.asset(
+                          "assets/icons/screen_share.svg",
+                          color: iconColor,
+                        ),
+                        Text("You are sharing your screen",
+                            style: GoogleFonts.inter(
+                              color: iconColor,
+                            )),
                       ],
                     ),
                   )
@@ -63,7 +72,7 @@ Widget gridHeroView(
 }
 
 List<StairedGridTile> pattern(int itemCount, int screenShareCount, Size size) {
-  double ratio = (size.width) / (size.height * 0.81);
+  double ratio = (size.width) / (size.height * 0.82);
 
   List<StairedGridTile> tiles = [];
   for (int i = 0; i < screenShareCount; i++) {

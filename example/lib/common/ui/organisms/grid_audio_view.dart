@@ -1,5 +1,6 @@
 //Package imports
 import 'package:flutter/material.dart';
+import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:provider/provider.dart';
 
 //Project imports
@@ -16,10 +17,10 @@ Widget gridAudioView(
     itemCount: itemCount,
     itemBuilder: (context, index) {
       return ChangeNotifierProvider.value(
-          key: ValueKey(peerTracks[index].uid),
+          key: ValueKey(peerTracks[index].uid + "audio_view"),
           value: peerTracks[index],
           child: AudioTile(
-            key: ValueKey(peerTracks[index].uid),
+            key: ValueKey(peerTracks[index].uid + "audio_tile"),
             itemHeight: size.height,
             itemWidth: size.width,
           ));
@@ -33,7 +34,8 @@ Widget gridAudioView(
 }
 
 List<StairedGridTile> pattern(int itemCount, Size size) {
-  double ratio = (size.height * 0.81) / (size.width);
+  double ratio = Utilities.getRatio(size);
+
   List<StairedGridTile> tiles = [];
   int gridView = itemCount ~/ 6;
   int tileLeft = itemCount - (gridView * 6);
