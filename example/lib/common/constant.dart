@@ -21,6 +21,4 @@ class Constant {
   static String meetingUrl = defaultRoomID;
   static String meetingCode = "";
   static String rtmpUrl = "";
-
-  static bool isDarkMode = true;
 }
