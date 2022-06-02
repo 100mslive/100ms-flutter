@@ -216,6 +216,8 @@ class _MeetingPageState extends State<MeetingPage>
                   Navigator.of(context).popUntil((route) => route.isFirst);
                 });
               }
+              bool isPortraitMode =
+                  MediaQuery.of(context).orientation == Orientation.portrait;
               return data.item1
                   ? OfflineWidget()
                   : Scaffold(
@@ -259,7 +261,8 @@ class _MeetingPageState extends State<MeetingPage>
                       body: Stack(
                         children: [
                           Container(
-                            height: MediaQuery.of(context).size.height * 0.82,
+                            height: MediaQuery.of(context).size.height *
+                                (isPortraitMode ? 0.82 : 0.67),
                             child: Selector<
                                     MeetingStore,
                                     Tuple6<List<PeerTrackNode>, bool, int, int,
@@ -339,6 +342,7 @@ class _MeetingPageState extends State<MeetingPage>
                                         itemCount: data.item3,
                                         screenShareCount: data.item4,
                                         context: context,
+                                        isPortrait: isPortraitMode,
                                         size: size);
                                   }
                                   if (data.item5 == MeetingMode.Audio) {
@@ -348,6 +352,7 @@ class _MeetingPageState extends State<MeetingPage>
                                         itemCount: data.item1
                                             .sublist(data.item4)
                                             .length,
+                                        isPortrait: isPortraitMode,
                                         size: size);
                                   }
                                   if (data.item5 == MeetingMode.Single) {
@@ -356,6 +361,7 @@ class _MeetingPageState extends State<MeetingPage>
                                         itemCount: data.item3,
                                         screenShareCount: data.item4,
                                         context: context,
+                                        isPortrait: isPortraitMode,
                                         size: size);
                                   }
                                   return gridVideoView(
@@ -363,6 +369,7 @@ class _MeetingPageState extends State<MeetingPage>
                                       itemCount: data.item3,
                                       screenShareCount: data.item4,
                                       context: context,
+                                      isPortrait: isPortraitMode,
                                       size: size);
                                 }),
                           ),

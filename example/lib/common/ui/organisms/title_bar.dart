@@ -20,7 +20,7 @@ class TitleBar extends StatelessWidget {
           builder: (_, speakerName, __) {
             return (speakerName != null)
                 ? Container(
-                    width: 164,
+                    width: MediaQuery.of(context).size.width * 0.7,
                     child: Text("🔊 $speakerName",
                         overflow: TextOverflow.clip,
                         style: GoogleFonts.inter()))

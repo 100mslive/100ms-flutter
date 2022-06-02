@@ -17,12 +17,14 @@ Widget gridHeroView(
     required int itemCount,
     required int screenShareCount,
     required BuildContext context,
+    required bool isPortrait,
     required Size size}) {
   return GridView.builder(
       shrinkWrap: true,
       cacheExtent: 600,
       physics: PageScrollPhysics(),
       itemCount: itemCount,
+      scrollDirection: isPortrait ? Axis.vertical : Axis.horizontal,
       itemBuilder: (context, index) {
         if (peerTracks[index].track?.source != "REGULAR") {
           return ChangeNotifierProvider.value(
@@ -68,11 +70,14 @@ Widget gridHeroView(
       controller: Provider.of<MeetingStore>(context).controller,
       gridDelegate: SliverStairedGridDelegate(
           startCrossAxisDirectionReversed: false,
-          pattern: pattern(itemCount, screenShareCount, size)));
+          pattern: pattern(itemCount, screenShareCount, size, isPortrait)));
 }
 
-List<StairedGridTile> pattern(int itemCount, int screenShareCount, Size size) {
-  double ratio = (size.width) / (size.height * 0.82);
+List<StairedGridTile> pattern(
+    int itemCount, int screenShareCount, Size size, bool isPortrait) {
+  double ratio = isPortrait
+      ? ((size.width) / (size.height * 0.82))
+      : ((size.height * 0.67) / (size.width));
 
   List<StairedGridTile> tiles = [];
   for (int i = 0; i < screenShareCount; i++) {

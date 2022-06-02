@@ -12,6 +12,7 @@ import 'package:hmssdk_flutter_example/meeting/peer_track_node.dart';
 Widget gridAudioView(
     {required List<PeerTrackNode> peerTracks,
     required int itemCount,
+    required bool isPortrait,
     required Size size}) {
   return GridView.builder(
     itemCount: itemCount,
@@ -27,13 +28,15 @@ Widget gridAudioView(
     },
     gridDelegate: SliverStairedGridDelegate(
         startCrossAxisDirectionReversed: true,
-        pattern: pattern(itemCount, size)),
+        pattern: isPortrait
+            ? portraitPattern(itemCount, size)
+            : landscapePattern(itemCount, size)),
     physics: PageScrollPhysics(),
     scrollDirection: Axis.horizontal,
   );
 }
 
-List<StairedGridTile> pattern(int itemCount, Size size) {
+List<StairedGridTile> portraitPattern(int itemCount, Size size) {
   double ratio = Utilities.getRatio(size);
 
   List<StairedGridTile> tiles = [];
@@ -63,5 +66,17 @@ List<StairedGridTile> pattern(int itemCount, Size size) {
     tiles.add(StairedGridTile(1 / 3, ratio / 1.5));
     tiles.add(StairedGridTile(1 / 3, ratio / 1.5));
   }
+  return tiles;
+}
+
+List<StairedGridTile> landscapePattern(int itemCount, Size size) {
+  double ratio = (size.height * 0.67) / (size.width);
+  List<StairedGridTile> tiles = [];
+  int gridView = itemCount ~/ 2;
+  int tileLeft = itemCount - (gridView * 2);
+  for (int i = 0; i < (itemCount - tileLeft); i++) {
+    tiles.add(StairedGridTile(1, ratio / 0.5));
+  }
+  if (tileLeft == 1) tiles.add(StairedGridTile(1, ratio));
   return tiles;
 }

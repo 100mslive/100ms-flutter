@@ -18,6 +18,7 @@ Widget fullScreenView(
     required int itemCount,
     required int screenShareCount,
     required BuildContext context,
+    required bool isPortrait,
     required Size size}) {
   return GridView.builder(
       shrinkWrap: true,
@@ -78,5 +79,11 @@ Widget fullScreenView(
       controller: Provider.of<MeetingStore>(context).controller,
       gridDelegate: SliverStairedGridDelegate(
           startCrossAxisDirectionReversed: false,
-          pattern: [StairedGridTile(1, Utilities.getRatio(size))]));
+          pattern: [
+            StairedGridTile(
+                1,
+                isPortrait
+                    ? Utilities.getRatio(size)
+                    : ((size.height * 0.67) / size.width))
+          ]));
 }
