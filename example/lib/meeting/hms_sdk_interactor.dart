@@ -183,7 +183,6 @@ class HMSSDKInteractor {
   }
 
   Future<bool> isVideoMute(HMSPeer? peer) async {
-    // TODO: add permission checks in exmaple app UI
     return await hmsSDK.isVideoMute(peer: peer);
   }
 
@@ -201,12 +200,10 @@ class HMSSDKInteractor {
   }
 
   void unMuteAll() {
-    // TODO: add permission checks in exmaple app UI
     hmsSDK.unMuteAll();
   }
 
   void setPlayBackAllowed(bool allow) {
-    // TODO: add permission checks in exmaple app UI
     hmsSDK.setPlayBackAllowed(allow: allow);
   }
 

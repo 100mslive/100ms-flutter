@@ -98,8 +98,6 @@ class HMSPeer {
     return peer;
   }
 
-  // TODO: add HMSRemotePeer class
-
   static List<HMSPeer> fromListOfMap(List peersMap) {
     List<HMSPeer> peers = peersMap.map((e) => HMSPeer.fromMap(e)).toList();
     return peers;

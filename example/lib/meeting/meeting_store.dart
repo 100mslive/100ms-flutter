@@ -171,12 +171,10 @@ class MeetingStore extends ChangeNotifier
   }
 
   Future<bool> isAudioMute(HMSPeer? peer) async {
-    // TODO: add permission checks in exmaple app UI
     return await _hmsSDKInteractor.isAudioMute(peer);
   }
 
   Future<bool> isVideoMute(HMSPeer? peer) async {
-    // TODO: add permission checks in exmaple app UI
     return await _hmsSDKInteractor.isVideoMute(peer);
   }
 
@@ -953,7 +951,6 @@ class MeetingStore extends ChangeNotifier
         notifyListeners();
         break;
       case HMSActionResultListenerMethod.changeTrackState:
-        // TODO: Handle this case.
         showToast("Track State Changed");
         break;
       case HMSActionResultListenerMethod.changeMetadata:
@@ -967,11 +964,9 @@ class MeetingStore extends ChangeNotifier
         // TODO: Handle this case.
         break;
       case HMSActionResultListenerMethod.acceptChangeRole:
-        // TODO: Handle this case.
         showToast("Accept role change successful");
         break;
       case HMSActionResultListenerMethod.changeRole:
-        // TODO: Handle this case.
         showToast("Change role successful");
         break;
       case HMSActionResultListenerMethod.changeTrackStateForRole:
@@ -982,7 +977,6 @@ class MeetingStore extends ChangeNotifier
         break;
       case HMSActionResultListenerMethod.startRtmpOrRecording:
         showToast("RTMP start successful");
-        //TODO: HmsException?.code == 400(To see what this means)
 
         break;
       case HMSActionResultListenerMethod.stopRtmpAndRecording:
@@ -1037,14 +1031,11 @@ class MeetingStore extends ChangeNotifier
         hasHlsStarted = true;
         showToast("HLS Streaming Started");
         notifyListeners();
-        // TODO: Handle this case.
         break;
       case HMSActionResultListenerMethod.hlsStreamingStopped:
         hasHlsStarted = false;
         showToast("HLS Streaming Stopped");
         notifyListeners();
-
-        // TODO: Handle this case.
         break;
 
       case HMSActionResultListenerMethod.startScreenShare:
@@ -1069,30 +1060,24 @@ class MeetingStore extends ChangeNotifier
     FirebaseCrashlytics.instance.log(hmsException.toString());
     switch (methodType) {
       case HMSActionResultListenerMethod.leave:
-        // TODO: Handle this case.
         showToast("Leave Operation failed");
         break;
       case HMSActionResultListenerMethod.changeTrackState:
-        // TODO: Handle this case.
         showToast("Change Track state failed");
         break;
       case HMSActionResultListenerMethod.changeMetadata:
         // TODO: Handle this case.
         break;
       case HMSActionResultListenerMethod.endRoom:
-        // TODO: Handle this case.
         showToast("End room failed");
         break;
       case HMSActionResultListenerMethod.removePeer:
-        // TODO: Handle this case.
         showToast("Remove peer failed");
         break;
       case HMSActionResultListenerMethod.acceptChangeRole:
-        // TODO: Handle this case.
         showToast("Accept change role failed");
         break;
       case HMSActionResultListenerMethod.changeRole:
-        // TODO: Handle this case.
         showToast("Change role failed");
         break;
       case HMSActionResultListenerMethod.changeTrackStateForRole:
@@ -1105,13 +1090,9 @@ class MeetingStore extends ChangeNotifier
         showToast("Start RTMP Streaming failed");
         break;
       case HMSActionResultListenerMethod.stopRtmpAndRecording:
-        // TODO: Handle this case.
         showToast("Stop RTMP Streaming failed");
         break;
-      case HMSActionResultListenerMethod.unknown:
-        break;
       case HMSActionResultListenerMethod.changeName:
-        // TODO: Handle this case.
         showToast("Name change failed");
         break;
       case HMSActionResultListenerMethod.sendBroadcastMessage:
@@ -1124,23 +1105,20 @@ class MeetingStore extends ChangeNotifier
         // TODO: Handle this case.
         break;
       case HMSActionResultListenerMethod.hlsStreamingStarted:
-        // TODO: Handle this case.
         showToast("Start HLS failed");
         break;
       case HMSActionResultListenerMethod.hlsStreamingStopped:
-        // TODO: Handle this case.
         showToast("Stop HLS failed");
-
         break;
-
       case HMSActionResultListenerMethod.startScreenShare:
         isScreenShareActive();
         showToast("Start screenshare failed");
         break;
-
       case HMSActionResultListenerMethod.stopScreenShare:
         isScreenShareActive();
         showToast("Stop screenshare failed");
+        break;
+      case HMSActionResultListenerMethod.unknown:
         break;
     }
   }
