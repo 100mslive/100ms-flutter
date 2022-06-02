@@ -31,7 +31,8 @@ Here you will find everything you need to build experiences with video using 100
 4. Get the HMSSDK via [pub.dev](https://pub.dev/packages/hmssdk_flutter). Add the `hmssdk_flutter` to your pubspec.yaml.
 
 
-If you are running Flutter 3.0 or higher, use this branch to add the package: `flutter3.0`
+    If you are running Flutter 3.0 or higher, use this branch to add the package: `flutter3.0` 
+    <https://github.com/100mslive/100ms-flutter/tree/flutter3.0>
 
 ## 🏃‍♀️ How to run the Sample App
 
