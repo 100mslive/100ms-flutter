@@ -45,8 +45,9 @@ class HMSExampleApp extends StatefulWidget {
 }
 
 class _HMSExampleAppState extends State<HMSExampleApp> {
-  ThemeMode _themeMode = ThemeMode.dark;
-
+  ThemeMode _themeMode = ThemeMode.system;
+  bool isDarkMode =
+      WidgetsBinding.instance?.window.platformBrightness == Brightness.dark;
   ThemeData _darkTheme = ThemeData(
       brightness: Brightness.dark,
       primaryColor: Color.fromARGB(255, 13, 107, 184),
@@ -74,8 +75,8 @@ class _HMSExampleAppState extends State<HMSExampleApp> {
   void changeTheme(ThemeMode themeMode) {
     setState(() {
       _themeMode = themeMode;
-      Constant.isDarkMode = _themeMode == ThemeMode.dark ? true : false;
-      updateColor();
+      isDarkMode = themeMode == ThemeMode.dark;
+      updateColor(_themeMode);
     });
   }
 }
@@ -167,11 +168,12 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    bool isDarkMode = HMSExampleApp.of(context).isDarkMode;
     return WillPopScope(
       onWillPop: _closeApp,
       child: Scaffold(
           appBar: AppBar(
-            backgroundColor: Constant.isDarkMode ? Colors.black : Colors.white,
+            backgroundColor: isDarkMode ? Colors.black : Colors.white,
             elevation: 0,
             title: Text(
               '100ms',
@@ -180,13 +182,13 @@ class _HomePageState extends State<HomePage> {
             actions: [
               IconButton(
                   onPressed: () {
-                    if (Constant.isDarkMode) {
+                    if (isDarkMode) {
                       HMSExampleApp.of(context).changeTheme(ThemeMode.light);
                     } else {
                       HMSExampleApp.of(context).changeTheme(ThemeMode.dark);
                     }
                   },
-                  icon: Constant.isDarkMode
+                  icon: isDarkMode
                       ? SvgPicture.asset(
                           'assets/icons/light_mode.svg',
                           color: iconColor,
