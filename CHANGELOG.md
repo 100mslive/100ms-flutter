@@ -1,3 +1,10 @@
+## 0.7.2 - 2022-06-02
+
+- Segregated RTC Stats update notifications from `HMSUpdateListener` into `HMSStatsListener`
+- Removed `room_peer_count_updated` from `HMSRoomUpdate` enum
+- Added `sessionId` to the `HMSRoom` class
+- Updated to Native Android SDK 2.3.9 & Native iOS SDK 0.3.1
+
 ## 0.7.1 - 2022-05-20
 
 - Added RTC Stats Listener which provides info about local & remote peer's audio/video quality
