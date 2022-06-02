@@ -798,8 +798,8 @@ class _MeetingPageState extends State<MeetingPage>
                   children: [
                     Text(
                         meetingStore.isRecordingStarted
-                            ? "Recording "
-                            : "Record",
+                            ? "Stop RTMP/Rec"
+                            : "Start RTMP/Rec",
                         style: GoogleFonts.inter(
                           color: meetingStore.isRecordingStarted
                               ? Colors.blue
