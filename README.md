@@ -28,7 +28,9 @@ Here you will find everything you need to build experiences with video using 100
 
 3. Complete the steps in [Auth Token Quick Start Guide](https://docs.100ms.live/flutter/guides/token)
 
-4. Get the HMSSDK via [pub.dev](https://pub.dev/packages/hmssdk_flutter). Add the `hmssdk_flutter` to your pubspec.yaml
+4. Get the HMSSDK via [pub.dev](https://pub.dev/packages/hmssdk_flutter). Add the `hmssdk_flutter` to your pubspec.yaml.
+
+
 If you are running Flutter 3.0 or higher, use this branch to add the package: `flutter3.0`
 
 ## 🏃‍♀️ How to run the Sample App
