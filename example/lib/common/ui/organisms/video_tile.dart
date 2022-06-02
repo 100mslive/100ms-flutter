@@ -198,7 +198,10 @@ class _VideoTileState extends State<VideoTile> {
               ),
             )
           : Container(
-              color: Colors.transparent,
+              decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey, width: 1.0),
+                  color: Colors.transparent,
+                  borderRadius: BorderRadius.all(Radius.circular(10))),
               key: key,
               padding: EdgeInsets.all(2),
               margin: EdgeInsets.all(2),
@@ -209,17 +212,8 @@ class _VideoTileState extends State<VideoTile> {
                   VideoView(
                     uid: context.read<PeerTrackNode>().uid,
                     scaleType: widget.scaleType,
-                    itemHeight: widget.itemHeight,
-                    itemWidth: widget.itemWidth,
                   ),
                   PeerName(),
-                  Container(
-                    height: widget.itemHeight + 110,
-                    width: widget.itemWidth - 4,
-                    decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey, width: 1.0),
-                        borderRadius: BorderRadius.all(Radius.circular(10))),
-                  )
                 ],
               ),
             ),
