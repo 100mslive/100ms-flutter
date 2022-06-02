@@ -59,6 +59,7 @@ class _MeetingPageState extends State<MeetingPage>
   bool isRecordingStarted = false;
   bool isBRB = false;
   final scrollController = DraggableScrollableController();
+  late AnimationController animationController;
 
   @override
   void initState() {
@@ -67,6 +68,7 @@ class _MeetingPageState extends State<MeetingPage>
     initMeeting();
     checkAudioState();
     setInitValues();
+    initAnimation();
   }
 
   void initMeeting() async {
@@ -88,8 +90,17 @@ class _MeetingPageState extends State<MeetingPage>
     context.read<MeetingStore>().setSettings();
   }
 
+  void initAnimation() {
+    animationController = AnimationController(
+      vsync: this,
+      duration: new Duration(milliseconds: 5000),
+    );
+    animationController.repeat();
+  }
+
   @override
   void dispose() {
+    animationController.dispose();
     super.dispose();
   }
 
@@ -302,8 +313,11 @@ class _MeetingPageState extends State<MeetingPage>
                                                                   fontSize: 20),
                                                         ),
                                                       ),
-                                                      CircularProgressIndicator(
-                                                        strokeWidth: 1,
+                                                      RotationTransition(
+                                                        child: Image.asset(
+                                                            "assets/icons/hms_icon_loading.png"),
+                                                        turns:
+                                                            animationController,
                                                       )
                                                     ],
                                                   ),
@@ -312,11 +326,10 @@ class _MeetingPageState extends State<MeetingPage>
                                   }
                                   if (data.item3 == 0) {
                                     return Center(
-                                        child: Text(
-                                      'Waiting for others to join!',
-                                      style: GoogleFonts.inter(
-                                        color: iconColor,
-                                      ),
+                                        child: RotationTransition(
+                                      child: Image.asset(
+                                          "assets/icons/hms_icon_loading.png"),
+                                      turns: animationController,
                                     ));
                                   }
                                   Size size = MediaQuery.of(context).size;

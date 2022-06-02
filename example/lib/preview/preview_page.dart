@@ -1,7 +1,6 @@
 //Package imports
 
 import 'package:connectivity_checker/connectivity_checker.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -38,13 +37,21 @@ class PreviewPage extends StatefulWidget {
   _PreviewPageState createState() => _PreviewPageState();
 }
 
-class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
+class _PreviewPageState extends State<PreviewPage>
+    with WidgetsBindingObserver, TickerProviderStateMixin {
+  late AnimationController animationController;
+
   @override
   void initState() {
     WidgetsBinding.instance!.addObserver(this);
     MultiProvider(
       providers: [ChangeNotifierProvider(create: (_) => PreviewStore())],
     );
+    animationController = AnimationController(
+      vsync: this,
+      duration: new Duration(milliseconds: 5000),
+    );
+    animationController.repeat();
     super.initState();
     initPreview();
   }
@@ -61,6 +68,7 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
 
   @override
   void dispose() {
+    animationController.dispose();
     super.dispose();
   }
 
@@ -90,7 +98,11 @@ class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
                           )
                         : Align(
                             alignment: Alignment.center,
-                            child: CupertinoActivityIndicator(radius: 50))
+                            child: RotationTransition(
+                              child: Image.asset(
+                                  "assets/icons/hms_icon_loading.png"),
+                              turns: animationController,
+                            ))
                     : Container(
                         height: itemHeight,
                         width: itemWidth,
