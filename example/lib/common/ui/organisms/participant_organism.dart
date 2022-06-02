@@ -45,8 +45,9 @@ class _ParticipantOrganismState extends State<ParticipantOrganism> {
               width: width / 3,
               child: Text(
                 peer.name,
-                style: GoogleFonts.inter(fontSize: 20.0,
-                color:iconColor,
+                style: GoogleFonts.inter(
+                  fontSize: 20.0,
+                  color: iconColor,
                 ),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
@@ -58,7 +59,7 @@ class _ParticipantOrganismState extends State<ParticipantOrganism> {
                   Padding(
                       padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
                       child: SvgPicture.asset(
-                        "assets/icons/hand_state_on.svg",
+                        "assets/icons/hand.svg",
                         color: Colors.yellow,
                         height: 25,
                       )),
@@ -104,7 +105,7 @@ class _ParticipantOrganismState extends State<ParticipantOrganism> {
                           overflow: TextOverflow.clip,
                           maxLines: 1,
                           style: GoogleFonts.inter(
-                              color:Colors.white,
+                              color: Colors.white,
                               fontSize: 18.0,
                               fontWeight: FontWeight.bold),
                         ),

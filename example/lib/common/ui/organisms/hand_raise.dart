@@ -16,9 +16,9 @@ class HandRaise extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
                     child: SvgPicture.asset(
-                      "assets/icons/hand_state_on.svg",
+                      "assets/icons/hand.svg",
                       color: Colors.yellow,
-                      height: 50,
+                      height: 35,
                     ),
                   ),
                   bottom: 5.0,

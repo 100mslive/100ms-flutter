@@ -24,7 +24,8 @@ class UtilityComponents {
       builder: (ctx) => AlertDialog(
         title: Text(
           'Leave Room?',
-          style: GoogleFonts.inter(color:iconColor,fontSize: 24, fontWeight: FontWeight.w700),
+          style: GoogleFonts.inter(
+              color: iconColor, fontSize: 24, fontWeight: FontWeight.w700),
         ),
         actions: [
           ElevatedButton(
@@ -96,7 +97,9 @@ class UtilityComponents {
           return AlertDialog(
             content: Text(
               message,
-              style: GoogleFonts.inter(color:iconColor,),
+              style: GoogleFonts.inter(
+                color: iconColor,
+              ),
             ),
             actions: [
               ElevatedButton(
@@ -176,7 +179,9 @@ class UtilityComponents {
               return AlertDialog(
                 title: Text(
                   "Select Role for Mute",
-                  style: GoogleFonts.inter(color:iconColor,),
+                  style: GoogleFonts.inter(
+                    color: iconColor,
+                  ),
                 ),
                 content: Container(
                     width: 300,
@@ -194,7 +199,9 @@ class UtilityComponents {
                                   children: [
                                     Text(
                                       roles[index].name,
-                                      style: GoogleFonts.inter(color:iconColor,),
+                                      style: GoogleFonts.inter(
+                                        color: iconColor,
+                                      ),
                                     ),
                                     Checkbox(
                                         value: _selectedRoles
@@ -297,7 +304,9 @@ class UtilityComponents {
                       CheckboxListTile(
                           title: Text(
                             "Recording",
-                            style: GoogleFonts.inter(color:iconColor,),
+                            style: GoogleFonts.inter(
+                              color: iconColor,
+                            ),
                           ),
                           activeColor: Colors.blue,
                           controlAffinity: ListTileControlAffinity.trailing,
@@ -340,5 +349,39 @@ class UtilityComponents {
             }));
 
     return answer;
+  }
+
+  static Future<dynamic> onEndRoomPressed(BuildContext context) {
+    MeetingStore _meetingStore = context.read<MeetingStore>();
+    return showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(
+          'End Room?',
+          style: GoogleFonts.inter(
+              color: iconColor, fontSize: 24, fontWeight: FontWeight.w700),
+        ),
+        actions: [
+          ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                primary: Colors.red,
+              ),
+              onPressed: () {
+                _meetingStore.endRoom(false, "Room Ended From Flutter");
+                if (_meetingStore.isRoomEnded) {
+                  Navigator.popUntil(context, (route) => route.isFirst);
+                }
+              },
+              child: Text('Yes', style: GoogleFonts.inter(fontSize: 24))),
+          ElevatedButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: Text(
+              'Cancel',
+              style: GoogleFonts.inter(fontSize: 24),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
