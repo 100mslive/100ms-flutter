@@ -1,6 +1,5 @@
 //Package imports
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_mode.dart';
