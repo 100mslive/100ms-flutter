@@ -23,7 +23,7 @@ class _PeerNameState extends State<PeerName> {
             peerTrackNode.peer.isLocal),
         builder: (_, data, __) {
           return Align(
-            alignment: Alignment.bottomCenter,
+            alignment: Alignment.topCenter,
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 5.0),
               child: Text(
