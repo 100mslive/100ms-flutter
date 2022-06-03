@@ -1,4 +1,5 @@
 //Package imports
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 
@@ -18,18 +19,15 @@ class _AudioMuteStatusState extends State<AudioMuteStatus> {
             peerTrackNode.audioTrack?.isMute ?? true,
         builder: (_, data, __) {
           return Positioned(
-            bottom: 20,
-            left: 0,
-            right: 0,
+            top: 5,
+            right: 5,
             child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 3.0),
+                padding: const EdgeInsets.fromLTRB(0, 5, 5, 0),
                 child: data
-                    ? CircleAvatar(
-                        backgroundColor: Colors.transparent.withOpacity(0.2),
-                        child: Icon(
-                          Icons.mic_off,
-                          color: Colors.red,
-                        ))
+                    ? SvgPicture.asset(
+                        'assets/icons/mic_state_off.svg',
+                        color: Colors.red,
+                      )
                     : Container()),
           );
         });
