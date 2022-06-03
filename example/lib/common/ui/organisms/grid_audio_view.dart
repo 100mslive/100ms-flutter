@@ -37,7 +37,7 @@ Widget gridAudioView(
 }
 
 List<StairedGridTile> portraitPattern(int itemCount, Size size) {
-  double ratio = Utilities.getRatio(size);
+  double ratio = Utilities.getPortraitRatio(size);
 
   List<StairedGridTile> tiles = [];
   int gridView = itemCount ~/ 6;
@@ -70,7 +70,7 @@ List<StairedGridTile> portraitPattern(int itemCount, Size size) {
 }
 
 List<StairedGridTile> landscapePattern(int itemCount, Size size) {
-  double ratio = (size.height * 0.67) / (size.width);
+  double ratio = Utilities.getLandscapeRatio(size);
   List<StairedGridTile> tiles = [];
   int gridView = itemCount ~/ 2;
   int tileLeft = itemCount - (gridView * 2);

@@ -262,7 +262,7 @@ class _MeetingPageState extends State<MeetingPage>
                         children: [
                           Container(
                             height: MediaQuery.of(context).size.height *
-                                (isPortraitMode ? 0.82 : 0.67),
+                                (isPortraitMode ? 0.82 : 0.65),
                             child: Selector<
                                     MeetingStore,
                                     Tuple6<List<PeerTrackNode>, bool, int, int,

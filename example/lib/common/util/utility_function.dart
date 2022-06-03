@@ -30,7 +30,11 @@ class Utilities {
     Color(0xFF8FF5FB)
   ];
 
-  static double getRatio(Size size) {
+  static double getPortraitRatio(Size size) {
     return (size.height * 0.82) / (size.width);
+  }
+
+  static double getLandscapeRatio(Size size) {
+    return ((size.height * 0.65) / size.width);
   }
 }

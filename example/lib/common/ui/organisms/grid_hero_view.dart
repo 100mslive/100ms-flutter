@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
+import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:provider/provider.dart';
 
 //Project imports
@@ -77,7 +78,7 @@ List<StairedGridTile> pattern(
     int itemCount, int screenShareCount, Size size, bool isPortrait) {
   double ratio = isPortrait
       ? ((size.width) / (size.height * 0.82))
-      : ((size.height * 0.67) / (size.width));
+      : Utilities.getLandscapeRatio(size);
 
   List<StairedGridTile> tiles = [];
   for (int i = 0; i < screenShareCount; i++) {

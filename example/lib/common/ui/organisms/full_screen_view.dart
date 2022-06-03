@@ -83,7 +83,7 @@ Widget fullScreenView(
             StairedGridTile(
                 1,
                 isPortrait
-                    ? Utilities.getRatio(size)
-                    : ((size.height * 0.67) / size.width))
+                    ? Utilities.getPortraitRatio(size)
+                    : Utilities.getLandscapeRatio(size))
           ]));
 }

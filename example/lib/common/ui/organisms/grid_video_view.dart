@@ -86,7 +86,7 @@ Widget gridVideoView(
 
 List<StairedGridTile> portraitPattern(
     int itemCount, int screenShareCount, Size size) {
-  double ratio = Utilities.getRatio(size);
+  double ratio = Utilities.getPortraitRatio(size);
   List<StairedGridTile> tiles = [];
   for (int i = 0; i < screenShareCount; i++) {
     tiles.add(StairedGridTile(1, ratio));
@@ -112,7 +112,7 @@ List<StairedGridTile> portraitPattern(
 
 List<StairedGridTile> landscapePattern(
     int itemCount, int screenShareCount, Size size) {
-  double ratio = (size.height * 0.67) / (size.width);
+  double ratio = Utilities.getLandscapeRatio(size);
   List<StairedGridTile> tiles = [];
   for (int i = 0; i < screenShareCount; i++) {
     tiles.add(StairedGridTile(1, ratio));
