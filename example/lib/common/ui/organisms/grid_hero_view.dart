@@ -71,14 +71,14 @@ Widget gridHeroView(
       controller: Provider.of<MeetingStore>(context).controller,
       gridDelegate: SliverStairedGridDelegate(
           startCrossAxisDirectionReversed: false,
-          pattern: pattern(itemCount, screenShareCount, size, isPortrait)));
+          pattern: pattern(itemCount, screenShareCount, size, isPortrait,context)));
 }
 
 List<StairedGridTile> pattern(
-    int itemCount, int screenShareCount, Size size, bool isPortrait) {
+    int itemCount, int screenShareCount, Size size, bool isPortrait,BuildContext context) {
   double ratio = isPortrait
-      ? ((size.width) / (size.height * 0.82))
-      : Utilities.getLandscapeRatio(size);
+      ? (1/Utilities.getRatio(size,context))
+      : Utilities.getRatio(size,context);
 
   List<StairedGridTile> tiles = [];
   for (int i = 0; i < screenShareCount; i++) {

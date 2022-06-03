@@ -30,11 +30,8 @@ class Utilities {
     Color(0xFF8FF5FB)
   ];
 
-  static double getPortraitRatio(Size size) {
-    return (size.height * 0.82) / (size.width);
-  }
-
-  static double getLandscapeRatio(Size size) {
-    return ((size.height * 0.65) / size.width);
+  static double getRatio(Size size,BuildContext context) {
+    EdgeInsets viewPadding = MediaQuery.of(context).viewPadding;
+    return (size.height-viewPadding.top-viewPadding.bottom-kToolbarHeight) / (size.width-viewPadding.left-viewPadding.right);
   }
 }

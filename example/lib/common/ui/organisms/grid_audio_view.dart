@@ -13,6 +13,7 @@ Widget gridAudioView(
     {required List<PeerTrackNode> peerTracks,
     required int itemCount,
     required bool isPortrait,
+    required BuildContext context,
     required Size size}) {
   return GridView.builder(
     itemCount: itemCount,
@@ -29,15 +30,15 @@ Widget gridAudioView(
     gridDelegate: SliverStairedGridDelegate(
         startCrossAxisDirectionReversed: true,
         pattern: isPortrait
-            ? portraitPattern(itemCount, size)
-            : landscapePattern(itemCount, size)),
+            ? portraitPattern(itemCount, size,context)
+            : landscapePattern(itemCount, size,context)),
     physics: PageScrollPhysics(),
     scrollDirection: Axis.horizontal,
   );
 }
 
-List<StairedGridTile> portraitPattern(int itemCount, Size size) {
-  double ratio = Utilities.getPortraitRatio(size);
+List<StairedGridTile> portraitPattern(int itemCount, Size size,BuildContext context) {
+  double ratio = Utilities.getRatio(size,context);
 
   List<StairedGridTile> tiles = [];
   int gridView = itemCount ~/ 6;
@@ -69,8 +70,8 @@ List<StairedGridTile> portraitPattern(int itemCount, Size size) {
   return tiles;
 }
 
-List<StairedGridTile> landscapePattern(int itemCount, Size size) {
-  double ratio = Utilities.getLandscapeRatio(size);
+List<StairedGridTile> landscapePattern(int itemCount, Size size,BuildContext context) {
+  double ratio = Utilities.getRatio(size,context);
   List<StairedGridTile> tiles = [];
   int gridView = itemCount ~/ 2;
   int tileLeft = itemCount - (gridView * 2);

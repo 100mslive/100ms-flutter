@@ -79,11 +79,5 @@ Widget fullScreenView(
       controller: Provider.of<MeetingStore>(context).controller,
       gridDelegate: SliverStairedGridDelegate(
           startCrossAxisDirectionReversed: false,
-          pattern: [
-            StairedGridTile(
-                1,
-                isPortrait
-                    ? Utilities.getPortraitRatio(size)
-                    : Utilities.getLandscapeRatio(size))
-          ]));
+          pattern: [StairedGridTile(1, Utilities.getRatio(size, context))]));
 }
