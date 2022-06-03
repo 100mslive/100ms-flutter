@@ -56,7 +56,7 @@ class ReceiveMessageScreen extends StatelessWidget {
                         children: [
                           Expanded(
                             child: Text(
-                              senderName ?? "",
+                              (senderName ?? "") + (role==""?"":" (to " + role + ")"),
                               style: GoogleFonts.inter(
                                   fontSize: 14.0,
                                   color: Colors.black,
@@ -85,13 +85,7 @@ class ReceiveMessageScreen extends StatelessWidget {
                                   fontWeight: FontWeight.w700),
                             ),
                           ),
-                          Text(
-                            role,
-                            style: GoogleFonts.inter(
-                                fontSize: 14.0,
-                                color: Colors.white,
-                                fontWeight: FontWeight.w500),
-                          ),
+                          
                         ],
                       ),
                     ],

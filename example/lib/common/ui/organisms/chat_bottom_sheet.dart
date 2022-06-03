@@ -38,7 +38,7 @@ class _ChatWidgetState extends State<ChatWidget> {
   void _scrollDown() {
     SchedulerBinding.instance!.addPostFrameCallback((_) {
       _scrollController.animateTo(
-        _scrollController.position.maxScrollExtent+20,
+        _scrollController.position.maxScrollExtent + 20,
         duration: Duration(seconds: 1),
         curve: Curves.fastOutSlowIn,
       );
@@ -52,11 +52,21 @@ class _ChatWidgetState extends State<ChatWidget> {
     super.dispose();
   }
 
+  String sender(HMSMessageRecipient hmsMessageRecipient) {
+     if ((hmsMessageRecipient.recipientPeer != null) &&
+        (hmsMessageRecipient.recipientRoles == null)) {
+      return hmsMessageRecipient.recipientPeer?.name ?? "";
+    } else if ((hmsMessageRecipient.recipientPeer == null) &&
+        (hmsMessageRecipient.recipientRoles != null)) {
+      return hmsMessageRecipient.recipientRoles![0].name;
+    }
+    return "";
+  }
+
   @override
   Widget build(BuildContext context) {
-    _scrollDown();
     widthOfScreen = MediaQuery.of(context).size.width;
-    final DateFormat formatter = DateFormat('yyyy-MM-dd hh:mm a');
+    final DateFormat formatter = DateFormat('hh:mm a');
     return FractionallySizedBox(
       heightFactor: 0.8,
       child: Container(
@@ -188,20 +198,22 @@ class _ChatWidgetState extends State<ChatWidget> {
                                           .format(data.item1[index].time),
                                       message:
                                           data.item1[index].message.toString(),
-                                      role: HMSMessageRecipientValues
-                                              .getValueFromHMSMessageRecipientType(
-                                                  data
+                                      role: data
                                                       .item1[index]
-                                                      .hmsMessageRecipient!
-                                                      .hmsMessageRecipientType)
-                                          .toLowerCase())
+                                                      .hmsMessageRecipient==null?"":sender(data
+                                                      .item1[index]
+                                                      .hmsMessageRecipient!))
                                   : ReceiveMessageScreen(
                                       message:
                                           data.item1[index].message.toString(),
                                       senderName:
                                           data.item1[index].sender?.name ?? "",
                                       date: formatter.format(data.item1[index].time),
-                                      role: HMSMessageRecipientValues.getValueFromHMSMessageRecipientType(data.item1[index].hmsMessageRecipient!.hmsMessageRecipientType).toLowerCase()),
+                                      role: data
+                                                      .item1[index]
+                                                      .hmsMessageRecipient==null?"":sender(data
+                                                      .item1[index]
+                                                      .hmsMessageRecipient!)),
                             ),
                           ),
                         );
