@@ -25,7 +25,7 @@ class _PeerNameState extends State<PeerName> {
           return Align(
             alignment: Alignment.topCenter,
             child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 5.0),
+              padding: const EdgeInsets.symmetric(vertical: 10.0),
               child: Text(
                 "${data.item3 ? "You (" : ""}${data.item1}${data.item3 ? ")" : ""} ${data.item2 ? " Degraded" : ""}",
                 maxLines: 1,
