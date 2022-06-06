@@ -24,7 +24,7 @@ import '../hmssdk_flutter.dart';
 /// **Broadcast** - A local peer can send any message/data to all remote peers in the room
 ///
 /// HMSSDK has other methods which the client app can use to get more info about the Room, Peer and Tracks
-class HMSSDK with WidgetsBindingObserver {
+class HMSSDK {
   ///join meeting by passing HMSConfig instance to it.
 
   HMSTrackSetting? hmsTrackSetting;
@@ -63,7 +63,6 @@ class HMSSDK with WidgetsBindingObserver {
           isTerminal: false,
           params: {...config.getJson()});
     }
-    WidgetsBinding.instance!.addObserver(this);
     return await PlatformService.invokeMethod(PlatformMethod.join,
         arguments: {...config.getJson()});
   }
@@ -100,7 +99,6 @@ class HMSSDK with WidgetsBindingObserver {
             hmsException: HMSException.fromMap(result["error"]));
       }
     }
-    WidgetsBinding.instance!.removeObserver(this);
   }
 
   /// To switch local peer's audio on/off.
@@ -731,42 +729,5 @@ class HMSSDK with WidgetsBindingObserver {
   ///Method to remove Log Listener
   void removeLogListener({required HMSLogListener hmsLogListener}) {
     PlatformService.removeLogsListener(hmsLogListener);
-  }
-
-  ///To maintain the app state in background and foreground state
-  bool isLocalVideoOn = false;
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) async {
-    super.didChangeAppLifecycleState(state);
-
-    if (state == AppLifecycleState.resumed) {
-      List<HMSPeer>? peersList = await getPeers();
-
-      peersList?.forEach((element) {
-        if (!element.isLocal) {
-          (element.audioTrack as HMSRemoteAudioTrack?)?.setVolume(10.0);
-          element.auxiliaryTracks?.forEach((element) {
-            if (element.kind == HMSTrackKind.kHMSTrackKindAudio) {
-              (element as HMSRemoteAudioTrack?)?.setVolume(10.0);
-            }
-          });
-        } else {
-          if ((element.videoTrack != null && isLocalVideoOn)) startCapturing();
-          isLocalVideoOn = false;
-        }
-      });
-    } else if (state == AppLifecycleState.paused) {
-      HMSLocalPeer? localPeer = await getLocalPeer();
-      if (localPeer != null && !(localPeer.videoTrack?.isMute ?? true)) {
-        isLocalVideoOn = true;
-        stopCapturing();
-      }
-    } else if (state == AppLifecycleState.inactive) {
-      HMSLocalPeer? localPeer = await getLocalPeer();
-      if (localPeer != null && !(localPeer.videoTrack?.isMute ?? true)) {
-        isLocalVideoOn = true;
-        stopCapturing();
-      }
-    }
   }
 }

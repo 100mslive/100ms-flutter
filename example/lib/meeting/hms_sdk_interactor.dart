@@ -124,7 +124,7 @@ class HMSSDKInteractor {
     hmsSDK.stopCapturing();
   }
 
-  Future<HMSPeer?> getLocalPeer() async {
+  Future<HMSLocalPeer?> getLocalPeer() async {
     return await hmsSDK.getLocalPeer();
   }
 
