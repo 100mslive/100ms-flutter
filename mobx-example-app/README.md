@@ -4,7 +4,7 @@ This is a final version of the app for starter kit download starter branch in th
 
 Building mobx clone in Flutter with 100ms SDK
 
-Step by Step guide available at : https://www.100ms.live/blog/mobx-clone-in-flutter
+Step by Step guide available at : https://www.100ms.live/blog/zoom-clone-in-flutter
 
 mobx is the most popular video and audio conferencing app. From interacting with co-workers to organizing events like workshops and webinars, mobx is everywhere.
 
