@@ -51,7 +51,7 @@ class MeetingPage extends StatefulWidget {
 }
 
 class _MeetingPageState extends State<MeetingPage>
-    with WidgetsBindingObserver, TickerProviderStateMixin {
+    with TickerProviderStateMixin {
   CustomLogger logger = CustomLogger();
   int appBarIndex = 0;
   bool audioViewOn = false;
@@ -64,7 +64,6 @@ class _MeetingPageState extends State<MeetingPage>
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance!.addObserver(this);
     initMeeting();
     checkAudioState();
     setInitValues();
