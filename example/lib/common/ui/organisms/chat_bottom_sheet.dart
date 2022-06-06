@@ -53,7 +53,7 @@ class _ChatWidgetState extends State<ChatWidget> {
   }
 
   String sender(HMSMessageRecipient hmsMessageRecipient) {
-     if ((hmsMessageRecipient.recipientPeer != null) &&
+    if ((hmsMessageRecipient.recipientPeer != null) &&
         (hmsMessageRecipient.recipientRoles == null)) {
       return hmsMessageRecipient.recipientPeer?.name ?? "";
     } else if ((hmsMessageRecipient.recipientPeer == null) &&
@@ -79,92 +79,90 @@ class _ChatWidgetState extends State<ChatWidget> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Container(
-                    child: Padding(
-                      padding: EdgeInsets.only(
-                          left: MediaQuery.of(context).size.width / 3),
-                      child: Row(
-                        children: [
-                          Icon(Icons.people_alt_outlined),
-                          SizedBox(
-                            width: 5,
-                          ),
-                          Selector<MeetingStore,
-                                  Tuple2<List<HMSRole>, List<HMSPeer>>>(
-                              selector: (_, meetingStore) => Tuple2(
-                                  meetingStore.roles, meetingStore.peers),
-                              builder: (context, data, _) {
-                                List<HMSRole> roles = data.item1;
-                                if (roles.length > 0) {
-                                  return DropdownButtonHideUnderline(
-                                    child: DropdownButton2(
-                                      buttonWidth: 120,
-                                      value: valueChoose,
-                                      iconEnabledColor: iconColor,
-                                      onChanged: (newvalue) {
-                                        setState(() {
-                                          this.valueChoose = newvalue as String;
-                                        });
-                                      },
-                                      items: [
-                                        DropdownMenuItem<String>(
-                                          child: Container(
-                                              width: 90,
-                                              child: Text(
-                                                "Everyone",
-                                                style: GoogleFonts.inter(),
-                                                overflow: TextOverflow.clip,
-                                              )),
-                                          value: "Everyone",
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.people_alt_outlined),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Selector<MeetingStore,
+                                Tuple2<List<HMSRole>, List<HMSPeer>>>(
+                            selector: (_, meetingStore) =>
+                                Tuple2(meetingStore.roles, meetingStore.peers),
+                            builder: (context, data, _) {
+                              List<HMSRole> roles = data.item1;
+                              if (roles.length > 0) {
+                                return DropdownButtonHideUnderline(
+                                  child: DropdownButton2(
+                                    isExpanded: true,
+                                    dropdownWidth:
+                                        MediaQuery.of(context).size.width * 0.6,
+                                    buttonWidth: 120,
+                                    value: valueChoose,
+                                    offset: Offset(
+                                        -1 *
+                                            (MediaQuery.of(context).size.width *
+                                                0.2),
+                                        0),
+                                    iconEnabledColor: iconColor,
+                                    selectedItemHighlightColor: Colors.blue,
+                                    onChanged: (newvalue) {
+                                      setState(() {
+                                        this.valueChoose = newvalue as String;
+                                      });
+                                    },
+                                    items: [
+                                      DropdownMenuItem<String>(
+                                        child: Text(
+                                          "Everyone",
+                                          style: GoogleFonts.inter(),
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 1,
                                         ),
-                                        ...data.item2
-                                            .map((peer) {
-                                              return !peer.isLocal
-                                                  ? DropdownMenuItem<String>(
-                                                      child: Container(
-                                                        width: 90,
-                                                        child: Text(
-                                                          "${peer.name} ${peer.isLocal ? "(You)" : ""}",
-                                                          style:
-                                                              GoogleFonts.inter(
-                                                                  color:
-                                                                      iconColor),
-                                                          overflow:
-                                                              TextOverflow.clip,
-                                                        ),
-                                                      ),
-                                                      value: peer.peerId,
-                                                    )
-                                                  : null;
-                                            })
-                                            .whereNotNull()
-                                            .toList(),
-                                        ...roles
-                                            .map((role) =>
-                                                DropdownMenuItem<String>(
-                                                  child: Container(
-                                                      width: 90,
-                                                      child: Text(
-                                                        "${role.name}",
-                                                        overflow:
-                                                            TextOverflow.clip,
-                                                        style:
-                                                            GoogleFonts.inter(
-                                                                color:
-                                                                    iconColor),
-                                                      )),
-                                                  value: role.name,
-                                                ))
-                                            .toList()
-                                      ],
-                                    ),
-                                  );
-                                } else
-                                  return CircularProgressIndicator(
-                                    color: Colors.white,
-                                  );
-                              }),
-                        ],
-                      ),
+                                        value: "Everyone",
+                                      ),
+                                      ...data.item2
+                                          .map((peer) {
+                                            return !peer.isLocal
+                                                ? DropdownMenuItem<String>(
+                                                    child: Text(
+                                                      "${peer.name} ${peer.isLocal ? "(You)" : ""}",
+                                                      style: GoogleFonts.inter(
+                                                          color: iconColor),
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      maxLines: 1,
+                                                    ),
+                                                    value: peer.peerId,
+                                                  )
+                                                : null;
+                                          })
+                                          .whereNotNull()
+                                          .toList(),
+                                      ...roles
+                                          .map((role) =>
+                                              DropdownMenuItem<String>(
+                                                child: Text(
+                                                  "${role.name}",
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  maxLines: 1,
+                                                  style: GoogleFonts.inter(
+                                                      color: iconColor),
+                                                ),
+                                                value: role.name,
+                                              ))
+                                          .toList()
+                                    ],
+                                  ),
+                                );
+                              } else
+                                return CircularProgressIndicator(
+                                  color: Colors.white,
+                                );
+                            }),
+                      ],
                     ),
                   ),
                   Divider(
@@ -198,22 +196,23 @@ class _ChatWidgetState extends State<ChatWidget> {
                                           .format(data.item1[index].time),
                                       message:
                                           data.item1[index].message.toString(),
-                                      role: data
-                                                      .item1[index]
-                                                      .hmsMessageRecipient==null?"":sender(data
-                                                      .item1[index]
-                                                      .hmsMessageRecipient!))
+                                      role: data.item1[index].hmsMessageRecipient ==
+                                              null
+                                          ? ""
+                                          : sender(data.item1[index]
+                                              .hmsMessageRecipient!))
                                   : ReceiveMessageScreen(
                                       message:
                                           data.item1[index].message.toString(),
                                       senderName:
                                           data.item1[index].sender?.name ?? "",
-                                      date: formatter.format(data.item1[index].time),
-                                      role: data
-                                                      .item1[index]
-                                                      .hmsMessageRecipient==null?"":sender(data
-                                                      .item1[index]
-                                                      .hmsMessageRecipient!)),
+                                      date: formatter
+                                          .format(data.item1[index].time),
+                                      role: data.item1[index]
+                                                  .hmsMessageRecipient ==
+                                              null
+                                          ? ""
+                                          : sender(data.item1[index].hmsMessageRecipient!)),
                             ),
                           ),
                         );
