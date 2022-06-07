@@ -71,14 +71,14 @@ Widget gridHeroView(
       controller: Provider.of<MeetingStore>(context).controller,
       gridDelegate: SliverStairedGridDelegate(
           startCrossAxisDirectionReversed: false,
-          pattern: pattern(itemCount, screenShareCount, size, isPortrait,context)));
+          pattern: isPortrait
+              ? portraitPattern(itemCount, screenShareCount, size, context)
+              : landscapePattern(itemCount, screenShareCount, size, context)));
 }
 
-List<StairedGridTile> pattern(
-    int itemCount, int screenShareCount, Size size, bool isPortrait,BuildContext context) {
-  double ratio = isPortrait
-      ? (1/Utilities.getRatio(size,context))
-      : Utilities.getRatio(size,context);
+List<StairedGridTile> portraitPattern(
+    int itemCount, int screenShareCount, Size size, BuildContext context) {
+  double ratio = 1 / Utilities.getRatio(size, context);
 
   List<StairedGridTile> tiles = [];
   for (int i = 0; i < screenShareCount; i++) {
@@ -108,5 +108,31 @@ List<StairedGridTile> pattern(
     tiles.add(StairedGridTile(1, ratio / (1 / 3)));
     tiles.add(StairedGridTile(1, ratio / (1 / 3)));
   }
+  return tiles;
+}
+
+List<StairedGridTile> landscapePattern(
+    int itemCount, int screenShareCount, Size size, BuildContext context) {
+  double ratio = Utilities.getRatio(size, context);
+  List<StairedGridTile> tiles = [];
+  for (int i = 0; i < screenShareCount; i++) {
+    tiles.add(StairedGridTile(1, ratio));
+  }
+  int normalTile = (itemCount - screenShareCount);
+  if (normalTile == 1) {
+    tiles.add(StairedGridTile(1, ratio));
+  } else {
+    tiles.add(StairedGridTile(1, ratio / 0.8));
+    tiles.add(StairedGridTile(0.33, ratio / 0.6));
+    tiles.add(StairedGridTile(0.33, ratio / 0.6));
+    tiles.add(StairedGridTile(0.33, ratio / 0.6));
+  }
+  int gridView = normalTile ~/ 2;
+  int tileLeft = normalTile - (gridView * 2);
+  for (int i = 0; i < (normalTile - tileLeft - 4); i++) {
+    tiles.add(StairedGridTile(1, ratio / 0.5));
+  }
+  if (tileLeft == 1) tiles.add(StairedGridTile(1, ratio));
+
   return tiles;
 }
