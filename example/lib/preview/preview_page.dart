@@ -150,20 +150,43 @@ class _PreviewPageState extends State<PreviewPage>
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            if (_previewStore.isRecordingStarted)
+                            if (_previewStore.isStreamingStarted)
                               Container(
-                                height: 35,
-                                width: 35,
+                                height: 33,
+                                width: 33,
                                 decoration: BoxDecoration(
                                     color: Colors.transparent.withOpacity(0.2),
-                                    borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(5),
-                                        bottomLeft: Radius.circular(5))),
+                                    borderRadius:
+                                        _previewStore.isRecordingStarted
+                                            ? BorderRadius.only(
+                                                topLeft: Radius.circular(5),
+                                                bottomLeft: Radius.circular(5))
+                                            : BorderRadius.circular(5)),
+                                child: SvgPicture.asset(
+                                  "assets/icons/stream.svg",
+                                  color: Colors.red,
+                                ),
+                              ),
+                            if (_previewStore.isRecordingStarted)
+                              Container(
+                                height: 33,
+                                width: 33,
+                                decoration: BoxDecoration(
+                                    color: Colors.transparent.withOpacity(0.2),
+                                    borderRadius:
+                                        _previewStore.isStreamingStarted
+                                            ? BorderRadius.only(
+                                                topRight: Radius.circular(5),
+                                                bottomRight: Radius.circular(5))
+                                            : BorderRadius.circular(5)),
                                 child: SvgPicture.asset(
                                   "assets/icons/record.svg",
                                   color: Colors.red,
                                 ),
                               ),
+                            SizedBox(
+                              width: 5,
+                            ),
                             if (_previewStore.peers.isNotEmpty)
                               GestureDetector(
                                   onTap: () {
@@ -236,13 +259,8 @@ class _PreviewPageState extends State<PreviewPage>
                                       decoration: BoxDecoration(
                                           color: Colors.transparent
                                               .withOpacity(0.2),
-                                          borderRadius: _previewStore
-                                                  .isRecordingStarted
-                                              ? BorderRadius.only(
-                                                  topRight: Radius.circular(5),
-                                                  bottomRight:
-                                                      Radius.circular(5))
-                                              : BorderRadius.circular(5)),
+                                          borderRadius:
+                                              BorderRadius.circular(5)),
                                       child: Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
