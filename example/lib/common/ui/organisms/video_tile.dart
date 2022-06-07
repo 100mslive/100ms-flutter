@@ -214,6 +214,7 @@ class _VideoTileState extends State<VideoTile> {
                     scaleType: widget.scaleType,
                   ),
                   PeerName(),
+                  RTCStatsView(isLocal: false),
                 ],
               ),
             ),

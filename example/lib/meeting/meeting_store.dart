@@ -610,7 +610,8 @@ class MeetingStore extends ChangeNotifier
               PeerTrackNode(
                   peer: peer,
                   uid: peer.peerId + track.trackId,
-                  track: track as HMSVideoTrack));
+                  track: track as HMSVideoTrack,
+                  stats: RTCStats()));
           isScreenShareActive();
           // for (var node in peerTracks) {
           //   if (node.isOffscreen == false) {
