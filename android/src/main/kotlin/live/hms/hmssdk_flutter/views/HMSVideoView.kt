@@ -13,15 +13,13 @@ import org.webrtc.SurfaceViewRenderer
 
 
 class HMSVideoView(
-    context: Context,
-    setMirror: Boolean,
-    scaleType: Int? = RendererCommon.ScalingType.SCALE_ASPECT_FIT.ordinal,
-    track:HMSVideoTrack
+        context: Context,
+        setMirror: Boolean,
+        scaleType: Int? = RendererCommon.ScalingType.SCALE_ASPECT_FIT.ordinal,
+        private val track:HMSVideoTrack
 ) : FrameLayout(context, null) {
 
     private val surfaceViewRenderer: SurfaceViewRenderer
-
-    private  val myTrack: HMSVideoTrack = track
 
     init {
         val inflater =
@@ -41,17 +39,13 @@ class HMSVideoView(
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         surfaceViewRenderer.init(SharedEglContext.context, null)
-        myTrack.addSink(surfaceViewRenderer)
+        track.addSink(surfaceViewRenderer)
     }
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
-        myTrack.removeSink(surfaceViewRenderer)
+        track.removeSink(surfaceViewRenderer)
         surfaceViewRenderer.release()
-    }
-
-    override fun onWindowVisibilityChanged(visibility: Int) {
-        super.onWindowVisibilityChanged(visibility)
     }
 }
 
