@@ -224,16 +224,25 @@ class _MeetingPageState extends State<MeetingPage>
                       appBar: AppBar(
                         title: TitleBar(),
                         actions: [
-                          Selector<MeetingStore, bool>(
-                            selector: (_, meetingStore) =>
+                          Selector<MeetingStore, Tuple2<bool, bool>>(
+                            selector: (_, meetingStore) => Tuple2(
                                 meetingStore.isRecordingStarted,
-                            builder: (_, isRecordingStarted, __) {
-                              return isRecordingStarted
-                                  ? SvgPicture.asset(
+                                meetingStore.isStreamingStarted),
+                            builder: (_, data, __) {
+                              return Row(
+                                children: [
+                                  if (data.item1)
+                                    SvgPicture.asset(
                                       "assets/icons/record.svg",
                                       color: Colors.red,
-                                    )
-                                  : Container();
+                                    ),
+                                  if (data.item2)
+                                    SvgPicture.asset(
+                                      "assets/icons/stream.svg",
+                                      color: Colors.red,
+                                    ),
+                                ],
+                              );
                             },
                           ),
                           IconButton(

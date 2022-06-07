@@ -5,6 +5,7 @@ enum HMSRoomUpdate {
   browserRecordingStateUpdated,
   rtmpStreamingStateUpdated,
   hlsStreamingStateUpdated,
+  hlsRecordingStateUpdated,
   RoomNameUpdated,
   defaultUpdate
 }
@@ -29,6 +30,9 @@ extension HMSRoomUpdateValues on HMSRoomUpdate {
 
       case 'hls_streaming_state_updated':
         return HMSRoomUpdate.hlsStreamingStateUpdated;
+
+      case 'hls_recording_state_updated':
+        return HMSRoomUpdate.hlsRecordingStateUpdated;
 
       case "room_name_updated":
         return HMSRoomUpdate.RoomNameUpdated;
@@ -57,6 +61,9 @@ extension HMSRoomUpdateValues on HMSRoomUpdate {
 
       case HMSRoomUpdate.hlsStreamingStateUpdated:
         return 'hls_streaming_state_updated';
+
+      case HMSRoomUpdate.hlsRecordingStateUpdated:
+        return 'hls_recording_state_updated';
 
       case HMSRoomUpdate.RoomNameUpdated:
         return "room_name_updated";

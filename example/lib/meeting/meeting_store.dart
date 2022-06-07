@@ -57,6 +57,8 @@ class MeetingStore extends ChangeNotifier
 
   bool isRecordingStarted = false;
 
+  bool isStreamingStarted = false;
+
   String description = "Meeting Ended";
 
   HMSTrackChangeRequest? hmsTrackChangeRequest;
@@ -248,11 +250,15 @@ class MeetingStore extends ChangeNotifier
     }
     if (room.hmsBrowserRecordingState?.running == true ||
         room.hmsServerRecordingState?.running == true ||
-        room.hmsRtmpStreamingState?.running == true ||
-        room.hmshlsStreamingState?.running == true)
+        room.hmshlsRecordingState?.running == true)
       isRecordingStarted = true;
     else
       isRecordingStarted = false;
+    if (room.hmsRtmpStreamingState?.running == true ||
+        room.hmshlsStreamingState?.running == true)
+      isStreamingStarted = true;
+    else
+      isStreamingStarted = false;
 
     for (HMSPeer each in room.peers!) {
       if (each.isLocal) {
@@ -295,12 +301,14 @@ class MeetingStore extends ChangeNotifier
       case HMSRoomUpdate.serverRecordingStateUpdated:
         isRecordingStarted = room.hmsServerRecordingState?.running ?? false;
         break;
-
+      case HMSRoomUpdate.hlsRecordingStateUpdated:
+        isRecordingStarted = room.hmshlsRecordingState?.running ?? false;
+        break;
       case HMSRoomUpdate.rtmpStreamingStateUpdated:
-        isRecordingStarted = room.hmsRtmpStreamingState?.running ?? false;
+        isStreamingStarted = room.hmsRtmpStreamingState?.running ?? false;
         break;
       case HMSRoomUpdate.hlsStreamingStateUpdated:
-        isRecordingStarted = room.hmshlsStreamingState?.running ?? false;
+        isStreamingStarted = room.hmshlsStreamingState?.running ?? false;
         hasHlsStarted = room.hmshlsStreamingState?.running ?? false;
         streamUrl = hasHlsStarted
             ? room.hmshlsStreamingState?.variants[0]?.hlsStreamUrl ?? ""
