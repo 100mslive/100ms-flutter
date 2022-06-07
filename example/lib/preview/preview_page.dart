@@ -158,7 +158,7 @@ class _PreviewPageState extends State<PreviewPage>
                                     color: Colors.transparent.withOpacity(0.2),
                                     borderRadius: BorderRadius.only(
                                         topLeft: Radius.circular(5),
-                                        bottomRight: Radius.circular(5))),
+                                        bottomLeft: Radius.circular(5))),
                                 child: SvgPicture.asset(
                                   "assets/icons/record.svg",
                                   color: Colors.red,
