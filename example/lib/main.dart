@@ -400,8 +400,18 @@ class _HomePageState extends State<HomePage> {
                   SizedBox(
                     height: 50,
                   ),
-                  Text("Made with ❤️ by 100ms",
-                      style: GoogleFonts.inter(color: iconColor))
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text("Made with ",
+                          style: GoogleFonts.inter(color: iconColor)),
+                      Text(
+                        "❤️",
+                      ),
+                      Text(" by 100ms",
+                          style: GoogleFonts.inter(color: iconColor)),
+                    ],
+                  )
                 ],
               ),
             ),
