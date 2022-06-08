@@ -406,7 +406,7 @@ class _MeetingPageState extends State<MeetingPage>
                                           roleChangeRequest, context);
                                     });
                                   }
-                                  return Container();
+                                  return SizedBox();
                                 }),
                             Selector<MeetingStore, HMSTrackChangeRequest?>(
                                 selector: (_, meetingStore) =>
@@ -419,7 +419,7 @@ class _MeetingPageState extends State<MeetingPage>
                                           hmsTrackChangeRequest, context);
                                     });
                                   }
-                                  return Container();
+                                  return SizedBox();
                                 }),
                           ],
                         ),

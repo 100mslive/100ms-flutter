@@ -1,6 +1,7 @@
 //Package imports
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_mode.dart';
 import 'package:hmssdk_flutter_example/model/rtc_stats.dart';
@@ -101,6 +102,8 @@ class MeetingStore extends ChangeNotifier
   ScrollController controller = ScrollController();
 
   MeetingMode meetingMode = MeetingMode.Video;
+
+  bool isLandscapeLocked = false;
 
   Future<bool> join(String user, String roomUrl) async {
     List<String?>? token =
@@ -235,6 +238,21 @@ class MeetingStore extends ChangeNotifier
       _hmsSDKInteractor.removeStatsListener(this);
     }
     isStatsVisible = !isStatsVisible;
+    notifyListeners();
+  }
+
+  void setLandscapeLock(bool value) {
+    if (value) {
+      SystemChrome.setPreferredOrientations(
+          [DeviceOrientation.landscapeRight, DeviceOrientation.landscapeLeft]);
+    } else {
+      SystemChrome.setPreferredOrientations([
+        DeviceOrientation.portraitUp,
+        DeviceOrientation.landscapeLeft,
+        DeviceOrientation.landscapeRight
+      ]);
+    }
+    isLandscapeLocked = value;
     notifyListeners();
   }
 
@@ -613,12 +631,6 @@ class MeetingStore extends ChangeNotifier
                   track: track as HMSVideoTrack,
                   stats: RTCStats()));
           isScreenShareActive();
-          // for (var node in peerTracks) {
-          //   if (node.isOffscreen == false) {
-          //     node.setOffScreenStatus(true);
-          //   }
-          // }
-          // controller.jumpTo(0);
           notifyListeners();
         }
         break;
@@ -627,6 +639,9 @@ class MeetingStore extends ChangeNotifier
           screenShareCount--;
           peerTracks.removeWhere(
               (element) => element.uid == peer.peerId + track.trackId);
+          if (screenShareCount == 0) {
+            setLandscapeLock(false);
+          }
           notifyListeners();
         } else {
           isScreenShareActive();
@@ -960,6 +975,7 @@ class MeetingStore extends ChangeNotifier
         isRoomEnded = true;
         screenShareCount = 0;
         this.meetingMode = MeetingMode.Video;
+        setLandscapeLock(false);
         notifyListeners();
         break;
       case HMSActionResultListenerMethod.changeTrackState:

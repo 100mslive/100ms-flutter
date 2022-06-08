@@ -1,5 +1,6 @@
 //Package imports
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
@@ -381,6 +382,26 @@ class UtilityComponents {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  static Widget rotateScreen(BuildContext context) {
+    MeetingStore _meetingStore = Provider.of<MeetingStore>(context);
+    return GestureDetector(
+      onTap: () {
+        if (_meetingStore.isLandscapeLocked)
+          _meetingStore.setLandscapeLock(false);
+        else {
+          _meetingStore.setLandscapeLock(true);
+        }
+      },
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: SvgPicture.asset(
+          "assets/icons/rotate.svg",
+          color: _meetingStore.isLandscapeLocked ? Colors.blue : iconColor,
+        ),
       ),
     );
   }

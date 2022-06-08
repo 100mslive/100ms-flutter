@@ -215,6 +215,10 @@ class _VideoTileState extends State<VideoTile> {
                   ),
                   PeerName(),
                   RTCStatsView(isLocal: false),
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: UtilityComponents.rotateScreen(context),
+                  )
                 ],
               ),
             ),
