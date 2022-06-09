@@ -1179,10 +1179,16 @@ class MeetingStore extends ChangeNotifier
       if (localPeer != null && !(localPeer.videoTrack?.isMute ?? true)) {
         stopCapturing();
       }
+      for (PeerTrackNode peerTrackNode in peerTracks) {
+        peerTrackNode.setOffScreenStatus(true);
+      }
     } else if (state == AppLifecycleState.inactive) {
       HMSLocalPeer? localPeer = await getLocalPeer();
       if (localPeer != null && !(localPeer.videoTrack?.isMute ?? true)) {
         stopCapturing();
+      }
+      for (PeerTrackNode peerTrackNode in peerTracks) {
+        peerTrackNode.setOffScreenStatus(true);
       }
     }
   }
