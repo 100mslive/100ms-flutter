@@ -1,5 +1,3 @@
-import 'package:demo_with_getx_and_100ms/models/User.dart';
-import 'package:demo_with_getx_and_100ms/views/HomePage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';

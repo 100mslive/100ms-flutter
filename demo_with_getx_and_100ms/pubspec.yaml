@@ -38,7 +38,7 @@ dependencies:
   get:
   hmssdk_flutter: ^0.7.1
   permission_handler:
-  flutter_staggered_grid_view:
+  focus_detector:
   http:
 
 dev_dependencies:

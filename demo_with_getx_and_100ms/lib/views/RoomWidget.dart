@@ -1,5 +1,4 @@
 import 'package:demo_with_getx_and_100ms/controllers/RoomController.dart';
-import 'package:demo_with_getx_and_100ms/views/GridHeroView.dart';
 import 'package:demo_with_getx_and_100ms/views/VideoWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -19,12 +18,15 @@ class RoomWidget extends StatelessWidget {
     return Scaffold(
       body: GetX<RoomController>(builder: (controller) {
         return ListView.builder(
-            itemCount: controller.usersList.length,
-            itemBuilder: (ctx, index) {
-              return Card(
-                  key: Key(controller.usersList[index].peer.peerId.toString()),
-                  child: SizedBox(height: 250.0, child: VideoWidget(index)));
-            });
+          itemCount: controller.peerTrackList.length,
+          itemBuilder: (ctx, index) {
+            return Card(
+                key: Key(controller.peerTrackList[index].value.peer.peerId
+                    .toString()),
+                child: SizedBox(
+                    height: 250.0, child: VideoWidget(index, roomController)));
+          },
+        );
       }),
       bottomNavigationBar: GetX<RoomController>(builder: (controller) {
         return BottomNavigationBar(

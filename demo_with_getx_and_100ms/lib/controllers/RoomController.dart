@@ -1,7 +1,5 @@
-import 'package:demo_with_getx_and_100ms/models/User.dart';
+import 'package:demo_with_getx_and_100ms/models/PeerTrackNode.dart';
 import 'package:demo_with_getx_and_100ms/views/HomePage.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
@@ -9,10 +7,11 @@ import '../services/RoomService.dart';
 
 class RoomController extends GetxController
     implements HMSUpdateListener, HMSActionResultListener {
-  RxList<User> usersList = <User>[].obs;
+
+  RxList<Rx<PeerTrackNode>> peerTrackList =
+      <Rx<PeerTrackNode>>[].obs;
   RxBool isLocalVideoOn = false.obs;
   RxBool isLocalAudioOn = false.obs;
-  List<Widget> widgets = <Widget>[].obs;
 
   String url;
   String name;
@@ -61,10 +60,9 @@ class RoomController extends GetxController
 
   @override
   void onJoin({required HMSRoom room}) {
-    usersList.clear();
+    peerTrackList.clear();
     isLocalAudioOn.value = isAudioOnPreview.value;
     isLocalAudioOn.refresh();
-
 
     isLocalVideoOn.value = isVideoOnPreview.value;
     isLocalVideoOn.refresh();
@@ -80,9 +78,6 @@ class RoomController extends GetxController
 
   @override
   void onPeerUpdate({required HMSPeer peer, required HMSPeerUpdate update}) {
-    if (update == HMSPeerUpdate.peerLeft) {
-      removeUserFromList(peer);
-    }
   }
 
   @override
@@ -114,38 +109,24 @@ class RoomController extends GetxController
   @override
   void onTrackUpdate(
       {required HMSTrack track,
-      required HMSTrackUpdate trackUpdate,
-      required HMSPeer peer}) {
-    // isLocalAudioOn.value = isAudioOnPreview.value;
-    // isLocalAudioOn.refresh();
-    //
-    // isLocalVideoOn.value = isVideoOnPreview.value;
-    // isLocalVideoOn.refresh();
+        required HMSTrackUpdate trackUpdate,
+        required HMSPeer peer}) {
 
-    if (peer.isLocal) {
-      if (track.kind == HMSTrackKind.kHMSTrackKindAudio) {
-      } else {
-        print("OnTrackUpdate ${peer.name} video ${track.isMute}");
-      }
-    }
 
     if (track.kind == HMSTrackKind.kHMSTrackKindVideo) {
-      User user = User(track as HMSVideoTrack, !track.isMute, peer);
 
       if (trackUpdate == HMSTrackUpdate.trackRemoved) {
-        usersList.remove(user);
+        removeUserFromList(peer);
       } else {
-        if (!usersList.contains(user)) {
-          widgets.add(HMSVideoView(track: track,peerName: "${peer.name}",));
-          usersList.add(user);
-        } else {
-          int index = usersList
-              .indexWhere((element) => element.peer.peerId == user.peer.peerId);
-          usersList[index] = user;
+        int index = peerTrackList.indexWhere((element) => element.value.peer.peerId == peer.peerId);
+        if(index > -1){
+          peerTrackList[index](PeerTrackNode(track as HMSVideoTrack, track.isMute, peer));
+        }
+        else{
+          peerTrackList.add(PeerTrackNode(track as HMSVideoTrack, track.isMute, peer).obs);
         }
       }
 
-      //usersList.refresh();
     }
   }
 
@@ -170,47 +151,42 @@ class RoomController extends GetxController
 
     if (result == null) {
       isLocalVideoOn.toggle();
-
-      for (var element in usersList) {
-        if (element.peer.isLocal) {
-          element.isVideoOn = isLocalVideoOn.value;
-        }
-      }
     }
   }
 
   @override
   void onException(
       {HMSActionResultListenerMethod? methodType,
-      Map<String, dynamic>? arguments,
-      required HMSException hmsException}) {
+        Map<String, dynamic>? arguments,
+        required HMSException hmsException}) {
     Get.snackbar("Error", hmsException.message);
   }
 
   @override
   void onSuccess(
       {HMSActionResultListenerMethod? methodType,
-      Map<String, dynamic>? arguments}) {
+        Map<String, dynamic>? arguments}) {
     Get.back();
     Get.off(() => const HomePage());
   }
 
   void removeUserFromList(HMSPeer peer) {
-    // int index = usersList.indexWhere((element) => element.peer.peerId == peer.peerId);
-    //
-    // usersList.removeAt(index);
-    //
-    // //usersList.removeWhere((element) => peer.peerId == element.peer.peerId);
-    // usersList.refresh();
+    peerTrackList.removeWhere((element) => peer.peerId == element.value.peer.peerId);
   }
 
   @override
-  void onLocalAudioStats({required HMSLocalAudioStats hmsLocalAudioStats, required HMSLocalAudioTrack track, required HMSPeer peer}) {
+  void onLocalAudioStats(
+      {required HMSLocalAudioStats hmsLocalAudioStats,
+        required HMSLocalAudioTrack track,
+        required HMSPeer peer}) {
     // TODO: implement onLocalAudioStats
   }
 
   @override
-  void onLocalVideoStats({required HMSLocalVideoStats hmsLocalVideoStats, required HMSLocalVideoTrack track, required HMSPeer peer}) {
+  void onLocalVideoStats(
+      {required HMSLocalVideoStats hmsLocalVideoStats,
+        required HMSLocalVideoTrack track,
+        required HMSPeer peer}) {
     // TODO: implement onLocalVideoStats
   }
 
@@ -220,12 +196,19 @@ class RoomController extends GetxController
   }
 
   @override
-  void onRemoteAudioStats({required HMSRemoteAudioStats hmsRemoteAudioStats, required HMSRemoteAudioTrack track, required HMSPeer peer}) {
+  void onRemoteAudioStats(
+      {required HMSRemoteAudioStats hmsRemoteAudioStats,
+        required HMSRemoteAudioTrack track,
+        required HMSPeer peer}) {
     // TODO: implement onRemoteAudioStats
   }
 
   @override
-  void onRemoteVideoStats({required HMSRemoteVideoStats hmsRemoteVideoStats, required HMSRemoteVideoTrack track, required HMSPeer peer}) {
+  void onRemoteVideoStats(
+      {required HMSRemoteVideoStats hmsRemoteVideoStats,
+        required HMSRemoteVideoTrack track,
+        required HMSPeer peer}) {
     // TODO: implement onRemoteVideoStats
   }
+
 }
