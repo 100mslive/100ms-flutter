@@ -23,7 +23,8 @@ class HMSHLSAction {
     
     static private func startHlsStreaming(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, hmsSDK:HMSSDK?) {
         let arguments = call.arguments as! [AnyHashable: Any]
-        guard let meetingUrlVariantsList = arguments["meeting_url_variants"] as? [[String: String]]
+        guard let meetingUrlVariantsList = arguments["meeting_url_variants"] as? [[String: String]],
+              let recordingConfig = arguments["recording_config"] as? [String:Bool]
         else {
             let error = HMSCommonAction.getError(message: "Wrong Paramenter found in \(#function)",
                                  description: "Paramenter is nil",
@@ -34,7 +35,7 @@ class HMSHLSAction {
         var meetingUrlVariant = [HMSHLSMeetingURLVariant]()
         meetingUrlVariantsList.forEach { meetingUrlVariant.append(HMSHLSMeetingURLVariant(meetingURL: URL(string: $0["meeting_url"]!)!, metadata: $0["meta_data"] ?? "")) }
 
-        let hlsConfig = HMSHLSConfig(variants: meetingUrlVariant)
+        let hlsConfig = HMSHLSConfig(variants: meetingUrlVariant,recording: HMSHLSRecordingConfig(singleFilePerLayer: recordingConfig["single_file_per_layer"] ?? false, enableVOD: recordingConfig["video_on_demand"] ?? false))
         hmsSDK?.startHLSStreaming(config: hlsConfig) { _, error in
             if let error = error {
                 result(HMSErrorExtension.toDictionary(error))

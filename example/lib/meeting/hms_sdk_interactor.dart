@@ -238,13 +238,18 @@ class HMSSDKInteractor {
   }
 
   void startHLSStreaming(
-      String meetingUrl, HMSActionResultListener hmsActionResultListener) {
+      String meetingUrl, HMSActionResultListener hmsActionResultListener,
+      {bool singleFilePerLayer = false, bool enableVOD = false}) {
     List<HMSHLSMeetingURLVariant> hmsHlsMeetingUrls = [];
 
     hmsHlsMeetingUrls.add(HMSHLSMeetingURLVariant(
         meetingUrl: meetingUrl, metadata: "HLS started from Flutter"));
+    HMSHLSRecordingConfig hmshlsRecordingConfig = HMSHLSRecordingConfig(
+        singleFilePerLayer: singleFilePerLayer, videoOnDemand: enableVOD);
+    HMSHLSConfig hmshlsConfig = HMSHLSConfig(
+        meetingURLVariant: hmsHlsMeetingUrls,
+        hmsHLSRecordingConfig: hmshlsRecordingConfig);
 
-    HMSHLSConfig hmshlsConfig = new HMSHLSConfig(hmsHlsMeetingUrls);
     hmsSDK.startHlsStreaming(
         hmshlsConfig: hmshlsConfig,
         hmsActionResultListener: hmsActionResultListener);

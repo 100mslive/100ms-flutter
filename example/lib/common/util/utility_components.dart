@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hmssdk_flutter_example/common/constant.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_mode.dart';
 import 'package:provider/provider.dart';
@@ -168,6 +169,107 @@ class UtilityComponents {
             ));
 
     return answer;
+  }
+
+  static showHLSDialog({required BuildContext context}) async {
+    TextEditingController textController = TextEditingController();
+    textController.text = Constant.rtmpUrl;
+    bool isSingleFileChecked = false, isVODChecked = false;
+    MeetingStore _meetingStore = context.read<MeetingStore>();
+    await showDialog(
+        context: context,
+        builder: (context) => StatefulBuilder(builder: (context, setState) {
+              return AlertDialog(
+                content: Container(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      TextField(
+                        autofocus: true,
+                        controller: textController,
+                        decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(16)),
+                            ),
+                            hintText: "Enter HLS Url"),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text("Recording"),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Single file per layer",
+                            style: GoogleFonts.inter(
+                              color: iconColor,
+                            ),
+                          ),
+                          Checkbox(
+                              value: isSingleFileChecked,
+                              activeColor: Colors.blue,
+                              onChanged: (bool? value) {
+                                if (value != null) {
+                                  isSingleFileChecked = value;
+                                  setState(() {});
+                                }
+                              }),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Video on Demand",
+                            style: GoogleFonts.inter(
+                              color: iconColor,
+                            ),
+                          ),
+                          Checkbox(
+                              value: isVODChecked,
+                              activeColor: Colors.blue,
+                              onChanged: (bool? value) {
+                                if (value != null) {
+                                  isVODChecked = value;
+                                  setState(() {});
+                                }
+                              }),
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+                actions: [
+                  ElevatedButton(
+                    child: Text(
+                      'Cancel',
+                      style: GoogleFonts.inter(),
+                    ),
+                    onPressed: () {
+                      Navigator.pop(context, '');
+                    },
+                  ),
+                  ElevatedButton(
+                    child: Text(
+                      'OK',
+                      style: GoogleFonts.inter(),
+                    ),
+                    onPressed: () {
+                      if (textController.text == "") {
+                      } else {
+                        _meetingStore.startHLSStreaming(
+                            textController.text.trim(),
+                            isSingleFileChecked,
+                            isVODChecked);
+                        Navigator.pop(context);
+                      }
+                    },
+                  ),
+                ],
+              );
+            }));
   }
 
   static showRoleList(BuildContext context, List<HMSRole> roles,

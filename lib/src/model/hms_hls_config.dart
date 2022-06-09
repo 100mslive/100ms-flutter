@@ -1,22 +1,21 @@
-import 'package:hmssdk_flutter/src/model/hms_hls_meeting_url_variant.dart';
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 ///100ms HMSHLSConfig
 ///
 ///[HMSHLSConfig] contains a list of [HMSHLSMeetingURLVariant].
 class HMSHLSConfig {
-  List<HMSHLSMeetingURLVariant> variants;
-
-  HMSHLSConfig(this.variants);
+  List<HMSHLSMeetingURLVariant> meetingURLVariant;
+  HMSHLSRecordingConfig? hmsHLSRecordingConfig;
+  HMSHLSConfig({required this.meetingURLVariant, this.hmsHLSRecordingConfig});
 
   Map<String, dynamic> toMap() {
     List<Map<String, String>> list = [];
 
-    variants.forEach((element) {
+    meetingURLVariant.forEach((element) {
       list.add(element.toMap());
     });
-
-    return {
-      'meeting_url_variants': list,
-    };
+    Map recordingConfig =
+        hmsHLSRecordingConfig?.toMap() ?? HMSHLSRecordingConfig().toMap();
+    return {'meeting_url_variants': list, 'recording_config': recordingConfig};
   }
 }

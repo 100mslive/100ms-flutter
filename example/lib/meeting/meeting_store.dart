@@ -782,8 +782,10 @@ class MeetingStore extends ChangeNotifier
     _hmsSDKInteractor.changeName(name: name, hmsActionResultListener: this);
   }
 
-  void startHLSStreaming(String meetingUrl) {
-    _hmsSDKInteractor.startHLSStreaming(meetingUrl, this);
+  void startHLSStreaming(
+      String meetingUrl, bool singleFile, bool videoOnDemand) {
+    _hmsSDKInteractor.startHLSStreaming(meetingUrl, this,
+        singleFilePerLayer: singleFile, enableVOD: videoOnDemand);
   }
 
   void stopHLSStreaming() {

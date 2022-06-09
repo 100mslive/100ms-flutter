@@ -6,6 +6,7 @@ import live.hms.video.sdk.models.HMSHLSConfig
 import live.hms.video.sdk.models.HMSHLSMeetingURLVariant
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel.Result
+import live.hms.video.sdk.models.HMSHlsRecordingConfig
 
 class HMSHLSAction {
 
@@ -28,6 +29,7 @@ class HMSHLSAction {
 
         private fun hlsStreaming(call: MethodCall, result: Result,hmssdk:HMSSDK) {
             val meetingUrlVariantsList = call.argument<List<Map<String,String>>>("meeting_url_variants")
+            val recordingConfig = call.argument<Map<String,Boolean>>("recording_config")
             val meetingUrlVariant1 : ArrayList<HMSHLSMeetingURLVariant> = ArrayList()
 
             meetingUrlVariantsList?.forEach {
@@ -39,7 +41,11 @@ class HMSHLSAction {
                 )
             }
 
-            val hlsConfig = HMSHLSConfig(meetingUrlVariant1)
+            val hmsHLSRecordingConfig = HMSHlsRecordingConfig(
+                singleFilePerLayer = recordingConfig?.get("single_file_per_layer")!!,
+                videoOnDemand = recordingConfig?.get("video_on_demand")!!)
+
+            val hlsConfig = HMSHLSConfig(meetingUrlVariant1,hmsHLSRecordingConfig)
 
             hmssdk.startHLSStreaming(config = hlsConfig, hmsActionResultListener = HMSCommonAction.getActionListener(result))
         }
