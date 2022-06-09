@@ -14,8 +14,14 @@ class HMSHLSConfig {
     meetingURLVariant.forEach((element) {
       list.add(element.toMap());
     });
-    Map recordingConfig =
-        hmsHLSRecordingConfig?.toMap() ?? HMSHLSRecordingConfig().toMap();
-    return {'meeting_url_variants': list, 'recording_config': recordingConfig};
+    if (hmsHLSRecordingConfig != null) {
+      Map recordingConfig = hmsHLSRecordingConfig!.toMap();
+      return {
+        'meeting_url_variants': list,
+        'recording_config': recordingConfig
+      };
+    } else {
+      return {'meeting_url_variants': list};
+    }
   }
 }

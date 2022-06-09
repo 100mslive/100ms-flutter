@@ -29,11 +29,11 @@ class HMSHLSAction {
 
         private fun hlsStreaming(call: MethodCall, result: Result,hmssdk:HMSSDK) {
             val meetingUrlVariantsList = call.argument<List<Map<String,String>>>("meeting_url_variants")
-            val recordingConfig = call.argument<Map<String,Boolean>>("recording_config")
-            val meetingUrlVariant1 : ArrayList<HMSHLSMeetingURLVariant> = ArrayList()
+            val recordingConfig = call.argument<Map<String,Boolean>>("recording_config") ?: null
+            val meetingUrlVariant : ArrayList<HMSHLSMeetingURLVariant> = ArrayList()
 
             meetingUrlVariantsList?.forEach {
-                meetingUrlVariant1.add(
+                meetingUrlVariant.add(
                         HMSHLSMeetingURLVariant(
                                 meetingUrl = it["meeting_url"]!!,
                                 metadata = it["meta_data"]!!
@@ -41,12 +41,15 @@ class HMSHLSAction {
                 )
             }
 
-            val hmsHLSRecordingConfig = HMSHlsRecordingConfig(
-                singleFilePerLayer = recordingConfig?.get("single_file_per_layer")!!,
-                videoOnDemand = recordingConfig?.get("video_on_demand")!!)
-
-            val hlsConfig = HMSHLSConfig(meetingUrlVariant1,hmsHLSRecordingConfig)
-
+            val hlsConfig = if(recordingConfig!=null) {
+                val hmsHLSRecordingConfig = HMSHlsRecordingConfig(
+                    singleFilePerLayer = recordingConfig?.get("single_file_per_layer")!!,
+                    videoOnDemand = recordingConfig?.get("video_on_demand")!!
+                )
+                HMSHLSConfig(meetingUrlVariant, hmsHLSRecordingConfig)
+            }else{
+                HMSHLSConfig(meetingUrlVariant)
+            }
             hmssdk.startHLSStreaming(config = hlsConfig, hmsActionResultListener = HMSCommonAction.getActionListener(result))
         }
 
