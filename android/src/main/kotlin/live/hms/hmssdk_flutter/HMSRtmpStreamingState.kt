@@ -51,7 +51,7 @@ class HMSStreamingState {
         fun toDictionary(hmsHlsRecordingState: HmsHlsRecordingState?):HashMap<String,Any?>?{
             val map = HashMap<String,Any?>()
             if(hmsHlsRecordingState == null)return null
-            map["running"] = hmsHlsRecordingState.running==true
+            map["running"] = hmsHlsRecordingState.running
             if(hmsHlsRecordingState.running == true)
             map["started_at"] = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(hmsHlsRecordingState.startedAt).toString()
             return map
