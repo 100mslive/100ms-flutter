@@ -24,78 +24,80 @@ class PreviewWidget extends StatelessWidget {
     return Scaffold(
       body: Column(
         children: [
-          GetX<PreviewController>(builder: (controller) {
-            return Container(
-              child: controller.localTracks.length > 0
-                  ? SizedBox(
-                      height: itemHeight,
-                      width: itemWidth,
-                      child: Stack(
-                        children: [
-                          HMSVideoView(track: controller.localTracks[0],matchParent: true, peerName: 'dada',),
-                          Positioned(
-                            bottom: 20.0,
-                            left: itemWidth / 2 - 50.0,
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                  primary: Colors.blue,
-                                  padding: const EdgeInsets.all(14)),
-                              onPressed: () {
-                                Get.off(() => RoomWidget(meetingUrl, userName));
-                              },
-                              child: const Text(
-                                "Join Now",
-                                style: TextStyle(height: 1, fontSize: 18),
+          Expanded(
+            child: GetX<PreviewController>(builder: (controller) {
+              return Container(
+                child: controller.localTracks.length > 0
+                    ? SizedBox(
+                        height: itemHeight,
+                        width: itemWidth,
+                        child: Stack(
+                          children: [
+                            HMSVideoView(track: controller.localTracks[0],matchParent: true, peerName: 'dada',),
+                            Positioned(
+                              bottom: 20.0,
+                              left: itemWidth / 2 - 50.0,
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                    primary: Colors.blue,
+                                    padding: const EdgeInsets.all(14)),
+                                onPressed: () {
+                                  Get.off(() => RoomWidget(meetingUrl, userName));
+                                },
+                                child: const Text(
+                                  "Join Now",
+                                  style: TextStyle(height: 1, fontSize: 18),
+                                ),
                               ),
                             ),
-                          ),
-                          Positioned(
-                            bottom: 20.0,
-                            right: 50.0,
-                            child:
-                                GetX<PreviewController>(builder: (controller) {
-                              return IconButton(
-                                  onPressed: () {
-                                    controller.toggleAudio();
-                                  },
-                                  icon: Icon(
-                                    controller.isLocalAudioOn.value
-                                        ? Icons.mic
-                                        : Icons.mic_off,
-                                    size: 30.0,
-                                    color: Colors.blue,
-                                  ));
-                            }),
-                          ),
-                          Positioned(
-                            bottom: 20.0,
-                            left: 50.0,
-                            child:
-                                GetX<PreviewController>(builder: (controller) {
-                              return IconButton(
-                                  onPressed: () {
-                                    controller.toggleVideo();
-                                  },
-                                  icon: Icon(
-                                    controller.isLocalVideoOn.value
-                                        ? Icons.videocam
-                                        : Icons.videocam_off,
-                                    size: 30.0,
-                                    color: Colors.blueAccent,
-                                  ));
-                            }),
-                          ),
-                        ],
+                            Positioned(
+                              bottom: 20.0,
+                              right: 50.0,
+                              child:
+                                  GetX<PreviewController>(builder: (controller) {
+                                return IconButton(
+                                    onPressed: () {
+                                      controller.toggleAudio();
+                                    },
+                                    icon: Icon(
+                                      controller.isLocalAudioOn.value
+                                          ? Icons.mic
+                                          : Icons.mic_off,
+                                      size: 30.0,
+                                      color: Colors.blue,
+                                    ));
+                              }),
+                            ),
+                            Positioned(
+                              bottom: 20.0,
+                              left: 50.0,
+                              child:
+                                  GetX<PreviewController>(builder: (controller) {
+                                return IconButton(
+                                    onPressed: () {
+                                      controller.toggleVideo();
+                                    },
+                                    icon: Icon(
+                                      controller.isLocalVideoOn.value
+                                          ? Icons.videocam
+                                          : Icons.videocam_off,
+                                      size: 30.0,
+                                      color: Colors.blueAccent,
+                                    ));
+                              }),
+                            ),
+                          ],
+                        ),
+                      )
+                    : SizedBox(
+                        height: itemHeight / 1.3,
+                        child: const Center(
+                          child: CircularProgressIndicator(),
+                        ),
                       ),
-                    )
-                  : SizedBox(
-                      height: itemHeight / 1.3,
-                      child: const Center(
-                        child: CircularProgressIndicator(),
-                      ),
-                    ),
-            );
-          }),
+              );
+            }),
+          ),
         ],
       ),
     );
