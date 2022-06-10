@@ -122,7 +122,24 @@ class _ChatWidgetState extends State<ChatWidget> {
                                         ),
                                         value: "Everyone",
                                       ),
+                                      ...roles
+                                          .sortedBy((element) =>
+                                              element.priority.toString())
+                                          .map((role) =>
+                                              DropdownMenuItem<String>(
+                                                child: Text(
+                                                  "${role.name}",
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  maxLines: 1,
+                                                  style: GoogleFonts.inter(
+                                                      color: iconColor),
+                                                ),
+                                                value: role.name,
+                                              ))
+                                          .toList(),
                                       ...data.item2
+                                          .sortedBy((element) => element.name)
                                           .map((peer) {
                                             return !peer.isLocal
                                                 ? DropdownMenuItem<String>(
@@ -140,20 +157,6 @@ class _ChatWidgetState extends State<ChatWidget> {
                                           })
                                           .whereNotNull()
                                           .toList(),
-                                      ...roles
-                                          .map((role) =>
-                                              DropdownMenuItem<String>(
-                                                child: Text(
-                                                  "${role.name}",
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  maxLines: 1,
-                                                  style: GoogleFonts.inter(
-                                                      color: iconColor),
-                                                ),
-                                                value: role.name,
-                                              ))
-                                          .toList()
                                     ],
                                   ),
                                 );

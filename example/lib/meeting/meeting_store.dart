@@ -122,11 +122,6 @@ class MeetingStore extends ChangeNotifier
   }
 
   void leave() async {
-    if (isScreenShareOn) {
-      isScreenShareOn = false;
-      _hmsSDKInteractor.stopScreenShare();
-    }
-
     _hmsSDKInteractor.removeStatsListener(this);
     WidgetsBinding.instance!.removeObserver(this);
     _hmsSDKInteractor.leave(hmsActionResultListener: this);
@@ -977,6 +972,7 @@ class MeetingStore extends ChangeNotifier
         isRoomEnded = true;
         screenShareCount = 0;
         this.meetingMode = MeetingMode.Video;
+        isScreenShareOn = false;
         setLandscapeLock(false);
         notifyListeners();
         break;
