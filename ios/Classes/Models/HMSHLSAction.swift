@@ -31,10 +31,19 @@ class HMSHLSAction {
             result(HMSErrorExtension.toDictionary(error))
             return
         }
+        let recordingConfig = arguments["recording_config"] as? [String:Bool]? ?? nil
+        
         var meetingUrlVariant = [HMSHLSMeetingURLVariant]()
         meetingUrlVariantsList.forEach { meetingUrlVariant.append(HMSHLSMeetingURLVariant(meetingURL: URL(string: $0["meeting_url"]!)!, metadata: $0["meta_data"] ?? "")) }
-
-        let hlsConfig = HMSHLSConfig(variants: meetingUrlVariant)
+        
+        var hlsConfig:HMSHLSConfig
+        
+        if(recordingConfig==nil){
+            hlsConfig = HMSHLSConfig(variants: meetingUrlVariant)
+        }else{
+            let hmsHLSRecordingConfig = HMSHLSRecordingConfig(singleFilePerLayer: recordingConfig!["single_file_per_layer"]!, enableVOD: recordingConfig!["video_on_demand"]!)
+        hlsConfig = HMSHLSConfig(variants: meetingUrlVariant,recording: hmsHLSRecordingConfig)
+        }
         hmsSDK?.startHLSStreaming(config: hlsConfig) { _, error in
             if let error = error {
                 result(HMSErrorExtension.toDictionary(error))

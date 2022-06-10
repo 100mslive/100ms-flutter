@@ -177,13 +177,7 @@ class _MeetingPageState extends State<MeetingPage>
         if (_meetingStore.hasHlsStarted) {
           _meetingStore.stopHLSStreaming();
         } else {
-          String url = await UtilityComponents.showInputDialog(
-              context: context,
-              placeholder: "Enter HLS Url",
-              prefilledValue: Constant.rtmpUrl);
-          if (url.isNotEmpty) {
-            _meetingStore.startHLSStreaming(url);
-          }
+          UtilityComponents.showHLSDialog(context: context);
         }
         break;
       case 11:
