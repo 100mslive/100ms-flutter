@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 class Utilities {
   static String getAvatarTitle(String name) {
-    List<String>? parts = name.split(" ");
+    List<String>? parts = name.trim().split(" ");
     if (parts.length == 1) {
       name = parts[0][0];
     } else if (parts.length >= 2) {
@@ -30,8 +30,12 @@ class Utilities {
     Color(0xFF8FF5FB)
   ];
 
-  static double getRatio(Size size,BuildContext context) {
+  static double getRatio(Size size, BuildContext context) {
     EdgeInsets viewPadding = MediaQuery.of(context).viewPadding;
-    return (size.height-viewPadding.top-viewPadding.bottom-kToolbarHeight) / (size.width-viewPadding.left-viewPadding.right);
+    return (size.height -
+            viewPadding.top -
+            viewPadding.bottom -
+            kToolbarHeight) /
+        (size.width - viewPadding.left - viewPadding.right);
   }
 }
