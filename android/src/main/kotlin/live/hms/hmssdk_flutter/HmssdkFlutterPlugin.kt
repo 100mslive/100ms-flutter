@@ -58,7 +58,6 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
     lateinit var hmssdk: HMSSDK
     private lateinit var hmsVideoFactory: HMSVideoViewFactory
     private var requestChange: HMSRoleChangeRequest? = null
-    private var isStatsActive: Boolean = false
 
     companion object {
         var hmssdkFlutterPlugin: HmssdkFlutterPlugin? = null
@@ -275,20 +274,14 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         }
     }
 
-    private var isRTCStatsListenerInit = false
-
     private  fun statsListenerAction(call: MethodCall, result: Result){
         when (call.method) {
             "start_stats_listener" -> {
-                if (!isRTCStatsListenerInit) {
-                    hmssdk.addRtcStatsObserver(this.hmsStatsListener)
-                    isRTCStatsListenerInit = true
-                }
-                isStatsActive = true
+                hmssdk.addRtcStatsObserver(this.hmsStatsListener)
             }
 
             "remove_stats_listener" -> {
-                isStatsActive = false
+                hmssdk.removeRtcStatsObserver()
             }
 
             else -> {
@@ -1012,19 +1005,17 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             hmsTrack: HMSTrack?,
             hmsPeer: HMSPeer?
         ) {
-            if(isStatsActive) {
-                val args = HashMap<String, Any?>()
-                args["event_name"] = "on_remote_video_stats"
-                args["data"] = HMSRtcStatsExtension.toDictionary(
-                    hmsRemoteVideoStats = videoStats,
-                    peer = hmsPeer,
-                    track = hmsTrack
-                )
-
-                if (args["data"] != null)
-                    CoroutineScope(Dispatchers.Main).launch {
-                        rtcSink?.success(args)
-                    }
+            val args = HashMap<String, Any?>()
+            args["event_name"] = "on_remote_video_stats"
+            args["data"] = HMSRtcStatsExtension.toDictionary(
+                hmsRemoteVideoStats = videoStats,
+                peer = hmsPeer,
+                track = hmsTrack
+            )
+            
+            if (args["data"] != null) 
+            CoroutineScope(Dispatchers.Main).launch {
+                rtcSink?.success(args)
             }
         }
 
@@ -1033,20 +1024,17 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             hmsTrack: HMSTrack?,
             hmsPeer: HMSPeer?
         ) {
-            if(isStatsActive) {
-                val args = HashMap<String, Any?>()
-                args["event_name"] = "on_remote_audio_stats"
-                args["data"] = HMSRtcStatsExtension.toDictionary(
-                    hmsRemoteAudioStats = audioStats,
-                    peer = hmsPeer,
-                    track = hmsTrack
-                )
-
-
-                if (args["data"] != null)
-                    CoroutineScope(Dispatchers.Main).launch {
-                        rtcSink?.success(args)
-                    }
+            val args = HashMap<String, Any?>()
+            args["event_name"] = "on_remote_audio_stats"
+            args["data"] = HMSRtcStatsExtension.toDictionary(
+                hmsRemoteAudioStats = audioStats,
+                peer = hmsPeer,
+                track = hmsTrack
+            )
+            
+            if (args["data"] != null) 
+            CoroutineScope(Dispatchers.Main).launch {
+                rtcSink?.success(args)
             }
         }
 
@@ -1055,20 +1043,17 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             hmsTrack: HMSTrack?,
             hmsPeer: HMSPeer?
         ) {
-            if(isStatsActive) {
-                val args = HashMap<String, Any?>()
-                args["event_name"] = "on_local_video_stats"
-                args["data"] = HMSRtcStatsExtension.toDictionary(
-                    hmsLocalVideoStats = videoStats,
-                    peer = getLocalPeer(),
-                    track = hmsTrack
-                )
+            val args = HashMap<String, Any?>()
+            args["event_name"] = "on_local_video_stats"
+            args["data"] = HMSRtcStatsExtension.toDictionary(
+                hmsLocalVideoStats = videoStats,
+                peer = getLocalPeer(),
+                track = hmsTrack
+            )
 
-
-                if (args["data"] != null)
-                    CoroutineScope(Dispatchers.Main).launch {
-                        rtcSink?.success(args)
-                    }
+            if (args["data"] != null) 
+            CoroutineScope(Dispatchers.Main).launch {
+                rtcSink?.success(args)
             }
         }
 
@@ -1077,41 +1062,38 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             hmsTrack: HMSTrack?,
             hmsPeer: HMSPeer?
         ) {
-            if(isStatsActive) {
-                val args = HashMap<String, Any?>()
-                args["event_name"] = "on_local_audio_stats"
-                args["data"] = HMSRtcStatsExtension.toDictionary(
-                    hmsLocalAudioStats = audioStats,
-                    peer = getLocalPeer(),
-                    track = hmsTrack
-                )
+            val args = HashMap<String, Any?>()
+            args["event_name"] = "on_local_audio_stats"
+            args["data"] = HMSRtcStatsExtension.toDictionary(
+                hmsLocalAudioStats = audioStats,
+                peer = getLocalPeer(),
+                track = hmsTrack
+            )
 
-                if (args["data"] != null)
-                    CoroutineScope(Dispatchers.Main).launch {
-                        rtcSink?.success(args)
-                    }
+            if (args["data"] != null) 
+            CoroutineScope(Dispatchers.Main).launch {
+                rtcSink?.success(args)
             }
         }
 
         override fun onRTCStats(rtcStats: HMSRTCStatsReport) {
-            if(isStatsActive) {
-                val args = HashMap<String, Any?>()
-                args["event_name"] = "on_rtc_stats"
-                val dict = HashMap<String, Any?>()
-                dict["bytes_sent"] = rtcStats.combined.bytesSent
-                dict["bytes_received"] = rtcStats.combined.bitrateReceived
-                dict["bitrate_sent"] = rtcStats.combined.bitrateSent
-                dict["packets_received"] = rtcStats.combined.packetsReceived
-                dict["packets_lost"] = rtcStats.combined.packetsLost
-                dict["bitrate_received"] = rtcStats.combined.bitrateReceived
-                dict["round_trip_time"] = rtcStats.combined.roundTripTime
+            val args = HashMap<String, Any?>()
+            args["event_name"] = "on_rtc_stats"
+            val dict = HashMap<String, Any?>()
+            dict["bytes_sent"] = rtcStats.combined.bytesSent
+            dict["bytes_received"] = rtcStats.combined.bitrateReceived
+            dict["bitrate_sent"] = rtcStats.combined.bitrateSent
+            dict["packets_received"] = rtcStats.combined.packetsReceived
+            dict["packets_lost"] = rtcStats.combined.packetsLost
+            dict["bitrate_received"] = rtcStats.combined.bitrateReceived
+            dict["round_trip_time"] = rtcStats.combined.roundTripTime
 
-                args["data"] = dict
-                if (args["data"] != null)
-                    CoroutineScope(Dispatchers.Main).launch {
-                        rtcSink?.success(args)
-                    }
+            args["data"] = dict
+            if (args["data"] != null) 
+            CoroutineScope(Dispatchers.Main).launch {
+                rtcSink?.success(args)
             }
+
         }
 
     }
