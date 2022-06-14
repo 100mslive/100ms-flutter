@@ -35,7 +35,7 @@ class PreviewStore extends ChangeNotifier
   int? networkQuality;
 
   @override
-  void onError({required HMSException error}) {
+  void onHMSError({required HMSException error}) {
     updateError(error);
   }
 

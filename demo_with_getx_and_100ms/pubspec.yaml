@@ -36,10 +36,11 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   get:
-  hmssdk_flutter: ^0.7.1
   permission_handler:
   focus_detector:
   http:
+  hmssdk_flutter:
+    path: ../
 
 dev_dependencies:
   flutter_test:

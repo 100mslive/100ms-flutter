@@ -54,7 +54,7 @@ class RoomController extends GetxController
   }
 
   @override
-  void onError({required HMSException error}) {
+  void onHMSError({required HMSException error}) {
     Get.snackbar("Error", error.message);
   }
 
