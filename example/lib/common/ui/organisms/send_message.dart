@@ -18,70 +18,52 @@ class SendMessageScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Padding(
       padding: EdgeInsets.only(right: 10.0, left: 50, top: 15, bottom: 5),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: <Widget>[
-          SizedBox(height: 30),
-          Flexible(
-              child: Row(
+      child: Stack(
+        children: [
+          Row(
             mainAxisAlignment: MainAxisAlignment.end,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Flexible(
-                child: Container(
-                  padding: EdgeInsets.all(14),
-                  decoration: BoxDecoration(
-                    color: Colors.green.shade300,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(18),
-                      bottomLeft: Radius.circular(18),
-                      bottomRight: Radius.circular(18),
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(minWidth: 100),
+                  child: Container(
+                    padding: EdgeInsets.only(
+                        bottom: 14, left: 14, right: 14, top: 5),
+                    decoration: BoxDecoration(
+                      color: Colors.green.shade300,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(18),
+                        bottomLeft: Radius.circular(18),
+                        bottomRight: Radius.circular(18),
+                      ),
                     ),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              (senderName ?? "") + (role==""?"":" (to " + role + ")"),
-                              style: GoogleFonts.inter(
-                                  fontSize: 14.0,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w600),
-                            ),
-                          ),
-                          Text(
-                            date,
-                            style: GoogleFonts.inter(
-                                fontSize: 10.0,
-                                color: Colors.black,
-                                fontWeight: FontWeight.w900),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Flexible(
-                            child: Text(
-                              message,
-                              style: GoogleFonts.inter(
-                                  fontSize: 14.0,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w700),
-                            ),
-                          ),
-                          
-                        ],
-                      ),
-                    ],
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          (senderName ?? "") +
+                              (role == "" ? "" : " (to " + role + ")"),
+                          style: GoogleFonts.inter(
+                              fontSize: 14.0,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w600),
+                        ),
+                        SizedBox(
+                          height: 2,
+                        ),
+                        Text(
+                          message,
+                          style: GoogleFonts.inter(
+                              fontSize: 14.0,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w700),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -90,7 +72,18 @@ class SendMessageScreen extends StatelessWidget {
                 Colors.green.shade300,
               )),
             ],
-          ))
+          ),
+          Positioned(
+            bottom: 2,
+            right: 15,
+            child: Text(
+              date,
+              style: GoogleFonts.inter(
+                  fontSize: 10.0,
+                  color: Colors.black,
+                  fontWeight: FontWeight.w900),
+            ),
+          ),
         ],
       ),
     );

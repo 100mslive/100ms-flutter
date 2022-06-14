@@ -21,81 +21,72 @@ class ReceiveMessageScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(right: 50.0, left: 10, top: 15, bottom: 5),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: <Widget>[
-          SizedBox(height: 30),
-          Flexible(
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Transform(
-          alignment: Alignment.center,
-          transform: Matrix4.rotationY(pi),
-          child: CustomPaint(
-            painter: CustomShape(Colors.blue.shade300),
-          ),
-        ),
-        Flexible(
-          child: Container(
-            padding: EdgeInsets.all(14),
-            decoration: BoxDecoration(
-              color: Colors.blue.shade300,
-              borderRadius: BorderRadius.only(
-                topRight: Radius.circular(18),
-                bottomLeft: Radius.circular(18),
-                bottomRight: Radius.circular(18),
+      child: Stack(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Transform(
+                alignment: Alignment.center,
+                transform: Matrix4.rotationY(pi),
+                child: CustomPaint(
+                  painter: CustomShape(Colors.blue.shade300),
+                ),
               ),
-            ),
-            child: Column(
+              Flexible(
+                child: Container(
+                  padding:
+                      EdgeInsets.only(bottom: 14, left: 14, right: 14, top: 5),
+                  decoration: BoxDecoration(
+                    color: Colors.blue.shade300,
+                    borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(18),
+                      bottomLeft: Radius.circular(18),
+                      bottomRight: Radius.circular(18),
+                    ),
+                  ),
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              (senderName ?? "") + (role==""?"":" (to " + role + ")"),
-                              style: GoogleFonts.inter(
-                                  fontSize: 14.0,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w600),
-                            ),
-                          ),
-                          Text(
-                            date,
-                            style: GoogleFonts.inter(
-                                fontSize: 10.0,
-                                color: Colors.black,
-                                fontWeight: FontWeight.w900),
-                          ),
-                        ],
+                      Text(
+                        (senderName ?? "") +
+                            (role == "" ? "" : " (to " + role + ")"),
+                        style: GoogleFonts.inter(
+                            fontSize: 14.0,
+                            color: Colors.black,
+                            fontWeight: FontWeight.w600),
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Flexible(
-                            child: Text(
-                              message,
-                              style: GoogleFonts.inter(
-                                  fontSize: 14.0,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w700),
-                            ),
-                          ),
-                          
-                        ],
+                      SizedBox(
+                        height: 2,
+                      ),
+                      Text(
+                        message,
+                        style: GoogleFonts.inter(
+                            fontSize: 14.0,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w700),
                       ),
                     ],
                   ),
+                ),
+              ),
+            ],
           ),
-        ),
-      ],
-    ))
+          Positioned(
+            bottom: 2,
+            left: 15,
+            child: Text(
+              date,
+              style: GoogleFonts.inter(
+                  fontSize: 10.0,
+                  color: Colors.black,
+                  fontWeight: FontWeight.w900),
+            ),
+          ),
         ],
       ),
     );
-}
+  }
 }
