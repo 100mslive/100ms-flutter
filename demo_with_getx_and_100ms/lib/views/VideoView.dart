@@ -20,7 +20,7 @@ class _VideoViewState extends State<VideoView> {
   Widget build(BuildContext context) {
     return HMSVideoView(
       track: widget.track,
-      matchParent: true, peerName: widget.name,
+      matchParent: true,
     );
   }
 }

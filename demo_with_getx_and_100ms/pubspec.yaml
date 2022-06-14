@@ -40,6 +40,8 @@ dependencies:
   permission_handler:
   focus_detector:
   http:
+  hmssdk_flutter:
+    path: ../
 
 dev_dependencies:
   flutter_test:

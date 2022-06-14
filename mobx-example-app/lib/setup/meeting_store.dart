@@ -360,7 +360,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
   }
 
   @override
-  void onError({required HMSException error}) {
+  void onHMSError({required HMSException error}) {
     hmsException = hmsException;
   }
 

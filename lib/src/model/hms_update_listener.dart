@@ -51,7 +51,7 @@ abstract class HMSUpdateListener {
   ///
   /// and SDK has already retried to fix the error
   /// - Parameter error: the error that occurred
-  void onError({required HMSException error});
+  void onHMSError({required HMSException error});
 
   /// This is called when there is a new broadcast message from any other peer in the room
   ///
