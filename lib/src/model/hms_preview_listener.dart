@@ -12,7 +12,7 @@ abstract class HMSPreviewListener {
   ///
   /// - Parameters:
   ///   - error: error which you get.
-  void onError({required HMSException error});
+  void onHMSError({required HMSException error});
 
   ///when you want to preview listen to this callback
   ///
