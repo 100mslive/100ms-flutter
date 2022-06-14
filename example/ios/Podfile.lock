@@ -164,6 +164,7 @@ DEPENDENCIES:
   - firebase_performance (from `.symlinks/plugins/firebase_performance/ios`)
   - Flutter (from `Flutter`)
   - fluttertoast (from `.symlinks/plugins/fluttertoast/ios`)
+  - HMSBroadcastExtensionSDK
   - hmssdk_flutter (from `.symlinks/plugins/hmssdk_flutter/ios`)
   - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
   - path_provider_ios (from `.symlinks/plugins/path_provider_ios/ios`)
@@ -250,6 +251,6 @@ SPEC CHECKSUMS:
   video_player_avfoundation: e489aac24ef5cf7af82702979ed16f2a5ef84cff
   wakelock: d0fc7c864128eac40eba1617cb5264d9c940b46f
 
-PODFILE CHECKSUM: e57a6b233c1c6fff78fd48a8b8a1b5b9fcc1e3a5
+PODFILE CHECKSUM: 3b22f8e4f0aeb192e1241ece38f59bf2a052864a
 
 COCOAPODS: 1.11.3

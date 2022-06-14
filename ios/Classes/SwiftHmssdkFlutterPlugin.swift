@@ -296,6 +296,9 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         
         hmsSDK = HMSSDK.build { sdk in
             
+            // TODO: add option in Dart to pass app group
+            sdk.appGroup = "group.flutterhms"
+            
             if let settings = trackSettings {
                 sdk.trackSettings = settings
             }
