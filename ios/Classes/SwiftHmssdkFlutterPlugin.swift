@@ -107,64 +107,65 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             // MARK: Room Actions
             
         case "build", "preview", "join", "leave":
-            buildActions(call, result: result)
+            buildActions(call, result)
             
             // MARK: Room Actions
             
         case "get_room", "get_local_peer", "get_remote_peers", "get_peers":
-            HMSRoomAction.roomActions(call, result: result,hmsSDK:hmsSDK)
+            HMSRoomAction.roomActions(call, result, hmsSDK)
             
             // MARK: - Audio Helpers
             
         case "switch_audio", "is_audio_mute", "mute_all", "un_mute_all", "set_volume":
-            HMSAudioAction.audioActions(call, result: result,hmsSDK: hmsSDK)
+            HMSAudioAction.audioActions(call, result, hmsSDK)
             
             // MARK: - Video Helpers
             
         case "switch_video", "switch_camera", "start_capturing", "stop_capturing", "is_video_mute", "set_playback_allowed":
-            HMSVideoAction.videoActions(call, result: result,hmsSDK: hmsSDK)
+            HMSVideoAction.videoActions(call, result, hmsSDK)
             
             // MARK: - Messaging
             
         case "send_broadcast_message", "send_direct_message", "send_group_message":
-            HMSMessageAction.messageActions(call, result: result,hmsSDK: hmsSDK)
+            HMSMessageAction.messageActions(call, result, hmsSDK)
             
             // MARK: - Role based Actions
             
         case "get_roles", "change_role", "accept_change_role", "end_room", "remove_peer", "on_change_track_state_request", "change_track_state_for_role":
-            roleActions(call, result: result)
+            roleActions(call, result)
             
             // MARK: - Peer Action
         case "change_metadata", "change_name":
-            peerActions(call, result: result)
+            peerActions(call, result)
             
-            // MARK: - Recording
+            // MARK: - RTMP
             
         case "start_rtmp_or_recording", "stop_rtmp_and_recording":
-            HMSRecordingAction.recordingActions(call, result: result,hmsSDK: hmsSDK)
+            HMSRecordingAction.recordingActions(call, result, hmsSDK)
             
             // MARK: - HLS
             
         case "hls_start_streaming", "hls_stop_streaming":
-            HMSHLSAction.hlsActions(call, result: result, hmsSDK: hmsSDK)
+            HMSHLSAction.hlsActions(call, result, hmsSDK)
             
             // MARK: - Logging
             
         case "start_hms_logger", "remove_hms_logger":
-            loggingActions(call, result: result)
+            loggingActions(call, result)
             
-            // MARK: - statsListener
+            // MARK: - Stats Listener
             
         case "start_stats_listener", "remove_stats_listener":
-            statsListenerAction(call, result: result)
+            statsListenerAction(call, result)
+            
             
         default:
             result(FlutterMethodNotImplemented)
         }
     }
     
-    // MARK: Build Actions
-    private func buildActions(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
+    // MARK: - Build Actions
+    private func buildActions(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         switch call.method {
         case "build":
             build(call, result)
@@ -184,7 +185,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     }
     
     // MARK: - Role based Actions
-    private func roleActions(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
+    private func roleActions(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         switch call.method {
         case "get_roles":
             getRoles(call, result)
@@ -212,8 +213,10 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         }
     }
     
-    // MARK: - Peer
-    private func peerActions(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
+    
+    // MARK: - Peer Actions
+    
+    private func peerActions(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         switch call.method {
         case "change_metadata":
             changeMetadata(call, result)
@@ -226,7 +229,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     }
     
     // MARK: - Logging
-    private func loggingActions(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
+    private func loggingActions(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         switch call.method {
         case "start_hms_logger":
             startHMSLogger(call)
@@ -239,7 +242,9 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         }
     }
     
-    private func statsListenerAction(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
+    // MARK: - Stats Listener
+    
+    private func statsListenerAction(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         switch call.method {
             
         case "start_stats_listener":

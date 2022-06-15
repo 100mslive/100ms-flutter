@@ -9,45 +9,45 @@ import Foundation
 import HMSSDK
 
 class HMSAudioAction{
-    static func audioActions(_ call: FlutterMethodCall, result: @escaping FlutterResult,hmsSDK:HMSSDK?) {
-    switch call.method {
-    case "switch_audio":
-        switchAudio(call, result,hmsSDK: hmsSDK)
-
-    case "is_audio_mute":
-        isAudioMute(call, result,hmsSDK: hmsSDK)
-
-    case "mute_all":
-        toggleAudioMuteAll(result, shouldMute: true,hmsSDK: hmsSDK)
-
-    case "un_mute_all":
-        toggleAudioMuteAll(result, shouldMute: false,hmsSDK: hmsSDK)
-
-    case "set_volume":
-        setVolume(call, result,hmsSDK: hmsSDK)
-    default:
-        result(FlutterMethodNotImplemented)
+    static func audioActions(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?) {
+        switch call.method {
+        case "switch_audio":
+            switchAudio(call, result, hmsSDK)
+            
+        case "is_audio_mute":
+            isAudioMute(call, result, hmsSDK)
+            
+        case "mute_all":
+            toggleAudioMuteAll(result, hmsSDK, shouldMute: true)
+            
+        case "un_mute_all":
+            toggleAudioMuteAll(result, hmsSDK, shouldMute: false)
+            
+        case "set_volume":
+            setVolume(call, result, hmsSDK)
+        default:
+            result(FlutterMethodNotImplemented)
         }
     }
     
-    static private func switchAudio(_ call: FlutterMethodCall, _ result: FlutterResult,hmsSDK:HMSSDK?) {
+    static private func switchAudio(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?) {
         let arguments = call.arguments as! [AnyHashable: Any]
-
+        
         guard let shouldMute = arguments["is_on"] as? Bool,
               let peer = hmsSDK?.localPeer,
               let audio = peer.audioTrack as? HMSLocalAudioTrack else {
-                  result(false)
-                  return
-              }
-
+            result(false)
+            return
+        }
+        
         audio.setMute(shouldMute)
-
+        
         result(true)
     }
-
-    static private func isAudioMute(_ call: FlutterMethodCall, _ result: FlutterResult,hmsSDK:HMSSDK?) {
+    
+    static private func isAudioMute(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?) {
         let arguments = call.arguments as! [AnyHashable: Any]
-
+        
         if let peerID = arguments["peer_id"] as? String, let peer = HMSCommonAction.getPeer(by: peerID,hmsSDK: hmsSDK) {
             if let audio = peer.audioTrack {
                 result(audio.isMute())
@@ -59,12 +59,12 @@ class HMSAudioAction{
                 return
             }
         }
-
+        
         result(false)
     }
-
-    static private func toggleAudioMuteAll(_ result: FlutterResult, shouldMute: Bool,hmsSDK:HMSSDK?) {
-
+    
+    static private func toggleAudioMuteAll(_ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?, shouldMute: Bool) {
+        
         hmsSDK?.remotePeers?.forEach { peer in
             if let audio = peer.remoteAudioTrack() {
                 audio.setPlaybackAllowed(!shouldMute)
@@ -75,32 +75,32 @@ class HMSAudioAction{
                 }
             }
         }
-
+        
         result(nil)
     }
-
-    static private func setVolume(_ call: FlutterMethodCall, _ result: FlutterResult,hmsSDK:HMSSDK?) {
+    
+    static private func setVolume(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?) {
         let arguments = call.arguments as! [AnyHashable: Any]
-
+        
         guard let volume = arguments["volume"] as? Double,
               let trackID = arguments["track_id"] as? String,
               let track = HMSUtilities.getTrack(for: trackID, in: hmsSDK!.room!)
         else {
             let error = HMSCommonAction.getError(message: "Invalid arguments passed in \(#function)",
-                                 description: "Message is nil",
-                                 params: ["function": #function, "arguments": arguments])
+                                                 description: "Message is nil",
+                                                 params: ["function": #function, "arguments": arguments])
             result(HMSErrorExtension.toDictionary(error))
             return
         }
-
+        
         if let remoteAudio = track as? HMSRemoteAudioTrack {
             remoteAudio.setVolume(volume)
             result(nil)
             return
         }
-
+        
         let error = HMSCommonAction.getError(message: "Invalid arguments passed in \(#function)",
-                             params: ["function": #function, "arguments": arguments])
+                                             params: ["function": #function, "arguments": arguments])
         result(HMSErrorExtension.toDictionary(error))
     }
 }
