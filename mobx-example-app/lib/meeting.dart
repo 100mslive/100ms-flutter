@@ -45,6 +45,7 @@ class _MeetingState extends State<Meeting> with WidgetsBindingObserver {
         backgroundColor: Colors.grey,
         appBar: AppBar(
           title: const Text("100ms mobx"),
+          automaticallyImplyLeading: false,
           actions: [
             IconButton(
                 onPressed: () {
