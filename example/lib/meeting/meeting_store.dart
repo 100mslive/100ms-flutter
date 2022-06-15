@@ -545,6 +545,7 @@ class MeetingStore extends ChangeNotifier
       case HMSPeerUpdate.peerLeft:
         peerTracks.removeWhere(
             (leftPeer) => leftPeer.uid == peer.peerId + "mainVideo");
+            // TODO: remove auxiliary peer track nodes
         removePeer(peer);
         notifyListeners();
         break;
