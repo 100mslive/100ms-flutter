@@ -12,7 +12,7 @@ public class TopToolBar extends PreviewPage {
     public MobileElement headingCta;
 
     @iOSXCUITFindBy(xpath = "//XCUIElementTypeApplication[@name='Flutter 100ms']/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther[2]/XCUIElementTypeOther[2]/XCUIElementTypeOther[2]/XCUIElementTypeOther[2]/XCUIElementTypeButton[2]")
-    @AndroidFindBy(xpath = "//android.view.View/android.view.View/android.view.View/android.view.View/android.view.View[1]/android.widget.Button[2]")
+    @AndroidFindBy(xpath = "//android.view.View/android.view.View/android.view.View/android.view.View/android.view.View[1]/android.widget.ImageView[1]")
     public MobileElement speakerBtn;
 
     @iOSXCUITFindBy(accessibility = "Show menu")

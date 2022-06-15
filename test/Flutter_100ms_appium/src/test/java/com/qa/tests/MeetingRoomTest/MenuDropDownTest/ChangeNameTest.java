@@ -64,10 +64,12 @@ public class ChangeNameTest extends BaseTest {
         leaveRoom.leave_withoutEndingRoom();
     }
 
-    //@Test
+    @Test
     public void Test_ChangeName() throws InterruptedException {
         System.out.println("Verify Change Name");
         Thread.sleep(2000);
+        String name_flag;
+        String name_text;
 
         topToolBar = topToolBar.goto_meetingRoom_menuPage(meetingDetail.getJSONObject("valid").getString("meeting_url"),
                 meetingDetail.getJSONObject("valid").getString("username"),
@@ -81,10 +83,11 @@ public class ChangeNameTest extends BaseTest {
         sa.assertTrue(changeName.changeNameCancelBtn.isDisplayed());
         click(changeName.changeNameCancelBtn);
 
+        Thread.sleep(2000);
         sa.assertTrue(tile.myTile.isDisplayed());
 
-        String name_flag = getContextDesc(tile.myTile, "Name on Tile- ");
-        String name_text = meetingDetail.getJSONObject("valid").getString("username") + getStrings().get("tile_name_(You)");
+        name_flag = getContextDesc(tile.myTile, "Name on Tile- ");
+        name_text = getStrings().get("tile_name_(You)") + "(" + meetingDetail.getJSONObject("valid").getString("username") + ") ";
         sa.assertEquals(name_flag, name_text );
 
         click(topToolBar.menuBtn);
@@ -98,13 +101,13 @@ public class ChangeNameTest extends BaseTest {
 
         sa.assertTrue(tile.myTile_nameChange.isDisplayed());
         name_flag = getContextDesc(tile.myTile_nameChange, "New Name on Tile- ");
-        name_text = meetingDetail.getJSONObject("valid").getString("new_username") + getStrings().get("tile_name_(You)");
+        name_text = getStrings().get("tile_name_(You)") + "(" + meetingDetail.getJSONObject("valid").getString("new_username") + ") ";
         sa.assertEquals(name_flag, name_text);
 
-        sa.assertTrue(changeName.nameChange_Notification.isDisplayed());
-        name_flag = getContextDesc(changeName.nameChange_Notification, "New Name Notification- ");
-        name_text = getStrings().get("name_changed_to") + meetingDetail.getJSONObject("valid").getString("new_username");
-        sa.assertEquals(name_flag, name_text);
+//        sa.assertTrue(changeName.nameChange_Notification.isDisplayed());
+//        name_flag = getContextDesc(changeName.nameChange_Notification, "New Name Notification- ");
+//        name_text = getStrings().get("name_changed_to") + meetingDetail.getJSONObject("valid").getString("new_username");
+//        sa.assertEquals(name_flag, name_text);
     }
 
 }

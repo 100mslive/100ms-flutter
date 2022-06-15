@@ -23,7 +23,8 @@ public class HomePage extends BaseTest {
     public MobileElement crossBtn;
 
     @iOSXCUITFindBy(accessibility = "joinButton")
-    @AndroidFindBy(accessibility = "Join Meeting")
+//    @AndroidFindBy(accessibility = "Join Meeting")
+    @AndroidFindBy(xpath = "//android.widget.Button[@content-desc='Join Meeting']")
     public MobileElement joinMeetingBtn;
 
     public void clear_meeting_url(){

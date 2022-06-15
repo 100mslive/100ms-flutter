@@ -69,8 +69,6 @@ public class ScreenShareTest extends BaseTest {
           meetingDetail.getJSONObject("camera").getString("ON"),
           meetingDetail.getJSONObject("mic").getString("ON"));
 
-        assertTrue(screenShare.expand.isDisplayed(),"expand","isDisplayed");
-        click(screenShare.expand,"expand");
         waitForVisibility(screenShare.screenShareBtn);
         assertTrue(screenShare.screenShareBtn.isDisplayed(),"screenShareBtn","isDisplayed");
         click(screenShare.screenShareBtn,"screenShareBtn");

@@ -71,27 +71,27 @@ public class RaiseHandTest extends BaseTest {
             meetingDetail.getJSONObject("camera").getString("ON"),
             meetingDetail.getJSONObject("mic").getString("ON"));
 
-        assertTrue(raiseHand.expand.isDisplayed(),"expand","isDisplayed");
-        click(raiseHand.expand);
+//        assertTrue(raiseHand.expand.isDisplayed(),"expand","isDisplayed");
+//        click(raiseHand.expand);
         assertTrue(raiseHand.raiseHandBtn.isDisplayed(),"raiseHandBtn","isDisplayed");
 
         click(raiseHand.raiseHandBtn);
-        assertTrue(raiseHand.expand.isDisplayed(),"expand","isDisplayed");
-        click(raiseHand.expand);
-        assertTrue(raiseHand.raiseHandOnNotifictaion.isDisplayed(),"raiseHandOnNotifictaion","isDisplayed");
-        String raise_hand_flag = raiseHand.raiseHandOnNotifictaion.getAttribute("content-desc");
-        String raise_hand_text = getStrings().get("raise_hand_on");;
-        sa.assertEquals(raise_hand_flag, raise_hand_text);
+//        assertTrue(raiseHand.expand.isDisplayed(),"expand","isDisplayed");
+//        click(raiseHand.expand);
+//        assertTrue(raiseHand.raiseHandOnNotifictaion.isDisplayed(),"raiseHandOnNotifictaion","isDisplayed");
+//        String raise_hand_flag = raiseHand.raiseHandOnNotifictaion.getAttribute("content-desc");
+//        String raise_hand_text = getStrings().get("raise_hand_on");;
+//        sa.assertEquals(raise_hand_flag, raise_hand_text);
 
         Thread.sleep(5000);
-        click(raiseHand.expand);
+//        click(raiseHand.expand);
         click(raiseHand.raiseHandBtn);
-        click(raiseHand.expand);
-        assertTrue(raiseHand.raiseHandOffNotifictaion.isDisplayed(),"raiseHandOffNotifictaion","isDisplayed");
-        raise_hand_flag = raiseHand.raiseHandOffNotifictaion.getAttribute("content-desc");
-        raise_hand_text = getStrings().get("raise_hand_off");
-        sa.assertEquals(raise_hand_flag, raise_hand_text);
-        Thread.sleep(5000);
+//        click(raiseHand.expand);
+//        assertTrue(raiseHand.raiseHandOffNotifictaion.isDisplayed(),"raiseHandOffNotifictaion","isDisplayed");
+//        raise_hand_flag = raiseHand.raiseHandOffNotifictaion.getAttribute("content-desc");
+//        raise_hand_text = getStrings().get("raise_hand_off");
+//        sa.assertEquals(raise_hand_flag, raise_hand_text);
+//        Thread.sleep(5000);
 
 
 //        Add negative case

@@ -69,8 +69,18 @@ public class MuteAllTest extends BaseTest {
                 meetingDetail.getJSONObject("camera").getString("ON"),
                 meetingDetail.getJSONObject("mic").getString("ON"));
 
+        assertTrue(muteAll.muteBtn.isDisplayed(),"muteBtn","isDisplayed");
+        click(muteAll.muteBtn,"muteBtn");
+
+        assertTrue(muteAll.mutePopup.isDisplayed(),"mutePopup","isDisplayed");
+        Thread.sleep(2000);
+
+        assertTrue(muteAll.muteAllCheckbox.isDisplayed(),"muteAllBtn","isDisplayed");
+        click(muteAll.muteAllCheckbox,"muteAllCheckbox");
+
         assertTrue(muteAll.muteAllBtn.isDisplayed(),"muteAllBtn","isDisplayed");
         click(muteAll.muteAllBtn,"muteAllBtn");
+
 
 //        sa.assertTrue(muteAll.muteAllNotification.isDisplayed());
 //        String mute_all_flag = muteAll.muteAllNotification.getAttribute("content-desc");

@@ -10,7 +10,7 @@
     <string name="screen_share_started">Screen Share Started</string>
     <string name="screen_share_stopped">Screen Share Stopped</string>
     <string name="mute_all_notification">Successfully Muted All</string>
-    <string name="tile_name_(You)"> (You)</string>
+    <string name="tile_name_(You)">You </string>
     <string name="name_changed_to">Name Changed to </string>
     <string name="token_beam">?token=beam_recording, Enter RTMP Url</string>
     <string name="recording_started">Recording Started</string>

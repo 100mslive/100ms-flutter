@@ -6,14 +6,18 @@
     </listeners>
 
     <parameter name="emulator" value="true" />
-    <parameter name="platformName" value="Android" />
-<!--    <parameter name="udid" value="emulator-5554" />-->
-    <parameter name="deviceName" value="test" />
-<!--    <parameter name="deviceName" value="Nexus_6_API_29" />-->
     <parameter name="systemPort" value="10000" />
     <parameter name="chromeDriverPort" value="11000" />
+    <parameter name="platformName" value="Android" />
+    <!--    uncomment for CI />-->
+<!--    <parameter name="deviceName" value="test" />-->
+    <!--    uncomment for local />-->
+        <parameter name="deviceName" value="Nexus_6_API_29" />
 
-  <test name="tests.Android_Flutter">
+    <!--    <parameter name="udid" value="emulator-5554" />-->
+
+
+    <test name="tests.Android_Flutter">
 
         <classes>
 <!--                        <class name="com.qa.tests.HomePageTest"></class>-->
@@ -21,11 +25,11 @@
 <!--                        <class name="com.qa.tests.MeetingRoomTest.TopToolBarTest"></class>-->
 <!--                        <class name="com.qa.tests.MeetingRoomTest.BottomToolBarTest.RaiseHandTest"></class>-->
 <!--                        <class name="com.qa.tests.MeetingRoomTest.BottomToolBarTest.LeaveRoomTest"></class>-->
-                        <class name="com.qa.tests.MeetingRoomTest.BottomToolBarTest.ScreenShareTest"></class>
+<!--                        <class name="com.qa.tests.MeetingRoomTest.MenuDropDownTest.ScreenShareTest"></class>-->
 <!--                        <class name="com.qa.tests.MeetingRoomTest.MenuDropDownTest.EndRoomTest"></class>-->
-<!--                        <class name="com.qa.tests.MeetingRoomTest.MenuDropDownTest.RecordTest"></class>-->
+<!--                        <class name="com.qa.tests.MeetingRoomTest.MenuDropDownTest.RecordTest" noo></class>-->
 <!--                        <class name="com.qa.tests.MeetingRoomTest.MenuDropDownTest.MuteAllTest"></class>-->
-<!--                        <class name="com.qa.tests.MeetingRoomTest.MenuDropDownTest.ChangeNameTest"></class>-->
+                        <class name="com.qa.tests.MeetingRoomTest.MenuDropDownTest.ChangeNameTest"></class>
 <!--                    <class name="com.qa.tests.MeetingRoomTest.MenuDropDownTest.AudioVideoViewTest"></class>-->
         </classes>
     </test>

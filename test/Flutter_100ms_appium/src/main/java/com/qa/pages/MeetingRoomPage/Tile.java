@@ -7,11 +7,13 @@ import io.appium.java_client.pagefactory.iOSXCUITFindBy;
 public class Tile extends MeetingRoom {
 
     @iOSXCUITFindBy(accessibility = "Back")
-    @AndroidFindBy(accessibility =  "Ronit (You)" )
+//    @AndroidFindBy(accessibility =  "You (Ronit)" )
+    @AndroidFindBy(xpath =  "//android.view.View[@content-desc='You (Ronit) ']" )
     public static MobileElement myTile;
 
     @iOSXCUITFindBy(accessibility = "Back")
-    @AndroidFindBy(accessibility =  "Ronit New Name (You)" )
+//    @AndroidFindBy(accessibility =  "Ronit New Name (You)" )
+    @AndroidFindBy(xpath =  "//android.view.View[@content-desc='You (Ronit New Name) ']" )
     public static MobileElement myTile_nameChange;
 
     @iOSXCUITFindBy(accessibility = "Back")

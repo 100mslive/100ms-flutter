@@ -12,11 +12,11 @@ public class ChangeName extends MeetingRoom {
     public MobileElement changeNameBtn;
 
     @iOSXCUITFindBy(accessibility = "Change Name")
-    @AndroidFindBy(xpath = "/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.view.View/android.view.View/android.view.View[1]/android.view.View/android.view.View")
+    @AndroidFindBy(xpath = "//android.view.View/android.view.View/android.view.View[1]/android.view.View/android.view.View")
     public MobileElement changeNamePopup;
 
     @iOSXCUITFindBy(accessibility = "Change Name")
-    @AndroidFindBy(xpath = "/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.view.View/android.view.View/android.view.View[1]/android.view.View/android.view.View/android.widget.EditText")
+    @AndroidFindBy(xpath = "//android.widget.EditText")
     public MobileElement changeNameField;
 
     @iOSXCUITFindBy(accessibility = "OK")

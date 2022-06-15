@@ -8,7 +8,7 @@ import io.appium.java_client.pagefactory.iOSXCUITFindBy;
 public class ScreenShare extends MeetingRoom {
 
     @iOSXCUITFindBy(accessibility = "Share")
-    @AndroidFindBy(xpath = "//android.view.ViewGroup[8]")
+    @AndroidFindBy(accessibility = "Screen share")
     public MobileElement screenShareBtn;
 
     @iOSXCUITFindBy(accessibility = "Share")

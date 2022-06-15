@@ -11,10 +11,15 @@ public class EndRoom extends TopToolBar {
     @AndroidFindBy(accessibility = "End Room")
     public MobileElement endRoomBtn;
 
+    @iOSXCUITFindBy(accessibility = "Yes")
+    @AndroidFindBy(accessibility = "Yes")
+    public MobileElement endRoomYesBtn;
+
     public EndRoom end_room_for_all() throws InterruptedException {
         click(menuBtn);
         Thread.sleep(2000);
         click(endRoomBtn);
+        click(endRoomYesBtn);
         return this;
     }
 }
