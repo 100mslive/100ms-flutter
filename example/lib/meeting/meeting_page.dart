@@ -216,6 +216,7 @@ class _MeetingPageState extends State<MeetingPage>
                   : Scaffold(
                       resizeToAvoidBottomInset: false,
                       appBar: AppBar(
+                        automaticallyImplyLeading: false,
                         title: TitleBar(),
                         actions: [
                           Selector<MeetingStore, Tuple2<bool, bool>>(
