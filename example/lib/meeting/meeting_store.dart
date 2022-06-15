@@ -286,14 +286,21 @@ class MeetingStore extends ChangeNotifier
         localPeer = each;
         addPeer(localPeer!);
         if (localPeer!.role.name.contains("hls-") == true) isHLSLink = true;
-
+        index = peerTracks
+            .indexWhere((element) => element.uid == each.peerId + "mainVideo");
         if (each.videoTrack != null) {
           if (each.videoTrack!.kind == HMSTrackKind.kHMSTrackKindVideo) {
-            int index = peerTracks.indexWhere(
-                (element) => element.uid == each.peerId + "mainVideo");
             peerTracks[index].track = each.videoTrack!;
             if (each.videoTrack!.isMute) {
               this.isVideoOn = false;
+            }
+          }
+        }
+        if (each.audioTrack != null) {
+          if (each.audioTrack!.kind == HMSTrackKind.kHMSTrackKindAudio) {
+            peerTracks[index].audioTrack = each.audioTrack!;
+            if (each.audioTrack!.isMute) {
+              this.isMicOn = false;
             }
           }
         }
