@@ -40,6 +40,9 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         let videoViewFactory = HMSFlutterPlatformViewFactory(plugin: instance)
         registrar.register(videoViewFactory, withId: "HMSFlutterPlatformView")
         
+        let screenShareFactory = HMSFlutterScreenSharePlatformViewFactory(plugin: instance)
+        registrar.register(screenShareFactory, withId: "HMSFlutterScreenShareView")
+        
         eventChannel.setStreamHandler(instance)
         previewChannel.setStreamHandler(instance)
         logsChannel.setStreamHandler(instance)
@@ -158,6 +161,11 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         case "start_stats_listener", "remove_stats_listener":
             statsListenerAction(call, result)
             
+            // MARK: - Screen Share
+            
+        case "start_screen_share", "stop_screen_share", "is_screen_share_active":
+            screenShareActions(call, result)
+                        
             
         default:
             result(FlutterMethodNotImplemented)
@@ -255,6 +263,22 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             
         default:
             result(FlutterMethodNotImplemented)
+        }
+    }
+    
+    // MARK: - Screen Share
+    
+    private func screenShareActions(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+        switch call.method {
+        case "start_screen_share":
+            print(#function)
+            
+        case "stop_screen_share":
+            print(#function)
+        case "is_screen_share_active":
+            print(#function)
+        default:
+            print("Not Valid")
         }
     }
     

@@ -746,8 +746,7 @@ class _MeetingPageState extends State<MeetingPage>
           ),
           if ((meetingStore.localPeer != null) &&
               meetingStore.localPeer!.role.publishSettings!.allowed
-                  .contains("screen") &&
-              Platform.isAndroid)
+                  .contains("screen"))
             PopupMenuItem(
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -759,12 +758,16 @@ class _MeetingPageState extends State<MeetingPage>
                               ? Colors.blue
                               : iconColor),
                     ),
-                    SvgPicture.asset(
-                      "assets/icons/screen_share.svg",
-                      color: meetingStore.isScreenShareOn
-                          ? Colors.blue
-                          : iconColor,
-                    ),
+                    SizedBox(width: 64, height: 64,
+                    child: HMSScreenShareView(),
+                    )
+                    
+                    // SvgPicture.asset(
+                    //   "assets/icons/screen_share.svg",
+                    //   color: meetingStore.isScreenShareOn
+                    //       ? Colors.blue
+                    //       : iconColor,
+                    // ),
                   ]),
               value: 5,
             ),
