@@ -545,6 +545,12 @@ class MeetingStore extends ChangeNotifier
       case HMSPeerUpdate.peerLeft:
         peerTracks.removeWhere(
             (leftPeer) => leftPeer.uid == peer.peerId + "mainVideo");
+        int index = peerTracks
+            .indexWhere((element) => element.uid == peer.peerId + "screen");
+        if (index != -1) {
+          peerTracks.removeAt(index);
+          screenShareCount--;
+        }
         removePeer(peer);
         notifyListeners();
         break;
@@ -629,7 +635,7 @@ class MeetingStore extends ChangeNotifier
               0,
               PeerTrackNode(
                   peer: peer,
-                  uid: peer.peerId + track.trackId,
+                  uid: peer.peerId + "screen",
                   track: track as HMSVideoTrack,
                   stats: RTCStats()));
           isScreenShareActive();
@@ -639,8 +645,8 @@ class MeetingStore extends ChangeNotifier
       case HMSTrackUpdate.trackRemoved:
         if (track.source != "REGULAR") {
           screenShareCount--;
-          peerTracks.removeWhere(
-              (element) => element.uid == peer.peerId + track.trackId);
+          peerTracks
+              .removeWhere((element) => element.uid == peer.peerId + "screen");
           if (screenShareCount == 0) {
             setLandscapeLock(false);
           }
@@ -889,7 +895,7 @@ class MeetingStore extends ChangeNotifier
     int index = -1;
     if (track.source != "REGULAR") {
       index = peerTracks
-          .indexWhere((element) => element.uid == peer.peerId + track.trackId);
+          .indexWhere((element) => element.uid == peer.peerId + "screen");
     } else {
       index = peerTracks
           .indexWhere((element) => element.uid == peer.peerId + "mainVideo");
@@ -908,7 +914,7 @@ class MeetingStore extends ChangeNotifier
     int index = -1;
     if (track.source != "REGULAR") {
       index = peerTracks
-          .indexWhere((element) => element.uid == peer.peerId + track.trackId);
+          .indexWhere((element) => element.uid == peer.peerId + "screen");
     } else {
       index = peerTracks
           .indexWhere((element) => element.uid == peer.peerId + "mainVideo");
@@ -927,7 +933,7 @@ class MeetingStore extends ChangeNotifier
     int index = -1;
     if (track.source != "REGULAR") {
       index = peerTracks
-          .indexWhere((element) => element.uid == peer.peerId + track.trackId);
+          .indexWhere((element) => element.uid == peer.peerId + "screen");
     } else {
       index = peerTracks
           .indexWhere((element) => element.uid == peer.peerId + "mainVideo");
@@ -946,7 +952,7 @@ class MeetingStore extends ChangeNotifier
     int index = -1;
     if (track.source != "REGULAR") {
       index = peerTracks
-          .indexWhere((element) => element.uid == peer.peerId + track.trackId);
+          .indexWhere((element) => element.uid == peer.peerId + "screen");
     } else {
       index = peerTracks
           .indexWhere((element) => element.uid == peer.peerId + "mainVideo");
