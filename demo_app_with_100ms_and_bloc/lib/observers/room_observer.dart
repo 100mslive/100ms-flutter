@@ -22,7 +22,6 @@ class RoomObserver implements HMSUpdateListener, HMSActionResultListener {
       HMSConfig config = HMSConfig(
         authToken: token[0]!,
         userName: roomOverviewBloc.name,
-        endPoint: token[1] == "true" ? "" : "https://qa-init.100ms.live/init",
       );
 
       roomOverviewBloc.hmsSdk.join(config: config);
@@ -35,7 +34,7 @@ class RoomObserver implements HMSUpdateListener, HMSActionResultListener {
   Stream<List<PeerTrackNode>> getTracks() =>
       _peerNodeStreamController.asBroadcastStream();
 
-  Future<void> addPeer(HMSVideoTrack hmsVideoTrack, HMSPeer peer) async{
+  Future<void> addPeer(HMSVideoTrack hmsVideoTrack, HMSPeer peer) async {
     final tracks = [..._peerNodeStreamController.value];
     final todoIndex = tracks.indexWhere((t) => t.peer?.peerId == peer.peerId);
     if (todoIndex >= 0) {
@@ -121,19 +120,18 @@ class RoomObserver implements HMSUpdateListener, HMSActionResultListener {
       if (trackUpdate == HMSTrackUpdate.trackRemoved) {
         roomOverviewBloc
             .add(RoomOverviewOnPeerLeave(track as HMSVideoTrack, peer));
-      } else {
-
+      } else if (trackUpdate == HMSTrackUpdate.trackAdded) {
         roomOverviewBloc
             .add(RoomOverviewOnPeerJoin(track as HMSVideoTrack, peer));
       }
     }
   }
 
-  Future<void> leaveMeeting() async{
+  Future<void> leaveMeeting() async {
     roomOverviewBloc.hmsSdk.leave(hmsActionResultListener: this);
   }
 
-  Future<void> setOffScreen(int index, bool setOffScreen) async{
+  Future<void> setOffScreen(int index, bool setOffScreen) async {
     final tracks = [..._peerNodeStreamController.value];
 
     if (index >= 0) {
@@ -148,14 +146,17 @@ class RoomObserver implements HMSUpdateListener, HMSActionResultListener {
   }
 
   @override
-  void onException({HMSActionResultListenerMethod? methodType, Map<String, dynamic>? arguments, required HMSException hmsException}) {
+  void onException(
+      {HMSActionResultListenerMethod? methodType,
+      Map<String, dynamic>? arguments,
+      required HMSException hmsException}) {
     // TODO: implement onException
   }
 
   @override
-  void onSuccess({HMSActionResultListenerMethod? methodType, Map<String, dynamic>? arguments}) {
+  void onSuccess(
+      {HMSActionResultListenerMethod? methodType,
+      Map<String, dynamic>? arguments}) {
     _peerNodeStreamController.add([]);
   }
-
-
 }

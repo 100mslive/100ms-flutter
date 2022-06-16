@@ -23,7 +23,6 @@ class PreviewObserver implements HMSPreviewListener{
       HMSConfig config = HMSConfig(
         authToken: token[0]!,
         userName: previewCubit.name,
-        endPoint: token[1] == "true" ? "" : "https://qa-init.100ms.live/init",
       );
 
       previewCubit.hmsSdk.preview(config: config);
