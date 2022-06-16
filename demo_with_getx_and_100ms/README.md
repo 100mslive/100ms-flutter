@@ -32,7 +32,6 @@ A few resources to get you started if this is your first Flutter project:
     HMSConfig config = HMSConfig(
       authToken: token[0]!,
       userName: name,
-      endPoint: token[1] == "true" ? "" : "https://qa-init.100ms.live/init",
     );
 
     hmsSdk.join(config: config);
@@ -59,7 +58,7 @@ A few resources to get you started if this is your first Flutter project:
 
       if (trackUpdate == HMSTrackUpdate.trackRemoved) {
         removeUserFromList(peer);
-      } else {
+      } else if(trackUpdate == HMSTrackUpdate.trackAdded) {
         int index = peerTrackList.indexWhere((element) => element.value.peer.peerId == peer.peerId);
         if(index > -1){
           peerTrackList[index](PeerTrackNode(track as HMSVideoTrack, track.isMute, peer));
