@@ -35,11 +35,7 @@ class HMSSDKInteractor {
   }
 
   Future<bool> isScreenShareActive() async {
-    if (Platform.isAndroid) {
-      return await hmsSDK.isScreenShareActive();
-    } else {
-      return false;
-    }
+    return await hmsSDK.isScreenShareActive();
   }
 
   void sendBroadcastMessage(

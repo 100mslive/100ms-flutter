@@ -1,6 +1,3 @@
-//Dart imports
-import 'dart:io';
-
 //Package imports
 import 'package:connectivity_checker/connectivity_checker.dart';
 import 'package:flutter/material.dart';
@@ -758,16 +755,12 @@ class _MeetingPageState extends State<MeetingPage>
                               ? Colors.blue
                               : iconColor),
                     ),
-                    SizedBox(width: 64, height: 64,
-                    child: HMSScreenShareView(),
-                    )
-                    
-                    // SvgPicture.asset(
-                    //   "assets/icons/screen_share.svg",
-                    //   color: meetingStore.isScreenShareOn
-                    //       ? Colors.blue
-                    //       : iconColor,
-                    // ),
+                    SvgPicture.asset(
+                      "assets/icons/screen_share.svg",
+                      color: meetingStore.isScreenShareOn
+                          ? Colors.blue
+                          : iconColor,
+                    ),
                   ]),
               value: 5,
             ),

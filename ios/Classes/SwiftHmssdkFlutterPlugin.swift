@@ -1,6 +1,7 @@
 import Flutter
 import UIKit
 import HMSSDK
+import ReplayKit
 
 public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListener, FlutterStreamHandler, HMSPreviewListener, HMSLogger {
     
@@ -267,16 +268,24 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     }
     
     // MARK: - Screen Share
-    
+    var initScreenShareButton = false
+    let systemBroadcastPicker = RPSystemBroadcastPickerView()
+    var isScreenShareOn = false
     private func screenShareActions(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+        if(initScreenShareButton == false){
+            systemBroadcastPicker.preferredExtension = "live.100ms.flutter.FlutterBroadcastUploadExtension"
+            systemBroadcastPicker.showsMicrophoneButton = false
+            initScreenShareButton = true
+        }
         switch call.method {
-        case "start_screen_share":
-            print(#function)
-            
-        case "stop_screen_share":
-            print(#function)
+        case "start_screen_share","stop_screen_share":
+            for view in systemBroadcastPicker.subviews {
+                if let button = view as? UIButton {
+                    button.sendActions(for: .allEvents)
+                }
+            }
         case "is_screen_share_active":
-            print(#function)
+            result(isScreenShareOn)
         default:
             print("Not Valid")
         }
@@ -705,7 +714,13 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                 "update": HMSTrackExtension.getValueOf(update)
             ]
         ] as [String: Any]
-        
+        if peer.isLocal && track.source.uppercased() == "SCREEN" {
+            if update == .trackAdded {
+                isScreenShareOn = true
+            }else if update == .trackRemoved {
+                isScreenShareOn = false
+            }
+        }
         eventSink?(data)
     }
     

@@ -1,7 +1,6 @@
 import 'dart:io' show Platform;
 import 'package:flutter/widgets.dart';
 import 'package:flutter/services.dart' show StandardMessageCodec;
-import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 class HMSScreenShareView extends StatelessWidget {
   
