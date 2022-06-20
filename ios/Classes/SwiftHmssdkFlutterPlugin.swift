@@ -1,3 +1,4 @@
+
 import Flutter
 import UIKit
 import HMSSDK
@@ -164,7 +165,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             
         case "start_screen_share", "stop_screen_share", "is_screen_share_active":
             screenShareActions(call, result)
-                        
+            
             
         default:
             result(FlutterMethodNotImplemented)
@@ -266,31 +267,45 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     }
     
     // MARK: - Screen Share
-    var isScreenShareOn = false
-    var preferredExtension : String?
-    var systemBroadcastPicker : RPSystemBroadcastPickerView?
+    var isScreenShareOn = false {
+        didSet {
+            screenShareActionResult?(nil)
+            screenShareActionResult = nil
+        }
+    }
+    var preferredExtension: String?
+    var systemBroadcastPicker: RPSystemBroadcastPickerView?
+    var screenShareActionResult: FlutterResult?
+    
     private func screenShareActions(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+
         switch call.method {
-            case "start_screen_share","stop_screen_share":
+        case "start_screen_share", "stop_screen_share":
             guard let preferredExtension = preferredExtension else {
                 let error = getError(message: "Could not start Screen share, preferredExtension not passed in Build Method", params: ["function": #function])
                 result(HMSErrorExtension.toDictionary(error))
+                screenShareActionResult = nil
                 return
             }
+            
+            screenShareActionResult = result
+            
             if systemBroadcastPicker == nil {
                 systemBroadcastPicker = RPSystemBroadcastPickerView()
                 systemBroadcastPicker!.preferredExtension = preferredExtension
                 systemBroadcastPicker!.showsMicrophoneButton = false
             }
-                for view in systemBroadcastPicker!.subviews {
-                    if let button = view as? UIButton {
-                        button.sendActions(for: .allEvents)
-                    }
+            
+            for view in systemBroadcastPicker!.subviews {
+                if let button = view as? UIButton {
+                    button.sendActions(for: .allEvents)
                 }
-            case "is_screen_share_active":
-                result(isScreenShareOn)
-            default:
-                print("Not Valid")
+            }
+            
+        case "is_screen_share_active":
+            result(isScreenShareOn)
+        default:
+            print("Not Valid")
         }
     }
     
@@ -328,11 +343,11 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             
             trackSettings = HMSTrackSettings(videoSettings: videoSettings, audioSettings: audioSettings)
         }
-                    
+        
         if let prefExtension = arguments["preferred_extension"] as? String {
             preferredExtension = prefExtension
         }
-            
+        
         
         var setLogger = false
         if let level = arguments["log_level"] as? String {
