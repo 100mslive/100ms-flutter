@@ -348,7 +348,7 @@ class _HomePageState extends State<HomePage> {
                           FocusManager.instance.primaryFocus?.unfocus();
                           if (skipPreview) {
                             HMSSDKInteractor _hmsSDKInteractor =
-                                HMSSDKInteractor();
+                                HMSSDKInteractor(appGroup: "group.flutterhms");
                             _hmsSDKInteractor.showStats = showStats;
                             _hmsSDKInteractor.mirrorCamera = mirrorCamera;
                             _hmsSDKInteractor.skipPreview = true;

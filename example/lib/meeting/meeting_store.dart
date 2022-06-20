@@ -650,9 +650,8 @@ class MeetingStore extends ChangeNotifier
           if (screenShareCount == 0) {
             setLandscapeLock(false);
           }
-          notifyListeners();
-        } else {
           isScreenShareActive();
+          notifyListeners();
         }
         break;
       case HMSTrackUpdate.trackMuted:
@@ -682,11 +681,17 @@ class MeetingStore extends ChangeNotifier
   }
 
   void startScreenShare() {
-    _hmsSDKInteractor.startScreenShare(hmsActionResultListener: this);
+    _hmsSDKInteractor.startScreenShare(
+        hmsActionResultListener: this,
+        preferredExtension:
+            "live.100ms.flutter.FlutterBroadcastUploadExtension");
   }
 
   void stopScreenShare() {
-    _hmsSDKInteractor.stopScreenShare(hmsActionResultListener: this);
+    _hmsSDKInteractor.stopScreenShare(
+        hmsActionResultListener: this,
+        preferredExtension:
+            "live.100ms.flutter.FlutterBroadcastUploadExtension");
   }
 
   void muteAll() {

@@ -10,7 +10,7 @@ class PreviewStore extends ChangeNotifier
   late HMSSDKInteractor hmsSDKInteractor;
 
   PreviewStore() {
-    hmsSDKInteractor = HMSSDKInteractor();
+    hmsSDKInteractor = HMSSDKInteractor(appGroup: "group.flutterhms");
   }
 
   List<HMSVideoTrack> localTracks = [];

@@ -73,4 +73,3 @@ export 'src/enum/hms_video_scale_type.dart';
 export 'src/model/hms_network_quality.dart';
 export 'src/model/hms_stats_listener.dart';
 export 'src/model/hms_hls_recording_config.dart';
-export 'src/ui/screenshare/hms_screen_share_view.dart';

@@ -41,8 +41,6 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         let videoViewFactory = HMSFlutterPlatformViewFactory(plugin: instance)
         registrar.register(videoViewFactory, withId: "HMSFlutterPlatformView")
         
-        let screenShareFactory = HMSFlutterScreenSharePlatformViewFactory(plugin: instance)
-        registrar.register(screenShareFactory, withId: "HMSFlutterScreenShareView")
         
         eventChannel.setStreamHandler(instance)
         previewChannel.setStreamHandler(instance)
@@ -272,22 +270,28 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     let systemBroadcastPicker = RPSystemBroadcastPickerView()
     var isScreenShareOn = false
     private func screenShareActions(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
-        if(initScreenShareButton == false){
-            systemBroadcastPicker.preferredExtension = "live.100ms.flutter.FlutterBroadcastUploadExtension"
-            systemBroadcastPicker.showsMicrophoneButton = false
-            initScreenShareButton = true
-        }
         switch call.method {
-        case "start_screen_share","stop_screen_share":
-            for view in systemBroadcastPicker.subviews {
-                if let button = view as? UIButton {
-                    button.sendActions(for: .allEvents)
-                }
+            case "start_screen_share","stop_screen_share":
+            let arguments = call.arguments as! [AnyHashable: Any]
+            guard let preferredExtension = arguments["preferred_extension"] as? String else {
+                let error = getError(message: "Could not start Screen share, invalid parameters passed", params: ["function": #function, "arguments": arguments])
+                result(HMSErrorExtension.toDictionary(error))
+                return
             }
-        case "is_screen_share_active":
-            result(isScreenShareOn)
-        default:
-            print("Not Valid")
+            if(initScreenShareButton == false) {
+                systemBroadcastPicker.preferredExtension = preferredExtension
+                systemBroadcastPicker.showsMicrophoneButton = false
+                initScreenShareButton = true
+            }
+                for view in systemBroadcastPicker.subviews {
+                    if let button = view as? UIButton {
+                        button.sendActions(for: .allEvents)
+                    }
+                }
+            case "is_screen_share_active":
+                result(isScreenShareOn)
+            default:
+                print("Not Valid")
         }
     }
     
@@ -334,9 +338,9 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         
         hmsSDK = HMSSDK.build { sdk in
             
-            // TODO: add option in Dart to pass app group
-            sdk.appGroup = "group.flutterhms"
-            
+            if let appGroup = arguments["app_group"] as? String {
+                sdk.appGroup = appGroup
+            }
             if let settings = trackSettings {
                 sdk.trackSettings = settings
             }

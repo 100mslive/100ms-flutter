@@ -33,9 +33,10 @@ class HMSSDK {
   HMSSDK({this.hmsTrackSetting});
 
   /// The build function should be called after creating an instance of the [HMSSDK].
+  /// [appGroup] is only used for screen share (broadcast screen) in iOS.
   /// Await the result & if true then create [HMSConfig] object to join or preview a room.
-  Future<bool> build() async {
-    return await HmsSdkManager().createHMSSdk(hmsTrackSetting);
+  Future<bool> build({String? appGroup}) async {
+    return await HmsSdkManager().createHMSSdk(hmsTrackSetting, appGroup);
   }
 
   ///add MeetingListener it will add all the listeners.
@@ -651,11 +652,13 @@ class HMSSDK {
   /// API to start screen share of your android device. Note: This API is not available on iOS.
   /// [hmsActionResultListener] is a callback instance on which [HMSActionResultListener.onSuccess]
   ///  and [HMSActionResultListener.onException] will be called
+  /// [preferredExtension] is only used for screen share (broadcast screen) in iOS.
   void startScreenShare(
-      {HMSActionResultListener? hmsActionResultListener}) async {
+      {HMSActionResultListener? hmsActionResultListener,
+      String? preferredExtension}) async {
     var result = await PlatformService.invokeMethod(
-      PlatformMethod.startScreenShare,
-    );
+        PlatformMethod.startScreenShare,
+        arguments: {"preferred_extension": preferredExtension});
 
     if (hmsActionResultListener != null) {
       if (result == null) {
@@ -679,11 +682,13 @@ class HMSSDK {
   /// API to stop screen share
   /// [hmsActionResultListener] is a callback instance on which [HMSActionResultListener.onSuccess]
   ///  and [HMSActionResultListener.onException] will be called
+  /// [preferredExtension] is only used for screen share (broadcast screen) in iOS.
   void stopScreenShare(
-      {HMSActionResultListener? hmsActionResultListener}) async {
+      {HMSActionResultListener? hmsActionResultListener,
+      String? preferredExtension}) async {
     var result = await PlatformService.invokeMethod(
-      PlatformMethod.stopScreenShare,
-    );
+        PlatformMethod.stopScreenShare,
+        arguments: {"preferred_extension": preferredExtension});
     if (hmsActionResultListener != null) {
       if (result == null) {
         hmsActionResultListener.onSuccess(
