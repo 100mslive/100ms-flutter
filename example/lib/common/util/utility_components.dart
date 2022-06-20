@@ -381,7 +381,7 @@ class UtilityComponents {
       {context,
       String placeholder = "",
       String prefilledValue = "",
-      bool isRecordingEnabled = false}) async {
+      }) async {
     TextEditingController textController = TextEditingController();
     if (prefilledValue.isNotEmpty) {
       textController.text = prefilledValue;
@@ -404,21 +404,6 @@ class UtilityComponents {
                             ),
                             hintText: placeholder),
                       ),
-                      CheckboxListTile(
-                          title: Text(
-                            "Recording",
-                            style: GoogleFonts.inter(
-                              color: iconColor,
-                            ),
-                          ),
-                          activeColor: Colors.blue,
-                          controlAffinity: ListTileControlAffinity.trailing,
-                          value: isRecordingEnabled,
-                          onChanged: (bool? value) {
-                            setState(() {
-                              isRecordingEnabled = value ?? false;
-                            });
-                          })
                     ],
                   ),
                 ),
@@ -429,7 +414,7 @@ class UtilityComponents {
                       style: GoogleFonts.inter(),
                     ),
                     onPressed: () {
-                      Navigator.pop(context, {"url": "", "toRecord": "false"});
+                      Navigator.pop(context, {"url": "","toRecord": "false"});
                     },
                   ),
                   ElevatedButton(
@@ -438,11 +423,11 @@ class UtilityComponents {
                       style: GoogleFonts.inter(),
                     ),
                     onPressed: () {
-                      if (textController.text == "" && !isRecordingEnabled) {
+                      if (textController.text == "") {
                       } else {
                         Navigator.pop(context, {
                           "url": textController.text,
-                          "toRecord": isRecordingEnabled.toString()
+                          "toRecord": false
                         });
                       }
                     },

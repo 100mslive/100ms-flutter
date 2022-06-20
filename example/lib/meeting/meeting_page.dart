@@ -53,7 +53,6 @@ class _MeetingPageState extends State<MeetingPage>
   int appBarIndex = 0;
   bool audioViewOn = false;
   bool videoPreviousState = false;
-  bool isRecordingStarted = false;
   bool isBRB = false;
   final scrollController = DraggableScrollableController();
   late AnimationController animationController;
@@ -146,27 +145,23 @@ class _MeetingPageState extends State<MeetingPage>
         UtilityComponents.showRoleList(context, roles, _meetingStore);
         break;
       case 9:
-        if (_meetingStore.isRecordingStarted) {
+        if (_meetingStore.streamingType["rtmp"] == true) {
           _meetingStore.stopRtmpAndRecording();
-          isRecordingStarted = false;
         } else {
-          if (isRecordingStarted == false) {
-            Map<String, String> data =
-                await UtilityComponents.showRTMPInputDialog(
-                    context: context,
-                    placeholder: "Enter Comma separated RTMP Urls",
-                    isRecordingEnabled: false);
-            List<String>? urls;
-            if (data["url"]!.isNotEmpty) {
-              urls = data["url"]!.split(",");
-            }
-            if (data["toRecord"] == "true" || urls != null) {
-              _meetingStore.startRtmpOrRecording(
-                  meetingUrl: Constant.rtmpUrl,
-                  toRecord: data["toRecord"] == "true" ? true : false,
-                  rtmpUrls: urls);
-              isRecordingStarted = true;
-            }
+          Map<String, String> data =
+              await UtilityComponents.showRTMPInputDialog(
+                  context: context,
+                  placeholder: "Enter Comma separated RTMP Urls",
+                  );
+          List<String>? urls;
+          if (data["url"]!.isNotEmpty) {
+            urls = data["url"]!.split(",");
+          }
+          if (urls != null) {
+            _meetingStore.startRtmpOrRecording(
+                meetingUrl: Constant.rtmpUrl,
+                toRecord: false,
+                rtmpUrls: urls);
           }
         }
         break;
@@ -178,9 +173,17 @@ class _MeetingPageState extends State<MeetingPage>
         }
         break;
       case 11:
-        _meetingStore.changeStatsVisible();
+        if (_meetingStore.recordingType["browser"] == true) {
+          _meetingStore.stopRtmpAndRecording();
+        } else {
+          _meetingStore.startRtmpOrRecording(
+              meetingUrl: Constant.rtmpUrl, toRecord: true, rtmpUrls: []);
+        }
         break;
       case 12:
+        _meetingStore.changeStatsVisible();
+        break;
+      case 13:
         UtilityComponents.onEndRoomPressed(context);
         break;
       default:
@@ -216,19 +219,20 @@ class _MeetingPageState extends State<MeetingPage>
                         automaticallyImplyLeading: false,
                         title: TitleBar(),
                         actions: [
-                          Selector<MeetingStore, Tuple2<bool, bool>>(
+                          Selector<MeetingStore,
+                              Tuple2<Map<String, bool>, Map<String, bool>>>(
                             selector: (_, meetingStore) => Tuple2(
-                                meetingStore.isRecordingStarted,
-                                meetingStore.isStreamingStarted),
+                                meetingStore.recordingType,
+                                meetingStore.streamingType),
                             builder: (_, data, __) {
                               return Row(
                                 children: [
-                                  if (data.item1)
+                                  if (data.item1.containsValue(true))
                                     SvgPicture.asset(
                                       "assets/icons/record.svg",
                                       color: Colors.red,
                                     ),
-                                  if (data.item2)
+                                  if (data.item2.containsValue(true))
                                     SvgPicture.asset(
                                       "assets/icons/stream.svg",
                                       color: Colors.red,
@@ -823,18 +827,18 @@ class _MeetingPageState extends State<MeetingPage>
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                        meetingStore.isRecordingStarted
-                            ? "Stop RTMP/Rec"
-                            : "Start RTMP/Rec",
+                        meetingStore.streamingType["rtmp"]==true
+                            ? "Stop RTMP"
+                            : "Start RTMP",
                         style: GoogleFonts.inter(
-                          color: meetingStore.isRecordingStarted
+                          color: meetingStore.streamingType["rtmp"]==true
                               ? Colors.blue
                               : iconColor,
                         )),
                     SvgPicture.asset(
-                      "assets/icons/record.svg",
-                      color: meetingStore.isRecordingStarted
-                          ? Colors.red
+                      "assets/icons/stream.svg",
+                      color: meetingStore.streamingType["rtmp"]==true
+                          ? Colors.blue
                           : iconColor,
                     ),
                   ]),
@@ -860,6 +864,29 @@ class _MeetingPageState extends State<MeetingPage>
                   ]),
               value: 10,
             ),
+            if (!(meetingStore.localPeer?.role.name.contains("hls-") ?? true))
+            PopupMenuItem(
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                        meetingStore.recordingType["browser"]==true
+                            ? "Stop Recording"
+                            : "Start Recording",
+                        style: GoogleFonts.inter(
+                          color: meetingStore.recordingType["browser"]==true
+                              ? Colors.blue
+                              : iconColor,
+                        )),
+                    SvgPicture.asset(
+                      "assets/icons/record.svg",
+                      color: meetingStore.recordingType["browser"]==true
+                          ? Colors.red
+                          : iconColor,
+                    ),
+                  ]),
+              value: 11,
+            ),
           PopupMenuItem(
             child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -876,7 +903,7 @@ class _MeetingPageState extends State<MeetingPage>
                           ? Colors.blue
                           : iconColor),
                 ]),
-            value: 11,
+            value: 12,
           ),
           if (meetingStore.localPeer!.role.permissions.endRoom!)
             PopupMenuItem(
@@ -894,8 +921,9 @@ class _MeetingPageState extends State<MeetingPage>
                       color: iconColor,
                     ),
                   ]),
-              value: 12,
+              value: 13,
             ),
+          
         ];
       },
       onSelected: handleMenu,
