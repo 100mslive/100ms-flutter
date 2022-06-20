@@ -16,9 +16,9 @@ class HMSSDKInteractor {
   //Contains the default setting to jump directly in meeting i.e. skipping preview
   bool skipPreview = false;
 
-  HMSSDKInteractor({String? appGroup}) {
-    hmsSDK = HMSSDK();
-    hmsSDK.build(appGroup: appGroup);
+  HMSSDKInteractor({String? appGroup, String? preferredExtension}) {
+    hmsSDK = HMSSDK(appGroup: appGroup, preferredExtension: preferredExtension);
+    hmsSDK.build();
   }
 
   void join({required HMSConfig config}) async {
@@ -187,20 +187,12 @@ class HMSSDKInteractor {
     hmsSDK.muteAll();
   }
 
-  void startScreenShare(
-      {HMSActionResultListener? hmsActionResultListener,
-      String? preferredExtension}) {
-    hmsSDK.startScreenShare(
-        hmsActionResultListener: hmsActionResultListener,
-        preferredExtension: preferredExtension);
+  void startScreenShare({HMSActionResultListener? hmsActionResultListener}) {
+    hmsSDK.startScreenShare(hmsActionResultListener: hmsActionResultListener);
   }
 
-  void stopScreenShare(
-      {HMSActionResultListener? hmsActionResultListener,
-      String? preferredExtension}) {
-    hmsSDK.stopScreenShare(
-        hmsActionResultListener: hmsActionResultListener,
-        preferredExtension: preferredExtension);
+  void stopScreenShare({HMSActionResultListener? hmsActionResultListener}) {
+    hmsSDK.stopScreenShare(hmsActionResultListener: hmsActionResultListener);
   }
 
   void unMuteAll() {

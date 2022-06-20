@@ -24,19 +24,24 @@ import '../hmssdk_flutter.dart';
 /// **Broadcast** - A local peer can send any message/data to all remote peers in the room
 ///
 /// HMSSDK has other methods which the client app can use to get more info about the Room, Peer and Tracks
+///
+/// [appGroup] is only used for screen share (broadcast screen) in iOS.
+///
+/// [preferredExtension] is only used for screen share (broadcast screen) in iOS.
 class HMSSDK {
   ///join meeting by passing HMSConfig instance to it.
 
   HMSTrackSetting? hmsTrackSetting;
   bool previewState = false;
-
-  HMSSDK({this.hmsTrackSetting});
+  String? appGroup;
+  String? preferredExtension;
+  HMSSDK({this.hmsTrackSetting, this.appGroup, this.preferredExtension});
 
   /// The build function should be called after creating an instance of the [HMSSDK].
-  /// [appGroup] is only used for screen share (broadcast screen) in iOS.
   /// Await the result & if true then create [HMSConfig] object to join or preview a room.
-  Future<bool> build({String? appGroup}) async {
-    return await HmsSdkManager().createHMSSdk(hmsTrackSetting, appGroup);
+  Future<bool> build() async {
+    return await HmsSdkManager()
+        .createHMSSdk(hmsTrackSetting, appGroup, preferredExtension);
   }
 
   ///add MeetingListener it will add all the listeners.
@@ -654,11 +659,9 @@ class HMSSDK {
   ///  and [HMSActionResultListener.onException] will be called
   /// [preferredExtension] is only used for screen share (broadcast screen) in iOS.
   void startScreenShare(
-      {HMSActionResultListener? hmsActionResultListener,
-      String? preferredExtension}) async {
-    var result = await PlatformService.invokeMethod(
-        PlatformMethod.startScreenShare,
-        arguments: {"preferred_extension": preferredExtension});
+      {HMSActionResultListener? hmsActionResultListener}) async {
+    var result =
+        await PlatformService.invokeMethod(PlatformMethod.startScreenShare);
 
     if (hmsActionResultListener != null) {
       if (result == null) {
@@ -682,13 +685,10 @@ class HMSSDK {
   /// API to stop screen share
   /// [hmsActionResultListener] is a callback instance on which [HMSActionResultListener.onSuccess]
   ///  and [HMSActionResultListener.onException] will be called
-  /// [preferredExtension] is only used for screen share (broadcast screen) in iOS.
   void stopScreenShare(
-      {HMSActionResultListener? hmsActionResultListener,
-      String? preferredExtension}) async {
-    var result = await PlatformService.invokeMethod(
-        PlatformMethod.stopScreenShare,
-        arguments: {"preferred_extension": preferredExtension});
+      {HMSActionResultListener? hmsActionResultListener}) async {
+    var result =
+        await PlatformService.invokeMethod(PlatformMethod.stopScreenShare);
     if (hmsActionResultListener != null) {
       if (result == null) {
         hmsActionResultListener.onSuccess(

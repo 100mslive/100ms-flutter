@@ -267,23 +267,24 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     
     // MARK: - Screen Share
     var initScreenShareButton = false
-    let systemBroadcastPicker = RPSystemBroadcastPickerView()
     var isScreenShareOn = false
+    var preferredExtension : String?
+    var systemBroadcastPicker : RPSystemBroadcastPickerView?
     private func screenShareActions(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         switch call.method {
             case "start_screen_share","stop_screen_share":
-            let arguments = call.arguments as! [AnyHashable: Any]
-            guard let preferredExtension = arguments["preferred_extension"] as? String else {
-                let error = getError(message: "Could not start Screen share, invalid parameters passed", params: ["function": #function, "arguments": arguments])
+            guard preferredExtension != nil else {
+                let error = getError(message: "Could not start Screen share, preferredExtension not passed in Build Method", params: ["function": #function])
                 result(HMSErrorExtension.toDictionary(error))
                 return
             }
-            if(initScreenShareButton == false) {
-                systemBroadcastPicker.preferredExtension = preferredExtension
-                systemBroadcastPicker.showsMicrophoneButton = false
+            if initScreenShareButton == false {
+                systemBroadcastPicker = RPSystemBroadcastPickerView()
+                systemBroadcastPicker!.preferredExtension = preferredExtension
+                systemBroadcastPicker!.showsMicrophoneButton = false
                 initScreenShareButton = true
             }
-                for view in systemBroadcastPicker.subviews {
+                for view in systemBroadcastPicker!.subviews {
                     if let button = view as? UIButton {
                         button.sendActions(for: .allEvents)
                     }
@@ -329,6 +330,11 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             
             trackSettings = HMSTrackSettings(videoSettings: videoSettings, audioSettings: audioSettings)
         }
+                    
+        if let prefExtension = arguments["preferred_extension"] as? String {
+            preferredExtension = prefExtension
+        }
+            
         
         var setLogger = false
         if let level = arguments["log_level"] as? String {

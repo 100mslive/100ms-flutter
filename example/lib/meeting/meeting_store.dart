@@ -681,17 +681,11 @@ class MeetingStore extends ChangeNotifier
   }
 
   void startScreenShare() {
-    _hmsSDKInteractor.startScreenShare(
-        hmsActionResultListener: this,
-        preferredExtension:
-            "live.100ms.flutter.FlutterBroadcastUploadExtension");
+    _hmsSDKInteractor.startScreenShare(hmsActionResultListener: this);
   }
 
   void stopScreenShare() {
-    _hmsSDKInteractor.stopScreenShare(
-        hmsActionResultListener: this,
-        preferredExtension:
-            "live.100ms.flutter.FlutterBroadcastUploadExtension");
+    _hmsSDKInteractor.stopScreenShare(hmsActionResultListener: this);
   }
 
   void muteAll() {
