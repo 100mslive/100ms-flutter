@@ -56,9 +56,13 @@ class MeetingStore extends ChangeNotifier
 
   bool isRoomEnded = false;
 
-  bool isRecordingStarted = false;
+  Map<String, bool> recordingType = {
+    "browser": false,
+    "server": false,
+    "hls": false
+  };
 
-  bool isStreamingStarted = false;
+  Map<String, bool> streamingType = {"rtmp": false, "hls": false};
 
   String description = "Meeting Ended";
 
@@ -261,18 +265,21 @@ class MeetingStore extends ChangeNotifier
     } else {
       hasHlsStarted = false;
     }
-    if (room.hmsBrowserRecordingState?.running == true ||
-        room.hmsServerRecordingState?.running == true ||
-        room.hmshlsRecordingState?.running == true)
-      isRecordingStarted = true;
-    else
-      isRecordingStarted = false;
-    if (room.hmsRtmpStreamingState?.running == true ||
-        room.hmshlsStreamingState?.running == true)
-      isStreamingStarted = true;
-    else
-      isStreamingStarted = false;
-
+    if (room.hmsBrowserRecordingState?.running == true) {
+      recordingType["browser"] = true;
+    }
+    if (room.hmsServerRecordingState?.running == true) {
+      recordingType["server"] = true;
+    }
+    if (room.hmshlsRecordingState?.running == true) {
+      recordingType["hls"] = true;
+    }
+    if (room.hmsRtmpStreamingState?.running == true) {
+      streamingType["rtmp"] = true;
+    }
+    if (room.hmshlsStreamingState?.running == true) {
+      streamingType["hls"] = true;
+    }
     for (HMSPeer each in room.peers!) {
       if (each.isLocal) {
         int index = peerTracks
@@ -315,20 +322,21 @@ class MeetingStore extends ChangeNotifier
   void onRoomUpdate({required HMSRoom room, required HMSRoomUpdate update}) {
     switch (update) {
       case HMSRoomUpdate.browserRecordingStateUpdated:
-        isRecordingStarted = room.hmsBrowserRecordingState?.running ?? false;
+        recordingType["browser"] =
+            room.hmsBrowserRecordingState?.running ?? false;
         break;
-
       case HMSRoomUpdate.serverRecordingStateUpdated:
-        isRecordingStarted = room.hmsServerRecordingState?.running ?? false;
+        recordingType["server"] =
+            room.hmsServerRecordingState?.running ?? false;
         break;
       case HMSRoomUpdate.hlsRecordingStateUpdated:
-        isRecordingStarted = room.hmshlsRecordingState?.running ?? false;
+        recordingType["hls"] = room.hmshlsRecordingState?.running ?? false;
         break;
       case HMSRoomUpdate.rtmpStreamingStateUpdated:
-        isStreamingStarted = room.hmsRtmpStreamingState?.running ?? false;
+        streamingType["rtmp"] = room.hmsRtmpStreamingState?.running ?? false;
         break;
       case HMSRoomUpdate.hlsStreamingStateUpdated:
-        isStreamingStarted = room.hmshlsStreamingState?.running ?? false;
+        streamingType["hls"] = room.hmshlsStreamingState?.running ?? false;
         hasHlsStarted = room.hmshlsStreamingState?.running ?? false;
         streamUrl = hasHlsStarted
             ? room.hmshlsStreamingState?.variants[0]?.hlsStreamUrl ?? ""
@@ -1015,11 +1023,17 @@ class MeetingStore extends ChangeNotifier
         showToast(message);
         break;
       case HMSActionResultListenerMethod.startRtmpOrRecording:
-        showToast("RTMP start successful");
-
+        if (arguments != null) {
+          if (arguments["rtmp_urls"].length == 0 && arguments["to_record"]) {
+            showToast("Recording Started");
+          } else if (arguments["rtmp_urls"].length != 0 &&
+              arguments["to_record"] == false) {
+            showToast("RTMP Started");
+          }
+        }
         break;
       case HMSActionResultListenerMethod.stopRtmpAndRecording:
-        showToast("RTMP stop successful");
+        showToast("Stopped successfully");
         break;
       case HMSActionResultListenerMethod.unknown:
         break;
@@ -1123,10 +1137,14 @@ class MeetingStore extends ChangeNotifier
         showToast("Failed to change track state");
         break;
       case HMSActionResultListenerMethod.startRtmpOrRecording:
-        if (hmsException.code?.errorCode == "400") {
-          isRecordingStarted = true;
+        if (arguments != null) {
+          if (arguments["rtmp_urls"].length == 0 && arguments["to_record"]) {
+            showToast("Recording failed");
+          } else if (arguments["rtmp_urls"].length != 0 &&
+              arguments["to_record"] == false) {
+            showToast("RTMP failed");
+          }
         }
-        showToast("Start RTMP Streaming failed");
         break;
       case HMSActionResultListenerMethod.stopRtmpAndRecording:
         showToast("Stop RTMP Streaming failed");
