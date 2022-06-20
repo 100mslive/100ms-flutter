@@ -266,23 +266,21 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     }
     
     // MARK: - Screen Share
-    var initScreenShareButton = false
     var isScreenShareOn = false
     var preferredExtension : String?
     var systemBroadcastPicker : RPSystemBroadcastPickerView?
     private func screenShareActions(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         switch call.method {
             case "start_screen_share","stop_screen_share":
-            guard preferredExtension != nil else {
+            guard let preferredExtension = preferredExtension else {
                 let error = getError(message: "Could not start Screen share, preferredExtension not passed in Build Method", params: ["function": #function])
                 result(HMSErrorExtension.toDictionary(error))
                 return
             }
-            if initScreenShareButton == false {
+            if systemBroadcastPicker == nil {
                 systemBroadcastPicker = RPSystemBroadcastPickerView()
                 systemBroadcastPicker!.preferredExtension = preferredExtension
                 systemBroadcastPicker!.showsMicrophoneButton = false
-                initScreenShareButton = true
             }
                 for view in systemBroadcastPicker!.subviews {
                     if let button = view as? UIButton {
