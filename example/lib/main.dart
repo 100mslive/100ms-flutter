@@ -66,7 +66,7 @@ class _HMSExampleAppState extends State<HMSExampleApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: HomePage(),
-      theme: _lightTheme,
+      theme: _darkTheme,
       darkTheme: _darkTheme,
       themeMode: _themeMode,
     );
@@ -172,167 +172,217 @@ class _HomePageState extends State<HomePage> {
     return WillPopScope(
       onWillPop: _closeApp,
       child: Scaffold(
-          appBar: AppBar(
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-            elevation: 0,
-            title: Text(
-              '100ms',
-              style: GoogleFonts.inter(color: iconColor),
-            ),
-            actions: [
-              IconButton(
-                  onPressed: () {
-                    if (isDarkMode) {
-                      HMSExampleApp.of(context).changeTheme(ThemeMode.light);
-                    } else {
-                      HMSExampleApp.of(context).changeTheme(ThemeMode.dark);
-                    }
-                  },
-                  icon: isDarkMode
-                      ? SvgPicture.asset(
-                          'assets/icons/light_mode.svg',
-                          color: iconColor,
-                        )
-                      : SvgPicture.asset(
-                          'assets/icons/dark_mode.svg',
-                          color: iconColor,
-                        )),
-              PopupMenuButton<int>(
-                onSelected: handleClick,
-                icon: SvgPicture.asset(
-                  'assets/icons/settings.svg',
-                  color: iconColor,
+          // appBar: AppBar(
+          //   backgroundColor: isDarkMode ? Colors.black : Colors.white,
+          //   elevation: 0,
+          //   title: Text(
+          //     '100ms',
+          //     style: GoogleFonts.inter(color: iconColor),
+          //   ),
+          //   actions: [
+          //     IconButton(
+          //         onPressed: () {
+          //           if (isDarkMode) {
+          //             HMSExampleApp.of(context).changeTheme(ThemeMode.light);
+          //           } else {
+          //             HMSExampleApp.of(context).changeTheme(ThemeMode.dark);
+          //           }
+          //         },
+          //         icon: isDarkMode
+          //             ? SvgPicture.asset(
+          //                 'assets/icons/light_mode.svg',
+          //                 color: iconColor,
+          //               )
+          //             : SvgPicture.asset(
+          //                 'assets/icons/dark_mode.svg',
+          //                 color: iconColor,
+          //               )),
+          //     PopupMenuButton<int>(
+          //       onSelected: handleClick,
+          //       icon: SvgPicture.asset(
+          //         'assets/icons/settings.svg',
+          //         color: iconColor,
+          //       ),
+          //       itemBuilder: (BuildContext context) {
+          //         return [
+          //           PopupMenuItem(
+          //             child: Row(
+          //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //               children: [
+          //                 if (skipPreview)
+          //                   Text("Enable Preview",
+          //                       style: GoogleFonts.inter(color: iconColor))
+          //                 else
+          //                   Text(
+          //                     "Disable Preview",
+          //                     style: GoogleFonts.inter(color: Colors.blue),
+          //                   ),
+          //                 if (skipPreview)
+          //                   SvgPicture.asset(
+          //                       'assets/icons/preview_state_on.svg',
+          //                       color: iconColor)
+          //                 else
+          //                   SvgPicture.asset(
+          //                     'assets/icons/preview_state_off.svg',
+          //                     color: Colors.blue,
+          //                   ),
+          //               ],
+          //             ),
+          //             value: 1,
+          //           ),
+          //           PopupMenuItem(
+          //             child: Row(
+          //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //               children: [
+          //                 if (mirrorCamera)
+          //                   Text("Disable Mirroring",
+          //                       style: GoogleFonts.inter(color: Colors.blue))
+          //                 else
+          //                   Text(
+          //                     "Enable Mirroring",
+          //                     style: GoogleFonts.inter(color: iconColor),
+          //                   ),
+          //                 Icon(
+          //                   Icons.camera_front,
+          //                   color: mirrorCamera ? Colors.blue : iconColor,
+          //                 ),
+          //               ],
+          //             ),
+          //             value: 2,
+          //           ),
+          //           PopupMenuItem(
+          //             child: Row(
+          //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //               children: [
+          //                 if (showStats)
+          //                   Text("Disable Stats",
+          //                       style: GoogleFonts.inter(color: Colors.blue))
+          //                 else
+          //                   Text(
+          //                     "Enable Stats",
+          //                     style: GoogleFonts.inter(color: iconColor),
+          //                   ),
+          //                 SvgPicture.asset(
+          //                   'assets/icons/stats.svg',
+          //                   color: showStats ? Colors.blue : iconColor,
+          //                 ),
+          //               ],
+          //             ),
+          //             value: 3,
+          //           ),
+          //           PopupMenuItem(
+          //             child: Row(
+          //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //               children: [
+          //                 Text("Version ${_packageInfo.version}",
+          //                     style: GoogleFonts.inter(color: iconColor)),
+          //               ],
+          //             ),
+          //             value: 4,
+          //           ),
+          //         ];
+          //       },
+          //     ),
+          //   ],
+          // ),
+          body: SingleChildScrollView(
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 40,
                 ),
-                itemBuilder: (BuildContext context) {
-                  return [
-                    PopupMenuItem(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          if (skipPreview)
-                            Text("Enable Preview",
-                                style: GoogleFonts.inter(color: iconColor))
-                          else
-                            Text(
-                              "Disable Preview",
-                              style: GoogleFonts.inter(color: Colors.blue),
-                            ),
-                          if (skipPreview)
-                            SvgPicture.asset(
-                                'assets/icons/preview_state_on.svg',
-                                color: iconColor)
-                          else
-                            SvgPicture.asset(
-                              'assets/icons/preview_state_off.svg',
-                              color: Colors.blue,
-                            ),
-                        ],
-                      ),
-                      value: 1,
-                    ),
-                    PopupMenuItem(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          if (mirrorCamera)
-                            Text("Disable Mirroring",
-                                style: GoogleFonts.inter(color: Colors.blue))
-                          else
-                            Text(
-                              "Enable Mirroring",
-                              style: GoogleFonts.inter(color: iconColor),
-                            ),
-                          Icon(
-                            Icons.camera_front,
-                            color: mirrorCamera ? Colors.blue : iconColor,
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 21),
+                  child: SvgPicture.asset(
+                            'assets/welcome.svg',
+                            height: 234,
                           ),
-                        ],
-                      ),
-                      value: 2,
-                    ),
-                    PopupMenuItem(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          if (showStats)
-                            Text("Disable Stats",
-                                style: GoogleFonts.inter(color: Colors.blue))
-                          else
-                            Text(
-                              "Enable Stats",
-                              style: GoogleFonts.inter(color: iconColor),
-                            ),
-                          SvgPicture.asset(
-                            'assets/icons/stats.svg',
-                            color: showStats ? Colors.blue : iconColor,
-                          ),
-                        ],
-                      ),
-                      value: 3,
-                    ),
-                    PopupMenuItem(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text("Version ${_packageInfo.version}",
-                              style: GoogleFonts.inter(color: iconColor)),
-                        ],
-                      ),
-                      value: 4,
-                    ),
-                  ];
-                },
-              ),
-            ],
-          ),
-          body: Center(
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  Image.asset(
-                    "assets/100ms.gif",
-                    width: 120,
-                    height: 120,
-                  ),
-                  SizedBox(
-                    height: 70,
-                  ),
-                  Text('Join Meeting',
+                ),
+                SizedBox(
+                  height: 40,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal:18),
+                  child: Text('Stream right from your mobile!',
+                    textAlign: TextAlign.center,
                       style: GoogleFonts.inter(
-                          height: 1,
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold)),
-                  SizedBox(
-                    height: 8,
+                          color: defaultColor,
+                          height: 1.5,
+                          fontSize: 34,
+                          fontWeight: FontWeight.w600)),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal:27),
+                  child: Text('Login or scan the QR code from\n the app to get started',
+                    textAlign: TextAlign.center,
+                      style: GoogleFonts.inter(
+                          color: subHeadingColor,
+                          height: 1.5,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400)),
+                ),
+                SizedBox(
+                  height: 15,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12,vertical: 8),
+                  child: Row(
+                    children: [
+                      Text("Joining Link",
+                      style: GoogleFonts.inter(
+                                color: defaultColor,
+                                height: 1.5,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400)),
+                    ],
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: TextField(
-                      style: GoogleFonts.inter(),
-                      controller: roomIdController,
-                      keyboardType: TextInputType.url,
-                      decoration: InputDecoration(
-                          hintText: 'Enter Room URL',
-                          hintStyle: GoogleFonts.inter(),
-                          suffixIcon: IconButton(
-                            onPressed: roomIdController.clear,
-                            icon: Icon(Icons.clear),
-                          ),
-                          border: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(16)))),
-                    ),
+                ),
+                SizedBox(
+                  width: 342,
+                  child: TextField(
+                    style: GoogleFonts.inter(),
+                    controller: roomIdController,
+                    keyboardType: TextInputType.url,
+                    decoration: InputDecoration(
+                      contentPadding: EdgeInsets.symmetric(vertical: 14,horizontal: 16),
+                        fillColor: surfaceColor,
+                        filled: true,
+                        hintText: 'Paste the link here',
+                        hintStyle: GoogleFonts.inter(
+                          color: hintColor,
+                                height: 1.5,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400
+                        ),
+                        // suffixIcon: IconButton(
+                        //   onPressed: roomIdController.clear,
+                        //   icon: Icon(Icons.clear),
+                        // ),
+                        enabledBorder:OutlineInputBorder(
+                            borderSide: BorderSide(color: borderColor,width: 1),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(8))) ,
+                        border: OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(8)))),
                   ),
-                  SizedBox(
-                    height: 30,
-                  ),
-                  ElevatedButton(
+                ),
+                SizedBox(
+                  height: 16,
+                ),
+                SizedBox(
+                  width: 342,
+                  child: ElevatedButton(
                     style: ButtonStyle(
-                        shadowColor: MaterialStateProperty.all(Colors.blue),
+                        shadowColor: MaterialStateProperty.all(surfaceColor),
+                        backgroundColor: MaterialStateProperty.all(surfaceColor),
                         shape:
                             MaterialStateProperty.all<RoundedRectangleBorder>(
                                 RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16.0),
+                          borderRadius: BorderRadius.circular(8.0),
                         ))),
                     onPressed: () async {
                       if (roomIdController.text.isEmpty) {
@@ -378,42 +428,68 @@ class _HomePageState extends State<HomePage> {
                       }
                     },
                     child: Container(
-                      width: 250,
-                      padding: const EdgeInsets.fromLTRB(4, 10, 4, 10),
+                      padding: const EdgeInsets.fromLTRB(8, 16, 8, 16),
                       decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(12))),
+                          borderRadius: BorderRadius.all(Radius.circular(8))),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text('Join Meeting',
+                          Text('Join Now',
                               style:
-                                  GoogleFonts.inter(height: 1, fontSize: 20)),
-                          SizedBox(
-                            width: 5,
-                          ),
-                          Icon(Icons.arrow_right_alt_outlined, size: 22),
+                                  GoogleFonts.inter(
+                                    color: disabledTextColor,
+                                    height: 1, fontSize: 16,fontWeight: FontWeight.w600)),
+                          
                         ],
                       ),
                     ),
                   ),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                SizedBox(
+                  width: 342,
+                  child: Divider(height: 5,color: dividerColor,)),
                   SizedBox(
-                    height: 50,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text("Made with ",
-                          style: GoogleFonts.inter(color: iconColor)),
-                      Text(
-                        "❤️",
+                  height: 20,
+                ),
+                SizedBox(
+                  width: 342,
+                  child: ElevatedButton(
+                      style: ButtonStyle(
+                          shadowColor: MaterialStateProperty.all(Colors.blue),
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                          ))),
+                      onPressed: (){},
+                      child: Container(
+                        padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(8))),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.qr_code, size: 22,color: enabledTextColor,),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Text('Scan QR Code',
+                                style:
+                                    GoogleFonts.inter(height: 1, fontSize: 16,fontWeight: FontWeight.w600,color: enabledTextColor)),
+                          ],
+                        ),
                       ),
-                      Text(" by 100ms",
-                          style: GoogleFonts.inter(color: iconColor)),
-                    ],
-                  )
-                ],
-              ),
+                    ),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+              ],
             ),
           )),
     );
