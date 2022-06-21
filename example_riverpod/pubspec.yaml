@@ -36,6 +36,7 @@ dependencies:
   cupertino_icons:
   flutter_riverpod:
   http:
+  permission_handler:
 
 dev_dependencies:
   flutter_test:

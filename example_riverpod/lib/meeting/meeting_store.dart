@@ -51,11 +51,7 @@ class MeetingStore extends ChangeNotifier
     List<String?>? token =
         await RoomService().getToken(user: user, room: roomUrl);
     if (token == null) return false;
-    HMSConfig config = HMSConfig(
-        authToken: token[0]!,
-        userName: user,
-        endPoint: token[1] == "true" ? "" : "https://qa-init.100ms.live/init",
-        captureNetworkQualityInPreview: true);
+    HMSConfig config = HMSConfig(authToken: token[0]!, userName: user);
 
     _hmsSDKInteractor.addUpdateListener(this);
     WidgetsBinding.instance!.addObserver(this);

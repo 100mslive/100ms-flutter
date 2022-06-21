@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:example_riverpod/preview/preview_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 void main() {
   runApp(const ProviderScope(child: MyApp()));
@@ -28,6 +31,24 @@ class HomePage extends StatefulWidget {
 
   @override
   _HomePageState createState() => _HomePageState();
+}
+
+Future<bool> getPermissions() async {
+  if (Platform.isIOS) return true;
+  await Permission.camera.request();
+  await Permission.microphone.request();
+  await Permission.bluetoothConnect.request();
+
+  while ((await Permission.camera.isDenied)) {
+    await Permission.camera.request();
+  }
+  while ((await Permission.microphone.isDenied)) {
+    await Permission.microphone.request();
+  }
+  while ((await Permission.bluetoothConnect.isDenied)) {
+    await Permission.bluetoothConnect.request();
+  }
+  return true;
 }
 
 class _HomePageState extends State<HomePage> {
@@ -70,15 +91,17 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => PreviewScreen(
-                            name: txtName.text,
-                            roomLink: txtId.text,
-                          )),
-                );
+              onPressed: () async {
+                if (await getPermissions()) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => PreviewScreen(
+                              name: txtName.text,
+                              roomLink: txtId.text,
+                            )),
+                  );
+                }
               },
               child: const Text(
                 "Join",

@@ -57,11 +57,7 @@ class PreviewStore extends ChangeNotifier
 
     if (token == null) return false;
     if (token[0] == null) return false;
-    HMSConfig config = HMSConfig(
-        authToken: token[0]!,
-        userName: user,
-        endPoint: token[1] == "true" ? "" : "https://qa-init.100ms.live/init",
-        captureNetworkQualityInPreview: true);
+    HMSConfig config = HMSConfig(authToken: token[0]!, userName: user);
     hmsSDKInteractor.addPreviewListener(this);
     hmsSDKInteractor.preview(config: config);
     return true;
