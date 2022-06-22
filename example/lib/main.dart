@@ -65,8 +65,6 @@ class _HMSExampleAppState extends State<HMSExampleApp> {
 
   @override
   Widget build(BuildContext context) {
-    print("Current Mode is $isDarkMode");
-    print("${WidgetsBinding.instance?.window.platformBrightness}");
     return MaterialApp(
       home: HomePage(),
       theme: _lightTheme,
@@ -147,7 +145,6 @@ class _HomePageState extends State<HomePage> {
     bool isDarkMode = HMSExampleApp.of(context).isDarkMode;
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
-    print("Width is $width and height is $height");
     return WillPopScope(
       onWillPop: _closeApp,
       child: SafeArea(
