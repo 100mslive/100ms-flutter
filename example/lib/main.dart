@@ -45,9 +45,10 @@ class HMSExampleApp extends StatefulWidget {
 }
 
 class _HMSExampleAppState extends State<HMSExampleApp> {
-  ThemeMode _themeMode = ThemeMode.system;
+  ThemeMode _themeMode = ThemeMode.dark;
   bool isDarkMode =
       WidgetsBinding.instance?.window.platformBrightness == Brightness.dark;
+
   ThemeData _darkTheme = ThemeData(
       brightness: Brightness.dark,
       primaryColor: Color.fromARGB(255, 13, 107, 184),
@@ -64,9 +65,11 @@ class _HMSExampleAppState extends State<HMSExampleApp> {
 
   @override
   Widget build(BuildContext context) {
+    print("Current Mode is $isDarkMode");
+    print("${WidgetsBinding.instance?.window.platformBrightness}");
     return MaterialApp(
       home: HomePage(),
-      theme: _darkTheme,
+      theme: _lightTheme,
       darkTheme: _darkTheme,
       themeMode: _themeMode,
     );
@@ -104,7 +107,6 @@ class _HomePageState extends State<HomePage> {
     buildSignature: 'Unknown',
   );
 
-
   @override
   void initState() {
     super.initState();
@@ -123,8 +125,6 @@ class _HomePageState extends State<HomePage> {
       _packageInfo = info;
     });
   }
-
-
 
   void handleClick(int value) {
     switch (value) {
@@ -145,6 +145,9 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     bool isDarkMode = HMSExampleApp.of(context).isDarkMode;
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
+    print("Width is $width and height is $height");
     return WillPopScope(
       onWillPop: _closeApp,
       child: SafeArea(
@@ -266,12 +269,9 @@ class _HomePageState extends State<HomePage> {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 21),
-                  child: SvgPicture.asset(
-                    'assets/welcome.svg',
-                    width: 390,
-                  ),
+                SvgPicture.asset(
+                  'assets/welcome.svg',
+                  width: width * 0.95,
                 ),
                 SizedBox(
                   height: 20,
@@ -305,7 +305,7 @@ class _HomePageState extends State<HomePage> {
                 ),
                 Padding(
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                   child: Row(
                     children: [
                       Text("Joining Link",
@@ -318,7 +318,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 SizedBox(
-                  width: 342,
+                  width: width * 0.95,
                   child: TextField(
                     style: GoogleFonts.inter(),
                     controller: roomIdController,
@@ -334,10 +334,10 @@ class _HomePageState extends State<HomePage> {
                             height: 1.5,
                             fontSize: 16,
                             fontWeight: FontWeight.w400),
-                        // suffixIcon: IconButton(
-                        //   onPressed: roomIdController.clear,
-                        //   icon: Icon(Icons.clear),
-                        // ),
+                        suffixIcon: IconButton(
+                          onPressed: roomIdController.clear,
+                          icon: Icon(Icons.clear),
+                        ),
                         enabledBorder: OutlineInputBorder(
                             borderSide:
                                 BorderSide(color: borderColor, width: 1),
@@ -351,84 +351,96 @@ class _HomePageState extends State<HomePage> {
                   height: 16,
                 ),
                 SizedBox(
-                  width: 342,
-                  child: ElevatedButton(
-                    style: ButtonStyle(
-                        shadowColor: MaterialStateProperty.all(surfaceColor),
-                        backgroundColor:
-                            MaterialStateProperty.all(surfaceColor),
-                        shape:
-                            MaterialStateProperty.all<RoundedRectangleBorder>(
-                                RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8.0),
-                        ))),
-                    onPressed: () async {
-                      if (roomIdController.text.isEmpty) {
-                        return;
-                      }
-                      Utilities.setRTMPUrl(roomIdController.text);
-                      String user = await showDialog(
-                          context: context,
-                          builder: (_) => UserNameDialogOrganism());
-                      if (user.isNotEmpty) {
-                        bool res = await Utilities.getPermissions();
-                        if (res) {
-                          FocusManager.instance.primaryFocus?.unfocus();
-                          if (skipPreview) {
-                            HMSSDKInteractor _hmsSDKInteractor =
-                                HMSSDKInteractor();
-                            _hmsSDKInteractor.showStats = showStats;
-                            _hmsSDKInteractor.mirrorCamera = mirrorCamera;
-                            _hmsSDKInteractor.skipPreview = true;
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (_) => ListenableProvider.value(
-                                    value: MeetingStore(
-                                        hmsSDKInteractor: _hmsSDKInteractor),
-                                    child: MeetingPage(
-                                        roomId: roomIdController.text.trim(),
-                                        flow: MeetingFlow.join,
-                                        user: user,
-                                        isAudioOn: true))));
-                          } else {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (_) => ListenableProvider.value(
-                                      value: PreviewStore(),
-                                      child: PreviewPage(
-                                        roomId: roomIdController.text.trim(),
-                                        user: user,
-                                        flow: MeetingFlow.join,
-                                        mirror: mirrorCamera,
-                                        showStats: showStats,
-                                      ),
-                                    )));
-                          }
-                        }
-                      }
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.fromLTRB(8, 16, 8, 16),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(8))),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text('Join Now',
-                              style: GoogleFonts.inter(
-                                  color: disabledTextColor,
-                                  height: 1,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600)),
-                        ],
-                      ),
-                    ),
-                  ),
+                  width: width * 0.95,
+                  child: ValueListenableBuilder<TextEditingValue>(
+                      valueListenable: roomIdController,
+                      builder: (context, value, child) {
+                        return ElevatedButton(
+                          style: ButtonStyle(
+                              shadowColor:
+                                  MaterialStateProperty.all(surfaceColor),
+                              backgroundColor: roomIdController.text.isEmpty
+                                  ? MaterialStateProperty.all(surfaceColor)
+                                  : MaterialStateProperty.all(Colors.blue),
+                              shape: MaterialStateProperty.all<
+                                      RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                              ))),
+                          onPressed: () async {
+                            if (roomIdController.text.isEmpty) {
+                              return;
+                            }
+                            Utilities.setRTMPUrl(roomIdController.text);
+                            String user = await showDialog(
+                                context: context,
+                                builder: (_) => UserNameDialogOrganism());
+                            if (user.isNotEmpty) {
+                              bool res = await Utilities.getPermissions();
+                              if (res) {
+                                FocusManager.instance.primaryFocus?.unfocus();
+                                if (skipPreview) {
+                                  HMSSDKInteractor _hmsSDKInteractor =
+                                      HMSSDKInteractor();
+                                  _hmsSDKInteractor.showStats = showStats;
+                                  _hmsSDKInteractor.mirrorCamera = mirrorCamera;
+                                  _hmsSDKInteractor.skipPreview = true;
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (_) => ListenableProvider.value(
+                                          value: MeetingStore(
+                                              hmsSDKInteractor:
+                                                  _hmsSDKInteractor),
+                                          child: MeetingPage(
+                                              roomId:
+                                                  roomIdController.text.trim(),
+                                              flow: MeetingFlow.join,
+                                              user: user,
+                                              isAudioOn: true))));
+                                } else {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (_) => ListenableProvider.value(
+                                            value: PreviewStore(),
+                                            child: PreviewPage(
+                                              roomId:
+                                                  roomIdController.text.trim(),
+                                              user: user,
+                                              flow: MeetingFlow.join,
+                                              mirror: mirrorCamera,
+                                              showStats: showStats,
+                                            ),
+                                          )));
+                                }
+                              }
+                            }
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.fromLTRB(8, 16, 8, 16),
+                            decoration: BoxDecoration(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(8))),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text('Join Now',
+                                    style: GoogleFonts.inter(
+                                        color: roomIdController.text.isEmpty
+                                            ? disabledTextColor
+                                            : enabledTextColor,
+                                        height: 1,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600)),
+                              ],
+                            ),
+                          ),
+                        );
+                      }),
                 ),
                 SizedBox(
                   height: 20,
                 ),
                 SizedBox(
-                    width: 342,
+                    width: width * 0.95,
                     child: Divider(
                       height: 5,
                       color: dividerColor,
@@ -437,7 +449,7 @@ class _HomePageState extends State<HomePage> {
                   height: 20,
                 ),
                 SizedBox(
-                  width: 342,
+                  width: width * 0.95,
                   child: ElevatedButton(
                     style: ButtonStyle(
                         shadowColor: MaterialStateProperty.all(Colors.blue),
@@ -446,8 +458,12 @@ class _HomePageState extends State<HomePage> {
                                 RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8.0),
                         ))),
-                    onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (_) => QRCodeScreen()));
+                    onPressed: () async {
+                      bool res = await Utilities.getCameraPermissions();
+                      if (res) {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (_) => QRCodeScreen()));
+                      }
                     },
                     child: Container(
                       padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
