@@ -658,9 +658,8 @@ class MeetingStore extends ChangeNotifier
           if (screenShareCount == 0) {
             setLandscapeLock(false);
           }
-          notifyListeners();
-        } else {
           isScreenShareActive();
+          notifyListeners();
         }
         break;
       case HMSTrackUpdate.trackMuted:
@@ -1006,7 +1005,8 @@ class MeetingStore extends ChangeNotifier
         notifyListeners();
         break;
       case HMSActionResultListenerMethod.removePeer:
-        // TODO: Handle this case.
+        HMSPeer peer = arguments!['peer'];
+        showToast("Removed ${peer.name} from room");
         break;
       case HMSActionResultListenerMethod.acceptChangeRole:
         Utilities.showToast("Accept role change successful");
@@ -1151,13 +1151,13 @@ class MeetingStore extends ChangeNotifier
         Utilities.showToast("Name change failed");
         break;
       case HMSActionResultListenerMethod.sendBroadcastMessage:
-        // TODO: Handle this case.
+        showToast("Sending broadcast message failed");
         break;
       case HMSActionResultListenerMethod.sendGroupMessage:
-        // TODO: Handle this case.
+        showToast("Sending group message failed");
         break;
       case HMSActionResultListenerMethod.sendDirectMessage:
-        // TODO: Handle this case.
+        showToast("Sending direct message failed");
         break;
       case HMSActionResultListenerMethod.hlsStreamingStarted:
         Utilities.showToast("Start HLS failed");

@@ -9,57 +9,57 @@ import Foundation
 import HMSSDK
 
 class HMSVideoAction{
-    static func videoActions(_ call: FlutterMethodCall, result: @escaping FlutterResult,hmsSDK:HMSSDK?) {
-    switch call.method {
-    case "switch_video":
-        switchVideo(call, result,hmsSDK: hmsSDK)
-
-    case "switch_camera":
-        switchCamera(result,hmsSDK: hmsSDK)
-
-    case "start_capturing":
-        startCapturing(result,hmsSDK: hmsSDK)
-
-    case "stop_capturing":
-        stopCapturing(result,hmsSDK: hmsSDK)
-
-    case "is_video_mute":
-        isVideoMute(call, result,hmsSDK: hmsSDK)
-
-    case "set_playback_allowed":
-        setPlaybackAllowed(call, result,hmsSDK: hmsSDK)
-    default:
-        result(FlutterMethodNotImplemented)
+    static func videoActions(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?) {
+        switch call.method {
+        case "switch_video":
+            switchVideo(call, result, hmsSDK)
+            
+        case "switch_camera":
+            switchCamera(result, hmsSDK)
+            
+        case "start_capturing":
+            startCapturing(result, hmsSDK)
+            
+        case "stop_capturing":
+            stopCapturing(result, hmsSDK)
+            
+        case "is_video_mute":
+            isVideoMute(call, result, hmsSDK)
+            
+        case "set_playback_allowed":
+            setPlaybackAllowed(call, result, hmsSDK)
+        default:
+            result(FlutterMethodNotImplemented)
         }
     }
     
-    static private func startCapturing(_ result: FlutterResult,hmsSDK:HMSSDK?) {
+    static private func startCapturing(_ result: @escaping FlutterResult, _ hmsSDK:HMSSDK?) {
         guard let peer = hmsSDK?.localPeer,
               let track = peer.videoTrack as? HMSLocalVideoTrack
         else {
             result(false)
             return
         }
-
+        
         track.startCapturing()
-
+        
         result(true)
     }
-
-    static private func stopCapturing(_ result: FlutterResult,hmsSDK:HMSSDK?) {
+    
+    static private func stopCapturing(_ result: @escaping FlutterResult, _ hmsSDK:HMSSDK?) {
         guard let peer = hmsSDK?.localPeer,
               let track = peer.videoTrack as? HMSLocalVideoTrack
         else {
             result(false)
             return
         }
-
+        
         track.stopCapturing()
-
+        
         result(true)
     }
-
-    static private func switchCamera(_ result: FlutterResult,hmsSDK:HMSSDK?) {
+    
+    static private func switchCamera(_ result: @escaping FlutterResult, _ hmsSDK:HMSSDK?) {
         guard let peer = hmsSDK?.localPeer,
               let videoTrack = peer.videoTrack as? HMSLocalVideoTrack
         else {
@@ -67,31 +67,31 @@ class HMSVideoAction{
             result(HMSErrorExtension.toDictionary(error))
             return
         }
-
+        
         videoTrack.switchCamera()
-
+        
         result(nil)
     }
-
-    static private func switchVideo(_ call: FlutterMethodCall, _ result: FlutterResult,hmsSDK:HMSSDK?) {
-
+    
+    static private func switchVideo(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK:HMSSDK?) {
+        
         let arguments = call.arguments as! [AnyHashable: Any]
-
+        
         guard let shouldMute = arguments["is_on"] as? Bool,
               let peer = hmsSDK?.localPeer,
               let video = peer.videoTrack as? HMSLocalVideoTrack else {
-                  result(false)
-                  return
-              }
-
+            result(false)
+            return
+        }
+        
         video.setMute(shouldMute)
-
+        
         result(true)
     }
-
-    static private func isVideoMute(_ call: FlutterMethodCall, _ result: FlutterResult,hmsSDK:HMSSDK?) {
+    
+    static private func isVideoMute(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK:HMSSDK?) {
         let arguments = call.arguments as! [AnyHashable: Any]
-
+        
         if let peerID = arguments["peer_id"] as? String, let peer = HMSCommonAction.getPeer(by: peerID,hmsSDK: hmsSDK) {
             if let video = peer.videoTrack {
                 result(video.isMute())
@@ -103,21 +103,21 @@ class HMSVideoAction{
                 return
             }
         }
-
+        
         result(false)
     }
-
-    static private func setPlaybackAllowed(_ call: FlutterMethodCall, _ result: FlutterResult,hmsSDK:HMSSDK?) {
+    
+    static private func setPlaybackAllowed(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK:HMSSDK?) {
         let arguments = call.arguments as! [AnyHashable: Any]
-
+        
         let allowed = arguments["allowed"] as! Bool
-
+        
         if let localPeer = hmsSDK?.localPeer {
             if let video = localPeer.videoTrack as? HMSLocalVideoTrack {
                 video.setMute(!allowed)
             }
         }
-
+        
         if let remotePeers = hmsSDK?.remotePeers {
             remotePeers.forEach { peer in
                 if let video = peer.remoteVideoTrack() {
@@ -130,7 +130,7 @@ class HMSVideoAction{
                 }
             }
         }
-
+        
         result(nil)
     }
 }
