@@ -33,7 +33,6 @@ class PreviewController extends GetxController
     HMSConfig config = Get.put(HMSConfig(
       authToken: token[0]!,
       userName: name,
-      endPoint: token[1] == "true" ? "" : "https://qa-init.100ms.live/init",
     ),tag: "");
 
     hmsSdk.preview(config: config);
@@ -86,7 +85,6 @@ class PreviewController extends GetxController
       if (track.kind == HMSTrackKind.kHMSTrackKindVideo) {
         isLocalVideoOn.value = !track.isMute;
         isLocalVideoOn.refresh();
-        print("onPreviewFlutter");
         videoTracks.add(track as HMSVideoTrack);
       }
       else{
