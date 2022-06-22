@@ -23,25 +23,30 @@ class _QRCodeScreenState extends State<QRCodeScreen> {
     controller.scannedDataStream.listen((scanData) async {
       controller.pauseCamera();
       if (scanData.code != null) {
-        Utilities.setRTMPUrl(scanData.code!);
-        String user = await showDialog(
-            context: context, builder: (_) => UserNameDialogOrganism());
-        if (user.isNotEmpty) {
-          bool res = await Utilities.getPermissions();
-          if (res) {
-            FocusManager.instance.primaryFocus?.unfocus();
-            Navigator.of(context).push(MaterialPageRoute(
-                builder: (_) => ListenableProvider.value(
-                      value: PreviewStore(),
-                      child: PreviewPage(
-                        roomId: scanData.code!.trim(),
-                        user: user,
-                        flow: MeetingFlow.join,
-                        mirror: true,
-                        showStats: false,
-                      ),
-                    )));
+        MeetingFlow flow = Utilities.deriveFlow(scanData.code!);
+        if (flow == MeetingFlow.join) {
+          Utilities.setRTMPUrl(scanData.code!);
+          String user = await showDialog(
+              context: context, builder: (_) => UserNameDialogOrganism());
+          if (user.isNotEmpty) {
+            bool res = await Utilities.getPermissions();
+            if (res) {
+              FocusManager.instance.primaryFocus?.unfocus();
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (_) => ListenableProvider.value(
+                        value: PreviewStore(),
+                        child: PreviewPage(
+                          roomId: scanData.code!.trim(),
+                          user: user,
+                          flow: MeetingFlow.join,
+                          mirror: true,
+                          showStats: false,
+                        ),
+                      )));
+            }
           }
+        } else {
+          controller.resumeCamera();
         }
       }
     });
@@ -90,7 +95,8 @@ class _QRCodeScreenState extends State<QRCodeScreen> {
                 height: 30,
               ),
               Container(
-                height: orientation==Orientation.portrait?height*0.75:500,
+                height:
+                    orientation == Orientation.portrait ? height * 0.75 : 500,
                 width: MediaQuery.of(context).size.width - 40,
                 child: QRView(
                   key: qrKey,
@@ -102,11 +108,10 @@ class _QRCodeScreenState extends State<QRCodeScreen> {
                   ),
                 ),
               ),
-              
               Padding(
-                padding: const EdgeInsets.symmetric(vertical:20.0),
+                padding: const EdgeInsets.symmetric(vertical: 20.0),
                 child: SizedBox(
-                  width: width*0.95,
+                  width: width * 0.95,
                   child: ElevatedButton(
                     style: ButtonStyle(
                         shadowColor: MaterialStateProperty.all(surfaceColor),
@@ -114,8 +119,9 @@ class _QRCodeScreenState extends State<QRCodeScreen> {
                             MaterialStateProperty.all(Colors.transparent),
                         side: MaterialStateProperty.all(
                             BorderSide(color: borderColor)),
-                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                            RoundedRectangleBorder(
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8.0),
                         ))),
                     onPressed: () {

@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:hmssdk_flutter_example/common/constant.dart';
+import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class Utilities {
@@ -79,5 +80,23 @@ class Utilities {
     }
 
     return true;
+  }
+
+  static MeetingFlow deriveFlow(String roomUrl) {
+    List<String> parts = roomUrl.split('//');
+    if (parts.length == 2) {
+      List<String> urlParts = parts[1].split('/');
+      if (urlParts.length == 3) {
+        String flow = urlParts[1];
+        if (MeetingFlowValues.getMeetingFlowfromName(flow) ==
+            MeetingFlow.join) {
+          return MeetingFlow.join;
+        } else if (MeetingFlowValues.getMeetingFlowfromName(flow) ==
+            MeetingFlow.hlsStreaming) {
+          return MeetingFlow.hlsStreaming;
+        }
+      }
+    }
+    return MeetingFlow.none;
   }
 }
