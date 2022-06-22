@@ -44,9 +44,8 @@ class _QRCodeScreenState extends State<QRCodeScreen> {
                         ),
                       )));
             }
-          }
-          else{
-          controller.resumeCamera();
+          } else {
+            controller.resumeCamera();
           }
         } else {
           Utilities.showToast("Invalid QR Code");

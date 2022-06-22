@@ -20,6 +20,7 @@ class HMSRecordingConfig {
   ///Height Range:480-1280. If width>720 them max height=720.
   ///Default 720.
   HMSResolution? resolution;
+
   HMSRecordingConfig(
       {required this.meetingUrl,
       required this.toRecord,

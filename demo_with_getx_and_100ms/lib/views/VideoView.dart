@@ -1,15 +1,10 @@
-
-
-
 import 'package:flutter/material.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
-
 class VideoView extends StatefulWidget {
-
   final HMSVideoTrack track;
   final String name;
-  const VideoView(this.track,this.name,{Key? key}) : super(key: key);
+  const VideoView(this.track, this.name, {Key? key}) : super(key: key);
 
   @override
   State<VideoView> createState() => _VideoViewState();

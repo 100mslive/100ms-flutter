@@ -80,13 +80,13 @@ Widget gridVideoView(
       gridDelegate: SliverStairedGridDelegate(
           startCrossAxisDirectionReversed: false,
           pattern: isPortrait
-              ? portraitPattern(itemCount, screenShareCount, size,context)
+              ? portraitPattern(itemCount, screenShareCount, size, context)
               : landscapePattern(itemCount, screenShareCount, size, context)));
 }
 
 List<StairedGridTile> portraitPattern(
-    int itemCount, int screenShareCount, Size size,BuildContext context) {
-  double ratio = Utilities.getRatio(size,context);
+    int itemCount, int screenShareCount, Size size, BuildContext context) {
+  double ratio = Utilities.getRatio(size, context);
   List<StairedGridTile> tiles = [];
   for (int i = 0; i < screenShareCount; i++) {
     tiles.add(StairedGridTile(1, ratio));
@@ -112,7 +112,7 @@ List<StairedGridTile> portraitPattern(
 
 List<StairedGridTile> landscapePattern(
     int itemCount, int screenShareCount, Size size, BuildContext context) {
-  double ratio = Utilities.getRatio(size,context);
+  double ratio = Utilities.getRatio(size, context);
   List<StairedGridTile> tiles = [];
   for (int i = 0; i < screenShareCount; i++) {
     tiles.add(StairedGridTile(1, ratio));

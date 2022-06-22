@@ -21,4 +21,3 @@ class CustomShape extends CustomPainter {
     return false;
   }
 }
-

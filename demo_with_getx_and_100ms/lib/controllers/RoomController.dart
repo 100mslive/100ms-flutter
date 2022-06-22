@@ -7,9 +7,7 @@ import '../services/RoomService.dart';
 
 class RoomController extends GetxController
     implements HMSUpdateListener, HMSActionResultListener {
-
-  RxList<Rx<PeerTrackNode>> peerTrackList =
-      <Rx<PeerTrackNode>>[].obs;
+  RxList<Rx<PeerTrackNode>> peerTrackList = <Rx<PeerTrackNode>>[].obs;
   RxBool isLocalVideoOn = false.obs;
   RxBool isLocalAudioOn = false.obs;
 
@@ -76,8 +74,7 @@ class RoomController extends GetxController
   }
 
   @override
-  void onPeerUpdate({required HMSPeer peer, required HMSPeerUpdate update}) {
-  }
+  void onPeerUpdate({required HMSPeer peer, required HMSPeerUpdate update}) {}
 
   @override
   void onReconnected() {
@@ -108,25 +105,22 @@ class RoomController extends GetxController
   @override
   void onTrackUpdate(
       {required HMSTrack track,
-        required HMSTrackUpdate trackUpdate,
-        required HMSPeer peer}) {
-
-
+      required HMSTrackUpdate trackUpdate,
+      required HMSPeer peer}) {
     if (track.kind == HMSTrackKind.kHMSTrackKindVideo) {
-
       if (trackUpdate == HMSTrackUpdate.trackRemoved) {
         removeUserFromList(peer);
-      }
-      else if(trackUpdate == HMSTrackUpdate.trackAdded) {
-        int index = peerTrackList.indexWhere((element) => element.value.peer.peerId == peer.peerId);
-        if(index > -1){
-          peerTrackList[index](PeerTrackNode(track as HMSVideoTrack, track.isMute, peer));
+      } else if (trackUpdate == HMSTrackUpdate.trackAdded) {
+        int index = peerTrackList
+            .indexWhere((element) => element.value.peer.peerId == peer.peerId);
+        if (index > -1) {
+          peerTrackList[index](
+              PeerTrackNode(track as HMSVideoTrack, track.isMute, peer));
+        } else {
+          peerTrackList.add(
+              PeerTrackNode(track as HMSVideoTrack, track.isMute, peer).obs);
         }
-        else{
-          peerTrackList.add(PeerTrackNode(track as HMSVideoTrack, track.isMute, peer).obs);
-        }
       }
-
     }
   }
 
@@ -157,36 +151,37 @@ class RoomController extends GetxController
   @override
   void onException(
       {HMSActionResultListenerMethod? methodType,
-        Map<String, dynamic>? arguments,
-        required HMSException hmsException}) {
+      Map<String, dynamic>? arguments,
+      required HMSException hmsException}) {
     Get.snackbar("Error", hmsException.message);
   }
 
   @override
   void onSuccess(
       {HMSActionResultListenerMethod? methodType,
-        Map<String, dynamic>? arguments}) {
+      Map<String, dynamic>? arguments}) {
     Get.back();
     Get.off(() => const HomePage());
   }
 
   void removeUserFromList(HMSPeer peer) {
-    peerTrackList.removeWhere((element) => peer.peerId == element.value.peer.peerId);
+    peerTrackList
+        .removeWhere((element) => peer.peerId == element.value.peer.peerId);
   }
 
   @override
   void onLocalAudioStats(
       {required HMSLocalAudioStats hmsLocalAudioStats,
-        required HMSLocalAudioTrack track,
-        required HMSPeer peer}) {
+      required HMSLocalAudioTrack track,
+      required HMSPeer peer}) {
     // TODO: implement onLocalAudioStats
   }
 
   @override
   void onLocalVideoStats(
       {required HMSLocalVideoStats hmsLocalVideoStats,
-        required HMSLocalVideoTrack track,
-        required HMSPeer peer}) {
+      required HMSLocalVideoTrack track,
+      required HMSPeer peer}) {
     // TODO: implement onLocalVideoStats
   }
 
@@ -198,17 +193,16 @@ class RoomController extends GetxController
   @override
   void onRemoteAudioStats(
       {required HMSRemoteAudioStats hmsRemoteAudioStats,
-        required HMSRemoteAudioTrack track,
-        required HMSPeer peer}) {
+      required HMSRemoteAudioTrack track,
+      required HMSPeer peer}) {
     // TODO: implement onRemoteAudioStats
   }
 
   @override
   void onRemoteVideoStats(
       {required HMSRemoteVideoStats hmsRemoteVideoStats,
-        required HMSRemoteVideoTrack track,
-        required HMSPeer peer}) {
+      required HMSRemoteVideoTrack track,
+      required HMSPeer peer}) {
     // TODO: implement onRemoteVideoStats
   }
-
 }

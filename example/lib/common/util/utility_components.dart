@@ -517,11 +517,18 @@ class UtilityComponents {
               children: [
                 Text(
                   "Wrong Meeting Url",
-                  style: GoogleFonts.inter(color: Colors.red.shade300,fontSize: 16,fontWeight: FontWeight.w600),
+                  style: GoogleFonts.inter(
+                      color: Colors.red.shade300,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600),
                 ),
               ],
             ),
-            content: Text("Please enter a valid meeting URL",style:GoogleFonts.inter(color: defaultColor,fontSize: 14,fontWeight: FontWeight.w400)),
+            content: Text("Please enter a valid meeting URL",
+                style: GoogleFonts.inter(
+                    color: defaultColor,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400)),
           );
         });
   }
