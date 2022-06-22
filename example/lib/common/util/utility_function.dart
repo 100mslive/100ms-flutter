@@ -1,5 +1,9 @@
 //Package imports
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:hmssdk_flutter_example/common/constant.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class Utilities {
   static String getAvatarTitle(String name) {
@@ -37,5 +41,32 @@ class Utilities {
             viewPadding.bottom -
             kToolbarHeight) /
         (size.width - viewPadding.left - viewPadding.right);
+  }
+
+  static void setRTMPUrl(String roomUrl) {
+    List<String> urlSplit = roomUrl.split('/');
+    int index = urlSplit.lastIndexOf("meeting");
+    if (index != -1) {
+      urlSplit[index] = "preview";
+    }
+    Constant.rtmpUrl = urlSplit.join('/') + "?token=beam_recording";
+  }
+
+    static Future<bool> getPermissions() async {
+    if (Platform.isIOS) return true;
+    await Permission.camera.request();
+    await Permission.microphone.request();
+    await Permission.bluetoothConnect.request();
+
+    while ((await Permission.camera.isDenied)) {
+      await Permission.camera.request();
+    }
+    while ((await Permission.microphone.isDenied)) {
+      await Permission.microphone.request();
+    }
+    while ((await Permission.bluetoothConnect.isDenied)) {
+      await Permission.bluetoothConnect.request();
+    }
+    return true;
   }
 }
