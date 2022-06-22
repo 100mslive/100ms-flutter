@@ -2,6 +2,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hmssdk_flutter_example/common/constant.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -83,20 +84,19 @@ class Utilities {
   }
 
   static MeetingFlow deriveFlow(String roomUrl) {
-    List<String> parts = roomUrl.split('//');
-    if (parts.length == 2) {
-      List<String> urlParts = parts[1].split('/');
-      if (urlParts.length == 3) {
-        String flow = urlParts[1];
-        if (MeetingFlowValues.getMeetingFlowfromName(flow) ==
-            MeetingFlow.join) {
-          return MeetingFlow.join;
-        } else if (MeetingFlowValues.getMeetingFlowfromName(flow) ==
-            MeetingFlow.hlsStreaming) {
-          return MeetingFlow.hlsStreaming;
-        }
-      }
+    final joinFlowRegex = RegExp("\.100ms\.live\/(preview|meeting)\/");
+    final hlsFlowRegex = RegExp("\.100ms\.live\/hls-streaming\/");
+
+    if (joinFlowRegex.hasMatch(roomUrl)) {
+      return MeetingFlow.join;
+    } else if (hlsFlowRegex.hasMatch(roomUrl)) {
+      return MeetingFlow.hlsStreaming;
+    } else {
+      return MeetingFlow.none;
     }
-    return MeetingFlow.none;
+  }
+
+  static void showToast(String message) {
+    Fluttertoast.showToast(msg: message, backgroundColor: Colors.black87);
   }
 }
