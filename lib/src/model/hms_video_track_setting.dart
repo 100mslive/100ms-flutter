@@ -3,7 +3,7 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 class HMSVideoTrackSetting {
   final HMSCodec? codec;
-  final HMSVideoResolution? resolution;
+  final HMSResolution? resolution;
   final int? maxBitrate;
   final int? maxFrameRate;
   final HMSCameraFacing? cameraFacing;
@@ -17,9 +17,9 @@ class HMSVideoTrackSetting {
   });
 
   factory HMSVideoTrackSetting.fromMap(Map map) {
-    HMSVideoResolution? resolution;
+    HMSResolution? resolution;
     if (map.containsKey('resolution')) {
-      resolution = HMSVideoResolution.fromMap(map['resolution']);
+      resolution = HMSResolution.fromMap(map['resolution']);
     }
     return HMSVideoTrackSetting(
       codec: HMSCodecValues.getHMSCodecFromName(map['video_codec']),

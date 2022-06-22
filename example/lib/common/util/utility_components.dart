@@ -377,16 +377,16 @@ class UtilityComponents {
             }));
   }
 
-  static Future<Map<String, String>> showRTMPInputDialog({
-    context,
-    String placeholder = "",
-    String prefilledValue = "",
-  }) async {
+  static Future<Map<String, dynamic>> showRTMPInputDialog(
+      {context,
+      String placeholder = "",
+      String prefilledValue = "",
+      bool isRecordingEnabled = false}) async {
     TextEditingController textController = TextEditingController();
     if (prefilledValue.isNotEmpty) {
       textController.text = prefilledValue;
     }
-    Map<String, String> answer = await showDialog(
+    Map<String, dynamic> answer = await showDialog(
         context: context,
         builder: (context) => StatefulBuilder(builder: (context, setState) {
               return AlertDialog(
@@ -404,6 +404,21 @@ class UtilityComponents {
                             ),
                             hintText: placeholder),
                       ),
+                      CheckboxListTile(
+                          title: Text(
+                            "Recording",
+                            style: GoogleFonts.inter(
+                              color: iconColor,
+                            ),
+                          ),
+                          activeColor: Colors.blue,
+                          controlAffinity: ListTileControlAffinity.trailing,
+                          value: isRecordingEnabled,
+                          onChanged: (bool? value) {
+                            setState(() {
+                              isRecordingEnabled = value ?? false;
+                            });
+                          })
                     ],
                   ),
                 ),
@@ -414,7 +429,7 @@ class UtilityComponents {
                       style: GoogleFonts.inter(),
                     ),
                     onPressed: () {
-                      Navigator.pop(context, {"url": "", "toRecord": "false"});
+                      Navigator.pop(context, {"url": "", "toRecord": false});
                     },
                   ),
                   ElevatedButton(
@@ -423,10 +438,11 @@ class UtilityComponents {
                       style: GoogleFonts.inter(),
                     ),
                     onPressed: () {
-                      if (textController.text == "") {
-                      } else {
-                        Navigator.pop(context,
-                            {"url": textController.text, "toRecord": false});
+                      if (textController.text != "") {
+                        Navigator.pop(context, {
+                          "url": textController.text,
+                          "toRecord": isRecordingEnabled
+                        });
                       }
                     },
                   ),
