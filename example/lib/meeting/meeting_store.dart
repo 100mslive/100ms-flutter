@@ -1006,7 +1006,7 @@ class MeetingStore extends ChangeNotifier
         break;
       case HMSActionResultListenerMethod.removePeer:
         HMSPeer peer = arguments!['peer'];
-        showToast("Removed ${peer.name} from room");
+        Utilities.showToast("Removed ${peer.name} from room");
         break;
       case HMSActionResultListenerMethod.acceptChangeRole:
         Utilities.showToast("Accept role change successful");
@@ -1151,13 +1151,13 @@ class MeetingStore extends ChangeNotifier
         Utilities.showToast("Name change failed");
         break;
       case HMSActionResultListenerMethod.sendBroadcastMessage:
-        showToast("Sending broadcast message failed");
+        Utilities.showToast("Sending broadcast message failed");
         break;
       case HMSActionResultListenerMethod.sendGroupMessage:
-        showToast("Sending group message failed");
+        Utilities.showToast("Sending group message failed");
         break;
       case HMSActionResultListenerMethod.sendDirectMessage:
-        showToast("Sending direct message failed");
+        Utilities.showToast("Sending direct message failed");
         break;
       case HMSActionResultListenerMethod.hlsStreamingStarted:
         Utilities.showToast("Start HLS failed");

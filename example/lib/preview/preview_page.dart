@@ -61,8 +61,8 @@ class _PreviewPageState extends State<PreviewPage>
         .read<PreviewStore>()
         .startPreview(user: widget.user, roomId: widget.roomId);
     if (ans == false) {
-      UtilityComponents.showToastWithString("Unable to preview");
       Navigator.of(context).pop();
+      UtilityComponents.showErrorDialog(context);
     }
   }
 
