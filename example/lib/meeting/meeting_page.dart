@@ -148,20 +148,19 @@ class _MeetingPageState extends State<MeetingPage>
         if (_meetingStore.streamingType["rtmp"] == true) {
           _meetingStore.stopRtmpAndRecording();
         } else {
-          Map<String, String> data =
+          Map<String, dynamic> data =
               await UtilityComponents.showRTMPInputDialog(
                   context: context,
                   placeholder: "Enter Comma separated RTMP Urls",
-                  );
+                  isRecordingEnabled:
+                      _meetingStore.recordingType["browser"] == true);
           List<String>? urls;
           if (data["url"]!.isNotEmpty) {
             urls = data["url"]!.split(",");
           }
           if (urls != null) {
             _meetingStore.startRtmpOrRecording(
-                meetingUrl: Constant.rtmpUrl,
-                toRecord: false,
-                rtmpUrls: urls);
+                meetingUrl: Constant.rtmpUrl, toRecord: false, rtmpUrls: urls);
           }
         }
         break;
@@ -827,17 +826,17 @@ class _MeetingPageState extends State<MeetingPage>
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                        meetingStore.streamingType["rtmp"]==true
+                        meetingStore.streamingType["rtmp"] == true
                             ? "Stop RTMP"
                             : "Start RTMP",
                         style: GoogleFonts.inter(
-                          color: meetingStore.streamingType["rtmp"]==true
+                          color: meetingStore.streamingType["rtmp"] == true
                               ? Colors.blue
                               : iconColor,
                         )),
                     SvgPicture.asset(
                       "assets/icons/stream.svg",
-                      color: meetingStore.streamingType["rtmp"]==true
+                      color: meetingStore.streamingType["rtmp"] == true
                           ? Colors.blue
                           : iconColor,
                     ),
@@ -864,23 +863,23 @@ class _MeetingPageState extends State<MeetingPage>
                   ]),
               value: 10,
             ),
-            if (!(meetingStore.localPeer?.role.name.contains("hls-") ?? true))
+          if (!(meetingStore.localPeer?.role.name.contains("hls-") ?? true))
             PopupMenuItem(
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                        meetingStore.recordingType["browser"]==true
+                        meetingStore.recordingType["browser"] == true
                             ? "Stop Recording"
                             : "Start Recording",
                         style: GoogleFonts.inter(
-                          color: meetingStore.recordingType["browser"]==true
+                          color: meetingStore.recordingType["browser"] == true
                               ? Colors.blue
                               : iconColor,
                         )),
                     SvgPicture.asset(
                       "assets/icons/record.svg",
-                      color: meetingStore.recordingType["browser"]==true
+                      color: meetingStore.recordingType["browser"] == true
                           ? Colors.red
                           : iconColor,
                     ),
@@ -923,7 +922,6 @@ class _MeetingPageState extends State<MeetingPage>
                   ]),
               value: 13,
             ),
-          
         ];
       },
       onSelected: handleMenu,
