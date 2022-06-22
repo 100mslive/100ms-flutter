@@ -1,6 +1,3 @@
-//Dart imports
-import 'dart:io';
-
 //Package imports
 import 'package:connectivity_checker/connectivity_checker.dart';
 import 'package:flutter/material.dart';
@@ -750,8 +747,7 @@ class _MeetingPageState extends State<MeetingPage>
           ),
           if ((meetingStore.localPeer != null) &&
               meetingStore.localPeer!.role.publishSettings!.allowed
-                  .contains("screen") &&
-              Platform.isAndroid)
+                  .contains("screen"))
             PopupMenuItem(
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,

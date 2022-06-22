@@ -16,8 +16,8 @@ class HMSSDKInteractor {
   //Contains the default setting to jump directly in meeting i.e. skipping preview
   bool skipPreview = false;
 
-  HMSSDKInteractor() {
-    hmsSDK = HMSSDK();
+  HMSSDKInteractor({String? appGroup, String? preferredExtension}) {
+    hmsSDK = HMSSDK(appGroup: appGroup, preferredExtension: preferredExtension);
     hmsSDK.build();
   }
 
@@ -43,11 +43,7 @@ class HMSSDKInteractor {
   }
 
   Future<bool> isScreenShareActive() async {
-    if (Platform.isAndroid) {
-      return await hmsSDK.isScreenShareActive();
-    } else {
-      return false;
-    }
+    return await hmsSDK.isScreenShareActive();
   }
 
   void sendBroadcastMessage(

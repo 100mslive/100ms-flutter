@@ -24,18 +24,24 @@ import '../hmssdk_flutter.dart';
 /// **Broadcast** - A local peer can send any message/data to all remote peers in the room
 ///
 /// HMSSDK has other methods which the client app can use to get more info about the Room, Peer and Tracks
+///
+/// [appGroup] is only used for screen share (broadcast screen) in iOS.
+///
+/// [preferredExtension] is only used for screen share (broadcast screen) in iOS.
 class HMSSDK {
   ///join meeting by passing HMSConfig instance to it.
 
   HMSTrackSetting? hmsTrackSetting;
   bool previewState = false;
-
-  HMSSDK({this.hmsTrackSetting});
+  String? appGroup;
+  String? preferredExtension;
+  HMSSDK({this.hmsTrackSetting, this.appGroup, this.preferredExtension});
 
   /// The build function should be called after creating an instance of the [HMSSDK].
   /// Await the result & if true then create [HMSConfig] object to join or preview a room.
   Future<bool> build() async {
-    return await HmsSdkManager().createHMSSdk(hmsTrackSetting);
+    return await HmsSdkManager()
+        .createHMSSdk(hmsTrackSetting, appGroup, preferredExtension);
   }
 
   ///add MeetingListener it will add all the listeners.
@@ -651,20 +657,33 @@ class HMSSDK {
   /// API to start screen share of your android device. Note: This API is not available on iOS.
   /// [hmsActionResultListener] is a callback instance on which [HMSActionResultListener.onSuccess]
   ///  and [HMSActionResultListener.onException] will be called
+  /// [preferredExtension] is only used for screen share (broadcast screen) in iOS.
   void startScreenShare(
       {HMSActionResultListener? hmsActionResultListener}) async {
-    var result = await PlatformService.invokeMethod(
-      PlatformMethod.startScreenShare,
-    );
+    HMSLocalPeer? localPeer = await getLocalPeer();
+    if (localPeer?.role.publishSettings?.allowed.contains("screen") ?? false) {
+      var result =
+          await PlatformService.invokeMethod(PlatformMethod.startScreenShare);
 
-    if (hmsActionResultListener != null) {
-      if (result == null) {
-        hmsActionResultListener.onSuccess(
-            methodType: HMSActionResultListenerMethod.startScreenShare);
-      } else {
+      if (hmsActionResultListener != null) {
+        if (result == null) {
+          hmsActionResultListener.onSuccess(
+              methodType: HMSActionResultListenerMethod.startScreenShare);
+        } else {
+          hmsActionResultListener.onException(
+              methodType: HMSActionResultListenerMethod.startScreenShare,
+              hmsException: HMSException.fromMap(result["error"]));
+        }
+      }
+    } else {
+      if (hmsActionResultListener != null) {
         hmsActionResultListener.onException(
             methodType: HMSActionResultListenerMethod.startScreenShare,
-            hmsException: HMSException.fromMap(result["error"]));
+            hmsException: HMSException(
+                message: "Permission denied",
+                description: "Screen share is not included in publish settings",
+                action: "Enable screen share from dashboard for current role",
+                isTerminal: false));
       }
     }
   }
@@ -681,9 +700,8 @@ class HMSSDK {
   ///  and [HMSActionResultListener.onException] will be called
   void stopScreenShare(
       {HMSActionResultListener? hmsActionResultListener}) async {
-    var result = await PlatformService.invokeMethod(
-      PlatformMethod.stopScreenShare,
-    );
+    var result =
+        await PlatformService.invokeMethod(PlatformMethod.stopScreenShare);
     if (hmsActionResultListener != null) {
       if (result == null) {
         hmsActionResultListener.onSuccess(

@@ -5,7 +5,6 @@
 //  Copyright © 2021 100ms. All rights reserved.
 //
 
-import Foundation
 import Flutter
 import HMSSDK
 import UIKit
@@ -16,6 +15,7 @@ class HMSFlutterPlatformViewFactory: NSObject, FlutterPlatformViewFactory {
 
     init(plugin: SwiftHmssdkFlutterPlugin) {
         self.plugin = plugin
+        super.init()
     }
 
     func create(withFrame frame: CGRect, viewIdentifier viewId: Int64, arguments args: Any?) -> FlutterPlatformView {
