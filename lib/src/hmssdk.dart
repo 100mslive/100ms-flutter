@@ -660,17 +660,30 @@ class HMSSDK {
   /// [preferredExtension] is only used for screen share (broadcast screen) in iOS.
   void startScreenShare(
       {HMSActionResultListener? hmsActionResultListener}) async {
-    var result =
-        await PlatformService.invokeMethod(PlatformMethod.startScreenShare);
+    HMSLocalPeer? localPeer = await getLocalPeer();
+    if (localPeer?.role.publishSettings?.allowed.contains("screen") ?? false) {
+      var result =
+          await PlatformService.invokeMethod(PlatformMethod.startScreenShare);
 
-    if (hmsActionResultListener != null) {
-      if (result == null) {
-        hmsActionResultListener.onSuccess(
-            methodType: HMSActionResultListenerMethod.startScreenShare);
-      } else {
+      if (hmsActionResultListener != null) {
+        if (result == null) {
+          hmsActionResultListener.onSuccess(
+              methodType: HMSActionResultListenerMethod.startScreenShare);
+        } else {
+          hmsActionResultListener.onException(
+              methodType: HMSActionResultListenerMethod.startScreenShare,
+              hmsException: HMSException.fromMap(result["error"]));
+        }
+      }
+    } else {
+      if (hmsActionResultListener != null) {
         hmsActionResultListener.onException(
             methodType: HMSActionResultListenerMethod.startScreenShare,
-            hmsException: HMSException.fromMap(result["error"]));
+            hmsException: HMSException(
+                message: "Permission denied",
+                description: "Screen share is not included in publish settings",
+                action: "Enable screen share from dashboard for current role",
+                isTerminal: false));
       }
     }
   }
