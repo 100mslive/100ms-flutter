@@ -377,11 +377,11 @@ class UtilityComponents {
             }));
   }
 
-  static Future<Map<String, String>> showRTMPInputDialog(
-      {context,
-      String placeholder = "",
-      String prefilledValue = "",
-      }) async {
+  static Future<Map<String, String>> showRTMPInputDialog({
+    context,
+    String placeholder = "",
+    String prefilledValue = "",
+  }) async {
     TextEditingController textController = TextEditingController();
     if (prefilledValue.isNotEmpty) {
       textController.text = prefilledValue;
@@ -414,7 +414,7 @@ class UtilityComponents {
                       style: GoogleFonts.inter(),
                     ),
                     onPressed: () {
-                      Navigator.pop(context, {"url": "","toRecord": "false"});
+                      Navigator.pop(context, {"url": "", "toRecord": "false"});
                     },
                   ),
                   ElevatedButton(
@@ -425,10 +425,8 @@ class UtilityComponents {
                     onPressed: () {
                       if (textController.text == "") {
                       } else {
-                        Navigator.pop(context, {
-                          "url": textController.text,
-                          "toRecord": false
-                        });
+                        Navigator.pop(context,
+                            {"url": textController.text, "toRecord": false});
                       }
                     },
                   ),
@@ -491,5 +489,24 @@ class UtilityComponents {
         ),
       ),
     );
+  }
+
+  static showErrorDialog(BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  "Wrong Meeting Url",
+                  style: GoogleFonts.inter(color: Colors.red.shade300,fontSize: 16,fontWeight: FontWeight.w600),
+                ),
+              ],
+            ),
+            content: Text("Please enter a valid meeting URL",style:GoogleFonts.inter(color: defaultColor,fontSize: 14,fontWeight: FontWeight.w400)),
+          );
+        });
   }
 }

@@ -32,7 +32,7 @@ class _QRCodeScreenState extends State<QRCodeScreen> {
             bool res = await Utilities.getPermissions();
             if (res) {
               FocusManager.instance.primaryFocus?.unfocus();
-              Navigator.of(context).push(MaterialPageRoute(
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
                   builder: (_) => ListenableProvider.value(
                         value: PreviewStore(),
                         child: PreviewPage(
@@ -44,6 +44,9 @@ class _QRCodeScreenState extends State<QRCodeScreen> {
                         ),
                       )));
             }
+          }
+          else{
+          controller.resumeCamera();
           }
         } else {
           Utilities.showToast("Invalid QR Code");
