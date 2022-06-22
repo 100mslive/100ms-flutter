@@ -36,7 +36,6 @@ class RoomController extends GetxController
     HMSConfig config = HMSConfig(
       authToken: token[0]!,
       userName: name,
-      endPoint: token[1] == "true" ? "" : "https://qa-init.100ms.live/init",
     );
 
     hmsSdk.join(config: config);
@@ -117,7 +116,8 @@ class RoomController extends GetxController
 
       if (trackUpdate == HMSTrackUpdate.trackRemoved) {
         removeUserFromList(peer);
-      } else {
+      }
+      else if(trackUpdate == HMSTrackUpdate.trackAdded) {
         int index = peerTrackList.indexWhere((element) => element.value.peer.peerId == peer.peerId);
         if(index > -1){
           peerTrackList[index](PeerTrackNode(track as HMSVideoTrack, track.isMute, peer));
