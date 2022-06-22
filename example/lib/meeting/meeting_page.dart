@@ -155,7 +155,8 @@ class _MeetingPageState extends State<MeetingPage>
               await UtilityComponents.showRTMPInputDialog(
                   context: context,
                   placeholder: "Enter Comma separated RTMP Urls",
-                  isRecordingEnabled: false);
+                  isRecordingEnabled:
+                      _meetingStore.recordingType["browser"] == true);
           List<String>? urls;
           if (data["url"]!.isNotEmpty) {
             urls = data["url"]!.split(",");
