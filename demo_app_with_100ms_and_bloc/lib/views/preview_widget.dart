@@ -35,7 +35,6 @@ class PreviewWidget extends StatelessWidget {
     final double itemHeight = size.height;
     final double itemWidth = size.width;
 
-
     return Scaffold(
       body: Column(
         children: [
@@ -55,8 +54,7 @@ class PreviewWidget extends StatelessWidget {
                         child: Stack(
                           children: [
                             HMSVideoView(
-                                track: state.tracks[0],
-                                matchParent: true),
+                                track: state.tracks[0], matchParent: true),
                             Positioned(
                               bottom: 20.0,
                               left: itemWidth / 2 - 50.0,
@@ -66,7 +64,8 @@ class PreviewWidget extends StatelessWidget {
                                     padding: const EdgeInsets.all(14)),
                                 onPressed: () {
                                   Navigator.of(context).pushReplacement(
-                                      Room.route(meetingUrl, userName,state.isVideoOff,state.isMicOff));
+                                      Room.route(meetingUrl, userName,
+                                          state.isVideoOff, state.isMicOff));
                                 },
                                 child: const Text(
                                   "Join Now",

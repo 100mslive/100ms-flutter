@@ -47,8 +47,8 @@ class _VideoWidgetState extends State<VideoWidget> {
                     SizedBox(
                       height: 200.0,
                       width: 400.0,
-                      child:
-                          VideoView(state.peerTrackNodes[widget.index].hmsVideoTrack!),
+                      child: VideoView(
+                          state.peerTrackNodes[widget.index].hmsVideoTrack!),
                     ),
                     Text(
                       state.peerTrackNodes[widget.index].peer!.name,

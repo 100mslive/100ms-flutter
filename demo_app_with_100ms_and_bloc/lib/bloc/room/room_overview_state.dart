@@ -18,21 +18,20 @@ class RoomOverviewState extends Equatable {
       this.leaveMeeting = false});
 
   @override
-  List<Object?> get props => [status,peerTrackNodes,isAudioMute,isVideoMute,leaveMeeting];
+  List<Object?> get props =>
+      [status, peerTrackNodes, isAudioMute, isVideoMute, leaveMeeting];
 
-  RoomOverviewState copyWith({
-    RoomOverviewStatus? status,
-    List<PeerTrackNode>? peerTrackNodes,
-    bool? isVideoMute,
-    bool? isAudioMute,
-    bool? leaveMeeting
-  }) {
+  RoomOverviewState copyWith(
+      {RoomOverviewStatus? status,
+      List<PeerTrackNode>? peerTrackNodes,
+      bool? isVideoMute,
+      bool? isAudioMute,
+      bool? leaveMeeting}) {
     return RoomOverviewState(
-      status: status ?? this.status,
-      peerTrackNodes: peerTrackNodes ?? this.peerTrackNodes,
-      isVideoMute: isVideoMute ?? this.isVideoMute,
-      isAudioMute: isAudioMute ?? this.isAudioMute,
-      leaveMeeting: leaveMeeting ?? this.leaveMeeting
-    );
+        status: status ?? this.status,
+        peerTrackNodes: peerTrackNodes ?? this.peerTrackNodes,
+        isVideoMute: isVideoMute ?? this.isVideoMute,
+        isAudioMute: isAudioMute ?? this.isAudioMute,
+        leaveMeeting: leaveMeeting ?? this.leaveMeeting);
   }
 }
