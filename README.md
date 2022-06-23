@@ -166,7 +166,7 @@ abstract class HMSUpdateListener {
   /// This will be called when there is an error in the system
   /// and SDK has already retried to fix the error
   /// [error]: the error that occurred
-  void onError({required HMSException error});
+  void onHMSError({required HMSException error});
 
   /// This is called when there is a new broadcast message from any other peer in the room
   ///
@@ -221,25 +221,26 @@ abstract class HMSUpdateListener {
 HMSPeerUpdate
   HMSPeerUpdate.peerJoined: A new peer joins the room
   HMSPeerUpdate.peerLeft: An existing peer leaves the room
-  HMSPeerUpdate.roleUpdated
-  HMSPeerUpdate.metadataChanged
-  HMSPeerUpdate.nameChanged
+  HMSPeerUpdate.roleUpdated: When peer role is changed
+  HMSPeerUpdate.metadataChanged: When peer metadata changed
+  HMSPeerUpdate.nameChanged: When peer name change
 
 HMSTrackUpdate
   HMSTrackUpdate.trackAdded: A new track is added by a remote peer
   HMSTrackUpdate.trackRemoved: An existing track is removed from a remote peer
   HMSTrackUpdate.trackMuted: An existing track of a remote peer is muted
   HMSTrackUpdate.trackUnMuted: An existing track of a remote peer is unmuted
-  HMSTrackUpdate.trackDegraded
-  HMSTrackUpdate.trackRestored
+  HMSTrackUpdate.trackDegraded: When track is degraded
+  HMSTrackUpdate.trackRestored: When track is restored
 
 HMSRoomUpdate
-  HMSRoomUpdate.roomMuted
-  HMSRoomUpdate.roomUnmuted
-  HMSRoomUpdate.serverRecordingStateUpdated
-  HMSRoomUpdate.browserRecordingStateUpdated
-  HMSRoomUpdate.rtmpStreamingStateUpdated
-  HMSRoomUpdate.hlsStreamingStateUpdated
+  HMSRoomUpdate.roomMuted: When room is muted
+  HMSRoomUpdate.roomUnmuted: When room is unmuted
+  HMSRoomUpdate.serverRecordingStateUpdated: When server recording state is updated
+  HMSRoomUpdate.browserRecordingStateUpdated: When browser recording state is changed
+  HMSRoomUpdate.rtmpStreamingStateUpdated: When RTMP is started or stopped
+  HMSRoomUpdate.hlsStreamingStateUpdated: When HLS is started or stopped
+  HMSRoomUpdate.hlsRecordingStateUpdated: When hls recording state is updated
 ```
   
 ## 🛤 How to know the type and source of Track?
@@ -372,7 +373,7 @@ void onMessage({required HMSMessage message}){
 abstract class HMSPreviewListener {
 
   //you will get all error updates here
-  void onError({required HMSException error});
+  void onHMSError({required HMSException error});
 
   //here you will get a room instance where you are going to join and your own local tracks to render the video by checking the type of trackKind and then using the 
   //above mentioned VideoView widget
