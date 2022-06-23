@@ -55,14 +55,13 @@ class RoomOverviewBloc extends Bloc<RoomOverviewEvent, RoomOverviewState> {
 
   Future<void> _onJoinSuccess(
       RoomOverviewOnJoinSuccess event, Emitter<RoomOverviewState> emit) async {
-    if(state.isAudioMute){
-      hmsSdk.switchAudio(isOn : state.isAudioMute);
+    if (state.isAudioMute) {
+      hmsSdk.switchAudio(isOn: state.isAudioMute);
     }
 
-    if(state.isVideoMute){
-      hmsSdk.switchVideo(isOn : state.isVideoMute);
+    if (state.isVideoMute) {
+      hmsSdk.switchVideo(isOn: state.isVideoMute);
     }
-
   }
 
   Future<void> _onPeerLeave(
@@ -75,12 +74,14 @@ class RoomOverviewBloc extends Bloc<RoomOverviewEvent, RoomOverviewState> {
     await roomObserver.addPeer(event.hmsVideoTrack, event.hmsPeer);
   }
 
-  Future<void> _leaveRequested(RoomOverviewLeaveRequested event, Emitter<RoomOverviewState> emit) async{
+  Future<void> _leaveRequested(
+      RoomOverviewLeaveRequested event, Emitter<RoomOverviewState> emit) async {
     await roomObserver.leaveMeeting();
     emit(state.copyWith(leaveMeeting: true));
   }
 
-  Future<void> _setOffScreen(RoomOverviewSetOffScreen event, Emitter<RoomOverviewState> emit) async{
-    await roomObserver.setOffScreen(event.index,event.setOffScreen);
+  Future<void> _setOffScreen(
+      RoomOverviewSetOffScreen event, Emitter<RoomOverviewState> emit) async {
+    await roomObserver.setOffScreen(event.index, event.setOffScreen);
   }
 }

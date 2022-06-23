@@ -24,10 +24,10 @@ class RoomOverviewLeaveRequested extends RoomOverviewEvent {
   const RoomOverviewLeaveRequested();
 }
 
-class RoomOverviewSetOffScreen extends RoomOverviewEvent{
+class RoomOverviewSetOffScreen extends RoomOverviewEvent {
   final int index;
   final bool setOffScreen;
-  const RoomOverviewSetOffScreen(this.setOffScreen,this.index);
+  const RoomOverviewSetOffScreen(this.setOffScreen, this.index);
 }
 
 class RoomOverviewOnJoinSuccess extends RoomOverviewEvent {
@@ -38,11 +38,11 @@ class RoomOverviewOnJoinSuccess extends RoomOverviewEvent {
 class RoomOverviewOnPeerLeave extends RoomOverviewEvent {
   final HMSPeer hmsPeer;
   final HMSVideoTrack hmsVideoTrack;
-  const RoomOverviewOnPeerLeave(this.hmsVideoTrack,this.hmsPeer);
+  const RoomOverviewOnPeerLeave(this.hmsVideoTrack, this.hmsPeer);
 }
 
 class RoomOverviewOnPeerJoin extends RoomOverviewEvent {
   final HMSPeer hmsPeer;
   final HMSVideoTrack hmsVideoTrack;
-  const RoomOverviewOnPeerJoin(this.hmsVideoTrack,this.hmsPeer);
+  const RoomOverviewOnPeerJoin(this.hmsVideoTrack, this.hmsPeer);
 }
