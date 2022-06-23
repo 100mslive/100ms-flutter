@@ -2,16 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
+import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
+import 'package:hmssdk_flutter_example/hls-streaming-kit/hls-preview-screen.dart';
+import 'package:hmssdk_flutter_example/preview/preview_store.dart';
+import 'package:provider/provider.dart';
 
 class WelcomeHLSScreen extends StatefulWidget {
+  String roomId;
+  WelcomeHLSScreen({
+    required this.roomId
+  });
   @override
   State<WelcomeHLSScreen> createState() => _WelcomeHLSScreenState();
 }
 
 class _WelcomeHLSScreenState extends State<WelcomeHLSScreen> {
-
-  TextEditingController nameController =
-      TextEditingController();
+  TextEditingController nameController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -22,10 +28,13 @@ class _WelcomeHLSScreenState extends State<WelcomeHLSScreen> {
     return Scaffold(
       body: Center(
           child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-            SvgPicture.asset('assets/icons/user-music.svg',width: width/4,),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SvgPicture.asset(
+              'assets/icons/user-music.svg',
+              width: width / 4,
+            ),
             SizedBox(
               height: 40,
             ),
@@ -78,58 +87,74 @@ class _WelcomeHLSScreenState extends State<WelcomeHLSScreen> {
               height: 30,
             ),
             SizedBox(
-                    width: width * 0.6,
-                    child: ValueListenableBuilder<TextEditingValue>(
-                        valueListenable: nameController,
-                        builder: (context, value, child) {
-                          return ElevatedButton(
-                            style: ButtonStyle(
-                                shadowColor:
-                                    MaterialStateProperty.all(surfaceColor),
-                                backgroundColor: nameController.text.isEmpty
-                                    ? MaterialStateProperty.all(surfaceColor)
-                                    : MaterialStateProperty.all(Colors.blue),
-                                shape: MaterialStateProperty.all<
-                                        RoundedRectangleBorder>(
-                                    RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ))),
-                            onPressed: () async {
-                              if (nameController.text.isEmpty) {
-                                return;
-                              }
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.fromLTRB(8, 16, 8, 16),
-                              decoration: BoxDecoration(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(8))),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text('Get Started',
-                                      style: GoogleFonts.inter(
-                                          color: nameController.text.isEmpty
-                                              ? disabledTextColor
-                                              : enabledTextColor,
-                                          height: 1,
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w600)),
-                                  SizedBox(width: 4,),
-                                  Icon(Icons.arrow_forward,color: nameController.text.isEmpty
-                                              ? disabledTextColor
-                                              : enabledTextColor,size: 16,)
-                                ],
-                              ),
+              width: width * 0.6,
+              child: ValueListenableBuilder<TextEditingValue>(
+                  valueListenable: nameController,
+                  builder: (context, value, child) {
+                    return ElevatedButton(
+                      style: ButtonStyle(
+                          shadowColor: MaterialStateProperty.all(surfaceColor),
+                          backgroundColor: nameController.text.isEmpty
+                              ? MaterialStateProperty.all(surfaceColor)
+                              : MaterialStateProperty.all(Colors.blue),
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                          ))),
+                      onPressed: () async {
+                        print("Name is ${nameController.text}");
+                        if (nameController.text.isEmpty) {
+                          return;
+                        }
+                        bool res = await Utilities.getPermissions();
+                        if(res){
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (_) => ListenableProvider.value(
+                                  value: PreviewStore(),
+                                  child: HLSPreviewScreen(
+                                    name: nameController.text,
+                                    roomId:widget.roomId 
+                                  ),
+                                )));
+                        }
+                        
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.fromLTRB(8, 16, 8, 16),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(8))),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text('Get Started',
+                                style: GoogleFonts.inter(
+                                    color: nameController.text.isEmpty
+                                        ? disabledTextColor
+                                        : enabledTextColor,
+                                    height: 1,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600)),
+                            SizedBox(
+                              width: 4,
                             ),
-                          );
-                        }),
-                  ),
-                 
-                  ],
-                ),
-          )),
+                            Icon(
+                              Icons.arrow_forward,
+                              color: nameController.text.isEmpty
+                                  ? disabledTextColor
+                                  : enabledTextColor,
+                              size: 16,
+                            )
+                          ],
+                        ),
+                      ),
+                    );
+                  }),
+            ),
+          ],
+        ),
+      )),
     );
   }
 }

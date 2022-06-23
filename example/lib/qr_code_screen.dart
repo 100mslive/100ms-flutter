@@ -50,7 +50,7 @@ class _QRCodeScreenState extends State<QRCodeScreen> {
           }
         } else if (flow == MeetingFlow.hlsStreaming) {
           Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (_) => WelcomeHLSScreen()));
+              context, MaterialPageRoute(builder: (_) => WelcomeHLSScreen(roomId: scanData.code!.trim(),)));
         } else {
           Utilities.showToast("Invalid QR Code");
           controller.resumeCamera();
