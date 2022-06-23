@@ -27,30 +27,14 @@ class _QRCodeScreenState extends State<QRCodeScreen> {
         MeetingFlow flow = Utilities.deriveFlow(scanData.code!);
         if (flow == MeetingFlow.join) {
           Utilities.setRTMPUrl(scanData.code!);
-          String user = await showDialog(
-              context: context, builder: (_) => UserNameDialogOrganism());
-          if (user.isNotEmpty) {
-            bool res = await Utilities.getPermissions();
-            if (res) {
-              FocusManager.instance.primaryFocus?.unfocus();
+          FocusManager.instance.primaryFocus?.unfocus();
               Navigator.of(context).pushReplacement(MaterialPageRoute(
                   builder: (_) => ListenableProvider.value(
                         value: PreviewStore(),
-                        child: PreviewPage(
-                          roomId: scanData.code!.trim(),
-                          user: user,
-                          flow: MeetingFlow.join,
-                          mirror: true,
-                          showStats: false,
+                        child: WelcomeHLSScreen(
+                          roomId: scanData.code!.trim(),                          
                         ),
                       )));
-            }
-          } else {
-            controller.resumeCamera();
-          }
-        } else if (flow == MeetingFlow.hlsStreaming) {
-          Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (_) => WelcomeHLSScreen(roomId: scanData.code!.trim(),)));
         } else {
           Utilities.showToast("Invalid QR Code");
           controller.resumeCamera();

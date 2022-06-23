@@ -107,9 +107,10 @@ class _WelcomeHLSScreenState extends State<WelcomeHLSScreen> {
                         if (nameController.text.isEmpty) {
                           return;
                         }
+                        FocusManager.instance.primaryFocus?.unfocus();
                         bool res = await Utilities.getPermissions();
                         if(res){
-                          Navigator.of(context).push(MaterialPageRoute(
+                          Navigator.of(context).pushReplacement(MaterialPageRoute(
                             builder: (_) => ListenableProvider.value(
                                   value: PreviewStore(),
                                   child: HLSPreviewScreen(
