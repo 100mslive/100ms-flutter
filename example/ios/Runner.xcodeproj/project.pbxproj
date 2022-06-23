@@ -528,7 +528,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = live.100ms.flutter;
 				"PRODUCT_BUNDLE_IDENTIFIER[sdk=macosx*]" = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = FlutterAppStore;
+				PROVISIONING_PROFILE_SPECIFIER = FlutterAdHocDistribution;
 				SUPPORTS_MACCATALYST = NO;
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
@@ -701,7 +701,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = live.100ms.flutter;
 				"PRODUCT_BUNDLE_IDENTIFIER[sdk=macosx*]" = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = FlutterAppStore;
+				PROVISIONING_PROFILE_SPECIFIER = FlutterAdHocDistribution;
 				SUPPORTS_MACCATALYST = NO;
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
@@ -783,7 +783,7 @@
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = live.100ms.flutter.FlutterBroadcastUploadExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = FlutterAppStoreBroadcastUploadExtension;
+				PROVISIONING_PROFILE_SPECIFIER = FlutterAdhocBroadcastUploadExtension;
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -822,7 +822,7 @@
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = live.100ms.flutter.FlutterBroadcastUploadExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = FlutterAppStoreBroadcastUploadExtension;
+				PROVISIONING_PROFILE_SPECIFIER = FlutterAdhocBroadcastUploadExtension;
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
