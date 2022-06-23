@@ -147,7 +147,7 @@ class _HomePageState extends State<HomePage> {
     bool isDarkMode = HMSExampleApp.of(context).isDarkMode;
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
-    print("Width is $width and height is $height");
+
     return WillPopScope(
       onWillPop: _closeApp,
       child: SafeArea(
