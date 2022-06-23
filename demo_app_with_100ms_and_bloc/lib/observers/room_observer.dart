@@ -120,7 +120,9 @@ class RoomObserver implements HMSUpdateListener, HMSActionResultListener {
       if (trackUpdate == HMSTrackUpdate.trackRemoved) {
         roomOverviewBloc
             .add(RoomOverviewOnPeerLeave(track as HMSVideoTrack, peer));
-      } else if (trackUpdate == HMSTrackUpdate.trackAdded) {
+      } else if (trackUpdate == HMSTrackUpdate.trackAdded ||
+          trackUpdate == HMSTrackUpdate.trackMuted ||
+          trackUpdate == HMSTrackUpdate.trackUnMuted) {
         roomOverviewBloc
             .add(RoomOverviewOnPeerJoin(track as HMSVideoTrack, peer));
       }
