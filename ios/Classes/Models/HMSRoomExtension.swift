@@ -40,7 +40,9 @@ class  HMSRoomExtension {
 
         dict["server_recording_state"] = HMSStreamingStateExtension.toDictionary(server: room.serverRecordingState)
 
-         dict["hls_streaming_state"] = HMSStreamingStateExtension.toDictionary(hlsVariant: room.hlsStreamingState)
+        dict["hls_streaming_state"] = HMSStreamingStateExtension.toDictionary(hlsStreaming: room.hlsStreamingState)
+        
+        dict["hls_recording_state"] = HMSStreamingStateExtension.toDictionary(hlsRecording: room.hlsRecordingState)
 
         return dict
     }
@@ -57,6 +59,8 @@ class  HMSRoomExtension {
             return "server_recording_state_updated"
         case .hlsStreamingStateUpdated:
             return "hls_streaming_state_updated"
+        case .hlsRecordingStateUpdated:
+            return "hls_recording_state_updated"
         case .metaDataUpdated:
             return "meta_data_updated"
         default:

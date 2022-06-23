@@ -10,7 +10,10 @@ class PreviewStore extends ChangeNotifier
   late HMSSDKInteractor hmsSDKInteractor;
 
   PreviewStore() {
-    hmsSDKInteractor = HMSSDKInteractor();
+    hmsSDKInteractor = HMSSDKInteractor(
+        appGroup: "group.flutterhms",
+        preferredExtension:
+            "live.100ms.flutter.FlutterBroadcastUploadExtension");
   }
 
   List<HMSVideoTrack> localTracks = [];
@@ -28,12 +31,14 @@ class PreviewStore extends ChangeNotifier
 
   bool isRecordingStarted = false;
 
+  bool isStreamingStarted = false;
+
   List<HMSPeer> peers = [];
 
   int? networkQuality;
 
   @override
-  void onError({required HMSException error}) {
+  void onHMSError({required HMSException error}) {
     updateError(error);
   }
 
@@ -114,11 +119,15 @@ class PreviewStore extends ChangeNotifier
         isRecordingStarted = room.hmsServerRecordingState?.running ?? false;
         break;
 
+      case HMSRoomUpdate.hlsRecordingStateUpdated:
+        isRecordingStarted = room.hmshlsRecordingState?.running ?? false;
+        break;
+
       case HMSRoomUpdate.rtmpStreamingStateUpdated:
-        isRecordingStarted = room.hmsRtmpStreamingState?.running ?? false;
+        isStreamingStarted = room.hmsRtmpStreamingState?.running ?? false;
         break;
       case HMSRoomUpdate.hlsStreamingStateUpdated:
-        isRecordingStarted = room.hmshlsStreamingState?.running ?? false;
+        isStreamingStarted = room.hmshlsStreamingState?.running ?? false;
         break;
       default:
         break;

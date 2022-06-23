@@ -1,6 +1,8 @@
+
 import Flutter
 import UIKit
 import HMSSDK
+import ReplayKit
 
 public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListener, FlutterStreamHandler, HMSPreviewListener, HMSLogger {
     
@@ -39,6 +41,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         
         let videoViewFactory = HMSFlutterPlatformViewFactory(plugin: instance)
         registrar.register(videoViewFactory, withId: "HMSFlutterPlatformView")
+        
         
         eventChannel.setStreamHandler(instance)
         previewChannel.setStreamHandler(instance)
@@ -107,64 +110,70 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             // MARK: Room Actions
             
         case "build", "preview", "join", "leave":
-            buildActions(call, result: result)
+            buildActions(call, result)
             
             // MARK: Room Actions
             
         case "get_room", "get_local_peer", "get_remote_peers", "get_peers":
-            HMSRoomAction.roomActions(call, result: result,hmsSDK:hmsSDK)
+            HMSRoomAction.roomActions(call, result, hmsSDK)
             
             // MARK: - Audio Helpers
             
         case "switch_audio", "is_audio_mute", "mute_all", "un_mute_all", "set_volume":
-            HMSAudioAction.audioActions(call, result: result,hmsSDK: hmsSDK)
+            HMSAudioAction.audioActions(call, result, hmsSDK)
             
             // MARK: - Video Helpers
             
         case "switch_video", "switch_camera", "start_capturing", "stop_capturing", "is_video_mute", "set_playback_allowed":
-            HMSVideoAction.videoActions(call, result: result,hmsSDK: hmsSDK)
+            HMSVideoAction.videoActions(call, result, hmsSDK)
             
             // MARK: - Messaging
             
         case "send_broadcast_message", "send_direct_message", "send_group_message":
-            HMSMessageAction.messageActions(call, result: result,hmsSDK: hmsSDK)
+            HMSMessageAction.messageActions(call, result, hmsSDK)
             
             // MARK: - Role based Actions
             
         case "get_roles", "change_role", "accept_change_role", "end_room", "remove_peer", "on_change_track_state_request", "change_track_state_for_role":
-            roleActions(call, result: result)
+            roleActions(call, result)
             
             // MARK: - Peer Action
         case "change_metadata", "change_name":
-            peerActions(call, result: result)
+            peerActions(call, result)
             
-            // MARK: - Recording
+            // MARK: - RTMP
             
         case "start_rtmp_or_recording", "stop_rtmp_and_recording":
-            HMSRecordingAction.recordingActions(call, result: result,hmsSDK: hmsSDK)
+            HMSRecordingAction.recordingActions(call, result, hmsSDK)
             
             // MARK: - HLS
             
         case "hls_start_streaming", "hls_stop_streaming":
-            HMSHLSAction.hlsActions(call, result: result, hmsSDK: hmsSDK)
+            HMSHLSAction.hlsActions(call, result, hmsSDK)
             
             // MARK: - Logging
             
         case "start_hms_logger", "remove_hms_logger":
-            loggingActions(call, result: result)
+            loggingActions(call, result)
             
-            // MARK: - statsListener
+            // MARK: - Stats Listener
             
         case "start_stats_listener", "remove_stats_listener":
-            statsListenerAction(call, result: result)
+            statsListenerAction(call, result)
+            
+            // MARK: - Screen Share
+            
+        case "start_screen_share", "stop_screen_share", "is_screen_share_active":
+            screenShareActions(call, result)
+            
             
         default:
             result(FlutterMethodNotImplemented)
         }
     }
     
-    // MARK: Build Actions
-    private func buildActions(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
+    // MARK: - Build Actions
+    private func buildActions(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         switch call.method {
         case "build":
             build(call, result)
@@ -184,7 +193,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     }
     
     // MARK: - Role based Actions
-    private func roleActions(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
+    private func roleActions(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         switch call.method {
         case "get_roles":
             getRoles(call, result)
@@ -212,8 +221,10 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         }
     }
     
-    // MARK: - Peer
-    private func peerActions(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
+    
+    // MARK: - Peer Actions
+    
+    private func peerActions(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         switch call.method {
         case "change_metadata":
             changeMetadata(call, result)
@@ -226,7 +237,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     }
     
     // MARK: - Logging
-    private func loggingActions(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
+    private func loggingActions(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         switch call.method {
         case "start_hms_logger":
             startHMSLogger(call)
@@ -239,7 +250,9 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         }
     }
     
-    private func statsListenerAction(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
+    // MARK: - Stats Listener
+    
+    private func statsListenerAction(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         switch call.method {
             
         case "start_stats_listener":
@@ -250,6 +263,49 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             
         default:
             result(FlutterMethodNotImplemented)
+        }
+    }
+    
+    // MARK: - Screen Share
+    var isScreenShareOn = false {
+        didSet {
+            screenShareActionResult?(nil)
+            screenShareActionResult = nil
+        }
+    }
+    var preferredExtension: String?
+    var systemBroadcastPicker: RPSystemBroadcastPickerView?
+    var screenShareActionResult: FlutterResult?
+    
+    private func screenShareActions(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+
+        switch call.method {
+        case "start_screen_share", "stop_screen_share":
+            guard let preferredExtension = preferredExtension else {
+                let error = getError(message: "Could not start Screen share, preferredExtension not passed in Build Method", params: ["function": #function])
+                result(HMSErrorExtension.toDictionary(error))
+                screenShareActionResult = nil
+                return
+            }
+            
+            screenShareActionResult = result
+            
+            if systemBroadcastPicker == nil {
+                systemBroadcastPicker = RPSystemBroadcastPickerView()
+                systemBroadcastPicker!.preferredExtension = preferredExtension
+                systemBroadcastPicker!.showsMicrophoneButton = false
+            }
+            
+            for view in systemBroadcastPicker!.subviews {
+                if let button = view as? UIButton {
+                    button.sendActions(for: .allEvents)
+                }
+            }
+            
+        case "is_screen_share_active":
+            result(isScreenShareOn)
+        default:
+            print("Not Valid")
         }
     }
     
@@ -288,6 +344,11 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             trackSettings = HMSTrackSettings(videoSettings: videoSettings, audioSettings: audioSettings)
         }
         
+        if let prefExtension = arguments["preferred_extension"] as? String {
+            preferredExtension = prefExtension
+        }
+        
+        
         var setLogger = false
         if let level = arguments["log_level"] as? String {
             logLevel = getLogLevel(from: level)
@@ -296,6 +357,9 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         
         hmsSDK = HMSSDK.build { sdk in
             
+            if let appGroup = arguments["app_group"] as? String {
+                sdk.appGroup = appGroup
+            }
             if let settings = trackSettings {
                 sdk.trackSettings = settings
             }
@@ -673,7 +737,13 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                 "update": HMSTrackExtension.getValueOf(update)
             ]
         ] as [String: Any]
-        
+        if peer.isLocal && track.source.uppercased() == "SCREEN" {
+            if update == .trackAdded {
+                isScreenShareOn = true
+            }else if update == .trackRemoved {
+                isScreenShareOn = false
+            }
+        }
         eventSink?(data)
     }
     

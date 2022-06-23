@@ -17,7 +17,7 @@ class HMSLocalVideoStats {
   double frameRate;
 
   /// Frame rate of video frames being sent (FPS).
-  HMSVideoResolution resolution;
+  HMSResolution resolution;
 
   HMSLocalVideoStats({
     required this.roundTripTime,
@@ -34,7 +34,7 @@ class HMSLocalVideoStats {
         bitrate: map["bitrate"] ?? 0.00,
         frameRate: map["frame_rate"] ?? 0.0,
         resolution: map['resolution'] == null
-            ? HMSVideoResolution(height: 0, width: 0)
-            : HMSVideoResolution.fromMap(map['resolution']));
+            ? HMSResolution(height: 0, width: 0)
+            : HMSResolution.fromMap(map['resolution']));
   }
 }

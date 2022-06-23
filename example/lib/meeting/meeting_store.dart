@@ -1,7 +1,8 @@
 //Package imports
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:flutter/services.dart';
+import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_mode.dart';
 import 'package:hmssdk_flutter_example/model/rtc_stats.dart';
 import 'package:intl/intl.dart';
@@ -13,6 +14,7 @@ import 'package:hmssdk_flutter_example/meeting/peer_track_node.dart';
 import 'package:hmssdk_flutter_example/service/room_service.dart';
 
 class MeetingStore extends ChangeNotifier
+    with WidgetsBindingObserver
     implements HMSUpdateListener, HMSActionResultListener, HMSStatsListener {
   late HMSSDKInteractor _hmsSDKInteractor;
 
@@ -54,7 +56,13 @@ class MeetingStore extends ChangeNotifier
 
   bool isRoomEnded = false;
 
-  bool isRecordingStarted = false;
+  Map<String, bool> recordingType = {
+    "browser": false,
+    "server": false,
+    "hls": false
+  };
+
+  Map<String, bool> streamingType = {"rtmp": false, "hls": false};
 
   String description = "Meeting Ended";
 
@@ -99,6 +107,8 @@ class MeetingStore extends ChangeNotifier
 
   MeetingMode meetingMode = MeetingMode.Video;
 
+  bool isLandscapeLocked = false;
+
   Future<bool> join(String user, String roomUrl) async {
     List<String?>? token =
         await RoomService().getToken(user: user, room: roomUrl);
@@ -110,17 +120,14 @@ class MeetingStore extends ChangeNotifier
         captureNetworkQualityInPreview: true);
 
     _hmsSDKInteractor.addUpdateListener(this);
+    WidgetsBinding.instance!.addObserver(this);
     _hmsSDKInteractor.join(config: config);
     return true;
   }
 
   void leave() async {
-    if (isScreenShareOn) {
-      isScreenShareOn = false;
-      _hmsSDKInteractor.stopScreenShare();
-    }
-
     _hmsSDKInteractor.removeStatsListener(this);
+    WidgetsBinding.instance!.removeObserver(this);
     _hmsSDKInteractor.leave(hmsActionResultListener: this);
   }
 
@@ -233,6 +240,21 @@ class MeetingStore extends ChangeNotifier
     notifyListeners();
   }
 
+  void setLandscapeLock(bool value) {
+    if (value) {
+      SystemChrome.setPreferredOrientations(
+          [DeviceOrientation.landscapeRight, DeviceOrientation.landscapeLeft]);
+    } else {
+      SystemChrome.setPreferredOrientations([
+        DeviceOrientation.portraitUp,
+        DeviceOrientation.landscapeLeft,
+        DeviceOrientation.landscapeRight
+      ]);
+    }
+    isLandscapeLocked = value;
+    notifyListeners();
+  }
+
   @override
   void onJoin({required HMSRoom room}) async {
     isMeetingStarted = true;
@@ -243,14 +265,21 @@ class MeetingStore extends ChangeNotifier
     } else {
       hasHlsStarted = false;
     }
-    if (room.hmsBrowserRecordingState?.running == true ||
-        room.hmsServerRecordingState?.running == true ||
-        room.hmsRtmpStreamingState?.running == true ||
-        room.hmshlsStreamingState?.running == true)
-      isRecordingStarted = true;
-    else
-      isRecordingStarted = false;
-
+    if (room.hmsBrowserRecordingState?.running == true) {
+      recordingType["browser"] = true;
+    }
+    if (room.hmsServerRecordingState?.running == true) {
+      recordingType["server"] = true;
+    }
+    if (room.hmshlsRecordingState?.running == true) {
+      recordingType["hls"] = true;
+    }
+    if (room.hmsRtmpStreamingState?.running == true) {
+      streamingType["rtmp"] = true;
+    }
+    if (room.hmshlsStreamingState?.running == true) {
+      streamingType["hls"] = true;
+    }
     for (HMSPeer each in room.peers!) {
       if (each.isLocal) {
         int index = peerTracks
@@ -264,14 +293,21 @@ class MeetingStore extends ChangeNotifier
         localPeer = each;
         addPeer(localPeer!);
         if (localPeer!.role.name.contains("hls-") == true) isHLSLink = true;
-
+        index = peerTracks
+            .indexWhere((element) => element.uid == each.peerId + "mainVideo");
         if (each.videoTrack != null) {
           if (each.videoTrack!.kind == HMSTrackKind.kHMSTrackKindVideo) {
-            int index = peerTracks.indexWhere(
-                (element) => element.uid == each.peerId + "mainVideo");
             peerTracks[index].track = each.videoTrack!;
             if (each.videoTrack!.isMute) {
               this.isVideoOn = false;
+            }
+          }
+        }
+        if (each.audioTrack != null) {
+          if (each.audioTrack!.kind == HMSTrackKind.kHMSTrackKindAudio) {
+            peerTracks[index].audioTrack = each.audioTrack!;
+            if (each.audioTrack!.isMute) {
+              this.isMicOn = false;
             }
           }
         }
@@ -286,18 +322,21 @@ class MeetingStore extends ChangeNotifier
   void onRoomUpdate({required HMSRoom room, required HMSRoomUpdate update}) {
     switch (update) {
       case HMSRoomUpdate.browserRecordingStateUpdated:
-        isRecordingStarted = room.hmsBrowserRecordingState?.running ?? false;
+        recordingType["browser"] =
+            room.hmsBrowserRecordingState?.running ?? false;
         break;
-
       case HMSRoomUpdate.serverRecordingStateUpdated:
-        isRecordingStarted = room.hmsServerRecordingState?.running ?? false;
+        recordingType["server"] =
+            room.hmsServerRecordingState?.running ?? false;
         break;
-
+      case HMSRoomUpdate.hlsRecordingStateUpdated:
+        recordingType["hls"] = room.hmshlsRecordingState?.running ?? false;
+        break;
       case HMSRoomUpdate.rtmpStreamingStateUpdated:
-        isRecordingStarted = room.hmsRtmpStreamingState?.running ?? false;
+        streamingType["rtmp"] = room.hmsRtmpStreamingState?.running ?? false;
         break;
       case HMSRoomUpdate.hlsStreamingStateUpdated:
-        isRecordingStarted = room.hmshlsStreamingState?.running ?? false;
+        streamingType["hls"] = room.hmshlsStreamingState?.running ?? false;
         hasHlsStarted = room.hmshlsStreamingState?.running ?? false;
         streamUrl = hasHlsStarted
             ? room.hmshlsStreamingState?.variants[0]?.hlsStreamUrl ?? ""
@@ -367,7 +406,7 @@ class MeetingStore extends ChangeNotifier
   }
 
   @override
-  void onError({required HMSException error}) {
+  void onHMSError({required HMSException error}) {
     this.hmsException = hmsException;
     notifyListeners();
   }
@@ -514,6 +553,12 @@ class MeetingStore extends ChangeNotifier
       case HMSPeerUpdate.peerLeft:
         peerTracks.removeWhere(
             (leftPeer) => leftPeer.uid == peer.peerId + "mainVideo");
+        int index = peerTracks
+            .indexWhere((element) => element.peer.peerId == peer.peerId);
+        if (index != -1) {
+          peerTracks.removeAt(index);
+          screenShareCount--;
+        }
         removePeer(peer);
         notifyListeners();
         break;
@@ -599,14 +644,9 @@ class MeetingStore extends ChangeNotifier
               PeerTrackNode(
                   peer: peer,
                   uid: peer.peerId + track.trackId,
-                  track: track as HMSVideoTrack));
+                  track: track as HMSVideoTrack,
+                  stats: RTCStats()));
           isScreenShareActive();
-          // for (var node in peerTracks) {
-          //   if (node.isOffscreen == false) {
-          //     node.setOffScreenStatus(true);
-          //   }
-          // }
-          // controller.jumpTo(0);
           notifyListeners();
         }
         break;
@@ -615,9 +655,11 @@ class MeetingStore extends ChangeNotifier
           screenShareCount--;
           peerTracks.removeWhere(
               (element) => element.uid == peer.peerId + track.trackId);
-          notifyListeners();
-        } else {
+          if (screenShareCount == 0) {
+            setLandscapeLock(false);
+          }
           isScreenShareActive();
+          notifyListeners();
         }
         break;
       case HMSTrackUpdate.trackMuted:
@@ -685,7 +727,7 @@ class MeetingStore extends ChangeNotifier
   //   HmsSdkManager.hmsSdkInteractor?.removeHMSLogger();
   // }
 
-  Future<HMSPeer?> getLocalPeer() async {
+  Future<HMSLocalPeer?> getLocalPeer() async {
     return await _hmsSDKInteractor.getLocalPeer();
   }
 
@@ -755,8 +797,10 @@ class MeetingStore extends ChangeNotifier
     _hmsSDKInteractor.changeName(name: name, hmsActionResultListener: this);
   }
 
-  void startHLSStreaming(String meetingUrl) {
-    _hmsSDKInteractor.startHLSStreaming(meetingUrl, this);
+  void startHLSStreaming(
+      String meetingUrl, bool singleFile, bool videoOnDemand) {
+    _hmsSDKInteractor.startHLSStreaming(meetingUrl, this,
+        singleFilePerLayer: singleFile, enableVOD: videoOnDemand);
   }
 
   void stopHLSStreaming() {
@@ -933,10 +977,6 @@ class MeetingStore extends ChangeNotifier
     return activeSpeakerIds.containsKey(uid) ? activeSpeakerIds[uid]! : -1;
   }
 
-  void showToast(String message) {
-    Fluttertoast.showToast(msg: message, backgroundColor: Colors.black87);
-  }
-
   @override
   void onSuccess(
       {HMSActionResultListenerMethod methodType =
@@ -948,10 +988,12 @@ class MeetingStore extends ChangeNotifier
         isRoomEnded = true;
         screenShareCount = 0;
         this.meetingMode = MeetingMode.Video;
+        isScreenShareOn = false;
+        setLandscapeLock(false);
         notifyListeners();
         break;
       case HMSActionResultListenerMethod.changeTrackState:
-        showToast("Track State Changed");
+        Utilities.showToast("Track State Changed");
         break;
       case HMSActionResultListenerMethod.changeMetadata:
         notifyListeners();
@@ -961,31 +1003,38 @@ class MeetingStore extends ChangeNotifier
         notifyListeners();
         break;
       case HMSActionResultListenerMethod.removePeer:
-        // TODO: Handle this case.
+        HMSPeer peer = arguments!['peer'];
+        Utilities.showToast("Removed ${peer.name} from room");
         break;
       case HMSActionResultListenerMethod.acceptChangeRole:
-        showToast("Accept role change successful");
+        Utilities.showToast("Accept role change successful");
         break;
       case HMSActionResultListenerMethod.changeRole:
-        showToast("Change role successful");
+        Utilities.showToast("Change role successful");
         break;
       case HMSActionResultListenerMethod.changeTrackStateForRole:
         message = arguments!['roles'] == null
             ? "Successfully Muted All"
             : "Successfully Muted Role";
-        showToast(message);
+        Utilities.showToast(message);
         break;
       case HMSActionResultListenerMethod.startRtmpOrRecording:
-        showToast("RTMP start successful");
-
+        if (arguments != null) {
+          if (arguments["rtmp_urls"].length == 0 && arguments["to_record"]) {
+            Utilities.showToast("Recording Started");
+          } else if (arguments["rtmp_urls"].length != 0 &&
+              arguments["to_record"] == false) {
+            Utilities.showToast("RTMP Started");
+          }
+        }
         break;
       case HMSActionResultListenerMethod.stopRtmpAndRecording:
-        showToast("RTMP stop successful");
+        Utilities.showToast("Stopped successfully");
         break;
       case HMSActionResultListenerMethod.unknown:
         break;
       case HMSActionResultListenerMethod.changeName:
-        showToast("Change name successful");
+        Utilities.showToast("Change name successful");
         break;
       case HMSActionResultListenerMethod.sendBroadcastMessage:
         var message = HMSMessage(
@@ -1029,22 +1078,22 @@ class MeetingStore extends ChangeNotifier
         break;
       case HMSActionResultListenerMethod.hlsStreamingStarted:
         hasHlsStarted = true;
-        showToast("HLS Streaming Started");
+        Utilities.showToast("HLS Streaming Started");
         notifyListeners();
         break;
       case HMSActionResultListenerMethod.hlsStreamingStopped:
         hasHlsStarted = false;
-        showToast("HLS Streaming Stopped");
+        Utilities.showToast("HLS Streaming Stopped");
         notifyListeners();
         break;
 
       case HMSActionResultListenerMethod.startScreenShare:
-        showToast("Screen Share Started");
+        Utilities.showToast("Screen Share Started");
         isScreenShareActive();
         break;
 
       case HMSActionResultListenerMethod.stopScreenShare:
-        showToast("Screen Share Stopped");
+        Utilities.showToast("Screen Share Stopped");
         isScreenShareActive();
         break;
     }
@@ -1060,63 +1109,67 @@ class MeetingStore extends ChangeNotifier
     FirebaseCrashlytics.instance.log(hmsException.toString());
     switch (methodType) {
       case HMSActionResultListenerMethod.leave:
-        showToast("Leave Operation failed");
+        Utilities.showToast("Leave Operation failed");
         break;
       case HMSActionResultListenerMethod.changeTrackState:
-        showToast("Change Track state failed");
+        Utilities.showToast("Change Track state failed");
         break;
       case HMSActionResultListenerMethod.changeMetadata:
         // TODO: Handle this case.
         break;
       case HMSActionResultListenerMethod.endRoom:
-        showToast("End room failed");
+        Utilities.showToast("End room failed");
         break;
       case HMSActionResultListenerMethod.removePeer:
-        showToast("Remove peer failed");
+        Utilities.showToast("Remove peer failed");
         break;
       case HMSActionResultListenerMethod.acceptChangeRole:
-        showToast("Accept change role failed");
+        Utilities.showToast("Accept change role failed");
         break;
       case HMSActionResultListenerMethod.changeRole:
-        showToast("Change role failed");
+        Utilities.showToast("Change role failed");
         break;
       case HMSActionResultListenerMethod.changeTrackStateForRole:
-        showToast("Failed to change track state");
+        Utilities.showToast("Failed to change track state");
         break;
       case HMSActionResultListenerMethod.startRtmpOrRecording:
-        if (hmsException.code?.errorCode == "400") {
-          isRecordingStarted = true;
+        if (arguments != null) {
+          if (arguments["rtmp_urls"].length == 0 && arguments["to_record"]) {
+            Utilities.showToast("Recording failed");
+          } else if (arguments["rtmp_urls"].length != 0 &&
+              arguments["to_record"] == false) {
+            Utilities.showToast("RTMP failed");
+          }
         }
-        showToast("Start RTMP Streaming failed");
         break;
       case HMSActionResultListenerMethod.stopRtmpAndRecording:
-        showToast("Stop RTMP Streaming failed");
+        Utilities.showToast("Stop RTMP Streaming failed");
         break;
       case HMSActionResultListenerMethod.changeName:
-        showToast("Name change failed");
+        Utilities.showToast("Name change failed");
         break;
       case HMSActionResultListenerMethod.sendBroadcastMessage:
-        // TODO: Handle this case.
+        Utilities.showToast("Sending broadcast message failed");
         break;
       case HMSActionResultListenerMethod.sendGroupMessage:
-        // TODO: Handle this case.
+        Utilities.showToast("Sending group message failed");
         break;
       case HMSActionResultListenerMethod.sendDirectMessage:
-        // TODO: Handle this case.
+        Utilities.showToast("Sending direct message failed");
         break;
       case HMSActionResultListenerMethod.hlsStreamingStarted:
-        showToast("Start HLS failed");
+        Utilities.showToast("Start HLS failed");
         break;
       case HMSActionResultListenerMethod.hlsStreamingStopped:
-        showToast("Stop HLS failed");
+        Utilities.showToast("Stop HLS failed");
         break;
       case HMSActionResultListenerMethod.startScreenShare:
         isScreenShareActive();
-        showToast("Start screenshare failed");
+        Utilities.showToast("Start screenshare failed");
         break;
       case HMSActionResultListenerMethod.stopScreenShare:
         isScreenShareActive();
-        showToast("Stop screenshare failed");
+        Utilities.showToast("Stop screenshare failed");
         break;
       case HMSActionResultListenerMethod.unknown:
         break;
@@ -1125,5 +1178,43 @@ class MeetingStore extends ChangeNotifier
 
   Future<List<HMSPeer>?> getPeers() async {
     return await _hmsSDKInteractor.getPeers();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) async {
+    super.didChangeAppLifecycleState(state);
+
+    if (state == AppLifecycleState.resumed) {
+      List<HMSPeer>? peersList = await getPeers();
+
+      peersList?.forEach((element) {
+        if (!element.isLocal) {
+          (element.audioTrack as HMSRemoteAudioTrack?)?.setVolume(10.0);
+          element.auxiliaryTracks?.forEach((element) {
+            if (element.kind == HMSTrackKind.kHMSTrackKindAudio) {
+              (element as HMSRemoteAudioTrack?)?.setVolume(10.0);
+            }
+          });
+        } else {
+          if ((element.videoTrack != null && isVideoOn)) startCapturing();
+        }
+      });
+    } else if (state == AppLifecycleState.paused) {
+      HMSLocalPeer? localPeer = await getLocalPeer();
+      if (localPeer != null && !(localPeer.videoTrack?.isMute ?? true)) {
+        stopCapturing();
+      }
+      for (PeerTrackNode peerTrackNode in peerTracks) {
+        peerTrackNode.setOffScreenStatus(true);
+      }
+    } else if (state == AppLifecycleState.inactive) {
+      HMSLocalPeer? localPeer = await getLocalPeer();
+      if (localPeer != null && !(localPeer.videoTrack?.isMute ?? true)) {
+        stopCapturing();
+      }
+      for (PeerTrackNode peerTrackNode in peerTracks) {
+        peerTrackNode.setOffScreenStatus(true);
+      }
+    }
   }
 }

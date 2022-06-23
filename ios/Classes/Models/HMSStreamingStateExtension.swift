@@ -53,15 +53,29 @@ class HMSStreamingStateExtension {
         return dict
     }
 
-    static func toDictionary(hlsVariant: HMSHLSStreamingState) -> [String: Any] {
+    static func toDictionary(hlsStreaming: HMSHLSStreamingState) -> [String: Any] {
         var dict = [String: Any]()
 
-        dict["running"] = hlsVariant.running
+        dict["running"] = hlsStreaming.running
         var args = [Any]()
-        hlsVariant.variants.forEach { variant in
+        hlsStreaming.variants.forEach { variant in
             args.append(HMSHLSVariantExtension.toDictionary(variant))
         }
         dict["variants"]=args
+
+        return dict
+    }
+    
+    static func toDictionary(hlsRecording: HMSHLSRecordingState) -> [String: Any] {
+        var dict = [String: Any]()
+
+        dict["running"] = hlsRecording.running
+        if let startedAt = hlsRecording.startedAt {
+            dict["started_at"] = "\(startedAt)"
+        }
+        if let error = hlsRecording.error {
+            dict.merge(HMSErrorExtension.toDictionary(error)) { (_, new) in new }
+        }
 
         return dict
     }

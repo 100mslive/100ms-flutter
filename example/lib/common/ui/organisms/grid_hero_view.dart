@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
+import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:provider/provider.dart';
 
 //Project imports
@@ -17,12 +18,14 @@ Widget gridHeroView(
     required int itemCount,
     required int screenShareCount,
     required BuildContext context,
+    required bool isPortrait,
     required Size size}) {
   return GridView.builder(
       shrinkWrap: true,
       cacheExtent: 600,
       physics: PageScrollPhysics(),
       itemCount: itemCount,
+      scrollDirection: isPortrait ? Axis.vertical : Axis.horizontal,
       itemBuilder: (context, index) {
         if (peerTracks[index].track?.source != "REGULAR") {
           return ChangeNotifierProvider.value(
@@ -68,11 +71,14 @@ Widget gridHeroView(
       controller: Provider.of<MeetingStore>(context).controller,
       gridDelegate: SliverStairedGridDelegate(
           startCrossAxisDirectionReversed: false,
-          pattern: pattern(itemCount, screenShareCount, size)));
+          pattern: isPortrait
+              ? portraitPattern(itemCount, screenShareCount, size, context)
+              : landscapePattern(itemCount, screenShareCount, size, context)));
 }
 
-List<StairedGridTile> pattern(int itemCount, int screenShareCount, Size size) {
-  double ratio = (size.width) / (size.height * 0.82);
+List<StairedGridTile> portraitPattern(
+    int itemCount, int screenShareCount, Size size, BuildContext context) {
+  double ratio = 1 / Utilities.getRatio(size, context);
 
   List<StairedGridTile> tiles = [];
   for (int i = 0; i < screenShareCount; i++) {
@@ -102,5 +108,31 @@ List<StairedGridTile> pattern(int itemCount, int screenShareCount, Size size) {
     tiles.add(StairedGridTile(1, ratio / (1 / 3)));
     tiles.add(StairedGridTile(1, ratio / (1 / 3)));
   }
+  return tiles;
+}
+
+List<StairedGridTile> landscapePattern(
+    int itemCount, int screenShareCount, Size size, BuildContext context) {
+  double ratio = Utilities.getRatio(size, context);
+  List<StairedGridTile> tiles = [];
+  for (int i = 0; i < screenShareCount; i++) {
+    tiles.add(StairedGridTile(1, ratio));
+  }
+  int normalTile = (itemCount - screenShareCount);
+  if (normalTile == 1) {
+    tiles.add(StairedGridTile(1, ratio));
+  } else {
+    tiles.add(StairedGridTile(1, ratio / 0.8));
+    tiles.add(StairedGridTile(0.33, ratio / 0.6));
+    tiles.add(StairedGridTile(0.33, ratio / 0.6));
+    tiles.add(StairedGridTile(0.33, ratio / 0.6));
+  }
+  int gridView = normalTile ~/ 2;
+  int tileLeft = normalTile - (gridView * 2);
+  for (int i = 0; i < (normalTile - tileLeft - 4); i++) {
+    tiles.add(StairedGridTile(1, ratio / 0.5));
+  }
+  if (tileLeft == 1) tiles.add(StairedGridTile(1, ratio));
+
   return tiles;
 }

@@ -406,7 +406,7 @@ class PlatformService {
         break;
       case HMSPreviewUpdateListenerMethod.onError:
         previewListeners.forEach((e) {
-          e.onError(error: arguments["error"]);
+          e.onHMSError(error: arguments["error"]);
         });
         break;
       case HMSPreviewUpdateListenerMethod.unknown:
@@ -482,7 +482,7 @@ class PlatformService {
             peer: arguments['peer']));
         break;
       case HMSUpdateListenerMethod.onError:
-        updateListeners.forEach((e) => e.onError(error: arguments['error']));
+        updateListeners.forEach((e) => e.onHMSError(error: arguments['error']));
         break;
       case HMSUpdateListenerMethod.onMessage:
         updateListeners

@@ -1,5 +1,4 @@
 //Dart imports
-import 'dart:io';
 
 //Project imports
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
@@ -16,8 +15,8 @@ class HMSSDKInteractor {
   //Contains the default setting to jump directly in meeting i.e. skipping preview
   bool skipPreview = false;
 
-  HMSSDKInteractor() {
-    hmsSDK = HMSSDK();
+  HMSSDKInteractor({String? appGroup, String? preferredExtension}) {
+    hmsSDK = HMSSDK(appGroup: appGroup, preferredExtension: preferredExtension);
     hmsSDK.build();
   }
 
@@ -43,11 +42,7 @@ class HMSSDKInteractor {
   }
 
   Future<bool> isScreenShareActive() async {
-    if (Platform.isAndroid) {
-      return await hmsSDK.isScreenShareActive();
-    } else {
-      return false;
-    }
+    return await hmsSDK.isScreenShareActive();
   }
 
   void sendBroadcastMessage(
@@ -124,7 +119,7 @@ class HMSSDKInteractor {
     hmsSDK.stopCapturing();
   }
 
-  Future<HMSPeer?> getLocalPeer() async {
+  Future<HMSLocalPeer?> getLocalPeer() async {
     return await hmsSDK.getLocalPeer();
   }
 
@@ -238,13 +233,18 @@ class HMSSDKInteractor {
   }
 
   void startHLSStreaming(
-      String meetingUrl, HMSActionResultListener hmsActionResultListener) {
+      String meetingUrl, HMSActionResultListener hmsActionResultListener,
+      {bool singleFilePerLayer = false, bool enableVOD = false}) {
     List<HMSHLSMeetingURLVariant> hmsHlsMeetingUrls = [];
 
     hmsHlsMeetingUrls.add(HMSHLSMeetingURLVariant(
         meetingUrl: meetingUrl, metadata: "HLS started from Flutter"));
+    HMSHLSRecordingConfig hmshlsRecordingConfig = HMSHLSRecordingConfig(
+        singleFilePerLayer: singleFilePerLayer, videoOnDemand: enableVOD);
+    HMSHLSConfig hmshlsConfig = HMSHLSConfig(
+        meetingURLVariant: hmsHlsMeetingUrls,
+        hmsHLSRecordingConfig: hmshlsRecordingConfig);
 
-    HMSHLSConfig hmshlsConfig = new HMSHLSConfig(hmsHlsMeetingUrls);
     hmsSDK.startHlsStreaming(
         hmshlsConfig: hmshlsConfig,
         hmsActionResultListener: hmsActionResultListener);

@@ -18,6 +18,7 @@ Widget gridVideoView(
     required int itemCount,
     required int screenShareCount,
     required BuildContext context,
+    required bool isPortrait,
     required Size size}) {
   return GridView.builder(
       shrinkWrap: true,
@@ -78,11 +79,14 @@ Widget gridVideoView(
       controller: Provider.of<MeetingStore>(context).controller,
       gridDelegate: SliverStairedGridDelegate(
           startCrossAxisDirectionReversed: false,
-          pattern: pattern(itemCount, screenShareCount, size)));
+          pattern: isPortrait
+              ? portraitPattern(itemCount, screenShareCount, size, context)
+              : landscapePattern(itemCount, screenShareCount, size, context)));
 }
 
-List<StairedGridTile> pattern(int itemCount, int screenShareCount, Size size) {
-  double ratio = Utilities.getRatio(size);
+List<StairedGridTile> portraitPattern(
+    int itemCount, int screenShareCount, Size size, BuildContext context) {
+  double ratio = Utilities.getRatio(size, context);
   List<StairedGridTile> tiles = [];
   for (int i = 0; i < screenShareCount; i++) {
     tiles.add(StairedGridTile(1, ratio));
@@ -103,5 +107,23 @@ List<StairedGridTile> pattern(int itemCount, int screenShareCount, Size size) {
     tiles.add(StairedGridTile(1 / 3, ratio / 3));
     tiles.add(StairedGridTile(1 / 3, ratio / 3));
   }
+  return tiles;
+}
+
+List<StairedGridTile> landscapePattern(
+    int itemCount, int screenShareCount, Size size, BuildContext context) {
+  double ratio = Utilities.getRatio(size, context);
+  List<StairedGridTile> tiles = [];
+  for (int i = 0; i < screenShareCount; i++) {
+    tiles.add(StairedGridTile(1, ratio));
+  }
+  int normalTile = (itemCount - screenShareCount);
+  int gridView = normalTile ~/ 2;
+  int tileLeft = normalTile - (gridView * 2);
+  for (int i = 0; i < (normalTile - tileLeft); i++) {
+    tiles.add(StairedGridTile(1, ratio / 0.5));
+  }
+  if (tileLeft == 1) tiles.add(StairedGridTile(1, ratio));
+
   return tiles;
 }

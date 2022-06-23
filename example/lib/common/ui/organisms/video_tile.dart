@@ -52,7 +52,7 @@ class _VideoTileState extends State<VideoTile> {
     bool removePeerPermission =
         _meetingStore.localPeer?.role.permissions.removeOthers ?? false;
     bool changeRolePermission =
-        _meetingStore.localPeer!.role.permissions.changeRole ?? false;
+        _meetingStore.localPeer?.role.permissions.changeRole ?? false;
 
     return FocusDetector(
       onFocusLost: () {
@@ -214,6 +214,11 @@ class _VideoTileState extends State<VideoTile> {
                     scaleType: widget.scaleType,
                   ),
                   PeerName(),
+                  RTCStatsView(isLocal: false),
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: UtilityComponents.rotateScreen(context),
+                  )
                 ],
               ),
             ),

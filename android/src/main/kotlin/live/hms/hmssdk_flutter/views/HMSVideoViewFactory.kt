@@ -13,18 +13,15 @@ import live.hms.video.utils.HmsUtilities
 
 
 
-class HMSVideoViewWidget(context: Context, id: Int, creationParams: Map<String?, Any?>?, private val track: HMSVideoTrack, private val setMirror:Boolean,
+class HMSVideoViewWidget(private val context: Context, id: Int, creationParams: Map<String?, Any?>?, private val track: HMSVideoTrack, private val setMirror:Boolean,
                          private val scaleType : Int?,private val matchParent: Boolean? = true
 ) : PlatformView {
-
-    private val viewContext: Context = context
-    private val myTrack: HMSVideoTrack = track
 
     private var hmsVideoView: HMSVideoView? = null
 
     override fun getView(): View {        
         if (hmsVideoView == null) {
-            hmsVideoView = HMSVideoView(viewContext, setMirror, scaleType, myTrack)
+            hmsVideoView = HMSVideoView(context, setMirror, scaleType, track)
         }
         return hmsVideoView!!
     }
@@ -57,8 +54,7 @@ class HMSVideoViewWidget(context: Context, id: Int, creationParams: Map<String?,
 class HMSVideoViewFactory(private val plugin: HmssdkFlutterPlugin) :
 
     PlatformViewFactory(StandardMessageCodec.INSTANCE) {
-
-    override fun create(context: Context, viewId: Int, args: Any?): PlatformView {
+    override fun create(context: Context?, viewId: Int, args: Any?): PlatformView {
 
         val creationParams = args as Map<String?, Any?>?
 
@@ -73,6 +69,6 @@ class HMSVideoViewFactory(private val plugin: HmssdkFlutterPlugin) :
 
         val track = HmsUtilities.getVideoTrack(trackId!!, room!!)
 
-        return HMSVideoViewWidget(context, viewId, creationParams, track!!, setMirror!!, scaleType, matchParent)
+        return HMSVideoViewWidget(requireNotNull(context), viewId, creationParams, track!!, setMirror!!, scaleType, matchParent)
     }
 }

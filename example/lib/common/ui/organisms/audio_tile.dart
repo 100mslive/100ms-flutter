@@ -36,7 +36,7 @@ class AudioTile extends StatelessWidget {
     bool removePeerPermission =
         _meetingStore.localPeer?.role.permissions.removeOthers ?? false;
     bool changeRolePermission =
-        _meetingStore.localPeer!.role.permissions.changeRole ?? false;
+        _meetingStore.localPeer?.role.permissions.changeRole ?? false;
 
     return InkWell(
       onLongPress: () {

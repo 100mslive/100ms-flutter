@@ -1,6 +1,3 @@
-//Dart imports
-import 'dart:io';
-
 //Package imports
 import 'package:connectivity_checker/connectivity_checker.dart';
 import 'package:flutter/material.dart';
@@ -51,12 +48,11 @@ class MeetingPage extends StatefulWidget {
 }
 
 class _MeetingPageState extends State<MeetingPage>
-    with WidgetsBindingObserver, TickerProviderStateMixin {
+    with TickerProviderStateMixin {
   CustomLogger logger = CustomLogger();
   int appBarIndex = 0;
   bool audioViewOn = false;
   bool videoPreviousState = false;
-  bool isRecordingStarted = false;
   bool isBRB = false;
   final scrollController = DraggableScrollableController();
   late AnimationController animationController;
@@ -64,7 +60,6 @@ class _MeetingPageState extends State<MeetingPage>
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance!.addObserver(this);
     initMeeting();
     checkAudioState();
     setInitValues();
@@ -150,27 +145,22 @@ class _MeetingPageState extends State<MeetingPage>
         UtilityComponents.showRoleList(context, roles, _meetingStore);
         break;
       case 9:
-        if (_meetingStore.isRecordingStarted) {
+        if (_meetingStore.streamingType["rtmp"] == true) {
           _meetingStore.stopRtmpAndRecording();
-          isRecordingStarted = false;
         } else {
-          if (isRecordingStarted == false) {
-            Map<String, String> data =
-                await UtilityComponents.showRTMPInputDialog(
-                    context: context,
-                    placeholder: "Enter Comma separated RTMP Urls",
-                    isRecordingEnabled: false);
-            List<String>? urls;
-            if (data["url"]!.isNotEmpty) {
-              urls = data["url"]!.split(",");
-            }
-            if (data["toRecord"] == "true" || urls != null) {
-              _meetingStore.startRtmpOrRecording(
-                  meetingUrl: Constant.rtmpUrl,
-                  toRecord: data["toRecord"] == "true" ? true : false,
-                  rtmpUrls: urls);
-              isRecordingStarted = true;
-            }
+          Map<String, dynamic> data =
+              await UtilityComponents.showRTMPInputDialog(
+                  context: context,
+                  placeholder: "Enter Comma separated RTMP Urls",
+                  isRecordingEnabled:
+                      _meetingStore.recordingType["browser"] == true);
+          List<String>? urls;
+          if (data["url"]!.isNotEmpty) {
+            urls = data["url"]!.split(",");
+          }
+          if (urls != null) {
+            _meetingStore.startRtmpOrRecording(
+                meetingUrl: Constant.rtmpUrl, toRecord: false, rtmpUrls: urls);
           }
         }
         break;
@@ -178,19 +168,21 @@ class _MeetingPageState extends State<MeetingPage>
         if (_meetingStore.hasHlsStarted) {
           _meetingStore.stopHLSStreaming();
         } else {
-          String url = await UtilityComponents.showInputDialog(
-              context: context,
-              placeholder: "Enter HLS Url",
-              prefilledValue: Constant.rtmpUrl);
-          if (url.isNotEmpty) {
-            _meetingStore.startHLSStreaming(url);
-          }
+          UtilityComponents.showHLSDialog(context: context);
         }
         break;
       case 11:
-        _meetingStore.changeStatsVisible();
+        if (_meetingStore.recordingType["browser"] == true) {
+          _meetingStore.stopRtmpAndRecording();
+        } else {
+          _meetingStore.startRtmpOrRecording(
+              meetingUrl: Constant.rtmpUrl, toRecord: true, rtmpUrls: []);
+        }
         break;
       case 12:
+        _meetingStore.changeStatsVisible();
+        break;
+      case 13:
         UtilityComponents.onEndRoomPressed(context);
         break;
       default:
@@ -216,23 +208,36 @@ class _MeetingPageState extends State<MeetingPage>
                   Navigator.of(context).popUntil((route) => route.isFirst);
                 });
               }
+              bool isPortraitMode =
+                  MediaQuery.of(context).orientation == Orientation.portrait;
               return data.item1
                   ? OfflineWidget()
                   : Scaffold(
                       resizeToAvoidBottomInset: false,
                       appBar: AppBar(
+                        automaticallyImplyLeading: false,
                         title: TitleBar(),
                         actions: [
-                          Selector<MeetingStore, bool>(
-                            selector: (_, meetingStore) =>
-                                meetingStore.isRecordingStarted,
-                            builder: (_, isRecordingStarted, __) {
-                              return isRecordingStarted
-                                  ? SvgPicture.asset(
+                          Selector<MeetingStore,
+                              Tuple2<Map<String, bool>, Map<String, bool>>>(
+                            selector: (_, meetingStore) => Tuple2(
+                                meetingStore.recordingType,
+                                meetingStore.streamingType),
+                            builder: (_, data, __) {
+                              return Row(
+                                children: [
+                                  if (data.item1.containsValue(true))
+                                    SvgPicture.asset(
                                       "assets/icons/record.svg",
                                       color: Colors.red,
-                                    )
-                                  : Container();
+                                    ),
+                                  if (data.item2.containsValue(true))
+                                    SvgPicture.asset(
+                                      "assets/icons/stream.svg",
+                                      color: Colors.red,
+                                    ),
+                                ],
+                              );
                             },
                           ),
                           IconButton(
@@ -256,154 +261,163 @@ class _MeetingPageState extends State<MeetingPage>
                           dropDownMenu(),
                         ],
                       ),
-                      body: Stack(
-                        children: [
-                          Container(
-                            height: MediaQuery.of(context).size.height * 0.82,
-                            child: Selector<
-                                    MeetingStore,
-                                    Tuple6<List<PeerTrackNode>, bool, int, int,
-                                        MeetingMode, PeerTrackNode?>>(
-                                selector: (_, meetingStore) => Tuple6(
-                                    meetingStore.peerTracks,
-                                    meetingStore.isHLSLink,
-                                    meetingStore.peerTracks.length,
-                                    meetingStore.screenShareCount,
-                                    meetingStore.meetingMode,
-                                    meetingStore.peerTracks.length > 0
-                                        ? meetingStore.peerTracks[
-                                            meetingStore.screenShareCount]
-                                        : null),
-                                builder: (_, data, __) {
-                                  if (data.item2) {
-                                    return Selector<MeetingStore, bool>(
-                                        selector: (_, meetingStore) =>
-                                            meetingStore.hasHlsStarted,
-                                        builder: (_, hasHlsStarted, __) {
-                                          return hasHlsStarted
-                                              ? Center(
-                                                  child: Container(
-                                                    child: HLSViewer(
-                                                        streamUrl: context
-                                                            .read<
-                                                                MeetingStore>()
-                                                            .streamUrl),
-                                                  ),
-                                                )
-                                              : Center(
-                                                  child: Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                    .only(
-                                                                bottom: 8.0),
-                                                        child: Text(
-                                                          "Waiting for HLS to start...",
-                                                          style:
-                                                              GoogleFonts.inter(
-                                                                  color:
-                                                                      iconColor,
-                                                                  fontSize: 20),
+                      body: SafeArea(
+                        child: Stack(
+                          children: [
+                            Container(
+                              child: Selector<
+                                      MeetingStore,
+                                      Tuple6<List<PeerTrackNode>, bool, int,
+                                          int, MeetingMode, PeerTrackNode?>>(
+                                  selector: (_, meetingStore) => Tuple6(
+                                      meetingStore.peerTracks,
+                                      meetingStore.isHLSLink,
+                                      meetingStore.peerTracks.length,
+                                      meetingStore.screenShareCount,
+                                      meetingStore.meetingMode,
+                                      meetingStore.peerTracks.length > 0
+                                          ? meetingStore.peerTracks[
+                                              meetingStore.screenShareCount]
+                                          : null),
+                                  builder: (_, data, __) {
+                                    if (data.item2) {
+                                      return Selector<MeetingStore, bool>(
+                                          selector: (_, meetingStore) =>
+                                              meetingStore.hasHlsStarted,
+                                          builder: (_, hasHlsStarted, __) {
+                                            return hasHlsStarted
+                                                ? Center(
+                                                    child: Container(
+                                                      child: HLSViewer(
+                                                          streamUrl: context
+                                                              .read<
+                                                                  MeetingStore>()
+                                                              .streamUrl),
+                                                    ),
+                                                  )
+                                                : Center(
+                                                    child: Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .only(
+                                                                  bottom: 8.0),
+                                                          child: Text(
+                                                            "Waiting for HLS to start...",
+                                                            style: GoogleFonts
+                                                                .inter(
+                                                                    color:
+                                                                        iconColor,
+                                                                    fontSize:
+                                                                        20),
+                                                          ),
                                                         ),
-                                                      ),
-                                                      RotationTransition(
-                                                        child: Image.asset(
-                                                            "assets/icons/hms_icon_loading.png"),
-                                                        turns:
-                                                            animationController,
-                                                      )
-                                                    ],
-                                                  ),
-                                                );
-                                        });
-                                  }
-                                  if (data.item3 == 0) {
-                                    return Center(
-                                        child: RotationTransition(
-                                      child: Image.asset(
-                                          "assets/icons/hms_icon_loading.png"),
-                                      turns: animationController,
-                                    ));
-                                  }
-                                  Size size = MediaQuery.of(context).size;
-                                  if (data.item5 == MeetingMode.Hero) {
-                                    return gridHeroView(
+                                                        RotationTransition(
+                                                          child: Image.asset(
+                                                              "assets/icons/hms_icon_loading.png"),
+                                                          turns:
+                                                              animationController,
+                                                        )
+                                                      ],
+                                                    ),
+                                                  );
+                                          });
+                                    }
+                                    if (data.item3 == 0) {
+                                      return Center(
+                                          child: RotationTransition(
+                                        child: Image.asset(
+                                            "assets/icons/hms_icon_loading.png"),
+                                        turns: animationController,
+                                      ));
+                                    }
+                                    Size size = MediaQuery.of(context).size;
+                                    if (data.item5 == MeetingMode.Hero) {
+                                      return gridHeroView(
+                                          peerTracks: data.item1,
+                                          itemCount: data.item3,
+                                          screenShareCount: data.item4,
+                                          context: context,
+                                          isPortrait: isPortraitMode,
+                                          size: size);
+                                    }
+                                    if (data.item5 == MeetingMode.Audio) {
+                                      return gridAudioView(
+                                          peerTracks:
+                                              data.item1.sublist(data.item4),
+                                          itemCount: data.item1
+                                              .sublist(data.item4)
+                                              .length,
+                                          context: context,
+                                          isPortrait: isPortraitMode,
+                                          size: size);
+                                    }
+                                    if (data.item5 == MeetingMode.Single) {
+                                      return fullScreenView(
+                                          peerTracks: data.item1,
+                                          itemCount: data.item3,
+                                          screenShareCount: data.item4,
+                                          context: context,
+                                          isPortrait: isPortraitMode,
+                                          size: size);
+                                    }
+                                    return gridVideoView(
                                         peerTracks: data.item1,
                                         itemCount: data.item3,
                                         screenShareCount: data.item4,
                                         context: context,
+                                        isPortrait: isPortraitMode,
                                         size: size);
-                                  }
-                                  if (data.item5 == MeetingMode.Audio) {
-                                    return gridAudioView(
-                                        peerTracks:
-                                            data.item1.sublist(data.item4),
-                                        itemCount: data.item1
-                                            .sublist(data.item4)
-                                            .length,
-                                        size: size);
-                                  }
-                                  if (data.item5 == MeetingMode.Single) {
-                                    return fullScreenView(
-                                        peerTracks: data.item1,
-                                        itemCount: data.item3,
-                                        screenShareCount: data.item4,
-                                        context: context,
-                                        size: size);
-                                  }
-                                  return gridVideoView(
-                                      peerTracks: data.item1,
-                                      itemCount: data.item3,
-                                      screenShareCount: data.item4,
-                                      context: context,
-                                      size: size);
+                                  }),
+                            ),
+                            Selector<MeetingStore, bool>(
+                                selector: (_, meetingStore) =>
+                                    meetingStore.isHLSLink,
+                                builder: (_, isHlsRunning, __) {
+                                  return Positioned(
+                                    bottom: 0,
+                                    left: 0,
+                                    right: 0,
+                                    child: isHlsRunning
+                                        ? hlsBottomBarWidget()
+                                        : normalBottomBarWidget(),
+                                  );
                                 }),
-                          ),
-                          Selector<MeetingStore, bool>(
-                              selector: (_, meetingStore) =>
-                                  meetingStore.isHLSLink,
-                              builder: (_, isHlsRunning, __) {
-                                return Positioned(
-                                  bottom: 0,
-                                  child: isHlsRunning
-                                      ? hlsBottomBarWidget()
-                                      : normalBottomBarWidget(),
-                                );
-                              }),
-                          Selector<MeetingStore, HMSRoleChangeRequest?>(
-                              selector: (_, meetingStore) =>
-                                  meetingStore.roleChangeRequest,
-                              builder: (_, roleChangeRequest, __) {
-                                if (roleChangeRequest != null) {
-                                  WidgetsBinding.instance!
-                                      .addPostFrameCallback((_) {
-                                    UtilityComponents.showRoleChangeDialog(
-                                        roleChangeRequest, context);
-                                  });
-                                }
-                                return Container();
-                              }),
-                          Selector<MeetingStore, HMSTrackChangeRequest?>(
-                              selector: (_, meetingStore) =>
-                                  meetingStore.hmsTrackChangeRequest,
-                              builder: (_, hmsTrackChangeRequest, __) {
-                                if (hmsTrackChangeRequest != null) {
-                                  WidgetsBinding.instance!
-                                      .addPostFrameCallback((_) {
-                                    UtilityComponents.showTrackChangeDialog(
-                                        hmsTrackChangeRequest, context);
-                                  });
-                                }
-                                return Container();
-                              }),
-                        ],
+                            Selector<MeetingStore, HMSRoleChangeRequest?>(
+                                selector: (_, meetingStore) =>
+                                    meetingStore.roleChangeRequest,
+                                builder: (_, roleChangeRequest, __) {
+                                  if (roleChangeRequest != null) {
+                                    WidgetsBinding.instance!
+                                        .addPostFrameCallback((_) {
+                                      UtilityComponents.showRoleChangeDialog(
+                                          roleChangeRequest, context);
+                                    });
+                                  }
+                                  return SizedBox();
+                                }),
+                            Selector<MeetingStore, HMSTrackChangeRequest?>(
+                                selector: (_, meetingStore) =>
+                                    meetingStore.hmsTrackChangeRequest,
+                                builder: (_, hmsTrackChangeRequest, __) {
+                                  if (hmsTrackChangeRequest != null) {
+                                    WidgetsBinding.instance!
+                                        .addPostFrameCallback((_) {
+                                      UtilityComponents.showTrackChangeDialog(
+                                          hmsTrackChangeRequest, context);
+                                    });
+                                  }
+                                  return SizedBox();
+                                }),
+                          ],
+                        ),
                       ),
                     );
             },
@@ -416,8 +430,11 @@ class _MeetingPageState extends State<MeetingPage>
   }
 
   Widget normalBottomBarWidget() {
-    return SizedBox(
+    return Container(
       width: MediaQuery.of(context).size.width,
+      decoration: BoxDecoration(
+          color: Colors.grey.withOpacity(0.2),
+          borderRadius: BorderRadius.circular(40)),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
@@ -729,8 +746,7 @@ class _MeetingPageState extends State<MeetingPage>
           ),
           if ((meetingStore.localPeer != null) &&
               meetingStore.localPeer!.role.publishSettings!.allowed
-                  .contains("screen") &&
-              Platform.isAndroid)
+                  .contains("screen"))
             PopupMenuItem(
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -810,18 +826,18 @@ class _MeetingPageState extends State<MeetingPage>
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                        meetingStore.isRecordingStarted
-                            ? "Stop RTMP/Rec"
-                            : "Start RTMP/Rec",
+                        meetingStore.streamingType["rtmp"] == true
+                            ? "Stop RTMP"
+                            : "Start RTMP",
                         style: GoogleFonts.inter(
-                          color: meetingStore.isRecordingStarted
+                          color: meetingStore.streamingType["rtmp"] == true
                               ? Colors.blue
                               : iconColor,
                         )),
                     SvgPicture.asset(
-                      "assets/icons/record.svg",
-                      color: meetingStore.isRecordingStarted
-                          ? Colors.red
+                      "assets/icons/stream.svg",
+                      color: meetingStore.streamingType["rtmp"] == true
+                          ? Colors.blue
                           : iconColor,
                     ),
                   ]),
@@ -847,6 +863,29 @@ class _MeetingPageState extends State<MeetingPage>
                   ]),
               value: 10,
             ),
+          if (!(meetingStore.localPeer?.role.name.contains("hls-") ?? true))
+            PopupMenuItem(
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                        meetingStore.recordingType["browser"] == true
+                            ? "Stop Recording"
+                            : "Start Recording",
+                        style: GoogleFonts.inter(
+                          color: meetingStore.recordingType["browser"] == true
+                              ? Colors.blue
+                              : iconColor,
+                        )),
+                    SvgPicture.asset(
+                      "assets/icons/record.svg",
+                      color: meetingStore.recordingType["browser"] == true
+                          ? Colors.red
+                          : iconColor,
+                    ),
+                  ]),
+              value: 11,
+            ),
           PopupMenuItem(
             child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -863,7 +902,7 @@ class _MeetingPageState extends State<MeetingPage>
                           ? Colors.blue
                           : iconColor),
                 ]),
-            value: 11,
+            value: 12,
           ),
           if (meetingStore.localPeer!.role.permissions.endRoom!)
             PopupMenuItem(
@@ -881,7 +920,7 @@ class _MeetingPageState extends State<MeetingPage>
                       color: iconColor,
                     ),
                   ]),
-              value: 12,
+              value: 13,
             ),
         ];
       },
