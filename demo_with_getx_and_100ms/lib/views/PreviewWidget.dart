@@ -33,7 +33,9 @@ class PreviewWidget extends StatelessWidget {
                         width: itemWidth,
                         child: Stack(
                           children: [
-                            HMSVideoView(track: controller.localTracks[0],matchParent: true),
+                            HMSVideoView(
+                                track: controller.localTracks[0],
+                                matchParent: true),
                             Positioned(
                               bottom: 20.0,
                               left: itemWidth / 2 - 50.0,
@@ -42,7 +44,8 @@ class PreviewWidget extends StatelessWidget {
                                     primary: Colors.blue,
                                     padding: const EdgeInsets.all(14)),
                                 onPressed: () {
-                                  Get.off(() => RoomWidget(meetingUrl, userName));
+                                  Get.off(
+                                      () => RoomWidget(meetingUrl, userName));
                                 },
                                 child: const Text(
                                   "Join Now",
@@ -53,8 +56,8 @@ class PreviewWidget extends StatelessWidget {
                             Positioned(
                               bottom: 20.0,
                               right: 50.0,
-                              child:
-                                  GetX<PreviewController>(builder: (controller) {
+                              child: GetX<PreviewController>(
+                                  builder: (controller) {
                                 return IconButton(
                                     onPressed: () {
                                       controller.toggleAudio();
@@ -71,8 +74,8 @@ class PreviewWidget extends StatelessWidget {
                             Positioned(
                               bottom: 20.0,
                               left: 50.0,
-                              child:
-                                  GetX<PreviewController>(builder: (controller) {
+                              child: GetX<PreviewController>(
+                                  builder: (controller) {
                                 return IconButton(
                                     onPressed: () {
                                       controller.toggleVideo();

@@ -21,7 +21,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 android {
-    compileSdkVersion 32
+    compileSdkVersion 33
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
@@ -31,9 +31,9 @@ android {
     defaultConfig {
         applicationId "live.hms.flutter"
         minSdkVersion 21
-        targetSdkVersion 32
-        versionCode 78
-        versionName "1.1.28"
+        targetSdkVersion 33
+        versionCode 79
+        versionName "1.1.29"
     }
 
     signingConfigs {
@@ -63,8 +63,8 @@ flutter {
 }
 
 dependencies {
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
-    implementation 'com.google.firebase:firebase-crashlytics:18.2.10'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'com.google.firebase:firebase-crashlytics:18.2.11'
 }
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.firebase-perf'

@@ -977,8 +977,6 @@ class MeetingStore extends ChangeNotifier
     return activeSpeakerIds.containsKey(uid) ? activeSpeakerIds[uid]! : -1;
   }
 
-
-
   @override
   void onSuccess(
       {HMSActionResultListenerMethod methodType =

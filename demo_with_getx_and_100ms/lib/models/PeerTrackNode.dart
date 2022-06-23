@@ -1,13 +1,10 @@
-
-
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
-class PeerTrackNode{
+class PeerTrackNode {
   HMSVideoTrack hmsVideoTrack;
   bool isMute = true;
   HMSPeer peer;
   bool isOffScreen = true;
-
 
   @override
   bool operator ==(Object other) =>
@@ -21,6 +18,6 @@ class PeerTrackNode{
   @override
   int get hashCode => isMute.hashCode ^ peer.hashCode ^ isOffScreen.hashCode;
 
-  PeerTrackNode(this.hmsVideoTrack, this.isMute, this.peer , {this.isOffScreen = false});
-
+  PeerTrackNode(this.hmsVideoTrack, this.isMute, this.peer,
+      {this.isOffScreen = false});
 }

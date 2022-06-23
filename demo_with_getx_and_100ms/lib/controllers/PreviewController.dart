@@ -6,8 +6,8 @@ import '../services/RoomService.dart';
 
 class PreviewController extends GetxController
     implements HMSPreviewListener, HMSActionResultListener {
-  RxBool isLocalVideoOn = Get.put(false.obs,tag: "isLocalVideoOn");
-  RxBool isLocalAudioOn = Get.put(false.obs,tag: "isLocalAudioOn");
+  RxBool isLocalVideoOn = Get.put(false.obs, tag: "isLocalVideoOn");
+  RxBool isLocalAudioOn = Get.put(false.obs, tag: "isLocalAudioOn");
 
   List<HMSVideoTrack> localTracks = <HMSVideoTrack>[].obs;
 
@@ -30,10 +30,12 @@ class PreviewController extends GetxController
     if (token == null) return;
     if (token[0] == null) return;
 
-    HMSConfig config = Get.put(HMSConfig(
-      authToken: token[0]!,
-      userName: name,
-    ),tag: "");
+    HMSConfig config = Get.put(
+        HMSConfig(
+          authToken: token[0]!,
+          userName: name,
+        ),
+        tag: "");
 
     hmsSdk.preview(config: config);
 
@@ -86,8 +88,7 @@ class PreviewController extends GetxController
         isLocalVideoOn.value = !track.isMute;
         isLocalVideoOn.refresh();
         videoTracks.add(track as HMSVideoTrack);
-      }
-      else{
+      } else {
         isLocalAudioOn.value = !track.isMute;
         isLocalAudioOn.refresh();
       }
@@ -110,6 +111,4 @@ class PreviewController extends GetxController
   void onRoomUpdate({required HMSRoom room, required HMSRoomUpdate update}) {
     // TODO: implement onRoomUpdate
   }
-
-
 }

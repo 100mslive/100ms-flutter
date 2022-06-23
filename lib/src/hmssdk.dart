@@ -1,11 +1,3 @@
-///HMSSDK will contain all the functionalities related to meeting and preview.
-///
-///Just create instance of [HMSSDK] and use the functionality which is present.
-///
-///All methods related to meeting, preview and their listeners are present here.
-
-// Project imports:
-import 'package:flutter/widgets.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter/src/manager/hms_sdk_manager.dart';
 import 'package:hmssdk_flutter/src/service/platform_service.dart';
@@ -25,16 +17,8 @@ import '../hmssdk_flutter.dart';
 ///
 /// HMSSDK has other methods which the client app can use to get more info about the Room, Peer and Tracks
 ///
-/// [appGroup] is only used for screen share (broadcast screen) in iOS.
-///
-/// [preferredExtension] is only used for screen share (broadcast screen) in iOS.
-class HMSSDK {
-  ///join meeting by passing HMSConfig instance to it.
 
-  HMSTrackSetting? hmsTrackSetting;
-  bool previewState = false;
-  String? appGroup;
-  String? preferredExtension;
+class HMSSDK {
   HMSSDK({this.hmsTrackSetting, this.appGroup, this.preferredExtension});
 
   /// The build function should be called after creating an instance of the [HMSSDK].
@@ -748,4 +732,15 @@ class HMSSDK {
   void removeLogListener({required HMSLogListener hmsLogListener}) {
     PlatformService.removeLogsListener(hmsLogListener);
   }
+
+  /// To modify local peer's audio & video track settings use the [hmsTrackSetting]. Only required for advanced use-cases.
+  HMSTrackSetting? hmsTrackSetting;
+
+  /// [appGroup] is only used for screen share (broadcast screen) in iOS.
+  String? appGroup;
+
+  /// [preferredExtension] is only used for screen share (broadcast screen) in iOS.
+  String? preferredExtension;
+
+  bool previewState = false;
 }
