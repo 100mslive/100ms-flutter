@@ -1,3 +1,9 @@
+## 0.7.3 - 2022-06-23
+- Added support for iOS Screenshare
+- Added `HMSHLSRecordingConfig` to perform recording while HLS Streaming
+- Updated error callback in `HMSUpdateListener` to `onHMSError`
+- Updated to Native Android SDK 2.4.2 & Native iOS SDK 0.3.1
+
 ## 0.7.2 - 2022-06-02
 
 - Segregated RTC Stats update notifications from `HMSUpdateListener` into `HMSStatsListener`
