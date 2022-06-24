@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hmssdk_flutter_example/common/ui/organisms/user_name_dialog_organism.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
 import 'package:hmssdk_flutter_example/hls-streaming-kit/welcome_hls_screen.dart';
-import 'package:hmssdk_flutter_example/preview/preview_page.dart';
 import 'package:hmssdk_flutter_example/preview/preview_store.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
@@ -28,13 +26,13 @@ class _QRCodeScreenState extends State<QRCodeScreen> {
         if (flow == MeetingFlow.join) {
           Utilities.setRTMPUrl(scanData.code!);
           FocusManager.instance.primaryFocus?.unfocus();
-              Navigator.of(context).pushReplacement(MaterialPageRoute(
-                  builder: (_) => ListenableProvider.value(
-                        value: PreviewStore(),
-                        child: WelcomeHLSScreen(
-                          roomId: scanData.code!.trim(),                          
-                        ),
-                      )));
+          Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (_) => ListenableProvider.value(
+                    value: PreviewStore(),
+                    child: WelcomeHLSScreen(
+                      roomId: scanData.code!.trim(),
+                    ),
+                  )));
         } else {
           Utilities.showToast("Invalid QR Code");
           controller.resumeCamera();

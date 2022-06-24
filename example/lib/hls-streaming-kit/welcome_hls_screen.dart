@@ -9,9 +9,7 @@ import 'package:provider/provider.dart';
 
 class WelcomeHLSScreen extends StatefulWidget {
   String roomId;
-  WelcomeHLSScreen({
-    required this.roomId
-  });
+  WelcomeHLSScreen({required this.roomId});
   @override
   State<WelcomeHLSScreen> createState() => _WelcomeHLSScreenState();
 }
@@ -103,23 +101,22 @@ class _WelcomeHLSScreenState extends State<WelcomeHLSScreen> {
                             borderRadius: BorderRadius.circular(8.0),
                           ))),
                       onPressed: () async {
-                        print("Name is ${nameController.text}");
                         if (nameController.text.isEmpty) {
+                          Utilities.showToast("Please enter you name");
                           return;
                         }
                         FocusManager.instance.primaryFocus?.unfocus();
                         bool res = await Utilities.getPermissions();
-                        if(res){
-                          Navigator.of(context).pushReplacement(MaterialPageRoute(
-                            builder: (_) => ListenableProvider.value(
-                                  value: PreviewStore(),
-                                  child: HLSPreviewScreen(
-                                    name: nameController.text,
-                                    roomId:widget.roomId 
-                                  ),
-                                )));
+                        if (res) {
+                          Navigator.of(context)
+                              .pushReplacement(MaterialPageRoute(
+                                  builder: (_) => ListenableProvider.value(
+                                        value: PreviewStore(),
+                                        child: HLSPreviewScreen(
+                                            name: nameController.text,
+                                            roomId: widget.roomId),
+                                      )));
                         }
-                        
                       },
                       child: Container(
                         padding: const EdgeInsets.fromLTRB(8, 16, 8, 16),

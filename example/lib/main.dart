@@ -16,14 +16,7 @@ import 'package:wakelock/wakelock.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 //Project imports
-import 'package:hmssdk_flutter_example/meeting/hms_sdk_interactor.dart';
-import 'package:hmssdk_flutter_example/meeting/meeting_page.dart';
-import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
-import 'package:hmssdk_flutter_example/preview/preview_store.dart';
 import 'package:hmssdk_flutter_example/common/constant.dart';
-import 'package:hmssdk_flutter_example/common/ui/organisms/user_name_dialog_organism.dart';
-import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
-import 'package:hmssdk_flutter_example/preview/preview_page.dart';
 import './logs/custom_singleton_logger.dart';
 
 void main() async {
@@ -372,12 +365,11 @@ class _HomePageState extends State<HomePage> {
                             }
                             Utilities.setRTMPUrl(roomIdController.text);
                             Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (_) => WelcomeHLSScreen(
-                                                roomId: roomIdController.text
-                                                    .trim(),
-                                              )));
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) => WelcomeHLSScreen(
+                                          roomId: roomIdController.text.trim(),
+                                        )));
                             // String user = await showDialog(
                             //     context: context,
                             //     builder: (_) => UserNameDialogOrganism());

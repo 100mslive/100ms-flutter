@@ -512,17 +512,14 @@ class UtilityComponents {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  "Wrong Meeting Url",
-                  style: GoogleFonts.inter(
-                      color: Colors.red.shade300,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600),
-                ),
-              ],
+            title: Center(
+              child: Text(
+                "Wrong Meeting Url",
+                style: GoogleFonts.inter(
+                    color: Colors.red.shade300,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600),
+              ),
             ),
             content: Text("Please enter a valid meeting URL",
                 style: GoogleFonts.inter(

@@ -1,6 +1,4 @@
 import 'dart:math';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -15,8 +13,8 @@ import 'package:hmssdk_flutter_example/preview/preview_store.dart';
 import 'package:provider/provider.dart';
 
 class HLSPreviewScreen extends StatefulWidget {
-  String name;
-  String roomId;
+  final String name;
+  final String roomId;
   HLSPreviewScreen({required this.name, required this.roomId});
   @override
   State<HLSPreviewScreen> createState() => _HLSPreviewScreenState();
@@ -33,9 +31,9 @@ class _HLSPreviewScreenState extends State<HLSPreviewScreen> {
   }
 
   void initPreview() async {
-    bool ans = await context.read<PreviewStore>().startPreview(
-        user: widget.name,
-        roomId: widget.roomId);
+    bool ans = await context
+        .read<PreviewStore>()
+        .startPreview(user: widget.name, roomId: widget.roomId);
     if (ans == false) {
       Navigator.of(context).pop();
       UtilityComponents.showErrorDialog(context);
@@ -182,17 +180,43 @@ class _HLSPreviewScreenState extends State<HLSPreviewScreen> {
                           children: [
                             if (_previewStore.networkQuality != null &&
                                 _previewStore.networkQuality != -1)
-                              Container(
-                                width: 50,
-                                height: 50,
-                                decoration: BoxDecoration(
-                                    color: dividerColor,
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(12)),
-                                    border: Border.all(color: borderColor)),
-                                child: SvgPicture.asset(
-                                  'assets/icons/network_${_previewStore.networkQuality}.svg',
-                                  fit: BoxFit.scaleDown,
+                              GestureDetector(
+                                onTap: () {
+                                  switch (_previewStore.networkQuality) {
+                                    case 0:
+                                      Utilities.showToast("Very Bad network");
+                                      break;
+                                    case 1:
+                                      Utilities.showToast("Poor network");
+                                      break;
+                                    case 2:
+                                      Utilities.showToast("Bad network");
+                                      break;
+                                    case 3:
+                                      Utilities.showToast("Average network");
+                                      break;
+                                    case 4:
+                                      Utilities.showToast("Good network");
+                                      break;
+                                    case 5:
+                                      Utilities.showToast("Best network");
+                                      break;
+                                    default:
+                                      break;
+                                  }
+                                },
+                                child: Container(
+                                  width: 50,
+                                  height: 50,
+                                  decoration: BoxDecoration(
+                                      color: dividerColor,
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(12)),
+                                      border: Border.all(color: borderColor)),
+                                  child: SvgPicture.asset(
+                                    'assets/icons/network_${_previewStore.networkQuality}.svg',
+                                    fit: BoxFit.scaleDown,
+                                  ),
                                 ),
                               ),
                             SizedBox(
