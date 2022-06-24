@@ -507,9 +507,12 @@ class UtilityComponents {
     );
   }
 
-  static Future<bool> showErrorDialog({required BuildContext context,required String errorMessage,required String errorTitle}) async {
-     bool res = await showDialog(
-      barrierDismissible: false,
+  static Future<bool> showErrorDialog(
+      {required BuildContext context,
+      required String errorMessage,
+      required String errorTitle}) async {
+    bool res = await showDialog(
+        barrierDismissible: false,
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
@@ -529,17 +532,16 @@ class UtilityComponents {
                     fontWeight: FontWeight.w400)),
             actions: [
               ElevatedButton(
-                    child: Text(
-                      'OK',
-                      style: GoogleFonts.inter(),
-                    ),
-                    onPressed: () {
-                      Navigator.pop(context,true);
-                      }
-                  )
+                  child: Text(
+                    'OK',
+                    style: GoogleFonts.inter(),
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context, true);
+                  })
             ],
           );
         });
-        return res;
+    return res;
   }
 }

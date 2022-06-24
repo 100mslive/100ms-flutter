@@ -39,8 +39,7 @@ class _QRCodeScreenState extends State<QRCodeScreen> {
               context: context,
               errorMessage: "Please scan a valid meeting URL",
               errorTitle: "Invalid Meeting Url");
-          if(res)
-            controller.resumeCamera();
+          if (res) controller.resumeCamera();
         }
       }
     });
