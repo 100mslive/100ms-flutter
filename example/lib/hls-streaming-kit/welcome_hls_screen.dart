@@ -8,7 +8,7 @@ import 'package:hmssdk_flutter_example/preview/preview_store.dart';
 import 'package:provider/provider.dart';
 
 class WelcomeHLSScreen extends StatefulWidget {
-  String roomId;
+  final String roomId;
   WelcomeHLSScreen({required this.roomId});
   @override
   State<WelcomeHLSScreen> createState() => _WelcomeHLSScreenState();
@@ -18,8 +18,6 @@ class _WelcomeHLSScreenState extends State<WelcomeHLSScreen> {
   TextEditingController nameController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
 
