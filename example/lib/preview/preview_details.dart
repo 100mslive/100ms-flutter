@@ -3,18 +3,18 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
-import 'package:hmssdk_flutter_example/hls-streaming-kit/hls-preview-screen.dart';
+import 'package:hmssdk_flutter_example/preview/preview_page.dart';
 import 'package:hmssdk_flutter_example/preview/preview_store.dart';
 import 'package:provider/provider.dart';
 
-class WelcomeHLSScreen extends StatefulWidget {
+class PreviewDetails extends StatefulWidget {
   final String roomId;
-  WelcomeHLSScreen({required this.roomId});
+  PreviewDetails({required this.roomId});
   @override
-  State<WelcomeHLSScreen> createState() => _WelcomeHLSScreenState();
+  State<PreviewDetails> createState() => _PreviewDetailsState();
 }
 
-class _WelcomeHLSScreenState extends State<WelcomeHLSScreen> {
+class _PreviewDetailsState extends State<PreviewDetails> {
   TextEditingController nameController = TextEditingController();
   @override
   Widget build(BuildContext context) {
@@ -68,10 +68,6 @@ class _WelcomeHLSScreenState extends State<WelcomeHLSScreen> {
                         height: 1.5,
                         fontSize: 16,
                         fontWeight: FontWeight.w400),
-                    // suffixIcon: IconButton(
-                    //   onPressed: nameController.clear,
-                    //   icon: Icon(Icons.clear),
-                    // ),
                     enabledBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: borderColor, width: 1),
                         borderRadius: BorderRadius.all(Radius.circular(8))),
@@ -110,7 +106,7 @@ class _WelcomeHLSScreenState extends State<WelcomeHLSScreen> {
                               .pushReplacement(MaterialPageRoute(
                                   builder: (_) => ListenableProvider.value(
                                         value: PreviewStore(),
-                                        child: HLSPreviewScreen(
+                                        child: PreviewPage(
                                             name: nameController.text,
                                             roomId: widget.roomId),
                                       )));

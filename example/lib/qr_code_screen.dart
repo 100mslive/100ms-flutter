@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
+import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
-import 'package:hmssdk_flutter_example/hls-streaming-kit/welcome_hls_screen.dart';
+import 'package:hmssdk_flutter_example/preview/preview_details.dart';
 import 'package:hmssdk_flutter_example/preview/preview_store.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
@@ -29,13 +30,17 @@ class _QRCodeScreenState extends State<QRCodeScreen> {
           Navigator.of(context).pushReplacement(MaterialPageRoute(
               builder: (_) => ListenableProvider.value(
                     value: PreviewStore(),
-                    child: WelcomeHLSScreen(
+                    child: PreviewDetails(
                       roomId: scanData.code!.trim(),
                     ),
                   )));
         } else {
-          Utilities.showToast("Invalid QR Code");
-          controller.resumeCamera();
+          bool res = await UtilityComponents.showErrorDialog(
+              context: context,
+              errorMessage: "Please scan a valid meeting URL",
+              errorTitle: "Invalid Meeting Url");
+          if(res)
+            controller.resumeCamera();
         }
       }
     });

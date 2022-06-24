@@ -9,7 +9,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
-import 'package:hmssdk_flutter_example/hls-streaming-kit/welcome_hls_screen.dart';
+import 'package:hmssdk_flutter_example/preview/preview_details.dart';
 import 'package:hmssdk_flutter_example/qr_code_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:wakelock/wakelock.dart';
@@ -367,56 +367,9 @@ class _HomePageState extends State<HomePage> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (_) => WelcomeHLSScreen(
+                                    builder: (_) => PreviewDetails(
                                           roomId: roomIdController.text.trim(),
                                         )));
-                            // String user = await showDialog(
-                            //     context: context,
-                            //     builder: (_) => UserNameDialogOrganism());
-                            // if (user.isNotEmpty) {
-                            //   bool res = await Utilities.getPermissions();
-                            //   if (res) {
-                            //     FocusManager.instance.primaryFocus?.unfocus();
-                            //     if (skipPreview) {
-                            //       HMSSDKInteractor _hmsSDKInteractor =
-                            //           HMSSDKInteractor();
-                            //       _hmsSDKInteractor.showStats = showStats;
-                            //       _hmsSDKInteractor.mirrorCamera = mirrorCamera;
-                            //       _hmsSDKInteractor.skipPreview = true;
-                            //       Navigator.of(context).push(MaterialPageRoute(
-                            //           builder: (_) => ListenableProvider.value(
-                            //               value: MeetingStore(
-                            //                   hmsSDKInteractor:
-                            //                       _hmsSDKInteractor),
-                            //               child: MeetingPage(
-                            //                   roomId:
-                            //                       roomIdController.text.trim(),
-                            //                   flow: MeetingFlow.join,
-                            //                   user: user,
-                            //                   isAudioOn: true))));
-                            //     } else {
-                            //       Navigator.pushReplacement(
-                            //           context,
-                            //           MaterialPageRoute(
-                            //               builder: (_) => WelcomeHLSScreen(
-                            //                     roomId: roomIdController.text
-                            //                         .trim(),
-                            //                   )));
-                            //       // Navigator.of(context).push(MaterialPageRoute(
-                            //       //     builder: (_) => ListenableProvider.value(
-                            //       //           value: PreviewStore(),
-                            //       //           child: PreviewPage(
-                            //       //             roomId:
-                            //       //                 roomIdController.text.trim(),
-                            //       //             user: user,
-                            //       //             flow: MeetingFlow.join,
-                            //       //             mirror: mirrorCamera,
-                            //       //             showStats: showStats,
-                            //       //           ),
-                            //       //         )));
-                            //     }
-                            //   }
-                            // }
                           },
                           child: Container(
                             padding: const EdgeInsets.fromLTRB(8, 16, 8, 16),
