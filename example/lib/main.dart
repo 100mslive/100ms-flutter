@@ -9,20 +9,14 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
+import 'package:hmssdk_flutter_example/preview/preview_details.dart';
 import 'package:hmssdk_flutter_example/qr_code_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:wakelock/wakelock.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 //Project imports
-import 'package:hmssdk_flutter_example/meeting/hms_sdk_interactor.dart';
-import 'package:hmssdk_flutter_example/meeting/meeting_page.dart';
-import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
-import 'package:hmssdk_flutter_example/preview/preview_store.dart';
 import 'package:hmssdk_flutter_example/common/constant.dart';
-import 'package:hmssdk_flutter_example/common/ui/organisms/user_name_dialog_organism.dart';
-import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
-import 'package:hmssdk_flutter_example/preview/preview_page.dart';
 import './logs/custom_singleton_logger.dart';
 
 void main() async {
@@ -65,8 +59,6 @@ class _HMSExampleAppState extends State<HMSExampleApp> {
 
   @override
   Widget build(BuildContext context) {
-    print("Current Mode is $isDarkMode");
-    print("${WidgetsBinding.instance?.window.platformBrightness}");
     return MaterialApp(
       home: HomePage(),
       theme: _lightTheme,
@@ -372,46 +364,12 @@ class _HomePageState extends State<HomePage> {
                               return;
                             }
                             Utilities.setRTMPUrl(roomIdController.text);
-                            String user = await showDialog(
-                                context: context,
-                                builder: (_) => UserNameDialogOrganism());
-                            if (user.isNotEmpty) {
-                              bool res = await Utilities.getPermissions();
-                              if (res) {
-                                FocusManager.instance.primaryFocus?.unfocus();
-                                if (skipPreview) {
-                                  HMSSDKInteractor _hmsSDKInteractor =
-                                      HMSSDKInteractor();
-                                  _hmsSDKInteractor.showStats = showStats;
-                                  _hmsSDKInteractor.mirrorCamera = mirrorCamera;
-                                  _hmsSDKInteractor.skipPreview = true;
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (_) => ListenableProvider.value(
-                                          value: MeetingStore(
-                                              hmsSDKInteractor:
-                                                  _hmsSDKInteractor),
-                                          child: MeetingPage(
-                                              roomId:
-                                                  roomIdController.text.trim(),
-                                              flow: MeetingFlow.join,
-                                              user: user,
-                                              isAudioOn: true))));
-                                } else {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (_) => ListenableProvider.value(
-                                            value: PreviewStore(),
-                                            child: PreviewPage(
-                                              roomId:
-                                                  roomIdController.text.trim(),
-                                              user: user,
-                                              flow: MeetingFlow.join,
-                                              mirror: mirrorCamera,
-                                              showStats: showStats,
-                                            ),
-                                          )));
-                                }
-                              }
-                            }
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) => PreviewDetails(
+                                          roomId: roomIdController.text.trim(),
+                                        )));
                           },
                           child: Container(
                             padding: const EdgeInsets.fromLTRB(8, 16, 8, 16),

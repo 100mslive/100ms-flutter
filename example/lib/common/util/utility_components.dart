@@ -507,29 +507,39 @@ class UtilityComponents {
     );
   }
 
-  static showErrorDialog(BuildContext context) {
-    return showDialog(
+  static Future<bool> showErrorDialog({required BuildContext context,required String errorMessage,required String errorTitle}) async {
+     bool res = await showDialog(
+      barrierDismissible: false,
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  "Wrong Meeting Url",
-                  style: GoogleFonts.inter(
-                      color: Colors.red.shade300,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600),
-                ),
-              ],
+            title: Center(
+              child: Text(
+                errorTitle,
+                style: GoogleFonts.inter(
+                    color: Colors.red.shade300,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600),
+              ),
             ),
-            content: Text("Please enter a valid meeting URL",
+            content: Text(errorMessage,
                 style: GoogleFonts.inter(
                     color: defaultColor,
                     fontSize: 14,
                     fontWeight: FontWeight.w400)),
+            actions: [
+              ElevatedButton(
+                    child: Text(
+                      'OK',
+                      style: GoogleFonts.inter(),
+                    ),
+                    onPressed: () {
+                      Navigator.pop(context,true);
+                      }
+                  )
+            ],
           );
         });
+        return res;
   }
 }

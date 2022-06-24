@@ -1,57 +1,31 @@
-//Package imports
-
-import 'package:connectivity_checker/connectivity_checker.dart';
+import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
-import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
-import 'package:provider/provider.dart';
-
-//Project imports
-import 'package:hmssdk_flutter_example/common/ui/organisms/offline_screen.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
+import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_page.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:hmssdk_flutter_example/preview/preview_store.dart';
+import 'package:provider/provider.dart';
 
 class PreviewPage extends StatefulWidget {
+  final String name;
   final String roomId;
-  final MeetingFlow flow;
-  final String user;
-  final bool mirror;
-  final bool showStats;
-
-  const PreviewPage(
-      {Key? key,
-      required this.roomId,
-      required this.flow,
-      required this.user,
-      this.showStats = false,
-      this.mirror = true})
-      : super(key: key);
-
+  PreviewPage({required this.name, required this.roomId});
   @override
-  _PreviewPageState createState() => _PreviewPageState();
+  State<PreviewPage> createState() => _PreviewPageState();
 }
 
-class _PreviewPageState extends State<PreviewPage>
-    with WidgetsBindingObserver, TickerProviderStateMixin {
-  late AnimationController animationController;
-
+class _PreviewPageState extends State<PreviewPage> {
   @override
   void initState() {
-    WidgetsBinding.instance!.addObserver(this);
     MultiProvider(
       providers: [ChangeNotifierProvider(create: (_) => PreviewStore())],
     );
-    animationController = AnimationController(
-      vsync: this,
-      duration: new Duration(milliseconds: 5000),
-    );
-    animationController.repeat();
     super.initState();
     initPreview();
   }
@@ -59,350 +33,96 @@ class _PreviewPageState extends State<PreviewPage>
   void initPreview() async {
     bool ans = await context
         .read<PreviewStore>()
-        .startPreview(user: widget.user, roomId: widget.roomId);
+        .startPreview(user: widget.name, roomId: widget.roomId);
     if (ans == false) {
       Navigator.of(context).pop();
-      UtilityComponents.showErrorDialog(context);
+      UtilityComponents.showErrorDialog(
+          context: context,
+          errorMessage: "Please enter a valid meeting URL",
+          errorTitle: "Invalid Meeting Url");
     }
-  }
-
-  @override
-  void dispose() {
-    animationController.dispose();
-    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    final double itemHeight = size.height;
-    final double itemWidth = size.width;
+    final double height = size.height;
+    final double width = size.width;
+    final Orientation orientation = MediaQuery.of(context).orientation;
     final _previewStore = context.watch<PreviewStore>();
-    return ConnectivityAppWrapper(
-      app: ConnectivityWidgetWrapper(
-        offlineWidget: OfflineWidget(),
-        disableInteraction: true,
-        child: WillPopScope(
-          onWillPop: () async {
-            _previewStore.removePreviewListener();
-            return true;
-          },
-          child: Scaffold(
-            body: Stack(
-              children: [
-                (_previewStore.localTracks.isEmpty)
-                    ? _previewStore.isHLSLink
-                        ? Container(
-                            height: itemHeight,
-                            width: itemWidth,
-                          )
-                        : Align(
-                            alignment: Alignment.center,
-                            child: RotationTransition(
-                              child: Image.asset(
-                                  "assets/icons/hms_icon_loading.png"),
-                              turns: animationController,
-                            ))
-                    : Container(
-                        height: itemHeight,
-                        width: itemWidth,
-                        child: (_previewStore.isVideoOn)
-                            ? HMSVideoView(
-                                scaleType: ScaleType.SCALE_ASPECT_FILL,
-                                track: _previewStore.localTracks[0],
-                                setMirror: widget.mirror,
-                                matchParent: false,
-                              )
-                            : Container(
-                                height: itemHeight,
-                                width: itemWidth,
-                                child: Center(
-                                    child: CircleAvatar(
-                                        backgroundColor:
-                                            Utilities.getBackgroundColour(
-                                                _previewStore.peer!.name),
-                                        radius: 36,
-                                        child: Text(
-                                          Utilities.getAvatarTitle(
-                                              _previewStore.peer!.name),
-                                          style: GoogleFonts.inter(
-                                            fontSize: 36,
-                                            color: Colors.white,
-                                          ),
-                                        ))),
-                              ),
-                      ),
-                if (_previewStore.networkQuality != null &&
-                    _previewStore.networkQuality != -1)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 40, left: 20),
-                    child: Align(
-                      alignment: Alignment.topLeft,
-                      child: SvgPicture.asset(
-                        'assets/icons/network_${_previewStore.networkQuality}.svg',
-                      ),
-                    ),
+    return Scaffold(
+      body: Stack(
+        children: [
+          (_previewStore.localTracks.isEmpty)
+              ? Center(
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
                   ),
-                Padding(
-                    padding: const EdgeInsets.only(top: 40, right: 20),
-                    child: Align(
-                        alignment: Alignment.topRight,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            if (_previewStore.isStreamingStarted)
-                              Container(
-                                height: 33,
-                                width: 33,
-                                decoration: BoxDecoration(
-                                    color: Colors.transparent.withOpacity(0.2),
-                                    borderRadius:
-                                        _previewStore.isRecordingStarted
-                                            ? BorderRadius.only(
-                                                topLeft: Radius.circular(5),
-                                                bottomLeft: Radius.circular(5))
-                                            : BorderRadius.circular(5)),
-                                child: SvgPicture.asset(
-                                  "assets/icons/stream.svg",
-                                  color: Colors.red,
-                                ),
-                              ),
-                            if (_previewStore.isRecordingStarted)
-                              Container(
-                                height: 33,
-                                width: 33,
-                                decoration: BoxDecoration(
-                                    color: Colors.transparent.withOpacity(0.2),
-                                    borderRadius:
-                                        _previewStore.isStreamingStarted
-                                            ? BorderRadius.only(
-                                                topRight: Radius.circular(5),
-                                                bottomRight: Radius.circular(5))
-                                            : BorderRadius.circular(5)),
-                                child: SvgPicture.asset(
-                                  "assets/icons/record.svg",
-                                  color: Colors.red,
-                                ),
-                              ),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            if (_previewStore.peers.isNotEmpty)
-                              GestureDetector(
-                                  onTap: () {
-                                    showModalBottomSheet<void>(
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(10.0),
-                                      ),
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return Container(
-                                            height: MediaQuery.of(context)
-                                                    .size
-                                                    .height /
-                                                2,
-                                            padding: EdgeInsets.only(top: 15),
-                                            child: ListView.separated(
-                                                itemBuilder: (context, index) {
-                                                  HMSPeer peer = _previewStore
-                                                      .peers[index];
-                                                  return Container(
-                                                    padding: EdgeInsets.all(15),
-                                                    margin:
-                                                        EdgeInsets.symmetric(
-                                                            horizontal: 10),
-                                                    decoration: BoxDecoration(
-                                                        color: Color.fromARGB(
-                                                            174, 0, 0, 0),
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(8)),
-                                                    child: Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceBetween,
-                                                      children: [
-                                                        Text(
-                                                          peer.name,
-                                                          style:
-                                                              GoogleFonts.inter(
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            color: Colors.white,
-                                                          ),
-                                                        ),
-                                                        Text(peer.role.name,
-                                                            style: GoogleFonts
-                                                                .inter(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                              color:
-                                                                  Colors.white,
-                                                            ))
-                                                      ],
-                                                    ),
-                                                  );
-                                                },
-                                                separatorBuilder:
-                                                    (context, index) {
-                                                  return Divider();
-                                                },
-                                                itemCount: _previewStore
-                                                    .peers.length));
-                                      },
-                                    );
-                                  },
-                                  child: Container(
-                                      padding: EdgeInsets.all(5),
-                                      decoration: BoxDecoration(
-                                          color: Colors.transparent
-                                              .withOpacity(0.2),
-                                          borderRadius:
-                                              BorderRadius.circular(5)),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          SvgPicture.asset(
-                                            "assets/icons/participants.svg",
-                                            color: iconColor,
-                                          ),
-                                          SizedBox(
-                                            width: 2,
-                                          ),
-                                          Text(
-                                            _previewStore.peers.length
-                                                .toString(),
-                                            style: GoogleFonts.inter(
-                                                color: iconColor,
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 16),
-                                          )
-                                        ],
-                                      ))),
-                          ],
-                        ))),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 20),
-                  child: Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                )
+              : Container(
+                  height: height,
+                  width: width,
+                  child: (_previewStore.isVideoOn)
+                      ? HMSVideoView(
+                          scaleType: ScaleType.SCALE_ASPECT_FILL,
+                          track: _previewStore.localTracks[0],
+                          setMirror: true,
+                          matchParent: false,
+                        )
+                      : Container(
+                          child: Center(
+                            child: CircleAvatar(
+                                backgroundColor: defaultAvatarColor,
+                                radius: 40,
+                                child: Text(
+                                  Utilities.getAvatarTitle(
+                                      _previewStore.peer!.name),
+                                  style: GoogleFonts.inter(
+                                    fontSize: 40,
+                                    color: Colors.white,
+                                  ),
+                                )),
+                          ),
+                        ),
+                ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: orientation == Orientation.portrait
+                          ? width * 0.2
+                          : width * 0.05,
+                    ),
+                    Text(
+                        "Let's get you started, ${widget.name.split(' ')[0].substring(0, min(widget.name.split(' ')[0].length, 10))}!",
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.inter(
+                            color: defaultColor,
+                            fontSize: 28,
+                            fontWeight: FontWeight.w600)),
+                    Text("Set your studio setup in less than 5 minutes",
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.inter(
+                            color: disabledTextColor,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400)),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 15.0, left: 8, right: 8),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        // if (context.read<PreviewStore>().peer != null &&
-                        //     context.read<PreviewStore>().peer!.role.publishSettings!.allowed
-                        //         .contains("video"))
-                        (_previewStore.peer != null &&
-                                _previewStore
-                                    .peer!.role.publishSettings!.allowed
-                                    .contains("video"))
-                            ? GestureDetector(
-                                onTap: _previewStore.localTracks.isEmpty
-                                    ? null
-                                    : () async {
-                                        _previewStore.switchVideo(
-                                            isOn: _previewStore.isVideoOn);
-                                      },
-                                child: CircleAvatar(
-                                  radius: 25,
-                                  backgroundColor:
-                                      Colors.transparent.withOpacity(0.2),
-                                  child: (_previewStore.isVideoOn)
-                                      ? SvgPicture.asset(
-                                          "assets/icons/cam_state_on.svg",
-                                          color: Colors.blue,
-                                        )
-                                      : SvgPicture.asset(
-                                          "assets/icons/cam_state_off.svg",
-                                          color: Colors.blue,
-                                        ),
-                                ),
-                              )
-                            : Container(),
-                        _previewStore.peer != null
-                            ? _previewStore.isHLSLink
-                                ? ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                        primary: Colors.blue,
-                                        padding: EdgeInsets.all(14)),
-                                    onPressed: () {
-                                      context
-                                          .read<PreviewStore>()
-                                          .removePreviewListener();
-                                      _previewStore.hmsSDKInteractor
-                                          .mirrorCamera = widget.mirror;
-                                      _previewStore.hmsSDKInteractor.showStats =
-                                          widget.showStats;
-                                      _previewStore
-                                          .hmsSDKInteractor.skipPreview = false;
-                                      Navigator.of(context).pushReplacement(
-                                          MaterialPageRoute(
-                                              builder: (_) =>
-                                                  ListenableProvider.value(
-                                                    value: MeetingStore(
-                                                      hmsSDKInteractor:
-                                                          _previewStore
-                                                              .hmsSDKInteractor,
-                                                    ),
-                                                    child: MeetingPage(
-                                                      roomId: widget.roomId,
-                                                      flow: widget.flow,
-                                                      user: widget.user,
-                                                      isAudioOn: _previewStore
-                                                          .isAudioOn,
-                                                    ),
-                                                  )));
-                                    },
-                                    child: Text(
-                                      'Join HLS ',
-                                      style: GoogleFonts.inter(
-                                          height: 1, fontSize: 18),
-                                    ),
-                                  )
-                                : ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                        primary: Colors.blue),
-                                    onPressed: () {
-                                      context
-                                          .read<PreviewStore>()
-                                          .removePreviewListener();
-                                      _previewStore.hmsSDKInteractor
-                                          .mirrorCamera = widget.mirror;
-                                      _previewStore.hmsSDKInteractor.showStats =
-                                          widget.showStats;
-                                      _previewStore
-                                          .hmsSDKInteractor.skipPreview = false;
-                                      Navigator.of(context).pushReplacement(
-                                          MaterialPageRoute(
-                                              builder: (_) =>
-                                                  ListenableProvider.value(
-                                                    value: MeetingStore(
-                                                      hmsSDKInteractor:
-                                                          _previewStore
-                                                              .hmsSDKInteractor,
-                                                    ),
-                                                    child: MeetingPage(
-                                                      roomId: widget.roomId,
-                                                      flow: widget.flow,
-                                                      user: widget.user,
-                                                      isAudioOn: _previewStore
-                                                          .isAudioOn,
-                                                      localPeerNetworkQuality:
-                                                          _previewStore
-                                                              .networkQuality,
-                                                    ),
-                                                  )));
-                                    },
-                                    child: Text(
-                                      'Join Now',
-                                      style: GoogleFonts.inter(
-                                          height: 1, fontSize: 18),
-                                    ),
-                                  )
-                            : Container(),
-                        (_previewStore.peer != null &&
+                        Row(
+                          children: [
+                            if (_previewStore.peer != null &&
                                 context
                                     .read<PreviewStore>()
                                     .peer!
@@ -410,34 +130,205 @@ class _PreviewPageState extends State<PreviewPage>
                                     .publishSettings!
                                     .allowed
                                     .contains("audio"))
-                            ? GestureDetector(
+                              GestureDetector(
                                 onTap: () async {
                                   _previewStore.switchAudio();
                                 },
-                                child: CircleAvatar(
-                                  radius: 25,
-                                  backgroundColor:
-                                      Colors.transparent.withOpacity(0.2),
-                                  child: (_previewStore.isAudioOn)
-                                      ? SvgPicture.asset(
-                                          "assets/icons/mic_state_on.svg",
-                                          color: Colors.blue,
-                                        )
-                                      : SvgPicture.asset(
-                                          "assets/icons/mic_state_off.svg",
-                                          color: Colors.blue,
-                                        ),
+                                child: Container(
+                                  width: 50,
+                                  height: 50,
+                                  decoration: BoxDecoration(
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(12)),
+                                      color: _previewStore.isAudioOn
+                                          ? buttonColor
+                                          : defaultColor),
+                                  child: SvgPicture.asset(
+                                    _previewStore.isAudioOn
+                                        ? "assets/icons/mic_state_on.svg"
+                                        : "assets/icons/mic_state_off.svg",
+                                    color: _previewStore.isAudioOn
+                                        ? defaultColor
+                                        : Colors.black,
+                                    fit: BoxFit.scaleDown,
+                                  ),
                                 ),
-                              )
-                            : Container(),
+                              ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            if (_previewStore.peer != null &&
+                                _previewStore
+                                    .peer!.role.publishSettings!.allowed
+                                    .contains("video"))
+                              GestureDetector(
+                                onTap: _previewStore.localTracks.isEmpty
+                                    ? null
+                                    : () async {
+                                        _previewStore.switchVideo(
+                                            isOn: _previewStore.isVideoOn);
+                                      },
+                                child: Container(
+                                  height: 50,
+                                  width: 50,
+                                  decoration: BoxDecoration(
+                                    color: _previewStore.isVideoOn
+                                        ? buttonColor
+                                        : defaultColor,
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(12)),
+                                  ),
+                                  child: SvgPicture.asset(
+                                    _previewStore.isVideoOn
+                                        ? "assets/icons/cam_state_on.svg"
+                                        : "assets/icons/cam_state_off.svg",
+                                    color: _previewStore.isVideoOn
+                                        ? defaultColor
+                                        : Colors.black,
+                                    fit: BoxFit.scaleDown,
+                                  ),
+                                ),
+                              ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            if (_previewStore.networkQuality != null &&
+                                _previewStore.networkQuality != -1)
+                              GestureDetector(
+                                onTap: () {
+                                  switch (_previewStore.networkQuality) {
+                                    case 0:
+                                      Utilities.showToast("Very Bad network");
+                                      break;
+                                    case 1:
+                                      Utilities.showToast("Poor network");
+                                      break;
+                                    case 2:
+                                      Utilities.showToast("Bad network");
+                                      break;
+                                    case 3:
+                                      Utilities.showToast("Average network");
+                                      break;
+                                    case 4:
+                                      Utilities.showToast("Good network");
+                                      break;
+                                    case 5:
+                                      Utilities.showToast("Best network");
+                                      break;
+                                    default:
+                                      break;
+                                  }
+                                },
+                                child: Container(
+                                  width: 50,
+                                  height: 50,
+                                  decoration: BoxDecoration(
+                                      color: dividerColor,
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(12)),
+                                      border: Border.all(color: borderColor)),
+                                  child: SvgPicture.asset(
+                                    'assets/icons/network_${_previewStore.networkQuality}.svg',
+                                    fit: BoxFit.scaleDown,
+                                  ),
+                                ),
+                              ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            GestureDetector(
+                              onTap: () {},
+                              child: Container(
+                                width: 50,
+                                height: 50,
+                                decoration: BoxDecoration(
+                                    color: surfaceColor,
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(12)),
+                                    border: Border.all(color: borderColor)),
+                                child: SvgPicture.asset(
+                                  "assets/icons/settings.svg",
+                                  color: defaultColor,
+                                  fit: BoxFit.scaleDown,
+                                ),
+                              ),
+                            ),
+                          ],
+                        )
                       ],
                     ),
-                  ),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    SizedBox(
+                      width: width * 0.5,
+                      child: ElevatedButton(
+                        style: ButtonStyle(
+                            shadowColor:
+                                MaterialStateProperty.all(surfaceColor),
+                            backgroundColor:
+                                MaterialStateProperty.all(Colors.blue),
+                            shape: MaterialStateProperty.all<
+                                RoundedRectangleBorder>(RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8.0),
+                            ))),
+                        onPressed: () async {
+                          context.read<PreviewStore>().removePreviewListener();
+                          _previewStore.hmsSDKInteractor.mirrorCamera = true;
+                          _previewStore.hmsSDKInteractor.showStats = false;
+                          _previewStore.hmsSDKInteractor.skipPreview = false;
+                          Navigator.of(context)
+                              .pushReplacement(MaterialPageRoute(
+                                  builder: (_) => ListenableProvider.value(
+                                        value: MeetingStore(
+                                          hmsSDKInteractor:
+                                              _previewStore.hmsSDKInteractor,
+                                        ),
+                                        child: MeetingPage(
+                                          roomId: widget.roomId,
+                                          flow: MeetingFlow.join,
+                                          user: widget.name,
+                                          isAudioOn: _previewStore.isAudioOn,
+                                          localPeerNetworkQuality:
+                                              _previewStore.networkQuality,
+                                        ),
+                                      )));
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.fromLTRB(8, 16, 8, 16),
+                          decoration: BoxDecoration(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(8))),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text('Enter Studio',
+                                  style: GoogleFonts.inter(
+                                      color: enabledTextColor,
+                                      height: 1,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600)),
+                              SizedBox(
+                                width: 4,
+                              ),
+                              Icon(
+                                Icons.arrow_forward,
+                                color: enabledTextColor,
+                                size: 16,
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              )
+            ],
           ),
-        ),
+        ],
       ),
     );
   }

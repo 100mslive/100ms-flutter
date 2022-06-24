@@ -18,3 +18,5 @@ Color disabledTextColor = Color.fromRGBO(255, 255, 255, 0.48);
 Color enabledTextColor = Color.fromRGBO(255, 255, 255, 0.98);
 Color borderColor = Color.fromRGBO(45, 52, 64, 1);
 Color dividerColor = Color.fromRGBO(27, 31, 38, 1);
+Color buttonColor = Color.fromRGBO(71, 83, 102, 1);
+Color defaultAvatarColor = Color.fromRGBO(101, 85, 193, 1);
