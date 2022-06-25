@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:hmssdk_flutter_example/common/ui/organisms/embedded_button.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
@@ -130,28 +131,21 @@ class _PreviewPageState extends State<PreviewPage> {
                                     .publishSettings!
                                     .allowed
                                     .contains("audio"))
-                              GestureDetector(
-                                onTap: () async {
-                                  _previewStore.switchAudio();
-                                },
-                                child: Container(
-                                  width: 50,
-                                  height: 50,
-                                  decoration: BoxDecoration(
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(12)),
-                                      color: _previewStore.isAudioOn
-                                          ? buttonColor
-                                          : defaultColor),
-                                  child: SvgPicture.asset(
-                                    _previewStore.isAudioOn
-                                        ? "assets/icons/mic_state_on.svg"
-                                        : "assets/icons/mic_state_off.svg",
-                                    color: _previewStore.isAudioOn
-                                        ? defaultColor
-                                        : Colors.black,
-                                    fit: BoxFit.scaleDown,
-                                  ),
+                              EmbeddedButton(
+                                onTap:
+                                  () async => _previewStore.switchAudio(isOn: _previewStore.isAudioOn)
+                                ,
+                                offColor: defaultColor,
+                                onColor: buttonColor,
+                                isActive: _previewStore.isAudioOn,
+                                child: SvgPicture.asset(
+                                  _previewStore.isAudioOn
+                                      ? "assets/icons/mic_state_on.svg"
+                                      : "assets/icons/mic_state_off.svg",
+                                  color: _previewStore.isAudioOn
+                                      ? defaultColor
+                                      : Colors.black,
+                                  fit: BoxFit.scaleDown,
                                 ),
                               ),
                             SizedBox(
@@ -161,24 +155,16 @@ class _PreviewPageState extends State<PreviewPage> {
                                 _previewStore
                                     .peer!.role.publishSettings!.allowed
                                     .contains("video"))
-                              GestureDetector(
-                                onTap: _previewStore.localTracks.isEmpty
+                              EmbeddedButton(
+                                onTap:() async =>
+                                  (_previewStore.localTracks.isEmpty)
                                     ? null
-                                    : () async {
-                                        _previewStore.switchVideo(
-                                            isOn: _previewStore.isVideoOn);
-                                      },
-                                child: Container(
-                                  height: 50,
-                                  width: 50,
-                                  decoration: BoxDecoration(
-                                    color: _previewStore.isVideoOn
-                                        ? buttonColor
-                                        : defaultColor,
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(12)),
-                                  ),
-                                  child: SvgPicture.asset(
+                                    : _previewStore.switchVideo(isOn: _previewStore.isVideoOn)
+                                ,
+                                offColor: defaultColor,
+                                onColor: buttonColor,
+                                isActive: _previewStore.isVideoOn,
+                                child: SvgPicture.asset(
                                     _previewStore.isVideoOn
                                         ? "assets/icons/cam_state_on.svg"
                                         : "assets/icons/cam_state_off.svg",
@@ -187,7 +173,6 @@ class _PreviewPageState extends State<PreviewPage> {
                                         : Colors.black,
                                     fit: BoxFit.scaleDown,
                                   ),
-                                ),
                               ),
                           ],
                         ),
@@ -195,9 +180,9 @@ class _PreviewPageState extends State<PreviewPage> {
                           children: [
                             if (_previewStore.networkQuality != null &&
                                 _previewStore.networkQuality != -1)
-                              GestureDetector(
-                                onTap: () {
-                                  switch (_previewStore.networkQuality) {
+                              EmbeddedButton(
+                                onTap: (){
+                                    switch (_previewStore.networkQuality) {
                                     case 0:
                                       Utilities.showToast("Very Bad network");
                                       break;
@@ -220,40 +205,36 @@ class _PreviewPageState extends State<PreviewPage> {
                                       break;
                                   }
                                 },
-                                child: Container(
-                                  width: 50,
-                                  height: 50,
-                                  decoration: BoxDecoration(
-                                      color: dividerColor,
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(12)),
-                                      border: Border.all(color: borderColor)),
-                                  child: SvgPicture.asset(
+                                offColor: dividerColor, onColor: dividerColor, isActive: false, child: SvgPicture.asset(
                                     'assets/icons/network_${_previewStore.networkQuality}.svg',
                                     fit: BoxFit.scaleDown,
-                                  ),
-                                ),
-                              ),
+                                  )),
+                              // GestureDetector(
+                              //   onTap: () {
+                                  
+                              //   },
+                              //   child: Container(
+                              //     width: 50,
+                              //     height: 50,
+                              //     decoration: BoxDecoration(
+                              //         color: dividerColor,
+                              //         borderRadius:
+                              //             BorderRadius.all(Radius.circular(12)),
+                              //         border: Border.all(color: borderColor)),
+                              //     child: ,
+                              //   ),
+                              // ),
                             SizedBox(
                               width: 10,
                             ),
-                            GestureDetector(
-                              onTap: () {},
-                              child: Container(
-                                width: 50,
-                                height: 50,
-                                decoration: BoxDecoration(
-                                    color: surfaceColor,
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(12)),
-                                    border: Border.all(color: borderColor)),
-                                child: SvgPicture.asset(
+                            EmbeddedButton(
+                              onTap: (){},
+                              offColor: surfaceColor, onColor: surfaceColor, isActive: false,
+                               child: SvgPicture.asset(
                                   "assets/icons/settings.svg",
                                   color: defaultColor,
                                   fit: BoxFit.scaleDown,
-                                ),
-                              ),
-                            ),
+                                ),)
                           ],
                         )
                       ],

@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 
 class EmbeddedButton extends StatelessWidget {
-  final void Function() onTap;
+  final Function()? onTap;
   final Color offColor;
   final Color onColor;
   final bool isActive;
@@ -9,17 +9,17 @@ class EmbeddedButton extends StatelessWidget {
   final double? height;
   final double? width;
   EmbeddedButton(
-      {required this.onTap,
+      {this.onTap,
       required this.offColor,
       required this.onColor,
       required this.isActive,
       required this.child,
       this.height = 50,
-      this.width=50});
+      this.width = 50});
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: () => onTap!(),
       child: Container(
           width: width,
           height: height,
