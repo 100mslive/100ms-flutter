@@ -6,6 +6,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hmssdk_flutter_example/common/constant.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Utilities {
   static String getAvatarTitle(String name) {
@@ -98,5 +99,17 @@ class Utilities {
 
   static void showToast(String message) {
     Fluttertoast.showToast(msg: message, backgroundColor: Colors.black87);
+  }
+
+  static Future<String> loadData({required String key}) async {
+    final prefs = await SharedPreferences.getInstance();
+
+    return prefs.getString(key)??"";
+  }
+
+  static void saveData({required String key,required String value}) async {
+    final prefs = await SharedPreferences.getInstance();
+
+    prefs.setString(key,value);
   }
 }
