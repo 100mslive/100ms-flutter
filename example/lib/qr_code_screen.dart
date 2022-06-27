@@ -10,6 +10,10 @@ import 'package:provider/provider.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 class QRCodeScreen extends StatefulWidget {
+  final MeetingFlow meetingFlow;
+
+  QRCodeScreen({required this.meetingFlow});
+
   @override
   State<QRCodeScreen> createState() => _QRCodeScreenState();
 }
@@ -24,7 +28,7 @@ class _QRCodeScreenState extends State<QRCodeScreen> {
       controller.pauseCamera();
       if (scanData.code != null) {
         MeetingFlow flow = Utilities.deriveFlow(scanData.code!);
-        if (flow == MeetingFlow.join) {
+        if (flow == MeetingFlow.meeting) {
           Utilities.setRTMPUrl(scanData.code!);
           FocusManager.instance.primaryFocus?.unfocus();
           Navigator.of(context).pushReplacement(MaterialPageRoute(
@@ -32,6 +36,7 @@ class _QRCodeScreenState extends State<QRCodeScreen> {
                     value: PreviewStore(),
                     child: PreviewDetails(
                       roomId: scanData.code!.trim(),
+                      meetingFlow: widget.meetingFlow,
                     ),
                   )));
         } else {

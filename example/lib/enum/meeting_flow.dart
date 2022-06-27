@@ -1,13 +1,13 @@
 //enum to set the meeting flow
-enum MeetingFlow { join, hlsStreaming, none }
+enum MeetingFlow { meeting, hlsStreaming, none }
 
 extension MeetingFlowValues on MeetingFlow {
   static MeetingFlow getMeetingFlowfromName(String name) {
     switch (name) {
       case 'meeting':
-        return MeetingFlow.join;
+        return MeetingFlow.meeting;
       case 'preview':
-        return MeetingFlow.join;
+        return MeetingFlow.meeting;
       case 'hls-streaming':
         return MeetingFlow.hlsStreaming;
       default:
@@ -17,7 +17,7 @@ extension MeetingFlowValues on MeetingFlow {
 
   static String getNameFromMeetingFlow(MeetingFlow flow) {
     switch (flow) {
-      case MeetingFlow.join:
+      case MeetingFlow.meeting:
         return 'meeting';
       case MeetingFlow.hlsStreaming:
         return 'hls-streaming';

@@ -41,7 +41,7 @@ class UtilityComponents {
             ],
           ),
         ),
-        content: Text("Your will leave the room immediately. You can’t undo this action.",
+        content: Text("You will leave the room immediately. You can’t undo this action.",
         style: GoogleFonts.inter(color: subHeadingColor,fontSize: 14,fontWeight: FontWeight.w400,letterSpacing: 0.25)),
         actions: [
           Row(

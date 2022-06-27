@@ -9,6 +9,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
+import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
 import 'package:hmssdk_flutter_example/preview/preview_details.dart';
 import 'package:hmssdk_flutter_example/qr_code_screen.dart';
 import 'package:provider/provider.dart';
@@ -88,6 +89,7 @@ class _HomePageState extends State<HomePage> {
   bool skipPreview = false;
   bool mirrorCamera = true;
   bool showStats = false;
+  List<bool> mode = [true, false]; //0-> meeting ,1 -> HLS mode
 
   PackageInfo _packageInfo = PackageInfo(
     appName: 'Unknown',
@@ -106,7 +108,10 @@ class _HomePageState extends State<HomePage> {
   }
 
   void getData() async {
-    roomIdController.text = await Utilities.loadData(key: 'roomId');
+    roomIdController.text = await Utilities.getStringData(key: 'roomId');
+    int index = await Utilities.getIntData(key: 'mode');
+    mode[index] = true;
+    mode[1 - index] = false;
   }
 
   Future<bool> _closeApp() {
@@ -142,7 +147,6 @@ class _HomePageState extends State<HomePage> {
     bool isDarkMode = HMSExampleApp.of(context).isDarkMode;
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
-    List<bool> mode = [true, false]; //0-> meeting ,1 -> HLS mode
     return WillPopScope(
       onWillPop: _closeApp,
       child: SafeArea(
@@ -310,22 +314,27 @@ class _HomePageState extends State<HomePage> {
                               height: 1.5,
                               fontSize: 14,
                               fontWeight: FontWeight.w400)),
-                      // ToggleButtons(
-                      //     children: [Text("Meeting"), Text("HLS")],
-                      //     onPressed: (int index) {
-                      //       setState(() {
-                      //         for (int buttonIndex = 0;
-                      //             buttonIndex < mode.length;
-                      //             buttonIndex++) {
-                      //           if (buttonIndex == index) {
-                      //             mode[buttonIndex] = true;
-                      //           } else {
-                      //             mode[buttonIndex] = false;
-                      //           }
-                      //         }
-                      //       });
-                      //     },
-                      //     isSelected: mode)
+                      ToggleButtons(
+                          borderRadius: BorderRadius.circular(10),
+                          textStyle: GoogleFonts.inter(
+                              color: defaultColor,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600),
+                          children: [Text(" Meeting "), Text("HLS")],
+                          onPressed: (int index) {
+                            setState(() {
+                              for (int buttonIndex = 0;
+                                  buttonIndex < mode.length;
+                                  buttonIndex++) {
+                                if (buttonIndex == index) {
+                                  mode[buttonIndex] = true;
+                                } else {
+                                  mode[buttonIndex] = false;
+                                }
+                              }
+                            });
+                          },
+                          isSelected: mode)
                     ],
                   ),
                 ),
@@ -391,9 +400,11 @@ class _HomePageState extends State<HomePage> {
                             if (roomIdController.text.isEmpty) {
                               return;
                             }
-                            Utilities.saveData(
+                            Utilities.saveStringData(
                                 key: "roomId",
                                 value: roomIdController.text.trim());
+                            Utilities.saveIntData(
+                                key: "mode", value: mode[0] == true ? 0 : 1);
                             FocusManager.instance.primaryFocus?.unfocus();
                             Utilities.setRTMPUrl(roomIdController.text);
                             Navigator.push(
@@ -401,6 +412,7 @@ class _HomePageState extends State<HomePage> {
                                 MaterialPageRoute(
                                     builder: (_) => PreviewDetails(
                                           roomId: roomIdController.text.trim(),
+                                          meetingFlow: mode[0]?MeetingFlow.meeting:MeetingFlow.hlsStreaming,
                                         )));
                           },
                           child: Container(
@@ -452,7 +464,7 @@ class _HomePageState extends State<HomePage> {
                       bool res = await Utilities.getCameraPermissions();
                       if (res) {
                         Navigator.push(context,
-                            MaterialPageRoute(builder: (_) => QRCodeScreen()));
+                            MaterialPageRoute(builder: (_) => QRCodeScreen(meetingFlow: mode[0]?MeetingFlow.meeting:MeetingFlow.hlsStreaming,)));
                       }
                     },
                     child: Container(

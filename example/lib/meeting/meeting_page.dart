@@ -131,7 +131,7 @@ class _MeetingPageState extends State<MeetingPage>
         _meetingStore.toggleScreenShare();
         break;
       case 6:
-        if (_meetingStore.isVideoOn) _meetingStore.switchCamera();
+        _meetingStore.switchCamera();
         break;
       case 7:
         String name = await UtilityComponents.showInputDialog(

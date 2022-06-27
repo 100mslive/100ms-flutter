@@ -9,6 +9,7 @@ import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
+import 'package:hmssdk_flutter_example/hls-streaming/hls_meeting_page.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_page.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:hmssdk_flutter_example/preview/preview_store.dart';
@@ -17,7 +18,10 @@ import 'package:provider/provider.dart';
 class PreviewPage extends StatefulWidget {
   final String name;
   final String roomId;
-  PreviewPage({required this.name, required this.roomId});
+  final MeetingFlow meetingFlow;
+
+  PreviewPage(
+      {required this.name, required this.roomId, required this.meetingFlow});
   @override
   State<PreviewPage> createState() => _PreviewPageState();
 }
@@ -133,9 +137,8 @@ class _PreviewPageState extends State<PreviewPage> {
                                     .allowed
                                     .contains("audio"))
                               EmbeddedButton(
-                                onTap:
-                                  () async => _previewStore.switchAudio(isOn: _previewStore.isAudioOn)
-                                ,
+                                onTap: () async => _previewStore.switchAudio(
+                                    isOn: _previewStore.isAudioOn),
                                 offColor: defaultColor,
                                 onColor: backgroundColor,
                                 isActive: _previewStore.isAudioOn,
@@ -157,23 +160,23 @@ class _PreviewPageState extends State<PreviewPage> {
                                     .peer!.role.publishSettings!.allowed
                                     .contains("video"))
                               EmbeddedButton(
-                                onTap:() async =>
-                                  (_previewStore.localTracks.isEmpty)
-                                    ? null
-                                    : _previewStore.switchVideo(isOn: _previewStore.isVideoOn)
-                                ,
+                                onTap: () async =>
+                                    (_previewStore.localTracks.isEmpty)
+                                        ? null
+                                        : _previewStore.switchVideo(
+                                            isOn: _previewStore.isVideoOn),
                                 offColor: defaultColor,
                                 onColor: backgroundColor,
                                 isActive: _previewStore.isVideoOn,
                                 child: SvgPicture.asset(
-                                    _previewStore.isVideoOn
-                                        ? "assets/icons/cam_state_on.svg"
-                                        : "assets/icons/cam_state_off.svg",
-                                    color: _previewStore.isVideoOn
-                                        ? defaultColor
-                                        : Colors.black,
-                                    fit: BoxFit.scaleDown,
-                                  ),
+                                  _previewStore.isVideoOn
+                                      ? "assets/icons/cam_state_on.svg"
+                                      : "assets/icons/cam_state_off.svg",
+                                  color: _previewStore.isVideoOn
+                                      ? defaultColor
+                                      : Colors.black,
+                                  fit: BoxFit.scaleDown,
+                                ),
                               ),
                           ],
                         ),
@@ -182,31 +185,34 @@ class _PreviewPageState extends State<PreviewPage> {
                             if (_previewStore.networkQuality != null &&
                                 _previewStore.networkQuality != -1)
                               EmbeddedButton(
-                                onTap: (){
+                                  onTap: () {
                                     switch (_previewStore.networkQuality) {
-                                    case 0:
-                                      Utilities.showToast("Very Bad network");
-                                      break;
-                                    case 1:
-                                      Utilities.showToast("Poor network");
-                                      break;
-                                    case 2:
-                                      Utilities.showToast("Bad network");
-                                      break;
-                                    case 3:
-                                      Utilities.showToast("Average network");
-                                      break;
-                                    case 4:
-                                      Utilities.showToast("Good network");
-                                      break;
-                                    case 5:
-                                      Utilities.showToast("Best network");
-                                      break;
-                                    default:
-                                      break;
-                                  }
-                                },
-                                offColor: dividerColor, onColor: dividerColor, isActive: false, child: SvgPicture.asset(
+                                      case 0:
+                                        Utilities.showToast("Very Bad network");
+                                        break;
+                                      case 1:
+                                        Utilities.showToast("Poor network");
+                                        break;
+                                      case 2:
+                                        Utilities.showToast("Bad network");
+                                        break;
+                                      case 3:
+                                        Utilities.showToast("Average network");
+                                        break;
+                                      case 4:
+                                        Utilities.showToast("Good network");
+                                        break;
+                                      case 5:
+                                        Utilities.showToast("Best network");
+                                        break;
+                                      default:
+                                        break;
+                                    }
+                                  },
+                                  offColor: dividerColor,
+                                  onColor: dividerColor,
+                                  isActive: false,
+                                  child: SvgPicture.asset(
                                     'assets/icons/network_${_previewStore.networkQuality}.svg',
                                     fit: BoxFit.scaleDown,
                                   )),
@@ -214,13 +220,16 @@ class _PreviewPageState extends State<PreviewPage> {
                               width: 10,
                             ),
                             EmbeddedButton(
-                              onTap: (){},
-                              offColor: surfaceColor, onColor: surfaceColor, isActive: false,
-                               child: SvgPicture.asset(
-                                  "assets/icons/settings.svg",
-                                  color: defaultColor,
-                                  fit: BoxFit.scaleDown,
-                                ),)
+                              onTap: () {},
+                              offColor: surfaceColor,
+                              onColor: surfaceColor,
+                              isActive: false,
+                              child: SvgPicture.asset(
+                                "assets/icons/settings.svg",
+                                color: defaultColor,
+                                fit: BoxFit.scaleDown,
+                              ),
+                            )
                           ],
                         )
                       ],
@@ -228,55 +237,71 @@ class _PreviewPageState extends State<PreviewPage> {
                     SizedBox(
                       height: 30,
                     ),
-                    HMSButton(width: width * 0.5, 
-                    onPressed: () async => 
-                    {
-                      context.read<PreviewStore>().removePreviewListener(),
-                          _previewStore.hmsSDKInteractor.mirrorCamera = true,
-                          _previewStore.hmsSDKInteractor.showStats = false,
-                          _previewStore.hmsSDKInteractor.skipPreview = false,
-                          Navigator.of(context)
-                              .pushReplacement(MaterialPageRoute(
-                                  builder: (_) => ListenableProvider.value(
-                                        value: MeetingStore(
-                                          hmsSDKInteractor:
-                                              _previewStore.hmsSDKInteractor,
-                                        ),
-                                        child: MeetingPage(
-                                          roomId: widget.roomId,
-                                          flow: MeetingFlow.join,
-                                          user: widget.name,
-                                          isAudioOn: _previewStore.isAudioOn,
-                                          localPeerNetworkQuality:
-                                              _previewStore.networkQuality,
-                                        ),
-                                      )))
-                        }, childWidget: Container(
-                          padding: const EdgeInsets.fromLTRB(8, 16, 8, 16),
-                          decoration: BoxDecoration(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(8))),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text('Enter Studio',
-                                  style: GoogleFonts.inter(
-                                      color: enabledTextColor,
-                                      height: 1,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w600)),
-                              SizedBox(
-                                width: 4,
-                              ),
-                              Icon(
-                                Icons.arrow_forward,
-                                color: enabledTextColor,
-                                size: 16,
-                              )
-                            ],
-                          ),
-                        ),),
+                    HMSButton(
+                      width: width * 0.5,
+                      onPressed: () async => {
+                        context.read<PreviewStore>().removePreviewListener(),
+                        _previewStore.hmsSDKInteractor.mirrorCamera = true,
+                        _previewStore.hmsSDKInteractor.showStats = false,
+                        _previewStore.hmsSDKInteractor.skipPreview = false,
+                        if (widget.meetingFlow == MeetingFlow.meeting)
+                          {
+                            Navigator.of(context)
+                                .pushReplacement(MaterialPageRoute(
+                                    builder: (_) => ListenableProvider.value(
+                                          value: MeetingStore(
+                                            hmsSDKInteractor:
+                                                _previewStore.hmsSDKInteractor,
+                                          ),
+                                          child: MeetingPage(
+                                            roomId: widget.roomId,
+                                            flow: MeetingFlow.meeting,
+                                            user: widget.name,
+                                            isAudioOn: _previewStore.isAudioOn,
+                                            localPeerNetworkQuality:
+                                                _previewStore.networkQuality,
+                                          ),
+                                        )))
+                          }
+                        else
+                          {
+                            Navigator.of(context)
+                                .pushReplacement(MaterialPageRoute(
+                                    builder: (_) => ListenableProvider.value(
+                                          value: MeetingStore(
+                                            hmsSDKInteractor:
+                                                _previewStore.hmsSDKInteractor,
+                                          ),
+                                          child: HLSMeetingPage(isAudioOn: _previewStore.isAudioOn, roomId: widget.roomId, localPeerNetworkQuality: _previewStore.networkQuality, user: widget.name,),
+                                        )))
+                          }
+                      },
+                      childWidget: Container(
+                        padding: const EdgeInsets.fromLTRB(8, 16, 8, 16),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(8))),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text('Enter Studio',
+                                style: GoogleFonts.inter(
+                                    color: enabledTextColor,
+                                    height: 1,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600)),
+                            SizedBox(
+                              width: 4,
+                            ),
+                            Icon(
+                              Icons.arrow_forward,
+                              color: enabledTextColor,
+                              size: 16,
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               )

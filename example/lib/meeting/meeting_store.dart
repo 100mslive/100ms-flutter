@@ -144,7 +144,9 @@ class MeetingStore extends ChangeNotifier
   }
 
   Future<void> switchCamera() async {
-    await _hmsSDKInteractor.switchCamera();
+    if(isVideoOn) {
+      await _hmsSDKInteractor.switchCamera();
+    }
   }
 
   void sendBroadcastMessage(String message) {
