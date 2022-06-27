@@ -335,6 +335,9 @@ class _HomePageState extends State<HomePage> {
                     style: GoogleFonts.inter(),
                     controller: roomIdController,
                     keyboardType: TextInputType.url,
+                    onChanged: (value) {
+                      setState(() {});
+                    },
                     decoration: InputDecoration(
                         contentPadding:
                             EdgeInsets.symmetric(vertical: 14, horizontal: 16),
@@ -346,10 +349,15 @@ class _HomePageState extends State<HomePage> {
                             height: 1.5,
                             fontSize: 16,
                             fontWeight: FontWeight.w400),
-                        suffixIcon: IconButton(
-                          onPressed: roomIdController.clear,
-                          icon: Icon(Icons.clear),
-                        ),
+                        suffixIcon: roomIdController.text.isEmpty
+                            ? null
+                            : IconButton(
+                                onPressed: () {
+                                  roomIdController.text = "";
+                                  setState(() {});
+                                },
+                                icon: Icon(Icons.clear),
+                              ),
                         enabledBorder: OutlineInputBorder(
                             borderSide:
                                 BorderSide(color: borderColor, width: 1),

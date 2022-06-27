@@ -71,11 +71,19 @@ class _PreviewDetailsState extends State<PreviewDetails> {
                 style: GoogleFonts.inter(),
                 controller: nameController,
                 keyboardType: TextInputType.name,
+                onChanged: (value) {
+                  setState(() {});
+                },
                 decoration: InputDecoration(
-                  suffixIcon: IconButton(
-                          onPressed: nameController.clear,
-                          icon: Icon(Icons.clear),
-                        ),
+                    suffixIcon: nameController.text.isEmpty
+                        ? null
+                        : IconButton(
+                            onPressed: () {
+                              nameController.text = "";
+                              setState(() {});
+                            },
+                            icon: Icon(Icons.clear),
+                          ),
                     contentPadding:
                         EdgeInsets.symmetric(vertical: 14, horizontal: 16),
                     fillColor: surfaceColor,
@@ -91,7 +99,6 @@ class _PreviewDetailsState extends State<PreviewDetails> {
                         borderRadius: BorderRadius.all(Radius.circular(8))),
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(8)))),
-                        
               ),
             ),
             SizedBox(
@@ -107,7 +114,8 @@ class _PreviewDetailsState extends State<PreviewDetails> {
                         }
                       else
                         {
-                          Utilities.saveData(key:"name",value:nameController.text.trim()),
+                          Utilities.saveData(
+                              key: "name", value: nameController.text.trim()),
                           res = await Utilities.getPermissions(),
                           if (res)
                             {
