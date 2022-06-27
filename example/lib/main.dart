@@ -315,6 +315,8 @@ class _HomePageState extends State<HomePage> {
                               fontSize: 14,
                               fontWeight: FontWeight.w400)),
                       ToggleButtons(
+                        selectedColor: hmsButtonColor,
+                        selectedBorderColor: hmsButtonColor,
                           borderRadius: BorderRadius.circular(10),
                           textStyle: GoogleFonts.inter(
                               color: defaultColor,
@@ -348,6 +350,7 @@ class _HomePageState extends State<HomePage> {
                       setState(() {});
                     },
                     decoration: InputDecoration(
+                        focusColor: hmsButtonColor,
                         contentPadding:
                             EdgeInsets.symmetric(vertical: 14, horizontal: 16),
                         fillColor: surfaceColor,
@@ -390,7 +393,7 @@ class _HomePageState extends State<HomePage> {
                                   MaterialStateProperty.all(surfaceColor),
                               backgroundColor: roomIdController.text.isEmpty
                                   ? MaterialStateProperty.all(surfaceColor)
-                                  : MaterialStateProperty.all(Colors.blue),
+                                  : MaterialStateProperty.all(hmsButtonColor),
                               shape: MaterialStateProperty.all<
                                       RoundedRectangleBorder>(
                                   RoundedRectangleBorder(
@@ -454,7 +457,8 @@ class _HomePageState extends State<HomePage> {
                   width: width * 0.95,
                   child: ElevatedButton(
                     style: ButtonStyle(
-                        shadowColor: MaterialStateProperty.all(Colors.blue),
+                        shadowColor: MaterialStateProperty.all(hmsButtonColor),
+                        backgroundColor: MaterialStateProperty.all(hmsButtonColor),
                         shape:
                             MaterialStateProperty.all<RoundedRectangleBorder>(
                                 RoundedRectangleBorder(
