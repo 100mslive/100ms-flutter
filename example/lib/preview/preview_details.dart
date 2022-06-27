@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hmssdk_flutter_example/common/ui/organisms/hms_listenable_button.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
+import 'package:hmssdk_flutter_example/hls-streaming/hls_meeting_page.dart';
 import 'package:hmssdk_flutter_example/preview/preview_page.dart';
 import 'package:hmssdk_flutter_example/preview/preview_store.dart';
 import 'package:provider/provider.dart';
@@ -20,7 +22,7 @@ class _PreviewDetailsState extends State<PreviewDetails> {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
-
+    bool res = false;
     return Scaffold(
       body: Center(
           child: SingleChildScrollView(
@@ -78,72 +80,61 @@ class _PreviewDetailsState extends State<PreviewDetails> {
             SizedBox(
               height: 30,
             ),
-            SizedBox(
-              width: width * 0.6,
-              child: ValueListenableBuilder<TextEditingValue>(
-                  valueListenable: nameController,
-                  builder: (context, value, child) {
-                    return ElevatedButton(
-                      style: ButtonStyle(
-                          shadowColor: MaterialStateProperty.all(surfaceColor),
-                          backgroundColor: nameController.text.isEmpty
-                              ? MaterialStateProperty.all(surfaceColor)
-                              : MaterialStateProperty.all(Colors.blue),
-                          shape:
-                              MaterialStateProperty.all<RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8.0),
-                          ))),
-                      onPressed: () async {
-                        if (nameController.text.isEmpty) {
-                          Utilities.showToast("Please enter you name");
-                          return;
+            HMSListenableButton(
+                width: width * 0.6,
+                onPressed: () async => {
+                      FocusManager.instance.primaryFocus?.unfocus(),
+                      if (nameController.text.isEmpty)
+                        {
+                          Utilities.showToast("Please enter you name"),
                         }
-                        FocusManager.instance.primaryFocus?.unfocus();
-                        bool res = await Utilities.getPermissions();
-                        if (res) {
-                          Navigator.of(context)
-                              .pushReplacement(MaterialPageRoute(
-                                  builder: (_) => ListenableProvider.value(
-                                        value: PreviewStore(),
-                                        child: PreviewPage(
-                                            name: nameController.text,
-                                            roomId: widget.roomId),
-                                      )));
+                      else
+                        {
+                          res = await Utilities.getPermissions(),
+                          if (res)
+                            {
+                              Navigator.of(context)
+                                  .pushReplacement(MaterialPageRoute(
+                                      builder: (_) => ListenableProvider.value(
+                                            value: PreviewStore(),
+                                            child: PreviewPage(
+                                                name: nameController.text,
+                                                roomId: widget.roomId),
+                                          )))
+                            }
                         }
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.fromLTRB(8, 16, 8, 16),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(8))),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text('Get Started',
-                                style: GoogleFonts.inter(
-                                    color: nameController.text.isEmpty
-                                        ? disabledTextColor
-                                        : enabledTextColor,
-                                    height: 1,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600)),
-                            SizedBox(
-                              width: 4,
-                            ),
-                            Icon(
-                              Icons.arrow_forward,
+                    },
+                childWidget: Container(
+                  padding: const EdgeInsets.fromLTRB(8, 16, 8, 16),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(8))),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text('Get Started',
+                          style: GoogleFonts.inter(
                               color: nameController.text.isEmpty
                                   ? disabledTextColor
                                   : enabledTextColor,
-                              size: 16,
-                            )
-                          ],
-                        ),
+                              height: 1,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600)),
+                      SizedBox(
+                        width: 4,
                       ),
-                    );
-                  }),
-            ),
+                      Icon(
+                        Icons.arrow_forward,
+                        color: nameController.text.isEmpty
+                            ? disabledTextColor
+                            : enabledTextColor,
+                        size: 16,
+                      )
+                    ],
+                  ),
+                ),
+                textController: nameController,
+                errorMessage: "Please enter you name")
           ],
         ),
       )),

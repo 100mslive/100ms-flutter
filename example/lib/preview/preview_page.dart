@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/embedded_button.dart';
+import 'package:hmssdk_flutter_example/common/ui/organisms/hms_button.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
@@ -136,7 +137,7 @@ class _PreviewPageState extends State<PreviewPage> {
                                   () async => _previewStore.switchAudio(isOn: _previewStore.isAudioOn)
                                 ,
                                 offColor: defaultColor,
-                                onColor: buttonColor,
+                                onColor: backgroundColor,
                                 isActive: _previewStore.isAudioOn,
                                 child: SvgPicture.asset(
                                   _previewStore.isAudioOn
@@ -162,7 +163,7 @@ class _PreviewPageState extends State<PreviewPage> {
                                     : _previewStore.switchVideo(isOn: _previewStore.isVideoOn)
                                 ,
                                 offColor: defaultColor,
-                                onColor: buttonColor,
+                                onColor: backgroundColor,
                                 isActive: _previewStore.isVideoOn,
                                 child: SvgPicture.asset(
                                     _previewStore.isVideoOn
@@ -209,21 +210,6 @@ class _PreviewPageState extends State<PreviewPage> {
                                     'assets/icons/network_${_previewStore.networkQuality}.svg',
                                     fit: BoxFit.scaleDown,
                                   )),
-                              // GestureDetector(
-                              //   onTap: () {
-                                  
-                              //   },
-                              //   child: Container(
-                              //     width: 50,
-                              //     height: 50,
-                              //     decoration: BoxDecoration(
-                              //         color: dividerColor,
-                              //         borderRadius:
-                              //             BorderRadius.all(Radius.circular(12)),
-                              //         border: Border.all(color: borderColor)),
-                              //     child: ,
-                              //   ),
-                              // ),
                             SizedBox(
                               width: 10,
                             ),
@@ -242,23 +228,13 @@ class _PreviewPageState extends State<PreviewPage> {
                     SizedBox(
                       height: 30,
                     ),
-                    SizedBox(
-                      width: width * 0.5,
-                      child: ElevatedButton(
-                        style: ButtonStyle(
-                            shadowColor:
-                                MaterialStateProperty.all(surfaceColor),
-                            backgroundColor:
-                                MaterialStateProperty.all(Colors.blue),
-                            shape: MaterialStateProperty.all<
-                                RoundedRectangleBorder>(RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8.0),
-                            ))),
-                        onPressed: () async {
-                          context.read<PreviewStore>().removePreviewListener();
-                          _previewStore.hmsSDKInteractor.mirrorCamera = true;
-                          _previewStore.hmsSDKInteractor.showStats = false;
-                          _previewStore.hmsSDKInteractor.skipPreview = false;
+                    HMSButton(width: width * 0.5, 
+                    onPressed: () async => 
+                    {
+                      context.read<PreviewStore>().removePreviewListener(),
+                          _previewStore.hmsSDKInteractor.mirrorCamera = true,
+                          _previewStore.hmsSDKInteractor.showStats = false,
+                          _previewStore.hmsSDKInteractor.skipPreview = false,
                           Navigator.of(context)
                               .pushReplacement(MaterialPageRoute(
                                   builder: (_) => ListenableProvider.value(
@@ -274,9 +250,8 @@ class _PreviewPageState extends State<PreviewPage> {
                                           localPeerNetworkQuality:
                                               _previewStore.networkQuality,
                                         ),
-                                      )));
-                        },
-                        child: Container(
+                                      )))
+                        }, childWidget: Container(
                           padding: const EdgeInsets.fromLTRB(8, 16, 8, 16),
                           decoration: BoxDecoration(
                               borderRadius:
@@ -301,9 +276,7 @@ class _PreviewPageState extends State<PreviewPage> {
                               )
                             ],
                           ),
-                        ),
-                      ),
-                    ),
+                        ),),
                   ],
                 ),
               )

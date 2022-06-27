@@ -5,17 +5,17 @@ class HMSButton extends StatelessWidget {
   final double width;
   final Color? shadowColor;
   final Function() onPressed;
-  final Widget child;
+  final Widget childWidget;
 
   HMSButton(
       {required this.width,
       this.shadowColor,
       required this.onPressed,
-      required this.child});
+      required this.childWidget});
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-        width: width * 0.5,
+        width: width,
         child: ElevatedButton(
           style: ButtonStyle(
               shadowColor: MaterialStateProperty.all(
@@ -26,12 +26,7 @@ class HMSButton extends StatelessWidget {
                 borderRadius: BorderRadius.circular(8.0),
               ))),
           onPressed: onPressed,
-          child: Container(
-            padding: const EdgeInsets.fromLTRB(8, 16, 8, 16),
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(8))),
-            child: child
-          ),
+          child: childWidget,
         ));
   }
 }

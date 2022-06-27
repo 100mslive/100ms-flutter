@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
+import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 
 class EmbeddedButton extends StatelessWidget {
-  final Function()? onTap;
+  final Function() onTap;
   final Color offColor;
   final Color onColor;
   final bool isActive;
@@ -9,7 +10,7 @@ class EmbeddedButton extends StatelessWidget {
   final double? height;
   final double? width;
   EmbeddedButton(
-      {this.onTap,
+      {required this.onTap,
       required this.offColor,
       required this.onColor,
       required this.isActive,
@@ -19,11 +20,12 @@ class EmbeddedButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => onTap!(),
+      onTap: onTap,
       child: Container(
           width: width,
           height: height,
           decoration: BoxDecoration(
+              border: isActive?Border.all(color: borderColor,width: 1):Border.all(color: defaultColor,width: 0),
               borderRadius: BorderRadius.all(Radius.circular(12)),
               color: isActive ? onColor : offColor),
           child: child),

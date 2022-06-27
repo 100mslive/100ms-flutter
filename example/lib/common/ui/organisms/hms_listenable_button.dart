@@ -5,7 +5,7 @@ class HMSListenableButton extends StatelessWidget {
   final double width;
   final Color? shadowColor;
   final Function() onPressed;
-  final Widget child;
+  final Widget childWidget;
   final TextEditingController textController;
   final String errorMessage;
 
@@ -13,14 +13,14 @@ class HMSListenableButton extends StatelessWidget {
       {required this.width,
       this.shadowColor,
       required this.onPressed,
-      required this.child,
+      required this.childWidget,
       required this.textController,
       required this.errorMessage});
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: width * 0.6,
+      width: width,
       child: ValueListenableBuilder<TextEditingValue>(
           valueListenable: textController,
           builder: (context, value, child) {
@@ -36,7 +36,7 @@ class HMSListenableButton extends StatelessWidget {
                       borderRadius: BorderRadius.circular(8.0),
                     ))),
                 onPressed: onPressed,
-                child: child);
+                child: childWidget);
           }),
     );
   }

@@ -363,6 +363,7 @@ class _HomePageState extends State<HomePage> {
                             if (roomIdController.text.isEmpty) {
                               return;
                             }
+                            FocusManager.instance.primaryFocus?.unfocus();
                             Utilities.setRTMPUrl(roomIdController.text);
                             Navigator.push(
                                 context,
