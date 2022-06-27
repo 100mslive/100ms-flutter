@@ -12,12 +12,10 @@ import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:hmssdk_flutter_example/preview/preview_details.dart';
 import 'package:hmssdk_flutter_example/qr_code_screen.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wakelock/wakelock.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 //Project imports
-import 'package:hmssdk_flutter_example/common/constant.dart';
 import './logs/custom_singleton_logger.dart';
 
 void main() async {
