@@ -24,28 +24,68 @@ class UtilityComponents {
     return showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: Text(
-          'Leave Room?',
-          style: GoogleFonts.inter(
-              color: iconColor, fontSize: 24, fontWeight: FontWeight.w700),
-        ),
-        actions: [
-          ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                primary: Colors.red,
+        insetPadding: EdgeInsets.symmetric(horizontal: 10,vertical: 10),
+        backgroundColor: Color.fromRGBO(32, 22, 23, 1),
+        title: Container(
+          width: 300,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SvgPicture.asset("assets/icons/leave_room.svg"),
+              SizedBox(width: 5,),
+              Text(
+                'Do you wish to leave?',
+                style: GoogleFonts.inter(
+                    color: errorColor, fontSize: 20, fontWeight: FontWeight.w600,letterSpacing: 0.25),
               ),
-              onPressed: () => {
+            ],
+          ),
+        ),
+        content: Text("Your will leave the room immediately. You can’t undo this action.",
+        style: GoogleFonts.inter(color: subHeadingColor,fontSize: 14,fontWeight: FontWeight.w400,letterSpacing: 0.25)),
+        actions: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+                        ElevatedButton(
+              style: ButtonStyle(
+              shadowColor: MaterialStateProperty.all(
+                 surfaceColor),
+              backgroundColor: MaterialStateProperty.all(Color.fromRGBO(32, 22, 23, 1),),
+              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  RoundedRectangleBorder(
+                    side: BorderSide(width: 1,color: borderColor),
+                borderRadius: BorderRadius.circular(8.0),
+                
+              ))),
+              onPressed:
+              () => Navigator.pop(context, false),
+              
+              child: Text('Nevermind', style: GoogleFonts.inter(color:defaultColor,fontSize: 16,fontWeight: FontWeight.w600,letterSpacing: 0.50))),
+          
+          ElevatedButton(
+                          style: ButtonStyle(
+              shadowColor: MaterialStateProperty.all(
+                 surfaceColor),
+              backgroundColor: MaterialStateProperty.all(errorColor),
+              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  RoundedRectangleBorder(
+                    side: BorderSide(width: 1,color: borderColor),
+                borderRadius: BorderRadius.circular(8.0),
+                
+              ))),
+            onPressed:  () => {
                     _meetingStore.leave(),
                     Navigator.popUntil(context, (route) => route.isFirst)
                   },
-              child: Text('Yes', style: GoogleFonts.inter(fontSize: 24))),
-          ElevatedButton(
-            onPressed: () => Navigator.pop(context, false),
             child: Text(
-              'Cancel',
-              style: GoogleFonts.inter(fontSize: 24),
+              'Leave Room',
+               style: GoogleFonts.inter(color:defaultColor,fontSize: 16,fontWeight: FontWeight.w600,letterSpacing: 0.50),
             ),
           ),
+            ],
+          )
+
         ],
       ),
     );
