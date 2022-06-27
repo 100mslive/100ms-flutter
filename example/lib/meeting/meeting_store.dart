@@ -853,7 +853,8 @@ class MeetingStore extends ChangeNotifier
 
   void setActiveSpeakerMode() {
     this.isActiveSpeakerMode = !this.isActiveSpeakerMode;
-    this.meetingMode = MeetingMode.Video;
+    if (meetingMode == MeetingMode.Hero || meetingMode == MeetingMode.Single)
+      this.meetingMode = MeetingMode.Video;
     notifyListeners();
   }
 

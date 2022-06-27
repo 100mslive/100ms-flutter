@@ -1,6 +1,6 @@
 name: hmssdk_flutter
 description: The Flutter package for 100ms SDK. Video Conferencing infrastructure for a Video first world.
-version: 0.7.3
+version: 0.7.4
 homepage: https://www.100ms.live/
 repository: https://github.com/100mslive/100ms-flutter
 issue_tracker: https://github.com/100mslive/100ms-flutter/issues
