@@ -97,55 +97,6 @@ class _HLSMeetingPageState extends State<HLSMeetingPage> {
                 ),
                 Column(
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Container(
-                        padding: EdgeInsets.all(24),
-                        decoration: BoxDecoration(
-                          color: buttonColor.withOpacity(0.5),
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        child: Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                SvgPicture.asset(
-                                  "assets/icons/mic.svg",
-                                  color: Colors.white,
-                                  fit: BoxFit.scaleDown,
-                                ),
-                                SvgPicture.asset(
-                                  "assets/icons/arrow.svg",
-                                  color: Colors.white,
-                                  fit: BoxFit.scaleDown,
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 10),
-                            Text(
-                              "Invite others to join the conversation",
-                              style: GoogleFonts.inter(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                  letterSpacing: 0.25),
-                            ),
-                            SizedBox(height: 10),
-                            Text(
-                              "Add other broadcasters, or priviliged viewers who can interact with you in real time",
-                              style: GoogleFonts.inter(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w400,
-                                  color: subHeadingColor,
-                                  letterSpacing: 0.25),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 32,
-                    ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [

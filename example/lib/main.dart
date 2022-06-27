@@ -12,6 +12,7 @@ import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:hmssdk_flutter_example/preview/preview_details.dart';
 import 'package:hmssdk_flutter_example/qr_code_screen.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wakelock/wakelock.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
@@ -84,8 +85,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  TextEditingController roomIdController =
-      TextEditingController(text: Constant.defaultRoomID);
+  TextEditingController roomIdController = TextEditingController();
   CustomLogger logger = CustomLogger();
   bool skipPreview = false;
   bool mirrorCamera = true;
@@ -104,6 +104,11 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     logger.getCustomLogger();
     _initPackageInfo();
+    getData();
+  }
+
+  void getData() async {
+    roomIdController.text = await Utilities.loadData(key: 'roomId');
   }
 
   Future<bool> _closeApp() {
@@ -139,7 +144,7 @@ class _HomePageState extends State<HomePage> {
     bool isDarkMode = HMSExampleApp.of(context).isDarkMode;
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
-
+    List<bool> mode = [true, false]; //0-> meeting ,1 -> HLS mode
     return WillPopScope(
       onWillPop: _closeApp,
       child: SafeArea(
@@ -299,6 +304,7 @@ class _HomePageState extends State<HomePage> {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                   child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text("Joining Link",
                           style: GoogleFonts.inter(
@@ -306,6 +312,22 @@ class _HomePageState extends State<HomePage> {
                               height: 1.5,
                               fontSize: 14,
                               fontWeight: FontWeight.w400)),
+                      // ToggleButtons(
+                      //     children: [Text("Meeting"), Text("HLS")],
+                      //     onPressed: (int index) {
+                      //       setState(() {
+                      //         for (int buttonIndex = 0;
+                      //             buttonIndex < mode.length;
+                      //             buttonIndex++) {
+                      //           if (buttonIndex == index) {
+                      //             mode[buttonIndex] = true;
+                      //           } else {
+                      //             mode[buttonIndex] = false;
+                      //           }
+                      //         }
+                      //       });
+                      //     },
+                      //     isSelected: mode)
                     ],
                   ),
                 ),
@@ -363,6 +385,9 @@ class _HomePageState extends State<HomePage> {
                             if (roomIdController.text.isEmpty) {
                               return;
                             }
+                            Utilities.saveData(
+                                key: "roomId",
+                                value: roomIdController.text.trim());
                             FocusManager.instance.primaryFocus?.unfocus();
                             Utilities.setRTMPUrl(roomIdController.text);
                             Navigator.push(
