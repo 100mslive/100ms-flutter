@@ -144,7 +144,7 @@ class MeetingStore extends ChangeNotifier
   }
 
   Future<void> switchCamera() async {
-    if(isVideoOn) {
+    if (isVideoOn) {
       await _hmsSDKInteractor.switchCamera();
     }
   }
@@ -343,6 +343,9 @@ class MeetingStore extends ChangeNotifier
         streamUrl = hasHlsStarted
             ? room.hmshlsStreamingState?.variants[0]?.hlsStreamUrl ?? ""
             : "";
+        Utilities.showToast(room.hmshlsStreamingState?.running ?? false
+            ? "HLS Streaming Started"
+            : "HLS Streaming Stopped");
         break;
       default:
         break;
@@ -1080,12 +1083,10 @@ class MeetingStore extends ChangeNotifier
         notifyListeners();
         break;
       case HMSActionResultListenerMethod.hlsStreamingStarted:
-        hasHlsStarted = true;
         Utilities.showToast("HLS Streaming Started");
         notifyListeners();
         break;
       case HMSActionResultListenerMethod.hlsStreamingStopped:
-        hasHlsStarted = false;
         Utilities.showToast("HLS Streaming Stopped");
         notifyListeners();
         break;
