@@ -143,7 +143,8 @@ class _HLSMeetingPageState extends State<HLSMeetingPage> {
                                   return Column(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Row(
                                         children: [
@@ -338,8 +339,8 @@ class _HLSMeetingPageState extends State<HLSMeetingPage> {
                                       ),
                                       InkWell(
                                         onTap: () {
-                                          context.read<MeetingStore>()
-                                              .stopHLSStreaming();
+                                          UtilityComponents.onEndStream(
+                                              context);
                                         },
                                         child: CircleAvatar(
                                           radius: 40,

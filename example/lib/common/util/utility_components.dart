@@ -584,4 +584,76 @@ class UtilityComponents {
         });
     return res;
   }
+
+    static onEndStream(BuildContext context) {
+    MeetingStore _meetingStore = context.read<MeetingStore>();
+    return showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        insetPadding: EdgeInsets.symmetric(horizontal: 10,vertical: 10),
+        backgroundColor: Color.fromRGBO(32, 22, 23, 1),
+        title: Container(
+          width: 300,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SvgPicture.asset("assets/icons/end.svg"),
+              SizedBox(width: 5,),
+              Text(
+                'End live stream for all?',
+                style: GoogleFonts.inter(
+                    color: errorColor, fontSize: 20, fontWeight: FontWeight.w600,letterSpacing: 0.25),
+              ),
+            ],
+          ),
+        ),
+        content: Text("Your stream will end and everone will go offline immediately in this room. You can’t undo this action.",
+        style: GoogleFonts.inter(color: subHeadingColor,fontSize: 14,fontWeight: FontWeight.w400,letterSpacing: 0.25)),
+        actions: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+                        ElevatedButton(
+              style: ButtonStyle(
+              shadowColor: MaterialStateProperty.all(
+                 surfaceColor),
+              backgroundColor: MaterialStateProperty.all(Color.fromRGBO(32, 22, 23, 1),),
+              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  RoundedRectangleBorder(
+                    side: BorderSide(width: 1,color: borderColor),
+                borderRadius: BorderRadius.circular(8.0),
+                
+              ))),
+              onPressed:
+              () => Navigator.pop(context),
+              
+              child: Text('Nevermind', style: GoogleFonts.inter(color:defaultColor,fontSize: 16,fontWeight: FontWeight.w600,letterSpacing: 0.50))),
+          
+          ElevatedButton(
+                          style: ButtonStyle(
+              shadowColor: MaterialStateProperty.all(
+                 surfaceColor),
+              backgroundColor: MaterialStateProperty.all(errorColor),
+              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  RoundedRectangleBorder(
+                    side: BorderSide(width: 1,color: borderColor),
+                borderRadius: BorderRadius.circular(8.0),
+                
+              ))),
+            onPressed:  () => {
+                    _meetingStore.stopHLSStreaming(),
+                    Navigator.pop(context)
+                  },
+            child: Text(
+              'End Stream',
+               style: GoogleFonts.inter(color:defaultColor,fontSize: 16,fontWeight: FontWeight.w600,letterSpacing: 0.50),
+            ),
+          ),
+            ],
+          )
+
+        ],
+      ),
+    );
+  }
 }
