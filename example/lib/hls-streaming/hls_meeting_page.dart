@@ -115,19 +115,70 @@ class _HLSMeetingPageState extends State<HLSMeetingPage> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      EmbeddedButton(
-                        onTap: () async =>
-                            {await UtilityComponents.onBackPressed(context)},
-                        width: 45,
-                        height: 45,
-                        offColor: Color(0xffCC525F),
-                        onColor: Color(0xffCC525F),
-                        isActive: false,
-                        child: SvgPicture.asset(
-                          "assets/icons/leave_hls.svg",
-                          color: Colors.white,
-                          fit: BoxFit.scaleDown,
-                        ),
+                      Row(
+                        children: [
+                          EmbeddedButton(
+                            onTap: () async => {
+                              await UtilityComponents.onBackPressed(context)
+                            },
+                            width: 45,
+                            height: 45,
+                            offColor: Color(0xffCC525F),
+                            onColor: Color(0xffCC525F),
+                            isActive: false,
+                            child: SvgPicture.asset(
+                              "assets/icons/leave_hls.svg",
+                              color: Colors.white,
+                              fit: BoxFit.scaleDown,
+                            ),
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Selector<MeetingStore, bool>(
+                              selector: (_, meetingStore) =>
+                                  meetingStore.hasHlsStarted,
+                              builder: (_, hasHlsStarted, __) {
+                                if (hasHlsStarted)
+                                  return Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                right: 5.0),
+                                            child: SvgPicture.asset(
+                                              "assets/icons/live_stream.svg",
+                                              color: errorColor,
+                                              fit: BoxFit.scaleDown,
+                                            ),
+                                          ),
+                                          Text(
+                                            "Live",
+                                            style: GoogleFonts.inter(
+                                                fontSize: 16,
+                                                color: defaultColor,
+                                                letterSpacing: 0.5,
+                                                fontWeight: FontWeight.w600),
+                                          ),
+                                        ],
+                                      ),
+                                      Text(
+                                        "01:23",
+                                        style: GoogleFonts.inter(
+                                            fontSize: 12,
+                                            color: subHeadingColor,
+                                            letterSpacing: 0.4,
+                                            fontWeight: FontWeight.w400),
+                                      )
+                                    ],
+                                  );
+                                return SizedBox();
+                              })
+                        ],
                       ),
                       Row(
                         children: [
@@ -275,42 +326,88 @@ class _HLSMeetingPageState extends State<HLSMeetingPage> {
                               }),
                         if (Provider.of<MeetingStore>(context).localPeer !=
                             null)
-                          Column(
-                            children: [
-                              SizedBox(
-                                height: 10,
-                              ),
-                              InkWell(
-                                onTap: () {
-                                  showModalBottomSheet(
-                                      isScrollControlled: true,
-                                      backgroundColor: bottomSheetColor,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(20),
+                          Selector<MeetingStore, bool>(
+                              selector: (_, meetingStore) =>
+                                  meetingStore.hasHlsStarted,
+                              builder: (_, hasHlsStarted, __) {
+                                if (hasHlsStarted) {
+                                  return Column(
+                                    children: [
+                                      SizedBox(
+                                        height: 10,
                                       ),
-                                      context: context,
-                                      builder: (_) => HLSBottomSheet());
-                                },
-                                child: CircleAvatar(
-                                  radius: 40,
-                                  backgroundColor: Colors.blue,
-                                  child: SvgPicture.asset(
-                                    "assets/icons/live.svg",
-                                    color: defaultColor,
-                                    fit: BoxFit.scaleDown,
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                height: 5,
-                              ),
-                              Text(
-                                "GO LIVE",
-                                style: GoogleFonts.inter(
-                                    fontSize: 12, fontWeight: FontWeight.w500),
-                              )
-                            ],
-                          ),
+                                      InkWell(
+                                        onTap: () {
+                                          context.read<MeetingStore>()
+                                              .stopHLSStreaming();
+                                        },
+                                        child: CircleAvatar(
+                                          radius: 40,
+                                          backgroundColor: errorColor,
+                                          child: SvgPicture.asset(
+                                            "assets/icons/end.svg",
+                                            color: defaultColor,
+                                            height: 36,
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 5,
+                                      ),
+                                      Text(
+                                        "END STREAM",
+                                        style: GoogleFonts.inter(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w500),
+                                      )
+                                    ],
+                                  );
+                                }
+                                return Column(
+                                  children: [
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    InkWell(
+                                      onTap: () {
+                                        showModalBottomSheet(
+                                          isScrollControlled: true,
+                                          backgroundColor: bottomSheetColor,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                          ),
+                                          context: context,
+                                          builder: (ctx) =>
+                                              ChangeNotifierProvider.value(
+                                                  value: context
+                                                      .read<MeetingStore>(),
+                                                  child: HLSBottomSheet(
+                                                      roomId: widget.roomId)),
+                                        );
+                                      },
+                                      child: CircleAvatar(
+                                        radius: 40,
+                                        backgroundColor: Colors.blue,
+                                        child: SvgPicture.asset(
+                                          "assets/icons/live.svg",
+                                          color: defaultColor,
+                                          fit: BoxFit.scaleDown,
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 5,
+                                    ),
+                                    Text(
+                                      "GO LIVE",
+                                      style: GoogleFonts.inter(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w500),
+                                    )
+                                  ],
+                                );
+                              }),
                         if (Provider.of<MeetingStore>(context).localPeer !=
                                 null &&
                             (Provider.of<MeetingStore>(context)

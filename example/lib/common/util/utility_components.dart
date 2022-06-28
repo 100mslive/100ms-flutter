@@ -31,7 +31,7 @@ class UtilityComponents {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              SvgPicture.asset("assets/icons/leave_room.svg"),
+              SvgPicture.asset("assets/icons/end.svg"),
               SizedBox(width: 5,),
               Text(
                 'Do you wish to leave?',

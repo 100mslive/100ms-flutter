@@ -4,13 +4,20 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/hms_button.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
+import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
+import 'package:provider/provider.dart';
 
 class HLSBottomSheet extends StatefulWidget {
+  final String roomId;
+
+  HLSBottomSheet({required this.roomId});
+
   @override
   State<HLSBottomSheet> createState() => _HLSBottomSheetState();
 }
 
 class _HLSBottomSheetState extends State<HLSBottomSheet> {
+  bool _isRecordingOn = false;
   @override
   Widget build(BuildContext context) {
     return FractionallySizedBox(
@@ -135,7 +142,12 @@ class _HLSBottomSheetState extends State<HLSBottomSheet> {
                               scale: 0.6,
                               transformHitTests: false,
                               child: CupertinoSwitch(
-                                  value: false, onChanged: (bool newValue) {}))
+                                  value: _isRecordingOn,
+                                  onChanged: (bool newValue) {
+                                    setState(() {
+                                      _isRecordingOn = newValue;
+                                    });
+                                  }))
                         ],
                       ),
                     ],
@@ -147,7 +159,11 @@ class _HLSBottomSheetState extends State<HLSBottomSheet> {
               ),
               HMSButton(
                   width: MediaQuery.of(context).size.width - 30,
-                  onPressed: () {},
+                  onPressed: () => {
+                    context.read<MeetingStore>().startHLSStreaming(
+                        widget.roomId + "?token=beam_recording", false, _isRecordingOn),
+                    Navigator.pop(context)
+                  },
                   childWidget: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 16.0),
                     child: Row(
