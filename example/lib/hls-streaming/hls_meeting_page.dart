@@ -5,6 +5,7 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/embedded_button.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
+import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_mode.dart';
 import 'package:hmssdk_flutter_example/hls-streaming/hls_bottom_sheet.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
@@ -69,6 +70,26 @@ class _HLSMeetingPageState extends State<HLSMeetingPage> {
                 meetingStore.peerTracks),
             builder: (_, data, __) {
               if (data.item1 && data.item2 && data.item3[0].track != null) {
+                if (data.item3[0].track!.isMute) {
+                  return Center(
+                    child: Center(
+                      child: CircleAvatar(
+                          backgroundColor: defaultAvatarColor,
+                          radius: 40,
+                          child: Text(
+                            Utilities.getAvatarTitle(context
+                                .read<MeetingStore>()
+                                .peerTracks[0]
+                                .peer
+                                .name),
+                            style: GoogleFonts.inter(
+                              fontSize: 40,
+                              color: Colors.white,
+                            ),
+                          )),
+                    ),
+                  );
+                }
                 return HMSVideoView(
                   scaleType: ScaleType.SCALE_ASPECT_FILL,
                   track: data.item3[0].track!,
@@ -76,15 +97,13 @@ class _HLSMeetingPageState extends State<HLSMeetingPage> {
                   matchParent: false,
                 );
               } else {
-                return CircularProgressIndicator(
-                  strokeWidth: 2,
+                return Center(
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                  ),
                 );
               }
             },
-          ),
-          Container(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height,
           ),
           SafeArea(
             child: Column(
@@ -254,68 +273,95 @@ class _HLSMeetingPageState extends State<HLSMeetingPage> {
                                   ),
                                 );
                               }),
-                        Column(
-                          children: [
-                            SizedBox(
-                              height: 10,
-                            ),
-                            InkWell(
-                              onTap: () {
-                                showModalBottomSheet(
-                                  isScrollControlled: true,
-                                    backgroundColor: bottomSheetColor,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                    context: context,
-                                    builder: (_) => HLSBottomSheet());
-                              },
-                              child: CircleAvatar(
-                                radius: 40,
-                                backgroundColor: Colors.blue,
-                                child: SvgPicture.asset(
-                                  "assets/icons/live.svg",
-                                  color: defaultColor,
-                                  fit: BoxFit.scaleDown,
+                        if (Provider.of<MeetingStore>(context).localPeer !=
+                            null)
+                          Column(
+                            children: [
+                              SizedBox(
+                                height: 10,
+                              ),
+                              InkWell(
+                                onTap: () {
+                                  showModalBottomSheet(
+                                      isScrollControlled: true,
+                                      backgroundColor: bottomSheetColor,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                      context: context,
+                                      builder: (_) => HLSBottomSheet());
+                                },
+                                child: CircleAvatar(
+                                  radius: 40,
+                                  backgroundColor: Colors.blue,
+                                  child: SvgPicture.asset(
+                                    "assets/icons/live.svg",
+                                    color: defaultColor,
+                                    fit: BoxFit.scaleDown,
+                                  ),
                                 ),
                               ),
-                            ),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            Text(
-                              "GO LIVE",
-                              style: TextStyle(
-                                  fontSize: 12, fontWeight: FontWeight.w500),
-                            )
-                          ],
-                        ),
-                        EmbeddedButton(
-                          onTap: () => {},
-                          width: 45,
-                          height: 45,
-                          offColor: hintColor,
-                          onColor: backgroundColor,
-                          isActive: true,
-                          child: SvgPicture.asset(
-                            "assets/icons/screen_share.svg",
-                            color: defaultColor,
-                            fit: BoxFit.scaleDown,
+                              SizedBox(
+                                height: 5,
+                              ),
+                              Text(
+                                "GO LIVE",
+                                style: GoogleFonts.inter(
+                                    fontSize: 12, fontWeight: FontWeight.w500),
+                              )
+                            ],
                           ),
-                        ),
-                        EmbeddedButton(
-                          onTap: () => {},
-                          width: 45,
-                          height: 45,
-                          offColor: hintColor,
-                          onColor: backgroundColor,
-                          isActive: true,
-                          child: SvgPicture.asset(
-                            "assets/icons/more.svg",
-                            color: defaultColor,
-                            fit: BoxFit.scaleDown,
+                        if (Provider.of<MeetingStore>(context).localPeer !=
+                                null &&
+                            (Provider.of<MeetingStore>(context)
+                                    .localPeer
+                                    ?.role
+                                    .publishSettings
+                                    ?.allowed
+                                    .contains("screen") ??
+                                false))
+                          Selector<MeetingStore, bool>(
+                              selector: (_, meetingStore) =>
+                                  meetingStore.isScreenShareOn,
+                              builder: (_, data, __) {
+                                return EmbeddedButton(
+                                  onTap: () {
+                                    MeetingStore meetingStore =
+                                        Provider.of<MeetingStore>(context,
+                                            listen: false);
+                                    if (meetingStore.isScreenShareOn) {
+                                      meetingStore.stopScreenShare();
+                                    } else {
+                                      meetingStore.startScreenShare();
+                                    }
+                                  },
+                                  width: 45,
+                                  height: 45,
+                                  offColor: hintColor,
+                                  onColor: backgroundColor,
+                                  isActive: data,
+                                  child: SvgPicture.asset(
+                                    "assets/icons/screen_share.svg",
+                                    color: defaultColor,
+                                    fit: BoxFit.scaleDown,
+                                  ),
+                                );
+                              }),
+                        if (Provider.of<MeetingStore>(context).localPeer !=
+                            null)
+                          EmbeddedButton(
+                            onTap: () => {},
+                            width: 45,
+                            height: 45,
+                            offColor: hintColor,
+                            onColor: backgroundColor,
+                            isActive: true,
+                            child: SvgPicture.asset(
+                              "assets/icons/more.svg",
+                              color: defaultColor,
+                              fit: BoxFit.scaleDown,
+                            ),
                           ),
-                        ),
                       ],
                     ),
                   ],

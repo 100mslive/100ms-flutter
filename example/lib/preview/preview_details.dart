@@ -5,7 +5,6 @@ import 'package:hmssdk_flutter_example/common/ui/organisms/hms_listenable_button
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
-import 'package:hmssdk_flutter_example/hls-streaming/hls_meeting_page.dart';
 import 'package:hmssdk_flutter_example/preview/preview_page.dart';
 import 'package:hmssdk_flutter_example/preview/preview_store.dart';
 import 'package:provider/provider.dart';
@@ -13,7 +12,7 @@ import 'package:provider/provider.dart';
 class PreviewDetails extends StatefulWidget {
   final String roomId;
   final MeetingFlow meetingFlow;
-  PreviewDetails({required this.roomId,required this.meetingFlow});
+  PreviewDetails({required this.roomId, required this.meetingFlow});
   @override
   State<PreviewDetails> createState() => _PreviewDetailsState();
 }

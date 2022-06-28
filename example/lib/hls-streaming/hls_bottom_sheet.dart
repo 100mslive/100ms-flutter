@@ -130,10 +130,13 @@ class _HLSBottomSheetState extends State<HLSBottomSheet> {
                         ],
                       ),
                       Row(
-                        children: [Transform.scale(
-                          scale: 0.6,
-                          transformHitTests: false,
-                          child: CupertinoSwitch(value: false, onChanged:(bool newValue) {}))],
+                        children: [
+                          Transform.scale(
+                              scale: 0.6,
+                              transformHitTests: false,
+                              child: CupertinoSwitch(
+                                  value: false, onChanged: (bool newValue) {}))
+                        ],
                       ),
                     ],
                   ),
@@ -142,38 +145,60 @@ class _HLSBottomSheetState extends State<HLSBottomSheet> {
               SizedBox(
                 height: 20,
               ),
-              HMSButton(width: MediaQuery.of(context).size.width - 30,
-               onPressed: (){}, 
-               childWidget: Padding(
-                 padding: const EdgeInsets.symmetric(vertical:16.0),
-                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SvgPicture.asset(
-                  "assets/icons/live.svg",
-                  color: defaultColor,
-                  width: 18,
-              ),
-              SizedBox(width: 10,),
-              Text("Go Live",style: GoogleFonts.inter(color:defaultColor,fontSize:16,fontWeight: FontWeight.w600,letterSpacing: 0.5),)
-                  ],
-                 ),
-               )),
-               SizedBox(
+              HMSButton(
+                  width: MediaQuery.of(context).size.width - 30,
+                  onPressed: () {},
+                  childWidget: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 16.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SvgPicture.asset(
+                          "assets/icons/live.svg",
+                          color: defaultColor,
+                          width: 18,
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Text(
+                          "Go Live",
+                          style: GoogleFonts.inter(
+                              color: defaultColor,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: 0.5),
+                        )
+                      ],
+                    ),
+                  )),
+              SizedBox(
                 height: 20,
               ),
               Container(
                 width: MediaQuery.of(context).size.width - 30,
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    SvgPicture.asset("assets/icons/info.svg",color: subHeadingColor,width: 15,),
-                    Text("If recording has to be enabled later, streaming has\nto be stopped first.",
-                    textAlign: TextAlign.left,
-                    overflow: TextOverflow.clip,
-                    style: GoogleFonts.inter(
-                      fontSize: 12,color:subHeadingColor,letterSpacing: 0.4,fontWeight:FontWeight.w400
-                    ),)
+                    SvgPicture.asset(
+                      "assets/icons/info.svg",
+                      color: subHeadingColor,
+                      width: 15,
+                    ),
+                    SizedBox(
+                      width: 18.5,
+                    ),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width - 65,
+                      child: Text(
+                        "If recording has to be enabled later, streaming has to be stopped first.",
+                        style: GoogleFonts.inter(
+                            fontSize: 12,
+                            color: subHeadingColor,
+                            letterSpacing: 0.4,
+                            fontWeight: FontWeight.w400),
+                      ),
+                    )
                   ],
                 ),
               )
