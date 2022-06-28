@@ -124,5 +124,6 @@ class Utilities {
     final prefs = await SharedPreferences.getInstance();
 
     prefs.setInt(key, value);
+
   }
 }

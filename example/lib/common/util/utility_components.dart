@@ -24,7 +24,7 @@ class UtilityComponents {
     return showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        insetPadding: EdgeInsets.symmetric(horizontal: 10,vertical: 10),
+        insetPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         backgroundColor: Color.fromRGBO(32, 22, 23, 1),
         title: Container(
           width: 300,
@@ -36,7 +36,10 @@ class UtilityComponents {
               Text(
                 'Do you wish to leave?',
                 style: GoogleFonts.inter(
-                    color: errorColor, fontSize: 20, fontWeight: FontWeight.w600,letterSpacing: 0.25),
+                    color: errorColor,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 0.25),
               ),
             ],
           ),
@@ -47,45 +50,48 @@ class UtilityComponents {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-                        ElevatedButton(
-              style: ButtonStyle(
-              shadowColor: MaterialStateProperty.all(
-                 surfaceColor),
-              backgroundColor: MaterialStateProperty.all(Color.fromRGBO(32, 22, 23, 1),),
-              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                  RoundedRectangleBorder(
-                    side: BorderSide(width: 1,color: borderColor),
-                borderRadius: BorderRadius.circular(8.0),
-                
-              ))),
-              onPressed:
-              () => Navigator.pop(context, false),
-              
-              child: Text('Nevermind', style: GoogleFonts.inter(color:defaultColor,fontSize: 16,fontWeight: FontWeight.w600,letterSpacing: 0.50))),
-          
-          ElevatedButton(
-                          style: ButtonStyle(
-              shadowColor: MaterialStateProperty.all(
-                 surfaceColor),
-              backgroundColor: MaterialStateProperty.all(errorColor),
-              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                  RoundedRectangleBorder(
-                    side: BorderSide(width: 1,color: borderColor),
-                borderRadius: BorderRadius.circular(8.0),
-                
-              ))),
-            onPressed:  () => {
-                    _meetingStore.leave(),
-                    Navigator.popUntil(context, (route) => route.isFirst)
-                  },
-            child: Text(
-              'Leave Room',
-               style: GoogleFonts.inter(color:defaultColor,fontSize: 16,fontWeight: FontWeight.w600,letterSpacing: 0.50),
-            ),
-          ),
+              ElevatedButton(
+                  style: ButtonStyle(
+                      shadowColor: MaterialStateProperty.all(surfaceColor),
+                      backgroundColor: MaterialStateProperty.all(
+                        Color.fromRGBO(32, 22, 23, 1),
+                      ),
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                        side: BorderSide(width: 1, color: borderColor),
+                        borderRadius: BorderRadius.circular(8.0),
+                      ))),
+                  onPressed: () => Navigator.pop(context, false),
+                  child: Text('Nevermind',
+                      style: GoogleFonts.inter(
+                          color: defaultColor,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: 0.50))),
+              ElevatedButton(
+                style: ButtonStyle(
+                    shadowColor: MaterialStateProperty.all(surfaceColor),
+                    backgroundColor: MaterialStateProperty.all(errorColor),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                      side: BorderSide(width: 1, color: borderColor),
+                      borderRadius: BorderRadius.circular(8.0),
+                    ))),
+                onPressed: () => {
+                  _meetingStore.leave(),
+                  Navigator.popUntil(context, (route) => route.isFirst)
+                },
+                child: Text(
+                  'Leave Room',
+                  style: GoogleFonts.inter(
+                      color: defaultColor,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      letterSpacing: 0.50),
+                ),
+              ),
             ],
           )
-
         ],
       ),
     );
