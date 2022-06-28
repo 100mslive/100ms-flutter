@@ -32,6 +32,8 @@ class MeetingStore extends ChangeNotifier
 
   bool hasHlsStarted = false;
 
+  bool isHLSLoading = false;
+
   String streamUrl = "";
 
   bool isHLSLink = false;
@@ -338,6 +340,7 @@ class MeetingStore extends ChangeNotifier
         streamingType["rtmp"] = room.hmsRtmpStreamingState?.running ?? false;
         break;
       case HMSRoomUpdate.hlsStreamingStateUpdated:
+        isHLSLoading = false;
         streamingType["hls"] = room.hmshlsStreamingState?.running ?? false;
         hasHlsStarted = room.hmshlsStreamingState?.running ?? false;
         streamUrl = hasHlsStarted
@@ -350,6 +353,7 @@ class MeetingStore extends ChangeNotifier
       default:
         break;
     }
+    hmsRoom = room;
     notifyListeners();
   }
 
@@ -1083,10 +1087,11 @@ class MeetingStore extends ChangeNotifier
         notifyListeners();
         break;
       case HMSActionResultListenerMethod.hlsStreamingStarted:
-        Utilities.showToast("HLS Streaming Started");
+        isHLSLoading = true;
         notifyListeners();
         break;
       case HMSActionResultListenerMethod.hlsStreamingStopped:
+        hasHlsStarted = false;
         Utilities.showToast("HLS Streaming Stopped");
         notifyListeners();
         break;

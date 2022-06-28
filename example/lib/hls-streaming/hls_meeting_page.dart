@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/embedded_button.dart';
+import 'package:hmssdk_flutter_example/common/ui/organisms/stream_timer.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
@@ -167,14 +168,35 @@ class _HLSMeetingPageState extends State<HLSMeetingPage> {
                                           ),
                                         ],
                                       ),
-                                      Text(
-                                        "01:23",
-                                        style: GoogleFonts.inter(
-                                            fontSize: 12,
-                                            color: subHeadingColor,
-                                            letterSpacing: 0.4,
-                                            fontWeight: FontWeight.w400),
-                                      )
+                                      Selector<MeetingStore, HMSRoom?>(
+                                          selector: (_, meetingStore) =>
+                                              meetingStore.hmsRoom,
+                                          builder: (_, hmsRoom, __) {
+                                            if (hmsRoom != null) {
+                                              if (hmsRoom
+                                                      .hmshlsStreamingState !=
+                                                  null) {
+                                                if (hmsRoom
+                                                        .hmshlsStreamingState!
+                                                        .variants
+                                                        .length !=
+                                                    0) {
+                                                  if (hmsRoom
+                                                          .hmshlsStreamingState!
+                                                          .variants[0]!
+                                                          .startedAt !=
+                                                      null) {
+                                                    return StreamTimer(
+                                                        startedAt: hmsRoom
+                                                          .hmshlsStreamingState!
+                                                          .variants[0]!
+                                                          .startedAt!);
+                                                  }
+                                                }
+                                              }
+                                            }
+                                              return Text("00:00");
+                                          })
                                     ],
                                   );
                                 return SizedBox();
@@ -327,11 +349,12 @@ class _HLSMeetingPageState extends State<HLSMeetingPage> {
                               }),
                         if (Provider.of<MeetingStore>(context).localPeer !=
                             null)
-                          Selector<MeetingStore, bool>(
-                              selector: (_, meetingStore) =>
+                          Selector<MeetingStore, Tuple2<bool, bool>>(
+                              selector: (_, meetingStore) => Tuple2(
                                   meetingStore.hasHlsStarted,
-                              builder: (_, hasHlsStarted, __) {
-                                if (hasHlsStarted) {
+                                  meetingStore.isHLSLoading),
+                              builder: (_, data, __) {
+                                if (data.item1) {
                                   return Column(
                                     children: [
                                       SizedBox(
@@ -357,6 +380,33 @@ class _HLSMeetingPageState extends State<HLSMeetingPage> {
                                       ),
                                       Text(
                                         "END STREAM",
+                                        style: GoogleFonts.inter(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w500),
+                                      )
+                                    ],
+                                  );
+                                } else if (data.item2) {
+                                  return Column(
+                                    children: [
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      InkWell(
+                                        onTap: () {},
+                                        child: CircleAvatar(
+                                            radius: 40,
+                                            backgroundColor: backgroundColor,
+                                            child: CircularProgressIndicator(
+                                              strokeWidth: 2,
+                                              color: hmsButtonColor,
+                                            )),
+                                      ),
+                                      SizedBox(
+                                        height: 5,
+                                      ),
+                                      Text(
+                                        "STARTING HLS",
                                         style: GoogleFonts.inter(
                                             fontSize: 12,
                                             fontWeight: FontWeight.w500),
@@ -389,7 +439,7 @@ class _HLSMeetingPageState extends State<HLSMeetingPage> {
                                       },
                                       child: CircleAvatar(
                                         radius: 40,
-                                        backgroundColor: Colors.blue,
+                                        backgroundColor: hmsButtonColor,
                                         child: SvgPicture.asset(
                                           "assets/icons/live.svg",
                                           color: defaultColor,

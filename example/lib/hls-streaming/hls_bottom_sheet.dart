@@ -142,6 +142,7 @@ class _HLSBottomSheetState extends State<HLSBottomSheet> {
                               scale: 0.6,
                               transformHitTests: false,
                               child: CupertinoSwitch(
+                                  activeColor: hmsButtonColor,
                                   value: _isRecordingOn,
                                   onChanged: (bool newValue) {
                                     setState(() {
@@ -161,7 +162,7 @@ class _HLSBottomSheetState extends State<HLSBottomSheet> {
                   width: MediaQuery.of(context).size.width - 30,
                   onPressed: () => {
                     context.read<MeetingStore>().startHLSStreaming(
-                        widget.roomId + "?token=beam_recording", false, _isRecordingOn),
+                        widget.roomId+"?skip_preview=true", _isRecordingOn, false),
                     Navigator.pop(context)
                   },
                   childWidget: Padding(

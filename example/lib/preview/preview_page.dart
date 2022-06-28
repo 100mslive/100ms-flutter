@@ -121,7 +121,9 @@ class _PreviewPageState extends State<PreviewPage> {
               ),
               Padding(
                 padding: const EdgeInsets.only(bottom: 15.0, left: 8, right: 8),
-                child: Column(
+                child: 
+                (_previewStore.peer != null)?
+                Column(
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -303,7 +305,7 @@ class _PreviewPageState extends State<PreviewPage> {
                       ),
                     ),
                   ],
-                ),
+                ):SizedBox()
               )
             ],
           ),
