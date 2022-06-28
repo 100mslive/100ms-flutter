@@ -15,13 +15,13 @@ import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 
 class HLSMeetingPage extends StatefulWidget {
-  final String roomId;
+  final String meetingLink;
   final String user;
   final bool isAudioOn;
   final int? localPeerNetworkQuality;
   const HLSMeetingPage(
       {Key? key,
-      required this.roomId,
+      required this.meetingLink,
       required this.user,
       required this.isAudioOn,
       required this.localPeerNetworkQuality})
@@ -41,8 +41,9 @@ class _HLSMeetingPageState extends State<HLSMeetingPage> {
   }
 
   void initMeeting() async {
-    bool ans =
-        await context.read<MeetingStore>().join(widget.user, widget.roomId);
+    bool ans = await context
+        .read<MeetingStore>()
+        .join(widget.user, widget.meetingLink);
     if (!ans) {
       UtilityComponents.showToastWithString("Unable to Join");
       Navigator.of(context).pop();
@@ -188,14 +189,14 @@ class _HLSMeetingPageState extends State<HLSMeetingPage> {
                                                       null) {
                                                     return StreamTimer(
                                                         startedAt: hmsRoom
-                                                          .hmshlsStreamingState!
-                                                          .variants[0]!
-                                                          .startedAt!);
+                                                            .hmshlsStreamingState!
+                                                            .variants[0]!
+                                                            .startedAt!);
                                                   }
                                                 }
                                               }
                                             }
-                                              return Text("00:00");
+                                            return Text("00:00");
                                           })
                                     ],
                                   );
@@ -434,7 +435,8 @@ class _HLSMeetingPageState extends State<HLSMeetingPage> {
                                                   value: context
                                                       .read<MeetingStore>(),
                                                   child: HLSBottomSheet(
-                                                      roomId: widget.roomId)),
+                                                      meetingLink:
+                                                          widget.meetingLink)),
                                         );
                                       },
                                       child: CircleAvatar(

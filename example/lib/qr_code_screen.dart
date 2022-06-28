@@ -35,7 +35,7 @@ class _QRCodeScreenState extends State<QRCodeScreen> {
               builder: (_) => ListenableProvider.value(
                     value: PreviewStore(),
                     child: PreviewDetails(
-                      roomId: scanData.code!.trim(),
+                      meetingLink: scanData.code!.trim(),
                       meetingFlow: widget.meetingFlow,
                     ),
                   )));

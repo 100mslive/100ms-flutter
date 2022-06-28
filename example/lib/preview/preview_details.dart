@@ -10,9 +10,9 @@ import 'package:hmssdk_flutter_example/preview/preview_store.dart';
 import 'package:provider/provider.dart';
 
 class PreviewDetails extends StatefulWidget {
-  final String roomId;
+  final String meetingLink;
   final MeetingFlow meetingFlow;
-  PreviewDetails({required this.roomId, required this.meetingFlow});
+  PreviewDetails({required this.meetingLink, required this.meetingFlow});
   @override
   State<PreviewDetails> createState() => _PreviewDetailsState();
 }
@@ -127,7 +127,8 @@ class _PreviewDetailsState extends State<PreviewDetails> {
                                             child: PreviewPage(
                                                 meetingFlow: widget.meetingFlow,
                                                 name: nameController.text,
-                                                roomId: widget.roomId),
+                                                meetingLink:
+                                                    widget.meetingLink),
                                           )))
                             }
                         }

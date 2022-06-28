@@ -7,7 +7,7 @@ class Constant {
 
   static String tokenQuery = "api/token";
 
-  static String defaultRoomID =
+  static String defaultMeetingLink =
       "https://yogi.app.100ms.live/meeting/ssz-eqr-eaa";
 
   static String tokenKey = "token";
@@ -18,7 +18,7 @@ class Constant {
 
   static String hostKey = "host";
   static String defaultRole = 'host';
-  static String meetingUrl = defaultRoomID;
+  static String meetingUrl = defaultMeetingLink;
   static String meetingCode = "";
   static String rtmpUrl = "";
 }
