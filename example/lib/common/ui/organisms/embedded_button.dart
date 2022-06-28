@@ -25,7 +25,9 @@ class EmbeddedButton extends StatelessWidget {
           width: width,
           height: height,
           decoration: BoxDecoration(
-              border: isActive?Border.all(color: borderColor,width: 1):Border.all(color: defaultColor,width: 0),
+              border: isActive
+                  ? Border.all(color: borderColor, width: 1)
+                  : Border.all(color: defaultColor, width: 0),
               borderRadius: BorderRadius.all(Radius.circular(12)),
               color: isActive ? onColor : offColor),
           child: child),

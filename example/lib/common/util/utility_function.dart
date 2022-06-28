@@ -104,12 +104,12 @@ class Utilities {
   static Future<String> loadData({required String key}) async {
     final prefs = await SharedPreferences.getInstance();
 
-    return prefs.getString(key)??"";
+    return prefs.getString(key) ?? "";
   }
 
-  static void saveData({required String key,required String value}) async {
+  static void saveData({required String key, required String value}) async {
     final prefs = await SharedPreferences.getInstance();
 
-    prefs.setString(key,value);
+    prefs.setString(key, value);
   }
 }
