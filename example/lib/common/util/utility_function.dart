@@ -89,7 +89,7 @@ class Utilities {
     final hlsFlowRegex = RegExp("\.100ms\.live\/hls-streaming\/");
 
     if (joinFlowRegex.hasMatch(roomUrl)) {
-      return MeetingFlow.join;
+      return MeetingFlow.meeting;
     } else if (hlsFlowRegex.hasMatch(roomUrl)) {
       return MeetingFlow.hlsStreaming;
     } else {
@@ -101,15 +101,29 @@ class Utilities {
     Fluttertoast.showToast(msg: message, backgroundColor: Colors.black87);
   }
 
-  static Future<String> loadData({required String key}) async {
+  static Future<String> getStringData({required String key}) async {
     final prefs = await SharedPreferences.getInstance();
 
     return prefs.getString(key) ?? "";
   }
 
-  static void saveData({required String key, required String value}) async {
+  static void saveStringData(
+      {required String key, required String value}) async {
     final prefs = await SharedPreferences.getInstance();
 
     prefs.setString(key, value);
+  }
+
+  static Future<int> getIntData({required String key}) async {
+    final prefs = await SharedPreferences.getInstance();
+
+    return prefs.getInt(key) ?? 0;
+  }
+
+  static void saveIntData({required String key, required int value}) async {
+    final prefs = await SharedPreferences.getInstance();
+
+    prefs.setInt(key, value);
+
   }
 }

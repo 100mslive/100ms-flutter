@@ -9,6 +9,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
+import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
 import 'package:hmssdk_flutter_example/preview/preview_details.dart';
 import 'package:hmssdk_flutter_example/qr_code_screen.dart';
 import 'package:provider/provider.dart';
@@ -83,11 +84,12 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  TextEditingController roomIdController = TextEditingController();
+  TextEditingController meetingLinkController = TextEditingController();
   CustomLogger logger = CustomLogger();
   bool skipPreview = false;
   bool mirrorCamera = true;
   bool showStats = false;
+  List<bool> mode = [true, false]; //0-> meeting ,1 -> HLS mode
 
   PackageInfo _packageInfo = PackageInfo(
     appName: 'Unknown',
@@ -106,7 +108,11 @@ class _HomePageState extends State<HomePage> {
   }
 
   void getData() async {
-    roomIdController.text = await Utilities.loadData(key: 'roomId');
+    meetingLinkController.text =
+        await Utilities.getStringData(key: 'meetingLink');
+    int index = await Utilities.getIntData(key: 'mode');
+    mode[index] = true;
+    mode[1 - index] = false;
   }
 
   Future<bool> _closeApp() {
@@ -142,7 +148,6 @@ class _HomePageState extends State<HomePage> {
     bool isDarkMode = HMSExampleApp.of(context).isDarkMode;
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
-    List<bool> mode = [true, false]; //0-> meeting ,1 -> HLS mode
     return WillPopScope(
       onWillPop: _closeApp,
       child: SafeArea(
@@ -310,22 +315,29 @@ class _HomePageState extends State<HomePage> {
                               height: 1.5,
                               fontSize: 14,
                               fontWeight: FontWeight.w400)),
-                      // ToggleButtons(
-                      //     children: [Text("Meeting"), Text("HLS")],
-                      //     onPressed: (int index) {
-                      //       setState(() {
-                      //         for (int buttonIndex = 0;
-                      //             buttonIndex < mode.length;
-                      //             buttonIndex++) {
-                      //           if (buttonIndex == index) {
-                      //             mode[buttonIndex] = true;
-                      //           } else {
-                      //             mode[buttonIndex] = false;
-                      //           }
-                      //         }
-                      //       });
-                      //     },
-                      //     isSelected: mode)
+                      ToggleButtons(
+                          selectedColor: hmsButtonColor,
+                          selectedBorderColor: hmsButtonColor,
+                          borderRadius: BorderRadius.circular(10),
+                          textStyle: GoogleFonts.inter(
+                              color: defaultColor,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600),
+                          children: [Text(" Meeting "), Text("HLS")],
+                          onPressed: (int index) {
+                            setState(() {
+                              for (int buttonIndex = 0;
+                                  buttonIndex < mode.length;
+                                  buttonIndex++) {
+                                if (buttonIndex == index) {
+                                  mode[buttonIndex] = true;
+                                } else {
+                                  mode[buttonIndex] = false;
+                                }
+                              }
+                            });
+                          },
+                          isSelected: mode)
                     ],
                   ),
                 ),
@@ -333,12 +345,13 @@ class _HomePageState extends State<HomePage> {
                   width: width * 0.95,
                   child: TextField(
                     style: GoogleFonts.inter(),
-                    controller: roomIdController,
+                    controller: meetingLinkController,
                     keyboardType: TextInputType.url,
                     onChanged: (value) {
                       setState(() {});
                     },
                     decoration: InputDecoration(
+                        focusColor: hmsButtonColor,
                         contentPadding:
                             EdgeInsets.symmetric(vertical: 14, horizontal: 16),
                         fillColor: surfaceColor,
@@ -349,11 +362,11 @@ class _HomePageState extends State<HomePage> {
                             height: 1.5,
                             fontSize: 16,
                             fontWeight: FontWeight.w400),
-                        suffixIcon: roomIdController.text.isEmpty
+                        suffixIcon: meetingLinkController.text.isEmpty
                             ? null
                             : IconButton(
                                 onPressed: () {
-                                  roomIdController.text = "";
+                                  meetingLinkController.text = "";
                                   setState(() {});
                                 },
                                 icon: Icon(Icons.clear),
@@ -373,34 +386,41 @@ class _HomePageState extends State<HomePage> {
                 SizedBox(
                   width: width * 0.95,
                   child: ValueListenableBuilder<TextEditingValue>(
-                      valueListenable: roomIdController,
+                      valueListenable: meetingLinkController,
                       builder: (context, value, child) {
                         return ElevatedButton(
                           style: ButtonStyle(
                               shadowColor:
                                   MaterialStateProperty.all(surfaceColor),
-                              backgroundColor: roomIdController.text.isEmpty
+                              backgroundColor: meetingLinkController
+                                      .text.isEmpty
                                   ? MaterialStateProperty.all(surfaceColor)
-                                  : MaterialStateProperty.all(Colors.blue),
+                                  : MaterialStateProperty.all(hmsButtonColor),
                               shape: MaterialStateProperty.all<
                                       RoundedRectangleBorder>(
                                   RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8.0),
                               ))),
                           onPressed: () async {
-                            if (roomIdController.text.isEmpty) {
+                            if (meetingLinkController.text.isEmpty) {
                               return;
                             }
-                            Utilities.saveData(
-                                key: "roomId",
-                                value: roomIdController.text.trim());
+                            Utilities.saveStringData(
+                                key: "meetingLink",
+                                value: meetingLinkController.text.trim());
+                            Utilities.saveIntData(
+                                key: "mode", value: mode[0] == true ? 0 : 1);
                             FocusManager.instance.primaryFocus?.unfocus();
-                            Utilities.setRTMPUrl(roomIdController.text);
+                            Utilities.setRTMPUrl(meetingLinkController.text);
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (_) => PreviewDetails(
-                                          roomId: roomIdController.text.trim(),
+                                          meetingLink:
+                                              meetingLinkController.text.trim(),
+                                          meetingFlow: mode[0]
+                                              ? MeetingFlow.meeting
+                                              : MeetingFlow.hlsStreaming,
                                         )));
                           },
                           child: Container(
@@ -414,9 +434,10 @@ class _HomePageState extends State<HomePage> {
                               children: [
                                 Text('Join Now',
                                     style: GoogleFonts.inter(
-                                        color: roomIdController.text.isEmpty
-                                            ? disabledTextColor
-                                            : enabledTextColor,
+                                        color:
+                                            meetingLinkController.text.isEmpty
+                                                ? disabledTextColor
+                                                : enabledTextColor,
                                         height: 1,
                                         fontSize: 16,
                                         fontWeight: FontWeight.w600)),
@@ -442,7 +463,9 @@ class _HomePageState extends State<HomePage> {
                   width: width * 0.95,
                   child: ElevatedButton(
                     style: ButtonStyle(
-                        shadowColor: MaterialStateProperty.all(Colors.blue),
+                        shadowColor: MaterialStateProperty.all(hmsButtonColor),
+                        backgroundColor:
+                            MaterialStateProperty.all(hmsButtonColor),
                         shape:
                             MaterialStateProperty.all<RoundedRectangleBorder>(
                                 RoundedRectangleBorder(
@@ -451,8 +474,14 @@ class _HomePageState extends State<HomePage> {
                     onPressed: () async {
                       bool res = await Utilities.getCameraPermissions();
                       if (res) {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (_) => QRCodeScreen()));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => QRCodeScreen(
+                                      meetingFlow: mode[0]
+                                          ? MeetingFlow.meeting
+                                          : MeetingFlow.hlsStreaming,
+                                    )));
                       }
                     },
                     child: Container(

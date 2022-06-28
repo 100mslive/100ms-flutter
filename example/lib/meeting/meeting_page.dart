@@ -28,7 +28,7 @@ import 'package:hmssdk_flutter_example/meeting/peer_track_node.dart';
 import 'package:tuple/tuple.dart';
 
 class MeetingPage extends StatefulWidget {
-  final String roomId;
+  final String meetingLink;
   final MeetingFlow flow;
   final String user;
   final bool isAudioOn;
@@ -36,7 +36,7 @@ class MeetingPage extends StatefulWidget {
 
   const MeetingPage({
     Key? key,
-    required this.roomId,
+    required this.meetingLink,
     required this.flow,
     required this.user,
     required this.isAudioOn,
@@ -67,8 +67,9 @@ class _MeetingPageState extends State<MeetingPage>
   }
 
   void initMeeting() async {
-    bool ans =
-        await context.read<MeetingStore>().join(widget.user, widget.roomId);
+    bool ans = await context
+        .read<MeetingStore>()
+        .join(widget.user, widget.meetingLink);
     if (!ans) {
       UtilityComponents.showToastWithString("Unable to Join");
       Navigator.of(context).pop();
@@ -131,7 +132,7 @@ class _MeetingPageState extends State<MeetingPage>
         _meetingStore.toggleScreenShare();
         break;
       case 6:
-        if (_meetingStore.isVideoOn) _meetingStore.switchCamera();
+        _meetingStore.switchCamera();
         break;
       case 7:
         String name = await UtilityComponents.showInputDialog(

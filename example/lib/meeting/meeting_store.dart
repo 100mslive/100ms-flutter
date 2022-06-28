@@ -32,6 +32,8 @@ class MeetingStore extends ChangeNotifier
 
   bool hasHlsStarted = false;
 
+  bool isHLSLoading = false;
+
   String streamUrl = "";
 
   bool isHLSLink = false;
@@ -144,7 +146,9 @@ class MeetingStore extends ChangeNotifier
   }
 
   Future<void> switchCamera() async {
-    await _hmsSDKInteractor.switchCamera();
+    if (isVideoOn) {
+      await _hmsSDKInteractor.switchCamera();
+    }
   }
 
   void sendBroadcastMessage(String message) {
@@ -336,15 +340,20 @@ class MeetingStore extends ChangeNotifier
         streamingType["rtmp"] = room.hmsRtmpStreamingState?.running ?? false;
         break;
       case HMSRoomUpdate.hlsStreamingStateUpdated:
+        isHLSLoading = false;
         streamingType["hls"] = room.hmshlsStreamingState?.running ?? false;
         hasHlsStarted = room.hmshlsStreamingState?.running ?? false;
         streamUrl = hasHlsStarted
             ? room.hmshlsStreamingState?.variants[0]?.hlsStreamUrl ?? ""
             : "";
+        Utilities.showToast(room.hmshlsStreamingState?.running ?? false
+            ? "HLS Streaming Started"
+            : "HLS Streaming Stopped");
         break;
       default:
         break;
     }
+    hmsRoom = room;
     notifyListeners();
   }
 
@@ -1078,8 +1087,7 @@ class MeetingStore extends ChangeNotifier
         notifyListeners();
         break;
       case HMSActionResultListenerMethod.hlsStreamingStarted:
-        hasHlsStarted = true;
-        Utilities.showToast("HLS Streaming Started");
+        isHLSLoading = true;
         notifyListeners();
         break;
       case HMSActionResultListenerMethod.hlsStreamingStopped:

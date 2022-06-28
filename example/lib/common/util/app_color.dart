@@ -23,3 +23,5 @@ Color defaultAvatarColor = Color.fromRGBO(101, 85, 193, 1);
 Color buttonBackgroundColor = Color.fromRGBO(1, 13, 15, 1);
 Color backgroundColor = Color.fromRGBO(11, 13, 15, 1);
 Color errorColor = Color.fromRGBO(204, 82, 95, 1);
+Color bottomSheetColor = Color.fromRGBO(20, 23, 28, 1);
+Color hmsButtonColor = Color.fromRGBO(36, 113, 237, 1);

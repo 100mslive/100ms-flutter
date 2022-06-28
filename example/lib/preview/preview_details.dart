@@ -4,13 +4,15 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/hms_listenable_button.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
+import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
 import 'package:hmssdk_flutter_example/preview/preview_page.dart';
 import 'package:hmssdk_flutter_example/preview/preview_store.dart';
 import 'package:provider/provider.dart';
 
 class PreviewDetails extends StatefulWidget {
-  final String roomId;
-  PreviewDetails({required this.roomId});
+  final String meetingLink;
+  final MeetingFlow meetingFlow;
+  PreviewDetails({required this.meetingLink, required this.meetingFlow});
   @override
   State<PreviewDetails> createState() => _PreviewDetailsState();
 }
@@ -25,7 +27,7 @@ class _PreviewDetailsState extends State<PreviewDetails> {
   }
 
   void loadData() async {
-    nameController.text = await Utilities.loadData(key: "name");
+    nameController.text = await Utilities.getStringData(key: "name");
   }
 
   @override
@@ -113,7 +115,7 @@ class _PreviewDetailsState extends State<PreviewDetails> {
                         }
                       else
                         {
-                          Utilities.saveData(
+                          Utilities.saveStringData(
                               key: "name", value: nameController.text.trim()),
                           res = await Utilities.getPermissions(),
                           if (res)
@@ -123,8 +125,10 @@ class _PreviewDetailsState extends State<PreviewDetails> {
                                       builder: (_) => ListenableProvider.value(
                                             value: PreviewStore(),
                                             child: PreviewPage(
+                                                meetingFlow: widget.meetingFlow,
                                                 name: nameController.text,
-                                                roomId: widget.roomId),
+                                                meetingLink:
+                                                    widget.meetingLink),
                                           )))
                             }
                         }

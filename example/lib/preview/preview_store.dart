@@ -66,9 +66,9 @@ class PreviewStore extends ChangeNotifier
   }
 
   Future<bool> startPreview(
-      {required String user, required String roomId}) async {
+      {required String user, required String meetingLink}) async {
     List<String?>? token =
-        await RoomService().getToken(user: user, room: roomId);
+        await RoomService().getToken(user: user, room: meetingLink);
 
     if (token == null) return false;
     if (token[0] == null) return false;
