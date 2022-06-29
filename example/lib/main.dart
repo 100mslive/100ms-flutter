@@ -281,20 +281,22 @@ class _HomePageState extends State<HomePage> {
                   child: Text('Experience the power of 100ms',
                       textAlign: TextAlign.center,
                       style: GoogleFonts.inter(
+                          letterSpacing : 0.25,
                           color: defaultColor,
-                          height: 1.5,
+                          height: 1.1,
                           fontSize: 34,
                           fontWeight: FontWeight.w600)),
                 ),
                 SizedBox(
-                  height: 10,
+                  height: 8,
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 27),
                   child: Text(
-                      'Jump right in by pasting a room link or\n scanning a QR code',
+                      'Jump right in by pasting a room link or scanning a QR code',
                       textAlign: TextAlign.center,
                       style: GoogleFonts.inter(
+                          letterSpacing: 0.5,
                           color: subHeadingColor,
                           height: 1.5,
                           fontSize: 16,
@@ -338,6 +340,7 @@ class _HomePageState extends State<HomePage> {
                             });
                           },
                           isSelected: mode)
+                    
                     ],
                   ),
                 ),
@@ -353,7 +356,7 @@ class _HomePageState extends State<HomePage> {
                     decoration: InputDecoration(
                         focusColor: hmsdefaultColor,
                         contentPadding:
-                            EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+                            EdgeInsets.symmetric(vertical: 12, horizontal: 16),
                         fillColor: surfaceColor,
                         filled: true,
                         hintText: 'Paste the link here',
@@ -424,7 +427,7 @@ class _HomePageState extends State<HomePage> {
                                         )));
                           },
                           child: Container(
-                            padding: const EdgeInsets.fromLTRB(8, 16, 8, 16),
+                            padding: const EdgeInsets.fromLTRB(8, 15, 8, 15),
                             decoration: BoxDecoration(
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(8))),
@@ -440,6 +443,7 @@ class _HomePageState extends State<HomePage> {
                                                 : enabledTextColor,
                                         height: 1,
                                         fontSize: 16,
+                                        letterSpacing: 0.5,
                                         fontWeight: FontWeight.w600)),
                               ],
                             ),

@@ -17,7 +17,7 @@ class _HLSSettingsState extends State<HLSSettings> {
   Widget build(BuildContext context) {
     // TODO: implement build
     return FractionallySizedBox(
-      heightFactor: 0.5,
+      heightFactor: 0.75,
       child: Padding(
         padding: const EdgeInsets.only(top: 20.0, left: 15, right: 15),
         child: Column(

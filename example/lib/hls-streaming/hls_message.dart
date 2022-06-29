@@ -4,8 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hmssdk_flutter_example/common/ui/organisms/receive_message.dart';
-import 'package:hmssdk_flutter_example/common/ui/organisms/send_message.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/hls-streaming/util/hls_message_organism.dart';
 import 'package:intl/intl.dart';
