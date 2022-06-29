@@ -316,8 +316,8 @@ class _HomePageState extends State<HomePage> {
                               fontSize: 14,
                               fontWeight: FontWeight.w400)),
                       ToggleButtons(
-                          selectedColor: hmsButtonColor,
-                          selectedBorderColor: hmsButtonColor,
+                          selectedColor: hmsdefaultColor,
+                          selectedBorderColor: hmsdefaultColor,
                           borderRadius: BorderRadius.circular(10),
                           textStyle: GoogleFonts.inter(
                               color: defaultColor,
@@ -351,7 +351,7 @@ class _HomePageState extends State<HomePage> {
                       setState(() {});
                     },
                     decoration: InputDecoration(
-                        focusColor: hmsButtonColor,
+                        focusColor: hmsdefaultColor,
                         contentPadding:
                             EdgeInsets.symmetric(vertical: 14, horizontal: 16),
                         fillColor: surfaceColor,
@@ -395,7 +395,7 @@ class _HomePageState extends State<HomePage> {
                               backgroundColor: meetingLinkController
                                       .text.isEmpty
                                   ? MaterialStateProperty.all(surfaceColor)
-                                  : MaterialStateProperty.all(hmsButtonColor),
+                                  : MaterialStateProperty.all(hmsdefaultColor),
                               shape: MaterialStateProperty.all<
                                       RoundedRectangleBorder>(
                                   RoundedRectangleBorder(
@@ -463,9 +463,9 @@ class _HomePageState extends State<HomePage> {
                   width: width * 0.95,
                   child: ElevatedButton(
                     style: ButtonStyle(
-                        shadowColor: MaterialStateProperty.all(hmsButtonColor),
+                        shadowColor: MaterialStateProperty.all(hmsdefaultColor),
                         backgroundColor:
-                            MaterialStateProperty.all(hmsButtonColor),
+                            MaterialStateProperty.all(hmsdefaultColor),
                         shape:
                             MaterialStateProperty.all<RoundedRectangleBorder>(
                                 RoundedRectangleBorder(

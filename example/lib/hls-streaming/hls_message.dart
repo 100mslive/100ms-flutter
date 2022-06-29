@@ -1,16 +1,13 @@
 //Package imports
 import 'package:dropdown_button2/dropdown_button2.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:collection/collection.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hmssdk_flutter_example/common/constant.dart';
-import 'package:hmssdk_flutter_example/common/ui/organisms/hms_button.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/receive_message.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/send_message.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
+import 'package:hmssdk_flutter_example/hls-streaming/util/hls_message_organism.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
@@ -47,16 +44,6 @@ class _HLSMessageState extends State<HLSMessage> {
       return hmsMessageRecipient.recipientRoles![0].name;
     }
     return "";
-  }
-
-  void _scrollDown() {
-    SchedulerBinding.instance!.addPostFrameCallback((_) {
-      _scrollController.animateTo(
-        _scrollController.position.maxScrollExtent + 20,
-        duration: Duration(seconds: 1),
-        curve: Curves.fastOutSlowIn,
-      );
-    });
   }
 
   @override
@@ -134,7 +121,11 @@ class _HLSMessageState extends State<HLSMessage> {
                                           DropdownMenuItem(
                                             child: Text(
                                               "Everyone",
-                                              style: GoogleFonts.inter(),
+                                              style: GoogleFonts.inter(
+                                                fontWeight: FontWeight.w400,
+                                                fontSize: 12,
+                                                letterSpacing: 0.4,
+                                              ),
                                               overflow: TextOverflow.ellipsis,
                                               maxLines: 1,
                                             ),
@@ -254,36 +245,29 @@ class _HLSMessageState extends State<HLSMessage> {
                       return ListView(
                         controller: _scrollController,
                         children: List.generate(
-                          data.item2,
-                          (index) => Container(
-                            margin: EdgeInsets.symmetric(vertical: 2),
-                            child: data.item1[index].sender?.isLocal ?? false
-                                ? SendMessageScreen(
-                                    senderName:
-                                        data.item1[index].sender?.name ?? "",
-                                    date: formatter
-                                        .format(data.item1[index].time),
-                                    message:
-                                        data.item1[index].message.toString(),
-                                    role: data.item1[index].hmsMessageRecipient ==
-                                            null
-                                        ? ""
-                                        : sender(data
-                                            .item1[index].hmsMessageRecipient!))
-                                : ReceiveMessageScreen(
-                                    message:
-                                        data.item1[index].message.toString(),
-                                    senderName:
-                                        data.item1[index].sender?.name ?? "",
-                                    date: formatter
-                                        .format(data.item1[index].time),
-                                    role: data.item1[index].hmsMessageRecipient ==
-                                            null
-                                        ? ""
-                                        : sender(
-                                            data.item1[index].hmsMessageRecipient!)),
-                          ),
-                        ),
+                            data.item2,
+                            (index) => Container(
+                                  padding: EdgeInsets.only(top: 15, bottom: 5),
+                                  margin: EdgeInsets.symmetric(vertical: 2),
+                                  child: 
+                                      HLSMessageOrganism(
+                                          isLocalMessage: data.item1[index].sender?.isLocal ??
+                                          false?true:false,
+                                          message: data.item1[index].message
+                                              .toString(),
+                                          senderName: data.item1[index].sender
+                                                  ?.name ??
+                                              "",
+                                          date: formatter
+                                              .format(data.item1[index].time),
+                                          role: data.item1[index]
+                                                      .hmsMessageRecipient ==
+                                                  null
+                                              ? ""
+                                              : sender(data.item1[index]
+                                                  .hmsMessageRecipient!),
+                                        )
+                                )),
                       );
                     },
                   ),
@@ -339,7 +323,6 @@ class _HLSMessageState extends State<HLSMessage> {
                             meetingStore.sendDirectMessage(message, peer!);
                           }
                           messageTextController.clear();
-                          _scrollDown();
                         },
                         child: Icon(
                           Icons.send,

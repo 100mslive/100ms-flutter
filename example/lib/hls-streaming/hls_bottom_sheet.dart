@@ -143,7 +143,7 @@ class _HLSBottomSheetState extends State<HLSBottomSheet> {
                               scale: 0.6,
                               transformHitTests: false,
                               child: CupertinoSwitch(
-                                  activeColor: hmsButtonColor,
+                                  activeColor: hmsdefaultColor,
                                   value: _isRecordingOn,
                                   onChanged: (bool newValue) {
                                     setState(() {

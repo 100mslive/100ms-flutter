@@ -145,7 +145,7 @@ class _PreviewPageState extends State<PreviewPage> {
                                             _previewStore.switchAudio(
                                                 isOn: _previewStore.isAudioOn),
                                         offColor: defaultColor,
-                                        onColor: backgroundColor,
+                                        onColor: screenBackgroundColor,
                                         isActive: _previewStore.isAudioOn,
                                         child: SvgPicture.asset(
                                           _previewStore.isAudioOn
@@ -171,7 +171,7 @@ class _PreviewPageState extends State<PreviewPage> {
                                             : _previewStore.switchVideo(
                                                 isOn: _previewStore.isVideoOn),
                                         offColor: defaultColor,
-                                        onColor: backgroundColor,
+                                        onColor: screenBackgroundColor,
                                         isActive: _previewStore.isVideoOn,
                                         child: SvgPicture.asset(
                                           _previewStore.isVideoOn

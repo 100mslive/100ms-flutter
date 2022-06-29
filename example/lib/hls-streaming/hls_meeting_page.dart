@@ -10,6 +10,7 @@ import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_mode.dart';
 import 'package:hmssdk_flutter_example/hls-streaming/hls_bottom_sheet.dart';
 import 'package:hmssdk_flutter_example/hls-streaming/hls_message.dart';
+import 'package:hmssdk_flutter_example/hls-streaming/hls_settings.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:hmssdk_flutter_example/meeting/peer_track_node.dart';
 import 'package:provider/provider.dart';
@@ -213,7 +214,7 @@ class _HLSMeetingPageState extends State<HLSMeetingPage> {
                                   },
                                   width: 45,
                                   height: 45,
-                                  offColor: backgroundColor,
+                                  offColor: screenBackgroundColor,
                                   onColor: hintColor,
                                   isActive: handRaised,
                                   child: SvgPicture.asset(
@@ -251,7 +252,7 @@ class _HLSMeetingPageState extends State<HLSMeetingPage> {
                                   width: 45,
                                   height: 45,
                                   offColor: hintColor,
-                                  onColor: backgroundColor,
+                                  onColor: screenBackgroundColor,
                                   isActive: true,
                                   child: SvgPicture.asset(
                                     isNewMessageReceived
@@ -271,7 +272,7 @@ class _HLSMeetingPageState extends State<HLSMeetingPage> {
                             width: 45,
                             height: 45,
                             offColor: hintColor,
-                            onColor: backgroundColor,
+                            onColor: screenBackgroundColor,
                             isActive: true,
                             child: SvgPicture.asset(
                               "assets/icons/camera.svg",
@@ -309,7 +310,7 @@ class _HLSMeetingPageState extends State<HLSMeetingPage> {
                                   width: 45,
                                   height: 45,
                                   offColor: hintColor,
-                                  onColor: backgroundColor,
+                                  onColor: screenBackgroundColor,
                                   isActive: isMicOn,
                                   child: SvgPicture.asset(
                                     isMicOn
@@ -346,7 +347,7 @@ class _HLSMeetingPageState extends State<HLSMeetingPage> {
                                   width: 45,
                                   height: 45,
                                   offColor: hintColor,
-                                  onColor: backgroundColor,
+                                  onColor: screenBackgroundColor,
                                   isActive: data.item1,
                                   child: SvgPicture.asset(
                                     data.item1
@@ -406,10 +407,11 @@ class _HLSMeetingPageState extends State<HLSMeetingPage> {
                                         onTap: () {},
                                         child: CircleAvatar(
                                             radius: 40,
-                                            backgroundColor: backgroundColor,
+                                            backgroundColor:
+                                                screenBackgroundColor,
                                             child: CircularProgressIndicator(
                                               strokeWidth: 2,
-                                              color: hmsButtonColor,
+                                              color: hmsdefaultColor,
                                             )),
                                       ),
                                       SizedBox(
@@ -450,7 +452,7 @@ class _HLSMeetingPageState extends State<HLSMeetingPage> {
                                       },
                                       child: CircleAvatar(
                                         radius: 40,
-                                        backgroundColor: hmsButtonColor,
+                                        backgroundColor: hmsdefaultColor,
                                         child: SvgPicture.asset(
                                           "assets/icons/live.svg",
                                           color: defaultColor,
@@ -497,7 +499,7 @@ class _HLSMeetingPageState extends State<HLSMeetingPage> {
                                   width: 45,
                                   height: 45,
                                   offColor: hintColor,
-                                  onColor: backgroundColor,
+                                  onColor: screenBackgroundColor,
                                   isActive: data,
                                   child: SvgPicture.asset(
                                     "assets/icons/screen_share.svg",
@@ -509,11 +511,23 @@ class _HLSMeetingPageState extends State<HLSMeetingPage> {
                         if (Provider.of<MeetingStore>(context).localPeer !=
                             null)
                           EmbeddedButton(
-                            onTap: () => {},
+                            onTap: () => {
+                              showModalBottomSheet(
+                                isScrollControlled: true,
+                                backgroundColor: bottomSheetColor,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                context: context,
+                                builder: (ctx) => ChangeNotifierProvider.value(
+                                    value: context.read<MeetingStore>(),
+                                    child: HLSSettings()),
+                              )
+                            },
                             width: 45,
                             height: 45,
                             offColor: hintColor,
-                            onColor: backgroundColor,
+                            onColor: screenBackgroundColor,
                             isActive: true,
                             child: SvgPicture.asset(
                               "assets/icons/more.svg",
