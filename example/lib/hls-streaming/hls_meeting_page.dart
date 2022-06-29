@@ -9,6 +9,7 @@ import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_mode.dart';
 import 'package:hmssdk_flutter_example/hls-streaming/hls_bottom_sheet.dart';
+import 'package:hmssdk_flutter_example/hls-streaming/hls_message.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:hmssdk_flutter_example/meeting/peer_track_node.dart';
 import 'package:provider/provider.dart';
@@ -173,28 +174,22 @@ class _HLSMeetingPageState extends State<HLSMeetingPage> {
                                           selector: (_, meetingStore) =>
                                               meetingStore.hmsRoom,
                                           builder: (_, hmsRoom, __) {
-                                            if (hmsRoom != null) {
-                                              if (hmsRoom
-                                                      .hmshlsStreamingState !=
-                                                  null) {
-                                                if (hmsRoom
+                                            if (hmsRoom != null &&
+                                                hmsRoom.hmshlsStreamingState !=
+                                                    null &&
+                                                hmsRoom.hmshlsStreamingState!
+                                                        .variants.length !=
+                                                    0 &&
+                                                hmsRoom
                                                         .hmshlsStreamingState!
-                                                        .variants
-                                                        .length !=
-                                                    0) {
-                                                  if (hmsRoom
-                                                          .hmshlsStreamingState!
-                                                          .variants[0]!
-                                                          .startedAt !=
-                                                      null) {
-                                                    return StreamTimer(
-                                                        startedAt: hmsRoom
-                                                            .hmshlsStreamingState!
-                                                            .variants[0]!
-                                                            .startedAt!);
-                                                  }
-                                                }
-                                              }
+                                                        .variants[0]!
+                                                        .startedAt !=
+                                                    null) {
+                                              return StreamTimer(
+                                                  startedAt: hmsRoom
+                                                      .hmshlsStreamingState!
+                                                      .variants[0]!
+                                                      .startedAt!);
                                             }
                                             return Text("00:00");
                                           })
@@ -238,7 +233,21 @@ class _HLSMeetingPageState extends State<HLSMeetingPage> {
                                   meetingStore.isNewMessageReceived,
                               builder: (_, isNewMessageReceived, __) {
                                 return EmbeddedButton(
-                                  onTap: () => {},
+                                  onTap: () => {
+                                    showModalBottomSheet(
+                                      isScrollControlled: true,
+                                      backgroundColor: bottomSheetColor,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                      context: context,
+                                      builder: (ctx) =>
+                                          ChangeNotifierProvider.value(
+                                              value:
+                                                  context.read<MeetingStore>(),
+                                              child: HLSMessage()),
+                                    )
+                                  },
                                   width: 45,
                                   height: 45,
                                   offColor: hintColor,
