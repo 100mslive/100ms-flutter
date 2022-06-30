@@ -6,12 +6,13 @@ class HMSButton extends StatelessWidget {
   final Color? shadowColor;
   final Function() onPressed;
   final Widget childWidget;
-
+  final Color? buttonBackgroundColor;
   HMSButton(
       {required this.width,
       this.shadowColor,
       required this.onPressed,
-      required this.childWidget});
+      required this.childWidget,
+      this.buttonBackgroundColor});
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -20,7 +21,7 @@ class HMSButton extends StatelessWidget {
           style: ButtonStyle(
               shadowColor: MaterialStateProperty.all(
                   shadowColor == null ? surfaceColor : shadowColor),
-              backgroundColor: MaterialStateProperty.all(hmsButtonColor),
+              backgroundColor: MaterialStateProperty.all(buttonBackgroundColor==null?hmsdefaultColor:buttonBackgroundColor),
               shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                   RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8.0),
