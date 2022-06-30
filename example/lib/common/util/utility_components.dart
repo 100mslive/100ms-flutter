@@ -5,6 +5,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_flutter_example/common/constant.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
+import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_mode.dart';
 import 'package:provider/provider.dart';
 
@@ -683,7 +684,8 @@ class UtilityComponents {
 
   static Future<String> showNameChangeDialog(
       {context, String placeholder = "", String prefilledValue = ""}) async {
-    TextEditingController textController = TextEditingController(text: prefilledValue);
+    TextEditingController textController =
+        TextEditingController(text: prefilledValue);
     if (prefilledValue.isNotEmpty) {
       textController.text = prefilledValue;
     }
@@ -703,14 +705,17 @@ class UtilityComponents {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     TextField(
+                      textInputAction: TextInputAction.done,
+                      onSubmitted: (value) => (textController.text == "")
+                          ? Utilities.showToast("Name can't be empty")
+                          : Navigator.pop(context, textController.text),
                       autofocus: true,
                       controller: textController,
                       decoration: InputDecoration(
                         fillColor: surfaceColor,
                         filled: true,
                         hintText: "Enter Name",
-                        contentPadding: EdgeInsets.only(
-                            left: 10,right: 10),
+                        contentPadding: EdgeInsets.only(left: 10, right: 10),
                         enabledBorder: OutlineInputBorder(
                             borderSide:
                                 BorderSide(color: borderColor, width: 1),
@@ -763,7 +768,9 @@ class UtilityComponents {
                           ))),
                       onPressed: () => {
                         if (textController.text == "")
-                          {}
+                          {
+                            Utilities.showToast("Name can't be empty"),
+                          }
                         else
                           {Navigator.pop(context, textController.text)}
                       },

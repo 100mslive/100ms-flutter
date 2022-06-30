@@ -613,6 +613,7 @@ class MeetingStore extends ChangeNotifier
             peerTrackNode.peer = peer;
             localPeer = peer;
             peerTrackNode.notify();
+            notifyListeners();
           }
         } else {
           int remotePeerIndex = peerTracks.indexWhere(

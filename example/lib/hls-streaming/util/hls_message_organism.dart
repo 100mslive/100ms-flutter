@@ -41,7 +41,7 @@ class HLSMessageOrganism extends StatelessWidget {
                 Row(
                   children: [
                     Container(
-                      constraints: BoxConstraints(maxWidth: role!=""?60:width-50),
+                      constraints: BoxConstraints(maxWidth: role!=""?60:width*0.5),
                       child: Text(
                         senderName ?? "",
                         overflow: TextOverflow.ellipsis,

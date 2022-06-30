@@ -71,13 +71,15 @@ class _HLSMeetingPageState extends State<HLSMeetingPage> {
         return ans;
       },
       child: Scaffold(
+          resizeToAvoidBottomInset: true,
         body: Stack(
           children: [
-            Selector<MeetingStore, Tuple3<bool, bool, List<PeerTrackNode>>>(
-              selector: (_, meetingStore) => Tuple3(
+            Selector<MeetingStore, Tuple4<bool, bool, List<PeerTrackNode>,String>>(
+              selector: (_, meetingStore) => Tuple4(
                   meetingStore.localPeer != null,
                   meetingStore.peerTracks.length > 0,
-                  meetingStore.peerTracks),
+                  meetingStore.peerTracks,
+                  meetingStore.localPeer?.name??""),
               builder: (_, data, __) {
                 if (data.item1 && data.item2) {
                   PeerTrackNode localPeer = data.item3
@@ -89,9 +91,7 @@ class _HLSMeetingPageState extends State<HLSMeetingPage> {
                             backgroundColor: defaultAvatarColor,
                             radius: 40,
                             child: Text(
-                              Utilities.getAvatarTitle(localPeer
-                                  .peer
-                                  .name),
+                              Utilities.getAvatarTitle(data.item4),
                               style: GoogleFonts.inter(
                                 fontSize: 40,
                                 color: Colors.white,
