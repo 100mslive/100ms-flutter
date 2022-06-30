@@ -19,34 +19,37 @@ class HLSMessageOrganism extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment:
-          isLocalMessage ? MainAxisAlignment.end : MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-       Flexible (
-          child: Container(
-            padding: role != ""
-                ? EdgeInsets.symmetric(vertical: 8, horizontal: 10)
-                : EdgeInsets.zero,
-            decoration: role != ""
-                ? BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    color: surfaceColor)
-                : BoxDecoration(),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
+    double width = MediaQuery.of(context).size.width;
+    return Align(
+      alignment: isLocalMessage ? Alignment.centerRight : Alignment.centerLeft,
+      child: Container(
+        width: width - 50,
+        padding: role != ""
+            ? EdgeInsets.symmetric(vertical: 8, horizontal: 8)
+            : EdgeInsets.symmetric(horizontal: 8),
+        decoration: role != ""
+            ? BoxDecoration(
+                borderRadius: BorderRadius.circular(8), color: surfaceColor)
+            : BoxDecoration(),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Wrap(
+              alignment: WrapAlignment.spaceBetween,
               children: [
                 Row(
                   children: [
-                    Text(
-                      senderName ?? "",
-                      style: GoogleFonts.inter(
-                          fontSize: 14.0,
-                          color: defaultColor,
-                          fontWeight: FontWeight.w600),
+                    Container(
+                      constraints: BoxConstraints(maxWidth: 60),
+                      child: Text(
+                        senderName ?? "",
+                        overflow: TextOverflow.ellipsis,
+                        style: GoogleFonts.inter(
+                            fontSize: 14.0,
+                            color: defaultColor,
+                            fontWeight: FontWeight.w600),
+                      ),
                     ),
                     SizedBox(
                       width: 5,
@@ -61,22 +64,68 @@ class HLSMessageOrganism extends StatelessWidget {
                     ),
                   ],
                 ),
-                SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  message,
-                  style: GoogleFonts.inter(
-                      fontSize: 14.0,
-                      color: defaultColor,
-                      letterSpacing: 0.25,
-                      fontWeight: FontWeight.w400),
-                ),
+                role != ""
+                    ? Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Container(
+                            width: width * 0.4,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(4),
+                                border:
+                                    Border.all(color: borderColor, width: 1)),
+                            child: Padding(
+                              padding: const EdgeInsets.all(4.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "TO YOU",
+                                    style: GoogleFonts.inter(
+                                        fontSize: 10.0,
+                                        color: subHeadingColor,
+                                        letterSpacing: 1.5,
+                                        fontWeight: FontWeight.w600),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 2),
+                                    child: VerticalDivider(
+                                      width: 5,
+                                      color: borderColor,
+                                    ),
+                                  ),
+                                  Text(
+                                    "PRIVATE ›",
+                                    style: GoogleFonts.inter(
+                                        fontSize: 10.0,
+                                        color: defaultColor,
+                                        letterSpacing: 1.5,
+                                        fontWeight: FontWeight.w400),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      )
+                    : SizedBox()
               ],
             ),
-          ),
+            SizedBox(
+              height: 8,
+            ),
+            Text(
+              message,
+              style: GoogleFonts.inter(
+                  fontSize: 14.0,
+                  color: defaultColor,
+                  letterSpacing: 0.25,
+                  fontWeight: FontWeight.w400),
+            ),
+          ],
         ),
-      ],
+      ),
     );
   }
 }

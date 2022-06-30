@@ -49,10 +49,11 @@ class _HLSMessageState extends State<HLSMessage> {
     widthOfScreen = MediaQuery.of(context).size.width;
     return SafeArea(
       child: FractionallySizedBox(
-        heightFactor: 0.75,
+        heightFactor: 0.8,
         child: Container(
           child: Padding(
-            padding: const EdgeInsets.only(top: 20.0, left: 20, right: 10),
+            padding: const EdgeInsets.only(
+                top: 20.0, left: 10, right: 10,bottom: 10),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -245,27 +246,33 @@ class _HLSMessageState extends State<HLSMessage> {
                         children: List.generate(
                             data.item2,
                             (index) => Container(
-                                  padding: EdgeInsets.only(top: 15, bottom: 5),
-                                  margin: EdgeInsets.symmetric(vertical: 2),
-                                  child: 
-                                      HLSMessageOrganism(
-                                          isLocalMessage: data.item1[index].sender?.isLocal ??
-                                          false?true:false,
-                                          message: data.item1[index].message
-                                              .toString(),
-                                          senderName: data.item1[index].sender
-                                                  ?.name ??
-                                              "",
-                                          date: formatter
-                                              .format(data.item1[index].time),
-                                          role: data.item1[index]
-                                                      .hmsMessageRecipient ==
-                                                  null
-                                              ? ""
-                                              : sender(data.item1[index]
-                                                  .hmsMessageRecipient!),
-                                        )
-                                )),
+                                padding: EdgeInsets.fromLTRB(
+                                  (data.item1[index].sender?.isLocal ?? false)
+                                      ? 20.0
+                                      : 8.0,
+                                  10,
+                                  (data.item1[index].sender?.isLocal ?? false)
+                                      ? 8.0
+                                      : 20.0,
+                                  10,
+                                ),
+                                margin: EdgeInsets.symmetric(vertical: 2),
+                                child: HLSMessageOrganism(
+                                  isLocalMessage:
+                                      data.item1[index].sender?.isLocal ?? false
+                                          ? true
+                                          : false,
+                                  message: data.item1[index].message.toString(),
+                                  senderName:
+                                      data.item1[index].sender?.name ?? "",
+                                  date:
+                                      formatter.format(data.item1[index].time),
+                                  role: data.item1[index].hmsMessageRecipient ==
+                                          null
+                                      ? ""
+                                      : sender(data
+                                          .item1[index].hmsMessageRecipient!),
+                                ))),
                       );
                     },
                   ),
@@ -287,47 +294,50 @@ class _HLSMessageState extends State<HLSMessage> {
                               enabledBorder: InputBorder.none,
                               errorBorder: InputBorder.none,
                               disabledBorder: InputBorder.none,
-                              hintStyle: TextStyle(color: Colors.grey[300]),
+                              hintStyle: GoogleFonts.inter(
+                                  color: hintColor,
+                                  fontSize: 14,
+                                  letterSpacing: 0.25,
+                                  fontWeight: FontWeight.w400),
                               contentPadding: EdgeInsets.only(
                                   left: 15, bottom: 11, top: 11, right: 15),
-                              hintText: "Send Message"),
+                              hintText: "Send a message to everyone"),
                         ),
                         width: widthOfScreen - 70,
                       ),
                       GestureDetector(
-                        onTap: () async {
-                          MeetingStore meetingStore =
-                              context.read<MeetingStore>();
-                          List<HMSRole> hmsRoles = meetingStore.roles;
-                          String message = messageTextController.text;
-                          if (message.isEmpty) return;
+                          onTap: () async {
+                            MeetingStore meetingStore =
+                                context.read<MeetingStore>();
+                            List<HMSRole> hmsRoles = meetingStore.roles;
+                            String message = messageTextController.text;
+                            if (message.isEmpty) return;
 
-                          List<String> rolesName = <String>[];
-                          for (int i = 0; i < hmsRoles.length; i++)
-                            rolesName.add(hmsRoles[i].name);
+                            List<String> rolesName = <String>[];
+                            for (int i = 0; i < hmsRoles.length; i++)
+                              rolesName.add(hmsRoles[i].name);
 
-                          if (this.valueChoose == "Everyone") {
-                            meetingStore.sendBroadcastMessage(message);
-                          } else if (rolesName.contains(this.valueChoose)) {
-                            List<HMSRole> selectedRoles = [];
-                            selectedRoles.add(hmsRoles.firstWhere(
-                                (role) => role.name == this.valueChoose));
-                            meetingStore.sendGroupMessage(
-                                message, selectedRoles);
-                          } else if (meetingStore.localPeer!.peerId !=
-                              this.valueChoose) {
-                            var peer = await meetingStore.getPeer(
-                                peerId: this.valueChoose);
-                            meetingStore.sendDirectMessage(message, peer!);
-                          }
-                          messageTextController.clear();
-                        },
-                        child: Icon(
-                          Icons.send,
-                          color: Colors.white,
-                          size: 20,
-                        ),
-                      )
+                            if (this.valueChoose == "Everyone") {
+                              meetingStore.sendBroadcastMessage(message);
+                            } else if (rolesName.contains(this.valueChoose)) {
+                              List<HMSRole> selectedRoles = [];
+                              selectedRoles.add(hmsRoles.firstWhere(
+                                  (role) => role.name == this.valueChoose));
+                              meetingStore.sendGroupMessage(
+                                  message, selectedRoles);
+                            } else if (meetingStore.localPeer!.peerId !=
+                                this.valueChoose) {
+                              var peer = await meetingStore.getPeer(
+                                  peerId: this.valueChoose);
+                              meetingStore.sendDirectMessage(message, peer!);
+                            }
+                            messageTextController.clear();
+                          },
+                          child: SvgPicture.asset(
+                            "assets/icons/send_message.svg",
+                            color: defaultColor,
+                            height: 17.23,
+                          ))
                     ],
                   ),
                 ),
