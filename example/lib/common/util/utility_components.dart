@@ -32,7 +32,9 @@ class UtilityComponents {
             mainAxisSize: MainAxisSize.min,
             children: [
               SvgPicture.asset("assets/icons/end.svg"),
-              SizedBox(width: 5,),
+              SizedBox(
+                width: 5,
+              ),
               Text(
                 'Do you wish to leave?',
                 style: GoogleFonts.inter(
@@ -44,8 +46,13 @@ class UtilityComponents {
             ],
           ),
         ),
-        content: Text("You will leave the room immediately. You can’t undo this action.",
-        style: GoogleFonts.inter(color: subHeadingColor,fontSize: 14,fontWeight: FontWeight.w400,letterSpacing: 0.25)),
+        content: Text(
+            "You will leave the room immediately. You can’t undo this action.",
+            style: GoogleFonts.inter(
+                color: subHeadingColor,
+                fontSize: 14,
+                fontWeight: FontWeight.w400,
+                letterSpacing: 0.25)),
         actions: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -591,12 +598,12 @@ class UtilityComponents {
     return res;
   }
 
-    static onEndStream(BuildContext context) {
+  static onEndStream(BuildContext context) {
     MeetingStore _meetingStore = context.read<MeetingStore>();
     return showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        insetPadding: EdgeInsets.symmetric(horizontal: 10,vertical: 10),
+        insetPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         backgroundColor: Color.fromRGBO(32, 22, 23, 1),
         title: Container(
           width: 300,
@@ -604,62 +611,179 @@ class UtilityComponents {
             mainAxisSize: MainAxisSize.min,
             children: [
               SvgPicture.asset("assets/icons/end.svg"),
-              SizedBox(width: 5,),
+              SizedBox(
+                width: 5,
+              ),
               Text(
                 'End live stream for all?',
                 style: GoogleFonts.inter(
-                    color: errorColor, fontSize: 20, fontWeight: FontWeight.w600,letterSpacing: 0.25),
+                    color: errorColor,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 0.25),
               ),
             ],
           ),
         ),
-        content: Text("Your stream will end and everone will go offline immediately in this room. You can’t undo this action.",
-        style: GoogleFonts.inter(color: subHeadingColor,fontSize: 14,fontWeight: FontWeight.w400,letterSpacing: 0.25)),
+        content: Text(
+            "Your stream will end and everone will go offline immediately in this room. You can’t undo this action.",
+            style: GoogleFonts.inter(
+                color: subHeadingColor,
+                fontSize: 14,
+                fontWeight: FontWeight.w400,
+                letterSpacing: 0.25)),
         actions: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-                        ElevatedButton(
-              style: ButtonStyle(
-              shadowColor: MaterialStateProperty.all(
-                 surfaceColor),
-              backgroundColor: MaterialStateProperty.all(Color.fromRGBO(32, 22, 23, 1),),
-              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                  RoundedRectangleBorder(
-                    side: BorderSide(width: 1,color: borderColor),
-                borderRadius: BorderRadius.circular(8.0),
-                
-              ))),
-              onPressed:
-              () => Navigator.pop(context),
-              
-              child: Text('Nevermind', style: GoogleFonts.inter(color:defaultColor,fontSize: 16,fontWeight: FontWeight.w600,letterSpacing: 0.50))),
-          
-          ElevatedButton(
-                          style: ButtonStyle(
-              shadowColor: MaterialStateProperty.all(
-                 surfaceColor),
-              backgroundColor: MaterialStateProperty.all(errorColor),
-              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                  RoundedRectangleBorder(
-                    side: BorderSide(width: 1,color: borderColor),
-                borderRadius: BorderRadius.circular(8.0),
-                
-              ))),
-            onPressed:  () => {
-                    _meetingStore.stopHLSStreaming(),
-                    Navigator.pop(context)
-                  },
-            child: Text(
-              'End Stream',
-               style: GoogleFonts.inter(color:defaultColor,fontSize: 16,fontWeight: FontWeight.w600,letterSpacing: 0.50),
-            ),
-          ),
+              ElevatedButton(
+                  style: ButtonStyle(
+                      shadowColor: MaterialStateProperty.all(surfaceColor),
+                      backgroundColor: MaterialStateProperty.all(
+                        Color.fromRGBO(32, 22, 23, 1),
+                      ),
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                        side: BorderSide(width: 1, color: borderColor),
+                        borderRadius: BorderRadius.circular(8.0),
+                      ))),
+                  onPressed: () => Navigator.pop(context),
+                  child: Text('Nevermind',
+                      style: GoogleFonts.inter(
+                          color: defaultColor,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: 0.50))),
+              ElevatedButton(
+                style: ButtonStyle(
+                    shadowColor: MaterialStateProperty.all(surfaceColor),
+                    backgroundColor: MaterialStateProperty.all(errorColor),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                      side: BorderSide(width: 1, color: borderColor),
+                      borderRadius: BorderRadius.circular(8.0),
+                    ))),
+                onPressed: () =>
+                    {_meetingStore.stopHLSStreaming(), Navigator.pop(context)},
+                child: Text(
+                  'End Stream',
+                  style: GoogleFonts.inter(
+                      color: defaultColor,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      letterSpacing: 0.50),
+                ),
+              ),
             ],
           )
-
         ],
       ),
     );
+  }
+
+  static Future<String> showNameChangeDialog(
+      {context, String placeholder = "", String prefilledValue = ""}) async {
+    TextEditingController textController = TextEditingController(text: prefilledValue);
+    if (prefilledValue.isNotEmpty) {
+      textController.text = prefilledValue;
+    }
+    String answer = await showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              insetPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+              backgroundColor: bottomSheetColor,
+              title: Text("Change Name",
+                  style: GoogleFonts.inter(
+                      color: defaultColor,
+                      fontWeight: FontWeight.w600,
+                      letterSpacing: 0.15,
+                      fontSize: 20)),
+              content: Container(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    TextField(
+                      autofocus: true,
+                      controller: textController,
+                      decoration: InputDecoration(
+                        fillColor: surfaceColor,
+                        filled: true,
+                        hintText: "Enter Name",
+                        contentPadding: EdgeInsets.only(
+                            left: 10,right: 10),
+                        enabledBorder: OutlineInputBorder(
+                            borderSide:
+                                BorderSide(color: borderColor, width: 1),
+                            borderRadius: BorderRadius.all(Radius.circular(8))),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(8)),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              actions: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ElevatedButton(
+                        style: ButtonStyle(
+                            shadowColor:
+                                MaterialStateProperty.all(surfaceColor),
+                            backgroundColor:
+                                MaterialStateProperty.all(bottomSheetColor),
+                            shape: MaterialStateProperty.all<
+                                RoundedRectangleBorder>(RoundedRectangleBorder(
+                              side: BorderSide(
+                                  width: 1,
+                                  color: Color.fromRGBO(107, 125, 153, 1)),
+                              borderRadius: BorderRadius.circular(8.0),
+                            ))),
+                        onPressed: () => Navigator.pop(context, false),
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 4.0, right: 4),
+                          child: Text('Cancel',
+                              style: GoogleFonts.inter(
+                                  color: defaultColor,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                  letterSpacing: 0.50)),
+                        )),
+                    ElevatedButton(
+                      style: ButtonStyle(
+                          shadowColor: MaterialStateProperty.all(surfaceColor),
+                          backgroundColor:
+                              MaterialStateProperty.all(hmsdefaultColor),
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                            side: BorderSide(width: 1, color: hmsdefaultColor),
+                            borderRadius: BorderRadius.circular(8.0),
+                          ))),
+                      onPressed: () => {
+                        if (textController.text == "")
+                          {}
+                        else
+                          {Navigator.pop(context, textController.text)}
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 4.0, right: 4),
+                        child: Text(
+                          'Change',
+                          style: GoogleFonts.inter(
+                              color: defaultColor,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: 0.50),
+                        ),
+                      ),
+                    ),
+                  ],
+                )
+              ],
+            ));
+
+    return answer;
   }
 }

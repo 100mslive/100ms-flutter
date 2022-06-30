@@ -248,7 +248,8 @@ class _HLSMessageState extends State<HLSMessage> {
                             (index) => Container(
                                 padding: EdgeInsets.fromLTRB(
                                   (data.item1[index].sender?.isLocal ?? false)
-                                      ? 20.0
+                                      ? 
+                                      20.0
                                       : 8.0,
                                   10,
                                   (data.item1[index].sender?.isLocal ?? false)

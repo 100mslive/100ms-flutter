@@ -36,6 +36,7 @@ class _ChangeRoleOptionDialogState extends State<ChangeRoleOptionDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      contentPadding: EdgeInsets.symmetric(horizontal: 10,vertical: 10),
       title: Text(
         widget.peerName,
         style: GoogleFonts.inter(color: iconColor),
@@ -51,37 +52,38 @@ class _ChangeRoleOptionDialogState extends State<ChangeRoleOptionDialog> {
                 valueChoose = data.data![0].name;
               }
               return Container(
-                width: 300,
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
                           "Role To: ",
                           style: GoogleFonts.inter(color: iconColor),
                         ),
-                        Flexible(
-                          child: DropdownButton2(
-                            buttonWidth: MediaQuery.of(context).size.width / 2,
-                            value: valueChoose,
-                            iconEnabledColor: Colors.white,
-                            onChanged: (newvalue) {
-                              setState(() {
-                                valueChoose = newvalue as String;
-                              });
-                            },
-                            items: data.data!.map((role) {
-                              return DropdownMenuItem(
+                        DropdownButton2(
+                          buttonWidth: MediaQuery.of(context).size.width / 3,
+                          value: valueChoose,
+                          iconEnabledColor: Colors.white,
+                          onChanged: (newvalue) {
+                            setState(() {
+                              valueChoose = newvalue as String;
+                            });
+                          },
+                          items: data.data!.map((role) {
+                            return DropdownMenuItem(
+
+                              child: SizedBox(
+                                width : 60,
                                 child: Text(
                                   role.name,
                                   style: GoogleFonts.inter(color: iconColor),
+                                  overflow: TextOverflow.ellipsis,
                                 ),
-                                value: role.name,
-                              );
-                            }).toList(),
-                          ),
+                              ),
+                              value: role.name,
+                            );
+                          }).toList(),
                         ),
                       ],
                     ),

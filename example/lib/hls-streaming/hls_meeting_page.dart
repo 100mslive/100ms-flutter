@@ -79,17 +79,17 @@ class _HLSMeetingPageState extends State<HLSMeetingPage> {
                   meetingStore.peerTracks.length > 0,
                   meetingStore.peerTracks),
               builder: (_, data, __) {
-                if (data.item1 && data.item2 && data.item3[0].track != null) {
-                  if (data.item3[0].track!.isMute) {
+                if (data.item1 && data.item2) {
+                  PeerTrackNode localPeer = data.item3
+                      .firstWhere((element) => element.peer.isLocal == true);
+                  if (localPeer.track != null && localPeer.track!.isMute) {
                     return Center(
                       child: Center(
                         child: CircleAvatar(
                             backgroundColor: defaultAvatarColor,
                             radius: 40,
                             child: Text(
-                              Utilities.getAvatarTitle(context
-                                  .read<MeetingStore>()
-                                  .peerTracks[0]
+                              Utilities.getAvatarTitle(localPeer
                                   .peer
                                   .name),
                               style: GoogleFonts.inter(
@@ -102,7 +102,7 @@ class _HLSMeetingPageState extends State<HLSMeetingPage> {
                   }
                   return HMSVideoView(
                     scaleType: ScaleType.SCALE_ASPECT_FILL,
-                    track: data.item3[0].track!,
+                    track: localPeer.track!,
                     setMirror: true,
                     matchParent: false,
                   );
@@ -217,9 +217,10 @@ class _HLSMeetingPageState extends State<HLSMeetingPage> {
                                     borderRadius: BorderRadius.circular(20),
                                   ),
                                   context: context,
-                                  builder: (ctx) => ChangeNotifierProvider.value(
-                                      value: context.read<MeetingStore>(),
-                                      child: HLSParticipantSheet()),
+                                  builder: (ctx) =>
+                                      ChangeNotifierProvider.value(
+                                          value: context.read<MeetingStore>(),
+                                          child: HLSParticipantSheet()),
                                 )
                               },
                               width: 45,
@@ -269,18 +270,21 @@ class _HLSMeetingPageState extends State<HLSMeetingPage> {
                                 builder: (_, isNewMessageReceived, __) {
                                   return EmbeddedButton(
                                     onTap: () => {
-                                      context.read<MeetingStore>().setNewMessageFalse(),
+                                      context
+                                          .read<MeetingStore>()
+                                          .setNewMessageFalse(),
                                       showModalBottomSheet(
                                         isScrollControlled: true,
                                         backgroundColor: bottomSheetColor,
                                         shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(20),
+                                          borderRadius:
+                                              BorderRadius.circular(20),
                                         ),
                                         context: context,
                                         builder: (ctx) =>
                                             ChangeNotifierProvider.value(
-                                                value:
-                                                    context.read<MeetingStore>(),
+                                                value: context
+                                                    .read<MeetingStore>(),
                                                 child: HLSMessage()),
                                       )
                                     },
@@ -481,8 +485,8 @@ class _HLSMeetingPageState extends State<HLSMeetingPage> {
                                                     value: context
                                                         .read<MeetingStore>(),
                                                     child: HLSBottomSheet(
-                                                        meetingLink:
-                                                            widget.meetingLink)),
+                                                        meetingLink: widget
+                                                            .meetingLink)),
                                           );
                                         },
                                         child: CircleAvatar(
@@ -554,9 +558,10 @@ class _HLSMeetingPageState extends State<HLSMeetingPage> {
                                     borderRadius: BorderRadius.circular(20),
                                   ),
                                   context: context,
-                                  builder: (ctx) => ChangeNotifierProvider.value(
-                                      value: context.read<MeetingStore>(),
-                                      child: HLSSettings()),
+                                  builder: (ctx) =>
+                                      ChangeNotifierProvider.value(
+                                          value: context.read<MeetingStore>(),
+                                          child: HLSSettings()),
                                 )
                               },
                               width: 45,

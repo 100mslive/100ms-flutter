@@ -24,10 +24,10 @@ class HLSMessageOrganism extends StatelessWidget {
       alignment: isLocalMessage ? Alignment.centerRight : Alignment.centerLeft,
       child: Container(
         width: width - 50,
-        padding: role != ""
+        padding: (role != "" || isLocalMessage)
             ? EdgeInsets.symmetric(vertical: 8, horizontal: 8)
             : EdgeInsets.symmetric(horizontal: 8),
-        decoration: role != ""
+        decoration: (role != "" || isLocalMessage)
             ? BoxDecoration(
                 borderRadius: BorderRadius.circular(8), color: surfaceColor)
             : BoxDecoration(),
@@ -41,7 +41,7 @@ class HLSMessageOrganism extends StatelessWidget {
                 Row(
                   children: [
                     Container(
-                      constraints: BoxConstraints(maxWidth: 60),
+                      constraints: BoxConstraints(maxWidth: role!=""?60:width-50),
                       child: Text(
                         senderName ?? "",
                         overflow: TextOverflow.ellipsis,
@@ -64,7 +64,7 @@ class HLSMessageOrganism extends StatelessWidget {
                     ),
                   ],
                 ),
-                role != ""
+                (role != "" || isLocalMessage)
                     ? Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
@@ -80,7 +80,7 @@ class HLSMessageOrganism extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Text(
-                                    "TO YOU",
+                                    (isLocalMessage?"BY":"TO") + " YOU",
                                     style: GoogleFonts.inter(
                                         fontSize: 10.0,
                                         color: subHeadingColor,
@@ -96,7 +96,7 @@ class HLSMessageOrganism extends StatelessWidget {
                                     ),
                                   ),
                                   Text(
-                                    "PRIVATE ›",
+                                    role != ""?"PRIVATE ›":"EVERYONE",
                                     style: GoogleFonts.inter(
                                         fontSize: 10.0,
                                         color: defaultColor,
