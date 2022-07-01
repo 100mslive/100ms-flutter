@@ -32,7 +32,7 @@ android {
         applicationId "live.hms.flutter"
         minSdkVersion 21
         targetSdkVersion 33
-        versionCode 86
+        versionCode 87
         versionName "1.2.3"
     }
 
@@ -46,6 +46,8 @@ android {
     }
     buildTypes {
         release {
+            shrinkResources true
+
             minifyEnabled true
 
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -56,6 +58,7 @@ android {
     lint {
         checkDependencies true
     }
+    android.buildTypes.release.ndk.debugSymbolLevel "FULL"
 }
 
 flutter {
