@@ -4,6 +4,7 @@ import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
+import 'package:hmssdk_flutter_example/hls-streaming/util/hls_title_text.dart';
 import 'package:hmssdk_flutter_example/preview/preview_details.dart';
 import 'package:hmssdk_flutter_example/preview/preview_store.dart';
 import 'package:provider/provider.dart';
@@ -77,15 +78,16 @@ class _QRCodeScreenState extends State<QRCodeScreen> {
                       },
                     ),
                   ),
-                  SizedBox(
-                    width: 20,
-                  ),
-                  Text(
-                    "Scan QR Code",
-                    style: GoogleFonts.inter(
-                        color: defaultColor,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(right:25.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          HLSTitleText(text: "Scan QR Code", textColor: subHeadingColor,letterSpacing: 0.15,),
+                        ],
+                      ),
+                    ),
                   )
                 ],
               ),
@@ -142,12 +144,7 @@ class _QRCodeScreenState extends State<QRCodeScreen> {
                           SizedBox(
                             width: 8,
                           ),
-                          Text('Join with Link Instead',
-                              style: GoogleFonts.inter(
-                                  height: 1,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500,
-                                  color: enabledTextColor)),
+                          HLSTitleText(text: 'Join with Link Instead', textColor: enabledTextColor),
                         ],
                       ),
                     ),

@@ -12,6 +12,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
+import 'package:hmssdk_flutter_example/hls-streaming/util/hls_title_text.dart';
 import 'package:hmssdk_flutter_example/preview/preview_details.dart';
 import 'package:hmssdk_flutter_example/qr_code_screen.dart';
 import 'package:provider/provider.dart';
@@ -529,16 +530,12 @@ class _HomePageState extends State<HomePage> {
                               mainAxisSize: MainAxisSize.min,
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Text('Join Now',
-                                    style: GoogleFonts.inter(
-                                        color:
-                                            meetingLinkController.text.isEmpty
-                                                ? disabledTextColor
-                                                : enabledTextColor,
-                                        height: 1,
-                                        fontSize: 16,
-                                        letterSpacing: 0.5,
-                                        fontWeight: FontWeight.w600)),
+                                HLSTitleText(
+                                  text: 'Join Now',
+                                  textColor: meetingLinkController.text.isEmpty
+                                      ? disabledTextColor
+                                      : enabledTextColor,
+                                )
                               ],
                             ),
                           ),
@@ -592,18 +589,14 @@ class _HomePageState extends State<HomePage> {
                         children: [
                           Icon(
                             Icons.qr_code,
-                            size: 22,
+                            size: 18,
                             color: enabledTextColor,
                           ),
                           SizedBox(
                             width: 5,
                           ),
-                          Text('Scan QR Code',
-                              style: GoogleFonts.inter(
-                                  height: 1,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
-                                  color: enabledTextColor)),
+                          HLSTitleText(
+                              text: 'Scan QR Code', textColor: enabledTextColor)
                         ],
                       ),
                     ),
