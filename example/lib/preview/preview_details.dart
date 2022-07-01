@@ -28,6 +28,7 @@ class _PreviewDetailsState extends State<PreviewDetails> {
 
   void loadData() async {
     nameController.text = await Utilities.getStringData(key: "name");
+    nameController.selection = TextSelection.fromPosition(TextPosition(offset: nameController.text.length));
   }
 
   @override
@@ -69,6 +70,7 @@ class _PreviewDetailsState extends State<PreviewDetails> {
               width: width * 0.95,
               child: TextField(
                 autofocus: true,
+                textCapitalization: TextCapitalization.characters,
                 style: GoogleFonts.inter(),
                 controller: nameController,
                 keyboardType: TextInputType.name,
