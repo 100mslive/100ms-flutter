@@ -4,7 +4,9 @@ import 'dart:async';
 //Package imports
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
@@ -15,9 +17,12 @@ import 'package:hmssdk_flutter_example/qr_code_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:wakelock/wakelock.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:uni_links/uni_links.dart';
 
 //Project imports
 import './logs/custom_singleton_logger.dart';
+
+bool _initialURILinkHandled = false;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -57,10 +62,86 @@ class _HMSExampleAppState extends State<HMSExampleApp> {
     dividerColor: Colors.white54,
   );
 
+  Uri? _initialURI;
+  Uri? _currentURI;
+  Object? _err;
+  StreamSubscription? _streamSubscription;
+
+  @override
+  void initState() {
+    super.initState();
+    _initURIHandler();
+    _incomingLinkHandler();
+  }
+
+  Future<void> _initURIHandler() async {
+    if (!_initialURILinkHandled) {
+      _initialURILinkHandled = true;
+      try {
+        _currentURI = await getInitialUri();
+        if (_currentURI != null) {
+          if (!mounted) {
+            return;
+          }
+          setState(() {
+          });
+        }
+      } on PlatformException {
+        debugPrint("Failed to receive initial uri");
+      } on FormatException catch (err) {
+        if (!mounted) {
+          return;
+        }
+        Utilities.showToast("Malformed URI received");
+        setState(() => _err = err);
+      }
+    }
+  }
+
+  /// Handle incoming links - the ones that the app will receive from the OS
+  /// while already started.
+  void _incomingLinkHandler() {
+    if (!kIsWeb) {
+      // It will handle app links while the app is already started - be it in
+      // the foreground or in the background.
+      _streamSubscription = uriLinkStream.listen((Uri? uri) {
+        if (!mounted) {
+          return;
+        }
+        debugPrint('Received URI: $uri');
+        setState(() {
+          _currentURI = uri;
+          _err = null;
+        });
+      }, onError: (Object err) {
+        if (!mounted) {
+          return;
+        }
+        debugPrint('Error occurred: $err');
+        setState(() {
+          _currentURI = null;
+          if (err is FormatException) {
+            _err = err;
+          } else {
+            _err = null;
+          }
+        });
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _streamSubscription?.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: HomePage(),
+      home: HomePage(
+        deepLinkURL: _currentURI == null ? null : _currentURI.toString(),
+      ),
       theme: _lightTheme,
       darkTheme: _darkTheme,
       themeMode: _themeMode,
@@ -77,7 +158,9 @@ class _HMSExampleAppState extends State<HMSExampleApp> {
 }
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  final String? deepLinkURL;
+
+  const HomePage({Key? key, this.deepLinkURL}) : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -141,6 +224,15 @@ class _HomePageState extends State<HomePage> {
       case 4:
         break;
     }
+  }
+
+  @override
+  void didUpdateWidget(covariant HomePage oldWidget) {
+    // TODO: implement didUpdateWidget
+    if (widget.deepLinkURL != null) {
+      meetingLinkController.text = widget.deepLinkURL!;
+    }
+    super.didUpdateWidget(oldWidget);
   }
 
   @override
@@ -281,7 +373,7 @@ class _HomePageState extends State<HomePage> {
                   child: Text('Experience the power of 100ms',
                       textAlign: TextAlign.center,
                       style: GoogleFonts.inter(
-                          letterSpacing : 0.25,
+                          letterSpacing: 0.25,
                           color: defaultColor,
                           height: 1.1,
                           fontSize: 34,
@@ -340,7 +432,6 @@ class _HomePageState extends State<HomePage> {
                             });
                           },
                           isSelected: mode)
-                    
                     ],
                   ),
                 ),
