@@ -104,7 +104,7 @@ class _HLSSettingsState extends State<HLSSettings> {
                 horizontalTitleGap: 2,
 
                 onTap: () async {
-                  Navigator.pop(context);
+                  FocusManager.instance.primaryFocus?.unfocus();
                   String name = await UtilityComponents.showNameChangeDialog(
                       context: context,
                       placeholder: "Enter Name",
@@ -113,6 +113,8 @@ class _HLSSettingsState extends State<HLSSettings> {
                   if (name.isNotEmpty) {
                     context.read<MeetingStore>().changeName(name: name);
                   }
+                  Navigator.pop(context);
+
                 },
                 contentPadding: EdgeInsets.zero,
                 leading: SvgPicture.asset(

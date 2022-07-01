@@ -8,6 +8,7 @@ import 'package:hmssdk_flutter_example/common/ui/organisms/local_peer_tile_dialo
 import 'package:hmssdk_flutter_example/common/ui/organisms/remote_peer_tile_dialog.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
+import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
@@ -154,10 +155,10 @@ class _HLSParticipantSheetState extends State<HLSParticipantSheet> {
                     Tuple2(meetingStore.peers, meetingStore.peers.length),
                 builder: (_, data, __) {
                   List<HMSPeer> copyList = [];
-
+        
                   copyList.addAll(data.item1);
                   List<HMSPeer> peerList = [];
-
+        
                   peerList.add(copyList.removeAt(
                       copyList.indexWhere((element) => element.isLocal)));
                   if (valueChoose == "Everyone") {
@@ -168,128 +169,69 @@ class _HLSParticipantSheetState extends State<HLSParticipantSheet> {
                         .where((element) => element.role.name == valueChoose)
                         .toList();
                   }
-
-                  return ListView.builder(
-                      physics: NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      itemCount: peerList.length,
-                      itemBuilder: (context, index) {
-                        return ListTile(
-                          horizontalTitleGap: 5,
-                          contentPadding: EdgeInsets.zero,
-                          leading: SvgPicture.asset(
-                            "assets/icons/avatar.svg",
-                            width: 32,
-                          ),
-                          title: Text(
-                            peerList[index].name +
-                                (peerList[index].isLocal ? " (You)" : ""),
-                            style: GoogleFonts.inter(
-                                fontSize: 16,
-                                color: defaultColor,
-                                letterSpacing: 0.15,
-                                fontWeight: FontWeight.w600),
-                          ),
-                          subtitle: Text(
-                            peerList[index].role.name,
-                            style: GoogleFonts.inter(
+        
+                  return Container(
+                    height: MediaQuery.of(context).size.height*0.38,
+                    child: ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: peerList.length,
+                        itemBuilder: (context, index) {
+                          return ListTile(
+                            horizontalTitleGap: 5,
+                            contentPadding: EdgeInsets.zero,
+                            leading: 
+                            CircleAvatar(
+                              backgroundColor: Utilities.getBackgroundColour(peerList[index].name),
+                              radius: 16,
+                              child: Text(Utilities.getAvatarTitle(peerList[index].name),
+                              style: GoogleFonts.inter(
                                 fontSize: 12,
-                                color: subHeadingColor,
-                                letterSpacing: 0.40,
-                                fontWeight: FontWeight.w400),
-                          ),
-                          trailing: GestureDetector(
-                            onTap: () {
-                              var peerTrackNode = _meetingStore.peerTracks
-                                  .firstWhere((element) =>
-                                      element.peer.peerId ==
-                                      peerList[index].peerId);
-                              HMSPeer peerNode = peerTrackNode.peer;
-                              if (!mutePermission ||
-                                  !unMutePermission ||
-                                  !removePeerPermission ||
-                                  !changeRolePermission) return;
-                              if (_meetingStore.localPeer == null) {
-                                return;
-                              }
-                              if (peerList[index].peerId ==
-                                  _meetingStore.localPeer!.peerId) {
-                                showDialog(
-                                    context: context,
-                                    builder: (_) => LocalPeerTileDialog(
-                                        isAudioMode: false,
-                                        toggleCamera: () {
-                                          if (_meetingStore.isVideoOn)
-                                            _meetingStore.switchCamera();
-                                        },
-                                        peerName: peerNode.name,
-                                        changeRole: () {
-                                          Navigator.pop(context);
-                                          showDialog(
-                                              context: context,
-                                              builder: (_) =>
-                                                  ChangeRoleOptionDialog(
-                                                    peerName: peerNode.name,
-                                                    getRoleFunction:
-                                                        _meetingStore
-                                                            .getRoles(),
-                                                    changeRole:
-                                                        (role, forceChange) {
-                                                      Navigator.pop(context);
-                                                      _meetingStore.changeRole(
-                                                          peer: peerNode,
-                                                          roleName: role,
-                                                          forceChange:
-                                                              forceChange);
-                                                    },
-                                                  ));
-                                        },
-                                        roles: changeRolePermission,
-                                        changeName: () async {
-                                          String name = await UtilityComponents
-                                              .showNameChangeDialog(
-                                                  context: context,
-                                                  placeholder: "Enter Name",
-                                                  prefilledValue: _meetingStore
-                                                      .localPeer!.name);
-                                          if (name.isNotEmpty) {
-                                            _meetingStore.changeName(
-                                                name: name);
-                                          }
-                                        }));
-                              } else {
-                                showDialog(
-                                    context: context,
-                                    builder: (_) => RemotePeerTileDialog(
-                                          isAudioMuted: peerTrackNode
-                                                  .audioTrack?.isMute ??
-                                              true,
-                                          isVideoMuted:
-                                              peerTrackNode.track == null
-                                                  ? true
-                                                  : peerTrackNode.track!.isMute,
+                                color: defaultColor,
+                                fontWeight: FontWeight.w600
+                              )),
+                            ),
+                            title: Text(
+                              peerList[index].name +
+                                  (peerList[index].isLocal ? " (You)" : ""),
+                              style: GoogleFonts.inter(
+                                  fontSize: 16,
+                                  color: defaultColor,
+                                  letterSpacing: 0.15,
+                                  fontWeight: FontWeight.w600),
+                            ),
+                            subtitle: Text(
+                              peerList[index].role.name,
+                              style: GoogleFonts.inter(
+                                  fontSize: 12,
+                                  color: subHeadingColor,
+                                  letterSpacing: 0.40,
+                                  fontWeight: FontWeight.w400),
+                            ),
+                            trailing: GestureDetector(
+                              onTap: () {
+                                var peerTrackNode = _meetingStore.peerTracks
+                                    .firstWhere((element) =>
+                                        element.peer.peerId ==
+                                        peerList[index].peerId);
+                                HMSPeer peerNode = peerTrackNode.peer;
+                                if (!mutePermission ||
+                                    !unMutePermission ||
+                                    !removePeerPermission ||
+                                    !changeRolePermission) return;
+                                if (_meetingStore.localPeer == null) {
+                                  return;
+                                }
+                                if (peerList[index].peerId ==
+                                    _meetingStore.localPeer!.peerId) {
+                                  showDialog(
+                                      context: context,
+                                      builder: (_) => LocalPeerTileDialog(
+                                          isAudioMode: false,
+                                          toggleCamera: () {
+                                            if (_meetingStore.isVideoOn)
+                                              _meetingStore.switchCamera();
+                                          },
                                           peerName: peerNode.name,
-                                          changeVideoTrack:
-                                              (mute, isVideoTrack) {
-                                            Navigator.pop(context);
-                                            _meetingStore.changeTrackState(
-                                                peerTrackNode.track!, mute);
-                                          },
-                                          changeAudioTrack:
-                                              (mute, isAudioTrack) {
-                                            Navigator.pop(context);
-                                            _meetingStore.changeTrackState(
-                                                peerTrackNode.audioTrack!,
-                                                mute);
-                                          },
-                                          removePeer: () async {
-                                            Navigator.pop(context);
-                                            var peer =
-                                                await _meetingStore.getPeer(
-                                                    peerId: peerNode.peerId);
-                                            _meetingStore
-                                                .removePeerFromRoom(peer!);
-                                          },
                                           changeRole: () {
                                             Navigator.pop(context);
                                             showDialog(
@@ -311,21 +253,89 @@ class _HLSParticipantSheetState extends State<HLSParticipantSheet> {
                                                       },
                                                     ));
                                           },
-                                          mute: mutePermission,
-                                          unMute: unMutePermission,
-                                          removeOthers: removePeerPermission,
                                           roles: changeRolePermission,
-                                        ));
-                              }
-                            },
-                            child: SvgPicture.asset(
-                              "assets/icons/more.svg",
-                              color: defaultColor,
-                              fit: BoxFit.scaleDown,
+                                          changeName: () async {
+                                            String name = await UtilityComponents
+                                                .showNameChangeDialog(
+                                                    context: context,
+                                                    placeholder: "Enter Name",
+                                                    prefilledValue: _meetingStore
+                                                        .localPeer!.name);
+                                            if (name.isNotEmpty) {
+                                              _meetingStore.changeName(
+                                                  name: name);
+                                            }
+                                          }));
+                                } else {
+                                  showDialog(
+                                      context: context,
+                                      builder: (_) => RemotePeerTileDialog(
+                                            isAudioMuted: peerTrackNode
+                                                    .audioTrack?.isMute ??
+                                                true,
+                                            isVideoMuted:
+                                                peerTrackNode.track == null
+                                                    ? true
+                                                    : peerTrackNode.track!.isMute,
+                                            peerName: peerNode.name,
+                                            changeVideoTrack:
+                                                (mute, isVideoTrack) {
+                                              Navigator.pop(context);
+                                              _meetingStore.changeTrackState(
+                                                  peerTrackNode.track!, mute);
+                                            },
+                                            changeAudioTrack:
+                                                (mute, isAudioTrack) {
+                                              Navigator.pop(context);
+                                              _meetingStore.changeTrackState(
+                                                  peerTrackNode.audioTrack!,
+                                                  mute);
+                                            },
+                                            removePeer: () async {
+                                              Navigator.pop(context);
+                                              var peer =
+                                                  await _meetingStore.getPeer(
+                                                      peerId: peerNode.peerId);
+                                              _meetingStore
+                                                  .removePeerFromRoom(peer!);
+                                            },
+                                            changeRole: () {
+                                              Navigator.pop(context);
+                                              showDialog(
+                                                  context: context,
+                                                  builder: (_) =>
+                                                      ChangeRoleOptionDialog(
+                                                        peerName: peerNode.name,
+                                                        getRoleFunction:
+                                                            _meetingStore
+                                                                .getRoles(),
+                                                        changeRole:
+                                                            (role, forceChange) {
+                                                          Navigator.pop(context);
+                                                          _meetingStore.changeRole(
+                                                              peer: peerNode,
+                                                              roleName: role,
+                                                              forceChange:
+                                                                  forceChange);
+                                                        },
+                                                      ));
+                                            },
+                                            mute: mutePermission,
+                                            unMute: unMutePermission,
+                                            removeOthers: removePeerPermission,
+                                            roles: changeRolePermission,
+                                          ));
+                                }
+                              },
+                              child: SvgPicture.asset(
+                                "assets/icons/more.svg",
+                                color: defaultColor,
+                                fit: BoxFit.scaleDown,
+                              ),
                             ),
-                          ),
-                        );
-                      });
+                          );
+                        }),
+                  );
                 })
           ],
         ),
