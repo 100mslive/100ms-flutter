@@ -12,6 +12,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
+import 'package:hmssdk_flutter_example/hls-streaming/util/hls_title_text.dart';
 import 'package:hmssdk_flutter_example/preview/preview_details.dart';
 import 'package:hmssdk_flutter_example/qr_code_screen.dart';
 import 'package:provider/provider.dart';
@@ -233,6 +234,25 @@ class _HomePageState extends State<HomePage> {
     super.didUpdateWidget(oldWidget);
   }
 
+  void joinMeeting() {
+    if (meetingLinkController.text.isEmpty) {
+      return;
+    }
+    Utilities.saveStringData(
+        key: "meetingLink", value: meetingLinkController.text.trim());
+    Utilities.saveIntData(key: "mode", value: mode[0] == true ? 0 : 1);
+    FocusManager.instance.primaryFocus?.unfocus();
+    Utilities.setRTMPUrl(meetingLinkController.text);
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (_) => PreviewDetails(
+                  meetingLink: meetingLinkController.text.trim(),
+                  meetingFlow:
+                      mode[0] ? MeetingFlow.meeting : MeetingFlow.hlsStreaming,
+                )));
+  }
+
   @override
   Widget build(BuildContext context) {
     bool isDarkMode = HMSExampleApp.of(context).isDarkMode;
@@ -373,7 +393,7 @@ class _HomePageState extends State<HomePage> {
                       style: GoogleFonts.inter(
                           letterSpacing: 0.25,
                           color: defaultColor,
-                          height: 1.1,
+                          height: 1.17,
                           fontSize: 34,
                           fontWeight: FontWeight.w600)),
                 ),
@@ -400,6 +420,7 @@ class _HomePageState extends State<HomePage> {
                       const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Text("Joining Link",
                           style: GoogleFonts.inter(
@@ -436,6 +457,10 @@ class _HomePageState extends State<HomePage> {
                 SizedBox(
                   width: width * 0.95,
                   child: TextField(
+                    textInputAction: TextInputAction.done,
+                    onSubmitted: (value) {
+                      joinMeeting();
+                    },
                     style: GoogleFonts.inter(),
                     controller: meetingLinkController,
                     keyboardType: TextInputType.url,
@@ -494,26 +519,7 @@ class _HomePageState extends State<HomePage> {
                                 borderRadius: BorderRadius.circular(8.0),
                               ))),
                           onPressed: () async {
-                            if (meetingLinkController.text.isEmpty) {
-                              return;
-                            }
-                            Utilities.saveStringData(
-                                key: "meetingLink",
-                                value: meetingLinkController.text.trim());
-                            Utilities.saveIntData(
-                                key: "mode", value: mode[0] == true ? 0 : 1);
-                            FocusManager.instance.primaryFocus?.unfocus();
-                            Utilities.setRTMPUrl(meetingLinkController.text);
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (_) => PreviewDetails(
-                                          meetingLink:
-                                              meetingLinkController.text.trim(),
-                                          meetingFlow: mode[0]
-                                              ? MeetingFlow.meeting
-                                              : MeetingFlow.hlsStreaming,
-                                        )));
+                            joinMeeting();
                           },
                           child: Container(
                             padding: const EdgeInsets.fromLTRB(8, 15, 8, 15),
@@ -524,16 +530,12 @@ class _HomePageState extends State<HomePage> {
                               mainAxisSize: MainAxisSize.min,
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Text('Join Now',
-                                    style: GoogleFonts.inter(
-                                        color:
-                                            meetingLinkController.text.isEmpty
-                                                ? disabledTextColor
-                                                : enabledTextColor,
-                                        height: 1,
-                                        fontSize: 16,
-                                        letterSpacing: 0.5,
-                                        fontWeight: FontWeight.w600)),
+                                HLSTitleText(
+                                  text: 'Join Now',
+                                  textColor: meetingLinkController.text.isEmpty
+                                      ? disabledTextColor
+                                      : enabledTextColor,
+                                )
                               ],
                             ),
                           ),
@@ -587,18 +589,14 @@ class _HomePageState extends State<HomePage> {
                         children: [
                           Icon(
                             Icons.qr_code,
-                            size: 22,
+                            size: 18,
                             color: enabledTextColor,
                           ),
                           SizedBox(
                             width: 5,
                           ),
-                          Text('Scan QR Code',
-                              style: GoogleFonts.inter(
-                                  height: 1,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
-                                  color: enabledTextColor)),
+                          HLSTitleText(
+                              text: 'Scan QR Code', textColor: enabledTextColor)
                         ],
                       ),
                     ),

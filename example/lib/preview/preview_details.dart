@@ -28,7 +28,27 @@ class _PreviewDetailsState extends State<PreviewDetails> {
 
   void loadData() async {
     nameController.text = await Utilities.getStringData(key: "name");
-    nameController.selection = TextSelection.fromPosition(TextPosition(offset: nameController.text.length));
+    nameController.selection = TextSelection.fromPosition(
+        TextPosition(offset: nameController.text.length));
+  }
+
+  void showPreview(bool res) async {
+    if (nameController.text.isEmpty) {
+      Utilities.showToast("Please enter you name");
+    } else {
+      Utilities.saveStringData(key: "name", value: nameController.text.trim());
+      res = await Utilities.getPermissions();
+      if (res) {
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+            builder: (_) => ListenableProvider.value(
+                  value: PreviewStore(),
+                  child: PreviewPage(
+                      meetingFlow: widget.meetingFlow,
+                      name: nameController.text,
+                      meetingLink: widget.meetingLink),
+                )));
+      }
+    }
   }
 
   @override
@@ -55,7 +75,7 @@ class _PreviewDetailsState extends State<PreviewDetails> {
                     fontSize: 34,
                     fontWeight: FontWeight.w600)),
             SizedBox(
-              height: 15,
+              height: 4,
             ),
             Text("Let's get started with your name",
                 style: GoogleFonts.inter(
@@ -64,11 +84,15 @@ class _PreviewDetailsState extends State<PreviewDetails> {
                     fontSize: 16,
                     fontWeight: FontWeight.w400)),
             SizedBox(
-              height: 30,
+              height: 40,
             ),
             SizedBox(
               width: width * 0.95,
               child: TextField(
+                textInputAction: TextInputAction.done,
+                onSubmitted: (value) {
+                  showPreview(res);
+                },
                 autofocus: true,
                 textCapitalization: TextCapitalization.characters,
                 style: GoogleFonts.inter(),
@@ -108,32 +132,10 @@ class _PreviewDetailsState extends State<PreviewDetails> {
               height: 30,
             ),
             HMSListenableButton(
-                width: width * 0.6,
+                width: width * 0.5,
                 onPressed: () async => {
                       FocusManager.instance.primaryFocus?.unfocus(),
-                      if (nameController.text.isEmpty)
-                        {
-                          Utilities.showToast("Please enter you name"),
-                        }
-                      else
-                        {
-                          Utilities.saveStringData(
-                              key: "name", value: nameController.text.trim()),
-                          res = await Utilities.getPermissions(),
-                          if (res)
-                            {
-                              Navigator.of(context)
-                                  .pushReplacement(MaterialPageRoute(
-                                      builder: (_) => ListenableProvider.value(
-                                            value: PreviewStore(),
-                                            child: PreviewPage(
-                                                meetingFlow: widget.meetingFlow,
-                                                name: nameController.text,
-                                                meetingLink:
-                                                    widget.meetingLink),
-                                          )))
-                            }
-                        }
+                      showPreview(res),
                     },
                 childWidget: Container(
                   padding: const EdgeInsets.fromLTRB(8, 16, 8, 16),
