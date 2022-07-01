@@ -23,6 +23,7 @@ import 'package:uni_links/uni_links.dart';
 import './logs/custom_singleton_logger.dart';
 
 bool _initialURILinkHandled = false;
+StreamSubscription? _streamSubscription;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -65,7 +66,6 @@ class _HMSExampleAppState extends State<HMSExampleApp> {
   Uri? _initialURI;
   Uri? _currentURI;
   Object? _err;
-  StreamSubscription? _streamSubscription;
 
   @override
   void initState() {
@@ -83,8 +83,7 @@ class _HMSExampleAppState extends State<HMSExampleApp> {
           if (!mounted) {
             return;
           }
-          setState(() {
-          });
+          setState(() {});
         }
       } on PlatformException {
         debugPrint("Failed to receive initial uri");
@@ -108,7 +107,7 @@ class _HMSExampleAppState extends State<HMSExampleApp> {
         if (!mounted) {
           return;
         }
-        debugPrint('Received URI: $uri');
+
         setState(() {
           _currentURI = uri;
           _err = null;
@@ -117,7 +116,6 @@ class _HMSExampleAppState extends State<HMSExampleApp> {
         if (!mounted) {
           return;
         }
-        debugPrint('Error occurred: $err');
         setState(() {
           _currentURI = null;
           if (err is FormatException) {

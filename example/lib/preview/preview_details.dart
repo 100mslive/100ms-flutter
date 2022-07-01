@@ -28,7 +28,7 @@ class _PreviewDetailsState extends State<PreviewDetails> {
 
   void loadData() async {
     nameController.text = await Utilities.getStringData(key: "name");
-
+    nameController.selection = TextSelection.fromPosition(TextPosition(offset: nameController.text.length));
   }
 
   @override

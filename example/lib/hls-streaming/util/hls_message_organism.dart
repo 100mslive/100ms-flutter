@@ -41,7 +41,8 @@ class HLSMessageOrganism extends StatelessWidget {
                 Row(
                   children: [
                     Container(
-                      constraints: BoxConstraints(maxWidth: role!=""?60:width*0.5),
+                      constraints: BoxConstraints(
+                          maxWidth: role != "" ? 60 : width * 0.5),
                       child: Text(
                         senderName ?? "",
                         overflow: TextOverflow.ellipsis,
@@ -69,7 +70,7 @@ class HLSMessageOrganism extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           Container(
-                            width: width * 0.4,
+                            width: isLocalMessage ? width * 0.3 : width * 0.4,
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(4),
                                 border:
@@ -80,28 +81,40 @@ class HLSMessageOrganism extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Text(
-                                    (isLocalMessage?"BY":"TO") + " YOU",
+                                    (isLocalMessage ? "" : "TO YOU"),
                                     style: GoogleFonts.inter(
                                         fontSize: 10.0,
                                         color: subHeadingColor,
                                         letterSpacing: 1.5,
                                         fontWeight: FontWeight.w600),
                                   ),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 2),
-                                    child: VerticalDivider(
-                                      width: 5,
-                                      color: borderColor,
+                                  isLocalMessage
+                                      ? SizedBox()
+                                      : Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 2),
+                                          child: Text(
+                                            "|",
+                                            style: GoogleFonts.inter(
+                                                fontSize: 10.0,
+                                                color: borderColor,
+                                                letterSpacing: 1.5,
+                                                fontWeight: FontWeight.w600),
+                                          )),
+                                  Container(
+                                    constraints: BoxConstraints(
+                                        maxWidth: isLocalMessage
+                                            ? width * 0.25
+                                            : width * 0.2),
+                                    child: Text(
+                                      role != "" ? "${role.toUpperCase()} ›" : "EVERYONE ›",
+                                      overflow: TextOverflow.ellipsis,
+                                      style: GoogleFonts.inter(
+                                          fontSize: 10.0,
+                                          color: defaultColor,
+                                          letterSpacing: 1.5,
+                                          fontWeight: FontWeight.w400),
                                     ),
-                                  ),
-                                  Text(
-                                    role != ""?"PRIVATE ›":"EVERYONE",
-                                    style: GoogleFonts.inter(
-                                        fontSize: 10.0,
-                                        color: defaultColor,
-                                        letterSpacing: 1.5,
-                                        fontWeight: FontWeight.w400),
                                   ),
                                 ],
                               ),

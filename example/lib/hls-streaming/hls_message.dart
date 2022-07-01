@@ -37,7 +37,7 @@ class _HLSMessageState extends State<HLSMessage> {
   String sender(HMSMessageRecipient hmsMessageRecipient) {
     if ((hmsMessageRecipient.recipientPeer != null) &&
         (hmsMessageRecipient.recipientRoles == null)) {
-      return hmsMessageRecipient.recipientPeer?.name ?? "";
+      return "PRIVATE";
     } else if ((hmsMessageRecipient.recipientPeer == null) &&
         (hmsMessageRecipient.recipientRoles != null)) {
       return hmsMessageRecipient.recipientRoles![0].name;
