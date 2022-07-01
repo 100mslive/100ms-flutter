@@ -132,12 +132,12 @@ PODS:
   - GoogleUtilities/UserDefaults (7.7.0):
     - GoogleUtilities/Logger
   - HMSBroadcastExtensionSDK (0.0.1)
-  - HMSSDK (0.3.1):
+  - HMSSDK (0.3.2):
     - HMSWebRTC (= 1.0.4897)
   - hmssdk_flutter (0.7.4):
     - Flutter
     - HMSBroadcastExtensionSDK (= 0.0.1)
-    - HMSSDK (= 0.3.1)
+    - HMSSDK (= 0.3.2)
   - HMSWebRTC (1.0.4897)
   - MTBBarcodeScanner (5.0.11)
   - nanopb (2.30908.0):
@@ -158,6 +158,8 @@ PODS:
   - shared_preferences_ios (0.0.1):
     - Flutter
   - Toast (4.0.0)
+  - uni_links (0.0.1):
+    - Flutter
   - video_player_avfoundation (0.0.1):
     - Flutter
   - wakelock (0.0.1):
@@ -177,6 +179,7 @@ DEPENDENCIES:
   - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
   - qr_code_scanner (from `.symlinks/plugins/qr_code_scanner/ios`)
   - shared_preferences_ios (from `.symlinks/plugins/shared_preferences_ios/ios`)
+  - uni_links (from `.symlinks/plugins/uni_links/ios`)
   - video_player_avfoundation (from `.symlinks/plugins/video_player_avfoundation/ios`)
   - wakelock (from `.symlinks/plugins/wakelock/ios`)
 
@@ -227,6 +230,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/qr_code_scanner/ios"
   shared_preferences_ios:
     :path: ".symlinks/plugins/shared_preferences_ios/ios"
+  uni_links:
+    :path: ".symlinks/plugins/uni_links/ios"
   video_player_avfoundation:
     :path: ".symlinks/plugins/video_player_avfoundation/ios"
   wakelock:
@@ -252,8 +257,8 @@ SPEC CHECKSUMS:
   GoogleDataTransport: 5fffe35792f8b96ec8d6775f5eccd83c998d5a3b
   GoogleUtilities: e0913149f6b0625b553d70dae12b49fc62914fd1
   HMSBroadcastExtensionSDK: a19186ebbf8e381f447f382448038b38a9985be0
-  HMSSDK: 9780df180a4c8bd3446fd2981b338856fd02b3a4
-  hmssdk_flutter: f96a7c84d970565df2385aa0a98373ae7898a98a
+  HMSSDK: 6ec0cb6d776141f8fcd749d28b9b793357995e7f
+  hmssdk_flutter: b782ab2ddc277b9aa1e5ae8246647f3965bc2687
   HMSWebRTC: aa317dbbf56a191463a90491e5e37f298f8fa29c
   MTBBarcodeScanner: f453b33c4b7dfe545d8c6484ed744d55671788cb
   nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
@@ -264,6 +269,7 @@ SPEC CHECKSUMS:
   qr_code_scanner: bb67d64904c3b9658ada8c402e8b4d406d5d796e
   shared_preferences_ios: 548a61f8053b9b8a49ac19c1ffbc8b92c50d68ad
   Toast: 91b396c56ee72a5790816f40d3a94dd357abc196
+  uni_links: d97da20c7701486ba192624d99bffaaffcfc298a
   video_player_avfoundation: e489aac24ef5cf7af82702979ed16f2a5ef84cff
   wakelock: d0fc7c864128eac40eba1617cb5264d9c940b46f
 
