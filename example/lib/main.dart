@@ -233,6 +233,25 @@ class _HomePageState extends State<HomePage> {
     super.didUpdateWidget(oldWidget);
   }
 
+  void joinMeeting() {
+    if (meetingLinkController.text.isEmpty) {
+      return;
+    }
+    Utilities.saveStringData(
+        key: "meetingLink", value: meetingLinkController.text.trim());
+    Utilities.saveIntData(key: "mode", value: mode[0] == true ? 0 : 1);
+    FocusManager.instance.primaryFocus?.unfocus();
+    Utilities.setRTMPUrl(meetingLinkController.text);
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (_) => PreviewDetails(
+                  meetingLink: meetingLinkController.text.trim(),
+                  meetingFlow:
+                      mode[0] ? MeetingFlow.meeting : MeetingFlow.hlsStreaming,
+                )));
+  }
+
   @override
   Widget build(BuildContext context) {
     bool isDarkMode = HMSExampleApp.of(context).isDarkMode;
@@ -373,7 +392,7 @@ class _HomePageState extends State<HomePage> {
                       style: GoogleFonts.inter(
                           letterSpacing: 0.25,
                           color: defaultColor,
-                          height: 1.1,
+                          height: 1.17,
                           fontSize: 34,
                           fontWeight: FontWeight.w600)),
                 ),
@@ -400,6 +419,7 @@ class _HomePageState extends State<HomePage> {
                       const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Text("Joining Link",
                           style: GoogleFonts.inter(
@@ -436,6 +456,10 @@ class _HomePageState extends State<HomePage> {
                 SizedBox(
                   width: width * 0.95,
                   child: TextField(
+                    textInputAction: TextInputAction.done,
+                    onSubmitted: (value) {
+                      joinMeeting();
+                    },
                     style: GoogleFonts.inter(),
                     controller: meetingLinkController,
                     keyboardType: TextInputType.url,
@@ -494,26 +518,7 @@ class _HomePageState extends State<HomePage> {
                                 borderRadius: BorderRadius.circular(8.0),
                               ))),
                           onPressed: () async {
-                            if (meetingLinkController.text.isEmpty) {
-                              return;
-                            }
-                            Utilities.saveStringData(
-                                key: "meetingLink",
-                                value: meetingLinkController.text.trim());
-                            Utilities.saveIntData(
-                                key: "mode", value: mode[0] == true ? 0 : 1);
-                            FocusManager.instance.primaryFocus?.unfocus();
-                            Utilities.setRTMPUrl(meetingLinkController.text);
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (_) => PreviewDetails(
-                                          meetingLink:
-                                              meetingLinkController.text.trim(),
-                                          meetingFlow: mode[0]
-                                              ? MeetingFlow.meeting
-                                              : MeetingFlow.hlsStreaming,
-                                        )));
+                            joinMeeting();
                           },
                           child: Container(
                             padding: const EdgeInsets.fromLTRB(8, 15, 8, 15),
