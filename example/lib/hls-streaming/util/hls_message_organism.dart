@@ -45,12 +45,12 @@ class HLSMessageOrganism extends StatelessWidget {
                     Container(
                       constraints: BoxConstraints(
                           maxWidth: role != "" ? 60 : width * 0.5),
-                      child: 
-                      HLSTitleText(text: senderName ?? "",
-                      fontSize: 14,
-                      letterSpacing: 0.1,
-                      lineHeight: 20,
-                      textColor: defaultColor,
+                      child: HLSTitleText(
+                        text: senderName ?? "",
+                        fontSize: 14,
+                        letterSpacing: 0.1,
+                        lineHeight: 20,
+                        textColor: defaultColor,
                       ),
                     ),
                     SizedBox(
@@ -101,7 +101,9 @@ class HLSMessageOrganism extends StatelessWidget {
                                             ? width * 0.25
                                             : width * 0.2),
                                     child: Text(
-                                      role != "" ? "${role.toUpperCase()} ›" : "EVERYONE ›",
+                                      role != ""
+                                          ? "${role.toUpperCase()} ›"
+                                          : "EVERYONE ›",
                                       overflow: TextOverflow.ellipsis,
                                       style: GoogleFonts.inter(
                                           fontSize: 10.0,

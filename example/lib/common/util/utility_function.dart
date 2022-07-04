@@ -47,8 +47,7 @@ class Utilities {
   }
 
   static double getHLSRatio(Size size, BuildContext context) {
-    return (size.height) /
-        (size.width);
+    return (size.height) / (size.width);
   }
 
   static void setRTMPUrl(String roomUrl) {
@@ -129,6 +128,5 @@ class Utilities {
     final prefs = await SharedPreferences.getInstance();
 
     prefs.setInt(key, value);
-
   }
 }

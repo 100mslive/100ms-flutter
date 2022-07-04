@@ -388,8 +388,7 @@ class _HomePageState extends State<HomePage> {
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 18),
-                  child: 
-                  Text('Experience the power of 100ms',
+                  child: Text('Experience the power of 100ms',
                       textAlign: TextAlign.center,
                       style: GoogleFonts.inter(
                           letterSpacing: 0.25,

@@ -95,6 +95,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                               if (roles.length > 0) {
                                 return DropdownButtonHideUnderline(
                                   child: DropdownButton2(
+                                    selectedItemHighlightColor: hmsdefaultColor,
                                     isExpanded: true,
                                     dropdownWidth:
                                         MediaQuery.of(context).size.width * 0.6,
@@ -106,7 +107,6 @@ class _ChatWidgetState extends State<ChatWidget> {
                                                 0.2),
                                         0),
                                     iconEnabledColor: iconColor,
-                                    selectedItemHighlightColor: Colors.blue,
                                     onChanged: (newvalue) {
                                       setState(() {
                                         this.valueChoose = newvalue as String;

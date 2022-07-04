@@ -12,8 +12,6 @@ class StreamTimer extends StatefulWidget {
 }
 
 class _StreamTimerState extends State<StreamTimer> {
-
-
   format(Duration d) => d.toString().split('.').first.padLeft(8, "0");
 
   @override
@@ -22,7 +20,7 @@ class _StreamTimerState extends State<StreamTimer> {
       stream: Stream.periodic(const Duration(seconds: 1)),
       builder: (context, snapshot) {
         return Text(
-          format(DateTime.now().difference(widget.startedAt)),
+          format(DateTime.now().toUtc().difference(widget.startedAt.toUtc())),
           style: GoogleFonts.inter(
               fontSize: 12,
               color: subHeadingColor,

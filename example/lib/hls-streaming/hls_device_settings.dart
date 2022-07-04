@@ -120,7 +120,6 @@ class _HLSDeviceSettingsState extends State<HLSDeviceSettings> {
                                 color: surfaceColor),
                             offset: Offset(-10, -10),
                             iconEnabledColor: iconColor,
-                            // selectedItemHighlightColor: Colors.blue,
                             onChanged: (dynamic newvalue) {
                               setState(() {
                                 this.valueChoose = newvalue as String;
@@ -188,7 +187,7 @@ class _HLSDeviceSettingsState extends State<HLSDeviceSettings> {
                 Container(
                   height: 48,
                   child: HMSButton(
-                    buttonBackgroundColor: buttonColor,
+                      buttonBackgroundColor: buttonColor,
                       width: width * 0.3,
                       onPressed: () {},
                       childWidget: Row(

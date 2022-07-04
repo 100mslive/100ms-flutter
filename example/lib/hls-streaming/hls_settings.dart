@@ -102,7 +102,6 @@ class _HLSSettingsState extends State<HLSSettings> {
               ),
               ListTile(
                 horizontalTitleGap: 2,
-
                 onTap: () async {
                   FocusManager.instance.primaryFocus?.unfocus();
                   String name = await UtilityComponents.showNameChangeDialog(
@@ -114,7 +113,6 @@ class _HLSSettingsState extends State<HLSSettings> {
                     context.read<MeetingStore>().changeName(name: name);
                   }
                   Navigator.pop(context);
-
                 },
                 contentPadding: EdgeInsets.zero,
                 leading: SvgPicture.asset(
@@ -132,7 +130,6 @@ class _HLSSettingsState extends State<HLSSettings> {
               ),
               ListTile(
                 horizontalTitleGap: 2,
-
                 onTap: () {
                   Navigator.pop(context);
                   context.read<MeetingStore>().toggleSpeaker();
