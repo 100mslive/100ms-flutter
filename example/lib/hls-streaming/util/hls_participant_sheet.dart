@@ -35,7 +35,7 @@ class _HLSParticipantSheetState extends State<HLSParticipantSheet> {
         _meetingStore.localPeer?.role.permissions.changeRole ?? false;
 
     return FractionallySizedBox(
-      heightFactor: 0.5,
+      heightFactor: 0.8,
       child: Padding(
         padding: const EdgeInsets.only(top: 20.0, left: 15, right: 15),
         child: Column(
@@ -85,7 +85,7 @@ class _HLSParticipantSheetState extends State<HLSParticipantSheet> {
                                 color: surfaceColor),
                             offset: Offset(-10, -10),
                             iconEnabledColor: iconColor,
-                            // selectedItemHighlightColor: Colors.blue,
+                            selectedItemHighlightColor: hmsdefaultColor,
                             onChanged: (dynamic newvalue) {
                               setState(() {
                                 this.valueChoose = newvalue as String;
@@ -114,7 +114,7 @@ class _HLSParticipantSheetState extends State<HLSParticipantSheet> {
                                           overflow: TextOverflow.ellipsis,
                                           maxLines: 1,
                                           style: GoogleFonts.inter(
-                                              color: iconColor),
+                                              fontSize: 12, color: iconColor),
                                         ),
                                         value: role.name,
                                       ))
@@ -155,10 +155,8 @@ class _HLSParticipantSheetState extends State<HLSParticipantSheet> {
                     Tuple2(meetingStore.peers, meetingStore.peers.length),
                 builder: (_, data, __) {
                   List<HMSPeer> copyList = [];
-        
                   copyList.addAll(data.item1);
                   List<HMSPeer> peerList = [];
-        
                   peerList.add(copyList.removeAt(
                       copyList.indexWhere((element) => element.isLocal)));
                   if (valueChoose == "Everyone") {
@@ -169,9 +167,8 @@ class _HLSParticipantSheetState extends State<HLSParticipantSheet> {
                         .where((element) => element.role.name == valueChoose)
                         .toList();
                   }
-        
                   return Container(
-                    height: MediaQuery.of(context).size.height*0.38,
+                    height: MediaQuery.of(context).size.height * 0.38,
                     child: ListView.builder(
                         shrinkWrap: true,
                         itemCount: peerList.length,
@@ -179,16 +176,17 @@ class _HLSParticipantSheetState extends State<HLSParticipantSheet> {
                           return ListTile(
                             horizontalTitleGap: 5,
                             contentPadding: EdgeInsets.zero,
-                            leading: 
-                            CircleAvatar(
-                              backgroundColor: Utilities.getBackgroundColour(peerList[index].name),
+                            leading: CircleAvatar(
+                              backgroundColor: Utilities.getBackgroundColour(
+                                  peerList[index].name),
                               radius: 16,
-                              child: Text(Utilities.getAvatarTitle(peerList[index].name),
-                              style: GoogleFonts.inter(
-                                fontSize: 12,
-                                color: defaultColor,
-                                fontWeight: FontWeight.w600
-                              )),
+                              child: Text(
+                                  Utilities.getAvatarTitle(
+                                      peerList[index].name),
+                                  style: GoogleFonts.inter(
+                                      fontSize: 12,
+                                      color: defaultColor,
+                                      fontWeight: FontWeight.w600)),
                             ),
                             title: Text(
                               peerList[index].name +
@@ -255,12 +253,16 @@ class _HLSParticipantSheetState extends State<HLSParticipantSheet> {
                                           },
                                           roles: changeRolePermission,
                                           changeName: () async {
-                                            String name = await UtilityComponents
-                                                .showNameChangeDialog(
-                                                    context: context,
-                                                    placeholder: "Enter Name",
-                                                    prefilledValue: _meetingStore
-                                                        .localPeer!.name);
+                                            String name =
+                                                await UtilityComponents
+                                                    .showNameChangeDialog(
+                                                        context: context,
+                                                        placeholder:
+                                                            "Enter Name",
+                                                        prefilledValue:
+                                                            _meetingStore
+                                                                .localPeer!
+                                                                .name);
                                             if (name.isNotEmpty) {
                                               _meetingStore.changeName(
                                                   name: name);
@@ -273,10 +275,10 @@ class _HLSParticipantSheetState extends State<HLSParticipantSheet> {
                                             isAudioMuted: peerTrackNode
                                                     .audioTrack?.isMute ??
                                                 true,
-                                            isVideoMuted:
-                                                peerTrackNode.track == null
-                                                    ? true
-                                                    : peerTrackNode.track!.isMute,
+                                            isVideoMuted: peerTrackNode.track ==
+                                                    null
+                                                ? true
+                                                : peerTrackNode.track!.isMute,
                                             peerName: peerNode.name,
                                             changeVideoTrack:
                                                 (mute, isVideoTrack) {
@@ -309,9 +311,10 @@ class _HLSParticipantSheetState extends State<HLSParticipantSheet> {
                                                         getRoleFunction:
                                                             _meetingStore
                                                                 .getRoles(),
-                                                        changeRole:
-                                                            (role, forceChange) {
-                                                          Navigator.pop(context);
+                                                        changeRole: (role,
+                                                            forceChange) {
+                                                          Navigator.pop(
+                                                              context);
                                                           _meetingStore.changeRole(
                                                               peer: peerNode,
                                                               roleName: role,

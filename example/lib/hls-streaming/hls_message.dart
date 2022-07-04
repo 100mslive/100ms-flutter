@@ -135,6 +135,8 @@ class _HLSMessageState extends State<HLSMessage> {
                                       builder: (context, data, _) {
                                         List<HMSRole> roles = data.item1;
                                         return DropdownButton2(
+                                          selectedItemHighlightColor:
+                                              hmsdefaultColor,
                                           isExpanded: true,
                                           dropdownWidth: MediaQuery.of(context)
                                                   .size
@@ -183,6 +185,7 @@ class _HLSMessageState extends State<HLSMessage> {
                                                         maxLines: 1,
                                                         style:
                                                             GoogleFonts.inter(
+                                                                fontSize: 12,
                                                                 color:
                                                                     iconColor),
                                                       ),
@@ -199,6 +202,8 @@ class _HLSMessageState extends State<HLSMessage> {
                                                             "${peer.name} ${peer.isLocal ? "(You)" : ""}",
                                                             style: GoogleFonts
                                                                 .inter(
+                                                                    fontSize:
+                                                                        12,
                                                                     color:
                                                                         iconColor),
                                                             overflow:

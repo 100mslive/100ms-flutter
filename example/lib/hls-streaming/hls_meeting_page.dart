@@ -78,7 +78,7 @@ class _HLSMeetingPageState extends State<HLSMeetingPage> {
           children: [
             Center(
               child: Container(
-                height: MediaQuery.of(context).size.height*0.735,
+                height: MediaQuery.of(context).size.height * 0.735,
                 child: Selector<
                         MeetingStore,
                         Tuple6<List<PeerTrackNode>, bool, int, int, MeetingMode,
@@ -90,7 +90,8 @@ class _HLSMeetingPageState extends State<HLSMeetingPage> {
                         meetingStore.screenShareCount,
                         meetingStore.meetingMode,
                         meetingStore.peerTracks.length > 0
-                            ? meetingStore.peerTracks[meetingStore.screenShareCount]
+                            ? meetingStore
+                                .peerTracks[meetingStore.screenShareCount]
                             : null),
                     builder: (_, data, __) {
                       if (data.item2) {
@@ -109,17 +110,19 @@ class _HLSMeetingPageState extends State<HLSMeetingPage> {
                                     )
                                   : Center(
                                       child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
                                         crossAxisAlignment:
                                             CrossAxisAlignment.center,
                                         children: [
                                           Padding(
-                                            padding:
-                                                const EdgeInsets.only(bottom: 8.0),
+                                            padding: const EdgeInsets.only(
+                                                bottom: 8.0),
                                             child: Text(
                                               "Waiting for HLS to start...",
                                               style: GoogleFonts.inter(
-                                                  color: iconColor, fontSize: 20),
+                                                  color: iconColor,
+                                                  fontSize: 20),
                                             ),
                                           ),
                                           // RotationTransition(
@@ -146,7 +149,7 @@ class _HLSMeetingPageState extends State<HLSMeetingPage> {
                           context: context,
                           isPortrait: true,
                           size: Size(MediaQuery.of(context).size.width,
-                              MediaQuery.of(context).size.height*0.735));
+                              MediaQuery.of(context).size.height * 0.735));
                     }),
               ),
             ),

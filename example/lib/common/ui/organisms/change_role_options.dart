@@ -36,7 +36,7 @@ class _ChangeRoleOptionDialogState extends State<ChangeRoleOptionDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      contentPadding: EdgeInsets.symmetric(horizontal: 10,vertical: 10),
+      contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       title: Text(
         widget.peerName,
         style: GoogleFonts.inter(color: iconColor),
@@ -72,9 +72,8 @@ class _ChangeRoleOptionDialogState extends State<ChangeRoleOptionDialog> {
                           },
                           items: data.data!.map((role) {
                             return DropdownMenuItem(
-
                               child: SizedBox(
-                                width : 60,
+                                width: 60,
                                 child: Text(
                                   role.name,
                                   style: GoogleFonts.inter(color: iconColor),

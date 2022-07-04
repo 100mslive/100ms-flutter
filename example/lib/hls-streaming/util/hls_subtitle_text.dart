@@ -26,7 +26,7 @@ class HLSSubtitleText extends StatelessWidget {
     return Text(text,
         overflow: textOverflow,
         style: GoogleFonts.inter(
-            height: lineHeight!/fontSize!  ,
+            height: lineHeight! / fontSize!,
             fontSize: fontSize,
             letterSpacing: letterSpacing,
             color: textColor,

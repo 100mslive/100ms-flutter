@@ -21,7 +21,10 @@ class HMSButton extends StatelessWidget {
           style: ButtonStyle(
               shadowColor: MaterialStateProperty.all(
                   shadowColor == null ? surfaceColor : shadowColor),
-              backgroundColor: MaterialStateProperty.all(buttonBackgroundColor==null?hmsdefaultColor:buttonBackgroundColor),
+              backgroundColor: MaterialStateProperty.all(
+                  buttonBackgroundColor == null
+                      ? hmsdefaultColor
+                      : buttonBackgroundColor),
               shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                   RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8.0),

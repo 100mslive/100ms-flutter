@@ -176,7 +176,6 @@ class _HLSBottomSheetState extends State<HLSBottomSheet> {
                           width: 10,
                         ),
                         HLSTitleText(text: "Go Live", textColor: defaultColor)
-
                       ],
                     ),
                   )),
