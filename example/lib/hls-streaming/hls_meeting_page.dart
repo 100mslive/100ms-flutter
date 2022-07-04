@@ -150,48 +150,6 @@ class _HLSMeetingPageState extends State<HLSMeetingPage> {
                     }),
               ),
             ),
-            // Selector<MeetingStore,
-            //     Tuple4<bool, bool, List<PeerTrackNode>, String>>(
-            //   selector: (_, meetingStore) => Tuple4(
-            //       meetingStore.localPeer != null,
-            //       meetingStore.peerTracks.length > 0,
-            //       meetingStore.peerTracks,
-            //       meetingStore.localPeer?.name ?? ""),
-            //   builder: (_, data, __) {
-            //     if (data.item1 && data.item2) {
-            //       PeerTrackNode localPeer = data.item3
-            //           .firstWhere((element) => element.peer.isLocal == true);
-            //       if (localPeer.track != null && localPeer.track!.isMute) {
-            //         return Center(
-            //           child: Center(
-            //             child: CircleAvatar(
-            //                 backgroundColor: defaultAvatarColor,
-            //                 radius: 40,
-            //                 child: Text(
-            //                   Utilities.getAvatarTitle(data.item4),
-            //                   style: GoogleFonts.inter(
-            //                     fontSize: 40,
-            //                     color: Colors.white,
-            //                   ),
-            //                 )),
-            //           ),
-            //         );
-            //       }
-            //       return HMSVideoView(
-            //         scaleType: ScaleType.SCALE_ASPECT_FILL,
-            //         track: localPeer.track!,
-            //         setMirror: true,
-            //         matchParent: false,
-            //       );
-            //     } else {
-            //       return Center(
-            //         child: CircularProgressIndicator(
-            //           strokeWidth: 2,
-            //         ),
-            //       );
-            //     }
-            //   },
-            // ),
             SafeArea(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
