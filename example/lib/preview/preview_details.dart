@@ -94,7 +94,7 @@ class _PreviewDetailsState extends State<PreviewDetails> {
                   showPreview(res);
                 },
                 autofocus: true,
-                textCapitalization: TextCapitalization.characters,
+                textCapitalization: TextCapitalization.words,
                 style: GoogleFonts.inter(),
                 controller: nameController,
                 keyboardType: TextInputType.name,

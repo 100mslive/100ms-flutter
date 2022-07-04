@@ -46,6 +46,11 @@ class Utilities {
         (size.width - viewPadding.left - viewPadding.right);
   }
 
+  static double getHLSRatio(Size size, BuildContext context) {
+    return (size.height) /
+        (size.width);
+  }
+
   static void setRTMPUrl(String roomUrl) {
     List<String> urlSplit = roomUrl.split('/');
     int index = urlSplit.lastIndexOf("meeting");

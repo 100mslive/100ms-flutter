@@ -3,15 +3,17 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/embedded_button.dart';
+import 'package:hmssdk_flutter_example/common/ui/organisms/grid_video_view.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/stream_timer.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
-import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_mode.dart';
 import 'package:hmssdk_flutter_example/hls-streaming/hls_bottom_sheet.dart';
 import 'package:hmssdk_flutter_example/hls-streaming/hls_message.dart';
 import 'package:hmssdk_flutter_example/hls-streaming/hls_settings.dart';
+import 'package:hmssdk_flutter_example/hls-streaming/util/hls_grid_view.dart';
 import 'package:hmssdk_flutter_example/hls-streaming/util/hls_participant_sheet.dart';
+import 'package:hmssdk_flutter_example/hls_viewer/hls_viewer.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:hmssdk_flutter_example/meeting/peer_track_node.dart';
 import 'package:provider/provider.dart';
@@ -74,47 +76,79 @@ class _HLSMeetingPageState extends State<HLSMeetingPage> {
         resizeToAvoidBottomInset: false,
         body: Stack(
           children: [
-            Selector<MeetingStore,
-                Tuple4<bool, bool, List<PeerTrackNode>, String>>(
-              selector: (_, meetingStore) => Tuple4(
-                  meetingStore.localPeer != null,
-                  meetingStore.peerTracks.length > 0,
-                  meetingStore.peerTracks,
-                  meetingStore.localPeer?.name ?? ""),
-              builder: (_, data, __) {
-                if (data.item1 && data.item2) {
-                  PeerTrackNode localPeer = data.item3
-                      .firstWhere((element) => element.peer.isLocal == true);
-                  if (localPeer.track != null && localPeer.track!.isMute) {
-                    return Center(
-                      child: Center(
-                        child: CircleAvatar(
-                            backgroundColor: defaultAvatarColor,
-                            radius: 40,
-                            child: Text(
-                              Utilities.getAvatarTitle(data.item4),
-                              style: GoogleFonts.inter(
-                                fontSize: 40,
-                                color: Colors.white,
-                              ),
-                            )),
-                      ),
-                    );
-                  }
-                  return HMSVideoView(
-                    scaleType: ScaleType.SCALE_ASPECT_FILL,
-                    track: localPeer.track!,
-                    setMirror: true,
-                    matchParent: false,
-                  );
-                } else {
-                  return Center(
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                    ),
-                  );
-                }
-              },
+            Center(
+              child: Container(
+                height: MediaQuery.of(context).size.height*0.735,
+                child: Selector<
+                        MeetingStore,
+                        Tuple6<List<PeerTrackNode>, bool, int, int, MeetingMode,
+                            PeerTrackNode?>>(
+                    selector: (_, meetingStore) => Tuple6(
+                        meetingStore.peerTracks,
+                        meetingStore.isHLSLink,
+                        meetingStore.peerTracks.length,
+                        meetingStore.screenShareCount,
+                        meetingStore.meetingMode,
+                        meetingStore.peerTracks.length > 0
+                            ? meetingStore.peerTracks[meetingStore.screenShareCount]
+                            : null),
+                    builder: (_, data, __) {
+                      if (data.item2) {
+                        return Selector<MeetingStore, bool>(
+                            selector: (_, meetingStore) =>
+                                meetingStore.hasHlsStarted,
+                            builder: (_, hasHlsStarted, __) {
+                              return hasHlsStarted
+                                  ? Center(
+                                      child: Container(
+                                        child: HLSViewer(
+                                            streamUrl: context
+                                                .read<MeetingStore>()
+                                                .streamUrl),
+                                      ),
+                                    )
+                                  : Center(
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Padding(
+                                            padding:
+                                                const EdgeInsets.only(bottom: 8.0),
+                                            child: Text(
+                                              "Waiting for HLS to start...",
+                                              style: GoogleFonts.inter(
+                                                  color: iconColor, fontSize: 20),
+                                            ),
+                                          ),
+                                          // RotationTransition(
+                                          //   child: Image.asset(
+                                          //       "assets/icons/hms_icon_loading.png"),
+                                          //   turns:
+                                          //       animationController,
+                                          // )
+                                        ],
+                                      ),
+                                    );
+                            });
+                      }
+                      if (data.item3 == 0) {
+                        return Center(
+                            child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                        ));
+                      }
+                      return HLSGridView(
+                          peerTracks: data.item1,
+                          itemCount: data.item3,
+                          screenShareCount: data.item4,
+                          context: context,
+                          isPortrait: true,
+                          size: Size(MediaQuery.of(context).size.width,
+                              MediaQuery.of(context).size.height*0.735));
+                    }),
+              ),
             ),
             SafeArea(
               child: Column(
@@ -122,7 +156,7 @@ class _HLSMeetingPageState extends State<HLSMeetingPage> {
                 children: [
                   Padding(
                     padding:
-                        const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                        const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -236,7 +270,7 @@ class _HLSMeetingPageState extends State<HLSMeetingPage> {
                               ),
                             ),
                             SizedBox(
-                              width: 15,
+                              width: 10,
                             ),
                             Selector<MeetingStore, bool>(
                                 selector: (_, meetingStore) =>
@@ -263,7 +297,7 @@ class _HLSMeetingPageState extends State<HLSMeetingPage> {
                                   );
                                 }),
                             SizedBox(
-                              width: 15,
+                              width: 10,
                             ),
                             Selector<MeetingStore, bool>(
                                 selector: (_, meetingStore) =>
@@ -304,7 +338,7 @@ class _HLSMeetingPageState extends State<HLSMeetingPage> {
                                   );
                                 }),
                             SizedBox(
-                              width: 15,
+                              width: 10,
                             ),
                             EmbeddedButton(
                               onTap: () =>
