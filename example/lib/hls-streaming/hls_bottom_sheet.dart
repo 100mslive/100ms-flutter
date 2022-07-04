@@ -5,6 +5,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_flutter_example/common/constant.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/hms_button.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
+import 'package:hmssdk_flutter_example/hls-streaming/util/hls_subtitle_text.dart';
+import 'package:hmssdk_flutter_example/hls-streaming/util/hls_title_text.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:provider/provider.dart';
 
@@ -52,21 +54,18 @@ class _HLSBottomSheetState extends State<HLSBottomSheet> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        "START STREAMING",
-                        style: GoogleFonts.inter(
-                            color: subHeadingColor,
-                            fontSize: 10,
-                            letterSpacing: 1.5,
-                            fontWeight: FontWeight.w600),
+                      HLSTitleText(
+                        text: "START STREAMING",
+                        textColor: subHeadingColor,
+                        fontSize: 10,
+                        lineHeight: 16,
                       ),
-                      Text(
-                        "HLS",
-                        style: GoogleFonts.inter(
-                            color: defaultColor,
-                            fontSize: 20,
-                            letterSpacing: 0.15,
-                            fontWeight: FontWeight.w600),
+                      HLSTitleText(
+                        text: "HLS",
+                        textColor: defaultColor,
+                        fontSize: 20,
+                        letterSpacing: 0.15,
+                        lineHeight: 24,
                       )
                     ],
                   )
@@ -87,25 +86,23 @@ class _HLSBottomSheetState extends State<HLSBottomSheet> {
               SizedBox(
                 height: 20,
               ),
-              Text(
-                "HLS Streaming",
-                style: GoogleFonts.inter(
-                    color: defaultColor,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 20,
-                    letterSpacing: 0.15),
+              HLSTitleText(
+                text: "HLS Streaming",
+                textColor: defaultColor,
+                fontSize: 20,
+                letterSpacing: 0.15,
+                lineHeight: 24,
               ),
               SizedBox(
-                height: 15,
+                height: 8,
               ),
-              Text(
-                "Stream directly from the browser using any device with multiple hosts and real-time messaging, all within this platform.",
-                style: GoogleFonts.inter(
-                    color: subHeadingColor,
-                    fontWeight: FontWeight.w400,
-                    fontSize: 14,
-                    letterSpacing: 0.25),
-              ),
+              HLSSubtitleText(
+                  text:
+                      "Stream directly from the browser using any device with multiple hosts and real-time messaging, all within this platform.",
+                  textColor: subHeadingColor,
+                  fontSize: 14,
+                  lineHeight: 20,
+                  letterSpacing: 0.25),
               SizedBox(
                 height: 20,
               ),
@@ -127,14 +124,13 @@ class _HLSBottomSheetState extends State<HLSBottomSheet> {
                           SizedBox(
                             width: 10,
                           ),
-                          Text(
-                            "Record the stream",
-                            style: GoogleFonts.inter(
-                                color: defaultColor,
-                                fontWeight: FontWeight.w600,
-                                fontSize: 14,
-                                letterSpacing: 0.25),
-                          ),
+                          HLSTitleText(
+                            text: "Record the stream",
+                            textColor: defaultColor,
+                            fontSize: 14,
+                            letterSpacing: 0.25,
+                            lineHeight: 20,
+                          )
                         ],
                       ),
                       Row(
@@ -179,14 +175,8 @@ class _HLSBottomSheetState extends State<HLSBottomSheet> {
                         SizedBox(
                           width: 10,
                         ),
-                        Text(
-                          "Go Live",
-                          style: GoogleFonts.inter(
-                              color: defaultColor,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                              letterSpacing: 0.5),
-                        )
+                        HLSTitleText(text: "Go Live", textColor: defaultColor)
+
                       ],
                     ),
                   )),

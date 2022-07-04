@@ -80,11 +80,15 @@ class _QRCodeScreenState extends State<QRCodeScreen> {
                   ),
                   Expanded(
                     child: Padding(
-                      padding: const EdgeInsets.only(right:25.0),
+                      padding: const EdgeInsets.only(right: 25.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          HLSTitleText(text: "Scan QR Code", textColor: subHeadingColor,letterSpacing: 0.15,),
+                          HLSTitleText(
+                            text: "Scan QR Code",
+                            textColor: subHeadingColor,
+                            letterSpacing: 0.15,
+                          ),
                         ],
                       ),
                     ),
@@ -144,7 +148,9 @@ class _QRCodeScreenState extends State<QRCodeScreen> {
                           SizedBox(
                             width: 8,
                           ),
-                          HLSTitleText(text: 'Join with Link Instead', textColor: enabledTextColor),
+                          HLSTitleText(
+                              text: 'Join with Link Instead',
+                              textColor: enabledTextColor),
                         ],
                       ),
                     ),

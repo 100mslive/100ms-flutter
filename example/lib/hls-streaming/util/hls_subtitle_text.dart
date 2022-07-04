@@ -8,22 +8,25 @@ class HLSSubtitleText extends StatelessWidget {
   final double? lineHeight;
   final double? fontSize;
   final FontWeight? fontWeight;
+  final TextOverflow? textOverflow;
 
   const HLSSubtitleText(
       {Key? key,
       required this.text,
       required this.textColor,
       this.letterSpacing = 0.4,
-      this.lineHeight = 1.5,
+      this.lineHeight = 16,
       this.fontSize = 12,
-      this.fontWeight = FontWeight.w400})
+      this.fontWeight = FontWeight.w400,
+      this.textOverflow = TextOverflow.ellipsis})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Text(text,
+        overflow: textOverflow,
         style: GoogleFonts.inter(
-            height: lineHeight,
+            height: lineHeight!/fontSize!  ,
             fontSize: fontSize,
             letterSpacing: letterSpacing,
             color: textColor,

@@ -2,6 +2,7 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:collection/collection.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
@@ -27,11 +28,18 @@ class _HLSMessageState extends State<HLSMessage> {
   final ScrollController _scrollController = ScrollController();
   bool infoDialog = true;
   final DateFormat formatter = DateFormat('hh:mm a');
+  final bool _isScrollNeeded = false;
   @override
   void dispose() {
     messageTextController.dispose();
     _scrollController.dispose();
     super.dispose();
+  }
+
+  void _scrollToEnd() {
+    WidgetsBinding.instance?.addPostFrameCallback((_) =>
+        _scrollController.animateTo(_scrollController.position.maxScrollExtent,
+            duration: Duration(milliseconds: 200), curve: Curves.easeInOut));
   }
 
   String sender(HMSMessageRecipient hmsMessageRecipient) {
@@ -69,8 +77,15 @@ class _HLSMessageState extends State<HLSMessage> {
   }
 
   @override
+  void didUpdateWidget(covariant HLSMessage oldWidget) {
+    // TODO: implement didUpdateWidget
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
   Widget build(BuildContext context) {
     widthOfScreen = MediaQuery.of(context).size.width;
+
     return WillPopScope(
       onWillPop: () async {
         context.read<MeetingStore>().setNewMessageFalse();
@@ -278,7 +293,7 @@ class _HLSMessageState extends State<HLSMessage> {
                             'No messages',
                             style: GoogleFonts.inter(color: iconColor),
                           ));
-
+                        _scrollToEnd();
                         return ListView(
                           controller: _scrollController,
                           children: List.generate(
