@@ -388,7 +388,8 @@ class _HomePageState extends State<HomePage> {
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 18),
-                  child: Text('Experience the power of 100ms',
+                  child: 
+                  Text('Experience the power of 100ms',
                       textAlign: TextAlign.center,
                       style: GoogleFonts.inter(
                           letterSpacing: 0.25,
@@ -522,7 +523,7 @@ class _HomePageState extends State<HomePage> {
                             joinMeeting();
                           },
                           child: Container(
-                            padding: const EdgeInsets.fromLTRB(8, 15, 8, 15),
+                            padding: const EdgeInsets.fromLTRB(8, 12, 8, 12),
                             decoration: BoxDecoration(
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(8))),

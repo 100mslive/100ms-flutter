@@ -35,7 +35,6 @@ class HLSMeetingPage extends StatefulWidget {
 }
 
 class _HLSMeetingPageState extends State<HLSMeetingPage> {
-
   @override
   void initState() {
     super.initState();
@@ -72,15 +71,16 @@ class _HLSMeetingPageState extends State<HLSMeetingPage> {
         return ans;
       },
       child: Scaffold(
-          resizeToAvoidBottomInset: true,
+        resizeToAvoidBottomInset: false,
         body: Stack(
           children: [
-            Selector<MeetingStore, Tuple4<bool, bool, List<PeerTrackNode>,String>>(
+            Selector<MeetingStore,
+                Tuple4<bool, bool, List<PeerTrackNode>, String>>(
               selector: (_, meetingStore) => Tuple4(
                   meetingStore.localPeer != null,
                   meetingStore.peerTracks.length > 0,
                   meetingStore.peerTracks,
-                  meetingStore.localPeer?.name??""),
+                  meetingStore.localPeer?.name ?? ""),
               builder: (_, data, __) {
                 if (data.item1 && data.item2) {
                   PeerTrackNode localPeer = data.item3

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
+import 'package:hmssdk_flutter_example/hls-streaming/util/hls_subtitle_text.dart';
+import 'package:hmssdk_flutter_example/hls-streaming/util/hls_title_text.dart';
 
 class HLSMessageOrganism extends StatelessWidget {
   final String message;
@@ -43,26 +45,18 @@ class HLSMessageOrganism extends StatelessWidget {
                     Container(
                       constraints: BoxConstraints(
                           maxWidth: role != "" ? 60 : width * 0.5),
-                      child: Text(
-                        senderName ?? "",
-                        overflow: TextOverflow.ellipsis,
-                        style: GoogleFonts.inter(
-                            fontSize: 14.0,
-                            color: defaultColor,
-                            fontWeight: FontWeight.w600),
+                      child: 
+                      HLSTitleText(text: senderName ?? "",
+                      fontSize: 14,
+                      letterSpacing: 0.1,
+                      lineHeight: 20,
+                      textColor: defaultColor,
                       ),
                     ),
                     SizedBox(
                       width: 5,
                     ),
-                    Text(
-                      date,
-                      style: GoogleFonts.inter(
-                          fontSize: 12.0,
-                          letterSpacing: 0.4,
-                          color: subHeadingColor,
-                          fontWeight: FontWeight.w400),
-                    ),
+                    HLSSubtitleText(text: date, textColor: subHeadingColor),
                   ],
                 ),
                 (role != "" || isLocalMessage)

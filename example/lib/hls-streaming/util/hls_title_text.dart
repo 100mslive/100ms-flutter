@@ -8,25 +8,28 @@ class HLSTitleText extends StatelessWidget {
   final double? lineHeight;
   final double? fontSize;
   final FontWeight? fontWeight;
+  final TextOverflow? textOverflow;
 
   const HLSTitleText(
       {Key? key,
       required this.text,
       required this.textColor,
       this.letterSpacing = 0.5,
-      this.lineHeight = 1.5,
+      this.lineHeight = 24,
       this.fontSize = 16,
-      this.fontWeight = FontWeight.w600})
+      this.fontWeight = FontWeight.w600,
+      this.textOverflow = TextOverflow.ellipsis})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Text(text,
+        overflow: textOverflow,
         style: GoogleFonts.inter(
             color: textColor,
-            height: 1.5,
-            fontSize: 16,
-            letterSpacing: 0.5,
-            fontWeight: FontWeight.w600));
+            height: lineHeight! / fontSize!,
+            fontSize: fontSize,
+            letterSpacing: letterSpacing,
+            fontWeight: fontWeight));
   }
 }
