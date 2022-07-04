@@ -77,12 +77,6 @@ class _HLSMessageState extends State<HLSMessage> {
   }
 
   @override
-  void didUpdateWidget(covariant HLSMessage oldWidget) {
-    // TODO: implement didUpdateWidget
-    super.didUpdateWidget(oldWidget);
-  }
-
-  @override
   Widget build(BuildContext context) {
     widthOfScreen = MediaQuery.of(context).size.width;
 
