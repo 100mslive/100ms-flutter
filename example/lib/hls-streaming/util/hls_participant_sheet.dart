@@ -21,17 +21,68 @@ class HLSParticipantSheet extends StatefulWidget {
 class _HLSParticipantSheetState extends State<HLSParticipantSheet> {
   String valueChoose = "Everyone";
 
-  Widget _kebabMenu(PeerTrackNode? peerTrackNode) {
-
-    if(peerTrackNode == null){
-      return SvgPicture.asset(
-              "assets/icons/more.svg",
-              color: defaultColor,
-              fit: BoxFit.scaleDown,
-            );
+  Widget _kebabMenu(HMSPeer peer) {
+    final _meetingStore = context.read<MeetingStore>();
+    PeerTrackNode? peerTrackNode;
+    try {
+      peerTrackNode = _meetingStore.peerTracks
+          .firstWhere((element) => element.peer.peerId == peer.peerId);
+    } catch (e) {
+      peerTrackNode = null;
     }
 
-    final _meetingStore = context.read<MeetingStore>();
+    //For HLS-Viewer
+    if (peerTrackNode == null) {
+      return PopupMenuButton(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          color: surfaceColor,
+          icon: SvgPicture.asset(
+            "assets/icons/more.svg",
+            color: defaultColor,
+            fit: BoxFit.scaleDown,
+          ),
+          onSelected: (int value) async {
+            switch (value) {
+              case 1:
+                showDialog(
+                    context: context,
+                    builder: (_) => ChangeRoleOptionDialog(
+                          peerName: peer.name,
+                          getRoleFunction: _meetingStore.getRoles(),
+                          changeRole: (role, forceChange) {
+                            Navigator.pop(context);
+                            _meetingStore.changeRole(
+                                peer: peer,
+                                roleName: role,
+                                forceChange: forceChange);
+                          },
+                        ));
+                break;
+              default:
+                break;
+            }
+          },
+          itemBuilder: ((context) => [
+                PopupMenuItem(
+                  child: Row(children: [
+                    SvgPicture.asset("assets/icons/role_change.svg",
+                        width: 15, color: defaultColor),
+                    SizedBox(
+                      width: 12,
+                    ),
+                    HLSTitleText(
+                      text: "Change Role",
+                      textColor: defaultColor,
+                      fontSize: 14,
+                      lineHeight: 20,
+                      letterSpacing: 0.25,
+                    ),
+                  ]),
+                  value: 1,
+                ),
+              ]));
+    }
+
     bool mutePermission =
         _meetingStore.localPeer?.role.permissions.mute ?? false;
     bool removePeerPermission =
@@ -39,140 +90,137 @@ class _HLSParticipantSheetState extends State<HLSParticipantSheet> {
     bool changeRolePermission =
         _meetingStore.localPeer?.role.permissions.changeRole ?? false;
 
-    return 
-        PopupMenuButton(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-            color: surfaceColor,
-            onSelected: (int value) async {
-              switch (value) {
-                case 1:
-                  showDialog(
-                      context: context,
-                      builder: (_) => ChangeRoleOptionDialog(
-                            peerName: peerTrackNode.peer.name,
-                            getRoleFunction: _meetingStore.getRoles(),
-                            changeRole: (role, forceChange) {
-                              Navigator.pop(context);
-                              _meetingStore.changeRole(
-                                  peer: peerTrackNode.peer,
-                                  roleName: role,
-                                  forceChange: forceChange);
-                            },
-                          ));
-                  break;
-                case 2:
-                  if (peerTrackNode.track == null) {
-                    return;
-                  }
-                  _meetingStore.changeTrackState(
-                      peerTrackNode.track!, !peerTrackNode.track!.isMute);
-                  break;
-                case 3:
-                  if (peerTrackNode.audioTrack == null) {
-                    return;
-                  }
-                  _meetingStore.changeTrackState(peerTrackNode.audioTrack!,
-                      !peerTrackNode.audioTrack!.isMute);
-                  break;
-                case 4:
-                  var peer = await _meetingStore.getPeer(
-                      peerId: peerTrackNode.peer.peerId);
-                  if (peer == null) {
-                    return;
-                  }
-                  _meetingStore.removePeerFromRoom(peer);
-                  break;
-                default:
-                  break;
+    return PopupMenuButton(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        color: surfaceColor,
+        onSelected: (int value) async {
+          switch (value) {
+            case 1:
+              showDialog(
+                  context: context,
+                  builder: (_) => ChangeRoleOptionDialog(
+                        peerName: peerTrackNode!.peer.name,
+                        getRoleFunction: _meetingStore.getRoles(),
+                        changeRole: (role, forceChange) {
+                          Navigator.pop(context);
+                          _meetingStore.changeRole(
+                              peer: peerTrackNode!.peer,
+                              roleName: role,
+                              forceChange: forceChange);
+                        },
+                      ));
+              break;
+            case 2:
+              if (peerTrackNode!.track == null) {
+                return;
               }
-            },
-            icon: SvgPicture.asset(
-              "assets/icons/more.svg",
-              color: defaultColor,
-              fit: BoxFit.scaleDown,
-            ),
-            itemBuilder: (context) => [
-                  if (changeRolePermission)
-                    PopupMenuItem(
-                      child: Row(children: [
-                        SvgPicture.asset("assets/icons/role_change.svg",
-                            width: 15, color: defaultColor),
-                        SizedBox(
-                          width: 12,
-                        ),
-                        HLSTitleText(
-                          text: "Change Role",
-                          textColor: defaultColor,
-                          fontSize: 14,
-                          lineHeight: 20,
-                          letterSpacing: 0.25,
-                        ),
-                      ]),
-                      value: 1,
+              _meetingStore.changeTrackState(
+                  peerTrackNode.track!, !peerTrackNode.track!.isMute);
+              break;
+            case 3:
+              if (peerTrackNode!.audioTrack == null) {
+                return;
+              }
+              _meetingStore.changeTrackState(
+                  peerTrackNode.audioTrack!, !peerTrackNode.audioTrack!.isMute);
+              break;
+            case 4:
+              var peer = await _meetingStore.getPeer(
+                  peerId: peerTrackNode!.peer.peerId);
+              if (peer == null) {
+                return;
+              }
+              _meetingStore.removePeerFromRoom(peer);
+              break;
+            default:
+              break;
+          }
+        },
+        icon: SvgPicture.asset(
+          "assets/icons/more.svg",
+          color: defaultColor,
+          fit: BoxFit.scaleDown,
+        ),
+        itemBuilder: (context) => [
+              if (changeRolePermission)
+                PopupMenuItem(
+                  child: Row(children: [
+                    SvgPicture.asset("assets/icons/role_change.svg",
+                        width: 15, color: defaultColor),
+                    SizedBox(
+                      width: 12,
                     ),
-                  if (mutePermission && !peerTrackNode.peer.isLocal)
-                    PopupMenuItem(
-                      child: Row(children: [
-                        SvgPicture.asset(
-                          "assets/icons/cam_state_on.svg",
-                          color: defaultColor,
-                          width: 15,
-                        ),
-                        SizedBox(
-                          width: 12,
-                        ),
-                        HLSTitleText(
-                          text: "Switch Video",
-                          textColor: defaultColor,
-                          fontSize: 14,
-                          lineHeight: 20,
-                          letterSpacing: 0.25,
-                        ),
-                      ]),
-                      value: 2,
+                    HLSTitleText(
+                      text: "Change Role",
+                      textColor: defaultColor,
+                      fontSize: 14,
+                      lineHeight: 20,
+                      letterSpacing: 0.25,
                     ),
-                  if (mutePermission && !peerTrackNode.peer.isLocal)
-                    PopupMenuItem(
-                      child: Row(children: [
-                        SvgPicture.asset(
-                          "assets/icons/mic_state_on.svg",
-                          color: defaultColor,
-                          width: 15,
-                        ),
-                        SizedBox(
-                          width: 12,
-                        ),
-                        HLSTitleText(
-                          text: "Switch Audio",
-                          textColor: defaultColor,
-                          fontSize: 14,
-                          lineHeight: 20,
-                          letterSpacing: 0.25,
-                        ),
-                      ]),
-                      value: 3,
+                  ]),
+                  value: 1,
+                ),
+              if (mutePermission && !peerTrackNode!.peer.isLocal)
+                PopupMenuItem(
+                  child: Row(children: [
+                    SvgPicture.asset(
+                      "assets/icons/cam_state_on.svg",
+                      color: defaultColor,
+                      width: 15,
                     ),
-                  if (removePeerPermission && !peerTrackNode.peer.isLocal)
-                    PopupMenuItem(
-                      child: Row(children: [
-                        SvgPicture.asset("assets/icons/peer_remove.svg",
-                            width: 15, color: defaultColor),
-                        SizedBox(
-                          width: 12,
-                        ),
-                        HLSTitleText(
-                          text: "Remove Peer",
-                          textColor: defaultColor,
-                          fontSize: 14,
-                          lineHeight: 20,
-                          letterSpacing: 0.25,
-                        ),
-                      ]),
-                      value: 4,
+                    SizedBox(
+                      width: 12,
                     ),
-                ])
-        ;
+                    HLSTitleText(
+                      text: "Switch Video",
+                      textColor: defaultColor,
+                      fontSize: 14,
+                      lineHeight: 20,
+                      letterSpacing: 0.25,
+                    ),
+                  ]),
+                  value: 2,
+                ),
+              if (mutePermission && !peerTrackNode!.peer.isLocal)
+                PopupMenuItem(
+                  child: Row(children: [
+                    SvgPicture.asset(
+                      "assets/icons/mic_state_on.svg",
+                      color: defaultColor,
+                      width: 15,
+                    ),
+                    SizedBox(
+                      width: 12,
+                    ),
+                    HLSTitleText(
+                      text: "Switch Audio",
+                      textColor: defaultColor,
+                      fontSize: 14,
+                      lineHeight: 20,
+                      letterSpacing: 0.25,
+                    ),
+                  ]),
+                  value: 3,
+                ),
+              if (removePeerPermission && !peerTrackNode!.peer.isLocal)
+                PopupMenuItem(
+                  child: Row(children: [
+                    SvgPicture.asset("assets/icons/peer_remove.svg",
+                        width: 15, color: defaultColor),
+                    SizedBox(
+                      width: 12,
+                    ),
+                    HLSTitleText(
+                      text: "Remove Peer",
+                      textColor: defaultColor,
+                      fontSize: 14,
+                      lineHeight: 20,
+                      letterSpacing: 0.25,
+                    ),
+                  ]),
+                  value: 4,
+                ),
+            ]);
   }
 
   @override
@@ -348,13 +396,7 @@ class _HLSParticipantSheetState extends State<HLSParticipantSheet> {
                                     letterSpacing: 0.40,
                                     fontWeight: FontWeight.w400),
                               ),
-                              trailing: _kebabMenu(_meetingStore.peerTracks
-                                  .firstWhere(
-                                      (element) =>
-                                          element.peer.peerId ==
-                                          peerList[index].peerId,
-                                      orElse: null))
-                              );
+                              trailing: _kebabMenu(peerList[index]));
                         }),
                   );
                 })
