@@ -65,13 +65,13 @@ class PreviewStore extends ChangeNotifier
     notifyListeners();
   }
 
-  Future<bool> startPreview(
+  Future<String> startPreview(
       {required String user, required String meetingLink}) async {
     List<String?>? token =
         await RoomService().getToken(user: user, room: meetingLink);
 
-    if (token == null) return false;
-    if (token[0] == null) return false;
+    if (token == null) return "Connection Error";
+    if (token[0] == null) return "Token Error";
     FirebaseCrashlytics.instance.setUserIdentifier(token[0]!);
     HMSConfig config = HMSConfig(
         authToken: token[0]!,
@@ -80,7 +80,7 @@ class PreviewStore extends ChangeNotifier
         captureNetworkQualityInPreview: true);
     hmsSDKInteractor.addPreviewListener(this);
     hmsSDKInteractor.preview(config: config);
-    return true;
+    return "";
   }
 
   @override

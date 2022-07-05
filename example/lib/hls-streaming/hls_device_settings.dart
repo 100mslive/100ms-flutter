@@ -54,15 +54,12 @@ class _HLSDeviceSettingsState extends State<HLSDeviceSettings> {
                         fontWeight: FontWeight.w600),
                   ),
                 ),
-                CircleAvatar(
-                  radius: 18,
-                  backgroundColor: borderColor,
-                  child: IconButton(
-                    icon: SvgPicture.asset("assets/icons/close.svg"),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                  ),
+                IconButton(
+                  icon: SvgPicture.asset("assets/icons/close_button.svg",
+                  width: 40,),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
                 ),
               ],
             ),
@@ -184,35 +181,36 @@ class _HLSDeviceSettingsState extends State<HLSDeviceSettings> {
                         }),
                   ),
                 ),
-                Container(
-                  height: 48,
-                  child: HMSButton(
-                      buttonBackgroundColor: buttonColor,
-                      width: width * 0.3,
-                      onPressed: () {},
-                      childWidget: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          SvgPicture.asset(
-                            "assets/icons/speaker_state_on.svg",
-                            color: defaultColor,
-                            fit: BoxFit.scaleDown,
-                          ),
-                          Text(
-                            "Test",
-                            style: GoogleFonts.inter(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 16,
-                              letterSpacing: 0.5,
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
-                          ),
-                        ],
-                      )),
-                )
+                // Container(
+                //   height: 48,
+                //   child: HMSButton(
+                //       buttonBackgroundColor: buttonColor,
+                //       width: width * 0.3,
+                //       onPressed: () {},
+                //       childWidget: Row(
+                //         mainAxisAlignment: MainAxisAlignment.spaceAround,
+                //         children: [
+                //           SvgPicture.asset(
+                //             "assets/icons/speaker_state_on.svg",
+                //             color: defaultColor,
+                //             fit: BoxFit.scaleDown,
+                //           ),
+                //           Text(
+                //             "Test",
+                //             style: GoogleFonts.inter(
+                //               fontWeight: FontWeight.w600,
+                //               fontSize: 16,
+                //               letterSpacing: 0.5,
+                //             ),
+                //             overflow: TextOverflow.ellipsis,
+                //             maxLines: 1,
+                //           ),
+                //         ],
+                //       )),
+                // )
               ],
             ),
+          
           ],
         ),
       ),

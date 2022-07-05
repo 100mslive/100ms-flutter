@@ -9,6 +9,9 @@ class EmbeddedButton extends StatelessWidget {
   final Widget child;
   final double? height;
   final double? width;
+  final Color? enabledBorderColor;
+  final Color? disabledBorderColor;
+  
   EmbeddedButton(
       {required this.onTap,
       required this.offColor,
@@ -16,7 +19,9 @@ class EmbeddedButton extends StatelessWidget {
       required this.isActive,
       required this.child,
       this.height = 50,
-      this.width = 50});
+      this.width = 50, 
+      this.enabledBorderColor, 
+      this.disabledBorderColor});
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -26,8 +31,9 @@ class EmbeddedButton extends StatelessWidget {
           height: height,
           decoration: BoxDecoration(
               border: isActive
-                  ? Border.all(color: borderColor, width: 1)
-                  : Border.all(color: defaultColor, width: 0),
+                  ? Border.all(color: (enabledBorderColor==null)?borderColor:enabledBorderColor
+                  !, width: 1)
+                  : Border.all(color: (disabledBorderColor==null)?defaultColor:disabledBorderColor!,width: 0),
               borderRadius: BorderRadius.all(Radius.circular(12)),
               color: isActive ? onColor : offColor),
           child: child),

@@ -627,7 +627,7 @@ class UtilityComponents {
           ),
         ),
         content: Text(
-            "Your stream will end and everone will go offline immediately in this room. You can’t undo this action.",
+            "Your live stream will end and stream viewers will go offline immediately in this room. You can’t undo this action.",
             style: GoogleFonts.inter(
                 color: subHeadingColor,
                 fontSize: 14,

@@ -8,6 +8,7 @@ import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:provider/provider.dart';
 
 class HLSSettings extends StatefulWidget {
+  
   @override
   State<HLSSettings> createState() => _HLSSettingsState();
 }
@@ -17,7 +18,7 @@ class _HLSSettingsState extends State<HLSSettings> {
   Widget build(BuildContext context) {
     // TODO: implement build
     return FractionallySizedBox(
-      heightFactor: 0.75,
+      heightFactor: 0.5,
       child: Padding(
         padding: const EdgeInsets.only(top: 20.0, left: 15, right: 15),
         child: SingleChildScrollView(
@@ -37,7 +38,7 @@ class _HLSSettingsState extends State<HLSSettings> {
                         width: 10,
                       ),
                       Text(
-                        "Placeholder event",
+                        "Utilities",
                         style: GoogleFonts.inter(
                             fontSize: 16,
                             color: defaultColor,
@@ -49,15 +50,14 @@ class _HLSSettingsState extends State<HLSSettings> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      CircleAvatar(
-                        radius: 18,
-                        backgroundColor: borderColor,
-                        child: IconButton(
-                          icon: SvgPicture.asset("assets/icons/close.svg"),
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
+                      IconButton(
+                        icon: SvgPicture.asset(
+                          "assets/icons/close_button.svg",
+                          width: 40,
                         ),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
                       ),
                     ],
                   )
@@ -141,6 +141,25 @@ class _HLSSettingsState extends State<HLSSettings> {
                 ),
                 title: Text(
                   "Change Speaker State",
+                  style: GoogleFonts.inter(
+                      fontSize: 14,
+                      color: defaultColor,
+                      letterSpacing: 0.25,
+                      fontWeight: FontWeight.w600),
+                ),
+              ),
+              ListTile(
+                horizontalTitleGap: 2,
+                onTap: () {
+                  context.read<MeetingStore>().switchCamera();
+                },
+                contentPadding: EdgeInsets.zero,
+                leading: SvgPicture.asset(
+                  "assets/icons/camera.svg",
+                  fit: BoxFit.scaleDown,
+                ),
+                title: Text(
+                  "Switch Camera",
                   style: GoogleFonts.inter(
                       fontSize: 14,
                       color: defaultColor,

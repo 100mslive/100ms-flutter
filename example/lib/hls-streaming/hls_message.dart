@@ -225,17 +225,14 @@ class _HLSMessageState extends State<HLSMessage> {
                           ),
                         ],
                       ),
-                      CircleAvatar(
-                        radius: 18,
-                        backgroundColor: borderColor,
-                        child: IconButton(
-                          icon: SvgPicture.asset("assets/icons/close.svg"),
-                          onPressed: () {
-                            context.read<MeetingStore>().setNewMessageFalse();
-                            Navigator.pop(context);
-                          },
-                        ),
-                      ),
+                      IconButton(
+                  icon: SvgPicture.asset("assets/icons/close_button.svg",
+                  width: 40,),
+                  onPressed: () {
+                    context.read<MeetingStore>().setNewMessageFalse();
+                    Navigator.pop(context);
+                  },
+                ),
                     ],
                   ),
                   Padding(

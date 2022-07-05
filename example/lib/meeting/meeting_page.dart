@@ -289,7 +289,7 @@ class _MeetingPageState extends State<MeetingPage>
                                             return hasHlsStarted
                                                 ? Center(
                                                     child: Container(
-                                                      child: HLSViewer(
+                                                      child: HLSPlayer(
                                                           streamUrl: context
                                                               .read<
                                                                   MeetingStore>()
