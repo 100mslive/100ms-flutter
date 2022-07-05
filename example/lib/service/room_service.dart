@@ -17,6 +17,7 @@ class RoomService {
     Uri endPoint = codeAndDomain[2] == "true"
         ? Uri.parse(Constant.prodTokenEndpoint)
         : Uri.parse(Constant.qaTokenEndPoint);
+    try{
     http.Response response = await http.post(endPoint, body: {
       'code': (codeAndDomain[1] ?? "").trim(),
       'user_id': user,
@@ -26,6 +27,11 @@ class RoomService {
 
     var body = json.decode(response.body);
     return [body['token'], codeAndDomain[2]!.trim()];
+    }
+    catch(e){
+      return null;
+    }
+
   }
 
   List<String?>? getCode(String roomUrl) {

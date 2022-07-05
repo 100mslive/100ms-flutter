@@ -8,16 +8,16 @@ import 'package:video_player/video_player.dart';
 //Project imports
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 
-class HLSViewer extends StatefulWidget {
+class HLSPlayer extends StatefulWidget {
   final String streamUrl;
 
-  HLSViewer({Key? key, required this.streamUrl}) : super(key: key);
+  HLSPlayer({Key? key, required this.streamUrl}) : super(key: key);
 
   @override
-  _HLSViewerState createState() => _HLSViewerState();
+  _HLSPlayerState createState() => _HLSPlayerState();
 }
 
-class _HLSViewerState extends State<HLSViewer> {
+class _HLSPlayerState extends State<HLSPlayer> {
   late VideoPlayerController _controller;
 
   @override
