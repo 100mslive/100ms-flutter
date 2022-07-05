@@ -59,12 +59,13 @@ jobs:
 #         force-avd-creation: false
 #         emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -no-boot-anim none
 #         script: mvn test
+        script: mvn -B package --file pom.xml
         working-directory: ./test/Flutter_100ms_appium
 #         script: mvn clean run -Pandroid
 
   
-    - name: Build with Maven
-      run: mvn -B package --file pom.xml
+#     - name: Build with Maven
+#       run: mvn -B package --file pom.xml
 
 #     - name: Allure
 #     - run: npm run allure:generate
