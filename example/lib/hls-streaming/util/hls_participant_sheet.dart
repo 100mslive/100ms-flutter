@@ -4,12 +4,11 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/change_role_options.dart';
-import 'package:hmssdk_flutter_example/common/ui/organisms/local_peer_tile_dialog.dart';
-import 'package:hmssdk_flutter_example/common/ui/organisms/remote_peer_tile_dialog.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
-import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
+import 'package:hmssdk_flutter_example/hls-streaming/util/hls_title_text.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
+import 'package:hmssdk_flutter_example/meeting/peer_track_node.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 import 'package:collection/collection.dart';
@@ -22,18 +21,163 @@ class HLSParticipantSheet extends StatefulWidget {
 class _HLSParticipantSheetState extends State<HLSParticipantSheet> {
   String valueChoose = "Everyone";
 
-  @override
-  Widget build(BuildContext context) {
-    MeetingStore _meetingStore = context.read<MeetingStore>();
+  Widget _kebabMenu(PeerTrackNode? peerTrackNode) {
+
+    if(peerTrackNode == null){
+      return SvgPicture.asset(
+              "assets/icons/more.svg",
+              color: defaultColor,
+              fit: BoxFit.scaleDown,
+            );
+    }
+
+    final _meetingStore = context.read<MeetingStore>();
     bool mutePermission =
         _meetingStore.localPeer?.role.permissions.mute ?? false;
-    bool unMutePermission =
-        _meetingStore.localPeer?.role.permissions.unMute ?? false;
     bool removePeerPermission =
         _meetingStore.localPeer?.role.permissions.removeOthers ?? false;
     bool changeRolePermission =
         _meetingStore.localPeer?.role.permissions.changeRole ?? false;
 
+    return 
+        PopupMenuButton(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            color: surfaceColor,
+            onSelected: (int value) async {
+              switch (value) {
+                case 1:
+                  showDialog(
+                      context: context,
+                      builder: (_) => ChangeRoleOptionDialog(
+                            peerName: peerTrackNode.peer.name,
+                            getRoleFunction: _meetingStore.getRoles(),
+                            changeRole: (role, forceChange) {
+                              Navigator.pop(context);
+                              _meetingStore.changeRole(
+                                  peer: peerTrackNode.peer,
+                                  roleName: role,
+                                  forceChange: forceChange);
+                            },
+                          ));
+                  break;
+                case 2:
+                  if (peerTrackNode.track == null) {
+                    return;
+                  }
+                  _meetingStore.changeTrackState(
+                      peerTrackNode.track!, !peerTrackNode.track!.isMute);
+                  break;
+                case 3:
+                  if (peerTrackNode.audioTrack == null) {
+                    return;
+                  }
+                  _meetingStore.changeTrackState(peerTrackNode.audioTrack!,
+                      !peerTrackNode.audioTrack!.isMute);
+                  break;
+                case 4:
+                  var peer = await _meetingStore.getPeer(
+                      peerId: peerTrackNode.peer.peerId);
+                  if (peer == null) {
+                    return;
+                  }
+                  _meetingStore.removePeerFromRoom(peer);
+                  break;
+                default:
+                  break;
+              }
+            },
+            icon: SvgPicture.asset(
+              "assets/icons/more.svg",
+              color: defaultColor,
+              fit: BoxFit.scaleDown,
+            ),
+            itemBuilder: (context) => [
+                  if (changeRolePermission)
+                    PopupMenuItem(
+                      child: Row(children: [
+                        SvgPicture.asset("assets/icons/role_change.svg",
+                            width: 15, color: defaultColor),
+                        SizedBox(
+                          width: 12,
+                        ),
+                        HLSTitleText(
+                          text: "Change Role",
+                          textColor: defaultColor,
+                          fontSize: 14,
+                          lineHeight: 20,
+                          letterSpacing: 0.25,
+                        ),
+                      ]),
+                      value: 1,
+                    ),
+                  if (mutePermission && !peerTrackNode.peer.isLocal)
+                    PopupMenuItem(
+                      child: Row(children: [
+                        SvgPicture.asset(
+                          "assets/icons/cam_state_on.svg",
+                          color: defaultColor,
+                          width: 15,
+                        ),
+                        SizedBox(
+                          width: 12,
+                        ),
+                        HLSTitleText(
+                          text: "Switch Video",
+                          textColor: defaultColor,
+                          fontSize: 14,
+                          lineHeight: 20,
+                          letterSpacing: 0.25,
+                        ),
+                      ]),
+                      value: 2,
+                    ),
+                  if (mutePermission && !peerTrackNode.peer.isLocal)
+                    PopupMenuItem(
+                      child: Row(children: [
+                        SvgPicture.asset(
+                          "assets/icons/mic_state_on.svg",
+                          color: defaultColor,
+                          width: 15,
+                        ),
+                        SizedBox(
+                          width: 12,
+                        ),
+                        HLSTitleText(
+                          text: "Switch Audio",
+                          textColor: defaultColor,
+                          fontSize: 14,
+                          lineHeight: 20,
+                          letterSpacing: 0.25,
+                        ),
+                      ]),
+                      value: 3,
+                    ),
+                  if (removePeerPermission && !peerTrackNode.peer.isLocal)
+                    PopupMenuItem(
+                      child: Row(children: [
+                        SvgPicture.asset("assets/icons/peer_remove.svg",
+                            width: 15, color: defaultColor),
+                        SizedBox(
+                          width: 12,
+                        ),
+                        HLSTitleText(
+                          text: "Remove Peer",
+                          textColor: defaultColor,
+                          fontSize: 14,
+                          lineHeight: 20,
+                          letterSpacing: 0.25,
+                        ),
+                      ]),
+                      value: 4,
+                    ),
+                ])
+        ;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final _meetingStore = context.read<MeetingStore>();
     return FractionallySizedBox(
       heightFactor: 0.8,
       child: Padding(
@@ -128,15 +272,14 @@ class _HLSParticipantSheetState extends State<HLSParticipantSheet> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      CircleAvatar(
-                        radius: 18,
-                        backgroundColor: borderColor,
-                        child: IconButton(
-                          icon: SvgPicture.asset("assets/icons/close.svg"),
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
+                      IconButton(
+                        icon: SvgPicture.asset(
+                          "assets/icons/close_button.svg",
+                          width: 40,
                         ),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
                       ),
                     ],
                   ),
@@ -168,175 +311,50 @@ class _HLSParticipantSheetState extends State<HLSParticipantSheet> {
                         .toList();
                   }
                   return Container(
-                    height: MediaQuery.of(context).size.height * 0.38,
+                    height: MediaQuery.of(context).size.height * 0.65,
                     child: ListView.builder(
                         shrinkWrap: true,
                         itemCount: peerList.length,
                         itemBuilder: (context, index) {
                           return ListTile(
-                            horizontalTitleGap: 5,
-                            contentPadding: EdgeInsets.zero,
-                            leading: CircleAvatar(
-                              backgroundColor: Utilities.getBackgroundColour(
-                                  peerList[index].name),
-                              radius: 16,
-                              child: Text(
-                                  Utilities.getAvatarTitle(
-                                      peerList[index].name),
-                                  style: GoogleFonts.inter(
-                                      fontSize: 12,
-                                      color: defaultColor,
-                                      fontWeight: FontWeight.w600)),
-                            ),
-                            title: Text(
-                              peerList[index].name +
-                                  (peerList[index].isLocal ? " (You)" : ""),
-                              style: GoogleFonts.inter(
-                                  fontSize: 16,
-                                  color: defaultColor,
-                                  letterSpacing: 0.15,
-                                  fontWeight: FontWeight.w600),
-                            ),
-                            subtitle: Text(
-                              peerList[index].role.name,
-                              style: GoogleFonts.inter(
-                                  fontSize: 12,
-                                  color: subHeadingColor,
-                                  letterSpacing: 0.40,
-                                  fontWeight: FontWeight.w400),
-                            ),
-                            trailing: GestureDetector(
-                              onTap: () {
-                                var peerTrackNode = _meetingStore.peerTracks
-                                    .firstWhere((element) =>
-                                        element.peer.peerId ==
-                                        peerList[index].peerId);
-                                HMSPeer peerNode = peerTrackNode.peer;
-                                if (!mutePermission ||
-                                    !unMutePermission ||
-                                    !removePeerPermission ||
-                                    !changeRolePermission) return;
-                                if (_meetingStore.localPeer == null) {
-                                  return;
-                                }
-                                if (peerList[index].peerId ==
-                                    _meetingStore.localPeer!.peerId) {
-                                  showDialog(
-                                      context: context,
-                                      builder: (_) => LocalPeerTileDialog(
-                                          isAudioMode: false,
-                                          toggleCamera: () {
-                                            if (_meetingStore.isVideoOn)
-                                              _meetingStore.switchCamera();
-                                          },
-                                          peerName: peerNode.name,
-                                          changeRole: () {
-                                            Navigator.pop(context);
-                                            showDialog(
-                                                context: context,
-                                                builder: (_) =>
-                                                    ChangeRoleOptionDialog(
-                                                      peerName: peerNode.name,
-                                                      getRoleFunction:
-                                                          _meetingStore
-                                                              .getRoles(),
-                                                      changeRole:
-                                                          (role, forceChange) {
-                                                        Navigator.pop(context);
-                                                        _meetingStore.changeRole(
-                                                            peer: peerNode,
-                                                            roleName: role,
-                                                            forceChange:
-                                                                forceChange);
-                                                      },
-                                                    ));
-                                          },
-                                          roles: changeRolePermission,
-                                          changeName: () async {
-                                            String name =
-                                                await UtilityComponents
-                                                    .showNameChangeDialog(
-                                                        context: context,
-                                                        placeholder:
-                                                            "Enter Name",
-                                                        prefilledValue:
-                                                            _meetingStore
-                                                                .localPeer!
-                                                                .name);
-                                            if (name.isNotEmpty) {
-                                              _meetingStore.changeName(
-                                                  name: name);
-                                            }
-                                          }));
-                                } else {
-                                  showDialog(
-                                      context: context,
-                                      builder: (_) => RemotePeerTileDialog(
-                                            isAudioMuted: peerTrackNode
-                                                    .audioTrack?.isMute ??
-                                                true,
-                                            isVideoMuted: peerTrackNode.track ==
-                                                    null
-                                                ? true
-                                                : peerTrackNode.track!.isMute,
-                                            peerName: peerNode.name,
-                                            changeVideoTrack:
-                                                (mute, isVideoTrack) {
-                                              Navigator.pop(context);
-                                              _meetingStore.changeTrackState(
-                                                  peerTrackNode.track!, mute);
-                                            },
-                                            changeAudioTrack:
-                                                (mute, isAudioTrack) {
-                                              Navigator.pop(context);
-                                              _meetingStore.changeTrackState(
-                                                  peerTrackNode.audioTrack!,
-                                                  mute);
-                                            },
-                                            removePeer: () async {
-                                              Navigator.pop(context);
-                                              var peer =
-                                                  await _meetingStore.getPeer(
-                                                      peerId: peerNode.peerId);
-                                              _meetingStore
-                                                  .removePeerFromRoom(peer!);
-                                            },
-                                            changeRole: () {
-                                              Navigator.pop(context);
-                                              showDialog(
-                                                  context: context,
-                                                  builder: (_) =>
-                                                      ChangeRoleOptionDialog(
-                                                        peerName: peerNode.name,
-                                                        getRoleFunction:
-                                                            _meetingStore
-                                                                .getRoles(),
-                                                        changeRole: (role,
-                                                            forceChange) {
-                                                          Navigator.pop(
-                                                              context);
-                                                          _meetingStore.changeRole(
-                                                              peer: peerNode,
-                                                              roleName: role,
-                                                              forceChange:
-                                                                  forceChange);
-                                                        },
-                                                      ));
-                                            },
-                                            mute: mutePermission,
-                                            unMute: unMutePermission,
-                                            removeOthers: removePeerPermission,
-                                            roles: changeRolePermission,
-                                          ));
-                                }
-                              },
-                              child: SvgPicture.asset(
-                                "assets/icons/more.svg",
-                                color: defaultColor,
-                                fit: BoxFit.scaleDown,
+                              horizontalTitleGap: 5,
+                              contentPadding: EdgeInsets.zero,
+                              leading: CircleAvatar(
+                                backgroundColor: Utilities.getBackgroundColour(
+                                    peerList[index].name),
+                                radius: 16,
+                                child: Text(
+                                    Utilities.getAvatarTitle(
+                                        peerList[index].name),
+                                    style: GoogleFonts.inter(
+                                        fontSize: 12,
+                                        color: defaultColor,
+                                        fontWeight: FontWeight.w600)),
                               ),
-                            ),
-                          );
+                              title: Text(
+                                peerList[index].name +
+                                    (peerList[index].isLocal ? " (You)" : ""),
+                                style: GoogleFonts.inter(
+                                    fontSize: 16,
+                                    color: defaultColor,
+                                    letterSpacing: 0.15,
+                                    fontWeight: FontWeight.w600),
+                              ),
+                              subtitle: Text(
+                                peerList[index].role.name,
+                                style: GoogleFonts.inter(
+                                    fontSize: 12,
+                                    color: subHeadingColor,
+                                    letterSpacing: 0.40,
+                                    fontWeight: FontWeight.w400),
+                              ),
+                              trailing: _kebabMenu(_meetingStore.peerTracks
+                                  .firstWhere(
+                                      (element) =>
+                                          element.peer.peerId ==
+                                          peerList[index].peerId,
+                                      orElse: null))
+                              );
                         }),
                   );
                 })

@@ -10,6 +10,7 @@ import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:hmssdk_flutter_example/hls-streaming/hls_message.dart';
+import 'package:hmssdk_flutter_example/hls-streaming/util/hls_subtitle_text.dart';
 import 'package:hmssdk_flutter_example/hls_viewer/hls_viewer.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:provider/provider.dart';
@@ -208,11 +209,10 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                           children: [
                                                             Row(
-
                                                               children: [
                                                                 SvgPicture.asset(
                                                       "assets/icons/clock.svg",
-                                                      color: defaultColor,
+                                                      color: subHeadingColor,
                                                       fit: BoxFit.scaleDown,
                                                     ),
                                                     SizedBox(width: 6,),
@@ -246,26 +246,49 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                                                     0]!
                                                                                 .startedAt!);
                                                                       }
-                                                                      return Text(
-                                                                          "00:00");
+                                                                      return HLSSubtitleText(
+                                                                        text:
+                                                                            "00:00",
+                                                                        textColor:
+                                                                            subHeadingColor,
+                                                                      );
                                                                     }),
                                                             
                                                               ],
                                                             ),
-                                                            Text(" | ",style: GoogleFonts.inter(
-                                                              color: dividerColor,
-                                                              fontSize: 12
-                                                            ),),
+                                                            HLSSubtitleText(
+                                                              text: " | ",
+                                                              textColor:
+                                                                  dividerColor,
+                                                            ),
                                                             Row(
                                                               children: [
-                                                                 SvgPicture.asset(
-                                                      "assets/icons/watching.svg",
-                                                      color: defaultColor,
-                                                      fit: BoxFit.scaleDown,
-                                                    ),
+                                                                 SvgPicture
+                                                                    .asset(
+                                                                  "assets/icons/watching.svg",
+                                                                  color:
+                                                                      subHeadingColor,
+                                                                  fit: BoxFit
+                                                                      .scaleDown,
+                                                                ),
                                                     SizedBox(width: 6,),
-                                                                Text(
-                                                                          "1202"),
+                                                                Selector<
+                                                                        MeetingStore,
+                                                                        int>(
+                                                                    selector: (_,
+                                                                            meetingStore) =>
+                                                                        meetingStore
+                                                                            .peers
+                                                                            .length,
+                                                                    builder: (_,
+                                                                        length,
+                                                                        __) {
+                                                                      return HLSSubtitleText(
+                                                                          text: length
+                                                                              .toString(),
+                                                                          textColor:
+                                                                              subHeadingColor);
+                                                                    })
                                                               ],
                                                             )
                                                           ],

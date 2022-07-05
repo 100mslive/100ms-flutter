@@ -4,7 +4,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/embedded_button.dart';
-import 'package:hmssdk_flutter_example/common/ui/organisms/grid_video_view.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/offline_screen.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/stream_timer.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
@@ -16,6 +15,7 @@ import 'package:hmssdk_flutter_example/hls-streaming/hls_message.dart';
 import 'package:hmssdk_flutter_example/hls-streaming/hls_settings.dart';
 import 'package:hmssdk_flutter_example/hls-streaming/util/hls_grid_view.dart';
 import 'package:hmssdk_flutter_example/hls-streaming/util/hls_participant_sheet.dart';
+import 'package:hmssdk_flutter_example/hls-streaming/util/hls_subtitle_text.dart';
 import 'package:hmssdk_flutter_example/hls_viewer/hls_viewer.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:hmssdk_flutter_example/meeting/peer_track_node.dart';
@@ -188,6 +188,8 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                     }
                                     return Positioned(
                                       top: 55,
+                                      left: 0,
+                                      right: 0,
                                       child: Container(
                                         height:
                                             MediaQuery.of(context).size.height *
@@ -227,10 +229,12 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                                 await UtilityComponents
                                                     .onBackPressed(context)
                                               },
-                                              width: 45,
-                                              height: 45,
+                                              width: 40,
+                                              height: 40,
                                               offColor: Color(0xffCC525F),
                                               onColor: Color(0xffCC525F),
+                                              disabledBorderColor:
+                                                  Color(0xffCC525F),
                                               isActive: false,
                                               child: SvgPicture.asset(
                                                 "assets/icons/leave_hls.svg",
@@ -286,39 +290,93 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                                             ),
                                                           ],
                                                         ),
-                                                        Selector<MeetingStore,
-                                                                HMSRoom?>(
-                                                            selector: (_,
-                                                                    meetingStore) =>
-                                                                meetingStore
-                                                                    .hmsRoom,
-                                                            builder: (_,
-                                                                hmsRoom, __) {
-                                                              if (hmsRoom !=
-                                                                      null &&
-                                                                  hmsRoom.hmshlsStreamingState !=
-                                                                      null &&
-                                                                  hmsRoom
-                                                                          .hmshlsStreamingState!
-                                                                          .variants
-                                                                          .length !=
-                                                                      0 &&
-                                                                  hmsRoom
-                                                                          .hmshlsStreamingState!
-                                                                          .variants[
-                                                                              0]!
-                                                                          .startedAt !=
-                                                                      null) {
-                                                                return StreamTimer(
-                                                                    startedAt: hmsRoom
-                                                                        .hmshlsStreamingState!
-                                                                        .variants[
-                                                                            0]!
-                                                                        .startedAt!);
-                                                              }
-                                                              return Text(
-                                                                  "00:00");
-                                                            })
+                                                        Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceBetween,
+                                                          children: [
+                                                            Row(
+                                                              children: [
+                                                                SvgPicture
+                                                                    .asset(
+                                                                  "assets/icons/clock.svg",
+                                                                  color:
+                                                                      subHeadingColor,
+                                                                  fit: BoxFit
+                                                                      .scaleDown,
+                                                                ),
+                                                                SizedBox(
+                                                                  width: 6,
+                                                                ),
+                                                                Selector<
+                                                                        MeetingStore,
+                                                                        HMSRoom?>(
+                                                                    selector: (_,
+                                                                            meetingStore) =>
+                                                                        meetingStore
+                                                                            .hmsRoom,
+                                                                    builder: (_,
+                                                                        hmsRoom,
+                                                                        __) {
+                                                                      if (hmsRoom != null &&
+                                                                          hmsRoom.hmshlsStreamingState !=
+                                                                              null &&
+                                                                          hmsRoom.hmshlsStreamingState!.variants.length !=
+                                                                              0 &&
+                                                                          hmsRoom.hmshlsStreamingState!.variants[0]!.startedAt !=
+                                                                              null) {
+                                                                        return StreamTimer(
+                                                                            startedAt:
+                                                                                hmsRoom.hmshlsStreamingState!.variants[0]!.startedAt!);
+                                                                      }
+                                                                      return HLSSubtitleText(
+                                                                        text:
+                                                                            "00:00",
+                                                                        textColor:
+                                                                            subHeadingColor,
+                                                                      );
+                                                                    }),
+                                                              ],
+                                                            ),
+                                                            HLSSubtitleText(
+                                                              text: " | ",
+                                                              textColor:
+                                                                  dividerColor,
+                                                            ),
+                                                            Row(
+                                                              children: [
+                                                                SvgPicture
+                                                                    .asset(
+                                                                  "assets/icons/watching.svg",
+                                                                  color:
+                                                                      subHeadingColor,
+                                                                  fit: BoxFit
+                                                                      .scaleDown,
+                                                                ),
+                                                                SizedBox(
+                                                                  width: 6,
+                                                                ),
+                                                                Selector<
+                                                                        MeetingStore,
+                                                                        int>(
+                                                                    selector: (_,
+                                                                            meetingStore) =>
+                                                                        meetingStore
+                                                                            .peers
+                                                                            .length,
+                                                                    builder: (_,
+                                                                        length,
+                                                                        __) {
+                                                                      return HLSSubtitleText(
+                                                                          text: length
+                                                                              .toString(),
+                                                                          textColor:
+                                                                              subHeadingColor);
+                                                                    })
+                                                              ],
+                                                            )
+                                                          ],
+                                                        )
                                                       ],
                                                     );
                                                   return SizedBox();
@@ -347,11 +405,11 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                                               HLSParticipantSheet()),
                                                 )
                                               },
-                                              width: 45,
-                                              height: 45,
+                                              width: 40,
+                                              height: 40,
                                               offColor: screenBackgroundColor,
                                               onColor: screenBackgroundColor,
-                                              isActive: false,
+                                              isActive: true,
                                               child: SvgPicture.asset(
                                                 "assets/icons/participants.svg",
                                                 color: defaultColor,
@@ -371,12 +429,13 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                                           .read<MeetingStore>()
                                                           .changeMetadata()
                                                     },
-                                                    width: 45,
-                                                    height: 45,
+                                                    width: 40,
+                                                    height: 40,
                                                     offColor:
                                                         screenBackgroundColor,
-                                                    onColor: hintColor,
-                                                    isActive: handRaised,
+                                                    onColor:
+                                                        screenBackgroundColor,
+                                                    isActive: true,
                                                     child: SvgPicture.asset(
                                                       "assets/icons/hand.svg",
                                                       color: handRaised
@@ -420,8 +479,8 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                                                     HLSMessage()),
                                                       )
                                                     },
-                                                    width: 45,
-                                                    height: 45,
+                                                    width: 40,
+                                                    height: 40,
                                                     offColor: hintColor,
                                                     onColor:
                                                         screenBackgroundColor,
@@ -434,27 +493,7 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                                       fit: BoxFit.scaleDown,
                                                     ),
                                                   );
-                                                }),
-                                            SizedBox(
-                                              width: 10,
-                                            ),
-                                            EmbeddedButton(
-                                              onTap: () => {
-                                                context
-                                                    .read<MeetingStore>()
-                                                    .switchCamera()
-                                              },
-                                              width: 45,
-                                              height: 45,
-                                              offColor: hintColor,
-                                              onColor: screenBackgroundColor,
-                                              isActive: true,
-                                              child: SvgPicture.asset(
-                                                "assets/icons/camera.svg",
-                                                color: defaultColor,
-                                                fit: BoxFit.scaleDown,
-                                              ),
-                                            ),
+                                                })
                                           ],
                                         )
                                       ],
@@ -497,9 +536,11 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                                                 MeetingStore>()
                                                             .switchAudio()
                                                       },
-                                                      width: 45,
-                                                      height: 45,
-                                                      offColor: hintColor,
+                                                      width: 40,
+                                                      height: 40,
+                                                      disabledBorderColor:
+                                                          borderColor,
+                                                      offColor: borderColor,
                                                       onColor:
                                                           screenBackgroundColor,
                                                       isActive: isMicOn,
@@ -544,9 +585,11 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                                                     MeetingStore>()
                                                                 .switchVideo(),
                                                       },
-                                                      width: 45,
-                                                      height: 45,
-                                                      offColor: hintColor,
+                                                      width: 40,
+                                                      height: 40,
+                                                      disabledBorderColor:
+                                                          borderColor,
+                                                      offColor: borderColor,
                                                       onColor:
                                                           screenBackgroundColor,
                                                       isActive: data.item1,
@@ -737,9 +780,11 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                                               .startScreenShare();
                                                         }
                                                       },
-                                                      width: 45,
-                                                      height: 45,
-                                                      offColor: hintColor,
+                                                      width: 40,
+                                                      height: 40,
+                                                      disabledBorderColor:
+                                                          borderColor,
+                                                      offColor: borderColor,
                                                       onColor:
                                                           screenBackgroundColor,
                                                       isActive: data,
@@ -775,8 +820,8 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                                                 HLSSettings()),
                                                   )
                                                 },
-                                                width: 45,
-                                                height: 45,
+                                                width: 40,
+                                                height: 40,
                                                 offColor: hintColor,
                                                 onColor: screenBackgroundColor,
                                                 isActive: true,

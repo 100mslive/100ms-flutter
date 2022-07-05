@@ -188,7 +188,7 @@ class _PreviewPageState extends State<PreviewPage> {
                                                       isOn: _previewStore
                                                           .isAudioOn),
                                               offColor: defaultColor,
-                                              onColor: screenBackgroundColor,
+                                              onColor:borderColor,
                                               isActive: _previewStore.isAudioOn,
                                               child: SvgPicture.asset(
                                                 _previewStore.isAudioOn
@@ -215,7 +215,7 @@ class _PreviewPageState extends State<PreviewPage> {
                                                       isOn: _previewStore
                                                           .isVideoOn),
                                               offColor: defaultColor,
-                                              onColor: screenBackgroundColor,
+                                              onColor: borderColor,
                                               isActive: _previewStore.isVideoOn,
                                               child: SvgPicture.asset(
                                                 _previewStore.isVideoOn
@@ -269,7 +269,7 @@ class _PreviewPageState extends State<PreviewPage> {
                                                 },
                                                 offColor: dividerColor,
                                                 onColor: dividerColor,
-                                                isActive: false,
+                                                isActive: true,
                                                 child: SvgPicture.asset(
                                                   'assets/icons/network_${_previewStore.networkQuality}.svg',
                                                   fit: BoxFit.scaleDown,
@@ -279,9 +279,9 @@ class _PreviewPageState extends State<PreviewPage> {
                                           ),
                                           EmbeddedButton(
                                             onTap: () {},
-                                            offColor: surfaceColor,
-                                            onColor: surfaceColor,
-                                            isActive: false,
+                                            offColor: buttonBackgroundColor,
+                                            onColor: buttonBackgroundColor,
+                                            isActive: true,
                                             child: SvgPicture.asset(
                                               "assets/icons/settings.svg",
                                               color: defaultColor,

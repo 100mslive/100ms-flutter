@@ -423,12 +423,14 @@ class _HomePageState extends State<HomePage> {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Text("Joining Link",
+                          key: Key('joining_link_text'),
                           style: GoogleFonts.inter(
                               color: defaultColor,
                               height: 1.5,
                               fontSize: 14,
                               fontWeight: FontWeight.w400)),
                       ToggleButtons(
+                          key: Key('mode_toggle_button'),
                           selectedColor: hmsdefaultColor,
                           selectedBorderColor: hmsdefaultColor,
                           borderRadius: BorderRadius.circular(10),
@@ -457,6 +459,7 @@ class _HomePageState extends State<HomePage> {
                 SizedBox(
                   width: width * 0.95,
                   child: TextField(
+                    key: Key('meeting_link_field'),
                     textInputAction: TextInputAction.done,
                     onSubmitted: (value) {
                       joinMeeting();
@@ -531,6 +534,7 @@ class _HomePageState extends State<HomePage> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 HLSTitleText(
+                                  key: Key('join_now'),
                                   text: 'Join Now',
                                   textColor: meetingLinkController.text.isEmpty
                                       ? disabledTextColor
@@ -596,6 +600,7 @@ class _HomePageState extends State<HomePage> {
                             width: 5,
                           ),
                           HLSTitleText(
+                              key:Key("scan_qr_code"),
                               text: 'Scan QR Code', textColor: enabledTextColor)
                         ],
                       ),
