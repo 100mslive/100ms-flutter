@@ -60,7 +60,7 @@ jobs:
 #         emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -no-boot-anim none
 #         script: mvn test
 #         script: mvn -B package --file pom.xml
-        script: mvn -B package --file flutter_android.xml
+        script: mvn clean test -Dsurefire.suiteXmlFiles=flutter_android.xml
         working-directory: ./test/Flutter_100ms_appium
 #         script: mvn clean run -Pandroid
 
