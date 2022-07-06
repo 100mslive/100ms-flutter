@@ -225,7 +225,6 @@ class _HLSParticipantSheetState extends State<HLSParticipantSheet> {
 
   @override
   Widget build(BuildContext context) {
-    final _meetingStore = context.read<MeetingStore>();
     return FractionallySizedBox(
       heightFactor: 0.8,
       child: Padding(
