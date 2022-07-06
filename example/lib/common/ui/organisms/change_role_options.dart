@@ -131,6 +131,7 @@ class _ChangeRoleOptionDialogState extends State<ChangeRoleOptionDialog> {
                                   data.data!.firstWhere(
                                       (element) => element.name == valueChoose),
                                   forceValue);
+                              Navigator.pop(context);
                             },
                             child: Text(
                               "Change Role",

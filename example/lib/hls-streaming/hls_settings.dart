@@ -16,7 +16,6 @@ class HLSSettings extends StatefulWidget {
 class _HLSSettingsState extends State<HLSSettings> {
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return FractionallySizedBox(
       heightFactor: 0.5,
       child: Padding(
