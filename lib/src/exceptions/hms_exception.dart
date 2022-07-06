@@ -32,7 +32,7 @@ class HMSException {
         id: map["id"] ?? map['name'] ?? '',
         code: code,
         message: map['message'],
-        action: map['action'],
+        action: map['action'] ?? '',
         description: map['info'] ?? map['description'] ?? '',
         params: map['params'],
         isTerminal: map['isTerminal'] ?? false);

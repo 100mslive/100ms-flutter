@@ -18,7 +18,7 @@
 
 
    <application
-        android:label="Flutter 100ms"
+        android:label="100ms Video Calling Streaming"
         android:icon="@mipmap/ic_launcher"
         android:hardwareAccelerated="true">
         <activity
