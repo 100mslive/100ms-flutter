@@ -4,6 +4,7 @@ import 'package:focus_detector/focus_detector.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/change_role_options.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/local_peer_tile_dialog.dart';
+import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
 import 'package:provider/provider.dart';
 
@@ -108,8 +109,7 @@ class _VideoTileState extends State<VideoTile> {
                                   context: context,
                                   builder: (_) => ChangeRoleOptionDialog(
                                         peerName: peerNode.name,
-                                        getRoleFunction:
-                                            _meetingStore.getRoles(),
+                                        roles: _meetingStore.roles,
                                         changeRole: (role, forceChange) {
                                           Navigator.pop(context);
                                           _meetingStore.changeRole(
@@ -140,7 +140,7 @@ class _VideoTileState extends State<VideoTile> {
                                 context: context,
                                 builder: (_) => ChangeRoleOptionDialog(
                                       peerName: peerNode.name,
-                                      getRoleFunction: _meetingStore.getRoles(),
+                                      roles: _meetingStore.roles,
                                       changeRole: (role, forceChange) {
                                         Navigator.pop(context);
                                         _meetingStore.changeRole(
@@ -162,12 +162,14 @@ class _VideoTileState extends State<VideoTile> {
                           }));
               },
               child: Container(
-                color: Colors.transparent,
                 key: key,
                 padding: EdgeInsets.all(2),
                 margin: EdgeInsets.all(2),
                 height: widget.itemHeight + 110,
                 width: widget.itemWidth - 5.0,
+                decoration: BoxDecoration(borderRadius: BorderRadius.circular(10),
+                color: bottomSheetColor,
+                ),
                 child: Stack(
                   children: [
                     VideoView(

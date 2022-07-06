@@ -104,9 +104,10 @@ List<StairedGridTile> portraitPattern(
     tiles.add(StairedGridTile(0.5, ratio / 2));
     tiles.add(StairedGridTile(0.5, ratio / 2));
   } else {
-    tiles.add(StairedGridTile(0.5, ratio));
-    tiles.add(StairedGridTile(0.5, ratio));
-    tiles.add(StairedGridTile(0.5, ratio));
+        tiles.add(StairedGridTile(0.5, ratio / 2));
+    tiles.add(StairedGridTile(0.5, ratio / 2));
+    tiles.add(StairedGridTile(1, ratio));
+    
   }
   return tiles;
 }

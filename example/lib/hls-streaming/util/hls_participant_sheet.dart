@@ -48,7 +48,8 @@ class _HLSParticipantSheetState extends State<HLSParticipantSheet> {
                     context: context,
                     builder: (_) => ChangeRoleOptionDialog(
                           peerName: peer.name,
-                          getRoleFunction: _meetingStore.getRoles(),
+                          roles: _meetingStore.roles,
+                          
                           changeRole: (role, forceChange) {
                             Navigator.pop(context);
                             _meetingStore.changeRole(
@@ -100,7 +101,7 @@ class _HLSParticipantSheetState extends State<HLSParticipantSheet> {
                   context: context,
                   builder: (_) => ChangeRoleOptionDialog(
                         peerName: peerTrackNode!.peer.name,
-                        getRoleFunction: _meetingStore.getRoles(),
+                        roles: _meetingStore.roles,
                         changeRole: (role, forceChange) {
                           Navigator.pop(context);
                           _meetingStore.changeRole(

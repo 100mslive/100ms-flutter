@@ -1,5 +1,6 @@
 //Package imports
 import 'package:flutter/material.dart';
+import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:provider/provider.dart';
 
 //Project imports
@@ -30,8 +31,8 @@ class TileBorder extends StatelessWidget {
               border: Border.all(
                   color: (isHighestSpeaker != -1)
                       ? Utilities.getBackgroundColour(name)
-                      : Colors.grey,
-                  width: (isHighestSpeaker != -1) ? 4.0 : 1.0),
+                      : bottomSheetColor,
+                  width: (isHighestSpeaker != -1) ? 4.0 : 0.0),
               borderRadius: BorderRadius.all(Radius.circular(10)),
             ),
           );

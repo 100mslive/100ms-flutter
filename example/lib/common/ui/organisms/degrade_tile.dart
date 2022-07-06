@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/audio_level_avatar.dart';
+import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:provider/provider.dart';
 
 //Package imports
@@ -32,7 +33,7 @@ class _DegradeTileState extends State<DegradeTile> {
                 height: widget.itemHeight + 110,
                 width: widget.itemWidth - 4,
                 decoration: BoxDecoration(
-                    color: Colors.black87,
+                    color: bottomSheetColor,
                     borderRadius: BorderRadius.all(Radius.circular(10))),
                 child: Stack(
                   children: [
@@ -43,7 +44,7 @@ class _DegradeTileState extends State<DegradeTile> {
                           'assets/icons/degrade.svg',
                         ),
                       ),
-                      top: 10.0,
+                      bottom: 10.0,
                       right: 5.0,
                     ),
                     AudioLevelAvatar()

@@ -25,6 +25,7 @@ class UtilityComponents {
     return showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         insetPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         backgroundColor: Color.fromRGBO(32, 22, 23, 1),
         title: Container(
@@ -151,6 +152,9 @@ class UtilityComponents {
         context: context,
         builder: (context) {
           return AlertDialog(
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+
+            backgroundColor: bottomSheetColor,
             content: Text(
               message,
               style: GoogleFonts.inter(
@@ -181,6 +185,8 @@ class UtilityComponents {
     String answer = await showDialog(
         context: context,
         builder: (context) => AlertDialog(
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+backgroundColor: bottomSheetColor,
               content: Container(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -234,6 +240,8 @@ class UtilityComponents {
         context: context,
         builder: (context) => StatefulBuilder(builder: (context, setState) {
               return AlertDialog(
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+backgroundColor: bottomSheetColor,
                 content: Container(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
@@ -334,6 +342,8 @@ class UtilityComponents {
         context: context,
         builder: (context) => StatefulBuilder(builder: (context, setState) {
               return AlertDialog(
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+  backgroundColor: bottomSheetColor,
                 title: Text(
                   "Select Role for Mute",
                   style: GoogleFonts.inter(
@@ -444,6 +454,8 @@ class UtilityComponents {
         context: context,
         builder: (context) => StatefulBuilder(builder: (context, setState) {
               return AlertDialog(
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              backgroundColor: bottomSheetColor,
                 content: Container(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
@@ -512,6 +524,8 @@ class UtilityComponents {
     return showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        backgroundColor: bottomSheetColor,
         title: Text(
           'End Room?',
           style: GoogleFonts.inter(
@@ -520,7 +534,7 @@ class UtilityComponents {
         actions: [
           ElevatedButton(
               style: ElevatedButton.styleFrom(
-                primary: Colors.red,
+                primary: errorColor,
               ),
               onPressed: () {
                 _meetingStore.endRoom(false, "Room Ended From Flutter");
@@ -570,6 +584,8 @@ class UtilityComponents {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              backgroundColor: bottomSheetColor,
             title: Center(
               child: Text(
                 errorTitle,
@@ -604,6 +620,7 @@ class UtilityComponents {
     return showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         insetPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         backgroundColor: Color.fromRGBO(32, 22, 23, 1),
         title: Container(
@@ -692,6 +709,7 @@ class UtilityComponents {
     String answer = await showDialog(
         context: context,
         builder: (context) => AlertDialog(
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
               insetPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
               backgroundColor: bottomSheetColor,
               title: Text("Change Name",
@@ -747,7 +765,7 @@ class UtilityComponents {
                             ))),
                         onPressed: () => Navigator.pop(context, false),
                         child: Padding(
-                          padding: const EdgeInsets.only(left: 4.0, right: 4),
+                          padding: const EdgeInsets.symmetric(horizontal: 4,vertical: 8),
                           child: Text('Cancel',
                               style: GoogleFonts.inter(
                                   color: defaultColor,
@@ -775,7 +793,7 @@ class UtilityComponents {
                           {Navigator.pop(context, textController.text)}
                       },
                       child: Padding(
-                        padding: const EdgeInsets.only(left: 4.0, right: 4),
+                        padding: const EdgeInsets.symmetric(horizontal: 4,vertical: 8),
                         child: Text(
                           'Change',
                           style: GoogleFonts.inter(
