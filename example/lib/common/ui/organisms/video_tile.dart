@@ -110,6 +110,7 @@ class _VideoTileState extends State<VideoTile> {
                                   builder: (_) => ChangeRoleOptionDialog(
                                         peerName: peerNode.name,
                                         roles: _meetingStore.roles,
+                                        peer: peerNode,
                                         changeRole: (role, forceChange) {
                                           Navigator.pop(context);
                                           _meetingStore.changeRole(
@@ -141,6 +142,7 @@ class _VideoTileState extends State<VideoTile> {
                                 builder: (_) => ChangeRoleOptionDialog(
                                       peerName: peerNode.name,
                                       roles: _meetingStore.roles,
+                                      peer: peerNode,
                                       changeRole: (role, forceChange) {
                                         Navigator.pop(context);
                                         _meetingStore.changeRole(
@@ -167,8 +169,9 @@ class _VideoTileState extends State<VideoTile> {
                 margin: EdgeInsets.all(2),
                 height: widget.itemHeight + 110,
                 width: widget.itemWidth - 5.0,
-                decoration: BoxDecoration(borderRadius: BorderRadius.circular(10),
-                color: bottomSheetColor,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: bottomSheetColor,
                 ),
                 child: Stack(
                   children: [

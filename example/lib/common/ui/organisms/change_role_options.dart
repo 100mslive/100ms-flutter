@@ -16,10 +16,12 @@ class ChangeRoleOptionDialog extends StatefulWidget {
   final List<HMSRole> roles;
   final Function(HMSRole, bool) changeRole;
   final bool force;
+  final HMSPeer peer;
   ChangeRoleOptionDialog({
     required this.peerName,
     required this.roles,
     required this.changeRole,
+    required this.peer,
     this.force = true,
   });
 
@@ -30,7 +32,6 @@ class ChangeRoleOptionDialog extends StatefulWidget {
 class _ChangeRoleOptionDialogState extends State<ChangeRoleOptionDialog> {
   late bool askPermission;
   HMSRole? valueChoose;
-
   @override
   void initState() {
     super.initState();
@@ -44,10 +45,10 @@ class _ChangeRoleOptionDialogState extends State<ChangeRoleOptionDialog> {
     double width = MediaQuery.of(context).size.width;
     return AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      actionsPadding: EdgeInsets.only(left: 20,right : 20,bottom: 10),
+      actionsPadding: EdgeInsets.only(left: 20, right: 20, bottom: 10),
       backgroundColor: bottomSheetColor,
       insetPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-      contentPadding: EdgeInsets.only(top: 20,bottom : 15,left: 24,right : 24),
+      contentPadding: EdgeInsets.only(top: 20, bottom: 15, left: 24, right: 24),
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -117,32 +118,38 @@ class _ChangeRoleOptionDialogState extends State<ChangeRoleOptionDialog> {
           SizedBox(
             height: 15,
           ),
-          Row(
-            children: [
-              SizedBox(
-                width: 25,
-                height: 25,
-                child: Checkbox(
-                    value: askPermission,
-                    activeColor: Colors.blue,
-                    onChanged: (bool? value) {
-                      if (value != null) {
-                        askPermission = value;
-                        setState(() {});
-                      }
-                    }),
-              ),
-              SizedBox(width: 10.5,),
-              SizedBox(
-                width: width*0.5,
-                child: Text( "Request permission from the user",
-                style: GoogleFonts.inter(color: defaultColor,fontSize: 14,
-                  height: 20/14,
-                  letterSpacing: 0.25,),)
-                
-              ),
-            ],
-          ),
+          if (!widget.peer.isLocal)
+            Row(
+              children: [
+                SizedBox(
+                  width: 25,
+                  height: 25,
+                  child: Checkbox(
+                      value: askPermission,
+                      activeColor: Colors.blue,
+                      onChanged: (bool? value) {
+                        if (value != null) {
+                          askPermission = value;
+                          setState(() {});
+                        }
+                      }),
+                ),
+                SizedBox(
+                  width: 10.5,
+                ),
+                SizedBox(
+                    width: width * 0.5,
+                    child: Text(
+                      "Request permission from the user",
+                      style: GoogleFonts.inter(
+                        color: defaultColor,
+                        fontSize: 14,
+                        height: 20 / 14,
+                        letterSpacing: 0.25,
+                      ),
+                    )),
+              ],
+            ),
         ],
       ),
       actions: [
@@ -186,7 +193,10 @@ class _ChangeRoleOptionDialogState extends State<ChangeRoleOptionDialog> {
                     Utilities.showToast("Please select a role"),
                   }
                 else
-                  widget.changeRole(valueChoose!, !askPermission)
+                  {
+                    Navigator.pop(context),
+                    widget.changeRole(valueChoose!, !askPermission)
+                  }
               },
               child: Padding(
                 padding:

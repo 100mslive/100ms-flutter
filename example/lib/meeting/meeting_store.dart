@@ -228,6 +228,7 @@ class MeetingStore extends ChangeNotifier
     int index = this.peers.indexOf(peer);
     this.peers.removeAt(index);
     this.peers.insert(index, peer);
+    notifyListeners();
   }
 
   Future<void> isScreenShareActive() async {
@@ -1193,7 +1194,9 @@ class MeetingStore extends ChangeNotifier
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) async {
     super.didChangeAppLifecycleState(state);
-
+    if (isRoomEnded) {
+      return;
+    }
     if (state == AppLifecycleState.resumed) {
       List<HMSPeer>? peersList = await getPeers();
 

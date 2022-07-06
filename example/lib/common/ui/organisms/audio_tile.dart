@@ -78,6 +78,7 @@ class AudioTile extends StatelessWidget {
                           builder: (_) => ChangeRoleOptionDialog(
                                 peerName: peerNode.name,
                                 roles: _meetingStore.roles,
+                                peer: peerNode,
                                 changeRole: (role, forceChange) {
                                   Navigator.pop(context);
                                   _meetingStore.changeRole(
@@ -107,8 +108,8 @@ class AudioTile extends StatelessWidget {
                         context: context,
                         builder: (_) => ChangeRoleOptionDialog(
                               peerName: peerNode.name,
-                                                              roles: _meetingStore.roles,
-
+                              roles: _meetingStore.roles,
+                              peer: peerNode,
                               changeRole: (role, forceChange) {
                                 Navigator.pop(context);
                                 _meetingStore.changeRole(
