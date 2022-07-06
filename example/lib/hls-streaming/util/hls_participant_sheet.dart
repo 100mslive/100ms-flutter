@@ -50,7 +50,6 @@ class _HLSParticipantSheetState extends State<HLSParticipantSheet> {
                           peerName: peer.name,
                           getRoleFunction: _meetingStore.getRoles(),
                           changeRole: (role, forceChange) {
-                            Navigator.pop(context);
                             _meetingStore.changeRole(
                                 peer: peer,
                                 roleName: role,
