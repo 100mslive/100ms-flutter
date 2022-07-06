@@ -12,7 +12,7 @@ import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
 import 'package:hmssdk_flutter_example/hls-streaming/hls_broadcaster_page.dart';
-import 'package:hmssdk_flutter_example/hls-streaming/hls_role_swtich_screen.dart';
+import 'package:hmssdk_flutter_example/hls-streaming/hls_screen_controller.dart';
 import 'package:hmssdk_flutter_example/hls-streaming/hls_viewer_page.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_page.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
@@ -354,27 +354,6 @@ class _PreviewPageState extends State<PreviewPage> {
                                                                 .networkQuality,
                                                         user: widget.name,
                                                       ),
-                                                      // child: _previewStore
-                                                      //         .peer!.role.name
-                                                      //         .contains("hls")
-                                                      //     ? HLSViewerPage(
-                                                      //   meetingLink:
-                                                      //       widget.meetingLink,
-                                                      //   localPeerNetworkQuality:
-                                                      //       _previewStore
-                                                      //           .networkQuality,
-                                                      //   user: widget.name,)
-                                                      // : HLSBroadcasterPage(
-                                                      //     isAudioOn:
-                                                      //         _previewStore
-                                                      //             .isAudioOn,
-                                                      //     meetingLink: widget
-                                                      //         .meetingLink,
-                                                      //     localPeerNetworkQuality:
-                                                      //         _previewStore
-                                                      //             .networkQuality,
-                                                      //     user: widget.name,
-                                                      //   ),
                                                     )))
                                       }
                                   },
