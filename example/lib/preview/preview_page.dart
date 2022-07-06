@@ -12,6 +12,7 @@ import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
 import 'package:hmssdk_flutter_example/hls-streaming/hls_broadcaster_page.dart';
+import 'package:hmssdk_flutter_example/hls-streaming/hls_role_swtich_screen.dart';
 import 'package:hmssdk_flutter_example/hls-streaming/hls_viewer_page.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_page.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
@@ -81,56 +82,54 @@ class _PreviewPageState extends State<PreviewPage> {
                         strokeWidth: 2,
                       ),
                     )
-                  : 
-                  (_previewStore.peer!.role.name.contains("hls"))?
-                  Container(
-                              child: Center(
-                                child: CircleAvatar(
-                                    backgroundColor: defaultAvatarColor,
-                                    radius: 40,
-                                    child: Text(
-                                      Utilities.getAvatarTitle(
-                                          _previewStore.peer!.name),
-                                      style: GoogleFonts.inter(
-                                        fontSize: 40,
-                                        color: Colors.white,
-                                      ),
-                                    )),
+                  : (_previewStore.peer!.role.name.contains("hls"))
+                      ? Container(
+                          child: Center(
+                            child: CircleAvatar(
+                                backgroundColor: defaultAvatarColor,
+                                radius: 40,
+                                child: Text(
+                                  Utilities.getAvatarTitle(
+                                      _previewStore.peer!.name),
+                                  style: GoogleFonts.inter(
+                                    fontSize: 40,
+                                    color: Colors.white,
+                                  ),
+                                )),
+                          ),
+                        )
+                      : (_previewStore.localTracks.isEmpty)
+                          ? Center(
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
                               ),
-                            )
-                  :
-                  (_previewStore.localTracks.isEmpty)
-                  ?Center(
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                      ),
-                    ):
-                  Container(
-                      height: height,
-                      width: width,
-                      child: (_previewStore.isVideoOn)
-                          ? HMSVideoView(
-                              scaleType: ScaleType.SCALE_ASPECT_FILL,
-                              track: _previewStore.localTracks[0],
-                              setMirror: true,
-                              matchParent: false,
                             )
                           : Container(
-                              child: Center(
-                                child: CircleAvatar(
-                                    backgroundColor: defaultAvatarColor,
-                                    radius: 40,
-                                    child: Text(
-                                      Utilities.getAvatarTitle(
-                                          _previewStore.peer!.name),
-                                      style: GoogleFonts.inter(
-                                        fontSize: 40,
-                                        color: Colors.white,
+                              height: height,
+                              width: width,
+                              child: (_previewStore.isVideoOn)
+                                  ? HMSVideoView(
+                                      scaleType: ScaleType.SCALE_ASPECT_FILL,
+                                      track: _previewStore.localTracks[0],
+                                      setMirror: true,
+                                      matchParent: false,
+                                    )
+                                  : Container(
+                                      child: Center(
+                                        child: CircleAvatar(
+                                            backgroundColor: defaultAvatarColor,
+                                            radius: 40,
+                                            child: Text(
+                                              Utilities.getAvatarTitle(
+                                                  _previewStore.peer!.name),
+                                              style: GoogleFonts.inter(
+                                                fontSize: 40,
+                                                color: Colors.white,
+                                              ),
+                                            )),
                                       ),
-                                    )),
-                              ),
+                                    ),
                             ),
-                    ),
               Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -188,7 +187,7 @@ class _PreviewPageState extends State<PreviewPage> {
                                                       isOn: _previewStore
                                                           .isAudioOn),
                                               offColor: defaultColor,
-                                              onColor:borderColor,
+                                              onColor: borderColor,
                                               isActive: _previewStore.isAudioOn,
                                               child: SvgPicture.asset(
                                                 _previewStore.isAudioOn
@@ -344,27 +343,38 @@ class _PreviewPageState extends State<PreviewPage> {
                                                             _previewStore
                                                                 .hmsSDKInteractor,
                                                       ),
-                                                      child: _previewStore
-                                                              .peer!.role.name
-                                                              .contains("hls")
-                                                          ? HLSViewerPage(
+                                                      child:
+                                                          HLSScreenController(
+                                                        isAudioOn: _previewStore
+                                                            .isAudioOn,
                                                         meetingLink:
                                                             widget.meetingLink,
                                                         localPeerNetworkQuality:
                                                             _previewStore
                                                                 .networkQuality,
-                                                        user: widget.name,)
-                                                          : HLSBroadcasterPage(
-                                                              isAudioOn:
-                                                                  _previewStore
-                                                                      .isAudioOn,
-                                                              meetingLink: widget
-                                                                  .meetingLink,
-                                                              localPeerNetworkQuality:
-                                                                  _previewStore
-                                                                      .networkQuality,
-                                                              user: widget.name,
-                                                            ),
+                                                        user: widget.name,
+                                                      ),
+                                                      // child: _previewStore
+                                                      //         .peer!.role.name
+                                                      //         .contains("hls")
+                                                      //     ? HLSViewerPage(
+                                                      //   meetingLink:
+                                                      //       widget.meetingLink,
+                                                      //   localPeerNetworkQuality:
+                                                      //       _previewStore
+                                                      //           .networkQuality,
+                                                      //   user: widget.name,)
+                                                      // : HLSBroadcasterPage(
+                                                      //     isAudioOn:
+                                                      //         _previewStore
+                                                      //             .isAudioOn,
+                                                      //     meetingLink: widget
+                                                      //         .meetingLink,
+                                                      //     localPeerNetworkQuality:
+                                                      //         _previewStore
+                                                      //             .networkQuality,
+                                                      //     user: widget.name,
+                                                      //   ),
                                                     )))
                                       }
                                   },
