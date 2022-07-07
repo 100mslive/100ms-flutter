@@ -16,23 +16,24 @@ class NameWidget extends StatefulWidget {
 class _NameWidgetState extends State<NameWidget> {
   @override
   Widget build(BuildContext context) {
-    return Selector<PeerTrackNode, Tuple3<String, bool, bool>>(
-        selector: (_, peerTrackNode) => Tuple3(
+    return Selector<PeerTrackNode, Tuple4<String, bool, bool,bool>>(
+        selector: (_, peerTrackNode) => Tuple4(
             peerTrackNode.peer.name,
             peerTrackNode.track?.isDegraded ?? false,
-            peerTrackNode.peer.isLocal),
+            peerTrackNode.peer.isLocal,
+            peerTrackNode.track?.isMute??true),
         builder: (_, data, __) {
-          return Container(
+          return data.item4?Container(
               constraints: BoxConstraints(
                 maxWidth: MediaQuery.of(context).size.width * 0.4,
               ),
               child: HLSSubtitleText(
-                text: data.item1,
+                text: "${data.item3 ? "You (" : ""}${data.item1}${data.item3 ? ")" : ""} ${data.item2 ? " Degraded" : ""}",
                 textColor: defaultColor,
                 lineHeight: 20,
                 fontSize: 14,
                 letterSpacing: 0.25,
-              ));
+              )):SizedBox();
         });
   }
 }

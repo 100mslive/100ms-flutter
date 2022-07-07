@@ -44,7 +44,7 @@ class _DegradeTileState extends State<DegradeTile> {
                           'assets/icons/degrade.svg',
                         ),
                       ),
-                      bottom: 10.0,
+                      bottom: 5.0,
                       right: 5.0,
                     ),
                     AudioLevelAvatar()
