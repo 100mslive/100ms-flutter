@@ -340,25 +340,24 @@ class _HLSParticipantSheetState extends State<HLSParticipantSheet> {
                 height: 5,
               ),
             ),
-            Selector<MeetingStore, Tuple2<List<PeerTrackNode>, int>>(
+            Selector<MeetingStore, Tuple2<List<HMSPeer>, int>>(
                 selector: (_, meetingStore) =>
-                    Tuple2(meetingStore.peerTracks, meetingStore.peers.length),
+                    Tuple2(meetingStore.peers, meetingStore.peers.length),
                 builder: (_, data, __) {
-                  List<PeerTrackNode> copyList = [];
+                  List<HMSPeer> copyList = [];
                   copyList.addAll(data.item1);
                   copyList.removeWhere((element) =>
-                      element.track != null &&
-                      element.track!.source != "REGULAR");
-                  List<PeerTrackNode> peerList = [];
+                      element.videoTrack != null &&
+                      element.videoTrack!.source != "REGULAR");
+                  List<HMSPeer> peerList = [];
                   peerList.add(copyList.removeAt(
-                      copyList.indexWhere((element) => element.peer.isLocal)));
+                      copyList.indexWhere((element) => element.isLocal)));
                   if (valueChoose == "Everyone") {
                     peerList.addAll(copyList.sortedBy(
-                        (element) => element.peer.role.priority.toString()));
+                        (element) => element.role.priority.toString()));
                   } else {
                     peerList = copyList
-                        .where(
-                            (element) => element.peer.role.name == valueChoose)
+                        .where((element) => element.role.name == valueChoose)
                         .toList();
                   }
                   return Container(
@@ -367,55 +366,48 @@ class _HLSParticipantSheetState extends State<HLSParticipantSheet> {
                         shrinkWrap: true,
                         itemCount: peerList.length,
                         itemBuilder: (context, index) {
-                          return ChangeNotifierProvider.value(
-                            key: ValueKey(
-                                peerList[index].uid + "participant_list"),
-                            value: peerList[index],
-                            child: Selector<MeetingStore,
-                                    Tuple4<String, bool, HMSPeer, String>>(
-                                selector: (_, meetingStore) => Tuple4(
-                                    meetingStore.peers[index].name,
-                                    meetingStore.peers[index].isLocal,
-                                    meetingStore.peers[index],
-                                    meetingStore.peers[index].role.name),
-                                builder: (_, data, __) {
-                                  return ListTile(
-                                      horizontalTitleGap: 5,
-                                      contentPadding: EdgeInsets.zero,
-                                      leading: CircleAvatar(
-                                        backgroundColor:
-                                            Utilities.getBackgroundColour(
-                                                data.item1),
-                                        radius: 16,
-                                        child: Text(
-                                            Utilities.getAvatarTitle(
-                                                data.item1),
-                                            style: GoogleFonts.inter(
-                                                fontSize: 12,
-                                                color: defaultColor,
-                                                fontWeight: FontWeight.w600)),
-                                      ),
-                                      title: Text(
-                                        data.item1 +
-                                            (data.item2 ? " (You)" : ""),
-                                        maxLines: 1,
-                                        style: GoogleFonts.inter(
-                                            fontSize: 16,
-                                            color: defaultColor,
-                                            letterSpacing: 0.15,
-                                            fontWeight: FontWeight.w600),
-                                      ),
-                                      subtitle: Text(
-                                        data.item4,
-                                        style: GoogleFonts.inter(
-                                            fontSize: 12,
-                                            color: subHeadingColor,
-                                            letterSpacing: 0.40,
-                                            fontWeight: FontWeight.w400),
-                                      ),
-                                      trailing: _kebabMenu(data.item3));
-                                }),
-                          );
+                          return Selector<MeetingStore,
+                                  Tuple4<String, bool, HMSPeer, String>>(
+                              selector: (_, meetingStore) => Tuple4(
+                                  meetingStore.peers[index].name,
+                                  meetingStore.peers[index].isLocal,
+                                  meetingStore.peers[index],
+                                  meetingStore.peers[index].role.name),
+                              builder: (_, data, __) {
+                                return ListTile(
+                                    horizontalTitleGap: 5,
+                                    contentPadding: EdgeInsets.zero,
+                                    leading: CircleAvatar(
+                                      backgroundColor:
+                                          Utilities.getBackgroundColour(
+                                              data.item1),
+                                      radius: 16,
+                                      child: Text(
+                                          Utilities.getAvatarTitle(data.item1),
+                                          style: GoogleFonts.inter(
+                                              fontSize: 12,
+                                              color: defaultColor,
+                                              fontWeight: FontWeight.w600)),
+                                    ),
+                                    title: Text(
+                                      data.item1 + (data.item2 ? " (You)" : ""),
+                                      maxLines: 1,
+                                      style: GoogleFonts.inter(
+                                          fontSize: 16,
+                                          color: defaultColor,
+                                          letterSpacing: 0.15,
+                                          fontWeight: FontWeight.w600),
+                                    ),
+                                    subtitle: Text(
+                                      data.item4,
+                                      style: GoogleFonts.inter(
+                                          fontSize: 12,
+                                          color: subHeadingColor,
+                                          letterSpacing: 0.40,
+                                          fontWeight: FontWeight.w400),
+                                    ),
+                                    trailing: _kebabMenu(data.item3));
+                              });
                         }),
                   );
                 })
