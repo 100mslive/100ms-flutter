@@ -186,10 +186,31 @@ class _VideoTileState extends State<VideoTile> {
                       itemHeight: widget.itemHeight,
                       itemWidth: widget.itemWidth,
                     ),
-                    PeerName(),
+                    Positioned(
+                      bottom: 5,
+                      left: 5,
+                      child: Container(
+                        decoration: BoxDecoration(
+                            color: Color.fromRGBO(0, 0, 0, 0.9),
+                            borderRadius: BorderRadius.circular(8)),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 4, vertical: 2.0),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              PeerName(),
+                              SizedBox(
+                                width: 3,
+                              ),
+                              NetworkIconWidget(), //top left
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
                     HandRaise(), //bottom left
                     BRBTag(), //top right
-                    NetworkIconWidget(), //top left
                     AudioMuteStatus(), //bottom center
                     RTCStatsView(
                         isLocal: context.read<PeerTrackNode>().peer.isLocal),
