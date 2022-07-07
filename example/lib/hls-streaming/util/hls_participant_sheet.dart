@@ -44,6 +44,7 @@ class _HLSParticipantSheetState extends State<HLSParticipantSheet> {
           onSelected: (int value) async {
             switch (value) {
               case 1:
+                Navigator.pop(context);
                 showDialog(
                     context: context,
                     builder: (_) => ChangeRoleOptionDialog(
@@ -96,6 +97,7 @@ class _HLSParticipantSheetState extends State<HLSParticipantSheet> {
         onSelected: (int value) async {
           switch (value) {
             case 1:
+                Navigator.pop(context);
               showDialog(
                   context: context,
                   builder: (_) => ChangeRoleOptionDialog(
@@ -109,6 +111,7 @@ class _HLSParticipantSheetState extends State<HLSParticipantSheet> {
                               forceChange: forceChange);
                         },
                       ));
+                
               break;
             case 2:
               if (peerTrackNode!.track == null) {
