@@ -30,7 +30,7 @@ class _PreviewScreenState extends ConsumerState<PreviewScreen> {
   void initPreview() async {
     bool ans = await ref
         .read(previewStoreProvider)
-        .startPreview(user: widget.name, meetingLink: widget.roomLink);
+        .startPreview(user: widget.name, roomId: widget.roomLink);
     if (ans == false) {
       Navigator.of(context).pop();
     }
