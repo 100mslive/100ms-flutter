@@ -212,15 +212,9 @@ class _VideoTileState extends State<VideoTile> {
                     ),
                     Align(
                         alignment: Alignment.center,
-                        child: Column(
-                          // mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SizedBox(
-                              height: 100,
-                            ),
-                            NameWidget(),
-                          ],
+                        child: Padding(
+                          padding: const EdgeInsets.only(top:110.0),
+                          child: NameWidget(),
                         )),
                     HandRaise(), //bottom left
                     BRBTag(), //top right
