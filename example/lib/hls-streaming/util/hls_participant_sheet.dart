@@ -346,6 +346,9 @@ class _HLSParticipantSheetState extends State<HLSParticipantSheet> {
                 builder: (_, data, __) {
                   List<PeerTrackNode> copyList = [];
                   copyList.addAll(data.item1);
+                  copyList.removeWhere((element) =>
+                      element.track != null &&
+                      element.track!.source != "REGULAR");
                   List<PeerTrackNode> peerList = [];
                   peerList.add(copyList.removeAt(
                       copyList.indexWhere((element) => element.peer.isLocal)));
@@ -395,6 +398,7 @@ class _HLSParticipantSheetState extends State<HLSParticipantSheet> {
                                       title: Text(
                                         data.item1 +
                                             (data.item2 ? " (You)" : ""),
+                                        maxLines: 1,
                                         style: GoogleFonts.inter(
                                             fontSize: 16,
                                             color: defaultColor,

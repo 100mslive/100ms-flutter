@@ -893,9 +893,10 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                                       height: 40,
                                                       disabledBorderColor:
                                                           borderColor,
-                                                      offColor: borderColor,
+                                                      offColor: screenBackgroundColor,
                                                       onColor:
-                                                          screenBackgroundColor,
+                                                      borderColor
+                                                          ,
                                                       isActive: data,
                                                       child: SvgPicture.asset(
                                                         "assets/icons/screen_share.svg",
