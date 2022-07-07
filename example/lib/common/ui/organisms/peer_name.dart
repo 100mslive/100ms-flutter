@@ -23,7 +23,8 @@ class _PeerNameState extends State<PeerName> {
             peerTrackNode.peer.isLocal),
         builder: (_, data, __) {
           return Container(
-            constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width*0.4),
+            constraints: BoxConstraints(
+                maxWidth: MediaQuery.of(context).size.width * 0.4),
             child: Text(
               "${data.item3 ? "You (" : ""}${data.item1}${data.item3 ? ")" : ""} ${data.item2 ? " Degraded" : ""}",
               maxLines: 1,
@@ -34,7 +35,7 @@ class _PeerNameState extends State<PeerName> {
                   color: defaultColor,
                   fontSize: 14,
                   letterSpacing: 0.25,
-                  height: 20/14),
+                  height: 20 / 14),
             ),
           );
         });

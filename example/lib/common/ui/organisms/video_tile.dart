@@ -4,6 +4,7 @@ import 'package:focus_detector/focus_detector.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/change_role_options.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/local_peer_tile_dialog.dart';
+import 'package:hmssdk_flutter_example/common/ui/organisms/name_widget.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
 import 'package:provider/provider.dart';
@@ -203,12 +204,24 @@ class _VideoTileState extends State<VideoTile> {
                               SizedBox(
                                 width: 3,
                               ),
-                              NetworkIconWidget(), //top left
+                              NetworkIconWidget(),
                             ],
                           ),
                         ),
                       ),
                     ),
+                    Align(
+                        alignment: Alignment.center,
+                        child: Column(
+                          // mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                              height: 100,
+                            ),
+                            NameWidget(),
+                          ],
+                        )),
                     HandRaise(), //bottom left
                     BRBTag(), //top right
                     AudioMuteStatus(), //bottom center

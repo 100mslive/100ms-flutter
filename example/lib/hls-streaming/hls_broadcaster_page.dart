@@ -71,7 +71,7 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
 
   Widget _showPopupMenuButton({required bool isHLSRunning}) {
     return PopupMenuButton(
-      offset: Offset(0,45),
+        offset: Offset(0, 45),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         icon: SvgPicture.asset(
           "assets/icons/leave_hls.svg",
@@ -269,7 +269,7 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                         height:
                                             MediaQuery.of(context).size.height *
                                                 0.735,
-                                        child: HLSGridView(
+                                        child: hlsGridView(
                                             peerTracks: data.item1,
                                             itemCount: data.item3,
                                             screenShareCount: data.item4,
@@ -893,10 +893,9 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                                       height: 40,
                                                       disabledBorderColor:
                                                           borderColor,
-                                                      offColor: screenBackgroundColor,
-                                                      onColor:
-                                                      borderColor
-                                                          ,
+                                                      offColor:
+                                                          screenBackgroundColor,
+                                                      onColor: borderColor,
                                                       isActive: data,
                                                       child: SvgPicture.asset(
                                                         "assets/icons/screen_share.svg",
