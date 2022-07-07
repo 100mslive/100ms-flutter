@@ -4,16 +4,16 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
 import 'package:hmssdk_flutter_example/hls-streaming/hls_device_settings.dart';
+import 'package:hmssdk_flutter_example/hls-streaming/util/hls_participant_sheet.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:provider/provider.dart';
 
-class HLSSettings extends StatefulWidget {
-  
+class HLSViewerSettings extends StatefulWidget {
   @override
-  State<HLSSettings> createState() => _HLSSettingsState();
+  State<HLSViewerSettings> createState() => _HLSViewerSettingsState();
 }
 
-class _HLSSettingsState extends State<HLSSettings> {
+class _HLSViewerSettingsState extends State<HLSViewerSettings> {
   @override
   Widget build(BuildContext context) {
     return FractionallySizedBox(
@@ -30,7 +30,7 @@ class _HLSSettingsState extends State<HLSSettings> {
                   Row(
                     children: [
                       Text(
-                        "More Settings",
+                        "Settings",
                         style: GoogleFonts.inter(
                             fontSize: 16,
                             color: defaultColor,
@@ -143,15 +143,25 @@ class _HLSSettingsState extends State<HLSSettings> {
               ListTile(
                 horizontalTitleGap: 2,
                 onTap: () {
-                  context.read<MeetingStore>().switchCamera();
+                  showModalBottomSheet(
+                    isScrollControlled: true,
+                    backgroundColor: bottomSheetColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    context: context,
+                    builder: (ctx) => ChangeNotifierProvider.value(
+                        value: context.read<MeetingStore>(),
+                        child: HLSParticipantSheet()),
+                  );
                 },
                 contentPadding: EdgeInsets.zero,
                 leading: SvgPicture.asset(
-                  "assets/icons/camera.svg",
+                  "assets/icons/participants.svg",
                   fit: BoxFit.scaleDown,
                 ),
                 title: Text(
-                  "Switch Camera",
+                  "Participants",
                   style: GoogleFonts.inter(
                       fontSize: 14,
                       color: defaultColor,

@@ -80,7 +80,8 @@ class _ParticipantOrganismState extends State<ParticipantOrganism> {
                           context: context,
                           builder: (_) => ChangeRoleOptionDialog(
                                 peerName: peer.name,
-                                getRoleFunction: _meetingStore!.getRoles(),
+                                roles: _meetingStore?.roles ?? [],
+                                peer: peer,
                                 changeRole: (role, forceChange) {
                                   Navigator.pop(context);
                                   _meetingStore!.changeRole(

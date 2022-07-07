@@ -16,6 +16,7 @@ import 'package:hmssdk_flutter_example/hls-streaming/hls_settings.dart';
 import 'package:hmssdk_flutter_example/hls-streaming/util/hls_grid_view.dart';
 import 'package:hmssdk_flutter_example/hls-streaming/util/hls_participant_sheet.dart';
 import 'package:hmssdk_flutter_example/hls-streaming/util/hls_subtitle_text.dart';
+import 'package:hmssdk_flutter_example/hls-streaming/util/hls_title_text.dart';
 import 'package:hmssdk_flutter_example/hls_viewer/hls_viewer.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:hmssdk_flutter_example/meeting/peer_track_node.dart';
@@ -66,6 +67,80 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
     context.read<MeetingStore>().localPeerNetworkQuality =
         widget.localPeerNetworkQuality;
     context.read<MeetingStore>().setSettings();
+  }
+
+  Widget _showPopupMenuButton({required bool isHLSRunning}) {
+    return PopupMenuButton(
+      offset: Offset(0,45),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        icon: SvgPicture.asset(
+          "assets/icons/leave_hls.svg",
+          color: Colors.white,
+          fit: BoxFit.scaleDown,
+        ),
+        color: bottomSheetColor,
+        onSelected: (int value) async {
+          switch (value) {
+            case 1:
+              await UtilityComponents.onLeaveStudio(context);
+              break;
+            case 2:
+              await UtilityComponents.onEndStream(
+                  context: context,
+                  title: 'End Session',
+                  content:
+                      "The session will end for everyone and all the activities will stop. You can’t undo this action.",
+                  ignoreText: "Don't End ",
+                  actionText: 'End Session');
+              break;
+            default:
+              break;
+          }
+        },
+        itemBuilder: (context) => [
+              PopupMenuItem(
+                child: Row(children: [
+                  SvgPicture.asset("assets/icons/leave_hls.svg",
+                      width: 17, color: defaultColor),
+                  SizedBox(
+                    width: 12,
+                  ),
+                  HLSTitleText(
+                    text: "Leave Studio",
+                    textColor: defaultColor,
+                    fontSize: 14,
+                    lineHeight: 20,
+                    letterSpacing: 0.25,
+                  ),
+                  Divider(
+                    height: 5,
+                    color: dividerColor,
+                  ),
+                ]),
+                value: 1,
+              ),
+              PopupMenuItem(
+                child: Row(children: [
+                  SvgPicture.asset("assets/icons/end_warning.svg",
+                      width: 17, color: errorColor),
+                  SizedBox(
+                    width: 12,
+                  ),
+                  HLSTitleText(
+                    text: "End Session",
+                    textColor: errorColor,
+                    fontSize: 14,
+                    lineHeight: 20,
+                    letterSpacing: 0.25,
+                  ),
+                  Divider(
+                    height: 1,
+                    color: dividerColor,
+                  ),
+                ]),
+                value: 2,
+              ),
+            ]);
   }
 
   @override
@@ -224,24 +299,50 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                       children: [
                                         Row(
                                           children: [
-                                            EmbeddedButton(
-                                              onTap: () async => {
-                                                await UtilityComponents
-                                                    .onBackPressed(context)
-                                              },
-                                              width: 40,
-                                              height: 40,
-                                              offColor: Color(0xffCC525F),
-                                              onColor: Color(0xffCC525F),
-                                              disabledBorderColor:
-                                                  Color(0xffCC525F),
-                                              isActive: false,
-                                              child: SvgPicture.asset(
-                                                "assets/icons/leave_hls.svg",
-                                                color: Colors.white,
-                                                fit: BoxFit.scaleDown,
-                                              ),
-                                            ),
+                                            Selector<MeetingStore, bool>(
+                                                selector: (_, meetingStore) =>
+                                                    meetingStore.hasHlsStarted,
+                                                builder:
+                                                    (_, hasHlsStarted, __) {
+                                                  return hasHlsStarted
+                                                      ? EmbeddedButton(
+                                                          onTap: () async => {},
+                                                          width: 40,
+                                                          height: 40,
+                                                          offColor:
+                                                              Color(0xffCC525F),
+                                                          onColor:
+                                                              Color(0xffCC525F),
+                                                          disabledBorderColor:
+                                                              Color(0xffCC525F),
+                                                          isActive: false,
+                                                          child: _showPopupMenuButton(
+                                                              isHLSRunning:
+                                                                  hasHlsStarted))
+                                                      : EmbeddedButton(
+                                                          onTap: () async => {
+                                                            await UtilityComponents
+                                                                .onBackPressed(
+                                                                    context)
+                                                          },
+                                                          width: 40,
+                                                          height: 40,
+                                                          offColor:
+                                                              Color(0xffCC525F),
+                                                          onColor:
+                                                              Color(0xffCC525F),
+                                                          disabledBorderColor:
+                                                              Color(0xffCC525F),
+                                                          isActive: false,
+                                                          child:
+                                                              SvgPicture.asset(
+                                                            "assets/icons/leave_hls.svg",
+                                                            color: Colors.white,
+                                                            fit: BoxFit
+                                                                .scaleDown,
+                                                          ),
+                                                        );
+                                                }),
                                             SizedBox(
                                               width: 10,
                                             ),
@@ -623,9 +724,17 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                                           ),
                                                           InkWell(
                                                             onTap: () {
-                                                              UtilityComponents
-                                                                  .onEndStream(
-                                                                      context);
+                                                              UtilityComponents.onEndStream(
+                                                                  context:
+                                                                      context,
+                                                                  title:
+                                                                      'End live stream for all?',
+                                                                  content:
+                                                                      "Your live stream will end and stream viewers will go offline immediately in this room. You can’t undo this action.",
+                                                                  ignoreText:
+                                                                      "Don't End ",
+                                                                  actionText:
+                                                                      'End Stream');
                                                             },
                                                             child: CircleAvatar(
                                                               radius: 40,

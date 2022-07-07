@@ -11,6 +11,7 @@ import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:hmssdk_flutter_example/hls-streaming/hls_message.dart';
 import 'package:hmssdk_flutter_example/hls-streaming/util/hls_subtitle_text.dart';
+import 'package:hmssdk_flutter_example/hls-streaming/util/hls_viewer_settings.dart';
 import 'package:hmssdk_flutter_example/hls_viewer/hls_viewer.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:provider/provider.dart';
@@ -379,7 +380,25 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                               width: 10,
                                             ),
                                             EmbeddedButton(
-                                              onTap: () => {},
+                                              onTap: () => {
+                                                showModalBottomSheet(
+                                                    isScrollControlled: true,
+                                                    backgroundColor:
+                                                        bottomSheetColor,
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              20),
+                                                    ),
+                                                    context: context,
+                                                    builder: (ctx) =>
+                                                        ChangeNotifierProvider.value(
+                                                            value: context.read<
+                                                                MeetingStore>(),
+                                                            child:
+                                                                HLSViewerSettings()))
+                                              },
                                               width: 40,
                                               height: 40,
                                               offColor: hintColor,

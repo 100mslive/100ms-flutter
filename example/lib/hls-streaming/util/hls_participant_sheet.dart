@@ -48,7 +48,8 @@ class _HLSParticipantSheetState extends State<HLSParticipantSheet> {
                     context: context,
                     builder: (_) => ChangeRoleOptionDialog(
                           peerName: peer.name,
-                          getRoleFunction: _meetingStore.getRoles(),
+                          roles: _meetingStore.roles,
+                          peer: peer,
                           changeRole: (role, forceChange) {
                             _meetingStore.changeRole(
                                 peer: peer,
@@ -99,9 +100,9 @@ class _HLSParticipantSheetState extends State<HLSParticipantSheet> {
                   context: context,
                   builder: (_) => ChangeRoleOptionDialog(
                         peerName: peerTrackNode!.peer.name,
-                        getRoleFunction: _meetingStore.getRoles(),
+                        roles: _meetingStore.roles,
+                        peer: peerTrackNode.peer,
                         changeRole: (role, forceChange) {
-                          Navigator.pop(context);
                           _meetingStore.changeRole(
                               peer: peerTrackNode!.peer,
                               roleName: role,
@@ -224,7 +225,6 @@ class _HLSParticipantSheetState extends State<HLSParticipantSheet> {
 
   @override
   Widget build(BuildContext context) {
-    final _meetingStore = context.read<MeetingStore>();
     return FractionallySizedBox(
       heightFactor: 0.8,
       child: Padding(
@@ -340,21 +340,22 @@ class _HLSParticipantSheetState extends State<HLSParticipantSheet> {
                 height: 5,
               ),
             ),
-            Selector<MeetingStore, Tuple2<List<HMSPeer>, int>>(
+            Selector<MeetingStore, Tuple2<List<PeerTrackNode>, int>>(
                 selector: (_, meetingStore) =>
-                    Tuple2(meetingStore.peers, meetingStore.peers.length),
+                    Tuple2(meetingStore.peerTracks, meetingStore.peers.length),
                 builder: (_, data, __) {
-                  List<HMSPeer> copyList = [];
+                  List<PeerTrackNode> copyList = [];
                   copyList.addAll(data.item1);
-                  List<HMSPeer> peerList = [];
+                  List<PeerTrackNode> peerList = [];
                   peerList.add(copyList.removeAt(
-                      copyList.indexWhere((element) => element.isLocal)));
+                      copyList.indexWhere((element) => element.peer.isLocal)));
                   if (valueChoose == "Everyone") {
                     peerList.addAll(copyList.sortedBy(
-                        (element) => element.role.priority.toString()));
+                        (element) => element.peer.role.priority.toString()));
                   } else {
                     peerList = copyList
-                        .where((element) => element.role.name == valueChoose)
+                        .where(
+                            (element) => element.peer.role.name == valueChoose)
                         .toList();
                   }
                   return Container(
@@ -363,39 +364,54 @@ class _HLSParticipantSheetState extends State<HLSParticipantSheet> {
                         shrinkWrap: true,
                         itemCount: peerList.length,
                         itemBuilder: (context, index) {
-                          return ListTile(
-                              horizontalTitleGap: 5,
-                              contentPadding: EdgeInsets.zero,
-                              leading: CircleAvatar(
-                                backgroundColor: Utilities.getBackgroundColour(
-                                    peerList[index].name),
-                                radius: 16,
-                                child: Text(
-                                    Utilities.getAvatarTitle(
-                                        peerList[index].name),
-                                    style: GoogleFonts.inter(
-                                        fontSize: 12,
-                                        color: defaultColor,
-                                        fontWeight: FontWeight.w600)),
-                              ),
-                              title: Text(
-                                peerList[index].name +
-                                    (peerList[index].isLocal ? " (You)" : ""),
-                                style: GoogleFonts.inter(
-                                    fontSize: 16,
-                                    color: defaultColor,
-                                    letterSpacing: 0.15,
-                                    fontWeight: FontWeight.w600),
-                              ),
-                              subtitle: Text(
-                                peerList[index].role.name,
-                                style: GoogleFonts.inter(
-                                    fontSize: 12,
-                                    color: subHeadingColor,
-                                    letterSpacing: 0.40,
-                                    fontWeight: FontWeight.w400),
-                              ),
-                              trailing: _kebabMenu(peerList[index]));
+                          return ChangeNotifierProvider.value(
+                            key: ValueKey(
+                                peerList[index].uid + "participant_list"),
+                            value: peerList[index],
+                            child: Selector<MeetingStore,
+                                    Tuple4<String, bool, HMSPeer, String>>(
+                                selector: (_, meetingStore) => Tuple4(
+                                    meetingStore.peers[index].name,
+                                    meetingStore.peers[index].isLocal,
+                                    meetingStore.peers[index],
+                                    meetingStore.peers[index].role.name),
+                                builder: (_, data, __) {
+                                  return ListTile(
+                                      horizontalTitleGap: 5,
+                                      contentPadding: EdgeInsets.zero,
+                                      leading: CircleAvatar(
+                                        backgroundColor:
+                                            Utilities.getBackgroundColour(
+                                                data.item1),
+                                        radius: 16,
+                                        child: Text(
+                                            Utilities.getAvatarTitle(
+                                                data.item1),
+                                            style: GoogleFonts.inter(
+                                                fontSize: 12,
+                                                color: defaultColor,
+                                                fontWeight: FontWeight.w600)),
+                                      ),
+                                      title: Text(
+                                        data.item1 +
+                                            (data.item2 ? " (You)" : ""),
+                                        style: GoogleFonts.inter(
+                                            fontSize: 16,
+                                            color: defaultColor,
+                                            letterSpacing: 0.15,
+                                            fontWeight: FontWeight.w600),
+                                      ),
+                                      subtitle: Text(
+                                        data.item4,
+                                        style: GoogleFonts.inter(
+                                            fontSize: 12,
+                                            color: subHeadingColor,
+                                            letterSpacing: 0.40,
+                                            fontWeight: FontWeight.w400),
+                                      ),
+                                      trailing: _kebabMenu(data.item3));
+                                }),
+                          );
                         }),
                   );
                 })

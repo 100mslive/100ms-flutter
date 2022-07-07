@@ -7,6 +7,7 @@ import 'package:hmssdk_flutter_example/common/constant.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_mode.dart';
+import 'package:hmssdk_flutter_example/hls-streaming/util/hls_title_text.dart';
 import 'package:provider/provider.dart';
 
 //Project imports
@@ -25,7 +26,9 @@ class UtilityComponents {
     return showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         insetPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+        actionsPadding: EdgeInsets.only(right: 10, left: 10, bottom: 10),
         backgroundColor: Color.fromRGBO(32, 22, 23, 1),
         title: Container(
           width: 300,
@@ -66,36 +69,136 @@ class UtilityComponents {
                       ),
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
-                        side: BorderSide(width: 1, color: borderColor),
+                        side: BorderSide(width: 1, color: popupButtonBorderColor),
                         borderRadius: BorderRadius.circular(8.0),
                       ))),
                   onPressed: () => Navigator.pop(context, false),
-                  child: Text('Nevermind',
-                      style: GoogleFonts.inter(
-                          color: defaultColor,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          letterSpacing: 0.50))),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 8.0, vertical: 12),
+                    child: Text('Nevermind',
+                        style: GoogleFonts.inter(
+                            color: defaultColor,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: 0.50)),
+                  )),
               ElevatedButton(
                 style: ButtonStyle(
                     shadowColor: MaterialStateProperty.all(surfaceColor),
                     backgroundColor: MaterialStateProperty.all(errorColor),
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(
-                      side: BorderSide(width: 1, color: borderColor),
+                      side: BorderSide(width: 1, color: errorColor),
                       borderRadius: BorderRadius.circular(8.0),
                     ))),
                 onPressed: () => {
                   _meetingStore.leave(),
                   Navigator.popUntil(context, (route) => route.isFirst)
                 },
-                child: Text(
-                  'Leave Room',
-                  style: GoogleFonts.inter(
-                      color: defaultColor,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      letterSpacing: 0.50),
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8.0, vertical: 12),
+                  child: Text(
+                    'Leave Room',
+                    style: GoogleFonts.inter(
+                        color: defaultColor,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: 0.50),
+                  ),
+                ),
+              ),
+            ],
+          )
+        ],
+      ),
+    );
+  }
+
+  static Future<dynamic> onLeaveStudio(BuildContext context) {
+    MeetingStore _meetingStore = context.read<MeetingStore>();
+    return showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        insetPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+        actionsPadding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
+        backgroundColor: bottomSheetColor,
+        title: Container(
+          width: 300,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SvgPicture.asset(
+                "assets/icons/leave_hls.svg",
+                height: 17,
+              ),
+              SizedBox(
+                width: 5,
+              ),
+              Text(
+                'Leave Studio',
+                style: GoogleFonts.inter(
+                    color: defaultColor,
+                    fontSize: 20,
+                    height: 24 / 20,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 0.15),
+              ),
+            ],
+          ),
+        ),
+        content: Text(
+            "Others will continue after you leave. You can join the studio again.",
+            style: GoogleFonts.inter(
+                color: subHeadingColor,
+                fontSize: 14,
+                fontWeight: FontWeight.w400,
+                height: 20 / 14,
+                letterSpacing: 0.25)),
+        actions: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              ElevatedButton(
+                  style: ButtonStyle(
+                      shadowColor: MaterialStateProperty.all(surfaceColor),
+                      backgroundColor: MaterialStateProperty.all(
+                        bottomSheetColor
+                      ),
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                        side: BorderSide(width: 1, color: popupButtonBorderColor),
+                        borderRadius: BorderRadius.circular(8.0),
+                      ))),
+                  onPressed: () => Navigator.pop(context, false),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 8.0, vertical: 12),
+                    child: HLSTitleText(
+                        text: 'Don’t Leave', textColor: defaultColor),
+                  )),
+              ElevatedButton(
+                style: ButtonStyle(
+                    shadowColor: MaterialStateProperty.all(surfaceColor),
+                    backgroundColor: MaterialStateProperty.all(errorColor),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                      side: BorderSide(width: 1, color: errorColor),
+                      borderRadius: BorderRadius.circular(8.0),
+                    ))),
+                onPressed: () => {
+                  _meetingStore.leave(),
+                  Navigator.popUntil(context, (route) => route.isFirst)
+                },
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 15.0, vertical: 12),
+                  child: HLSTitleText(
+                    text: 'Leave',
+                    textColor: defaultColor,
+                  ),
                 ),
               ),
             ],
@@ -151,6 +254,9 @@ class UtilityComponents {
         context: context,
         builder: (context) {
           return AlertDialog(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            backgroundColor: bottomSheetColor,
             content: Text(
               message,
               style: GoogleFonts.inter(
@@ -181,6 +287,9 @@ class UtilityComponents {
     String answer = await showDialog(
         context: context,
         builder: (context) => AlertDialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12)),
+              backgroundColor: bottomSheetColor,
               content: Container(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -234,6 +343,9 @@ class UtilityComponents {
         context: context,
         builder: (context) => StatefulBuilder(builder: (context, setState) {
               return AlertDialog(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12)),
+                backgroundColor: bottomSheetColor,
                 content: Container(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
@@ -334,6 +446,9 @@ class UtilityComponents {
         context: context,
         builder: (context) => StatefulBuilder(builder: (context, setState) {
               return AlertDialog(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12)),
+                backgroundColor: bottomSheetColor,
                 title: Text(
                   "Select Role for Mute",
                   style: GoogleFonts.inter(
@@ -444,6 +559,9 @@ class UtilityComponents {
         context: context,
         builder: (context) => StatefulBuilder(builder: (context, setState) {
               return AlertDialog(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12)),
+                backgroundColor: bottomSheetColor,
                 content: Container(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
@@ -512,6 +630,8 @@ class UtilityComponents {
     return showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        backgroundColor: bottomSheetColor,
         title: Text(
           'End Room?',
           style: GoogleFonts.inter(
@@ -520,7 +640,7 @@ class UtilityComponents {
         actions: [
           ElevatedButton(
               style: ElevatedButton.styleFrom(
-                primary: Colors.red,
+                primary: errorColor,
               ),
               onPressed: () {
                 _meetingStore.endRoom(false, "Room Ended From Flutter");
@@ -570,6 +690,9 @@ class UtilityComponents {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            backgroundColor: bottomSheetColor,
             title: Center(
               child: Text(
                 errorTitle,
@@ -599,24 +722,31 @@ class UtilityComponents {
     return res;
   }
 
-  static onEndStream(BuildContext context) {
+  static onEndStream(
+      {required BuildContext context,
+      required String title,
+      required String content,
+      required String actionText,
+      required String ignoreText}) {
     MeetingStore _meetingStore = context.read<MeetingStore>();
     return showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         insetPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+        actionsPadding: EdgeInsets.only(right: 10, left: 10, bottom: 10),
         backgroundColor: Color.fromRGBO(32, 22, 23, 1),
         title: Container(
           width: 300,
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              SvgPicture.asset("assets/icons/end.svg"),
+              SvgPicture.asset("assets/icons/end_warning.svg"),
               SizedBox(
                 width: 5,
               ),
               Text(
-                'End live stream for all?',
+                title,
                 style: GoogleFonts.inter(
                     color: errorColor,
                     fontSize: 20,
@@ -626,8 +756,7 @@ class UtilityComponents {
             ],
           ),
         ),
-        content: Text(
-            "Your live stream will end and stream viewers will go offline immediately in this room. You can’t undo this action.",
+        content: Text(content,
             style: GoogleFonts.inter(
                 color: subHeadingColor,
                 fontSize: 14,
@@ -635,7 +764,7 @@ class UtilityComponents {
                 letterSpacing: 0.25)),
         actions: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               ElevatedButton(
                   style: ButtonStyle(
@@ -645,34 +774,42 @@ class UtilityComponents {
                       ),
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
-                        side: BorderSide(width: 1, color: borderColor),
+                        side: BorderSide(width: 1, color: popupButtonBorderColor),
                         borderRadius: BorderRadius.circular(8.0),
                       ))),
                   onPressed: () => Navigator.pop(context),
-                  child: Text('Nevermind',
-                      style: GoogleFonts.inter(
-                          color: defaultColor,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          letterSpacing: 0.50))),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 8.0, vertical: 12),
+                    child: Text(ignoreText,
+                        style: GoogleFonts.inter(
+                            color: defaultColor,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: 0.50)),
+                  )),
               ElevatedButton(
                 style: ButtonStyle(
                     shadowColor: MaterialStateProperty.all(surfaceColor),
                     backgroundColor: MaterialStateProperty.all(errorColor),
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(
-                      side: BorderSide(width: 1, color: borderColor),
+                      side: BorderSide(width: 1, color: errorColor),
                       borderRadius: BorderRadius.circular(8.0),
                     ))),
                 onPressed: () =>
                     {_meetingStore.stopHLSStreaming(), Navigator.pop(context)},
-                child: Text(
-                  'End Stream',
-                  style: GoogleFonts.inter(
-                      color: defaultColor,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      letterSpacing: 0.50),
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8.0, vertical: 12),
+                  child: Text(
+                    actionText,
+                    style: GoogleFonts.inter(
+                        color: defaultColor,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: 0.50),
+                  ),
                 ),
               ),
             ],
@@ -692,6 +829,8 @@ class UtilityComponents {
     String answer = await showDialog(
         context: context,
         builder: (context) => AlertDialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12)),
               insetPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
               backgroundColor: bottomSheetColor,
               title: Text("Change Name",
@@ -747,7 +886,8 @@ class UtilityComponents {
                             ))),
                         onPressed: () => Navigator.pop(context, false),
                         child: Padding(
-                          padding: const EdgeInsets.only(left: 4.0, right: 4),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 4, vertical: 8),
                           child: Text('Cancel',
                               style: GoogleFonts.inter(
                                   color: defaultColor,
@@ -775,7 +915,8 @@ class UtilityComponents {
                           {Navigator.pop(context, textController.text)}
                       },
                       child: Padding(
-                        padding: const EdgeInsets.only(left: 4.0, right: 4),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 4, vertical: 8),
                         child: Text(
                           'Change',
                           style: GoogleFonts.inter(

@@ -25,3 +25,4 @@ Color screenBackgroundColor = Color.fromRGBO(11, 13, 15, 1);
 Color errorColor = Color.fromRGBO(204, 82, 95, 1);
 Color bottomSheetColor = Color.fromRGBO(20, 23, 28, 1);
 Color hmsdefaultColor = Color.fromRGBO(36, 113, 237, 1);
+Color popupButtonBorderColor = Color.fromRGBO(107, 125, 153, 1);

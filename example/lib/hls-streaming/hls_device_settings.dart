@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/hms_button.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
+import 'package:hmssdk_flutter_example/hls-streaming/util/hls_subtitle_text.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
@@ -16,7 +17,8 @@ class HLSDeviceSettings extends StatefulWidget {
 }
 
 class _HLSDeviceSettingsState extends State<HLSDeviceSettings> {
-  String valueChoose = "test_hls";
+  String valueChoose = "Default - Macbook Pro Speakers (Built-in)";
+
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -55,8 +57,10 @@ class _HLSDeviceSettingsState extends State<HLSDeviceSettings> {
                   ),
                 ),
                 IconButton(
-                  icon: SvgPicture.asset("assets/icons/close_button.svg",
-                  width: 40,),
+                  icon: SvgPicture.asset(
+                    "assets/icons/close_button.svg",
+                    width: 40,
+                  ),
                   onPressed: () {
                     Navigator.pop(context);
                   },
@@ -79,138 +83,68 @@ class _HLSDeviceSettingsState extends State<HLSDeviceSettings> {
             SizedBox(
               height: 10,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                  padding: EdgeInsets.only(left: 10, right: 5),
-                  decoration: BoxDecoration(
-                    color: surfaceColor,
-                    borderRadius: BorderRadius.circular(10.0),
-                    border: Border.all(
-                        color: borderColor,
-                        style: BorderStyle.solid,
-                        width: 0.80),
-                  ),
-                  width: MediaQuery.of(context).size.width * 0.55,
-                  child: DropdownButtonHideUnderline(
-                    child: Selector<MeetingStore,
-                            Tuple2<List<HMSRole>, List<HMSPeer>>>(
-                        selector: (_, meetingStore) =>
-                            Tuple2(meetingStore.roles, meetingStore.peers),
-                        builder: (context, data, _) {
-                          List<String> roles = [
-                            "Default - Macbook Pro Speakers (Built-in)",
-                            "Bluetooth earpiece"
-                          ];
-                          return DropdownButton2(
-                            isExpanded: true,
-                            dropdownWidth: width * 0.55,
-                            buttonWidth: width * 0.55,
-                            buttonHeight: 48,
-                            itemHeight: 45,
-                            selectedItemHighlightColor: hmsdefaultColor,
-                            value: valueChoose,
-                            icon: Icon(Icons.keyboard_arrow_down),
-                            dropdownDecoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8),
-                                color: surfaceColor),
-                            offset: Offset(-10, -10),
-                            iconEnabledColor: iconColor,
-                            onChanged: (dynamic newvalue) {
-                              setState(() {
-                                this.valueChoose = newvalue as String;
-                              });
-                            },
-                            items: <DropdownMenuItem>[
-                              DropdownMenuItem(
-                                child: Row(
-                                  children: [
-                                    SvgPicture.asset(
-                                        "assets/icons/music_wave.svg"),
-                                    SizedBox(
-                                      width: 10,
-                                    ),
-                                    Container(
-                                      width: width * 0.35,
-                                      child: Text(
-                                        "Default - Macbook Pro Speakers (Built-in)",
-                                        style: GoogleFonts.inter(
-                                          fontWeight: FontWeight.w400,
-                                          fontSize: 12,
-                                          letterSpacing: 0.4,
+            Container(
+              padding: EdgeInsets.only(left: 10, right: 5),
+              decoration: BoxDecoration(
+                color: surfaceColor,
+                borderRadius: BorderRadius.circular(10.0),
+                border: Border.all(
+                    color: borderColor, style: BorderStyle.solid, width: 0.80),
+              ),
+              child: DropdownButtonHideUnderline(
+                child: Selector<MeetingStore,
+                        Tuple2<List<HMSRole>, List<HMSPeer>>>(
+                    selector: (_, meetingStore) =>
+                        Tuple2(meetingStore.roles, meetingStore.peers),
+                    builder: (context, data, _) {
+                      List<String> roles = [
+                        "Default - Macbook Pro Speakers (Built-in)",
+                        "Bluetooth earpiece"
+                      ];
+                      return DropdownButton2(
+                        isExpanded: true,
+                        buttonHeight: 48,
+                        itemHeight: 45,
+                        selectedItemHighlightColor: hmsdefaultColor,
+                        value: valueChoose,
+                        icon: Icon(Icons.keyboard_arrow_down),
+                        dropdownDecoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            color: surfaceColor),
+                        offset: Offset(-10, -10),
+                        iconEnabledColor: iconColor,
+                        onChanged: (dynamic newvalue) {
+                          setState(() {
+                            this.valueChoose = newvalue as String;
+                          });
+                        },
+                        items: <DropdownMenuItem>[
+                          ...roles
+                              .sortedBy((element) => element.toString())
+                              .map((role) => DropdownMenuItem(
+                                    child: Row(
+                                      children: [
+                                        SvgPicture.asset(
+                                            "assets/icons/music_wave.svg"),
+                                        SizedBox(
+                                          width: 10,
                                         ),
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 1,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                value: "test_hls",
-                              ),
-                              ...roles
-                                  .sortedBy((element) => element.toString())
-                                  .map((role) => DropdownMenuItem(
-                                        child: Row(
-                                          children: [
-                                            SvgPicture.asset(
-                                                "assets/icons/music_wave.svg"),
-                                            SizedBox(
-                                              width: 10,
-                                            ),
-                                            Container(
-                                              width: width * 0.3,
-                                              child: Text(
-                                                role,
-                                                style: GoogleFonts.inter(
-                                                  fontWeight: FontWeight.w400,
-                                                  fontSize: 12,
-                                                  letterSpacing: 0.4,
-                                                ),
-                                                overflow: TextOverflow.ellipsis,
-                                                maxLines: 1,
-                                              ),
-                                            ),
-                                          ],
+                                        Container(
+                                          child: HLSSubtitleText(
+                                            text: role,
+                                            textColor: defaultColor,
+                                          ),
                                         ),
-                                        value: role,
-                                      ))
-                                  .toList(),
-                            ],
-                          );
-                        }),
-                  ),
-                ),
-                // Container(
-                //   height: 48,
-                //   child: HMSButton(
-                //       buttonBackgroundColor: buttonColor,
-                //       width: width * 0.3,
-                //       onPressed: () {},
-                //       childWidget: Row(
-                //         mainAxisAlignment: MainAxisAlignment.spaceAround,
-                //         children: [
-                //           SvgPicture.asset(
-                //             "assets/icons/speaker_state_on.svg",
-                //             color: defaultColor,
-                //             fit: BoxFit.scaleDown,
-                //           ),
-                //           Text(
-                //             "Test",
-                //             style: GoogleFonts.inter(
-                //               fontWeight: FontWeight.w600,
-                //               fontSize: 16,
-                //               letterSpacing: 0.5,
-                //             ),
-                //             overflow: TextOverflow.ellipsis,
-                //             maxLines: 1,
-                //           ),
-                //         ],
-                //       )),
-                // )
-              ],
+                                      ],
+                                    ),
+                                    value: role,
+                                  ))
+                              .toList(),
+                        ],
+                      );
+                    }),
+              ),
             ),
-          
           ],
         ),
       ),

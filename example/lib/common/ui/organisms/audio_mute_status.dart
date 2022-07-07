@@ -25,8 +25,8 @@ class _AudioMuteStatusState extends State<AudioMuteStatus> {
                 padding: const EdgeInsets.fromLTRB(0, 5, 5, 0),
                 child: data
                     ? SvgPicture.asset(
-                        'assets/icons/mic_state_off.svg',
-                        color: Colors.red,
+                        'assets/icons/tile_mute.svg',
+                        width: 30,
                       )
                     : Container()),
           );

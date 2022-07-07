@@ -73,6 +73,7 @@ class _HMSExampleAppState extends State<HMSExampleApp> {
     super.initState();
     _initURIHandler();
     _incomingLinkHandler();
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   }
 
   Future<void> _initURIHandler() async {
@@ -98,12 +99,8 @@ class _HMSExampleAppState extends State<HMSExampleApp> {
     }
   }
 
-  /// Handle incoming links - the ones that the app will receive from the OS
-  /// while already started.
   void _incomingLinkHandler() {
     if (!kIsWeb) {
-      // It will handle app links while the app is already started - be it in
-      // the foreground or in the background.
       _streamSubscription = uriLinkStream.listen((Uri? uri) {
         if (!mounted) {
           return;
@@ -600,8 +597,9 @@ class _HomePageState extends State<HomePage> {
                             width: 5,
                           ),
                           HLSTitleText(
-                              key:Key("scan_qr_code"),
-                              text: 'Scan QR Code', textColor: enabledTextColor)
+                              key: Key("scan_qr_code"),
+                              text: 'Scan QR Code',
+                              textColor: enabledTextColor)
                         ],
                       ),
                     ),
