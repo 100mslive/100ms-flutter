@@ -197,7 +197,7 @@ class _VideoTileState extends State<VideoTile> {
                         child: Padding(
                           padding: const EdgeInsets.symmetric(
                               horizontal: 4, vertical: 2.0),
-                          child: Row(
+                          child: Row(//Bottom left
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               PeerName(),
@@ -210,21 +210,15 @@ class _VideoTileState extends State<VideoTile> {
                         ),
                       ),
                     ),
-                    Align(
+                    Align( //Center
                         alignment: Alignment.center,
-                        child: Column(
-                          // mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SizedBox(
-                              height: 100,
-                            ),
-                            NameWidget(),
-                          ],
+                        child: Padding(
+                          padding: const EdgeInsets.only(top:110.0),
+                          child: NameWidget(),
                         )),
-                    HandRaise(), //bottom left
-                    BRBTag(), //top right
-                    AudioMuteStatus(), //bottom center
+                    HandRaise(), //top left
+                    BRBTag(), //bottom right
+                    AudioMuteStatus(), //top right
                     RTCStatsView(
                         isLocal: context.read<PeerTrackNode>().peer.isLocal),
                     TileBorder(
