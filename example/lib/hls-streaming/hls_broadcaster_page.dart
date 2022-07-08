@@ -265,10 +265,9 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                       top: 55,
                                       left: 0,
                                       right: 0,
+                                      bottom: 105,
                                       child: Container(
-                                        height:
-                                            MediaQuery.of(context).size.height *
-                                                0.735,
+
                                         child: hlsGridView(
                                             peerTracks: data.item1,
                                             itemCount: data.item3,
@@ -281,8 +280,13 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                                     .width,
                                                 MediaQuery.of(context)
                                                         .size
-                                                        .height *
-                                                    0.735)),
+                                                        .height -
+                                                    159 -
+                                                    MediaQuery.of(context)
+                                                        .padding
+                                                        .bottom - MediaQuery.of(context)
+                                                    .padding
+                                                    .top)),
                                       ),
                                     );
                                   }),
@@ -486,6 +490,34 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                         ),
                                         Row(
                                           children: [
+                                            Selector<MeetingStore, bool>(
+                                                selector: (_, meetingStore) =>
+                                                    meetingStore.isRaisedHand,
+                                                builder: (_, handRaised, __) {
+                                                  return EmbeddedButton(
+                                                    onTap: () => {
+                                                      context
+                                                          .read<MeetingStore>()
+                                                          .changeMetadata()
+                                                    },
+                                                    width: 40,
+                                                    height: 40,
+                                                    disabledBorderColor:
+                                                        borderColor,
+                                                    offColor:
+                                                        screenBackgroundColor,
+                                                    onColor: hintColor,
+                                                    isActive: handRaised,
+                                                    child: SvgPicture.asset(
+                                                      "assets/icons/hand_outline.svg",
+                                                      color: defaultColor,
+                                                      fit: BoxFit.scaleDown,
+                                                    ),
+                                                  );
+                                                }),
+                                            SizedBox(
+                                              width: 10,
+                                            ),
                                             EmbeddedButton(
                                               onTap: () => {
                                                 showModalBottomSheet(
@@ -517,35 +549,6 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                                 fit: BoxFit.scaleDown,
                                               ),
                                             ),
-                                            SizedBox(
-                                              width: 10,
-                                            ),
-                                            Selector<MeetingStore, bool>(
-                                                selector: (_, meetingStore) =>
-                                                    meetingStore.isRaisedHand,
-                                                builder: (_, handRaised, __) {
-                                                  return EmbeddedButton(
-                                                    onTap: () => {
-                                                      context
-                                                          .read<MeetingStore>()
-                                                          .changeMetadata()
-                                                    },
-                                                    width: 40,
-                                                    height: 40,
-                                                    offColor:
-                                                        screenBackgroundColor,
-                                                    onColor:
-                                                        screenBackgroundColor,
-                                                    isActive: true,
-                                                    child: SvgPicture.asset(
-                                                      "assets/icons/hand.svg",
-                                                      color: handRaised
-                                                          ? Colors.yellow
-                                                          : defaultColor,
-                                                      fit: BoxFit.scaleDown,
-                                                    ),
-                                                  );
-                                                }),
                                             SizedBox(
                                               width: 10,
                                             ),

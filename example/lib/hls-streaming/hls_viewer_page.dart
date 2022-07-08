@@ -314,15 +314,14 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                     },
                                                     width: 40,
                                                     height: 40,
+                                                    disabledBorderColor: borderColor,
                                                     offColor:
                                                         screenBackgroundColor,
                                                     onColor: hintColor,
                                                     isActive: handRaised,
                                                     child: SvgPicture.asset(
-                                                      "assets/icons/hand.svg",
-                                                      color: handRaised
-                                                          ? Colors.yellow
-                                                          : defaultColor,
+                                                      "assets/icons/hand_outline.svg",
+                                                      color: defaultColor,
                                                       fit: BoxFit.scaleDown,
                                                     ),
                                                   );
