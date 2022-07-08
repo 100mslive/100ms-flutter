@@ -30,7 +30,7 @@ class _HLSSettingsState extends State<HLSSettings> {
                   Row(
                     children: [
                       Text(
-                        "More Settings",
+                        "Live Streaming Kit",
                         style: GoogleFonts.inter(
                             fontSize: 16,
                             color: defaultColor,
