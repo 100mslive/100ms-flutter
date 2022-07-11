@@ -210,12 +210,6 @@ class _VideoTileState extends State<VideoTile> {
                         ),
                       ),
                     ),
-                    Align( //Center
-                        alignment: Alignment.center,
-                        child: Padding(
-                          padding: const EdgeInsets.only(top:110.0),
-                          child: NameWidget(),
-                        )),
                     HandRaise(), //top left
                     BRBTag(), //bottom right
                     AudioMuteStatus(), //top right
