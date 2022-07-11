@@ -6,6 +6,7 @@ import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_mode.dart';
 import 'package:hmssdk_flutter_example/model/rtc_stats.dart';
 import 'package:intl/intl.dart';
+import 'package:collection/collection.dart';
 
 //Project imports
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
@@ -75,6 +76,10 @@ class MeetingStore extends ChangeNotifier
   late int highestSpeakerIndex = -1;
 
   List<HMSPeer> peers = [];
+
+  List<HMSPeer> filteredPeers = [];
+
+  String selectedRoleFilter = "Everyone";
 
   HMSPeer? localPeer;
 
@@ -199,11 +204,14 @@ class MeetingStore extends ChangeNotifier
 
   void removePeer(HMSPeer peer) {
     peers.remove(peer);
+    if (filteredPeers.contains(peer)) filteredPeers.remove(peer);
     // removeTrackWithPeerId(peer.peerId);
   }
 
   void addPeer(HMSPeer peer) {
     if (!peers.contains(peer)) peers.add(peer);
+
+    if (checkForFilteredList(peer)) filteredPeers.add(peer);
   }
 
   void onRoleUpdated(int index, HMSPeer peer) {
@@ -224,11 +232,40 @@ class MeetingStore extends ChangeNotifier
     notifyListeners();
   }
 
-  void updatePeerAt(peer) {
+  void updatePeerAt(HMSPeer peer) {
     int index = this.peers.indexOf(peer);
     this.peers.removeAt(index);
     this.peers.insert(index, peer);
     notifyListeners();
+  }
+
+  void updateFilteredList(HMSPeerUpdate peerUpdate, HMSPeer peer) {
+    String currentRole = this.selectedRoleFilter;
+    print("Current role is $currentRole");
+    int index =
+        filteredPeers.indexWhere((element) => element.peerId == peer.peerId);
+
+    if (index != -1) {
+      this.filteredPeers.removeAt(index);
+      if ((peerUpdate == HMSPeerUpdate.nameChanged)) {
+        this.filteredPeers.insert(index, peer);
+      } else if (peerUpdate == HMSPeerUpdate.metadataChanged) {
+        if ((peer.metadata?.contains("\"isHandRaised\":true") ?? false) ||
+            ((currentRole == "Everyone") || (currentRole == peer.role.name))) {
+          this.filteredPeers.insert(index, peer);
+        }
+      } else if (peerUpdate == HMSPeerUpdate.roleUpdated &&
+          ((currentRole == "Everyone") || (currentRole == "Raised Hand"))) {
+        this.filteredPeers.insert(index, peer);
+      }
+    } else {
+      if ((peerUpdate == HMSPeerUpdate.metadataChanged &&
+              currentRole == "Raised Hand") ||
+          (peerUpdate == HMSPeerUpdate.roleUpdated &&
+              currentRole == peer.role.name)) {
+        this.filteredPeers.add(peer);
+      }
+    }
   }
 
   Future<void> isScreenShareActive() async {
@@ -591,6 +628,7 @@ class MeetingStore extends ChangeNotifier
         }
 
         updatePeerAt(peer);
+        updateFilteredList(update, peer);
         notifyListeners();
         break;
 
@@ -603,6 +641,7 @@ class MeetingStore extends ChangeNotifier
           peerTrackNode.notify();
         }
         updatePeerAt(peer);
+        updateFilteredList(update, peer);
         break;
 
       case HMSPeerUpdate.nameChanged:
@@ -626,6 +665,7 @@ class MeetingStore extends ChangeNotifier
           }
         }
         updatePeerAt(peer);
+        updateFilteredList(update, peer);
         break;
 
       case HMSPeerUpdate.networkQualityUpdated:
@@ -989,6 +1029,60 @@ class MeetingStore extends ChangeNotifier
     return activeSpeakerIds.containsKey(uid) ? activeSpeakerIds[uid]! : -1;
   }
 
+  Future<List<HMSPeer>?> getPeers() async {
+    return await _hmsSDKInteractor.getPeers();
+  }
+
+  Future<List<HMSAudioDevice>> getAudioDevicesList() async {
+    return await _hmsSDKInteractor.getAudioDevicesList();
+  }
+
+  Future<HMSAudioDevice> getCurrentAudioDevice() async {
+    return await _hmsSDKInteractor.getCurrentAudioDevice();
+  }
+
+  void switchAudioOutput(HMSAudioDevice audioDevice) {
+    _hmsSDKInteractor.switchAudioOutput(audioDevice);
+  }
+
+  @override
+  void onAudioDeviceChanged(
+      {HMSAudioDevice? currentAudioDevice,
+      List<HMSAudioDevice>? availableAudioDevice}) {
+    if (currentAudioDevice != null)
+      Utilities.showToast(
+          "Output Device changed to ${currentAudioDevice.name}");
+  }
+
+  void getFilteredList(String type) {
+    filteredPeers.clear();
+    filteredPeers.addAll(peers);
+    filteredPeers.removeWhere((element) => element.isLocal);
+    filteredPeers.sortedBy(((element) => element.role.priority.toString()));
+    filteredPeers.insert(0, localPeer!);
+    if (type == "Everyone") {
+      return;
+    } else if (type == "Raised Hand") {
+      filteredPeers = filteredPeers
+          .where((element) =>
+              element.metadata != null &&
+              element.metadata!.contains("\"isHandRaised\":true"))
+          .toList();
+    } else {
+      filteredPeers =
+          filteredPeers.where((element) => element.role.name == type).toList();
+    }
+    notifyListeners();
+  }
+
+  bool checkForFilteredList(HMSPeer peer) {
+    if ((selectedRoleFilter == "Everyone") ||
+        (peer.role.name == selectedRoleFilter)) {
+      return true;
+    }
+    return false;
+  }
+
   @override
   void onSuccess(
       {HMSActionResultListenerMethod methodType =
@@ -1185,31 +1279,6 @@ class MeetingStore extends ChangeNotifier
       case HMSActionResultListenerMethod.unknown:
         break;
     }
-  }
-
-  Future<List<HMSPeer>?> getPeers() async {
-    return await _hmsSDKInteractor.getPeers();
-  }
-
-  Future<List<HMSAudioDevice>> getAudioDevicesList() async {
-    return await _hmsSDKInteractor.getAudioDevicesList();
-  }
-
-  Future<HMSAudioDevice> getCurrentAudioDevice() async {
-    return await _hmsSDKInteractor.getCurrentAudioDevice();
-  }
-
-  void switchAudioOutput(HMSAudioDevice audioDevice) {
-    _hmsSDKInteractor.switchAudioOutput(audioDevice);
-  }
-
-  @override
-  void onAudioDeviceChanged(
-      {HMSAudioDevice? currentAudioDevice,
-      List<HMSAudioDevice>? availableAudioDevice}) {
-    if (currentAudioDevice != null)
-      Utilities.showToast(
-          "Output Device changed to ${currentAudioDevice.name}");
   }
 
   @override
