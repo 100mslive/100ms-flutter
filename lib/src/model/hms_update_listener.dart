@@ -93,4 +93,8 @@ abstract class HMSUpdateListener {
   ///- Paramter hmsPeerRemovedFromPeer - it consists info about who removed you and why.
   void onRemovedFromRoom(
       {required HMSPeerRemovedFromPeer hmsPeerRemovedFromPeer});
+
+  void onAudioDeviceChanged(
+      {HMSAudioDevice? currentAudioDevice,
+      List<HMSAudioDevice>? availableAudioDevice});
 }

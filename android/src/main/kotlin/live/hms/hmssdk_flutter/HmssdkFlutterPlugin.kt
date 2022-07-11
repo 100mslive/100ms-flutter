@@ -22,6 +22,7 @@ import kotlinx.coroutines.launch
 import live.hms.hmssdk_flutter.hms_role_components.AudioParamsExtension
 import live.hms.hmssdk_flutter.hms_role_components.VideoParamsExtension
 import live.hms.hmssdk_flutter.views.HMSVideoViewFactory
+import live.hms.video.audio.HMSAudioManager
 import live.hms.video.connection.stats.*
 import live.hms.video.error.HMSException
 import live.hms.video.media.codec.HMSAudioCodec
@@ -38,6 +39,7 @@ import live.hms.video.sdk.models.enums.HMSTrackUpdate
 import live.hms.video.sdk.models.role.HMSRole
 import live.hms.video.sdk.models.trackchangerequest.HMSChangeTrackStateRequest
 import live.hms.video.utils.HMSLogger
+import live.hms.video.audio.HMSAudioManager.*
 
 
 /** HmssdkFlutterPlugin */
@@ -164,6 +166,9 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             }
             "start_stats_listener", "remove_stats_listener" -> {
                 statsListenerAction(call, result)
+            }
+            "get_audio_devices_list","get_current_audio_device","switch_audio_output" -> {
+                HMSAudioDeviceAction.audioDeviceActions(call,result,hmssdk)
             }
             else -> {
                 result.notImplemented()
@@ -318,7 +323,9 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         val config = getConfig(call)
 
         hmssdk.join(config, this.hmsUpdateListener)
+        hmssdk.setAudioDeviceChangeListener(audioDeviceChangeListener)
         result.success(null)
+
     }
 
     private fun getConfig(
@@ -1096,6 +1103,29 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
 
         }
 
+    }
+
+    private val audioDeviceChangeListener = object: AudioManagerEvents {
+        override fun onAudioDeviceChanged(p0: AudioDevice?, p1: MutableSet<AudioDevice>?) {
+            val args = HashMap<String, Any?>()
+            args["event_name"] = "on_audio_device_changed"
+            val dict = HashMap<String, Any?>()
+            if (p0!=null){
+                dict["current_audio_device"] = p0.name
+            }
+            if(p1!=null){
+                val audioDevicesList = ArrayList<String>();
+                for (device in hmssdk.getAudioDevicesList()){
+                    audioDevicesList.add(device.name);
+                }
+                dict["available_audio_device"] = audioDevicesList
+            }
+            args["data"] = dict
+            if (args["data"] != null)
+                CoroutineScope(Dispatchers.Main).launch {
+                    eventSink?.success(args)
+                }
+        }
     }
 
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
 import 'package:hmssdk_flutter_example/hls-streaming/hls_device_settings.dart';
@@ -64,8 +65,13 @@ class _HLSViewerSettingsState extends State<HLSViewerSettings> {
               ),
               ListTile(
                 horizontalTitleGap: 2,
-                onTap: () {
+                onTap: () async {
                   Navigator.pop(context);
+                  List<HMSAudioDevice> audioDeviceList =
+                      await context.read<MeetingStore>().getAudioDevicesList();
+                  HMSAudioDevice currentAudioDevice = await context
+                      .read<MeetingStore>()
+                      .getCurrentAudioDevice();
                   showModalBottomSheet(
                     isScrollControlled: true,
                     backgroundColor: bottomSheetColor,
@@ -75,7 +81,10 @@ class _HLSViewerSettingsState extends State<HLSViewerSettings> {
                     context: context,
                     builder: (ctx) => ChangeNotifierProvider.value(
                         value: context.read<MeetingStore>(),
-                        child: HLSDeviceSettings()),
+                        child: HLSDeviceSettings(
+                          audioDeviceList: audioDeviceList,
+                          currentAudioDevice: currentAudioDevice,
+                        )),
                   );
                 },
                 contentPadding: EdgeInsets.zero,

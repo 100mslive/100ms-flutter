@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
 import 'package:hmssdk_flutter_example/hls-streaming/hls_device_settings.dart';
@@ -8,7 +11,6 @@ import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:provider/provider.dart';
 
 class HLSSettings extends StatefulWidget {
-  
   @override
   State<HLSSettings> createState() => _HLSSettingsState();
 }
@@ -30,7 +32,7 @@ class _HLSSettingsState extends State<HLSSettings> {
                   Row(
                     children: [
                       Text(
-                        "Live Streaming Kit",
+                        "More Options",
                         style: GoogleFonts.inter(
                             fontSize: 16,
                             color: defaultColor,
@@ -62,10 +64,16 @@ class _HLSSettingsState extends State<HLSSettings> {
                   height: 5,
                 ),
               ),
+              if(Platform.isAndroid)
               ListTile(
                 horizontalTitleGap: 2,
-                onTap: () {
+                onTap: () async {
                   Navigator.pop(context);
+                  List<HMSAudioDevice> audioDeviceList =
+                      await context.read<MeetingStore>().getAudioDevicesList();
+                  HMSAudioDevice currentAudioDevice = await context
+                      .read<MeetingStore>()
+                      .getCurrentAudioDevice();
                   showModalBottomSheet(
                     isScrollControlled: true,
                     backgroundColor: bottomSheetColor,
@@ -75,7 +83,10 @@ class _HLSSettingsState extends State<HLSSettings> {
                     context: context,
                     builder: (ctx) => ChangeNotifierProvider.value(
                         value: context.read<MeetingStore>(),
-                        child: HLSDeviceSettings()),
+                        child: HLSDeviceSettings(
+                          audioDeviceList: audioDeviceList,
+                          currentAudioDevice: currentAudioDevice,
+                        )),
                   );
                 },
                 contentPadding: EdgeInsets.zero,
@@ -84,7 +95,7 @@ class _HLSSettingsState extends State<HLSSettings> {
                   fit: BoxFit.scaleDown,
                 ),
                 title: Text(
-                  "Settings",
+                  "Device Settings",
                   style: GoogleFonts.inter(
                       fontSize: 14,
                       color: defaultColor,

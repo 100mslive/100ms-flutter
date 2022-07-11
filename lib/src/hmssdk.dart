@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter/src/manager/hms_sdk_manager.dart';
 import 'package:hmssdk_flutter/src/service/platform_service.dart';
@@ -731,6 +733,35 @@ class HMSSDK {
   ///Method to remove Log Listener
   void removeLogListener({required HMSLogListener hmsLogListener}) {
     PlatformService.removeLogsListener(hmsLogListener);
+  }
+
+  ///Method to get available audio devices(Android Only)
+  Future<List<HMSAudioDevice>> getAudioDevicesList() async {
+    if (Platform.isAndroid) {
+      List result = await PlatformService.invokeMethod(
+          PlatformMethod.getAudioDevicesList);
+      return result
+          .map((e) => HMSAudioDeviceValues.getHMSAudioDeviceFromName(e))
+          .toList();
+    }
+    return [];
+  }
+
+  ///Method to get current audio output device(Android Only)
+  Future<HMSAudioDevice> getCurrentAudioDevice() async {
+    if (Platform.isAndroid) {
+      var result = await PlatformService.invokeMethod(
+          PlatformMethod.getCurrentAudioDevice);
+      return HMSAudioDeviceValues.getHMSAudioDeviceFromName(result);
+    }
+    return HMSAudioDevice.UNKNOWN;
+  }
+
+  ///Method to switch audio output device(Android Only)
+  void switchAudioOutput(HMSAudioDevice audioDevice) {
+    if (Platform.isAndroid)
+      PlatformService.invokeMethod(PlatformMethod.switchAudioOutput,
+          arguments: {"audio_device_name": audioDevice.name});
   }
 
   /// To modify local peer's audio & video track settings use the [hmsTrackSetting]. Only required for advanced use-cases.

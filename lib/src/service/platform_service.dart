@@ -203,14 +203,34 @@ class PlatformService {
               method, {'track_change_request': trackChangeRequest});
           break;
 
-        case HMSUpdateListenerMethod.unknown:
-          break;
-
         case HMSUpdateListenerMethod.onRemovedFromRoom:
           HMSPeerRemovedFromPeer hmsPeerRemovedFromPeer =
               HMSPeerRemovedFromPeer.fromMap(data['removed_from_room'] as Map);
           notifyUpdateListeners(
               method, {'removed_from_room': hmsPeerRemovedFromPeer});
+          break;
+        case HMSUpdateListenerMethod.onAudioDeviceChanged:
+          HMSAudioDevice? currentAudioDevice =
+              data.containsKey("current_audio_device")
+                  ? HMSAudioDeviceValues.getHMSAudioDeviceFromName(
+                      data['current_audio_device'])
+                  : null;
+          List<HMSAudioDevice> availableAudioDevice = [];
+          if (data["available_audio_device"] != null)
+            for (var device in data["available_audio_device"]) {
+              availableAudioDevice
+                  .add(HMSAudioDeviceValues.getHMSAudioDeviceFromName(device));
+            }
+
+          notifyUpdateListeners(method, {
+            'current_audio_device': currentAudioDevice,
+            "available_audio_device": data["available_audio_device"] != null
+                ? availableAudioDevice
+                : null
+          });
+          break;
+
+        case HMSUpdateListenerMethod.unknown:
           break;
       }
     });
@@ -514,6 +534,13 @@ class PlatformService {
               hmsPeerRemovedFromPeer: arguments['removed_from_room']);
         });
         break;
+
+      case HMSUpdateListenerMethod.onAudioDeviceChanged:
+        updateListeners.forEach((e) => e.onAudioDeviceChanged(
+            currentAudioDevice: arguments["current_audio_device"],
+            availableAudioDevice: arguments["available_audio_device"]));
+        break;
+
       case HMSUpdateListenerMethod.unknown:
         break;
     }

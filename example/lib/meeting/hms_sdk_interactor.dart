@@ -276,4 +276,16 @@ class HMSSDKInteractor {
   void removeStatsListener(HMSStatsListener listener) {
     hmsSDK.removeStatsListener(listener: listener);
   }
+
+  Future<List<HMSAudioDevice>> getAudioDevicesList() async {
+    return await hmsSDK.getAudioDevicesList();
+  }
+
+  Future<HMSAudioDevice> getCurrentAudioDevice() async {
+    return await hmsSDK.getCurrentAudioDevice();
+  }
+
+  void switchAudioOutput(HMSAudioDevice audioDevice) {
+    hmsSDK.switchAudioOutput(audioDevice);
+  }
 }
