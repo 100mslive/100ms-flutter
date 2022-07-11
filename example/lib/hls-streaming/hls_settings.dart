@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -30,7 +32,7 @@ class _HLSSettingsState extends State<HLSSettings> {
                   Row(
                     children: [
                       Text(
-                        "More Settings",
+                        "More Options",
                         style: GoogleFonts.inter(
                             fontSize: 16,
                             color: defaultColor,
@@ -62,6 +64,7 @@ class _HLSSettingsState extends State<HLSSettings> {
                   height: 5,
                 ),
               ),
+              if(Platform.isAndroid)
               ListTile(
                 horizontalTitleGap: 2,
                 onTap: () async {
@@ -92,7 +95,7 @@ class _HLSSettingsState extends State<HLSSettings> {
                   fit: BoxFit.scaleDown,
                 ),
                 title: Text(
-                  "Settings",
+                  "Device Settings",
                   style: GoogleFonts.inter(
                       fontSize: 14,
                       color: defaultColor,
