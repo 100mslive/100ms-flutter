@@ -35,7 +35,7 @@ class UtilityComponents {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              SvgPicture.asset("assets/icons/end.svg"),
+              SvgPicture.asset("assets/icons/end.svg",width: 24,),
               SizedBox(
                 width: 5,
               ),
@@ -53,7 +53,7 @@ class UtilityComponents {
         content: Text(
             "You will leave the room immediately. You can’t undo this action.",
             style: GoogleFonts.inter(
-                color: subHeadingColor,
+                color: hintColor,
                 fontSize: 14,
                 fontWeight: FontWeight.w400,
                 letterSpacing: 0.25)),
@@ -132,7 +132,7 @@ class UtilityComponents {
             children: [
               SvgPicture.asset(
                 "assets/icons/leave_hls.svg",
-                height: 17,
+                height: 24,
               ),
               SizedBox(
                 width: 5,
@@ -152,7 +152,7 @@ class UtilityComponents {
         content: Text(
             "Others will continue after you leave. You can join the studio again.",
             style: GoogleFonts.inter(
-                color: subHeadingColor,
+                color: hintColor,
                 fontSize: 14,
                 fontWeight: FontWeight.w400,
                 height: 20 / 14,
@@ -194,7 +194,7 @@ class UtilityComponents {
                 },
                 child: Padding(
                   padding: const EdgeInsets.symmetric(
-                      horizontal: 15.0, vertical: 12),
+                      horizontal: 25.0, vertical: 12),
                   child: HLSTitleText(
                     text: 'Leave',
                     textColor: defaultColor,
@@ -741,7 +741,7 @@ class UtilityComponents {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              SvgPicture.asset("assets/icons/end_warning.svg"),
+              SvgPicture.asset("assets/icons/end_warning.svg",width: 24,),
               SizedBox(
                 width: 5,
               ),
@@ -750,17 +750,19 @@ class UtilityComponents {
                 style: GoogleFonts.inter(
                     color: errorColor,
                     fontSize: 20,
+                    height: 24/20,
                     fontWeight: FontWeight.w600,
-                    letterSpacing: 0.25),
+                    letterSpacing: 0.15),
               ),
             ],
           ),
         ),
         content: Text(content,
             style: GoogleFonts.inter(
-                color: subHeadingColor,
+                color: dialogcontentColor,
                 fontSize: 14,
                 fontWeight: FontWeight.w400,
+                height:20/14,
                 letterSpacing: 0.25)),
         actions: [
           Row(
@@ -844,6 +846,7 @@ class UtilityComponents {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     TextField(
+                      textCapitalization: TextCapitalization.words,
                       textInputAction: TextInputAction.done,
                       onSubmitted: (value) => (textController.text == "")
                           ? Utilities.showToast("Name can't be empty")
@@ -887,7 +890,7 @@ class UtilityComponents {
                         onPressed: () => Navigator.pop(context, false),
                         child: Padding(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 4, vertical: 8),
+                              horizontal: 6, vertical: 12),
                           child: Text('Cancel',
                               style: GoogleFonts.inter(
                                   color: defaultColor,
@@ -916,7 +919,7 @@ class UtilityComponents {
                       },
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 4, vertical: 8),
+                            horizontal: 6, vertical: 12),
                         child: Text(
                           'Change',
                           style: GoogleFonts.inter(

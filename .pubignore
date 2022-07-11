@@ -7,6 +7,7 @@ example/android/fastlane/Pluginfile
 example/android/fastlane/README.md
 example/android/fastlane/report.xml
 example/android/build/
+example/android/flutter-hms-4aea6d38fd2a.json
 
 example/ios/fastlane/Appfile
 example/ios/fastlane/Fastfile
@@ -14,6 +15,7 @@ example/ios/fastlane/Pluginfile
 example/ios/fastlane/README.md
 example/ios/fastlane/report.xml
 example/ios/pods/
+example/ios/flutter-hms-4aea6d38fd2a.json
 
 example/android/app/google-services.json
 example/ios/Runner/GoogleService-Info.plist

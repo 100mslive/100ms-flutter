@@ -96,13 +96,18 @@ class _HLSBottomSheetState extends State<HLSBottomSheet> {
               SizedBox(
                 height: 8,
               ),
-              HLSSubtitleText(
-                  text:
+              Text(
+
                       "Stream directly from the browser using any device with multiple hosts and real-time messaging, all within this platform.",
-                  textColor: subHeadingColor,
-                  fontSize: 14,
-                  lineHeight: 20,
-                  letterSpacing: 0.25),
+                      maxLines: 2,
+                      style: GoogleFonts.inter(
+                        color: subHeadingColor,
+                        fontSize: 14,
+                        height: 20/14,
+                                  letterSpacing: 0.25,        
+                        fontWeight: FontWeight.w600      
+                      ),
+              ),
               SizedBox(
                 height: 20,
               ),
@@ -110,6 +115,7 @@ class _HLSBottomSheetState extends State<HLSBottomSheet> {
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8),
                     color: surfaceColor),
+                height: 56,
                 child: Padding(
                   padding: EdgeInsets.symmetric(vertical: 7, horizontal: 10),
                   child: Row(
@@ -170,10 +176,10 @@ class _HLSBottomSheetState extends State<HLSBottomSheet> {
                         SvgPicture.asset(
                           "assets/icons/live.svg",
                           color: defaultColor,
-                          width: 18,
+                          width: 24,
                         ),
                         SizedBox(
-                          width: 10,
+                          width: 11,
                         ),
                         HLSTitleText(text: "Go Live", textColor: defaultColor)
                       ],

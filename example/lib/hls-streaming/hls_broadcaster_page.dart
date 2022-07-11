@@ -758,10 +758,12 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                                           Text(
                                                             "END STREAM",
                                                             style: GoogleFonts.inter(
-                                                                fontSize: 12,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w500),
+                                                                letterSpacing: 1.5,
+                                                                  fontSize: 10,
+                                                                  height: 1.6,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w600),
                                                           )
                                                         ],
                                                       );
@@ -791,10 +793,12 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                                           Text(
                                                             "STARTING HLS",
                                                             style: GoogleFonts.inter(
-                                                                fontSize: 12,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w500),
+                                                                letterSpacing: 1.5,
+                                                                  fontSize: 10,
+                                                                  height: 1.6,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w600),
                                                           )
                                                         ],
                                                       );
@@ -850,10 +854,12 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                                           "GO LIVE",
                                                           style:
                                                               GoogleFonts.inter(
-                                                                  fontSize: 12,
+                                                                letterSpacing: 1.5,
+                                                                  fontSize: 10,
+                                                                  height: 1.6,
                                                                   fontWeight:
                                                                       FontWeight
-                                                                          .w500),
+                                                                          .w600),
                                                         )
                                                       ],
                                                     );
