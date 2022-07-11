@@ -733,6 +733,25 @@ class HMSSDK {
     PlatformService.removeLogsListener(hmsLogListener);
   }
 
+  Future<List<HMSAudioDevice>> getAudioDevicesList() async {
+    List result =
+        await PlatformService.invokeMethod(PlatformMethod.getAudioDevicesList);
+    return result
+        .map((e) => HMSAudioDeviceValues.getHMSAudioDeviceFromName(e))
+        .toList();
+  }
+
+  Future<HMSAudioDevice> getCurrentAudioDevice() async {
+    var result = await PlatformService.invokeMethod(
+        PlatformMethod.getCurrentAudioDevice);
+    return HMSAudioDeviceValues.getHMSAudioDeviceFromName(result);
+  }
+
+  void switchAudioOutput(HMSAudioDevice audioDevice) {
+    PlatformService.invokeMethod(PlatformMethod.switchAudioOutput,
+        arguments: {"audio_device_name": audioDevice.name});
+  }
+
   /// To modify local peer's audio & video track settings use the [hmsTrackSetting]. Only required for advanced use-cases.
   HMSTrackSetting? hmsTrackSetting;
 

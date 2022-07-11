@@ -1191,6 +1191,18 @@ class MeetingStore extends ChangeNotifier
     return await _hmsSDKInteractor.getPeers();
   }
 
+  Future<List<HMSAudioDevice>> getAudioDevicesList() async {
+    return await _hmsSDKInteractor.getAudioDevicesList();
+  }
+
+  Future<HMSAudioDevice> getCurrentAudioDevice() async {
+    return await _hmsSDKInteractor.getCurrentAudioDevice();
+  }
+
+  void switchAudioOutput(HMSAudioDevice audioDevice) {
+    _hmsSDKInteractor.switchAudioOutput(audioDevice);
+  }
+
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) async {
     super.didChangeAppLifecycleState(state);

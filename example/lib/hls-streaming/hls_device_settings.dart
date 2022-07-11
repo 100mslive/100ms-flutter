@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-import 'package:hmssdk_flutter_example/common/ui/organisms/hms_button.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/hls-streaming/util/hls_subtitle_text.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
@@ -12,12 +11,25 @@ import 'package:tuple/tuple.dart';
 import 'package:collection/collection.dart';
 
 class HLSDeviceSettings extends StatefulWidget {
+  final List<HMSAudioDevice> audioDeviceList;
+  final HMSAudioDevice currentAudioDevice;
+  HLSDeviceSettings(
+      {Key? key,
+      required this.audioDeviceList,
+      required this.currentAudioDevice})
+      : super(key: key);
   @override
   State<HLSDeviceSettings> createState() => _HLSDeviceSettingsState();
 }
 
 class _HLSDeviceSettingsState extends State<HLSDeviceSettings> {
-  String valueChoose = "Default - Macbook Pro Speakers (Built-in)";
+  String? valueChoose;
+
+  @override
+  void initState() {
+    super.initState();
+    valueChoose = widget.currentAudioDevice.name;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -97,10 +109,6 @@ class _HLSDeviceSettingsState extends State<HLSDeviceSettings> {
                     selector: (_, meetingStore) =>
                         Tuple2(meetingStore.roles, meetingStore.peers),
                     builder: (context, data, _) {
-                      List<String> roles = [
-                        "Default - Macbook Pro Speakers (Built-in)",
-                        "Bluetooth earpiece"
-                      ];
                       return DropdownButton2(
                         isExpanded: true,
                         buttonHeight: 48,
@@ -114,14 +122,17 @@ class _HLSDeviceSettingsState extends State<HLSDeviceSettings> {
                         offset: Offset(-10, -10),
                         iconEnabledColor: iconColor,
                         onChanged: (dynamic newvalue) {
+                          context.read<MeetingStore>().switchAudioOutput(
+                              HMSAudioDeviceValues.getHMSAudioDeviceFromName(
+                                  newvalue));
                           setState(() {
                             this.valueChoose = newvalue as String;
                           });
                         },
                         items: <DropdownMenuItem>[
-                          ...roles
+                          ...widget.audioDeviceList
                               .sortedBy((element) => element.toString())
-                              .map((role) => DropdownMenuItem(
+                              .map((device) => DropdownMenuItem(
                                     child: Row(
                                       children: [
                                         SvgPicture.asset(
@@ -131,13 +142,13 @@ class _HLSDeviceSettingsState extends State<HLSDeviceSettings> {
                                         ),
                                         Container(
                                           child: HLSSubtitleText(
-                                            text: role,
+                                            text: device.name,
                                             textColor: defaultColor,
                                           ),
                                         ),
                                       ],
                                     ),
-                                    value: role,
+                                    value: device.name,
                                   ))
                               .toList(),
                         ],
