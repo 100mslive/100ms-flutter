@@ -323,7 +323,9 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         val config = getConfig(call)
 
         hmssdk.join(config, this.hmsUpdateListener)
+        hmssdk.setAudioDeviceChangeListener(audioDeviceChangeListener)
         result.success(null)
+
     }
 
     private fun getConfig(
@@ -1101,6 +1103,29 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
 
         }
 
+    }
+
+    private val audioDeviceChangeListener = object: AudioManagerEvents {
+        override fun onAudioDeviceChanged(p0: AudioDevice?, p1: MutableSet<AudioDevice>?) {
+            val args = HashMap<String, Any?>()
+            args["event_name"] = "on_audio_device_changed"
+            val dict = HashMap<String, Any?>()
+            if (p0!=null){
+                dict["current_audio_device"] = p0.name
+            }
+            if(p1!=null){
+                val audioDevicesList = ArrayList<String>();
+                for (device in hmssdk.getAudioDevicesList()){
+                    audioDevicesList.add(device.name);
+                }
+                dict["available_audio_device"] = audioDevicesList
+            }
+            args["data"] = dict
+            if (args["data"] != null)
+                CoroutineScope(Dispatchers.Main).launch {
+                    eventSink?.success(args)
+                }
+        }
     }
 
 }

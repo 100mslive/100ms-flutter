@@ -1204,6 +1204,15 @@ class MeetingStore extends ChangeNotifier
   }
 
   @override
+  void onAudioDeviceChanged(
+      {HMSAudioDevice? currentAudioDevice,
+      List<HMSAudioDevice>? availableAudioDevice}) {
+    if (currentAudioDevice != null)
+      Utilities.showToast(
+          "Output Device changed to ${currentAudioDevice.name}");
+  }
+
+  @override
   void didChangeAppLifecycleState(AppLifecycleState state) async {
     super.didChangeAppLifecycleState(state);
     if (isRoomEnded) {

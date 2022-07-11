@@ -11,6 +11,7 @@ enum HMSUpdateListenerMethod {
   onRoleChangeRequest,
   onChangeTrackStateRequest,
   onRemovedFromRoom,
+  onAudioDeviceChanged,
   unknown
 }
 
@@ -41,6 +42,8 @@ extension HMSUpdateListenerMethodValues on HMSUpdateListenerMethod {
         return HMSUpdateListenerMethod.onChangeTrackStateRequest;
       case 'on_removed_from_room':
         return HMSUpdateListenerMethod.onRemovedFromRoom;
+      case 'on_audio_device_changed':
+        return HMSUpdateListenerMethod.onAudioDeviceChanged;
       default:
         return HMSUpdateListenerMethod.unknown;
     }
