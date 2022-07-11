@@ -236,7 +236,7 @@ class _HLSMessageState extends State<HLSMessage> {
                     ],
                   ),
                   Padding(
-                    padding: EdgeInsets.symmetric(vertical: 20),
+                    padding: EdgeInsets.only(top: 20,bottom:15),
                     child: Divider(
                       height: 5,
                       color: dividerColor,

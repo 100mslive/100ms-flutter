@@ -97,7 +97,7 @@ class _HLSParticipantSheetState extends State<HLSParticipantSheet> {
         onSelected: (int value) async {
           switch (value) {
             case 1:
-                Navigator.pop(context);
+              Navigator.pop(context);
               showDialog(
                   context: context,
                   builder: (_) => ChangeRoleOptionDialog(
@@ -111,7 +111,7 @@ class _HLSParticipantSheetState extends State<HLSParticipantSheet> {
                               forceChange: forceChange);
                         },
                       ));
-                
+
               break;
             case 2:
               if (peerTrackNode!.track == null) {
@@ -249,46 +249,26 @@ class _HLSParticipantSheetState extends State<HLSParticipantSheet> {
                 SizedBox(
                   width: 20,
                 ),
-                Container(
-                  padding: EdgeInsets.only(left: 10, right: 5),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10.0),
-                    border: Border.all(
-                        color: hintColor,
-                        style: BorderStyle.solid,
-                        width: 0.80),
-                  ),
-                  child: DropdownButtonHideUnderline(
-                    child: Selector<MeetingStore,
-                            Tuple2<List<HMSRole>, List<HMSPeer>>>(
-                        selector: (_, meetingStore) =>
-                            Tuple2(meetingStore.roles, meetingStore.peers),
-                        builder: (context, data, _) {
-                          List<HMSRole> roles = data.item1;
-                          return DropdownButton2(
-                            isExpanded: true,
-                            dropdownWidth:
-                                MediaQuery.of(context).size.width * 0.4,
-                            buttonWidth: 100,
-                            buttonHeight: 32,
-                            itemHeight: 48,
-                            value: valueChoose,
-                            icon: Icon(Icons.keyboard_arrow_down),
-                            dropdownDecoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8),
-                                color: surfaceColor),
-                            offset: Offset(-10, -10),
-                            iconEnabledColor: iconColor,
-                            selectedItemHighlightColor: hmsdefaultColor,
-                            onChanged: (dynamic newvalue) {
-                              setState(() {
-                                this.valueChoose = newvalue as String;
-                              });
-                            },
-                            items: <DropdownMenuItem>[
-                              DropdownMenuItem(
-                                child: Text(
-                                  "Everyone",
+                DropdownButtonHideUnderline(
+                  child: Selector<MeetingStore,
+                          Tuple2<List<HMSRole>, List<HMSPeer>>>(
+                      selector: (_, meetingStore) =>
+                          Tuple2(meetingStore.roles, meetingStore.peers),
+                      builder: (context, data, _) {
+                        List<HMSRole> roles = data.item1;
+                        return DropdownButton2(
+                          customButton: Container(
+                            padding: EdgeInsets.only(left: 10, right: 5),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10.0),
+                                border: Border.all(
+                                    color: hintColor,
+                                    style: BorderStyle.solid,
+                                    width: 0.80)),
+                            child: Row(
+                              children: [
+                                Text(
+                                  valueChoose,
                                   style: GoogleFonts.inter(
                                     fontWeight: FontWeight.w400,
                                     fontSize: 12,
@@ -297,26 +277,102 @@ class _HLSParticipantSheetState extends State<HLSParticipantSheet> {
                                   overflow: TextOverflow.ellipsis,
                                   maxLines: 1,
                                 ),
-                                value: "Everyone",
+                                SizedBox(
+                                  width: 3,
+                                ),
+                                Icon(Icons.keyboard_arrow_down),
+                              ],
+                            ),
+                          ),
+                          isExpanded: true,
+                          dropdownWidth:
+                              MediaQuery.of(context).size.width * 0.4,
+                          buttonWidth: 100,
+                          buttonHeight: 32,
+                          itemHeight: 48,
+                          value: valueChoose,
+                          icon: Icon(Icons.keyboard_arrow_down),
+                          dropdownDecoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8),
+                              color: surfaceColor),
+                          offset: Offset(-10, -10),
+                          iconEnabledColor: iconColor,
+                          selectedItemHighlightColor: hmsdefaultColor,
+                          onChanged: (dynamic newvalue) {
+                            setState(() {
+                              this.valueChoose = newvalue as String;
+                            });
+                          },
+                          items: <DropdownMenuItem>[
+                            DropdownMenuItem(
+                              child: Row(
+                                children: [
+                                  SvgPicture.asset(
+                                    "assets/icons/participants.svg",
+                                    fit: BoxFit.scaleDown,
+                                    color: defaultColor,
+                                    height: 16,
+                                  ),
+                                  SizedBox(
+                                    width: 11,
+                                  ),
+                                  Text(
+                                    "Everyone",
+                                    style: GoogleFonts.inter(
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 12,
+                                      letterSpacing: 0.4,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 1,
+                                  ),
+                                ],
                               ),
-                              ...roles
-                                  .sortedBy(
-                                      (element) => element.priority.toString())
-                                  .map((role) => DropdownMenuItem(
-                                        child: Text(
-                                          "${role.name}",
-                                          overflow: TextOverflow.ellipsis,
-                                          maxLines: 1,
-                                          style: GoogleFonts.inter(
-                                              fontSize: 12, color: iconColor),
-                                        ),
-                                        value: role.name,
-                                      ))
-                                  .toList(),
-                            ],
-                          );
-                        }),
-                  ),
+                              value: "Everyone",
+                            ),
+                            DropdownMenuItem(
+                              child: Row(
+                                children: [
+                                  SvgPicture.asset(
+                                    "assets/icons/hand_outline.svg",
+                                    fit: BoxFit.scaleDown,
+                                    color: defaultColor,
+                                    height: 16,
+                                  ),
+                                  SizedBox(
+                                    width: 11,
+                                  ),
+                                  Text(
+                                    "Raised Hand",
+                                    style: GoogleFonts.inter(
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 12,
+                                      letterSpacing: 0.4,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 1,
+                                  ),
+                                ],
+                              ),
+                              value: "Raised Hand",
+                            ),
+                            ...roles
+                                .sortedBy(
+                                    (element) => element.priority.toString())
+                                .map((role) => DropdownMenuItem(
+                                      child: Text(
+                                        "${role.name}",
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
+                                        style: GoogleFonts.inter(
+                                            fontSize: 12, color: iconColor),
+                                      ),
+                                      value: role.name,
+                                    ))
+                                .toList(),
+                          ],
+                        );
+                      }),
                 ),
                 Expanded(
                   child: Row(
@@ -358,6 +414,9 @@ class _HLSParticipantSheetState extends State<HLSParticipantSheet> {
                   if (valueChoose == "Everyone") {
                     peerList.addAll(copyList.sortedBy(
                         (element) => element.role.priority.toString()));
+                  } else if (valueChoose == "Raised Hand") {
+                    peerList = copyList.where((element) => element.metadata != null && 
+                        element.metadata!.contains("\"isHandRaised\":true")).toList();
                   } else {
                     peerList = copyList
                         .where((element) => element.role.name == valueChoose)
