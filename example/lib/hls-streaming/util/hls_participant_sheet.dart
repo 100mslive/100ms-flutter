@@ -420,11 +420,12 @@ class _HLSParticipantSheetState extends State<HLSParticipantSheet> {
                         itemCount: data.item2,
                         itemBuilder: (context, index) {
                           return Selector<MeetingStore,
-                                  Tuple3<String, HMSPeer, String>>(
-                              selector: (_, meetingStore) => Tuple3(
+                                  Tuple4<String, HMSPeer, String,String>>(
+                              selector: (_, meetingStore) => Tuple4(
                                   meetingStore.filteredPeers[index].name,
                                   meetingStore.filteredPeers[index],
-                                  meetingStore.filteredPeers[index].role.name),
+                                  meetingStore.filteredPeers[index].role.name,
+                                  meetingStore.filteredPeers[index].metadata??""),
                               builder: (_, peer, __) {
                                 return ListTile(
                                     horizontalTitleGap: 5,
@@ -459,7 +460,18 @@ class _HLSParticipantSheetState extends State<HLSParticipantSheet> {
                                           letterSpacing: 0.40,
                                           fontWeight: FontWeight.w400),
                                     ),
-                                    trailing: _kebabMenu(peer.item2));
+                                    trailing: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        peer.item4.contains("\"isHandRaised\":true")?SvgPicture.asset(
+                      "assets/icons/hand.svg",
+                      color: Color.fromRGBO(250, 201, 25, 1),
+                      height: 15,
+                    ):SizedBox(),
+                                        SizedBox(width: 5,),
+                                        _kebabMenu(peer.item2),
+                                      ],
+                                    ));
                               });
                         }),
                   );
