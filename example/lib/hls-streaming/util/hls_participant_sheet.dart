@@ -37,7 +37,7 @@ class _HLSParticipantSheetState extends State<HLSParticipantSheet> {
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           color: surfaceColor,
           icon: SvgPicture.asset(
-            "assets/icons/more.svg",
+            "assets/icons/more.svg", 
             color: defaultColor,
             fit: BoxFit.scaleDown,
           ),
