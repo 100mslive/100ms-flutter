@@ -674,6 +674,13 @@ abstract class MeetingStoreBase extends ChangeNotifier
   }
 
   @override
+  void onAudioDeviceChanged(
+      {HMSAudioDevice? currentAudioDevice,
+      List<HMSAudioDevice>? availableAudioDevice}) {
+    // TODO: implement onAudioDeviceChanged
+  }
+
+  @override
   void onSuccess(
       {HMSActionResultListenerMethod methodType =
           HMSActionResultListenerMethod.unknown,
