@@ -5,7 +5,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_flutter_example/common/constant.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/hms_button.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
-import 'package:hmssdk_flutter_example/hls-streaming/util/hls_subtitle_text.dart';
 import 'package:hmssdk_flutter_example/hls-streaming/util/hls_title_text.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:provider/provider.dart';
@@ -97,16 +96,14 @@ class _HLSBottomSheetState extends State<HLSBottomSheet> {
                 height: 8,
               ),
               Text(
-
-                      "Stream directly from the browser using any device with multiple hosts and real-time messaging, all within this platform.",
-                      maxLines: 2,
-                      style: GoogleFonts.inter(
-                        color: subHeadingColor,
-                        fontSize: 14,
-                        height: 20/14,
-                                  letterSpacing: 0.25,        
-                        fontWeight: FontWeight.w600      
-                      ),
+                "Stream directly from the browser using any device with multiple hosts and real-time messaging, all within this platform.",
+                maxLines: 2,
+                style: GoogleFonts.inter(
+                    color: subHeadingColor,
+                    fontSize: 14,
+                    height: 20 / 14,
+                    letterSpacing: 0.25,
+                    fontWeight: FontWeight.w600),
               ),
               SizedBox(
                 height: 20,

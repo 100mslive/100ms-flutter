@@ -11,7 +11,7 @@ class EmbeddedButton extends StatelessWidget {
   final double? width;
   final Color? enabledBorderColor;
   final Color? disabledBorderColor;
-  
+
   EmbeddedButton(
       {required this.onTap,
       required this.offColor,
@@ -19,8 +19,8 @@ class EmbeddedButton extends StatelessWidget {
       required this.isActive,
       required this.child,
       this.height = 48,
-      this.width = 48, 
-      this.enabledBorderColor, 
+      this.width = 48,
+      this.enabledBorderColor,
       this.disabledBorderColor});
   @override
   Widget build(BuildContext context) {
@@ -31,9 +31,16 @@ class EmbeddedButton extends StatelessWidget {
           height: height,
           decoration: BoxDecoration(
               border: isActive
-                  ? Border.all(color: (enabledBorderColor==null)?borderColor:enabledBorderColor
-                  !, width: 1)
-                  : Border.all(color: (disabledBorderColor==null)?defaultColor:disabledBorderColor!,width: 1),
+                  ? Border.all(
+                      color: (enabledBorderColor == null)
+                          ? borderColor
+                          : enabledBorderColor!,
+                      width: 1)
+                  : Border.all(
+                      color: (disabledBorderColor == null)
+                          ? defaultColor
+                          : disabledBorderColor!,
+                      width: 1),
               borderRadius: BorderRadius.all(Radius.circular(12)),
               color: isActive ? onColor : offColor),
           child: child),

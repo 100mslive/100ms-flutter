@@ -207,45 +207,43 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                           ],
                                                         ),
                                                         Row(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceBetween,
                                                           children: [
                                                             Row(
                                                               children: [
-                                                                SvgPicture.asset(
-                                                      "assets/icons/clock.svg",
-                                                      color: subHeadingColor,
-                                                      fit: BoxFit.scaleDown,
-                                                    ),
-                                                    SizedBox(width: 6,),
-                                                                Selector<MeetingStore,
+                                                                SvgPicture
+                                                                    .asset(
+                                                                  "assets/icons/clock.svg",
+                                                                  color:
+                                                                      subHeadingColor,
+                                                                  fit: BoxFit
+                                                                      .scaleDown,
+                                                                ),
+                                                                SizedBox(
+                                                                  width: 6,
+                                                                ),
+                                                                Selector<
+                                                                        MeetingStore,
                                                                         HMSRoom?>(
                                                                     selector: (_,
                                                                             meetingStore) =>
                                                                         meetingStore
                                                                             .hmsRoom,
                                                                     builder: (_,
-                                                                        hmsRoom, __) {
-                                                                      if (hmsRoom !=
-                                                                              null &&
+                                                                        hmsRoom,
+                                                                        __) {
+                                                                      if (hmsRoom != null &&
                                                                           hmsRoom.hmshlsStreamingState !=
                                                                               null &&
-                                                                          hmsRoom
-                                                                                  .hmshlsStreamingState!
-                                                                                  .variants
-                                                                                  .length !=
+                                                                          hmsRoom.hmshlsStreamingState!.variants.length !=
                                                                               0 &&
-                                                                          hmsRoom
-                                                                                  .hmshlsStreamingState!
-                                                                                  .variants[
-                                                                                      0]!
-                                                                                  .startedAt !=
+                                                                          hmsRoom.hmshlsStreamingState!.variants[0]!.startedAt !=
                                                                               null) {
                                                                         return StreamTimer(
-                                                                            startedAt: hmsRoom
-                                                                                .hmshlsStreamingState!
-                                                                                .variants[
-                                                                                    0]!
-                                                                                .startedAt!);
+                                                                            startedAt:
+                                                                                hmsRoom.hmshlsStreamingState!.variants[0]!.startedAt!);
                                                                       }
                                                                       return HLSSubtitleText(
                                                                         text:
@@ -254,7 +252,6 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                                             subHeadingColor,
                                                                       );
                                                                     }),
-                                                            
                                                               ],
                                                             ),
                                                             HLSSubtitleText(
@@ -264,7 +261,7 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                             ),
                                                             Row(
                                                               children: [
-                                                                 SvgPicture
+                                                                SvgPicture
                                                                     .asset(
                                                                   "assets/icons/watching.svg",
                                                                   color:
@@ -272,7 +269,9 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                                   fit: BoxFit
                                                                       .scaleDown,
                                                                 ),
-                                                    SizedBox(width: 6,),
+                                                                SizedBox(
+                                                                  width: 6,
+                                                                ),
                                                                 Selector<
                                                                         MeetingStore,
                                                                         int>(
@@ -314,7 +313,8 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                     },
                                                     width: 40,
                                                     height: 40,
-                                                    disabledBorderColor: borderColor,
+                                                    disabledBorderColor:
+                                                        borderColor,
                                                     offColor:
                                                         screenBackgroundColor,
                                                     onColor: hintColor,

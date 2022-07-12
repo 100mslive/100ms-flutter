@@ -47,18 +47,21 @@ Widget gridHeroView(
                           color: Colors.white,
                           height: 55.2,
                         ),
-                        SizedBox(height: 18,),
-                        Text(
-                          "You are sharing your screen",
-                          textAlign: TextAlign.center,
-                          style: GoogleFonts.inter(
+                        SizedBox(
+                          height: 18,
+                        ),
+                        Text("You are sharing your screen",
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.inter(
                               color: defaultColor,
                               fontSize: 20,
                               letterSpacing: 0.15,
                               height: 24 / 20,
-                              fontWeight:FontWeight.w600,)
+                              fontWeight: FontWeight.w600,
+                            )),
+                        SizedBox(
+                          height: 40,
                         ),
-                        SizedBox(height: 40,),
                         HMSButton(
                             buttonBackgroundColor: errorColor,
                             width: MediaQuery.of(context).size.width * 0.6,
@@ -66,7 +69,7 @@ Widget gridHeroView(
                               context.read<MeetingStore>().stopScreenShare();
                             },
                             childWidget: Padding(
-                              padding: const EdgeInsets.symmetric(vertical:12),
+                              padding: const EdgeInsets.symmetric(vertical: 12),
                               child: Row(
                                 children: [
                                   SvgPicture.asset("assets/icons/close.svg"),

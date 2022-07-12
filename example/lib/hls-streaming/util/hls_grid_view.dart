@@ -29,7 +29,8 @@ Widget hlsGridView(
       scrollDirection: Axis.horizontal,
       physics: PageScrollPhysics(),
       itemBuilder: (context, index) {
-        if (peerTracks[index].track != null && peerTracks[index].track?.source != "REGULAR") {
+        if (peerTracks[index].track != null &&
+            peerTracks[index].track?.source != "REGULAR") {
           return ChangeNotifierProvider.value(
             key: ValueKey(peerTracks[index].uid + "video_view"),
             value: peerTracks[index],

@@ -35,7 +35,10 @@ class UtilityComponents {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              SvgPicture.asset("assets/icons/end.svg",width: 24,),
+              SvgPicture.asset(
+                "assets/icons/end.svg",
+                width: 24,
+              ),
               SizedBox(
                 width: 5,
               ),
@@ -69,7 +72,8 @@ class UtilityComponents {
                       ),
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
-                        side: BorderSide(width: 1, color: popupButtonBorderColor),
+                        side:
+                            BorderSide(width: 1, color: popupButtonBorderColor),
                         borderRadius: BorderRadius.circular(8.0),
                       ))),
                   onPressed: () => Navigator.pop(context, false),
@@ -164,12 +168,12 @@ class UtilityComponents {
               ElevatedButton(
                   style: ButtonStyle(
                       shadowColor: MaterialStateProperty.all(surfaceColor),
-                      backgroundColor: MaterialStateProperty.all(
-                        bottomSheetColor
-                      ),
+                      backgroundColor:
+                          MaterialStateProperty.all(bottomSheetColor),
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
-                        side: BorderSide(width: 1, color: popupButtonBorderColor),
+                        side:
+                            BorderSide(width: 1, color: popupButtonBorderColor),
                         borderRadius: BorderRadius.circular(8.0),
                       ))),
                   onPressed: () => Navigator.pop(context, false),
@@ -741,7 +745,10 @@ class UtilityComponents {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              SvgPicture.asset("assets/icons/end_warning.svg",width: 24,),
+              SvgPicture.asset(
+                "assets/icons/end_warning.svg",
+                width: 24,
+              ),
               SizedBox(
                 width: 5,
               ),
@@ -750,7 +757,7 @@ class UtilityComponents {
                 style: GoogleFonts.inter(
                     color: errorColor,
                     fontSize: 20,
-                    height: 24/20,
+                    height: 24 / 20,
                     fontWeight: FontWeight.w600,
                     letterSpacing: 0.15),
               ),
@@ -762,7 +769,7 @@ class UtilityComponents {
                 color: dialogcontentColor,
                 fontSize: 14,
                 fontWeight: FontWeight.w400,
-                height:20/14,
+                height: 20 / 14,
                 letterSpacing: 0.25)),
         actions: [
           Row(
@@ -776,7 +783,8 @@ class UtilityComponents {
                       ),
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
-                        side: BorderSide(width: 1, color: popupButtonBorderColor),
+                        side:
+                            BorderSide(width: 1, color: popupButtonBorderColor),
                         borderRadius: BorderRadius.circular(8.0),
                       ))),
                   onPressed: () => Navigator.pop(context),
