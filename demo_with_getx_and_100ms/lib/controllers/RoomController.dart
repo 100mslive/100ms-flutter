@@ -205,4 +205,10 @@ class RoomController extends GetxController
       required HMSPeer peer}) {
     // TODO: implement onRemoteVideoStats
   }
+  @override
+  void onAudioDeviceChanged(
+      {HMSAudioDevice? currentAudioDevice,
+      List<HMSAudioDevice>? availableAudioDevice}) {
+    // TODO: implement onAudioDeviceChanged
+  }
 }

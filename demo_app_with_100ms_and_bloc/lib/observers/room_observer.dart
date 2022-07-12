@@ -160,4 +160,11 @@ class RoomObserver implements HMSUpdateListener, HMSActionResultListener {
       Map<String, dynamic>? arguments}) {
     _peerNodeStreamController.add([]);
   }
+
+  @override
+  void onAudioDeviceChanged(
+      {HMSAudioDevice? currentAudioDevice,
+      List<HMSAudioDevice>? availableAudioDevice}) {
+    // TODO: implement onAudioDeviceChanged
+  }
 }

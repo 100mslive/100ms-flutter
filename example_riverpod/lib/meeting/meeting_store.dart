@@ -408,6 +408,12 @@ class MeetingStore extends ChangeNotifier
   void onRTCStats({required HMSRTCStatsReport hmsrtcStatsReport}) {}
 
   @override
+  void onAudioDeviceChanged(
+      {HMSAudioDevice? currentAudioDevice,
+      List<HMSAudioDevice>? availableAudioDevice}) {
+    // TODO: implement onAudioDeviceChanged
+  }
+  @override
   void onSuccess(
       {HMSActionResultListenerMethod methodType =
           HMSActionResultListenerMethod.unknown,
