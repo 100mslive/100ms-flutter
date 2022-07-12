@@ -147,6 +147,8 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                 await UtilityComponents
                                                     .onBackPressed(context)
                                               },
+                                              disabledBorderColor:
+                                                              Color(0xffCC525F),
                                               width: 40,
                                               height: 40,
                                               offColor: Color(0xffCC525F),

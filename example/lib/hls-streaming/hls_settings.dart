@@ -64,45 +64,46 @@ class _HLSSettingsState extends State<HLSSettings> {
                   height: 5,
                 ),
               ),
-              if(Platform.isAndroid)
-              ListTile(
-                horizontalTitleGap: 2,
-                onTap: () async {
-                  Navigator.pop(context);
-                  List<HMSAudioDevice> audioDeviceList =
-                      await context.read<MeetingStore>().getAudioDevicesList();
-                  HMSAudioDevice currentAudioDevice = await context
-                      .read<MeetingStore>()
-                      .getCurrentAudioDevice();
-                  showModalBottomSheet(
-                    isScrollControlled: true,
-                    backgroundColor: bottomSheetColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    context: context,
-                    builder: (ctx) => ChangeNotifierProvider.value(
-                        value: context.read<MeetingStore>(),
-                        child: HLSDeviceSettings(
-                          audioDeviceList: audioDeviceList,
-                          currentAudioDevice: currentAudioDevice,
-                        )),
-                  );
-                },
-                contentPadding: EdgeInsets.zero,
-                leading: SvgPicture.asset(
-                  "assets/icons/settings.svg",
-                  fit: BoxFit.scaleDown,
+              if (Platform.isAndroid)
+                ListTile(
+                  horizontalTitleGap: 2,
+                  onTap: () async {
+                    Navigator.pop(context);
+                    List<HMSAudioDevice> audioDeviceList = await context
+                        .read<MeetingStore>()
+                        .getAudioDevicesList();
+                    HMSAudioDevice currentAudioDevice = await context
+                        .read<MeetingStore>()
+                        .getCurrentAudioDevice();
+                    showModalBottomSheet(
+                      isScrollControlled: true,
+                      backgroundColor: bottomSheetColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      context: context,
+                      builder: (ctx) => ChangeNotifierProvider.value(
+                          value: context.read<MeetingStore>(),
+                          child: HLSDeviceSettings(
+                            audioDeviceList: audioDeviceList,
+                            currentAudioDevice: currentAudioDevice,
+                          )),
+                    );
+                  },
+                  contentPadding: EdgeInsets.zero,
+                  leading: SvgPicture.asset(
+                    "assets/icons/settings.svg",
+                    fit: BoxFit.scaleDown,
+                  ),
+                  title: Text(
+                    "Device Settings",
+                    style: GoogleFonts.inter(
+                        fontSize: 14,
+                        color: defaultColor,
+                        letterSpacing: 0.25,
+                        fontWeight: FontWeight.w600),
+                  ),
                 ),
-                title: Text(
-                  "Device Settings",
-                  style: GoogleFonts.inter(
-                      fontSize: 14,
-                      color: defaultColor,
-                      letterSpacing: 0.25,
-                      fontWeight: FontWeight.w600),
-                ),
-              ),
               ListTile(
                 horizontalTitleGap: 2,
                 onTap: () async {
@@ -155,6 +156,7 @@ class _HLSSettingsState extends State<HLSSettings> {
                 horizontalTitleGap: 2,
                 onTap: () {
                   context.read<MeetingStore>().switchCamera();
+                  Navigator.pop(context);
                 },
                 contentPadding: EdgeInsets.zero,
                 leading: SvgPicture.asset(
