@@ -188,24 +188,25 @@ class _VideoTileState extends State<VideoTile> {
                       itemWidth: widget.itemWidth,
                     ),
                     Positioned(
+                      //Bottom left
                       bottom: 5,
                       left: 5,
                       child: Container(
                         decoration: BoxDecoration(
                             color: Color.fromRGBO(0, 0, 0, 0.9),
                             borderRadius: BorderRadius.circular(8)),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 4, vertical: 2.0),
-                          child: Row(//Bottom left
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              PeerName(),
-                              SizedBox(
-                                width: 3,
-                              ),
-                              NetworkIconWidget(),
-                            ],
+                        child: Center(
+                          child: Padding(
+                            padding: const EdgeInsets.only(
+                                left: 8.0,right : 4, top: 4,bottom : 4),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                PeerName(),
+                                NetworkIconWidget(),
+                              ],
+                            ),
                           ),
                         ),
                       ),

@@ -227,6 +227,12 @@ class _HLSParticipantSheetState extends State<HLSParticipantSheet> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    context.read<MeetingStore>().getFilteredList(valueChoose);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return FractionallySizedBox(
       heightFactor: 0.8,
@@ -250,12 +256,9 @@ class _HLSParticipantSheetState extends State<HLSParticipantSheet> {
                   width: 20,
                 ),
                 DropdownButtonHideUnderline(
-                  child: Selector<MeetingStore,
-                          Tuple2<List<HMSRole>, List<HMSPeer>>>(
-                      selector: (_, meetingStore) =>
-                          Tuple2(meetingStore.roles, meetingStore.peers),
-                      builder: (context, data, _) {
-                        List<HMSRole> roles = data.item1;
+                  child: Selector<MeetingStore, List<HMSRole>>(
+                      selector: (_, meetingStore) => meetingStore.roles,
+                      builder: (context, roles, _) {
                         return DropdownButton2(
                           customButton: Container(
                             padding: EdgeInsets.only(left: 10, right: 5),
@@ -299,6 +302,11 @@ class _HLSParticipantSheetState extends State<HLSParticipantSheet> {
                           iconEnabledColor: iconColor,
                           selectedItemHighlightColor: hmsdefaultColor,
                           onChanged: (dynamic newvalue) {
+                            context
+                                .read<MeetingStore>()
+                                .getFilteredList(newvalue);
+                            context.read<MeetingStore>().selectedRoleFilter =
+                                newvalue;
                             setState(() {
                               this.valueChoose = newvalue as String;
                             });
@@ -384,6 +392,7 @@ class _HLSParticipantSheetState extends State<HLSParticipantSheet> {
                           width: 40,
                         ),
                         onPressed: () {
+                          context.read<MeetingStore>().filteredPeers.clear();
                           Navigator.pop(context);
                         },
                       ),
@@ -400,59 +409,42 @@ class _HLSParticipantSheetState extends State<HLSParticipantSheet> {
               ),
             ),
             Selector<MeetingStore, Tuple2<List<HMSPeer>, int>>(
-                selector: (_, meetingStore) =>
-                    Tuple2(meetingStore.peers, meetingStore.peers.length),
+                selector: (_, meetingStore) => Tuple2(
+                    meetingStore.filteredPeers,
+                    meetingStore.filteredPeers.length),
                 builder: (_, data, __) {
-                  List<HMSPeer> copyList = [];
-                  copyList.addAll(data.item1);
-                  copyList.removeWhere((element) =>
-                      element.videoTrack != null &&
-                      element.videoTrack!.source != "REGULAR");
-                  List<HMSPeer> peerList = [];
-                  peerList.add(copyList.removeAt(
-                      copyList.indexWhere((element) => element.isLocal)));
-                  if (valueChoose == "Everyone") {
-                    peerList.addAll(copyList.sortedBy(
-                        (element) => element.role.priority.toString()));
-                  } else if (valueChoose == "Raised Hand") {
-                    peerList = copyList.where((element) => element.metadata != null && 
-                        element.metadata!.contains("\"isHandRaised\":true")).toList();
-                  } else {
-                    peerList = copyList
-                        .where((element) => element.role.name == valueChoose)
-                        .toList();
-                  }
                   return Container(
                     height: MediaQuery.of(context).size.height * 0.65,
                     child: ListView.builder(
                         shrinkWrap: true,
-                        itemCount: peerList.length,
+                        itemCount: data.item2,
                         itemBuilder: (context, index) {
                           return Selector<MeetingStore,
-                                  Tuple4<String, bool, HMSPeer, String>>(
+                                  Tuple4<String, HMSPeer, String,String>>(
                               selector: (_, meetingStore) => Tuple4(
-                                  meetingStore.peers[index].name,
-                                  meetingStore.peers[index].isLocal,
-                                  meetingStore.peers[index],
-                                  meetingStore.peers[index].role.name),
-                              builder: (_, data, __) {
+                                  meetingStore.filteredPeers[index].name,
+                                  meetingStore.filteredPeers[index],
+                                  meetingStore.filteredPeers[index].role.name,
+                                  meetingStore.filteredPeers[index].metadata??""),
+                              builder: (_, peer, __) {
                                 return ListTile(
                                     horizontalTitleGap: 5,
                                     contentPadding: EdgeInsets.zero,
                                     leading: CircleAvatar(
                                       backgroundColor:
                                           Utilities.getBackgroundColour(
-                                              data.item1),
+                                              peer.item1),
                                       radius: 16,
                                       child: Text(
-                                          Utilities.getAvatarTitle(data.item1),
+                                          Utilities.getAvatarTitle(peer.item1),
                                           style: GoogleFonts.inter(
                                               fontSize: 12,
                                               color: defaultColor,
                                               fontWeight: FontWeight.w600)),
                                     ),
                                     title: Text(
-                                      data.item1 + (data.item2 ? " (You)" : ""),
+                                      peer.item1 +
+                                          (peer.item2.isLocal ? " (You)" : ""),
                                       maxLines: 1,
                                       style: GoogleFonts.inter(
                                           fontSize: 16,
@@ -461,14 +453,25 @@ class _HLSParticipantSheetState extends State<HLSParticipantSheet> {
                                           fontWeight: FontWeight.w600),
                                     ),
                                     subtitle: Text(
-                                      data.item4,
+                                      peer.item3,
                                       style: GoogleFonts.inter(
                                           fontSize: 12,
                                           color: subHeadingColor,
                                           letterSpacing: 0.40,
                                           fontWeight: FontWeight.w400),
                                     ),
-                                    trailing: _kebabMenu(data.item3));
+                                    trailing: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        peer.item4.contains("\"isHandRaised\":true")?SvgPicture.asset(
+                      "assets/icons/hand.svg",
+                      color: Color.fromRGBO(250, 201, 25, 1),
+                      height: 15,
+                    ):SizedBox(),
+                                        SizedBox(width: 5,),
+                                        _kebabMenu(peer.item2),
+                                      ],
+                                    ));
                               });
                         }),
                   );

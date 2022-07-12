@@ -114,7 +114,6 @@ Widget hlsGridView(
           pattern: isPortrait
               ? portraitPattern(itemCount, screenShareCount, size, context)
               : landscapePattern(itemCount, screenShareCount, size, context)));
-  // gridDelegate:SliverGridDelegateWithMaxCrossAxisExtent(maxCrossAxisExtent: size.height/2));
 }
 
 List<StairedGridTile> portraitPattern(

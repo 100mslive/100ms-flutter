@@ -12,10 +12,17 @@ class NetworkIconWidget extends StatelessWidget {
     return Selector<PeerTrackNode, int?>(
         builder: (_, networkQuality, __) {
           return networkQuality != -1
-              ? SvgPicture.asset(
-                'assets/icons/network_$networkQuality.svg',
-                height: 20,
-              )
+              ? Row(
+                  children: [
+                    SizedBox(
+                      width: 3,
+                    ),
+                    SvgPicture.asset(
+                      'assets/icons/network_$networkQuality.svg',
+                      height: 20,
+                    ),
+                  ],
+                )
               : Container();
         },
         selector: (_, peerTrackNode) => peerTrackNode.networkQuality);
