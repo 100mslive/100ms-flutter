@@ -358,6 +358,7 @@ class _HLSMessageState extends State<HLSMessage> {
                         Container(
                           margin: EdgeInsets.only(bottom: 5.0, left: 5.0),
                           child: TextField(
+                            textCapitalization: TextCapitalization.sentences,
                             textInputAction: TextInputAction.done,
                             onSubmitted: (value) {
                               sendMessage();

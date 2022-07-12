@@ -26,12 +26,13 @@ class VideoTile extends StatefulWidget {
   final double itemHeight;
   final double itemWidth;
   final ScaleType scaleType;
-
+  final bool islongPressEnabled;
   VideoTile(
       {Key? key,
       this.itemHeight = 200.0,
       this.itemWidth = 200.0,
-      this.scaleType = ScaleType.SCALE_ASPECT_FILL})
+      this.scaleType = ScaleType.SCALE_ASPECT_FILL,
+      this.islongPressEnabled = true})
       : super(key: key);
 
   @override
@@ -70,6 +71,9 @@ class _VideoTileState extends State<VideoTile> {
       child: context.read<PeerTrackNode>().uid.contains("mainVideo")
           ? InkWell(
               onLongPress: () {
+                if (!widget.islongPressEnabled) {
+                  return;
+                }
                 var peerTrackNode = context.read<PeerTrackNode>();
                 HMSPeer peerNode = peerTrackNode.peer;
                 if (!mutePermission ||

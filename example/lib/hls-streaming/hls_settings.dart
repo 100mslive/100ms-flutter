@@ -156,6 +156,7 @@ class _HLSSettingsState extends State<HLSSettings> {
                 horizontalTitleGap: 2,
                 onTap: () {
                   context.read<MeetingStore>().switchCamera();
+                  Navigator.pop(context);
                 },
                 contentPadding: EdgeInsets.zero,
                 leading: SvgPicture.asset(

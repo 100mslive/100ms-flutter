@@ -31,7 +31,7 @@ class _HLSViewerSettingsState extends State<HLSViewerSettings> {
                   Row(
                     children: [
                       Text(
-                        "Settings",
+                        "More Options",
                         style: GoogleFonts.inter(
                             fontSize: 16,
                             color: defaultColor,
@@ -93,7 +93,7 @@ class _HLSViewerSettingsState extends State<HLSViewerSettings> {
                   fit: BoxFit.scaleDown,
                 ),
                 title: Text(
-                  "Settings",
+                  "Device Settings",
                   style: GoogleFonts.inter(
                       fontSize: 14,
                       color: defaultColor,

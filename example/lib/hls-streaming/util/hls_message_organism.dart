@@ -44,7 +44,7 @@ class HLSMessageOrganism extends StatelessWidget {
                   children: [
                     Container(
                       constraints: BoxConstraints(
-                          maxWidth: role != "" ? 60 : width * 0.5),
+                          maxWidth: role != "" ? width * 0.25 : width * 0.5),
                       child: HLSTitleText(
                         text: senderName ?? "",
                         fontSize: 14,
@@ -106,7 +106,7 @@ class HLSMessageOrganism extends StatelessWidget {
                                     constraints: BoxConstraints(
                                         maxWidth: isLocalMessage
                                             ? width * 0.25
-                                            : width * 0.2),
+                                            : width * 0.15),
                                     child: role != ""
                                         ? Text(
                                             "${role.toUpperCase()} ›",
