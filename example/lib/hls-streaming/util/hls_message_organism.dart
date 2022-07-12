@@ -64,11 +64,18 @@ class HLSMessageOrganism extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           Container(
-                            width: isLocalMessage ? width * 0.3 : width * 0.4,
+                            width: isLocalMessage
+                                ? (role.length * 10) > width * 0.3
+                                    ? width * 0.3
+                                    : role.length * 10
+                                : (role.length * 10 + 60) > width * 0.37
+                                    ? width * 0.37
+                                    : role.length * 10 + 60,
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(4),
-                                border:
-                                    Border.all(color: borderColor, width: 1)),
+                                border: role != ""
+                                    ? Border.all(color: borderColor, width: 1)
+                                    : Border.symmetric()),
                             child: Padding(
                               padding: const EdgeInsets.all(4.0),
                               child: Row(
@@ -100,17 +107,17 @@ class HLSMessageOrganism extends StatelessWidget {
                                         maxWidth: isLocalMessage
                                             ? width * 0.25
                                             : width * 0.2),
-                                    child: Text(
-                                      role != ""
-                                          ? "${role.toUpperCase()} ›"
-                                          : "EVERYONE ›",
-                                      overflow: TextOverflow.ellipsis,
-                                      style: GoogleFonts.inter(
-                                          fontSize: 10.0,
-                                          color: defaultColor,
-                                          letterSpacing: 1.5,
-                                          fontWeight: FontWeight.w400),
-                                    ),
+                                    child: role != ""
+                                        ? Text(
+                                            "${role.toUpperCase()} ›",
+                                            overflow: TextOverflow.ellipsis,
+                                            style: GoogleFonts.inter(
+                                                fontSize: 10.0,
+                                                color: defaultColor,
+                                                letterSpacing: 1.5,
+                                                fontWeight: FontWeight.w400),
+                                          )
+                                        : SizedBox(),
                                   ),
                                 ],
                               ),

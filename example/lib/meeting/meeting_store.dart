@@ -111,6 +111,8 @@ class MeetingStore extends ChangeNotifier
 
   bool isLandscapeLocked = false;
 
+  bool isMessageInfoShown = true;
+
   Future<bool> join(String user, String roomUrl) async {
     List<String?>? token =
         await RoomService().getToken(user: user, room: roomUrl);
@@ -895,6 +897,11 @@ class MeetingStore extends ChangeNotifier
   void setNewMessageFalse() {
     if (!isNewMessageReceived) return;
     this.isNewMessageReceived = false;
+    notifyListeners();
+  }
+
+  void setMessageInfoFalse() {
+    isMessageInfoShown = false;
     notifyListeners();
   }
 
