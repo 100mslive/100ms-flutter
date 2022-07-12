@@ -4,7 +4,6 @@ import 'package:focus_detector/focus_detector.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/change_role_options.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/local_peer_tile_dialog.dart';
-import 'package:hmssdk_flutter_example/common/ui/organisms/name_widget.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
 import 'package:provider/provider.dart';
@@ -27,12 +26,13 @@ class VideoTile extends StatefulWidget {
   final double itemHeight;
   final double itemWidth;
   final ScaleType scaleType;
-
+  final bool islongPressEnabled;
   VideoTile(
       {Key? key,
       this.itemHeight = 200.0,
       this.itemWidth = 200.0,
-      this.scaleType = ScaleType.SCALE_ASPECT_FILL})
+      this.scaleType = ScaleType.SCALE_ASPECT_FILL,
+      this.islongPressEnabled = true})
       : super(key: key);
 
   @override
@@ -71,6 +71,9 @@ class _VideoTileState extends State<VideoTile> {
       child: context.read<PeerTrackNode>().uid.contains("mainVideo")
           ? InkWell(
               onLongPress: () {
+                if (!widget.islongPressEnabled) {
+                  return;
+                }
                 var peerTrackNode = context.read<PeerTrackNode>();
                 HMSPeer peerNode = peerTrackNode.peer;
                 if (!mutePermission ||
@@ -198,7 +201,7 @@ class _VideoTileState extends State<VideoTile> {
                         child: Center(
                           child: Padding(
                             padding: const EdgeInsets.only(
-                                left: 8.0,right : 4, top: 4,bottom : 4),
+                                left: 8.0, right: 4, top: 4, bottom: 4),
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               mainAxisAlignment: MainAxisAlignment.center,

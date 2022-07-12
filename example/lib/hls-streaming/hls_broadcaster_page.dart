@@ -593,7 +593,6 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                                       isNewMessageReceived
                                                           ? "assets/icons/message_badge_on.svg"
                                                           : "assets/icons/message_badge_off.svg",
-                                                      color: defaultColor,
                                                       fit: BoxFit.scaleDown,
                                                     ),
                                                   );

@@ -103,6 +103,7 @@ Widget hlsGridView(
             key: ValueKey(peerTracks[index].uid + "video_view"),
             value: peerTracks[index],
             child: VideoTile(
+              islongPressEnabled: false,
               key: ValueKey(peerTracks[index].uid + "audio_view"),
               itemHeight: size.height,
               itemWidth: size.width,

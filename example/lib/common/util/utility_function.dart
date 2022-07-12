@@ -9,7 +9,17 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Utilities {
+
+  static RegExp REGEX_EMOJI = RegExp(
+        r'(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])');
+
   static String getAvatarTitle(String name) {
+    if (name.contains(REGEX_EMOJI)) {
+      name = name.replaceAll(REGEX_EMOJI, '');
+      if (name.trim().isEmpty) {
+        return '😄';
+      }
+    }
     List<String>? parts = name.trim().split(" ");
     if (parts.length == 1) {
       name = parts[0][0];
@@ -25,6 +35,13 @@ class Utilities {
   }
 
   static Color getBackgroundColour(String name) {
+
+    if (name.contains(REGEX_EMOJI)) {
+      name = name.replaceAll(REGEX_EMOJI, '');
+      if (name.trim().isEmpty) {
+        return Color(0xFF6554C0);
+      }
+    }
     return Utilities
         .colors[name.toUpperCase().codeUnitAt(0) % Utilities.colors.length];
   }
