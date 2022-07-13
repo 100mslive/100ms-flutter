@@ -758,7 +758,7 @@ class HMSSDK {
   }
 
   ///Method to switch audio output device(Android Only)
-  void switchAudioOutput(HMSAudioDevice audioDevice) {
+  void switchAudioOutput({required HMSAudioDevice audioDevice}) {
     if (Platform.isAndroid)
       PlatformService.invokeMethod(PlatformMethod.switchAudioOutput,
           arguments: {"audio_device_name": audioDevice.name});
@@ -801,10 +801,10 @@ class HMSSDK {
     }
   }
 
-  void setAudioMixingMode(HMSAudioMixingMode audiosMixingMode) {
+  void setAudioMixingMode({required HMSAudioMixingMode audioMixingMode}) {
     if (Platform.isAndroid)
       PlatformService.invokeMethod(PlatformMethod.setAudioMixingMode,
-          arguments: {"audio_mixing_mode": audiosMixingMode.name});
+          arguments: {"audio_mixing_mode": audioMixingMode.name});
   }
 
   /// To modify local peer's audio & video track settings use the [hmsTrackSetting]. Only required for advanced use-cases.

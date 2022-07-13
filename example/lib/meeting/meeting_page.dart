@@ -189,9 +189,12 @@ class _MeetingPageState extends State<MeetingPage>
           _meetingStore.startAudioShare();
         break;
       case 13:
-        _meetingStore.changeStatsVisible();
+        if (_meetingStore.isAudioShareStarted) UtilityComponents.showChangeAudioMixingModeDialog(context);
         break;
       case 14:
+        _meetingStore.changeStatsVisible();
+        break;
+      case 15:
         UtilityComponents.onEndRoomPressed(context);
         break;
       default:
@@ -924,6 +927,24 @@ class _MeetingPageState extends State<MeetingPage>
                   ]),
               value: 12,
             ),
+          if (Platform.isAndroid && meetingStore.isAudioShareStarted)
+            PopupMenuItem(
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text("Change Audio Mixing Mode",
+                        style: GoogleFonts.inter(
+                          color: meetingStore.isAudioShareStarted
+                              ? Colors.blue
+                              : iconColor,
+                        )),
+                    Icon(
+                      Icons.music_note,
+                      color: iconColor,
+                    )
+                  ]),
+              value: 13,
+            ),
           PopupMenuItem(
             child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -940,7 +961,7 @@ class _MeetingPageState extends State<MeetingPage>
                           ? Colors.blue
                           : iconColor),
                 ]),
-            value: 13,
+            value: 14,
           ),
           if (meetingStore.localPeer!.role.permissions.endRoom!)
             PopupMenuItem(
@@ -958,7 +979,7 @@ class _MeetingPageState extends State<MeetingPage>
                       color: iconColor,
                     ),
                   ]),
-              value: 14,
+              value: 15,
             ),
         ];
       },
