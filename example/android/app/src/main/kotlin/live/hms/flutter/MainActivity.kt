@@ -74,5 +74,9 @@ class MainActivity: FlutterActivity() {
             HmssdkFlutterPlugin.hmssdkFlutterPlugin?.requestScreenShare(data)
         }
 
+        if (requestCode == Constants.AUDIO_SHARE_INTENT_REQUEST_CODE && resultCode == Activity.RESULT_OK){
+            HmssdkFlutterPlugin.hmssdkFlutterPlugin?.requestAudioShare(data)
+        }
+
     }
 }

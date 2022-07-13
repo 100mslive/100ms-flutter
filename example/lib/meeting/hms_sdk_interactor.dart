@@ -288,4 +288,16 @@ class HMSSDKInteractor {
   void switchAudioOutput(HMSAudioDevice audioDevice) {
     hmsSDK.switchAudioOutput(audioDevice);
   }
+
+  void startAudioShare({HMSActionResultListener? hmsActionResultListener}) {
+    hmsSDK.startAudioShare(hmsActionResultListener: hmsActionResultListener);
+  }
+
+  void stopAudioShare({HMSActionResultListener? hmsActionResultListener}) {
+    hmsSDK.stopAudioShare(hmsActionResultListener: hmsActionResultListener);
+  }
+
+  void setAudioMixingMode(HMSAudioMixingMode audioMixingMode) {
+    hmsSDK.setAudioMixingMode(audioMixingMode);
+  }
 }

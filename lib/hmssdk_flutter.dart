@@ -74,3 +74,4 @@ export 'src/model/hms_network_quality.dart';
 export 'src/model/hms_stats_listener.dart';
 export 'src/model/hms_hls_recording_config.dart';
 export 'src/enum/hms_audio_device.dart';
+export 'src/enum/hms_audio_mixing_mode.dart';

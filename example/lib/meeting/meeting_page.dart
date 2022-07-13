@@ -1,4 +1,6 @@
 //Package imports
+import 'dart:io';
+
 import 'package:connectivity_checker/connectivity_checker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -181,9 +183,15 @@ class _MeetingPageState extends State<MeetingPage>
         }
         break;
       case 12:
-        _meetingStore.changeStatsVisible();
+        if (_meetingStore.isAudioShareStarted)
+          _meetingStore.stopAudioShare();
+        else
+          _meetingStore.startAudioShare();
         break;
       case 13:
+        _meetingStore.changeStatsVisible();
+        break;
+      case 14:
         UtilityComponents.onEndRoomPressed(context);
         break;
       default:
@@ -887,6 +895,35 @@ class _MeetingPageState extends State<MeetingPage>
                   ]),
               value: 11,
             ),
+          if (Platform.isAndroid)
+            PopupMenuItem(
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                        meetingStore.isAudioShareStarted
+                            ? "Stop Audio Share"
+                            : "Start Audio Share",
+                        style: GoogleFonts.inter(
+                          color: meetingStore.isAudioShareStarted
+                              ? Colors.blue
+                              : iconColor,
+                        )),
+                    Icon(
+                      Icons.music_note,
+                      color: meetingStore.isAudioShareStarted
+                          ? Colors.blue
+                          : iconColor,
+                    )
+                    // SvgPicture.asset(
+                    //   "assets/icons/record.svg",
+                    //   color: meetingStore.isAudioShareStarted
+                    //       ? Colors.blue
+                    //       : iconColor,
+                    // ),
+                  ]),
+              value: 12,
+            ),
           PopupMenuItem(
             child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -903,7 +940,7 @@ class _MeetingPageState extends State<MeetingPage>
                           ? Colors.blue
                           : iconColor),
                 ]),
-            value: 12,
+            value: 13,
           ),
           if (meetingStore.localPeer!.role.permissions.endRoom!)
             PopupMenuItem(
@@ -921,7 +958,7 @@ class _MeetingPageState extends State<MeetingPage>
                       color: iconColor,
                     ),
                   ]),
-              value: 13,
+              value: 14,
             ),
         ];
       },
