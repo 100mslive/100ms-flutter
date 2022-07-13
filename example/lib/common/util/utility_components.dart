@@ -948,14 +948,14 @@ class UtilityComponents {
     return answer;
   }
 
-  static void showChangeAudioMixingModeDialog(context) {
+  static void showChangeAudioMixingModeDialog(BuildContext context) {
     HMSAudioMixingMode valueChoose = HMSAudioMixingMode.TALK_AND_MUSIC;
     double width = MediaQuery.of(context).size.width;
     MeetingStore _meetingStore = context.read<MeetingStore>();
     showDialog(
         barrierDismissible: false,
         context: context,
-        builder: (ctx) => StatefulBuilder(builder: (context, setState) {
+        builder: (ctx) => StatefulBuilder(builder: (ctx, setState) {
               return AlertDialog(
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12)),
@@ -1086,11 +1086,10 @@ class UtilityComponents {
                               borderRadius: BorderRadius.circular(8.0),
                             ))),
                         onPressed: () => {
-                          if(_meetingStore.isAudioShareStarted)
-                            _meetingStore
-                              .setAudioMixingMode(valueChoose)
+                          if (_meetingStore.isAudioShareStarted)
+                            _meetingStore.setAudioMixingMode(valueChoose)
                           else
-                          Utilities.showToast("Audio Share not enabled"),
+                            Utilities.showToast("Audio Share not enabled"),
                           Navigator.pop(context),
                         },
                         child: Padding(

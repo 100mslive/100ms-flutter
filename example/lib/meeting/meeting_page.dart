@@ -189,7 +189,8 @@ class _MeetingPageState extends State<MeetingPage>
           _meetingStore.startAudioShare();
         break;
       case 13:
-        if (_meetingStore.isAudioShareStarted) UtilityComponents.showChangeAudioMixingModeDialog(context);
+        if (_meetingStore.isAudioShareStarted)
+          UtilityComponents.showChangeAudioMixingModeDialog(context);
         break;
       case 14:
         _meetingStore.changeStatsVisible();
@@ -932,11 +933,9 @@ class _MeetingPageState extends State<MeetingPage>
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text("Change Audio Mixing Mode",
+                    Text("Audio Mixing Mode",
                         style: GoogleFonts.inter(
-                          color: meetingStore.isAudioShareStarted
-                              ? Colors.blue
-                              : iconColor,
+                          color: iconColor,
                         )),
                     Icon(
                       Icons.music_note,
