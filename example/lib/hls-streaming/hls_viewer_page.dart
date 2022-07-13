@@ -11,6 +11,7 @@ import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:hmssdk_flutter_example/hls-streaming/hls_message.dart';
 import 'package:hmssdk_flutter_example/hls-streaming/util/hls_subtitle_text.dart';
+import 'package:hmssdk_flutter_example/hls-streaming/util/hls_title_text.dart';
 import 'package:hmssdk_flutter_example/hls-streaming/util/hls_viewer_settings.dart';
 import 'package:hmssdk_flutter_example/hls_viewer/hls_viewer.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
@@ -117,12 +118,8 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                     padding:
                                                         const EdgeInsets.only(
                                                             bottom: 8.0),
-                                                    child: Text(
-                                                      "Waiting for HLS to start...",
-                                                      style: GoogleFonts.inter(
-                                                          color: iconColor,
-                                                          fontSize: 20),
-                                                    ),
+                                                    child: HLSTitleText(text: "Waiting for HLS to start...", textColor: defaultColor)
+                                                    
                                                   ),
                                                 ],
                                               ),
