@@ -2,26 +2,28 @@
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter/src/service/platform_service.dart';
 
+///100ms HMSLocalVideoTrack
+///
+///[HMSLocalVideoTrack] contains the local peer video track infomation.
 class HMSLocalVideoTrack extends HMSVideoTrack {
   HMSVideoTrackSetting setting;
 
-  HMSLocalVideoTrack(
-      {required this.setting,
-      required bool isDegraded,
-      required HMSTrackKind kind,
-      required String source,
-      required String trackId,
-      required String trackDescription,
-      required bool isMute,
-      HMSPeer? peer})
-      : super(
-            isDegraded: isDegraded,
-            kind: kind,
-            source: source,
-            trackDescription: trackDescription,
-            trackId: trackId,
-            isMute: isMute,
-            peer: peer);
+  HMSLocalVideoTrack({
+    required this.setting,
+    required bool isDegraded,
+    required HMSTrackKind kind,
+    required String source,
+    required String trackId,
+    required String trackDescription,
+    required bool isMute,
+  }) : super(
+          isDegraded: isDegraded,
+          kind: kind,
+          source: source,
+          trackDescription: trackDescription,
+          trackId: trackId,
+          isMute: isMute,
+        );
 
   Future<void> startCapturing() async {
     await PlatformService.invokeMethod(PlatformMethod.startCapturing);
@@ -35,7 +37,7 @@ class HMSLocalVideoTrack extends HMSVideoTrack {
     await PlatformService.invokeMethod(PlatformMethod.switchCamera);
   }
 
-  factory HMSLocalVideoTrack.fromMap({required Map map, HMSPeer? peer}) {
+  factory HMSLocalVideoTrack.fromMap({required Map map}) {
     return HMSLocalVideoTrack(
         trackId: map['track_id'],
         trackDescription: map['track_description'],
@@ -43,7 +45,6 @@ class HMSLocalVideoTrack extends HMSVideoTrack {
         kind: HMSTrackKindValue.getHMSTrackKindFromName(map['track_kind']),
         isMute: map['track_mute'],
         isDegraded: map['is_degraded'],
-        peer: peer,
         setting: HMSVideoTrackSetting.fromMap(map["hms_video_track_settings"]));
   }
 

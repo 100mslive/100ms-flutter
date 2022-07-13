@@ -1,5 +1,6 @@
 enum HMSVideoCodec { h264, vp8, vp9, h265, unknown }
 
+///VideoCodec
 extension HMSVideoCodecValues on HMSVideoCodec {
   static HMSVideoCodec getHMSCodecFromName(String name) {
     switch (name) {

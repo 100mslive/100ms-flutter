@@ -1,5 +1,6 @@
 enum HMSLogsUpdateListenerMethod { onLogsUpdate, unknown }
 
+///HMSLogsUpdateListenerMethod
 extension HMSLogsUpdateListenerMethodValues on HMSLogsUpdateListenerMethod {
   static HMSLogsUpdateListenerMethod getMethodFromName(String name) {
     switch (name) {

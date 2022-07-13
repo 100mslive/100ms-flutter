@@ -9,7 +9,7 @@ import Foundation
 import HMSSDK
 
 class HMSSubscribeDegradationPolicyExtension {
-    
+
     static func toDictionary(_ policy: HMSSubscribeDegradationPolicy?) -> [String: Any]? {
         [
             "packet_loss_threshold": policy?.packetLossThreshold ?? 0,

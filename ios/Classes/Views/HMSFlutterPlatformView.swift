@@ -17,14 +17,14 @@ class HMSFlutterPlatformView: NSObject, FlutterPlatformView {
     private let disableAutoSimulcastLayerSelect: Bool
     private let videoTrack: HMSVideoTrack
     private var videoView: HMSVideoView?
-    
+
     init(frame: CGRect,
          viewIdentifier: Int64,
          videoContentMode: UIView.ContentMode,
          mirror: Bool,
          disableAutoSimulcastLayerSelect: Bool,
          videoTrack: HMSVideoTrack) {
-        
+
         self.frame = frame
         self.viewIdentifier = viewIdentifier
         self.videoContentMode = videoContentMode
@@ -33,22 +33,22 @@ class HMSFlutterPlatformView: NSObject, FlutterPlatformView {
         self.videoTrack = videoTrack
         super.init()
     }
-    
+
     func view() -> UIView {
         renderVideo()
     }
-    
+
     private func renderVideo() -> HMSVideoView {
-        
+
         videoView = HMSVideoView(frame: frame)
-        
+
         videoView?.videoContentMode = videoContentMode
         videoView?.mirror = mirror
         videoView?.disableAutoSimulcastLayerSelect = disableAutoSimulcastLayerSelect
         videoView?.setVideoTrack(videoTrack)
         return videoView!
     }
-    
+
     deinit {
         videoView?.setVideoTrack(nil)
         videoView = nil

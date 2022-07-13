@@ -4,8 +4,6 @@ import 'dart:convert';
 
 //Package imports
 import 'package:flutter/material.dart';
-
-//Package imports
 import 'package:hmssdk_flutter_example/logs/static_logger.dart';
 import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';

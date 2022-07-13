@@ -1,34 +1,44 @@
 //Package imports
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-import 'package:hmssdk_flutter_example/preview/preview_controller.dart';
-import 'package:mobx/mobx.dart';
+import 'package:hmssdk_flutter_example/meeting/hms_sdk_interactor.dart';
+import 'package:hmssdk_flutter_example/service/room_service.dart';
 
-part 'preview_store.g.dart';
-
-class PreviewStore = PreviewStoreBase with _$PreviewStore;
-
-abstract class PreviewStoreBase
-    with Store
+class PreviewStore extends ChangeNotifier
     implements HMSPreviewListener, HMSLogListener {
-  late PreviewController previewController;
+  late HMSSDKInteractor hmsSDKInteractor;
 
-  @observable
+  PreviewStore() {
+    hmsSDKInteractor = HMSSDKInteractor(
+        appGroup: "group.flutterhms",
+        preferredExtension:
+            "live.100ms.flutter.FlutterBroadcastUploadExtension");
+  }
+
   List<HMSVideoTrack> localTracks = [];
-  @observable
+
   HMSPeer? peer;
-  @observable
+
   HMSException? error;
-  @observable
+
   bool isHLSLink = false;
   HMSRoom? room;
-  @observable
-  bool videoOn = true;
-  @observable
-  bool audioOn = true;
+
+  bool isVideoOn = true;
+
+  bool isAudioOn = true;
+
+  bool isRecordingStarted = false;
+
+  bool isStreamingStarted = false;
+
+  List<HMSPeer> peers = [];
+
+  int? networkQuality;
 
   @override
-  void onError({required HMSException error}) {
+  void onHMSError({required HMSException error}) {
     updateError(error);
   }
 
@@ -40,6 +50,7 @@ abstract class PreviewStoreBase
         peer = each;
         if (each.role.name.indexOf("hls-") == 0) {
           isHLSLink = true;
+          notifyListeners();
         }
         break;
       }
@@ -50,56 +61,118 @@ abstract class PreviewStoreBase
         videoTracks.add(track as HMSVideoTrack);
       }
     }
-    this.localTracks = ObservableList.of(videoTracks);
+    this.localTracks = videoTracks;
+    notifyListeners();
   }
 
-  void addPreviewListener() {
-    previewController.addPreviewListener(this);
-    addLogsListener();
-  }
+  Future<bool> startPreview(
+      {required String user, required String roomId}) async {
+    List<String?>? token =
+        await RoomService().getToken(user: user, room: roomId);
 
-  void removeListener() {
-    previewController.removeListener(this);
-    removeLogsListener();
-  }
-
-  Future<bool> startPreview() async {
-    return await previewController.startPreview();
-  }
-
-  void startCapturing() {
-    previewController.startCapturing();
-  }
-
-  void stopCapturing() {
-    previewController.stopCapturing();
-  }
-
-  void switchVideo() {
-    previewController.switchVideo(isOn: videoOn);
-    videoOn = !videoOn;
-  }
-
-  void switchAudio() {
-    previewController.switchAudio(isOn: audioOn);
-    audioOn = !audioOn;
-  }
-
-  @action
-  void updateError(HMSException error) {
-    this.error = error;
+    if (token == null) return false;
+    if (token[0] == null) return false;
+    FirebaseCrashlytics.instance.setUserIdentifier(token[0]!);
+    HMSConfig config = HMSConfig(
+        authToken: token[0]!,
+        userName: user,
+        endPoint: token[1] == "true" ? "" : "https://qa-init.100ms.live/init",
+        captureNetworkQualityInPreview: true);
+    hmsSDKInteractor.addPreviewListener(this);
+    hmsSDKInteractor.preview(config: config);
+    return true;
   }
 
   @override
-  void onLogMessage({required dynamic hmsLogList}) {
+  void onPeerUpdate({required HMSPeer peer, required HMSPeerUpdate update}) {
+    switch (update) {
+      case HMSPeerUpdate.peerJoined:
+        peers.add(peer);
+        break;
+      case HMSPeerUpdate.peerLeft:
+        peers.remove(peer);
+        break;
+      case HMSPeerUpdate.networkQualityUpdated:
+        if (peer.isLocal) {
+          networkQuality = peer.networkQuality?.quality;
+          notifyListeners();
+        }
+        break;
+      case HMSPeerUpdate.roleUpdated:
+        int index = peers.indexOf(peer);
+        if (index != -1) peers[index] = peer;
+        break;
+      default:
+        break;
+    }
+    notifyListeners();
+  }
+
+  @override
+  void onRoomUpdate({required HMSRoom room, required HMSRoomUpdate update}) {
+    switch (update) {
+      case HMSRoomUpdate.browserRecordingStateUpdated:
+        isRecordingStarted = room.hmsBrowserRecordingState?.running ?? false;
+        break;
+
+      case HMSRoomUpdate.serverRecordingStateUpdated:
+        isRecordingStarted = room.hmsServerRecordingState?.running ?? false;
+        break;
+
+      case HMSRoomUpdate.hlsRecordingStateUpdated:
+        isRecordingStarted = room.hmshlsRecordingState?.running ?? false;
+        break;
+
+      case HMSRoomUpdate.rtmpStreamingStateUpdated:
+        isStreamingStarted = room.hmsRtmpStreamingState?.running ?? false;
+        break;
+      case HMSRoomUpdate.hlsStreamingStateUpdated:
+        isStreamingStarted = room.hmshlsStreamingState?.running ?? false;
+        break;
+      default:
+        break;
+    }
+    notifyListeners();
+  }
+
+  void removePreviewListener() {
+    hmsSDKInteractor.removePreviewListener(this);
+  }
+
+  void stopCapturing() {
+    hmsSDKInteractor.stopCapturing();
+  }
+
+  void startCapturing() {
+    hmsSDKInteractor.startCapturing();
+  }
+
+  void switchVideo({bool isOn = false}) {
+    hmsSDKInteractor.switchVideo(isOn: isOn);
+    isVideoOn = !isVideoOn;
+    notifyListeners();
+  }
+
+  void switchAudio({bool isOn = false}) {
+    hmsSDKInteractor.switchAudio(isOn: isOn);
+    isAudioOn = !isAudioOn;
+    notifyListeners();
+  }
+
+  void addLogsListener(HMSLogListener hmsLogListener) {
+    hmsSDKInteractor.addLogsListener(hmsLogListener);
+  }
+
+  void removeLogsListener(HMSLogListener hmsLogListener) {
+    hmsSDKInteractor.removeLogsListener(hmsLogListener);
+  }
+
+  @override
+  void onLogMessage({required hmsLogList}) {
     FirebaseCrashlytics.instance.log(hmsLogList.toString());
   }
 
-  void addLogsListener() {
-    previewController.addLogsListener(this);
-  }
-
-  void removeLogsListener() {
-    previewController.removeLogsListener(this);
+  void updateError(HMSException error) {
+    this.error = error;
   }
 }

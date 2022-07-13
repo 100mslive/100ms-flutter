@@ -1,3 +1,6 @@
+///100ms HMSPermissions
+///
+///[HMSPermissions] contains permissions for local peer like end room, remove others, mute and unmute other peers, role change and other permissions.
 class HMSPermissions {
   final bool? endRoom;
   final bool? removeOthers;

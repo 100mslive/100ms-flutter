@@ -17,3 +17,11 @@ example/ios/pods/
 
 example/android/app/google-services.json
 example/ios/Runner/GoogleService-Info.plist
+*.p8
+release-apps.sh
+example/lib/firebase_options.dart
+
+mobx-example-app
+example_riverpod
+demo_app_with_100ms_and_bloc
+demo_with_getx_and_100ms

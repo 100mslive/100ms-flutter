@@ -1,8 +1,11 @@
 //Package imports
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 //Project imports
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 
 class ChangeRoleOptionDialog extends StatefulWidget {
   final String peerName;
@@ -22,6 +25,7 @@ class ChangeRoleOptionDialog extends StatefulWidget {
 
 class _ChangeRoleOptionDialogState extends State<ChangeRoleOptionDialog> {
   late bool forceValue;
+  String valueChoose = "";
 
   @override
   void initState() {
@@ -32,7 +36,10 @@ class _ChangeRoleOptionDialogState extends State<ChangeRoleOptionDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(widget.peerName),
+      title: Text(
+        widget.peerName,
+        style: GoogleFonts.inter(color: iconColor),
+      ),
       content: Container(
         width: double.infinity,
         child: FutureBuilder<List<HMSRole>>(
@@ -40,28 +47,46 @@ class _ChangeRoleOptionDialogState extends State<ChangeRoleOptionDialog> {
             if (data.connectionState != ConnectionState.done) {
               return CircularProgressIndicator();
             } else if (data.hasData) {
+              if (valueChoose == "") {
+                valueChoose = data.data![0].name;
+              }
               return Container(
                 width: 300,
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Flexible(
-                      child: ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: data.data?.length,
-                          itemBuilder: (_, index) {
-                            return ListTile(
-                                title: Text(data.data![index].name),
-                                trailing: IconButton(
-                                  onPressed: () {
-                                    widget.changeRole(
-                                        data.data![index], forceValue);
-                                  },
-                                  icon: Icon(
-                                    Icons.done,
-                                  ),
-                                ));
-                          }),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Role To: ",
+                          style: GoogleFonts.inter(color: iconColor),
+                        ),
+                        Flexible(
+                          child: DropdownButton2(
+                            buttonWidth: MediaQuery.of(context).size.width / 2,
+                            value: valueChoose,
+                            iconEnabledColor: Colors.white,
+                            onChanged: (newvalue) {
+                              setState(() {
+                                valueChoose = newvalue as String;
+                              });
+                            },
+                            items: data.data!.map((role) {
+                              return DropdownMenuItem(
+                                child: Text(
+                                  role.name,
+                                  style: GoogleFonts.inter(color: iconColor),
+                                ),
+                                value: role.name,
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 10,
                     ),
                     GestureDetector(
                       onTap: () {
@@ -76,15 +101,50 @@ class _ChangeRoleOptionDialogState extends State<ChangeRoleOptionDialog> {
                           SizedBox(
                             width: 16,
                           ),
-                          Text('Force change')
+                          Text(
+                            'Force change',
+                            style: GoogleFonts.inter(color: iconColor),
+                          )
                         ],
                       ),
                     ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        ElevatedButton(
+                            style:
+                                ElevatedButton.styleFrom(primary: Colors.red),
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: Text(
+                              "Cancel",
+                              style: GoogleFonts.inter(),
+                            )),
+                        ElevatedButton(
+                            onPressed: () {
+                              widget.changeRole(
+                                  data.data!.firstWhere(
+                                      (element) => element.name == valueChoose),
+                                  forceValue);
+                            },
+                            child: Text(
+                              "Change Role",
+                              style: GoogleFonts.inter(),
+                            )),
+                      ],
+                    )
                   ],
                 ),
               );
             }
-            return Text('No roles available');
+            return Text(
+              'No roles available',
+              style: GoogleFonts.inter(),
+            );
           },
           future: widget.getRoleFunction,
         ),
