@@ -64,13 +64,6 @@ class HLSMessageOrganism extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           Container(
-                            width: isLocalMessage
-                                ? (role.length * 10) > width * 0.3
-                                    ? width * 0.3
-                                    : role.length * 10
-                                : (role.length * 10 + 60) > width * 0.37
-                                    ? width * 0.37
-                                    : role.length * 10 + 60,
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(4),
                                 border: role != ""
@@ -102,23 +95,39 @@ class HLSMessageOrganism extends StatelessWidget {
                                                 letterSpacing: 1.5,
                                                 fontWeight: FontWeight.w600),
                                           )),
-                                  Container(
-                                    constraints: BoxConstraints(
-                                        maxWidth: isLocalMessage
-                                            ? width * 0.25
-                                            : width * 0.15),
-                                    child: role != ""
-                                        ? Text(
-                                            "${role.toUpperCase()} ›",
-                                            overflow: TextOverflow.ellipsis,
-                                            style: GoogleFonts.inter(
-                                                fontSize: 10.0,
-                                                color: defaultColor,
-                                                letterSpacing: 1.5,
-                                                fontWeight: FontWeight.w400),
-                                          )
-                                        : SizedBox(),
-                                  ),
+                                  role != ""
+                                      ? Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Container(
+                                              constraints: BoxConstraints(
+                                                  maxWidth: isLocalMessage
+                                                      ? width * 0.25
+                                                      : width * 0.15),
+                                              child: Text(
+                                                "${role.toUpperCase()} ",
+                                                overflow: TextOverflow.ellipsis,
+                                                style: GoogleFonts.inter(
+                                                    fontSize: 10.0,
+                                                    color: defaultColor,
+                                                    letterSpacing: 1.5,
+                                                    fontWeight:
+                                                        FontWeight.w400),
+                                              ),
+                                            ),
+                                            Text(
+                                              "›",
+                                              overflow: TextOverflow.ellipsis,
+                                              style: GoogleFonts.inter(
+                                                  fontSize: 10.0,
+                                                  color: defaultColor,
+                                                  letterSpacing: 1.5,
+                                                  fontWeight: FontWeight.w400),
+                                            ),
+                                          ],
+                                        )
+                                      : SizedBox(),
                                 ],
                               ),
                             ),
