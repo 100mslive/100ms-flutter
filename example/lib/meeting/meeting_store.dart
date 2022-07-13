@@ -243,7 +243,6 @@ class MeetingStore extends ChangeNotifier
 
   void updateFilteredList(HMSPeerUpdate peerUpdate, HMSPeer peer) {
     String currentRole = this.selectedRoleFilter;
-    print("Current role is $currentRole");
     int index =
         filteredPeers.indexWhere((element) => element.peerId == peer.peerId);
 
@@ -635,6 +634,7 @@ class MeetingStore extends ChangeNotifier
         break;
 
       case HMSPeerUpdate.metadataChanged:
+        if (peer.isLocal) localPeer = peer;
         int index = peerTracks
             .indexWhere((element) => element.uid == peer.peerId + "mainVideo");
         if (index != -1) {
@@ -1066,7 +1066,7 @@ class MeetingStore extends ChangeNotifier
     filteredPeers.addAll(peers);
     filteredPeers.removeWhere((element) => element.isLocal);
     filteredPeers.sortedBy(((element) => element.role.priority.toString()));
-    filteredPeers.insert(0, localPeer!);
+    filteredPeers.insert(0,localPeer!);
     if (type == "Everyone") {
       return;
     } else if (type == "Raised Hand") {
