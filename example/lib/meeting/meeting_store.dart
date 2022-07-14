@@ -118,6 +118,8 @@ class MeetingStore extends ChangeNotifier
 
   bool isMessageInfoShown = true;
 
+  bool isAudioShareStarted = false;
+
   Future<bool> join(String user, String roomUrl) async {
     List<String?>? token =
         await RoomService().getToken(user: user, room: roomUrl);
@@ -1090,6 +1092,18 @@ class MeetingStore extends ChangeNotifier
     return false;
   }
 
+  void startAudioShare() {
+    _hmsSDKInteractor.startAudioShare(hmsActionResultListener: this);
+  }
+
+  void stopAudioShare() {
+    _hmsSDKInteractor.stopAudioShare(hmsActionResultListener: this);
+  }
+
+  void setAudioMixingMode(HMSAudioMixingMode audioMixingMode) {
+    _hmsSDKInteractor.setAudioMixingMode(audioMixingMode);
+  }
+
   @override
   void onSuccess(
       {HMSActionResultListenerMethod methodType =
@@ -1102,6 +1116,7 @@ class MeetingStore extends ChangeNotifier
         screenShareCount = 0;
         this.meetingMode = MeetingMode.Video;
         isScreenShareOn = false;
+        isAudioShareStarted = false;
         setLandscapeLock(false);
         notifyListeners();
         break;
@@ -1208,6 +1223,16 @@ class MeetingStore extends ChangeNotifier
         Utilities.showToast("Screen Share Stopped");
         isScreenShareActive();
         break;
+      case HMSActionResultListenerMethod.startAudioShare:
+        Utilities.showToast("Audio Share Started");
+        isAudioShareStarted = true;
+        notifyListeners();
+        break;
+      case HMSActionResultListenerMethod.stopAudioShare:
+        Utilities.showToast("Audio Share Stopped");
+        isAudioShareStarted = false;
+        notifyListeners();
+        break;
     }
   }
 
@@ -1284,6 +1309,14 @@ class MeetingStore extends ChangeNotifier
         Utilities.showToast("Stop screenshare failed");
         break;
       case HMSActionResultListenerMethod.unknown:
+        break;
+      case HMSActionResultListenerMethod.startAudioShare:
+        Utilities.showToast("Start audio share failed");
+        isAudioShareStarted = false;
+        notifyListeners();
+        break;
+      case HMSActionResultListenerMethod.stopAudioShare:
+        Utilities.showToast("Stop audio share failed");
         break;
     }
   }

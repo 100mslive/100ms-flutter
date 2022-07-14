@@ -758,10 +758,53 @@ class HMSSDK {
   }
 
   ///Method to switch audio output device(Android Only)
-  void switchAudioOutput(HMSAudioDevice audioDevice) {
+  void switchAudioOutput({required HMSAudioDevice audioDevice}) {
     if (Platform.isAndroid)
       PlatformService.invokeMethod(PlatformMethod.switchAudioOutput,
           arguments: {"audio_device_name": audioDevice.name});
+  }
+
+  void startAudioShare(
+      {HMSActionResultListener? hmsActionResultListener,
+      HMSAudioMixingMode audioMixingMode =
+          HMSAudioMixingMode.TALK_AND_MUSIC}) async {
+    if (!Platform.isAndroid) return;
+    var result = await PlatformService.invokeMethod(
+        PlatformMethod.startAudioShare,
+        arguments: {"audio_mixing_mode": audioMixingMode.name});
+    if (hmsActionResultListener != null) {
+      if (result == null) {
+        hmsActionResultListener.onSuccess(
+            methodType: HMSActionResultListenerMethod.startAudioShare);
+      } else {
+        hmsActionResultListener.onException(
+            methodType: HMSActionResultListenerMethod.startAudioShare,
+            hmsException: HMSException.fromMap(result["error"]));
+      }
+    }
+  }
+
+  void stopAudioShare(
+      {HMSActionResultListener? hmsActionResultListener}) async {
+    if (!Platform.isAndroid) return;
+    var result =
+        await PlatformService.invokeMethod(PlatformMethod.stopAudioShare);
+    if (hmsActionResultListener != null) {
+      if (result == null) {
+        hmsActionResultListener.onSuccess(
+            methodType: HMSActionResultListenerMethod.stopAudioShare);
+      } else {
+        hmsActionResultListener.onException(
+            methodType: HMSActionResultListenerMethod.startAudioShare,
+            hmsException: HMSException.fromMap(result["error"]));
+      }
+    }
+  }
+
+  void setAudioMixingMode({required HMSAudioMixingMode audioMixingMode}) {
+    if (Platform.isAndroid)
+      PlatformService.invokeMethod(PlatformMethod.setAudioMixingMode,
+          arguments: {"audio_mixing_mode": audioMixingMode.name});
   }
 
   /// To modify local peer's audio & video track settings use the [hmsTrackSetting]. Only required for advanced use-cases.

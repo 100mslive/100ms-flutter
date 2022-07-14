@@ -40,6 +40,7 @@ import live.hms.video.sdk.models.role.HMSRole
 import live.hms.video.sdk.models.trackchangerequest.HMSChangeTrackStateRequest
 import live.hms.video.utils.HMSLogger
 import live.hms.video.audio.HMSAudioManager.*
+import live.hms.video.sdk.models.enums.AudioMixingMode
 
 
 /** HmssdkFlutterPlugin */
@@ -170,6 +171,9 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             "get_audio_devices_list","get_current_audio_device","switch_audio_output" -> {
                 HMSAudioDeviceAction.audioDeviceActions(call,result,hmssdk)
             }
+            "start_audio_share","stop_audio_share","set_audio_mixing_mode"->{
+                audioShare(call,result)
+            }
             else -> {
                 result.notImplemented()
             }
@@ -287,6 +291,25 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
 
             "remove_stats_listener" -> {
                 hmssdk.removeRtcStatsObserver()
+            }
+
+            else -> {
+                result.notImplemented()
+            }
+        }
+    }
+
+    private fun audioShare(call: MethodCall,result: Result){
+        when (call.method) {
+            "start_audio_share" -> {
+                startAudioShare(call,result)
+            }
+
+            "stop_audio_share" -> {
+               stopAudioShare(result)
+            }
+            "set_audio_mixing_mode" -> {
+                setAudioMixingMode(call,result)
             }
 
             else -> {
@@ -939,7 +962,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
     }
 
     private fun changeName(call: MethodCall, result: Result) {
-        val name = call.argument<String>("name");
+        val name = call.argument<String>("name")
         hmssdk.changeName(
             name = name!!,
             hmsActionResultListener = HMSCommonAction.getActionListener(result)
@@ -979,8 +1002,56 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         }, data)
     }
 
+
+
     private fun stopScreenShare(result: Result) {
         hmssdk.stopScreenshare(HMSCommonAction.getActionListener(result))
+    }
+
+    private var androidAudioShareResult: Result? = null
+    private var mode: String? = "TALK_AND_MUSIC"
+    private fun startAudioShare(call: MethodCall,result: Result){
+        androidAudioShareResult = result
+        mode = call.argument<String>("audio_mixing_mode")
+        val mediaProjectionManager: MediaProjectionManager? = activity.getSystemService(
+            Context.MEDIA_PROJECTION_SERVICE
+        ) as MediaProjectionManager
+        activity.startActivityForResult(
+            mediaProjectionManager?.createScreenCaptureIntent(),
+            Constants.AUDIO_SHARE_INTENT_REQUEST_CODE
+        )
+    }
+
+    fun requestAudioShare(data: Intent?) {
+
+        hmssdk.startAudioshare(object : HMSActionResultListener {
+            override fun onError(error: HMSException) {
+                CoroutineScope(Dispatchers.Main).launch {
+                    androidAudioShareResult?.success(HMSExceptionExtension.toDictionary(error))
+                    androidAudioShareResult = null
+                }
+            }
+
+            override fun onSuccess() {
+                CoroutineScope(Dispatchers.Main).launch {
+                    androidAudioShareResult?.success(null)
+                    androidAudioShareResult = null
+                }
+            }
+        },data, audioMixingMode = AudioMixingMode.valueOf(mode!!))
+    }
+
+    private fun stopAudioShare(result: Result){
+        hmssdk.stopAudioshare(HMSCommonAction.getActionListener(result))
+    }
+
+    private fun setAudioMixingMode(call: MethodCall,result: Result){
+        val mode = call.argument<String>("audio_mixing_mode")
+        if(mode!=null) {
+            val audioMixingMode: AudioMixingMode = AudioMixingMode.valueOf(mode)
+            hmssdk.setAudioMixingMode(audioMixingMode)
+        }
+
     }
 
 
