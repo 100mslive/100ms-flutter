@@ -214,7 +214,8 @@ class UtilityComponents {
     );
   }
 
-  static void showRoleChangeDialog(HMSRoleChangeRequest? event, context) async {
+  static void showRoleChangeDialog(
+      HMSRoleChangeRequest? event, BuildContext context) async {
     event = event as HMSRoleChangeRequest;
     String answer = await showDialog(
         barrierDismissible: false,
@@ -231,7 +232,7 @@ class UtilityComponents {
     }
   }
 
-  static showTrackChangeDialog(event, context) async {
+  static showTrackChangeDialog(event, BuildContext context) async {
     event = event as HMSTrackChangeRequest;
     MeetingStore meetingStore =
         Provider.of<MeetingStore>(context, listen: false);
@@ -252,7 +253,7 @@ class UtilityComponents {
     }
   }
 
-  static showonExceptionDialog(event, context) {
+  static showonExceptionDialog(event, BuildContext context) {
     event = event as HMSException;
     var message =
         "${event.message} ${event.id ?? ""} ${event.code?.errorCode ?? ""} ${event.description} ${event.action} ${event.params ?? "".toString()}";
