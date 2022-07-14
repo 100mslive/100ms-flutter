@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
+import 'package:hmssdk_flutter_example/hls-streaming/util/hls_title_text.dart';
 import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 
@@ -48,9 +49,9 @@ class _HLSPlayerState extends State<HLSPlayer> {
                 aspectRatio: _controller.value.aspectRatio,
                 child: VideoPlayer(_controller),
               )
-            : Text(
-                "Waiting for the HLS Streaming to start...",
-                style: GoogleFonts.inter(color: iconColor, fontSize: 20.0),
+            : HLSTitleText(
+                text:"Waiting for the HLS Streaming to start...",
+                textColor: defaultColor,
               ),
       ),
     );
