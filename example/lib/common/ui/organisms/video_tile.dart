@@ -244,11 +244,27 @@ class _VideoTileState extends State<VideoTile> {
                     uid: context.read<PeerTrackNode>().uid,
                     scaleType: widget.scaleType,
                   ),
-                  PeerName(),
+                  Positioned(
+                    //Bottom left
+                    bottom: 5,
+                    left: 5,
+                    child: Container(
+                      decoration: BoxDecoration(
+                          color: Color.fromRGBO(0, 0, 0, 0.9),
+                          borderRadius: BorderRadius.circular(8)),
+                      child: Center(
+                        child: Padding(
+                          padding: const EdgeInsets.only(
+                              left: 8.0, right: 4, top: 4, bottom: 4),
+                          child: PeerName(),
+                        ),
+                      ),
+                    ),
+                  ),
                   RTCStatsView(isLocal: false),
                   Align(
                     alignment: Alignment.topRight,
-                    child: UtilityComponents.rotateScreen(context),
+                    child: widget.islongPressEnabled?UtilityComponents.rotateScreen(context):SizedBox(),
                   )
                 ],
               ),
