@@ -264,7 +264,9 @@ class _VideoTileState extends State<VideoTile> {
                   RTCStatsView(isLocal: false),
                   Align(
                     alignment: Alignment.topRight,
-                    child: widget.islongPressEnabled?UtilityComponents.rotateScreen(context):SizedBox(),
+                    child: widget.islongPressEnabled
+                        ? UtilityComponents.rotateScreen(context)
+                        : SizedBox(),
                   )
                 ],
               ),

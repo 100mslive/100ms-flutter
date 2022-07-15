@@ -51,7 +51,7 @@ class _HLSPlayerState extends State<HLSPlayer> {
                 right: 0,
                 bottom: 10,
                 child: AspectRatio(
-                  aspectRatio: 9/16,
+                  aspectRatio: 9 / 16,
                   child: VideoPlayer(_controller),
                 ),
               )
