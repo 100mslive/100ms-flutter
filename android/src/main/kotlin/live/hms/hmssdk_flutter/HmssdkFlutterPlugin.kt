@@ -7,7 +7,6 @@ import android.content.Intent
 import android.media.projection.MediaProjectionManager
 import android.os.Build
 import androidx.annotation.NonNull
-
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
@@ -22,7 +21,7 @@ import kotlinx.coroutines.launch
 import live.hms.hmssdk_flutter.hms_role_components.AudioParamsExtension
 import live.hms.hmssdk_flutter.hms_role_components.VideoParamsExtension
 import live.hms.hmssdk_flutter.views.HMSVideoViewFactory
-import live.hms.video.audio.HMSAudioManager
+import live.hms.video.audio.HMSAudioManager.*
 import live.hms.video.connection.stats.*
 import live.hms.video.error.HMSException
 import live.hms.video.media.codec.HMSAudioCodec
@@ -33,6 +32,7 @@ import live.hms.video.media.settings.HMSVideoTrackSettings
 import live.hms.video.media.tracks.*
 import live.hms.video.sdk.*
 import live.hms.video.sdk.models.*
+import live.hms.video.sdk.models.enums.AudioMixingMode
 import live.hms.video.sdk.models.enums.HMSPeerUpdate
 import live.hms.video.sdk.models.enums.HMSRoomUpdate
 import live.hms.video.sdk.models.enums.HMSTrackUpdate
@@ -40,7 +40,6 @@ import live.hms.video.sdk.models.role.HMSRole
 import live.hms.video.sdk.models.trackchangerequest.HMSChangeTrackStateRequest
 import live.hms.video.utils.HMSLogger
 import live.hms.video.audio.HMSAudioManager.*
-import live.hms.video.sdk.models.enums.AudioMixingMode
 
 
 /** HmssdkFlutterPlugin */
@@ -1176,8 +1175,8 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
 
     }
 
-    private val audioDeviceChangeListener = object: AudioManagerEvents {
-        override fun onAudioDeviceChanged(p0: AudioDevice?, p1: MutableSet<AudioDevice>?) {
+    private val audioDeviceChangeListener = object: AudioManagerDeviceChangeListener {
+        override fun onAudioDeviceChanged(p0: AudioDevice?, p1: Set<AudioDevice>?) {
             val args = HashMap<String, Any?>()
             args["event_name"] = "on_audio_device_changed"
             val dict = HashMap<String, Any?>()
@@ -1195,6 +1194,18 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             if (args["data"] != null)
                 CoroutineScope(Dispatchers.Main).launch {
                     eventSink?.success(args)
+                }
+        }
+
+        override fun onError(e: HMSException?){
+
+            val args = HashMap<String, Any?>()
+            args.put("event_name", "on_error")
+            args.put("data", HMSExceptionExtension.toDictionary(e))
+
+            if (args["data"] != null)
+                CoroutineScope(Dispatchers.Main).launch {
+                    previewSink?.success(args)
                 }
         }
     }
