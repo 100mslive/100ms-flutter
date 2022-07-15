@@ -958,31 +958,31 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                 ],
                               ),
                               Selector<MeetingStore, HMSRoleChangeRequest?>(
-                                selector: (_, meetingStore) =>
-                                    meetingStore.roleChangeRequest,
-                                builder: (_, roleChangeRequest, __) {
-                                  if (roleChangeRequest != null) {
-                                    WidgetsBinding.instance!
-                                        .addPostFrameCallback((_) {
-                                      UtilityComponents.showRoleChangeDialog(
-                                          roleChangeRequest, context);
-                                    });
-                                  }
-                                  return SizedBox();
-                                }),
-                            Selector<MeetingStore, HMSTrackChangeRequest?>(
-                                selector: (_, meetingStore) =>
-                                    meetingStore.hmsTrackChangeRequest,
-                                builder: (_, hmsTrackChangeRequest, __) {
-                                  if (hmsTrackChangeRequest != null) {
-                                    WidgetsBinding.instance!
-                                        .addPostFrameCallback((_) {
-                                      UtilityComponents.showTrackChangeDialog(
-                                          hmsTrackChangeRequest, context);
-                                    });
-                                  }
-                                  return SizedBox();
-                                }),
+                                  selector: (_, meetingStore) =>
+                                      meetingStore.roleChangeRequest,
+                                  builder: (_, roleChangeRequest, __) {
+                                    if (roleChangeRequest != null) {
+                                      WidgetsBinding.instance!
+                                          .addPostFrameCallback((_) {
+                                        UtilityComponents.showRoleChangeDialog(
+                                            roleChangeRequest, context);
+                                      });
+                                    }
+                                    return SizedBox();
+                                  }),
+                              Selector<MeetingStore, HMSTrackChangeRequest?>(
+                                  selector: (_, meetingStore) =>
+                                      meetingStore.hmsTrackChangeRequest,
+                                  builder: (_, hmsTrackChangeRequest, __) {
+                                    if (hmsTrackChangeRequest != null) {
+                                      WidgetsBinding.instance!
+                                          .addPostFrameCallback((_) {
+                                        UtilityComponents.showTrackChangeDialog(
+                                            hmsTrackChangeRequest, context);
+                                      });
+                                    }
+                                    return SizedBox();
+                                  }),
                             ],
                           ),
                         ),

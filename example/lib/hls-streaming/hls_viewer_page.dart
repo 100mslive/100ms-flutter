@@ -115,12 +115,14 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                     CrossAxisAlignment.center,
                                                 children: [
                                                   Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            bottom: 8.0),
-                                                    child: HLSTitleText(text: "Waiting for HLS to start...", textColor: defaultColor)
-                                                    
-                                                  ),
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              bottom: 8.0),
+                                                      child: HLSTitleText(
+                                                          text:
+                                                              "Waiting for HLS to start...",
+                                                          textColor:
+                                                              defaultColor)),
                                                 ],
                                               ),
                                             ),
@@ -145,7 +147,7 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                     .onBackPressed(context)
                                               },
                                               disabledBorderColor:
-                                                              Color(0xffCC525F),
+                                                  Color(0xffCC525F),
                                               width: 40,
                                               height: 40,
                                               offColor: Color(0xffCC525F),
@@ -416,31 +418,31 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                 ],
                               ),
                               Selector<MeetingStore, HMSRoleChangeRequest?>(
-                                selector: (_, meetingStore) =>
-                                    meetingStore.roleChangeRequest,
-                                builder: (_, roleChangeRequest, __) {
-                                  if (roleChangeRequest != null) {
-                                    WidgetsBinding.instance!
-                                        .addPostFrameCallback((_) {
-                                      UtilityComponents.showRoleChangeDialog(
-                                          roleChangeRequest, context);
-                                    });
-                                  }
-                                  return SizedBox();
-                                }),
-                            Selector<MeetingStore, HMSTrackChangeRequest?>(
-                                selector: (_, meetingStore) =>
-                                    meetingStore.hmsTrackChangeRequest,
-                                builder: (_, hmsTrackChangeRequest, __) {
-                                  if (hmsTrackChangeRequest != null) {
-                                    WidgetsBinding.instance!
-                                        .addPostFrameCallback((_) {
-                                      UtilityComponents.showTrackChangeDialog(
-                                          hmsTrackChangeRequest, context);
-                                    });
-                                  }
-                                  return SizedBox();
-                                }),
+                                  selector: (_, meetingStore) =>
+                                      meetingStore.roleChangeRequest,
+                                  builder: (_, roleChangeRequest, __) {
+                                    if (roleChangeRequest != null) {
+                                      WidgetsBinding.instance!
+                                          .addPostFrameCallback((_) {
+                                        UtilityComponents.showRoleChangeDialog(
+                                            roleChangeRequest, context);
+                                      });
+                                    }
+                                    return SizedBox();
+                                  }),
+                              Selector<MeetingStore, HMSTrackChangeRequest?>(
+                                  selector: (_, meetingStore) =>
+                                      meetingStore.hmsTrackChangeRequest,
+                                  builder: (_, hmsTrackChangeRequest, __) {
+                                    if (hmsTrackChangeRequest != null) {
+                                      WidgetsBinding.instance!
+                                          .addPostFrameCallback((_) {
+                                        UtilityComponents.showTrackChangeDialog(
+                                            hmsTrackChangeRequest, context);
+                                      });
+                                    }
+                                    return SizedBox();
+                                  }),
                             ],
                           ),
                         ),

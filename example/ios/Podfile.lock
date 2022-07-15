@@ -9,21 +9,28 @@ PODS:
   - Firebase/Crashlytics (9.2.0):
     - Firebase/CoreOnly
     - FirebaseCrashlytics (~> 9.2.0)
+  - Firebase/DynamicLinks (9.2.0):
+    - Firebase/CoreOnly
+    - FirebaseDynamicLinks (~> 9.2.0)
   - Firebase/Performance (9.2.0):
     - Firebase/CoreOnly
     - FirebasePerformance (~> 9.2.0)
-  - firebase_analytics (9.1.12):
+  - firebase_analytics (9.2.0):
     - Firebase/Analytics (= 9.2.0)
     - firebase_core
     - Flutter
-  - firebase_core (1.19.1):
+  - firebase_core (1.19.2):
     - Firebase/CoreOnly (= 9.2.0)
     - Flutter
-  - firebase_crashlytics (2.8.4):
+  - firebase_crashlytics (2.8.5):
     - Firebase/Crashlytics (= 9.2.0)
     - firebase_core
     - Flutter
-  - firebase_performance (0.8.1-1):
+  - firebase_dynamic_links (4.3.2):
+    - Firebase/DynamicLinks (= 9.2.0)
+    - firebase_core
+    - Flutter
+  - firebase_performance (0.8.2):
     - Firebase/Performance (= 9.2.0)
     - firebase_core
     - Flutter
@@ -66,6 +73,8 @@ PODS:
     - GoogleUtilities/Environment (~> 7.7)
     - nanopb (< 2.30910.0, >= 2.30908.0)
     - PromisesObjC (~> 2.1)
+  - FirebaseDynamicLinks (9.2.0):
+    - FirebaseCore (~> 9.0)
   - FirebaseInstallations (9.3.0):
     - FirebaseCore (~> 9.0)
     - GoogleUtilities/Environment (~> 7.7)
@@ -172,6 +181,7 @@ DEPENDENCIES:
   - firebase_analytics (from `.symlinks/plugins/firebase_analytics/ios`)
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
   - firebase_crashlytics (from `.symlinks/plugins/firebase_crashlytics/ios`)
+  - firebase_dynamic_links (from `.symlinks/plugins/firebase_dynamic_links/ios`)
   - firebase_performance (from `.symlinks/plugins/firebase_performance/ios`)
   - Flutter (from `Flutter`)
   - fluttertoast (from `.symlinks/plugins/fluttertoast/ios`)
@@ -195,6 +205,7 @@ SPEC REPOS:
     - FirebaseCoreDiagnostics
     - FirebaseCoreInternal
     - FirebaseCrashlytics
+    - FirebaseDynamicLinks
     - FirebaseInstallations
     - FirebasePerformance
     - FirebaseRemoteConfig
@@ -216,6 +227,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/firebase_core/ios"
   firebase_crashlytics:
     :path: ".symlinks/plugins/firebase_crashlytics/ios"
+  firebase_dynamic_links:
+    :path: ".symlinks/plugins/firebase_dynamic_links/ios"
   firebase_performance:
     :path: ".symlinks/plugins/firebase_performance/ios"
   Flutter:
@@ -243,16 +256,18 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Firebase: 4ba896cb8e5105d4b9e247e1c1b6222b548df55a
-  firebase_analytics: 62f21c400c1fe65369985fa8ba68b5ac1d939bb8
-  firebase_core: 9e09bbfbf5467e459822850732f5fb648f5b1927
-  firebase_crashlytics: 8f38d64d3fb4d0b1976637e8a119366dbf95f3af
-  firebase_performance: 6c932fe63be1fd81140e19fd8bc045477aa65ea7
+  firebase_analytics: e6754d7dd82bd2006b002d88c0f44f8f50da26e6
+  firebase_core: ada8be870601fe3c2684dae2356f634189bd598f
+  firebase_crashlytics: c07347255e8609dbe65a72feb82a76943827730d
+  firebase_dynamic_links: c550902a43e20498a686908405b4d84194e0b2e4
+  firebase_performance: 58084929e08f449e2b5b1259dab451f0518dc998
   FirebaseABTesting: d7383da017eff5dc4fccb40987fa76271fd1cdbf
   FirebaseAnalytics: af5a03a8dff7648c7b8486f6a78b1368e0268dd3
   FirebaseCore: 0e27f2a15d8f7b7ef11e7d93e23b1cbab55d748c
   FirebaseCoreDiagnostics: 060eb57cc56dfaf40b1b1b5874a5c17c41ce79f8
   FirebaseCoreInternal: 635d1c9a612a6502b6377a0c92af83758076ffff
   FirebaseCrashlytics: 9fff819edb2bfc9d3eff612225b207d41945a935
+  FirebaseDynamicLinks: f576ccfba05f2813e3679d48ccae5bcfff5714fc
   FirebaseInstallations: 54b40022cb06e462740c9f2b9fbe38b5e78a825a
   FirebasePerformance: 5a8d2a9e645a398dfcc02657853f4b946675d5d4
   FirebaseRemoteConfig: 0a644c924b3339bcf3bc3ea253206f171672308e

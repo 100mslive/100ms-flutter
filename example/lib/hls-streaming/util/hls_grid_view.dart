@@ -87,7 +87,7 @@ Widget hlsGridView(
                     ),
                   )
                 : VideoTile(
-                  islongPressEnabled: false,
+                    islongPressEnabled: false,
                     key: Key(peerTracks[index].uid + "video_tile"),
                     scaleType: ScaleType.SCALE_ASPECT_FIT,
                     itemHeight: size.height,

@@ -53,10 +53,9 @@ class _RoleChangeDialogOrganismState extends State<TrackChangeDialogOrganism> {
       actions: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
           children: [
             ElevatedButton(
-               style: ButtonStyle(
+              style: ButtonStyle(
                   shadowColor: MaterialStateProperty.all(surfaceColor),
                   backgroundColor: MaterialStateProperty.all(bottomSheetColor),
                   shape: MaterialStateProperty.all<RoundedRectangleBorder>(
@@ -67,10 +66,7 @@ class _RoleChangeDialogOrganismState extends State<TrackChangeDialogOrganism> {
               child: Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 30.0, vertical: 12),
-                child: HLSTitleText(
-                  text:'Reject',
-                 textColor: defaultColor
-                ),
+                child: HLSTitleText(text: 'Reject', textColor: defaultColor),
               ),
               onPressed: () {
                 Navigator.pop(context, '');
@@ -89,7 +85,7 @@ class _RoleChangeDialogOrganismState extends State<TrackChangeDialogOrganism> {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 30.0, vertical: 12),
                 child: HLSTitleText(
-                  text:'Accept',
+                  text: 'Accept',
                   textColor: defaultColor,
                 ),
               ),

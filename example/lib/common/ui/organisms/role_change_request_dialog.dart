@@ -20,10 +20,11 @@ class RoleChangeDialogOrganism extends StatefulWidget {
 class _RoleChangeDialogOrganismState extends State<RoleChangeDialogOrganism> {
   @override
   Widget build(BuildContext context) {
-    String message =
-        "‘" + (widget.roleChangeRequest.suggestedBy?.name ?? "Anonymus") + 
-            "’ requested to change your role to ‘" +
-            widget.roleChangeRequest.suggestedRole.name+"’";
+    String message = "‘" +
+        (widget.roleChangeRequest.suggestedBy?.name ?? "Anonymus") +
+        "’ requested to change your role to ‘" +
+        widget.roleChangeRequest.suggestedRole.name +
+        "’";
     return AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       insetPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
@@ -58,10 +59,7 @@ class _RoleChangeDialogOrganismState extends State<RoleChangeDialogOrganism> {
               child: Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 30.0, vertical: 12),
-                child: HLSTitleText(
-                  text:'Reject',
-                 textColor: defaultColor
-                ),
+                child: HLSTitleText(text: 'Reject', textColor: defaultColor),
               ),
               onPressed: () {
                 Navigator.pop(context, '');
@@ -80,7 +78,7 @@ class _RoleChangeDialogOrganismState extends State<RoleChangeDialogOrganism> {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 30.0, vertical: 12),
                 child: HLSTitleText(
-                  text:'Accept',
+                  text: 'Accept',
                   textColor: defaultColor,
                 ),
               ),

@@ -9,14 +9,13 @@ class HMSVideoTrackSetting {
   final HMSCameraFacing? cameraFacing;
   final bool? disableAutoResize;
 
-  HMSVideoTrackSetting({
-    this.codec,
-    this.resolution,
-    this.maxBitrate,
-    this.maxFrameRate,
-    this.cameraFacing,
-    this.disableAutoResize = false
-  });
+  HMSVideoTrackSetting(
+      {this.codec,
+      this.resolution,
+      this.maxBitrate,
+      this.maxFrameRate,
+      this.cameraFacing,
+      this.disableAutoResize = false});
 
   factory HMSVideoTrackSetting.fromMap(Map map) {
     HMSResolution? resolution;
@@ -24,14 +23,13 @@ class HMSVideoTrackSetting {
       resolution = HMSResolution.fromMap(map['resolution']);
     }
     return HMSVideoTrackSetting(
-      codec: HMSCodecValues.getHMSCodecFromName(map['video_codec']),
-      resolution: resolution,
-      maxBitrate: map['bit_rate'] ?? 0,
-      maxFrameRate: map['max_frame_rate'] ?? 0,
-      cameraFacing: HMSCameraFacingValues.getHMSCameraFacingFromName(
-          map['camera_facing']),
-      disableAutoResize: map['disable_auto_resize']??false
-    );
+        codec: HMSCodecValues.getHMSCodecFromName(map['video_codec']),
+        resolution: resolution,
+        maxBitrate: map['bit_rate'] ?? 0,
+        maxFrameRate: map['max_frame_rate'] ?? 0,
+        cameraFacing: HMSCameraFacingValues.getHMSCameraFacingFromName(
+            map['camera_facing']),
+        disableAutoResize: map['disable_auto_resize'] ?? false);
   }
 
   Map<String, dynamic> toMap() {
@@ -44,7 +42,7 @@ class HMSVideoTrackSetting {
       'camera_facing': cameraFacing != null
           ? HMSCameraFacingValues.getValueFromHMSCameraFacing(cameraFacing!)
           : null,
-      'disable_auto_resize':disableAutoResize??false
+      'disable_auto_resize': disableAutoResize ?? false
     };
   }
 }
