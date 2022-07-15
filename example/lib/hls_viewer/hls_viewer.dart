@@ -43,17 +43,25 @@ class _HLSPlayerState extends State<HLSPlayer> {
   Widget build(BuildContext context) {
     context.watch<MeetingStore>();
     return Scaffold(
-      body: Center(
-        child: _controller.value.isInitialized
-            ? AspectRatio(
-                aspectRatio: _controller.value.aspectRatio,
-                child: VideoPlayer(_controller),
+      body: Stack(children: [
+        _controller.value.isInitialized
+            ? Positioned(
+                top: 55,
+                left: 0,
+                right: 0,
+                bottom: 10,
+                child: AspectRatio(
+                  aspectRatio: 9/16,
+                  child: VideoPlayer(_controller),
+                ),
               )
-            : HLSTitleText(
-                text:"Waiting for the HLS Streaming to start...",
-                textColor: defaultColor,
+            : Center(
+                child: HLSTitleText(
+                  text: "Waiting for the HLS Streaming to start...",
+                  textColor: defaultColor,
+                ),
               ),
-      ),
+      ]),
     );
   }
 }
