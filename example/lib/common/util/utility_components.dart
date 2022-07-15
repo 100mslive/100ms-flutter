@@ -1,4 +1,5 @@
 //Package imports
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -7,6 +8,7 @@ import 'package:hmssdk_flutter_example/common/constant.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_mode.dart';
+import 'package:hmssdk_flutter_example/hls-streaming/util/hls_subtitle_text.dart';
 import 'package:hmssdk_flutter_example/hls-streaming/util/hls_title_text.dart';
 import 'package:provider/provider.dart';
 
@@ -212,7 +214,8 @@ class UtilityComponents {
     );
   }
 
-  static void showRoleChangeDialog(HMSRoleChangeRequest? event, context) async {
+  static void showRoleChangeDialog(
+      HMSRoleChangeRequest? event, BuildContext context) async {
     event = event as HMSRoleChangeRequest;
     String answer = await showDialog(
         barrierDismissible: false,
@@ -229,7 +232,7 @@ class UtilityComponents {
     }
   }
 
-  static showTrackChangeDialog(event, context) async {
+  static showTrackChangeDialog(event, BuildContext context) async {
     event = event as HMSTrackChangeRequest;
     MeetingStore meetingStore =
         Provider.of<MeetingStore>(context, listen: false);
@@ -250,7 +253,7 @@ class UtilityComponents {
     }
   }
 
-  static showonExceptionDialog(event, context) {
+  static showonExceptionDialog(event, BuildContext context) {
     event = event as HMSException;
     var message =
         "${event.message} ${event.id ?? ""} ${event.code?.errorCode ?? ""} ${event.description} ${event.action} ${event.params ?? "".toString()}";
@@ -944,5 +947,169 @@ class UtilityComponents {
             ));
 
     return answer;
+  }
+
+  static void showChangeAudioMixingModeDialog(BuildContext context) {
+    HMSAudioMixingMode valueChoose = HMSAudioMixingMode.TALK_AND_MUSIC;
+    double width = MediaQuery.of(context).size.width;
+    MeetingStore _meetingStore = context.read<MeetingStore>();
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (ctx) => StatefulBuilder(builder: (ctx, setState) {
+              return AlertDialog(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12)),
+                actionsPadding:
+                    EdgeInsets.only(left: 20, right: 20, bottom: 10),
+                backgroundColor: bottomSheetColor,
+                insetPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                contentPadding:
+                    EdgeInsets.only(top: 20, bottom: 15, left: 24, right: 24),
+                title: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    HLSTitleText(
+                      text: "Change Audio Mixing Mode",
+                      fontSize: 20,
+                      letterSpacing: 0.15,
+                      textColor: defaultColor,
+                    ),
+                    SizedBox(
+                      height: 8,
+                    ),
+                    HLSSubtitleText(
+                        text: "Select Audio Mixing mode",
+                        textColor: subHeadingColor),
+                  ],
+                ),
+                content: Container(
+                  padding: EdgeInsets.only(left: 10, right: 5),
+                  decoration: BoxDecoration(
+                    color: surfaceColor,
+                    borderRadius: BorderRadius.circular(10.0),
+                    border: Border.all(
+                        color: borderColor,
+                        style: BorderStyle.solid,
+                        width: 0.80),
+                  ),
+                  child: DropdownButtonHideUnderline(
+                      child: DropdownButton2(
+                    isExpanded: true,
+                    dropdownWidth: width * 0.7,
+                    buttonWidth: width * 0.7,
+                    buttonHeight: 48,
+                    itemHeight: 48,
+                    value: valueChoose,
+                    icon: Icon(Icons.keyboard_arrow_down),
+                    buttonDecoration: BoxDecoration(
+                      color: surfaceColor,
+                    ),
+                    dropdownDecoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        color: surfaceColor,
+                        border: Border.all(color: borderColor)),
+                    offset: Offset(-10, -10),
+                    iconEnabledColor: defaultColor,
+                    selectedItemHighlightColor: hmsdefaultColor,
+                    onChanged: (dynamic newvalue) {
+                      setState(() {
+                        valueChoose = newvalue;
+                      });
+                    },
+                    items: <DropdownMenuItem>[
+                      DropdownMenuItem(
+                        child: HLSTitleText(
+                          text: HMSAudioMixingMode.TALK_AND_MUSIC.name,
+                          textColor: defaultColor,
+                          fontWeight: FontWeight.w400,
+                        ),
+                        value: HMSAudioMixingMode.TALK_AND_MUSIC,
+                      ),
+                      DropdownMenuItem(
+                        child: HLSTitleText(
+                          text: HMSAudioMixingMode.TALK_ONLY.name,
+                          textColor: defaultColor,
+                          fontWeight: FontWeight.w400,
+                        ),
+                        value: HMSAudioMixingMode.TALK_ONLY,
+                      ),
+                      DropdownMenuItem(
+                        child: HLSTitleText(
+                          text: HMSAudioMixingMode.MUSIC_ONLY.name,
+                          textColor: defaultColor,
+                          fontWeight: FontWeight.w400,
+                        ),
+                        value: HMSAudioMixingMode.MUSIC_ONLY,
+                      )
+                    ],
+                  )),
+                ),
+                actions: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      ElevatedButton(
+                          style: ButtonStyle(
+                              shadowColor:
+                                  MaterialStateProperty.all(surfaceColor),
+                              backgroundColor:
+                                  MaterialStateProperty.all(bottomSheetColor),
+                              shape: MaterialStateProperty.all<
+                                      RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                side: BorderSide(
+                                    width: 1,
+                                    color: Color.fromRGBO(107, 125, 153, 1)),
+                                borderRadius: BorderRadius.circular(8.0),
+                              ))),
+                          onPressed: () => Navigator.pop(context, false),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 12, horizontal: 10),
+                            child: Text('Cancel',
+                                style: GoogleFonts.inter(
+                                    color: defaultColor,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                    letterSpacing: 0.50)),
+                          )),
+                      ElevatedButton(
+                        style: ButtonStyle(
+                            shadowColor:
+                                MaterialStateProperty.all(surfaceColor),
+                            backgroundColor:
+                                MaterialStateProperty.all(hmsdefaultColor),
+                            shape: MaterialStateProperty.all<
+                                RoundedRectangleBorder>(RoundedRectangleBorder(
+                              side:
+                                  BorderSide(width: 1, color: hmsdefaultColor),
+                              borderRadius: BorderRadius.circular(8.0),
+                            ))),
+                        onPressed: () => {
+                          if (_meetingStore.isAudioShareStarted)
+                            _meetingStore.setAudioMixingMode(valueChoose)
+                          else
+                            Utilities.showToast("Audio Share not enabled"),
+                          Navigator.pop(context),
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 12, horizontal: 10),
+                          child: Text(
+                            'Change',
+                            style: GoogleFonts.inter(
+                                color: defaultColor,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                letterSpacing: 0.50),
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+              );
+            }));
   }
 }

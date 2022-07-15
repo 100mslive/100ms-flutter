@@ -135,7 +135,10 @@ enum PlatformMethod {
   removeStatsListener,
   getAudioDevicesList,
   getCurrentAudioDevice,
-  switchAudioOutput
+  switchAudioOutput,
+  startAudioShare,
+  stopAudioShare,
+  setAudioMixingMode
 }
 
 extension PlatformMethodValues on PlatformMethod {
@@ -306,6 +309,12 @@ extension PlatformMethodValues on PlatformMethod {
         return "get_current_audio_device";
       case PlatformMethod.switchAudioOutput:
         return "switch_audio_output";
+      case PlatformMethod.startAudioShare:
+        return "start_audio_share";
+      case PlatformMethod.stopAudioShare:
+        return "stop_audio_share";
+      case PlatformMethod.setAudioMixingMode:
+        return "set_audio_mixing_mode";
       default:
         return 'unknown';
     }
@@ -482,6 +491,12 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.getCurrentAudioDevice;
       case "switch_audio_output":
         return PlatformMethod.switchAudioOutput;
+      case "start_audio_share":
+        return PlatformMethod.startAudioShare;
+      case "stop_audio_share":
+        return PlatformMethod.stopAudioShare;
+      case "set_audio_mixing_mode":
+        return PlatformMethod.setAudioMixingMode;
       default:
         return PlatformMethod.unknown;
     }
