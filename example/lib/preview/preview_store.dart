@@ -2,6 +2,7 @@
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:hmssdk_flutter_example/meeting/hms_sdk_interactor.dart';
 import 'package:hmssdk_flutter_example/service/room_service.dart';
 
@@ -37,6 +38,8 @@ class PreviewStore extends ChangeNotifier
 
   int? networkQuality;
 
+  String meetingUrl = "";
+
   @override
   void onHMSError({required HMSException error}) {
     updateError(error);
@@ -44,6 +47,8 @@ class PreviewStore extends ChangeNotifier
 
   @override
   void onPreview({required HMSRoom room, required List<HMSTrack> localTracks}) {
+    Utilities.saveStringData(
+        key: "meetingLink", value: this.meetingUrl);
     this.room = room;
     for (HMSPeer each in room.peers!) {
       if (each.isLocal) {
@@ -80,6 +85,7 @@ class PreviewStore extends ChangeNotifier
         captureNetworkQualityInPreview: true);
     hmsSDKInteractor.addPreviewListener(this);
     hmsSDKInteractor.preview(config: config);
+    meetingUrl = meetingLink;
     return "";
   }
 

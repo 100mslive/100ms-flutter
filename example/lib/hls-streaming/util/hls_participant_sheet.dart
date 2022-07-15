@@ -40,58 +40,61 @@ class _HLSParticipantSheetState extends State<HLSParticipantSheet> {
 
     //For HLS-Viewer
     if (peerTrackNode == null) {
-      return changeRolePermission?PopupMenuButton(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-          color: surfaceColor,
-          icon: SvgPicture.asset(
-            "assets/icons/more.svg",
-            color: defaultColor,
-            fit: BoxFit.scaleDown,
-          ),
-          onSelected: (int value) async {
-            switch (value) {
-              case 1:
-                Navigator.pop(context);
-                showDialog(
-                    context: context,
-                    builder: (_) => ChangeRoleOptionDialog(
-                          peerName: peer.name,
-                          roles: _meetingStore.roles,
-                          peer: peer,
-                          changeRole: (role, forceChange) {
-                            _meetingStore.changeRole(
-                                peer: peer,
-                                roleName: role,
-                                forceChange: forceChange);
-                          },
-                        ));
-                break;
-              default:
-                break;
-            }
-          },
-          itemBuilder: ((context) => [
-                PopupMenuItem(
-                  child: Row(children: [
-                    SvgPicture.asset("assets/icons/role_change.svg",
-                        width: 15, color: defaultColor),
-                    SizedBox(
-                      width: 12,
+      return changeRolePermission
+          ? PopupMenuButton(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8)),
+              color: surfaceColor,
+              icon: SvgPicture.asset(
+                "assets/icons/more.svg",
+                color: defaultColor,
+                fit: BoxFit.scaleDown,
+              ),
+              onSelected: (int value) async {
+                switch (value) {
+                  case 1:
+                    Navigator.pop(context);
+                    showDialog(
+                        context: context,
+                        builder: (_) => ChangeRoleOptionDialog(
+                              peerName: peer.name,
+                              roles: _meetingStore.roles,
+                              peer: peer,
+                              changeRole: (role, forceChange) {
+                                _meetingStore.changeRole(
+                                    peer: peer,
+                                    roleName: role,
+                                    forceChange: forceChange);
+                              },
+                            ));
+                    break;
+                  default:
+                    break;
+                }
+              },
+              itemBuilder: ((context) => [
+                    PopupMenuItem(
+                      child: Row(children: [
+                        SvgPicture.asset("assets/icons/role_change.svg",
+                            width: 15, color: defaultColor),
+                        SizedBox(
+                          width: 12,
+                        ),
+                        HLSTitleText(
+                          text: "Change Role",
+                          textColor: defaultColor,
+                          fontSize: 14,
+                          lineHeight: 20,
+                          letterSpacing: 0.25,
+                        ),
+                      ]),
+                      value: 1,
                     ),
-                    HLSTitleText(
-                      text: "Change Role",
-                      textColor: defaultColor,
-                      fontSize: 14,
-                      lineHeight: 20,
-                      letterSpacing: 0.25,
-                    ),
-                  ]),
-                  value: 1,
-                ),
-              ])):SizedBox();
+                  ]))
+          : SizedBox();
     }
 
-    return (changeRolePermission && removePeerPermission && mutePermission)
+    return (changeRolePermission || removePeerPermission || mutePermission)
         ? PopupMenuButton(
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
