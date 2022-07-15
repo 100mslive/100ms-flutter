@@ -47,8 +47,6 @@ class PreviewStore extends ChangeNotifier
 
   @override
   void onPreview({required HMSRoom room, required List<HMSTrack> localTracks}) {
-    Utilities.saveStringData(
-        key: "meetingLink", value: this.meetingUrl);
     this.room = room;
     for (HMSPeer each in room.peers!) {
       if (each.isLocal) {
@@ -67,6 +65,7 @@ class PreviewStore extends ChangeNotifier
       }
     }
     this.localTracks = videoTracks;
+    Utilities.saveStringData(key: "meetingLink", value: this.meetingUrl);
     notifyListeners();
   }
 

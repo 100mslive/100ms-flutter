@@ -304,7 +304,6 @@ class MeetingStore extends ChangeNotifier
 
   @override
   void onJoin({required HMSRoom room}) async {
-    Utilities.saveStringData(key: "meetingLink", value: this.meetingUrl);
     isMeetingStarted = true;
     hmsRoom = room;
     if (room.hmshlsStreamingState?.running ?? false) {
@@ -363,6 +362,7 @@ class MeetingStore extends ChangeNotifier
       }
     }
     roles = await getRoles();
+    Utilities.saveStringData(key: "meetingLink", value: this.meetingUrl);
     notifyListeners();
   }
 
