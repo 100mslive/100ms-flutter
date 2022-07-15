@@ -130,7 +130,6 @@ class _HMSExampleAppState extends State<HMSExampleApp> {
 
   Future<void> initDynamicLinks() async {
     FirebaseDynamicLinks.instance.onLink.listen((dynamicLinkData) {
-      print("dynamic link:${dynamicLinkData.link.path}");
       if (!mounted) {
         return;
       }
