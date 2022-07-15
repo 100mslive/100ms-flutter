@@ -252,8 +252,6 @@ class _HomePageState extends State<HomePage> {
     if (meetingLinkController.text.isEmpty) {
       return;
     }
-    Utilities.saveStringData(
-        key: "meetingLink", value: meetingLinkController.text.trim());
     Utilities.saveIntData(key: "mode", value: mode[0] == true ? 0 : 1);
     FocusManager.instance.primaryFocus?.unfocus();
     Utilities.setRTMPUrl(meetingLinkController.text);

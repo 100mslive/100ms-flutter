@@ -2,6 +2,7 @@
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:hmssdk_flutter_example/meeting/hms_sdk_interactor.dart';
 import 'package:hmssdk_flutter_example/service/room_service.dart';
 
@@ -37,6 +38,8 @@ class PreviewStore extends ChangeNotifier
 
   int? networkQuality;
 
+  String meetingUrl = "";
+
   @override
   void onHMSError({required HMSException error}) {
     updateError(error);
@@ -62,6 +65,7 @@ class PreviewStore extends ChangeNotifier
       }
     }
     this.localTracks = videoTracks;
+    Utilities.saveStringData(key: "meetingLink", value: this.meetingUrl);
     notifyListeners();
   }
 
@@ -80,6 +84,7 @@ class PreviewStore extends ChangeNotifier
         captureNetworkQualityInPreview: true);
     hmsSDKInteractor.addPreviewListener(this);
     hmsSDKInteractor.preview(config: config);
+    meetingUrl = meetingLink;
     return "";
   }
 

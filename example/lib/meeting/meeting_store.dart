@@ -118,6 +118,7 @@ class MeetingStore extends ChangeNotifier
 
   bool isMessageInfoShown = true;
 
+  String meetingUrl = "";
   bool isAudioShareStarted = false;
 
   Future<bool> join(String user, String roomUrl) async {
@@ -133,6 +134,7 @@ class MeetingStore extends ChangeNotifier
     _hmsSDKInteractor.addUpdateListener(this);
     WidgetsBinding.instance!.addObserver(this);
     _hmsSDKInteractor.join(config: config);
+    this.meetingUrl = roomUrl;
     return true;
   }
 
@@ -360,6 +362,7 @@ class MeetingStore extends ChangeNotifier
       }
     }
     roles = await getRoles();
+    Utilities.saveStringData(key: "meetingLink", value: this.meetingUrl);
     notifyListeners();
   }
 
@@ -1068,7 +1071,7 @@ class MeetingStore extends ChangeNotifier
     filteredPeers.addAll(peers);
     filteredPeers.removeWhere((element) => element.isLocal);
     filteredPeers.sortedBy(((element) => element.role.priority.toString()));
-    filteredPeers.insert(0,localPeer!);
+    filteredPeers.insert(0, localPeer!);
     if (type == "Everyone") {
       return;
     } else if (type == "Raised Hand") {
