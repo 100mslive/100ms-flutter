@@ -25,6 +25,7 @@ dependencies:
   firebase_core: 
   firebase_analytics:
   firebase_performance:
+  firebase_dynamic_links:
   flutter_launcher_icons:
   package_info_plus: 
   logger: 
