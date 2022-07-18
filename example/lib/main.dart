@@ -4,7 +4,6 @@ import 'dart:async';
 //Package imports
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -74,7 +73,6 @@ class _HMSExampleAppState extends State<HMSExampleApp> {
     super.initState();
     _initURIHandler();
     _incomingLinkHandler();
-    initDynamicLinks();
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   }
 
@@ -126,20 +124,6 @@ class _HMSExampleAppState extends State<HMSExampleApp> {
         });
       });
     }
-  }
-
-  Future<void> initDynamicLinks() async {
-    FirebaseDynamicLinks.instance.onLink.listen((dynamicLinkData) {
-      if (!mounted) {
-        return;
-      }
-      setState(() {
-        _currentURI = dynamicLinkData.link;
-      });
-    }).onError((error) {
-      print('onLink error');
-      print(error.message);
-    });
   }
 
   @override
@@ -211,6 +195,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<bool> _closeApp() {
+    FocusScope.of(context).unfocus();
     CustomLogger.file?.delete();
     return Future.value(true);
   }
