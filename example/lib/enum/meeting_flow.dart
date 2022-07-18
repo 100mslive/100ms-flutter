@@ -8,7 +8,7 @@ extension MeetingFlowValues on MeetingFlow {
         return MeetingFlow.meeting;
       case 'preview':
         return MeetingFlow.meeting;
-      case 'hls-streaming':
+      case 'streaming':
         return MeetingFlow.hlsStreaming;
       default:
         return MeetingFlow.none;
@@ -20,7 +20,7 @@ extension MeetingFlowValues on MeetingFlow {
       case MeetingFlow.meeting:
         return 'meeting';
       case MeetingFlow.hlsStreaming:
-        return 'hls-streaming';
+        return 'streaming';
       case MeetingFlow.none:
         return 'none';
     }

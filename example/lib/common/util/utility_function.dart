@@ -105,7 +105,7 @@ class Utilities {
 
   static MeetingFlow deriveFlow(String roomUrl) {
     final joinFlowRegex = RegExp("\.100ms\.live\/(preview|meeting)\/");
-    final hlsFlowRegex = RegExp("\.100ms\.live\/hls-streaming\/");
+    final hlsFlowRegex = RegExp("\.100ms\.live\/streaming\/");
 
     if (joinFlowRegex.hasMatch(roomUrl)) {
       return MeetingFlow.meeting;
