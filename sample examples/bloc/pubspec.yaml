@@ -1,4 +1,4 @@
-name: mobx_example
+name: demo_app_with_100ms_and_bloc
 description: A new Flutter project.
 
 # The following line prevents the package from being accidentally published to
@@ -18,7 +18,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.12.0 <3.0.0"
+  sdk: ">=2.16.1 <3.0.0"
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -29,24 +29,24 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
-
-  hmssdk_flutter:
-    path: ../
-    
-  cupertino_icons:
-  mobx: 
-  flutter_mobx:
-  mobx_codegen:
+  flutter_bloc: ^8.0.1
+  equatable:
+  bloc:
+  permission_handler:
+  focus_detector:
   http:
-  intl:
+  rxdart: ^0.27.2
+  hmssdk_flutter:
+    path: ../../  #branch name
 
-    
-    
+  # The following adds the Cupertino Icons font to your application.
+  # Use with the CupertinoIcons class for iOS style icons.
+  cupertino_icons: ^1.0.2
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  build_runner: ^2.0.5
+
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
   # activated in the `analysis_options.yaml` file located at the root of your
@@ -65,9 +65,13 @@ flutter:
   # the material Icons class.
   uses-material-design: true
 
-  # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/
+    - assets/icons/
+
+  # To add assets to your application, add an assets section, like this:
+  # assets:
+  #   - images/a_dot_burr.jpeg
+  #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

@@ -466,6 +466,12 @@ class MeetingStore extends ChangeNotifier
 
       case HMSActionResultListenerMethod.stopScreenShare:
         break;
+      case HMSActionResultListenerMethod.startAudioShare:
+        // TODO: Handle this case.
+        break;
+      case HMSActionResultListenerMethod.stopAudioShare:
+        // TODO: Handle this case.
+        break;
     }
   }
 
@@ -518,6 +524,12 @@ class MeetingStore extends ChangeNotifier
       case HMSActionResultListenerMethod.stopScreenShare:
         break;
       case HMSActionResultListenerMethod.unknown:
+        break;
+      case HMSActionResultListenerMethod.startAudioShare:
+        // TODO: Handle this case.
+        break;
+      case HMSActionResultListenerMethod.stopAudioShare:
+        // TODO: Handle this case.
         break;
     }
   }

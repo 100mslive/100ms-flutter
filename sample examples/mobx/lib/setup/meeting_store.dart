@@ -767,6 +767,12 @@ abstract class MeetingStoreBase extends ChangeNotifier
         print("stopScreenShare success");
         isScreenShareActive();
         break;
+      case HMSActionResultListenerMethod.startAudioShare:
+        // TODO: Handle this case.
+        break;
+      case HMSActionResultListenerMethod.stopAudioShare:
+        // TODO: Handle this case.
+        break;
     }
   }
 
@@ -828,6 +834,12 @@ abstract class MeetingStoreBase extends ChangeNotifier
       case HMSActionResultListenerMethod.stopScreenShare:
         print("stopScreenShare exception");
         isScreenShareActive();
+        break;
+      case HMSActionResultListenerMethod.startAudioShare:
+        // TODO: Handle this case.
+        break;
+      case HMSActionResultListenerMethod.stopAudioShare:
+        // TODO: Handle this case.
         break;
     }
   }
