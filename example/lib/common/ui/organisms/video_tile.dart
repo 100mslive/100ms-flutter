@@ -206,8 +206,8 @@ class _VideoTileState extends State<VideoTile> {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                PeerName(),
                                 NetworkIconWidget(),
+                                PeerName(),
                               ],
                             ),
                           ),

@@ -696,28 +696,36 @@ class MeetingStore extends ChangeNotifier
     switch (update) {
       case HMSTrackUpdate.trackAdded:
         if (track.source != "REGULAR") {
-          screenShareCount++;
-          peerTracks.insert(
-              0,
-              PeerTrackNode(
-                  peer: peer,
-                  uid: peer.peerId + track.trackId,
-                  track: track as HMSVideoTrack,
-                  stats: RTCStats()));
-          isScreenShareActive();
-          notifyListeners();
+          int peerIndex = peerTracks.indexWhere(
+              (element) => element.uid == peer.peerId + track.trackId);
+          if (peerIndex == -1) {
+            screenShareCount++;
+            peerTracks.insert(
+                0,
+                PeerTrackNode(
+                    peer: peer,
+                    uid: peer.peerId + track.trackId,
+                    track: track as HMSVideoTrack,
+                    stats: RTCStats()));
+            isScreenShareActive();
+            notifyListeners();
+          }
         }
         break;
       case HMSTrackUpdate.trackRemoved:
         if (track.source != "REGULAR") {
-          screenShareCount--;
-          peerTracks.removeWhere(
+          int peerIndex = peerTracks.indexWhere(
               (element) => element.uid == peer.peerId + track.trackId);
-          if (screenShareCount == 0) {
-            setLandscapeLock(false);
+          if (peerIndex != -1) {
+            screenShareCount--;
+            peerTracks.removeWhere(
+                (element) => element.uid == peer.peerId + track.trackId);
+            if (screenShareCount == 0) {
+              setLandscapeLock(false);
+            }
+            isScreenShareActive();
+            notifyListeners();
           }
-          isScreenShareActive();
-          notifyListeners();
         }
         break;
       case HMSTrackUpdate.trackMuted:
