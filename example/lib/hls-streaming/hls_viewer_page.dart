@@ -92,9 +92,8 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                     return hasHlsStarted
                                         ? Container(
                                             height: MediaQuery.of(context)
-                                                    .size
-                                                    .height *
-                                                0.735,
+                                                .size
+                                                .height,
                                             child: Center(
                                               child: HLSPlayer(
                                                   streamUrl: context
