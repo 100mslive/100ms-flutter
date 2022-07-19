@@ -167,28 +167,87 @@ class _VideoTileState extends State<VideoTile> {
                             }
                           }));
               },
-              child: Container(
+              child: Semantics(
+                label: "video_tile_${context.read<PeerTrackNode>().peer.name}",
+                child: Container(
+                  key: key,
+                  padding: EdgeInsets.all(2),
+                  margin: EdgeInsets.all(2),
+                  height: widget.itemHeight + 110,
+                  width: widget.itemWidth - 5.0,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: bottomSheetColor,
+                  ),
+                  child: Stack(
+                    children: [
+                      VideoView(
+                        uid: context.read<PeerTrackNode>().uid,
+                        scaleType: widget.scaleType,
+                        itemHeight: widget.itemHeight,
+                        itemWidth: widget.itemWidth,
+                      ),
+              
+                      DegradeTile(
+                        itemHeight: widget.itemHeight,
+                        itemWidth: widget.itemWidth,
+                      ),
+                      Positioned(
+                        //Bottom left
+                        bottom: 5,
+                        left: 5,
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: Color.fromRGBO(0, 0, 0, 0.9),
+                              borderRadius: BorderRadius.circular(8)),
+                          child: Center(
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 8.0, right: 4, top: 4, bottom: 4),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  NetworkIconWidget(),
+                                  PeerName(),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      HandRaise(), //top left
+                      BRBTag(), //bottom right
+                      AudioMuteStatus(), //top right
+                      RTCStatsView(
+                          isLocal: context.read<PeerTrackNode>().peer.isLocal),
+                      TileBorder(
+                          itemHeight: widget.itemHeight,
+                          itemWidth: widget.itemWidth,
+                          name: context.read<PeerTrackNode>().peer.name,
+                          uid: context.read<PeerTrackNode>().uid)
+                    ],
+                  ),
+                ),
+              ),
+            )
+          : Semantics(
+            label: "screen_share_tile_${context.read<PeerTrackNode>().peer.name}",
+            child: Container(
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey, width: 1.0),
+                    color: Colors.transparent,
+                    borderRadius: BorderRadius.all(Radius.circular(10))),
                 key: key,
                 padding: EdgeInsets.all(2),
                 margin: EdgeInsets.all(2),
                 height: widget.itemHeight + 110,
                 width: widget.itemWidth - 5.0,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: bottomSheetColor,
-                ),
                 child: Stack(
                   children: [
                     VideoView(
                       uid: context.read<PeerTrackNode>().uid,
                       scaleType: widget.scaleType,
-                      itemHeight: widget.itemHeight,
-                      itemWidth: widget.itemWidth,
-                    ),
-
-                    DegradeTile(
-                      itemHeight: widget.itemHeight,
-                      itemWidth: widget.itemWidth,
                     ),
                     Positioned(
                       //Bottom left
@@ -202,75 +261,22 @@ class _VideoTileState extends State<VideoTile> {
                           child: Padding(
                             padding: const EdgeInsets.only(
                                 left: 8.0, right: 4, top: 4, bottom: 4),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                PeerName(),
-                                NetworkIconWidget(),
-                              ],
-                            ),
+                            child: PeerName(),
                           ),
                         ),
                       ),
                     ),
-                    HandRaise(), //top left
-                    BRBTag(), //bottom right
-                    AudioMuteStatus(), //top right
-                    RTCStatsView(
-                        isLocal: context.read<PeerTrackNode>().peer.isLocal),
-                    TileBorder(
-                        itemHeight: widget.itemHeight,
-                        itemWidth: widget.itemWidth,
-                        name: context.read<PeerTrackNode>().peer.name,
-                        uid: context.read<PeerTrackNode>().uid)
+                    RTCStatsView(isLocal: false),
+                    Align(
+                      alignment: Alignment.topRight,
+                      child: widget.islongPressEnabled
+                          ? UtilityComponents.rotateScreen(context)
+                          : SizedBox(),
+                    )
                   ],
                 ),
               ),
-            )
-          : Container(
-              decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey, width: 1.0),
-                  color: Colors.transparent,
-                  borderRadius: BorderRadius.all(Radius.circular(10))),
-              key: key,
-              padding: EdgeInsets.all(2),
-              margin: EdgeInsets.all(2),
-              height: widget.itemHeight + 110,
-              width: widget.itemWidth - 5.0,
-              child: Stack(
-                children: [
-                  VideoView(
-                    uid: context.read<PeerTrackNode>().uid,
-                    scaleType: widget.scaleType,
-                  ),
-                  Positioned(
-                    //Bottom left
-                    bottom: 5,
-                    left: 5,
-                    child: Container(
-                      decoration: BoxDecoration(
-                          color: Color.fromRGBO(0, 0, 0, 0.9),
-                          borderRadius: BorderRadius.circular(8)),
-                      child: Center(
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                              left: 8.0, right: 4, top: 4, bottom: 4),
-                          child: PeerName(),
-                        ),
-                      ),
-                    ),
-                  ),
-                  RTCStatsView(isLocal: false),
-                  Align(
-                    alignment: Alignment.topRight,
-                    child: widget.islongPressEnabled
-                        ? UtilityComponents.rotateScreen(context)
-                        : SizedBox(),
-                  )
-                ],
-              ),
-            ),
+          ),
     );
   }
 }

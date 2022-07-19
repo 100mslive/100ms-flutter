@@ -19,8 +19,8 @@ class HLSScreenController extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (Provider.of<MeetingStore>(context).localPeer != null &&
-        Provider.of<MeetingStore>(context)
+    if (Provider.of<MeetingStore>(context,listen: false).localPeer != null &&
+        Provider.of<MeetingStore>(context,listen: false)
             .localPeer!
             .role
             .name

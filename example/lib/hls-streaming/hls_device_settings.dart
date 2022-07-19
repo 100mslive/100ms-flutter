@@ -11,24 +11,18 @@ import 'package:tuple/tuple.dart';
 import 'package:collection/collection.dart';
 
 class HLSDeviceSettings extends StatefulWidget {
-  final List<HMSAudioDevice> audioDeviceList;
-  final HMSAudioDevice currentAudioDevice;
-  HLSDeviceSettings(
-      {Key? key,
-      required this.audioDeviceList,
-      required this.currentAudioDevice})
-      : super(key: key);
+  HLSDeviceSettings({
+    Key? key,
+  }) : super(key: key);
   @override
   State<HLSDeviceSettings> createState() => _HLSDeviceSettingsState();
 }
 
 class _HLSDeviceSettingsState extends State<HLSDeviceSettings> {
-  String? valueChoose;
 
   @override
   void initState() {
     super.initState();
-    valueChoose = widget.currentAudioDevice.name;
   }
 
   @override
@@ -105,16 +99,18 @@ class _HLSDeviceSettingsState extends State<HLSDeviceSettings> {
               ),
               child: DropdownButtonHideUnderline(
                 child: Selector<MeetingStore,
-                        Tuple2<List<HMSRole>, List<HMSPeer>>>(
-                    selector: (_, meetingStore) =>
-                        Tuple2(meetingStore.roles, meetingStore.peers),
+                        Tuple3<List<HMSAudioDevice>, int, HMSAudioDevice?>>(
+                    selector: (_, meetingStore) => Tuple3(
+                        meetingStore.availableAudioOutputDevices,
+                        meetingStore.availableAudioOutputDevices.length,
+                        meetingStore.currentAudioOutputDevice),
                     builder: (context, data, _) {
                       return DropdownButton2(
                         isExpanded: true,
                         buttonHeight: 48,
                         itemHeight: 45,
                         selectedItemHighlightColor: hmsdefaultColor,
-                        value: valueChoose,
+                        value: data.item3,
                         icon: Icon(Icons.keyboard_arrow_down),
                         dropdownDecoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(8),
@@ -122,15 +118,13 @@ class _HLSDeviceSettingsState extends State<HLSDeviceSettings> {
                         offset: Offset(-10, -10),
                         iconEnabledColor: iconColor,
                         onChanged: (dynamic newvalue) {
-                          context.read<MeetingStore>().switchAudioOutput(
-                              HMSAudioDeviceValues.getHMSAudioDeviceFromName(
-                                  newvalue));
-                          setState(() {
-                            this.valueChoose = newvalue as String;
-                          });
+                          if (newvalue != null)
+                            context
+                                .read<MeetingStore>()
+                                .switchAudioOutput(newvalue);
                         },
                         items: <DropdownMenuItem>[
-                          ...widget.audioDeviceList
+                          ...data.item1
                               .sortedBy((element) => element.toString())
                               .map((device) => DropdownMenuItem(
                                     child: Row(
@@ -148,7 +142,7 @@ class _HLSDeviceSettingsState extends State<HLSDeviceSettings> {
                                         ),
                                       ],
                                     ),
-                                    value: device.name,
+                                    value: device,
                                   ))
                               .toList(),
                         ],
