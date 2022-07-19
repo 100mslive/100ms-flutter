@@ -39,7 +39,7 @@ class MeetingStore extends ChangeNotifier
 
   bool isHLSLink = false;
 
-  HMSRoleChangeRequest? roleChangeRequest;
+  HMSRoleChangeRequest? currentRoleChangeRequest;
 
   bool isMeetingStarted = false;
 
@@ -229,7 +229,8 @@ class MeetingStore extends ChangeNotifier
   }
 
   void updateRoleChangeRequest(HMSRoleChangeRequest roleChangeRequest) {
-    this.roleChangeRequest = roleChangeRequest;
+    if(this.currentRoleChangeRequest == null)
+      this.currentRoleChangeRequest = roleChangeRequest;
   }
 
   void addMessage(HMSMessage message) {
@@ -857,7 +858,6 @@ class MeetingStore extends ChangeNotifier
 
   void acceptChangeRole(HMSRoleChangeRequest hmsRoleChangeRequest) {
     _hmsSDKInteractor.acceptChangeRole(hmsRoleChangeRequest, this);
-    this.roleChangeRequest = null;
     notifyListeners();
   }
 

@@ -405,7 +405,7 @@ class _MeetingPageState extends State<MeetingPage>
                                 }),
                             Selector<MeetingStore, HMSRoleChangeRequest?>(
                                 selector: (_, meetingStore) =>
-                                    meetingStore.roleChangeRequest,
+                                    meetingStore.currentRoleChangeRequest,
                                 builder: (_, roleChangeRequest, __) {
                                   if (roleChangeRequest != null) {
                                     WidgetsBinding.instance!

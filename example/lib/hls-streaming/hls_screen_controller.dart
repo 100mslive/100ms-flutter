@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
 import 'package:hmssdk_flutter_example/hls-streaming/hls_broadcaster_page.dart';
 import 'package:hmssdk_flutter_example/hls-streaming/hls_viewer_page.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:provider/provider.dart';
 
-class HLSScreenController extends StatelessWidget {
+class HLSScreenController extends StatefulWidget {
   final String meetingLink;
   final String user;
   final bool isAudioOn;
@@ -18,6 +19,35 @@ class HLSScreenController extends StatelessWidget {
       : super(key: key);
 
   @override
+  State<HLSScreenController> createState() => _HLSScreenControllerState();
+}
+
+class _HLSScreenControllerState extends State<HLSScreenController> {
+
+    @override
+  void initState() {
+    super.initState();
+    initMeeting();
+    setInitValues();
+  }
+
+  void initMeeting() async {
+    bool ans = await context
+        .read<MeetingStore>()
+        .join(widget.user, widget.meetingLink);
+    if (!ans) {
+      UtilityComponents.showToastWithString("Unable to Join");
+      Navigator.of(context).pop();
+    }
+  }
+
+  void setInitValues() async {
+    context.read<MeetingStore>().localPeerNetworkQuality =
+        widget.localPeerNetworkQuality;
+    context.read<MeetingStore>().setSettings();
+  }
+  
+  @override
   Widget build(BuildContext context) {
     if (Provider.of<MeetingStore>(context,listen: false).localPeer != null &&
         Provider.of<MeetingStore>(context,listen: false)
@@ -26,15 +56,12 @@ class HLSScreenController extends StatelessWidget {
             .name
             .contains("hls")) {
       return HLSViewerPage(
-          meetingLink: meetingLink,
-          user: user,
-          localPeerNetworkQuality: localPeerNetworkQuality);
+          );
     } else {
       return HLSBroadcasterPage(
-          meetingLink: meetingLink,
-          user: user,
-          isAudioOn: isAudioOn,
-          localPeerNetworkQuality: localPeerNetworkQuality);
+          meetingLink: widget.meetingLink,
+          isAudioOn: widget.isAudioOn,
+          );
     }
   }
 }

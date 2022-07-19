@@ -19,42 +19,16 @@ import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 
 class HLSViewerPage extends StatefulWidget {
-  final String meetingLink;
-  final String user;
-  final int? localPeerNetworkQuality;
   const HLSViewerPage(
       {Key? key,
-      required this.meetingLink,
-      required this.user,
-      required this.localPeerNetworkQuality})
+      })
       : super(key: key);
   @override
   State<HLSViewerPage> createState() => _HLSViewerPageState();
 }
 
 class _HLSViewerPageState extends State<HLSViewerPage> {
-  @override
-  void initState() {
-    super.initState();
-    initMeeting();
-    setInitValues();
-  }
 
-  void initMeeting() async {
-    bool ans = await context
-        .read<MeetingStore>()
-        .join(widget.user, widget.meetingLink);
-    if (!ans) {
-      UtilityComponents.showToastWithString("Unable to Join");
-      Navigator.of(context).pop();
-    }
-  }
-
-  void setInitValues() async {
-    context.read<MeetingStore>().localPeerNetworkQuality =
-        widget.localPeerNetworkQuality;
-    context.read<MeetingStore>().setSettings();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -156,8 +130,7 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                 "assets/icons/leave_hls.svg",
                                                 color: Colors.white,
                                                 fit: BoxFit.scaleDown,
-                                                semanticsLabel:
-                                                                "leave_button",
+                                                semanticsLabel: "leave_button",
                                               ),
                                             ),
                                             SizedBox(
@@ -424,7 +397,7 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                               ),
                               Selector<MeetingStore, HMSRoleChangeRequest?>(
                                   selector: (_, meetingStore) =>
-                                      meetingStore.roleChangeRequest,
+                                      meetingStore.currentRoleChangeRequest,
                                   builder: (_, roleChangeRequest, __) {
                                     if (roleChangeRequest != null) {
                                       WidgetsBinding.instance!

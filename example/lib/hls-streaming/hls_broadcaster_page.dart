@@ -25,15 +25,12 @@ import 'package:tuple/tuple.dart';
 
 class HLSBroadcasterPage extends StatefulWidget {
   final String meetingLink;
-  final String user;
   final bool isAudioOn;
-  final int? localPeerNetworkQuality;
   const HLSBroadcasterPage(
       {Key? key,
       required this.meetingLink,
-      required this.user,
       required this.isAudioOn,
-      required this.localPeerNetworkQuality})
+  })
       : super(key: key);
 
   @override
@@ -44,29 +41,11 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
   @override
   void initState() {
     super.initState();
-    initMeeting();
     checkAudioState();
-    setInitValues();
-  }
-
-  void initMeeting() async {
-    bool ans = await context
-        .read<MeetingStore>()
-        .join(widget.user, widget.meetingLink);
-    if (!ans) {
-      UtilityComponents.showToastWithString("Unable to Join");
-      Navigator.of(context).pop();
-    }
   }
 
   void checkAudioState() async {
     if (!widget.isAudioOn) context.read<MeetingStore>().switchAudio();
-  }
-
-  void setInitValues() async {
-    context.read<MeetingStore>().localPeerNetworkQuality =
-        widget.localPeerNetworkQuality;
-    context.read<MeetingStore>().setSettings();
   }
 
   Widget _showPopupMenuButton({required bool isHLSRunning}) {
@@ -553,7 +532,7 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                                 color: defaultColor,
                                                 fit: BoxFit.scaleDown,
                                                 semanticsLabel:
-                                                          "participants_button",
+                                                    "participants_button",
                                               ),
                                             ),
                                             SizedBox(
@@ -663,7 +642,7 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                                         color: defaultColor,
                                                         fit: BoxFit.scaleDown,
                                                         semanticsLabel:
-                                                          "audio_mute_button",
+                                                            "audio_mute_button",
                                                       ),
                                                     );
                                                   }),
@@ -708,14 +687,13 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                                           screenBackgroundColor,
                                                       isActive: data.item1,
                                                       child: SvgPicture.asset(
-                                                        data.item1
-                                                            ? "assets/icons/cam_state_on.svg"
-                                                            : "assets/icons/cam_state_off.svg",
-                                                        color: defaultColor,
-                                                        fit: BoxFit.scaleDown,
-                                                        semanticsLabel:
-                                                          "video_mute_button"
-                                                      ),
+                                                          data.item1
+                                                              ? "assets/icons/cam_state_on.svg"
+                                                              : "assets/icons/cam_state_off.svg",
+                                                          color: defaultColor,
+                                                          fit: BoxFit.scaleDown,
+                                                          semanticsLabel:
+                                                              "video_mute_button"),
                                                     );
                                                   }),
                                             if (Provider.of<MeetingStore>(
@@ -755,15 +733,13 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                                               radius: 40,
                                                               backgroundColor:
                                                                   errorColor,
-                                                              child: SvgPicture
-                                                                  .asset(
-                                                                "assets/icons/end.svg",
-                                                                color:
-                                                                    defaultColor,
-                                                                height: 36,
-                                                                semanticsLabel:
-                                                          "hls_end_button"
-                                                              ),
+                                                              child: SvgPicture.asset(
+                                                                  "assets/icons/end.svg",
+                                                                  color:
+                                                                      defaultColor,
+                                                                  height: 36,
+                                                                  semanticsLabel:
+                                                                      "hls_end_button"),
                                                             ),
                                                           ),
                                                           SizedBox(
@@ -796,7 +772,8 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                                                     screenBackgroundColor,
                                                                 child:
                                                                     CircularProgressIndicator(
-                                                                      semanticsLabel: "hls_loader",
+                                                                  semanticsLabel:
+                                                                      "hls_loader",
                                                                   strokeWidth:
                                                                       2,
                                                                   color:
@@ -854,16 +831,14 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                                             radius: 40,
                                                             backgroundColor:
                                                                 hmsdefaultColor,
-                                                            child: SvgPicture
-                                                                .asset(
-                                                              "assets/icons/live.svg",
-                                                              color:
-                                                                  defaultColor,
-                                                              fit: BoxFit
-                                                                  .scaleDown,
-                                                                  semanticsLabel:
-                                                          "start_hls_button"
-                                                            ),
+                                                            child: SvgPicture.asset(
+                                                                "assets/icons/live.svg",
+                                                                color:
+                                                                    defaultColor,
+                                                                fit: BoxFit
+                                                                    .scaleDown,
+                                                                semanticsLabel:
+                                                                    "start_hls_button"),
                                                           ),
                                                         ),
                                                         SizedBox(
@@ -927,12 +902,11 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                                       onColor: borderColor,
                                                       isActive: data,
                                                       child: SvgPicture.asset(
-                                                        "assets/icons/screen_share.svg",
-                                                        color: defaultColor,
-                                                        fit: BoxFit.scaleDown,
-                                                        semanticsLabel:
-                                                          "screen_share_button"
-                                                      ),
+                                                          "assets/icons/screen_share.svg",
+                                                          color: defaultColor,
+                                                          fit: BoxFit.scaleDown,
+                                                          semanticsLabel:
+                                                              "screen_share_button"),
                                                     );
                                                   }),
                                             if (Provider.of<MeetingStore>(
@@ -966,12 +940,11 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                                 onColor: screenBackgroundColor,
                                                 isActive: true,
                                                 child: SvgPicture.asset(
-                                                  "assets/icons/more.svg",
-                                                  color: defaultColor,
-                                                  fit: BoxFit.scaleDown,
-                                                  semanticsLabel:
-                                                          "more_button"
-                                                ),
+                                                    "assets/icons/more.svg",
+                                                    color: defaultColor,
+                                                    fit: BoxFit.scaleDown,
+                                                    semanticsLabel:
+                                                        "more_button"),
                                               ),
                                           ],
                                         ),
@@ -981,7 +954,7 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                               ),
                               Selector<MeetingStore, HMSRoleChangeRequest?>(
                                   selector: (_, meetingStore) =>
-                                      meetingStore.roleChangeRequest,
+                                      meetingStore.currentRoleChangeRequest,
                                   builder: (_, roleChangeRequest, __) {
                                     if (roleChangeRequest != null) {
                                       WidgetsBinding.instance!
