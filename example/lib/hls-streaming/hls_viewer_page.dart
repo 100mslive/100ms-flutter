@@ -156,6 +156,8 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                 "assets/icons/leave_hls.svg",
                                                 color: Colors.white,
                                                 fit: BoxFit.scaleDown,
+                                                semanticsLabel:
+                                                                "leave_button",
                                               ),
                                             ),
                                             SizedBox(
@@ -323,6 +325,8 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                       "assets/icons/hand_outline.svg",
                                                       color: defaultColor,
                                                       fit: BoxFit.scaleDown,
+                                                      semanticsLabel:
+                                                          "hand_raise_button",
                                                     ),
                                                   );
                                                 }),
@@ -371,6 +375,8 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                           ? "assets/icons/message_badge_on.svg"
                                                           : "assets/icons/message_badge_off.svg",
                                                       fit: BoxFit.scaleDown,
+                                                      semanticsLabel:
+                                                          "chat_button",
                                                     ),
                                                   );
                                                 }),
@@ -406,6 +412,7 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                 "assets/icons/more.svg",
                                                 color: defaultColor,
                                                 fit: BoxFit.scaleDown,
+                                                semanticsLabel: "more_button",
                                               ),
                                             ),
                                           ],

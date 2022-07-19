@@ -71,6 +71,7 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
 
   Widget _showPopupMenuButton({required bool isHLSRunning}) {
     return PopupMenuButton(
+        tooltip: "leave_end_stream",
         offset: Offset(0, 45),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         icon: SvgPicture.asset(
@@ -344,6 +345,8 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                                             color: Colors.white,
                                                             fit: BoxFit
                                                                 .scaleDown,
+                                                            semanticsLabel:
+                                                                "leave_button",
                                                           ),
                                                         );
                                                 }),
@@ -512,6 +515,8 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                                       "assets/icons/hand_outline.svg",
                                                       color: defaultColor,
                                                       fit: BoxFit.scaleDown,
+                                                      semanticsLabel:
+                                                          "hand_raise_button",
                                                     ),
                                                   );
                                                 }),
@@ -547,6 +552,8 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                                 "assets/icons/participants.svg",
                                                 color: defaultColor,
                                                 fit: BoxFit.scaleDown,
+                                                semanticsLabel:
+                                                          "participants_button",
                                               ),
                                             ),
                                             SizedBox(
@@ -594,6 +601,8 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                                           ? "assets/icons/message_badge_on.svg"
                                                           : "assets/icons/message_badge_off.svg",
                                                       fit: BoxFit.scaleDown,
+                                                      semanticsLabel:
+                                                          "chat_button",
                                                     ),
                                                   );
                                                 })
@@ -653,6 +662,8 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                                             : "assets/icons/mic_state_off.svg",
                                                         color: defaultColor,
                                                         fit: BoxFit.scaleDown,
+                                                        semanticsLabel:
+                                                          "audio_mute_button",
                                                       ),
                                                     );
                                                   }),
@@ -702,6 +713,8 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                                             : "assets/icons/cam_state_off.svg",
                                                         color: defaultColor,
                                                         fit: BoxFit.scaleDown,
+                                                        semanticsLabel:
+                                                          "video_mute_button"
                                                       ),
                                                     );
                                                   }),
@@ -748,6 +761,8 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                                                 color:
                                                                     defaultColor,
                                                                 height: 36,
+                                                                semanticsLabel:
+                                                          "hls_end_button"
                                                               ),
                                                             ),
                                                           ),
@@ -781,6 +796,7 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                                                     screenBackgroundColor,
                                                                 child:
                                                                     CircularProgressIndicator(
+                                                                      semanticsLabel: "hls_loader",
                                                                   strokeWidth:
                                                                       2,
                                                                   color:
@@ -845,6 +861,8 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                                                   defaultColor,
                                                               fit: BoxFit
                                                                   .scaleDown,
+                                                                  semanticsLabel:
+                                                          "start_hls_button"
                                                             ),
                                                           ),
                                                         ),
@@ -912,6 +930,8 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                                         "assets/icons/screen_share.svg",
                                                         color: defaultColor,
                                                         fit: BoxFit.scaleDown,
+                                                        semanticsLabel:
+                                                          "screen_share_button"
                                                       ),
                                                     );
                                                   }),
@@ -949,6 +969,8 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                                   "assets/icons/more.svg",
                                                   color: defaultColor,
                                                   fit: BoxFit.scaleDown,
+                                                  semanticsLabel:
+                                                          "more_button"
                                                 ),
                                               ),
                                           ],

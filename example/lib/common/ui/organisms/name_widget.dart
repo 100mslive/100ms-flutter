@@ -24,18 +24,21 @@ class _NameWidgetState extends State<NameWidget> {
             peerTrackNode.track?.isMute ?? true),
         builder: (_, data, __) {
           return data.item4
-              ? Container(
-                  constraints: BoxConstraints(
-                    maxWidth: MediaQuery.of(context).size.width * 0.4,
-                  ),
-                  child: HLSSubtitleText(
-                    text:
-                        "${data.item3 ? "You (" : ""}${data.item1}${data.item3 ? ")" : ""} ${data.item2 ? " Degraded" : ""}",
-                    textColor: defaultColor,
-                    lineHeight: 20,
-                    fontSize: 14,
-                    letterSpacing: 0.25,
-                  ))
+              ? Semantics(
+                  label: "name_label_${data.item1}",
+                  child: Container(
+                      constraints: BoxConstraints(
+                        maxWidth: MediaQuery.of(context).size.width * 0.4,
+                      ),
+                      child: HLSSubtitleText(
+                        text:
+                            "${data.item3 ? "You (" : ""}${data.item1}${data.item3 ? ")" : ""} ${data.item2 ? " Degraded" : ""}",
+                        textColor: defaultColor,
+                        lineHeight: 20,
+                        fontSize: 14,
+                        letterSpacing: 0.25,
+                      )),
+                )
               : SizedBox();
         });
   }

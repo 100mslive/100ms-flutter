@@ -19,6 +19,7 @@ class BRBTag extends StatelessWidget {
                       "assets/icons/brb.svg",
                       color: Colors.white,
                       width: 26,
+                      semanticsLabel: "brb_label",
                     ),
                   ),
                   bottom: 5.0,

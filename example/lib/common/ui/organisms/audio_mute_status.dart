@@ -27,6 +27,7 @@ class _AudioMuteStatusState extends State<AudioMuteStatus> {
                     ? SvgPicture.asset(
                         'assets/icons/tile_mute.svg',
                         width: 30,
+                      semanticsLabel: "audio_mute_label",
                       )
                     : Container()),
           );

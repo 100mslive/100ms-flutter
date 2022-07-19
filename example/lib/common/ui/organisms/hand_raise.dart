@@ -19,6 +19,7 @@ class HandRaise extends StatelessWidget {
                       "assets/icons/hand.svg",
                       color: Color.fromRGBO(250, 201, 25, 1),
                       height: 30,
+                      semanticsLabel: "hand_raise_label",
                     ),
                   ),
                   top: 5,
