@@ -69,12 +69,8 @@ class _HLSSettingsState extends State<HLSSettings> {
                   horizontalTitleGap: 2,
                   onTap: () async {
                     Navigator.pop(context);
-                    List<HMSAudioDevice> audioDeviceList = await context
-                        .read<MeetingStore>()
-                        .getAudioDevicesList();
-                    HMSAudioDevice currentAudioDevice = await context
-                        .read<MeetingStore>()
-                        .getCurrentAudioDevice();
+                    await context.read<MeetingStore>().getCurrentAudioDevice();
+                    await context.read<MeetingStore>().getAudioDevicesList();
                     showModalBottomSheet(
                       isScrollControlled: true,
                       backgroundColor: bottomSheetColor,
@@ -84,10 +80,7 @@ class _HLSSettingsState extends State<HLSSettings> {
                       context: context,
                       builder: (ctx) => ChangeNotifierProvider.value(
                           value: context.read<MeetingStore>(),
-                          child: HLSDeviceSettings(
-                            audioDeviceList: audioDeviceList,
-                            currentAudioDevice: currentAudioDevice,
-                          )),
+                          child: HLSDeviceSettings()),
                     );
                   },
                   contentPadding: EdgeInsets.zero,

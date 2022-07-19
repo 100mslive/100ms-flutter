@@ -121,6 +121,10 @@ class MeetingStore extends ChangeNotifier
   String meetingUrl = "";
   bool isAudioShareStarted = false;
 
+  List<HMSAudioDevice> availableAudioOutputDevices = [];
+
+  HMSAudioDevice? currentAudioOutputDevice;
+
   Future<bool> join(String user, String roomUrl) async {
     List<String?>? token =
         await RoomService().getToken(user: user, room: roomUrl);
@@ -1051,12 +1055,16 @@ class MeetingStore extends ChangeNotifier
     return await _hmsSDKInteractor.getPeers();
   }
 
-  Future<List<HMSAudioDevice>> getAudioDevicesList() async {
-    return await _hmsSDKInteractor.getAudioDevicesList();
+  Future<void> getAudioDevicesList() async {
+    availableAudioOutputDevices.clear();
+    availableAudioOutputDevices
+        .addAll(await _hmsSDKInteractor.getAudioDevicesList());
+    notifyListeners();
   }
 
-  Future<HMSAudioDevice> getCurrentAudioDevice() async {
-    return await _hmsSDKInteractor.getCurrentAudioDevice();
+  Future<void> getCurrentAudioDevice() async {
+    currentAudioOutputDevice = await _hmsSDKInteractor.getCurrentAudioDevice();
+    notifyListeners();
   }
 
   void switchAudioOutput(HMSAudioDevice audioDevice) {
@@ -1067,9 +1075,17 @@ class MeetingStore extends ChangeNotifier
   void onAudioDeviceChanged(
       {HMSAudioDevice? currentAudioDevice,
       List<HMSAudioDevice>? availableAudioDevice}) {
-    if (currentAudioDevice != null)
+    if (currentAudioDevice != null) {
       Utilities.showToast(
           "Output Device changed to ${currentAudioDevice.name}");
+      this.currentAudioOutputDevice = currentAudioDevice;
+    }
+
+    if (availableAudioDevice != null) {
+      this.availableAudioOutputDevices.clear();
+      this.availableAudioOutputDevices.addAll(availableAudioDevice);
+    }
+    notifyListeners();
   }
 
   void getFilteredList(String type) {
