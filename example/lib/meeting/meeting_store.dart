@@ -729,10 +729,8 @@ class MeetingStore extends ChangeNotifier
         }
         break;
       case HMSTrackUpdate.trackMuted:
-        // trackStatus[peer.peerId] = HMSTrackUpdate.trackMuted;
         break;
       case HMSTrackUpdate.trackUnMuted:
-        // trackStatus[peer.peerId] = HMSTrackUpdate.trackUnMuted;
         break;
       case HMSTrackUpdate.trackDescriptionChanged:
         break;

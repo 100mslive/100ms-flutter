@@ -370,7 +370,6 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                       isNewMessageReceived
                                                           ? "assets/icons/message_badge_on.svg"
                                                           : "assets/icons/message_badge_off.svg",
-                                                      color: defaultColor,
                                                       fit: BoxFit.scaleDown,
                                                     ),
                                                   );
