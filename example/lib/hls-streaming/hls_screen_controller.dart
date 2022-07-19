@@ -23,8 +23,7 @@ class HLSScreenController extends StatefulWidget {
 }
 
 class _HLSScreenControllerState extends State<HLSScreenController> {
-
-    @override
+  @override
   void initState() {
     super.initState();
     initMeeting();
@@ -46,22 +45,21 @@ class _HLSScreenControllerState extends State<HLSScreenController> {
         widget.localPeerNetworkQuality;
     context.read<MeetingStore>().setSettings();
   }
-  
+
   @override
   Widget build(BuildContext context) {
-    if (Provider.of<MeetingStore>(context,listen: false).localPeer != null &&
-        Provider.of<MeetingStore>(context,listen: false)
+    if (Provider.of<MeetingStore>(context).localPeer != null &&
+        Provider.of<MeetingStore>(context)
             .localPeer!
             .role
             .name
             .contains("hls")) {
-      return HLSViewerPage(
-          );
+      return HLSViewerPage();
     } else {
       return HLSBroadcasterPage(
-          meetingLink: widget.meetingLink,
-          isAudioOn: widget.isAudioOn,
-          );
+        meetingLink: widget.meetingLink,
+        isAudioOn: widget.isAudioOn,
+      );
     }
   }
 }
