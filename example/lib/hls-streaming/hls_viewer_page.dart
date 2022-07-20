@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:hmssdk_flutter_example/common/ui/organisms/audio_device_change.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/embedded_button.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/offline_screen.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/stream_timer.dart';
@@ -41,10 +42,16 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
         child: ConnectivityWidgetWrapper(
           disableInteraction: true,
           offlineWidget: OfflineWidget(),
-          child: Selector<MeetingStore, Tuple2<bool, bool>>(
+          child: Selector<MeetingStore, Tuple3<bool, bool,bool>>(
               selector: (_, meetingStore) =>
-                  Tuple2(meetingStore.reconnecting, meetingStore.isRoomEnded),
+                  Tuple3(meetingStore.reconnecting, meetingStore.isRoomEnded,meetingStore.hmsException?.isTerminal ?? false),
               builder: (_, data, __) {
+                if (data.item3) {
+                  WidgetsBinding.instance?.addPostFrameCallback((_) {
+                    Utilities.showToast("Terminal Error");
+                    Navigator.of(context).popUntil((route) => route.isFirst);
+                  });
+                }
                 if (data.item2) {
                   WidgetsBinding.instance?.addPostFrameCallback((_) {
                     Utilities.showToast(
@@ -418,6 +425,37 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                         UtilityComponents.showTrackChangeDialog(
                                             hmsTrackChangeRequest, context);
                                       });
+                                    }
+                                    return SizedBox();
+                                  }),
+                                                                Selector<MeetingStore, bool>(
+                                  selector: (_, meetingStore) =>
+                                      meetingStore.showAudioDeviceChangePopup,
+                                  builder: (_, showAudioDeviceChangePopup, __) {
+                                    if (showAudioDeviceChangePopup) {
+                                      WidgetsBinding.instance!
+                                          .addPostFrameCallback((_) {
+                                        showDialog(
+                                            context: context,
+                                            builder: (_) =>
+                                                AudioDeviceChangeDialog(
+                                                  currentAudioDevice: context
+                                                      .read<MeetingStore>().currentAudioOutputDevice!,
+                                                  audioDevicesList: context
+                                                      .read<MeetingStore>()
+                                                      .availableAudioOutputDevices,
+                                                  changeAudioDevice:
+                                                      (audioDevice) {
+                                                    context
+                                                        .read<MeetingStore>()
+                                                        .switchAudioOutput(
+                                                            audioDevice);
+                                                  },
+                                                ));
+                                      });
+                                      context
+                                          .read<MeetingStore>()
+                                          .showAudioDeviceChangePopup = false;
                                     }
                                     return SizedBox();
                                   }),

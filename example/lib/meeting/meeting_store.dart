@@ -125,6 +125,12 @@ class MeetingStore extends ChangeNotifier
 
   HMSAudioDevice? currentAudioOutputDevice;
 
+  HMSAudioDevice currentAudioDeviceMode = HMSAudioDevice.AUTOMATIC;
+
+  bool showAudioDeviceChangePopup = false;
+
+  bool selfChangeAudioDevice = false;
+
   Future<bool> join(String user, String roomUrl) async {
     List<String?>? token =
         await RoomService().getToken(user: user, room: roomUrl);
@@ -229,7 +235,7 @@ class MeetingStore extends ChangeNotifier
   }
 
   void updateRoleChangeRequest(HMSRoleChangeRequest roleChangeRequest) {
-    if(this.currentRoleChangeRequest == null)
+    if (this.currentRoleChangeRequest == null)
       this.currentRoleChangeRequest = roleChangeRequest;
   }
 
@@ -368,6 +374,8 @@ class MeetingStore extends ChangeNotifier
     }
     roles = await getRoles();
     Utilities.saveStringData(key: "meetingLink", value: this.meetingUrl);
+    getCurrentAudioDevice();
+    getAudioDevicesList();
     notifyListeners();
   }
 
@@ -465,7 +473,8 @@ class MeetingStore extends ChangeNotifier
 
   @override
   void onHMSError({required HMSException error}) {
-    this.hmsException = hmsException;
+    this.hmsException = error;
+
     notifyListeners();
   }
 
@@ -1068,6 +1077,8 @@ class MeetingStore extends ChangeNotifier
   }
 
   void switchAudioOutput(HMSAudioDevice audioDevice) {
+    selfChangeAudioDevice = true;
+    currentAudioDeviceMode = audioDevice;
     _hmsSDKInteractor.switchAudioOutput(audioDevice);
   }
 
@@ -1075,7 +1086,14 @@ class MeetingStore extends ChangeNotifier
   void onAudioDeviceChanged(
       {HMSAudioDevice? currentAudioDevice,
       List<HMSAudioDevice>? availableAudioDevice}) {
-    if (currentAudioDevice != null) {
+    if (currentAudioDeviceMode != HMSAudioDevice.AUTOMATIC && !selfChangeAudioDevice) {
+      this.showAudioDeviceChangePopup = true;
+    }
+    if (selfChangeAudioDevice) {
+      selfChangeAudioDevice = false;
+    }
+    if (currentAudioDevice != null &&
+        this.currentAudioOutputDevice != currentAudioDevice) {
       Utilities.showToast(
           "Output Device changed to ${currentAudioDevice.name}");
       this.currentAudioOutputDevice = currentAudioDevice;

@@ -69,8 +69,6 @@ class _HLSSettingsState extends State<HLSSettings> {
                   horizontalTitleGap: 2,
                   onTap: () async {
                     Navigator.pop(context);
-                    await context.read<MeetingStore>().getCurrentAudioDevice();
-                    await context.read<MeetingStore>().getAudioDevicesList();
                     showModalBottomSheet(
                       isScrollControlled: true,
                       backgroundColor: bottomSheetColor,

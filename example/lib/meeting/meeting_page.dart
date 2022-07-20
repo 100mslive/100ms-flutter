@@ -210,10 +210,19 @@ class _MeetingPageState extends State<MeetingPage>
       child: ConnectivityWidgetWrapper(
           disableInteraction: true,
           offlineWidget: OfflineWidget(),
-          child: Selector<MeetingStore, Tuple2<bool, bool>>(
-            selector: (_, meetingStore) =>
-                Tuple2(meetingStore.reconnecting, meetingStore.isRoomEnded),
+          child: Selector<MeetingStore, Tuple3<bool, bool, bool>>(
+            selector: (_, meetingStore) => Tuple3(
+                meetingStore.reconnecting,
+                meetingStore.isRoomEnded,
+                meetingStore.hmsException?.isTerminal ?? false),
             builder: (_, data, __) {
+              if (data.item3) {
+                WidgetsBinding.instance?.addPostFrameCallback((_) {
+                  UtilityComponents.showToastWithString(
+                      "Terminal Error");
+                  Navigator.of(context).popUntil((route) => route.isFirst);
+                });
+              }
               if (data.item2) {
                 WidgetsBinding.instance?.addPostFrameCallback((_) {
                   UtilityComponents.showToastWithString(
