@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:hmssdk_flutter_example/common/ui/organisms/audio_device_change.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/embedded_button.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/offline_screen.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/stream_timer.dart';
@@ -19,42 +20,16 @@ import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 
 class HLSViewerPage extends StatefulWidget {
-  final String meetingLink;
-  final String user;
-  final int? localPeerNetworkQuality;
   const HLSViewerPage(
       {Key? key,
-      required this.meetingLink,
-      required this.user,
-      required this.localPeerNetworkQuality})
+      })
       : super(key: key);
   @override
   State<HLSViewerPage> createState() => _HLSViewerPageState();
 }
 
 class _HLSViewerPageState extends State<HLSViewerPage> {
-  @override
-  void initState() {
-    super.initState();
-    initMeeting();
-    setInitValues();
-  }
 
-  void initMeeting() async {
-    bool ans = await context
-        .read<MeetingStore>()
-        .join(widget.user, widget.meetingLink);
-    if (!ans) {
-      UtilityComponents.showToastWithString("Unable to Join");
-      Navigator.of(context).pop();
-    }
-  }
-
-  void setInitValues() async {
-    context.read<MeetingStore>().localPeerNetworkQuality =
-        widget.localPeerNetworkQuality;
-    context.read<MeetingStore>().setSettings();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,10 +42,16 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
         child: ConnectivityWidgetWrapper(
           disableInteraction: true,
           offlineWidget: OfflineWidget(),
-          child: Selector<MeetingStore, Tuple2<bool, bool>>(
+          child: Selector<MeetingStore, Tuple3<bool, bool,bool>>(
               selector: (_, meetingStore) =>
-                  Tuple2(meetingStore.reconnecting, meetingStore.isRoomEnded),
+                  Tuple3(meetingStore.reconnecting, meetingStore.isRoomEnded,meetingStore.hmsException?.isTerminal ?? false),
               builder: (_, data, __) {
+                if (data.item3) {
+                  WidgetsBinding.instance?.addPostFrameCallback((_) {
+                    Utilities.showToast("Terminal Error");
+                    Navigator.of(context).popUntil((route) => route.isFirst);
+                  });
+                }
                 if (data.item2) {
                   WidgetsBinding.instance?.addPostFrameCallback((_) {
                     Utilities.showToast(
@@ -156,8 +137,7 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                 "assets/icons/leave_hls.svg",
                                                 color: Colors.white,
                                                 fit: BoxFit.scaleDown,
-                                                semanticsLabel:
-                                                                "leave_button",
+                                                semanticsLabel: "leave_button",
                                               ),
                                             ),
                                             SizedBox(
@@ -424,7 +404,7 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                               ),
                               Selector<MeetingStore, HMSRoleChangeRequest?>(
                                   selector: (_, meetingStore) =>
-                                      meetingStore.roleChangeRequest,
+                                      meetingStore.currentRoleChangeRequest,
                                   builder: (_, roleChangeRequest, __) {
                                     if (roleChangeRequest != null) {
                                       WidgetsBinding.instance!
@@ -445,6 +425,37 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                         UtilityComponents.showTrackChangeDialog(
                                             hmsTrackChangeRequest, context);
                                       });
+                                    }
+                                    return SizedBox();
+                                  }),
+                                                                Selector<MeetingStore, bool>(
+                                  selector: (_, meetingStore) =>
+                                      meetingStore.showAudioDeviceChangePopup,
+                                  builder: (_, showAudioDeviceChangePopup, __) {
+                                    if (showAudioDeviceChangePopup) {
+                                      WidgetsBinding.instance!
+                                          .addPostFrameCallback((_) {
+                                        showDialog(
+                                            context: context,
+                                            builder: (_) =>
+                                                AudioDeviceChangeDialog(
+                                                  currentAudioDevice: context
+                                                      .read<MeetingStore>().currentAudioOutputDevice!,
+                                                  audioDevicesList: context
+                                                      .read<MeetingStore>()
+                                                      .availableAudioOutputDevices,
+                                                  changeAudioDevice:
+                                                      (audioDevice) {
+                                                    context
+                                                        .read<MeetingStore>()
+                                                        .switchAudioOutput(
+                                                            audioDevice);
+                                                  },
+                                                ));
+                                      });
+                                      context
+                                          .read<MeetingStore>()
+                                          .showAudioDeviceChangePopup = false;
                                     }
                                     return SizedBox();
                                   }),

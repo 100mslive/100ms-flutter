@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -63,38 +65,39 @@ class _HLSViewerSettingsState extends State<HLSViewerSettings> {
                   height: 5,
                 ),
               ),
-              ListTile(
-                horizontalTitleGap: 2,
-                onTap: () async {
-                  Navigator.pop(context);
-                  await context.read<MeetingStore>().getCurrentAudioDevice();
-                  await context.read<MeetingStore>().getAudioDevicesList();
-                  showModalBottomSheet(
-                    isScrollControlled: true,
-                    backgroundColor: bottomSheetColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    context: context,
-                    builder: (ctx) => ChangeNotifierProvider.value(
-                        value: context.read<MeetingStore>(),
-                        child: HLSDeviceSettings()),
-                  );
-                },
-                contentPadding: EdgeInsets.zero,
-                leading: SvgPicture.asset(
-                  "assets/icons/settings.svg",
-                  fit: BoxFit.scaleDown,
+              if (Platform.isAndroid)
+                ListTile(
+                  horizontalTitleGap: 2,
+                  onTap: () async {
+                    Navigator.pop(context);
+                    await context.read<MeetingStore>().getCurrentAudioDevice();
+                    await context.read<MeetingStore>().getAudioDevicesList();
+                    showModalBottomSheet(
+                      isScrollControlled: true,
+                      backgroundColor: bottomSheetColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      context: context,
+                      builder: (ctx) => ChangeNotifierProvider.value(
+                          value: context.read<MeetingStore>(),
+                          child: HLSDeviceSettings()),
+                    );
+                  },
+                  contentPadding: EdgeInsets.zero,
+                  leading: SvgPicture.asset(
+                    "assets/icons/settings.svg",
+                    fit: BoxFit.scaleDown,
+                  ),
+                  title: Text(
+                    "Device Settings",
+                    style: GoogleFonts.inter(
+                        fontSize: 14,
+                        color: defaultColor,
+                        letterSpacing: 0.25,
+                        fontWeight: FontWeight.w600),
+                  ),
                 ),
-                title: Text(
-                  "Device Settings",
-                  style: GoogleFonts.inter(
-                      fontSize: 14,
-                      color: defaultColor,
-                      letterSpacing: 0.25,
-                      fontWeight: FontWeight.w600),
-                ),
-              ),
               ListTile(
                 horizontalTitleGap: 2,
                 onTap: () async {

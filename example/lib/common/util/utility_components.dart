@@ -223,12 +223,11 @@ class UtilityComponents {
         builder: (ctx) => RoleChangeDialogOrganism(roleChangeRequest: event!));
     MeetingStore meetingStore =
         Provider.of<MeetingStore>(context, listen: false);
+    meetingStore.currentRoleChangeRequest = null;
     if (answer == "OK") {
       meetingStore.acceptChangeRole(event);
       UtilityComponents.showToastWithString(
           "Role Change to " + event.suggestedRole.name);
-    } else {
-      meetingStore.roleChangeRequest = null;
     }
   }
 
