@@ -96,26 +96,6 @@ class _HLSViewerSettingsState extends State<HLSViewerSettings> {
               ListTile(
                 horizontalTitleGap: 2,
                 onTap: () {
-                  Navigator.pop(context);
-                  context.read<MeetingStore>().toggleSpeaker();
-                },
-                contentPadding: EdgeInsets.zero,
-                leading: SvgPicture.asset(
-                  "assets/icons/speaker_state_on.svg",
-                  fit: BoxFit.scaleDown,
-                ),
-                title: Text(
-                  "Change Speaker State",
-                  style: GoogleFonts.inter(
-                      fontSize: 14,
-                      color: defaultColor,
-                      letterSpacing: 0.25,
-                      fontWeight: FontWeight.w600),
-                ),
-              ),
-              ListTile(
-                horizontalTitleGap: 2,
-                onTap: () {
                   showModalBottomSheet(
                     isScrollControlled: true,
                     backgroundColor: bottomSheetColor,
