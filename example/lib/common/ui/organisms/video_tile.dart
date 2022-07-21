@@ -187,7 +187,7 @@ class _VideoTileState extends State<VideoTile> {
                         itemHeight: widget.itemHeight,
                         itemWidth: widget.itemWidth,
                       ),
-              
+
                       DegradeTile(
                         itemHeight: widget.itemHeight,
                         itemWidth: widget.itemWidth,
@@ -232,8 +232,9 @@ class _VideoTileState extends State<VideoTile> {
               ),
             )
           : Semantics(
-            label: "screen_share_tile_${context.read<PeerTrackNode>().peer.name}",
-            child: Container(
+              label:
+                  "screen_share_tile_${context.read<PeerTrackNode>().peer.name}",
+              child: Container(
                 decoration: BoxDecoration(
                     border: Border.all(color: Colors.grey, width: 1.0),
                     color: Colors.transparent,
@@ -276,7 +277,7 @@ class _VideoTileState extends State<VideoTile> {
                   ],
                 ),
               ),
-          ),
+            ),
     );
   }
 }

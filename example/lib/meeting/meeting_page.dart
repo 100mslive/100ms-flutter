@@ -218,8 +218,7 @@ class _MeetingPageState extends State<MeetingPage>
             builder: (_, data, __) {
               if (data.item3) {
                 WidgetsBinding.instance?.addPostFrameCallback((_) {
-                  UtilityComponents.showToastWithString(
-                      "Terminal Error");
+                  UtilityComponents.showToastWithString("Terminal Error");
                   Navigator.of(context).popUntil((route) => route.isFirst);
                 });
               }

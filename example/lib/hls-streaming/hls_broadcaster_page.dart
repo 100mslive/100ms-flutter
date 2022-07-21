@@ -998,7 +998,8 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                             builder: (_) =>
                                                 AudioDeviceChangeDialog(
                                                   currentAudioDevice: context
-                                                      .read<MeetingStore>().currentAudioOutputDevice!,
+                                                      .read<MeetingStore>()
+                                                      .currentAudioOutputDevice!,
                                                   audioDevicesList: context
                                                       .read<MeetingStore>()
                                                       .availableAudioOutputDevices,

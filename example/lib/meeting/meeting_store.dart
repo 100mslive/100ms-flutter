@@ -1086,7 +1086,8 @@ class MeetingStore extends ChangeNotifier
   void onAudioDeviceChanged(
       {HMSAudioDevice? currentAudioDevice,
       List<HMSAudioDevice>? availableAudioDevice}) {
-    if (currentAudioDeviceMode != HMSAudioDevice.AUTOMATIC && !selfChangeAudioDevice) {
+    if (currentAudioDeviceMode != HMSAudioDevice.AUTOMATIC &&
+        !selfChangeAudioDevice) {
       this.showAudioDeviceChangePopup = true;
     }
     if (selfChangeAudioDevice) {
