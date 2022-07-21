@@ -1,8 +1,8 @@
 //package imports
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/audio_level_avatar.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
+import 'package:hmssdk_flutter_example/hls-streaming/util/hls_subtitle_text.dart';
 import 'package:provider/provider.dart';
 
 //Package imports
@@ -37,15 +37,13 @@ class _DegradeTileState extends State<DegradeTile> {
                     borderRadius: BorderRadius.all(Radius.circular(10))),
                 child: Stack(
                   children: [
-                    Positioned(
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(5, 5, 0, 0),
-                        child: SvgPicture.asset(
-                          'assets/icons/degrade.svg',
-                        ),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 45.0),
+                      child: Align(
+                        child: HLSSubtitleText(
+                            text: "DEGRADED", textColor: Colors.white),
+                        alignment: Alignment.bottomCenter,
                       ),
-                      bottom: 5.0,
-                      right: 5.0,
                     ),
                     AudioLevelAvatar()
                   ],
