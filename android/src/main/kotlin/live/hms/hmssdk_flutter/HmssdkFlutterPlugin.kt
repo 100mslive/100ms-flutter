@@ -523,6 +523,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             this.requestChange!!,
             hmsActionResultListener = HMSCommonAction.getActionListener(result)
         )
+        requestChange = null
     }
 
     var hmsAudioListener = object : HMSAudioListener {
