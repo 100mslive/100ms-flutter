@@ -6,7 +6,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/embedded_button.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/hms_button.dart';
-import 'package:hmssdk_flutter_example/common/ui/organisms/offline_screen.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
@@ -45,17 +44,24 @@ class _PreviewPageState extends State<PreviewPage> {
         .read<PreviewStore>()
         .startPreview(user: widget.name, meetingLink: widget.meetingLink);
     if (ans != "") {
-      Navigator.of(context).pop();
       if (ans.contains("Connection")) {
         UtilityComponents.showErrorDialog(
             context: context,
             errorMessage: "Please Check the internet connection",
-            errorTitle: ans);
+            errorTitle: ans,
+            actionMessage: "OK",
+            action: () {
+              Navigator.of(context).popUntil((route) => route.isFirst);
+            });
       } else {
         UtilityComponents.showErrorDialog(
             context: context,
             errorMessage: "Please check the meeting URL",
-            errorTitle: ans);
+            errorTitle: ans,
+            actionMessage: "OK",
+            action: () {
+              Navigator.of(context).popUntil((route) => route.isFirst);
+            });
       }
     }
   }
@@ -70,7 +76,8 @@ class _PreviewPageState extends State<PreviewPage> {
     return ConnectivityAppWrapper(
       app: ConnectivityWidgetWrapper(
         disableInteraction: true,
-        offlineWidget: OfflineWidget(),
+        offlineWidget: UtilityComponents.showReconnectingDialog(context,
+            alertMessage: "Leave Preview"),
         child: Scaffold(
           body: Stack(
             children: [
