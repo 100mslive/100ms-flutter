@@ -227,7 +227,7 @@ class MeetingStore extends ChangeNotifier
     _hmsSDKInteractor.setAudioMixingMode(audioMixingMode);
   }
 
-Future<bool> isAudioMute(HMSPeer? peer) async {
+  Future<bool> isAudioMute(HMSPeer? peer) async {
     return await _hmsSDKInteractor.isAudioMute(peer);
   }
 
@@ -303,7 +303,7 @@ Future<bool> isAudioMute(HMSPeer? peer) async {
     return await _hmsSDKInteractor.getPeer(peerId: peerId);
   }
 
-void changeMetadata() {
+  void changeMetadata() {
     isRaisedHand = !isRaisedHand;
     isBRB = false;
     String value = isRaisedHand ? "true" : "false";
@@ -389,7 +389,7 @@ void changeMetadata() {
     _hmsSDKInteractor.switchAudioOutput(audioDevice);
   }
 
-// Override Methods 
+// Override Methods
 
   @override
   void onJoin({required HMSRoom room}) async {
@@ -622,7 +622,7 @@ void changeMetadata() {
     reconnected = true;
   }
 
-@override
+  @override
   void onChangeTrackStateRequest(
       {required HMSTrackChangeRequest hmsTrackChangeRequest}) {
     if (!hmsTrackChangeRequest.mute) {
@@ -735,7 +735,7 @@ void changeMetadata() {
     notifyListeners();
   }
 
-@override
+  @override
   void onAudioDeviceChanged(
       {HMSAudioDevice? currentAudioDevice,
       List<HMSAudioDevice>? availableAudioDevice}) {
@@ -760,7 +760,7 @@ void changeMetadata() {
     notifyListeners();
   }
 
-// Helper Methods 
+// Helper Methods
 
   void toggleScreenShare() {
     if (!isScreenShareOn) {
@@ -887,8 +887,7 @@ void changeMetadata() {
             peerTracks.add(new PeerTrackNode(
                 peer: peer, uid: peer.peerId + "mainVideo", stats: RTCStats()));
         }
-        UtilityComponents.showToastWithString(
-            "${peer.name}'s role changed to " + peer.role.name);
+        Utilities.showToast("${peer.name}'s role changed to " + peer.role.name);
         updatePeerAt(peer);
         updateFilteredList(update, peer);
 
@@ -1024,7 +1023,6 @@ void changeMetadata() {
   //   HmsSdkManager.hmsSdkInteractor?.removeHMSLogger();
   // }
 
-
   void setMode(MeetingMode meetingMode) {
     switch (meetingMode) {
       case MeetingMode.Video:
@@ -1105,7 +1103,6 @@ void changeMetadata() {
     notifyListeners();
   }
 
-
   int isActiveSpeaker(String uid) {
     return activeSpeakerIds.containsKey(uid) ? activeSpeakerIds[uid]! : -1;
   }
@@ -1139,7 +1136,7 @@ void changeMetadata() {
     return false;
   }
 
-//Get onSuccess or onException callbacks for HMSActionResultListenerMethod 
+//Get onSuccess or onException callbacks for HMSActionResultListenerMethod
 
   @override
   void onSuccess(
