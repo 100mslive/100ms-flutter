@@ -119,7 +119,7 @@ PODS:
     - GoogleUtilities/Network (~> 7.7)
     - "GoogleUtilities/NSData+zlib (~> 7.7)"
     - nanopb (< 2.30910.0, >= 2.30908.0)
-  - GoogleDataTransport (9.1.4):
+  - GoogleDataTransport (9.2.0):
     - GoogleUtilities/Environment (~> 7.7)
     - nanopb (< 2.30910.0, >= 2.30908.0)
     - PromisesObjC (< 3.0, >= 1.2)
@@ -274,7 +274,7 @@ SPEC CHECKSUMS:
   Flutter: 50d75fe2f02b26cc09d224853bb45737f8b3214a
   fluttertoast: 16fbe6039d06a763f3533670197d01fc73459037
   GoogleAppMeasurement: 7a33224321f975d58c166657260526775d9c6b1a
-  GoogleDataTransport: 5fffe35792f8b96ec8d6775f5eccd83c998d5a3b
+  GoogleDataTransport: 1c8145da7117bd68bbbed00cf304edb6a24de00f
   GoogleUtilities: e0913149f6b0625b553d70dae12b49fc62914fd1
   HMSBroadcastExtensionSDK: a19186ebbf8e381f447f382448038b38a9985be0
   HMSSDK: 6ec0cb6d776141f8fcd749d28b9b793357995e7f
