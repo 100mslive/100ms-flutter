@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
+import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:hmssdk_flutter_example/hls-streaming/hls_broadcaster_page.dart';
 import 'package:hmssdk_flutter_example/hls-streaming/hls_viewer_page.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
@@ -35,7 +35,7 @@ class _HLSScreenControllerState extends State<HLSScreenController> {
         .read<MeetingStore>()
         .join(widget.user, widget.meetingLink);
     if (!ans) {
-      UtilityComponents.showToastWithString("Unable to Join");
+      Utilities.showToast("Unable to Join");
       Navigator.of(context).pop();
     }
   }

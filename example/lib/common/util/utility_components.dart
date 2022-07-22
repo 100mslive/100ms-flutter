@@ -2,7 +2,6 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_flutter_example/common/constant.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
@@ -19,10 +18,6 @@ import 'package:hmssdk_flutter_example/common/ui/organisms/track_change_request_
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 
 class UtilityComponents {
-  static void showToastWithString(String message) {
-    Fluttertoast.showToast(msg: message);
-  }
-
   static Future<dynamic> onBackPressed(BuildContext context) {
     MeetingStore _meetingStore = context.read<MeetingStore>();
     return showDialog(
@@ -226,8 +221,7 @@ class UtilityComponents {
     meetingStore.currentRoleChangeRequest = null;
     if (answer == "OK") {
       meetingStore.acceptChangeRole(event);
-      UtilityComponents.showToastWithString(
-          "Role Change to " + event.suggestedRole.name);
+      Utilities.showToast("Role Change to " + event.suggestedRole.name);
     }
   }
 
@@ -690,42 +684,121 @@ class UtilityComponents {
   static Future<bool> showErrorDialog(
       {required BuildContext context,
       required String errorMessage,
-      required String errorTitle}) async {
-    bool res = await showDialog(
+      required String errorTitle,
+      required String actionMessage,
+      required Function() action}) async {
+    bool? res = await showDialog(
         barrierDismissible: false,
         context: context,
         builder: (BuildContext context) {
-          return AlertDialog(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-            backgroundColor: bottomSheetColor,
-            title: Center(
-              child: Text(
-                errorTitle,
-                style: GoogleFonts.inter(
-                    color: Colors.red.shade300,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600),
+          return WillPopScope(
+            onWillPop: () async => false,
+            child: AlertDialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12)),
+              insetPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+              backgroundColor: bottomSheetColor,
+              title: Center(
+                child: Text(
+                  errorTitle,
+                  style: GoogleFonts.inter(
+                      color: Colors.red.shade300,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600),
+                ),
               ),
+              content: Text(errorMessage,
+                  style: GoogleFonts.inter(
+                      color: defaultColor,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400)),
+              actions: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ElevatedButton(
+                        style: ButtonStyle(
+                            shadowColor:
+                                MaterialStateProperty.all(surfaceColor),
+                            backgroundColor:
+                                MaterialStateProperty.all(hmsdefaultColor),
+                            shape: MaterialStateProperty.all<
+                                RoundedRectangleBorder>(RoundedRectangleBorder(
+                              side:
+                                  BorderSide(width: 1, color: hmsdefaultColor),
+                              borderRadius: BorderRadius.circular(8.0),
+                            ))),
+                        child: Text(
+                          actionMessage,
+                          style: GoogleFonts.inter(),
+                        ),
+                        onPressed: action),
+                  ],
+                )
+              ],
             ),
-            content: Text(errorMessage,
+          );
+        });
+    return res ?? false;
+  }
+
+  static Widget showReconnectingDialog(BuildContext context,
+      {String alertMessage = "Leave Room"}) {
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        insetPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+        backgroundColor: bottomSheetColor,
+        title: Text(
+          "Reconnecting...",
+          style: GoogleFonts.inter(
+              color: Colors.red.shade300,
+              fontSize: 16,
+              fontWeight: FontWeight.w600),
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            LinearProgressIndicator(
+              color: hmsdefaultColor,
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Text('Oops, No internet Connection.\nReconnecting...',
                 style: GoogleFonts.inter(
                     color: defaultColor,
                     fontSize: 14,
                     fontWeight: FontWeight.w400)),
-            actions: [
+          ],
+        ),
+        actions: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
               ElevatedButton(
+                  style: ButtonStyle(
+                      shadowColor: MaterialStateProperty.all(surfaceColor),
+                      backgroundColor:
+                          MaterialStateProperty.all(hmsdefaultColor),
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                        side: BorderSide(width: 1, color: hmsdefaultColor),
+                        borderRadius: BorderRadius.circular(8.0),
+                      ))),
                   child: Text(
-                    'OK',
+                    alertMessage,
                     style: GoogleFonts.inter(),
                   ),
                   onPressed: () {
-                    Navigator.pop(context, true);
-                  })
+                    Navigator.of(context).popUntil((route) => route.isFirst);
+                  }),
             ],
-          );
-        });
-    return res;
+          )
+        ],
+      ),
+    );
   }
 
   static onEndStream(
