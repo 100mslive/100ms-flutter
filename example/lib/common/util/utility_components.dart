@@ -212,17 +212,12 @@ class UtilityComponents {
   static void showRoleChangeDialog(
       HMSRoleChangeRequest? event, BuildContext context) async {
     event = event as HMSRoleChangeRequest;
-    String answer = await showDialog(
+    await showDialog(
         barrierDismissible: false,
         context: context,
-        builder: (ctx) => RoleChangeDialogOrganism(roleChangeRequest: event!));
-    MeetingStore meetingStore =
-        Provider.of<MeetingStore>(context, listen: false);
-    meetingStore.currentRoleChangeRequest = null;
-    if (answer == "OK") {
-      meetingStore.acceptChangeRole(event);
-      Utilities.showToast("Role Change to " + event.suggestedRole.name);
-    }
+        builder: (ctx) => RoleChangeDialogOrganism(
+              meetingStore: context.read<MeetingStore>(),
+            ));
   }
 
   static showTrackChangeDialog(event, BuildContext context) async {

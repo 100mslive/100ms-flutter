@@ -45,7 +45,7 @@ class _HLSPlayerState extends State<HLSPlayer> {
         body: Center(
       child: _controller.value.isInitialized
           ? AspectRatio(
-              aspectRatio:_controller.value.aspectRatio,
+              aspectRatio: _controller.value.aspectRatio,
               child: VideoPlayer(_controller),
             )
           : HLSTitleText(

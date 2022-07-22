@@ -9,7 +9,6 @@ import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:hmssdk_flutter_example/hls-streaming/util/hls_subtitle_text.dart';
 import 'package:hmssdk_flutter_example/hls-streaming/util/hls_title_text.dart';
-import 'package:collection/collection.dart';
 
 class AudioDeviceChangeDialog extends StatefulWidget {
   final HMSAudioDevice currentAudioDevice;

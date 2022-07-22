@@ -2,6 +2,7 @@
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_mode.dart';
 import 'package:hmssdk_flutter_example/model/rtc_stats.dart';
@@ -232,11 +233,6 @@ class MeetingStore extends ChangeNotifier
 
   void onRoleUpdated(int index, HMSPeer peer) {
     peers[index] = peer;
-  }
-
-  void updateRoleChangeRequest(HMSRoleChangeRequest roleChangeRequest) {
-    if (this.currentRoleChangeRequest == null)
-      this.currentRoleChangeRequest = roleChangeRequest;
   }
 
   void addMessage(HMSMessage message) {
@@ -487,7 +483,7 @@ class MeetingStore extends ChangeNotifier
 
   @override
   void onRoleChangeRequest({required HMSRoleChangeRequest roleChangeRequest}) {
-    updateRoleChangeRequest(roleChangeRequest);
+    this.currentRoleChangeRequest = roleChangeRequest;
     notifyListeners();
   }
 
@@ -646,9 +642,11 @@ class MeetingStore extends ChangeNotifier
             peerTracks.add(new PeerTrackNode(
                 peer: peer, uid: peer.peerId + "mainVideo", stats: RTCStats()));
         }
-
+        UtilityComponents.showToastWithString("${peer.name}'s role changed to " +
+                    peer.role.name);
         updatePeerAt(peer);
         updateFilteredList(update, peer);
+        
         notifyListeners();
         break;
 
@@ -866,6 +864,7 @@ class MeetingStore extends ChangeNotifier
   }
 
   void acceptChangeRole(HMSRoleChangeRequest hmsRoleChangeRequest) {
+    this.currentRoleChangeRequest = null;
     _hmsSDKInteractor.acceptChangeRole(hmsRoleChangeRequest, this);
     notifyListeners();
   }
@@ -1086,7 +1085,8 @@ class MeetingStore extends ChangeNotifier
   void onAudioDeviceChanged(
       {HMSAudioDevice? currentAudioDevice,
       List<HMSAudioDevice>? availableAudioDevice}) {
-    if (currentAudioDeviceMode != HMSAudioDevice.AUTOMATIC && !selfChangeAudioDevice) {
+    if (currentAudioDeviceMode != HMSAudioDevice.AUTOMATIC &&
+        !selfChangeAudioDevice) {
       this.showAudioDeviceChangePopup = true;
     }
     if (selfChangeAudioDevice) {

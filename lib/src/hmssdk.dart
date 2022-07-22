@@ -180,24 +180,26 @@ class HMSSDK {
         arguments: {"allowed": allow});
   }
 
-  /// Get the [HMSRoom] room object which the local peer has currently joined. Returns nil if no room is joined.
+  /// Get the [HMSRoom] room object which the local peer has currently joined. Returns null if no room is joined.
   Future<HMSRoom?> getRoom() async {
     var hmsRoomMap = await PlatformService.invokeMethod(PlatformMethod.getRoom);
     if (hmsRoomMap == null) return null;
     return HMSRoom.fromMap(hmsRoomMap);
   }
 
-  /// Returns an instance of the local peer if one existed. A local peer only exists during a preview and an active call.
+  /// Returns an instance of the local peer if one existed. A local peer only exists during a preview and an active call. Returns null if no room is joined.
   Future<HMSLocalPeer?> getLocalPeer() async {
-    return HMSLocalPeer.fromMap(
-        await PlatformService.invokeMethod(PlatformMethod.getLocalPeer) as Map);
+    Map? hmsLocalPeerMap =
+        await PlatformService.invokeMethod(PlatformMethod.getLocalPeer);
+    if (hmsLocalPeerMap == null) return null;
+    return HMSLocalPeer.fromMap(hmsLocalPeerMap);
   }
 
-  /// Returns only remote peers. The peer's own instance will not be included in this. To get all peers including the local one consider getPeers or for only the local one consider getLocalPeer.
+  /// Returns only remote peers. The peer's own instance will not be included in this. To get all peers including the local one consider getPeers or for only the local one consider getLocalPeer. Returns null if no room is joined.
   Future<List<HMSPeer>?> getRemotePeers() async {
-    List peers =
+    List? peers =
         await PlatformService.invokeMethod(PlatformMethod.getRemotePeers);
-
+    if (peers == null) return null;
     List<HMSPeer> listOfRemotePeers = [];
     peers.forEach((element) {
       listOfRemotePeers.add(HMSPeer.fromMap(element as Map));
@@ -205,10 +207,10 @@ class HMSSDK {
     return listOfRemotePeers;
   }
 
-  /// Returns all peers, remote and local.
+  /// Returns all peers, remote and local. Returns null if no room is joined.
   Future<List<HMSPeer>?> getPeers() async {
-    List peers = await PlatformService.invokeMethod(PlatformMethod.getPeers);
-
+    List? peers = await PlatformService.invokeMethod(PlatformMethod.getPeers);
+    if (peers == null) return null;
     List<HMSPeer> listOfPeers = [];
     peers.forEach((element) {
       listOfPeers.add(HMSPeer.fromMap(element as Map));
