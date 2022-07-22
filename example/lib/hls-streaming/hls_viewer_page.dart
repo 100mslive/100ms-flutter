@@ -423,7 +423,7 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                       WidgetsBinding.instance!
                                           .addPostFrameCallback((_) {
                                         UtilityComponents.showTrackChangeDialog(
-                                            hmsTrackChangeRequest, context);
+                                            context);
                                       });
                                     }
                                     return SizedBox();

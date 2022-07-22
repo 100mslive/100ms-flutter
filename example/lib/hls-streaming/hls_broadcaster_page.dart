@@ -981,7 +981,7 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                       WidgetsBinding.instance!
                                           .addPostFrameCallback((_) {
                                         UtilityComponents.showTrackChangeDialog(
-                                            hmsTrackChangeRequest, context);
+                                             context);
                                       });
                                     }
                                     return SizedBox();

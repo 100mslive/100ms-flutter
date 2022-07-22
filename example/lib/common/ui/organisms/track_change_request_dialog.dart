@@ -5,13 +5,15 @@ import 'package:google_fonts/google_fonts.dart';
 // Project imports
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
+import 'package:hmssdk_flutter_example/enum/meeting_mode.dart';
 import 'package:hmssdk_flutter_example/hls-streaming/util/hls_title_text.dart';
+import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 
 class TrackChangeDialogOrganism extends StatefulWidget {
-  final HMSTrackChangeRequest trackChangeRequest;
+  final MeetingStore meetingStore;
   final bool isAudioModeOn;
   const TrackChangeDialogOrganism(
-      {required this.trackChangeRequest, this.isAudioModeOn = false})
+      {required this.meetingStore, this.isAudioModeOn = false})
       : super();
 
   @override
@@ -23,11 +25,13 @@ class _RoleChangeDialogOrganismState extends State<TrackChangeDialogOrganism> {
   @override
   Widget build(BuildContext context) {
     String message = "‘" +
-        widget.trackChangeRequest.requestBy.name.toString() +
+        widget.meetingStore.hmsTrackChangeRequest!.requestBy.name.toString() +
         "’ requested to " +
-        ((widget.trackChangeRequest.mute) ? "mute" : "unmute") +
+        ((widget.meetingStore.hmsTrackChangeRequest!.mute)
+            ? "mute"
+            : "unmute") +
         " your ‘" +
-        ((widget.trackChangeRequest.track.kind ==
+        ((widget.meetingStore.hmsTrackChangeRequest!.track.kind ==
                 HMSTrackKind.kHMSTrackKindAudio)
             ? "Audio’"
             : "Video’") +
@@ -69,7 +73,7 @@ class _RoleChangeDialogOrganismState extends State<TrackChangeDialogOrganism> {
                 child: HLSTitleText(text: 'Reject', textColor: defaultColor),
               ),
               onPressed: () {
-                Navigator.pop(context, '');
+                Navigator.pop(context);
               },
             ),
             ElevatedButton(
@@ -90,7 +94,12 @@ class _RoleChangeDialogOrganismState extends State<TrackChangeDialogOrganism> {
                 ),
               ),
               onPressed: () {
-                Navigator.pop(context, 'OK');
+                if (widget.meetingStore.meetingMode == MeetingMode.Audio) {
+                  widget.meetingStore.setMode(MeetingMode.Audio);
+                }
+                if(widget.meetingStore.hmsTrackChangeRequest != null)
+                    widget.meetingStore.changeTracks(widget.meetingStore.hmsTrackChangeRequest!);
+                Navigator.pop(context);
               },
             ),
           ],

@@ -224,25 +224,15 @@ class UtilityComponents {
       
   }
 
-  static showTrackChangeDialog(event, BuildContext context) async {
-    event = event as HMSTrackChangeRequest;
-    MeetingStore meetingStore =
-        Provider.of<MeetingStore>(context, listen: false);
-    String answer = await showDialog(
+  static showTrackChangeDialog(BuildContext context) async {
+    MeetingStore _meetingStore = context.read<MeetingStore>();
+    await showDialog(
         barrierDismissible: false,
         context: context,
         builder: (ctx) => TrackChangeDialogOrganism(
-              trackChangeRequest: event,
-              isAudioModeOn: meetingStore.meetingMode == MeetingMode.Audio,
+              meetingStore: _meetingStore,
+              isAudioModeOn: _meetingStore.meetingMode == MeetingMode.Audio,
             ));
-    if (answer == "OK") {
-      if (meetingStore.meetingMode == MeetingMode.Audio) {
-        meetingStore.setMode(MeetingMode.Audio);
-      }
-      meetingStore.changeTracks(event);
-    } else {
-      meetingStore.hmsTrackChangeRequest = null;
-    }
   }
 
   static showonExceptionDialog(event, BuildContext context) {

@@ -433,7 +433,7 @@ class _MeetingPageState extends State<MeetingPage>
                                     WidgetsBinding.instance!
                                         .addPostFrameCallback((_) {
                                       UtilityComponents.showTrackChangeDialog(
-                                          hmsTrackChangeRequest, context);
+                                          context);
                                     });
                                   }
                                   return SizedBox();
