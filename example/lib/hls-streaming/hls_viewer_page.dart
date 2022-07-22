@@ -20,17 +20,14 @@ import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 
 class HLSViewerPage extends StatefulWidget {
-  const HLSViewerPage(
-      {Key? key,
-      })
-      : super(key: key);
+  const HLSViewerPage({
+    Key? key,
+  }) : super(key: key);
   @override
   State<HLSViewerPage> createState() => _HLSViewerPageState();
 }
 
 class _HLSViewerPageState extends State<HLSViewerPage> {
-
-
   @override
   Widget build(BuildContext context) {
     return ConnectivityAppWrapper(
@@ -42,9 +39,11 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
         child: ConnectivityWidgetWrapper(
           disableInteraction: true,
           offlineWidget: OfflineWidget(),
-          child: Selector<MeetingStore, Tuple3<bool, bool,bool>>(
-              selector: (_, meetingStore) =>
-                  Tuple3(meetingStore.reconnecting, meetingStore.isRoomEnded,meetingStore.hmsException?.isTerminal ?? false),
+          child: Selector<MeetingStore, Tuple3<bool, bool, bool>>(
+              selector: (_, meetingStore) => Tuple3(
+                  meetingStore.reconnecting,
+                  meetingStore.isRoomEnded,
+                  meetingStore.hmsException?.isTerminal ?? false),
               builder: (_, data, __) {
                 if (data.item3) {
                   WidgetsBinding.instance?.addPostFrameCallback((_) {
@@ -428,7 +427,7 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                     }
                                     return SizedBox();
                                   }),
-                                                                Selector<MeetingStore, bool>(
+                              Selector<MeetingStore, bool>(
                                   selector: (_, meetingStore) =>
                                       meetingStore.showAudioDeviceChangePopup,
                                   builder: (_, showAudioDeviceChangePopup, __) {
@@ -440,7 +439,8 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                             builder: (_) =>
                                                 AudioDeviceChangeDialog(
                                                   currentAudioDevice: context
-                                                      .read<MeetingStore>().currentAudioOutputDevice!,
+                                                      .read<MeetingStore>()
+                                                      .currentAudioOutputDevice!,
                                                   audioDevicesList: context
                                                       .read<MeetingStore>()
                                                       .availableAudioOutputDevices,

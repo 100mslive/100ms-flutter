@@ -236,7 +236,7 @@ class _VideoTileState extends State<VideoTile> {
               )
             : Semantics(
                 label:
-                    "screen_share_tile_${context.read<PeerTrackNode>().peer.name}",
+                    "${context.read<PeerTrackNode>().peer.name}_screen_share_tile",
                 child: Container(
                   decoration: BoxDecoration(
                       border: Border.all(color: Colors.grey, width: 1.0),

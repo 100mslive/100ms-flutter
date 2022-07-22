@@ -195,7 +195,8 @@ class _PreviewPageState extends State<PreviewPage> {
                                                     ? defaultColor
                                                     : Colors.black,
                                                 fit: BoxFit.scaleDown,
-                                                semanticsLabel: "audio_mute_button",
+                                                semanticsLabel:
+                                                    "audio_mute_button",
                                               ),
                                             ),
                                           SizedBox(
@@ -223,7 +224,8 @@ class _PreviewPageState extends State<PreviewPage> {
                                                     ? defaultColor
                                                     : Colors.black,
                                                 fit: BoxFit.scaleDown,
-                                                semanticsLabel: "video_mute_button",
+                                                semanticsLabel:
+                                                    "video_mute_button",
                                               ),
                                             ),
                                         ],
@@ -272,7 +274,8 @@ class _PreviewPageState extends State<PreviewPage> {
                                                 child: SvgPicture.asset(
                                                   'assets/icons/network_${_previewStore.networkQuality}.svg',
                                                   fit: BoxFit.scaleDown,
-                                                semanticsLabel: "network_button",
+                                                  semanticsLabel:
+                                                      "network_button",
                                                 )),
                                           SizedBox(
                                             width: 10,
@@ -286,7 +289,7 @@ class _PreviewPageState extends State<PreviewPage> {
                                               "assets/icons/settings.svg",
                                               color: defaultColor,
                                               fit: BoxFit.scaleDown,
-                                                semanticsLabel: "settings_button",
+                                              semanticsLabel: "settings_button",
                                             ),
                                           )
                                         ],

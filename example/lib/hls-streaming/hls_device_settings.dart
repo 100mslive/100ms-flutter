@@ -11,7 +11,7 @@ import 'package:tuple/tuple.dart';
 import 'package:collection/collection.dart';
 
 class HLSDeviceSettings extends StatefulWidget {
-    HLSDeviceSettings({
+  HLSDeviceSettings({
     Key? key,
   }) : super(key: key);
   @override
