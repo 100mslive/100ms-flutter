@@ -251,11 +251,13 @@ class _MeetingPageState extends State<MeetingPage>
                                     SvgPicture.asset(
                                       "assets/icons/record.svg",
                                       color: Colors.red,
+                                      semanticsLabel: "recording_on_label",
                                     ),
                                   if (data.item2.containsValue(true))
                                     SvgPicture.asset(
                                       "assets/icons/stream.svg",
                                       color: Colors.red,
+                                      semanticsLabel: "streaming_on_label",
                                     ),
                                 ],
                               );
@@ -273,9 +275,11 @@ class _MeetingPageState extends State<MeetingPage>
                                   return (isSpeakerOn)
                                       ? SvgPicture.asset(
                                           "assets/icons/speaker_state_on.svg",
+                                          semanticsLabel: "speaker_on_label",
                                         )
                                       : SvgPicture.asset(
                                           "assets/icons/speaker_state_off.svg",
+                                          semanticsLabel: "speaker_off_label",
                                         );
                                 },
                               )),
@@ -485,10 +489,12 @@ class _MeetingPageState extends State<MeetingPage>
                             ? SvgPicture.asset(
                                 "assets/icons/cam_state_on.svg",
                                 color: iconColor,
+                                semanticsLabel: "video_on_label",
                               )
                             : SvgPicture.asset(
                                 "assets/icons/cam_state_off.svg",
                                 color: data.item2 ? Colors.grey : iconColor,
+                                semanticsLabel: "video_off_label",
                               )));
               },
             ),
@@ -515,10 +521,12 @@ class _MeetingPageState extends State<MeetingPage>
                             ? SvgPicture.asset(
                                 "assets/icons/mic_state_on.svg",
                                 color: iconColor,
+                                semanticsLabel: "audio_on_label",
                               )
                             : SvgPicture.asset(
                                 "assets/icons/mic_state_off.svg",
                                 color: iconColor,
+                                semanticsLabel: "audio_off_label",
                               )));
               },
             ),
@@ -536,6 +544,7 @@ class _MeetingPageState extends State<MeetingPage>
                       icon: SvgPicture.asset(
                         "assets/icons/hand.svg",
                         color: raisedHand ? Colors.yellow : iconColor,
+                        semanticsLabel: "raise_hand_label",
                       )));
             },
           ),
@@ -553,6 +562,7 @@ class _MeetingPageState extends State<MeetingPage>
                       icon: SvgPicture.asset(
                         "assets/icons/brb.svg",
                         color: isBRB ? Colors.red : iconColor,
+                        semanticsLabel: "brb_label",
                       )));
             },
           ),
@@ -572,10 +582,12 @@ class _MeetingPageState extends State<MeetingPage>
                           ? SvgPicture.asset(
                               "assets/icons/message_badge_on.svg",
                               color: iconColor,
+                              semanticsLabel: "chat_label",
                             )
                           : SvgPicture.asset(
                               "assets/icons/message_badge_off.svg",
                               color: iconColor,
+                              semanticsLabel: "chat_label",
                             )),
                 );
               }),
@@ -590,7 +602,8 @@ class _MeetingPageState extends State<MeetingPage>
                 },
                 icon: CircleAvatar(
                   backgroundColor: Colors.red,
-                  child: SvgPicture.asset("assets/icons/leave.svg"),
+                  child: SvgPicture.asset("assets/icons/leave.svg",semanticsLabel: "leave_room_button",),
+                  
                 )),
           ),
         ],
@@ -620,6 +633,7 @@ class _MeetingPageState extends State<MeetingPage>
                     icon: SvgPicture.asset(
                       "assets/icons/hand.svg",
                       color: raisedHand ? Colors.yellow : iconColor,
+                      semanticsLabel: "hand_raise_label",
                     ),
                   ));
             },
@@ -640,10 +654,12 @@ class _MeetingPageState extends State<MeetingPage>
                           ? SvgPicture.asset(
                               "assets/icons/message_badge_on.svg",
                               color: iconColor,
+                              semanticsLabel: "chat_label",
                             )
                           : SvgPicture.asset(
                               "assets/icons/message_badge_off.svg",
                               color: iconColor,
+                              semanticsLabel: "chat_label",
                             )),
                 );
               }),
@@ -658,7 +674,7 @@ class _MeetingPageState extends State<MeetingPage>
                 },
                 icon: CircleAvatar(
                   backgroundColor: Colors.red,
-                  child: SvgPicture.asset("assets/icons/leave.svg"),
+                  child: SvgPicture.asset("assets/icons/leave.svg",semanticsLabel: "leave_room_button",),
                 )),
           ),
         ],
@@ -700,6 +716,7 @@ class _MeetingPageState extends State<MeetingPage>
                     color: meetingStore.isActiveSpeakerMode
                         ? Colors.blue
                         : iconColor,
+                    semanticsLabel: "participant_button",
                   ),
                 ]),
             value: 1,
