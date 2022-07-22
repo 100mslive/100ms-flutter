@@ -26,6 +26,7 @@ import './logs/custom_singleton_logger.dart';
 
 bool _initialURILinkHandled = false;
 StreamSubscription? _streamSubscription;
+Uri? _currentURI;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -33,6 +34,11 @@ void main() async {
   FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
   Wakelock.enable();
   Provider.debugCheckInvalidValueType = null;
+
+  // Get any initial links
+  final PendingDynamicLinkData? initialLink = await FirebaseDynamicLinks.instance.getInitialLink();
+  _currentURI = initialLink?.link;
+
   runZonedGuarded(
       () => runApp(HMSExampleApp()), FirebaseCrashlytics.instance.recordError);
 }
@@ -65,9 +71,6 @@ class _HMSExampleAppState extends State<HMSExampleApp> {
     dividerColor: Colors.white54,
   );
 
-  Uri? _initialURI;
-  Uri? _currentURI;
-  Object? _err;
 
   @override
   void initState() {
@@ -82,6 +85,9 @@ class _HMSExampleAppState extends State<HMSExampleApp> {
     if (!_initialURILinkHandled) {
       _initialURILinkHandled = true;
       try {
+        if (_currentURI != null) {
+          return;
+        }
         _currentURI = await getInitialUri();
         if (_currentURI != null) {
           if (!mounted) {
@@ -96,7 +102,6 @@ class _HMSExampleAppState extends State<HMSExampleApp> {
           return;
         }
         Utilities.showToast("Malformed URI received");
-        setState(() => _err = err);
       }
     }
   }
@@ -110,7 +115,6 @@ class _HMSExampleAppState extends State<HMSExampleApp> {
 
         setState(() {
           _currentURI = uri;
-          _err = null;
         });
       }, onError: (Object err) {
         if (!mounted) {
@@ -118,11 +122,6 @@ class _HMSExampleAppState extends State<HMSExampleApp> {
         }
         setState(() {
           _currentURI = null;
-          if (err is FormatException) {
-            _err = err;
-          } else {
-            _err = null;
-          }
         });
       });
     }
