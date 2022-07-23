@@ -214,7 +214,9 @@ class _MeetingPageState extends State<MeetingPage>
             selector: (_, meetingStore) =>
                 Tuple2(meetingStore.isRoomEnded, meetingStore.hmsException),
             builder: (_, data, __) {
-              if (data.item2 != null && (data.item2?.isTerminal ?? false)) {
+              if (data.item2 != null &&
+                  ((data.item2?.isTerminal ?? false) ||
+                      data.item2?.code?.errorCode == 2000)) {
                 WidgetsBinding.instance?.addPostFrameCallback((_) {
                   UtilityComponents.showErrorDialog(
                       context: context,

@@ -25,7 +25,7 @@ class HMSException {
     HMSExceptionCode? code;
 
     if (map.containsKey('code')) {
-      code = HMSExceptionCode(errorCode: map['code'].toString());
+      code = HMSExceptionCode(errorCode: map['code']);
     }
 
     return HMSException(
