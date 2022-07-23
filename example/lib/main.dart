@@ -36,15 +36,16 @@ void main() async {
   Provider.debugCheckInvalidValueType = null;
 
   // Get any initial links
-  final PendingDynamicLinkData? initialLink = await FirebaseDynamicLinks.instance.getInitialLink();
-  _currentURI = initialLink?.link;
+  final PendingDynamicLinkData? initialLink =
+      await FirebaseDynamicLinks.instance.getInitialLink();
 
-  runZonedGuarded(
-      () => runApp(HMSExampleApp()), FirebaseCrashlytics.instance.recordError);
+  runZonedGuarded(() => runApp(HMSExampleApp(initialLink: initialLink?.link)),
+      FirebaseCrashlytics.instance.recordError);
 }
 
 class HMSExampleApp extends StatefulWidget {
-  HMSExampleApp({Key? key}) : super(key: key);
+  final Uri? initialLink;
+  HMSExampleApp({Key? key, this.initialLink}) : super(key: key);
 
   @override
   _HMSExampleAppState createState() => _HMSExampleAppState();
@@ -70,7 +71,6 @@ class _HMSExampleAppState extends State<HMSExampleApp> {
     backgroundColor: Colors.black,
     dividerColor: Colors.white54,
   );
-
 
   @override
   void initState() {
@@ -139,6 +139,12 @@ class _HMSExampleAppState extends State<HMSExampleApp> {
       print('onLink error');
       print(error.message);
     });
+
+    if (widget.initialLink != null) {
+      setState(() {
+        _currentURI = widget.initialLink;
+      });
+    }
   }
 
   @override
