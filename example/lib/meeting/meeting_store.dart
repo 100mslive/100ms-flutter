@@ -1372,8 +1372,6 @@ class MeetingStore extends ChangeNotifier
               (element as HMSRemoteAudioTrack?)?.setVolume(10.0);
             }
           });
-        } else {
-          if ((element.videoTrack != null && isVideoOn)) startCapturing();
         }
       });
     } else if (state == AppLifecycleState.paused) {
