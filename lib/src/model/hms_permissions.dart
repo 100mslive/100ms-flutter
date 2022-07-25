@@ -9,6 +9,7 @@ class HMSPermissions {
   final bool? unMute;
   final bool? changeRoleForce;
   final bool? changeRole;
+  final bool? streaming;
 
   HMSPermissions(
       {this.endRoom,
@@ -17,7 +18,8 @@ class HMSPermissions {
       this.mute,
       this.unMute,
       this.changeRoleForce,
-      this.changeRole});
+      this.changeRole,
+      this.streaming});
 
   factory HMSPermissions.fromMap(Map map) {
     return HMSPermissions(
@@ -27,7 +29,8 @@ class HMSPermissions {
         mute: map['mute'],
         unMute: map['un_mute'],
         changeRoleForce: map['change_role_force'],
-        changeRole: map['change_role']);
+        changeRole: map['change_role'],
+        streaming: map.containsKey('streaming') ? map['streaming'] : null);
   }
 
   Map<String, dynamic> toJson() {
@@ -38,7 +41,8 @@ class HMSPermissions {
       'mute': mute,
       'un_mute': unMute,
       'change_role_force': changeRoleForce,
-      'change_role': changeRole
+      'change_role': changeRole,
+      'streaming': streaming
     };
   }
 }
