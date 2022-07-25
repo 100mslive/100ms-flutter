@@ -43,6 +43,7 @@ dependencies:
   qr_code_scanner:
   shared_preferences: 
   uni_links:
+  draggable_widget:
   
 dev_dependencies:
   flutter_test:
