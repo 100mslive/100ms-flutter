@@ -235,6 +235,8 @@ class MeetingStore extends ChangeNotifier
   }
 
   Future<bool> startCapturing() async {
+    isVideoOn = true;
+    notifyListeners();
     return await _hmsSDKInteractor.startCapturing();
   }
 
@@ -1371,8 +1373,6 @@ class MeetingStore extends ChangeNotifier
               (element as HMSRemoteAudioTrack?)?.setVolume(10.0);
             }
           });
-        } else {
-          if ((element.videoTrack != null && isVideoOn)) startCapturing();
         }
       });
     } else if (state == AppLifecycleState.paused) {
