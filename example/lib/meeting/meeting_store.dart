@@ -236,6 +236,8 @@ class MeetingStore extends ChangeNotifier
   }
 
   Future<bool> startCapturing() async {
+    isVideoOn = true;
+    notifyListeners();
     return await _hmsSDKInteractor.startCapturing();
   }
 
