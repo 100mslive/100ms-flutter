@@ -22,20 +22,33 @@ class OneToOneMode extends StatefulWidget {
 }
 
 class _OneToOneModeState extends State<OneToOneMode> {
+  late PeerTrackNode pipPeer;
+  late PeerTrackNode screenPeer;
+  @override
+  void initState() {
+    super.initState();
+    pipPeer = widget.peerTracks.firstWhere((element) => element.peer.isLocal);
+    screenPeer =
+        widget.peerTracks.firstWhere((element) => !element.peer.isLocal);
+  }
+
+  void switchView() {
+    PeerTrackNode tempPeer = pipPeer;
+    pipPeer = screenPeer;
+    screenPeer = tempPeer;
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
-    PeerTrackNode localPeer =
-        widget.peerTracks.firstWhere((element) => element.peer.isLocal);
-    PeerTrackNode remotePeer =
-        widget.peerTracks.firstWhere((element) => !element.peer.isLocal);
     // EdgeInsets viewPadding = MediaQuery.of(context).viewPadding;
     return Scaffold(
       body: SafeArea(
         child: Stack(
           children: [
             ChangeNotifierProvider.value(
-              key: ValueKey(remotePeer.uid + "video_view"),
-              value: remotePeer,
+              key: ValueKey(screenPeer.uid + "video_view"),
+              value: screenPeer,
               child: VideoTile(
                 itemHeight: widget.size.height,
                 itemWidth: widget.size.width,
@@ -45,17 +58,21 @@ class _OneToOneModeState extends State<OneToOneMode> {
               topMargin: 10,
               bottomMargin: 230,
               horizontalSpace: 10,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(8.0),
-                child: SizedBox(
-                  width: 100,
-                  height: 150,
-                  child: ChangeNotifierProvider.value(
-                    key: ValueKey(localPeer.uid + "video_view"),
-                    value: localPeer,
-                    child: VideoTile(
-                      itemHeight: 150,
-                      itemWidth: 100,
+              child: GestureDetector(
+                onDoubleTap: (() => switchView()),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(8.0),
+                  child: SizedBox(
+                    width: 100,
+                    height: 150,
+                    child: ChangeNotifierProvider.value(
+                      key: ValueKey(pipPeer.uid + "video_view"),
+                      value: pipPeer,
+                      child: VideoTile(
+                        isPipTile: true,
+                        itemHeight: 150,
+                        itemWidth: 100,
+                      ),
                     ),
                   ),
                 ),
