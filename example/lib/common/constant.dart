@@ -3,7 +3,7 @@ class Constant {
   static String prodTokenEndpoint =
       "https://prod-in.100ms.live/hmsapi/get-token";
 
-  static String qaTokenEndPoint = "https://qa-in2.100ms.live/hmsapi/get-token";
+  static String qaTokenEndPoint = "https://qa-in.100ms.live/hmsapi/get-token";
 
   static String tokenQuery = "api/token";
 
