@@ -113,6 +113,9 @@ class _HMSExampleAppState extends State<HMSExampleApp> {
         if (!mounted) {
           return;
         }
+        if (uri == null) {
+          return;
+        }
         setState(() {
           _currentURI = uri;
         });
@@ -129,8 +132,12 @@ class _HMSExampleAppState extends State<HMSExampleApp> {
   }
 
   Future<void> initDynamicLinks() async {
-    FirebaseDynamicLinks.instance.onLink.listen((dynamicLinkData) {
+    FirebaseDynamicLinks.instance.onLink
+        .listen((PendingDynamicLinkData dynamicLinkData) {
       if (!mounted) {
+        return;
+      }
+      if (dynamicLinkData.link.toString().length == 0) {
         return;
       }
       setState(() {
@@ -146,7 +153,9 @@ class _HMSExampleAppState extends State<HMSExampleApp> {
       setState(() {
         _currentURI = widget.initialLink;
       });
-      Utilities.showToast("initialLink 4");
+      Utilities.showToast("initialLink initialLink 4");
+    } else {
+      Utilities.showToast("initialLink null 5");
     }
   }
 
