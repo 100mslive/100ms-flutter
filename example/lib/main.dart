@@ -448,30 +448,31 @@ class _HomePageState extends State<HomePage> {
                               height: 1.5,
                               fontSize: 14,
                               fontWeight: FontWeight.w400)),
-                      ToggleButtons(
-                          key: Key('mode_toggle_button'),
-                          selectedColor: hmsdefaultColor,
-                          selectedBorderColor: hmsdefaultColor,
-                          borderRadius: BorderRadius.circular(10),
-                          textStyle: GoogleFonts.inter(
-                              color: defaultColor,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w600),
-                          children: [Text(" Meeting "), Text("HLS")],
-                          onPressed: (int index) {
-                            setState(() {
-                              for (int buttonIndex = 0;
-                                  buttonIndex < mode.length;
-                                  buttonIndex++) {
-                                if (buttonIndex == index) {
-                                  mode[buttonIndex] = true;
-                                } else {
-                                  mode[buttonIndex] = false;
-                                }
-                              }
-                            });
-                          },
-                          isSelected: mode)
+                      // ToggleButtons(
+                      //     key: Key('mode_toggle_button'),
+                      //     selectedColor: hmsdefaultColor,
+                      //     selectedBorderColor: hmsdefaultColor,
+                      //     borderRadius: BorderRadius.circular(10),
+                      //     textStyle: GoogleFonts.inter(
+                      //         color: defaultColor,
+                      //         fontSize: 12,
+                      //         fontWeight: FontWeight.w600),
+                      //     children: [Text(" Meeting "), Text("HLS")],
+                      //     onPressed: (int index) {
+                      //       setState(() {
+                      //         for (int buttonIndex = 0;
+                      //             buttonIndex < mode.length;
+                      //             buttonIndex++) {
+                      //           if (buttonIndex == index) {
+                      //             mode[buttonIndex] = true;
+                      //           } else {
+                      //             mode[buttonIndex] = false;
+                      //           }
+                      //         }
+                      //       });
+                      //     },
+                      //     isSelected: mode)
+                    
                     ],
                   ),
                 ),
