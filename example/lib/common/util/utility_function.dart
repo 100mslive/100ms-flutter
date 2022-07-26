@@ -116,8 +116,11 @@ class Utilities {
     }
   }
 
-  static void showToast(String message) {
-    Fluttertoast.showToast(msg: message, backgroundColor: Colors.black87);
+  static void showToast(String message, {int time = 1}) {
+    Fluttertoast.showToast(
+        msg: message,
+        backgroundColor: Colors.black87,
+        timeInSecForIosWeb: time);
   }
 
   static Future<String> getStringData({required String key}) async {

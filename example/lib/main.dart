@@ -95,7 +95,8 @@ class _HMSExampleAppState extends State<HMSExampleApp> {
           }
           setState(() {});
           Utilities.showToast(
-              "_initURIHandler 1 current:${_currentURI.toString()} init: ${widget.initialLink.toString()}");
+              "_initURIHandler 1 current:${_currentURI.toString()} init: ${widget.initialLink.toString()}",
+              time: 5);
         }
       } on PlatformException {
         debugPrint("Failed to receive initial uri");
@@ -121,7 +122,8 @@ class _HMSExampleAppState extends State<HMSExampleApp> {
           _currentURI = uri;
         });
         Utilities.showToast(
-            "_incomingLinkHandler 2 current:${_currentURI.toString()} init: ${widget.initialLink.toString()}");
+            "_incomingLinkHandler 2 current:${_currentURI.toString()} init: ${widget.initialLink.toString()}",
+            time: 5);
       }, onError: (Object err) {
         if (!mounted) {
           return;
@@ -146,7 +148,8 @@ class _HMSExampleAppState extends State<HMSExampleApp> {
         _currentURI = dynamicLinkData.link;
       });
       Utilities.showToast(
-          "initDynamicLinks 3 current:${_currentURI.toString()} init: ${widget.initialLink.toString()}");
+          "initDynamicLinks 3 current:${_currentURI.toString()} init: ${widget.initialLink.toString()}",
+          time: 5);
     }).onError((error) {
       print('onLink error');
       print(error.message);
@@ -157,10 +160,12 @@ class _HMSExampleAppState extends State<HMSExampleApp> {
         _currentURI = widget.initialLink;
       });
       Utilities.showToast(
-          "initialLink initialLink 4 current:${_currentURI.toString()} init: ${widget.initialLink.toString()}");
+          "initialLink initialLink 4 current:${_currentURI.toString()} init: ${widget.initialLink.toString()}",
+          time: 5);
     } else {
       Utilities.showToast(
-          "initialLink null 5 current:${_currentURI.toString()} init: ${widget.initialLink.toString()}");
+          "initialLink null 5 current:${_currentURI.toString()} init: ${widget.initialLink.toString()}",
+          time: 5);
     }
   }
 
