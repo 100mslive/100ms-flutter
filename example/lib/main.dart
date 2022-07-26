@@ -245,7 +245,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void didUpdateWidget(covariant HomePage oldWidget) {
-    // TODO: implement didUpdateWidget
     if (widget.deepLinkURL != null) {
       meetingLinkController.text = widget.deepLinkURL!;
     }
@@ -259,14 +258,18 @@ class _HomePageState extends State<HomePage> {
     Utilities.saveIntData(key: "mode", value: mode[0] == true ? 0 : 1);
     FocusManager.instance.primaryFocus?.unfocus();
     Utilities.setRTMPUrl(meetingLinkController.text);
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (_) => PreviewDetails(
-                  meetingLink: meetingLinkController.text.trim(),
-                  meetingFlow:
-                      mode[0] ? MeetingFlow.meeting : MeetingFlow.hlsStreaming,
-                )));
+    MeetingFlow flow = Utilities.deriveFlow(meetingLinkController.text.trim());
+    if (flow == MeetingFlow.meeting || flow == MeetingFlow.hlsStreaming) {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (_) => PreviewDetails(
+                    meetingLink: meetingLinkController.text.trim(),
+                    meetingFlow: flow,
+                  )));
+    } else {
+      Utilities.showToast("Please enter valid url");
+    }
   }
 
   @override
