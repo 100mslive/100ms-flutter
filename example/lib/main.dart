@@ -26,7 +26,6 @@ import './logs/custom_singleton_logger.dart';
 
 bool _initialURILinkHandled = false;
 StreamSubscription? _streamSubscription;
-Uri? _currentURI;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -55,6 +54,7 @@ class HMSExampleApp extends StatefulWidget {
 
 class _HMSExampleAppState extends State<HMSExampleApp> {
   ThemeMode _themeMode = ThemeMode.dark;
+  Uri? _currentURI;
   bool isDarkMode =
       WidgetsBinding.instance?.window.platformBrightness == Brightness.dark;
 
@@ -116,6 +116,7 @@ class _HMSExampleAppState extends State<HMSExampleApp> {
           return;
         }
         if (uri == null) {
+          Utilities.showToast("_incomingLinkHandler uri is null exiting");
           return;
         }
         setState(() {
@@ -128,9 +129,9 @@ class _HMSExampleAppState extends State<HMSExampleApp> {
         if (!mounted) {
           return;
         }
-        setState(() {
-          _currentURI = null;
-        });
+        // setState(() {
+        //   _currentURI = null;
+        // });
       });
     }
   }
@@ -156,11 +157,11 @@ class _HMSExampleAppState extends State<HMSExampleApp> {
     });
 
     if (widget.initialLink != null) {
-      setState(() {
-        _currentURI = widget.initialLink;
-      });
+      Utilities.showToast("Current URI is ${_currentURI.toString()}");
+      _currentURI = widget.initialLink;
+      setState(() {});
       Utilities.showToast(
-          "initialLink initialLink 4 current:${_currentURI.toString()} init: ${widget.initialLink.toString()}",
+          "initialLink initialLink 4 Current:${_currentURI.toString()} Init: ${widget.initialLink.toString()}",
           time: 5);
     } else {
       Utilities.showToast(
@@ -224,14 +225,19 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    Utilities.showToast("DeepLink url is ${widget.deepLinkURL}", time: 5);
     logger.getCustomLogger();
     _initPackageInfo();
     getData();
   }
 
   void getData() async {
-    meetingLinkController.text =
-        await Utilities.getStringData(key: 'meetingLink');
+    String savedMeetingUrl = await Utilities.getStringData(key: 'meetingLink');
+    if (savedMeetingUrl.isNotEmpty) {
+      meetingLinkController.text = savedMeetingUrl;
+    } else {
+      meetingLinkController.text = widget.deepLinkURL??"";
+    }
     int index = await Utilities.getIntData(key: 'mode');
     mode[index] = true;
     mode[1 - index] = false;
@@ -494,7 +500,6 @@ class _HomePageState extends State<HomePage> {
                       //       });
                       //     },
                       //     isSelected: mode)
-                    
                     ],
                   ),
                 ),
