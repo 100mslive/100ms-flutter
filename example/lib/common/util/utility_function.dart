@@ -147,4 +147,11 @@ class Utilities {
 
     prefs.setInt(key, value);
   }
+
+  static String fetchMeetingLinkFromFirebase(String url) {
+    url = url.split("deep_link_id=")[1];
+    url = url.split("&")[0];
+    url = url.replaceAll("%3A", ":").replaceAll("%2F", "/");
+    return url;
+  }
 }

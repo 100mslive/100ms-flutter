@@ -122,6 +122,13 @@ class _HMSExampleAppState extends State<HMSExampleApp> {
         setState(() {
           _currentURI = uri;
         });
+        String tempUri = uri.toString();
+        if (tempUri.contains("deep_link_id")) {
+          setState(() {
+            _currentURI =
+                Uri.parse(Utilities.fetchMeetingLinkFromFirebase(tempUri));
+          });
+        }
         Utilities.showToast(
             "_incomingLinkHandler 2 current:${_currentURI.toString()} init: ${widget.initialLink.toString()}",
             time: 5);
@@ -129,9 +136,6 @@ class _HMSExampleAppState extends State<HMSExampleApp> {
         if (!mounted) {
           return;
         }
-        // setState(() {
-        //   _currentURI = null;
-        // });
       });
     }
   }
@@ -236,7 +240,7 @@ class _HomePageState extends State<HomePage> {
     if (savedMeetingUrl.isNotEmpty) {
       meetingLinkController.text = savedMeetingUrl;
     } else {
-      meetingLinkController.text = widget.deepLinkURL??"";
+      meetingLinkController.text = widget.deepLinkURL ?? "";
     }
     int index = await Utilities.getIntData(key: 'mode');
     mode[index] = true;
