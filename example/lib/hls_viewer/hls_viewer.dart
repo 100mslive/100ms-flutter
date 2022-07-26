@@ -17,17 +17,15 @@ class HLSPlayer extends StatefulWidget {
   _HLSPlayerState createState() => _HLSPlayerState();
 }
 
-class _HLSPlayerState extends State<HLSPlayer> {
-  late VideoPlayerController _controller;
+class _HLSPlayerState extends State<HLSPlayer>{
 
   @override
   void initState() {
     super.initState();
-
-    _controller = VideoPlayerController.network(
+    context.read<MeetingStore>().hlsVideoController = VideoPlayerController.network(
       widget.streamUrl,
     )..initialize().then((_) {
-        _controller.play();
+        context.read<MeetingStore>().hlsVideoController.play();
         setState(() {});
       });
   }
@@ -35,23 +33,29 @@ class _HLSPlayerState extends State<HLSPlayer> {
   @override
   void dispose() async {
     super.dispose();
-    await _controller.dispose();
+    if(context.read<MeetingStore>().hlsVideoController.value.isPlaying)
+      await context.read<MeetingStore>().hlsVideoController.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    context.watch<MeetingStore>();
-    return Scaffold(
-        body: Center(
-      child: _controller.value.isInitialized
-          ? AspectRatio(
-              aspectRatio: _controller.value.aspectRatio,
-              child: VideoPlayer(_controller),
-            )
-          : HLSTitleText(
-              text: "Waiting for the HLS Streaming to start...",
-              textColor: defaultColor,
-            ),
-    ));
+    return Selector<MeetingStore,VideoPlayerController>(
+      selector: (_,meetingStore)=>meetingStore.hlsVideoController,
+      builder: (_,controller,__) {
+        return Scaffold(
+            body: Center(
+          child: controller.value.isInitialized
+              ? AspectRatio(
+                  aspectRatio: controller.value.aspectRatio,
+                  child: VideoPlayer(controller),
+                )
+              : HLSTitleText(
+                  text: "Waiting for the HLS Streaming to start...",
+                  textColor: defaultColor,
+                ),
+        ));
+      }
+    );
   }
 }
+
