@@ -28,7 +28,7 @@ class _QRCodeScreenState extends State<QRCodeScreen> {
       controller.pauseCamera();
       if (scanData.code != null) {
         MeetingFlow flow = Utilities.deriveFlow(scanData.code!);
-        if (flow == MeetingFlow.meeting) {
+        if (flow == MeetingFlow.meeting || flow == MeetingFlow.hlsStreaming) {
           Utilities.setRTMPUrl(scanData.code!);
           FocusManager.instance.primaryFocus?.unfocus();
           Navigator.of(context).pushReplacement(MaterialPageRoute(
@@ -36,10 +36,11 @@ class _QRCodeScreenState extends State<QRCodeScreen> {
                     value: PreviewStore(),
                     child: PreviewDetails(
                       meetingLink: scanData.code!.trim(),
-                      meetingFlow: widget.meetingFlow,
+                      meetingFlow: flow,
                     ),
                   )));
-        } else {
+        } 
+        else {
           bool res = await UtilityComponents.showErrorDialog(
               context: context,
               errorMessage: "Please scan a valid meeting URL",
