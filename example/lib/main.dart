@@ -94,7 +94,8 @@ class _HMSExampleAppState extends State<HMSExampleApp> {
             return;
           }
           setState(() {});
-          Utilities.showToast("_initURIHandler 1");
+          Utilities.showToast(
+              "_initURIHandler 1 current:${_currentURI.toString()} init: ${widget.initialLink.toString()}");
         }
       } on PlatformException {
         debugPrint("Failed to receive initial uri");
@@ -119,7 +120,8 @@ class _HMSExampleAppState extends State<HMSExampleApp> {
         setState(() {
           _currentURI = uri;
         });
-        Utilities.showToast("_incomingLinkHandler 2");
+        Utilities.showToast(
+            "_incomingLinkHandler 2 current:${_currentURI.toString()} init: ${widget.initialLink.toString()}");
       }, onError: (Object err) {
         if (!mounted) {
           return;
@@ -143,7 +145,8 @@ class _HMSExampleAppState extends State<HMSExampleApp> {
       setState(() {
         _currentURI = dynamicLinkData.link;
       });
-      Utilities.showToast("initDynamicLinks 3");
+      Utilities.showToast(
+          "initDynamicLinks 3 current:${_currentURI.toString()} init: ${widget.initialLink.toString()}");
     }).onError((error) {
       print('onLink error');
       print(error.message);
@@ -153,9 +156,11 @@ class _HMSExampleAppState extends State<HMSExampleApp> {
       setState(() {
         _currentURI = widget.initialLink;
       });
-      Utilities.showToast("initialLink initialLink 4");
+      Utilities.showToast(
+          "initialLink initialLink 4 current:${_currentURI.toString()} init: ${widget.initialLink.toString()}");
     } else {
-      Utilities.showToast("initialLink null 5");
+      Utilities.showToast(
+          "initialLink null 5 current:${_currentURI.toString()} init: ${widget.initialLink.toString()}");
     }
   }
 
