@@ -24,7 +24,7 @@ class _PeerNameState extends State<PeerName> {
             constraints: BoxConstraints(
                 maxWidth: MediaQuery.of(context).size.width * 0.4),
             child: Text(
-              "${data.item2 ? "You (" : ""}${data.item1}${data.item2 ? ")" : ""}",
+              "${data.item2 ? "You (" : ""}${data.item1.trim()}${data.item2 ? ")" : ""}",
               maxLines: 1,
               softWrap: true,
               overflow: TextOverflow.ellipsis,

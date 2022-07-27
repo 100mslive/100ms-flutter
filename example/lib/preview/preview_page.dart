@@ -286,21 +286,7 @@ class _PreviewPageState extends State<PreviewPage> {
                                                   semanticsLabel:
                                                       "network_button",
                                                 )),
-                                          SizedBox(
-                                            width: 10,
-                                          ),
-                                          EmbeddedButton(
-                                            onTap: () {},
-                                            offColor: buttonBackgroundColor,
-                                            onColor: buttonBackgroundColor,
-                                            isActive: true,
-                                            child: SvgPicture.asset(
-                                              "assets/icons/settings.svg",
-                                              color: defaultColor,
-                                              fit: BoxFit.scaleDown,
-                                              semanticsLabel: "settings_button",
-                                            ),
-                                          )
+                                          
                                         ],
                                       )
                                     ],
