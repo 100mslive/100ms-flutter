@@ -1371,8 +1371,8 @@ class MeetingStore extends ChangeNotifier
           streamUrl,
         )..initialize().then((_) {
             hlsVideoController!.play();
-          });
       notifyListeners();
+          });
       });
       List<HMSPeer>? peersList = await getPeers();
 
