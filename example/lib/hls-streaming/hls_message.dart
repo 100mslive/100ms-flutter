@@ -263,22 +263,26 @@ class _HLSMessageState extends State<HLSMessage> {
                                 borderRadius: BorderRadius.circular(8),
                                 color: surfaceColor),
                             child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                SvgPicture.asset("assets/icons/info.svg"),
-                                SizedBox(width: 5),
-                                SizedBox(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.7,
-                                  child: Text(
-                                    "Messages can only be seen by people in the call and are deleted when the call ends.",
-                                    style: GoogleFonts.inter(
-                                        fontWeight: FontWeight.w400,
-                                        color: subHeadingColor,
-                                        letterSpacing: 0.4,
-                                        height: 16 / 12,
-                                        fontSize: 12),
-                                  ),
+                                Row(
+                                  children: [
+                                    SvgPicture.asset("assets/icons/info.svg"),
+                                    SizedBox(width: 18.5),
+                                    SizedBox(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.7,
+                                      child: Text(
+                                        "Messages can only be seen by people in the call and are deleted when the call ends.",
+                                        style: GoogleFonts.inter(
+                                            fontWeight: FontWeight.w400,
+                                            color: subHeadingColor,
+                                            letterSpacing: 0.4,
+                                            height: 16 / 12,
+                                            fontSize: 12),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                                 GestureDetector(
                                     onTap: () {

@@ -140,27 +140,29 @@ class _PreviewPageState extends State<PreviewPage> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          height: orientation == Orientation.portrait
-                              ? width * 0.2
-                              : width * 0.05,
-                        ),
-                        Text(
-                            "Let's get you started, ${widget.name.split(' ')[0].substring(0, min(widget.name.split(' ')[0].length, 10))}!",
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.inter(
-                                color: defaultColor,
-                                fontSize: 28,
-                                fontWeight: FontWeight.w600)),
-                        Text("Set your studio setup in less than 5 minutes",
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.inter(
-                                color: disabledTextColor,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w400)),
-                      ],
+                    child: Center(
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            height: orientation == Orientation.portrait
+                                ? width * 0.2
+                                : width * 0.05,
+                          ),
+                          Text(
+                              "Let's get you started, ${widget.name.split(' ')[0].substring(0, min(widget.name.split(' ')[0].length, 10))}!",
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.inter(
+                                  color: defaultColor,
+                                  fontSize: 28,
+                                  fontWeight: FontWeight.w600)),
+                          Text("Set your studio setup in less than 5 minutes",
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.inter(
+                                  color: disabledTextColor,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w400)),
+                        ],
+                      ),
                     ),
                   ),
                   Padding(
