@@ -17,45 +17,43 @@ class HLSPlayer extends StatefulWidget {
   _HLSPlayerState createState() => _HLSPlayerState();
 }
 
-class _HLSPlayerState extends State<HLSPlayer>{
-
+class _HLSPlayerState extends State<HLSPlayer> {
   @override
   void initState() {
     super.initState();
-    context.read<MeetingStore>().hlsVideoController = VideoPlayerController.network(
+    context.read<MeetingStore>().hlsVideoController =
+        VideoPlayerController.network(
       widget.streamUrl,
     )..initialize().then((_) {
-        context.read<MeetingStore>().hlsVideoController.play();
-        setState(() {});
-      });
+            context.read<MeetingStore>().hlsVideoController!.play();
+            setState(() {});
+          });
   }
 
   @override
   void dispose() async {
     super.dispose();
-    if(context.read<MeetingStore>().hlsVideoController.value.isPlaying)
-      await context.read<MeetingStore>().hlsVideoController.dispose();
+    await context.read<MeetingStore>().hlsVideoController?.dispose();
+    context.read<MeetingStore>().hlsVideoController = null;
   }
 
   @override
   Widget build(BuildContext context) {
-    return Selector<MeetingStore,VideoPlayerController>(
-      selector: (_,meetingStore)=>meetingStore.hlsVideoController,
-      builder: (_,controller,__) {
-        return Scaffold(
-            body: Center(
-          child: controller.value.isInitialized
-              ? AspectRatio(
-                  aspectRatio: controller.value.aspectRatio,
-                  child: VideoPlayer(controller),
-                )
-              : HLSTitleText(
-                  text: "Waiting for the HLS Streaming to start...",
-                  textColor: defaultColor,
-                ),
-        ));
-      }
-    );
+    return Selector<MeetingStore, VideoPlayerController?>(
+        selector: (_, meetingStore) => meetingStore.hlsVideoController,
+        builder: (_, controller, __) {
+          return Scaffold(
+              body: Center(
+            child: controller?.value.isInitialized??false
+                ? AspectRatio(
+                    aspectRatio: controller!.value.aspectRatio,
+                    child: VideoPlayer(controller),
+                  )
+                : HLSTitleText(
+                    text: "Waiting for the HLS Streaming to start...",
+                    textColor: defaultColor,
+                  ),
+          ));
+        });
   }
 }
-

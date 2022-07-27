@@ -136,7 +136,7 @@ class MeetingStore extends ChangeNotifier
 
   int trackChange = -1;
 
-  late VideoPlayerController hlsVideoController;
+  VideoPlayerController? hlsVideoController;
 
   Future<bool> join(String user, String roomUrl) async {
     List<String?>? token =
@@ -1366,14 +1366,14 @@ class MeetingStore extends ChangeNotifier
       return;
     }
     if (state == AppLifecycleState.resumed) {
-      if (!hlsVideoController.value.isPlaying) {
-        hlsVideoController = VideoPlayerController.network(
+      WidgetsBinding.instance!.addPostFrameCallback((_) {
+        hlsVideoController = new VideoPlayerController.network(
           streamUrl,
         )..initialize().then((_) {
-            hlsVideoController.play();
+            hlsVideoController!.play();
           });
-        notifyListeners();
-      }
+      notifyListeners();
+      });
       List<HMSPeer>? peersList = await getPeers();
 
       peersList?.forEach((element) {
@@ -1387,10 +1387,9 @@ class MeetingStore extends ChangeNotifier
         }
       });
     } else if (state == AppLifecycleState.paused) {
-      if (hlsVideoController.value.isPlaying) {
-        hlsVideoController.dispose();
-        notifyListeners();
-      }
+      hlsVideoController?.dispose();
+      hlsVideoController = null;
+      notifyListeners();
       HMSLocalPeer? localPeer = await getLocalPeer();
       if (localPeer != null && !(localPeer.videoTrack?.isMute ?? true)) {
         stopCapturing();
