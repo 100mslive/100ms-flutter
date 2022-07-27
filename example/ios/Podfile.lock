@@ -144,13 +144,13 @@ PODS:
   - GoogleUtilities/UserDefaults (7.7.0):
     - GoogleUtilities/Logger
   - HMSBroadcastExtensionSDK (0.0.1)
-  - HMSSDK (0.3.2):
-    - HMSWebRTC (= 1.0.4897)
+  - HMSSDK (0.3.3):
+    - HMSWebRTC (= 1.0.4898)
   - hmssdk_flutter (0.7.4):
     - Flutter
     - HMSBroadcastExtensionSDK (= 0.0.1)
-    - HMSSDK (= 0.3.2)
-  - HMSWebRTC (1.0.4897)
+    - HMSSDK (= 0.3.3)
+  - HMSWebRTC (1.0.4898)
   - MTBBarcodeScanner (5.0.11)
   - nanopb (2.30909.0):
     - nanopb/decode (= 2.30909.0)
@@ -277,9 +277,9 @@ SPEC CHECKSUMS:
   GoogleDataTransport: 1c8145da7117bd68bbbed00cf304edb6a24de00f
   GoogleUtilities: e0913149f6b0625b553d70dae12b49fc62914fd1
   HMSBroadcastExtensionSDK: a19186ebbf8e381f447f382448038b38a9985be0
-  HMSSDK: 6ec0cb6d776141f8fcd749d28b9b793357995e7f
-  hmssdk_flutter: b782ab2ddc277b9aa1e5ae8246647f3965bc2687
-  HMSWebRTC: aa317dbbf56a191463a90491e5e37f298f8fa29c
+  HMSSDK: 7c9d01559f1ac06cea982097138c1d3c836df0ae
+  hmssdk_flutter: d0dd70ae6165b2195e57ecb1447e631e437118d4
+  HMSWebRTC: d3a9b2866e4a36a1d3834728a548a4a46309bb86
   MTBBarcodeScanner: f453b33c4b7dfe545d8c6484ed744d55671788cb
   nanopb: b552cce312b6c8484180ef47159bc0f65a1f0431
   package_info_plus: 6c92f08e1f853dc01228d6f553146438dafcd14e

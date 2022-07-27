@@ -12,7 +12,7 @@ Pod::Spec.new do |s|
   s.source           = { :git => 'https://github.com/100mslive/100ms-flutter.git' }
   s.source_files = 'Classes/**/*'
   s.dependency 'Flutter'
-  s.dependency 'HMSSDK', '0.3.2'
+  s.dependency 'HMSSDK', '0.3.3'
   s.dependency 'HMSBroadcastExtensionSDK', '0.0.1'
   s.platform = :ios, '12.0'
   s.ios.deployment_target  = '12.0'
