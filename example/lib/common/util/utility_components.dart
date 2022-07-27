@@ -88,7 +88,7 @@ class UtilityComponents {
                     )),
               ),
               SizedBox(
-                width: 16,
+                width: 10,
               ),
               Expanded(
                 child: ElevatedButton(
@@ -192,7 +192,7 @@ class UtilityComponents {
                     )),
               ),
               SizedBox(
-                width: 16,
+                width: 10,
               ),
               Expanded(
                 child: ElevatedButton(
@@ -879,7 +879,7 @@ class UtilityComponents {
                     )),
               ),
               SizedBox(
-                width: 16,
+                width: 5,
               ),
               Expanded(
                 child: ElevatedButton(
