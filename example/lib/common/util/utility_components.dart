@@ -61,52 +61,60 @@ class UtilityComponents {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              ElevatedButton(
+              Expanded(
+                child: ElevatedButton(
+                    style: ButtonStyle(
+                        shadowColor: MaterialStateProperty.all(surfaceColor),
+                        backgroundColor: MaterialStateProperty.all(
+                          Color.fromRGBO(32, 22, 23, 1),
+                        ),
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                          side: BorderSide(
+                              width: 1, color: popupButtonBorderColor),
+                          borderRadius: BorderRadius.circular(8.0),
+                        ))),
+                    onPressed: () => Navigator.pop(context, false),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8.0, vertical: 12),
+                      child: Text('Nevermind',
+                          style: GoogleFonts.inter(
+                              color: defaultColor,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: 0.50)),
+                    )),
+              ),
+              SizedBox(
+                width: 16,
+              ),
+              Expanded(
+                child: ElevatedButton(
                   style: ButtonStyle(
                       shadowColor: MaterialStateProperty.all(surfaceColor),
-                      backgroundColor: MaterialStateProperty.all(
-                        Color.fromRGBO(32, 22, 23, 1),
-                      ),
+                      backgroundColor: MaterialStateProperty.all(errorColor),
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
-                        side:
-                            BorderSide(width: 1, color: popupButtonBorderColor),
+                        side: BorderSide(width: 1, color: errorColor),
                         borderRadius: BorderRadius.circular(8.0),
                       ))),
-                  onPressed: () => Navigator.pop(context, false),
+                  onPressed: () => {
+                    _meetingStore.leave(),
+                    Navigator.popUntil(context, (route) => route.isFirst)
+                  },
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 8.0, vertical: 12),
-                    child: Text('Nevermind',
-                        style: GoogleFonts.inter(
-                            color: defaultColor,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            letterSpacing: 0.50)),
-                  )),
-              ElevatedButton(
-                style: ButtonStyle(
-                    shadowColor: MaterialStateProperty.all(surfaceColor),
-                    backgroundColor: MaterialStateProperty.all(errorColor),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                      side: BorderSide(width: 1, color: errorColor),
-                      borderRadius: BorderRadius.circular(8.0),
-                    ))),
-                onPressed: () => {
-                  _meetingStore.leave(),
-                  Navigator.popUntil(context, (route) => route.isFirst)
-                },
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8.0, vertical: 12),
-                  child: Text(
-                    'Leave Room',
-                    style: GoogleFonts.inter(
-                        color: defaultColor,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        letterSpacing: 0.50),
+                    child: Text(
+                      'Leave Room',
+                      style: GoogleFonts.inter(
+                          color: defaultColor,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: 0.50),
+                    ),
                   ),
                 ),
               ),
@@ -162,43 +170,51 @@ class UtilityComponents {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              ElevatedButton(
+              Expanded(
+                child: ElevatedButton(
+                    style: ButtonStyle(
+                        shadowColor: MaterialStateProperty.all(surfaceColor),
+                        backgroundColor:
+                            MaterialStateProperty.all(bottomSheetColor),
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                          side: BorderSide(
+                              width: 1, color: popupButtonBorderColor),
+                          borderRadius: BorderRadius.circular(8.0),
+                        ))),
+                    onPressed: () => Navigator.pop(context, false),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8.0, vertical: 12),
+                      child: HLSTitleText(
+                          text: 'Don’t Leave', textColor: defaultColor),
+                    )),
+              ),
+              SizedBox(
+                width: 16,
+              ),
+              Expanded(
+                child: ElevatedButton(
                   style: ButtonStyle(
                       shadowColor: MaterialStateProperty.all(surfaceColor),
-                      backgroundColor:
-                          MaterialStateProperty.all(bottomSheetColor),
+                      backgroundColor: MaterialStateProperty.all(errorColor),
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
-                        side:
-                            BorderSide(width: 1, color: popupButtonBorderColor),
+                        side: BorderSide(width: 1, color: errorColor),
                         borderRadius: BorderRadius.circular(8.0),
                       ))),
-                  onPressed: () => Navigator.pop(context, false),
+                  onPressed: () => {
+                    _meetingStore.leave(),
+                    Navigator.popUntil(context, (route) => route.isFirst)
+                  },
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 8.0, vertical: 12),
+                        horizontal: 25.0, vertical: 12),
                     child: HLSTitleText(
-                        text: 'Don’t Leave', textColor: defaultColor),
-                  )),
-              ElevatedButton(
-                style: ButtonStyle(
-                    shadowColor: MaterialStateProperty.all(surfaceColor),
-                    backgroundColor: MaterialStateProperty.all(errorColor),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                      side: BorderSide(width: 1, color: errorColor),
-                      borderRadius: BorderRadius.circular(8.0),
-                    ))),
-                onPressed: () => {
-                  _meetingStore.leave(),
-                  Navigator.popUntil(context, (route) => route.isFirst)
-                },
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 25.0, vertical: 12),
-                  child: HLSTitleText(
-                    text: 'Leave',
-                    textColor: defaultColor,
+                      text: 'Leave',
+                      textColor: defaultColor,
+                    ),
                   ),
                 ),
               ),
@@ -836,50 +852,60 @@ class UtilityComponents {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              ElevatedButton(
+              Expanded(
+                child: ElevatedButton(
+                    style: ButtonStyle(
+                        shadowColor: MaterialStateProperty.all(surfaceColor),
+                        backgroundColor: MaterialStateProperty.all(
+                          Color.fromRGBO(32, 22, 23, 1),
+                        ),
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                          side: BorderSide(
+                              width: 1, color: popupButtonBorderColor),
+                          borderRadius: BorderRadius.circular(8.0),
+                        ))),
+                    onPressed: () => Navigator.pop(context),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8.0, vertical: 12),
+                      child: Text(ignoreText,
+                          style: GoogleFonts.inter(
+                              color: defaultColor,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: 0.50)),
+                    )),
+              ),
+              SizedBox(
+                width: 16,
+              ),
+              Expanded(
+                child: ElevatedButton(
                   style: ButtonStyle(
                       shadowColor: MaterialStateProperty.all(surfaceColor),
-                      backgroundColor: MaterialStateProperty.all(
-                        Color.fromRGBO(32, 22, 23, 1),
-                      ),
+                      backgroundColor: MaterialStateProperty.all(errorColor),
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
-                        side:
-                            BorderSide(width: 1, color: popupButtonBorderColor),
+                        side: BorderSide(width: 1, color: errorColor),
                         borderRadius: BorderRadius.circular(8.0),
                       ))),
-                  onPressed: () => Navigator.pop(context),
+                  onPressed: () => {
+                    _meetingStore.stopHLSStreaming(),
+                    Navigator.pop(context)
+                  },
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 8.0, vertical: 12),
-                    child: Text(ignoreText,
-                        style: GoogleFonts.inter(
-                            color: defaultColor,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            letterSpacing: 0.50)),
-                  )),
-              ElevatedButton(
-                style: ButtonStyle(
-                    shadowColor: MaterialStateProperty.all(surfaceColor),
-                    backgroundColor: MaterialStateProperty.all(errorColor),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                      side: BorderSide(width: 1, color: errorColor),
-                      borderRadius: BorderRadius.circular(8.0),
-                    ))),
-                onPressed: () =>
-                    {_meetingStore.stopHLSStreaming(), Navigator.pop(context)},
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8.0, vertical: 12),
-                  child: Text(
-                    actionText,
-                    style: GoogleFonts.inter(
-                        color: defaultColor,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        letterSpacing: 0.50),
+                    child: Text(
+                      actionText,
+                      style: GoogleFonts.inter(
+                          color: defaultColor,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: 0.50),
+                    ),
                   ),
                 ),
               ),
@@ -956,7 +982,7 @@ class UtilityComponents {
                                   color: Color.fromRGBO(107, 125, 153, 1)),
                               borderRadius: BorderRadius.circular(8.0),
                             ))),
-                        onPressed: () => Navigator.pop(context, false),
+                        onPressed: () => Navigator.pop(context, ""),
                         child: Padding(
                           padding: const EdgeInsets.symmetric(
                               horizontal: 6, vertical: 12),
