@@ -94,9 +94,6 @@ class _HMSExampleAppState extends State<HMSExampleApp> {
             return;
           }
           setState(() {});
-          Utilities.showToast(
-              "_initURIHandler 1 current:${_currentURI.toString()} init: ${widget.initialLink.toString()}",
-              time: 5);
         }
       } on PlatformException {
         debugPrint("Failed to receive initial uri");
@@ -104,7 +101,6 @@ class _HMSExampleAppState extends State<HMSExampleApp> {
         if (!mounted) {
           return;
         }
-        Utilities.showToast("Malformed URI received");
       }
     }
   }
@@ -116,7 +112,6 @@ class _HMSExampleAppState extends State<HMSExampleApp> {
           return;
         }
         if (uri == null) {
-          Utilities.showToast("_incomingLinkHandler uri is null exiting");
           return;
         }
         setState(() {
@@ -129,9 +124,6 @@ class _HMSExampleAppState extends State<HMSExampleApp> {
                 Uri.parse(Utilities.fetchMeetingLinkFromFirebase(tempUri));
           });
         }
-        Utilities.showToast(
-            "_incomingLinkHandler 2 current:${_currentURI.toString()} init: ${widget.initialLink.toString()}",
-            time: 5);
       }, onError: (Object err) {
         if (!mounted) {
           return;
@@ -152,25 +144,14 @@ class _HMSExampleAppState extends State<HMSExampleApp> {
       setState(() {
         _currentURI = dynamicLinkData.link;
       });
-      Utilities.showToast(
-          "initDynamicLinks 3 current:${_currentURI.toString()} init: ${widget.initialLink.toString()}",
-          time: 5);
     }).onError((error) {
       print('onLink error');
       print(error.message);
     });
 
     if (widget.initialLink != null) {
-      Utilities.showToast("Current URI is ${_currentURI.toString()}");
       _currentURI = widget.initialLink;
       setState(() {});
-      Utilities.showToast(
-          "initialLink initialLink 4 Current:${_currentURI.toString()} Init: ${widget.initialLink.toString()}",
-          time: 5);
-    } else {
-      Utilities.showToast(
-          "initialLink null 5 current:${_currentURI.toString()} init: ${widget.initialLink.toString()}",
-          time: 5);
     }
   }
 
@@ -229,7 +210,6 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    Utilities.showToast("DeepLink url is ${widget.deepLinkURL}", time: 5);
     logger.getCustomLogger();
     _initPackageInfo();
     getData();
