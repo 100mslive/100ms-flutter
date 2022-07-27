@@ -13,6 +13,7 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/meeting/hms_sdk_interactor.dart';
 import 'package:hmssdk_flutter_example/meeting/peer_track_node.dart';
 import 'package:hmssdk_flutter_example/service/room_service.dart';
+import 'package:video_player/video_player.dart';
 
 class MeetingStore extends ChangeNotifier
     with WidgetsBindingObserver
@@ -134,6 +135,8 @@ class MeetingStore extends ChangeNotifier
   bool isRaisedHand = false;
 
   int trackChange = -1;
+
+  VideoPlayerController? hlsVideoController;
 
   Future<bool> join(String user, String roomUrl) async {
     List<String?>? token =
@@ -1363,6 +1366,14 @@ class MeetingStore extends ChangeNotifier
       return;
     }
     if (state == AppLifecycleState.resumed) {
+      WidgetsBinding.instance!.addPostFrameCallback((_) {
+        hlsVideoController = new VideoPlayerController.network(
+          streamUrl,
+        )..initialize().then((_) {
+            hlsVideoController!.play();
+      notifyListeners();
+          });
+      });
       List<HMSPeer>? peersList = await getPeers();
 
       peersList?.forEach((element) {
@@ -1376,6 +1387,9 @@ class MeetingStore extends ChangeNotifier
         }
       });
     } else if (state == AppLifecycleState.paused) {
+      hlsVideoController?.dispose();
+      hlsVideoController = null;
+      notifyListeners();
       HMSLocalPeer? localPeer = await getLocalPeer();
       if (localPeer != null && !(localPeer.videoTrack?.isMute ?? true)) {
         stopCapturing();
