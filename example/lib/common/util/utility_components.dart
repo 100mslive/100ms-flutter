@@ -777,6 +777,7 @@ class UtilityComponents {
                     style: GoogleFonts.inter(),
                   ),
                   onPressed: () {
+                    context.read<MeetingStore>().leave();
                     Navigator.of(context).popUntil((route) => route.isFirst);
                   }),
             ],

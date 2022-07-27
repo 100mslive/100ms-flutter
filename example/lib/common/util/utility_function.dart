@@ -116,8 +116,11 @@ class Utilities {
     }
   }
 
-  static void showToast(String message) {
-    Fluttertoast.showToast(msg: message, backgroundColor: Colors.black87);
+  static void showToast(String message, {int time = 1}) {
+    Fluttertoast.showToast(
+        msg: message,
+        backgroundColor: Colors.black87,
+        timeInSecForIosWeb: time);
   }
 
   static Future<String> getStringData({required String key}) async {
@@ -143,5 +146,12 @@ class Utilities {
     final prefs = await SharedPreferences.getInstance();
 
     prefs.setInt(key, value);
+  }
+
+  static String fetchMeetingLinkFromFirebase(String url) {
+    url = url.split("deep_link_id=")[1];
+    url = url.split("&")[0];
+    url = url.replaceAll("%3A", ":").replaceAll("%2F", "/");
+    return url;
   }
 }

@@ -26,7 +26,6 @@ import './logs/custom_singleton_logger.dart';
 
 bool _initialURILinkHandled = false;
 StreamSubscription? _streamSubscription;
-Uri? _currentURI;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,15 +35,16 @@ void main() async {
   Provider.debugCheckInvalidValueType = null;
 
   // Get any initial links
-  final PendingDynamicLinkData? initialLink = await FirebaseDynamicLinks.instance.getInitialLink();
-  _currentURI = initialLink?.link;
+  final PendingDynamicLinkData? initialLink =
+      await FirebaseDynamicLinks.instance.getInitialLink();
 
-  runZonedGuarded(
-      () => runApp(HMSExampleApp()), FirebaseCrashlytics.instance.recordError);
+  runZonedGuarded(() => runApp(HMSExampleApp(initialLink: initialLink?.link)),
+      FirebaseCrashlytics.instance.recordError);
 }
 
 class HMSExampleApp extends StatefulWidget {
-  HMSExampleApp({Key? key}) : super(key: key);
+  final Uri? initialLink;
+  HMSExampleApp({Key? key, this.initialLink}) : super(key: key);
 
   @override
   _HMSExampleAppState createState() => _HMSExampleAppState();
@@ -54,6 +54,7 @@ class HMSExampleApp extends StatefulWidget {
 
 class _HMSExampleAppState extends State<HMSExampleApp> {
   ThemeMode _themeMode = ThemeMode.dark;
+  Uri? _currentURI;
   bool isDarkMode =
       WidgetsBinding.instance?.window.platformBrightness == Brightness.dark;
 
@@ -71,7 +72,6 @@ class _HMSExampleAppState extends State<HMSExampleApp> {
     dividerColor: Colors.white54,
   );
 
-
   @override
   void initState() {
     super.initState();
@@ -85,7 +85,7 @@ class _HMSExampleAppState extends State<HMSExampleApp> {
     if (!_initialURILinkHandled) {
       _initialURILinkHandled = true;
       try {
-        if (_currentURI != null) {
+        if (widget.initialLink != null) {
           return;
         }
         _currentURI = await getInitialUri();
@@ -94,6 +94,9 @@ class _HMSExampleAppState extends State<HMSExampleApp> {
             return;
           }
           setState(() {});
+          Utilities.showToast(
+              "_initURIHandler 1 current:${_currentURI.toString()} init: ${widget.initialLink.toString()}",
+              time: 5);
         }
       } on PlatformException {
         debugPrint("Failed to receive initial uri");
@@ -112,33 +115,63 @@ class _HMSExampleAppState extends State<HMSExampleApp> {
         if (!mounted) {
           return;
         }
-
+        if (uri == null) {
+          Utilities.showToast("_incomingLinkHandler uri is null exiting");
+          return;
+        }
         setState(() {
           _currentURI = uri;
         });
+        String tempUri = uri.toString();
+        if (tempUri.contains("deep_link_id")) {
+          setState(() {
+            _currentURI =
+                Uri.parse(Utilities.fetchMeetingLinkFromFirebase(tempUri));
+          });
+        }
+        Utilities.showToast(
+            "_incomingLinkHandler 2 current:${_currentURI.toString()} init: ${widget.initialLink.toString()}",
+            time: 5);
       }, onError: (Object err) {
         if (!mounted) {
           return;
         }
-        setState(() {
-          _currentURI = null;
-        });
       });
     }
   }
 
   Future<void> initDynamicLinks() async {
-    FirebaseDynamicLinks.instance.onLink.listen((dynamicLinkData) {
+    FirebaseDynamicLinks.instance.onLink
+        .listen((PendingDynamicLinkData dynamicLinkData) {
       if (!mounted) {
+        return;
+      }
+      if (dynamicLinkData.link.toString().length == 0) {
         return;
       }
       setState(() {
         _currentURI = dynamicLinkData.link;
       });
+      Utilities.showToast(
+          "initDynamicLinks 3 current:${_currentURI.toString()} init: ${widget.initialLink.toString()}",
+          time: 5);
     }).onError((error) {
       print('onLink error');
       print(error.message);
     });
+
+    if (widget.initialLink != null) {
+      Utilities.showToast("Current URI is ${_currentURI.toString()}");
+      _currentURI = widget.initialLink;
+      setState(() {});
+      Utilities.showToast(
+          "initialLink initialLink 4 Current:${_currentURI.toString()} Init: ${widget.initialLink.toString()}",
+          time: 5);
+    } else {
+      Utilities.showToast(
+          "initialLink null 5 current:${_currentURI.toString()} init: ${widget.initialLink.toString()}",
+          time: 5);
+    }
   }
 
   @override
@@ -196,14 +229,19 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    Utilities.showToast("DeepLink url is ${widget.deepLinkURL}", time: 5);
     logger.getCustomLogger();
     _initPackageInfo();
     getData();
   }
 
   void getData() async {
-    meetingLinkController.text =
-        await Utilities.getStringData(key: 'meetingLink');
+    String savedMeetingUrl = await Utilities.getStringData(key: 'meetingLink');
+    if (savedMeetingUrl.isNotEmpty) {
+      meetingLinkController.text = savedMeetingUrl;
+    } else {
+      meetingLinkController.text = widget.deepLinkURL ?? "";
+    }
     int index = await Utilities.getIntData(key: 'mode');
     mode[index] = true;
     mode[1 - index] = false;
@@ -239,7 +277,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void didUpdateWidget(covariant HomePage oldWidget) {
-    // TODO: implement didUpdateWidget
     if (widget.deepLinkURL != null) {
       meetingLinkController.text = widget.deepLinkURL!;
     }
@@ -253,14 +290,18 @@ class _HomePageState extends State<HomePage> {
     Utilities.saveIntData(key: "mode", value: mode[0] == true ? 0 : 1);
     FocusManager.instance.primaryFocus?.unfocus();
     Utilities.setRTMPUrl(meetingLinkController.text);
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (_) => PreviewDetails(
-                  meetingLink: meetingLinkController.text.trim(),
-                  meetingFlow:
-                      mode[0] ? MeetingFlow.meeting : MeetingFlow.hlsStreaming,
-                )));
+    MeetingFlow flow = Utilities.deriveFlow(meetingLinkController.text.trim());
+    if (flow == MeetingFlow.meeting || flow == MeetingFlow.hlsStreaming) {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (_) => PreviewDetails(
+                    meetingLink: meetingLinkController.text.trim(),
+                    meetingFlow: flow,
+                  )));
+    } else {
+      Utilities.showToast("Please enter valid url");
+    }
   }
 
   @override
@@ -439,30 +480,30 @@ class _HomePageState extends State<HomePage> {
                               height: 1.5,
                               fontSize: 14,
                               fontWeight: FontWeight.w400)),
-                      ToggleButtons(
-                          key: Key('mode_toggle_button'),
-                          selectedColor: hmsdefaultColor,
-                          selectedBorderColor: hmsdefaultColor,
-                          borderRadius: BorderRadius.circular(10),
-                          textStyle: GoogleFonts.inter(
-                              color: defaultColor,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w600),
-                          children: [Text(" Meeting "), Text("HLS")],
-                          onPressed: (int index) {
-                            setState(() {
-                              for (int buttonIndex = 0;
-                                  buttonIndex < mode.length;
-                                  buttonIndex++) {
-                                if (buttonIndex == index) {
-                                  mode[buttonIndex] = true;
-                                } else {
-                                  mode[buttonIndex] = false;
-                                }
-                              }
-                            });
-                          },
-                          isSelected: mode)
+                      // ToggleButtons(
+                      //     key: Key('mode_toggle_button'),
+                      //     selectedColor: hmsdefaultColor,
+                      //     selectedBorderColor: hmsdefaultColor,
+                      //     borderRadius: BorderRadius.circular(10),
+                      //     textStyle: GoogleFonts.inter(
+                      //         color: defaultColor,
+                      //         fontSize: 12,
+                      //         fontWeight: FontWeight.w600),
+                      //     children: [Text(" Meeting "), Text("HLS")],
+                      //     onPressed: (int index) {
+                      //       setState(() {
+                      //         for (int buttonIndex = 0;
+                      //             buttonIndex < mode.length;
+                      //             buttonIndex++) {
+                      //           if (buttonIndex == index) {
+                      //             mode[buttonIndex] = true;
+                      //           } else {
+                      //             mode[buttonIndex] = false;
+                      //           }
+                      //         }
+                      //       });
+                      //     },
+                      //     isSelected: mode)
                     ],
                   ),
                 ),
