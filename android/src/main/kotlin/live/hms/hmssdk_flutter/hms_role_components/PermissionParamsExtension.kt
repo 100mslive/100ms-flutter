@@ -7,13 +7,14 @@ class PermissionParamsExtension {
         fun toDictionary(permissionsParams: PermissionsParams?):HashMap<String,Any>?{
             val args=HashMap<String,Any>()
             if(permissionsParams==null)return null
-            args.put("un_mute",permissionsParams.unmute)
-            args.put("change_role",permissionsParams.changeRole)
-            args.put("end_room",permissionsParams.endRoom)
-            args.put("mute",permissionsParams.mute)
-            args.put("change_role_force",permissionsParams.changeRoleForce)
-            args.put("remove_others",permissionsParams.removeOthers)
-            args.put("stop_presentation",permissionsParams.recording)
+            args["un_mute"] = permissionsParams.unmute
+            args["change_role"] = permissionsParams.changeRole
+            args["end_room"] = permissionsParams.endRoom
+            args["mute"] = permissionsParams.mute
+            args["change_role_force"] = permissionsParams.changeRoleForce
+            args["remove_others"] = permissionsParams.removeOthers
+            args["stop_presentation"] = permissionsParams.recording
+            args["streaming"] = permissionsParams.streaming
             return args
         }
     }
