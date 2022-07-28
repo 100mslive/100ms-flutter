@@ -559,11 +559,11 @@ class HMSSDK {
   /// You can set a custom [metadata] for the HLS Stream
   /// [hmsActionResultListener] is callback whose [HMSActionResultListener.onSuccess] will be called when the the action completes successfully.
   void startHlsStreaming(
-      {required HMSHLSConfig hmshlsConfig,
+      {HMSHLSConfig? hmshlsConfig,
       HMSActionResultListener? hmsActionResultListener}) async {
     var result = await PlatformService.invokeMethod(
         PlatformMethod.startHlsStreaming,
-        arguments: hmshlsConfig.toMap());
+        arguments: hmshlsConfig?.toMap());
     if (hmsActionResultListener != null) {
       if (result == null)
         hmsActionResultListener.onSuccess(

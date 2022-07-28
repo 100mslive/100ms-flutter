@@ -350,8 +350,10 @@ class MeetingStore extends ChangeNotifier
 
   void startHLSStreaming(
       String meetingUrl, bool singleFile, bool videoOnDemand) {
-    _hmsSDKInteractor.startHLSStreaming(meetingUrl, this,
-        singleFilePerLayer: singleFile, enableVOD: videoOnDemand);
+    _hmsSDKInteractor.startHLSStreaming(this,
+        meetingUrl: meetingUrl,
+        singleFilePerLayer: singleFile,
+        enableVOD: videoOnDemand);
   }
 
   void stopHLSStreaming() {
@@ -1371,7 +1373,7 @@ class MeetingStore extends ChangeNotifier
           streamUrl,
         )..initialize().then((_) {
             hlsVideoController!.play();
-      notifyListeners();
+            notifyListeners();
           });
       });
       List<HMSPeer>? peersList = await getPeers();

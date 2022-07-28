@@ -232,9 +232,10 @@ class HMSSDKInteractor {
         name: name, hmsActionResultListener: hmsActionResultListener);
   }
 
-  void startHLSStreaming(
-      String meetingUrl, HMSActionResultListener hmsActionResultListener,
-      {bool singleFilePerLayer = false, bool enableVOD = false}) {
+  void startHLSStreaming(HMSActionResultListener hmsActionResultListener,
+      {String? meetingUrl,
+      bool singleFilePerLayer = false,
+      bool enableVOD = false}) {
     List<HMSHLSMeetingURLVariant> hmsHlsMeetingUrls = [];
 
     hmsHlsMeetingUrls.add(HMSHLSMeetingURLVariant(
