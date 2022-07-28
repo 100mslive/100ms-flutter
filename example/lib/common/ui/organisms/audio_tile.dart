@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/audio_level_avatar.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/change_role_options.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/local_peer_tile_dialog.dart';
+import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
 import 'package:provider/provider.dart';
 
@@ -129,27 +130,54 @@ class AudioTile extends StatelessWidget {
                   }));
       },
       child: Container(
-        color: Colors.transparent,
         key: key,
         padding: EdgeInsets.all(2),
         margin: EdgeInsets.all(2),
         height: itemHeight + 110,
         width: itemWidth - 5.0,
-        child: Stack(
-          children: [
-            Center(child: AudioLevelAvatar()),
-            PeerName(),
-            HandRaise(), //bottom left
-            BRBTag(), //top right
-            NetworkIconWidget(), //top left
-            AudioMuteStatus(), //bottom center
-            RTCStatsView(isLocal: context.read<PeerTrackNode>().peer.isLocal),
-            TileBorder(
-                name: context.read<PeerTrackNode>().peer.name,
-                itemHeight: itemHeight,
-                itemWidth: itemWidth,
-                uid: context.read<PeerTrackNode>().uid)
-          ],
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: bottomSheetColor,
+        ),
+        child: Semantics(
+          label: "${context.read<PeerTrackNode>().peer.name}_audio",
+          child: Stack(
+            children: [
+              Center(child: AudioLevelAvatar()),
+              Positioned(
+                //Bottom left
+                bottom: 5,
+                left: 5,
+                child: Container(
+                  decoration: BoxDecoration(
+                      color: Color.fromRGBO(0, 0, 0, 0.9),
+                      borderRadius: BorderRadius.circular(8)),
+                  child: Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(4),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          NetworkIconWidget(),
+                          PeerName(),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              HandRaise(), //bottom left
+              BRBTag(), //top right
+              AudioMuteStatus(), //bottom center
+              RTCStatsView(isLocal: context.read<PeerTrackNode>().peer.isLocal),
+              TileBorder(
+                  name: context.read<PeerTrackNode>().peer.name,
+                  itemHeight: itemHeight,
+                  itemWidth: itemWidth,
+                  uid: context.read<PeerTrackNode>().uid)
+            ],
+          ),
         ),
       ),
     );
