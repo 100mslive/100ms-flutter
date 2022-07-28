@@ -351,19 +351,6 @@ class UtilityComponents {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      TextField(
-                        autofocus: true,
-                        controller: textController,
-                        decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(16)),
-                            ),
-                            hintText: "Enter HLS Url"),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
                       Text("Recording"),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -427,9 +414,7 @@ class UtilityComponents {
                       if (textController.text == "") {
                       } else {
                         _meetingStore.startHLSStreaming(
-                            textController.text.trim(),
-                            isSingleFileChecked,
-                            isVODChecked);
+                            isSingleFileChecked, isVODChecked);
                         Navigator.pop(context);
                       }
                     },

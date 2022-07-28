@@ -2,6 +2,7 @@
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:hmssdk_flutter_example/common/constant.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_mode.dart';
 import 'package:hmssdk_flutter_example/model/rtc_stats.dart';
@@ -137,6 +138,8 @@ class MeetingStore extends ChangeNotifier
   int trackChange = -1;
 
   VideoPlayerController? hlsVideoController;
+
+  bool hlsStreamingRetry = false;
 
   Future<bool> join(String user, String roomUrl) async {
     List<String?>? token =
@@ -348,12 +351,12 @@ class MeetingStore extends ChangeNotifier
     _hmsSDKInteractor.changeName(name: name, hmsActionResultListener: this);
   }
 
-  void startHLSStreaming(
-      String meetingUrl, bool singleFile, bool videoOnDemand) {
+  HMSHLSRecordingConfig? hmshlsRecordingConfig;
+  void startHLSStreaming(bool singleFile, bool videoOnDemand) {
+    hmshlsRecordingConfig = HMSHLSRecordingConfig(
+        singleFilePerLayer: singleFile, videoOnDemand: videoOnDemand);
     _hmsSDKInteractor.startHLSStreaming(this,
-        meetingUrl: meetingUrl,
-        singleFilePerLayer: singleFile,
-        enableVOD: videoOnDemand);
+        hmshlsRecordingConfig: hmshlsRecordingConfig!);
   }
 
   void stopHLSStreaming() {
@@ -1246,6 +1249,7 @@ class MeetingStore extends ChangeNotifier
         break;
       case HMSActionResultListenerMethod.hlsStreamingStarted:
         isHLSLoading = true;
+        hlsStreamingRetry = false;
         notifyListeners();
         break;
       case HMSActionResultListenerMethod.hlsStreamingStopped:
@@ -1336,6 +1340,16 @@ class MeetingStore extends ChangeNotifier
         break;
       case HMSActionResultListenerMethod.hlsStreamingStarted:
         Utilities.showToast("Start HLS failed");
+        print(hmsException.toMap());
+        if (!hlsStreamingRetry) {
+          _hmsSDKInteractor.startHLSStreaming(this,
+              meetingUrl: Constant.rtmpUrl,
+              hmshlsRecordingConfig: hmshlsRecordingConfig!);
+          hlsStreamingRetry = true;
+        } else {
+          Utilities.showToast("Start HLS failed");
+        }
+
         break;
       case HMSActionResultListenerMethod.hlsStreamingStopped:
         Utilities.showToast("Stop HLS failed");

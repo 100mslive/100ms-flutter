@@ -161,8 +161,9 @@ class _HLSBottomSheetState extends State<HLSBottomSheet> {
               HMSButton(
                   width: MediaQuery.of(context).size.width - 30,
                   onPressed: () => {
-                        context.read<MeetingStore>().startHLSStreaming(
-                            Constant.rtmpUrl, _isRecordingOn, false),
+                        context
+                            .read<MeetingStore>()
+                            .startHLSStreaming(_isRecordingOn, false),
                         Navigator.pop(context)
                       },
                   childWidget: Padding(

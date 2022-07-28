@@ -222,7 +222,7 @@ class _MeetingPageState extends State<MeetingPage>
                       context: context,
                       errorMessage:
                           "Error Code: ${data.item2!.code?.errorCode ?? ""} ${data.item2!.description}",
-                      errorTitle: data.item2!.message,
+                      errorTitle: data.item2!.message ?? "",
                       actionMessage: "Leave Room",
                       action: () {
                         Navigator.of(context)
