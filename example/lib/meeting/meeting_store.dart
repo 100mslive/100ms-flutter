@@ -342,9 +342,7 @@ class MeetingStore extends ChangeNotifier
   }
 
   void acceptChangeRole(HMSRoleChangeRequest hmsRoleChangeRequest) {
-    this.currentRoleChangeRequest = null;
     _hmsSDKInteractor.acceptChangeRole(hmsRoleChangeRequest, this);
-    notifyListeners();
   }
 
   void changeName({required String name}) {
@@ -652,6 +650,7 @@ class MeetingStore extends ChangeNotifier
     description = "Removed by ${hmsPeerRemovedFromPeer.peerWhoRemoved?.name}";
     peerTracks.clear();
     isRoomEnded = true;
+
     notifyListeners();
   }
 
@@ -849,8 +848,6 @@ class MeetingStore extends ChangeNotifier
     } else {
       switchAudio();
     }
-    this.hmsTrackChangeRequest = null;
-    notifyListeners();
   }
 
   void peerOperation(HMSPeer peer, HMSPeerUpdate update) {
@@ -1160,6 +1157,7 @@ class MeetingStore extends ChangeNotifier
         this.meetingMode = MeetingMode.Video;
         isScreenShareOn = false;
         isAudioShareStarted = false;
+        _hmsSDKInteractor.removeUpdateListener(this);
         setLandscapeLock(false);
         notifyListeners();
         break;

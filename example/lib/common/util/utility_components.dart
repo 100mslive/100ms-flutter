@@ -226,23 +226,24 @@ class UtilityComponents {
   }
 
   static void showRoleChangeDialog(
-      HMSRoleChangeRequest? event, BuildContext context) async {
-    event = event as HMSRoleChangeRequest;
+      HMSRoleChangeRequest event, BuildContext context) async {
     await showDialog(
         barrierDismissible: false,
         context: context,
         builder: (ctx) => RoleChangeDialogOrganism(
-              meetingStore: context.read<MeetingStore>(),
-            ));
+            roleChangeRequest: event,
+            meetingStore: context.read<MeetingStore>()));
   }
 
-  static showTrackChangeDialog(BuildContext context) async {
+  static showTrackChangeDialog(
+      BuildContext context, HMSTrackChangeRequest trackChangeRequest) async {
     MeetingStore _meetingStore = context.read<MeetingStore>();
     await showDialog(
         barrierDismissible: false,
         context: context,
         builder: (ctx) => TrackChangeDialogOrganism(
-              meetingStore: _meetingStore,
+              trackChangeRequest: trackChangeRequest,
+              meetingStore: context.read<MeetingStore>(),
               isAudioModeOn: _meetingStore.meetingMode == MeetingMode.Audio,
             ));
   }

@@ -1,6 +1,7 @@
 // Package imports
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 // Project imports
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
@@ -8,9 +9,10 @@ import 'package:hmssdk_flutter_example/hls-streaming/util/hls_title_text.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 
 class RoleChangeDialogOrganism extends StatefulWidget {
+  final HMSRoleChangeRequest roleChangeRequest;
   final MeetingStore meetingStore;
   const RoleChangeDialogOrganism(
-      {required this.meetingStore})
+      {required this.roleChangeRequest, required this.meetingStore})
       : super();
 
   @override
@@ -22,9 +24,9 @@ class _RoleChangeDialogOrganismState extends State<RoleChangeDialogOrganism> {
   @override
   Widget build(BuildContext context) {
     String message = "‘" +
-        (widget.meetingStore.currentRoleChangeRequest!.suggestedBy?.name ?? "Anonymus") +
+        (widget.roleChangeRequest.suggestedBy?.name ?? "Anonymus") +
         "’ requested to change your role to ‘" +
-        widget.meetingStore.currentRoleChangeRequest!.suggestedRole.name +
+        widget.roleChangeRequest.suggestedRole.name +
         "’";
     return AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -63,7 +65,6 @@ class _RoleChangeDialogOrganismState extends State<RoleChangeDialogOrganism> {
                 child: HLSTitleText(text: 'Reject', textColor: defaultColor),
               ),
               onPressed: () {
-                widget.meetingStore.currentRoleChangeRequest = null;
                 Navigator.pop(context);
               },
             ),
@@ -85,7 +86,7 @@ class _RoleChangeDialogOrganismState extends State<RoleChangeDialogOrganism> {
                 ),
               ),
               onPressed: () {
-                widget.meetingStore.acceptChangeRole(widget.meetingStore.currentRoleChangeRequest!);
+                widget.meetingStore.acceptChangeRole(widget.roleChangeRequest);
                 Navigator.pop(context);
               },
             ),
