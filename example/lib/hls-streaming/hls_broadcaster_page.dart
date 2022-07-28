@@ -138,14 +138,14 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                   Tuple2(meetingStore.isRoomEnded, meetingStore.hmsException),
               builder: (_, data, __) {
                 if (data.item2 != null &&
-                    ((data.item2?.isTerminal ?? false) ||
-                        data.item2?.code?.errorCode == 2000)) {
+                    (data.item2?.code?.errorCode == 1003 ||
+                        data.item2?.code?.errorCode == 2000 || data.item2?.code?.errorCode == 4005)) {
                   WidgetsBinding.instance?.addPostFrameCallback((_) {
                     UtilityComponents.showErrorDialog(
                         context: context,
                         errorMessage:
                             "Error Code: ${data.item2!.code?.errorCode ?? ""} ${data.item2!.description}",
-                        errorTitle: data.item2!.message,
+                        errorTitle: data.item2!.message ?? "",
                         actionMessage: "Leave Room",
                         action: () {
                           Navigator.of(context)
@@ -891,10 +891,15 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                 meetingStore.currentRoleChangeRequest,
                             builder: (_, roleChangeRequest, __) {
                               if (roleChangeRequest != null) {
+                                HMSRoleChangeRequest currentRequest =
+                                    roleChangeRequest;
+                                context
+                                    .read<MeetingStore>()
+                                    .currentRoleChangeRequest = null;
                                 WidgetsBinding.instance!
                                     .addPostFrameCallback((_) {
                                   UtilityComponents.showRoleChangeDialog(
-                                      roleChangeRequest, context);
+                                      currentRequest, context);
                                 });
                               }
                               return SizedBox();
@@ -904,10 +909,15 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                 meetingStore.hmsTrackChangeRequest,
                             builder: (_, hmsTrackChangeRequest, __) {
                               if (hmsTrackChangeRequest != null) {
+                                HMSTrackChangeRequest currentRequest =
+                                    hmsTrackChangeRequest;
+                                context
+                                    .read<MeetingStore>()
+                                    .hmsTrackChangeRequest = null;
                                 WidgetsBinding.instance!
                                     .addPostFrameCallback((_) {
                                   UtilityComponents.showTrackChangeDialog(
-                                      context);
+                                      context, currentRequest);
                                 });
                               }
                               return SizedBox();
@@ -917,6 +927,9 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                 meetingStore.showAudioDeviceChangePopup,
                             builder: (_, showAudioDeviceChangePopup, __) {
                               if (showAudioDeviceChangePopup) {
+                                context
+                                    .read<MeetingStore>()
+                                    .showAudioDeviceChangePopup = false;
                                 WidgetsBinding.instance!
                                     .addPostFrameCallback((_) {
                                   showDialog(
@@ -936,9 +949,6 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                             },
                                           ));
                                 });
-                                context
-                                    .read<MeetingStore>()
-                                    .showAudioDeviceChangePopup = false;
                               }
                               return SizedBox();
                             }),

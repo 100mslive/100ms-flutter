@@ -2,6 +2,7 @@
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:hmssdk_flutter_example/common/constant.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_mode.dart';
 import 'package:hmssdk_flutter_example/model/rtc_stats.dart';
@@ -137,6 +138,8 @@ class MeetingStore extends ChangeNotifier
   int trackChange = -1;
 
   VideoPlayerController? hlsVideoController;
+
+  bool hlsStreamingRetry = false;
 
   Future<bool> join(String user, String roomUrl) async {
     List<String?>? token =
@@ -339,19 +342,19 @@ class MeetingStore extends ChangeNotifier
   }
 
   void acceptChangeRole(HMSRoleChangeRequest hmsRoleChangeRequest) {
-    this.currentRoleChangeRequest = null;
     _hmsSDKInteractor.acceptChangeRole(hmsRoleChangeRequest, this);
-    notifyListeners();
   }
 
   void changeName({required String name}) {
     _hmsSDKInteractor.changeName(name: name, hmsActionResultListener: this);
   }
 
-  void startHLSStreaming(
-      String meetingUrl, bool singleFile, bool videoOnDemand) {
-    _hmsSDKInteractor.startHLSStreaming(meetingUrl, this,
-        singleFilePerLayer: singleFile, enableVOD: videoOnDemand);
+  HMSHLSRecordingConfig? hmshlsRecordingConfig;
+  void startHLSStreaming(bool singleFile, bool videoOnDemand) {
+    hmshlsRecordingConfig = HMSHLSRecordingConfig(
+        singleFilePerLayer: singleFile, videoOnDemand: videoOnDemand);
+    _hmsSDKInteractor.startHLSStreaming(this,
+        hmshlsRecordingConfig: hmshlsRecordingConfig!);
   }
 
   void stopHLSStreaming() {
@@ -647,6 +650,7 @@ class MeetingStore extends ChangeNotifier
     description = "Removed by ${hmsPeerRemovedFromPeer.peerWhoRemoved?.name}";
     peerTracks.clear();
     isRoomEnded = true;
+
     notifyListeners();
   }
 
@@ -844,8 +848,6 @@ class MeetingStore extends ChangeNotifier
     } else {
       switchAudio();
     }
-    this.hmsTrackChangeRequest = null;
-    notifyListeners();
   }
 
   void peerOperation(HMSPeer peer, HMSPeerUpdate update) {
@@ -1155,6 +1157,7 @@ class MeetingStore extends ChangeNotifier
         this.meetingMode = MeetingMode.Video;
         isScreenShareOn = false;
         isAudioShareStarted = false;
+        _hmsSDKInteractor.removeUpdateListener(this);
         setLandscapeLock(false);
         notifyListeners();
         break;
@@ -1244,6 +1247,7 @@ class MeetingStore extends ChangeNotifier
         break;
       case HMSActionResultListenerMethod.hlsStreamingStarted:
         isHLSLoading = true;
+        hlsStreamingRetry = false;
         notifyListeners();
         break;
       case HMSActionResultListenerMethod.hlsStreamingStopped:
@@ -1334,6 +1338,16 @@ class MeetingStore extends ChangeNotifier
         break;
       case HMSActionResultListenerMethod.hlsStreamingStarted:
         Utilities.showToast("Start HLS failed");
+        print(hmsException.toMap());
+        if (!hlsStreamingRetry) {
+          _hmsSDKInteractor.startHLSStreaming(this,
+              meetingUrl: Constant.streamingUrl,
+              hmshlsRecordingConfig: hmshlsRecordingConfig!);
+          hlsStreamingRetry = true;
+        } else {
+          Utilities.showToast("Start HLS failed");
+        }
+
         break;
       case HMSActionResultListenerMethod.hlsStreamingStopped:
         Utilities.showToast("Stop HLS failed");
@@ -1371,7 +1385,7 @@ class MeetingStore extends ChangeNotifier
           streamUrl,
         )..initialize().then((_) {
             hlsVideoController!.play();
-      notifyListeners();
+            notifyListeners();
           });
       });
       List<HMSPeer>? peersList = await getPeers();

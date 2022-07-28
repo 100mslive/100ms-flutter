@@ -10,10 +10,13 @@ import 'package:hmssdk_flutter_example/hls-streaming/util/hls_title_text.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 
 class TrackChangeDialogOrganism extends StatefulWidget {
+  final HMSTrackChangeRequest trackChangeRequest;
   final MeetingStore meetingStore;
   final bool isAudioModeOn;
   const TrackChangeDialogOrganism(
-      {required this.meetingStore, this.isAudioModeOn = false})
+      {required this.trackChangeRequest,
+      required this.meetingStore,
+      this.isAudioModeOn = false})
       : super();
 
   @override
@@ -25,13 +28,11 @@ class _RoleChangeDialogOrganismState extends State<TrackChangeDialogOrganism> {
   @override
   Widget build(BuildContext context) {
     String message = "‘" +
-        widget.meetingStore.hmsTrackChangeRequest!.requestBy.name.toString() +
+        widget.trackChangeRequest.requestBy.name.toString() +
         "’ requested to " +
-        ((widget.meetingStore.hmsTrackChangeRequest!.mute)
-            ? "mute"
-            : "unmute") +
+        ((widget.trackChangeRequest.mute) ? "mute" : "unmute") +
         " your ‘" +
-        ((widget.meetingStore.hmsTrackChangeRequest!.track.kind ==
+        ((widget.trackChangeRequest.track.kind ==
                 HMSTrackKind.kHMSTrackKindAudio)
             ? "Audio’"
             : "Video’") +
@@ -94,11 +95,12 @@ class _RoleChangeDialogOrganismState extends State<TrackChangeDialogOrganism> {
                 ),
               ),
               onPressed: () {
-                if (widget.meetingStore.meetingMode == MeetingMode.Audio) {
-                  widget.meetingStore.setMode(MeetingMode.Audio);
+                if (widget.trackChangeRequest.track.kind ==
+                        HMSTrackKind.kHMSTrackKindVideo &&
+                    widget.isAudioModeOn) {
+                  widget.meetingStore.setMode(MeetingMode.Video);
                 }
-                if(widget.meetingStore.hmsTrackChangeRequest != null)
-                    widget.meetingStore.changeTracks(widget.meetingStore.hmsTrackChangeRequest!);
+                widget.meetingStore.changeTracks(widget.trackChangeRequest);
                 Navigator.pop(context);
               },
             ),

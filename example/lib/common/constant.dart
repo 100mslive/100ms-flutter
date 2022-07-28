@@ -20,5 +20,5 @@ class Constant {
   static String defaultRole = 'host';
   static String meetingUrl = defaultMeetingLink;
   static String meetingCode = "";
-  static String rtmpUrl = "";
+  static String streamingUrl = "";
 }

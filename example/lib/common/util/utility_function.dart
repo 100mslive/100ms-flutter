@@ -71,7 +71,7 @@ class Utilities {
     if (index != -1) {
       urlSplit[index] = "preview";
     }
-    Constant.rtmpUrl = urlSplit.join('/') + "?token=beam_recording";
+    Constant.streamingUrl = urlSplit.join('/') + "?skip_preview=true";
   }
 
   static Future<bool> getPermissions() async {

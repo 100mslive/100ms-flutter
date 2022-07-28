@@ -226,23 +226,24 @@ class UtilityComponents {
   }
 
   static void showRoleChangeDialog(
-      HMSRoleChangeRequest? event, BuildContext context) async {
-    event = event as HMSRoleChangeRequest;
+      HMSRoleChangeRequest event, BuildContext context) async {
     await showDialog(
         barrierDismissible: false,
         context: context,
         builder: (ctx) => RoleChangeDialogOrganism(
-              meetingStore: context.read<MeetingStore>(),
-            ));
+            roleChangeRequest: event,
+            meetingStore: context.read<MeetingStore>()));
   }
 
-  static showTrackChangeDialog(BuildContext context) async {
+  static showTrackChangeDialog(
+      BuildContext context, HMSTrackChangeRequest trackChangeRequest) async {
     MeetingStore _meetingStore = context.read<MeetingStore>();
     await showDialog(
         barrierDismissible: false,
         context: context,
         builder: (ctx) => TrackChangeDialogOrganism(
-              meetingStore: _meetingStore,
+              trackChangeRequest: trackChangeRequest,
+              meetingStore: context.read<MeetingStore>(),
               isAudioModeOn: _meetingStore.meetingMode == MeetingMode.Audio,
             ));
   }
@@ -337,7 +338,7 @@ class UtilityComponents {
 
   static showHLSDialog({required BuildContext context}) async {
     TextEditingController textController = TextEditingController();
-    textController.text = Constant.rtmpUrl;
+    textController.text = Constant.streamingUrl;
     bool isSingleFileChecked = false, isVODChecked = false;
     MeetingStore _meetingStore = context.read<MeetingStore>();
     await showDialog(
@@ -351,19 +352,6 @@ class UtilityComponents {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      TextField(
-                        autofocus: true,
-                        controller: textController,
-                        decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(16)),
-                            ),
-                            hintText: "Enter HLS Url"),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
                       Text("Recording"),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -427,9 +415,7 @@ class UtilityComponents {
                       if (textController.text == "") {
                       } else {
                         _meetingStore.startHLSStreaming(
-                            textController.text.trim(),
-                            isSingleFileChecked,
-                            isVODChecked);
+                            isSingleFileChecked, isVODChecked);
                         Navigator.pop(context);
                       }
                     },
@@ -945,7 +931,7 @@ class UtilityComponents {
                       textInputAction: TextInputAction.done,
                       onSubmitted: (value) => (textController.text == "")
                           ? Utilities.showToast("Name can't be empty")
-                          : Navigator.pop(context, textController.text),
+                          : Navigator.pop(context, textController.text.trim()),
                       autofocus: true,
                       controller: textController,
                       decoration: InputDecoration(
@@ -1010,7 +996,7 @@ class UtilityComponents {
                             Utilities.showToast("Name can't be empty"),
                           }
                         else
-                          {Navigator.pop(context, textController.text)}
+                          {Navigator.pop(context, textController.text.trim())}
                       },
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
