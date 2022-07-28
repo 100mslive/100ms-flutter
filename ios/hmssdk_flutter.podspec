@@ -5,7 +5,7 @@ Pod::Spec.new do |s|
   s.summary          = 'The Flutter plugin for 100ms SDK'
   s.description      = <<-DESC
   A Flutter Project for 100ms SDK.
-                       DESC
+                      DESC
   s.homepage         = 'http://100ms.live'
   s.license          = { :file => '../LICENSE' }
   s.author           = { 'Yogesh Singh' => 'yogesh@100ms.live' }
