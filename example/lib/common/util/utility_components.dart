@@ -931,7 +931,7 @@ class UtilityComponents {
                       textInputAction: TextInputAction.done,
                       onSubmitted: (value) => (textController.text == "")
                           ? Utilities.showToast("Name can't be empty")
-                          : Navigator.pop(context, textController.text),
+                          : Navigator.pop(context, textController.text.trim()),
                       autofocus: true,
                       controller: textController,
                       decoration: InputDecoration(
