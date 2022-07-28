@@ -996,7 +996,7 @@ class UtilityComponents {
                             Utilities.showToast("Name can't be empty"),
                           }
                         else
-                          {Navigator.pop(context, textController.text)}
+                          {Navigator.pop(context, textController.text.trim())}
                       },
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
