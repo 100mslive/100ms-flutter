@@ -12,11 +12,16 @@ class  HMSPermissionExtension {
 
     static func toDictionary(_ permission: HMSPermissions) -> [String: Bool] {
         [
+            "browser_recording": permission.browserRecording ?? false,
             "change_role": permission.changeRole ?? false,
             "end_room": permission.endRoom ?? false,
-            "un_mute": permission.unmute ?? false,
+            "hls_streaming": permission.hlsStreaming ?? false,
             "mute": permission.mute ?? false,
-            "remove_others": permission.removeOthers ?? false
+            "remove_others": permission.removeOthers ?? false,
+            "rtmp_streaming":permission.rtmpStreaming ?? false,
+            "un_mute": permission.unmute ?? false,
+            
+            
         ]
     }
 }
