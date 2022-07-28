@@ -111,7 +111,7 @@ class _HMSExampleAppState extends State<HMSExampleApp> {
         if (!mounted) {
           return;
         }
-        if (uri == null) {
+        if (uri == null || !uri.toString().contains("100ms.live")) {
           return;
         }
         setState(() {
