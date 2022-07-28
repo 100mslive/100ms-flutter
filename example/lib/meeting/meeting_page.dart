@@ -163,7 +163,9 @@ class _MeetingPageState extends State<MeetingPage>
           }
           if (urls != null) {
             _meetingStore.startRtmpOrRecording(
-                meetingUrl: Constant.rtmpUrl, toRecord: false, rtmpUrls: urls);
+                meetingUrl: Constant.streamingUrl,
+                toRecord: false,
+                rtmpUrls: urls);
           }
         }
         break;
@@ -179,7 +181,7 @@ class _MeetingPageState extends State<MeetingPage>
           _meetingStore.stopRtmpAndRecording();
         } else {
           _meetingStore.startRtmpOrRecording(
-              meetingUrl: Constant.rtmpUrl, toRecord: true, rtmpUrls: []);
+              meetingUrl: Constant.streamingUrl, toRecord: true, rtmpUrls: []);
         }
         break;
       case 12:

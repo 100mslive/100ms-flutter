@@ -338,7 +338,7 @@ class UtilityComponents {
 
   static showHLSDialog({required BuildContext context}) async {
     TextEditingController textController = TextEditingController();
-    textController.text = Constant.rtmpUrl;
+    textController.text = Constant.streamingUrl;
     bool isSingleFileChecked = false, isVODChecked = false;
     MeetingStore _meetingStore = context.read<MeetingStore>();
     await showDialog(

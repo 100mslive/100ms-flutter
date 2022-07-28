@@ -1341,7 +1341,7 @@ class MeetingStore extends ChangeNotifier
         print(hmsException.toMap());
         if (!hlsStreamingRetry) {
           _hmsSDKInteractor.startHLSStreaming(this,
-              meetingUrl: Constant.rtmpUrl,
+              meetingUrl: Constant.streamingUrl,
               hmshlsRecordingConfig: hmshlsRecordingConfig!);
           hlsStreamingRetry = true;
         } else {
