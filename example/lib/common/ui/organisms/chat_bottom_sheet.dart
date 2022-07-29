@@ -99,6 +99,9 @@ class _ChatWidgetState extends State<ChatWidget> {
                                     isExpanded: true,
                                     dropdownWidth:
                                         MediaQuery.of(context).size.width * 0.6,
+                                    dropdownDecoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(8),
+                                        color: surfaceColor),
                                     buttonWidth: 120,
                                     value: valueChoose,
                                     offset: Offset(
@@ -299,6 +302,7 @@ class _ChatWidgetState extends State<ChatWidget> {
 void chatMessages(BuildContext context) {
   MeetingStore meetingStore = context.read<MeetingStore>();
   showModalBottomSheet(
+      backgroundColor: bottomSheetColor,
       context: context,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),

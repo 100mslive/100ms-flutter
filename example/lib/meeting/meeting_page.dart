@@ -245,6 +245,7 @@ class _MeetingPageState extends State<MeetingPage>
                 resizeToAvoidBottomInset: false,
                 appBar: AppBar(
                   automaticallyImplyLeading: false,
+                  backgroundColor: bottomSheetColor,
                   title: TitleBar(),
                   actions: [
                     Selector<MeetingStore,
@@ -707,6 +708,7 @@ class _MeetingPageState extends State<MeetingPage>
 
   Widget dropDownMenu() {
     return PopupMenuButton(
+      color: bottomSheetColor,
       icon: SvgPicture.asset("assets/icons/settings.svg"),
       itemBuilder: (context) {
         final meetingStore = context.read<MeetingStore>();
