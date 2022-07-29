@@ -1400,10 +1400,12 @@ class MeetingStore extends ChangeNotifier
         }
       });
     } else if (state == AppLifecycleState.paused) {
-      hlsVideoController?.dispose();
-      hlsVideoController = null;
-      notifyListeners();
       HMSLocalPeer? localPeer = await getLocalPeer();
+      if (localPeer?.role.name.contains("hls") ?? false) {
+        hlsVideoController?.dispose();
+        hlsVideoController = null;
+        notifyListeners();
+      }
       if (localPeer != null && !(localPeer.videoTrack?.isMute ?? true)) {
         stopCapturing();
       }
