@@ -245,7 +245,7 @@ class _MeetingPageState extends State<MeetingPage>
                 resizeToAvoidBottomInset: false,
                 appBar: AppBar(
                   automaticallyImplyLeading: false,
-                  backgroundColor: bottomSheetColor,
+                  backgroundColor: screenBackgroundColor,
                   title: TitleBar(),
                   actions: [
                     Selector<MeetingStore,
@@ -477,8 +477,9 @@ class _MeetingPageState extends State<MeetingPage>
     return Container(
       width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
-          color: Colors.grey.withOpacity(0.2),
-          borderRadius: BorderRadius.circular(40)),
+        color: screenBackgroundColor,
+        // borderRadius: BorderRadius.circular(40)
+      ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [

@@ -14,9 +14,6 @@ class NetworkIconWidget extends StatelessWidget {
           return networkQuality != -1
               ? Row(
                   children: [
-                    SizedBox(
-                      width: 3,
-                    ),
                     SvgPicture.asset(
                       'assets/icons/network_$networkQuality.svg',
                       height: 20,

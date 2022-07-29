@@ -180,7 +180,8 @@ class _VideoTileState extends State<VideoTile> {
                     color: bottomSheetColor,
                   ),
                   child: Semantics(
-                    label: "${context.read<PeerTrackNode>().peer.name}_video_on",
+                    label:
+                        "${context.read<PeerTrackNode>().peer.name}_video_on",
                     child: Stack(
                       children: [
                         VideoView(
@@ -189,7 +190,7 @@ class _VideoTileState extends State<VideoTile> {
                           itemHeight: widget.itemHeight,
                           itemWidth: widget.itemWidth,
                         ),
-                  
+
                         DegradeTile(
                           itemHeight: widget.itemHeight,
                           itemWidth: widget.itemWidth,
@@ -204,8 +205,7 @@ class _VideoTileState extends State<VideoTile> {
                                 borderRadius: BorderRadius.circular(8)),
                             child: Center(
                               child: Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 8.0, right: 4, top: 4, bottom: 4),
+                                padding: const EdgeInsets.all(4),
                                 child: Row(
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   mainAxisAlignment: MainAxisAlignment.center,
