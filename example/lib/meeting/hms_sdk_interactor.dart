@@ -235,9 +235,12 @@ class HMSSDKInteractor {
   void startHLSStreaming(HMSActionResultListener hmsActionResultListener,
       {String? meetingUrl,
       required HMSHLSRecordingConfig hmshlsRecordingConfig}) {
-    List<HMSHLSMeetingURLVariant> hmsHlsMeetingUrls = [];
-    hmsHlsMeetingUrls.add(HMSHLSMeetingURLVariant(
-        meetingUrl: meetingUrl, metadata: "HLS started from Flutter"));
+    List<HMSHLSMeetingURLVariant>? hmsHlsMeetingUrls;
+    if (meetingUrl != null) {
+      hmsHlsMeetingUrls = [];
+      hmsHlsMeetingUrls.add(HMSHLSMeetingURLVariant(
+          meetingUrl: meetingUrl, metadata: "HLS started from Flutter"));
+    }
     HMSHLSConfig hmshlsConfig = HMSHLSConfig(
         meetingURLVariant: hmsHlsMeetingUrls,
         hmsHLSRecordingConfig: hmshlsRecordingConfig);
