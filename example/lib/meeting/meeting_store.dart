@@ -1379,12 +1379,13 @@ class MeetingStore extends ChangeNotifier
     }
     if (state == AppLifecycleState.resumed) {
       WidgetsBinding.instance!.addPostFrameCallback((_) {
-        hlsVideoController = new VideoPlayerController.network(
-          streamUrl,
-        )..initialize().then((_) {
-            hlsVideoController!.play();
-            notifyListeners();
-          });
+        if (localPeer?.role.name.contains("hls") ?? false)
+          hlsVideoController = new VideoPlayerController.network(
+            streamUrl,
+          )..initialize().then((_) {
+              hlsVideoController!.play();
+              notifyListeners();
+            });
       });
       List<HMSPeer>? peersList = await getPeers();
 
