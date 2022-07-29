@@ -1378,8 +1378,7 @@ class MeetingStore extends ChangeNotifier
       return;
     }
     if (state == AppLifecycleState.resumed) {
-      WidgetsBinding.instance!.addPostFrameCallback((_) async {
-        HMSLocalPeer? localPeer = await getLocalPeer();
+      WidgetsBinding.instance!.addPostFrameCallback((_) {
         if (localPeer?.role.name.contains("hls") ?? false)
           hlsVideoController = new VideoPlayerController.network(
             streamUrl,
