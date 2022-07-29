@@ -33,7 +33,7 @@ class TitleBar extends StatelessWidget {
                     child: Text("🔊 $speakerName",
                         overflow: TextOverflow.clip,
                         style: GoogleFonts.inter()))
-                : Text("▼ " + Constant.meetingCode, style: GoogleFonts.inter());
+                : Text("👥 " + Constant.meetingCode, style: GoogleFonts.inter());
           }),
     );
   }

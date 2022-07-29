@@ -269,11 +269,11 @@ class _HLSParticipantSheetState extends State<HLSParticipantSheet> {
                         builder: (context, roles, _) {
                           return DropdownButton2(
                             customButton: Container(
-                              padding: EdgeInsets.only(left: 10, right: 5),
+                              padding: EdgeInsets.only(left: 10, right: 8,top: 4,bottom: 4),
                               decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10.0),
+                                  borderRadius: BorderRadius.circular(8),
                                   border: Border.all(
-                                      color: hintColor,
+                                      color: borderColor,
                                       style: BorderStyle.solid,
                                       width: 0.80)),
                               child: Row(
@@ -289,7 +289,7 @@ class _HLSParticipantSheetState extends State<HLSParticipantSheet> {
                                     maxLines: 1,
                                   ),
                                   SizedBox(
-                                    width: 3,
+                                    width: 5,
                                   ),
                                   Icon(Icons.keyboard_arrow_down),
                                 ],
@@ -299,8 +299,8 @@ class _HLSParticipantSheetState extends State<HLSParticipantSheet> {
                             dropdownWidth:
                                 MediaQuery.of(context).size.width * 0.4,
                             buttonWidth: 100,
-                            buttonHeight: 32,
-                            itemHeight: 48,
+                            buttonHeight: 35,
+                            itemHeight: 45,
                             value: valueChoose,
                             icon: Icon(Icons.keyboard_arrow_down),
                             dropdownDecoration: BoxDecoration(

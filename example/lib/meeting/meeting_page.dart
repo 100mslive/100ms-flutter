@@ -13,13 +13,14 @@ import 'package:hmssdk_flutter_example/common/ui/organisms/title_bar.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_mode.dart';
+import 'package:hmssdk_flutter_example/hls-streaming/hls_bottom_sheet.dart';
+import 'package:hmssdk_flutter_example/hls-streaming/hls_message.dart';
 import 'package:hmssdk_flutter_example/hls_viewer/hls_viewer.dart';
 import 'package:provider/provider.dart';
 
 //Project imports
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/constant.dart';
-import 'package:hmssdk_flutter_example/common/ui/organisms/chat_bottom_sheet.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
 import 'package:hmssdk_flutter_example/logs/custom_singleton_logger.dart';
@@ -137,8 +138,10 @@ class _MeetingPageState extends State<MeetingPage>
         _meetingStore.switchCamera();
         break;
       case 7:
-        String name = await UtilityComponents.showInputDialog(
-            context: context, placeholder: "Enter Name");
+        String name = await UtilityComponents.showNameChangeDialog(
+            context: context,
+            placeholder: "Enter Name",
+            prefilledValue: context.read<MeetingStore>().localPeer?.name ?? "");
         if (name.isNotEmpty) {
           _meetingStore.changeName(name: name);
         }
@@ -173,7 +176,17 @@ class _MeetingPageState extends State<MeetingPage>
         if (_meetingStore.hasHlsStarted) {
           _meetingStore.stopHLSStreaming();
         } else {
-          UtilityComponents.showHLSDialog(context: context);
+          showModalBottomSheet(
+            isScrollControlled: true,
+            backgroundColor: bottomSheetColor,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            context: context,
+            builder: (ctx) => ChangeNotifierProvider.value(
+                value: context.read<MeetingStore>(),
+                child: HLSBottomSheet(meetingLink: widget.meetingLink)),
+          );
         }
         break;
       case 11:
@@ -1035,5 +1048,18 @@ class _MeetingPageState extends State<MeetingPage>
       },
       onSelected: handleMenu,
     );
+  }
+
+  void chatMessages(BuildContext context) {
+    MeetingStore meetingStore = context.read<MeetingStore>();
+    showModalBottomSheet(
+        backgroundColor: bottomSheetColor,
+        context: context,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        builder: (ctx) => ChangeNotifierProvider.value(
+            value: meetingStore, child: HLSMessage()),
+        isScrollControlled: true);
   }
 }
