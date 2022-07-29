@@ -4,7 +4,7 @@ import '../exceptions/hms_exception_code.dart';
 class HMSException {
   final String? id;
   final HMSExceptionCode? code;
-  final String message;
+  final String? message;
 
   String description;
   String action;
@@ -25,14 +25,14 @@ class HMSException {
     HMSExceptionCode? code;
 
     if (map.containsKey('code')) {
-      code = HMSExceptionCode(errorCode: map['code'].toString());
+      code = HMSExceptionCode(errorCode: map['code']);
     }
 
     return HMSException(
         id: map["id"] ?? map['name'] ?? '',
         code: code,
         message: map['message'],
-        action: map['action'],
+        action: map['action'] ?? '',
         description: map['info'] ?? map['description'] ?? '',
         params: map['params'],
         isTerminal: map['isTerminal'] ?? false);
@@ -51,8 +51,4 @@ class HMSException {
       'isTerminal': this.params
     };
   }
-
-  String get localizedDescription => message;
-
-  Map get analyticsRepresentation => params ?? {};
 }

@@ -28,27 +28,30 @@ class HMSHLSAction {
 
 
         private fun hlsStreaming(call: MethodCall, result: Result,hmssdk:HMSSDK) {
-            val meetingUrlVariantsList = call.argument<List<Map<String,String>>>("meeting_url_variants")
-            val recordingConfig = call.argument<Map<String,Boolean>>("recording_config") ?: null
-            val meetingUrlVariant : ArrayList<HMSHLSMeetingURLVariant> = ArrayList()
-
-            meetingUrlVariantsList?.forEach {
-                meetingUrlVariant.add(
+            val meetingUrlVariantsList = call.argument<List<Map<String,String>>?>("meeting_url_variants")
+            val recordingConfig = call.argument<Map<String,Boolean>?>("recording_config")
+            var meetingUrlVariant : ArrayList<HMSHLSMeetingURLVariant>? = null
+            var hmsHLSRecordingConfig: HMSHlsRecordingConfig? = null
+            var hlsConfig: HMSHLSConfig? = null
+            if(meetingUrlVariantsList!=null) {
+                meetingUrlVariant = ArrayList()
+                meetingUrlVariantsList?.forEach {
+                    meetingUrlVariant.add(
                         HMSHLSMeetingURLVariant(
-                                meetingUrl = it["meeting_url"]!!,
-                                metadata = it["meta_data"]!!
+                            meetingUrl = it["meeting_url"]!!,
+                            metadata = it["meta_data"]!!
                         )
-                )
+                    )
+                }
             }
-
-            val hlsConfig = if(recordingConfig!=null) {
-                val hmsHLSRecordingConfig = HMSHlsRecordingConfig(
+            if(recordingConfig!=null){
+                hmsHLSRecordingConfig = HMSHlsRecordingConfig(
                     singleFilePerLayer = recordingConfig?.get("single_file_per_layer")!!,
                     videoOnDemand = recordingConfig?.get("video_on_demand")!!
                 )
-                HMSHLSConfig(meetingUrlVariant, hmsHLSRecordingConfig)
-            }else{
-                HMSHLSConfig(meetingUrlVariant)
+            }
+            if(meetingUrlVariant!=null || hmsHLSRecordingConfig!=null) {
+                hlsConfig = HMSHLSConfig(meetingUrlVariant, hmsHLSRecordingConfig)
             }
             hmssdk.startHLSStreaming(config = hlsConfig, hmsActionResultListener = HMSCommonAction.getActionListener(result))
         }

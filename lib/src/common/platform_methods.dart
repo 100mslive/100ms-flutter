@@ -132,7 +132,13 @@ enum PlatformMethod {
   ///Get track with the help of trackId
   getTrackById,
   startStatsListener,
-  removeStatsListener
+  removeStatsListener,
+  getAudioDevicesList,
+  getCurrentAudioDevice,
+  switchAudioOutput,
+  startAudioShare,
+  stopAudioShare,
+  setAudioMixingMode
 }
 
 extension PlatformMethodValues on PlatformMethod {
@@ -297,6 +303,18 @@ extension PlatformMethodValues on PlatformMethod {
         return "start_stats_listener";
       case PlatformMethod.removeStatsListener:
         return "remove_stats_listener";
+      case PlatformMethod.getAudioDevicesList:
+        return "get_audio_devices_list";
+      case PlatformMethod.getCurrentAudioDevice:
+        return "get_current_audio_device";
+      case PlatformMethod.switchAudioOutput:
+        return "switch_audio_output";
+      case PlatformMethod.startAudioShare:
+        return "start_audio_share";
+      case PlatformMethod.stopAudioShare:
+        return "stop_audio_share";
+      case PlatformMethod.setAudioMixingMode:
+        return "set_audio_mixing_mode";
       default:
         return 'unknown';
     }
@@ -467,6 +485,18 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.startStatsListener;
       case "remove_stats_listener":
         return PlatformMethod.removeStatsListener;
+      case "get_audio_devices_list":
+        return PlatformMethod.getAudioDevicesList;
+      case "get_current_audio_device":
+        return PlatformMethod.getCurrentAudioDevice;
+      case "switch_audio_output":
+        return PlatformMethod.switchAudioOutput;
+      case "start_audio_share":
+        return PlatformMethod.startAudioShare;
+      case "stop_audio_share":
+        return PlatformMethod.stopAudioShare;
+      case "set_audio_mixing_mode":
+        return PlatformMethod.setAudioMixingMode;
       default:
         return PlatformMethod.unknown;
     }

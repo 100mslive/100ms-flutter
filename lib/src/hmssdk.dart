@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter/src/manager/hms_sdk_manager.dart';
 import 'package:hmssdk_flutter/src/service/platform_service.dart';
@@ -178,24 +180,26 @@ class HMSSDK {
         arguments: {"allowed": allow});
   }
 
-  /// Get the [HMSRoom] room object which the local peer has currently joined. Returns nil if no room is joined.
+  /// Get the [HMSRoom] room object which the local peer has currently joined. Returns null if no room is joined.
   Future<HMSRoom?> getRoom() async {
     var hmsRoomMap = await PlatformService.invokeMethod(PlatformMethod.getRoom);
     if (hmsRoomMap == null) return null;
     return HMSRoom.fromMap(hmsRoomMap);
   }
 
-  /// Returns an instance of the local peer if one existed. A local peer only exists during a preview and an active call.
+  /// Returns an instance of the local peer if one existed. A local peer only exists during a preview and an active call. Returns null if no room is joined.
   Future<HMSLocalPeer?> getLocalPeer() async {
-    return HMSLocalPeer.fromMap(
-        await PlatformService.invokeMethod(PlatformMethod.getLocalPeer) as Map);
+    Map? hmsLocalPeerMap =
+        await PlatformService.invokeMethod(PlatformMethod.getLocalPeer);
+    if (hmsLocalPeerMap == null) return null;
+    return HMSLocalPeer.fromMap(hmsLocalPeerMap);
   }
 
-  /// Returns only remote peers. The peer's own instance will not be included in this. To get all peers including the local one consider getPeers or for only the local one consider getLocalPeer.
+  /// Returns only remote peers. The peer's own instance will not be included in this. To get all peers including the local one consider getPeers or for only the local one consider getLocalPeer. Returns null if no room is joined.
   Future<List<HMSPeer>?> getRemotePeers() async {
-    List peers =
+    List? peers =
         await PlatformService.invokeMethod(PlatformMethod.getRemotePeers);
-
+    if (peers == null) return null;
     List<HMSPeer> listOfRemotePeers = [];
     peers.forEach((element) {
       listOfRemotePeers.add(HMSPeer.fromMap(element as Map));
@@ -203,10 +207,10 @@ class HMSSDK {
     return listOfRemotePeers;
   }
 
-  /// Returns all peers, remote and local.
+  /// Returns all peers, remote and local. Returns null if no room is joined.
   Future<List<HMSPeer>?> getPeers() async {
-    List peers = await PlatformService.invokeMethod(PlatformMethod.getPeers);
-
+    List? peers = await PlatformService.invokeMethod(PlatformMethod.getPeers);
+    if (peers == null) return null;
     List<HMSPeer> listOfPeers = [];
     peers.forEach((element) {
       listOfPeers.add(HMSPeer.fromMap(element as Map));
@@ -555,11 +559,11 @@ class HMSSDK {
   /// You can set a custom [metadata] for the HLS Stream
   /// [hmsActionResultListener] is callback whose [HMSActionResultListener.onSuccess] will be called when the the action completes successfully.
   void startHlsStreaming(
-      {required HMSHLSConfig hmshlsConfig,
+      {HMSHLSConfig? hmshlsConfig,
       HMSActionResultListener? hmsActionResultListener}) async {
     var result = await PlatformService.invokeMethod(
         PlatformMethod.startHlsStreaming,
-        arguments: hmshlsConfig.toMap());
+        arguments: hmshlsConfig?.toMap());
     if (hmsActionResultListener != null) {
       if (result == null)
         hmsActionResultListener.onSuccess(
@@ -731,6 +735,78 @@ class HMSSDK {
   ///Method to remove Log Listener
   void removeLogListener({required HMSLogListener hmsLogListener}) {
     PlatformService.removeLogsListener(hmsLogListener);
+  }
+
+  ///Method to get available audio devices(Android Only)
+  Future<List<HMSAudioDevice>> getAudioDevicesList() async {
+    if (Platform.isAndroid) {
+      List result = await PlatformService.invokeMethod(
+          PlatformMethod.getAudioDevicesList);
+      return result
+          .map((e) => HMSAudioDeviceValues.getHMSAudioDeviceFromName(e))
+          .toList();
+    }
+    return [];
+  }
+
+  ///Method to get current audio output device(Android Only)
+  Future<HMSAudioDevice> getCurrentAudioDevice() async {
+    if (Platform.isAndroid) {
+      var result = await PlatformService.invokeMethod(
+          PlatformMethod.getCurrentAudioDevice);
+      return HMSAudioDeviceValues.getHMSAudioDeviceFromName(result);
+    }
+    return HMSAudioDevice.UNKNOWN;
+  }
+
+  ///Method to switch audio output device(Android Only)
+  void switchAudioOutput({required HMSAudioDevice audioDevice}) {
+    if (Platform.isAndroid)
+      PlatformService.invokeMethod(PlatformMethod.switchAudioOutput,
+          arguments: {"audio_device_name": audioDevice.name});
+  }
+
+  void startAudioShare(
+      {HMSActionResultListener? hmsActionResultListener,
+      HMSAudioMixingMode audioMixingMode =
+          HMSAudioMixingMode.TALK_AND_MUSIC}) async {
+    if (!Platform.isAndroid) return;
+    var result = await PlatformService.invokeMethod(
+        PlatformMethod.startAudioShare,
+        arguments: {"audio_mixing_mode": audioMixingMode.name});
+    if (hmsActionResultListener != null) {
+      if (result == null) {
+        hmsActionResultListener.onSuccess(
+            methodType: HMSActionResultListenerMethod.startAudioShare);
+      } else {
+        hmsActionResultListener.onException(
+            methodType: HMSActionResultListenerMethod.startAudioShare,
+            hmsException: HMSException.fromMap(result["error"]));
+      }
+    }
+  }
+
+  void stopAudioShare(
+      {HMSActionResultListener? hmsActionResultListener}) async {
+    if (!Platform.isAndroid) return;
+    var result =
+        await PlatformService.invokeMethod(PlatformMethod.stopAudioShare);
+    if (hmsActionResultListener != null) {
+      if (result == null) {
+        hmsActionResultListener.onSuccess(
+            methodType: HMSActionResultListenerMethod.stopAudioShare);
+      } else {
+        hmsActionResultListener.onException(
+            methodType: HMSActionResultListenerMethod.startAudioShare,
+            hmsException: HMSException.fromMap(result["error"]));
+      }
+    }
+  }
+
+  void setAudioMixingMode({required HMSAudioMixingMode audioMixingMode}) {
+    if (Platform.isAndroid)
+      PlatformService.invokeMethod(PlatformMethod.setAudioMixingMode,
+          arguments: {"audio_mixing_mode": audioMixingMode.name});
   }
 
   /// To modify local peer's audio & video track settings use the [hmsTrackSetting]. Only required for advanced use-cases.

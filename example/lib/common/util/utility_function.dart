@@ -6,9 +6,19 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hmssdk_flutter_example/common/constant.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Utilities {
+  static RegExp REGEX_EMOJI = RegExp(
+      r'(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])');
+
   static String getAvatarTitle(String name) {
+    if (name.contains(REGEX_EMOJI)) {
+      name = name.replaceAll(REGEX_EMOJI, '');
+      if (name.trim().isEmpty) {
+        return '😄';
+      }
+    }
     List<String>? parts = name.trim().split(" ");
     if (parts.length == 1) {
       name = parts[0][0];
@@ -24,6 +34,12 @@ class Utilities {
   }
 
   static Color getBackgroundColour(String name) {
+    if (name.contains(REGEX_EMOJI)) {
+      name = name.replaceAll(REGEX_EMOJI, '');
+      if (name.trim().isEmpty) {
+        return Color(0xFF6554C0);
+      }
+    }
     return Utilities
         .colors[name.toUpperCase().codeUnitAt(0) % Utilities.colors.length];
   }
@@ -41,8 +57,14 @@ class Utilities {
     return (size.height -
             viewPadding.top -
             viewPadding.bottom -
-            kToolbarHeight) /
-        (size.width - viewPadding.left - viewPadding.right);
+            kToolbarHeight -
+            kBottomNavigationBarHeight -
+            4) /
+        (size.width);
+  }
+
+  static double getHLSRatio(Size size, BuildContext context) {
+    return (size.height) / (size.width);
   }
 
   static void setRTMPUrl(String roomUrl) {
@@ -51,7 +73,7 @@ class Utilities {
     if (index != -1) {
       urlSplit[index] = "preview";
     }
-    Constant.rtmpUrl = urlSplit.join('/') + "?token=beam_recording";
+    Constant.streamingUrl = urlSplit.join('/') + "?skip_preview=true";
   }
 
   static Future<bool> getPermissions() async {
@@ -85,10 +107,10 @@ class Utilities {
 
   static MeetingFlow deriveFlow(String roomUrl) {
     final joinFlowRegex = RegExp("\.100ms\.live\/(preview|meeting)\/");
-    final hlsFlowRegex = RegExp("\.100ms\.live\/hls-streaming\/");
+    final hlsFlowRegex = RegExp("\.100ms\.live\/streaming\/");
 
     if (joinFlowRegex.hasMatch(roomUrl)) {
-      return MeetingFlow.join;
+      return MeetingFlow.meeting;
     } else if (hlsFlowRegex.hasMatch(roomUrl)) {
       return MeetingFlow.hlsStreaming;
     } else {
@@ -96,7 +118,42 @@ class Utilities {
     }
   }
 
-  static void showToast(String message) {
-    Fluttertoast.showToast(msg: message, backgroundColor: Colors.black87);
+  static void showToast(String message, {int time = 1}) {
+    Fluttertoast.showToast(
+        msg: message,
+        backgroundColor: Colors.black87,
+        timeInSecForIosWeb: time);
+  }
+
+  static Future<String> getStringData({required String key}) async {
+    final prefs = await SharedPreferences.getInstance();
+
+    return prefs.getString(key) ?? "";
+  }
+
+  static void saveStringData(
+      {required String key, required String value}) async {
+    final prefs = await SharedPreferences.getInstance();
+
+    prefs.setString(key, value);
+  }
+
+  static Future<int> getIntData({required String key}) async {
+    final prefs = await SharedPreferences.getInstance();
+
+    return prefs.getInt(key) ?? 0;
+  }
+
+  static void saveIntData({required String key, required int value}) async {
+    final prefs = await SharedPreferences.getInstance();
+
+    prefs.setInt(key, value);
+  }
+
+  static String fetchMeetingLinkFromFirebase(String url) {
+    url = url.split("deep_link_id=")[1];
+    url = url.split("&")[0];
+    url = url.replaceAll("%3A", ":").replaceAll("%2F", "/");
+    return url;
   }
 }

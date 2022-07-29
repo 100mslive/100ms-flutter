@@ -17,13 +17,13 @@ class HandRaise extends StatelessWidget {
                     padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
                     child: SvgPicture.asset(
                       "assets/icons/hand.svg",
-                      color: Colors.yellow,
-                      height: 35,
+                      color: Color.fromRGBO(250, 201, 25, 1),
+                      height: 30,
+                      semanticsLabel: "hand_raise_label",
                     ),
                   ),
-                  top: 30.0,
-                  right: 0,
-                  left: 0,
+                  top: 5,
+                  left: 5,
                 )
               : Container();
         },

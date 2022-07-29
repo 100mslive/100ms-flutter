@@ -38,6 +38,7 @@ class _ParticipantOrganismState extends State<ParticipantOrganism> {
     return Card(
       child: Container(
         padding: EdgeInsets.all(20.0),
+        color: surfaceColor,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -80,7 +81,8 @@ class _ParticipantOrganismState extends State<ParticipantOrganism> {
                           context: context,
                           builder: (_) => ChangeRoleOptionDialog(
                                 peerName: peer.name,
-                                getRoleFunction: _meetingStore!.getRoles(),
+                                roles: _meetingStore?.roles ?? [],
+                                peer: peer,
                                 changeRole: (role, forceChange) {
                                   Navigator.pop(context);
                                   _meetingStore!.changeRole(
@@ -93,7 +95,7 @@ class _ParticipantOrganismState extends State<ParticipantOrganism> {
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                     child: Container(
-                      width: width / 6,
+                      // width: width / 6,
                       padding: const EdgeInsets.all(5.0),
                       decoration: BoxDecoration(
                         color: Colors.blue,

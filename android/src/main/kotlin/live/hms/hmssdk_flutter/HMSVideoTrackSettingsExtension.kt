@@ -14,6 +14,7 @@ class HMSVideoTrackSettingsExtension {
             map["video_codec"] = getValueOfHMSVideoCodec(hmsVideoTrackSettings?.codec)!!
             map["max_bit_rate"] = hmsVideoTrackSettings?.maxBitRate!!
             map["max_frame_rate"] = hmsVideoTrackSettings.maxFrameRate
+            map["disable_auto_resize"] = hmsVideoTrackSettings.disableAutoResize
             return  map
         }
 

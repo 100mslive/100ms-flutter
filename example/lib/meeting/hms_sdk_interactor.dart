@@ -232,15 +232,15 @@ class HMSSDKInteractor {
         name: name, hmsActionResultListener: hmsActionResultListener);
   }
 
-  void startHLSStreaming(
-      String meetingUrl, HMSActionResultListener hmsActionResultListener,
-      {bool singleFilePerLayer = false, bool enableVOD = false}) {
-    List<HMSHLSMeetingURLVariant> hmsHlsMeetingUrls = [];
-
-    hmsHlsMeetingUrls.add(HMSHLSMeetingURLVariant(
-        meetingUrl: meetingUrl, metadata: "HLS started from Flutter"));
-    HMSHLSRecordingConfig hmshlsRecordingConfig = HMSHLSRecordingConfig(
-        singleFilePerLayer: singleFilePerLayer, videoOnDemand: enableVOD);
+  void startHLSStreaming(HMSActionResultListener hmsActionResultListener,
+      {String? meetingUrl,
+      required HMSHLSRecordingConfig hmshlsRecordingConfig}) {
+    List<HMSHLSMeetingURLVariant>? hmsHlsMeetingUrls;
+    if (meetingUrl != null) {
+      hmsHlsMeetingUrls = [];
+      hmsHlsMeetingUrls.add(HMSHLSMeetingURLVariant(
+          meetingUrl: meetingUrl, metadata: "HLS started from Flutter"));
+    }
     HMSHLSConfig hmshlsConfig = HMSHLSConfig(
         meetingURLVariant: hmsHlsMeetingUrls,
         hmsHLSRecordingConfig: hmshlsRecordingConfig);
@@ -275,5 +275,29 @@ class HMSSDKInteractor {
 
   void removeStatsListener(HMSStatsListener listener) {
     hmsSDK.removeStatsListener(listener: listener);
+  }
+
+  Future<List<HMSAudioDevice>> getAudioDevicesList() async {
+    return await hmsSDK.getAudioDevicesList();
+  }
+
+  Future<HMSAudioDevice> getCurrentAudioDevice() async {
+    return await hmsSDK.getCurrentAudioDevice();
+  }
+
+  void switchAudioOutput(HMSAudioDevice audioDevice) {
+    hmsSDK.switchAudioOutput(audioDevice: audioDevice);
+  }
+
+  void startAudioShare({HMSActionResultListener? hmsActionResultListener}) {
+    hmsSDK.startAudioShare(hmsActionResultListener: hmsActionResultListener);
+  }
+
+  void stopAudioShare({HMSActionResultListener? hmsActionResultListener}) {
+    hmsSDK.stopAudioShare(hmsActionResultListener: hmsActionResultListener);
+  }
+
+  void setAudioMixingMode(HMSAudioMixingMode audioMixingMode) {
+    hmsSDK.setAudioMixingMode(audioMixingMode: audioMixingMode);
   }
 }

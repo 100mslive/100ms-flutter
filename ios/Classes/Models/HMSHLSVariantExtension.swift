@@ -20,8 +20,8 @@ class HMSHLSVariantExtension {
         
         dict["hls_stream_url"] = hmshlsVariant.url.absoluteString
         
-        if let date = hmshlsVariant.startedAt {
-            dict["started_at"] = Int(date.timeIntervalSince1970)
+        if let startedAt = hmshlsVariant.startedAt {
+            dict["started_at"] = "\(startedAt)"
         }
 
         return dict

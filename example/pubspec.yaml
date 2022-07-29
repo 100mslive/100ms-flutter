@@ -25,6 +25,7 @@ dependencies:
   firebase_core: 
   firebase_analytics:
   firebase_performance:
+  firebase_dynamic_links:
   flutter_launcher_icons:
   package_info_plus: 
   logger: 
@@ -40,6 +41,8 @@ dependencies:
   google_fonts:
   fluttertoast:
   qr_code_scanner:
+  shared_preferences: 
+  uni_links:
   
 dev_dependencies:
   flutter_test:

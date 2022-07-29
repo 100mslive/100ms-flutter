@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:hmssdk_flutter_example/common/ui/organisms/user_name_dialog_organism.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
+import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
-import 'package:hmssdk_flutter_example/preview/preview_page.dart';
+import 'package:hmssdk_flutter_example/hls-streaming/util/hls_title_text.dart';
+import 'package:hmssdk_flutter_example/preview/preview_details.dart';
 import 'package:hmssdk_flutter_example/preview/preview_store.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 class QRCodeScreen extends StatefulWidget {
+  final MeetingFlow meetingFlow;
+
+  QRCodeScreen({required this.meetingFlow});
+
   @override
   State<QRCodeScreen> createState() => _QRCodeScreenState();
 }
@@ -24,32 +28,27 @@ class _QRCodeScreenState extends State<QRCodeScreen> {
       controller.pauseCamera();
       if (scanData.code != null) {
         MeetingFlow flow = Utilities.deriveFlow(scanData.code!);
-        if (flow == MeetingFlow.join) {
+        if (flow == MeetingFlow.meeting || flow == MeetingFlow.hlsStreaming) {
           Utilities.setRTMPUrl(scanData.code!);
-          String user = await showDialog(
-              context: context, builder: (_) => UserNameDialogOrganism());
-          if (user.isNotEmpty) {
-            bool res = await Utilities.getPermissions();
-            if (res) {
-              FocusManager.instance.primaryFocus?.unfocus();
-              Navigator.of(context).pushReplacement(MaterialPageRoute(
-                  builder: (_) => ListenableProvider.value(
-                        value: PreviewStore(),
-                        child: PreviewPage(
-                          roomId: scanData.code!.trim(),
-                          user: user,
-                          flow: MeetingFlow.join,
-                          mirror: true,
-                          showStats: false,
-                        ),
-                      )));
-            }
-          } else {
-            controller.resumeCamera();
-          }
+          FocusManager.instance.primaryFocus?.unfocus();
+          Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (_) => ListenableProvider.value(
+                    value: PreviewStore(),
+                    child: PreviewDetails(
+                      meetingLink: scanData.code!.trim(),
+                      meetingFlow: flow,
+                    ),
+                  )));
         } else {
-          Utilities.showToast("Invalid QR Code");
-          controller.resumeCamera();
+          bool res = await UtilityComponents.showErrorDialog(
+              context: context,
+              errorMessage: "Please scan a valid meeting URL",
+              errorTitle: "Invalid Meeting Url",
+              actionMessage: "OK",
+              action: () {
+                Navigator.pop(context, true);
+              });
+          if (res) controller.resumeCamera();
         }
       }
     });
@@ -82,15 +81,20 @@ class _QRCodeScreenState extends State<QRCodeScreen> {
                       },
                     ),
                   ),
-                  SizedBox(
-                    width: 20,
-                  ),
-                  Text(
-                    "Scan QR Code",
-                    style: GoogleFonts.inter(
-                        color: defaultColor,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 25.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          HLSTitleText(
+                            text: "Scan QR Code",
+                            textColor: subHeadingColor,
+                            letterSpacing: 0.15,
+                          ),
+                        ],
+                      ),
+                    ),
                   )
                 ],
               ),
@@ -147,12 +151,9 @@ class _QRCodeScreenState extends State<QRCodeScreen> {
                           SizedBox(
                             width: 8,
                           ),
-                          Text('Join with Link Instead',
-                              style: GoogleFonts.inter(
-                                  height: 1,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500,
-                                  color: enabledTextColor)),
+                          HLSTitleText(
+                              text: 'Join with Link Instead',
+                              textColor: enabledTextColor),
                         ],
                       ),
                     ),

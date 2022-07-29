@@ -4,26 +4,28 @@ import 'dart:async';
 //Package imports
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
+import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
+import 'package:hmssdk_flutter_example/hls-streaming/util/hls_title_text.dart';
+import 'package:hmssdk_flutter_example/preview/preview_details.dart';
 import 'package:hmssdk_flutter_example/qr_code_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:wakelock/wakelock.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:uni_links/uni_links.dart';
 
 //Project imports
-import 'package:hmssdk_flutter_example/meeting/hms_sdk_interactor.dart';
-import 'package:hmssdk_flutter_example/meeting/meeting_page.dart';
-import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
-import 'package:hmssdk_flutter_example/preview/preview_store.dart';
-import 'package:hmssdk_flutter_example/common/constant.dart';
-import 'package:hmssdk_flutter_example/common/ui/organisms/user_name_dialog_organism.dart';
-import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
-import 'package:hmssdk_flutter_example/preview/preview_page.dart';
 import './logs/custom_singleton_logger.dart';
+
+bool _initialURILinkHandled = false;
+StreamSubscription? _streamSubscription;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,12 +33,18 @@ void main() async {
   FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
   Wakelock.enable();
   Provider.debugCheckInvalidValueType = null;
-  runZonedGuarded(
-      () => runApp(HMSExampleApp()), FirebaseCrashlytics.instance.recordError);
+
+  // Get any initial links
+  final PendingDynamicLinkData? initialLink =
+      await FirebaseDynamicLinks.instance.getInitialLink();
+
+  runZonedGuarded(() => runApp(HMSExampleApp(initialLink: initialLink?.link)),
+      FirebaseCrashlytics.instance.recordError);
 }
 
 class HMSExampleApp extends StatefulWidget {
-  HMSExampleApp({Key? key}) : super(key: key);
+  final Uri? initialLink;
+  HMSExampleApp({Key? key, this.initialLink}) : super(key: key);
 
   @override
   _HMSExampleAppState createState() => _HMSExampleAppState();
@@ -46,6 +54,7 @@ class HMSExampleApp extends StatefulWidget {
 
 class _HMSExampleAppState extends State<HMSExampleApp> {
   ThemeMode _themeMode = ThemeMode.dark;
+  Uri? _currentURI;
   bool isDarkMode =
       WidgetsBinding.instance?.window.platformBrightness == Brightness.dark;
 
@@ -64,11 +73,100 @@ class _HMSExampleAppState extends State<HMSExampleApp> {
   );
 
   @override
+  void initState() {
+    super.initState();
+    _initURIHandler();
+    _incomingLinkHandler();
+    initDynamicLinks();
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+  }
+
+  Future<void> _initURIHandler() async {
+    if (!_initialURILinkHandled) {
+      _initialURILinkHandled = true;
+      try {
+        if (widget.initialLink != null) {
+          return;
+        }
+        _currentURI = await getInitialUri();
+        if (_currentURI != null) {
+          if (!mounted) {
+            return;
+          }
+          setState(() {});
+        }
+      } on PlatformException {
+        debugPrint("Failed to receive initial uri");
+      } on FormatException {
+        if (!mounted) {
+          return;
+        }
+      }
+    }
+  }
+
+  void _incomingLinkHandler() {
+    if (!kIsWeb) {
+      _streamSubscription = uriLinkStream.listen((Uri? uri) {
+        if (!mounted) {
+          return;
+        }
+        if (uri == null || !uri.toString().contains("100ms.live")) {
+          return;
+        }
+        setState(() {
+          _currentURI = uri;
+        });
+        String tempUri = uri.toString();
+        if (tempUri.contains("deep_link_id")) {
+          setState(() {
+            _currentURI =
+                Uri.parse(Utilities.fetchMeetingLinkFromFirebase(tempUri));
+          });
+        }
+      }, onError: (Object err) {
+        if (!mounted) {
+          return;
+        }
+      });
+    }
+  }
+
+  Future<void> initDynamicLinks() async {
+    FirebaseDynamicLinks.instance.onLink
+        .listen((PendingDynamicLinkData dynamicLinkData) {
+      if (!mounted) {
+        return;
+      }
+      if (dynamicLinkData.link.toString().length == 0) {
+        return;
+      }
+      setState(() {
+        _currentURI = dynamicLinkData.link;
+      });
+    }).onError((error) {
+      print('onLink error');
+      print(error.message);
+    });
+
+    if (widget.initialLink != null) {
+      _currentURI = widget.initialLink;
+      setState(() {});
+    }
+  }
+
+  @override
+  void dispose() {
+    _streamSubscription?.cancel();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    print("Current Mode is $isDarkMode");
-    print("${WidgetsBinding.instance?.window.platformBrightness}");
     return MaterialApp(
-      home: HomePage(),
+      home: HomePage(
+        deepLinkURL: _currentURI == null ? null : _currentURI.toString(),
+      ),
       theme: _lightTheme,
       darkTheme: _darkTheme,
       themeMode: _themeMode,
@@ -85,19 +183,21 @@ class _HMSExampleAppState extends State<HMSExampleApp> {
 }
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  final String? deepLinkURL;
+
+  const HomePage({Key? key, this.deepLinkURL}) : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  TextEditingController roomIdController =
-      TextEditingController(text: Constant.defaultRoomID);
+  TextEditingController meetingLinkController = TextEditingController();
   CustomLogger logger = CustomLogger();
   bool skipPreview = false;
   bool mirrorCamera = true;
   bool showStats = false;
+  List<bool> mode = [true, false]; //0-> meeting ,1 -> HLS mode
 
   PackageInfo _packageInfo = PackageInfo(
     appName: 'Unknown',
@@ -112,6 +212,19 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     logger.getCustomLogger();
     _initPackageInfo();
+    getData();
+  }
+
+  void getData() async {
+    String savedMeetingUrl = await Utilities.getStringData(key: 'meetingLink');
+    if (widget.deepLinkURL == null && savedMeetingUrl.isNotEmpty) {
+      meetingLinkController.text = savedMeetingUrl;
+    } else {
+      meetingLinkController.text = widget.deepLinkURL ?? "";
+    }
+    int index = await Utilities.getIntData(key: 'mode');
+    mode[index] = true;
+    mode[1 - index] = false;
   }
 
   Future<bool> _closeApp() {
@@ -143,11 +256,39 @@ class _HomePageState extends State<HomePage> {
   }
 
   @override
+  void didUpdateWidget(covariant HomePage oldWidget) {
+    if (widget.deepLinkURL != null) {
+      meetingLinkController.text = widget.deepLinkURL!;
+    }
+    super.didUpdateWidget(oldWidget);
+  }
+
+  void joinMeeting() {
+    if (meetingLinkController.text.isEmpty) {
+      return;
+    }
+    Utilities.saveIntData(key: "mode", value: mode[0] == true ? 0 : 1);
+    FocusManager.instance.primaryFocus?.unfocus();
+    Utilities.setRTMPUrl(meetingLinkController.text);
+    MeetingFlow flow = Utilities.deriveFlow(meetingLinkController.text.trim());
+    if (flow == MeetingFlow.meeting || flow == MeetingFlow.hlsStreaming) {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (_) => PreviewDetails(
+                    meetingLink: meetingLinkController.text.trim(),
+                    meetingFlow: flow,
+                  )));
+    } else {
+      Utilities.showToast("Please enter valid url");
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     bool isDarkMode = HMSExampleApp.of(context).isDarkMode;
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
-
     return WillPopScope(
       onWillPop: _closeApp,
       child: SafeArea(
@@ -281,20 +422,22 @@ class _HomePageState extends State<HomePage> {
                   child: Text('Experience the power of 100ms',
                       textAlign: TextAlign.center,
                       style: GoogleFonts.inter(
+                          letterSpacing: 0.25,
                           color: defaultColor,
-                          height: 1.5,
+                          height: 1.17,
                           fontSize: 34,
                           fontWeight: FontWeight.w600)),
                 ),
                 SizedBox(
-                  height: 10,
+                  height: 8,
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 27),
                   child: Text(
-                      'Jump right in by pasting a room link or\n scanning a QR code',
+                      'Jump right in by pasting a room link or scanning a QR code',
                       textAlign: TextAlign.center,
                       style: GoogleFonts.inter(
+                          letterSpacing: 0.5,
                           color: subHeadingColor,
                           height: 1.5,
                           fontSize: 16,
@@ -307,25 +450,61 @@ class _HomePageState extends State<HomePage> {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                   child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Text("Joining Link",
+                          key: Key('joining_link_text'),
                           style: GoogleFonts.inter(
                               color: defaultColor,
                               height: 1.5,
                               fontSize: 14,
                               fontWeight: FontWeight.w400)),
+                      // ToggleButtons(
+                      //     key: Key('mode_toggle_button'),
+                      //     selectedColor: hmsdefaultColor,
+                      //     selectedBorderColor: hmsdefaultColor,
+                      //     borderRadius: BorderRadius.circular(10),
+                      //     textStyle: GoogleFonts.inter(
+                      //         color: defaultColor,
+                      //         fontSize: 12,
+                      //         fontWeight: FontWeight.w600),
+                      //     children: [Text(" Meeting "), Text("HLS")],
+                      //     onPressed: (int index) {
+                      //       setState(() {
+                      //         for (int buttonIndex = 0;
+                      //             buttonIndex < mode.length;
+                      //             buttonIndex++) {
+                      //           if (buttonIndex == index) {
+                      //             mode[buttonIndex] = true;
+                      //           } else {
+                      //             mode[buttonIndex] = false;
+                      //           }
+                      //         }
+                      //       });
+                      //     },
+                      //     isSelected: mode)
                     ],
                   ),
                 ),
                 SizedBox(
                   width: width * 0.95,
                   child: TextField(
+                    key: Key('meeting_link_field'),
+                    textInputAction: TextInputAction.done,
+                    onSubmitted: (value) {
+                      joinMeeting();
+                    },
                     style: GoogleFonts.inter(),
-                    controller: roomIdController,
+                    controller: meetingLinkController,
                     keyboardType: TextInputType.url,
+                    onChanged: (value) {
+                      setState(() {});
+                    },
                     decoration: InputDecoration(
+                        focusColor: hmsdefaultColor,
                         contentPadding:
-                            EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+                            EdgeInsets.symmetric(vertical: 12, horizontal: 16),
                         fillColor: surfaceColor,
                         filled: true,
                         hintText: 'Paste the link here',
@@ -334,10 +513,15 @@ class _HomePageState extends State<HomePage> {
                             height: 1.5,
                             fontSize: 16,
                             fontWeight: FontWeight.w400),
-                        suffixIcon: IconButton(
-                          onPressed: roomIdController.clear,
-                          icon: Icon(Icons.clear),
-                        ),
+                        suffixIcon: meetingLinkController.text.isEmpty
+                            ? null
+                            : IconButton(
+                                onPressed: () {
+                                  meetingLinkController.text = "";
+                                  setState(() {});
+                                },
+                                icon: Icon(Icons.clear),
+                              ),
                         enabledBorder: OutlineInputBorder(
                             borderSide:
                                 BorderSide(color: borderColor, width: 1),
@@ -353,68 +537,26 @@ class _HomePageState extends State<HomePage> {
                 SizedBox(
                   width: width * 0.95,
                   child: ValueListenableBuilder<TextEditingValue>(
-                      valueListenable: roomIdController,
+                      valueListenable: meetingLinkController,
                       builder: (context, value, child) {
                         return ElevatedButton(
                           style: ButtonStyle(
                               shadowColor:
                                   MaterialStateProperty.all(surfaceColor),
-                              backgroundColor: roomIdController.text.isEmpty
+                              backgroundColor: meetingLinkController
+                                      .text.isEmpty
                                   ? MaterialStateProperty.all(surfaceColor)
-                                  : MaterialStateProperty.all(Colors.blue),
+                                  : MaterialStateProperty.all(hmsdefaultColor),
                               shape: MaterialStateProperty.all<
                                       RoundedRectangleBorder>(
                                   RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8.0),
                               ))),
                           onPressed: () async {
-                            if (roomIdController.text.isEmpty) {
-                              return;
-                            }
-                            Utilities.setRTMPUrl(roomIdController.text);
-                            String user = await showDialog(
-                                context: context,
-                                builder: (_) => UserNameDialogOrganism());
-                            if (user.isNotEmpty) {
-                              bool res = await Utilities.getPermissions();
-                              if (res) {
-                                FocusManager.instance.primaryFocus?.unfocus();
-                                if (skipPreview) {
-                                  HMSSDKInteractor _hmsSDKInteractor =
-                                      HMSSDKInteractor();
-                                  _hmsSDKInteractor.showStats = showStats;
-                                  _hmsSDKInteractor.mirrorCamera = mirrorCamera;
-                                  _hmsSDKInteractor.skipPreview = true;
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (_) => ListenableProvider.value(
-                                          value: MeetingStore(
-                                              hmsSDKInteractor:
-                                                  _hmsSDKInteractor),
-                                          child: MeetingPage(
-                                              roomId:
-                                                  roomIdController.text.trim(),
-                                              flow: MeetingFlow.join,
-                                              user: user,
-                                              isAudioOn: true))));
-                                } else {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (_) => ListenableProvider.value(
-                                            value: PreviewStore(),
-                                            child: PreviewPage(
-                                              roomId:
-                                                  roomIdController.text.trim(),
-                                              user: user,
-                                              flow: MeetingFlow.join,
-                                              mirror: mirrorCamera,
-                                              showStats: showStats,
-                                            ),
-                                          )));
-                                }
-                              }
-                            }
+                            joinMeeting();
                           },
                           child: Container(
-                            padding: const EdgeInsets.fromLTRB(8, 16, 8, 16),
+                            padding: const EdgeInsets.fromLTRB(8, 12, 8, 12),
                             decoration: BoxDecoration(
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(8))),
@@ -422,14 +564,13 @@ class _HomePageState extends State<HomePage> {
                               mainAxisSize: MainAxisSize.min,
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Text('Join Now',
-                                    style: GoogleFonts.inter(
-                                        color: roomIdController.text.isEmpty
-                                            ? disabledTextColor
-                                            : enabledTextColor,
-                                        height: 1,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w600)),
+                                HLSTitleText(
+                                  key: Key('join_now'),
+                                  text: 'Join Now',
+                                  textColor: meetingLinkController.text.isEmpty
+                                      ? disabledTextColor
+                                      : enabledTextColor,
+                                )
                               ],
                             ),
                           ),
@@ -452,7 +593,9 @@ class _HomePageState extends State<HomePage> {
                   width: width * 0.95,
                   child: ElevatedButton(
                     style: ButtonStyle(
-                        shadowColor: MaterialStateProperty.all(Colors.blue),
+                        shadowColor: MaterialStateProperty.all(hmsdefaultColor),
+                        backgroundColor:
+                            MaterialStateProperty.all(hmsdefaultColor),
                         shape:
                             MaterialStateProperty.all<RoundedRectangleBorder>(
                                 RoundedRectangleBorder(
@@ -461,8 +604,14 @@ class _HomePageState extends State<HomePage> {
                     onPressed: () async {
                       bool res = await Utilities.getCameraPermissions();
                       if (res) {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (_) => QRCodeScreen()));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => QRCodeScreen(
+                                      meetingFlow: mode[0]
+                                          ? MeetingFlow.meeting
+                                          : MeetingFlow.hlsStreaming,
+                                    )));
                       }
                     },
                     child: Container(
@@ -475,18 +624,16 @@ class _HomePageState extends State<HomePage> {
                         children: [
                           Icon(
                             Icons.qr_code,
-                            size: 22,
+                            size: 18,
                             color: enabledTextColor,
                           ),
                           SizedBox(
                             width: 5,
                           ),
-                          Text('Scan QR Code',
-                              style: GoogleFonts.inter(
-                                  height: 1,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
-                                  color: enabledTextColor)),
+                          HLSTitleText(
+                              key: Key("scan_qr_code"),
+                              text: 'Scan QR Code',
+                              textColor: enabledTextColor)
                         ],
                       ),
                     ),
