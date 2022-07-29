@@ -39,8 +39,7 @@ class _QRCodeScreenState extends State<QRCodeScreen> {
                       meetingFlow: flow,
                     ),
                   )));
-        } 
-        else {
+        } else {
           bool res = await UtilityComponents.showErrorDialog(
               context: context,
               errorMessage: "Please scan a valid meeting URL",

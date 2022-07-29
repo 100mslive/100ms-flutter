@@ -139,7 +139,8 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
               builder: (_, data, __) {
                 if (data.item2 != null &&
                     (data.item2?.code?.errorCode == 1003 ||
-                        data.item2?.code?.errorCode == 2000 || data.item2?.code?.errorCode == 4005)) {
+                        data.item2?.code?.errorCode == 2000 ||
+                        data.item2?.code?.errorCode == 4005)) {
                   WidgetsBinding.instance?.addPostFrameCallback((_) {
                     UtilityComponents.showErrorDialog(
                         context: context,

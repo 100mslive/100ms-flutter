@@ -97,7 +97,7 @@ class _HMSExampleAppState extends State<HMSExampleApp> {
         }
       } on PlatformException {
         debugPrint("Failed to receive initial uri");
-      } on FormatException catch (err) {
+      } on FormatException {
         if (!mounted) {
           return;
         }

@@ -286,7 +286,6 @@ class _PreviewPageState extends State<PreviewPage> {
                                                   semanticsLabel:
                                                       "network_button",
                                                 )),
-                                          
                                         ],
                                       )
                                     ],

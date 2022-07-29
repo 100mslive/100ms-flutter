@@ -44,7 +44,7 @@ class _HLSPlayerState extends State<HLSPlayer> {
         builder: (_, controller, __) {
           return Scaffold(
               body: Center(
-            child: controller?.value.isInitialized??false
+            child: controller?.value.isInitialized ?? false
                 ? AspectRatio(
                     aspectRatio: controller!.value.aspectRatio,
                     child: VideoPlayer(controller),

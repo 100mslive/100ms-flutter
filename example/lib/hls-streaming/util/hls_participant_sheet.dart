@@ -269,7 +269,8 @@ class _HLSParticipantSheetState extends State<HLSParticipantSheet> {
                         builder: (context, roles, _) {
                           return DropdownButton2(
                             customButton: Container(
-                              padding: EdgeInsets.only(left: 10, right: 8,top: 4,bottom: 4),
+                              padding: EdgeInsets.only(
+                                  left: 10, right: 8, top: 4, bottom: 4),
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(8),
                                   border: Border.all(
@@ -433,7 +434,8 @@ class _HLSParticipantSheetState extends State<HLSParticipantSheet> {
                                     meetingStore.filteredPeers[index].name,
                                     meetingStore.filteredPeers[index],
                                     meetingStore.filteredPeers[index].role.name,
-                                    meetingStore.filteredPeers[index].metadata ??
+                                    meetingStore
+                                            .filteredPeers[index].metadata ??
                                         ""),
                                 builder: (_, peer, __) {
                                   return ListTile(
@@ -445,7 +447,8 @@ class _HLSParticipantSheetState extends State<HLSParticipantSheet> {
                                                 peer.item1),
                                         radius: 16,
                                         child: Text(
-                                            Utilities.getAvatarTitle(peer.item1),
+                                            Utilities.getAvatarTitle(
+                                                peer.item1),
                                             style: GoogleFonts.inter(
                                                 fontSize: 12,
                                                 color: defaultColor,
@@ -453,7 +456,9 @@ class _HLSParticipantSheetState extends State<HLSParticipantSheet> {
                                       ),
                                       title: Text(
                                         peer.item1 +
-                                            (peer.item2.isLocal ? " (You)" : ""),
+                                            (peer.item2.isLocal
+                                                ? " (You)"
+                                                : ""),
                                         maxLines: 1,
                                         style: GoogleFonts.inter(
                                             fontSize: 16,
