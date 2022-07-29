@@ -217,7 +217,7 @@ class _HomePageState extends State<HomePage> {
 
   void getData() async {
     String savedMeetingUrl = await Utilities.getStringData(key: 'meetingLink');
-    if (savedMeetingUrl.isNotEmpty) {
+    if (widget.deepLinkURL == null && savedMeetingUrl.isNotEmpty) {
       meetingLinkController.text = savedMeetingUrl;
     } else {
       meetingLinkController.text = widget.deepLinkURL ?? "";
