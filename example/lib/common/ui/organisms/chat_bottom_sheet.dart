@@ -7,6 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/receive_message.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/send_message.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
+import 'package:hmssdk_flutter_example/hls-streaming/hls_message.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
@@ -308,6 +309,6 @@ void chatMessages(BuildContext context) {
         borderRadius: BorderRadius.circular(20),
       ),
       builder: (ctx) => ChangeNotifierProvider.value(
-          value: meetingStore, child: ChatWidget(meetingStore)),
+          value: meetingStore, child: HLSMessage()),
       isScrollControlled: true);
 }
