@@ -1337,8 +1337,6 @@ class MeetingStore extends ChangeNotifier
         Utilities.showToast("Sending direct message failed");
         break;
       case HMSActionResultListenerMethod.hlsStreamingStarted:
-        Utilities.showToast("Start HLS failed");
-        print(hmsException.toMap());
         if (!hlsStreamingRetry) {
           _hmsSDKInteractor.startHLSStreaming(this,
               meetingUrl: Constant.streamingUrl,
