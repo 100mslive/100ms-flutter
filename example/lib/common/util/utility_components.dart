@@ -549,6 +549,7 @@ class UtilityComponents {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12)),
                 backgroundColor: bottomSheetColor,
+                        contentPadding: EdgeInsets.only(left: 14, right: 10,top: 15,bottom: 15),
                 content: Container(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
@@ -564,6 +565,7 @@ class UtilityComponents {
                             hintText: placeholder),
                       ),
                       CheckboxListTile(
+                          contentPadding:EdgeInsets.zero,
                           title: Text(
                             "Recording",
                             style: GoogleFonts.inter(
@@ -582,29 +584,68 @@ class UtilityComponents {
                   ),
                 ),
                 actions: [
-                  ElevatedButton(
-                    child: Text(
-                      'Cancel',
-                      style: GoogleFonts.inter(),
-                    ),
-                    onPressed: () {
-                      Navigator.pop(context, {"url": "", "toRecord": false});
-                    },
-                  ),
-                  ElevatedButton(
-                    child: Text(
-                      'OK',
-                      style: GoogleFonts.inter(),
-                    ),
-                    onPressed: () {
-                      if (textController.text != "") {
+                      Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ElevatedButton(
+                        style: ButtonStyle(
+                            shadowColor:
+                                MaterialStateProperty.all(surfaceColor),
+                            backgroundColor:
+                                MaterialStateProperty.all(bottomSheetColor),
+                            shape: MaterialStateProperty.all<
+                                RoundedRectangleBorder>(RoundedRectangleBorder(
+                              side: BorderSide(
+                                  width: 1,
+                                  color: Color.fromRGBO(107, 125, 153, 1)),
+                              borderRadius: BorderRadius.circular(8.0),
+                            ))),
+                        onPressed: () =>                       Navigator.pop(context, {"url": "", "toRecord": false})
+,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 6, vertical: 12),
+                          child: Text('Cancel',
+                              style: GoogleFonts.inter(
+                                  color: defaultColor,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                  letterSpacing: 0.50)),
+                        )),
+                    ElevatedButton(
+                      style: ButtonStyle(
+                          shadowColor: MaterialStateProperty.all(surfaceColor),
+                          backgroundColor:
+                              MaterialStateProperty.all(hmsdefaultColor),
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                            side: BorderSide(width: 1, color: hmsdefaultColor),
+                            borderRadius: BorderRadius.circular(8.0),
+                          ))),
+                      onPressed: () => {   
+                        if (textController.text != "") {
                         Navigator.pop(context, {
                           "url": textController.text,
                           "toRecord": isRecordingEnabled
-                        });
-                      }
-                    },
-                  ),
+                        })
+                      }                 
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 6, vertical: 12),
+                        child: Text(
+                          'Start RTMP',
+                          style: GoogleFonts.inter(
+                              color: defaultColor,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: 0.50),
+                        ),
+                      ),
+                    ),
+                  ],
+                )
                 ],
               );
             }));
@@ -618,31 +659,105 @@ class UtilityComponents {
       context: context,
       builder: (ctx) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        backgroundColor: bottomSheetColor,
-        title: Text(
-          'End Room?',
-          style: GoogleFonts.inter(
-              color: iconColor, fontSize: 24, fontWeight: FontWeight.w700),
-        ),
-        actions: [
-          ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                primary: errorColor,
+        insetPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+        actionsPadding: EdgeInsets.only(right: 10, left: 10, bottom: 10),
+        backgroundColor: Color.fromRGBO(32, 22, 23, 1),
+        title: Container(
+          width: 300,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SvgPicture.asset(
+                "assets/icons/end_warning.svg",
+                width: 24,
               ),
-              onPressed: () {
-                _meetingStore.endRoom(false, "Room Ended From Flutter");
-                if (_meetingStore.isRoomEnded) {
-                  Navigator.popUntil(context, (route) => route.isFirst);
-                }
-              },
-              child: Text('Yes', style: GoogleFonts.inter(fontSize: 24))),
-          ElevatedButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: Text(
-              'Cancel',
-              style: GoogleFonts.inter(fontSize: 24),
-            ),
+              SizedBox(
+                width: 5,
+              ),
+              Text(
+                "End Room",
+                style: GoogleFonts.inter(
+                    color: errorColor,
+                    fontSize: 20,
+                    height: 24 / 20,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 0.15),
+              ),
+            ],
           ),
+        ),
+        content: Text("The session will end for everyone and all the activities will stop. You can’t undo this action.",
+            style: GoogleFonts.inter(
+                color: dialogcontentColor,
+                fontSize: 14,
+                fontWeight: FontWeight.w400,
+                height: 20 / 14,
+                letterSpacing: 0.25)),
+        actions: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: ElevatedButton(
+                    style: ButtonStyle(
+                        shadowColor: MaterialStateProperty.all(surfaceColor),
+                        backgroundColor: MaterialStateProperty.all(
+                          Color.fromRGBO(32, 22, 23, 1),
+                        ),
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                          side: BorderSide(
+                              width: 1, color: popupButtonBorderColor),
+                          borderRadius: BorderRadius.circular(8.0),
+                        ))),
+                    onPressed: () => Navigator.pop(context, false),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8.0, vertical: 12),
+                      child: Text("Don't End",
+                          style: GoogleFonts.inter(
+                              color: defaultColor,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: 0.50)),
+                    )),
+              ),
+              SizedBox(
+                width: 5,
+              ),
+              Expanded(
+                child: ElevatedButton(
+                  style: ButtonStyle(
+                      shadowColor: MaterialStateProperty.all(surfaceColor),
+                      backgroundColor: MaterialStateProperty.all(errorColor),
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                        side: BorderSide(width: 1, color: errorColor),
+                        borderRadius: BorderRadius.circular(8.0),
+                      ))),
+                  onPressed: () => {
+                    _meetingStore.endRoom(false, "Room Ended From Flutter"),
+                if (_meetingStore.isRoomEnded) {
+                  Navigator.popUntil(context, (route) => route.isFirst)
+                }
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 8.0, vertical: 12),
+                    child: Text(
+                      "End Room",
+                      style: GoogleFonts.inter(
+                          color: defaultColor,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: 0.50),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          )
         ],
       ),
     );

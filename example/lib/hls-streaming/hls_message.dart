@@ -271,7 +271,7 @@ class _HLSMessageState extends State<HLSMessage> {
                                     SizedBox(width: 18.5),
                                     SizedBox(
                                       width: MediaQuery.of(context).size.width *
-                                          0.7,
+                                          0.66,
                                       child: Text(
                                         "Messages can only be seen by people in the call and are deleted when the call ends.",
                                         style: GoogleFonts.inter(

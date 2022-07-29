@@ -57,8 +57,10 @@ class Utilities {
     return (size.height -
             viewPadding.top -
             viewPadding.bottom -
-            kToolbarHeight) /
-        (size.width - viewPadding.left - viewPadding.right);
+            kToolbarHeight -
+            kBottomNavigationBarHeight -
+            4) /
+        (size.width);
   }
 
   static double getHLSRatio(Size size, BuildContext context) {
