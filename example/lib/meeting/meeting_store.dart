@@ -247,6 +247,8 @@ class MeetingStore extends ChangeNotifier
   }
 
   void stopCapturing() {
+    isVideoOn = false;
+    notifyListeners();
     _hmsSDKInteractor.stopCapturing();
   }
 
