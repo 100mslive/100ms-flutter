@@ -1409,7 +1409,7 @@ class MeetingStore extends ChangeNotifier
         notifyListeners();
       }
       if (localPeer != null && !(localPeer.videoTrack?.isMute ?? true)) {
-        stopCapturing();
+        switchVideo();
       }
       for (PeerTrackNode peerTrackNode in peerTracks) {
         peerTrackNode.setOffScreenStatus(true);
@@ -1417,7 +1417,7 @@ class MeetingStore extends ChangeNotifier
     } else if (state == AppLifecycleState.inactive) {
       HMSLocalPeer? localPeer = await getLocalPeer();
       if (localPeer != null && !(localPeer.videoTrack?.isMute ?? true)) {
-        stopCapturing();
+        switchVideo();
       }
       for (PeerTrackNode peerTrackNode in peerTracks) {
         peerTrackNode.setOffScreenStatus(true);
