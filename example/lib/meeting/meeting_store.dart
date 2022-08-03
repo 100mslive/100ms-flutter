@@ -1346,6 +1346,7 @@ class MeetingStore extends ChangeNotifier
           hlsStreamingRetry = true;
         } else {
           Utilities.showToast("Start HLS failed");
+          hlsStreamingRetry = false;
         }
 
         break;
