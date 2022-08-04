@@ -166,7 +166,9 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         case "start_screen_share", "stop_screen_share", "is_screen_share_active":
             screenShareActions(call, result)
             
-            
+        case "start_audio_share","stop_audio_share","pause_audio_share","play_audio_share","set_audio_share_volume","audio_share_playing","audio_share_current_time","audio_share_duration":
+//            HMSAudioShareAction(call, result, hmsSDK)
+            print("audio Share start")
         default:
             result(FlutterMethodNotImplemented)
         }

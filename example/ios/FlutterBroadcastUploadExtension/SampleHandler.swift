@@ -43,7 +43,7 @@ class SampleHandler: RPBroadcastSampleHandler {
             }
             break
         case RPSampleBufferType.audioApp:
-            // Handle audio sample buffer for app audio
+            self.screenRenderer.process(sampleBuffer)
             break
         case RPSampleBufferType.audioMic:
             // Handle audio sample buffer for mic audio

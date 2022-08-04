@@ -198,10 +198,17 @@ class _MeetingPageState extends State<MeetingPage>
         }
         break;
       case 12:
-        if (_meetingStore.isAudioShareStarted)
+        if (Platform.isAndroid) if (_meetingStore.isAudioShareStarted)
           _meetingStore.stopAudioShare();
         else
           _meetingStore.startAudioShare();
+        if (Platform.isIOS) {
+          String url = await UtilityComponents.showAudioShareDialog(
+              context: context, placeholder: "Enter Url");
+          if (url != "") {
+            // _meetingStore.startAudioShare();
+          }
+        }
         break;
       case 13:
         if (_meetingStore.isAudioShareStarted)
@@ -963,35 +970,34 @@ class _MeetingPageState extends State<MeetingPage>
                   ]),
               value: 11,
             ),
-          if (Platform.isAndroid)
-            PopupMenuItem(
-              child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                        meetingStore.isAudioShareStarted
-                            ? "Stop Audio Share"
-                            : "Start Audio Share",
-                        style: GoogleFonts.inter(
-                          color: meetingStore.isAudioShareStarted
-                              ? Colors.blue
-                              : iconColor,
-                        )),
-                    Icon(
-                      Icons.music_note,
-                      color: meetingStore.isAudioShareStarted
-                          ? Colors.blue
-                          : iconColor,
-                    )
-                    // SvgPicture.asset(
-                    //   "assets/icons/record.svg",
-                    //   color: meetingStore.isAudioShareStarted
-                    //       ? Colors.blue
-                    //       : iconColor,
-                    // ),
-                  ]),
-              value: 12,
-            ),
+          PopupMenuItem(
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                      meetingStore.isAudioShareStarted
+                          ? "Stop Audio Share"
+                          : "Start Audio Share",
+                      style: GoogleFonts.inter(
+                        color: meetingStore.isAudioShareStarted
+                            ? Colors.blue
+                            : iconColor,
+                      )),
+                  Icon(
+                    Icons.music_note,
+                    color: meetingStore.isAudioShareStarted
+                        ? Colors.blue
+                        : iconColor,
+                  )
+                  // SvgPicture.asset(
+                  //   "assets/icons/record.svg",
+                  //   color: meetingStore.isAudioShareStarted
+                  //       ? Colors.blue
+                  //       : iconColor,
+                  // ),
+                ]),
+            value: 12,
+          ),
           if (Platform.isAndroid && meetingStore.isAudioShareStarted)
             PopupMenuItem(
               child: Row(

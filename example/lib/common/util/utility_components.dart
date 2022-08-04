@@ -1301,4 +1301,103 @@ class UtilityComponents {
               );
             }));
   }
+
+  static Future<String> showAudioShareDialog(
+      {context, String placeholder = "", String prefilledValue = ""}) async {
+    TextEditingController textController = TextEditingController();
+    if (prefilledValue.isNotEmpty) {
+      textController.text = prefilledValue;
+    }
+    String answer = await showDialog(
+        context: context,
+        builder: (context) => StatefulBuilder(builder: (context, setState) {
+              return AlertDialog(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12)),
+                backgroundColor: bottomSheetColor,
+                contentPadding:
+                    EdgeInsets.only(left: 14, right: 10, top: 15, bottom: 15),
+                content: Container(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      TextField(
+                        autofocus: true,
+                        controller: textController,
+                        decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(16)),
+                            ),
+                            hintText: placeholder),
+                      ),
+                    ],
+                  ),
+                ),
+                actions: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      ElevatedButton(
+                          style: ButtonStyle(
+                              shadowColor:
+                                  MaterialStateProperty.all(surfaceColor),
+                              backgroundColor:
+                                  MaterialStateProperty.all(bottomSheetColor),
+                              shape: MaterialStateProperty.all<
+                                      RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                side: BorderSide(
+                                    width: 1,
+                                    color: Color.fromRGBO(107, 125, 153, 1)),
+                                borderRadius: BorderRadius.circular(8.0),
+                              ))),
+                          onPressed: () => Navigator.pop(context, ""),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 6, vertical: 12),
+                            child: Text('Cancel',
+                                style: GoogleFonts.inter(
+                                    color: defaultColor,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                    letterSpacing: 0.50)),
+                          )),
+                      ElevatedButton(
+                        style: ButtonStyle(
+                            shadowColor:
+                                MaterialStateProperty.all(surfaceColor),
+                            backgroundColor:
+                                MaterialStateProperty.all(hmsdefaultColor),
+                            shape: MaterialStateProperty.all<
+                                RoundedRectangleBorder>(RoundedRectangleBorder(
+                              side:
+                                  BorderSide(width: 1, color: hmsdefaultColor),
+                              borderRadius: BorderRadius.circular(8.0),
+                            ))),
+                        onPressed: () => {
+                          if (textController.text != "")
+                            {Navigator.pop(context, textController.text.trim())}
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 6, vertical: 12),
+                          child: Text(
+                            'Start RTMP',
+                            style: GoogleFonts.inter(
+                                color: defaultColor,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                letterSpacing: 0.50),
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+              );
+            }));
+
+    return answer;
+  }
 }

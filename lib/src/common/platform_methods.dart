@@ -138,7 +138,13 @@ enum PlatformMethod {
   switchAudioOutput,
   startAudioShare,
   stopAudioShare,
-  setAudioMixingMode
+  setAudioMixingMode,
+  pauseAudioShare,
+  playAudioShare,
+  setAudioShareVolume,
+  audioSharePlaying,
+  audioShareCurrentTime,
+  audioShareDuration
 }
 
 extension PlatformMethodValues on PlatformMethod {
@@ -315,6 +321,18 @@ extension PlatformMethodValues on PlatformMethod {
         return "stop_audio_share";
       case PlatformMethod.setAudioMixingMode:
         return "set_audio_mixing_mode";
+      case PlatformMethod.pauseAudioShare:
+        return "pause_audio_share";
+      case PlatformMethod.playAudioShare:
+        return "play_audio_share";
+      case PlatformMethod.setAudioShareVolume:
+        return "set_audio_share_volume";
+      case PlatformMethod.audioSharePlaying:
+        return "audio_share_playing";
+      case PlatformMethod.audioShareCurrentTime:
+        return "audio_share_current_time";
+      case PlatformMethod.audioShareDuration:
+        return "audio_share_duration";
       default:
         return 'unknown';
     }
@@ -497,6 +515,18 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.stopAudioShare;
       case "set_audio_mixing_mode":
         return PlatformMethod.setAudioMixingMode;
+      case "pause_audio_share":
+        return PlatformMethod.pauseAudioShare;
+      case "play_audio_share":
+        return PlatformMethod.playAudioShare;
+      case "set_audio_share_volume":
+        return PlatformMethod.setAudioShareVolume;
+      case "audio_share_playing":
+        return PlatformMethod.audioSharePlaying;
+      case "audio_share_current_time":
+        return PlatformMethod.audioShareCurrentTime;
+      case "audio_share_duration":
+        return PlatformMethod.audioShareDuration;
       default:
         return PlatformMethod.unknown;
     }
