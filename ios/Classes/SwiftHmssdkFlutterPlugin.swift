@@ -166,6 +166,9 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         case "start_screen_share", "stop_screen_share", "is_screen_share_active":
             screenShareActions(call, result)
             
+        case "get_track_settings","set_track_settings":
+            trackSettingsAction(call,result)
+            break
         case "start_audio_share","stop_audio_share","pause_audio_share","play_audio_share","set_audio_share_volume","audio_share_playing","audio_share_current_time","audio_share_duration":
 //            HMSAudioShareAction(call, result, hmsSDK)
             print("audio Share start")
@@ -268,6 +271,22 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         }
     }
     
+    private func trackSettingsAction(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+        switch call.method {
+        case "get_track_settings":
+            result(HMSTrackSettingsExtension.toDictionary(hmsSDK!))
+            break
+        case "set_track_settings":
+            let trackSetting = HMSTrackSettingsExtension.setTrackSetting(call.arguments as! [AnyHashable: Any])
+            if let settings = trackSetting {
+                hmsSDK?.trackSettings = settings
+            }
+            break
+        default:
+            result(FlutterMethodNotImplemented)
+        }
+    }
+    
     // MARK: - Screen Share
     var isScreenShareOn = false {
         didSet {
@@ -318,32 +337,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         
         var trackSettings: HMSTrackSettings?
         if let settingsDict = arguments["hms_track_setting"] as? [AnyHashable: Any] {
-            
-            var audioSettings: HMSAudioTrackSettings?
-            if let audioSettingsDict = settingsDict["audio_track_setting"] as? [AnyHashable: Any] {
-                if let bitrate = audioSettingsDict["bit_rate"] as? Int, let desc = audioSettingsDict["track_description"] as? String {
-                    audioSettings = HMSAudioTrackSettings(maxBitrate: bitrate, trackDescription: desc)
-                }
-            }
-            
-            var videoSettings: HMSVideoTrackSettings?
-            if let videoSettingsDict = settingsDict["video_track_setting"] as? [AnyHashable: Any] {
-                if let codec = videoSettingsDict["video_codec"] as? String,
-                   let bitrate = videoSettingsDict["max_bit_rate"] as? Int,
-                   let framerate = videoSettingsDict["max_frame_rate"] as? Int,
-                   let desc = videoSettingsDict["track_description"] as? String {
-                    
-                    videoSettings = HMSVideoTrackSettings(codec: getCodec(from: codec),
-                                                          resolution: .init(width: 320, height: 180),
-                                                          maxBitrate: bitrate,
-                                                          maxFrameRate: framerate,
-                                                          cameraFacing: .front,
-                                                          trackDescription: desc,
-                                                          videoPlugins: nil)
-                }
-            }
-            
-            trackSettings = HMSTrackSettings(videoSettings: videoSettings, audioSettings: audioSettings)
+            trackSettings = HMSTrackSettingsExtension.setTrackSetting(settingsDict)
         }
         
         if let prefExtension = arguments["preferred_extension"] as? String {
