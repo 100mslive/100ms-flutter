@@ -635,58 +635,9 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         }
 
         val hmsAudioTrackHashMap: HashMap<String, Any?>? = hmsTrackSettingMap["audio_track_setting"]
-        var hmsAudioTrackSettings = HMSAudioTrackSettings.Builder()
-        if (hmsAudioTrackHashMap != null) {
-            val maxBitRate = hmsAudioTrackHashMap["bit_rate"] as Int?
-            val volume = hmsAudioTrackHashMap["volume"] as Double?
-            val useHardwareAcousticEchoCanceler =
-                hmsAudioTrackHashMap["user_hardware_acoustic_echo_canceler"] as Boolean?
-            val audioCodec =
-                AudioParamsExtension.getValueOfHMSAudioCodecFromString(hmsAudioTrackHashMap["audio_codec"] as String?) as HMSAudioCodec?
-
-            if (maxBitRate != null) {
-                hmsAudioTrackSettings = hmsAudioTrackSettings.maxBitrate(maxBitRate)
-            }
-
-            if (volume != null) {
-                hmsAudioTrackSettings = hmsAudioTrackSettings.volume(volume)
-            }
-
-            if (useHardwareAcousticEchoCanceler != null) {
-                hmsAudioTrackSettings = hmsAudioTrackSettings.setUseHardwareAcousticEchoCanceler(
-                    useHardwareAcousticEchoCanceler
-                )
-            }
-
-            if (audioCodec != null) {
-                hmsAudioTrackSettings = hmsAudioTrackSettings.codec(audioCodec)
-            }
-        }
-
-
-        var hmsVideoTrackSettings = HMSVideoTrackSettings.Builder()
         val hmsVideoTrackHashMap: HashMap<String, Any?>? = hmsTrackSettingMap["video_track_setting"]
-        if (hmsVideoTrackHashMap != null) {
-            val maxBitRate = hmsVideoTrackHashMap["max_bit_rate"] as Int?
-            val maxFrameRate = hmsVideoTrackHashMap["max_frame_rate"] as Int?
-            val videoCodec =
-                VideoParamsExtension.getValueOfHMSAudioCodecFromString(hmsVideoTrackHashMap["video_codec"] as String?) as HMSVideoCodec?
 
-
-            if (maxBitRate != null) {
-                hmsVideoTrackSettings = hmsVideoTrackSettings.maxBitrate(maxBitRate)
-            }
-
-            if (maxFrameRate != null) {
-                hmsVideoTrackSettings = hmsVideoTrackSettings.maxFrameRate(maxFrameRate)
-            }
-            if (videoCodec != null) {
-                hmsVideoTrackSettings = hmsVideoTrackSettings.codec(videoCodec)
-            }
-        }
-
-        val hmsTrackSettings = HMSTrackSettings.Builder().audio(hmsAudioTrackSettings.build())
-            .video(hmsVideoTrackSettings.build()).build()
+        val hmsTrackSettings = HMSTrackSettingsExtension.setTrackSettings(hmsAudioTrackHashMap,hmsVideoTrackHashMap)
         hmssdk = HMSSDK
             .Builder(activity)
             .setTrackSettings(hmsTrackSettings)
