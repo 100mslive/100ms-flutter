@@ -15,10 +15,10 @@ class HMSTrackSettingsExtension {
         var dict = [String: Any]()
         
         if let hmsVideoSettings = hmsTrackSettings.video {
-            dict["video"] = HMSTrackSettingsExtension.toDictionary(hmsVideoSettings)
+            dict["video_track_setting"] = HMSTrackSettingsExtension.toDictionary(hmsVideoSettings)
         }
         if let hmsAudioSettings = hmsTrackSettings.audio {
-            dict["audio"] = HMSTrackSettingsExtension.toDictionary(hmsAudioSettings)
+            dict["audio_track_setting"] = HMSTrackSettingsExtension.toDictionary(hmsAudioSettings)
         }
 
         return dict
@@ -27,16 +27,22 @@ class HMSTrackSettingsExtension {
     static func toDictionary(_ hmsVideoTrackSettings: HMSVideoTrackSettings) -> [String: Any] {
 
         var dict = [String: Any]()
-
-        dict["codec"] = hmsVideoTrackSettings.codec
-        dict["camera_facing"] = hmsVideoTrackSettings.cameraFacing
+        if(hmsVideoTrackSettings.codec==HMSCodec.H264){
+            dict["video_codec"] = "h264"
+        }else{
+            dict["video_codec"] = "vp8"
+        }
+        if(hmsVideoTrackSettings.cameraFacing == .front){
+            dict["camera_facing"] = "front"
+        }else{
+            dict["camera_facing"] = "back"
+        }
         dict["max_bitrate"] = hmsVideoTrackSettings.maxBitrate
         dict["max_frame_rate"] = hmsVideoTrackSettings.maxFrameRate
         dict["resolution"] = HMSVideoResolutionExtension.toDictionary(hmsVideoTrackSettings.resolution)
         dict["simulcast_settings"] = hmsVideoTrackSettings.simulcastSettings
         dict["track_description"] = hmsVideoTrackSettings.trackDescription
         dict["video_plugins"] = hmsVideoTrackSettings.videoPlugins
-
         return dict
     }
     
@@ -54,6 +60,7 @@ class HMSTrackSettingsExtension {
     static func setTrackSetting(_ settingsDict: [AnyHashable: Any]) -> HMSTrackSettings? {
         
             var audioSettings: HMSAudioTrackSettings?
+        
             if let audioSettingsDict = settingsDict["audio_track_setting"] as? [AnyHashable: Any] {
                 if let bitrate = audioSettingsDict["bit_rate"] as? Int, let desc = audioSettingsDict["track_description"] as? String {
                     audioSettings = HMSAudioTrackSettings(maxBitrate: bitrate, trackDescription: desc)

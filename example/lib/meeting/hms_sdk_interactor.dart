@@ -300,4 +300,14 @@ class HMSSDKInteractor {
   void setAudioMixingMode(HMSAudioMixingMode audioMixingMode) {
     hmsSDK.setAudioMixingMode(audioMixingMode: audioMixingMode);
   }
+
+  Future<HMSTrackSetting> getTrackSettings() async {
+    return await hmsSDK.getTrackSettings();
+  }
+
+  void setTrackSettings(
+      {HMSActionResultListener? hmsActionResultListener,
+      required HMSTrackSetting hmsTrackSetting}) {
+    hmsSDK.setTrackSettings(hmsTrackSetting: hmsTrackSetting);
+  }
 }

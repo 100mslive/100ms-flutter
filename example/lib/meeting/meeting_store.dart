@@ -1144,6 +1144,20 @@ class MeetingStore extends ChangeNotifier
     return false;
   }
 
+  void getTrackSettings() {
+    _hmsSDKInteractor.getTrackSettings();
+  }
+
+  void setTrackSettings() {
+    HMSAudioTrackSetting hmsAudioTrackSetting =
+        HMSAudioTrackSetting(volume: 0.0);
+    HMSTrackSetting hmsTrackSetting =
+        HMSTrackSetting(audioTrackSetting: hmsAudioTrackSetting);
+
+    _hmsSDKInteractor.setTrackSettings(
+        hmsActionResultListener: this, hmsTrackSetting: hmsTrackSetting);
+  }
+
 //Get onSuccess or onException callbacks for HMSActionResultListenerMethod
 
   @override
@@ -1277,6 +1291,9 @@ class MeetingStore extends ChangeNotifier
         isAudioShareStarted = false;
         notifyListeners();
         break;
+      case HMSActionResultListenerMethod.setTrackSettings:
+        // TODO: Handle this case.
+        break;
     }
   }
 
@@ -1369,6 +1386,9 @@ class MeetingStore extends ChangeNotifier
         break;
       case HMSActionResultListenerMethod.stopAudioShare:
         Utilities.showToast("Stop audio share failed");
+        break;
+      case HMSActionResultListenerMethod.setTrackSettings:
+        // TODO: Handle this case.
         break;
     }
   }

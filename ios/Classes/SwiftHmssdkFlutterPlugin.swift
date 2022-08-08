@@ -281,6 +281,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             if let settings = trackSetting {
                 hmsSDK?.trackSettings = settings
             }
+            result(nil)
             break
         default:
             result(FlutterMethodNotImplemented)
