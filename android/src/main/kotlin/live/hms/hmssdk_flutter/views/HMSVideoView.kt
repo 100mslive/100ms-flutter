@@ -27,7 +27,7 @@ class HMSVideoView(
         val view = inflater.inflate(R.layout.hms_video_view, this)
 
         surfaceViewRenderer = view.findViewById(R.id.surfaceViewRenderer)
-        surfaceViewRenderer.setEnableHardwareScaler(true)
+        surfaceViewRenderer.setEnableHardwareScaler(false)
         surfaceViewRenderer.setMirror(setMirror)
 
         if ((scaleType ?: 0) <= RendererCommon.ScalingType.values().size) {

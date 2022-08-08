@@ -798,7 +798,7 @@ class MeetingStore extends ChangeNotifier
     int index = this.peers.indexOf(peer);
     this.peers.removeAt(index);
     this.peers.insert(index, peer);
-    notifyListeners();
+    // notifyListeners();
   }
 
   void updateFilteredList(HMSPeerUpdate peerUpdate, HMSPeer peer) {
