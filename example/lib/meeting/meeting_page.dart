@@ -198,7 +198,7 @@ class _MeetingPageState extends State<MeetingPage>
         }
         break;
       case 12:
-        if (Platform.isAndroid) if (_meetingStore.isAudioShareStarted)
+        if (_meetingStore.isAudioShareStarted)
           _meetingStore.stopAudioShare();
         else
           _meetingStore.startAudioShare();
