@@ -202,13 +202,6 @@ class _MeetingPageState extends State<MeetingPage>
           _meetingStore.stopAudioShare();
         else
           _meetingStore.startAudioShare();
-        if (Platform.isIOS) {
-          String url = await UtilityComponents.showAudioShareDialog(
-              context: context, placeholder: "Enter Url");
-          if (url != "") {
-            // _meetingStore.startAudioShare();
-          }
-        }
         break;
       case 13:
         if (_meetingStore.isAudioShareStarted)
