@@ -173,6 +173,10 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             "start_audio_share","stop_audio_share","set_audio_mixing_mode"->{
                 audioShare(call,result)
             }
+
+            "get_track_settings"->{
+                trackSettings(call, result)
+            }
             else -> {
                 result.notImplemented()
             }
@@ -314,6 +318,25 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             else -> {
                 result.notImplemented()
             }
+        }
+    }
+
+    private fun trackSettings(call: MethodCall, result: Result){
+        when (call.method) {
+            "get_track_settings"->{
+                result.success(HMSTrackSettingsExtension.toDictionary(hmssdk))
+            }
+//            "set_track_settings"->{
+//                val hmsTrackSettingMap =
+//                    call.argument<HashMap<String, HashMap<String, Any?>?>?>("hms_track_setting")
+//                if(hmsTrackSettingMap!=null){
+//                    val hmsAudioTrackHashMap: HashMap<String, Any?>? = hmsTrackSettingMap["audio_track_setting"]
+//                    val hmsVideoTrackHashMap: HashMap<String, Any?>? = hmsTrackSettingMap["video_track_setting"]
+//
+//                    val hmsTrackSettings = HMSTrackSettingsExtension.setTrackSettings(hmsAudioTrackHashMap,hmsVideoTrackHashMap)
+//                    hmssdk.setTrackSettings()
+//                }
+//            }
         }
     }
 

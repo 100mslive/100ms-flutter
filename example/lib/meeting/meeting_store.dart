@@ -1144,19 +1144,6 @@ class MeetingStore extends ChangeNotifier
     return false;
   }
 
-  void getTrackSettings() {
-    _hmsSDKInteractor.getTrackSettings();
-  }
-
-  void setTrackSettings() {
-    HMSAudioTrackSetting hmsAudioTrackSetting =
-        HMSAudioTrackSetting(volume: 0.0);
-    HMSTrackSetting hmsTrackSetting =
-        HMSTrackSetting(audioTrackSetting: hmsAudioTrackSetting);
-
-    _hmsSDKInteractor.setTrackSettings(
-        hmsActionResultListener: this, hmsTrackSetting: hmsTrackSetting);
-  }
 
 //Get onSuccess or onException callbacks for HMSActionResultListenerMethod
 

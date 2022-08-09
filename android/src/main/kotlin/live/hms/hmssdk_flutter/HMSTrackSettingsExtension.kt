@@ -18,11 +18,11 @@ class HMSTrackSettingsExtension {
             val hmsTrackSettings:HMSTrackSettings = hmssdk.hmsSettings;
 
             if(hmsTrackSettings.videoSettings != null){
-                map["video"] = HMSVideoTrackSettingsExtension.toDictionary(hmsTrackSettings.videoSettings)!!
+                map["video_track_setting"] = HMSVideoTrackSettingsExtension.toDictionary(hmsTrackSettings.videoSettings)!!
             }
 
             if(hmsTrackSettings.audioSettings != null){
-                map["video"] = HMSAudioTrackSettingsExtension.toDictionary(hmsTrackSettings.audioSettings)!!
+                map["audio_track_setting"] = HMSAudioTrackSettingsExtension.toDictionary(hmsTrackSettings.audioSettings)!!
             }
 
             return map
