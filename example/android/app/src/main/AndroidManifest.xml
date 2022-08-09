@@ -50,7 +50,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data
-                    android:host="*.100ms.live"
+                    android:host="*app.100ms.live"
                     android:pathPrefix="/"
                     android:scheme="https" />
             </intent-filter>
