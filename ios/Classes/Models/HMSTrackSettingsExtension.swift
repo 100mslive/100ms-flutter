@@ -62,8 +62,31 @@ class HMSTrackSettingsExtension {
             var audioSettings: HMSAudioTrackSettings?
         
             if let audioSettingsDict = settingsDict["audio_track_setting"] as? [AnyHashable: Any] {
-                if let bitrate = audioSettingsDict["bit_rate"] as? Int, let desc = audioSettingsDict["track_description"] as? String {
-                    audioSettings = HMSAudioTrackSettings(maxBitrate: bitrate, trackDescription: desc)
+                if #available(iOS 13.0, *) {
+                    var audioMixerSourceMap = [String: HMSAudioNode]()
+                    var audioMixerSourceList: [HMSAudioNode] = []
+                    if let playerNode = settingsDict["player_node"] as? [String] {
+                        for node in playerNode {
+                            audioMixerSourceMap[node] = HMSAudioFilePlayerNode()
+                            audioMixerSourceList.append(audioMixerSourceMap[node]!)
+                        }
+                        if playerNode.contains("mic_node") {
+                            audioMixerSourceMap["mic_node"] = HMSMicNode()
+                            audioMixerSourceList.append(audioMixerSourceMap["mic_node"]!)
+                        }
+                    }
+                    do {
+                    let audioMixerSource = try HMSAudioMixerSource(nodes: audioMixerSourceList)
+                        if let bitrate = audioSettingsDict["bit_rate"] as? Int, let desc = audioSettingsDict["track_description"] as? String {
+                            audioSettings = HMSAudioTrackSettings(maxBitrate: bitrate, trackDescription: desc,audioSource: audioMixerSource)
+                        }
+                    } catch {
+                        print(error)
+                    }
+                } else {
+                    if let bitrate = audioSettingsDict["bit_rate"] as? Int, let desc = audioSettingsDict["track_description"] as? String {
+                        audioSettings = HMSAudioTrackSettings(maxBitrate: bitrate, trackDescription: desc)
+                    }
                 }
             }
             
