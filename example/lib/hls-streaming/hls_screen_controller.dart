@@ -53,7 +53,7 @@ class _HLSScreenControllerState extends State<HLSScreenController> {
             .localPeer!
             .role
             .name
-            .contains("hls")) {
+            .contains("hls-")) {
       return HLSViewerPage();
     } else {
       return HLSBroadcasterPage(

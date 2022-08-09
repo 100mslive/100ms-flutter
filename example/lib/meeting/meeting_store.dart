@@ -1382,7 +1382,7 @@ class MeetingStore extends ChangeNotifier
     }
     if (state == AppLifecycleState.resumed) {
       WidgetsBinding.instance!.addPostFrameCallback((_) {
-        if (localPeer?.role.name.contains("hls") ?? false)
+        if (localPeer?.role.name.contains("hls-") ?? false)
           hlsVideoController = new VideoPlayerController.network(
             streamUrl,
           )..initialize().then((_) {
@@ -1404,7 +1404,7 @@ class MeetingStore extends ChangeNotifier
       });
     } else if (state == AppLifecycleState.paused) {
       HMSLocalPeer? localPeer = await getLocalPeer();
-      if (localPeer?.role.name.contains("hls") ?? false) {
+      if (localPeer?.role.name.contains("hls-") ?? false) {
         hlsVideoController?.dispose();
         hlsVideoController = null;
         notifyListeners();
