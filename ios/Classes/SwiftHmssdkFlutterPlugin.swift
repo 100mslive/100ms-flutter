@@ -306,12 +306,6 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         if let audioNode = audioMixerSourceMap[arguments["name"] as! String] {
             switch call.method {
             case "play_audio_share":
-                print("file url ", URL(string:arguments["file_url"] as! String)!)
-//                do{
-//                try audioFilePlayerNode.play(fileUrl:  URL(string:arguments["file_url"] as! String)!)
-//                }catch{
-//                    print("ero",error)
-//                }
                 HMSAudioFilePlayerNodeExtension.play(arguments,audioNode as! HMSAudioFilePlayerNode)
                 break
             case "stop_audio_share":
@@ -388,37 +382,10 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     }
     
     // MARK: - Room Actions
-//    var audioMixerSource: HMSAudioMixerSource?
-//        let audioFilePlayerNode = HMSAudioFilePlayerNode()
-//    private func audioSource(for sdk: HMSSDK) -> HMSAudioSource? {
-//
-////            let isLocalAudioFilePlaybackEnabled = AudioSourceType(rawValue: UserDefaults.standard.integer(forKey: Constants.defaultAudioSource)) == .audioMixer
-////
-////            guard isLocalAudioFilePlaybackEnabled else { return nil }
-//
-//            do {
-//                self.audioFilePlayerNode.volume = 0.5
-//                let nodes = [self.audioFilePlayerNode, HMSMicNode(), try sdk.screenBroadcastAudioReceiverNode()]
-//
-//                if #available(iOS 13.0, *) {
-//                    let audioMixerSource = try HMSAudioMixerSource(nodes: nodes)
-//                    return audioMixerSource
-//                } else {
-//                    // Fallback on earlier versions
-//                }
-//            }
-//            catch {
-//                print(error.localizedDescription)
-//            }
-//            return nil
-//
-//        }
-    
     private func build(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         let arguments = call.arguments as! [AnyHashable: Any]
         
         var trackSettings: HMSTrackSettings?
-        print("trackSettings",arguments)
         if let settingsDict = arguments["hms_track_setting"] as? [AnyHashable: Any] {
             print("trackSettings",settingsDict)
             if let audioTrackSetting = settingsDict["audio_track_setting"] as? [AnyHashable: Any]{
@@ -452,18 +419,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             }
             if let settings = trackSettings {
                 sdk.trackSettings = settings
-            }
-//            let videoSettings = HMSVideoTrackSettings(codec: .VP8,
-//                                                                  resolution: .init(width: 320, height: 180),
-//                                                                  maxBitrate: 512,
-//                                                                  maxFrameRate: 25,
-//                                                                  cameraFacing: .front,
-//                                                      trackDescription: "Just a normal video track", videoPlugins: nil)
-//
-//            let audioSettings = HMSAudioTrackSettings(maxBitrate: 32, trackDescription: "Just a normal audio track", audioSource: self.audioSource(for: sdk))
-//                        sdk.trackSettings = HMSTrackSettings(videoSettings: videoSettings, audioSettings: audioSettings)
-            
-            
+            }            
             if setLogger {
                 sdk.logger = self
             }

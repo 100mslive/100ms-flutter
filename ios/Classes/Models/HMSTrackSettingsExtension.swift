@@ -52,7 +52,6 @@ class HMSTrackSettingsExtension {
 
         dict["track_description"] = hmsAudioTrackSettings.trackDescription
         dict["max_bitrate"] = hmsAudioTrackSettings.maxBitrate
-//        dict["audio_source"] = hmsAudioTrackSettings.audioSource
 
         return dict
     }
@@ -64,7 +63,6 @@ class HMSTrackSettingsExtension {
                 if #available(iOS 13.0, *) {
                     do {
                         let audioMixerSource = try HMSAudioMixerSource(nodes: audioMixerSourceMap.values.map{$0})
-                        print(audioMixerSourceMap.values.map{$0})
                         if let bitrate = audioSettingsDict["bit_rate"] as? Int, let desc = audioSettingsDict["track_description"] as? String {
                             audioSettings = HMSAudioTrackSettings(maxBitrate: bitrate, trackDescription: desc,audioSource: audioMixerSource)
                         }
@@ -94,7 +92,7 @@ class HMSTrackSettingsExtension {
                                                           videoPlugins: nil)
                 }
             }
-        
+            
         return HMSTrackSettings(videoSettings: videoSettings, audioSettings: audioSettings)
     }
     

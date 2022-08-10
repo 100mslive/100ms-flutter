@@ -141,6 +141,8 @@ class MeetingStore extends ChangeNotifier
 
   bool hlsStreamingRetry = false;
 
+  bool isTrackSettingApplied = false;
+
   Future<bool> join(String user, String roomUrl) async {
     List<String?>? token =
         await RoomService().getToken(user: user, room: roomUrl);
@@ -1147,22 +1149,23 @@ class MeetingStore extends ChangeNotifier
   HMSAudioFilePlayerNode audioFilePlayerNode =
       HMSAudioFilePlayerNode("audioFilePlayerNode");
   HMSMicNode micNode = HMSMicNode();
-  void setTrackSettings() async {
-    HMSTrackSetting trackSetting = await _hmsSDKInteractor.getTrackSettings();
-    HMSAudioMixerSource audioMixerSource =
-        HMSAudioMixerSource(node: [audioFilePlayerNode, micNode]);
-    HMSAudioTrackSetting audioTrackSetting = HMSAudioTrackSetting(
-        maxBitrate: trackSetting.audioTrackSetting?.maxBitrate,
-        hmsAudioCodec: trackSetting.audioTrackSetting?.hmsAudioCodec,
-        useHardwareAcousticEchoCanceler:
-            trackSetting.audioTrackSetting?.useHardwareAcousticEchoCanceler,
-        volume: trackSetting.audioTrackSetting?.volume,
-        audioSource: audioMixerSource);
-    _hmsSDKInteractor.setTrackSettings(
-        hmsTrackSetting: HMSTrackSetting(
-            audioTrackSetting: audioTrackSetting,
-            videoTrackSetting: trackSetting.videoTrackSetting));
-  }
+  // void setTrackSettings() async {
+  //   HMSTrackSetting trackSetting = HMSTrackSetting(
+  //       audioTrackSetting: HMSAudioTrackSetting(
+  //           maxBitrate: 32,
+  //           audioSource: HMSAudioMixerSource(node: [
+  //             HMSAudioFilePlayerNode("audioFilePlayerNode"),
+  //             HMSMicNode()
+  //           ])),
+  //       videoTrackSetting: HMSVideoTrackSetting(
+  //           cameraFacing: HMSCameraFacing.FRONT,
+  //           maxBitrate: 512,
+  //           maxFrameRate: 25,
+  //           resolution: HMSResolution(height: 180, width: 320)));
+  //   _hmsSDKInteractor.setTrackSettings(hmsTrackSetting: trackSetting);
+  //   isTrackSettingApplied = true;
+  //   notifyListeners();
+  // }
 
   void playAudioIos(String url) {
     audioFilePlayerNode.play(fileUrl: url);
