@@ -103,7 +103,8 @@ class _PreviewPageState extends State<PreviewPage> {
                                 )),
                           ),
                         )
-                      : (_previewStore.localTracks.isEmpty)
+                      : (_previewStore.localTracks.isEmpty &&
+                              _previewStore.isVideoOn)
                           ? Center(
                               child: CircularProgressIndicator(
                                 strokeWidth: 2,
