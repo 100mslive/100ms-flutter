@@ -1164,8 +1164,7 @@ class MeetingStore extends ChangeNotifier
             videoTrackSetting: trackSetting.videoTrackSetting));
   }
 
-  void playAudioIos(String url) async {
-    setTrackSettings();
+  void playAudioIos(String url) {
     audioFilePlayerNode.play(fileUrl: url);
   }
 

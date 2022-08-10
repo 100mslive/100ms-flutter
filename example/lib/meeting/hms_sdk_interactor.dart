@@ -16,7 +16,22 @@ class HMSSDKInteractor {
   bool skipPreview = false;
 
   HMSSDKInteractor({String? appGroup, String? preferredExtension}) {
-    hmsSDK = HMSSDK(appGroup: appGroup, preferredExtension: preferredExtension);
+    HMSTrackSetting trackSetting = HMSTrackSetting(
+        audioTrackSetting: HMSAudioTrackSetting(
+            maxBitrate: 32,
+            audioSource: HMSAudioMixerSource(node: [
+              HMSAudioFilePlayerNode("audioFilePlayerNode"),
+              HMSMicNode()
+            ])),
+        videoTrackSetting: HMSVideoTrackSetting(
+            cameraFacing: HMSCameraFacing.FRONT,
+            maxBitrate: 512,
+            maxFrameRate: 25,
+            resolution: HMSResolution(height: 180, width: 320)));
+    hmsSDK = HMSSDK(
+        appGroup: appGroup,
+        preferredExtension: preferredExtension,
+        hmsTrackSetting: trackSetting);
     hmsSDK.build();
   }
 
