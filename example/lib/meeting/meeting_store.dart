@@ -164,6 +164,7 @@ class MeetingStore extends ChangeNotifier
     _hmsSDKInteractor.removeStatsListener(this);
     WidgetsBinding.instance!.removeObserver(this);
     _hmsSDKInteractor.leave(hmsActionResultListener: this);
+    _hmsSDKInteractor.destroy();
   }
 
   Future<void> switchAudio() async {

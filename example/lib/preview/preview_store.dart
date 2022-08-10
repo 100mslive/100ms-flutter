@@ -180,4 +180,9 @@ class PreviewStore extends ChangeNotifier
   void updateError(HMSException error) {
     this.error = error;
   }
+
+  void destroy() {
+    hmsSDKInteractor.destroy();
+    hmsSDKInteractor.removePreviewListener(this);
+  }
 }

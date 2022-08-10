@@ -138,7 +138,8 @@ enum PlatformMethod {
   switchAudioOutput,
   startAudioShare,
   stopAudioShare,
-  setAudioMixingMode
+  setAudioMixingMode,
+  destroy
 }
 
 extension PlatformMethodValues on PlatformMethod {
@@ -315,6 +316,8 @@ extension PlatformMethodValues on PlatformMethod {
         return "stop_audio_share";
       case PlatformMethod.setAudioMixingMode:
         return "set_audio_mixing_mode";
+      case PlatformMethod.destroy:
+        return "destroy";
       default:
         return 'unknown';
     }
@@ -497,6 +500,8 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.stopAudioShare;
       case "set_audio_mixing_mode":
         return PlatformMethod.setAudioMixingMode;
+      case "destroy":
+        return PlatformMethod.destroy;
       default:
         return PlatformMethod.unknown;
     }
