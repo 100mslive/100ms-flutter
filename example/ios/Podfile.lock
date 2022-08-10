@@ -1,4 +1,38 @@
 PODS:
+  - DKImagePickerController/Core (4.3.4):
+    - DKImagePickerController/ImageDataManager
+    - DKImagePickerController/Resource
+  - DKImagePickerController/ImageDataManager (4.3.4)
+  - DKImagePickerController/PhotoGallery (4.3.4):
+    - DKImagePickerController/Core
+    - DKPhotoGallery
+  - DKImagePickerController/Resource (4.3.4)
+  - DKPhotoGallery (0.0.17):
+    - DKPhotoGallery/Core (= 0.0.17)
+    - DKPhotoGallery/Model (= 0.0.17)
+    - DKPhotoGallery/Preview (= 0.0.17)
+    - DKPhotoGallery/Resource (= 0.0.17)
+    - SDWebImage
+    - SwiftyGif
+  - DKPhotoGallery/Core (0.0.17):
+    - DKPhotoGallery/Model
+    - DKPhotoGallery/Preview
+    - SDWebImage
+    - SwiftyGif
+  - DKPhotoGallery/Model (0.0.17):
+    - SDWebImage
+    - SwiftyGif
+  - DKPhotoGallery/Preview (0.0.17):
+    - DKPhotoGallery/Model
+    - DKPhotoGallery/Resource
+    - SDWebImage
+    - SwiftyGif
+  - DKPhotoGallery/Resource (0.0.17):
+    - SDWebImage
+    - SwiftyGif
+  - file_picker (0.0.1):
+    - DKImagePickerController/PhotoGallery
+    - Flutter
   - Firebase/Analytics (9.3.0):
     - Firebase/Core
   - Firebase/Core (9.3.0):
@@ -167,8 +201,12 @@ PODS:
   - qr_code_scanner (0.2.0):
     - Flutter
     - MTBBarcodeScanner
+  - SDWebImage (5.13.2):
+    - SDWebImage/Core (= 5.13.2)
+  - SDWebImage/Core (5.13.2)
   - shared_preferences_ios (0.0.1):
     - Flutter
+  - SwiftyGif (5.4.3)
   - Toast (4.0.0)
   - uni_links (0.0.1):
     - Flutter
@@ -178,6 +216,7 @@ PODS:
     - Flutter
 
 DEPENDENCIES:
+  - file_picker (from `.symlinks/plugins/file_picker/ios`)
   - firebase_analytics (from `.symlinks/plugins/firebase_analytics/ios`)
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
   - firebase_crashlytics (from `.symlinks/plugins/firebase_crashlytics/ios`)
@@ -198,6 +237,8 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
+    - DKImagePickerController
+    - DKPhotoGallery
     - Firebase
     - FirebaseABTesting
     - FirebaseAnalytics
@@ -218,9 +259,13 @@ SPEC REPOS:
     - MTBBarcodeScanner
     - nanopb
     - PromisesObjC
+    - SDWebImage
+    - SwiftyGif
     - Toast
 
 EXTERNAL SOURCES:
+  file_picker:
+    :path: ".symlinks/plugins/file_picker/ios"
   firebase_analytics:
     :path: ".symlinks/plugins/firebase_analytics/ios"
   firebase_core:
@@ -255,6 +300,9 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/wakelock/ios"
 
 SPEC CHECKSUMS:
+  DKImagePickerController: b512c28220a2b8ac7419f21c491fc8534b7601ac
+  DKPhotoGallery: fdfad5125a9fdda9cc57df834d49df790dbb4179
+  file_picker: 817ab1d8cd2da9d2da412a417162deee3500fc95
   Firebase: ef75abb1cdbc746d5a38f4e26c422c807b189b8c
   firebase_analytics: 8f772ccb3dad1e8968019a158823f99e63069d2b
   firebase_core: 96214f90497b808a2cf2a24517084c5f6de37b53
@@ -287,7 +335,9 @@ SPEC CHECKSUMS:
   permission_handler_apple: 44366e37eaf29454a1e7b1b7d736c2cceaeb17ce
   PromisesObjC: ab77feca74fa2823e7af4249b8326368e61014cb
   qr_code_scanner: bb67d64904c3b9658ada8c402e8b4d406d5d796e
+  SDWebImage: 72f86271a6f3139cc7e4a89220946489d4b9a866
   shared_preferences_ios: 548a61f8053b9b8a49ac19c1ffbc8b92c50d68ad
+  SwiftyGif: 6c3eafd0ce693cad58bb63d2b2fb9bacb8552780
   Toast: 91b396c56ee72a5790816f40d3a94dd357abc196
   uni_links: d97da20c7701486ba192624d99bffaaffcfc298a
   video_player_avfoundation: e489aac24ef5cf7af82702979ed16f2a5ef84cff

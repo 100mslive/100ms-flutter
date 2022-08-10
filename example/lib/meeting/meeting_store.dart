@@ -1144,6 +1144,30 @@ class MeetingStore extends ChangeNotifier
     return false;
   }
 
+  HMSAudioFilePlayerNode audioFilePlayerNode =
+      HMSAudioFilePlayerNode("audioFilePlayerNode");
+  HMSMicNode micNode = HMSMicNode();
+  void setTrackSettings() async {
+    HMSTrackSetting trackSetting = await _hmsSDKInteractor.getTrackSettings();
+    HMSAudioMixerSource audioMixerSource =
+        HMSAudioMixerSource(node: [audioFilePlayerNode, micNode]);
+    HMSAudioTrackSetting audioTrackSetting = HMSAudioTrackSetting(
+        maxBitrate: trackSetting.audioTrackSetting?.maxBitrate,
+        hmsAudioCodec: trackSetting.audioTrackSetting?.hmsAudioCodec,
+        useHardwareAcousticEchoCanceler:
+            trackSetting.audioTrackSetting?.useHardwareAcousticEchoCanceler,
+        volume: trackSetting.audioTrackSetting?.volume,
+        audioSource: audioMixerSource);
+    _hmsSDKInteractor.setTrackSettings(
+        hmsTrackSetting: HMSTrackSetting(
+            audioTrackSetting: audioTrackSetting,
+            videoTrackSetting: trackSetting.videoTrackSetting));
+  }
+
+  void playAudioIos(String url) async {
+    setTrackSettings();
+    audioFilePlayerNode.play(fileUrl: url);
+  }
 
 //Get onSuccess or onException callbacks for HMSActionResultListenerMethod
 

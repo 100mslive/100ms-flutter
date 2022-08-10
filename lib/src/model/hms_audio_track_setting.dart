@@ -6,22 +6,25 @@ class HMSAudioTrackSetting {
   final HMSAudioCodec? hmsAudioCodec;
   final bool? useHardwareAcousticEchoCanceler;
   final double? volume;
+  HMSAudioMixerSource? audioSource;
 
   HMSAudioTrackSetting(
       {this.maxBitrate,
       this.hmsAudioCodec,
       this.useHardwareAcousticEchoCanceler,
-      this.volume});
+      this.volume,
+      this.audioSource});
 
   factory HMSAudioTrackSetting.fromMap(Map map) {
     return HMSAudioTrackSetting(
-        volume: map['volume'] ?? null,
-        maxBitrate: map['bit_rate'] ?? null,
-        hmsAudioCodec: map["audio_codec"] == null
-            ? null
-            : HMSAudioCodecValues.getHMSCodecFromName(map['audio_codec']),
-        useHardwareAcousticEchoCanceler:
-            map['user_hardware_acoustic_echo_canceler'] ?? null);
+      volume: map['volume'] ?? null,
+      maxBitrate: map['bit_rate'] ?? null,
+      hmsAudioCodec: map["audio_codec"] == null
+          ? null
+          : HMSAudioCodecValues.getHMSCodecFromName(map['audio_codec']),
+      useHardwareAcousticEchoCanceler:
+          map['user_hardware_acoustic_echo_canceler'] ?? null,
+    );
   }
 
   Map<String, dynamic> toMap() {
@@ -31,7 +34,8 @@ class HMSAudioTrackSetting {
       'audio_codec': hmsAudioCodec != null
           ? HMSAudioCodecValues.getValueFromHMSAudioCodec(hmsAudioCodec!)
           : null,
-      'user_hardware_acoustic_echo_canceler': useHardwareAcousticEchoCanceler
+      'user_hardware_acoustic_echo_canceler': useHardwareAcousticEchoCanceler,
+      'player_node': audioSource?.toList()
     };
   }
 }

@@ -75,3 +75,6 @@ export 'src/model/hms_stats_listener.dart';
 export 'src/model/hms_hls_recording_config.dart';
 export 'src/enum/hms_audio_device.dart';
 export 'src/enum/hms_audio_mixing_mode.dart';
+export 'src/model/hms_audio_file_player_node.dart';
+export 'src/model/hms_mic_node.dart';
+export 'src/model/hms_audio_mixer_source.dart';

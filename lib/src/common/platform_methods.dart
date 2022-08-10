@@ -141,6 +141,7 @@ enum PlatformMethod {
   setAudioMixingMode,
   pauseAudioShare,
   playAudioShare,
+  resumeAudioShare,
   setAudioShareVolume,
   audioSharePlaying,
   audioShareCurrentTime,
@@ -327,6 +328,8 @@ extension PlatformMethodValues on PlatformMethod {
         return "pause_audio_share";
       case PlatformMethod.playAudioShare:
         return "play_audio_share";
+      case PlatformMethod.resumeAudioShare:
+        return "resume_audio_share";
       case PlatformMethod.setAudioShareVolume:
         return "set_audio_share_volume";
       case PlatformMethod.audioSharePlaying:
@@ -525,6 +528,8 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.pauseAudioShare;
       case "play_audio_share":
         return PlatformMethod.playAudioShare;
+      case "resume_audio_share":
+        return PlatformMethod.resumeAudioShare;
       case "set_audio_share_volume":
         return PlatformMethod.setAudioShareVolume;
       case "audio_share_playing":

@@ -1,5 +1,8 @@
 //Package imports
+import 'dart:io';
+
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -1303,11 +1306,9 @@ class UtilityComponents {
   }
 
   static Future<String> showAudioShareDialog(
-      {context, String placeholder = "", String prefilledValue = ""}) async {
-    TextEditingController textController = TextEditingController();
-    if (prefilledValue.isNotEmpty) {
-      textController.text = prefilledValue;
-    }
+      {required BuildContext context,
+      String placeholder = "",
+      String prefilledValue = ""}) async {
     String answer = await showDialog(
         context: context,
         builder: (context) => StatefulBuilder(builder: (context, setState) {
@@ -1317,23 +1318,7 @@ class UtilityComponents {
                 backgroundColor: bottomSheetColor,
                 contentPadding:
                     EdgeInsets.only(left: 14, right: 10, top: 15, bottom: 15),
-                content: Container(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      TextField(
-                        autofocus: true,
-                        controller: textController,
-                        decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(16)),
-                            ),
-                            hintText: placeholder),
-                      ),
-                    ],
-                  ),
-                ),
+                content: Text("Pick song from files"),
                 actions: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -1375,15 +1360,21 @@ class UtilityComponents {
                                   BorderSide(width: 1, color: hmsdefaultColor),
                               borderRadius: BorderRadius.circular(8.0),
                             ))),
-                        onPressed: () => {
-                          if (textController.text != "")
-                            {Navigator.pop(context, textController.text.trim())}
+                        onPressed: () async {
+                          FilePickerResult? result =
+                              await FilePicker.platform.pickFiles();
+                          if (result != null) {
+                            String? path =
+                                "file://" + result.files.single.path!;
+
+                            Navigator.pop(context, path);
+                          }
                         },
                         child: Padding(
                           padding: const EdgeInsets.symmetric(
                               horizontal: 6, vertical: 12),
                           child: Text(
-                            'Start RTMP',
+                            'Start',
                             style: GoogleFonts.inter(
                                 color: defaultColor,
                                 fontSize: 16,

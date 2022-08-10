@@ -57,26 +57,13 @@ class HMSTrackSettingsExtension {
         return dict
     }
     
-    static func setTrackSetting(_ settingsDict: [AnyHashable: Any]) -> HMSTrackSettings? {
+    static func setTrackSetting(_ settingsDict: [AnyHashable: Any],_ audioMixerSourceMap: [String:HMSAudioNode]) -> HMSTrackSettings? {
         
             var audioSettings: HMSAudioTrackSettings?
-        
             if let audioSettingsDict = settingsDict["audio_track_setting"] as? [AnyHashable: Any] {
                 if #available(iOS 13.0, *) {
-                    var audioMixerSourceMap = [String: HMSAudioNode]()
-                    var audioMixerSourceList: [HMSAudioNode] = []
-                    if let playerNode = settingsDict["player_node"] as? [String] {
-                        for node in playerNode {
-                            audioMixerSourceMap[node] = HMSAudioFilePlayerNode()
-                            audioMixerSourceList.append(audioMixerSourceMap[node]!)
-                        }
-                        if playerNode.contains("mic_node") {
-                            audioMixerSourceMap["mic_node"] = HMSMicNode()
-                            audioMixerSourceList.append(audioMixerSourceMap["mic_node"]!)
-                        }
-                    }
                     do {
-                    let audioMixerSource = try HMSAudioMixerSource(nodes: audioMixerSourceList)
+                        let audioMixerSource = try HMSAudioMixerSource(nodes: audioMixerSourceMap.values.map{$0})
                         if let bitrate = audioSettingsDict["bit_rate"] as? Int, let desc = audioSettingsDict["track_description"] as? String {
                             audioSettings = HMSAudioTrackSettings(maxBitrate: bitrate, trackDescription: desc,audioSource: audioMixerSource)
                         }
