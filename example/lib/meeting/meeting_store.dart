@@ -1171,6 +1171,15 @@ class MeetingStore extends ChangeNotifier
     audioFilePlayerNode.play(fileUrl: url);
   }
 
+  Future<bool> isPlayerRunningIos() async {
+    bool isPlaying = await audioFilePlayerNode.isPlaying();
+    return isPlaying;
+  }
+
+  void stopAudioIos() {
+    audioFilePlayerNode.stop();
+  }
+
 //Get onSuccess or onException callbacks for HMSActionResultListenerMethod
 
   @override

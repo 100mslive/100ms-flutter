@@ -1,5 +1,6 @@
 // Project imports:
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:hmssdk_flutter/src/model/hms_audio_node.dart';
 
 class HMSAudioTrackSetting {
   final int? maxBitrate;
@@ -10,7 +11,7 @@ class HMSAudioTrackSetting {
   HMSAudioMixerSource? audioSource;
 
   HMSAudioTrackSetting(
-      {this.maxBitrate,
+      {this.maxBitrate = 32,
       this.hmsAudioCodec,
       this.useHardwareAcousticEchoCanceler,
       this.volume,
@@ -18,6 +19,20 @@ class HMSAudioTrackSetting {
       this.audioSource});
 
   factory HMSAudioTrackSetting.fromMap(Map map) {
+    List<HMSAudioNode> nodeList = [];
+    List<String>? node = map["audio_source"] ?? null;
+    HMSAudioMixerSource? audioMixerSource;
+    if (node != null) {
+      for (String i in node) {
+        if (i == "mic_node") {
+          nodeList.add(HMSMicNode());
+        } else {
+          nodeList.add(HMSAudioFilePlayerNode(i));
+        }
+      }
+      audioMixerSource = HMSAudioMixerSource(node: nodeList);
+    }
+    HMSAudioMixerSource(node: nodeList);
     return HMSAudioTrackSetting(
         volume: map['volume'] ?? null,
         maxBitrate: map['bit_rate'] ?? 32,
@@ -26,7 +41,8 @@ class HMSAudioTrackSetting {
             : HMSAudioCodecValues.getHMSCodecFromName(map['audio_codec']),
         useHardwareAcousticEchoCanceler:
             map['user_hardware_acoustic_echo_canceler'] ?? null,
-        trackDescription: map['track_description'] ?? "This is an audio Track");
+        trackDescription: map['track_description'] ?? "This is an audio Track",
+        audioSource: audioMixerSource);
   }
 
   Map<String, dynamic> toMap() {
@@ -38,7 +54,7 @@ class HMSAudioTrackSetting {
           : null,
       'user_hardware_acoustic_echo_canceler': useHardwareAcousticEchoCanceler,
       'track_description': trackDescription,
-      'player_node': audioSource?.toList()
+      'audio_source': audioSource?.toList()
     };
   }
 }

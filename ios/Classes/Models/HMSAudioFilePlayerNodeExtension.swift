@@ -39,13 +39,21 @@ class HMSAudioFilePlayerNodeExtension {
     }
     
     static func isPlaying(_ playerNode:HMSAudioFilePlayerNode,_ result: FlutterResult) {
-        result(playerNode.isPlaying)
+        var dict = [String: Any]()
+        dict["is_playing"] = playerNode.isPlaying
+        result(dict)
     }
     
     static func currentDuration(_ playerNode:HMSAudioFilePlayerNode,_ result: FlutterResult) {
-        result(playerNode.currentTime)
+        var dict = [String: Any]()
+        dict["current_duration"] = playerNode.currentTime
+        result(dict)
     }
     
+    static func duration(_ playerNode:HMSAudioFilePlayerNode,_ result: FlutterResult) {
+        var dict = [String: Any]()
+        dict["duration"] = playerNode.duration
+        result(dict)
+    }
    
-    
 }

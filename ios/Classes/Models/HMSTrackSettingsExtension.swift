@@ -9,7 +9,7 @@ import Foundation
 import HMSSDK
 
 class HMSTrackSettingsExtension {
-    static func toDictionary(_ hmssdk: HMSSDK) -> [String: Any] {
+    static func toDictionary(_ hmssdk: HMSSDK,_ audioMixerSourceMap: [String:HMSAudioNode]?) -> [String: Any] {
         
         let hmsTrackSettings = hmssdk.trackSettings
         var dict = [String: Any]()
@@ -18,7 +18,7 @@ class HMSTrackSettingsExtension {
             dict["video_track_setting"] = HMSTrackSettingsExtension.toDictionary(hmsVideoSettings)
         }
         if let hmsAudioSettings = hmsTrackSettings.audio {
-            dict["audio_track_setting"] = HMSTrackSettingsExtension.toDictionary(hmsAudioSettings)
+            dict["audio_track_setting"] = HMSTrackSettingsExtension.toDictionary(hmsAudioSettings,audioMixerSourceMap!)
         }
 
         return dict
@@ -46,13 +46,13 @@ class HMSTrackSettingsExtension {
         return dict
     }
     
-    static func toDictionary(_ hmsAudioTrackSettings: HMSAudioTrackSettings) -> [String: Any] {
+    static func toDictionary(_ hmsAudioTrackSettings: HMSAudioTrackSettings,_ audioMixerSourceMap: [String:HMSAudioNode]) -> [String: Any] {
 
         var dict = [String: Any]()
 
         dict["track_description"] = hmsAudioTrackSettings.trackDescription
         dict["max_bitrate"] = hmsAudioTrackSettings.maxBitrate
-
+        dict["audio_source"] = audioMixerSourceMap.values.map{$0}
         return dict
     }
     

@@ -1307,8 +1307,8 @@ class UtilityComponents {
 
   static Future<String> showAudioShareDialog(
       {required BuildContext context,
-      String placeholder = "",
-      String prefilledValue = ""}) async {
+      required MeetingStore meetingStore,
+      required bool isPlaying}) async {
     String answer = await showDialog(
         context: context,
         builder: (context) => StatefulBuilder(builder: (context, setState) {
@@ -1318,7 +1318,8 @@ class UtilityComponents {
                 backgroundColor: bottomSheetColor,
                 contentPadding:
                     EdgeInsets.only(left: 14, right: 10, top: 15, bottom: 15),
-                content: Text("Pick song from files"),
+                content:
+                    Text(isPlaying ? "Stop playing" : "Pick song from files"),
                 actions: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -1361,20 +1362,25 @@ class UtilityComponents {
                               borderRadius: BorderRadius.circular(8.0),
                             ))),
                         onPressed: () async {
-                          FilePickerResult? result =
-                              await FilePicker.platform.pickFiles();
-                          if (result != null) {
-                            String? path =
-                                "file://" + result.files.single.path!;
+                          if (isPlaying) {
+                            meetingStore.stopAudioIos();
+                            Navigator.pop(context, "");
+                          } else {
+                            FilePickerResult? result =
+                                await FilePicker.platform.pickFiles();
+                            if (result != null) {
+                              String? path =
+                                  "file://" + result.files.single.path!;
 
-                            Navigator.pop(context, path);
+                              Navigator.pop(context, path);
+                            }
                           }
                         },
                         child: Padding(
                           padding: const EdgeInsets.symmetric(
                               horizontal: 6, vertical: 12),
                           child: Text(
-                            'Start',
+                            isPlaying ? 'Stop' : 'Select',
                             style: GoogleFonts.inter(
                                 color: defaultColor,
                                 fontSize: 16,

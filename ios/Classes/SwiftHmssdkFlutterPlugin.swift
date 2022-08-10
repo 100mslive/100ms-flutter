@@ -275,19 +275,23 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     private func trackSettingsAction(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         switch call.method {
         case "get_track_settings":
-            result(HMSTrackSettingsExtension.toDictionary(hmsSDK!))
+            result(HMSTrackSettingsExtension.toDictionary(hmsSDK!,audioMixerSourceMap))
             break
         case "set_track_settings":
             let arguments = call.arguments as! [AnyHashable: Any]
             let settingsDict = arguments["hms_track_setting"] as! [AnyHashable: Any]
             let audioTrackSetting = settingsDict["audio_track_setting"] as! [AnyHashable: Any]
             
-            if let playerNode = audioTrackSetting["player_node"] as? [String] {
+            if let playerNode = audioTrackSetting["audio_source"] as? [String] {
                 for node in playerNode {
-                    audioMixerSourceMap[node] = HMSAudioFilePlayerNode()
-                }
-                if playerNode.contains("mic_node") {
-                    audioMixerSourceMap["mic_node"] = HMSMicNode()
+                    if (audioMixerSourceMap[node] == nil) {
+                        if(node=="mic_node"){
+                            audioMixerSourceMap["mic_node"] = HMSMicNode()
+                        }
+                        else{
+                        audioMixerSourceMap[node] = HMSAudioFilePlayerNode()
+                        }
+                    }
                 }
             }
             let trackSetting = HMSTrackSettingsExtension.setTrackSetting(settingsDict,audioMixerSourceMap)
@@ -328,9 +332,10 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                 HMSAudioFilePlayerNodeExtension.isPlaying(audioNode as! HMSAudioFilePlayerNode,result)
                 break
             case "audio_share_current_time":
-                
+                HMSAudioFilePlayerNodeExtension.currentDuration(audioNode as! HMSAudioFilePlayerNode,result)
                 break
             case "audio_share_duration":
+                HMSAudioFilePlayerNodeExtension.duration(audioNode as! HMSAudioFilePlayerNode,result)
                 break
             default:
                 result(FlutterMethodNotImplemented)
@@ -387,14 +392,17 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         
         var trackSettings: HMSTrackSettings?
         if let settingsDict = arguments["hms_track_setting"] as? [AnyHashable: Any] {
-            print("trackSettings",settingsDict)
             if let audioTrackSetting = settingsDict["audio_track_setting"] as? [AnyHashable: Any]{
-            if let playerNode = audioTrackSetting["player_node"] as? [String] {
+            if let playerNode = audioTrackSetting["audio_source"] as? [String] {
                 for node in playerNode {
-                    audioMixerSourceMap[node] = HMSAudioFilePlayerNode()
-                }
-                if playerNode.contains("mic_node") {
-                    audioMixerSourceMap["mic_node"] = HMSMicNode()
+                    if (audioMixerSourceMap[node] == nil) {
+                        if(node=="mic_node"){
+                            audioMixerSourceMap["mic_node"] = HMSMicNode()
+                        }
+                        else{
+                        audioMixerSourceMap[node] = HMSAudioFilePlayerNode()
+                        }
+                    }
                 }
             }
             trackSettings = HMSTrackSettingsExtension.setTrackSetting(settingsDict,audioMixerSourceMap)

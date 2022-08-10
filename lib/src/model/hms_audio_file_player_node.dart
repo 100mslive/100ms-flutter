@@ -62,12 +62,12 @@ class HMSAudioFilePlayerNode extends HMSAudioNode {
     return false;
   }
 
-  Future<DateTime?> currentTime() async {
+  Future<DateTime?> currentDuration() async {
     var result = await PlatformService.invokeMethod(
         PlatformMethod.audioShareCurrentTime,
         arguments: {"name": methodName});
     if (result != null) {
-      return result["current_time"];
+      return result["current_duration"];
     }
     return null;
   }
