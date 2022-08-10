@@ -800,7 +800,7 @@ class MeetingStore extends ChangeNotifier
     int index = this.peers.indexOf(peer);
     this.peers.removeAt(index);
     this.peers.insert(index, peer);
-    notifyListeners();
+    // notifyListeners();
   }
 
   void updateFilteredList(HMSPeerUpdate peerUpdate, HMSPeer peer) {
@@ -1385,6 +1385,7 @@ class MeetingStore extends ChangeNotifier
           hlsStreamingRetry = true;
         } else {
           Utilities.showToast("Start HLS failed");
+          hlsStreamingRetry = false;
         }
 
         break;
@@ -1423,7 +1424,7 @@ class MeetingStore extends ChangeNotifier
     }
     if (state == AppLifecycleState.resumed) {
       WidgetsBinding.instance!.addPostFrameCallback((_) {
-        if (localPeer?.role.name.contains("hls") ?? false)
+        if (localPeer?.role.name.contains("hls-") ?? false)
           hlsVideoController = new VideoPlayerController.network(
             streamUrl,
           )..initialize().then((_) {
@@ -1445,7 +1446,7 @@ class MeetingStore extends ChangeNotifier
       });
     } else if (state == AppLifecycleState.paused) {
       HMSLocalPeer? localPeer = await getLocalPeer();
-      if (localPeer?.role.name.contains("hls") ?? false) {
+      if (localPeer?.role.name.contains("hls-") ?? false) {
         hlsVideoController?.dispose();
         hlsVideoController = null;
         notifyListeners();
