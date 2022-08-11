@@ -58,7 +58,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
     private var logsSink: EventChannel.EventSink? = null
     private var rtcSink: EventChannel.EventSink? = null
     private lateinit var activity: Activity
-    var hmssdk: HMSSDK?
+    var hmssdk: HMSSDK? = null
     private lateinit var hmsVideoFactory: HMSVideoViewFactory
     private var requestChange: HMSRoleChangeRequest? = null
 
@@ -638,7 +638,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             call.argument<HashMap<String, HashMap<String, Any?>?>?>("hms_track_setting")
 
         if (hmsTrackSettingMap == null) {
-            this.hmssdk!! = HMSSDK.Builder(activity).build()
+            this.hmssdk = HMSSDK.Builder(activity).build()
             result.success(true)
             return
         }
@@ -696,7 +696,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
 
         val hmsTrackSettings = HMSTrackSettings.Builder().audio(hmsAudioTrackSettings.build())
             .video(hmsVideoTrackSettings.build()).build()
-        hmssdk!! = HMSSDK
+        hmssdk = HMSSDK
             .Builder(activity)
             .setTrackSettings(hmsTrackSettings)
             .build()
