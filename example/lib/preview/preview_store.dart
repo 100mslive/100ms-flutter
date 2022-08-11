@@ -8,7 +8,7 @@ import 'package:hmssdk_flutter_example/service/room_service.dart';
 
 class PreviewStore extends ChangeNotifier
     implements HMSPreviewListener, HMSLogListener {
-  late HMSSDKInteractor hmsSDKInteractor;
+  HMSSDKInteractor? hmsSDKInteractor;
 
   PreviewStore() {
     hmsSDKInteractor = HMSSDKInteractor(
@@ -87,8 +87,8 @@ class PreviewStore extends ChangeNotifier
         userName: user,
         endPoint: token[1] == "true" ? "" : "https://qa-init.100ms.live/init",
         captureNetworkQualityInPreview: true);
-    hmsSDKInteractor.addPreviewListener(this);
-    hmsSDKInteractor.preview(config: config);
+    hmsSDKInteractor!.addPreviewListener(this);
+    hmsSDKInteractor!.preview(config: config);
     meetingUrl = meetingLink;
     return "";
   }
@@ -146,35 +146,35 @@ class PreviewStore extends ChangeNotifier
   }
 
   void removePreviewListener() {
-    hmsSDKInteractor.removePreviewListener(this);
+    hmsSDKInteractor!.removePreviewListener(this);
   }
 
   void stopCapturing() {
-    hmsSDKInteractor.stopCapturing();
+    hmsSDKInteractor!.stopCapturing();
   }
 
   void startCapturing() {
-    hmsSDKInteractor.startCapturing();
+    hmsSDKInteractor!.startCapturing();
   }
 
   void switchVideo({bool isOn = false}) {
-    hmsSDKInteractor.switchVideo(isOn: isOn);
+    hmsSDKInteractor!.switchVideo(isOn: isOn);
     isVideoOn = !isVideoOn;
     notifyListeners();
   }
 
   void switchAudio({bool isOn = false}) {
-    hmsSDKInteractor.switchAudio(isOn: isOn);
+    hmsSDKInteractor!.switchAudio(isOn: isOn);
     isAudioOn = !isAudioOn;
     notifyListeners();
   }
 
   void addLogsListener(HMSLogListener hmsLogListener) {
-    hmsSDKInteractor.addLogsListener(hmsLogListener);
+    hmsSDKInteractor!.addLogsListener(hmsLogListener);
   }
 
   void removeLogsListener(HMSLogListener hmsLogListener) {
-    hmsSDKInteractor.removeLogsListener(hmsLogListener);
+    hmsSDKInteractor!.removeLogsListener(hmsLogListener);
   }
 
   @override
@@ -184,5 +184,11 @@ class PreviewStore extends ChangeNotifier
 
   void updateError(HMSException error) {
     this.error = error;
+  }
+
+  void destroy() {
+    hmsSDKInteractor!.removePreviewListener(this);
+    hmsSDKInteractor!.destroy();
+    hmsSDKInteractor = null;
   }
 }

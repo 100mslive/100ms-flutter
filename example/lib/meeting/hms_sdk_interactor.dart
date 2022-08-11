@@ -20,12 +20,12 @@ class HMSSDKInteractor {
     hmsSDK.build();
   }
 
-  void join({required HMSConfig config}){
+  void join({required HMSConfig config}) {
     this.config = config;
     hmsSDK.join(config: this.config);
   }
 
-  void leave({required HMSActionResultListener hmsActionResultListener}){
+  void leave({required HMSActionResultListener hmsActionResultListener}) {
     hmsSDK.leave(hmsActionResultListener: hmsActionResultListener);
   }
 
@@ -299,5 +299,9 @@ class HMSSDKInteractor {
 
   void setAudioMixingMode(HMSAudioMixingMode audioMixingMode) {
     hmsSDK.setAudioMixingMode(audioMixingMode: audioMixingMode);
+  }
+
+  void destroy() {
+    hmsSDK.destroy();
   }
 }
