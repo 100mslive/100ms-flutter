@@ -35,12 +35,12 @@ class HMSSDKInteractor {
     hmsSDK.build();
   }
 
-  void join({required HMSConfig config}) async {
+  void join({required HMSConfig config}){
     this.config = config;
     hmsSDK.join(config: this.config);
   }
 
-  void leave({required HMSActionResultListener hmsActionResultListener}) async {
+  void leave({required HMSActionResultListener hmsActionResultListener}){
     hmsSDK.leave(hmsActionResultListener: hmsActionResultListener);
   }
 
@@ -69,7 +69,7 @@ class HMSSDKInteractor {
   }
 
   void sendDirectMessage(String message, HMSPeer peerTo,
-      HMSActionResultListener hmsActionResultListener) async {
+      HMSActionResultListener hmsActionResultListener) {
     hmsSDK.sendDirectMessage(
         message: message,
         peerTo: peerTo,
@@ -78,7 +78,7 @@ class HMSSDKInteractor {
   }
 
   void sendGroupMessage(String message, List<HMSRole> hmsRolesTo,
-      HMSActionResultListener hmsActionResultListener) async {
+      HMSActionResultListener hmsActionResultListener) {
     hmsSDK.sendGroupMessage(
         message: message,
         hmsRolesTo: hmsRolesTo,
@@ -86,7 +86,7 @@ class HMSSDKInteractor {
         hmsActionResultListener: hmsActionResultListener);
   }
 
-  Future<void> preview({required HMSConfig config}) async {
+  Future<void> preview({required HMSConfig config}) {
     this.config = config;
     return hmsSDK.preview(config: config);
   }

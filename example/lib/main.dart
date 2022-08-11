@@ -497,7 +497,6 @@ class _HomePageState extends State<HomePage> {
                     },
                     style: GoogleFonts.inter(),
                     controller: meetingLinkController,
-                    keyboardType: TextInputType.url,
                     onChanged: (value) {
                       setState(() {});
                     },

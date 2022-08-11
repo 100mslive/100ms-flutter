@@ -575,7 +575,7 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                         .localPeer!
                                         .role
                                         .name
-                                        .contains("hls"))
+                                        .contains("hls-"))
                                   Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceEvenly,

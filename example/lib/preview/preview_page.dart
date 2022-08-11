@@ -87,7 +87,7 @@ class _PreviewPageState extends State<PreviewPage> {
                         strokeWidth: 2,
                       ),
                     )
-                  : (_previewStore.peer!.role.name.contains("hls"))
+                  : (_previewStore.peer!.role.name.contains("hls-"))
                       ? Container(
                           child: Center(
                             child: CircleAvatar(
@@ -103,7 +103,8 @@ class _PreviewPageState extends State<PreviewPage> {
                                 )),
                           ),
                         )
-                      : (_previewStore.localTracks.isEmpty)
+                      : (_previewStore.localTracks.isEmpty &&
+                              _previewStore.isVideoOn)
                           ? Center(
                               child: CircularProgressIndicator(
                                 strokeWidth: 2,
@@ -173,7 +174,7 @@ class _PreviewPageState extends State<PreviewPage> {
                               children: [
                                 if (_previewStore.peer != null &&
                                     !_previewStore.peer!.role.name
-                                        .contains("hls"))
+                                        .contains("hls-"))
                                   Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
