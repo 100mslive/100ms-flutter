@@ -413,7 +413,6 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
 
     private fun destroy(result:Result){
         hmssdk = null
-        Log.i("HMSSDK","HMSSDK set to null")
     }
 
     override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {

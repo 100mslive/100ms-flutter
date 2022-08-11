@@ -199,6 +199,7 @@ class MeetingStore extends ChangeNotifier
 
   void endRoom(bool lock, String? reason) {
     _hmsSDKInteractor.endRoom(lock, reason == null ? "" : reason, this);
+    _hmsSDKInteractor.destroy();
   }
 
   void removePeerFromRoom(HMSPeer peer) {

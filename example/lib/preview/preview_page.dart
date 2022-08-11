@@ -308,11 +308,11 @@ class _PreviewPageState extends State<PreviewPage> {
                                           .read<PreviewStore>()
                                           .removePreviewListener(),
                                       _previewStore
-                                          .hmsSDKInteractor.mirrorCamera = true,
-                                      _previewStore.hmsSDKInteractor.showStats =
+                                          .hmsSDKInteractor!.mirrorCamera = true,
+                                      _previewStore.hmsSDKInteractor!.showStats =
                                           false,
                                       _previewStore
-                                          .hmsSDKInteractor.skipPreview = false,
+                                          .hmsSDKInteractor?.skipPreview = false,
                                       if (widget.meetingFlow ==
                                           MeetingFlow.meeting)
                                         {
@@ -323,7 +323,7 @@ class _PreviewPageState extends State<PreviewPage> {
                                                         value: MeetingStore(
                                                           hmsSDKInteractor:
                                                               _previewStore
-                                                                  .hmsSDKInteractor,
+                                                                  .hmsSDKInteractor!,
                                                         ),
                                                         child: MeetingPage(
                                                           meetingLink: widget
@@ -349,7 +349,7 @@ class _PreviewPageState extends State<PreviewPage> {
                                                         value: MeetingStore(
                                                           hmsSDKInteractor:
                                                               _previewStore
-                                                                  .hmsSDKInteractor,
+                                                                  .hmsSDKInteractor!,
                                                         ),
                                                         child:
                                                             HLSScreenController(
