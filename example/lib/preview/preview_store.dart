@@ -55,6 +55,11 @@ class PreviewStore extends ChangeNotifier
           isHLSLink = true;
           notifyListeners();
         }
+        if (!each.role.publishSettings!.allowed.contains("video")) {
+          isVideoOn = false;
+          notifyListeners();
+        }
+
         break;
       }
     }
