@@ -109,7 +109,7 @@ class _PreviewPageState extends State<PreviewPage> {
                             ),
                           )
                         : (_previewStore.localTracks.isEmpty &&
-                              _previewStore.isVideoOn)
+                                _previewStore.isVideoOn)
                             ? Center(
                                 child: CircularProgressIndicator(
                                   strokeWidth: 2,
@@ -308,12 +308,12 @@ class _PreviewPageState extends State<PreviewPage> {
                                       context
                                           .read<PreviewStore>()
                                           .removePreviewListener(),
+                                      _previewStore.hmsSDKInteractor!
+                                          .mirrorCamera = true,
                                       _previewStore
-                                          .hmsSDKInteractor!.mirrorCamera = true,
-                                      _previewStore.hmsSDKInteractor!.showStats =
-                                          false,
-                                      _previewStore
-                                          .hmsSDKInteractor?.skipPreview = false,
+                                          .hmsSDKInteractor!.showStats = false,
+                                      _previewStore.hmsSDKInteractor
+                                          ?.skipPreview = false,
                                       if (widget.meetingFlow ==
                                           MeetingFlow.meeting)
                                         {

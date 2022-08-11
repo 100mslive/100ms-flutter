@@ -810,9 +810,8 @@ class HMSSDK {
   }
 
   void destroy() {
-  PlatformService.invokeMethod(PlatformMethod.destroy);
-
-}
+    PlatformService.invokeMethod(PlatformMethod.destroy);
+  }
 
   /// To modify local peer's audio & video track settings use the [hmsTrackSetting]. Only required for advanced use-cases.
   HMSTrackSetting? hmsTrackSetting;
@@ -825,4 +824,3 @@ class HMSSDK {
 
   bool previewState = false;
 }
-
