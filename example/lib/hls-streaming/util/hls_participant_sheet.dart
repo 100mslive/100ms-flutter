@@ -241,7 +241,7 @@ class _HLSParticipantSheetState extends State<HLSParticipantSheet> {
   @override
   Widget build(BuildContext context) {
     return FractionallySizedBox(
-      heightFactor: 0.8,
+      heightFactor: 0.81,
       child: Material(
         color: bottomSheetColor,
         child: Padding(

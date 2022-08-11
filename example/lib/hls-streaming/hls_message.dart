@@ -86,7 +86,7 @@ class _HLSMessageState extends State<HLSMessage> {
         child: Padding(
           padding: MediaQuery.of(context).viewInsets,
           child: FractionallySizedBox(
-            heightFactor: 0.8,
+            heightFactor: 0.81,
             child: Padding(
               padding: const EdgeInsets.only(
                   top: 20.0, left: 10, right: 10, bottom: 10),
