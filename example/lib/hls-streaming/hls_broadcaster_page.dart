@@ -807,49 +807,68 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                               );
                                             }),
                                       if (Provider.of<MeetingStore>(context)
-                                                  .localPeer !=
-                                              null &&
-                                          (Provider.of<MeetingStore>(context)
-                                                  .localPeer
-                                                  ?.role
-                                                  .publishSettings
-                                                  ?.allowed
-                                                  .contains("screen") ??
-                                              false))
-                                        Selector<MeetingStore, bool>(
-                                            selector: (_, meetingStore) =>
-                                                meetingStore.isScreenShareOn,
-                                            builder: (_, data, __) {
-                                              return EmbeddedButton(
-                                                onTap: () {
-                                                  MeetingStore meetingStore =
-                                                      Provider.of<MeetingStore>(
-                                                          context,
-                                                          listen: false);
-                                                  if (meetingStore
-                                                      .isScreenShareOn) {
+                                              .localPeer !=
+                                          null)
+                                        (Provider.of<MeetingStore>(context)
+                                                    .localPeer
+                                                    ?.role
+                                                    .publishSettings
+                                                    ?.allowed
+                                                    .contains("screen") ??
+                                                false)
+                                            ? Selector<MeetingStore, bool>(
+                                                selector: (_, meetingStore) =>
                                                     meetingStore
-                                                        .stopScreenShare();
-                                                  } else {
-                                                    meetingStore
-                                                        .startScreenShare();
-                                                  }
-                                                },
-                                                width: 40,
-                                                height: 40,
-                                                disabledBorderColor:
-                                                    borderColor,
-                                                offColor: screenBackgroundColor,
-                                                onColor: borderColor,
-                                                isActive: data,
+                                                        .isScreenShareOn,
+                                                builder: (_, data, __) {
+                                                  return EmbeddedButton(
+                                                    onTap: () {
+                                                      MeetingStore
+                                                          meetingStore =
+                                                          Provider.of<
+                                                                  MeetingStore>(
+                                                              context,
+                                                              listen: false);
+                                                      if (meetingStore
+                                                          .isScreenShareOn) {
+                                                        meetingStore
+                                                            .stopScreenShare();
+                                                      } else {
+                                                        meetingStore
+                                                            .startScreenShare();
+                                                      }
+                                                    },
+                                                    width: 40,
+                                                    height: 40,
+                                                    disabledBorderColor:
+                                                        borderColor,
+                                                    offColor:
+                                                        screenBackgroundColor,
+                                                    onColor: borderColor,
+                                                    isActive: data,
+                                                    child: SvgPicture.asset(
+                                                        "assets/icons/screen_share.svg",
+                                                        color: defaultColor,
+                                                        fit: BoxFit.scaleDown,
+                                                        semanticsLabel:
+                                                            "screen_share_button"),
+                                                  );
+                                                })
+                                            : EmbeddedButton(
+                                              width: 40,
+                                          height: 40,
+                                                onTap: () => context
+                                                    .read<MeetingStore>()
+                                                    .switchCamera(),
+                                                offColor: hintColor,
+                                                onColor: screenBackgroundColor,
+                                                isActive: true,
                                                 child: SvgPicture.asset(
-                                                    "assets/icons/screen_share.svg",
-                                                    color: defaultColor,
-                                                    fit: BoxFit.scaleDown,
-                                                    semanticsLabel:
-                                                        "screen_share_button"),
-                                              );
-                                            }),
+                                                  
+                                                  "assets/icons/camera.svg",
+                                                  fit: BoxFit.scaleDown,
+                                                ),
+                                              ),
                                       if (Provider.of<MeetingStore>(context)
                                               .localPeer !=
                                           null)
