@@ -1309,6 +1309,7 @@ class UtilityComponents {
       {required BuildContext context,
       required MeetingStore meetingStore,
       required bool isPlaying}) async {
+    double volume = meetingStore.audioPlayerVolume;
     String answer = await showDialog(
         context: context,
         builder: (context) => StatefulBuilder(builder: (context, setState) {
@@ -1318,8 +1319,30 @@ class UtilityComponents {
                 backgroundColor: bottomSheetColor,
                 contentPadding:
                     EdgeInsets.only(left: 14, right: 10, top: 15, bottom: 15),
-                content:
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
                     Text(isPlaying ? "Stop playing" : "Pick song from files"),
+                    SizedBox(height: 10),
+                    if (isPlaying)
+                      Column(
+                        children: [
+                          Text("Volume: ${(volume * 100).truncate()}"),
+                          Slider(
+                            min: 0.0,
+                            max: 1.0,
+                            value: volume,
+                            onChanged: (value) {
+                              setState(() {
+                                volume = value;
+                                meetingStore.setAudioPlayerVolume(volume);
+                              });
+                            },
+                          ),
+                        ],
+                      )
+                  ],
+                ),
                 actions: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,

@@ -10,15 +10,12 @@ import HMSSDK
 
 class HMSAudioFilePlayerNodeExtension {
     
-    static func setVolume(_ call: [AnyHashable: Any],_ playerNode:HMSAudioFilePlayerNode){
-        playerNode.volume = call["volume"] as! Float
-    }
-    
-    static func play(_ call: [AnyHashable: Any], _ playerNode:HMSAudioFilePlayerNode){
+    static func play(_ call: [AnyHashable: Any], _ playerNode:HMSAudioFilePlayerNode, _ result: @escaping FlutterResult){
         do{
         try playerNode.play(fileUrl: URL(string:call["file_url"] as! String)!, loops: call["loops"] as? Bool ?? false, interrupts: call["interrupts"] as? Bool ?? false)
         }catch{
-            print(error)
+            let error = HMSCommonAction.getError(message: error.localizedDescription, params: ["function": #function])
+            result(HMSErrorExtension.toDictionary(error))
         }
     }
     
@@ -26,16 +23,21 @@ class HMSAudioFilePlayerNodeExtension {
         playerNode.pause()
     }
     
-    static func resume( _ playerNode:HMSAudioFilePlayerNode){
+    static func resume( _ playerNode:HMSAudioFilePlayerNode, _ result: @escaping FlutterResult){
         do{
         try playerNode.resume()
         }catch{
-            print(error)
+            let error = HMSCommonAction.getError(message: error.localizedDescription, params: ["function": #function])
+            result(HMSErrorExtension.toDictionary(error))
         }
     }
     
     static func stop( _ playerNode:HMSAudioFilePlayerNode){
         playerNode.stop()
+    }
+    
+    static func setVolume(_ call: [AnyHashable: Any],_ playerNode:HMSAudioFilePlayerNode){
+        playerNode.volume = Float(call["volume"] as! Double)
     }
     
     static func isPlaying(_ playerNode:HMSAudioFilePlayerNode,_ result: FlutterResult) {
@@ -55,5 +57,5 @@ class HMSAudioFilePlayerNodeExtension {
         dict["duration"] = playerNode.duration
         result(dict)
     }
-   
+
 }

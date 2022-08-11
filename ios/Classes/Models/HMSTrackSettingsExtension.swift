@@ -56,7 +56,7 @@ class HMSTrackSettingsExtension {
         return dict
     }
     
-    static func setTrackSetting(_ settingsDict: [AnyHashable: Any],_ audioMixerSourceMap: [String:HMSAudioNode]) -> HMSTrackSettings? {
+    static func setTrackSetting(_ settingsDict: [AnyHashable: Any],_ audioMixerSourceMap: [String:HMSAudioNode], _ result: @escaping FlutterResult) -> HMSTrackSettings? {
         
             var audioSettings: HMSAudioTrackSettings?
             if let audioSettingsDict = settingsDict["audio_track_setting"] as? [AnyHashable: Any] {
@@ -67,7 +67,8 @@ class HMSTrackSettingsExtension {
                             audioSettings = HMSAudioTrackSettings(maxBitrate: bitrate, trackDescription: desc,audioSource: audioMixerSource)
                         }
                     } catch {
-                        print(error)
+                        let error = HMSCommonAction.getError(message: error.localizedDescription, params: ["function": #function])
+                        result(HMSErrorExtension.toDictionary(error))
                     }
                 } else {
                     if let bitrate = audioSettingsDict["bit_rate"] as? Int, let desc = audioSettingsDict["track_description"] as? String {

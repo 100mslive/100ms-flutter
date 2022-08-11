@@ -143,6 +143,8 @@ class MeetingStore extends ChangeNotifier
 
   bool isTrackSettingApplied = false;
 
+  double audioPlayerVolume = 1.0;
+
   Future<bool> join(String user, String roomUrl) async {
     List<String?>? token =
         await RoomService().getToken(user: user, room: roomUrl);
@@ -1178,6 +1180,11 @@ class MeetingStore extends ChangeNotifier
 
   void stopAudioIos() {
     audioFilePlayerNode.stop();
+  }
+
+  void setAudioPlayerVolume(double volume) {
+    audioFilePlayerNode.setVolume(volume);
+    audioPlayerVolume = volume;
   }
 
 //Get onSuccess or onException callbacks for HMSActionResultListenerMethod

@@ -15,7 +15,7 @@ class HMSVideoTrackSetting {
       this.resolution,
       this.maxBitrate = 512,
       this.maxFrameRate = 25,
-      this.cameraFacing,
+      this.cameraFacing = HMSCameraFacing.FRONT,
       this.trackDescription = "This a video track",
       this.disableAutoResize = false});
 

@@ -8,7 +8,7 @@ class HMSAudioFilePlayerNode extends HMSAudioNode {
   HMSAudioFilePlayerNode(this.methodName) : super(methodName);
 
   void setVolume(double volume) async {
-    await PlatformService.invokeMethod(PlatformMethod.pauseAudioShare,
+    await PlatformService.invokeMethod(PlatformMethod.setAudioShareVolume,
         arguments: {"name": methodName, "volume": volume});
   }
 
@@ -38,7 +38,7 @@ class HMSAudioFilePlayerNode extends HMSAudioNode {
 
   Future<HMSException?> resume() async {
     var result = await PlatformService.invokeMethod(
-        PlatformMethod.pauseAudioShare,
+        PlatformMethod.resumeAudioShare,
         arguments: {"name": methodName});
     if (result == null) {
       return null;
@@ -74,7 +74,7 @@ class HMSAudioFilePlayerNode extends HMSAudioNode {
 
   Future<DateTime?> duration() async {
     var result = await PlatformService.invokeMethod(
-        PlatformMethod.audioShareCurrentTime,
+        PlatformMethod.audioShareDuration,
         arguments: {"name": methodName});
     if (result != null) {
       return result["duration"];
