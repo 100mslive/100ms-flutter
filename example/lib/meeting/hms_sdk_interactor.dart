@@ -317,7 +317,6 @@ class HMSSDKInteractor {
     hmsSDK.setAudioMixingMode(audioMixingMode: audioMixingMode);
   }
 
-
   Future<HMSTrackSetting> getTrackSettings() async {
     return await hmsSDK.getTrackSettings();
   }
@@ -326,9 +325,9 @@ class HMSSDKInteractor {
       {HMSActionResultListener? hmsActionResultListener,
       required HMSTrackSetting hmsTrackSetting}) {
     hmsSDK.setTrackSettings(hmsTrackSetting: hmsTrackSetting);
+  }
 
   void destroy() {
     hmsSDK.destroy();
-
   }
 }
