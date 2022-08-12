@@ -11,7 +11,7 @@ class HMSVideoTrackSetting {
   final bool? disableAutoResize;
 
   HMSVideoTrackSetting(
-      {this.codec,
+      {this.codec = HMSCodec.VP8,
       this.resolution,
       this.maxBitrate = 512,
       this.maxFrameRate = 25,

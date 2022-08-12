@@ -20,7 +20,7 @@ class HMSAudioTrackSetting {
 
   factory HMSAudioTrackSetting.fromMap(Map map) {
     List<HMSAudioNode> nodeList = [];
-    List<String>? node = map["audio_source"] ?? null;
+    List? node = map["audio_source"] ?? null;
     HMSAudioMixerSource? audioMixerSource;
     if (node != null) {
       for (String i in node) {

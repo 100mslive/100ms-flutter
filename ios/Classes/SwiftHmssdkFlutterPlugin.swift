@@ -389,7 +389,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         case "is_screen_share_active":
             result(isScreenShareOn)
         default:
-            print("Not Valid")
+            result(FlutterMethodNotImplemented)
         }
     }
     
@@ -439,7 +439,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                         }
                     }
                 }
-                    print(audioMixerSourceMap)
+                    
                 trackSettings = HMSTrackSettingsExtension.setTrackSetting(settingsDict,audioMixerSourceMap,result)
             }
             }

@@ -27,7 +27,7 @@ class HMSTrackSettingsExtension {
     static func toDictionary(_ hmsVideoTrackSettings: HMSVideoTrackSettings) -> [String: Any] {
 
         var dict = [String: Any]()
-        if(hmsVideoTrackSettings.codec==HMSCodec.H264){
+        if(hmsVideoTrackSettings.codec ==  HMSCodec.H264){
             dict["video_codec"] = "h264"
         }else{
             dict["video_codec"] = "vp8"
@@ -52,7 +52,7 @@ class HMSTrackSettingsExtension {
 
         dict["track_description"] = hmsAudioTrackSettings.trackDescription
         dict["max_bitrate"] = hmsAudioTrackSettings.maxBitrate
-        dict["audio_source"] = audioMixerSourceMap.values.map{$0}
+        dict["audio_source"] = audioMixerSourceMap.keys.map{$0}
         return dict
     }
     
