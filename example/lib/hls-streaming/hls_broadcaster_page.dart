@@ -694,37 +694,29 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                                             "video_mute_button"),
                                                   );
                                                 })
-                                            : EmbeddedButton(
-                                                width: 40,
-                                                height: 40,
-                                                onTap: () =>
-                                                    showModalBottomSheet(
-                                                  isScrollControlled: true,
-                                                  backgroundColor:
-                                                      bottomSheetColor,
-                                                  shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            20),
-                                                  ),
-                                                  context: context,
-                                                  builder: (ctx) =>
-                                                      ChangeNotifierProvider.value(
-                                                          value: context.read<
-                                                              MeetingStore>(),
-                                                          child:
-                                                              HLSDeviceSettings()),
-                                                ),
-                                                offColor: hintColor,
-                                                onColor: screenBackgroundColor,
-                                                isActive: true,
-                                                child: SvgPicture.asset(
-                                                  "assets/icons/settings.svg",
-                                                  fit: BoxFit.scaleDown,
-                                                  semanticsLabel:
-                                                            "device_settings_button"
-                                                ),
-                                              ),
+                                            : Selector<MeetingStore,bool>(
+                                              selector: (_,meetingStore)=>meetingStore.isStatsVisible,
+                                              builder: (_,isStatsVisible,__) {
+                                                return EmbeddedButton(
+                                                    width: 40,
+                                                    height: 40,
+                                                    onTap: () => context
+                                                        .read<MeetingStore>()
+                                                        .changeStatsVisible(),
+                                                    disabledBorderColor:
+                                                            borderColor,
+                                                        offColor:
+                                                            screenBackgroundColor,
+                                                        onColor: borderColor,
+                                                    isActive: isStatsVisible,
+                                                    child: SvgPicture.asset(
+                                                        "assets/icons/stats.svg",
+                                                        fit: BoxFit.scaleDown,
+                                                        semanticsLabel:
+                                                            "stats_button"),
+                                                  );
+                                              }
+                                            ),
                                       if (Provider.of<MeetingStore>(context)
                                               .localPeer !=
                                           null)
@@ -918,22 +910,29 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                                             "screen_share_button"),
                                                   );
                                                 })
-                                            : EmbeddedButton(
-                                                width: 40,
-                                                height: 40,
-                                                onTap: () => context
-                                                    .read<MeetingStore>()
-                                                    .switchCamera(),
-                                                offColor: hintColor,
-                                                onColor: screenBackgroundColor,
-                                                isActive: true,
-                                                child: SvgPicture.asset(
-                                                  "assets/icons/camera.svg",
-                                                  fit: BoxFit.scaleDown,
-                                                  semanticsLabel:
-                                                            "toggle_camera_button"
-                                                ),
-                                              ),
+                                            : Selector<MeetingStore, bool>(
+                                                selector: (_, meetingStore) =>
+                                                    (meetingStore.isBRB),
+                                                builder: (_, isBRB, __) {
+                                                  return EmbeddedButton(
+                                                    width: 40,
+                                                    height: 40,
+                                                    onTap: () => context
+                                                        .read<MeetingStore>()
+                                                        .changeMetadataBRB(),
+                                                    disabledBorderColor:
+                                                        borderColor,
+                                                    offColor:
+                                                        screenBackgroundColor,
+                                                    onColor: borderColor,
+                                                    isActive: isBRB,
+                                                    child: SvgPicture.asset(
+                                                        "assets/icons/brb.svg",
+                                                        fit: BoxFit.scaleDown,
+                                                        semanticsLabel:
+                                                            "brb_button"),
+                                                  );
+                                                }),
                                       if (Provider.of<MeetingStore>(context)
                                               .localPeer !=
                                           null)
