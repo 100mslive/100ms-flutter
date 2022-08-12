@@ -328,7 +328,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
     private fun trackSettings(call: MethodCall, result: Result){
         when (call.method) {
             "get_track_settings"->{
-                result.success(HMSTrackSettingsExtension.toDictionary(hmssdk))
+                result.success(HMSTrackSettingsExtension.toDictionary(hmssdk!!))
             }
 //            "set_track_settings"->{
 //                val hmsTrackSettingMap =
