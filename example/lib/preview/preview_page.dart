@@ -80,7 +80,7 @@ class _PreviewPageState extends State<PreviewPage> {
             alertMessage: "Leave Preview"),
         child: WillPopScope(
           onWillPop: () async {
-            context.read<PreviewStore>().destroy();
+            context.read<PreviewStore>().leave();
             return true;
           },
           child: Scaffold(
