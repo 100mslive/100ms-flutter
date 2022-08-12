@@ -18,17 +18,12 @@ class HMSSDKInteractor {
   HMSSDKInteractor({String? appGroup, String? preferredExtension}) {
     HMSTrackSetting trackSetting = HMSTrackSetting(
         audioTrackSetting: HMSAudioTrackSetting(
-            maxBitrate: 32,
             audioSource: HMSAudioMixerSource(node: [
-              HMSAudioFilePlayerNode("audioFilePlayerNode"),
-              HMSMicNode(),
-              HMSScreenBroadcastAudioReceiverNode()
-            ])),
-        videoTrackSetting: HMSVideoTrackSetting(
-            cameraFacing: HMSCameraFacing.FRONT,
-            maxBitrate: 512,
-            maxFrameRate: 25,
-            resolution: HMSResolution(height: 180, width: 320)));
+          HMSAudioFilePlayerNode("audioFilePlayerNode"),
+          HMSMicNode(),
+          HMSScreenBroadcastAudioReceiverNode()
+        ])),
+        videoTrackSetting: HMSVideoTrackSetting());
     hmsSDK = HMSSDK(
         appGroup: appGroup,
         preferredExtension: preferredExtension,
