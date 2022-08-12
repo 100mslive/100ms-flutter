@@ -168,6 +168,7 @@ class MeetingStore extends ChangeNotifier
     _hmsSDKInteractor.removeStatsListener(this);
     WidgetsBinding.instance!.removeObserver(this);
     _hmsSDKInteractor.leave(hmsActionResultListener: this);
+    _hmsSDKInteractor.destroy();
   }
 
   Future<void> switchAudio() async {
@@ -202,6 +203,7 @@ class MeetingStore extends ChangeNotifier
 
   void endRoom(bool lock, String? reason) {
     _hmsSDKInteractor.endRoom(lock, reason == null ? "" : reason, this);
+    _hmsSDKInteractor.destroy();
   }
 
   void removePeerFromRoom(HMSPeer peer) {

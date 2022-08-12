@@ -109,7 +109,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             
             // MARK: Room Actions
             
-        case "build", "preview", "join", "leave":
+        case "build", "preview", "join", "leave","destroy":
             buildActions(call, result)
             
             // MARK: Room Actions
@@ -191,6 +191,9 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             
         case "leave":
             leave(result)
+            
+        case "destroy":
+            destroy(result)
             
         default:
             result(FlutterMethodNotImplemented)
@@ -505,6 +508,10 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                 result(nil)
             }
         }
+    }
+    
+    private func destroy(_ result: @escaping FlutterResult){
+        hmsSDK = nil
     }
     
     // MARK: - Role based Actions

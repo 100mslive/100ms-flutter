@@ -68,7 +68,8 @@ class Utilities {
   }
 
   static void setRTMPUrl(String roomUrl) {
-    if (roomUrl.contains("flutterhms.page.link") && roomUrl.contains("meetingUrl")) {
+    if (roomUrl.contains("flutterhms.page.link") &&
+        roomUrl.contains("meetingUrl")) {
       roomUrl = roomUrl.split("meetingUrl=")[1];
     }
     List<String> urlSplit = roomUrl.split('/');

@@ -147,7 +147,8 @@ enum PlatformMethod {
   audioShareCurrentTime,
   audioShareDuration,
   getTrackSettings,
-  setTrackSettings
+  setTrackSettings,
+  destroy
 }
 
 extension PlatformMethodValues on PlatformMethod {
@@ -342,6 +343,8 @@ extension PlatformMethodValues on PlatformMethod {
         return "get_track_settings";
       case PlatformMethod.setTrackSettings:
         return "set_track_settings";
+      case PlatformMethod.destroy:
+        return "destroy";
       default:
         return 'unknown';
     }
@@ -542,6 +545,8 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.getTrackSettings;
       case "set_track_settings":
         return PlatformMethod.setTrackSettings;
+      case "destroy":
+        return PlatformMethod.destroy;
       default:
         return PlatformMethod.unknown;
     }
