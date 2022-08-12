@@ -836,6 +836,8 @@ class HMSSDK {
                 isTerminal: false));
       }
     }
+  }
+
   void destroy() {
     PlatformService.invokeMethod(PlatformMethod.destroy);
   }
