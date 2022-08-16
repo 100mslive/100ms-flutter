@@ -1,5 +1,8 @@
 //Package imports
+import 'dart:io';
+
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -1300,5 +1303,121 @@ class UtilityComponents {
                 ],
               );
             }));
+  }
+
+  static Future<String> showAudioShareDialog(
+      {required BuildContext context,
+      required MeetingStore meetingStore,
+      required bool isPlaying}) async {
+    double volume = meetingStore.audioPlayerVolume;
+    String answer = await showDialog(
+        context: context,
+        builder: (context) => StatefulBuilder(builder: (context, setState) {
+              return AlertDialog(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12)),
+                backgroundColor: bottomSheetColor,
+                contentPadding:
+                    EdgeInsets.only(left: 14, right: 10, top: 15, bottom: 15),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(isPlaying ? "Stop playing" : "Pick song from files"),
+                    SizedBox(height: 10),
+                    if (isPlaying)
+                      Column(
+                        children: [
+                          Text("Volume: ${(volume * 100).truncate()}"),
+                          Slider(
+                            min: 0.0,
+                            max: 1.0,
+                            value: volume,
+                            onChanged: (value) {
+                              setState(() {
+                                volume = value;
+                                meetingStore.setAudioPlayerVolume(volume);
+                              });
+                            },
+                          ),
+                        ],
+                      )
+                  ],
+                ),
+                actions: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      ElevatedButton(
+                          style: ButtonStyle(
+                              shadowColor:
+                                  MaterialStateProperty.all(surfaceColor),
+                              backgroundColor:
+                                  MaterialStateProperty.all(bottomSheetColor),
+                              shape: MaterialStateProperty.all<
+                                      RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                side: BorderSide(
+                                    width: 1,
+                                    color: Color.fromRGBO(107, 125, 153, 1)),
+                                borderRadius: BorderRadius.circular(8.0),
+                              ))),
+                          onPressed: () => Navigator.pop(context, ""),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 6, vertical: 12),
+                            child: Text('Cancel',
+                                style: GoogleFonts.inter(
+                                    color: defaultColor,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                    letterSpacing: 0.50)),
+                          )),
+                      ElevatedButton(
+                        style: ButtonStyle(
+                            shadowColor:
+                                MaterialStateProperty.all(surfaceColor),
+                            backgroundColor:
+                                MaterialStateProperty.all(hmsdefaultColor),
+                            shape: MaterialStateProperty.all<
+                                RoundedRectangleBorder>(RoundedRectangleBorder(
+                              side:
+                                  BorderSide(width: 1, color: hmsdefaultColor),
+                              borderRadius: BorderRadius.circular(8.0),
+                            ))),
+                        onPressed: () async {
+                          if (isPlaying) {
+                            meetingStore.stopAudioIos();
+                            Navigator.pop(context, "");
+                          } else {
+                            FilePickerResult? result =
+                                await FilePicker.platform.pickFiles();
+                            if (result != null) {
+                              String? path =
+                                  "file://" + result.files.single.path!;
+
+                              Navigator.pop(context, path);
+                            }
+                          }
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 6, vertical: 12),
+                          child: Text(
+                            isPlaying ? 'Stop' : 'Select',
+                            style: GoogleFonts.inter(
+                                color: defaultColor,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                letterSpacing: 0.50),
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+              );
+            }));
+
+    return answer;
   }
 }

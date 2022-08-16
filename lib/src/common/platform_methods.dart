@@ -139,6 +139,15 @@ enum PlatformMethod {
   startAudioShare,
   stopAudioShare,
   setAudioMixingMode,
+  pauseAudioShare,
+  playAudioShare,
+  resumeAudioShare,
+  setAudioShareVolume,
+  audioSharePlaying,
+  audioShareCurrentTime,
+  audioShareDuration,
+  getTrackSettings,
+  setTrackSettings,
   destroy
 }
 
@@ -316,6 +325,24 @@ extension PlatformMethodValues on PlatformMethod {
         return "stop_audio_share";
       case PlatformMethod.setAudioMixingMode:
         return "set_audio_mixing_mode";
+      case PlatformMethod.pauseAudioShare:
+        return "pause_audio_share";
+      case PlatformMethod.playAudioShare:
+        return "play_audio_share";
+      case PlatformMethod.resumeAudioShare:
+        return "resume_audio_share";
+      case PlatformMethod.setAudioShareVolume:
+        return "set_audio_share_volume";
+      case PlatformMethod.audioSharePlaying:
+        return "audio_share_playing";
+      case PlatformMethod.audioShareCurrentTime:
+        return "audio_share_current_time";
+      case PlatformMethod.audioShareDuration:
+        return "audio_share_duration";
+      case PlatformMethod.getTrackSettings:
+        return "get_track_settings";
+      case PlatformMethod.setTrackSettings:
+        return "set_track_settings";
       case PlatformMethod.destroy:
         return "destroy";
       default:
@@ -500,6 +527,24 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.stopAudioShare;
       case "set_audio_mixing_mode":
         return PlatformMethod.setAudioMixingMode;
+      case "pause_audio_share":
+        return PlatformMethod.pauseAudioShare;
+      case "play_audio_share":
+        return PlatformMethod.playAudioShare;
+      case "resume_audio_share":
+        return PlatformMethod.resumeAudioShare;
+      case "set_audio_share_volume":
+        return PlatformMethod.setAudioShareVolume;
+      case "audio_share_playing":
+        return PlatformMethod.audioSharePlaying;
+      case "audio_share_current_time":
+        return PlatformMethod.audioShareCurrentTime;
+      case "audio_share_duration":
+        return PlatformMethod.audioShareDuration;
+      case "get_track_settings":
+        return PlatformMethod.getTrackSettings;
+      case "set_track_settings":
+        return PlatformMethod.setTrackSettings;
       case "destroy":
         return PlatformMethod.destroy;
       default:

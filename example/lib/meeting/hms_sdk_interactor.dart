@@ -16,7 +16,18 @@ class HMSSDKInteractor {
   bool skipPreview = false;
 
   HMSSDKInteractor({String? appGroup, String? preferredExtension}) {
-    hmsSDK = HMSSDK(appGroup: appGroup, preferredExtension: preferredExtension);
+    HMSTrackSetting trackSetting = HMSTrackSetting(
+        audioTrackSetting: HMSAudioTrackSetting(
+            audioSource: HMSAudioMixerSource(node: [
+          HMSAudioFilePlayerNode("audioFilePlayerNode"),
+          HMSMicNode(),
+          HMSScreenBroadcastAudioReceiverNode()
+        ])),
+        videoTrackSetting: HMSVideoTrackSetting());
+    hmsSDK = HMSSDK(
+        appGroup: appGroup,
+        preferredExtension: preferredExtension,
+        hmsTrackSetting: trackSetting);
     hmsSDK.build();
   }
 
@@ -299,6 +310,16 @@ class HMSSDKInteractor {
 
   void setAudioMixingMode(HMSAudioMixingMode audioMixingMode) {
     hmsSDK.setAudioMixingMode(audioMixingMode: audioMixingMode);
+  }
+
+  Future<HMSTrackSetting> getTrackSettings() async {
+    return await hmsSDK.getTrackSettings();
+  }
+
+  void setTrackSettings(
+      {HMSActionResultListener? hmsActionResultListener,
+      required HMSTrackSetting hmsTrackSetting}) {
+    hmsSDK.setTrackSettings(hmsTrackSetting: hmsTrackSetting);
   }
 
   void destroy() {

@@ -166,6 +166,11 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         case "start_screen_share", "stop_screen_share", "is_screen_share_active":
             screenShareActions(call, result)
             
+        case "get_track_settings","set_track_settings":
+            trackSettingsAction(call,result)
+            break
+        case "play_audio_share","stop_audio_share","pause_audio_share","resume_audio_share","set_audio_share_volume","audio_share_playing","audio_share_current_time","audio_share_duration":
+            audioShareAction(call, result)
             
         default:
             result(FlutterMethodNotImplemented)
@@ -269,6 +274,85 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         }
     }
     
+    var audioMixerSourceMap = [String: HMSAudioNode]()
+    private func trackSettingsAction(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+        switch call.method {
+        case "get_track_settings":
+            result(HMSTrackSettingsExtension.toDictionary(hmsSDK!,audioMixerSourceMap))
+            break
+        case "set_track_settings":
+            let arguments = call.arguments as! [AnyHashable: Any]
+            let settingsDict = arguments["hms_track_setting"] as! [AnyHashable: Any]
+            let audioTrackSetting = settingsDict["audio_track_setting"] as! [AnyHashable: Any]
+            
+            if let playerNode = audioTrackSetting["audio_source"] as? [String] {
+                for node in playerNode {
+                    if (audioMixerSourceMap[node] == nil) {
+                        if(node=="mic_node"){
+                            audioMixerSourceMap["mic_node"] = HMSMicNode()
+                        }else if(node == "screen_broadcast_audio_receiver_node"){
+                            do {
+                                audioMixerSourceMap["screen_broadcast_audio_receiver_node"] = try hmsSDK!.screenBroadcastAudioReceiverNode()
+                            }catch {
+                                let error = HMSCommonAction.getError(message: error.localizedDescription, params: ["function": #function])
+                                result(HMSErrorExtension.toDictionary(error))
+                            }
+                        }
+                        else{
+                        audioMixerSourceMap[node] = HMSAudioFilePlayerNode()
+                        }
+                    }
+                }
+            }
+            let trackSetting = HMSTrackSettingsExtension.setTrackSetting(settingsDict,audioMixerSourceMap,result)
+            if let settings = trackSetting {
+                hmsSDK?.trackSettings = settings
+            }
+            result(nil)
+            break
+        default:
+            result(FlutterMethodNotImplemented)
+        }
+    }
+    
+    private func audioShareAction(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+        let arguments = call.arguments as! [AnyHashable: Any]
+        if let audioNode = audioMixerSourceMap[arguments["name"] as! String] {
+            switch call.method {
+            case "play_audio_share":
+                HMSAudioFilePlayerNodeExtension.play(arguments,audioNode as! HMSAudioFilePlayerNode,result)
+                break
+            case "stop_audio_share":
+                HMSAudioFilePlayerNodeExtension.stop(audioNode as! HMSAudioFilePlayerNode)
+                break
+            case "pause_audio_share":
+                HMSAudioFilePlayerNodeExtension.pause(audioNode as! HMSAudioFilePlayerNode)
+                break
+            case "resume_audio_share":
+                HMSAudioFilePlayerNodeExtension.resume(audioNode as! HMSAudioFilePlayerNode,result)
+                break
+            case "set_audio_share_volume":
+                if(arguments["name"] as! String != "mic_node"){
+                    HMSAudioFilePlayerNodeExtension.setVolume(arguments,audioNode as! HMSAudioFilePlayerNode)
+                }else {
+                    HMSMicNodeExtension.setVolume(arguments,audioNode as! HMSMicNode)
+                }
+                break
+            case "audio_share_playing":
+                HMSAudioFilePlayerNodeExtension.isPlaying(audioNode as! HMSAudioFilePlayerNode,result)
+                break
+            case "audio_share_current_time":
+                HMSAudioFilePlayerNodeExtension.currentDuration(audioNode as! HMSAudioFilePlayerNode,result)
+                break
+            case "audio_share_duration":
+                HMSAudioFilePlayerNodeExtension.duration(audioNode as! HMSAudioFilePlayerNode,result)
+                break
+            default:
+                result(FlutterMethodNotImplemented)
+            }
+        }
+    }
+    
     // MARK: - Screen Share
     var isScreenShareOn = false {
         didSet {
@@ -285,7 +369,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         switch call.method {
         case "start_screen_share", "stop_screen_share":
             guard let preferredExtension = preferredExtension else {
-                let error = getError(message: "Could not start Screen share, preferredExtension not passed in Build Method", params: ["function": #function])
+                let error = HMSCommonAction.getError(message: "Could not start Screen share, preferredExtension not passed in Build Method", params: ["function": #function])
                 result(HMSErrorExtension.toDictionary(error))
                 screenShareActionResult = nil
                 return
@@ -308,67 +392,63 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         case "is_screen_share_active":
             result(isScreenShareOn)
         default:
-            print("Not Valid")
+            result(FlutterMethodNotImplemented)
         }
     }
     
     // MARK: - Room Actions
-    
     private func build(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         let arguments = call.arguments as! [AnyHashable: Any]
-        
-        var trackSettings: HMSTrackSettings?
-        if let settingsDict = arguments["hms_track_setting"] as? [AnyHashable: Any] {
-            
-            var audioSettings: HMSAudioTrackSettings?
-            if let audioSettingsDict = settingsDict["audio_track_setting"] as? [AnyHashable: Any] {
-                if let bitrate = audioSettingsDict["bit_rate"] as? Int, let desc = audioSettingsDict["track_description"] as? String {
-                    audioSettings = HMSAudioTrackSettings(maxBitrate: bitrate, trackDescription: desc)
-                }
-            }
-            
-            var videoSettings: HMSVideoTrackSettings?
-            if let videoSettingsDict = settingsDict["video_track_setting"] as? [AnyHashable: Any] {
-                if let codec = videoSettingsDict["video_codec"] as? String,
-                   let bitrate = videoSettingsDict["max_bit_rate"] as? Int,
-                   let framerate = videoSettingsDict["max_frame_rate"] as? Int,
-                   let desc = videoSettingsDict["track_description"] as? String {
-                    
-                    videoSettings = HMSVideoTrackSettings(codec: getCodec(from: codec),
-                                                          resolution: .init(width: 320, height: 180),
-                                                          maxBitrate: bitrate,
-                                                          maxFrameRate: framerate,
-                                                          cameraFacing: .front,
-                                                          trackDescription: desc,
-                                                          videoPlugins: nil)
-                }
-            }
-            
-            trackSettings = HMSTrackSettings(videoSettings: videoSettings, audioSettings: audioSettings)
-        }
         
         if let prefExtension = arguments["preferred_extension"] as? String {
             preferredExtension = prefExtension
         }
-        
         
         var setLogger = false
         if let level = arguments["log_level"] as? String {
             logLevel = getLogLevel(from: level)
             setLogger = true
         }
-        
-        hmsSDK = HMSSDK.build { sdk in
+        audioMixerSourceMap = [:]
+        hmsSDK = HMSSDK.build { [self] sdk in
             
             if let appGroup = arguments["app_group"] as? String {
                 sdk.appGroup = appGroup
             }
-            if let settings = trackSettings {
-                sdk.trackSettings = settings
-            }
             
             if setLogger {
                 sdk.logger = self
+            }
+            
+            var trackSettings: HMSTrackSettings?
+            if let settingsDict = arguments["hms_track_setting"] as? [AnyHashable: Any] {
+                if let audioTrackSetting = settingsDict["audio_track_setting"] as? [AnyHashable: Any]{
+                if let playerNode = audioTrackSetting["audio_source"] as? [String] {
+                    for node in playerNode {
+                        if (self.audioMixerSourceMap[node] == nil) {
+                            if(node=="mic_node"){
+                                self.audioMixerSourceMap["mic_node"] = HMSMicNode()
+                            }else if(node == "screen_broadcast_audio_receiver_node"){
+                                do {
+                                    self.audioMixerSourceMap["screen_broadcast_audio_receiver_node"] = try sdk.screenBroadcastAudioReceiverNode()
+                                }catch {
+                                    let error = HMSCommonAction.getError(message: error.localizedDescription, params: ["function": #function])
+                                    result(HMSErrorExtension.toDictionary(error))
+                                }
+                            }
+                            else{
+                                self.audioMixerSourceMap[node] = HMSAudioFilePlayerNode()
+                            }
+                        }
+                    }
+                }
+                    
+                trackSettings = HMSTrackSettingsExtension.setTrackSetting(settingsDict,audioMixerSourceMap,result)
+            }
+            }
+            
+            if let settings = trackSettings {
+                sdk.trackSettings = settings
             }
             
             result(true)
@@ -380,7 +460,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         let arguments = call.arguments as! [AnyHashable: Any]
         
         guard let config = getConfig(from: arguments) else {
-            let error = getError(message: "Could not join room, invalid parameters passed", params: ["function": #function, "arguments": arguments])
+            let error = HMSCommonAction.getError(message: "Could not join room, invalid parameters passed", params: ["function": #function, "arguments": arguments])
             result(HMSErrorExtension.toDictionary(error))
             return
         }
@@ -410,7 +490,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         let arguments = call.arguments as! [AnyHashable: Any]
         
         guard let config = getConfig(from: arguments) else {
-            let error = getError(message: "Could not join room, invalid parameters passed", params: ["function": #function, "arguments": arguments])
+            let error = HMSCommonAction.getError(message: "Could not join room, invalid parameters passed", params: ["function": #function, "arguments": arguments])
             result(HMSErrorExtension.toDictionary(error))
             return
         }
@@ -454,7 +534,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
               let roleString = arguments["role_name"] as? String,
               let role = HMSCommonAction.getRole(by: roleString,hmsSDK: hmsSDK)
         else {
-            let error = getError(message: "Invalid parameters for change role", params: ["function": #function, "arguments": arguments])
+            let error = HMSCommonAction.getError(message: "Invalid parameters for change role", params: ["function": #function, "arguments": arguments])
             result(HMSErrorExtension.toDictionary(error))
             return
         }
@@ -505,7 +585,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         guard let peerID = arguments["peer_id"] as? String,
               let peer = HMSCommonAction.getPeer(by: peerID,hmsSDK: hmsSDK)
         else {
-            let error = getError(message: "Peer not found", params: ["function": #function, "arguments": arguments])
+            let error = HMSCommonAction.getError(message: "Peer not found", params: ["function": #function, "arguments": arguments])
             result(HMSErrorExtension.toDictionary(error))
             return
         }
@@ -527,7 +607,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         guard let trackID = arguments["track_id"] as? String,
               let track = HMSUtilities.getTrack(for: trackID, in: hmsSDK!.room!)
         else {
-            let error = getError(message: "Could not find track to change track",
+            let error = HMSCommonAction.getError(message: "Could not find track to change track",
                                  description: "Could not find track from trackID",
                                  params: ["function": #function, "arguments": arguments])
             result(HMSErrorExtension.toDictionary(error))
@@ -550,7 +630,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         let arguments = call.arguments as! [AnyHashable: Any]
         
         guard let mute = arguments["mute"] as? Bool else {
-            let error = getError(message: "Mute status to be set not found",
+            let error = HMSCommonAction.getError(message: "Mute status to be set not found",
                                  params: ["function": #function, "arguments": arguments])
             result(HMSErrorExtension.toDictionary(error))
             return
@@ -584,7 +664,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         let arguments = call.arguments as! [AnyHashable: Any]
         
         guard let metadata = arguments["metadata"] as? String else {
-            let error = getError(message: "No metadata found in \(#function)",
+            let error = HMSCommonAction.getError(message: "No metadata found in \(#function)",
                                  description: "Metadata is nil",
                                  params: ["function": #function, "arguments": arguments])
             result(HMSErrorExtension.toDictionary(error))
@@ -609,7 +689,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         let arguments = call.arguments as![AnyHashable: Any]
         
         guard let name = arguments["name"] as? String else {
-            let error = getError(message: "No name found in \(#function)",
+            let error = HMSCommonAction.getError(message: "No name found in \(#function)",
                                  description: "Name is nil",
                                  params: ["function": #function, "arguments": arguments])
             result(HMSErrorExtension.toDictionary(error))
@@ -943,15 +1023,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                          captureNetworkQualityInPreview: captureNetworkQualityInPreview)
     }
     
-    private func getError(message: String, description: String? = nil, params: [String: Any]) -> HMSError {
-        HMSError(id: "NONE",
-                 code: .genericErrorJsonParsingFailed,
-                 message: message,
-                 info: description,
-                 params: params)
-    }
-    
-    
+        
     private func kind(from string: String) -> HMSTrackKind {
         switch string {
         case "KHmsTrackAudio":

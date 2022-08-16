@@ -141,6 +141,10 @@ class MeetingStore extends ChangeNotifier
 
   bool hlsStreamingRetry = false;
 
+  bool isTrackSettingApplied = false;
+
+  double audioPlayerVolume = 1.0;
+
   Future<bool> join(String user, String roomUrl) async {
     List<String?>? token =
         await RoomService().getToken(user: user, room: roomUrl);
@@ -1146,6 +1150,45 @@ class MeetingStore extends ChangeNotifier
     return false;
   }
 
+  HMSAudioFilePlayerNode audioFilePlayerNode =
+      HMSAudioFilePlayerNode("audioFilePlayerNode");
+  HMSMicNode micNode = HMSMicNode();
+  // void setTrackSettings() async {
+  //   HMSTrackSetting trackSetting = HMSTrackSetting(
+  //       audioTrackSetting: HMSAudioTrackSetting(
+  //           maxBitrate: 32,
+  //           audioSource: HMSAudioMixerSource(node: [
+  //             HMSAudioFilePlayerNode("audioFilePlayerNode"),
+  //             HMSMicNode()
+  //           ])),
+  //       videoTrackSetting: HMSVideoTrackSetting(
+  //           cameraFacing: HMSCameraFacing.FRONT,
+  //           maxBitrate: 512,
+  //           maxFrameRate: 25,
+  //           resolution: HMSResolution(height: 180, width: 320)));
+  //   _hmsSDKInteractor.setTrackSettings(hmsTrackSetting: trackSetting);
+  //   isTrackSettingApplied = true;
+  //   notifyListeners();
+  // }
+
+  void playAudioIos(String url) {
+    audioFilePlayerNode.play(fileUrl: url);
+  }
+
+  Future<bool> isPlayerRunningIos() async {
+    bool isPlaying = await audioFilePlayerNode.isPlaying();
+    return isPlaying;
+  }
+
+  void stopAudioIos() {
+    audioFilePlayerNode.stop();
+  }
+
+  void setAudioPlayerVolume(double volume) {
+    audioFilePlayerNode.setVolume(volume);
+    audioPlayerVolume = volume;
+  }
+
 //Get onSuccess or onException callbacks for HMSActionResultListenerMethod
 
   @override
@@ -1279,6 +1322,9 @@ class MeetingStore extends ChangeNotifier
         isAudioShareStarted = false;
         notifyListeners();
         break;
+      case HMSActionResultListenerMethod.setTrackSettings:
+        // TODO: Handle this case.
+        break;
     }
   }
 
@@ -1372,6 +1418,9 @@ class MeetingStore extends ChangeNotifier
         break;
       case HMSActionResultListenerMethod.stopAudioShare:
         Utilities.showToast("Stop audio share failed");
+        break;
+      case HMSActionResultListenerMethod.setTrackSettings:
+        // TODO: Handle this case.
         break;
     }
   }
