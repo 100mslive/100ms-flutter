@@ -52,7 +52,7 @@ class RoomController extends GetxController
 
   @override
   void onHMSError({required HMSException error}) {
-    Get.snackbar("Error", error.message);
+    Get.snackbar("Error", error.message ?? "");
   }
 
   @override
@@ -153,7 +153,7 @@ class RoomController extends GetxController
       {HMSActionResultListenerMethod? methodType,
       Map<String, dynamic>? arguments,
       required HMSException hmsException}) {
-    Get.snackbar("Error", hmsException.message);
+    Get.snackbar("Error", hmsException.message ?? "");
   }
 
   @override
