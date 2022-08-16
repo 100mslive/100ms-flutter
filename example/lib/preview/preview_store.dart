@@ -191,4 +191,9 @@ class PreviewStore extends ChangeNotifier
     hmsSDKInteractor!.destroy();
     hmsSDKInteractor = null;
   }
+
+  void leave() {
+    hmsSDKInteractor!.leave();
+    destroy();
+  }
 }
