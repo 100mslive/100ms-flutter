@@ -36,7 +36,7 @@ class HMSSDKInteractor {
     hmsSDK.join(config: this.config);
   }
 
-  void leave({required HMSActionResultListener hmsActionResultListener}) {
+  void leave({HMSActionResultListener? hmsActionResultListener}) {
     hmsSDK.leave(hmsActionResultListener: hmsActionResultListener);
   }
 

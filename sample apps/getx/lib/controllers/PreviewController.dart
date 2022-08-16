@@ -99,6 +99,7 @@ class PreviewController extends GetxController
 
   @override
   void onHMSError({required HMSException error}) {
+
     Get.snackbar("Error", error.message??"");
   }
 
