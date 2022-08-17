@@ -14,9 +14,12 @@ class RoomOverviewBloc extends Bloc<RoomOverviewEvent, RoomOverviewState> {
   String url;
   late RoomObserver roomObserver;
 
-  RoomOverviewBloc(this.isVideoMute, this.isAudioMute, this.name, this.url,this.isScreenShareActive)
+  RoomOverviewBloc(this.isVideoMute, this.isAudioMute, this.name, this.url,
+      this.isScreenShareActive)
       : super(RoomOverviewState(
-            isAudioMute: isAudioMute, isVideoMute: isVideoMute,isScreenShareActive: isScreenShareActive)) {
+            isAudioMute: isAudioMute,
+            isVideoMute: isVideoMute,
+            isScreenShareActive: isScreenShareActive)) {
     roomObserver = RoomObserver(this);
     on<RoomOverviewSubscriptionRequested>(_onSubscription);
     on<RoomOverviewLocalPeerAudioToggled>(_onLocalAudioToggled);

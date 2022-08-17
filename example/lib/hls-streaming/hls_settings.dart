@@ -200,7 +200,7 @@ class _HLSSettingsState extends State<HLSSettings> {
                         fit: BoxFit.scaleDown,
                       ),
                       title: Text(
-                        "${context.read<MeetingStore>().isStatsVisible?"Hide":"Show"} Stats",
+                        "${context.read<MeetingStore>().isStatsVisible ? "Hide" : "Show"} Stats",
                         style: GoogleFonts.inter(
                             fontSize: 14,
                             color: defaultColor,

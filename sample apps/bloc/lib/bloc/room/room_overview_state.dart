@@ -19,8 +19,14 @@ class RoomOverviewState extends Equatable {
       this.isScreenShareActive = false});
 
   @override
-  List<Object?> get props =>
-      [status, peerTrackNodes, isAudioMute, isVideoMute, leaveMeeting,isScreenShareActive];
+  List<Object?> get props => [
+        status,
+        peerTrackNodes,
+        isAudioMute,
+        isVideoMute,
+        leaveMeeting,
+        isScreenShareActive
+      ];
 
   RoomOverviewState copyWith(
       {RoomOverviewStatus? status,
@@ -35,6 +41,6 @@ class RoomOverviewState extends Equatable {
         isVideoMute: isVideoMute ?? this.isVideoMute,
         isAudioMute: isAudioMute ?? this.isAudioMute,
         leaveMeeting: leaveMeeting ?? this.leaveMeeting,
-        isScreenShareActive: isScreenShareActive??this.isScreenShareActive);
+        isScreenShareActive: isScreenShareActive ?? this.isScreenShareActive);
   }
 }

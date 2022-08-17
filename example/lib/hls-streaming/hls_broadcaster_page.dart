@@ -11,7 +11,6 @@ import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_mode.dart';
 import 'package:hmssdk_flutter_example/hls-streaming/hls_bottom_sheet.dart';
-import 'package:hmssdk_flutter_example/hls-streaming/hls_device_settings.dart';
 import 'package:hmssdk_flutter_example/hls-streaming/hls_message.dart';
 import 'package:hmssdk_flutter_example/hls-streaming/hls_settings.dart';
 import 'package:hmssdk_flutter_example/hls-streaming/util/hls_grid_view.dart';
@@ -694,20 +693,22 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                                             "video_mute_button"),
                                                   );
                                                 })
-                                            : Selector<MeetingStore,bool>(
-                                              selector: (_,meetingStore)=>meetingStore.isStatsVisible,
-                                              builder: (_,isStatsVisible,__) {
-                                                return EmbeddedButton(
+                                            : Selector<MeetingStore, bool>(
+                                                selector: (_, meetingStore) =>
+                                                    meetingStore.isStatsVisible,
+                                                builder:
+                                                    (_, isStatsVisible, __) {
+                                                  return EmbeddedButton(
                                                     width: 40,
                                                     height: 40,
                                                     onTap: () => context
                                                         .read<MeetingStore>()
                                                         .changeStatsVisible(),
                                                     disabledBorderColor:
-                                                            borderColor,
-                                                        offColor:
-                                                            screenBackgroundColor,
-                                                        onColor: borderColor,
+                                                        borderColor,
+                                                    offColor:
+                                                        screenBackgroundColor,
+                                                    onColor: borderColor,
                                                     isActive: isStatsVisible,
                                                     child: SvgPicture.asset(
                                                         "assets/icons/stats.svg",
@@ -715,8 +716,7 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                                         semanticsLabel:
                                                             "stats_button"),
                                                   );
-                                              }
-                                            ),
+                                                }),
                                       if (Provider.of<MeetingStore>(context)
                                               .localPeer !=
                                           null)

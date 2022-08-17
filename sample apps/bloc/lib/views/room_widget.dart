@@ -15,20 +15,21 @@ class Room extends StatelessWidget {
   final bool isVideoOff;
   final bool isAudioOff;
   final bool isScreenshareActive;
-  static Route route(String url, String name, bool v, bool a,bool ss) {
-    return MaterialPageRoute<void>(builder: (_) => Room(url, name, v, a,ss));
+  static Route route(String url, String name, bool v, bool a, bool ss) {
+    return MaterialPageRoute<void>(builder: (_) => Room(url, name, v, a, ss));
   }
 
-  const Room(this.meetingUrl, this.userName, this.isVideoOff, this.isAudioOff,this.isScreenshareActive,
+  const Room(this.meetingUrl, this.userName, this.isVideoOff, this.isAudioOff,
+      this.isScreenshareActive,
       {Key? key})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) =>
-          RoomOverviewBloc(isVideoOff, isAudioOff, userName, meetingUrl, isScreenshareActive)
-            ..add(const RoomOverviewSubscriptionRequested()),
+      create: (_) => RoomOverviewBloc(
+          isVideoOff, isAudioOff, userName, meetingUrl, isScreenshareActive)
+        ..add(const RoomOverviewSubscriptionRequested()),
       child: RoomWidget(meetingUrl, userName),
     );
   }
@@ -82,9 +83,15 @@ class RoomWidget extends StatelessWidget {
                   label: 'Camera',
                 ),
                 //For screenshare in iOS follow the steps here : https://www.100ms.live/docs/flutter/v2/features/Screen-Share
-                if(Platform.isAndroid)
-                BottomNavigationBarItem(
-                    icon: Icon(Icons.screen_share,color: (state.isScreenShareActive)?Colors.green:Colors.grey,), label: "ScreenShare"),
+                if (Platform.isAndroid)
+                  BottomNavigationBarItem(
+                      icon: Icon(
+                        Icons.screen_share,
+                        color: (state.isScreenShareActive)
+                            ? Colors.green
+                            : Colors.grey,
+                      ),
+                      label: "ScreenShare"),
                 const BottomNavigationBarItem(
                   icon: Icon(Icons.cancel),
                   label: 'Leave Meeting',
