@@ -65,7 +65,7 @@ class PreviewWidget extends StatelessWidget {
                                 onPressed: () {
                                   Navigator.of(context).pushReplacement(
                                       Room.route(meetingUrl, userName,
-                                          state.isVideoOff, state.isMicOff));
+                                          state.isVideoOff, state.isMicOff,false));
                                 },
                                 child: const Text(
                                   "Join Now",

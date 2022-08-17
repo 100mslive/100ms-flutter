@@ -12,12 +12,12 @@ class Room extends StatelessWidget {
   final String userName;
   final bool isVideoOff;
   final bool isAudioOff;
-
-  static Route route(String url, String name, bool v, bool a) {
-    return MaterialPageRoute<void>(builder: (_) => Room(url, name, v, a));
+  final bool isScreenshareActive;
+  static Route route(String url, String name, bool v, bool a,bool ss) {
+    return MaterialPageRoute<void>(builder: (_) => Room(url, name, v, a,ss));
   }
 
-  const Room(this.meetingUrl, this.userName, this.isVideoOff, this.isAudioOff,
+  const Room(this.meetingUrl, this.userName, this.isVideoOff, this.isAudioOff,this.isScreenshareActive,
       {Key? key})
       : super(key: key);
 
@@ -25,7 +25,7 @@ class Room extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) =>
-          RoomOverviewBloc(isVideoOff, isAudioOff, userName, meetingUrl)
+          RoomOverviewBloc(isVideoOff, isAudioOff, userName, meetingUrl, isScreenshareActive)
             ..add(const RoomOverviewSubscriptionRequested()),
       child: RoomWidget(meetingUrl, userName),
     );
@@ -67,13 +67,9 @@ class RoomWidget extends StatelessWidget {
           return BottomNavigationBar(
               type: BottomNavigationBarType.fixed,
               backgroundColor: Colors.black,
-              selectedItemColor: Colors.greenAccent,
+              selectedItemColor: Colors.grey,
               unselectedItemColor: Colors.grey,
               items: <BottomNavigationBarItem>[
-                const BottomNavigationBarItem(
-                  icon: Icon(Icons.cancel),
-                  label: 'Leave Meeting',
-                ),
                 BottomNavigationBarItem(
                   icon: Icon(state.isAudioMute ? Icons.mic_off : Icons.mic),
                   label: 'Mic',
@@ -82,6 +78,12 @@ class RoomWidget extends StatelessWidget {
                   icon: Icon(
                       state.isVideoMute ? Icons.videocam_off : Icons.videocam),
                   label: 'Camera',
+                ),
+                BottomNavigationBarItem(
+                    icon: Icon(Icons.screen_share,color: (state.isScreenShareActive)?Colors.green:Colors.grey,), label: "ScreenShare"),
+                const BottomNavigationBarItem(
+                  icon: Icon(Icons.cancel),
+                  label: 'Leave Meeting',
                 ),
               ],
 
@@ -93,16 +95,26 @@ class RoomWidget extends StatelessWidget {
   }
 
   void _onItemTapped(int index, BuildContext context) {
-    if (index == 0) {
-      context.read<RoomOverviewBloc>().add(const RoomOverviewLeaveRequested());
-    } else if (index == 1) {
-      context
-          .read<RoomOverviewBloc>()
-          .add(const RoomOverviewLocalPeerAudioToggled());
-    } else {
-      context
-          .read<RoomOverviewBloc>()
-          .add(const RoomOverviewLocalPeerVideoToggled());
+    switch (index) {
+      case 0:
+        context
+            .read<RoomOverviewBloc>()
+            .add(const RoomOverviewLocalPeerAudioToggled());
+        break;
+      case 1:
+        context
+            .read<RoomOverviewBloc>()
+            .add(const RoomOverviewLocalPeerVideoToggled());
+        break;
+      case 2:
+        context
+            .read<RoomOverviewBloc>()
+            .add(const RoomOverviewLocalPeerScreenshareToggled());
+        break;
+      case 3:
+        context
+            .read<RoomOverviewBloc>()
+            .add(const RoomOverviewLeaveRequested());
     }
   }
 }
