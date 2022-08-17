@@ -10,7 +10,7 @@ class RoomController extends GetxController
   RxList<Rx<PeerTrackNode>> peerTrackList = <Rx<PeerTrackNode>>[].obs;
   RxBool isLocalVideoOn = false.obs;
   RxBool isLocalAudioOn = false.obs;
-
+  RxBool isScreenShareActive = false.obs;
   String url;
   String name;
 
@@ -109,16 +109,17 @@ class RoomController extends GetxController
       required HMSPeer peer}) {
     if (track.kind == HMSTrackKind.kHMSTrackKindVideo) {
       if (trackUpdate == HMSTrackUpdate.trackRemoved) {
-        removeUserFromList(peer);
+        peerTrackList
+        .removeWhere((element) => peer.peerId + ((track.source == "REGULAR")?"mainVideo":track.trackId) == element.value.uid);
       } else if (trackUpdate == HMSTrackUpdate.trackAdded) {
-        int index = peerTrackList
-            .indexWhere((element) => element.value.peer.peerId == peer.peerId);
-        if (index > -1) {
+        bool isRegular = (track.source == "REGULAR");
+        int index = peerTrackList.indexWhere((element) => element.value.peer.peerId + (isRegular?"mainVideo":element.value.hmsVideoTrack.trackId) == peer.peerId + (isRegular?"mainVideo":track.trackId));
+        if (index != -1) {
           peerTrackList[index](
-              PeerTrackNode(track as HMSVideoTrack, track.isMute, peer));
+              PeerTrackNode(peer.peerId + (isRegular?"mainVideo":track.trackId),track as HMSVideoTrack, track.isMute, peer));
         } else {
           peerTrackList.add(
-              PeerTrackNode(track as HMSVideoTrack, track.isMute, peer).obs);
+              PeerTrackNode(peer.peerId + (isRegular?"mainVideo":track.trackId),track as HMSVideoTrack, track.isMute, peer).obs);
         }
       }
     }
@@ -148,6 +149,15 @@ class RoomController extends GetxController
     }
   }
 
+  void toggleScreenShare() {
+    if (!isScreenShareActive.value) {
+      hmsSdk.startScreenShare();
+    } else {
+      hmsSdk.stopScreenShare();
+    }
+    isScreenShareActive.toggle();
+  }
+
   @override
   void onException(
       {HMSActionResultListenerMethod? methodType,
@@ -162,11 +172,6 @@ class RoomController extends GetxController
       Map<String, dynamic>? arguments}) {
     Get.back();
     Get.off(() => const HomePage());
-  }
-
-  void removeUserFromList(HMSPeer peer) {
-    peerTrackList
-        .removeWhere((element) => peer.peerId == element.value.peer.peerId);
   }
 
   @override

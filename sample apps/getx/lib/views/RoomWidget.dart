@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:demo_with_getx_and_100ms/controllers/RoomController.dart';
 import 'package:demo_with_getx_and_100ms/views/VideoWidget.dart';
 import 'package:flutter/material.dart';
@@ -32,13 +34,9 @@ class RoomWidget extends StatelessWidget {
         return BottomNavigationBar(
             type: BottomNavigationBarType.fixed,
             backgroundColor: Colors.black,
-            selectedItemColor: Colors.greenAccent,
+            selectedItemColor: Colors.grey,
             unselectedItemColor: Colors.grey,
             items: <BottomNavigationBarItem>[
-              const BottomNavigationBarItem(
-                icon: Icon(Icons.cancel),
-                label: 'Leave Meeting',
-              ),
               BottomNavigationBarItem(
                 icon: Icon(controller.isLocalAudioOn.value
                     ? Icons.mic
@@ -51,21 +49,41 @@ class RoomWidget extends StatelessWidget {
                     : Icons.videocam_off),
                 label: 'Camera',
               ),
+              //For screenshare in iOS follow the steps here : https://www.100ms.live/docs/flutter/v2/features/Screen-Share
+              if (Platform.isAndroid)
+                BottomNavigationBarItem(
+                    icon: Icon(
+                      Icons.screen_share,
+                      color: (controller.isScreenShareActive.value)
+                          ? Colors.green
+                          : Colors.grey,
+                    ),
+                    label: "ScreenShare"),
+              const BottomNavigationBarItem(
+                icon: Icon(Icons.cancel),
+                label: 'Leave Meeting',
+              ),
             ],
 
             //New
-            onTap: _onItemTapped);
+            onTap: (index) => _onItemTapped(index));
       }),
     );
   }
 
   void _onItemTapped(int index) {
-    if (index == 0) {
-      roomController.leaveMeeting();
-    } else if (index == 1) {
-      roomController.toggleAudio();
-    } else {
-      roomController.toggleVideo();
+    switch (index) {
+      case 0:
+        roomController.toggleAudio();
+        break;
+      case 1:
+        roomController.toggleVideo();
+        break;
+      case 2:
+        roomController.toggleScreenShare();
+        break;
+      case 3:
+        roomController.leaveMeeting();
     }
   }
 }
