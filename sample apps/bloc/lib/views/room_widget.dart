@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:demo_app_with_100ms_and_bloc/bloc/preview/preview_cubit.dart';
 import 'package:demo_app_with_100ms_and_bloc/bloc/room/room_overview_bloc.dart';
 import 'package:demo_app_with_100ms_and_bloc/bloc/room/room_overview_event.dart';
@@ -79,6 +81,8 @@ class RoomWidget extends StatelessWidget {
                       state.isVideoMute ? Icons.videocam_off : Icons.videocam),
                   label: 'Camera',
                 ),
+                //For screenshare in iOS follow the steps here : https://www.100ms.live/docs/flutter/v2/features/Screen-Share
+                if(Platform.isAndroid)
                 BottomNavigationBarItem(
                     icon: Icon(Icons.screen_share,color: (state.isScreenShareActive)?Colors.green:Colors.grey,), label: "ScreenShare"),
                 const BottomNavigationBarItem(
