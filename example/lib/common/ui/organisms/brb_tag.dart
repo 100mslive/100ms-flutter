@@ -17,13 +17,13 @@ class BRBTag extends StatelessWidget {
                     padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
                     child: SvgPicture.asset(
                       "assets/icons/brb.svg",
-                      color: Colors.red,
-                      width: 35,
+                      color: Colors.white,
+                      width: 26,
+                      semanticsLabel: "brb_label",
                     ),
                   ),
-                  top: 30.0,
-                  right: 0,
-                  left: 0,
+                  bottom: 5.0,
+                  right: 5,
                 )
               : Container();
         },

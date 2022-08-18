@@ -23,6 +23,7 @@ class _ParticipantsListState extends State<ParticipantsList> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: bottomSheetColor,
         title: Selector<MeetingStore, int>(
             selector: (_, meetingStore) => meetingStore.peers.length,
             builder: (_, length, __) {

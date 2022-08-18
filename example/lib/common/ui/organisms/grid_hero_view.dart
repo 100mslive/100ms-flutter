@@ -2,8 +2,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hmssdk_flutter_example/common/ui/organisms/hms_button.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
+import 'package:hmssdk_flutter_example/hls-streaming/util/hls_title_text.dart';
 import 'package:provider/provider.dart';
 
 //Project imports
@@ -42,12 +44,44 @@ Widget gridHeroView(
                       children: [
                         SvgPicture.asset(
                           "assets/icons/screen_share.svg",
-                          color: iconColor,
+                          color: Colors.white,
+                          height: 55.2,
+                        ),
+                        SizedBox(
+                          height: 18,
                         ),
                         Text("You are sharing your screen",
+                            textAlign: TextAlign.center,
                             style: GoogleFonts.inter(
-                              color: iconColor,
+                              color: defaultColor,
+                              fontSize: 20,
+                              letterSpacing: 0.15,
+                              height: 24 / 20,
+                              fontWeight: FontWeight.w600,
                             )),
+                        SizedBox(
+                          height: 40,
+                        ),
+                        HMSButton(
+                            buttonBackgroundColor: errorColor,
+                            width: MediaQuery.of(context).size.width * 0.6,
+                            onPressed: () {
+                              context.read<MeetingStore>().stopScreenShare();
+                            },
+                            childWidget: Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 12),
+                              child: Row(
+                                children: [
+                                  SvgPicture.asset("assets/icons/close.svg"),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  HLSTitleText(
+                                      text: "Stop Screenshare",
+                                      textColor: enabledTextColor)
+                                ],
+                              ),
+                            ))
                       ],
                     ),
                   )

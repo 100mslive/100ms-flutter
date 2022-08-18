@@ -6,17 +6,23 @@ import 'package:google_fonts/google_fonts.dart';
 //Project imports
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
+import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
+import 'package:hmssdk_flutter_example/hls-streaming/util/hls_subtitle_text.dart';
+import 'package:hmssdk_flutter_example/hls-streaming/util/hls_title_text.dart';
+import 'package:collection/collection.dart';
 
 class ChangeRoleOptionDialog extends StatefulWidget {
   final String peerName;
-  final Future<List<HMSRole>> getRoleFunction;
+  final List<HMSRole> roles;
   final Function(HMSRole, bool) changeRole;
   final bool force;
+  final HMSPeer peer;
   ChangeRoleOptionDialog({
     required this.peerName,
-    required this.getRoleFunction,
+    required this.roles,
     required this.changeRole,
-    this.force = false,
+    required this.peer,
+    this.force = true,
   });
 
   @override
@@ -24,131 +30,190 @@ class ChangeRoleOptionDialog extends StatefulWidget {
 }
 
 class _ChangeRoleOptionDialogState extends State<ChangeRoleOptionDialog> {
-  late bool forceValue;
-  String valueChoose = "";
-
+  late bool askPermission;
+  HMSRole? valueChoose;
   @override
   void initState() {
     super.initState();
-    forceValue = widget.force;
+    askPermission = !widget.force;
+    valueChoose = widget.roles[0];
   }
 
   @override
   Widget build(BuildContext context) {
+    String message = "Change the role of ‘${widget.peerName}’ to";
+    double width = MediaQuery.of(context).size.width;
     return AlertDialog(
-      title: Text(
-        widget.peerName,
-        style: GoogleFonts.inter(color: iconColor),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      actionsPadding: EdgeInsets.only(left: 20, right: 20, bottom: 10),
+      backgroundColor: bottomSheetColor,
+      insetPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+      contentPadding: EdgeInsets.only(top: 20, bottom: 15, left: 24, right: 24),
+      title: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          HLSTitleText(
+            text: "Change Role",
+            fontSize: 20,
+            letterSpacing: 0.15,
+            textColor: defaultColor,
+          ),
+          SizedBox(
+            height: 8,
+          ),
+          HLSSubtitleText(text: message, textColor: subHeadingColor),
+        ],
       ),
-      content: Container(
-        width: double.infinity,
-        child: FutureBuilder<List<HMSRole>>(
-          builder: (_, AsyncSnapshot<List<HMSRole>> data) {
-            if (data.connectionState != ConnectionState.done) {
-              return CircularProgressIndicator();
-            } else if (data.hasData) {
-              if (valueChoose == "") {
-                valueChoose = data.data![0].name;
-              }
-              return Container(
-                width: 300,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "Role To: ",
-                          style: GoogleFonts.inter(color: iconColor),
-                        ),
-                        Flexible(
-                          child: DropdownButton2(
-                            buttonWidth: MediaQuery.of(context).size.width / 2,
-                            value: valueChoose,
-                            iconEnabledColor: Colors.white,
-                            onChanged: (newvalue) {
-                              setState(() {
-                                valueChoose = newvalue as String;
-                              });
-                            },
-                            items: data.data!.map((role) {
-                              return DropdownMenuItem(
-                                child: Text(
-                                  role.name,
-                                  style: GoogleFonts.inter(color: iconColor),
-                                ),
-                                value: role.name,
-                              );
-                            }).toList(),
+      content: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            padding: EdgeInsets.only(left: 10, right: 5),
+            decoration: BoxDecoration(
+              color: surfaceColor,
+              borderRadius: BorderRadius.circular(10.0),
+              border: Border.all(
+                  color: borderColor, style: BorderStyle.solid, width: 0.80),
+            ),
+            child: DropdownButtonHideUnderline(
+                child: DropdownButton2(
+              isExpanded: true,
+              dropdownWidth: width * 0.7,
+              buttonWidth: width * 0.7,
+              buttonHeight: 48,
+              itemHeight: 48,
+              value: valueChoose,
+              icon: Icon(Icons.keyboard_arrow_down),
+              buttonDecoration: BoxDecoration(
+                color: surfaceColor,
+              ),
+              dropdownDecoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  color: surfaceColor,
+                  border: Border.all(color: borderColor)),
+              offset: Offset(-10, -10),
+              iconEnabledColor: defaultColor,
+              selectedItemHighlightColor: hmsdefaultColor,
+              onChanged: (dynamic newvalue) {
+                setState(() {
+                  valueChoose = newvalue;
+                });
+              },
+              items: <DropdownMenuItem>[
+                ...widget.roles
+                    .sortedBy((element) => element.priority.toString())
+                    .map((role) => DropdownMenuItem(
+                          child: HLSTitleText(
+                            text: role.name,
+                            textColor: defaultColor,
+                            fontWeight: FontWeight.w400,
                           ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        forceValue = !forceValue;
-                        setState(() {});
-                      },
-                      child: Row(
-                        children: [
-                          Icon(forceValue
-                              ? Icons.check_box
-                              : Icons.check_box_outline_blank),
-                          SizedBox(
-                            width: 16,
-                          ),
-                          Text(
-                            'Force change',
-                            style: GoogleFonts.inter(color: iconColor),
-                          )
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        ElevatedButton(
-                            style:
-                                ElevatedButton.styleFrom(primary: Colors.red),
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                            child: Text(
-                              "Cancel",
-                              style: GoogleFonts.inter(),
-                            )),
-                        ElevatedButton(
-                            onPressed: () {
-                              widget.changeRole(
-                                  data.data!.firstWhere(
-                                      (element) => element.name == valueChoose),
-                                  forceValue);
-                            },
-                            child: Text(
-                              "Change Role",
-                              style: GoogleFonts.inter(),
-                            )),
-                      ],
-                    )
-                  ],
+                          value: role,
+                        ))
+                    .toList(),
+              ],
+            )),
+          ),
+          SizedBox(
+            height: 15,
+          ),
+          if (!widget.peer.isLocal)
+            Row(
+              children: [
+                SizedBox(
+                  width: 25,
+                  height: 25,
+                  child: Checkbox(
+                      value: askPermission,
+                      activeColor: Colors.blue,
+                      onChanged: (bool? value) {
+                        if (value != null) {
+                          askPermission = value;
+                          setState(() {});
+                        }
+                      }),
                 ),
-              );
-            }
-            return Text(
-              'No roles available',
-              style: GoogleFonts.inter(),
-            );
-          },
-          future: widget.getRoleFunction,
-        ),
+                SizedBox(
+                  width: 10.5,
+                ),
+                SizedBox(
+                    width: width * 0.5,
+                    child: Text(
+                      "Request permission from the user",
+                      style: GoogleFonts.inter(
+                        color: defaultColor,
+                        fontSize: 14,
+                        height: 20 / 14,
+                        letterSpacing: 0.25,
+                      ),
+                    )),
+              ],
+            ),
+        ],
       ),
+      actions: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            ElevatedButton(
+                style: ButtonStyle(
+                    shadowColor: MaterialStateProperty.all(surfaceColor),
+                    backgroundColor:
+                        MaterialStateProperty.all(bottomSheetColor),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                      side: BorderSide(
+                          width: 1, color: Color.fromRGBO(107, 125, 153, 1)),
+                      borderRadius: BorderRadius.circular(8.0),
+                    ))),
+                onPressed: () => Navigator.pop(context, false),
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
+                  child: Text('Cancel',
+                      style: GoogleFonts.inter(
+                          color: defaultColor,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: 0.50)),
+                )),
+            ElevatedButton(
+              style: ButtonStyle(
+                  shadowColor: MaterialStateProperty.all(surfaceColor),
+                  backgroundColor: MaterialStateProperty.all(hmsdefaultColor),
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                    side: BorderSide(width: 1, color: hmsdefaultColor),
+                    borderRadius: BorderRadius.circular(8.0),
+                  ))),
+              onPressed: () => {
+                if (valueChoose == null)
+                  {
+                    Utilities.showToast("Please select a role"),
+                  }
+                else
+                  {
+                    Navigator.pop(context),
+                    widget.changeRole(valueChoose!, !askPermission)
+                  }
+              },
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
+                child: Text(
+                  'Change',
+                  style: GoogleFonts.inter(
+                      color: defaultColor,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      letterSpacing: 0.50),
+                ),
+              ),
+            ),
+          ],
+        )
+      ],
     );
   }
 }

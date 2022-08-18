@@ -2,6 +2,7 @@
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:hmssdk_flutter_example/meeting/hms_sdk_interactor.dart';
 import 'package:hmssdk_flutter_example/service/room_service.dart';
 
@@ -37,6 +38,8 @@ class PreviewStore extends ChangeNotifier
 
   int? networkQuality;
 
+  String meetingUrl = "";
+
   @override
   void onHMSError({required HMSException error}) {
     updateError(error);
@@ -62,16 +65,17 @@ class PreviewStore extends ChangeNotifier
       }
     }
     this.localTracks = videoTracks;
+    Utilities.saveStringData(key: "meetingLink", value: this.meetingUrl);
     notifyListeners();
   }
 
-  Future<bool> startPreview(
-      {required String user, required String roomId}) async {
+  Future<String> startPreview(
+      {required String user, required String meetingLink}) async {
     List<String?>? token =
-        await RoomService().getToken(user: user, room: roomId);
+        await RoomService().getToken(user: user, room: meetingLink);
 
-    if (token == null) return false;
-    if (token[0] == null) return false;
+    if (token == null) return "Connection Error";
+    if (token[0] == null) return "Token Error";
     FirebaseCrashlytics.instance.setUserIdentifier(token[0]!);
     HMSConfig config = HMSConfig(
         authToken: token[0]!,
@@ -80,7 +84,8 @@ class PreviewStore extends ChangeNotifier
         captureNetworkQualityInPreview: true);
     hmsSDKInteractor.addPreviewListener(this);
     hmsSDKInteractor.preview(config: config);
-    return true;
+    meetingUrl = meetingLink;
+    return "";
   }
 
   @override
