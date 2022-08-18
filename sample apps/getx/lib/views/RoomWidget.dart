@@ -61,7 +61,7 @@ class RoomWidget extends StatelessWidget {
                     label: "ScreenShare"),
               const BottomNavigationBarItem(
                 icon: Icon(Icons.cancel),
-                label: 'Leave Meeting',
+                label: 'Leave',
               ),
             ],
 

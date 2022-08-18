@@ -47,6 +47,8 @@ class MeetingStore extends ChangeNotifier
 
   int firstTimeBuild = 0;
 
+  bool isScreenShareOn = false;
+
   Future<bool> join(String user, String roomUrl) async {
     List<String?>? token =
         await RoomService().getToken(user: user, room: roomUrl);
@@ -91,6 +93,14 @@ class MeetingStore extends ChangeNotifier
 
   void sendGroupMessage(String message, List<HMSRole> roles) async {
     _hmsSDKInteractor.sendGroupMessage(message, roles, this);
+  }
+
+  void startScreenShare() {
+    _hmsSDKInteractor.startScreenShare(hmsActionResultListener: this);
+  }
+
+  void stopScreenShare() {
+    _hmsSDKInteractor.stopScreenShare(hmsActionResultListener: this);
   }
 
   Future<bool> isAudioMute(HMSPeer? peer) async {
@@ -214,6 +224,20 @@ class MeetingStore extends ChangeNotifier
       } else {
         return;
       }
+    } else {
+      if (trackUpdate == HMSTrackUpdate.trackAdded) {
+        peerTracks.add(PeerTrackNode(
+            peer: peer,
+            uid: peer.peerId + track.trackId,
+            track: track as HMSVideoTrack));
+      } else {
+        int index = peerTracks.indexWhere(
+            (element) => element.uid == peer.peerId + track.trackId);
+        if (index != -1) {
+          peerTracks.removeAt(index);
+        }
+      }
+      notifyListeners();
     }
   }
 
@@ -462,9 +486,13 @@ class MeetingStore extends ChangeNotifier
         break;
 
       case HMSActionResultListenerMethod.startScreenShare:
+        isScreenShareOn = true;
+        notifyListeners();
         break;
 
       case HMSActionResultListenerMethod.stopScreenShare:
+        isScreenShareOn = false;
+        notifyListeners();
         break;
       case HMSActionResultListenerMethod.startAudioShare:
         // TODO: Handle this case.

@@ -606,6 +606,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
 
   void startScreenShare() {
     _hmsSDKInteractor.startScreenShare(hmsActionResultListener: this);
+
   }
 
   void stopScreenShare() {
