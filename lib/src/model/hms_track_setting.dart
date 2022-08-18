@@ -7,7 +7,7 @@ class HMSTrackSetting {
 
   HMSTrackSetting({this.audioTrackSetting, this.videoTrackSetting});
 
-  factory HMSTrackSetting.fromMap(Map<String, dynamic> map) {
+  factory HMSTrackSetting.fromMap(Map map) {
     HMSAudioTrackSetting? audioTrackSetting;
     HMSVideoTrackSetting? videoTrackSetting;
     if (map.containsKey('audio_track_setting')) {

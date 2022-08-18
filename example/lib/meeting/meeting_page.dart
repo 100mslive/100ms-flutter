@@ -198,10 +198,20 @@ class _MeetingPageState extends State<MeetingPage>
         }
         break;
       case 12:
-        if (_meetingStore.isAudioShareStarted)
+        if (Platform.isAndroid) if (_meetingStore.isAudioShareStarted)
           _meetingStore.stopAudioShare();
         else
           _meetingStore.startAudioShare();
+        if (Platform.isIOS) {
+          bool isPlaying = await _meetingStore.isPlayerRunningIos();
+          String url = await UtilityComponents.showAudioShareDialog(
+              context: context,
+              meetingStore: _meetingStore,
+              isPlaying: isPlaying);
+          if (url != "") {
+            _meetingStore.playAudioIos(url);
+          }
+        }
         break;
       case 13:
         if (_meetingStore.isAudioShareStarted)
@@ -992,6 +1002,26 @@ class _MeetingPageState extends State<MeetingPage>
                   ]),
               value: 12,
             ),
+          if (Platform.isIOS)
+            PopupMenuItem(
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text("Audio Share",
+                        style: GoogleFonts.inter(
+                          color: meetingStore.isAudioShareStarted
+                              ? Colors.blue
+                              : iconColor,
+                        )),
+                    Icon(
+                      Icons.music_note,
+                      color: meetingStore.isAudioShareStarted
+                          ? Colors.blue
+                          : iconColor,
+                    )
+                  ]),
+              value: 12,
+            ),
           if (Platform.isAndroid && meetingStore.isAudioShareStarted)
             PopupMenuItem(
               child: Row(
@@ -1008,6 +1038,7 @@ class _MeetingPageState extends State<MeetingPage>
                   ]),
               value: 13,
             ),
+
           PopupMenuItem(
             child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

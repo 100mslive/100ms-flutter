@@ -141,6 +141,10 @@ class MeetingStore extends ChangeNotifier
 
   bool hlsStreamingRetry = false;
 
+  bool isTrackSettingApplied = false;
+
+  double audioPlayerVolume = 1.0;
+
   Future<bool> join(String user, String roomUrl) async {
     List<String?>? token =
         await RoomService().getToken(user: user, room: roomUrl);
@@ -164,6 +168,7 @@ class MeetingStore extends ChangeNotifier
     _hmsSDKInteractor.removeStatsListener(this);
     WidgetsBinding.instance!.removeObserver(this);
     _hmsSDKInteractor.leave(hmsActionResultListener: this);
+    _hmsSDKInteractor.destroy();
   }
 
   Future<void> switchAudio() async {
@@ -198,6 +203,7 @@ class MeetingStore extends ChangeNotifier
 
   void endRoom(bool lock, String? reason) {
     _hmsSDKInteractor.endRoom(lock, reason == null ? "" : reason, this);
+    _hmsSDKInteractor.destroy();
   }
 
   void removePeerFromRoom(HMSPeer peer) {
@@ -247,6 +253,8 @@ class MeetingStore extends ChangeNotifier
   }
 
   void stopCapturing() {
+    isVideoOn = false;
+    notifyListeners();
     _hmsSDKInteractor.stopCapturing();
   }
 
@@ -796,7 +804,7 @@ class MeetingStore extends ChangeNotifier
     int index = this.peers.indexOf(peer);
     this.peers.removeAt(index);
     this.peers.insert(index, peer);
-    notifyListeners();
+    // notifyListeners();
   }
 
   void updateFilteredList(HMSPeerUpdate peerUpdate, HMSPeer peer) {
@@ -1142,6 +1150,45 @@ class MeetingStore extends ChangeNotifier
     return false;
   }
 
+  HMSAudioFilePlayerNode audioFilePlayerNode =
+      HMSAudioFilePlayerNode("audioFilePlayerNode");
+  HMSMicNode micNode = HMSMicNode();
+  // void setTrackSettings() async {
+  //   HMSTrackSetting trackSetting = HMSTrackSetting(
+  //       audioTrackSetting: HMSAudioTrackSetting(
+  //           maxBitrate: 32,
+  //           audioSource: HMSAudioMixerSource(node: [
+  //             HMSAudioFilePlayerNode("audioFilePlayerNode"),
+  //             HMSMicNode()
+  //           ])),
+  //       videoTrackSetting: HMSVideoTrackSetting(
+  //           cameraFacing: HMSCameraFacing.FRONT,
+  //           maxBitrate: 512,
+  //           maxFrameRate: 25,
+  //           resolution: HMSResolution(height: 180, width: 320)));
+  //   _hmsSDKInteractor.setTrackSettings(hmsTrackSetting: trackSetting);
+  //   isTrackSettingApplied = true;
+  //   notifyListeners();
+  // }
+
+  void playAudioIos(String url) {
+    audioFilePlayerNode.play(fileUrl: url);
+  }
+
+  Future<bool> isPlayerRunningIos() async {
+    bool isPlaying = await audioFilePlayerNode.isPlaying();
+    return isPlaying;
+  }
+
+  void stopAudioIos() {
+    audioFilePlayerNode.stop();
+  }
+
+  void setAudioPlayerVolume(double volume) {
+    audioFilePlayerNode.setVolume(volume);
+    audioPlayerVolume = volume;
+  }
+
 //Get onSuccess or onException callbacks for HMSActionResultListenerMethod
 
   @override
@@ -1275,6 +1322,9 @@ class MeetingStore extends ChangeNotifier
         isAudioShareStarted = false;
         notifyListeners();
         break;
+      case HMSActionResultListenerMethod.setTrackSettings:
+        // TODO: Handle this case.
+        break;
     }
   }
 
@@ -1344,6 +1394,7 @@ class MeetingStore extends ChangeNotifier
           hlsStreamingRetry = true;
         } else {
           Utilities.showToast("Start HLS failed");
+          hlsStreamingRetry = false;
         }
 
         break;
@@ -1368,6 +1419,9 @@ class MeetingStore extends ChangeNotifier
       case HMSActionResultListenerMethod.stopAudioShare:
         Utilities.showToast("Stop audio share failed");
         break;
+      case HMSActionResultListenerMethod.setTrackSettings:
+        // TODO: Handle this case.
+        break;
     }
   }
 
@@ -1379,7 +1433,7 @@ class MeetingStore extends ChangeNotifier
     }
     if (state == AppLifecycleState.resumed) {
       WidgetsBinding.instance!.addPostFrameCallback((_) {
-        if (localPeer?.role.name.contains("hls") ?? false)
+        if (localPeer?.role.name.contains("hls-") ?? false)
           hlsVideoController = new VideoPlayerController.network(
             streamUrl,
           )..initialize().then((_) {
@@ -1401,13 +1455,13 @@ class MeetingStore extends ChangeNotifier
       });
     } else if (state == AppLifecycleState.paused) {
       HMSLocalPeer? localPeer = await getLocalPeer();
-      if (localPeer?.role.name.contains("hls") ?? false) {
+      if (localPeer?.role.name.contains("hls-") ?? false) {
         hlsVideoController?.dispose();
         hlsVideoController = null;
         notifyListeners();
       }
       if (localPeer != null && !(localPeer.videoTrack?.isMute ?? true)) {
-        stopCapturing();
+        switchVideo();
       }
       for (PeerTrackNode peerTrackNode in peerTracks) {
         peerTrackNode.setOffScreenStatus(true);
@@ -1415,7 +1469,7 @@ class MeetingStore extends ChangeNotifier
     } else if (state == AppLifecycleState.inactive) {
       HMSLocalPeer? localPeer = await getLocalPeer();
       if (localPeer != null && !(localPeer.videoTrack?.isMute ?? true)) {
-        stopCapturing();
+        switchVideo();
       }
       for (PeerTrackNode peerTrackNode in peerTracks) {
         peerTrackNode.setOffScreenStatus(true);

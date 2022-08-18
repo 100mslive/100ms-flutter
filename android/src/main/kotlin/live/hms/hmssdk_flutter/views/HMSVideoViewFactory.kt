@@ -65,7 +65,7 @@ class HMSVideoViewFactory(private val plugin: HmssdkFlutterPlugin) :
 
         val matchParent = args!!["match_parent"] as? Boolean
 
-        val room = plugin.hmssdk.getRoom()
+        val room = plugin.hmssdk!!.getRoom()
 
         val track = HmsUtilities.getVideoTrack(trackId!!, room!!)
 

@@ -19,7 +19,7 @@ class HMSVideoTrackSettingsExtension {
         }
 
 
-        fun getValueOfHMSCameraFacing(cameraFacing: HMSVideoTrackSettings.CameraFacing?):String?{
+        private fun getValueOfHMSCameraFacing(cameraFacing: HMSVideoTrackSettings.CameraFacing?):String?{
             if(cameraFacing==null)return null
 
             return when(cameraFacing){
@@ -29,7 +29,7 @@ class HMSVideoTrackSettingsExtension {
             }
         }
 
-        fun getValueOfHMSVideoCodec(codec: HMSVideoCodec?):String?{
+        private fun getValueOfHMSVideoCodec(codec: HMSVideoCodec?):String?{
             if(codec==null)return null
 
             return when(codec){

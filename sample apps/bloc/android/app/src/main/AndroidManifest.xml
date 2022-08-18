@@ -19,6 +19,9 @@
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    
+
    <application
         android:label="demo_app_with_100ms_and_bloc"
         android:name="${applicationName}"

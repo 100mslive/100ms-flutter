@@ -7,14 +7,16 @@ class HMSVideoTrackSetting {
   final int? maxBitrate;
   final int? maxFrameRate;
   final HMSCameraFacing? cameraFacing;
+  final String? trackDescription;
   final bool? disableAutoResize;
 
   HMSVideoTrackSetting(
-      {this.codec,
+      {this.codec = HMSCodec.VP8,
       this.resolution,
-      this.maxBitrate,
-      this.maxFrameRate,
-      this.cameraFacing,
+      this.maxBitrate = 512,
+      this.maxFrameRate = 25,
+      this.cameraFacing = HMSCameraFacing.FRONT,
+      this.trackDescription = "This a video track",
       this.disableAutoResize = false});
 
   factory HMSVideoTrackSetting.fromMap(Map map) {
@@ -42,6 +44,7 @@ class HMSVideoTrackSetting {
       'camera_facing': cameraFacing != null
           ? HMSCameraFacingValues.getValueFromHMSCameraFacing(cameraFacing!)
           : null,
+      'track_description': trackDescription,
       'disable_auto_resize': disableAutoResize ?? false
     };
   }
