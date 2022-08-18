@@ -19,7 +19,14 @@ Here you will find everything you need to build experiences with video using 100
 📲 Download the Sample iOS app here: <https://testflight.apple.com/join/Uhzebmut>
 
 🤖 Download the Sample Android app here: <https://appdistribution.firebase.dev/i/b623e5310929ab70>
-  
+
+
+100ms Flutter apps are also released on the App Stores, you can download them here:
+
+📲 iOS app on Apple App Store: <https://apps.apple.com/app/100ms-live/id1576541989>
+
+🤖 Android app on Google Play Store: <https://play.google.com/store/apps/details?id=live.hms.flutter>
+
 ## 🚂 Setup Guide
 
 1. Sign up on <https://dashboard.100ms.live/register> & visit the Developer tab to access your credentials.
