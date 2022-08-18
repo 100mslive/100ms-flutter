@@ -1,3 +1,13 @@
+## 0.7.5 - 2022-08-18
+
+- Added support on iOS for sharing audio from local files on your device & from other audio playing apps
+- Added ability to apply local peer track settings while initializing HMSSDK
+- Added APIs to fetch local peer track settings
+- Fixed an issue where exiting from Preview without joining room was not releasing camera access
+- Added `destroy` API to cleanup Native HMSSDK instance correctly
+- Disabled Hardware Scaler on Android to correct intermittent Video tile flickering 
+- Updated to Native Android SDK 2.4.8 & Native iOS SDK 0.3.3
+
 ## 0.7.4 - 2022-07-29
 
 ### Added
