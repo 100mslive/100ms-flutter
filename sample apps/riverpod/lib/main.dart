@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: '100ms mobx',
+      title: '100ms riverpod',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -53,12 +53,12 @@ Future<bool> getPermissions() async {
 
 class _HomePageState extends State<HomePage> {
   TextEditingController txtName = TextEditingController(text: "");
-  TextEditingController txtId = TextEditingController(text: "");
+  TextEditingController txtId = TextEditingController(text: "https://shaik.app.100ms.live/meeting/ajk-stp-ebs");
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("mobx Clone"),
+        title: const Text("riverpod Clone"),
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,

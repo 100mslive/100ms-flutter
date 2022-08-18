@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:example_riverpod/hms_sdk_interactor.dart';
 import 'package:example_riverpod/meeting/meeting_store.dart';
 import 'package:example_riverpod/meeting/video_tiles.dart';
@@ -61,10 +63,6 @@ class _MeetingPageState extends ConsumerState<MeetingPage> {
             selectedItemColor: Colors.greenAccent,
             unselectedItemColor: Colors.grey,
             items: <BottomNavigationBarItem>[
-              const BottomNavigationBarItem(
-                icon: Icon(Icons.cancel),
-                label: 'Leave Meeting',
-              ),
               BottomNavigationBarItem(
                 icon: Icon(ref.watch(meetingStoreProvider).isMicOn
                     ? Icons.mic
@@ -77,6 +75,20 @@ class _MeetingPageState extends ConsumerState<MeetingPage> {
                     : Icons.videocam_off),
                 label: 'Camera',
               ),
+              //For screenshare in iOS follow the steps here : https://www.100ms.live/docs/flutter/v2/features/Screen-Share
+              if (Platform.isAndroid)
+                BottomNavigationBarItem(
+                    icon: Icon(
+                      Icons.screen_share,
+                      color: (ref.watch(meetingStoreProvider).isScreenShareOn)
+                          ? Colors.green
+                          : Colors.grey,
+                    ),
+                    label: "ScreenShare"),
+              const BottomNavigationBarItem(
+                icon: Icon(Icons.cancel),
+                label: 'Leave',
+              ),
             ],
             onTap: _onItemTapped),
       ),
@@ -84,13 +96,26 @@ class _MeetingPageState extends ConsumerState<MeetingPage> {
   }
 
   void _onItemTapped(int index) {
-    if (index == 0) {
-      ref.read(meetingStoreProvider).leave();
-      Navigator.pop(context);
-    } else if (index == 1) {
-      ref.read(meetingStoreProvider).switchAudio();
-    } else {
-      ref.read(meetingStoreProvider).switchVideo();
+    switch (index) {
+      case 0:
+        ref.read(meetingStoreProvider).switchAudio();
+
+        break;
+      case 1:
+        ref.read(meetingStoreProvider).switchVideo();
+
+        break;
+      case 2:
+        if (!ref.read(meetingStoreProvider).isScreenShareOn) {
+          ref.read(meetingStoreProvider).startScreenShare();
+        } else {
+          ref.read(meetingStoreProvider).stopScreenShare();
+        }
+        break;
+      case 3:
+        ref.read(meetingStoreProvider).leave();
+        Navigator.pop(context);
+        break;
     }
   }
 }
