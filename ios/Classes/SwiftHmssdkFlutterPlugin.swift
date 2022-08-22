@@ -3,6 +3,7 @@ import Flutter
 import UIKit
 import HMSSDK
 import ReplayKit
+import AVKit
 
 public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListener, FlutterStreamHandler, HMSPreviewListener, HMSLogger {
     
@@ -703,6 +704,41 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                 result(nil)
             }
         }
+    }
+    
+    //MARK: - PIP mode
+    var pipVideoCallViewController: UIViewController? = nil
+    
+    private func enablePIPMode(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+        let arguments = call.arguments as! [AnyHashable: Any]
+        if #available(iOS 15.0, *) {
+            guard let trackID = arguments["track_id"] as? String,
+                  let track = HMSUtilities.getVideoTrack(for: trackID, in: hmsSDK!.room!)
+            else {
+                let error = HMSCommonAction.getError(message: "Could not find track for PIP mode",
+                                     description: "Could not find track from trackID",
+                                     params: ["function": #function, "arguments": arguments])
+                result(HMSErrorExtension.toDictionary(error))
+                return
+            }
+            pipVideoCallViewController = AVPictureInPictureVideoCallViewController()
+            let pipContentSource = AVPictureInPictureController.ContentSource(
+                       activeVideoCallSourceView: targetView,
+                       contentViewController: pipVideoCallViewController)
+            let pipController = AVPictureInPictureController(contentSource: pipContentSource)
+            pipController.canStartPictureInPictureAutomaticallyFromInline = true
+                        
+//            pipController.startPictureInPicture()
+            let trackVideoView = HMSSampleBufferDisplayView(frame: .zero)
+                trackVideoView.track = track
+            pipVideoCallViewController!.view.addSubview(trackVideoView)
+        } else {
+            let error = HMSCommonAction.getError(message: "PIP mode is not available",
+                                 description: "PIP mode require iOS 15.0 or above",
+                                 params: ["function": #function, "arguments": arguments])
+            result(HMSErrorExtension.toDictionary(error))
+        }
+        
     }
     
     // MARK: - Logging
