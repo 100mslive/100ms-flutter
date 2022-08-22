@@ -723,8 +723,8 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             }
             pipVideoCallViewController = AVPictureInPictureVideoCallViewController()
             let pipContentSource = AVPictureInPictureController.ContentSource(
-                       activeVideoCallSourceView: targetView,
-                       contentViewController: pipVideoCallViewController)
+                       activeVideoCallSourceView: UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 0)),
+                       contentViewController: pipVideoCallViewController as! AVPictureInPictureVideoCallViewController)
             let pipController = AVPictureInPictureController(contentSource: pipContentSource)
             pipController.canStartPictureInPictureAutomaticallyFromInline = true
                         
