@@ -1,4 +1,6 @@
 //Package imports
+import 'dart:developer';
+
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -408,6 +410,7 @@ class MeetingStore extends ChangeNotifier
 
   @override
   void onJoin({required HMSRoom room}) async {
+    log("onJoin-> room: ${room.toString()}");
     isMeetingStarted = true;
     hmsRoom = room;
     if (room.hmshlsStreamingState?.running ?? false) {
@@ -474,6 +477,7 @@ class MeetingStore extends ChangeNotifier
 
   @override
   void onRoomUpdate({required HMSRoom room, required HMSRoomUpdate update}) {
+    log("onRoomUpdate-> room: ${room.toString()} update: ${update.name}");
     switch (update) {
       case HMSRoomUpdate.browserRecordingStateUpdated:
         recordingType["browser"] =
@@ -510,6 +514,7 @@ class MeetingStore extends ChangeNotifier
   @override
   void onPeerUpdate(
       {required HMSPeer peer, required HMSPeerUpdate update}) async {
+    log("onPeerUpdate-> peer: ${peer.name} update: ${update.name}");
     peerOperation(peer, update);
   }
 
@@ -518,6 +523,7 @@ class MeetingStore extends ChangeNotifier
       {required HMSTrack track,
       required HMSTrackUpdate trackUpdate,
       required HMSPeer peer}) {
+    log("onTrackUpdate-> track: ${track.toString()} peer: ${peer.name} update: ${trackUpdate.name}");
     if (isSpeakerOn) {
       unMuteAll();
     } else {
@@ -566,6 +572,7 @@ class MeetingStore extends ChangeNotifier
 
   @override
   void onHMSError({required HMSException error}) {
+    log("onHMSError-> error: ${error.message}");
     this.hmsException = error;
 
     notifyListeners();
@@ -573,6 +580,7 @@ class MeetingStore extends ChangeNotifier
 
   @override
   void onMessage({required HMSMessage message}) {
+    log("onMessage-> sender: ${message.sender} message: ${message.message} time: ${message.time}");
     addMessage(message);
     isNewMessageReceived = true;
     notifyListeners();
@@ -580,6 +588,7 @@ class MeetingStore extends ChangeNotifier
 
   @override
   void onRoleChangeRequest({required HMSRoleChangeRequest roleChangeRequest}) {
+    log("onRoleChangeRequest-> sender: ${roleChangeRequest.suggestedBy} role: ${roleChangeRequest.suggestedRole}");
     this.currentRoleChangeRequest = roleChangeRequest;
     notifyListeners();
   }
@@ -640,6 +649,7 @@ class MeetingStore extends ChangeNotifier
   @override
   void onChangeTrackStateRequest(
       {required HMSTrackChangeRequest hmsTrackChangeRequest}) {
+    log("onChangeTrackStateRequest-> sender: ${hmsTrackChangeRequest.requestBy} track: ${hmsTrackChangeRequest.track.toString()} mute: ${hmsTrackChangeRequest.mute}");
     if (!hmsTrackChangeRequest.mute) {
       this.hmsTrackChangeRequest = hmsTrackChangeRequest;
     } else {
@@ -655,6 +665,7 @@ class MeetingStore extends ChangeNotifier
   @override
   void onRemovedFromRoom(
       {required HMSPeerRemovedFromPeer hmsPeerRemovedFromPeer}) {
+    log("onRemovedFromRoom-> sender: ${hmsPeerRemovedFromPeer.peerWhoRemoved}, reason: ${hmsPeerRemovedFromPeer.reason}, roomEnded: ${hmsPeerRemovedFromPeer.roomWasEnded}");
     description = "Removed by ${hmsPeerRemovedFromPeer.peerWhoRemoved?.name}";
     peerTracks.clear();
     isRoomEnded = true;
