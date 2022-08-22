@@ -46,6 +46,7 @@ class _VideoViewState extends State<VideoView> {
                     borderRadius: BorderRadius.all(Radius.circular(10)),
                     child: InteractiveViewer(
                       child: HMSVideoView(
+                          key: Key(data.item1!.trackId),
                           scaleType: widget.scaleType,
                           track: data.item1!,
                           setMirror: false,
@@ -60,6 +61,7 @@ class _VideoViewState extends State<VideoView> {
                       height: widget.itemHeight,
                       width: widget.itemWidth,
                       child: HMSVideoView(
+                        key: Key(data.item1!.trackId),
                         scaleType: ScaleType.SCALE_ASPECT_FILL,
                         track: data.item1!,
                         setMirror: data.item1.runtimeType == HMSLocalVideoTrack
