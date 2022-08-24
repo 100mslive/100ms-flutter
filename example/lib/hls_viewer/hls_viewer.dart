@@ -18,40 +18,42 @@ class HLSPlayer extends StatefulWidget {
 }
 
 class _HLSPlayerState extends State<HLSPlayer> {
-  late VideoPlayerController _controller;
-
   @override
   void initState() {
     super.initState();
-
-    _controller = VideoPlayerController.network(
+    context.read<MeetingStore>().hlsVideoController =
+        VideoPlayerController.network(
       widget.streamUrl,
     )..initialize().then((_) {
-        _controller.play();
-        setState(() {});
-      });
+            context.read<MeetingStore>().hlsVideoController!.play();
+            setState(() {});
+          });
   }
 
   @override
   void dispose() async {
     super.dispose();
-    await _controller.dispose();
+    await context.read<MeetingStore>().hlsVideoController?.dispose();
+    context.read<MeetingStore>().hlsVideoController = null;
   }
 
   @override
   Widget build(BuildContext context) {
-    context.watch<MeetingStore>();
-    return Scaffold(
-        body: Center(
-      child: _controller.value.isInitialized
-          ? AspectRatio(
-              aspectRatio: _controller.value.aspectRatio,
-              child: VideoPlayer(_controller),
-            )
-          : HLSTitleText(
-              text: "Waiting for the HLS Streaming to start...",
-              textColor: defaultColor,
-            ),
-    ));
+    return Selector<MeetingStore, VideoPlayerController?>(
+        selector: (_, meetingStore) => meetingStore.hlsVideoController,
+        builder: (_, controller, __) {
+          return Scaffold(
+              body: Center(
+            child: controller?.value.isInitialized ?? false
+                ? AspectRatio(
+                    aspectRatio: controller!.value.aspectRatio,
+                    child: VideoPlayer(controller),
+                  )
+                : HLSTitleText(
+                    text: "Waiting for the HLS Streaming to start...",
+                    textColor: defaultColor,
+                  ),
+          ));
+        });
   }
 }

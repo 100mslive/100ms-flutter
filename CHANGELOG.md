@@ -1,3 +1,36 @@
+## 0.7.5 - 2022-08-18
+
+- Added support on iOS for sharing audio from local files on your device & from other audio playing apps
+- Added ability to apply local peer track settings while initializing HMSSDK
+- Added APIs to fetch local peer track settings
+- Fixed an issue where exiting from Preview without joining room was not releasing camera access
+- Added `destroy` API to cleanup Native HMSSDK instance correctly
+- Disabled Hardware Scaler on Android to correct intermittent Video tile flickering 
+- Updated to Native Android SDK 2.4.8 & Native iOS SDK 0.3.3
+
+## 0.7.4 - 2022-07-29
+
+### Added
+
+- Added APIs to stream device audio in different modes
+- Added  APIs to view and change the output speaker selected by the SDK to playout
+- setAudioMode API to change the Audio out mode manually between in-call volume and media volume
+
+### Fixed
+
+- Calling `switchCamera` API leads to triggering of onSuccess callback twice
+- onRoomUpdate with type `HMSRoomUpdate.ROOM_PEER_COUNT_UPDATED` not getting called when peer count changes in the room
+- Peer not able to publish tracks when updated to WebRTC from HLS if rejoins after a reconnection in WebRTC Mode
+
+### Changed
+
+- `HMSHLSConfig` is now an optional parameter while calling startHLSStreaming and stopHLSStreaming
+- The `meetingUrl` parameter is optional while creating the `HMSHLSMeetingURLVariant` instance for HMSHLSConfig. If nothing is provided HMS system will take the default meetingUrl for starting HLS stream
+- changeRoleForce permission in HMSRole is now removed and no longer used
+- recording permission in HMSRole is now broken into - `browserRecording` and `rtmpStreaming`
+- streaming permission in HMSRole is now `hlsStreaming`
+
+
 ## 0.7.3 - 2022-06-23
 - Added support for iOS Screenshare
 - Added `HMSHLSRecordingConfig` to perform recording while HLS Streaming

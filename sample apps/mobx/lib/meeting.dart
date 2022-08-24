@@ -148,6 +148,27 @@ class _MeetingState extends State<Meeting> with WidgetsBindingObserver {
                         color: Colors.blue,
                       ),
                     ),
+                    Observer(builder: (context) {
+                      return CircleAvatar(
+                        backgroundColor: Colors.black,
+                        child: IconButton(
+                          icon: Icon(
+                            Icons.screen_share,
+                            color: _meetingStore.isScreenShareOn
+                                ? Colors.green
+                                : Colors.grey,
+                          ),
+                          onPressed: () {
+                            if (!_meetingStore.isScreenShareOn) {
+                              _meetingStore.startScreenShare();
+                            } else {
+                              _meetingStore.stopScreenShare();
+                            }
+                          },
+                          color: Colors.blue,
+                        ),
+                      );
+                    }),
                     CircleAvatar(
                       backgroundColor: Colors.black,
                       child: IconButton(

@@ -137,13 +137,16 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
               selector: (_, meetingStore) =>
                   Tuple2(meetingStore.isRoomEnded, meetingStore.hmsException),
               builder: (_, data, __) {
-                if (data.item2 != null && (data.item2?.isTerminal ?? false)) {
+                if (data.item2 != null &&
+                    (data.item2?.code?.errorCode == 1003 ||
+                        data.item2?.code?.errorCode == 2000 ||
+                        data.item2?.code?.errorCode == 4005)) {
                   WidgetsBinding.instance?.addPostFrameCallback((_) {
                     UtilityComponents.showErrorDialog(
                         context: context,
                         errorMessage:
                             "Error Code: ${data.item2!.code?.errorCode ?? ""} ${data.item2!.description}",
-                        errorTitle: data.item2!.message,
+                        errorTitle: data.item2!.message ?? "",
                         actionMessage: "Leave Room",
                         action: () {
                           Navigator.of(context)
@@ -572,92 +575,148 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                         .localPeer!
                                         .role
                                         .name
-                                        .contains("hls"))
+                                        .contains("hls-"))
                                   Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceEvenly,
                                     children: [
                                       if (Provider.of<MeetingStore>(context)
-                                                  .localPeer !=
-                                              null &&
-                                          (Provider.of<MeetingStore>(context)
-                                                  .localPeer
-                                                  ?.role
-                                                  .publishSettings
-                                                  ?.allowed
-                                                  .contains("audio") ??
-                                              false))
-                                        Selector<MeetingStore, bool>(
-                                            selector: (_, meetingStore) =>
-                                                meetingStore.isMicOn,
-                                            builder: (_, isMicOn, __) {
-                                              return EmbeddedButton(
-                                                onTap: () => {
-                                                  context
-                                                      .read<MeetingStore>()
-                                                      .switchAudio()
-                                                },
-                                                width: 40,
-                                                height: 40,
-                                                disabledBorderColor:
-                                                    borderColor,
-                                                offColor: borderColor,
-                                                onColor: screenBackgroundColor,
-                                                isActive: isMicOn,
-                                                child: SvgPicture.asset(
-                                                  isMicOn
-                                                      ? "assets/icons/mic_state_on.svg"
-                                                      : "assets/icons/mic_state_off.svg",
-                                                  color: defaultColor,
-                                                  fit: BoxFit.scaleDown,
-                                                  semanticsLabel:
-                                                      "audio_mute_button",
-                                                ),
-                                              );
-                                            }),
-                                      if (Provider.of<MeetingStore>(context)
-                                                  .localPeer !=
-                                              null &&
-                                          (Provider.of<MeetingStore>(context)
-                                                  .localPeer
-                                                  ?.role
-                                                  .publishSettings
-                                                  ?.allowed
-                                                  .contains("video") ??
-                                              false))
-                                        Selector<MeetingStore,
-                                                Tuple2<bool, bool>>(
-                                            selector: (_, meetingStore) =>
-                                                Tuple2(
-                                                    meetingStore.isVideoOn,
-                                                    meetingStore.meetingMode ==
-                                                        MeetingMode.Audio),
-                                            builder: (_, data, __) {
-                                              return EmbeddedButton(
-                                                onTap: () => {
-                                                  (data.item2)
-                                                      ? null
-                                                      : context
+                                              .localPeer !=
+                                          null)
+                                        (Provider.of<MeetingStore>(context)
+                                                    .localPeer
+                                                    ?.role
+                                                    .publishSettings
+                                                    ?.allowed
+                                                    .contains("audio") ??
+                                                false)
+                                            ? Selector<MeetingStore, bool>(
+                                                selector: (_, meetingStore) =>
+                                                    meetingStore.isMicOn,
+                                                builder: (_, isMicOn, __) {
+                                                  return EmbeddedButton(
+                                                    onTap: () => {
+                                                      context
                                                           .read<MeetingStore>()
-                                                          .switchVideo(),
-                                                },
-                                                width: 40,
-                                                height: 40,
-                                                disabledBorderColor:
-                                                    borderColor,
-                                                offColor: borderColor,
-                                                onColor: screenBackgroundColor,
-                                                isActive: data.item1,
-                                                child: SvgPicture.asset(
-                                                    data.item1
-                                                        ? "assets/icons/cam_state_on.svg"
-                                                        : "assets/icons/cam_state_off.svg",
-                                                    color: defaultColor,
-                                                    fit: BoxFit.scaleDown,
-                                                    semanticsLabel:
-                                                        "video_mute_button"),
-                                              );
-                                            }),
+                                                          .switchAudio()
+                                                    },
+                                                    width: 40,
+                                                    height: 40,
+                                                    disabledBorderColor:
+                                                        borderColor,
+                                                    offColor: borderColor,
+                                                    onColor:
+                                                        screenBackgroundColor,
+                                                    isActive: isMicOn,
+                                                    child: SvgPicture.asset(
+                                                      isMicOn
+                                                          ? "assets/icons/mic_state_on.svg"
+                                                          : "assets/icons/mic_state_off.svg",
+                                                      color: defaultColor,
+                                                      fit: BoxFit.scaleDown,
+                                                      semanticsLabel:
+                                                          "audio_mute_button",
+                                                    ),
+                                                  );
+                                                })
+                                            : Selector<MeetingStore, bool>(
+                                                selector: (_, meetingStore) =>
+                                                    meetingStore.isSpeakerOn,
+                                                builder: (_, isSpeakerOn, __) {
+                                                  return EmbeddedButton(
+                                                    onTap: () => {
+                                                      context
+                                                          .read<MeetingStore>()
+                                                          .toggleSpeaker(),
+                                                    },
+                                                    width: 40,
+                                                    height: 40,
+                                                    disabledBorderColor:
+                                                        borderColor,
+                                                    offColor: borderColor,
+                                                    onColor:
+                                                        screenBackgroundColor,
+                                                    isActive: isSpeakerOn,
+                                                    child: SvgPicture.asset(
+                                                        isSpeakerOn
+                                                            ? "assets/icons/speaker_state_on.svg"
+                                                            : "assets/icons/speaker_state_off.svg",
+                                                        color: defaultColor,
+                                                        fit: BoxFit.scaleDown,
+                                                        semanticsLabel:
+                                                            "speaker_mute_button"),
+                                                  );
+                                                }),
+                                      if (Provider.of<MeetingStore>(context)
+                                              .localPeer !=
+                                          null)
+                                        (Provider.of<MeetingStore>(context)
+                                                    .localPeer
+                                                    ?.role
+                                                    .publishSettings
+                                                    ?.allowed
+                                                    .contains("video") ??
+                                                false)
+                                            ? Selector<MeetingStore,
+                                                    Tuple2<bool, bool>>(
+                                                selector: (_, meetingStore) =>
+                                                    Tuple2(
+                                                        meetingStore.isVideoOn,
+                                                        meetingStore
+                                                                .meetingMode ==
+                                                            MeetingMode.Audio),
+                                                builder: (_, data, __) {
+                                                  return EmbeddedButton(
+                                                    onTap: () => {
+                                                      (data.item2)
+                                                          ? null
+                                                          : context
+                                                              .read<
+                                                                  MeetingStore>()
+                                                              .switchVideo(),
+                                                    },
+                                                    width: 40,
+                                                    height: 40,
+                                                    disabledBorderColor:
+                                                        borderColor,
+                                                    offColor: borderColor,
+                                                    onColor:
+                                                        screenBackgroundColor,
+                                                    isActive: data.item1,
+                                                    child: SvgPicture.asset(
+                                                        data.item1
+                                                            ? "assets/icons/cam_state_on.svg"
+                                                            : "assets/icons/cam_state_off.svg",
+                                                        color: defaultColor,
+                                                        fit: BoxFit.scaleDown,
+                                                        semanticsLabel:
+                                                            "video_mute_button"),
+                                                  );
+                                                })
+                                            : Selector<MeetingStore, bool>(
+                                                selector: (_, meetingStore) =>
+                                                    meetingStore.isStatsVisible,
+                                                builder:
+                                                    (_, isStatsVisible, __) {
+                                                  return EmbeddedButton(
+                                                    width: 40,
+                                                    height: 40,
+                                                    onTap: () => context
+                                                        .read<MeetingStore>()
+                                                        .changeStatsVisible(),
+                                                    disabledBorderColor:
+                                                        borderColor,
+                                                    offColor:
+                                                        screenBackgroundColor,
+                                                    onColor: borderColor,
+                                                    isActive: isStatsVisible,
+                                                    child: SvgPicture.asset(
+                                                        "assets/icons/stats.svg",
+                                                        fit: BoxFit.scaleDown,
+                                                        semanticsLabel:
+                                                            "stats_button"),
+                                                  );
+                                                }),
                                       if (Provider.of<MeetingStore>(context)
                                               .localPeer !=
                                           null)
@@ -804,49 +863,76 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                               );
                                             }),
                                       if (Provider.of<MeetingStore>(context)
-                                                  .localPeer !=
-                                              null &&
-                                          (Provider.of<MeetingStore>(context)
-                                                  .localPeer
-                                                  ?.role
-                                                  .publishSettings
-                                                  ?.allowed
-                                                  .contains("screen") ??
-                                              false))
-                                        Selector<MeetingStore, bool>(
-                                            selector: (_, meetingStore) =>
-                                                meetingStore.isScreenShareOn,
-                                            builder: (_, data, __) {
-                                              return EmbeddedButton(
-                                                onTap: () {
-                                                  MeetingStore meetingStore =
-                                                      Provider.of<MeetingStore>(
-                                                          context,
-                                                          listen: false);
-                                                  if (meetingStore
-                                                      .isScreenShareOn) {
+                                              .localPeer !=
+                                          null)
+                                        (Provider.of<MeetingStore>(context)
+                                                    .localPeer
+                                                    ?.role
+                                                    .publishSettings
+                                                    ?.allowed
+                                                    .contains("screen") ??
+                                                false)
+                                            ? Selector<MeetingStore, bool>(
+                                                selector: (_, meetingStore) =>
                                                     meetingStore
-                                                        .stopScreenShare();
-                                                  } else {
-                                                    meetingStore
-                                                        .startScreenShare();
-                                                  }
-                                                },
-                                                width: 40,
-                                                height: 40,
-                                                disabledBorderColor:
-                                                    borderColor,
-                                                offColor: screenBackgroundColor,
-                                                onColor: borderColor,
-                                                isActive: data,
-                                                child: SvgPicture.asset(
-                                                    "assets/icons/screen_share.svg",
-                                                    color: defaultColor,
-                                                    fit: BoxFit.scaleDown,
-                                                    semanticsLabel:
-                                                        "screen_share_button"),
-                                              );
-                                            }),
+                                                        .isScreenShareOn,
+                                                builder: (_, data, __) {
+                                                  return EmbeddedButton(
+                                                    onTap: () {
+                                                      MeetingStore
+                                                          meetingStore =
+                                                          Provider.of<
+                                                                  MeetingStore>(
+                                                              context,
+                                                              listen: false);
+                                                      if (meetingStore
+                                                          .isScreenShareOn) {
+                                                        meetingStore
+                                                            .stopScreenShare();
+                                                      } else {
+                                                        meetingStore
+                                                            .startScreenShare();
+                                                      }
+                                                    },
+                                                    width: 40,
+                                                    height: 40,
+                                                    disabledBorderColor:
+                                                        borderColor,
+                                                    offColor:
+                                                        screenBackgroundColor,
+                                                    onColor: borderColor,
+                                                    isActive: data,
+                                                    child: SvgPicture.asset(
+                                                        "assets/icons/screen_share.svg",
+                                                        color: defaultColor,
+                                                        fit: BoxFit.scaleDown,
+                                                        semanticsLabel:
+                                                            "screen_share_button"),
+                                                  );
+                                                })
+                                            : Selector<MeetingStore, bool>(
+                                                selector: (_, meetingStore) =>
+                                                    (meetingStore.isBRB),
+                                                builder: (_, isBRB, __) {
+                                                  return EmbeddedButton(
+                                                    width: 40,
+                                                    height: 40,
+                                                    onTap: () => context
+                                                        .read<MeetingStore>()
+                                                        .changeMetadataBRB(),
+                                                    disabledBorderColor:
+                                                        borderColor,
+                                                    offColor:
+                                                        screenBackgroundColor,
+                                                    onColor: borderColor,
+                                                    isActive: isBRB,
+                                                    child: SvgPicture.asset(
+                                                        "assets/icons/brb.svg",
+                                                        fit: BoxFit.scaleDown,
+                                                        semanticsLabel:
+                                                            "brb_button"),
+                                                  );
+                                                }),
                                       if (Provider.of<MeetingStore>(context)
                                               .localPeer !=
                                           null)
@@ -889,10 +975,15 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                 meetingStore.currentRoleChangeRequest,
                             builder: (_, roleChangeRequest, __) {
                               if (roleChangeRequest != null) {
+                                HMSRoleChangeRequest currentRequest =
+                                    roleChangeRequest;
+                                context
+                                    .read<MeetingStore>()
+                                    .currentRoleChangeRequest = null;
                                 WidgetsBinding.instance!
                                     .addPostFrameCallback((_) {
                                   UtilityComponents.showRoleChangeDialog(
-                                      roleChangeRequest, context);
+                                      currentRequest, context);
                                 });
                               }
                               return SizedBox();
@@ -902,10 +993,15 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                 meetingStore.hmsTrackChangeRequest,
                             builder: (_, hmsTrackChangeRequest, __) {
                               if (hmsTrackChangeRequest != null) {
+                                HMSTrackChangeRequest currentRequest =
+                                    hmsTrackChangeRequest;
+                                context
+                                    .read<MeetingStore>()
+                                    .hmsTrackChangeRequest = null;
                                 WidgetsBinding.instance!
                                     .addPostFrameCallback((_) {
                                   UtilityComponents.showTrackChangeDialog(
-                                      context);
+                                      context, currentRequest);
                                 });
                               }
                               return SizedBox();
@@ -915,6 +1011,9 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                 meetingStore.showAudioDeviceChangePopup,
                             builder: (_, showAudioDeviceChangePopup, __) {
                               if (showAudioDeviceChangePopup) {
+                                context
+                                    .read<MeetingStore>()
+                                    .showAudioDeviceChangePopup = false;
                                 WidgetsBinding.instance!
                                     .addPostFrameCallback((_) {
                                   showDialog(
@@ -934,9 +1033,6 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                             },
                                           ));
                                 });
-                                context
-                                    .read<MeetingStore>()
-                                    .showAudioDeviceChangePopup = false;
                               }
                               return SizedBox();
                             }),

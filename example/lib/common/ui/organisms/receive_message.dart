@@ -57,15 +57,15 @@ class ReceiveMessageScreen extends StatelessWidget {
                             color: Colors.black,
                             fontWeight: FontWeight.w600),
                       ),
-                      SizedBox(
-                        height: 2,
-                      ),
                       Text(
                         message,
                         style: GoogleFonts.inter(
                             fontSize: 14.0,
                             color: Colors.white,
                             fontWeight: FontWeight.w700),
+                      ),
+                      SizedBox(
+                        height: 2,
                       ),
                     ],
                   ),

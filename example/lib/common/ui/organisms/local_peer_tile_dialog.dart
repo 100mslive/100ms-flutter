@@ -32,6 +32,7 @@ class _LocalPeerTileDialogState extends State<LocalPeerTileDialog> {
         widget.peerName,
         style: GoogleFonts.inter(color: iconColor, fontWeight: FontWeight.bold),
       ),
+      backgroundColor: bottomSheetColor,
       content: Container(
         width: double.infinity,
         child: Column(

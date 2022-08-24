@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hmssdk_flutter_example/common/constant.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/hms_button.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/hls-streaming/util/hls_title_text.dart';
@@ -161,8 +160,9 @@ class _HLSBottomSheetState extends State<HLSBottomSheet> {
               HMSButton(
                   width: MediaQuery.of(context).size.width - 30,
                   onPressed: () => {
-                        context.read<MeetingStore>().startHLSStreaming(
-                            Constant.rtmpUrl, _isRecordingOn, false),
+                        context
+                            .read<MeetingStore>()
+                            .startHLSStreaming(_isRecordingOn, false),
                         Navigator.pop(context)
                       },
                   childWidget: Padding(

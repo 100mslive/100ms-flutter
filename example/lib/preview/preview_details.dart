@@ -30,6 +30,7 @@ class _PreviewDetailsState extends State<PreviewDetails> {
     nameController.text = await Utilities.getStringData(key: "name");
     nameController.selection = TextSelection.fromPosition(
         TextPosition(offset: nameController.text.length));
+    setState(() {});
   }
 
   void showPreview(bool res) async {

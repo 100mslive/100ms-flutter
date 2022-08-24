@@ -120,7 +120,6 @@ class _VideoTileState extends State<VideoTile> {
                                           roles: _meetingStore.roles,
                                           peer: peerNode,
                                           changeRole: (role, forceChange) {
-                                            Navigator.pop(context);
                                             _meetingStore.changeRole(
                                                 peer: peerNode,
                                                 roleName: role,
@@ -152,7 +151,6 @@ class _VideoTileState extends State<VideoTile> {
                                         roles: _meetingStore.roles,
                                         peer: peerNode,
                                         changeRole: (role, forceChange) {
-                                          Navigator.pop(context);
                                           _meetingStore.changeRole(
                                               peer: peerNode,
                                               roleName: role,
@@ -183,6 +181,7 @@ class _VideoTileState extends State<VideoTile> {
                   ),
                   child: Semantics(
                     label:
+                       
                         "${context.read<PeerTrackNode>().peer.name}_video_on",
                     child: Stack(
                       children: [

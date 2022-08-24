@@ -43,6 +43,7 @@ dependencies:
   qr_code_scanner:
   shared_preferences: 
   uni_links:
+  file_picker:
   draggable_widget:
   
 dev_dependencies:

@@ -34,7 +34,7 @@ class HMSErrorExtension {
         return ["error": dict]
     }
 
-    static func getValueOfHMSErrorCode(errorCode: HMSErrorCode) -> String {
-        return "\(errorCode)"
+    static func getValueOfHMSErrorCode(errorCode: HMSErrorCode) -> Int {
+        return errorCode.rawValue
     }
 }

@@ -57,8 +57,10 @@ class Utilities {
     return (size.height -
             viewPadding.top -
             viewPadding.bottom -
-            kToolbarHeight) /
-        (size.width - viewPadding.left - viewPadding.right);
+            kToolbarHeight -
+            kBottomNavigationBarHeight -
+            4) /
+        (size.width);
   }
 
   static double getHLSRatio(Size size, BuildContext context) {
@@ -66,12 +68,16 @@ class Utilities {
   }
 
   static void setRTMPUrl(String roomUrl) {
+    if (roomUrl.contains("flutterhms.page.link") &&
+        roomUrl.contains("meetingUrl")) {
+      roomUrl = roomUrl.split("meetingUrl=")[1];
+    }
     List<String> urlSplit = roomUrl.split('/');
     int index = urlSplit.lastIndexOf("meeting");
     if (index != -1) {
       urlSplit[index] = "preview";
     }
-    Constant.rtmpUrl = urlSplit.join('/') + "?token=beam_recording";
+    Constant.streamingUrl = urlSplit.join('/') + "?skip_preview=true";
   }
 
   static Future<bool> getPermissions() async {
@@ -116,8 +122,11 @@ class Utilities {
     }
   }
 
-  static void showToast(String message) {
-    Fluttertoast.showToast(msg: message, backgroundColor: Colors.black87);
+  static void showToast(String message, {int time = 1}) {
+    Fluttertoast.showToast(
+        msg: message,
+        backgroundColor: Colors.black87,
+        timeInSecForIosWeb: time);
   }
 
   static Future<String> getStringData({required String key}) async {
@@ -143,5 +152,12 @@ class Utilities {
     final prefs = await SharedPreferences.getInstance();
 
     prefs.setInt(key, value);
+  }
+
+  static String fetchMeetingLinkFromFirebase(String url) {
+    url = url.split("deep_link_id=")[1];
+    url = url.split("&")[0];
+    url = url.replaceAll("%3A", ":").replaceAll("%2F", "/");
+    return url;
   }
 }

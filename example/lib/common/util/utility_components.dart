@@ -1,5 +1,7 @@
 //Package imports
+
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -61,52 +63,60 @@ class UtilityComponents {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              ElevatedButton(
+              Expanded(
+                child: ElevatedButton(
+                    style: ButtonStyle(
+                        shadowColor: MaterialStateProperty.all(surfaceColor),
+                        backgroundColor: MaterialStateProperty.all(
+                          Color.fromRGBO(32, 22, 23, 1),
+                        ),
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                          side: BorderSide(
+                              width: 1, color: popupButtonBorderColor),
+                          borderRadius: BorderRadius.circular(8.0),
+                        ))),
+                    onPressed: () => Navigator.pop(context, false),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8.0, vertical: 12),
+                      child: Text('Nevermind',
+                          style: GoogleFonts.inter(
+                              color: defaultColor,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: 0.50)),
+                    )),
+              ),
+              SizedBox(
+                width: 10,
+              ),
+              Expanded(
+                child: ElevatedButton(
                   style: ButtonStyle(
                       shadowColor: MaterialStateProperty.all(surfaceColor),
-                      backgroundColor: MaterialStateProperty.all(
-                        Color.fromRGBO(32, 22, 23, 1),
-                      ),
+                      backgroundColor: MaterialStateProperty.all(errorColor),
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
-                        side:
-                            BorderSide(width: 1, color: popupButtonBorderColor),
+                        side: BorderSide(width: 1, color: errorColor),
                         borderRadius: BorderRadius.circular(8.0),
                       ))),
-                  onPressed: () => Navigator.pop(context, false),
+                  onPressed: () => {
+                    _meetingStore.leave(),
+                    Navigator.popUntil(context, (route) => route.isFirst)
+                  },
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 8.0, vertical: 12),
-                    child: Text('Nevermind',
-                        style: GoogleFonts.inter(
-                            color: defaultColor,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            letterSpacing: 0.50)),
-                  )),
-              ElevatedButton(
-                style: ButtonStyle(
-                    shadowColor: MaterialStateProperty.all(surfaceColor),
-                    backgroundColor: MaterialStateProperty.all(errorColor),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                      side: BorderSide(width: 1, color: errorColor),
-                      borderRadius: BorderRadius.circular(8.0),
-                    ))),
-                onPressed: () => {
-                  _meetingStore.leave(),
-                  Navigator.popUntil(context, (route) => route.isFirst)
-                },
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8.0, vertical: 12),
-                  child: Text(
-                    'Leave Room',
-                    style: GoogleFonts.inter(
-                        color: defaultColor,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        letterSpacing: 0.50),
+                    child: Text(
+                      'Leave Room',
+                      style: GoogleFonts.inter(
+                          color: defaultColor,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: 0.50),
+                    ),
                   ),
                 ),
               ),
@@ -162,43 +172,51 @@ class UtilityComponents {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              ElevatedButton(
+              Expanded(
+                child: ElevatedButton(
+                    style: ButtonStyle(
+                        shadowColor: MaterialStateProperty.all(surfaceColor),
+                        backgroundColor:
+                            MaterialStateProperty.all(bottomSheetColor),
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                          side: BorderSide(
+                              width: 1, color: popupButtonBorderColor),
+                          borderRadius: BorderRadius.circular(8.0),
+                        ))),
+                    onPressed: () => Navigator.pop(context, false),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8.0, vertical: 12),
+                      child: HLSTitleText(
+                          text: 'Don’t Leave', textColor: defaultColor),
+                    )),
+              ),
+              SizedBox(
+                width: 10,
+              ),
+              Expanded(
+                child: ElevatedButton(
                   style: ButtonStyle(
                       shadowColor: MaterialStateProperty.all(surfaceColor),
-                      backgroundColor:
-                          MaterialStateProperty.all(bottomSheetColor),
+                      backgroundColor: MaterialStateProperty.all(errorColor),
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
-                        side:
-                            BorderSide(width: 1, color: popupButtonBorderColor),
+                        side: BorderSide(width: 1, color: errorColor),
                         borderRadius: BorderRadius.circular(8.0),
                       ))),
-                  onPressed: () => Navigator.pop(context, false),
+                  onPressed: () => {
+                    _meetingStore.leave(),
+                    Navigator.popUntil(context, (route) => route.isFirst)
+                  },
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 8.0, vertical: 12),
+                        horizontal: 25.0, vertical: 12),
                     child: HLSTitleText(
-                        text: 'Don’t Leave', textColor: defaultColor),
-                  )),
-              ElevatedButton(
-                style: ButtonStyle(
-                    shadowColor: MaterialStateProperty.all(surfaceColor),
-                    backgroundColor: MaterialStateProperty.all(errorColor),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                      side: BorderSide(width: 1, color: errorColor),
-                      borderRadius: BorderRadius.circular(8.0),
-                    ))),
-                onPressed: () => {
-                  _meetingStore.leave(),
-                  Navigator.popUntil(context, (route) => route.isFirst)
-                },
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 25.0, vertical: 12),
-                  child: HLSTitleText(
-                    text: 'Leave',
-                    textColor: defaultColor,
+                      text: 'Leave',
+                      textColor: defaultColor,
+                    ),
                   ),
                 ),
               ),
@@ -210,23 +228,24 @@ class UtilityComponents {
   }
 
   static void showRoleChangeDialog(
-      HMSRoleChangeRequest? event, BuildContext context) async {
-    event = event as HMSRoleChangeRequest;
+      HMSRoleChangeRequest event, BuildContext context) async {
     await showDialog(
         barrierDismissible: false,
         context: context,
         builder: (ctx) => RoleChangeDialogOrganism(
-              meetingStore: context.read<MeetingStore>(),
-            ));
+            roleChangeRequest: event,
+            meetingStore: context.read<MeetingStore>()));
   }
 
-  static showTrackChangeDialog(BuildContext context) async {
+  static showTrackChangeDialog(
+      BuildContext context, HMSTrackChangeRequest trackChangeRequest) async {
     MeetingStore _meetingStore = context.read<MeetingStore>();
     await showDialog(
         barrierDismissible: false,
         context: context,
         builder: (ctx) => TrackChangeDialogOrganism(
-              meetingStore: _meetingStore,
+              trackChangeRequest: trackChangeRequest,
+              meetingStore: context.read<MeetingStore>(),
               isAudioModeOn: _meetingStore.meetingMode == MeetingMode.Audio,
             ));
   }
@@ -321,7 +340,7 @@ class UtilityComponents {
 
   static showHLSDialog({required BuildContext context}) async {
     TextEditingController textController = TextEditingController();
-    textController.text = Constant.rtmpUrl;
+    textController.text = Constant.streamingUrl;
     bool isSingleFileChecked = false, isVODChecked = false;
     MeetingStore _meetingStore = context.read<MeetingStore>();
     await showDialog(
@@ -335,19 +354,6 @@ class UtilityComponents {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      TextField(
-                        autofocus: true,
-                        controller: textController,
-                        decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(16)),
-                            ),
-                            hintText: "Enter HLS Url"),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
                       Text("Recording"),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -411,9 +417,7 @@ class UtilityComponents {
                       if (textController.text == "") {
                       } else {
                         _meetingStore.startHLSStreaming(
-                            textController.text.trim(),
-                            isSingleFileChecked,
-                            isVODChecked);
+                            isSingleFileChecked, isVODChecked);
                         Navigator.pop(context);
                       }
                     },
@@ -547,6 +551,8 @@ class UtilityComponents {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12)),
                 backgroundColor: bottomSheetColor,
+                contentPadding:
+                    EdgeInsets.only(left: 14, right: 10, top: 15, bottom: 15),
                 content: Container(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
@@ -562,6 +568,7 @@ class UtilityComponents {
                             hintText: placeholder),
                       ),
                       CheckboxListTile(
+                          contentPadding: EdgeInsets.zero,
                           title: Text(
                             "Recording",
                             style: GoogleFonts.inter(
@@ -580,29 +587,71 @@ class UtilityComponents {
                   ),
                 ),
                 actions: [
-                  ElevatedButton(
-                    child: Text(
-                      'Cancel',
-                      style: GoogleFonts.inter(),
-                    ),
-                    onPressed: () {
-                      Navigator.pop(context, {"url": "", "toRecord": false});
-                    },
-                  ),
-                  ElevatedButton(
-                    child: Text(
-                      'OK',
-                      style: GoogleFonts.inter(),
-                    ),
-                    onPressed: () {
-                      if (textController.text != "") {
-                        Navigator.pop(context, {
-                          "url": textController.text,
-                          "toRecord": isRecordingEnabled
-                        });
-                      }
-                    },
-                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      ElevatedButton(
+                          style: ButtonStyle(
+                              shadowColor:
+                                  MaterialStateProperty.all(surfaceColor),
+                              backgroundColor:
+                                  MaterialStateProperty.all(bottomSheetColor),
+                              shape: MaterialStateProperty.all<
+                                      RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                side: BorderSide(
+                                    width: 1,
+                                    color: Color.fromRGBO(107, 125, 153, 1)),
+                                borderRadius: BorderRadius.circular(8.0),
+                              ))),
+                          onPressed: () => Navigator.pop(
+                              context, {"url": "", "toRecord": false}),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 6, vertical: 12),
+                            child: Text('Cancel',
+                                style: GoogleFonts.inter(
+                                    color: defaultColor,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                    letterSpacing: 0.50)),
+                          )),
+                      ElevatedButton(
+                        style: ButtonStyle(
+                            shadowColor:
+                                MaterialStateProperty.all(surfaceColor),
+                            backgroundColor:
+                                MaterialStateProperty.all(hmsdefaultColor),
+                            shape: MaterialStateProperty.all<
+                                RoundedRectangleBorder>(RoundedRectangleBorder(
+                              side:
+                                  BorderSide(width: 1, color: hmsdefaultColor),
+                              borderRadius: BorderRadius.circular(8.0),
+                            ))),
+                        onPressed: () => {
+                          if (textController.text != "")
+                            {
+                              Navigator.pop(context, {
+                                "url": textController.text,
+                                "toRecord": isRecordingEnabled
+                              })
+                            }
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 6, vertical: 12),
+                          child: Text(
+                            'Start RTMP',
+                            style: GoogleFonts.inter(
+                                color: defaultColor,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                letterSpacing: 0.50),
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
                 ],
               );
             }));
@@ -616,31 +665,105 @@ class UtilityComponents {
       context: context,
       builder: (ctx) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        backgroundColor: bottomSheetColor,
-        title: Text(
-          'End Room?',
-          style: GoogleFonts.inter(
-              color: iconColor, fontSize: 24, fontWeight: FontWeight.w700),
-        ),
-        actions: [
-          ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                primary: errorColor,
+        insetPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+        actionsPadding: EdgeInsets.only(right: 10, left: 10, bottom: 10),
+        backgroundColor: Color.fromRGBO(32, 22, 23, 1),
+        title: Container(
+          width: 300,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SvgPicture.asset(
+                "assets/icons/end_warning.svg",
+                width: 24,
               ),
-              onPressed: () {
-                _meetingStore.endRoom(false, "Room Ended From Flutter");
-                if (_meetingStore.isRoomEnded) {
-                  Navigator.popUntil(context, (route) => route.isFirst);
-                }
-              },
-              child: Text('Yes', style: GoogleFonts.inter(fontSize: 24))),
-          ElevatedButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: Text(
-              'Cancel',
-              style: GoogleFonts.inter(fontSize: 24),
-            ),
+              SizedBox(
+                width: 5,
+              ),
+              Text(
+                "End Room",
+                style: GoogleFonts.inter(
+                    color: errorColor,
+                    fontSize: 20,
+                    height: 24 / 20,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 0.15),
+              ),
+            ],
           ),
+        ),
+        content: Text(
+            "The session will end for everyone and all the activities will stop. You can’t undo this action.",
+            style: GoogleFonts.inter(
+                color: dialogcontentColor,
+                fontSize: 14,
+                fontWeight: FontWeight.w400,
+                height: 20 / 14,
+                letterSpacing: 0.25)),
+        actions: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: ElevatedButton(
+                    style: ButtonStyle(
+                        shadowColor: MaterialStateProperty.all(surfaceColor),
+                        backgroundColor: MaterialStateProperty.all(
+                          Color.fromRGBO(32, 22, 23, 1),
+                        ),
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                          side: BorderSide(
+                              width: 1, color: popupButtonBorderColor),
+                          borderRadius: BorderRadius.circular(8.0),
+                        ))),
+                    onPressed: () => Navigator.pop(context, false),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8.0, vertical: 12),
+                      child: Text("Don't End",
+                          style: GoogleFonts.inter(
+                              color: defaultColor,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: 0.50)),
+                    )),
+              ),
+              SizedBox(
+                width: 5,
+              ),
+              Expanded(
+                child: ElevatedButton(
+                  style: ButtonStyle(
+                      shadowColor: MaterialStateProperty.all(surfaceColor),
+                      backgroundColor: MaterialStateProperty.all(errorColor),
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                        side: BorderSide(width: 1, color: errorColor),
+                        borderRadius: BorderRadius.circular(8.0),
+                      ))),
+                  onPressed: () => {
+                    _meetingStore.endRoom(false, "Room Ended From Flutter"),
+                    if (_meetingStore.isRoomEnded)
+                      {Navigator.popUntil(context, (route) => route.isFirst)}
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 8.0, vertical: 12),
+                    child: Text(
+                      "End Room",
+                      style: GoogleFonts.inter(
+                          color: defaultColor,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: 0.50),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          )
         ],
       ),
     );
@@ -777,6 +900,7 @@ class UtilityComponents {
                     style: GoogleFonts.inter(),
                   ),
                   onPressed: () {
+                    context.read<MeetingStore>().leave();
                     Navigator.of(context).popUntil((route) => route.isFirst);
                   }),
             ],
@@ -835,50 +959,60 @@ class UtilityComponents {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              ElevatedButton(
+              Expanded(
+                child: ElevatedButton(
+                    style: ButtonStyle(
+                        shadowColor: MaterialStateProperty.all(surfaceColor),
+                        backgroundColor: MaterialStateProperty.all(
+                          Color.fromRGBO(32, 22, 23, 1),
+                        ),
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                          side: BorderSide(
+                              width: 1, color: popupButtonBorderColor),
+                          borderRadius: BorderRadius.circular(8.0),
+                        ))),
+                    onPressed: () => Navigator.pop(context),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8.0, vertical: 12),
+                      child: Text(ignoreText,
+                          style: GoogleFonts.inter(
+                              color: defaultColor,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: 0.50)),
+                    )),
+              ),
+              SizedBox(
+                width: 5,
+              ),
+              Expanded(
+                child: ElevatedButton(
                   style: ButtonStyle(
                       shadowColor: MaterialStateProperty.all(surfaceColor),
-                      backgroundColor: MaterialStateProperty.all(
-                        Color.fromRGBO(32, 22, 23, 1),
-                      ),
+                      backgroundColor: MaterialStateProperty.all(errorColor),
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
-                        side:
-                            BorderSide(width: 1, color: popupButtonBorderColor),
+                        side: BorderSide(width: 1, color: errorColor),
                         borderRadius: BorderRadius.circular(8.0),
                       ))),
-                  onPressed: () => Navigator.pop(context),
+                  onPressed: () => {
+                    _meetingStore.stopHLSStreaming(),
+                    Navigator.pop(context)
+                  },
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 8.0, vertical: 12),
-                    child: Text(ignoreText,
-                        style: GoogleFonts.inter(
-                            color: defaultColor,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            letterSpacing: 0.50)),
-                  )),
-              ElevatedButton(
-                style: ButtonStyle(
-                    shadowColor: MaterialStateProperty.all(surfaceColor),
-                    backgroundColor: MaterialStateProperty.all(errorColor),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                      side: BorderSide(width: 1, color: errorColor),
-                      borderRadius: BorderRadius.circular(8.0),
-                    ))),
-                onPressed: () =>
-                    {_meetingStore.stopHLSStreaming(), Navigator.pop(context)},
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8.0, vertical: 12),
-                  child: Text(
-                    actionText,
-                    style: GoogleFonts.inter(
-                        color: defaultColor,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        letterSpacing: 0.50),
+                    child: Text(
+                      actionText,
+                      style: GoogleFonts.inter(
+                          color: defaultColor,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: 0.50),
+                    ),
                   ),
                 ),
               ),
@@ -918,7 +1052,7 @@ class UtilityComponents {
                       textInputAction: TextInputAction.done,
                       onSubmitted: (value) => (textController.text == "")
                           ? Utilities.showToast("Name can't be empty")
-                          : Navigator.pop(context, textController.text),
+                          : Navigator.pop(context, textController.text.trim()),
                       autofocus: true,
                       controller: textController,
                       decoration: InputDecoration(
@@ -955,7 +1089,7 @@ class UtilityComponents {
                                   color: Color.fromRGBO(107, 125, 153, 1)),
                               borderRadius: BorderRadius.circular(8.0),
                             ))),
-                        onPressed: () => Navigator.pop(context, false),
+                        onPressed: () => Navigator.pop(context, ""),
                         child: Padding(
                           padding: const EdgeInsets.symmetric(
                               horizontal: 6, vertical: 12),
@@ -983,7 +1117,7 @@ class UtilityComponents {
                             Utilities.showToast("Name can't be empty"),
                           }
                         else
-                          {Navigator.pop(context, textController.text)}
+                          {Navigator.pop(context, textController.text.trim())}
                       },
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
@@ -1168,5 +1302,121 @@ class UtilityComponents {
                 ],
               );
             }));
+  }
+
+  static Future<String> showAudioShareDialog(
+      {required BuildContext context,
+      required MeetingStore meetingStore,
+      required bool isPlaying}) async {
+    double volume = meetingStore.audioPlayerVolume;
+    String answer = await showDialog(
+        context: context,
+        builder: (context) => StatefulBuilder(builder: (context, setState) {
+              return AlertDialog(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12)),
+                backgroundColor: bottomSheetColor,
+                contentPadding:
+                    EdgeInsets.only(left: 14, right: 10, top: 15, bottom: 15),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(isPlaying ? "Stop playing" : "Pick song from files"),
+                    SizedBox(height: 10),
+                    if (isPlaying)
+                      Column(
+                        children: [
+                          Text("Volume: ${(volume * 100).truncate()}"),
+                          Slider(
+                            min: 0.0,
+                            max: 1.0,
+                            value: volume,
+                            onChanged: (value) {
+                              setState(() {
+                                volume = value;
+                                meetingStore.setAudioPlayerVolume(volume);
+                              });
+                            },
+                          ),
+                        ],
+                      )
+                  ],
+                ),
+                actions: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      ElevatedButton(
+                          style: ButtonStyle(
+                              shadowColor:
+                                  MaterialStateProperty.all(surfaceColor),
+                              backgroundColor:
+                                  MaterialStateProperty.all(bottomSheetColor),
+                              shape: MaterialStateProperty.all<
+                                      RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                side: BorderSide(
+                                    width: 1,
+                                    color: Color.fromRGBO(107, 125, 153, 1)),
+                                borderRadius: BorderRadius.circular(8.0),
+                              ))),
+                          onPressed: () => Navigator.pop(context, ""),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 6, vertical: 12),
+                            child: Text('Cancel',
+                                style: GoogleFonts.inter(
+                                    color: defaultColor,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                    letterSpacing: 0.50)),
+                          )),
+                      ElevatedButton(
+                        style: ButtonStyle(
+                            shadowColor:
+                                MaterialStateProperty.all(surfaceColor),
+                            backgroundColor:
+                                MaterialStateProperty.all(hmsdefaultColor),
+                            shape: MaterialStateProperty.all<
+                                RoundedRectangleBorder>(RoundedRectangleBorder(
+                              side:
+                                  BorderSide(width: 1, color: hmsdefaultColor),
+                              borderRadius: BorderRadius.circular(8.0),
+                            ))),
+                        onPressed: () async {
+                          if (isPlaying) {
+                            meetingStore.stopAudioIos();
+                            Navigator.pop(context, "");
+                          } else {
+                            FilePickerResult? result =
+                                await FilePicker.platform.pickFiles();
+                            if (result != null) {
+                              String? path =
+                                  "file://" + result.files.single.path!;
+
+                              Navigator.pop(context, path);
+                            }
+                          }
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 6, vertical: 12),
+                          child: Text(
+                            isPlaying ? 'Stop' : 'Select',
+                            style: GoogleFonts.inter(
+                                color: defaultColor,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                letterSpacing: 0.50),
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+              );
+            }));
+
+    return answer;
   }
 }

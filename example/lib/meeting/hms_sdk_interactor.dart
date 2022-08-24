@@ -16,16 +16,27 @@ class HMSSDKInteractor {
   bool skipPreview = false;
 
   HMSSDKInteractor({String? appGroup, String? preferredExtension}) {
-    hmsSDK = HMSSDK(appGroup: appGroup, preferredExtension: preferredExtension);
+    HMSTrackSetting trackSetting = HMSTrackSetting(
+        audioTrackSetting: HMSAudioTrackSetting(
+            audioSource: HMSAudioMixerSource(node: [
+          HMSAudioFilePlayerNode("audioFilePlayerNode"),
+          HMSMicNode(),
+          HMSScreenBroadcastAudioReceiverNode()
+        ])),
+        videoTrackSetting: HMSVideoTrackSetting());
+    hmsSDK = HMSSDK(
+        appGroup: appGroup,
+        preferredExtension: preferredExtension,
+        hmsTrackSetting: trackSetting);
     hmsSDK.build();
   }
 
-  void join({required HMSConfig config}) async {
+  void join({required HMSConfig config}) {
     this.config = config;
     hmsSDK.join(config: this.config);
   }
 
-  void leave({required HMSActionResultListener hmsActionResultListener}) async {
+  void leave({HMSActionResultListener? hmsActionResultListener}) {
     hmsSDK.leave(hmsActionResultListener: hmsActionResultListener);
   }
 
@@ -54,7 +65,7 @@ class HMSSDKInteractor {
   }
 
   void sendDirectMessage(String message, HMSPeer peerTo,
-      HMSActionResultListener hmsActionResultListener) async {
+      HMSActionResultListener hmsActionResultListener) {
     hmsSDK.sendDirectMessage(
         message: message,
         peerTo: peerTo,
@@ -63,7 +74,7 @@ class HMSSDKInteractor {
   }
 
   void sendGroupMessage(String message, List<HMSRole> hmsRolesTo,
-      HMSActionResultListener hmsActionResultListener) async {
+      HMSActionResultListener hmsActionResultListener) {
     hmsSDK.sendGroupMessage(
         message: message,
         hmsRolesTo: hmsRolesTo,
@@ -71,7 +82,7 @@ class HMSSDKInteractor {
         hmsActionResultListener: hmsActionResultListener);
   }
 
-  Future<void> preview({required HMSConfig config}) async {
+  Future<void> preview({required HMSConfig config}) {
     this.config = config;
     return hmsSDK.preview(config: config);
   }
@@ -232,15 +243,15 @@ class HMSSDKInteractor {
         name: name, hmsActionResultListener: hmsActionResultListener);
   }
 
-  void startHLSStreaming(
-      String meetingUrl, HMSActionResultListener hmsActionResultListener,
-      {bool singleFilePerLayer = false, bool enableVOD = false}) {
-    List<HMSHLSMeetingURLVariant> hmsHlsMeetingUrls = [];
-
-    hmsHlsMeetingUrls.add(HMSHLSMeetingURLVariant(
-        meetingUrl: meetingUrl, metadata: "HLS started from Flutter"));
-    HMSHLSRecordingConfig hmshlsRecordingConfig = HMSHLSRecordingConfig(
-        singleFilePerLayer: singleFilePerLayer, videoOnDemand: enableVOD);
+  void startHLSStreaming(HMSActionResultListener hmsActionResultListener,
+      {String? meetingUrl,
+      required HMSHLSRecordingConfig hmshlsRecordingConfig}) {
+    List<HMSHLSMeetingURLVariant>? hmsHlsMeetingUrls;
+    if (meetingUrl != null) {
+      hmsHlsMeetingUrls = [];
+      hmsHlsMeetingUrls.add(HMSHLSMeetingURLVariant(
+          meetingUrl: meetingUrl, metadata: "HLS started from Flutter"));
+    }
     HMSHLSConfig hmshlsConfig = HMSHLSConfig(
         meetingURLVariant: hmsHlsMeetingUrls,
         hmsHLSRecordingConfig: hmshlsRecordingConfig);
@@ -299,5 +310,19 @@ class HMSSDKInteractor {
 
   void setAudioMixingMode(HMSAudioMixingMode audioMixingMode) {
     hmsSDK.setAudioMixingMode(audioMixingMode: audioMixingMode);
+  }
+
+  Future<HMSTrackSetting> getTrackSettings() async {
+    return await hmsSDK.getTrackSettings();
+  }
+
+  void setTrackSettings(
+      {HMSActionResultListener? hmsActionResultListener,
+      required HMSTrackSetting hmsTrackSetting}) {
+    hmsSDK.setTrackSettings(hmsTrackSetting: hmsTrackSetting);
+  }
+
+  void destroy() {
+    hmsSDK.destroy();
   }
 }
