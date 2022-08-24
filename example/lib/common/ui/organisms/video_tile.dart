@@ -27,14 +27,14 @@ class VideoTile extends StatefulWidget {
   final double itemWidth;
   final ScaleType scaleType;
   final bool islongPressEnabled;
-  final bool isPipTile;
+  final bool isOneToOne;
   VideoTile(
       {Key? key,
       this.itemHeight = 200.0,
       this.itemWidth = 200.0,
       this.scaleType = ScaleType.SCALE_ASPECT_FILL,
       this.islongPressEnabled = true,
-      this.isPipTile = false})
+      this.isOneToOne = false})
       : super(key: key);
 
   @override
@@ -181,7 +181,6 @@ class _VideoTileState extends State<VideoTile> {
                   ),
                   child: Semantics(
                     label:
-                       
                         "${context.read<PeerTrackNode>().peer.name}_video_on",
                     child: Stack(
                       children: [
@@ -196,7 +195,7 @@ class _VideoTileState extends State<VideoTile> {
                           itemHeight: widget.itemHeight,
                           itemWidth: widget.itemWidth,
                         ),
-                        if (!widget.isPipTile)
+                        if (!widget.isOneToOne)
                           Positioned(
                             //Bottom left
                             bottom: 5,
@@ -225,7 +224,7 @@ class _VideoTileState extends State<VideoTile> {
                         HandRaise(), //top left
                         BRBTag(), //bottom right
                         AudioMuteStatus(), //top right
-                        if (!widget.isPipTile)
+                        if (!widget.isOneToOne)
                           RTCStatsView(
                               isLocal:
                                   context.read<PeerTrackNode>().peer.isLocal),

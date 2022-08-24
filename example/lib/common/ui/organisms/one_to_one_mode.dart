@@ -22,19 +22,19 @@ class OneToOneMode extends StatefulWidget {
 }
 
 class _OneToOneModeState extends State<OneToOneMode> {
-  late PeerTrackNode pipPeer;
+  late PeerTrackNode oneToOnePeer;
   late PeerTrackNode screenPeer;
   @override
   void initState() {
     super.initState();
-    pipPeer = widget.peerTracks.firstWhere((element) => element.peer.isLocal);
+    oneToOnePeer = widget.peerTracks.firstWhere((element) => element.peer.isLocal);
     screenPeer =
         widget.peerTracks.firstWhere((element) => !element.peer.isLocal);
   }
 
   void switchView() {
-    PeerTrackNode tempPeer = pipPeer;
-    pipPeer = screenPeer;
+    PeerTrackNode tempPeer = oneToOnePeer;
+    oneToOnePeer = screenPeer;
     screenPeer = tempPeer;
     setState(() {});
   }
@@ -66,10 +66,10 @@ class _OneToOneModeState extends State<OneToOneMode> {
                     width: 100,
                     height: 150,
                     child: ChangeNotifierProvider.value(
-                      key: ValueKey(pipPeer.uid + "video_view"),
-                      value: pipPeer,
+                      key: ValueKey(oneToOnePeer.uid + "video_view"),
+                      value: oneToOnePeer,
                       child: VideoTile(
-                        isPipTile: true,
+                        isOneToOne: true,
                         itemHeight: 150,
                         itemWidth: 100,
                       ),
