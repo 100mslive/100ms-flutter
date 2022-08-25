@@ -45,7 +45,10 @@ class _VideoViewState extends State<VideoView> {
                 ? ClipRRect(
                     borderRadius: BorderRadius.all(Radius.circular(10)),
                     child: InteractiveViewer(
+                      // [key] property can be used to forcefully rebuild the video widget by setting a unique key everytime.
+                      // Similarly to avoid rebuilding the key should be kept the same for particular HMSVideoView.
                       child: HMSVideoView(
+                          key: Key(data.item1!.trackId),
                           scaleType: widget.scaleType,
                           track: data.item1!,
                           setMirror: false,
@@ -59,7 +62,10 @@ class _VideoViewState extends State<VideoView> {
                     child: Container(
                       height: widget.itemHeight,
                       width: widget.itemWidth,
+                      // [key] property can be used to forcefully rebuild the video widget by setting a unique key everytime.
+                      // Similarly to avoid rebuilding the key should be kept the same for particular HMSVideoView.
                       child: HMSVideoView(
+                        key: Key(data.item1!.trackId),
                         scaleType: ScaleType.SCALE_ASPECT_FILL,
                         track: data.item1!,
                         setMirror: data.item1.runtimeType == HMSLocalVideoTrack

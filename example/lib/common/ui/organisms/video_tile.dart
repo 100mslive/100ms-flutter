@@ -27,12 +27,14 @@ class VideoTile extends StatefulWidget {
   final double itemWidth;
   final ScaleType scaleType;
   final bool islongPressEnabled;
+  final bool isOneToOne;
   VideoTile(
       {Key? key,
       this.itemHeight = 200.0,
       this.itemWidth = 200.0,
       this.scaleType = ScaleType.SCALE_ASPECT_FILL,
-      this.islongPressEnabled = true})
+      this.islongPressEnabled = true,
+      this.isOneToOne = false})
       : super(key: key);
 
   @override
@@ -193,35 +195,39 @@ class _VideoTileState extends State<VideoTile> {
                           itemHeight: widget.itemHeight,
                           itemWidth: widget.itemWidth,
                         ),
-                        Positioned(
-                          //Bottom left
-                          bottom: 5,
-                          left: 5,
-                          child: Container(
-                            decoration: BoxDecoration(
-                                color: Color.fromRGBO(0, 0, 0, 0.9),
-                                borderRadius: BorderRadius.circular(8)),
-                            child: Center(
-                              child: Padding(
-                                padding: const EdgeInsets.all(4),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    NetworkIconWidget(),
-                                    PeerName(),
-                                  ],
+                        if (!widget.isOneToOne)
+                          Positioned(
+                            //Bottom left
+                            bottom: 5,
+                            left: 5,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  color: Color.fromRGBO(0, 0, 0, 0.9),
+                                  borderRadius: BorderRadius.circular(8)),
+                              child: Center(
+                                child: Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 8.0, right: 4, top: 4, bottom: 4),
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      NetworkIconWidget(),
+                                      PeerName(),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
                         HandRaise(), //top left
                         BRBTag(), //bottom right
                         AudioMuteStatus(), //top right
-                        RTCStatsView(
-                            isLocal:
-                                context.read<PeerTrackNode>().peer.isLocal),
+                        if (!widget.isOneToOne)
+                          RTCStatsView(
+                              isLocal:
+                                  context.read<PeerTrackNode>().peer.isLocal),
                         TileBorder(
                             itemHeight: widget.itemHeight,
                             itemWidth: widget.itemWidth,

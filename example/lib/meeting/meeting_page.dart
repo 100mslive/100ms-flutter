@@ -9,6 +9,7 @@ import 'package:hmssdk_flutter_example/common/ui/organisms/full_screen_view.dart
 import 'package:hmssdk_flutter_example/common/ui/organisms/grid_audio_view.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/grid_hero_view.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/grid_video_view.dart';
+import 'package:hmssdk_flutter_example/common/ui/organisms/one_to_one_mode.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/title_bar.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
@@ -396,6 +397,13 @@ class _MeetingPageState extends State<MeetingPage>
                                   ));
                                 }
                                 Size size = MediaQuery.of(context).size;
+                                if (data.item5 == MeetingMode.Video && data.item3 == 2) {
+                                return OneToOneMode(
+                                    peerTracks: data.item1,
+                                    screenShareCount: data.item4,
+                                    context: context,
+                                    size: size);
+                              }
                                 if (data.item5 == MeetingMode.Hero) {
                                   return gridHeroView(
                                       peerTracks: data.item1,
