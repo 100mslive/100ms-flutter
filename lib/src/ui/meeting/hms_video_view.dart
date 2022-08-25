@@ -21,9 +21,8 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 /// [HMSVideoView] will render video using trackId from HMSTrack
 ///
 /// [key] property can be used to forcefully rebuild the video widget by setting a unique key everytime.
-/// Similarly to avoid rebuilding the key should be kept the same for particular HMSVideoView. 
+/// Similarly to avoid rebuilding the key should be kept the same for particular HMSVideoView.
 class HMSVideoView extends StatelessWidget {
-
   final HMSVideoTrack track;
   final matchParent;
 

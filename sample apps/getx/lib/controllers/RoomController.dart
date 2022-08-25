@@ -109,17 +109,31 @@ class RoomController extends GetxController
       required HMSPeer peer}) {
     if (track.kind == HMSTrackKind.kHMSTrackKindVideo) {
       if (trackUpdate == HMSTrackUpdate.trackRemoved) {
-        peerTrackList
-        .removeWhere((element) => peer.peerId + ((track.source == "REGULAR")?"mainVideo":track.trackId) == element.value.uid);
+        peerTrackList.removeWhere((element) =>
+            peer.peerId +
+                ((track.source == "REGULAR") ? "mainVideo" : track.trackId) ==
+            element.value.uid);
       } else if (trackUpdate == HMSTrackUpdate.trackAdded) {
         bool isRegular = (track.source == "REGULAR");
-        int index = peerTrackList.indexWhere((element) => element.value.peer.peerId + (isRegular?"mainVideo":element.value.hmsVideoTrack.trackId) == peer.peerId + (isRegular?"mainVideo":track.trackId));
+        int index = peerTrackList.indexWhere((element) =>
+            element.value.peer.peerId +
+                (isRegular
+                    ? "mainVideo"
+                    : element.value.hmsVideoTrack.trackId) ==
+            peer.peerId + (isRegular ? "mainVideo" : track.trackId));
         if (index != -1) {
-          peerTrackList[index](
-              PeerTrackNode(peer.peerId + (isRegular?"mainVideo":track.trackId),track as HMSVideoTrack, track.isMute, peer));
+          peerTrackList[index](PeerTrackNode(
+              peer.peerId + (isRegular ? "mainVideo" : track.trackId),
+              track as HMSVideoTrack,
+              track.isMute,
+              peer));
         } else {
-          peerTrackList.add(
-              PeerTrackNode(peer.peerId + (isRegular?"mainVideo":track.trackId),track as HMSVideoTrack, track.isMute, peer).obs);
+          peerTrackList.add(PeerTrackNode(
+                  peer.peerId + (isRegular ? "mainVideo" : track.trackId),
+                  track as HMSVideoTrack,
+                  track.isMute,
+                  peer)
+              .obs);
         }
       }
     }

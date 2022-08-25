@@ -11,7 +11,7 @@ class PeerTrackNode {
       identical(this, other) ||
       other is PeerTrackNode &&
           runtimeType == other.runtimeType &&
-          uid == other.uid && 
+          uid == other.uid &&
           isMute == other.isMute &&
           peer == other.peer &&
           isOffScreen == other.isOffScreen;
@@ -19,6 +19,6 @@ class PeerTrackNode {
   @override
   int get hashCode => isMute.hashCode ^ peer.hashCode ^ isOffScreen.hashCode;
 
-  PeerTrackNode(this.uid,this.hmsVideoTrack, this.isMute, this.peer,
+  PeerTrackNode(this.uid, this.hmsVideoTrack, this.isMute, this.peer,
       {this.isOffScreen = false});
 }

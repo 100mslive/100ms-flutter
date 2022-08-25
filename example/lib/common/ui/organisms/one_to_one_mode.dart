@@ -27,7 +27,8 @@ class _OneToOneModeState extends State<OneToOneMode> {
   @override
   void initState() {
     super.initState();
-    oneToOnePeer = widget.peerTracks.firstWhere((element) => element.peer.isLocal);
+    oneToOnePeer =
+        widget.peerTracks.firstWhere((element) => element.peer.isLocal);
     screenPeer =
         widget.peerTracks.firstWhere((element) => !element.peer.isLocal);
   }
