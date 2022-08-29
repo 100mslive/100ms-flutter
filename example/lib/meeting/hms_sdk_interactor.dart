@@ -325,4 +325,8 @@ class HMSSDKInteractor {
   void destroy() {
     hmsSDK.destroy();
   }
+
+  void startPip() {
+    hmsSDK.startPip();
+  }
 }

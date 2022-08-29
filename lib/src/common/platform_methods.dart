@@ -148,7 +148,8 @@ enum PlatformMethod {
   audioShareDuration,
   getTrackSettings,
   setTrackSettings,
-  destroy
+  destroy,
+  startPip
 }
 
 extension PlatformMethodValues on PlatformMethod {
@@ -345,6 +346,8 @@ extension PlatformMethodValues on PlatformMethod {
         return "set_track_settings";
       case PlatformMethod.destroy:
         return "destroy";
+      case PlatformMethod.startPip:
+        return "start_pip";
       default:
         return 'unknown';
     }
@@ -547,6 +550,8 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.setTrackSettings;
       case "destroy":
         return PlatformMethod.destroy;
+      case "start_pip":
+        return PlatformMethod.startPip;
       default:
         return PlatformMethod.unknown;
     }

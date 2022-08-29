@@ -838,6 +838,11 @@ class HMSSDK {
     }
   }
 
+  void startPip() async {
+    var result = await PlatformService.invokeMethod(PlatformMethod.startPip);
+    print(result);
+  }
+
   void destroy() {
     PlatformService.invokeMethod(PlatformMethod.destroy);
   }

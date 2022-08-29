@@ -178,6 +178,9 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             "get_track_settings"->{
                 trackSettings(call, result)
             }
+            "start_pip"->{
+                startPip(call,result)
+            }
             else -> {
                 result.notImplemented()
             }
@@ -954,6 +957,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
     private var androidScreenshareResult: Result? = null
 
     private fun startScreenShare(result: Result) {
+
         androidScreenshareResult = result
         val mediaProjectionManager: MediaProjectionManager? = activity.getSystemService(
             Context.MEDIA_PROJECTION_SERVICE
@@ -1056,7 +1060,12 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         result.success(HMSTrackExtension.toDictionary(peer?.getTrackById(trackId!!)))
     }
 
-
+    private fun startPip(call:MethodCall,result: Result){
+        if (Build.VERSION.SDK_INT > 24){
+            activity.enterPictureInPictureMode()
+        };
+        result.success("Android " + android.os.Build.VERSION.RELEASE);
+    }
 
     private val hmsStatsListener = object : HMSStatsObserver {
 

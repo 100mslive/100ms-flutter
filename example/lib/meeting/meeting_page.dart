@@ -11,6 +11,7 @@ import 'package:hmssdk_flutter_example/common/ui/organisms/grid_hero_view.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/grid_video_view.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/one_to_one_mode.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/title_bar.dart';
+import 'package:hmssdk_flutter_example/common/ui/organisms/video_view.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_mode.dart';
@@ -224,6 +225,9 @@ class _MeetingPageState extends State<MeetingPage>
       case 15:
         UtilityComponents.onEndRoomPressed(context);
         break;
+      case 16:
+        _meetingStore.startPip();
+        break;
       default:
         break;
     }
@@ -320,7 +324,15 @@ class _MeetingPageState extends State<MeetingPage>
                     height: MediaQuery.of(context).size.height,
                     child: Stack(
                       children: [
-                        SizedBox(
+                        Selector<MeetingStore,bool>(
+                          selector: (_,meetingStore) => meetingStore.isPipOn,
+                          builder: (_,isPipOn,__){
+                            return isPipOn?
+                            ChangeNotifierProvider.value(
+                              value: context.read<MeetingStore>().peerTracks[0],
+                              child:VideoView(uid:context.read<MeetingStore>().peerTracks[0].uid)
+                            )
+                            :SizedBox(
                           height: MediaQuery.of(context).size.height -
                               kBottomNavigationBarHeight -
                               MediaQuery.of(context).padding.bottom -
@@ -441,8 +453,11 @@ class _MeetingPageState extends State<MeetingPage>
                                     isPortrait: isPortraitMode,
                                     size: size);
                               }),
+                        );
+                     
+                          },
                         ),
-                        Selector<MeetingStore, bool>(
+                           Selector<MeetingStore, bool>(
                             selector: (_, meetingStore) =>
                                 meetingStore.isHLSLink,
                             builder: (_, isHlsRunning, __) {
@@ -1084,6 +1099,23 @@ class _MeetingPageState extends State<MeetingPage>
                   ]),
               value: 15,
             ),
+          PopupMenuItem(
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Pip Mode",
+                    style: GoogleFonts.inter(
+                      color: iconColor,
+                    ),
+                  ),
+                  SvgPicture.asset(
+                    "assets/icons/end_room.svg",
+                    color: iconColor,
+                  ),
+                ]),
+            value: 16,
+          ),
         ];
       },
       onSelected: handleMenu,

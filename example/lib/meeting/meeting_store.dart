@@ -147,6 +147,8 @@ class MeetingStore extends ChangeNotifier
 
   double audioPlayerVolume = 1.0;
 
+  bool isPipOn = false;
+
   Future<bool> join(String user, String roomUrl) async {
     List<String?>? token =
         await RoomService().getToken(user: user, room: roomUrl);
@@ -404,6 +406,14 @@ class MeetingStore extends ChangeNotifier
     selfChangeAudioDevice = true;
     currentAudioDeviceMode = audioDevice;
     _hmsSDKInteractor.switchAudioOutput(audioDevice);
+  }
+
+  void startPip() {
+    if(!isPipOn){
+    _hmsSDKInteractor.startPip();
+    }
+    isPipOn = !isPipOn;  
+    notifyListeners();
   }
 
 // Override Methods
@@ -1443,6 +1453,7 @@ class MeetingStore extends ChangeNotifier
       return;
     }
     if (state == AppLifecycleState.resumed) {
+      startPip();
       WidgetsBinding.instance!.addPostFrameCallback((_) {
         if (localPeer?.role.name.contains("hls-") ?? false)
           hlsVideoController = new VideoPlayerController.network(
@@ -1465,6 +1476,7 @@ class MeetingStore extends ChangeNotifier
         }
       });
     } else if (state == AppLifecycleState.paused) {
+      startPip();
       HMSLocalPeer? localPeer = await getLocalPeer();
       if (localPeer?.role.name.contains("hls-") ?? false) {
         hlsVideoController?.dispose();
