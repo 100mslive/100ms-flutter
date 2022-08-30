@@ -397,14 +397,14 @@ class _MeetingPageState extends State<MeetingPage>
                                   ));
                                 }
                                 Size size = MediaQuery.of(context).size;
-                                if (data.item5 == MeetingMode.Video &&
-                                    data.item3 == 2) {
-                                  return OneToOneMode(
-                                      peerTracks: data.item1,
-                                      screenShareCount: data.item4,
-                                      context: context,
-                                      size: size);
-                                }
+                                // if (data.item5 == MeetingMode.Video &&
+                                //     data.item3 == 2) {
+                                //   return OneToOneMode(
+                                //       peerTracks: data.item1,
+                                //       screenShareCount: data.item4,
+                                //       context: context,
+                                //       size: size);
+                                // }
                                 if (data.item5 == MeetingMode.Hero) {
                                   return gridHeroView(
                                       peerTracks: data.item1,
