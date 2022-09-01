@@ -330,11 +330,11 @@ class _MeetingPageState extends State<MeetingPage>
                           width: MediaQuery.of(context).size.width,
                           child: Selector<
                                   MeetingStore,
-                                  Tuple6<List<PeerTrackNode>, bool, int, int,
+                                  Tuple6<List<PeerTrackNode>, HMSRole?, int, int,
                                       MeetingMode, PeerTrackNode?>>(
                               selector: (_, meetingStore) => Tuple6(
                                   meetingStore.peerTracks,
-                                  meetingStore.isHLSLink,
+                                  meetingStore.localPeer?.role,
                                   meetingStore.peerTracks.length,
                                   meetingStore.screenShareCount,
                                   meetingStore.meetingMode,
@@ -343,7 +343,7 @@ class _MeetingPageState extends State<MeetingPage>
                                           meetingStore.screenShareCount]
                                       : null),
                               builder: (_, data, __) {
-                                if (data.item2) {
+                                if (data.item2?.name.contains("hls-")??false) {
                                   return Selector<MeetingStore, bool>(
                                       selector: (_, meetingStore) =>
                                           meetingStore.hasHlsStarted,
