@@ -172,7 +172,10 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             break
         case "play_audio_share","stop_audio_share","pause_audio_share","resume_audio_share","set_audio_share_volume","audio_share_playing","audio_share_current_time","audio_share_duration":
             audioShareAction(call, result)
-            
+            break
+        case "enable_pip_mode":
+            enablePIPMode(call, result)
+            break
         default:
             result(FlutterMethodNotImplemented)
         }
