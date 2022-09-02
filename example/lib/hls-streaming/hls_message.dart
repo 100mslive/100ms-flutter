@@ -34,7 +34,7 @@ class _HLSMessageState extends State<HLSMessage> {
   }
 
   void _scrollToEnd() {
-    WidgetsBinding.instance?.addPostFrameCallback((_) =>
+    WidgetsBinding.instance.addPostFrameCallback((_) =>
         _scrollController.animateTo(_scrollController.position.maxScrollExtent,
             duration: Duration(milliseconds: 200), curve: Curves.easeInOut));
   }

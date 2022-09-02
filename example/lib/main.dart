@@ -56,7 +56,7 @@ class _HMSExampleAppState extends State<HMSExampleApp> {
   ThemeMode _themeMode = ThemeMode.dark;
   Uri? _currentURI;
   bool isDarkMode =
-      WidgetsBinding.instance?.window.platformBrightness == Brightness.dark;
+      WidgetsBinding.instance.window.platformBrightness == Brightness.dark;
 
   ThemeData _darkTheme = ThemeData(
       brightness: Brightness.dark,
