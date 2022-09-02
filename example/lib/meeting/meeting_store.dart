@@ -147,8 +147,6 @@ class MeetingStore extends ChangeNotifier
 
   double audioPlayerVolume = 1.0;
 
-  Map<String, int> trackSynchronizer = {};
-
   Future<bool> join(String user, String roomUrl) async {
     List<String?>? token =
         await RoomService().getToken(user: user, room: roomUrl);
@@ -526,40 +524,6 @@ class MeetingStore extends ChangeNotifier
       required HMSTrackUpdate trackUpdate,
       required HMSPeer peer}) {
     log("onTrackUpdate-> track: ${track.toString()} peer: ${peer.name} update: ${trackUpdate.name}");
-    log("onTrackUpdate->Order Map ${trackSynchronizer.toString()} ");
-    if (track.kind == HMSTrackKind.kHMSTrackKindVideo &&
-        track.source == "REGULAR") {
-      if (trackUpdate == HMSTrackUpdate.trackAdded) {
-        if (trackSynchronizer.containsKey(track.trackId)) {
-          trackSynchronizer[track.trackId] =
-              trackSynchronizer[track.trackId]! + 1;
-          if (trackSynchronizer[track.trackId] != 1) return;
-        } else {
-          trackSynchronizer[track.trackId] = 1;
-          int index = peerTracks.indexWhere(
-              (element) => element.uid == peer.peerId + "mainVideo");
-          if (index == -1) {
-            peerTracks
-                .add(PeerTrackNode(peer: peer, uid: peer.peerId + "mainVideo"));
-          }
-        }
-      } else if (trackUpdate == HMSTrackUpdate.trackRemoved) {
-        if (trackSynchronizer.containsKey(track.trackId)) {
-          trackSynchronizer[track.trackId] =
-              trackSynchronizer[track.trackId]! - 1;
-          if (trackSynchronizer[track.trackId] == 0) {
-            peerTracks.removeWhere(
-                (element) => element.uid == peer.peerId + "mainVideo");
-            trackSynchronizer.removeWhere((key, value) => key == track.trackId);
-          } else {
-            return;
-          }
-        } else {
-          trackSynchronizer[track.trackId] = -1;
-        }
-      }
-      notifyListeners();
-    }
     if (isSpeakerOn) {
       unMuteAll();
     } else {

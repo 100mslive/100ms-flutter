@@ -799,7 +799,33 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
                 }
         }
 
+        val trackOrder = HashMap<String, Int>();
         override fun onTrackUpdate(type: HMSTrackUpdate, track: HMSTrack, peer: HMSPeer) {
+
+            if(track.type == HMSTrackType.VIDEO) {
+                if (type == HMSTrackUpdate.TRACK_ADDED) {
+                    if (trackOrder.containsKey(track.trackId)) {
+                        trackOrder[track.trackId]= trackOrder[track.trackId]!!.plus(1)
+                    } else {
+                        trackOrder[track.trackId] = 1
+                    }
+                    if (trackOrder[track.trackId] != 1) {
+                        Log.i("onTrackUpdate no action",trackOrder.toString())
+                        return;
+                    }
+                } else if (type == HMSTrackUpdate.TRACK_REMOVED) {
+                    if (trackOrder.containsKey(track.trackId)) {
+                        trackOrder[track.trackId] =  trackOrder[track.trackId]!!.minus(1)
+                    } else {
+                        trackOrder[track.trackId] = -1
+                    }
+                    if (trackOrder[track.trackId] != 0) {
+                        Log.i("onTrackUpdate no action",trackOrder.toString())
+                        return;
+                    }
+                }
+                Log.i("onTrackUpdate", trackOrder.toString());
+            }
             val args = HashMap<String, Any?>()
             args.put("event_name", "on_track_update")
             args.put("data", HMSTrackUpdateExtension.toDictionary(peer, track, type))
