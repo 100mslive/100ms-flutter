@@ -158,7 +158,7 @@ class MeetingStore extends ChangeNotifier
         captureNetworkQualityInPreview: true);
 
     _hmsSDKInteractor.addUpdateListener(this);
-    WidgetsBinding.instance!.addObserver(this);
+    WidgetsBinding.instance.addObserver(this);
     _hmsSDKInteractor.join(config: config);
     this.meetingUrl = roomUrl;
     return true;
@@ -168,7 +168,7 @@ class MeetingStore extends ChangeNotifier
 
   void leave() async {
     _hmsSDKInteractor.removeStatsListener(this);
-    WidgetsBinding.instance!.removeObserver(this);
+    WidgetsBinding.instance.removeObserver(this);
     _hmsSDKInteractor.leave(hmsActionResultListener: this);
     _hmsSDKInteractor.destroy();
   }
