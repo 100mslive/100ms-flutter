@@ -445,13 +445,13 @@ class _MeetingPageState extends State<MeetingPage>
                         ),
                         Selector<MeetingStore, bool>(
                             selector: (_, meetingStore) =>
-                                meetingStore.isHLSLink,
-                            builder: (_, isHlsRunning, __) {
+                            meetingStore.localPeer?.role.name.contains("hls-") ?? true,
+                            builder: (_, isHLSPeer, __) {
                               return Positioned(
                                 bottom: 0,
                                 left: 0,
                                 right: 0,
-                                child: isHlsRunning
+                                child: isHLSPeer
                                     ? hlsBottomBarWidget()
                                     : normalBottomBarWidget(),
                               );
@@ -760,7 +760,7 @@ class _MeetingPageState extends State<MeetingPage>
           //   ),
           //   value: 1,
           // ),
-          PopupMenuItem(
+          if (!(meetingStore.localPeer?.role.name.contains("hls-") ?? true))PopupMenuItem(
             child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -780,7 +780,7 @@ class _MeetingPageState extends State<MeetingPage>
                 ]),
             value: 1,
           ),
-          PopupMenuItem(
+          if (!(meetingStore.localPeer?.role.name.contains("hls-") ?? true))PopupMenuItem(
             child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -803,7 +803,7 @@ class _MeetingPageState extends State<MeetingPage>
                 ]),
             value: 2,
           ),
-          PopupMenuItem(
+          if (!(meetingStore.localPeer?.role.name.contains("hls-") ?? true))PopupMenuItem(
             child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -822,7 +822,7 @@ class _MeetingPageState extends State<MeetingPage>
                 ]),
             value: 3,
           ),
-          PopupMenuItem(
+          if (!(meetingStore.localPeer?.role.name.contains("hls-") ?? true))PopupMenuItem(
             child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -983,7 +983,7 @@ class _MeetingPageState extends State<MeetingPage>
                   ]),
               value: 11,
             ),
-          if (Platform.isAndroid)
+          if (Platform.isAndroid && (!(meetingStore.localPeer?.role.name.contains("hls-") ?? true)))
             PopupMenuItem(
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1049,7 +1049,7 @@ class _MeetingPageState extends State<MeetingPage>
               value: 13,
             ),
 
-          PopupMenuItem(
+          if (!(meetingStore.localPeer?.role.name.contains("hls-") ?? true))PopupMenuItem(
             child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
