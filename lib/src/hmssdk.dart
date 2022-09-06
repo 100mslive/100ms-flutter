@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter/src/manager/hms_sdk_manager.dart';
 import 'package:hmssdk_flutter/src/service/platform_service.dart';
 import '../hmssdk_flutter.dart';

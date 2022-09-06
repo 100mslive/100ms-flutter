@@ -244,7 +244,7 @@ class _MeetingPageState extends State<MeetingPage>
                   (data.item2?.code?.errorCode == 1003 ||
                       data.item2?.code?.errorCode == 2000 ||
                       data.item2?.code?.errorCode == 4005)) {
-                WidgetsBinding.instance?.addPostFrameCallback((_) {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
                   UtilityComponents.showErrorDialog(
                       context: context,
                       errorMessage:
@@ -258,7 +258,7 @@ class _MeetingPageState extends State<MeetingPage>
                 });
               }
               if (data.item1) {
-                WidgetsBinding.instance?.addPostFrameCallback((_) {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
                   Utilities.showToast(context.read<MeetingStore>().description);
                   Navigator.of(context).popUntil((route) => route.isFirst);
                 });
@@ -330,8 +330,8 @@ class _MeetingPageState extends State<MeetingPage>
                           width: MediaQuery.of(context).size.width,
                           child: Selector<
                                   MeetingStore,
-                                  Tuple6<List<PeerTrackNode>, HMSRole?, int, int,
-                                      MeetingMode, PeerTrackNode?>>(
+                                  Tuple6<List<PeerTrackNode>, HMSRole?, int,
+                                      int, MeetingMode, PeerTrackNode?>>(
                               selector: (_, meetingStore) => Tuple6(
                                   meetingStore.peerTracks,
                                   meetingStore.localPeer?.role,
@@ -343,7 +343,8 @@ class _MeetingPageState extends State<MeetingPage>
                                           meetingStore.screenShareCount]
                                       : null),
                               builder: (_, data, __) {
-                                if (data.item2?.name.contains("hls-")??false) {
+                                if (data.item2?.name.contains("hls-") ??
+                                    false) {
                                   return Selector<MeetingStore, bool>(
                                       selector: (_, meetingStore) =>
                                           meetingStore.hasHlsStarted,
@@ -465,7 +466,7 @@ class _MeetingPageState extends State<MeetingPage>
                                 context
                                     .read<MeetingStore>()
                                     .currentRoleChangeRequest = null;
-                                WidgetsBinding.instance!
+                                WidgetsBinding.instance
                                     .addPostFrameCallback((_) {
                                   UtilityComponents.showRoleChangeDialog(
                                       currentRequest, context);
@@ -483,7 +484,7 @@ class _MeetingPageState extends State<MeetingPage>
                                 context
                                     .read<MeetingStore>()
                                     .hmsTrackChangeRequest = null;
-                                WidgetsBinding.instance!
+                                WidgetsBinding.instance
                                     .addPostFrameCallback((_) {
                                   UtilityComponents.showTrackChangeDialog(
                                       context, currentRequest);

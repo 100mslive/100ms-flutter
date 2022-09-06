@@ -30,7 +30,6 @@ class _AudioDeviceChangeDialogState extends State<AudioDeviceChangeDialog> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     valueChoose = widget.currentAudioDevice;
   }

@@ -141,7 +141,7 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                     (data.item2?.code?.errorCode == 1003 ||
                         data.item2?.code?.errorCode == 2000 ||
                         data.item2?.code?.errorCode == 4005)) {
-                  WidgetsBinding.instance?.addPostFrameCallback((_) {
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
                     UtilityComponents.showErrorDialog(
                         context: context,
                         errorMessage:
@@ -155,7 +155,7 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                   });
                 }
                 if (data.item1) {
-                  WidgetsBinding.instance?.addPostFrameCallback((_) {
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
                     Utilities.showToast(
                         context.read<MeetingStore>().description);
                     Navigator.of(context).popUntil((route) => route.isFirst);
@@ -980,7 +980,7 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                 context
                                     .read<MeetingStore>()
                                     .currentRoleChangeRequest = null;
-                                WidgetsBinding.instance!
+                                WidgetsBinding.instance
                                     .addPostFrameCallback((_) {
                                   UtilityComponents.showRoleChangeDialog(
                                       currentRequest, context);
@@ -998,7 +998,7 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                 context
                                     .read<MeetingStore>()
                                     .hmsTrackChangeRequest = null;
-                                WidgetsBinding.instance!
+                                WidgetsBinding.instance
                                     .addPostFrameCallback((_) {
                                   UtilityComponents.showTrackChangeDialog(
                                       context, currentRequest);
@@ -1014,7 +1014,7 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                 context
                                     .read<MeetingStore>()
                                     .showAudioDeviceChangePopup = false;
-                                WidgetsBinding.instance!
+                                WidgetsBinding.instance
                                     .addPostFrameCallback((_) {
                                   showDialog(
                                       context: context,
