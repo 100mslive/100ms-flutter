@@ -42,7 +42,8 @@ class PreviewStore extends ChangeNotifier
 
   @override
   void onHMSError({required HMSException error}) {
-    updateError(error);
+    this.error = error;
+    notifyListeners();
   }
 
   @override
@@ -180,11 +181,6 @@ class PreviewStore extends ChangeNotifier
   @override
   void onLogMessage({required hmsLogList}) {
     FirebaseCrashlytics.instance.log(hmsLogList.toString());
-  }
-
-  void updateError(HMSException error) {
-    this.error = error;
-    notifyListeners();
   }
 
   void destroy() {
