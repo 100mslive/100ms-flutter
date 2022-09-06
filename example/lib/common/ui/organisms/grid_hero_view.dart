@@ -112,7 +112,7 @@ Widget gridHeroView(
 
 List<StairedGridTile> portraitPattern(
     int itemCount, int screenShareCount, Size size, BuildContext context) {
-  double ratio = 1 / Utilities.getRatio(size, context);
+  double ratio = 1 / Utilities.getHLSRatio(size, context);
 
   List<StairedGridTile> tiles = [];
   for (int i = 0; i < screenShareCount; i++) {
@@ -147,7 +147,7 @@ List<StairedGridTile> portraitPattern(
 
 List<StairedGridTile> landscapePattern(
     int itemCount, int screenShareCount, Size size, BuildContext context) {
-  double ratio = Utilities.getRatio(size, context);
+  double ratio = Utilities.getHLSRatio(size, context);
   List<StairedGridTile> tiles = [];
   for (int i = 0; i < screenShareCount; i++) {
     tiles.add(StairedGridTile(1, ratio));

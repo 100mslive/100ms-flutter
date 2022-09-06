@@ -14,8 +14,8 @@ import 'package:hmssdk_flutter_example/common/ui/organisms/title_bar.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_mode.dart';
-import 'package:hmssdk_flutter_example/hls-streaming/hls_bottom_sheet.dart';
-import 'package:hmssdk_flutter_example/hls-streaming/hls_message.dart';
+import 'package:hmssdk_flutter_example/hls-streaming/bottom_sheets/hls_start_bottom_sheet.dart';
+import 'package:hmssdk_flutter_example/hls-streaming/bottom_sheets/hls_message.dart';
 import 'package:hmssdk_flutter_example/hls_viewer/hls_viewer.dart';
 import 'package:provider/provider.dart';
 
@@ -108,7 +108,7 @@ class _MeetingPageState extends State<MeetingPage>
     final _meetingStore = context.read<MeetingStore>();
     switch (value) {
       case 1:
-        _meetingStore.setActiveSpeakerMode();
+        _meetingStore.setActiveSpeakerMode(); 
         break;
       case 2:
         if (_meetingStore.meetingMode != MeetingMode.Audio) {
@@ -186,7 +186,7 @@ class _MeetingPageState extends State<MeetingPage>
             context: context,
             builder: (ctx) => ChangeNotifierProvider.value(
                 value: context.read<MeetingStore>(),
-                child: HLSBottomSheet(meetingLink: widget.meetingLink)),
+                child: HLSStartBottomSheet(meetingLink: widget.meetingLink)),
           );
         }
         break;
@@ -445,7 +445,9 @@ class _MeetingPageState extends State<MeetingPage>
                         ),
                         Selector<MeetingStore, bool>(
                             selector: (_, meetingStore) =>
-                            meetingStore.localPeer?.role.name.contains("hls-") ?? true,
+                                meetingStore.localPeer?.role.name
+                                    .contains("hls-") ??
+                                true,
                             builder: (_, isHLSPeer, __) {
                               return Positioned(
                                 bottom: 0,
@@ -760,87 +762,91 @@ class _MeetingPageState extends State<MeetingPage>
           //   ),
           //   value: 1,
           // ),
-          if (!(meetingStore.localPeer?.role.name.contains("hls-") ?? true))PopupMenuItem(
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text("Active Speaker Mode",
-                      style: GoogleFonts.inter(
-                        color: meetingStore.isActiveSpeakerMode
-                            ? Colors.blue
-                            : iconColor,
-                      )),
-                  SvgPicture.asset(
-                    "assets/icons/participants.svg",
-                    color: meetingStore.isActiveSpeakerMode
-                        ? Colors.blue
-                        : iconColor,
-                    semanticsLabel: "participant_button",
-                  ),
-                ]),
-            value: 1,
-          ),
-          if (!(meetingStore.localPeer?.role.name.contains("hls-") ?? true))PopupMenuItem(
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    meetingStore.meetingMode == MeetingMode.Audio
-                        ? "Video View"
-                        : "Audio View",
-                    style: GoogleFonts.inter(
-                      color: iconColor,
+          if (!(meetingStore.localPeer?.role.name.contains("hls-") ?? true))
+            PopupMenuItem(
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text("Active Speaker Mode",
+                        style: GoogleFonts.inter(
+                          color: meetingStore.isActiveSpeakerMode
+                              ? Colors.blue
+                              : iconColor,
+                        )),
+                    SvgPicture.asset(
+                      "assets/icons/participants.svg",
+                      color: meetingStore.isActiveSpeakerMode
+                          ? Colors.blue
+                          : iconColor,
+                      semanticsLabel: "participant_button",
                     ),
-                  ),
-                  SvgPicture.asset(
-                    meetingStore.meetingMode == MeetingMode.Audio
-                        ? 'assets/icons/cam_state_on.svg'
-                        : 'assets/icons/mic_state_on.svg',
-                    color: iconColor,
-                    height: 24.0,
-                    width: 24.0,
-                  ),
-                ]),
-            value: 2,
-          ),
-          if (!(meetingStore.localPeer?.role.name.contains("hls-") ?? true))PopupMenuItem(
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text("Hero Mode",
+                  ]),
+              value: 1,
+            ),
+          if (!(meetingStore.localPeer?.role.name.contains("hls-") ?? true))
+            PopupMenuItem(
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      meetingStore.meetingMode == MeetingMode.Audio
+                          ? "Video View"
+                          : "Audio View",
                       style: GoogleFonts.inter(
-                        color: meetingStore.meetingMode == MeetingMode.Hero
-                            ? Colors.blue
-                            : iconColor,
-                      )),
-                  SvgPicture.asset(
-                    "assets/icons/participants.svg",
-                    color: meetingStore.meetingMode == MeetingMode.Hero
-                        ? Colors.blue
-                        : iconColor,
-                  ),
-                ]),
-            value: 3,
-          ),
-          if (!(meetingStore.localPeer?.role.name.contains("hls-") ?? true))PopupMenuItem(
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text("Single Tile Mode",
-                      style: GoogleFonts.inter(
-                        color: meetingStore.meetingMode == MeetingMode.Single
-                            ? Colors.blue
-                            : iconColor,
-                      )),
-                  SvgPicture.asset(
-                    "assets/icons/single_tile.svg",
-                    color: meetingStore.meetingMode == MeetingMode.Single
-                        ? Colors.blue
-                        : iconColor,
-                  ),
-                ]),
-            value: 4,
-          ),
+                        color: iconColor,
+                      ),
+                    ),
+                    SvgPicture.asset(
+                      meetingStore.meetingMode == MeetingMode.Audio
+                          ? 'assets/icons/cam_state_on.svg'
+                          : 'assets/icons/mic_state_on.svg',
+                      color: iconColor,
+                      height: 24.0,
+                      width: 24.0,
+                    ),
+                  ]),
+              value: 2,
+            ),
+          if (!(meetingStore.localPeer?.role.name.contains("hls-") ?? true))
+            PopupMenuItem(
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text("Hero Mode",
+                        style: GoogleFonts.inter(
+                          color: meetingStore.meetingMode == MeetingMode.Hero
+                              ? Colors.blue
+                              : iconColor,
+                        )),
+                    SvgPicture.asset(
+                      "assets/icons/participants.svg",
+                      color: meetingStore.meetingMode == MeetingMode.Hero
+                          ? Colors.blue
+                          : iconColor,
+                    ),
+                  ]),
+              value: 3,
+            ),
+          if (!(meetingStore.localPeer?.role.name.contains("hls-") ?? true))
+            PopupMenuItem(
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text("Single Tile Mode",
+                        style: GoogleFonts.inter(
+                          color: meetingStore.meetingMode == MeetingMode.Single
+                              ? Colors.blue
+                              : iconColor,
+                        )),
+                    SvgPicture.asset(
+                      "assets/icons/single_tile.svg",
+                      color: meetingStore.meetingMode == MeetingMode.Single
+                          ? Colors.blue
+                          : iconColor,
+                    ),
+                  ]),
+              value: 4,
+            ),
           if ((meetingStore.localPeer != null) &&
               meetingStore.localPeer!.role.publishSettings!.allowed
                   .contains("screen"))
@@ -983,7 +989,8 @@ class _MeetingPageState extends State<MeetingPage>
                   ]),
               value: 11,
             ),
-          if (Platform.isAndroid && (!(meetingStore.localPeer?.role.name.contains("hls-") ?? true)))
+          if (Platform.isAndroid &&
+              (!(meetingStore.localPeer?.role.name.contains("hls-") ?? true)))
             PopupMenuItem(
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1049,24 +1056,25 @@ class _MeetingPageState extends State<MeetingPage>
               value: 13,
             ),
 
-          if (!(meetingStore.localPeer?.role.name.contains("hls-") ?? true))PopupMenuItem(
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "Stats",
-                    style: GoogleFonts.inter(
+          if (!(meetingStore.localPeer?.role.name.contains("hls-") ?? true))
+            PopupMenuItem(
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Stats",
+                      style: GoogleFonts.inter(
+                          color: meetingStore.isStatsVisible
+                              ? Colors.blue
+                              : iconColor),
+                    ),
+                    SvgPicture.asset("assets/icons/stats.svg",
                         color: meetingStore.isStatsVisible
                             ? Colors.blue
                             : iconColor),
-                  ),
-                  SvgPicture.asset("assets/icons/stats.svg",
-                      color: meetingStore.isStatsVisible
-                          ? Colors.blue
-                          : iconColor),
-                ]),
-            value: 14,
-          ),
+                  ]),
+              value: 14,
+            ),
           if (meetingStore.localPeer!.role.permissions.endRoom!)
             PopupMenuItem(
               child: Row(

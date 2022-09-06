@@ -57,7 +57,7 @@ class _OneToOneModeState extends State<OneToOneMode> {
             ),
             DraggableWidget(
               topMargin: 10,
-              bottomMargin: 230,
+              bottomMargin: 272,
               horizontalSpace: 10,
               child: GestureDetector(
                 onDoubleTap: (() => switchView()),

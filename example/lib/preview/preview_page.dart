@@ -332,35 +332,35 @@ class _PreviewPageState extends State<PreviewPage> {
                                               .hmsSDKInteractor!.showStats = false,
                                           _previewStore.hmsSDKInteractor
                                               ?.skipPreview = false,
-                                          if (widget.meetingFlow ==
-                                              MeetingFlow.meeting)
-                                            {
-                                              Navigator.of(context).pushReplacement(
-                                                  MaterialPageRoute(
-                                                      builder: (_) =>
-                                                          ListenableProvider.value(
-                                                            value: MeetingStore(
-                                                              hmsSDKInteractor:
-                                                                  _previewStore
-                                                                      .hmsSDKInteractor!,
-                                                            ),
-                                                            child: MeetingPage(
-                                                              meetingLink: widget
-                                                                  .meetingLink,
-                                                              flow: MeetingFlow
-                                                                  .meeting,
-                                                              user: widget.name,
-                                                              isAudioOn:
-                                                                  _previewStore
-                                                                      .isAudioOn,
-                                                              localPeerNetworkQuality:
-                                                                  _previewStore
-                                                                      .networkQuality,
-                                                            ),
-                                                          )))
-                                            }
-                                          else
-                                            {
+                                          // if (widget.meetingFlow ==
+                                          //     MeetingFlow.meeting)
+                                          //   {
+                                          //     Navigator.of(context).pushReplacement(
+                                          //         MaterialPageRoute(
+                                          //             builder: (_) =>
+                                          //                 ListenableProvider.value(
+                                          //                   value: MeetingStore(
+                                          //                     hmsSDKInteractor:
+                                          //                         _previewStore
+                                          //                             .hmsSDKInteractor!,
+                                          //                   ),
+                                          //                   child: MeetingPage(
+                                          //                     meetingLink: widget
+                                          //                         .meetingLink,
+                                          //                     flow: MeetingFlow
+                                          //                         .meeting,
+                                          //                     user: widget.name,
+                                          //                     isAudioOn:
+                                          //                         _previewStore
+                                          //                             .isAudioOn,
+                                          //                     localPeerNetworkQuality:
+                                          //                         _previewStore
+                                          //                             .networkQuality,
+                                          //                   ),
+                                          //                 )))
+                                          //   }
+                                          // else
+                                          //   {
                                               Navigator.of(context).pushReplacement(
                                                   MaterialPageRoute(
                                                       builder: (_) =>
@@ -382,8 +382,8 @@ class _PreviewPageState extends State<PreviewPage> {
                                                                       .networkQuality,
                                                               user: widget.name,
                                                             ),
-                                                          )))
-                                            }
+                                                           )))
+                                            // }
                                         },
                                         childWidget: Container(
                                           padding: const EdgeInsets.fromLTRB(

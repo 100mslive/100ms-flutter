@@ -5,16 +5,20 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/audio_device_change.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/embedded_button.dart';
+import 'package:hmssdk_flutter_example/common/ui/organisms/full_screen_view.dart';
+import 'package:hmssdk_flutter_example/common/ui/organisms/grid_audio_view.dart';
+import 'package:hmssdk_flutter_example/common/ui/organisms/grid_hero_view.dart';
+import 'package:hmssdk_flutter_example/common/ui/organisms/one_to_one_mode.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/stream_timer.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_mode.dart';
-import 'package:hmssdk_flutter_example/hls-streaming/hls_bottom_sheet.dart';
-import 'package:hmssdk_flutter_example/hls-streaming/hls_message.dart';
-import 'package:hmssdk_flutter_example/hls-streaming/hls_settings.dart';
-import 'package:hmssdk_flutter_example/hls-streaming/util/hls_grid_view.dart';
-import 'package:hmssdk_flutter_example/hls-streaming/util/hls_participant_sheet.dart';
+import 'package:hmssdk_flutter_example/hls-streaming/bottom_sheets/hls_start_bottom_sheet.dart';
+import 'package:hmssdk_flutter_example/hls-streaming/bottom_sheets/hls_message.dart';
+import 'package:hmssdk_flutter_example/hls-streaming/bottom_sheets/hls_more_settings.dart';
+import 'package:hmssdk_flutter_example/hls-streaming/meeting_mode/hls_grid_view.dart';
+import 'package:hmssdk_flutter_example/hls-streaming/bottom_sheets/hls_participant_sheet.dart';
 import 'package:hmssdk_flutter_example/hls-streaming/util/hls_subtitle_text.dart';
 import 'package:hmssdk_flutter_example/hls-streaming/util/hls_title_text.dart';
 import 'package:hmssdk_flutter_example/hls_viewer/hls_viewer.dart';
@@ -124,6 +128,8 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
 
   @override
   Widget build(BuildContext context) {
+    bool isPortraitMode =
+        MediaQuery.of(context).orientation == Orientation.portrait;
     return ConnectivityAppWrapper(
       app: WillPopScope(
         onWillPop: () async {
@@ -137,22 +143,25 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
               selector: (_, meetingStore) =>
                   Tuple2(meetingStore.isRoomEnded, meetingStore.hmsException),
               builder: (_, data, __) {
-                if (data.item2 != null &&
-                    (data.item2?.code?.errorCode == 1003 ||
-                        data.item2?.code?.errorCode == 2000 ||
-                        data.item2?.code?.errorCode == 4005)) {
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    UtilityComponents.showErrorDialog(
-                        context: context,
-                        errorMessage:
-                            "Error Code: ${data.item2!.code?.errorCode ?? ""} ${data.item2!.description}",
-                        errorTitle: data.item2!.message ?? "",
-                        actionMessage: "Leave Room",
-                        action: () {
-                          Navigator.of(context)
-                              .popUntil((route) => route.isFirst);
-                        });
-                  });
+                if (data.item2 != null) {
+                  if (data.item2?.code?.errorCode == 1003 ||
+                      data.item2?.code?.errorCode == 2000 ||
+                      data.item2?.code?.errorCode == 4005) {
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      UtilityComponents.showErrorDialog(
+                          context: context,
+                          errorMessage:
+                              "Error Code: ${data.item2!.code?.errorCode ?? ""} ${data.item2!.description}",
+                          errorTitle: data.item2!.message ?? "",
+                          actionMessage: "Leave Room",
+                          action: () {
+                            Navigator.of(context)
+                                .popUntil((route) => route.isFirst);
+                          });
+                    });
+                  } else {
+            Utilities.showToast("Error : ${data.item2!.code} ${data.item2!.description} ${data.item2!.message}",time: 5);
+                  }
                 }
                 if (data.item1) {
                   WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -246,30 +255,85 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                   )),
                                 );
                               }
-                              return Positioned(
-                                top: 55,
-                                left: 0,
-                                right: 0,
-                                bottom: 105,
-                                child: Container(
-                                  child: hlsGridView(
-                                      peerTracks: data.item1,
-                                      itemCount: data.item3,
-                                      screenShareCount: data.item4,
-                                      context: context,
-                                      isPortrait: true,
-                                      size: Size(
-                                          MediaQuery.of(context).size.width,
-                                          MediaQuery.of(context).size.height -
-                                              159 -
-                                              MediaQuery.of(context)
-                                                  .padding
-                                                  .bottom -
-                                              MediaQuery.of(context)
-                                                  .padding
-                                                  .top)),
-                                ),
-                              );
+                              return Selector<MeetingStore,
+                                      Tuple2<MeetingMode, int>>(
+                                  selector: (_, meetingStore) => Tuple2(
+                                        meetingStore.meetingMode,
+                                        meetingStore.peerTracks.length,
+                                      ),
+                                  builder: (_, mode_data, __) {
+                                    Size size = Size(
+                                        MediaQuery.of(context).size.width,
+                                        MediaQuery.of(context).size.height -
+                                            159 -
+                                            MediaQuery.of(context)
+                                                .padding
+                                                .bottom -
+                                            MediaQuery.of(context).padding.top);
+                                    return Positioned(
+                                        top: 55,
+                                        left: 0,
+                                        right: 0,
+                                        bottom: 105,
+                                        child: Container(
+                                            child: (mode_data.item1 ==
+                                                        MeetingMode.Video &&
+                                                    mode_data.item2 == 2)
+                                                ? OneToOneMode(
+                                                    peerTracks: data.item1,
+                                                    screenShareCount:
+                                                        data.item4,
+                                                    context: context,
+                                                    size: size)
+                                                : (mode_data.item1 ==
+                                                        MeetingMode.Hero)
+                                                    ? gridHeroView(
+                                                        peerTracks: data.item1,
+                                                        itemCount: data.item3,
+                                                        screenShareCount:
+                                                            data.item4,
+                                                        context: context,
+                                                        isPortrait:
+                                                            isPortraitMode,
+                                                        size: size)
+                                                    : (mode_data.item1 ==
+                                                            MeetingMode.Audio)
+                                                        ? gridAudioView(
+                                                            peerTracks: data
+                                                                .item1
+                                                                .sublist(
+                                                                    data.item4),
+                                                            itemCount: data.item1
+                                                                .sublist(
+                                                                    data.item4)
+                                                                .length,
+                                                            context: context,
+                                                            isPortrait:
+                                                                isPortraitMode,
+                                                            size: size)
+                                                        : (data.item5 ==
+                                                                MeetingMode
+                                                                    .Single)
+                                                            ? fullScreenView(
+                                                                peerTracks:
+                                                                    data.item1,
+                                                                itemCount:
+                                                                    data.item3,
+                                                                screenShareCount:
+                                                                    data.item4,
+                                                                context:
+                                                                    context,
+                                                                isPortrait:
+                                                                    isPortraitMode,
+                                                                size: size)
+                                                            : hlsGridView(
+                                                                peerTracks: data.item1,
+                                                                itemCount: data.item3,
+                                                                screenShareCount: data.item4,
+                                                                context: context,
+                                                                isPortrait: true,
+                                                                size: size)));
+                                  });
                             }),
                         Column(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -830,7 +894,7 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                                         builder: (ctx) => ChangeNotifierProvider.value(
                                                             value: context.read<
                                                                 MeetingStore>(),
-                                                            child: HLSBottomSheet(
+                                                            child: HLSStartBottomSheet(
                                                                 meetingLink: widget
                                                                     .meetingLink)),
                                                       );
@@ -950,7 +1014,7 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                                   ChangeNotifierProvider.value(
                                                       value: context
                                                           .read<MeetingStore>(),
-                                                      child: HLSSettings()),
+                                                      child: HLSMoreSettings()),
                                             )
                                           },
                                           width: 40,
