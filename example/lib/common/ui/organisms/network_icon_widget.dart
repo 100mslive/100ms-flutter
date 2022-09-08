@@ -17,7 +17,7 @@ class NetworkIconWidget extends StatelessWidget {
                     SvgPicture.asset(
                       'assets/icons/network_$networkQuality.svg',
                       height: 20,
-                      semanticsLabel: "network_icon_label",
+                      semanticsLabel: "fl_network_icon_label",
                     ),
                   ],
                 )

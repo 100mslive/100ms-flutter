@@ -30,11 +30,13 @@ import 'package:tuple/tuple.dart';
 class HLSBroadcasterPage extends StatefulWidget {
   final String meetingLink;
   final bool isAudioOn;
-  const HLSBroadcasterPage({
-    Key? key,
-    required this.meetingLink,
-    required this.isAudioOn,
-  }) : super(key: key);
+  final bool isStreamingLink;
+  const HLSBroadcasterPage(
+      {Key? key,
+      required this.meetingLink,
+      required this.isAudioOn,
+      this.isStreamingLink = false})
+      : super(key: key);
 
   @override
   State<HLSBroadcasterPage> createState() => _HLSBroadcasterPageState();
@@ -160,8 +162,11 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                           });
                     });
                   } else {
-            Utilities.showToast("Error : ${data.item2!.code} ${data.item2!.description} ${data.item2!.message}",time: 5);
+                    Utilities.showToast(
+                        "Error : ${data.item2!.code} ${data.item2!.description} ${data.item2!.message}",
+                        time: 5);
                   }
+                  context.read<MeetingStore>().hmsException = null;
                 }
                 if (data.item1) {
                   WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -265,7 +270,7 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                     Size size = Size(
                                         MediaQuery.of(context).size.width,
                                         MediaQuery.of(context).size.height -
-                                            159 -
+                                            (widget.isStreamingLink?159:122) -
                                             MediaQuery.of(context)
                                                 .padding
                                                 .bottom -
@@ -274,12 +279,13 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                         top: 55,
                                         left: 0,
                                         right: 0,
-                                        bottom: 105,
+                                        bottom: widget.isStreamingLink?105: 65,
                                         child: Container(
                                             child: (mode_data.item1 ==
                                                         MeetingMode.Video &&
                                                     mode_data.item2 == 2)
                                                 ? OneToOneMode(
+                                                  bottomMargin: widget.isStreamingLink?272:235,
                                                     peerTracks: data.item1,
                                                     screenShareCount:
                                                         data.item4,
@@ -415,7 +421,9 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                                         ),
                                                       ),
                                                       Text(
+                                                        
                                                         "Live",
+                                                        semanticsLabel: "fl_live_stream_running",
                                                         style: GoogleFonts.inter(
                                                             fontSize: 16,
                                                             color: defaultColor,
@@ -782,8 +790,9 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                                   );
                                                 }),
                                       if (Provider.of<MeetingStore>(context)
-                                              .localPeer !=
-                                          null)
+                                                  .localPeer !=
+                                              null &&
+                                          widget.isStreamingLink)
                                         Selector<MeetingStore,
                                                 Tuple2<bool, bool>>(
                                             selector: (_, meetingStore) =>
@@ -891,12 +900,12 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                                                   .circular(20),
                                                         ),
                                                         context: context,
-                                                        builder: (ctx) => ChangeNotifierProvider.value(
-                                                            value: context.read<
-                                                                MeetingStore>(),
-                                                            child: HLSStartBottomSheet(
-                                                                meetingLink: widget
-                                                                    .meetingLink)),
+                                                        builder: (ctx) =>
+                                                            ChangeNotifierProvider.value(
+                                                                value: context.read<
+                                                                    MeetingStore>(),
+                                                                child:
+                                                                    HLSStartBottomSheet()),
                                                       );
                                                     },
                                                     child: CircleAvatar(

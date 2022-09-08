@@ -11,7 +11,6 @@ import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
 import 'package:hmssdk_flutter_example/hls-streaming/hls_screen_controller.dart';
-import 'package:hmssdk_flutter_example/meeting/meeting_page.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:hmssdk_flutter_example/preview/preview_store.dart';
 import 'package:provider/provider.dart';
@@ -332,35 +331,6 @@ class _PreviewPageState extends State<PreviewPage> {
                                               .hmsSDKInteractor!.showStats = false,
                                           _previewStore.hmsSDKInteractor
                                               ?.skipPreview = false,
-                                          // if (widget.meetingFlow ==
-                                          //     MeetingFlow.meeting)
-                                          //   {
-                                          //     Navigator.of(context).pushReplacement(
-                                          //         MaterialPageRoute(
-                                          //             builder: (_) =>
-                                          //                 ListenableProvider.value(
-                                          //                   value: MeetingStore(
-                                          //                     hmsSDKInteractor:
-                                          //                         _previewStore
-                                          //                             .hmsSDKInteractor!,
-                                          //                   ),
-                                          //                   child: MeetingPage(
-                                          //                     meetingLink: widget
-                                          //                         .meetingLink,
-                                          //                     flow: MeetingFlow
-                                          //                         .meeting,
-                                          //                     user: widget.name,
-                                          //                     isAudioOn:
-                                          //                         _previewStore
-                                          //                             .isAudioOn,
-                                          //                     localPeerNetworkQuality:
-                                          //                         _previewStore
-                                          //                             .networkQuality,
-                                          //                   ),
-                                          //                 )))
-                                          //   }
-                                          // else
-                                          //   {
                                               Navigator.of(context).pushReplacement(
                                                   MaterialPageRoute(
                                                       builder: (_) =>
@@ -372,6 +342,7 @@ class _PreviewPageState extends State<PreviewPage> {
                                                             ),
                                                             child:
                                                                 HLSScreenController(
+                                                                  isStreamingLink: widget.meetingFlow == MeetingFlow.meeting?false:true,
                                                               isAudioOn:
                                                                   _previewStore
                                                                       .isAudioOn,

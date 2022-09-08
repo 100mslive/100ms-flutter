@@ -169,6 +169,7 @@ class MeetingStore extends ChangeNotifier
   void leave() async {
     _hmsSDKInteractor.removeStatsListener(this);
     WidgetsBinding.instance.removeObserver(this);
+    hmsException = null;
     _hmsSDKInteractor.leave(hmsActionResultListener: this);
     _hmsSDKInteractor.destroy();
   }
@@ -1309,7 +1310,6 @@ class MeetingStore extends ChangeNotifier
         break;
       case HMSActionResultListenerMethod.hlsStreamingStopped:
         hasHlsStarted = false;
-        Utilities.showToast("HLS Streaming Stopped");
         notifyListeners();
         break;
 
@@ -1345,7 +1345,7 @@ class MeetingStore extends ChangeNotifier
       Map<String, dynamic>? arguments,
       required HMSException hmsException}) {
     this.hmsException = hmsException;
-            Utilities.showToast("${methodType.toString()} : ${hmsException.code} ${hmsException.description} ${hmsException.message}",time: 3);
+    log("ActionResultListener onException-> method: ${methodType.toString()} , Error code : ${hmsException.code} , Description : ${hmsException.description} , Message : ${hmsException.message}");
     FirebaseCrashlytics.instance.log(hmsException.toString());
     switch (methodType) {
       case HMSActionResultListenerMethod.leave:
@@ -1366,7 +1366,7 @@ class MeetingStore extends ChangeNotifier
       case HMSActionResultListenerMethod.changeTrackStateForRole:
         break;
       case HMSActionResultListenerMethod.startRtmpOrRecording:
-         break;
+        break;
       case HMSActionResultListenerMethod.stopRtmpAndRecording:
         break;
       case HMSActionResultListenerMethod.changeName:
@@ -1378,6 +1378,9 @@ class MeetingStore extends ChangeNotifier
       case HMSActionResultListenerMethod.sendDirectMessage:
         break;
       case HMSActionResultListenerMethod.hlsStreamingStarted:
+        _hmsSDKInteractor.startHLSStreaming(this,
+            meetingUrl: Constant.streamingUrl,
+            hmshlsRecordingConfig: hmshlsRecordingConfig!);
         break;
       case HMSActionResultListenerMethod.hlsStreamingStopped:
         break;

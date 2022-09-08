@@ -9,12 +9,14 @@ class OneToOneMode extends StatefulWidget {
   final BuildContext context;
   final Size size;
   final int screenShareCount;
+  final double bottomMargin;
   const OneToOneMode(
       {Key? key,
       required this.peerTracks,
       required this.context,
       required this.size,
-      required this.screenShareCount})
+      required this.screenShareCount,
+      this.bottomMargin = 272})
       : super(key: key);
 
   @override
@@ -57,7 +59,7 @@ class _OneToOneModeState extends State<OneToOneMode> {
             ),
             DraggableWidget(
               topMargin: 10,
-              bottomMargin: 272,
+              bottomMargin: widget.bottomMargin,
               horizontalSpace: 10,
               child: GestureDetector(
                 onDoubleTap: (() => switchView()),

@@ -8,6 +8,7 @@ import 'package:hmssdk_flutter_example/common/constant.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
 import 'package:hmssdk_flutter_example/hls-streaming/bottom_sheets/hls_device_settings.dart';
+import 'package:hmssdk_flutter_example/hls-streaming/bottom_sheets/hls_start_bottom_sheet.dart';
 import 'package:hmssdk_flutter_example/hls-streaming/bottom_sheets/meeting_mode_sheet.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:provider/provider.dart';
@@ -93,6 +94,7 @@ class _HLSMoreSettingsState extends State<HLSMoreSettings> {
                       ),
                       title: Text(
                         "Device Settings",
+                        semanticsLabel: "fl_device_settings",
                         style: GoogleFonts.inter(
                             fontSize: 14,
                             color: defaultColor,
@@ -103,7 +105,6 @@ class _HLSMoreSettingsState extends State<HLSMoreSettings> {
                   ListTile(
                     horizontalTitleGap: 2,
                     onTap: () async {
-                      Navigator.pop(context);
                       showModalBottomSheet(
                         isScrollControlled: true,
                         backgroundColor: bottomSheetColor,
@@ -123,6 +124,7 @@ class _HLSMoreSettingsState extends State<HLSMoreSettings> {
                     ),
                     title: Text(
                       "Meeting mode",
+                      semanticsLabel: "fl_meeting_mode",
                       style: GoogleFonts.inter(
                           fontSize: 14,
                           color: defaultColor,
@@ -155,6 +157,7 @@ class _HLSMoreSettingsState extends State<HLSMoreSettings> {
                     ),
                     title: Text(
                       "Change Name",
+                      semanticsLabel: "fl_change_name",
                       style: GoogleFonts.inter(
                           fontSize: 14,
                           color: defaultColor,
@@ -175,6 +178,7 @@ class _HLSMoreSettingsState extends State<HLSMoreSettings> {
                     ),
                     title: Text(
                       "Change Speaker State",
+                      semanticsLabel: "fl_mute_room",
                       style: GoogleFonts.inter(
                           fontSize: 14,
                           color: defaultColor,
@@ -195,6 +199,7 @@ class _HLSMoreSettingsState extends State<HLSMoreSettings> {
                     ),
                     title: Text(
                       "Switch Camera",
+                      semanticsLabel: "fl_switch_camera",
                       style: GoogleFonts.inter(
                           fontSize: 14,
                           color: defaultColor,
@@ -215,6 +220,7 @@ class _HLSMoreSettingsState extends State<HLSMoreSettings> {
                     ),
                     title: Text(
                       "BRB",
+                      semanticsLabel: "fl_brb_list_tile",
                       style: GoogleFonts.inter(
                           fontSize: 14,
                           color: defaultColor,
@@ -235,6 +241,7 @@ class _HLSMoreSettingsState extends State<HLSMoreSettings> {
                       ),
                       title: Text(
                         "${context.read<MeetingStore>().isStatsVisible ? "Hide" : "Show"} Stats",
+                        semanticsLabel: "fl_stats_list_tile",
                         style: GoogleFonts.inter(
                             fontSize: 14,
                             color: defaultColor,
@@ -257,6 +264,7 @@ class _HLSMoreSettingsState extends State<HLSMoreSettings> {
                         ),
                         title: Text(
                           "Mute",
+                          semanticsLabel: "fl_mute_role",
                           style: GoogleFonts.inter(
                               fontSize: 14,
                               color: defaultColor,
@@ -270,6 +278,7 @@ class _HLSMoreSettingsState extends State<HLSMoreSettings> {
                         onTap: () async {
                           if (_meetingStore.streamingType["rtmp"] == true) {
                             _meetingStore.stopRtmpAndRecording();
+                            Navigator.pop(context);
                           } else {
                             Map<String, dynamic> data =
                                 await UtilityComponents.showRTMPInputDialog(
@@ -295,14 +304,22 @@ class _HLSMoreSettingsState extends State<HLSMoreSettings> {
                         leading: SvgPicture.asset(
                           "assets/icons/stream.svg",
                           fit: BoxFit.scaleDown,
+                          color: _meetingStore.streamingType["rtmp"] == true
+                              ? errorColor
+                              : defaultColor,
                         ),
                         title: Text(
                           _meetingStore.streamingType["rtmp"] == true
                               ? "Stop RTMP"
                               : "Start RTMP",
+                          semanticsLabel: _meetingStore.streamingType["rtmp"] == true
+                              ? "fl_stop_rtmp"
+                              : "fl_start_rtmp",
                           style: GoogleFonts.inter(
                               fontSize: 14,
-                              color: defaultColor,
+                              color: _meetingStore.streamingType["rtmp"] == true
+                                  ? errorColor
+                                  : defaultColor,
                               letterSpacing: 0.25,
                               fontWeight: FontWeight.w600),
                         )),
@@ -319,19 +336,75 @@ class _HLSMoreSettingsState extends State<HLSMoreSettings> {
                                 toRecord: true,
                                 rtmpUrls: []);
                           }
+                          Navigator.pop(context);
                         },
                         contentPadding: EdgeInsets.zero,
                         leading: SvgPicture.asset(
                           "assets/icons/record.svg",
                           fit: BoxFit.scaleDown,
+                          color: _meetingStore.recordingType["browser"] == true
+                              ? errorColor
+                              : defaultColor,
                         ),
                         title: Text(
                           _meetingStore.recordingType["browser"] == true
                               ? "Stop Recording"
                               : "Start Recording",
+                          semanticsLabel: _meetingStore.recordingType["browser"] == true
+                              ? "fl_stop_recording"
+                              : "fl_start_recording",
                           style: GoogleFonts.inter(
                               fontSize: 14,
-                              color: defaultColor,
+                              color:
+                                  _meetingStore.recordingType["browser"] == true
+                                      ? errorColor
+                                      : defaultColor,
+                              letterSpacing: 0.25,
+                              fontWeight: FontWeight.w600),
+                        )),
+                  if (!(_meetingStore.localPeer?.role.name.contains("hls-") ??
+                      true))
+                    ListTile(
+                        horizontalTitleGap: 2,
+                        onTap: () async {
+                          if (_meetingStore.hasHlsStarted) {
+                            _meetingStore.stopHLSStreaming();
+                            Navigator.pop(context);
+                            return;
+                          }
+                          showModalBottomSheet(
+                            isScrollControlled: true,
+                            backgroundColor: bottomSheetColor,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            context: context,
+                            builder: (ctx) => ChangeNotifierProvider.value(
+                                value: context.read<MeetingStore>(),
+                                child: HLSStartBottomSheet()),
+                          );
+                        },
+                        contentPadding: EdgeInsets.zero,
+                        leading: SvgPicture.asset(
+                          "assets/icons/hls.svg",
+                          fit: BoxFit.scaleDown,
+                          color: _meetingStore.hasHlsStarted
+                              ? errorColor
+                              : defaultColor,
+                        ),
+                        title: Text(
+                          _meetingStore.hasHlsStarted
+                              ? "Stop HLS"
+                              : "Start HLS",
+                          
+                          semanticsLabel :_meetingStore.hasHlsStarted
+                              ? "fl_stop_hls"
+                              : "fl_start_hls",
+                          style: GoogleFonts.inter(
+                              fontSize: 14,
+                              color: _meetingStore.hasHlsStarted
+                                  ? errorColor
+                                  : defaultColor,
                               letterSpacing: 0.25,
                               fontWeight: FontWeight.w600),
                         )),
@@ -346,8 +419,7 @@ class _HLSMoreSettingsState extends State<HLSMoreSettings> {
                             } else {
                               _meetingStore.startAudioShare();
                             }
-                          }
-                          else if (Platform.isIOS) {
+                          } else if (Platform.isIOS) {
                             bool isPlaying =
                                 await _meetingStore.isPlayerRunningIos();
                             String url =
@@ -369,6 +441,10 @@ class _HLSMoreSettingsState extends State<HLSMoreSettings> {
                           _meetingStore.isAudioShareStarted
                               ? "Stop Audio Share"
                               : "Start Audio Share",
+                          semanticsLabel: 
+                          _meetingStore.isAudioShareStarted
+                              ? "fl_stop_audio_share"
+                              : "fl_start_audio_share",
                           style: GoogleFonts.inter(
                               fontSize: 14,
                               color: defaultColor,
@@ -408,6 +484,7 @@ class _HLSMoreSettingsState extends State<HLSMoreSettings> {
                       ),
                       title: Text(
                         "End Room",
+                        semanticsLabel: "fl_end_room",
                         style: GoogleFonts.inter(
                             fontSize: 14,
                             color: defaultColor,

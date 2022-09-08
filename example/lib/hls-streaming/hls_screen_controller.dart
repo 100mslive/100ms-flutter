@@ -10,12 +10,14 @@ class HLSScreenController extends StatefulWidget {
   final String user;
   final bool isAudioOn;
   final int? localPeerNetworkQuality;
+  final bool isStreamingLink;
   const HLSScreenController(
       {Key? key,
       required this.meetingLink,
       required this.user,
       required this.isAudioOn,
-      required this.localPeerNetworkQuality})
+      required this.localPeerNetworkQuality,
+      this.isStreamingLink = false})
       : super(key: key);
 
   @override
@@ -57,6 +59,7 @@ class _HLSScreenControllerState extends State<HLSScreenController> {
       return HLSViewerPage();
     } else {
       return HLSBroadcasterPage(
+        isStreamingLink: widget.isStreamingLink,
         meetingLink: widget.meetingLink,
         isAudioOn: widget.isAudioOn,
       );

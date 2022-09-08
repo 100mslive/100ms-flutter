@@ -607,9 +607,7 @@ class _HomePageState extends State<HomePage> {
                             context,
                             MaterialPageRoute(
                                 builder: (_) => QRCodeScreen(
-                                      meetingFlow: mode[0]
-                                          ? MeetingFlow.meeting
-                                          : MeetingFlow.hlsStreaming,
+                                      meetingFlow: MeetingFlow.hlsStreaming,
                                     )));
                       }
                     },

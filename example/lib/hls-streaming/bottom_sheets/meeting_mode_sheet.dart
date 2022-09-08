@@ -35,115 +35,166 @@ class _MeetingModeSheetState extends State<MeetingModeSheet> {
       heightFactor: 0.5,
       child: Padding(
           padding: const EdgeInsets.only(top: 20.0, left: 15, right: 15),
-          child: Expanded(
-            child: ListView(
-              children: [
-                ListTile(
-                  horizontalTitleGap: 2,
-                  onTap: () async {
-                    _meetingStore.setActiveSpeakerMode();
-                    Navigator.pop(context);
-                  },
-                  contentPadding: EdgeInsets.zero,
-                  leading: SvgPicture.asset(
-                    "assets/icons/participants.svg",
-                    semanticsLabel: "fl_active_speaker_mode",
-                    fit: BoxFit.scaleDown,
+          child: Column(
+            children: [
+               Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 18,
+                        backgroundColor: borderColor,
+                        child: IconButton(
+                          icon: Icon(
+                            Icons.arrow_back_ios_new,
+                            size: 16,
+                            color: defaultColor,
+                          ),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                      ),
+                      Expanded(
+                        child: Text(
+                          "Meeting Modes",
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.inter(
+                              fontSize: 16,
+                              color: defaultColor,
+                              letterSpacing: 0.15,
+                              fontWeight: FontWeight.w600),
+                        ),
+                      ),
+                      IconButton(
+                        icon: SvgPicture.asset(
+                          "assets/icons/close_button.svg",
+                          width: 40,
+                        ),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                      ),
+                    ],
                   ),
-                  title: Text(
-                    "Active Speaker Mode",
-                    style: GoogleFonts.inter(
-                        fontSize: 14,
-                        color: defaultColor,
-                        letterSpacing: 0.25,
-                        fontWeight: FontWeight.w600),
+               Padding(
+                    padding: EdgeInsets.only(top: 15, bottom: 10),
+                    child: Divider(
+                      color: dividerColor,
+                      height: 5,
+                    ),
                   ),
-                ),
-                ListTile(
-                  horizontalTitleGap: 2,
-                  onTap: () async {
-                    if (_meetingStore.meetingMode != MeetingMode.Audio) {
-                      _meetingStore.setMode(MeetingMode.Audio);
-                    } else {
-                      _meetingStore.setPlayBackAllowed(true);
-                      _meetingStore.setMode(MeetingMode.Video);
-                    }
-                    Navigator.pop(context);
+              Expanded(
+                child: ListView(
+                  children: [
+                    ListTile(
+                      horizontalTitleGap: 2,
+                      onTap: () async {
+                        _meetingStore.setActiveSpeakerMode();
+                        Navigator.pop(context);
+                      },
+                      contentPadding: EdgeInsets.zero,
+                      leading: SvgPicture.asset(
+                        "assets/icons/participants.svg",
+                        semanticsLabel: "fl_active_speaker_mode",
+                        fit: BoxFit.scaleDown,
+                      ),
+                      title: Text(
+                        "Active Speaker Mode",
+                        style: GoogleFonts.inter(
+                            fontSize: 14,
+                            color: defaultColor,
+                            letterSpacing: 0.25,
+                            fontWeight: FontWeight.w600),
+                      ),
+                    ),
+                    ListTile(
+                      horizontalTitleGap: 2,
+                      onTap: () async {
+                        if (_meetingStore.meetingMode != MeetingMode.Audio) {
+                          _meetingStore.setMode(MeetingMode.Audio);
+                        } else {
+                          _meetingStore.setPlayBackAllowed(true);
+                          _meetingStore.setMode(MeetingMode.Video);
+                        }
+                        Navigator.pop(context);
 
-                  },
-                  contentPadding: EdgeInsets.zero,
-                  leading: SvgPicture.asset(
-                    _meetingStore.meetingMode == MeetingMode.Audio
-                        ? 'assets/icons/cam_state_on.svg'
-                        : 'assets/icons/mic_state_on.svg',
-                    semanticsLabel: "fl_audio_video_view",
-                    fit: BoxFit.scaleDown,
-                  ),
-                  title: Text(
-                    _meetingStore.meetingMode == MeetingMode.Audio
-                        ? "Video View"
-                        : "Audio View",
-                    style: GoogleFonts.inter(
-                        fontSize: 14,
-                        color: defaultColor,
-                        letterSpacing: 0.25,
-                        fontWeight: FontWeight.w600),
-                  ),
-                ),
-                ListTile(
-                  horizontalTitleGap: 2,
-                  onTap: () async {
-                    if (_meetingStore.meetingMode != MeetingMode.Hero) {
-                      _meetingStore.setMode(MeetingMode.Hero);
-                    } else {
-                      _meetingStore.setMode(MeetingMode.Video);
-                    }
-                    Navigator.pop(context);
+                      },
+                      contentPadding: EdgeInsets.zero,
+                      leading: SvgPicture.asset(
+                        _meetingStore.meetingMode == MeetingMode.Audio
+                            ? 'assets/icons/cam_state_on.svg'
+                            : 'assets/icons/mic_state_on.svg',
+                        semanticsLabel: "fl_audio_video_view",
+                        fit: BoxFit.scaleDown,
+                      ),
+                      title: Text(
+                        
+                        _meetingStore.meetingMode == MeetingMode.Audio
+                            ? "Video View"
+                            : "Audio View",
+                            semanticsLabel: "fl_audio_video_mode",
+                        style: GoogleFonts.inter(
+                            fontSize: 14,
+                            color: defaultColor,
+                            letterSpacing: 0.25,
+                            fontWeight: FontWeight.w600),
+                      ),
+                    ),
+                    ListTile(
+                      horizontalTitleGap: 2,
+                      onTap: () async {
+                        if (_meetingStore.meetingMode != MeetingMode.Hero) {
+                          _meetingStore.setMode(MeetingMode.Hero);
+                        } else {
+                          _meetingStore.setMode(MeetingMode.Video);
+                        }
+                        Navigator.pop(context);
 
-                  },
-                  contentPadding: EdgeInsets.zero,
-                  leading: SvgPicture.asset(
-                    "assets/icons/participants.svg",
-                    semanticsLabel: "fl_hero_mode",
-                    fit: BoxFit.scaleDown,
-                  ),
-                  title: Text(
-                    "Hero Mode",
-                    style: GoogleFonts.inter(
-                        fontSize: 14,
-                        color: defaultColor,
-                        letterSpacing: 0.25,
-                        fontWeight: FontWeight.w600),
-                  ),
-                ),
-                ListTile(
-                  horizontalTitleGap: 2,
-                  onTap: () async {
-                    if (_meetingStore.meetingMode != MeetingMode.Single) {
-                      _meetingStore.setMode(MeetingMode.Single);
-                    } else {
-                      _meetingStore.setMode(MeetingMode.Video);
-                    }
-                    Navigator.pop(context);
+                      },
+                      contentPadding: EdgeInsets.zero,
+                      leading: SvgPicture.asset(
+                        "assets/icons/participants.svg",
+                        semanticsLabel: "fl_hero_mode",
+                        fit: BoxFit.scaleDown,
+                      ),
+                      title: Text(
+                        "Hero Mode",
+                        style: GoogleFonts.inter(
+                            fontSize: 14,
+                            color: defaultColor,
+                            letterSpacing: 0.25,
+                            fontWeight: FontWeight.w600),
+                      ),
+                    ),
+                    ListTile(
+                      horizontalTitleGap: 2,
+                      onTap: () async {
+                        if (_meetingStore.meetingMode != MeetingMode.Single) {
+                          _meetingStore.setMode(MeetingMode.Single);
+                        } else {
+                          _meetingStore.setMode(MeetingMode.Video);
+                        }
+                        Navigator.pop(context);
 
-                  },
-                  contentPadding: EdgeInsets.zero,
-                  leading: SvgPicture.asset(
-                    "assets/icons/single_tile.svg",
-                    semanticsLabel: "fl_single_mode",
-                    fit: BoxFit.scaleDown,
-                  ),
-                  title: Text(
-                    "Single Tile Mode",
-                    style: GoogleFonts.inter(
-                        fontSize: 14,
-                        color: defaultColor,
-                        letterSpacing: 0.25,
-                        fontWeight: FontWeight.w600),
-                  ),
+                      },
+                      contentPadding: EdgeInsets.zero,
+                      leading: SvgPicture.asset(
+                        "assets/icons/single_tile.svg",
+                        semanticsLabel: "fl_single_mode",
+                        fit: BoxFit.scaleDown,
+                      ),
+                      title: Text(
+                        "Single Tile Mode",
+                        style: GoogleFonts.inter(
+                            fontSize: 14,
+                            color: defaultColor,
+                            letterSpacing: 0.25,
+                            fontWeight: FontWeight.w600),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           )),
     );
   }

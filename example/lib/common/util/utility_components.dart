@@ -1000,6 +1000,7 @@ class UtilityComponents {
                       ))),
                   onPressed: () => {
                     _meetingStore.stopHLSStreaming(),
+                    _meetingStore.leave(),
                     Navigator.pop(context)
                   },
                   child: Padding(

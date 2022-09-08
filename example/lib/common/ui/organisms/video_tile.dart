@@ -59,7 +59,7 @@ class _VideoTileState extends State<VideoTile> {
         _meetingStore.localPeer?.role.permissions.changeRole ?? false;
 
     return Semantics(
-      label: "${context.read<PeerTrackNode>().peer.name}_video_tile",
+      label: "fl_${context.read<PeerTrackNode>().peer.name}_video_tile",
       child: FocusDetector(
         onFocusLost: () {
           if (mounted) {
@@ -181,7 +181,7 @@ class _VideoTileState extends State<VideoTile> {
                   ),
                   child: Semantics(
                     label:
-                        "${context.read<PeerTrackNode>().peer.name}_video_on",
+                        "fl_${context.read<PeerTrackNode>().peer.name}_video_on",
                     child: Stack(
                       children: [
                         VideoView(
@@ -191,9 +191,12 @@ class _VideoTileState extends State<VideoTile> {
                           itemWidth: widget.itemWidth,
                         ),
 
-                        DegradeTile(
-                          itemHeight: widget.itemHeight,
-                          itemWidth: widget.itemWidth,
+                        Semantics(
+                          label: "fl_${context.read<PeerTrackNode>().peer.name}_degraded_tile",
+                          child: DegradeTile(
+                            itemHeight: widget.itemHeight,
+                            itemWidth: widget.itemWidth,
+                          ),
                         ),
                         if (!widget.isOneToOne)
                           Positioned(
@@ -221,13 +224,23 @@ class _VideoTileState extends State<VideoTile> {
                               ),
                             ),
                           ),
-                        HandRaise(), //top left
-                        BRBTag(), //bottom right
-                        AudioMuteStatus(), //top right
+                        Semantics(
+                          label: "fl_${context.read<PeerTrackNode>().peer.name}_hand_raise",
+                          
+                          child: HandRaise()), //top left
+                        Semantics(
+                          label : "fl_${context.read<PeerTrackNode>().peer.name}_brb_tag",
+                          child: BRBTag()), //bottom right
+                        Semantics(
+                          label : "fl_${context.read<PeerTrackNode>().peer.name}_audio_mute",
+                          child: AudioMuteStatus()), //top right
                         if (!widget.isOneToOne)
-                          RTCStatsView(
-                              isLocal:
-                                  context.read<PeerTrackNode>().peer.isLocal),
+                          Semantics(
+                            label: "fl_stats_on_tile",
+                            child: RTCStatsView(
+                                isLocal:
+                                    context.read<PeerTrackNode>().peer.isLocal),
+                          ),
                         TileBorder(
                             itemHeight: widget.itemHeight,
                             itemWidth: widget.itemWidth,
@@ -240,7 +253,7 @@ class _VideoTileState extends State<VideoTile> {
               )
             : Semantics(
                 label:
-                    "${context.read<PeerTrackNode>().peer.name}_screen_share_tile",
+                    "fl_${context.read<PeerTrackNode>().peer.name}_screen_share_tile",
                 child: Container(
                   decoration: BoxDecoration(
                       border: Border.all(color: Colors.grey, width: 1.0),
@@ -262,6 +275,7 @@ class _VideoTileState extends State<VideoTile> {
                         bottom: 5,
                         left: 5,
                         child: Container(
+                          key: Key("fl_${context.read<PeerTrackNode>().peer.name}_name"),
                           decoration: BoxDecoration(
                               color: Color.fromRGBO(0, 0, 0, 0.9),
                               borderRadius: BorderRadius.circular(8)),
