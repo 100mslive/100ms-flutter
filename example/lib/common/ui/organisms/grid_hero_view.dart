@@ -11,8 +11,8 @@ import 'package:provider/provider.dart';
 //Project imports
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
-import 'package:hmssdk_flutter_example/meeting/peer_track_node.dart';
+import 'package:hmssdk_flutter_example/data_store/meeting_store.dart';
+import 'package:hmssdk_flutter_example/model/peer_track_node.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/video_tile.dart';
 
 Widget gridHeroView(

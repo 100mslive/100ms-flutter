@@ -4,7 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
 //Project imports
-import 'package:hmssdk_flutter_example/meeting/peer_track_node.dart';
+import 'package:hmssdk_flutter_example/model/peer_track_node.dart';
 
 class HandRaise extends StatelessWidget {
   @override
@@ -13,13 +13,16 @@ class HandRaise extends StatelessWidget {
         builder: (_, metadata, __) {
           return metadata?.contains("\"isHandRaised\":true") ?? false
               ? Positioned(
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
-                    child: SvgPicture.asset(
-                      "assets/icons/hand.svg",
-                      color: Color.fromRGBO(250, 201, 25, 1),
-                      height: 30,
-                      semanticsLabel: "hand_raise_label",
+                  child: Semantics(
+                          label: "fl_${context.read<PeerTrackNode>().peer.name}_hand_raise",
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
+                      child: SvgPicture.asset(
+                        "assets/icons/hand.svg",
+                        color: Color.fromRGBO(250, 201, 25, 1),
+                        height: 30,
+                        semanticsLabel: "hand_raise_label",
+                      ),
                     ),
                   ),
                   top: 5,

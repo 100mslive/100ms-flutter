@@ -16,8 +16,8 @@ import 'package:hmssdk_flutter_example/common/ui/organisms/network_icon_widget.d
 import 'package:hmssdk_flutter_example/common/ui/organisms/peer_name.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/tile_border.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/rtc_stats_view.dart';
-import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
-import 'package:hmssdk_flutter_example/meeting/peer_track_node.dart';
+import 'package:hmssdk_flutter_example/data_store/meeting_store.dart';
+import 'package:hmssdk_flutter_example/model/peer_track_node.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/remote_peer_tile_dialog.dart';
 
 class AudioTile extends StatelessWidget {

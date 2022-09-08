@@ -14,7 +14,7 @@ import 'package:hmssdk_flutter_example/hls-streaming/util/hls_subtitle_text.dart
 import 'package:hmssdk_flutter_example/hls-streaming/util/hls_title_text.dart';
 import 'package:hmssdk_flutter_example/hls-streaming/bottom_sheets/hls_viewer_settings.dart';
 import 'package:hmssdk_flutter_example/hls_viewer/hls_viewer.dart';
-import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
+import 'package:hmssdk_flutter_example/data_store/meeting_store.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 

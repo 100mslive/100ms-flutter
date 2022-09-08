@@ -1,9 +1,11 @@
 //Package imports
+import 'dart:developer';
+
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
-import 'package:hmssdk_flutter_example/meeting/hms_sdk_interactor.dart';
+import 'package:hmssdk_flutter_example/hms_sdk_interactor.dart';
 import 'package:hmssdk_flutter_example/service/room_service.dart';
 
 class PreviewStore extends ChangeNotifier
@@ -40,6 +42,10 @@ class PreviewStore extends ChangeNotifier
 
   String meetingUrl = "";
 
+  bool isRoomMute = false;
+
+  List<HMSRole> roles = [];
+
   @override
   void onHMSError({required HMSException error}) {
     this.error = error;
@@ -48,6 +54,7 @@ class PreviewStore extends ChangeNotifier
 
   @override
   void onPreview({required HMSRoom room, required List<HMSTrack> localTracks}) {
+    log("onPreview-> room: ${room.toString()}");
     this.room = room;
     for (HMSPeer each in room.peers!) {
       if (each.isLocal) {
@@ -72,6 +79,7 @@ class PreviewStore extends ChangeNotifier
     }
     this.localTracks = videoTracks;
     Utilities.saveStringData(key: "meetingLink", value: this.meetingUrl);
+    getRoles();
     notifyListeners();
   }
 
@@ -96,6 +104,7 @@ class PreviewStore extends ChangeNotifier
 
   @override
   void onPeerUpdate({required HMSPeer peer, required HMSPeerUpdate update}) {
+    log("onPeerUpdate-> peer: ${peer.name} update: ${update.name}");
     switch (update) {
       case HMSPeerUpdate.peerJoined:
         peers.add(peer);
@@ -121,6 +130,7 @@ class PreviewStore extends ChangeNotifier
 
   @override
   void onRoomUpdate({required HMSRoom room, required HMSRoomUpdate update}) {
+    log("onRoomUpdate-> room: ${room.toString()} update: ${update.name}");
     switch (update) {
       case HMSRoomUpdate.browserRecordingStateUpdated:
         isRecordingStarted = room.hmsBrowserRecordingState?.running ?? false;
@@ -193,4 +203,21 @@ class PreviewStore extends ChangeNotifier
     hmsSDKInteractor!.leave();
     destroy();
   }
+
+  void toggleSpeaker() async {
+    if (!this.isRoomMute) {
+      hmsSDKInteractor!.muteAll();
+    } else {
+      hmsSDKInteractor!.unMuteAll();
+    }
+    this.isRoomMute = !this.isRoomMute;
+    notifyListeners();
+  }
+
+  void getRoles() async {
+    roles = await hmsSDKInteractor!.getRoles();
+    notifyListeners();
+  }
+
+  void applyFilter(String selectedRole) {}
 }

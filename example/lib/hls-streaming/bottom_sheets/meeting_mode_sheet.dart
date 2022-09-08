@@ -1,15 +1,10 @@
-import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_mode.dart';
-import 'package:hmssdk_flutter_example/hls-streaming/util/hls_subtitle_text.dart';
-import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
+import 'package:hmssdk_flutter_example/data_store/meeting_store.dart';
 import 'package:provider/provider.dart';
-import 'package:tuple/tuple.dart';
-import 'package:collection/collection.dart';
 
 class MeetingModeSheet extends StatefulWidget {
   MeetingModeSheet({
@@ -37,51 +32,51 @@ class _MeetingModeSheetState extends State<MeetingModeSheet> {
           padding: const EdgeInsets.only(top: 20.0, left: 15, right: 15),
           child: Column(
             children: [
-               Row(
-                    children: [
-                      CircleAvatar(
-                        radius: 18,
-                        backgroundColor: borderColor,
-                        child: IconButton(
-                          icon: Icon(
-                            Icons.arrow_back_ios_new,
-                            size: 16,
-                            color: defaultColor,
-                          ),
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                        ),
+              Row(
+                children: [
+                  CircleAvatar(
+                    radius: 18,
+                    backgroundColor: borderColor,
+                    child: IconButton(
+                      icon: Icon(
+                        Icons.arrow_back_ios_new,
+                        size: 16,
+                        color: defaultColor,
                       ),
-                      Expanded(
-                        child: Text(
-                          "Meeting Modes",
-                          textAlign: TextAlign.center,
-                          style: GoogleFonts.inter(
-                              fontSize: 16,
-                              color: defaultColor,
-                              letterSpacing: 0.15,
-                              fontWeight: FontWeight.w600),
-                        ),
-                      ),
-                      IconButton(
-                        icon: SvgPicture.asset(
-                          "assets/icons/close_button.svg",
-                          width: 40,
-                        ),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                      ),
-                    ],
-                  ),
-               Padding(
-                    padding: EdgeInsets.only(top: 15, bottom: 10),
-                    child: Divider(
-                      color: dividerColor,
-                      height: 5,
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
                     ),
                   ),
+                  Expanded(
+                    child: Text(
+                      "Meeting Modes",
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.inter(
+                          fontSize: 16,
+                          color: defaultColor,
+                          letterSpacing: 0.15,
+                          fontWeight: FontWeight.w600),
+                    ),
+                  ),
+                  IconButton(
+                    icon: SvgPicture.asset(
+                      "assets/icons/close_button.svg",
+                      width: 40,
+                    ),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                ],
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 15, bottom: 10),
+                child: Divider(
+                  color: dividerColor,
+                  height: 5,
+                ),
+              ),
               Expanded(
                 child: ListView(
                   children: [
@@ -90,18 +85,20 @@ class _MeetingModeSheetState extends State<MeetingModeSheet> {
                       onTap: () async {
                         _meetingStore.setActiveSpeakerMode();
                         Navigator.pop(context);
+                        Navigator.pop(context);
                       },
                       contentPadding: EdgeInsets.zero,
                       leading: SvgPicture.asset(
                         "assets/icons/participants.svg",
                         semanticsLabel: "fl_active_speaker_mode",
+                        color:defaultColor,
                         fit: BoxFit.scaleDown,
                       ),
                       title: Text(
-                        "Active Speaker Mode",
+                        _meetingStore.isActiveSpeakerMode?"Normal Mode":"Active Speaker Mode",
                         style: GoogleFonts.inter(
                             fontSize: 14,
-                            color: defaultColor,
+                            color:defaultColor,
                             letterSpacing: 0.25,
                             fontWeight: FontWeight.w600),
                       ),
@@ -116,7 +113,7 @@ class _MeetingModeSheetState extends State<MeetingModeSheet> {
                           _meetingStore.setMode(MeetingMode.Video);
                         }
                         Navigator.pop(context);
-
+                        Navigator.pop(context);
                       },
                       contentPadding: EdgeInsets.zero,
                       leading: SvgPicture.asset(
@@ -127,11 +124,10 @@ class _MeetingModeSheetState extends State<MeetingModeSheet> {
                         fit: BoxFit.scaleDown,
                       ),
                       title: Text(
-                        
                         _meetingStore.meetingMode == MeetingMode.Audio
                             ? "Video View"
                             : "Audio View",
-                            semanticsLabel: "fl_audio_video_mode",
+                        semanticsLabel: "fl_audio_video_mode",
                         style: GoogleFonts.inter(
                             fontSize: 14,
                             color: defaultColor,
@@ -148,19 +144,24 @@ class _MeetingModeSheetState extends State<MeetingModeSheet> {
                           _meetingStore.setMode(MeetingMode.Video);
                         }
                         Navigator.pop(context);
-
+                        Navigator.pop(context);
                       },
                       contentPadding: EdgeInsets.zero,
                       leading: SvgPicture.asset(
                         "assets/icons/participants.svg",
                         semanticsLabel: "fl_hero_mode",
+                        color: _meetingStore.meetingMode == MeetingMode.Hero
+                            ? errorColor
+                            : defaultColor,
                         fit: BoxFit.scaleDown,
                       ),
                       title: Text(
                         "Hero Mode",
                         style: GoogleFonts.inter(
                             fontSize: 14,
-                            color: defaultColor,
+                            color: _meetingStore.meetingMode == MeetingMode.Hero
+                                ? errorColor
+                                : defaultColor,
                             letterSpacing: 0.25,
                             fontWeight: FontWeight.w600),
                       ),
@@ -174,19 +175,25 @@ class _MeetingModeSheetState extends State<MeetingModeSheet> {
                           _meetingStore.setMode(MeetingMode.Video);
                         }
                         Navigator.pop(context);
-
+                        Navigator.pop(context);
                       },
                       contentPadding: EdgeInsets.zero,
                       leading: SvgPicture.asset(
                         "assets/icons/single_tile.svg",
                         semanticsLabel: "fl_single_mode",
+                        color: _meetingStore.meetingMode == MeetingMode.Single
+                            ? errorColor
+                            : defaultColor,
                         fit: BoxFit.scaleDown,
                       ),
                       title: Text(
                         "Single Tile Mode",
                         style: GoogleFonts.inter(
                             fontSize: 14,
-                            color: defaultColor,
+                            color:
+                                _meetingStore.meetingMode == MeetingMode.Single
+                                    ? errorColor
+                                    : defaultColor,
                             letterSpacing: 0.25,
                             fontWeight: FontWeight.w600),
                       ),

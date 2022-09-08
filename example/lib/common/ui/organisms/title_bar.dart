@@ -6,7 +6,7 @@ import 'package:hmssdk_flutter_example/hls-streaming/bottom_sheets/hls_participa
 import 'package:provider/provider.dart';
 
 //Project imports
-import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
+import 'package:hmssdk_flutter_example/data_store/meeting_store.dart';
 import 'package:hmssdk_flutter_example/common/constant.dart';
 
 class TitleBar extends StatelessWidget {

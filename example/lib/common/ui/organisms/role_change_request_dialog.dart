@@ -6,7 +6,7 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 // Project imports
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/hls-streaming/util/hls_title_text.dart';
-import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
+import 'package:hmssdk_flutter_example/data_store/meeting_store.dart';
 
 class RoleChangeDialogOrganism extends StatefulWidget {
   final HMSRoleChangeRequest roleChangeRequest;

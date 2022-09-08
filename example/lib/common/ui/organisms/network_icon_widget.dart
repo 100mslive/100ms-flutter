@@ -4,7 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
 //Project imports
-import 'package:hmssdk_flutter_example/meeting/peer_track_node.dart';
+import 'package:hmssdk_flutter_example/model/peer_track_node.dart';
 
 class NetworkIconWidget extends StatelessWidget {
   @override

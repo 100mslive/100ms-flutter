@@ -17,7 +17,7 @@ import 'package:provider/provider.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/role_change_request_dialog.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/track_change_request_dialog.dart';
-import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
+import 'package:hmssdk_flutter_example/data_store/meeting_store.dart';
 
 class UtilityComponents {
   static Future<dynamic> onBackPressed(BuildContext context) {

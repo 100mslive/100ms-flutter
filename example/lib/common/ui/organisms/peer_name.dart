@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 
 //Project imports
-import 'package:hmssdk_flutter_example/meeting/peer_track_node.dart';
+import 'package:hmssdk_flutter_example/model/peer_track_node.dart';
 
 class PeerName extends StatefulWidget {
   @override

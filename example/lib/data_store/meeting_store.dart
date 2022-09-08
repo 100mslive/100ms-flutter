@@ -13,8 +13,8 @@ import 'package:collection/collection.dart';
 
 //Project imports
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-import 'package:hmssdk_flutter_example/meeting/hms_sdk_interactor.dart';
-import 'package:hmssdk_flutter_example/meeting/peer_track_node.dart';
+import 'package:hmssdk_flutter_example/hms_sdk_interactor.dart';
+import 'package:hmssdk_flutter_example/model/peer_track_node.dart';
 import 'package:hmssdk_flutter_example/service/room_service.dart';
 import 'package:video_player/video_player.dart';
 
@@ -818,7 +818,8 @@ class MeetingStore extends ChangeNotifier
     // notifyListeners();
   }
 
-  void updateFilteredList(HMSPeerUpdate peerUpdate, HMSPeer peer) {
+  void updateFilteredList
+  (HMSPeerUpdate peerUpdate, HMSPeer peer) {
     String currentRole = this.selectedRoleFilter;
     int index =
         filteredPeers.indexWhere((element) => element.peerId == peer.peerId);

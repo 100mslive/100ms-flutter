@@ -10,7 +10,7 @@ import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
 import 'package:hmssdk_flutter_example/hls-streaming/bottom_sheets/hls_device_settings.dart';
 import 'package:hmssdk_flutter_example/hls-streaming/bottom_sheets/hls_start_bottom_sheet.dart';
 import 'package:hmssdk_flutter_example/hls-streaming/bottom_sheets/meeting_mode_sheet.dart';
-import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
+import 'package:hmssdk_flutter_example/data_store/meeting_store.dart';
 import 'package:provider/provider.dart';
 
 class HLSMoreSettings extends StatefulWidget {
@@ -146,7 +146,7 @@ class _HLSMoreSettingsState extends State<HLSMoreSettings> {
                                       ?.name ??
                                   "");
                       if (name.isNotEmpty) {
-                        context.read<MeetingStore>().changeName(name: name);
+                        _meetingStore.changeName(name: name);
                       }
                       Navigator.pop(context);
                     },
@@ -169,15 +169,17 @@ class _HLSMoreSettingsState extends State<HLSMoreSettings> {
                     horizontalTitleGap: 2,
                     onTap: () {
                       Navigator.pop(context);
-                      context.read<MeetingStore>().toggleSpeaker();
+                      _meetingStore.toggleSpeaker();
                     },
                     contentPadding: EdgeInsets.zero,
                     leading: SvgPicture.asset(
-                      "assets/icons/speaker_state_on.svg",
+                      _meetingStore.isSpeakerOn?
+                      "assets/icons/speaker_state_on.svg":
+                      "assets/icons/speaker_state_off.svg",
                       fit: BoxFit.scaleDown,
                     ),
                     title: Text(
-                      "Change Speaker State",
+                      _meetingStore.isSpeakerOn?"Mute Room":"Unmute Room",
                       semanticsLabel: "fl_mute_room",
                       style: GoogleFonts.inter(
                           fontSize: 14,
@@ -189,7 +191,7 @@ class _HLSMoreSettingsState extends State<HLSMoreSettings> {
                   ListTile(
                     horizontalTitleGap: 2,
                     onTap: () {
-                      context.read<MeetingStore>().switchCamera();
+                      _meetingStore.switchCamera();
                       Navigator.pop(context);
                     },
                     contentPadding: EdgeInsets.zero,
@@ -210,7 +212,7 @@ class _HLSMoreSettingsState extends State<HLSMoreSettings> {
                   ListTile(
                     horizontalTitleGap: 2,
                     onTap: () async {
-                      context.read<MeetingStore>().changeMetadataBRB();
+                      _meetingStore.changeMetadataBRB();
                       Navigator.pop(context);
                     },
                     contentPadding: EdgeInsets.zero,
@@ -231,7 +233,7 @@ class _HLSMoreSettingsState extends State<HLSMoreSettings> {
                   ListTile(
                       horizontalTitleGap: 2,
                       onTap: () async {
-                        context.read<MeetingStore>().changeStatsVisible();
+                        _meetingStore.changeStatsVisible();
                         Navigator.pop(context);
                       },
                       contentPadding: EdgeInsets.zero,
@@ -240,7 +242,7 @@ class _HLSMoreSettingsState extends State<HLSMoreSettings> {
                         fit: BoxFit.scaleDown,
                       ),
                       title: Text(
-                        "${context.read<MeetingStore>().isStatsVisible ? "Hide" : "Show"} Stats",
+                        "${_meetingStore.isStatsVisible ? "Hide" : "Show"} Stats",
                         semanticsLabel: "fl_stats_list_tile",
                         style: GoogleFonts.inter(
                             fontSize: 14,
@@ -263,7 +265,7 @@ class _HLSMoreSettingsState extends State<HLSMoreSettings> {
                           fit: BoxFit.scaleDown,
                         ),
                         title: Text(
-                          "Mute",
+                          "Mute Role",
                           semanticsLabel: "fl_mute_role",
                           style: GoogleFonts.inter(
                               fontSize: 14,

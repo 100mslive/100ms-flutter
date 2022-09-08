@@ -18,8 +18,8 @@ import 'package:hmssdk_flutter_example/common/ui/organisms/peer_name.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/tile_border.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/rtc_stats_view.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/video_view.dart';
-import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
-import 'package:hmssdk_flutter_example/meeting/peer_track_node.dart';
+import 'package:hmssdk_flutter_example/data_store/meeting_store.dart';
+import 'package:hmssdk_flutter_example/model/peer_track_node.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/remote_peer_tile_dialog.dart';
 
 class VideoTile extends StatefulWidget {
@@ -224,16 +224,9 @@ class _VideoTileState extends State<VideoTile> {
                               ),
                             ),
                           ),
-                        Semantics(
-                          label: "fl_${context.read<PeerTrackNode>().peer.name}_hand_raise",
-                          
-                          child: HandRaise()), //top left
-                        Semantics(
-                          label : "fl_${context.read<PeerTrackNode>().peer.name}_brb_tag",
-                          child: BRBTag()), //bottom right
-                        Semantics(
-                          label : "fl_${context.read<PeerTrackNode>().peer.name}_audio_mute",
-                          child: AudioMuteStatus()), //top right
+                        HandRaise(), //top left
+                        BRBTag(), //bottom right
+                        AudioMuteStatus(), //top right
                         if (!widget.isOneToOne)
                           Semantics(
                             label: "fl_stats_on_tile",
