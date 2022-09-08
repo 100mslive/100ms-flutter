@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'package:badges/badges.dart';
 import 'package:connectivity_checker/connectivity_checker.dart';
 import 'package:flutter/material.dart';

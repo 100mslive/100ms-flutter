@@ -219,5 +219,4 @@ class PreviewStore extends ChangeNotifier
     notifyListeners();
   }
 
-  void applyFilter(String selectedRole) {}
 }
