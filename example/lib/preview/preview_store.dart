@@ -46,6 +46,12 @@ class PreviewStore extends ChangeNotifier
 
   List<HMSRole> roles = [];
 
+  List<HMSAudioDevice> availableAudioOutputDevices = [];
+
+  HMSAudioDevice? currentAudioOutputDevice;
+
+  HMSAudioDevice currentAudioDeviceMode = HMSAudioDevice.AUTOMATIC;
+
   @override
   void onHMSError({required HMSException error}) {
     this.error = error;
@@ -80,6 +86,8 @@ class PreviewStore extends ChangeNotifier
     this.localTracks = videoTracks;
     Utilities.saveStringData(key: "meetingLink", value: this.meetingUrl);
     getRoles();
+    getCurrentAudioDevice();
+    getAudioDevicesList();
     notifyListeners();
   }
 
@@ -219,4 +227,37 @@ class PreviewStore extends ChangeNotifier
     notifyListeners();
   }
 
+  Future<void> getAudioDevicesList() async {
+    availableAudioOutputDevices.clear();
+    availableAudioOutputDevices
+        .addAll(await hmsSDKInteractor!.getAudioDevicesList());
+    notifyListeners();
+  }
+
+  Future<void> getCurrentAudioDevice() async {
+    currentAudioOutputDevice = await hmsSDKInteractor!.getCurrentAudioDevice();
+    notifyListeners();
+  }
+
+  void switchAudioOutput(HMSAudioDevice audioDevice) {
+    currentAudioDeviceMode = audioDevice;
+    hmsSDKInteractor!.switchAudioOutput(audioDevice);
+    notifyListeners();
+  }
+  
+  @override
+  void onAudioDeviceChanged({HMSAudioDevice? currentAudioDevice, List<HMSAudioDevice>? availableAudioDevice}) {
+    if (currentAudioDevice != null &&
+        this.currentAudioOutputDevice != currentAudioDevice) {
+      Utilities.showToast(
+          "Output Device changed to ${currentAudioDevice.name}");
+      this.currentAudioOutputDevice = currentAudioDevice;
+    }
+
+    if (availableAudioDevice != null) {
+      this.availableAudioOutputDevices.clear();
+      this.availableAudioOutputDevices.addAll(availableAudioDevice);
+    }
+    notifyListeners();
+  }
 }

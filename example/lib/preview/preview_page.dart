@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:badges/badges.dart';
 import 'package:connectivity_checker/connectivity_checker.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +15,7 @@ import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
 import 'package:hmssdk_flutter_example/hls-streaming/hls_screen_controller.dart';
 import 'package:hmssdk_flutter_example/data_store/meeting_store.dart';
 import 'package:hmssdk_flutter_example/hls-streaming/util/hls_title_text.dart';
+import 'package:hmssdk_flutter_example/preview/preview_device_settings.dart';
 import 'package:hmssdk_flutter_example/preview/preview_participant_sheet.dart';
 import 'package:hmssdk_flutter_example/preview/preview_store.dart';
 import 'package:provider/provider.dart';
@@ -194,7 +197,26 @@ class _PreviewPageState extends State<PreviewPage> {
                                             height: 40,
                                             width: 40,
                                             onTap: () async =>
-                                                {_previewStore.toggleSpeaker()},
+                                                Platform.isAndroid?
+                                                showModalBottomSheet(
+                                            isScrollControlled: true,
+                                            backgroundColor: bottomSheetColor,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                            ),
+                                            context: context,
+                                            builder: (ctx) =>
+                                                ChangeNotifierProvider.value(
+                                                    value: context
+                                                        .read<PreviewStore>(),
+                                                    child:
+                                                        PreviewDeviceSettings()),
+                                          ):_previewStore.toggleSpeaker(),
+                                                // {
+                                                  
+                                                  
+                                                //   _previewStore.toggleSpeaker()},
                                             offColor: hintColor,
                                             onColor: screenBackgroundColor,
                                             isActive: true,
@@ -250,21 +272,7 @@ class _PreviewPageState extends State<PreviewPage> {
                                             ),
                                           ),
                                           SizedBox(
-                                            width: 10,
-                                          ),
-                                          EmbeddedButton(
-                                            height: 40,
-                                            width: 40,
-                                            onTap: () async => {},
-                                            offColor: hintColor,
-                                            onColor: screenBackgroundColor,
-                                            isActive: true,
-                                            child: SvgPicture.asset(
-                                              "assets/icons/more.svg",
-                                              color: defaultColor,
-                                              fit: BoxFit.scaleDown,
-                                              semanticsLabel: "fl_more_btn",
-                                            ),
+                                            width: 5,
                                           ),
                                         ],
                                       )
