@@ -19,7 +19,7 @@ class PreviewDetails extends StatefulWidget {
 
 class _PreviewDetailsState extends State<PreviewDetails> {
   TextEditingController nameController = TextEditingController();
-
+  bool toShowPreview = true;
   @override
   void initState() {
     super.initState();
@@ -30,6 +30,7 @@ class _PreviewDetailsState extends State<PreviewDetails> {
     nameController.text = await Utilities.getStringData(key: "name");
     nameController.selection = TextSelection.fromPosition(
         TextPosition(offset: nameController.text.length));
+    toShowPreview = await Utilities.getBoolData(key: 'show-preview');
     setState(() {});
   }
 
@@ -40,14 +41,14 @@ class _PreviewDetailsState extends State<PreviewDetails> {
       Utilities.saveStringData(key: "name", value: nameController.text.trim());
       res = await Utilities.getPermissions();
       if (res) {
-        Navigator.of(context).pushReplacement(MaterialPageRoute(
-            builder: (_) => ListenableProvider.value(
-                  value: PreviewStore(),
-                  child: PreviewPage(
-                      meetingFlow: widget.meetingFlow,
-                      name: nameController.text,
-                      meetingLink: widget.meetingLink),
-                )));
+          Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (_) => ListenableProvider.value(
+                    value: PreviewStore(),
+                    child: PreviewPage(
+                        meetingFlow: widget.meetingFlow,
+                        name: nameController.text,
+                        meetingLink: widget.meetingLink),
+                  )));          
       }
     }
   }

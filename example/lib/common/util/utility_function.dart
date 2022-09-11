@@ -154,6 +154,18 @@ class Utilities {
     prefs.setInt(key, value);
   }
 
+  static Future<bool> getBoolData({required String key}) async {
+    final prefs = await SharedPreferences.getInstance();
+
+    return prefs.getBool(key)??false;
+  }
+
+    static Future<bool> saveBoolData({required String key,required bool value}) async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.setBool(key,value);
+  }
+
+
   static String fetchMeetingLinkFromFirebase(String url) {
     url = url.split("deep_link_id=")[1];
     url = url.split("&")[0];
