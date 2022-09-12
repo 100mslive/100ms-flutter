@@ -818,8 +818,7 @@ class MeetingStore extends ChangeNotifier
     // notifyListeners();
   }
 
-  void updateFilteredList
-  (HMSPeerUpdate peerUpdate, HMSPeer peer) {
+  void updateFilteredList(HMSPeerUpdate peerUpdate, HMSPeer peer) {
     String currentRole = this.selectedRoleFilter;
     int index =
         filteredPeers.indexWhere((element) => element.peerId == peer.peerId);

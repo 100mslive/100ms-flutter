@@ -22,7 +22,7 @@ class _AudioMuteStatusState extends State<AudioMuteStatus> {
             top: 5,
             right: 5,
             child: Semantics(
-              label : "fl_${context.read<PeerTrackNode>().peer.name}_audio_mute",
+              label: "fl_${context.read<PeerTrackNode>().peer.name}_audio_mute",
               child: Padding(
                   padding: const EdgeInsets.fromLTRB(0, 5, 5, 0),
                   child: data

@@ -14,7 +14,8 @@ class HandRaise extends StatelessWidget {
           return metadata?.contains("\"isHandRaised\":true") ?? false
               ? Positioned(
                   child: Semantics(
-                          label: "fl_${context.read<PeerTrackNode>().peer.name}_hand_raise",
+                    label:
+                        "fl_${context.read<PeerTrackNode>().peer.name}_hand_raise",
                     child: Padding(
                       padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
                       child: SvgPicture.asset(

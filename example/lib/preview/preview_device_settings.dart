@@ -157,7 +157,9 @@ class _PreviewDeviceSettingsState extends State<PreviewDeviceSettings> {
                       ],
                     )),
                   ),
-                  SizedBox(height: 10,),
+                  SizedBox(
+                    height: 10,
+                  ),
                   ListTile(
                     horizontalTitleGap: 2,
                     onTap: () {
@@ -166,18 +168,18 @@ class _PreviewDeviceSettingsState extends State<PreviewDeviceSettings> {
                     },
                     contentPadding: EdgeInsets.zero,
                     leading: SvgPicture.asset(
-                      context.read<PreviewStore>().isRoomMute?
-                      "assets/icons/speaker_state_off.svg":
-                      "assets/icons/speaker_state_on.svg",
+                      context.read<PreviewStore>().isRoomMute
+                          ? "assets/icons/speaker_state_off.svg"
+                          : "assets/icons/speaker_state_on.svg",
                       fit: BoxFit.scaleDown,
                     ),
-                    
                     title: HLSSubtitleText(
-                            text: (context.read<PreviewStore>().isRoomMute?"Unmute Room":"Mute Room"),
-                            textColor: defaultColor,
-                          ),
-
-                        )
+                      text: (context.read<PreviewStore>().isRoomMute
+                          ? "Unmute Room"
+                          : "Mute Room"),
+                      textColor: defaultColor,
+                    ),
+                  )
                 ],
               );
             }),

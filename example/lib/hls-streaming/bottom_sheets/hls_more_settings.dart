@@ -173,13 +173,13 @@ class _HLSMoreSettingsState extends State<HLSMoreSettings> {
                     },
                     contentPadding: EdgeInsets.zero,
                     leading: SvgPicture.asset(
-                      _meetingStore.isSpeakerOn?
-                      "assets/icons/speaker_state_on.svg":
-                      "assets/icons/speaker_state_off.svg",
+                      _meetingStore.isSpeakerOn
+                          ? "assets/icons/speaker_state_on.svg"
+                          : "assets/icons/speaker_state_off.svg",
                       fit: BoxFit.scaleDown,
                     ),
                     title: Text(
-                      _meetingStore.isSpeakerOn?"Mute Room":"Unmute Room",
+                      _meetingStore.isSpeakerOn ? "Mute Room" : "Unmute Room",
                       semanticsLabel: "fl_mute_room",
                       style: GoogleFonts.inter(
                           fontSize: 14,
@@ -314,9 +314,10 @@ class _HLSMoreSettingsState extends State<HLSMoreSettings> {
                           _meetingStore.streamingType["rtmp"] == true
                               ? "Stop RTMP"
                               : "Start RTMP",
-                          semanticsLabel: _meetingStore.streamingType["rtmp"] == true
-                              ? "fl_stop_rtmp"
-                              : "fl_start_rtmp",
+                          semanticsLabel:
+                              _meetingStore.streamingType["rtmp"] == true
+                                  ? "fl_stop_rtmp"
+                                  : "fl_start_rtmp",
                           style: GoogleFonts.inter(
                               fontSize: 14,
                               color: _meetingStore.streamingType["rtmp"] == true
@@ -352,9 +353,10 @@ class _HLSMoreSettingsState extends State<HLSMoreSettings> {
                           _meetingStore.recordingType["browser"] == true
                               ? "Stop Recording"
                               : "Start Recording",
-                          semanticsLabel: _meetingStore.recordingType["browser"] == true
-                              ? "fl_stop_recording"
-                              : "fl_start_recording",
+                          semanticsLabel:
+                              _meetingStore.recordingType["browser"] == true
+                                  ? "fl_stop_recording"
+                                  : "fl_start_recording",
                           style: GoogleFonts.inter(
                               fontSize: 14,
                               color:
@@ -398,8 +400,7 @@ class _HLSMoreSettingsState extends State<HLSMoreSettings> {
                           _meetingStore.hasHlsStarted
                               ? "Stop HLS"
                               : "Start HLS",
-                          
-                          semanticsLabel :_meetingStore.hasHlsStarted
+                          semanticsLabel: _meetingStore.hasHlsStarted
                               ? "fl_stop_hls"
                               : "fl_start_hls",
                           style: GoogleFonts.inter(
@@ -443,8 +444,7 @@ class _HLSMoreSettingsState extends State<HLSMoreSettings> {
                           _meetingStore.isAudioShareStarted
                               ? "Stop Audio Share"
                               : "Start Audio Share",
-                          semanticsLabel: 
-                          _meetingStore.isAudioShareStarted
+                          semanticsLabel: _meetingStore.isAudioShareStarted
                               ? "fl_stop_audio_share"
                               : "fl_start_audio_share",
                           style: GoogleFonts.inter(

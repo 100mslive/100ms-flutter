@@ -244,9 +244,11 @@ class PreviewStore extends ChangeNotifier
     hmsSDKInteractor!.switchAudioOutput(audioDevice);
     notifyListeners();
   }
-  
+
   @override
-  void onAudioDeviceChanged({HMSAudioDevice? currentAudioDevice, List<HMSAudioDevice>? availableAudioDevice}) {
+  void onAudioDeviceChanged(
+      {HMSAudioDevice? currentAudioDevice,
+      List<HMSAudioDevice>? availableAudioDevice}) {
     if (currentAudioDevice != null &&
         this.currentAudioOutputDevice != currentAudioDevice) {
       Utilities.showToast(

@@ -68,7 +68,7 @@ class _HLSScreenControllerState extends State<HLSScreenController> {
         isStreamingLink: widget.isStreamingLink,
         meetingLink: widget.meetingLink,
         isAudioOn: widget.isAudioOn,
-        isRoomMute:widget.isRoomMute,
+        isRoomMute: widget.isRoomMute,
         mirrorCamera: widget.mirrorCamera,
         showStats: widget.showStats,
       );

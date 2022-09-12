@@ -196,32 +196,35 @@ class _PreviewPageState extends State<PreviewPage> {
                                           EmbeddedButton(
                                             height: 40,
                                             width: 40,
-                                            onTap: () async =>
-                                                Platform.isAndroid?
-                                                showModalBottomSheet(
-                                            isScrollControlled: true,
-                                            backgroundColor: bottomSheetColor,
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(20),
-                                            ),
-                                            context: context,
-                                            builder: (ctx) =>
-                                                ChangeNotifierProvider.value(
-                                                    value: context
-                                                        .read<PreviewStore>(),
-                                                    child:
-                                                        PreviewDeviceSettings()),
-                                          ):_previewStore.toggleSpeaker(),
-                                                // {
-                                                  
-                                                  
-                                                //   _previewStore.toggleSpeaker()},
+                                            onTap: () async => Platform
+                                                    .isAndroid
+                                                ? showModalBottomSheet(
+                                                    isScrollControlled: true,
+                                                    backgroundColor:
+                                                        bottomSheetColor,
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              20),
+                                                    ),
+                                                    context: context,
+                                                    builder: (ctx) =>
+                                                        ChangeNotifierProvider.value(
+                                                            value: context.read<
+                                                                PreviewStore>(),
+                                                            child:
+                                                                PreviewDeviceSettings()),
+                                                  )
+                                                : _previewStore.toggleSpeaker(),
+                                            // {
+
+                                            //   _previewStore.toggleSpeaker()},
                                             offColor: hintColor,
                                             onColor: screenBackgroundColor,
                                             isActive: true,
                                             child: SvgPicture.asset(
-                                             ! _previewStore.isRoomMute
+                                              !_previewStore.isRoomMute
                                                   ? "assets/icons/speaker_state_on.svg"
                                                   : "assets/icons/speaker_state_off.svg",
                                               color: defaultColor,

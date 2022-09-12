@@ -192,7 +192,8 @@ class _VideoTileState extends State<VideoTile> {
                         ),
 
                         Semantics(
-                          label: "fl_${context.read<PeerTrackNode>().peer.name}_degraded_tile",
+                          label:
+                              "fl_${context.read<PeerTrackNode>().peer.name}_degraded_tile",
                           child: DegradeTile(
                             itemHeight: widget.itemHeight,
                             itemWidth: widget.itemWidth,
@@ -268,7 +269,8 @@ class _VideoTileState extends State<VideoTile> {
                         bottom: 5,
                         left: 5,
                         child: Container(
-                          key: Key("fl_${context.read<PeerTrackNode>().peer.name}_name"),
+                          key: Key(
+                              "fl_${context.read<PeerTrackNode>().peer.name}_name"),
                           decoration: BoxDecoration(
                               color: Color.fromRGBO(0, 0, 0, 0.9),
                               borderRadius: BorderRadius.circular(8)),

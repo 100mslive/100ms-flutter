@@ -91,14 +91,16 @@ class _MeetingModeSheetState extends State<MeetingModeSheet> {
                       leading: SvgPicture.asset(
                         "assets/icons/participants.svg",
                         semanticsLabel: "fl_active_speaker_mode",
-                        color:defaultColor,
+                        color: defaultColor,
                         fit: BoxFit.scaleDown,
                       ),
                       title: Text(
-                        _meetingStore.isActiveSpeakerMode?"Normal Mode":"Active Speaker Mode",
+                        _meetingStore.isActiveSpeakerMode
+                            ? "Normal Mode"
+                            : "Active Speaker Mode",
                         style: GoogleFonts.inter(
                             fontSize: 14,
-                            color:defaultColor,
+                            color: defaultColor,
                             letterSpacing: 0.25,
                             fontWeight: FontWeight.w600),
                       ),

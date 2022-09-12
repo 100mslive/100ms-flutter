@@ -69,7 +69,7 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
   void setSettings() {
     if (widget.showStats) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<MeetingStore>().changeStatsVisible();
+        context.read<MeetingStore>().changeStatsVisible();
       });
     }
   }

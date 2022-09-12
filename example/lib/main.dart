@@ -190,7 +190,7 @@ class HomePage extends StatefulWidget {
 
   @override
   _HomePageState createState() => _HomePageState();
-    static _HomePageState of(BuildContext context) =>
+  static _HomePageState of(BuildContext context) =>
       context.findAncestorStateOfType<_HomePageState>()!;
 }
 
@@ -270,7 +270,7 @@ class _HomePageState extends State<HomePage> {
       onWillPop: _closeApp,
       child: SafeArea(
         child: Scaffold(
-          body: Center(
+            body: Center(
           child: SingleChildScrollView(
             child: Column(
               children: [
@@ -376,8 +376,9 @@ class _HomePageState extends State<HomePage> {
                 SizedBox(
                   width: width * 0.95,
                   child: Container(
-                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(8),
-                    color: hmsdefaultColor,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      color: hmsdefaultColor,
                     ),
                     child: Row(
                       children: [
@@ -387,8 +388,8 @@ class _HomePageState extends State<HomePage> {
                               builder: (context, value, child) {
                                 return ElevatedButton(
                                   style: ButtonStyle(
-                                      shadowColor:
-                                          MaterialStateProperty.all(surfaceColor),
+                                      shadowColor: MaterialStateProperty.all(
+                                          surfaceColor),
                                       backgroundColor:
                                           meetingLinkController.text.isEmpty
                                               ? MaterialStateProperty.all(
@@ -398,7 +399,8 @@ class _HomePageState extends State<HomePage> {
                                       shape: MaterialStateProperty.all<
                                               RoundedRectangleBorder>(
                                           RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(8.0),
+                                        borderRadius:
+                                            BorderRadius.circular(8.0),
                                       ))),
                                   onPressed: () async {
                                     joinMeeting();
@@ -407,11 +409,12 @@ class _HomePageState extends State<HomePage> {
                                     padding:
                                         const EdgeInsets.fromLTRB(8, 12, 8, 12),
                                     decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.all(Radius.circular(8))),
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(8))),
                                     child: Row(
                                       mainAxisSize: MainAxisSize.min,
-                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       children: [
                                         HLSTitleText(
                                           key: Key('join_now'),
@@ -429,18 +432,15 @@ class _HomePageState extends State<HomePage> {
                         ),
                         GestureDetector(
                           onTap: (() => showModalBottomSheet(
-                                                isScrollControlled: true,
-                                                backgroundColor:
-                                                    bottomSheetColor,
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(20),
-                                                ),
-                                                context: context,
-                                                builder: (ctx) =>HMSAppSettings()
-                                              )),
+                              isScrollControlled: true,
+                              backgroundColor: bottomSheetColor,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              context: context,
+                              builder: (ctx) => HMSAppSettings())),
                           child: Padding(
-                            padding: const EdgeInsets.only(left : 8.0,right: 8),
+                            padding: const EdgeInsets.only(left: 8.0, right: 8),
                             child: SvgPicture.asset(
                               "assets/icons/more.svg",
                               color: defaultColor,

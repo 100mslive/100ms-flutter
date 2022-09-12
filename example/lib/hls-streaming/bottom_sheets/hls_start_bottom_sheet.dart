@@ -9,9 +9,8 @@ import 'package:hmssdk_flutter_example/data_store/meeting_store.dart';
 import 'package:provider/provider.dart';
 
 class HLSStartBottomSheet extends StatefulWidget {
-
   final Key? key;
-  HLSStartBottomSheet({this.key}):super(key: key);
+  HLSStartBottomSheet({this.key}) : super(key: key);
 
   @override
   State<HLSStartBottomSheet> createState() => _HLSStartBottomSheetState();

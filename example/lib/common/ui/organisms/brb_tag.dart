@@ -14,7 +14,8 @@ class BRBTag extends StatelessWidget {
           return metadata?.contains("\"isBRBOn\":true") ?? false
               ? Positioned(
                   child: Semantics(
-                          label : "fl_${context.read<PeerTrackNode>().peer.name}_brb_tag",
+                    label:
+                        "fl_${context.read<PeerTrackNode>().peer.name}_brb_tag",
                     child: Padding(
                       padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
                       child: SvgPicture.asset(

@@ -245,10 +245,8 @@ class _HLSParticipantSheetState extends State<HLSParticipantSheet> {
         heightFactor: 0.81,
         child: Material(
           shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            20),
-                                                  ),
+            borderRadius: BorderRadius.circular(20),
+          ),
           color: bottomSheetColor,
           child: Padding(
             padding: const EdgeInsets.only(top: 20.0, left: 15, right: 15),
@@ -320,8 +318,9 @@ class _HLSParticipantSheetState extends State<HLSParticipantSheet> {
                                 context
                                     .read<MeetingStore>()
                                     .getFilteredList(newvalue);
-                                context.read<MeetingStore>().selectedRoleFilter =
-                                    newvalue;
+                                context
+                                    .read<MeetingStore>()
+                                    .selectedRoleFilter = newvalue;
                                 setState(() {
                                   this.valueChoose = newvalue as String;
                                 });
@@ -380,8 +379,8 @@ class _HLSParticipantSheetState extends State<HLSParticipantSheet> {
                                   value: "Raised Hand",
                                 ),
                                 ...roles
-                                    .sortedBy(
-                                        (element) => element.priority.toString())
+                                    .sortedBy((element) =>
+                                        element.priority.toString())
                                     .map((role) => DropdownMenuItem(
                                           child: Text(
                                             "${role.name}",
@@ -407,7 +406,10 @@ class _HLSParticipantSheetState extends State<HLSParticipantSheet> {
                               width: 40,
                             ),
                             onPressed: () {
-                              context.read<MeetingStore>().filteredPeers.clear();
+                              context
+                                  .read<MeetingStore>()
+                                  .filteredPeers
+                                  .clear();
                               Navigator.pop(context);
                             },
                           ),
@@ -439,7 +441,8 @@ class _HLSParticipantSheetState extends State<HLSParticipantSheet> {
                                   selector: (_, meetingStore) => Tuple4(
                                       meetingStore.filteredPeers[index].name,
                                       meetingStore.filteredPeers[index],
-                                      meetingStore.filteredPeers[index].role.name,
+                                      meetingStore
+                                          .filteredPeers[index].role.name,
                                       meetingStore
                                               .filteredPeers[index].metadata ??
                                           ""),
