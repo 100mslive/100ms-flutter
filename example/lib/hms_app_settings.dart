@@ -16,7 +16,7 @@ class HMSAppSettings extends StatefulWidget {
 class _HMSAppSettingsState extends State<HMSAppSettings> {
   bool isDarkMode = true;
   bool skipPreview = false;
-  bool mirrorCamera = true;
+  bool mirrorCamera = false;
   bool showStats = false;
 
   @override
@@ -30,6 +30,9 @@ class _HMSAppSettingsState extends State<HMSAppSettings> {
     skipPreview = await Utilities.getBoolData(key: 'skip-preview');
     mirrorCamera = await Utilities.getBoolData(key: 'mirror-camera');
     showStats = await Utilities.getBoolData(key: 'show-stats');
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() {});
+    });
   }
 
   Future<void> _launchUrl() async {
@@ -136,7 +139,7 @@ class _HMSAppSettingsState extends State<HMSAppSettings> {
                       fit: BoxFit.scaleDown,
                     ),
                     title: Text(
-                      "Enable Preview",
+                      "Skip Preview",
                       semanticsLabel: "fl_preview_enable",
                       style: GoogleFonts.inter(
                           fontSize: 14,
@@ -148,11 +151,10 @@ class _HMSAppSettingsState extends State<HMSAppSettings> {
                         activeColor: hmsdefaultColor,
                         value: skipPreview,
                         onChanged: (value) => {
+                              skipPreview = value,
                               Utilities.saveBoolData(
-                                  key: 'skip-preview', value: !skipPreview),
-                              setState(() {
-                                skipPreview = !skipPreview;
-                              })
+                                  key: 'skip-preview', value: value),
+                              setState(() {})
                             }),
                   ),
                   ListTile(
@@ -174,14 +176,12 @@ class _HMSAppSettingsState extends State<HMSAppSettings> {
                     ),
                     trailing: CupertinoSwitch(
                         activeColor: hmsdefaultColor,
-
                         value: mirrorCamera,
                         onChanged: (value) => {
+                              mirrorCamera = value,
                               Utilities.saveBoolData(
-                                  key: 'mirror-camera', value: !mirrorCamera),
-                              setState(() {
-                                mirrorCamera = !mirrorCamera;
-                              })
+                                  key: 'mirror-camera', value: value),
+                              setState(() {})
                             }),
                   ),
                   ListTile(
@@ -205,11 +205,10 @@ class _HMSAppSettingsState extends State<HMSAppSettings> {
                         activeColor: hmsdefaultColor,
                         value: showStats,
                         onChanged: (value) => {
+                              showStats = value,
                               Utilities.saveBoolData(
-                                  key: 'show-stats', value: !showStats),
-                              setState(() {
-                                showStats = !showStats;
-                              })
+                                  key: 'show-stats', value: value),
+                              setState(() {})
                             }),
                   ),
                   ListTile(
@@ -233,10 +232,12 @@ class _HMSAppSettingsState extends State<HMSAppSettings> {
                   ),
                 ],
               ),
-            )
-            ,Padding(
-              padding: const EdgeInsets.only(left: 8.0,right: 8,bottom: 15),
-              child: Center(child: HLSTitleText(text: "Made with ❤️ by 100ms", textColor: defaultColor)),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 8.0, right: 8, bottom: 15),
+              child: Center(
+                  child: HLSTitleText(
+                      text: "Made with ❤️ by 100ms", textColor: defaultColor)),
             )
           ],
         ),

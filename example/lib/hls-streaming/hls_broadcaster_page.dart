@@ -32,12 +32,16 @@ class HLSBroadcasterPage extends StatefulWidget {
   final bool isAudioOn;
   final bool isStreamingLink;
   final bool isRoomMute;
+  final bool showStats;
+  final bool mirrorCamera;
   const HLSBroadcasterPage(
       {Key? key,
       required this.meetingLink,
       required this.isAudioOn,
       this.isStreamingLink = false,
-      this.isRoomMute = true})
+      this.isRoomMute = true,
+      this.showStats = false,
+      this.mirrorCamera = true})
       : super(key: key);
 
   @override
@@ -49,6 +53,7 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
   void initState() {
     super.initState();
     checkAudioState();
+    setSettings();
   }
 
   void checkAudioState() async {
@@ -57,6 +62,14 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
     if (widget.isRoomMute) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         context.read<MeetingStore>().toggleSpeaker();
+      });
+    }
+  }
+
+  void setSettings() {
+    if (widget.showStats) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<MeetingStore>().changeStatsVisible();
       });
     }
   }

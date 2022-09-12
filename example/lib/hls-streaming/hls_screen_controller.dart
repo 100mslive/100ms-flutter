@@ -12,6 +12,8 @@ class HLSScreenController extends StatefulWidget {
   final int? localPeerNetworkQuality;
   final bool isStreamingLink;
   final bool isRoomMute;
+  final bool showStats;
+  final bool mirrorCamera;
   const HLSScreenController(
       {Key? key,
       required this.meetingLink,
@@ -19,7 +21,9 @@ class HLSScreenController extends StatefulWidget {
       required this.isAudioOn,
       required this.localPeerNetworkQuality,
       this.isStreamingLink = false,
-      this.isRoomMute = true})
+      this.isRoomMute = false,
+      this.showStats = false,
+      this.mirrorCamera = true})
       : super(key: key);
 
   @override
@@ -64,7 +68,9 @@ class _HLSScreenControllerState extends State<HLSScreenController> {
         isStreamingLink: widget.isStreamingLink,
         meetingLink: widget.meetingLink,
         isAudioOn: widget.isAudioOn,
-        isRoomMute:widget.isRoomMute
+        isRoomMute:widget.isRoomMute,
+        mirrorCamera: widget.mirrorCamera,
+        showStats: widget.showStats,
       );
     }
   }
