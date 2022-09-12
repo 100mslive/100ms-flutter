@@ -178,12 +178,12 @@ PODS:
   - GoogleUtilities/UserDefaults (7.7.0):
     - GoogleUtilities/Logger
   - HMSBroadcastExtensionSDK (0.0.2)
-  - HMSSDK (0.3.3):
+  - HMSSDK (0.4.1):
     - HMSWebRTC (= 1.0.4898)
   - hmssdk_flutter (0.7.6):
     - Flutter
     - HMSBroadcastExtensionSDK (= 0.0.2)
-    - HMSSDK (= 0.3.3)
+    - HMSSDK (= 0.4.1)
   - HMSWebRTC (1.0.4898)
   - MTBBarcodeScanner (5.0.11)
   - nanopb (2.30909.0):
@@ -319,14 +319,14 @@ SPEC CHECKSUMS:
   FirebaseInstallations: 41f811b530c41dd90973d0174381cdb3fcb5e839
   FirebasePerformance: 89697044484c366e9b3214163e10034a4b42353b
   FirebaseRemoteConfig: 97ccd1b58f26d756f86d071330f00856e51022a2
-  Flutter: 50d75fe2f02b26cc09d224853bb45737f8b3214a
+  Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
   fluttertoast: 16fbe6039d06a763f3533670197d01fc73459037
   GoogleAppMeasurement: 5d69e04287fc2c10cc43724bfa4bf31fc12c3dff
   GoogleDataTransport: 1c8145da7117bd68bbbed00cf304edb6a24de00f
   GoogleUtilities: e0913149f6b0625b553d70dae12b49fc62914fd1
   HMSBroadcastExtensionSDK: 2c3bf5b25453459d60799697bab1e30576690ab5
-  HMSSDK: 7c9d01559f1ac06cea982097138c1d3c836df0ae
-  hmssdk_flutter: e4888a286c6087881d76aba5c11e858624d40c92
+  HMSSDK: 3fdc3b3513a99c8e485d11112903342e1b0ad3a1
+  hmssdk_flutter: 2f81f96d77e165a24f36f48b1150befa5724d6d5
   HMSWebRTC: d3a9b2866e4a36a1d3834728a548a4a46309bb86
   MTBBarcodeScanner: f453b33c4b7dfe545d8c6484ed744d55671788cb
   nanopb: b552cce312b6c8484180ef47159bc0f65a1f0431
