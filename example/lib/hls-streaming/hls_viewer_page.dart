@@ -443,7 +443,7 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                               context
                                                   .read<MeetingStore>()
                                                   .switchAudioOutput(
-                                                      audioDevice);
+                                                      audioDevice: audioDevice);
                                             },
                                           ));
                                 });

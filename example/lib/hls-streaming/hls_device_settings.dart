@@ -129,7 +129,7 @@ class _HLSDeviceSettingsState extends State<HLSDeviceSettings> {
                         if (newvalue != null)
                           context
                               .read<MeetingStore>()
-                              .switchAudioOutput(newvalue);
+                              .switchAudioOutput(audioDevice: newvalue);
                         dropdownKey = null;
                       },
                       items: <DropdownMenuItem>[

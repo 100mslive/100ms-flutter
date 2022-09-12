@@ -96,6 +96,27 @@ class _HLSSettingsState extends State<HLSSettings> {
                             fontWeight: FontWeight.w600),
                       ),
                     ),
+                  if (Platform.isIOS)
+                    ListTile(
+                      horizontalTitleGap: 2,
+                      onTap: () async {
+                        Navigator.pop(context);
+                        context.read<MeetingStore>().switchAudioOutput();
+                      },
+                      contentPadding: EdgeInsets.zero,
+                      leading: SvgPicture.asset(
+                        "assets/icons/airplay.svg",
+                        fit: BoxFit.scaleDown,
+                      ),
+                      title: Text(
+                        "Airplay",
+                        style: GoogleFonts.inter(
+                            fontSize: 14,
+                            color: defaultColor,
+                            letterSpacing: 0.25,
+                            fontWeight: FontWeight.w600),
+                      ),
+                    ),
                   ListTile(
                     horizontalTitleGap: 2,
                     onTap: () async {

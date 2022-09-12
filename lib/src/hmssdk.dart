@@ -758,11 +758,13 @@ class HMSSDK {
     return HMSAudioDevice.UNKNOWN;
   }
 
-  ///Method to switch audio output device(Android Only)
-  void switchAudioOutput({required HMSAudioDevice audioDevice}) {
+  ///Method to switch audio output device (audioDevice needed to be passed for Android only)
+  void switchAudioOutput({HMSAudioDevice? audioDevice}) {
     if (Platform.isAndroid)
       PlatformService.invokeMethod(PlatformMethod.switchAudioOutput,
-          arguments: {"audio_device_name": audioDevice.name});
+          arguments: {"audio_device_name": audioDevice!.name});
+    if (Platform.isIOS)
+      PlatformService.invokeMethod(PlatformMethod.switchAudioOutput);
   }
 
   Future<void> startAudioShare(
