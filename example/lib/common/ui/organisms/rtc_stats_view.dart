@@ -6,8 +6,8 @@ import 'package:tuple/tuple.dart';
 import 'package:flutter/material.dart';
 
 //Project imports
-import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
-import 'package:hmssdk_flutter_example/meeting/peer_track_node.dart';
+import 'package:hmssdk_flutter_example/data_store/meeting_store.dart';
+import 'package:hmssdk_flutter_example/model/peer_track_node.dart';
 import 'package:hmssdk_flutter_example/model/rtc_stats.dart';
 
 class RTCStatsView extends StatelessWidget {

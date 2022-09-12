@@ -5,19 +5,18 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/hms_button.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/hls-streaming/util/hls_title_text.dart';
-import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
+import 'package:hmssdk_flutter_example/data_store/meeting_store.dart';
 import 'package:provider/provider.dart';
 
-class HLSBottomSheet extends StatefulWidget {
-  final String meetingLink;
-
-  HLSBottomSheet({required this.meetingLink});
+class HLSStartBottomSheet extends StatefulWidget {
+  final Key? key;
+  HLSStartBottomSheet({this.key}) : super(key: key);
 
   @override
-  State<HLSBottomSheet> createState() => _HLSBottomSheetState();
+  State<HLSStartBottomSheet> createState() => _HLSStartBottomSheetState();
 }
 
-class _HLSBottomSheetState extends State<HLSBottomSheet> {
+class _HLSStartBottomSheetState extends State<HLSStartBottomSheet> {
   bool _isRecordingOn = false;
   @override
   Widget build(BuildContext context) {

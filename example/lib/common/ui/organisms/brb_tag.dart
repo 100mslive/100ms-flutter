@@ -4,7 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
 //Project imports
-import 'package:hmssdk_flutter_example/meeting/peer_track_node.dart';
+import 'package:hmssdk_flutter_example/model/peer_track_node.dart';
 
 class BRBTag extends StatelessWidget {
   @override
@@ -13,13 +13,17 @@ class BRBTag extends StatelessWidget {
         builder: (_, metadata, __) {
           return metadata?.contains("\"isBRBOn\":true") ?? false
               ? Positioned(
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
-                    child: SvgPicture.asset(
-                      "assets/icons/brb.svg",
-                      color: Colors.white,
-                      width: 26,
-                      semanticsLabel: "brb_label",
+                  child: Semantics(
+                    label:
+                        "fl_${context.read<PeerTrackNode>().peer.name}_brb_tag",
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
+                      child: SvgPicture.asset(
+                        "assets/icons/brb.svg",
+                        color: Colors.white,
+                        width: 26,
+                        semanticsLabel: "brb_label",
+                      ),
                     ),
                   ),
                   bottom: 5.0,

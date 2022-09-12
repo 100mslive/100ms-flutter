@@ -4,7 +4,10 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/hms_listenable_button.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
+import 'package:hmssdk_flutter_example/data_store/meeting_store.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
+import 'package:hmssdk_flutter_example/hls-streaming/hls_screen_controller.dart';
+import 'package:hmssdk_flutter_example/hms_sdk_interactor.dart';
 import 'package:hmssdk_flutter_example/preview/preview_page.dart';
 import 'package:hmssdk_flutter_example/preview/preview_store.dart';
 import 'package:provider/provider.dart';
@@ -19,7 +22,7 @@ class PreviewDetails extends StatefulWidget {
 
 class _PreviewDetailsState extends State<PreviewDetails> {
   TextEditingController nameController = TextEditingController();
-
+  bool toShowPreview = true;
   @override
   void initState() {
     super.initState();
@@ -30,6 +33,7 @@ class _PreviewDetailsState extends State<PreviewDetails> {
     nameController.text = await Utilities.getStringData(key: "name");
     nameController.selection = TextSelection.fromPosition(
         TextPosition(offset: nameController.text.length));
+    toShowPreview = await Utilities.getBoolData(key: 'show-preview');
     setState(() {});
   }
 
@@ -39,15 +43,38 @@ class _PreviewDetailsState extends State<PreviewDetails> {
     } else {
       Utilities.saveStringData(key: "name", value: nameController.text.trim());
       res = await Utilities.getPermissions();
+      bool skipPreview = await Utilities.getBoolData(key: 'skip-preview');
       if (res) {
-        Navigator.of(context).pushReplacement(MaterialPageRoute(
-            builder: (_) => ListenableProvider.value(
-                  value: PreviewStore(),
-                  child: PreviewPage(
-                      meetingFlow: widget.meetingFlow,
-                      name: nameController.text,
-                      meetingLink: widget.meetingLink),
-                )));
+        if (!skipPreview) {
+          Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (_) => ListenableProvider.value(
+                    value: PreviewStore(),
+                    child: PreviewPage(
+                        meetingFlow: widget.meetingFlow,
+                        name: nameController.text,
+                        meetingLink: widget.meetingLink),
+                  )));
+        } else {
+          bool showStats = await Utilities.getBoolData(key: 'show-stats');
+          bool mirrorCamera = await Utilities.getBoolData(key: 'mirror-camera');
+          HMSSDKInteractor _hmsSDKInteractor = HMSSDKInteractor();
+          Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (_) => ListenableProvider.value(
+                    value: MeetingStore(hmsSDKInteractor: _hmsSDKInteractor),
+                    child: HLSScreenController(
+                      isRoomMute: false,
+                      isStreamingLink: widget.meetingFlow == MeetingFlow.meeting
+                          ? false
+                          : true,
+                      isAudioOn: false,
+                      meetingLink: widget.meetingLink,
+                      localPeerNetworkQuality: -1,
+                      user: nameController.text.trim(),
+                      mirrorCamera: mirrorCamera,
+                      showStats: showStats,
+                    ),
+                  )));
+        }
       }
     }
   }
@@ -55,7 +82,6 @@ class _PreviewDetailsState extends State<PreviewDetails> {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-    // double height = MediaQuery.of(context).size.height;
     bool res = false;
     return Scaffold(
       body: Center(

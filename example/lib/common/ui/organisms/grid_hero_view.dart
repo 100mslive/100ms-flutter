@@ -11,8 +11,8 @@ import 'package:provider/provider.dart';
 //Project imports
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
-import 'package:hmssdk_flutter_example/meeting/peer_track_node.dart';
+import 'package:hmssdk_flutter_example/data_store/meeting_store.dart';
+import 'package:hmssdk_flutter_example/model/peer_track_node.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/video_tile.dart';
 
 Widget gridHeroView(
@@ -112,7 +112,7 @@ Widget gridHeroView(
 
 List<StairedGridTile> portraitPattern(
     int itemCount, int screenShareCount, Size size, BuildContext context) {
-  double ratio = 1 / Utilities.getRatio(size, context);
+  double ratio = 1 / Utilities.getHLSRatio(size, context);
 
   List<StairedGridTile> tiles = [];
   for (int i = 0; i < screenShareCount; i++) {
@@ -147,7 +147,7 @@ List<StairedGridTile> portraitPattern(
 
 List<StairedGridTile> landscapePattern(
     int itemCount, int screenShareCount, Size size, BuildContext context) {
-  double ratio = Utilities.getRatio(size, context);
+  double ratio = Utilities.getHLSRatio(size, context);
   List<StairedGridTile> tiles = [];
   for (int i = 0; i < screenShareCount; i++) {
     tiles.add(StairedGridTile(1, ratio));

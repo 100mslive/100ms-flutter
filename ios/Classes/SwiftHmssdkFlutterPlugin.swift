@@ -847,7 +847,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         eventSink?(data)
     }
     
-    public func on(error: HMSError) {
+    public func on(error: Error) {
         
         let data = [
             "event_name": "on_error",

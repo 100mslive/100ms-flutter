@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 //Project imports
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/audio_tile.dart';
-import 'package:hmssdk_flutter_example/meeting/peer_track_node.dart';
+import 'package:hmssdk_flutter_example/model/peer_track_node.dart';
 
 //Widget for Audio View
 Widget gridAudioView(
@@ -39,7 +39,7 @@ Widget gridAudioView(
 
 List<StairedGridTile> portraitPattern(
     int itemCount, Size size, BuildContext context) {
-  double ratio = Utilities.getRatio(size, context);
+  double ratio = Utilities.getHLSRatio(size, context);
 
   List<StairedGridTile> tiles = [];
   int gridView = itemCount ~/ 6;
@@ -73,7 +73,7 @@ List<StairedGridTile> portraitPattern(
 
 List<StairedGridTile> landscapePattern(
     int itemCount, Size size, BuildContext context) {
-  double ratio = Utilities.getRatio(size, context);
+  double ratio = Utilities.getHLSRatio(size, context);
   List<StairedGridTile> tiles = [];
   int gridView = itemCount ~/ 2;
   int tileLeft = itemCount - (gridView * 2);

@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 
 //Project imports
-import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
+import 'package:hmssdk_flutter_example/data_store/meeting_store.dart';
 
 class HLSPlayer extends StatefulWidget {
   final String streamUrl;

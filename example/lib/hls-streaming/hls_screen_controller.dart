@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:hmssdk_flutter_example/hls-streaming/hls_broadcaster_page.dart';
 import 'package:hmssdk_flutter_example/hls-streaming/hls_viewer_page.dart';
-import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
+import 'package:hmssdk_flutter_example/data_store/meeting_store.dart';
 import 'package:provider/provider.dart';
 
 class HLSScreenController extends StatefulWidget {
@@ -10,12 +10,20 @@ class HLSScreenController extends StatefulWidget {
   final String user;
   final bool isAudioOn;
   final int? localPeerNetworkQuality;
+  final bool isStreamingLink;
+  final bool isRoomMute;
+  final bool showStats;
+  final bool mirrorCamera;
   const HLSScreenController(
       {Key? key,
       required this.meetingLink,
       required this.user,
       required this.isAudioOn,
-      required this.localPeerNetworkQuality})
+      required this.localPeerNetworkQuality,
+      this.isStreamingLink = false,
+      this.isRoomMute = false,
+      this.showStats = false,
+      this.mirrorCamera = true})
       : super(key: key);
 
   @override
@@ -57,8 +65,12 @@ class _HLSScreenControllerState extends State<HLSScreenController> {
       return HLSViewerPage();
     } else {
       return HLSBroadcasterPage(
+        isStreamingLink: widget.isStreamingLink,
         meetingLink: widget.meetingLink,
         isAudioOn: widget.isAudioOn,
+        isRoomMute: widget.isRoomMute,
+        mirrorCamera: widget.mirrorCamera,
+        showStats: widget.showStats,
       );
     }
   }

@@ -14,8 +14,8 @@ import 'package:collection/collection.dart';
 
 //Project imports
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-import 'package:hmssdk_flutter_example/meeting/hms_sdk_interactor.dart';
-import 'package:hmssdk_flutter_example/meeting/peer_track_node.dart';
+import 'package:hmssdk_flutter_example/hms_sdk_interactor.dart';
+import 'package:hmssdk_flutter_example/model/peer_track_node.dart';
 import 'package:hmssdk_flutter_example/service/room_service.dart';
 import 'package:video_player/video_player.dart';
 
@@ -170,6 +170,7 @@ class MeetingStore extends ChangeNotifier
   void leave() async {
     _hmsSDKInteractor.removeStatsListener(this);
     WidgetsBinding.instance.removeObserver(this);
+    hmsException = null;
     _hmsSDKInteractor.leave(hmsActionResultListener: this);
     _hmsSDKInteractor.destroy();
   }
@@ -575,7 +576,6 @@ class MeetingStore extends ChangeNotifier
   void onHMSError({required HMSException error}) {
     log("onHMSError-> error: ${error.message}");
     this.hmsException = error;
-
     notifyListeners();
   }
 
@@ -1311,7 +1311,6 @@ class MeetingStore extends ChangeNotifier
         break;
       case HMSActionResultListenerMethod.hlsStreamingStopped:
         hasHlsStarted = false;
-        Utilities.showToast("HLS Streaming Stopped");
         notifyListeners();
         break;
 
@@ -1347,89 +1346,58 @@ class MeetingStore extends ChangeNotifier
       Map<String, dynamic>? arguments,
       required HMSException hmsException}) {
     this.hmsException = hmsException;
+    log("ActionResultListener onException-> method: ${methodType.toString()} , Error code : ${hmsException.code} , Description : ${hmsException.description} , Message : ${hmsException.message}");
     FirebaseCrashlytics.instance.log(hmsException.toString());
     switch (methodType) {
       case HMSActionResultListenerMethod.leave:
-        Utilities.showToast("Leave Operation failed");
         break;
       case HMSActionResultListenerMethod.changeTrackState:
-        Utilities.showToast("Change Track state failed");
         break;
       case HMSActionResultListenerMethod.changeMetadata:
         // TODO: Handle this case.
         break;
       case HMSActionResultListenerMethod.endRoom:
-        Utilities.showToast("End room failed");
         break;
       case HMSActionResultListenerMethod.removePeer:
-        Utilities.showToast("Remove peer failed");
         break;
       case HMSActionResultListenerMethod.acceptChangeRole:
-        Utilities.showToast("Accept change role failed");
         break;
       case HMSActionResultListenerMethod.changeRole:
-        Utilities.showToast("Change role failed");
         break;
       case HMSActionResultListenerMethod.changeTrackStateForRole:
-        Utilities.showToast("Failed to change track state");
         break;
       case HMSActionResultListenerMethod.startRtmpOrRecording:
-        if (arguments != null) {
-          if (arguments["rtmp_urls"].length == 0 && arguments["to_record"]) {
-            Utilities.showToast("Recording failed");
-          } else if (arguments["rtmp_urls"].length != 0 &&
-              arguments["to_record"] == false) {
-            Utilities.showToast("RTMP failed");
-          }
-        }
         break;
       case HMSActionResultListenerMethod.stopRtmpAndRecording:
-        Utilities.showToast("Stop RTMP Streaming failed");
         break;
       case HMSActionResultListenerMethod.changeName:
-        Utilities.showToast("Name change failed");
         break;
       case HMSActionResultListenerMethod.sendBroadcastMessage:
-        Utilities.showToast("Sending broadcast message failed");
         break;
       case HMSActionResultListenerMethod.sendGroupMessage:
-        Utilities.showToast("Sending group message failed");
         break;
       case HMSActionResultListenerMethod.sendDirectMessage:
-        Utilities.showToast("Sending direct message failed");
         break;
       case HMSActionResultListenerMethod.hlsStreamingStarted:
-        if (!hlsStreamingRetry) {
-          _hmsSDKInteractor.startHLSStreaming(this,
-              meetingUrl: Constant.streamingUrl,
-              hmshlsRecordingConfig: hmshlsRecordingConfig!);
-          hlsStreamingRetry = true;
-        } else {
-          Utilities.showToast("Start HLS failed");
-          hlsStreamingRetry = false;
-        }
-
+        _hmsSDKInteractor.startHLSStreaming(this,
+            meetingUrl: Constant.streamingUrl,
+            hmshlsRecordingConfig: hmshlsRecordingConfig!);
         break;
       case HMSActionResultListenerMethod.hlsStreamingStopped:
-        Utilities.showToast("Stop HLS failed");
         break;
       case HMSActionResultListenerMethod.startScreenShare:
         isScreenShareActive();
-        Utilities.showToast("Start screenshare failed");
         break;
       case HMSActionResultListenerMethod.stopScreenShare:
         isScreenShareActive();
-        Utilities.showToast("Stop screenshare failed");
         break;
       case HMSActionResultListenerMethod.unknown:
         break;
       case HMSActionResultListenerMethod.startAudioShare:
-        Utilities.showToast("Start audio share failed");
         isAudioShareStarted = false;
         notifyListeners();
         break;
       case HMSActionResultListenerMethod.stopAudioShare:
-        Utilities.showToast("Stop audio share failed");
         break;
       case HMSActionResultListenerMethod.setTrackSettings:
         // TODO: Handle this case.
