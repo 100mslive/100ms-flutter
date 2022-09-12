@@ -1,6 +1,13 @@
 // Project imports:
 import '../exceptions/hms_exception_code.dart';
 
+///HMSException
+///
+///Valid Parameters according to OS:
+///
+///Android: id,code, message, description, action, params and isTerminal
+///
+///iOS: code, description, isTerminal and canRetry.
 class HMSException {
   final String? id;
   final HMSExceptionCode? code;
