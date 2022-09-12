@@ -281,7 +281,7 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                         meetingStore.meetingMode,
                                         meetingStore.peerTracks.length,
                                       ),
-                                  builder: (_, mode_data, __) {
+                                  builder: (_, modeData, __) {
                                     Size size = Size(
                                         MediaQuery.of(context).size.width,
                                         MediaQuery.of(context).size.height -
@@ -299,9 +299,9 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                         bottom:
                                             widget.isStreamingLink ? 108 : 68,
                                         child: Container(
-                                            child: (mode_data.item1 ==
+                                            child: (modeData.item1 ==
                                                         MeetingMode.Video &&
-                                                    mode_data.item2 == 2)
+                                                    modeData.item2 == 2)
                                                 ? OneToOneMode(
                                                     bottomMargin:
                                                         widget.isStreamingLink
@@ -312,7 +312,7 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                                         data.item4,
                                                     context: context,
                                                     size: size)
-                                                : (mode_data.item1 ==
+                                                : (modeData.item1 ==
                                                         MeetingMode.Hero)
                                                     ? gridHeroView(
                                                         peerTracks: data.item1,
@@ -323,7 +323,7 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                                         isPortrait:
                                                             isPortraitMode,
                                                         size: size)
-                                                    : (mode_data.item1 ==
+                                                    : (modeData.item1 ==
                                                             MeetingMode.Audio)
                                                         ? gridAudioView(
                                                             peerTracks: data
