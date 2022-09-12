@@ -6,8 +6,8 @@ import 'package:tuple/tuple.dart';
 
 //Project imports
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
-import 'package:hmssdk_flutter_example/meeting/peer_track_node.dart';
+import 'package:hmssdk_flutter_example/data_store/meeting_store.dart';
+import 'package:hmssdk_flutter_example/model/peer_track_node.dart';
 
 class VideoView extends StatefulWidget {
   final matchParent;
@@ -39,7 +39,9 @@ class _VideoViewState extends State<VideoView> {
     return Selector<PeerTrackNode, Tuple3<HMSVideoTrack?, bool, bool>>(
         builder: (_, data, __) {
           if ((data.item1 == null) || data.item2 || data.item3) {
-            return AudioLevelAvatar();
+            return Semantics(
+              label: "fl_video_off",
+              child: AudioLevelAvatar());
           } else {
             return (data.item1?.source != "REGULAR")
                 ? ClipRRect(

@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 
 //Project imports
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
-import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
+import 'package:hmssdk_flutter_example/data_store/meeting_store.dart';
 
 class TileBorder extends StatelessWidget {
   final double itemHeight;

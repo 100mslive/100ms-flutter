@@ -45,6 +45,7 @@ dependencies:
   uni_links:
   file_picker:
   draggable_widget:
+  badges:
   
 dev_dependencies:
   flutter_test:

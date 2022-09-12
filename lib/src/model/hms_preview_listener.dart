@@ -36,4 +36,11 @@ abstract class HMSPreviewListener {
   ///   - peer: the peer who joined/left or was updated
   ///   - update: the triggered update type. Should be used to perform different UI Actions
   void onPeerUpdate({required HMSPeer peer, required HMSPeerUpdate update});
+
+
+  ///whenever a new audio device is plugged in or audio output is changed we
+  ///get the onAudioDeviceChanged update
+  void onAudioDeviceChanged(
+      {HMSAudioDevice? currentAudioDevice,
+      List<HMSAudioDevice>? availableAudioDevice});
 }
