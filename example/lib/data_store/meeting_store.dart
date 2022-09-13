@@ -1,5 +1,6 @@
 //Package imports
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
@@ -401,9 +402,9 @@ class MeetingStore extends ChangeNotifier
     notifyListeners();
   }
 
-  void switchAudioOutput(HMSAudioDevice audioDevice) {
+  void switchAudioOutput({HMSAudioDevice? audioDevice}) {
     selfChangeAudioDevice = true;
-    currentAudioDeviceMode = audioDevice;
+    if (Platform.isAndroid) currentAudioDeviceMode = audioDevice!;
     _hmsSDKInteractor.switchAudioOutput(audioDevice);
   }
 
