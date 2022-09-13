@@ -67,7 +67,6 @@ class HMSTrackSettingsExtension {
                             audioSettings = HMSAudioTrackSettings(maxBitrate: bitrate, trackDescription: desc,audioSource: audioMixerSource)
                         }
                     } catch {
-                        let error = HMSCommonAction.getError(message: error.localizedDescription, params: ["function": #function])
                         result(HMSErrorExtension.toDictionary(error))
                     }
                 } else {
