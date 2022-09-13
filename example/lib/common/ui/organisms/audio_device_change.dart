@@ -41,7 +41,7 @@ class _AudioDeviceChangeDialogState extends State<AudioDeviceChangeDialog> {
     return AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       actionsPadding: EdgeInsets.only(left: 20, right: 20, bottom: 10),
-      backgroundColor: bottomSheetColor,
+      backgroundColor: themeBottomSheetColor,
       insetPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
       contentPadding: EdgeInsets.only(top: 20, bottom: 15, left: 24, right: 24),
       title: Column(
@@ -51,12 +51,12 @@ class _AudioDeviceChangeDialogState extends State<AudioDeviceChangeDialog> {
             text: "Change Audio Device",
             fontSize: 20,
             letterSpacing: 0.15,
-            textColor: defaultColor,
+            textColor: themeDefaultColor,
           ),
           SizedBox(
             height: 8,
           ),
-          HLSSubtitleText(text: message, textColor: subHeadingColor),
+          HLSSubtitleText(text: message, textColor: themeSubHeadingColor),
         ],
       ),
       content: Column(
@@ -66,7 +66,7 @@ class _AudioDeviceChangeDialogState extends State<AudioDeviceChangeDialog> {
           Container(
             padding: EdgeInsets.only(left: 10, right: 5),
             decoration: BoxDecoration(
-              color: surfaceColor,
+              color: themeSurfaceColor,
               borderRadius: BorderRadius.circular(10.0),
               border: Border.all(
                   color: borderColor, style: BorderStyle.solid, width: 0.80),
@@ -81,14 +81,14 @@ class _AudioDeviceChangeDialogState extends State<AudioDeviceChangeDialog> {
               value: valueChoose,
               icon: Icon(Icons.keyboard_arrow_down),
               buttonDecoration: BoxDecoration(
-                color: surfaceColor,
+                color: themeSurfaceColor,
               ),
               dropdownDecoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8),
-                  color: surfaceColor,
+                  color: themeSurfaceColor,
                   border: Border.all(color: borderColor)),
               offset: Offset(-10, -10),
-              iconEnabledColor: defaultColor,
+              iconEnabledColor: themeDefaultColor,
               selectedItemHighlightColor: hmsdefaultColor,
               onChanged: (dynamic newvalue) {
                 setState(() {
@@ -100,7 +100,7 @@ class _AudioDeviceChangeDialogState extends State<AudioDeviceChangeDialog> {
                     .map((device) => DropdownMenuItem(
                           child: HLSTitleText(
                             text: device.name,
-                            textColor: defaultColor,
+                            textColor: themeDefaultColor,
                             fontWeight: FontWeight.w400,
                           ),
                           value: device,
@@ -117,9 +117,9 @@ class _AudioDeviceChangeDialogState extends State<AudioDeviceChangeDialog> {
           children: [
             ElevatedButton(
                 style: ButtonStyle(
-                    shadowColor: MaterialStateProperty.all(surfaceColor),
+                    shadowColor: MaterialStateProperty.all(themeSurfaceColor),
                     backgroundColor:
-                        MaterialStateProperty.all(bottomSheetColor),
+                        MaterialStateProperty.all(themeBottomSheetColor),
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(
                       side: BorderSide(
@@ -132,14 +132,14 @@ class _AudioDeviceChangeDialogState extends State<AudioDeviceChangeDialog> {
                       const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
                   child: Text('Cancel',
                       style: GoogleFonts.inter(
-                          color: defaultColor,
+                          color: themeDefaultColor,
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
                           letterSpacing: 0.50)),
                 )),
             ElevatedButton(
               style: ButtonStyle(
-                  shadowColor: MaterialStateProperty.all(surfaceColor),
+                  shadowColor: MaterialStateProperty.all(themeSurfaceColor),
                   backgroundColor: MaterialStateProperty.all(hmsdefaultColor),
                   shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
@@ -163,7 +163,7 @@ class _AudioDeviceChangeDialogState extends State<AudioDeviceChangeDialog> {
                 child: Text(
                   'Change',
                   style: GoogleFonts.inter(
-                      color: defaultColor,
+                      color: themeDefaultColor,
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
                       letterSpacing: 0.50),

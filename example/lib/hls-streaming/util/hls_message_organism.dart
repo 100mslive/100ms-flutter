@@ -31,7 +31,8 @@ class HLSMessageOrganism extends StatelessWidget {
             : EdgeInsets.symmetric(horizontal: 8),
         decoration: (role != "" || isLocalMessage)
             ? BoxDecoration(
-                borderRadius: BorderRadius.circular(8), color: surfaceColor)
+                borderRadius: BorderRadius.circular(8),
+                color: themeSurfaceColor)
             : BoxDecoration(),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -50,13 +51,14 @@ class HLSMessageOrganism extends StatelessWidget {
                         fontSize: 14,
                         letterSpacing: 0.1,
                         lineHeight: 20,
-                        textColor: defaultColor,
+                        textColor: themeDefaultColor,
                       ),
                     ),
                     SizedBox(
                       width: 5,
                     ),
-                    HLSSubtitleText(text: date, textColor: subHeadingColor),
+                    HLSSubtitleText(
+                        text: date, textColor: themeSubHeadingColor),
                   ],
                 ),
                 (role != "" || isLocalMessage)
@@ -78,7 +80,7 @@ class HLSMessageOrganism extends StatelessWidget {
                                     (isLocalMessage ? "" : "TO YOU"),
                                     style: GoogleFonts.inter(
                                         fontSize: 10.0,
-                                        color: subHeadingColor,
+                                        color: themeSubHeadingColor,
                                         letterSpacing: 1.5,
                                         fontWeight: FontWeight.w600),
                                   ),
@@ -110,7 +112,7 @@ class HLSMessageOrganism extends StatelessWidget {
                                                 overflow: TextOverflow.ellipsis,
                                                 style: GoogleFonts.inter(
                                                     fontSize: 10.0,
-                                                    color: defaultColor,
+                                                    color: themeDefaultColor,
                                                     letterSpacing: 1.5,
                                                     fontWeight:
                                                         FontWeight.w400),
@@ -121,7 +123,7 @@ class HLSMessageOrganism extends StatelessWidget {
                                               overflow: TextOverflow.ellipsis,
                                               style: GoogleFonts.inter(
                                                   fontSize: 10.0,
-                                                  color: defaultColor,
+                                                  color: themeDefaultColor,
                                                   letterSpacing: 1.5,
                                                   fontWeight: FontWeight.w400),
                                             ),
@@ -144,7 +146,7 @@ class HLSMessageOrganism extends StatelessWidget {
               message,
               style: GoogleFonts.inter(
                   fontSize: 14.0,
-                  color: defaultColor,
+                  color: themeDefaultColor,
                   letterSpacing: 0.25,
                   fontWeight: FontWeight.w400),
             ),

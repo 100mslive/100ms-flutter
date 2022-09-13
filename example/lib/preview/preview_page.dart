@@ -188,7 +188,7 @@ class _PreviewPageState extends State<PreviewPage> {
                                     children: [
                                       HLSTitleText(
                                           text: "Configure",
-                                          textColor: defaultColor),
+                                          textColor: themeDefaultColor),
                                       Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
@@ -201,7 +201,7 @@ class _PreviewPageState extends State<PreviewPage> {
                                                 ? showModalBottomSheet(
                                                     isScrollControlled: true,
                                                     backgroundColor:
-                                                        bottomSheetColor,
+                                                        themeBottomSheetColor,
                                                     shape:
                                                         RoundedRectangleBorder(
                                                       borderRadius:
@@ -220,14 +220,14 @@ class _PreviewPageState extends State<PreviewPage> {
                                             // {
 
                                             //   _previewStore.toggleSpeaker()},
-                                            offColor: hintColor,
-                                            onColor: screenBackgroundColor,
+                                            offColor: themeHintColor,
+                                            onColor: themeScreenBackgroundColor,
                                             isActive: true,
                                             child: SvgPicture.asset(
                                               !_previewStore.isRoomMute
                                                   ? "assets/icons/speaker_state_on.svg"
                                                   : "assets/icons/speaker_state_off.svg",
-                                              color: defaultColor,
+                                              color: themeDefaultColor,
                                               fit: BoxFit.scaleDown,
                                               semanticsLabel:
                                                   "fl_mute_room_btn",
@@ -249,7 +249,7 @@ class _PreviewPageState extends State<PreviewPage> {
                                                   showModalBottomSheet(
                                                 isScrollControlled: true,
                                                 backgroundColor:
-                                                    bottomSheetColor,
+                                                    themeBottomSheetColor,
                                                 shape: RoundedRectangleBorder(
                                                   borderRadius:
                                                       BorderRadius.circular(20),
@@ -262,12 +262,13 @@ class _PreviewPageState extends State<PreviewPage> {
                                                         child:
                                                             PreviewParticipantSheet()),
                                               ),
-                                              offColor: hintColor,
-                                              onColor: screenBackgroundColor,
+                                              offColor: themeHintColor,
+                                              onColor:
+                                                  themeScreenBackgroundColor,
                                               isActive: true,
                                               child: SvgPicture.asset(
                                                 "assets/icons/participants.svg",
-                                                color: defaultColor,
+                                                color: themeDefaultColor,
                                                 fit: BoxFit.scaleDown,
                                                 semanticsLabel:
                                                     "fl_participants_btn",
@@ -316,8 +317,9 @@ class _PreviewPageState extends State<PreviewPage> {
                                                           _previewStore.switchAudio(
                                                               isOn: _previewStore
                                                                   .isAudioOn),
-                                                      offColor: defaultColor,
-                                                      onColor: borderColor,
+                                                      offColor: hmsWhiteColor,
+                                                      onColor:
+                                                          themeHMSBorderColor,
                                                       isActive: _previewStore
                                                           .isAudioOn,
                                                       child: SvgPicture.asset(
@@ -326,7 +328,7 @@ class _PreviewPageState extends State<PreviewPage> {
                                                             : "assets/icons/mic_state_off.svg",
                                                         color: _previewStore
                                                                 .isAudioOn
-                                                            ? defaultColor
+                                                            ? themeDefaultColor
                                                             : Colors.black,
                                                         fit: BoxFit.scaleDown,
                                                         semanticsLabel:
@@ -354,8 +356,9 @@ class _PreviewPageState extends State<PreviewPage> {
                                                           : _previewStore.switchVideo(
                                                               isOn: _previewStore
                                                                   .isVideoOn),
-                                                      offColor: defaultColor,
-                                                      onColor: borderColor,
+                                                      offColor: hmsWhiteColor,
+                                                      onColor:
+                                                          themeHMSBorderColor,
                                                       isActive: _previewStore
                                                           .isVideoOn,
                                                       child: SvgPicture.asset(
@@ -364,7 +367,7 @@ class _PreviewPageState extends State<PreviewPage> {
                                                             : "assets/icons/cam_state_off.svg",
                                                         color: _previewStore
                                                                 .isVideoOn
-                                                            ? defaultColor
+                                                            ? themeDefaultColor
                                                             : Colors.black,
                                                         fit: BoxFit.scaleDown,
                                                         semanticsLabel:

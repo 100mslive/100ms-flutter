@@ -32,7 +32,7 @@ class _HLSViewerSettingsState extends State<HLSViewerSettings> {
                         "More Options",
                         style: GoogleFonts.inter(
                             fontSize: 16,
-                            color: defaultColor,
+                            color: themeDefaultColor,
                             letterSpacing: 0.15,
                             fontWeight: FontWeight.w600),
                       ),
@@ -84,7 +84,7 @@ class _HLSViewerSettingsState extends State<HLSViewerSettings> {
                   "Change Name",
                   style: GoogleFonts.inter(
                       fontSize: 14,
-                      color: defaultColor,
+                      color: themeDefaultColor,
                       letterSpacing: 0.25,
                       fontWeight: FontWeight.w600),
                 ),
@@ -94,7 +94,7 @@ class _HLSViewerSettingsState extends State<HLSViewerSettings> {
                 onTap: () {
                   showModalBottomSheet(
                     isScrollControlled: true,
-                    backgroundColor: bottomSheetColor,
+                    backgroundColor: themeBottomSheetColor,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
                     ),
@@ -113,7 +113,7 @@ class _HLSViewerSettingsState extends State<HLSViewerSettings> {
                   "Participants",
                   style: GoogleFonts.inter(
                       fontSize: 14,
-                      color: defaultColor,
+                      color: themeDefaultColor,
                       letterSpacing: 0.25,
                       fontWeight: FontWeight.w600),
                 ),

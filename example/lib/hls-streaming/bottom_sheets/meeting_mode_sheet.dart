@@ -41,7 +41,7 @@ class _MeetingModeSheetState extends State<MeetingModeSheet> {
                       icon: Icon(
                         Icons.arrow_back_ios_new,
                         size: 16,
-                        color: defaultColor,
+                        color: themeDefaultColor,
                       ),
                       onPressed: () {
                         Navigator.pop(context);
@@ -54,7 +54,7 @@ class _MeetingModeSheetState extends State<MeetingModeSheet> {
                       textAlign: TextAlign.center,
                       style: GoogleFonts.inter(
                           fontSize: 16,
-                          color: defaultColor,
+                          color: themeDefaultColor,
                           letterSpacing: 0.15,
                           fontWeight: FontWeight.w600),
                     ),
@@ -91,7 +91,7 @@ class _MeetingModeSheetState extends State<MeetingModeSheet> {
                       leading: SvgPicture.asset(
                         "assets/icons/participants.svg",
                         semanticsLabel: "fl_active_speaker_mode",
-                        color: defaultColor,
+                        color: themeDefaultColor,
                         fit: BoxFit.scaleDown,
                       ),
                       title: Text(
@@ -100,7 +100,7 @@ class _MeetingModeSheetState extends State<MeetingModeSheet> {
                             : "Active Speaker Mode",
                         style: GoogleFonts.inter(
                             fontSize: 14,
-                            color: defaultColor,
+                            color: themeDefaultColor,
                             letterSpacing: 0.25,
                             fontWeight: FontWeight.w600),
                       ),
@@ -132,7 +132,7 @@ class _MeetingModeSheetState extends State<MeetingModeSheet> {
                         semanticsLabel: "fl_audio_video_mode",
                         style: GoogleFonts.inter(
                             fontSize: 14,
-                            color: defaultColor,
+                            color: themeDefaultColor,
                             letterSpacing: 0.25,
                             fontWeight: FontWeight.w600),
                       ),
@@ -154,7 +154,7 @@ class _MeetingModeSheetState extends State<MeetingModeSheet> {
                         semanticsLabel: "fl_hero_mode",
                         color: _meetingStore.meetingMode == MeetingMode.Hero
                             ? errorColor
-                            : defaultColor,
+                            : themeDefaultColor,
                         fit: BoxFit.scaleDown,
                       ),
                       title: Text(
@@ -163,7 +163,7 @@ class _MeetingModeSheetState extends State<MeetingModeSheet> {
                             fontSize: 14,
                             color: _meetingStore.meetingMode == MeetingMode.Hero
                                 ? errorColor
-                                : defaultColor,
+                                : themeDefaultColor,
                             letterSpacing: 0.25,
                             fontWeight: FontWeight.w600),
                       ),
@@ -185,7 +185,7 @@ class _MeetingModeSheetState extends State<MeetingModeSheet> {
                         semanticsLabel: "fl_single_mode",
                         color: _meetingStore.meetingMode == MeetingMode.Single
                             ? errorColor
-                            : defaultColor,
+                            : themeDefaultColor,
                         fit: BoxFit.scaleDown,
                       ),
                       title: Text(
@@ -195,7 +195,7 @@ class _MeetingModeSheetState extends State<MeetingModeSheet> {
                             color:
                                 _meetingStore.meetingMode == MeetingMode.Single
                                     ? errorColor
-                                    : defaultColor,
+                                    : themeDefaultColor,
                             letterSpacing: 0.25,
                             fontWeight: FontWeight.w600),
                       ),

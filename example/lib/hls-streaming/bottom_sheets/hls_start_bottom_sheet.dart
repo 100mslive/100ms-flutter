@@ -37,7 +37,7 @@ class _HLSStartBottomSheetState extends State<HLSStartBottomSheet> {
                       icon: Icon(
                         Icons.arrow_back_ios_new,
                         size: 16,
-                        color: defaultColor,
+                        color: hmsWhiteColor,
                       ),
                       onPressed: () {
                         Navigator.pop(context);
@@ -53,13 +53,13 @@ class _HLSStartBottomSheetState extends State<HLSStartBottomSheet> {
                     children: [
                       HLSTitleText(
                         text: "START STREAMING",
-                        textColor: subHeadingColor,
+                        textColor: themeSubHeadingColor,
                         fontSize: 10,
                         lineHeight: 16,
                       ),
                       HLSTitleText(
                         text: "HLS",
-                        textColor: defaultColor,
+                        textColor: themeDefaultColor,
                         fontSize: 20,
                         letterSpacing: 0.15,
                         lineHeight: 24,
@@ -77,7 +77,7 @@ class _HLSStartBottomSheetState extends State<HLSStartBottomSheet> {
               ),
               SvgPicture.asset(
                 "assets/icons/live.svg",
-                color: defaultColor,
+                color: themeDefaultColor,
                 width: 33,
               ),
               SizedBox(
@@ -85,7 +85,7 @@ class _HLSStartBottomSheetState extends State<HLSStartBottomSheet> {
               ),
               HLSTitleText(
                 text: "HLS Streaming",
-                textColor: defaultColor,
+                textColor: themeDefaultColor,
                 fontSize: 20,
                 letterSpacing: 0.15,
                 lineHeight: 24,
@@ -97,7 +97,7 @@ class _HLSStartBottomSheetState extends State<HLSStartBottomSheet> {
                 "Stream directly from the browser using any device with multiple hosts and real-time messaging, all within this platform.",
                 maxLines: 2,
                 style: GoogleFonts.inter(
-                    color: subHeadingColor,
+                    color: themeSubHeadingColor,
                     fontSize: 14,
                     height: 20 / 14,
                     letterSpacing: 0.25,
@@ -109,7 +109,7 @@ class _HLSStartBottomSheetState extends State<HLSStartBottomSheet> {
               Container(
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8),
-                    color: surfaceColor),
+                    color: themeSurfaceColor),
                 height: 56,
                 child: Padding(
                   padding: EdgeInsets.symmetric(vertical: 7, horizontal: 10),
@@ -120,14 +120,14 @@ class _HLSStartBottomSheetState extends State<HLSStartBottomSheet> {
                         children: [
                           SvgPicture.asset(
                             "assets/icons/record.svg",
-                            color: defaultColor,
+                            color: themeDefaultColor,
                           ),
                           SizedBox(
                             width: 10,
                           ),
                           HLSTitleText(
                             text: "Record the stream",
-                            textColor: defaultColor,
+                            textColor: themeDefaultColor,
                             fontSize: 14,
                             letterSpacing: 0.25,
                             lineHeight: 20,
@@ -171,13 +171,14 @@ class _HLSStartBottomSheetState extends State<HLSStartBottomSheet> {
                       children: [
                         SvgPicture.asset(
                           "assets/icons/live.svg",
-                          color: defaultColor,
+                          color: themeDefaultColor,
                           width: 24,
                         ),
                         SizedBox(
                           width: 11,
                         ),
-                        HLSTitleText(text: "Go Live", textColor: defaultColor)
+                        HLSTitleText(
+                            text: "Go Live", textColor: themeDefaultColor)
                       ],
                     ),
                   )),
@@ -191,7 +192,7 @@ class _HLSStartBottomSheetState extends State<HLSStartBottomSheet> {
                   children: [
                     SvgPicture.asset(
                       "assets/icons/info.svg",
-                      color: subHeadingColor,
+                      color: themeSubHeadingColor,
                       width: 15,
                     ),
                     SizedBox(
@@ -203,7 +204,7 @@ class _HLSStartBottomSheetState extends State<HLSStartBottomSheet> {
                         "If recording has to be enabled later, streaming has to be stopped first.",
                         style: GoogleFonts.inter(
                             fontSize: 12,
-                            color: subHeadingColor,
+                            color: themeSubHeadingColor,
                             letterSpacing: 0.4,
                             fontWeight: FontWeight.w400),
                       ),

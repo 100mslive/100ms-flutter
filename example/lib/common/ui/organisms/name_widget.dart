@@ -33,7 +33,7 @@ class _NameWidgetState extends State<NameWidget> {
                       child: HLSSubtitleText(
                         text:
                             "${data.item3 ? "You (" : ""}${data.item1}${data.item3 ? ")" : ""} ${data.item2 ? " Degraded" : ""}",
-                        textColor: defaultColor,
+                        textColor: themeDefaultColor,
                         lineHeight: 20,
                         fontSize: 14,
                         letterSpacing: 0.25,

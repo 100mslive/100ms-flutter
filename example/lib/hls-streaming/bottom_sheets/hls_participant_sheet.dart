@@ -44,10 +44,10 @@ class _HLSParticipantSheetState extends State<HLSParticipantSheet> {
           ? PopupMenuButton(
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8)),
-              color: surfaceColor,
+              color: themeSurfaceColor,
               icon: SvgPicture.asset(
                 "assets/icons/more.svg",
-                color: defaultColor,
+                color: themeDefaultColor,
                 fit: BoxFit.scaleDown,
               ),
               onSelected: (int value) async {
@@ -76,13 +76,13 @@ class _HLSParticipantSheetState extends State<HLSParticipantSheet> {
                     PopupMenuItem(
                       child: Row(children: [
                         SvgPicture.asset("assets/icons/role_change.svg",
-                            width: 15, color: defaultColor),
+                            width: 15, color: themeDefaultColor),
                         SizedBox(
                           width: 12,
                         ),
                         HLSTitleText(
                           text: "Change Role",
-                          textColor: defaultColor,
+                          textColor: themeDefaultColor,
                           fontSize: 14,
                           lineHeight: 20,
                           letterSpacing: 0.25,
@@ -98,7 +98,7 @@ class _HLSParticipantSheetState extends State<HLSParticipantSheet> {
         ? PopupMenuButton(
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-            color: surfaceColor,
+            color: themeSurfaceColor,
             onSelected: (int value) async {
               switch (value) {
                 case 1:
@@ -146,7 +146,7 @@ class _HLSParticipantSheetState extends State<HLSParticipantSheet> {
             },
             icon: SvgPicture.asset(
               "assets/icons/more.svg",
-              color: defaultColor,
+              color: themeDefaultColor,
               fit: BoxFit.scaleDown,
             ),
             itemBuilder: (context) => [
@@ -154,13 +154,13 @@ class _HLSParticipantSheetState extends State<HLSParticipantSheet> {
                     PopupMenuItem(
                       child: Row(children: [
                         SvgPicture.asset("assets/icons/role_change.svg",
-                            width: 15, color: defaultColor),
+                            width: 15, color: themeDefaultColor),
                         SizedBox(
                           width: 12,
                         ),
                         HLSTitleText(
                           text: "Change Role",
-                          textColor: defaultColor,
+                          textColor: themeDefaultColor,
                           fontSize: 14,
                           lineHeight: 20,
                           letterSpacing: 0.25,
@@ -173,7 +173,7 @@ class _HLSParticipantSheetState extends State<HLSParticipantSheet> {
                       child: Row(children: [
                         SvgPicture.asset(
                           "assets/icons/cam_state_on.svg",
-                          color: defaultColor,
+                          color: themeDefaultColor,
                           width: 15,
                         ),
                         SizedBox(
@@ -181,7 +181,7 @@ class _HLSParticipantSheetState extends State<HLSParticipantSheet> {
                         ),
                         HLSTitleText(
                           text: "Switch Video",
-                          textColor: defaultColor,
+                          textColor: themeDefaultColor,
                           fontSize: 14,
                           lineHeight: 20,
                           letterSpacing: 0.25,
@@ -194,7 +194,7 @@ class _HLSParticipantSheetState extends State<HLSParticipantSheet> {
                       child: Row(children: [
                         SvgPicture.asset(
                           "assets/icons/mic_state_on.svg",
-                          color: defaultColor,
+                          color: themeDefaultColor,
                           width: 15,
                         ),
                         SizedBox(
@@ -202,7 +202,7 @@ class _HLSParticipantSheetState extends State<HLSParticipantSheet> {
                         ),
                         HLSTitleText(
                           text: "Switch Audio",
-                          textColor: defaultColor,
+                          textColor: themeDefaultColor,
                           fontSize: 14,
                           lineHeight: 20,
                           letterSpacing: 0.25,
@@ -214,13 +214,13 @@ class _HLSParticipantSheetState extends State<HLSParticipantSheet> {
                     PopupMenuItem(
                       child: Row(children: [
                         SvgPicture.asset("assets/icons/peer_remove.svg",
-                            width: 15, color: defaultColor),
+                            width: 15, color: themeDefaultColor),
                         SizedBox(
                           width: 12,
                         ),
                         HLSTitleText(
                           text: "Remove Peer",
-                          textColor: defaultColor,
+                          textColor: themeDefaultColor,
                           fontSize: 14,
                           lineHeight: 20,
                           letterSpacing: 0.25,
@@ -247,7 +247,7 @@ class _HLSParticipantSheetState extends State<HLSParticipantSheet> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
           ),
-          color: bottomSheetColor,
+          color: themeBottomSheetColor,
           child: Padding(
             padding: const EdgeInsets.only(top: 20.0, left: 15, right: 15),
             child: Column(
@@ -260,7 +260,7 @@ class _HLSParticipantSheetState extends State<HLSParticipantSheet> {
                       textAlign: TextAlign.center,
                       style: GoogleFonts.inter(
                           fontSize: 16,
-                          color: defaultColor,
+                          color: themeDefaultColor,
                           letterSpacing: 0.15,
                           fontWeight: FontWeight.w600),
                     ),
@@ -310,7 +310,7 @@ class _HLSParticipantSheetState extends State<HLSParticipantSheet> {
                               icon: Icon(Icons.keyboard_arrow_down),
                               dropdownDecoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(8),
-                                  color: surfaceColor),
+                                  color: themeSurfaceColor),
                               offset: Offset(-10, -10),
                               iconEnabledColor: iconColor,
                               selectedItemHighlightColor: hmsdefaultColor,
@@ -332,7 +332,7 @@ class _HLSParticipantSheetState extends State<HLSParticipantSheet> {
                                       SvgPicture.asset(
                                         "assets/icons/participants.svg",
                                         fit: BoxFit.scaleDown,
-                                        color: defaultColor,
+                                        color: themeDefaultColor,
                                         height: 16,
                                       ),
                                       SizedBox(
@@ -358,7 +358,7 @@ class _HLSParticipantSheetState extends State<HLSParticipantSheet> {
                                       SvgPicture.asset(
                                         "assets/icons/hand_outline.svg",
                                         fit: BoxFit.scaleDown,
-                                        color: defaultColor,
+                                        color: themeDefaultColor,
                                         height: 16,
                                       ),
                                       SizedBox(
@@ -460,7 +460,7 @@ class _HLSParticipantSheetState extends State<HLSParticipantSheet> {
                                                   peer.item1),
                                               style: GoogleFonts.inter(
                                                   fontSize: 12,
-                                                  color: defaultColor,
+                                                  color: themeDefaultColor,
                                                   fontWeight: FontWeight.w600)),
                                         ),
                                         title: Text(
@@ -471,7 +471,7 @@ class _HLSParticipantSheetState extends State<HLSParticipantSheet> {
                                           maxLines: 1,
                                           style: GoogleFonts.inter(
                                               fontSize: 16,
-                                              color: defaultColor,
+                                              color: themeDefaultColor,
                                               letterSpacing: 0.15,
                                               fontWeight: FontWeight.w600),
                                         ),
@@ -479,7 +479,7 @@ class _HLSParticipantSheetState extends State<HLSParticipantSheet> {
                                           peer.item3,
                                           style: GoogleFonts.inter(
                                               fontSize: 12,
-                                              color: subHeadingColor,
+                                              color: themeSubHeadingColor,
                                               letterSpacing: 0.40,
                                               fontWeight: FontWeight.w400),
                                         ),

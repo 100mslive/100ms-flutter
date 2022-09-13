@@ -74,7 +74,7 @@ class _QRCodeScreenState extends State<QRCodeScreen> {
                       icon: Icon(
                         Icons.arrow_back_ios_new,
                         size: 16,
-                        color: defaultColor,
+                        color: themeDefaultColor,
                       ),
                       onPressed: () {
                         Navigator.pop(context);
@@ -89,7 +89,7 @@ class _QRCodeScreenState extends State<QRCodeScreen> {
                         children: [
                           HLSTitleText(
                             text: "Scan QR Code",
-                            textColor: subHeadingColor,
+                            textColor: themeSubHeadingColor,
                             letterSpacing: 0.15,
                           ),
                         ],
@@ -121,7 +121,8 @@ class _QRCodeScreenState extends State<QRCodeScreen> {
                   width: width * 0.95,
                   child: ElevatedButton(
                     style: ButtonStyle(
-                        shadowColor: MaterialStateProperty.all(surfaceColor),
+                        shadowColor:
+                            MaterialStateProperty.all(themeSurfaceColor),
                         backgroundColor:
                             MaterialStateProperty.all(Colors.transparent),
                         side: MaterialStateProperty.all(

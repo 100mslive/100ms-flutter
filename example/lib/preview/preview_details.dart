@@ -33,7 +33,7 @@ class _PreviewDetailsState extends State<PreviewDetails> {
     nameController.text = await Utilities.getStringData(key: "name");
     nameController.selection = TextSelection.fromPosition(
         TextPosition(offset: nameController.text.length));
-    toShowPreview = await Utilities.getBoolData(key: 'show-preview');
+    toShowPreview = await Utilities.getBoolData(key: 'show-preview') ?? false;
     setState(() {});
   }
 
@@ -43,7 +43,8 @@ class _PreviewDetailsState extends State<PreviewDetails> {
     } else {
       Utilities.saveStringData(key: "name", value: nameController.text.trim());
       res = await Utilities.getPermissions();
-      bool skipPreview = await Utilities.getBoolData(key: 'skip-preview');
+      bool skipPreview =
+          await Utilities.getBoolData(key: 'skip-preview') ?? false;
       if (res) {
         if (!skipPreview) {
           Navigator.of(context).pushReplacement(MaterialPageRoute(
@@ -55,8 +56,10 @@ class _PreviewDetailsState extends State<PreviewDetails> {
                         meetingLink: widget.meetingLink),
                   )));
         } else {
-          bool showStats = await Utilities.getBoolData(key: 'show-stats');
-          bool mirrorCamera = await Utilities.getBoolData(key: 'mirror-camera');
+          bool showStats =
+              await Utilities.getBoolData(key: 'show-stats') ?? false;
+          bool mirrorCamera =
+              await Utilities.getBoolData(key: 'mirror-camera') ?? false;
           HMSSDKInteractor _hmsSDKInteractor = HMSSDKInteractor();
           Navigator.of(context).pushReplacement(MaterialPageRoute(
               builder: (_) => ListenableProvider.value(
@@ -98,7 +101,7 @@ class _PreviewDetailsState extends State<PreviewDetails> {
             ),
             Text("Go live in five!",
                 style: GoogleFonts.inter(
-                    color: defaultColor,
+                    color: themeDefaultColor,
                     fontSize: 34,
                     fontWeight: FontWeight.w600)),
             SizedBox(
@@ -106,7 +109,7 @@ class _PreviewDetailsState extends State<PreviewDetails> {
             ),
             Text("Let's get started with your name",
                 style: GoogleFonts.inter(
-                    color: subHeadingColor,
+                    color: themeSubHeadingColor,
                     height: 1.5,
                     fontSize: 16,
                     fontWeight: FontWeight.w400)),
@@ -140,11 +143,11 @@ class _PreviewDetailsState extends State<PreviewDetails> {
                           ),
                     contentPadding:
                         EdgeInsets.symmetric(vertical: 14, horizontal: 16),
-                    fillColor: surfaceColor,
+                    fillColor: themeSurfaceColor,
                     filled: true,
                     hintText: 'Enter your name here',
                     hintStyle: GoogleFonts.inter(
-                        color: hintColor,
+                        color: themeHintColor,
                         height: 1.5,
                         fontSize: 16,
                         fontWeight: FontWeight.w400),
@@ -175,7 +178,7 @@ class _PreviewDetailsState extends State<PreviewDetails> {
                       Text('Get Started',
                           style: GoogleFonts.inter(
                               color: nameController.text.isEmpty
-                                  ? disabledTextColor
+                                  ? themeDisabledTextColor
                                   : enabledTextColor,
                               height: 1,
                               fontSize: 16,
@@ -186,7 +189,7 @@ class _PreviewDetailsState extends State<PreviewDetails> {
                       Icon(
                         Icons.arrow_forward,
                         color: nameController.text.isEmpty
-                            ? disabledTextColor
+                            ? themeDisabledTextColor
                             : enabledTextColor,
                         size: 16,
                       )

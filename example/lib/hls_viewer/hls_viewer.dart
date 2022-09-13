@@ -51,7 +51,7 @@ class _HLSPlayerState extends State<HLSPlayer> {
                   )
                 : HLSTitleText(
                     text: "Waiting for the HLS Streaming to start...",
-                    textColor: defaultColor,
+                    textColor: themeDefaultColor,
                   ),
           ));
         });

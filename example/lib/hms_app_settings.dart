@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:hmssdk_flutter_example/hls-streaming/util/hls_title_text.dart';
+import 'package:hmssdk_flutter_example/main.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class HMSAppSettings extends StatefulWidget {
@@ -26,9 +27,11 @@ class _HMSAppSettingsState extends State<HMSAppSettings> {
   }
 
   Future<void> getAppSettings() async {
-    skipPreview = await Utilities.getBoolData(key: 'skip-preview');
-    mirrorCamera = await Utilities.getBoolData(key: 'mirror-camera');
-    showStats = await Utilities.getBoolData(key: 'show-stats');
+    skipPreview = await Utilities.getBoolData(key: 'skip-preview') ?? false;
+    mirrorCamera = await Utilities.getBoolData(key: 'mirror-camera') ?? false;
+    showStats = await Utilities.getBoolData(key: 'show-stats') ?? false;
+    isDarkMode = await Utilities.getBoolData(key: 'dark-mode') ?? true;
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() {});
     });
@@ -36,7 +39,7 @@ class _HMSAppSettingsState extends State<HMSAppSettings> {
 
   Future<void> _launchUrl() async {
     final Uri _url = Uri.parse('https://discord.gg/YtUqvA6j');
-    if (!await launchUrl(_url)) {
+    if (!await launchUrl(_url, mode: LaunchMode.externalApplication)) {
       throw 'Could not launch $_url';
     }
   }
@@ -59,7 +62,7 @@ class _HMSAppSettingsState extends State<HMSAppSettings> {
                       "App Settings",
                       style: GoogleFonts.inter(
                           fontSize: 16,
-                          color: defaultColor,
+                          color: themeDefaultColor,
                           letterSpacing: 0.15,
                           fontWeight: FontWeight.w600),
                     ),
@@ -72,6 +75,7 @@ class _HMSAppSettingsState extends State<HMSAppSettings> {
                       icon: SvgPicture.asset(
                         "assets/icons/close_button.svg",
                         width: 40,
+                        // color: defaultColor,
                       ),
                       onPressed: () {
                         Navigator.pop(context);
@@ -91,44 +95,42 @@ class _HMSAppSettingsState extends State<HMSAppSettings> {
             Expanded(
               child: ListView(
                 children: [
-                  // ListTile(
-                  //   enabled: false,
-                  //   horizontalTitleGap: 2,
-                  //   onTap: () async {
-                  //     //   if (isDarkMode) {
-                  //     //   HMSExampleApp.of(context).changeTheme(ThemeMode.light);
-                  //     // } else {
-                  //     //   HMSExampleApp.of(context).changeTheme(ThemeMode.dark);
-                  //     // }
-                  //   },
-                  //   contentPadding: EdgeInsets.zero,
-                  //   leading: SvgPicture.asset(
-                  //     isDarkMode
-                  //         ? "assets/icons/light_mode.svg"
-                  //         : 'assets/icons/dark_mode.svg',
-                  //     fit: BoxFit.scaleDown,
-                  //   ),
-                  //   title: Text(
-                  //     "Dark Mode",
-                  //     semanticsLabel: "fl_dark_light_mode",
-                  //     style: GoogleFonts.inter(
-                  //         fontSize: 14,
-                  //         color: defaultColor,
-                  //         letterSpacing: 0.25,
-                  //         fontWeight: FontWeight.w600),
-                  //   ),
-                  //   trailing: CupertinoSwitch(
-                  //       value: isDarkMode,
-                  //       onChanged: ((value) => {
-
-                  //       isDarkMode = !isDarkMode,
-                  //       if(!isDarkMode)
-                  //       HMSExampleApp.of(context).changeTheme(ThemeMode.light)
-                  //       else
-                  //       HMSExampleApp.of(context).changeTheme(ThemeMode.dark),
-                  //       setState(() {})
-                  //         })),
-                  // ),
+                  ListTile(
+                    enabled: false,
+                    horizontalTitleGap: 2,
+                    contentPadding: EdgeInsets.zero,
+                    leading: SvgPicture.asset(
+                      isDarkMode
+                          ? "assets/icons/dark_mode.svg"
+                          : 'assets/icons/light_mode.svg',
+                      fit: BoxFit.scaleDown,
+                      color: themeDefaultColor,
+                    ),
+                    title: Text(
+                      "Dark Mode",
+                      semanticsLabel: "fl_dark_light_mode",
+                      style: GoogleFonts.inter(
+                          fontSize: 14,
+                          color: themeDefaultColor,
+                          letterSpacing: 0.25,
+                          fontWeight: FontWeight.w600),
+                    ),
+                    trailing: CupertinoSwitch(
+                        value: isDarkMode,
+                        activeColor: hmsdefaultColor,
+                        onChanged: ((value) => {
+                              Utilities.saveBoolData(
+                                  key: 'dark-mode', value: value),
+                              isDarkMode = !isDarkMode,
+                              if (!isDarkMode)
+                                HMSExampleApp.of(context)
+                                    .changeTheme(ThemeMode.light)
+                              else
+                                HMSExampleApp.of(context)
+                                    .changeTheme(ThemeMode.dark),
+                              setState(() {})
+                            })),
+                  ),
                   ListTile(
                     horizontalTitleGap: 2,
                     enabled: false,
@@ -136,13 +138,14 @@ class _HMSAppSettingsState extends State<HMSAppSettings> {
                     leading: SvgPicture.asset(
                       "assets/icons/preview_state_on.svg",
                       fit: BoxFit.scaleDown,
+                      color: themeDefaultColor,
                     ),
                     title: Text(
                       "Skip Preview",
                       semanticsLabel: "fl_preview_enable",
                       style: GoogleFonts.inter(
                           fontSize: 14,
-                          color: defaultColor,
+                          color: themeDefaultColor,
                           letterSpacing: 0.25,
                           fontWeight: FontWeight.w600),
                     ),
@@ -162,14 +165,14 @@ class _HMSAppSettingsState extends State<HMSAppSettings> {
                     contentPadding: EdgeInsets.zero,
                     leading: Icon(
                       Icons.cameraswitch_outlined,
-                      color: defaultColor,
+                      color: themeDefaultColor,
                     ),
                     title: Text(
                       "Mirror Camera",
                       semanticsLabel: "fl_mirror_camera_enable",
                       style: GoogleFonts.inter(
                           fontSize: 14,
-                          color: defaultColor,
+                          color: themeDefaultColor,
                           letterSpacing: 0.25,
                           fontWeight: FontWeight.w600),
                     ),
@@ -189,14 +192,14 @@ class _HMSAppSettingsState extends State<HMSAppSettings> {
                     contentPadding: EdgeInsets.zero,
                     leading: SvgPicture.asset(
                       'assets/icons/stats.svg',
-                      color: defaultColor,
+                      color: themeDefaultColor,
                     ),
                     title: Text(
                       "Enable Stats",
                       semanticsLabel: "fl_stats_enable",
                       style: GoogleFonts.inter(
                           fontSize: 14,
-                          color: defaultColor,
+                          color: themeDefaultColor,
                           letterSpacing: 0.25,
                           fontWeight: FontWeight.w600),
                     ),
@@ -217,14 +220,14 @@ class _HMSAppSettingsState extends State<HMSAppSettings> {
                     contentPadding: EdgeInsets.zero,
                     leading: SvgPicture.asset(
                       'assets/icons/bug.svg',
-                      color: defaultColor,
+                      color: themeDefaultColor,
                     ),
                     title: Text(
                       "Ask on Discord",
                       semanticsLabel: "fl_ask_feedback",
                       style: GoogleFonts.inter(
                           fontSize: 14,
-                          color: defaultColor,
+                          color: themeDefaultColor,
                           letterSpacing: 0.25,
                           fontWeight: FontWeight.w600),
                     ),
@@ -236,7 +239,8 @@ class _HMSAppSettingsState extends State<HMSAppSettings> {
               padding: const EdgeInsets.only(left: 8.0, right: 8, bottom: 15),
               child: Center(
                   child: HLSTitleText(
-                      text: "Made with ❤️ by 100ms", textColor: defaultColor)),
+                      text: "Made with ❤️ by 100ms",
+                      textColor: themeDefaultColor)),
             )
           ],
         ),

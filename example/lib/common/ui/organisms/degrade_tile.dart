@@ -34,7 +34,7 @@ class _DegradeTileState extends State<DegradeTile> {
                 height: widget.itemHeight + 110,
                 width: widget.itemWidth - 4,
                 decoration: BoxDecoration(
-                    color: bottomSheetColor,
+                    color: themeBottomSheetColor,
                     borderRadius: BorderRadius.all(Radius.circular(10))),
                 child: Stack(
                   children: [
