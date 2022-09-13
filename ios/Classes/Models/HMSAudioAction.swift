@@ -86,9 +86,6 @@ class HMSAudioAction{
               let trackID = arguments["track_id"] as? String,
               let track = HMSUtilities.getTrack(for: trackID, in: hmsSDK!.room!)
         else {
-            let error = HMSCommonAction.getError(message: "Invalid arguments passed in \(#function)",
-                                                 description: "Message is nil",
-                                                 params: ["function": #function, "arguments": arguments])
             result(HMSErrorExtension.toDictionary(error))
             return
         }
@@ -99,8 +96,6 @@ class HMSAudioAction{
             return
         }
         
-        let error = HMSCommonAction.getError(message: "Invalid arguments passed in \(#function)",
-                                             params: ["function": #function, "arguments": arguments])
         result(HMSErrorExtension.toDictionary(error))
     }
 }

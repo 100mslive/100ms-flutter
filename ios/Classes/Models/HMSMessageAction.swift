@@ -29,9 +29,6 @@ class HMSMessageAction {
         
         guard let message = arguments["message"] as? String
         else {
-            let error = HMSCommonAction.getError(message: "No message found in \(#function)",
-                                                 description: "Message is nil",
-                                                 params: ["function": #function, "arguments": arguments])
             result(HMSErrorExtension.toDictionary(error))
             return
         }
@@ -55,9 +52,6 @@ class HMSMessageAction {
               let peerID = arguments["peer_id"] as? String,
               let peer = HMSCommonAction.getPeer(by: peerID,hmsSDK: hmsSDK)
         else {
-            let error = HMSCommonAction.getError(message: "Invalid arguments passed in \(#function)",
-                                                 description: "Message is nil",
-                                                 params: ["function": #function, "arguments": arguments])
             result(HMSErrorExtension.toDictionary(error))
             return
         }
@@ -81,9 +75,6 @@ class HMSMessageAction {
               let rolesList = arguments["roles"] as? [String],
               let roles: [HMSRole] = (hmsSDK?.roles.filter { rolesList.contains($0.name) })
         else {
-            let error = HMSCommonAction.getError(message: "Invalid arguments passed in \(#function)",
-                                                 description: "Message is nil",
-                                                 params: ["function": #function, "arguments": arguments])
             result(HMSErrorExtension.toDictionary(error))
             return
         }

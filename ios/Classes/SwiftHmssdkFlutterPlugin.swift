@@ -368,7 +368,6 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         switch call.method {
         case "start_screen_share", "stop_screen_share":
             guard let preferredExtension = preferredExtension else {
-                let error = HMSCommonAction.getError(message: "Could not start Screen share, preferredExtension not passed in Build Method", params: ["function": #function])
                 result(HMSErrorExtension.toDictionary(error))
                 screenShareActionResult = nil
                 return
@@ -458,7 +457,6 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         let arguments = call.arguments as! [AnyHashable: Any]
         
         guard let config = getConfig(from: arguments) else {
-            let error = HMSCommonAction.getError(message: "Could not join room, invalid parameters passed", params: ["function": #function, "arguments": arguments])
             result(HMSErrorExtension.toDictionary(error))
             return
         }
@@ -488,7 +486,6 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         let arguments = call.arguments as! [AnyHashable: Any]
         
         guard let config = getConfig(from: arguments) else {
-            let error = HMSCommonAction.getError(message: "Could not join room, invalid parameters passed", params: ["function": #function, "arguments": arguments])
             result(HMSErrorExtension.toDictionary(error))
             return
         }
@@ -532,7 +529,6 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
               let roleString = arguments["role_name"] as? String,
               let role = HMSCommonAction.getRole(by: roleString,hmsSDK: hmsSDK)
         else {
-            let error = HMSCommonAction.getError(message: "Invalid parameters for change role", params: ["function": #function, "arguments": arguments])
             result(HMSErrorExtension.toDictionary(error))
             return
         }
@@ -583,7 +579,6 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         guard let peerID = arguments["peer_id"] as? String,
               let peer = HMSCommonAction.getPeer(by: peerID,hmsSDK: hmsSDK)
         else {
-            let error = HMSCommonAction.getError(message: "Peer not found", params: ["function": #function, "arguments": arguments])
             result(HMSErrorExtension.toDictionary(error))
             return
         }
@@ -605,9 +600,6 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         guard let trackID = arguments["track_id"] as? String,
               let track = HMSUtilities.getTrack(for: trackID, in: hmsSDK!.room!)
         else {
-            let error = HMSCommonAction.getError(message: "Could not find track to change track",
-                                                 description: "Could not find track from trackID",
-                                                 params: ["function": #function, "arguments": arguments])
             result(HMSErrorExtension.toDictionary(error))
             return
         }
@@ -628,8 +620,6 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         let arguments = call.arguments as! [AnyHashable: Any]
         
         guard let mute = arguments["mute"] as? Bool else {
-            let error = HMSCommonAction.getError(message: "Mute status to be set not found",
-                                                 params: ["function": #function, "arguments": arguments])
             result(HMSErrorExtension.toDictionary(error))
             return
         }
@@ -662,9 +652,6 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         let arguments = call.arguments as! [AnyHashable: Any]
         
         guard let metadata = arguments["metadata"] as? String else {
-            let error = HMSCommonAction.getError(message: "No metadata found in \(#function)",
-                                                 description: "Metadata is nil",
-                                                 params: ["function": #function, "arguments": arguments])
             result(HMSErrorExtension.toDictionary(error))
             return
         }
@@ -687,9 +674,6 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         let arguments = call.arguments as![AnyHashable: Any]
         
         guard let name = arguments["name"] as? String else {
-            let error = HMSCommonAction.getError(message: "No name found in \(#function)",
-                                                 description: "Name is nil",
-                                                 params: ["function": #function, "arguments": arguments])
             result(HMSErrorExtension.toDictionary(error))
             return
         }
