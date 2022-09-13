@@ -46,6 +46,7 @@ dependencies:
   file_picker:
   draggable_widget:
   badges:
+  url_launcher:
   
 dev_dependencies:
   flutter_test:
