@@ -63,7 +63,7 @@ class HMSVideoAction{
         guard let peer = hmsSDK?.localPeer,
               let videoTrack = peer.videoTrack as? HMSLocalVideoTrack
         else {
-            result(HMSErrorExtension.toDictionary(error))
+            result(HMSErrorExtension.getError("Local Peer not found"))
             return
         }
         

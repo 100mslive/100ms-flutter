@@ -29,7 +29,7 @@ class HMSMessageAction {
         
         guard let message = arguments["message"] as? String
         else {
-            result(HMSErrorExtension.toDictionary(error))
+            result(HMSErrorExtension.getError("No message found in \(#function)"))
             return
         }
         
@@ -52,7 +52,7 @@ class HMSMessageAction {
               let peerID = arguments["peer_id"] as? String,
               let peer = HMSCommonAction.getPeer(by: peerID,hmsSDK: hmsSDK)
         else {
-            result(HMSErrorExtension.toDictionary(error))
+            result(HMSErrorExtension.getError("Invalid arguments passed in \(#function)"))
             return
         }
         
@@ -75,7 +75,7 @@ class HMSMessageAction {
               let rolesList = arguments["roles"] as? [String],
               let roles: [HMSRole] = (hmsSDK?.roles.filter { rolesList.contains($0.name) })
         else {
-            result(HMSErrorExtension.toDictionary(error))
+            result(HMSErrorExtension.getError("Invalid arguments passed in \(#function)"))
             return
         }
         
