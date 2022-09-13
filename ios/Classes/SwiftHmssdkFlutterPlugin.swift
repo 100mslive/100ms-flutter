@@ -298,7 +298,6 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                             do {
                                 audioMixerSourceMap["screen_broadcast_audio_receiver_node"] = try hmsSDK!.screenBroadcastAudioReceiverNode()
                             }catch {
-                                let error = HMSCommonAction.getError(message: error.localizedDescription, params: ["function": #function])
                                 result(HMSErrorExtension.toDictionary(error))
                             }
                         }
@@ -445,7 +444,6 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                                     do {
                                         self.audioMixerSourceMap["screen_broadcast_audio_receiver_node"] = try sdk.screenBroadcastAudioReceiverNode()
                                     }catch {
-                                        let error = HMSCommonAction.getError(message: error.localizedDescription, params: ["function": #function])
                                         result(HMSErrorExtension.toDictionary(error))
                                     }
                                 }

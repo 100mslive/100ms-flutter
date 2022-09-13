@@ -14,7 +14,6 @@ class HMSAudioFilePlayerNodeExtension {
         do{
         try playerNode.play(fileUrl: URL(string:call["file_url"] as! String)!, loops: call["loops"] as? Bool ?? false, interrupts: call["interrupts"] as? Bool ?? false)
         }catch{
-            let error = HMSCommonAction.getError(message: error.localizedDescription, params: ["function": #function])
             result(HMSErrorExtension.toDictionary(error))
         }
     }
@@ -27,7 +26,6 @@ class HMSAudioFilePlayerNodeExtension {
         do{
         try playerNode.resume()
         }catch{
-            let error = HMSCommonAction.getError(message: error.localizedDescription, params: ["function": #function])
             result(HMSErrorExtension.toDictionary(error))
         }
     }
