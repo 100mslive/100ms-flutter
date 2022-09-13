@@ -41,7 +41,7 @@ class _RoleChangeDialogOrganismState extends State<TrackChangeDialogOrganism> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       insetPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       actionsPadding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
-      backgroundColor: bottomSheetColor,
+      backgroundColor: themeBottomSheetColor,
       content: Container(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -61,8 +61,9 @@ class _RoleChangeDialogOrganismState extends State<TrackChangeDialogOrganism> {
           children: [
             ElevatedButton(
               style: ButtonStyle(
-                  shadowColor: MaterialStateProperty.all(surfaceColor),
-                  backgroundColor: MaterialStateProperty.all(bottomSheetColor),
+                  shadowColor: MaterialStateProperty.all(themeSurfaceColor),
+                  backgroundColor:
+                      MaterialStateProperty.all(themeBottomSheetColor),
                   shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
                     side: BorderSide(width: 1, color: popupButtonBorderColor),
@@ -71,7 +72,8 @@ class _RoleChangeDialogOrganismState extends State<TrackChangeDialogOrganism> {
               child: Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 30.0, vertical: 12),
-                child: HLSTitleText(text: 'Reject', textColor: defaultColor),
+                child:
+                    HLSTitleText(text: 'Reject', textColor: themeDefaultColor),
               ),
               onPressed: () {
                 Navigator.pop(context);
@@ -79,7 +81,7 @@ class _RoleChangeDialogOrganismState extends State<TrackChangeDialogOrganism> {
             ),
             ElevatedButton(
               style: ButtonStyle(
-                  shadowColor: MaterialStateProperty.all(surfaceColor),
+                  shadowColor: MaterialStateProperty.all(themeSurfaceColor),
                   backgroundColor: MaterialStateProperty.all(errorColor),
                   shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
@@ -91,7 +93,7 @@ class _RoleChangeDialogOrganismState extends State<TrackChangeDialogOrganism> {
                     const EdgeInsets.symmetric(horizontal: 30.0, vertical: 12),
                 child: HLSTitleText(
                   text: 'Accept',
-                  textColor: defaultColor,
+                  textColor: themeDefaultColor,
                 ),
               ),
               onPressed: () {

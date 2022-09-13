@@ -60,16 +60,25 @@ class _HMSExampleAppState extends State<HMSExampleApp> {
       WidgetsBinding.instance.window.platformBrightness == Brightness.dark;
 
   ThemeData _darkTheme = ThemeData(
+      bottomSheetTheme: BottomSheetThemeData(
+          backgroundColor: themeBottomSheetColor, elevation: 5),
       brightness: Brightness.dark,
       primaryColor: Color.fromARGB(255, 13, 107, 184),
       backgroundColor: Colors.black,
       scaffoldBackgroundColor: Colors.black);
 
   ThemeData _lightTheme = ThemeData(
-    primaryColor: Color.fromARGB(255, 13, 107, 184),
+    bottomSheetTheme: BottomSheetThemeData(
+        backgroundColor: themeDefaultColor,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        elevation: 5),
+    primaryTextTheme: TextTheme(bodyText1: TextStyle(color: themeSurfaceColor)),
+    primaryColor: hmsdefaultColor,
     brightness: Brightness.light,
     scaffoldBackgroundColor: Colors.white,
-    backgroundColor: Colors.black,
+    backgroundColor: Colors.white,
     dividerColor: Colors.white54,
   );
 
@@ -79,6 +88,7 @@ class _HMSExampleAppState extends State<HMSExampleApp> {
     _initURIHandler();
     _incomingLinkHandler();
     initDynamicLinks();
+    setThemeMode();
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   }
 
@@ -153,6 +163,15 @@ class _HMSExampleAppState extends State<HMSExampleApp> {
     if (widget.initialLink != null) {
       _currentURI = widget.initialLink;
       setState(() {});
+    }
+  }
+
+  void setThemeMode() async {
+    _themeMode = await Utilities.getBoolData(key: "dark-mode") ?? true
+        ? ThemeMode.dark
+        : ThemeMode.light;
+    if (_themeMode == ThemeMode.light) {
+      changeTheme(_themeMode);
     }
   }
 
@@ -287,7 +306,7 @@ class _HomePageState extends State<HomePage> {
                       textAlign: TextAlign.center,
                       style: GoogleFonts.inter(
                           letterSpacing: 0.25,
-                          color: defaultColor,
+                          color: themeDefaultColor,
                           height: 1.17,
                           fontSize: 34,
                           fontWeight: FontWeight.w600)),
@@ -302,7 +321,7 @@ class _HomePageState extends State<HomePage> {
                       textAlign: TextAlign.center,
                       style: GoogleFonts.inter(
                           letterSpacing: 0.5,
-                          color: subHeadingColor,
+                          color: themeSubHeadingColor,
                           height: 1.5,
                           fontSize: 16,
                           fontWeight: FontWeight.w400)),
@@ -320,7 +339,7 @@ class _HomePageState extends State<HomePage> {
                       Text("Joining Link",
                           key: Key('joining_link_text'),
                           style: GoogleFonts.inter(
-                              color: defaultColor,
+                              color: themeDefaultColor,
                               height: 1.5,
                               fontSize: 14,
                               fontWeight: FontWeight.w400)),
@@ -344,11 +363,11 @@ class _HomePageState extends State<HomePage> {
                         focusColor: hmsdefaultColor,
                         contentPadding:
                             EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                        fillColor: surfaceColor,
+                        fillColor: themeSurfaceColor,
                         filled: true,
                         hintText: 'Paste the link here',
                         hintStyle: GoogleFonts.inter(
-                            color: hintColor,
+                            color: hmsHintColor,
                             height: 1.5,
                             fontSize: 16,
                             fontWeight: FontWeight.w400),
@@ -375,82 +394,82 @@ class _HomePageState extends State<HomePage> {
                 ),
                 SizedBox(
                   width: width * 0.95,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      color: hmsdefaultColor,
-                    ),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: ValueListenableBuilder<TextEditingValue>(
-                              valueListenable: meetingLinkController,
-                              builder: (context, value, child) {
-                                return ElevatedButton(
-                                  style: ButtonStyle(
-                                      shadowColor: MaterialStateProperty.all(
-                                          surfaceColor),
-                                      backgroundColor:
-                                          meetingLinkController.text.isEmpty
-                                              ? MaterialStateProperty.all(
-                                                  surfaceColor)
-                                              : MaterialStateProperty.all(
-                                                  hmsdefaultColor),
-                                      shape: MaterialStateProperty.all<
-                                              RoundedRectangleBorder>(
-                                          RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(8.0),
-                                      ))),
-                                  onPressed: () async {
-                                    joinMeeting();
-                                  },
-                                  child: Container(
-                                    padding:
-                                        const EdgeInsets.fromLTRB(8, 12, 8, 12),
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(8))),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        HLSTitleText(
-                                          key: Key('join_now'),
-                                          text: 'Join Now',
-                                          textColor:
-                                              meetingLinkController.text.isEmpty
-                                                  ? disabledTextColor
-                                                  : enabledTextColor,
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              }),
-                        ),
-                        GestureDetector(
-                          onTap: (() => showModalBottomSheet(
-                              isScrollControlled: true,
-                              backgroundColor: bottomSheetColor,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              context: context,
-                              builder: (ctx) => HMSAppSettings())),
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 8.0, right: 8),
-                            child: SvgPicture.asset(
-                              "assets/icons/more.svg",
-                              color: defaultColor,
-                              fit: BoxFit.scaleDown,
-                            ),
+                  child: ValueListenableBuilder<TextEditingValue>(
+                      valueListenable: meetingLinkController,
+                      builder: (context, value, child) {
+                        return Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            color: meetingLinkController.text.isEmpty
+                                ? themeSurfaceColor
+                                : hmsdefaultColor,
                           ),
-                        )
-                      ],
-                    ),
-                  ),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                  child: ElevatedButton(
+                                style: ButtonStyle(
+                                    shadowColor: MaterialStateProperty.all(
+                                        themeSurfaceColor),
+                                    backgroundColor:
+                                        meetingLinkController.text.isEmpty
+                                            ? MaterialStateProperty.all(
+                                                themeSurfaceColor)
+                                            : MaterialStateProperty.all(
+                                                hmsdefaultColor),
+                                    shape: MaterialStateProperty.all<
+                                            RoundedRectangleBorder>(
+                                        RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8.0),
+                                    ))),
+                                onPressed: () async {
+                                  joinMeeting();
+                                },
+                                child: Container(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(8, 12, 8, 12),
+                                  decoration: BoxDecoration(
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(8))),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      HLSTitleText(
+                                        key: Key('join_now'),
+                                        text: 'Join Now',
+                                        textColor:
+                                            meetingLinkController.text.isEmpty
+                                                ? themeDisabledTextColor
+                                                : enabledTextColor,
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              )),
+                              GestureDetector(
+                                onTap: (() => showModalBottomSheet(
+                                    isScrollControlled: true,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    context: context,
+                                    builder: (ctx) => HMSAppSettings())),
+                                child: Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 8.0, right: 8),
+                                  child: SvgPicture.asset(
+                                    "assets/icons/more.svg",
+                                    color: meetingLinkController.text.isEmpty
+                                                ? themeDisabledTextColor:hmsWhiteColor,
+                                    fit: BoxFit.scaleDown,
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        );
+                      }),
                 ),
                 SizedBox(
                   height: 20,

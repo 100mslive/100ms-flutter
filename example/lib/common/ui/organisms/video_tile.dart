@@ -177,7 +177,7 @@ class _VideoTileState extends State<VideoTile> {
                   width: widget.itemWidth - 5.0,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
-                    color: bottomSheetColor,
+                    color: themeBottomSheetColor,
                   ),
                   child: Semantics(
                     label:
@@ -206,7 +206,7 @@ class _VideoTileState extends State<VideoTile> {
                             left: 5,
                             child: Container(
                               decoration: BoxDecoration(
-                                  color: Color.fromRGBO(0, 0, 0, 0.9),
+                                  color: themeTileNameColor,
                                   borderRadius: BorderRadius.circular(8)),
                               child: Center(
                                 child: Padding(
@@ -272,7 +272,7 @@ class _VideoTileState extends State<VideoTile> {
                           key: Key(
                               "fl_${context.read<PeerTrackNode>().peer.name}_name"),
                           decoration: BoxDecoration(
-                              color: Color.fromRGBO(0, 0, 0, 0.9),
+                              color: themeTileNameColor,
                               borderRadius: BorderRadius.circular(8)),
                           child: Center(
                             child: Padding(

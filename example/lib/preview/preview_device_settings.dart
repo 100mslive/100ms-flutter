@@ -55,7 +55,7 @@ class _PreviewDeviceSettingsState extends State<PreviewDeviceSettings> {
                           icon: Icon(
                             Icons.arrow_back_ios_new,
                             size: 16,
-                            color: defaultColor,
+                            color: hmsWhiteColor,
                           ),
                           onPressed: () {
                             Navigator.pop(context);
@@ -68,7 +68,7 @@ class _PreviewDeviceSettingsState extends State<PreviewDeviceSettings> {
                           textAlign: TextAlign.center,
                           style: GoogleFonts.inter(
                               fontSize: 16,
-                              color: defaultColor,
+                              color: themeDefaultColor,
                               letterSpacing: 0.15,
                               fontWeight: FontWeight.w600),
                         ),
@@ -93,7 +93,7 @@ class _PreviewDeviceSettingsState extends State<PreviewDeviceSettings> {
                   ),
                   Text("Speakers",
                       style: GoogleFonts.inter(
-                          color: defaultColor,
+                          color: themeDefaultColor,
                           fontSize: 14,
                           fontWeight: FontWeight.w400,
                           letterSpacing: 0.25)),
@@ -103,7 +103,7 @@ class _PreviewDeviceSettingsState extends State<PreviewDeviceSettings> {
                   Container(
                     padding: EdgeInsets.only(left: 10, right: 5),
                     decoration: BoxDecoration(
-                      color: surfaceColor,
+                      color: themeSurfaceColor,
                       borderRadius: BorderRadius.circular(10.0),
                       border: Border.all(
                           color: borderColor,
@@ -121,7 +121,7 @@ class _PreviewDeviceSettingsState extends State<PreviewDeviceSettings> {
                       icon: Icon(Icons.keyboard_arrow_down),
                       dropdownDecoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(8),
-                          color: surfaceColor),
+                          color: themeSurfaceColor),
                       offset: Offset(-10, -10),
                       iconEnabledColor: iconColor,
                       onChanged: (dynamic newvalue) {
@@ -139,14 +139,16 @@ class _PreviewDeviceSettingsState extends State<PreviewDeviceSettings> {
                                   child: Row(
                                     children: [
                                       SvgPicture.asset(
-                                          "assets/icons/music_wave.svg"),
+                                        "assets/icons/music_wave.svg",
+                                        color: themeDefaultColor,
+                                      ),
                                       SizedBox(
                                         width: 10,
                                       ),
                                       Container(
                                         child: HLSSubtitleText(
                                           text: device.name,
-                                          textColor: defaultColor,
+                                          textColor: themeDefaultColor,
                                         ),
                                       ),
                                     ],
@@ -172,12 +174,13 @@ class _PreviewDeviceSettingsState extends State<PreviewDeviceSettings> {
                           ? "assets/icons/speaker_state_off.svg"
                           : "assets/icons/speaker_state_on.svg",
                       fit: BoxFit.scaleDown,
+                      color: themeDefaultColor,
                     ),
                     title: HLSSubtitleText(
                       text: (context.read<PreviewStore>().isRoomMute
                           ? "Unmute Room"
                           : "Mute Room"),
-                      textColor: defaultColor,
+                      textColor: themeDefaultColor,
                     ),
                   )
                 ],

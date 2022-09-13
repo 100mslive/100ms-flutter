@@ -14,7 +14,7 @@ class TitleBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => showModalBottomSheet(
-          backgroundColor: bottomSheetColor,
+          backgroundColor: themeBottomSheetColor,
           context: context,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),

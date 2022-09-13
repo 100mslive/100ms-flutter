@@ -31,7 +31,7 @@ class TileBorder extends StatelessWidget {
               border: Border.all(
                   color: (isHighestSpeaker != -1)
                       ? Utilities.getBackgroundColour(name)
-                      : bottomSheetColor,
+                      : themeBottomSheetColor,
                   width: (isHighestSpeaker != -1) ? 4.0 : 0.0),
               borderRadius: BorderRadius.all(Radius.circular(10)),
             ),

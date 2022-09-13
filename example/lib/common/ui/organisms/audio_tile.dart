@@ -137,7 +137,7 @@ class AudioTile extends StatelessWidget {
         width: itemWidth - 5.0,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
-          color: bottomSheetColor,
+          color: themeBottomSheetColor,
         ),
         child: Semantics(
           label: "${context.read<PeerTrackNode>().peer.name}_audio",

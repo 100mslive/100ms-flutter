@@ -38,7 +38,7 @@ class _ParticipantOrganismState extends State<ParticipantOrganism> {
     return Card(
       child: Container(
         padding: EdgeInsets.all(20.0),
-        color: surfaceColor,
+        color: themeSurfaceColor,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [

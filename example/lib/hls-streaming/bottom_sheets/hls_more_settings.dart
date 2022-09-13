@@ -38,7 +38,7 @@ class _HLSMoreSettingsState extends State<HLSMoreSettings> {
                       "More Options",
                       style: GoogleFonts.inter(
                           fontSize: 16,
-                          color: defaultColor,
+                          color: themeDefaultColor,
                           letterSpacing: 0.15,
                           fontWeight: FontWeight.w600),
                     ),
@@ -77,7 +77,7 @@ class _HLSMoreSettingsState extends State<HLSMoreSettings> {
                         Navigator.pop(context);
                         showModalBottomSheet(
                           isScrollControlled: true,
-                          backgroundColor: bottomSheetColor,
+                          backgroundColor: themeBottomSheetColor,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20),
                           ),
@@ -91,13 +91,14 @@ class _HLSMoreSettingsState extends State<HLSMoreSettings> {
                       leading: SvgPicture.asset(
                         "assets/icons/settings.svg",
                         fit: BoxFit.scaleDown,
+                        color: themeDefaultColor,
                       ),
                       title: Text(
                         "Device Settings",
                         semanticsLabel: "fl_device_settings",
                         style: GoogleFonts.inter(
                             fontSize: 14,
-                            color: defaultColor,
+                            color: themeDefaultColor,
                             letterSpacing: 0.25,
                             fontWeight: FontWeight.w600),
                       ),
@@ -107,7 +108,7 @@ class _HLSMoreSettingsState extends State<HLSMoreSettings> {
                     onTap: () async {
                       showModalBottomSheet(
                         isScrollControlled: true,
-                        backgroundColor: bottomSheetColor,
+                        backgroundColor: themeBottomSheetColor,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20),
                         ),
@@ -121,13 +122,14 @@ class _HLSMoreSettingsState extends State<HLSMoreSettings> {
                     leading: SvgPicture.asset(
                       "assets/icons/participants.svg",
                       fit: BoxFit.scaleDown,
+                      color: themeDefaultColor,
                     ),
                     title: Text(
                       "Meeting mode",
                       semanticsLabel: "fl_meeting_mode",
                       style: GoogleFonts.inter(
                           fontSize: 14,
-                          color: defaultColor,
+                          color: themeDefaultColor,
                           letterSpacing: 0.25,
                           fontWeight: FontWeight.w600),
                     ),
@@ -154,13 +156,14 @@ class _HLSMoreSettingsState extends State<HLSMoreSettings> {
                     leading: SvgPicture.asset(
                       "assets/icons/pencil.svg",
                       fit: BoxFit.scaleDown,
+                      color: themeDefaultColor,
                     ),
                     title: Text(
                       "Change Name",
                       semanticsLabel: "fl_change_name",
                       style: GoogleFonts.inter(
                           fontSize: 14,
-                          color: defaultColor,
+                          color: themeDefaultColor,
                           letterSpacing: 0.25,
                           fontWeight: FontWeight.w600),
                     ),
@@ -177,13 +180,14 @@ class _HLSMoreSettingsState extends State<HLSMoreSettings> {
                           ? "assets/icons/speaker_state_on.svg"
                           : "assets/icons/speaker_state_off.svg",
                       fit: BoxFit.scaleDown,
+                      color: themeDefaultColor,
                     ),
                     title: Text(
                       _meetingStore.isSpeakerOn ? "Mute Room" : "Unmute Room",
                       semanticsLabel: "fl_mute_room",
                       style: GoogleFonts.inter(
                           fontSize: 14,
-                          color: defaultColor,
+                          color: themeDefaultColor,
                           letterSpacing: 0.25,
                           fontWeight: FontWeight.w600),
                     ),
@@ -198,13 +202,14 @@ class _HLSMoreSettingsState extends State<HLSMoreSettings> {
                     leading: SvgPicture.asset(
                       "assets/icons/camera.svg",
                       fit: BoxFit.scaleDown,
+                      color: themeDefaultColor,
                     ),
                     title: Text(
                       "Switch Camera",
                       semanticsLabel: "fl_switch_camera",
                       style: GoogleFonts.inter(
                           fontSize: 14,
-                          color: defaultColor,
+                          color: themeDefaultColor,
                           letterSpacing: 0.25,
                           fontWeight: FontWeight.w600),
                     ),
@@ -219,13 +224,14 @@ class _HLSMoreSettingsState extends State<HLSMoreSettings> {
                     leading: SvgPicture.asset(
                       "assets/icons/brb.svg",
                       fit: BoxFit.scaleDown,
+                      color: themeDefaultColor,
                     ),
                     title: Text(
                       "BRB",
                       semanticsLabel: "fl_brb_list_tile",
                       style: GoogleFonts.inter(
                           fontSize: 14,
-                          color: defaultColor,
+                          color: themeDefaultColor,
                           letterSpacing: 0.25,
                           fontWeight: FontWeight.w600),
                     ),
@@ -240,13 +246,14 @@ class _HLSMoreSettingsState extends State<HLSMoreSettings> {
                       leading: SvgPicture.asset(
                         "assets/icons/stats.svg",
                         fit: BoxFit.scaleDown,
+                        color: themeDefaultColor,
                       ),
                       title: Text(
                         "${_meetingStore.isStatsVisible ? "Hide" : "Show"} Stats",
                         semanticsLabel: "fl_stats_list_tile",
                         style: GoogleFonts.inter(
                             fontSize: 14,
-                            color: defaultColor,
+                            color: themeDefaultColor,
                             letterSpacing: 0.25,
                             fontWeight: FontWeight.w600),
                       )),
@@ -263,13 +270,14 @@ class _HLSMoreSettingsState extends State<HLSMoreSettings> {
                         leading: SvgPicture.asset(
                           "assets/icons/mic_state_off.svg",
                           fit: BoxFit.scaleDown,
+                          color: themeDefaultColor,
                         ),
                         title: Text(
                           "Mute Role",
                           semanticsLabel: "fl_mute_role",
                           style: GoogleFonts.inter(
                               fontSize: 14,
-                              color: defaultColor,
+                              color: themeDefaultColor,
                               letterSpacing: 0.25,
                               fontWeight: FontWeight.w600),
                         )),
@@ -308,7 +316,7 @@ class _HLSMoreSettingsState extends State<HLSMoreSettings> {
                           fit: BoxFit.scaleDown,
                           color: _meetingStore.streamingType["rtmp"] == true
                               ? errorColor
-                              : defaultColor,
+                              : themeDefaultColor,
                         ),
                         title: Text(
                           _meetingStore.streamingType["rtmp"] == true
@@ -322,7 +330,7 @@ class _HLSMoreSettingsState extends State<HLSMoreSettings> {
                               fontSize: 14,
                               color: _meetingStore.streamingType["rtmp"] == true
                                   ? errorColor
-                                  : defaultColor,
+                                  : themeDefaultColor,
                               letterSpacing: 0.25,
                               fontWeight: FontWeight.w600),
                         )),
@@ -347,7 +355,7 @@ class _HLSMoreSettingsState extends State<HLSMoreSettings> {
                           fit: BoxFit.scaleDown,
                           color: _meetingStore.recordingType["browser"] == true
                               ? errorColor
-                              : defaultColor,
+                              : themeDefaultColor,
                         ),
                         title: Text(
                           _meetingStore.recordingType["browser"] == true
@@ -362,7 +370,7 @@ class _HLSMoreSettingsState extends State<HLSMoreSettings> {
                               color:
                                   _meetingStore.recordingType["browser"] == true
                                       ? errorColor
-                                      : defaultColor,
+                                      : themeDefaultColor,
                               letterSpacing: 0.25,
                               fontWeight: FontWeight.w600),
                         )),
@@ -378,7 +386,7 @@ class _HLSMoreSettingsState extends State<HLSMoreSettings> {
                           }
                           showModalBottomSheet(
                             isScrollControlled: true,
-                            backgroundColor: bottomSheetColor,
+                            backgroundColor: themeBottomSheetColor,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20),
                             ),
@@ -394,7 +402,7 @@ class _HLSMoreSettingsState extends State<HLSMoreSettings> {
                           fit: BoxFit.scaleDown,
                           color: _meetingStore.hasHlsStarted
                               ? errorColor
-                              : defaultColor,
+                              : themeDefaultColor,
                         ),
                         title: Text(
                           _meetingStore.hasHlsStarted
@@ -407,7 +415,7 @@ class _HLSMoreSettingsState extends State<HLSMoreSettings> {
                               fontSize: 14,
                               color: _meetingStore.hasHlsStarted
                                   ? errorColor
-                                  : defaultColor,
+                                  : themeDefaultColor,
                               letterSpacing: 0.25,
                               fontWeight: FontWeight.w600),
                         )),
@@ -438,7 +446,7 @@ class _HLSMoreSettingsState extends State<HLSMoreSettings> {
                         contentPadding: EdgeInsets.zero,
                         leading: Icon(
                           Icons.music_note,
-                          color: defaultColor,
+                          color: themeDefaultColor,
                         ),
                         title: Text(
                           _meetingStore.isAudioShareStarted
@@ -449,7 +457,7 @@ class _HLSMoreSettingsState extends State<HLSMoreSettings> {
                               : "fl_start_audio_share",
                           style: GoogleFonts.inter(
                               fontSize: 14,
-                              color: defaultColor,
+                              color: themeDefaultColor,
                               letterSpacing: 0.25,
                               fontWeight: FontWeight.w600),
                         )),
@@ -470,7 +478,7 @@ class _HLSMoreSettingsState extends State<HLSMoreSettings> {
                           "Audio Mixing Mode",
                           style: GoogleFonts.inter(
                               fontSize: 14,
-                              color: defaultColor,
+                              color: themeDefaultColor,
                               letterSpacing: 0.25,
                               fontWeight: FontWeight.w600),
                         )),
@@ -483,13 +491,14 @@ class _HLSMoreSettingsState extends State<HLSMoreSettings> {
                       leading: SvgPicture.asset(
                         "assets/icons/end_room.svg",
                         fit: BoxFit.scaleDown,
+                        color: themeDefaultColor,
                       ),
                       title: Text(
                         "End Room",
                         semanticsLabel: "fl_end_room",
                         style: GoogleFonts.inter(
                             fontSize: 14,
-                            color: defaultColor,
+                            color: themeDefaultColor,
                             letterSpacing: 0.25,
                             fontWeight: FontWeight.w600),
                       )),

@@ -84,7 +84,7 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
           color: Colors.white,
           fit: BoxFit.scaleDown,
         ),
-        color: bottomSheetColor,
+        color: themeBottomSheetColor,
         onSelected: (int value) async {
           switch (value) {
             case 1:
@@ -107,13 +107,13 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
               PopupMenuItem(
                 child: Row(children: [
                   SvgPicture.asset("assets/icons/leave_hls.svg",
-                      width: 17, color: defaultColor),
+                      width: 17, color: themeDefaultColor),
                   SizedBox(
                     width: 12,
                   ),
                   HLSTitleText(
                     text: "Leave Studio",
-                    textColor: defaultColor,
+                    textColor: themeDefaultColor,
                     fontSize: 14,
                     lineHeight: 20,
                     letterSpacing: 0.25,
@@ -436,7 +436,8 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                                             "fl_live_stream_running",
                                                         style: GoogleFonts.inter(
                                                             fontSize: 16,
-                                                            color: defaultColor,
+                                                            color:
+                                                                themeDefaultColor,
                                                             letterSpacing: 0.5,
                                                             fontWeight:
                                                                 FontWeight
@@ -454,7 +455,7 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                                           SvgPicture.asset(
                                                             "assets/icons/clock.svg",
                                                             color:
-                                                                subHeadingColor,
+                                                                themeSubHeadingColor,
                                                             fit: BoxFit
                                                                 .scaleDown,
                                                           ),
@@ -493,7 +494,7 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                                                 return HLSSubtitleText(
                                                                   text: "00:00",
                                                                   textColor:
-                                                                      subHeadingColor,
+                                                                      themeSubHeadingColor,
                                                                 );
                                                               }),
                                                         ],
@@ -507,7 +508,7 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                                           SvgPicture.asset(
                                                             "assets/icons/watching.svg",
                                                             color:
-                                                                subHeadingColor,
+                                                                themeSubHeadingColor,
                                                             fit: BoxFit
                                                                 .scaleDown,
                                                           ),
@@ -527,7 +528,7 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                                                     text: length
                                                                         .toString(),
                                                                     textColor:
-                                                                        subHeadingColor);
+                                                                        themeSubHeadingColor);
                                                               })
                                                         ],
                                                       )
@@ -554,12 +555,13 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                               width: 40,
                                               height: 40,
                                               disabledBorderColor: borderColor,
-                                              offColor: screenBackgroundColor,
-                                              onColor: hintColor,
+                                              offColor:
+                                                  themeScreenBackgroundColor,
+                                              onColor: themeHintColor,
                                               isActive: handRaised,
                                               child: SvgPicture.asset(
                                                 "assets/icons/hand_outline.svg",
-                                                color: defaultColor,
+                                                color: themeDefaultColor,
                                                 fit: BoxFit.scaleDown,
                                                 semanticsLabel:
                                                     "hand_raise_button",
@@ -573,7 +575,8 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                         onTap: () => {
                                           showModalBottomSheet(
                                             isScrollControlled: true,
-                                            backgroundColor: bottomSheetColor,
+                                            backgroundColor:
+                                                themeBottomSheetColor,
                                             shape: RoundedRectangleBorder(
                                               borderRadius:
                                                   BorderRadius.circular(20),
@@ -589,12 +592,12 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                         },
                                         width: 40,
                                         height: 40,
-                                        offColor: screenBackgroundColor,
-                                        onColor: screenBackgroundColor,
+                                        offColor: themeScreenBackgroundColor,
+                                        onColor: themeScreenBackgroundColor,
                                         isActive: true,
                                         child: SvgPicture.asset(
                                           "assets/icons/participants.svg",
-                                          color: defaultColor,
+                                          color: themeDefaultColor,
                                           fit: BoxFit.scaleDown,
                                           semanticsLabel: "participants_button",
                                         ),
@@ -615,7 +618,7 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                                 showModalBottomSheet(
                                                   isScrollControlled: true,
                                                   backgroundColor:
-                                                      bottomSheetColor,
+                                                      themeBottomSheetColor,
                                                   shape: RoundedRectangleBorder(
                                                     borderRadius:
                                                         BorderRadius.circular(
@@ -631,14 +634,16 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                               },
                                               width: 40,
                                               height: 40,
-                                              offColor: hintColor,
-                                              onColor: screenBackgroundColor,
+                                              offColor: themeHintColor,
+                                              onColor:
+                                                  themeScreenBackgroundColor,
                                               isActive: true,
                                               child: SvgPicture.asset(
                                                 isNewMessageReceived
                                                     ? "assets/icons/message_badge_on.svg"
                                                     : "assets/icons/message_badge_off.svg",
                                                 fit: BoxFit.scaleDown,
+                                                color: themeDefaultColor,
                                                 semanticsLabel: "chat_button",
                                               ),
                                             );
@@ -689,15 +694,17 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                                       height: 40,
                                                       disabledBorderColor:
                                                           borderColor,
-                                                      offColor: borderColor,
+                                                      offColor:
+                                                          themeHMSBorderColor,
                                                       onColor:
-                                                          screenBackgroundColor,
+                                                          themeHMSBorderColor,
                                                       isActive: isMicOn,
                                                       child: SvgPicture.asset(
                                                         isMicOn
                                                             ? "assets/icons/mic_state_on.svg"
                                                             : "assets/icons/mic_state_off.svg",
-                                                        color: defaultColor,
+                                                        color:
+                                                            themeDefaultColor,
                                                         fit: BoxFit.scaleDown,
                                                         semanticsLabel:
                                                             "audio_mute_button",
@@ -720,15 +727,17 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                                       height: 40,
                                                       disabledBorderColor:
                                                           borderColor,
-                                                      offColor: borderColor,
+                                                      offColor:
+                                                          themeHMSBorderColor,
                                                       onColor:
-                                                          screenBackgroundColor,
+                                                          themeScreenBackgroundColor,
                                                       isActive: isSpeakerOn,
                                                       child: SvgPicture.asset(
                                                           isSpeakerOn
                                                               ? "assets/icons/speaker_state_on.svg"
                                                               : "assets/icons/speaker_state_off.svg",
-                                                          color: defaultColor,
+                                                          color:
+                                                              themeDefaultColor,
                                                           fit: BoxFit.scaleDown,
                                                           semanticsLabel:
                                                               "speaker_mute_button"),
@@ -768,15 +777,17 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                                       height: 40,
                                                       disabledBorderColor:
                                                           borderColor,
-                                                      offColor: borderColor,
+                                                      offColor:
+                                                          themeHMSBorderColor,
                                                       onColor:
-                                                          screenBackgroundColor,
+                                                          themeScreenBackgroundColor,
                                                       isActive: data.item1,
                                                       child: SvgPicture.asset(
                                                           data.item1
                                                               ? "assets/icons/cam_state_on.svg"
                                                               : "assets/icons/cam_state_off.svg",
-                                                          color: defaultColor,
+                                                          color:
+                                                              themeDefaultColor,
                                                           fit: BoxFit.scaleDown,
                                                           semanticsLabel:
                                                               "video_mute_button"),
@@ -797,8 +808,9 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                                       disabledBorderColor:
                                                           borderColor,
                                                       offColor:
-                                                          screenBackgroundColor,
-                                                      onColor: borderColor,
+                                                          themeScreenBackgroundColor,
+                                                      onColor:
+                                                          themeHMSBorderColor,
                                                       isActive: isStatsVisible,
                                                       child: SvgPicture.asset(
                                                           "assets/icons/stats.svg",
@@ -846,7 +858,7 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                                           child: SvgPicture.asset(
                                                               "assets/icons/end.svg",
                                                               color:
-                                                                  defaultColor,
+                                                                  themeDefaultColor,
                                                               height: 36,
                                                               semanticsLabel:
                                                                   "hls_end_button"),
@@ -880,7 +892,7 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                                         child: CircleAvatar(
                                                             radius: 40,
                                                             backgroundColor:
-                                                                screenBackgroundColor,
+                                                                themeScreenBackgroundColor,
                                                             child:
                                                                 CircularProgressIndicator(
                                                               semanticsLabel:
@@ -919,7 +931,7 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                                           isScrollControlled:
                                                               true,
                                                           backgroundColor:
-                                                              bottomSheetColor,
+                                                              themeBottomSheetColor,
                                                           shape:
                                                               RoundedRectangleBorder(
                                                             borderRadius:
@@ -943,7 +955,8 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                                             hmsdefaultColor,
                                                         child: SvgPicture.asset(
                                                             "assets/icons/live.svg",
-                                                            color: defaultColor,
+                                                            color:
+                                                                themeDefaultColor,
                                                             fit: BoxFit
                                                                 .scaleDown,
                                                             semanticsLabel:
@@ -1002,12 +1015,13 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                                       disabledBorderColor:
                                                           borderColor,
                                                       offColor:
-                                                          screenBackgroundColor,
+                                                          themeScreenBackgroundColor,
                                                       onColor: borderColor,
                                                       isActive: data,
                                                       child: SvgPicture.asset(
                                                           "assets/icons/screen_share.svg",
-                                                          color: defaultColor,
+                                                          color:
+                                                              themeDefaultColor,
                                                           fit: BoxFit.scaleDown,
                                                           semanticsLabel:
                                                               "screen_share_button"),
@@ -1026,7 +1040,7 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                                       disabledBorderColor:
                                                           borderColor,
                                                       offColor:
-                                                          screenBackgroundColor,
+                                                          themeScreenBackgroundColor,
                                                       onColor: borderColor,
                                                       isActive: isBRB,
                                                       child: SvgPicture.asset(
@@ -1044,7 +1058,7 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                               showModalBottomSheet(
                                                 isScrollControlled: true,
                                                 backgroundColor:
-                                                    bottomSheetColor,
+                                                    themeBottomSheetColor,
                                                 shape: RoundedRectangleBorder(
                                                   borderRadius:
                                                       BorderRadius.circular(20),
@@ -1060,12 +1074,12 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                             },
                                             width: 40,
                                             height: 40,
-                                            offColor: hintColor,
-                                            onColor: screenBackgroundColor,
+                                            offColor: themeHintColor,
+                                            onColor: themeScreenBackgroundColor,
                                             isActive: true,
                                             child: SvgPicture.asset(
                                                 "assets/icons/more.svg",
-                                                color: defaultColor,
+                                                color: themeDefaultColor,
                                                 fit: BoxFit.scaleDown,
                                                 semanticsLabel: "more_button"),
                                           ),

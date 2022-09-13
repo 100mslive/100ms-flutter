@@ -30,7 +30,7 @@ class _PeerNameState extends State<PeerName> {
               overflow: TextOverflow.ellipsis,
               style: GoogleFonts.inter(
                   fontWeight: FontWeight.w400,
-                  color: defaultColor,
+                  color: themeDefaultColor,
                   fontSize: 14,
                   letterSpacing: 0.25,
                   height: 20 / 14),

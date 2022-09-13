@@ -30,11 +30,11 @@ class _StreamTimerState extends State<StreamTimer> {
           return HLSSubtitleText(
               text: format(DateTime.now().toUtc().difference(
                   widget.startedAt.add(DateTime.now().timeZoneOffset))),
-              textColor: subHeadingColor);
+              textColor: themeSubHeadingColor);
         return HLSSubtitleText(
             text: format(
                 DateTime.now().toUtc().difference(widget.startedAt.toUtc())),
-            textColor: subHeadingColor);
+            textColor: themeSubHeadingColor);
       },
     );
   }

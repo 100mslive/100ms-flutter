@@ -103,7 +103,8 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                 child: HLSTitleText(
                                                     text:
                                                         "Waiting for HLS to start...",
-                                                    textColor: defaultColor)),
+                                                    textColor:
+                                                        themeDefaultColor)),
                                           ],
                                         ),
                                       ),
@@ -171,7 +172,8 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                         "Live",
                                                         style: GoogleFonts.inter(
                                                             fontSize: 16,
-                                                            color: defaultColor,
+                                                            color:
+                                                                themeDefaultColor,
                                                             letterSpacing: 0.5,
                                                             fontWeight:
                                                                 FontWeight
@@ -189,7 +191,7 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                           SvgPicture.asset(
                                                             "assets/icons/clock.svg",
                                                             color:
-                                                                subHeadingColor,
+                                                                themeSubHeadingColor,
                                                             fit: BoxFit
                                                                 .scaleDown,
                                                           ),
@@ -228,7 +230,7 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                                 return HLSSubtitleText(
                                                                   text: "00:00",
                                                                   textColor:
-                                                                      subHeadingColor,
+                                                                      themeSubHeadingColor,
                                                                 );
                                                               }),
                                                         ],
@@ -242,7 +244,7 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                           SvgPicture.asset(
                                                             "assets/icons/watching.svg",
                                                             color:
-                                                                subHeadingColor,
+                                                                themeSubHeadingColor,
                                                             fit: BoxFit
                                                                 .scaleDown,
                                                           ),
@@ -262,7 +264,7 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                                     text: length
                                                                         .toString(),
                                                                     textColor:
-                                                                        subHeadingColor);
+                                                                        themeSubHeadingColor);
                                                               })
                                                         ],
                                                       )
@@ -289,12 +291,13 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                               width: 40,
                                               height: 40,
                                               disabledBorderColor: borderColor,
-                                              offColor: screenBackgroundColor,
-                                              onColor: hintColor,
+                                              offColor:
+                                                  themeScreenBackgroundColor,
+                                              onColor: themeHintColor,
                                               isActive: handRaised,
                                               child: SvgPicture.asset(
                                                 "assets/icons/hand_outline.svg",
-                                                color: defaultColor,
+                                                color: themeDefaultColor,
                                                 fit: BoxFit.scaleDown,
                                                 semanticsLabel:
                                                     "hand_raise_button",
@@ -317,7 +320,7 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                 showModalBottomSheet(
                                                   isScrollControlled: true,
                                                   backgroundColor:
-                                                      bottomSheetColor,
+                                                      themeBottomSheetColor,
                                                   shape: RoundedRectangleBorder(
                                                     borderRadius:
                                                         BorderRadius.circular(
@@ -333,8 +336,9 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                               },
                                               width: 40,
                                               height: 40,
-                                              offColor: hintColor,
-                                              onColor: screenBackgroundColor,
+                                              offColor: themeHintColor,
+                                              onColor:
+                                                  themeScreenBackgroundColor,
                                               isActive: true,
                                               child: SvgPicture.asset(
                                                 isNewMessageReceived
@@ -352,7 +356,8 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                         onTap: () => {
                                           showModalBottomSheet(
                                               isScrollControlled: true,
-                                              backgroundColor: bottomSheetColor,
+                                              backgroundColor:
+                                                  themeBottomSheetColor,
                                               shape: RoundedRectangleBorder(
                                                 borderRadius:
                                                     BorderRadius.circular(20),
@@ -367,12 +372,12 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                         },
                                         width: 40,
                                         height: 40,
-                                        offColor: hintColor,
-                                        onColor: screenBackgroundColor,
+                                        offColor: themeHintColor,
+                                        onColor: themeScreenBackgroundColor,
                                         isActive: true,
                                         child: SvgPicture.asset(
                                           "assets/icons/more.svg",
-                                          color: defaultColor,
+                                          color: themeDefaultColor,
                                           fit: BoxFit.scaleDown,
                                           semanticsLabel: "more_button",
                                         ),

@@ -154,10 +154,10 @@ class Utilities {
     prefs.setInt(key, value);
   }
 
-  static Future<bool> getBoolData({required String key}) async {
+  static Future<bool?> getBoolData({required String key}) async {
     final prefs = await SharedPreferences.getInstance();
 
-    return prefs.getBool(key) ?? false;
+    return prefs.getBool(key) ?? null;
   }
 
   static Future<bool> saveBoolData(

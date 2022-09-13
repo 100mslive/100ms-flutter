@@ -43,7 +43,7 @@ class _PreviewParticipantSheetState extends State<PreviewParticipantSheet> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
           ),
-          color: bottomSheetColor,
+          color: themeBottomSheetColor,
           child: Padding(
             padding: const EdgeInsets.only(top: 20.0, left: 15, right: 15),
             child: Column(
@@ -56,7 +56,7 @@ class _PreviewParticipantSheetState extends State<PreviewParticipantSheet> {
                       textAlign: TextAlign.center,
                       style: GoogleFonts.inter(
                           fontSize: 16,
-                          color: defaultColor,
+                          color: themeDefaultColor,
                           letterSpacing: 0.15,
                           fontWeight: FontWeight.w600),
                     ),
@@ -106,7 +106,7 @@ class _PreviewParticipantSheetState extends State<PreviewParticipantSheet> {
                               icon: Icon(Icons.keyboard_arrow_down),
                               dropdownDecoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(8),
-                                  color: surfaceColor),
+                                  color: themeSurfaceColor),
                               offset: Offset(-10, -10),
                               iconEnabledColor: iconColor,
                               selectedItemHighlightColor: hmsdefaultColor,
@@ -122,7 +122,7 @@ class _PreviewParticipantSheetState extends State<PreviewParticipantSheet> {
                                       SvgPicture.asset(
                                         "assets/icons/participants.svg",
                                         fit: BoxFit.scaleDown,
-                                        color: defaultColor,
+                                        color: themeDefaultColor,
                                         height: 16,
                                       ),
                                       SizedBox(
@@ -148,7 +148,7 @@ class _PreviewParticipantSheetState extends State<PreviewParticipantSheet> {
                                       SvgPicture.asset(
                                         "assets/icons/hand_outline.svg",
                                         fit: BoxFit.scaleDown,
-                                        color: defaultColor,
+                                        color: themeDefaultColor,
                                         height: 16,
                                       ),
                                       SizedBox(
@@ -234,7 +234,7 @@ class _PreviewParticipantSheetState extends State<PreviewParticipantSheet> {
                                             data.item1[index].name),
                                         style: GoogleFonts.inter(
                                             fontSize: 12,
-                                            color: defaultColor,
+                                            color: themeDefaultColor,
                                             fontWeight: FontWeight.w600)),
                                   ),
                                   title: Text(
@@ -242,7 +242,7 @@ class _PreviewParticipantSheetState extends State<PreviewParticipantSheet> {
                                     maxLines: 1,
                                     style: GoogleFonts.inter(
                                         fontSize: 16,
-                                        color: defaultColor,
+                                        color: themeDefaultColor,
                                         letterSpacing: 0.15,
                                         fontWeight: FontWeight.w600),
                                   ),
@@ -250,7 +250,7 @@ class _PreviewParticipantSheetState extends State<PreviewParticipantSheet> {
                                     data.item1[index].role.name,
                                     style: GoogleFonts.inter(
                                         fontSize: 12,
-                                        color: subHeadingColor,
+                                        color: themeSubHeadingColor,
                                         letterSpacing: 0.40,
                                         fontWeight: FontWeight.w400),
                                   ));

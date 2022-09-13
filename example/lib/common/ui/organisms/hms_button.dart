@@ -20,7 +20,7 @@ class HMSButton extends StatelessWidget {
         child: ElevatedButton(
           style: ButtonStyle(
               shadowColor: MaterialStateProperty.all(
-                  shadowColor == null ? surfaceColor : shadowColor),
+                  shadowColor == null ? themeSurfaceColor : shadowColor),
               backgroundColor: MaterialStateProperty.all(
                   buttonBackgroundColor == null
                       ? hmsdefaultColor

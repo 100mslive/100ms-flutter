@@ -51,7 +51,7 @@ Widget fullScreenView(
                           "You are sharing your screen",
                           textAlign: TextAlign.center,
                           style: GoogleFonts.inter(
-                              color: defaultColor,
+                              color: themeDefaultColor,
                               fontSize: 20,
                               letterSpacing: 0.15,
                               height: 24 / 20),
