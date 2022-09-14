@@ -39,6 +39,10 @@ abstract class HMSPreviewListener {
 
   ///whenever a new audio device is plugged in or audio output is changed we
   ///get the onAudioDeviceChanged update
+  ///This is only for android in case of iOS no callback will be received here
+  /// - Parameters:
+  ///   - currentAudioDevice: Current audio output route
+  ///   - availableAudioDevice: List of available audio output devices
   void onAudioDeviceChanged(
       {HMSAudioDevice? currentAudioDevice,
       List<HMSAudioDevice>? availableAudioDevice});
