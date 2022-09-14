@@ -11,9 +11,9 @@ import HMSSDK
 class HMSAudioFilePlayerNodeExtension {
     
     static func play(_ call: [AnyHashable: Any], _ playerNode:HMSAudioFilePlayerNode, _ result: @escaping FlutterResult){
-        do{
-        try playerNode.play(fileUrl: URL(string:call["file_url"] as! String)!, loops: call["loops"] as? Bool ?? false, interrupts: call["interrupts"] as? Bool ?? false)
-        }catch{
+        do {
+            try playerNode.play(fileUrl: URL(string:call["file_url"] as! String)!, loops: call["loops"] as? Bool ?? false, interrupts: call["interrupts"] as? Bool ?? false)
+        } catch {
             result(HMSErrorExtension.toDictionary(error))
         }
     }
@@ -23,9 +23,9 @@ class HMSAudioFilePlayerNodeExtension {
     }
     
     static func resume( _ playerNode:HMSAudioFilePlayerNode, _ result: @escaping FlutterResult){
-        do{
-        try playerNode.resume()
-        }catch{
+        do {
+            try playerNode.resume()
+        } catch {
             result(HMSErrorExtension.toDictionary(error))
         }
     }
@@ -55,5 +55,4 @@ class HMSAudioFilePlayerNodeExtension {
         dict["duration"] = playerNode.duration
         result(dict)
     }
-
 }

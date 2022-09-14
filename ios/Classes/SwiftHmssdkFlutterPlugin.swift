@@ -292,16 +292,15 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             if let playerNode = audioTrackSetting["audio_source"] as? [String] {
                 for node in playerNode {
                     if (audioMixerSourceMap[node] == nil) {
-                        if(node=="mic_node"){
+                        if (node=="mic_node") {
                             audioMixerSourceMap["mic_node"] = HMSMicNode()
-                        }else if(node == "screen_broadcast_audio_receiver_node"){
+                        } else if (node == "screen_broadcast_audio_receiver_node"){
                             do {
                                 audioMixerSourceMap["screen_broadcast_audio_receiver_node"] = try hmsSDK!.screenBroadcastAudioReceiverNode()
-                            }catch {
+                            } catch {
                                 result(HMSErrorExtension.toDictionary(error))
                             }
-                        }
-                        else{
+                        } else {
                             audioMixerSourceMap[node] = HMSAudioFilePlayerNode()
                         }
                     }
@@ -437,16 +436,15 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                     if let playerNode = audioTrackSetting["audio_source"] as? [String] {
                         for node in playerNode {
                             if (self.audioMixerSourceMap[node] == nil) {
-                                if(node=="mic_node"){
+                                if (node=="mic_node") {
                                     self.audioMixerSourceMap["mic_node"] = HMSMicNode()
-                                }else if(node == "screen_broadcast_audio_receiver_node"){
+                                } else if (node == "screen_broadcast_audio_receiver_node") {
                                     do {
                                         self.audioMixerSourceMap["screen_broadcast_audio_receiver_node"] = try sdk.screenBroadcastAudioReceiverNode()
-                                    }catch {
+                                    } catch {
                                         result(HMSErrorExtension.toDictionary(error))
                                     }
-                                }
-                                else{
+                                } else{
                                     self.audioMixerSourceMap[node] = HMSAudioFilePlayerNode()
                                 }
                             }
