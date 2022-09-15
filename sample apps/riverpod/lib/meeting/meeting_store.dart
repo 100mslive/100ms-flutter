@@ -56,14 +56,14 @@ class MeetingStore extends ChangeNotifier
     HMSConfig config = HMSConfig(authToken: token[0]!, userName: user);
 
     _hmsSDKInteractor.addUpdateListener(this);
-    WidgetsBinding.instance!.addObserver(this);
+    WidgetsBinding.instance.addObserver(this);
     _hmsSDKInteractor.join(config: config);
     return true;
   }
 
   void leave() async {
     _hmsSDKInteractor.removeStatsListener(this);
-    WidgetsBinding.instance!.removeObserver(this);
+    WidgetsBinding.instance.removeObserver(this);
     _hmsSDKInteractor.leave(hmsActionResultListener: this);
   }
 
