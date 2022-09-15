@@ -264,10 +264,10 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                 );
                               }
                               return Selector<MeetingStore,
-                                      Tuple2<MeetingMode, int>>(
+                                      Tuple2<MeetingMode,HMSPeer?>>(
                                   selector: (_, meetingStore) => Tuple2(
                                         meetingStore.meetingMode,
-                                        meetingStore.peerTracks.length,
+                                        meetingStore.localPeer
                                       ),
                                   builder: (_, modeData, __) {
                                     Size size = Size(
@@ -287,9 +287,9 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                         bottom:
                                             widget.isStreamingLink ? 108 : 68,
                                         child: Container(
-                                            child: (modeData.item1 ==
-                                                        MeetingMode.Video &&
-                                                    modeData.item2 == 2)
+                                            child: ((modeData.item1 ==
+                                                        MeetingMode.Video) &&
+                                                    (data.item3 == 2) && modeData.item2 !=null)
                                                 ? OneToOneMode(
                                                     bottomMargin:
                                                         widget.isStreamingLink

@@ -173,7 +173,7 @@ class MeetingStore extends ChangeNotifier
     _hmsSDKInteractor.removeStatsListener(this);
     WidgetsBinding.instance.removeObserver(this);
     hmsException = null;
-    if (localPeer?.role.name.contains("hls-") ?? false) {
+    if ((localPeer?.role.name.contains("hls-") ?? false) && hasHlsStarted) {
       hlsVideoController!.dispose();
       hlsVideoController = null;
     }
