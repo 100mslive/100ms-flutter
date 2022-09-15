@@ -33,7 +33,7 @@ class _MeetingState extends State<Meeting> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance!.addObserver(this);
+    WidgetsBinding.instance.addObserver(this);
     _meetingStore = MeetingStore();
     initMeeting();
   }
