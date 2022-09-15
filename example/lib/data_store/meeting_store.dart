@@ -148,6 +148,8 @@ class MeetingStore extends ChangeNotifier
 
   double audioPlayerVolume = 1.0;
 
+  bool retryHLS = true;
+
   Future<bool> join(String user, String roomUrl) async {
     List<String?>? token =
         await RoomService().getToken(user: user, room: roomUrl);
@@ -171,6 +173,10 @@ class MeetingStore extends ChangeNotifier
     _hmsSDKInteractor.removeStatsListener(this);
     WidgetsBinding.instance.removeObserver(this);
     hmsException = null;
+    if (localPeer?.role.name.contains("hls-") ?? false) {
+      hlsVideoController!.dispose();
+      hlsVideoController = null;
+    }
     _hmsSDKInteractor.leave(hmsActionResultListener: this);
     _hmsSDKInteractor.destroy();
   }
@@ -367,6 +373,7 @@ class MeetingStore extends ChangeNotifier
         singleFilePerLayer: singleFile, videoOnDemand: videoOnDemand);
     _hmsSDKInteractor.startHLSStreaming(this,
         hmshlsRecordingConfig: hmshlsRecordingConfig!);
+    retryHLS = true;
   }
 
   void stopHLSStreaming() {
@@ -378,9 +385,9 @@ class MeetingStore extends ChangeNotifier
         true, HMSTrackKind.kHMSTrackKindAudio, "regular", roles, this);
   }
 
-  void setSettings() {
-    isMirror = _hmsSDKInteractor.mirrorCamera;
-    isStatsVisible = _hmsSDKInteractor.showStats;
+  void setSettings() async {
+    isMirror = await Utilities.getBoolData(key: 'mirror-camera') ?? false;
+    isStatsVisible = await Utilities.getBoolData(key: 'show-stats') ?? false;
     if (isStatsVisible) {
       _hmsSDKInteractor.addStatsListener(this);
     }
@@ -1052,6 +1059,9 @@ class MeetingStore extends ChangeNotifier
   void setMode(MeetingMode meetingMode) {
     switch (meetingMode) {
       case MeetingMode.Video:
+        if (isActiveSpeakerMode) {
+          isActiveSpeakerMode = false;
+        }
         break;
       case MeetingMode.Audio:
         setPlayBackAllowed(false);
@@ -1254,6 +1264,7 @@ class MeetingStore extends ChangeNotifier
               arguments["to_record"] == false) {
             Utilities.showToast("RTMP Started");
           }
+          notifyListeners();
         }
         break;
       case HMSActionResultListenerMethod.stopRtmpAndRecording:
@@ -1379,9 +1390,13 @@ class MeetingStore extends ChangeNotifier
       case HMSActionResultListenerMethod.sendDirectMessage:
         break;
       case HMSActionResultListenerMethod.hlsStreamingStarted:
-        _hmsSDKInteractor.startHLSStreaming(this,
-            meetingUrl: Constant.streamingUrl,
-            hmshlsRecordingConfig: hmshlsRecordingConfig!);
+        if (retryHLS) {
+          _hmsSDKInteractor.startHLSStreaming(this,
+              meetingUrl: Constant.streamingUrl,
+              hmshlsRecordingConfig: hmshlsRecordingConfig!);
+          retryHLS = false;
+        }
+
         break;
       case HMSActionResultListenerMethod.hlsStreamingStopped:
         break;
@@ -1403,6 +1418,7 @@ class MeetingStore extends ChangeNotifier
         // TODO: Handle this case.
         break;
     }
+    notifyListeners();
   }
 
   @override

@@ -440,12 +440,6 @@ class _PreviewPageState extends State<PreviewPage> {
                                             context
                                                 .read<PreviewStore>()
                                                 .removePreviewListener(),
-                                            _previewStore.hmsSDKInteractor!
-                                                .mirrorCamera = true,
-                                            _previewStore.hmsSDKInteractor!
-                                                .showStats = false,
-                                            _previewStore.hmsSDKInteractor
-                                                ?.skipPreview = false,
                                             Navigator.of(context)
                                                 .pushReplacement(
                                                     MaterialPageRoute(

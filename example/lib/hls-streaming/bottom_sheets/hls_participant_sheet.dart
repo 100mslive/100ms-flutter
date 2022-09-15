@@ -172,7 +172,9 @@ class _HLSParticipantSheetState extends State<HLSParticipantSheet> {
                     PopupMenuItem(
                       child: Row(children: [
                         SvgPicture.asset(
-                          "assets/icons/cam_state_on.svg",
+                          peerTrackNode.track?.isMute ?? false
+                              ? "assets/icons/cam_state_on.svg"
+                              : "assets/icons/cam_state_off.svg",
                           color: themeDefaultColor,
                           width: 15,
                         ),
@@ -180,7 +182,8 @@ class _HLSParticipantSheetState extends State<HLSParticipantSheet> {
                           width: 12,
                         ),
                         HLSTitleText(
-                          text: "Switch Video",
+                          text:
+                              "${peerTrackNode.track?.isMute ?? false ? "Unmute" : "Mute"} Video",
                           textColor: themeDefaultColor,
                           fontSize: 14,
                           lineHeight: 20,
@@ -193,7 +196,9 @@ class _HLSParticipantSheetState extends State<HLSParticipantSheet> {
                     PopupMenuItem(
                       child: Row(children: [
                         SvgPicture.asset(
-                          "assets/icons/mic_state_on.svg",
+                          peerTrackNode.audioTrack?.isMute ?? false
+                              ? "assets/icons/mic_state_on.svg"
+                              : "assets/icons/mic_state_off.svg",
                           color: themeDefaultColor,
                           width: 15,
                         ),
@@ -201,7 +206,7 @@ class _HLSParticipantSheetState extends State<HLSParticipantSheet> {
                           width: 12,
                         ),
                         HLSTitleText(
-                          text: "Switch Audio",
+                          text: "${peerTrackNode.audioTrack?.isMute??false?"Unmute":"Mute"} Audio",
                           textColor: themeDefaultColor,
                           fontSize: 14,
                           lineHeight: 20,

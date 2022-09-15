@@ -83,7 +83,44 @@ class _MeetingModeSheetState extends State<MeetingModeSheet> {
                     ListTile(
                       horizontalTitleGap: 2,
                       onTap: () async {
-                        _meetingStore.setActiveSpeakerMode();
+                        if (_meetingStore.meetingMode != MeetingMode.Video || _meetingStore.isActiveSpeakerMode) {
+                          if(_meetingStore.isVideoOn)
+                            _meetingStore.setPlayBackAllowed(true);
+                        }
+                        _meetingStore.setMode(MeetingMode.Video);
+                        Navigator.pop(context);
+                        Navigator.pop(context);
+                      },
+                      contentPadding: EdgeInsets.zero,
+                      leading: SvgPicture.asset(
+                        "assets/icons/role_change.svg",
+                        semanticsLabel: "fl_normal_mode",
+                        color:
+                            (_meetingStore.meetingMode == MeetingMode.Video &&
+                                    !_meetingStore.isActiveSpeakerMode)
+                                ? errorColor
+                                : themeDefaultColor,
+                        fit: BoxFit.scaleDown,
+                      ),
+                      title: Text(
+                        "Normal Mode",
+                        style: GoogleFonts.inter(
+                            fontSize: 14,
+                            color: (_meetingStore.meetingMode ==
+                                        MeetingMode.Video &&
+                                    !_meetingStore.isActiveSpeakerMode)
+                                ? errorColor
+                                : themeDefaultColor,
+                            letterSpacing: 0.25,
+                            fontWeight: FontWeight.w600),
+                      ),
+                    ),
+                    ListTile(
+                      horizontalTitleGap: 2,
+                      onTap: () async {
+                        if (!_meetingStore.isActiveSpeakerMode) {
+                          _meetingStore.setActiveSpeakerMode();
+                        }
                         Navigator.pop(context);
                         Navigator.pop(context);
                       },
@@ -91,16 +128,18 @@ class _MeetingModeSheetState extends State<MeetingModeSheet> {
                       leading: SvgPicture.asset(
                         "assets/icons/participants.svg",
                         semanticsLabel: "fl_active_speaker_mode",
-                        color: themeDefaultColor,
+                        color: _meetingStore.isActiveSpeakerMode
+                            ? errorColor
+                            : themeDefaultColor,
                         fit: BoxFit.scaleDown,
                       ),
                       title: Text(
-                        _meetingStore.isActiveSpeakerMode
-                            ? "Normal Mode"
-                            : "Active Speaker Mode",
+                        "Active Speaker Mode",
                         style: GoogleFonts.inter(
                             fontSize: 14,
-                            color: themeDefaultColor,
+                            color: _meetingStore.isActiveSpeakerMode
+                                ? errorColor
+                                : themeDefaultColor,
                             letterSpacing: 0.25,
                             fontWeight: FontWeight.w600),
                       ),
@@ -110,29 +149,28 @@ class _MeetingModeSheetState extends State<MeetingModeSheet> {
                       onTap: () async {
                         if (_meetingStore.meetingMode != MeetingMode.Audio) {
                           _meetingStore.setMode(MeetingMode.Audio);
-                        } else {
-                          _meetingStore.setPlayBackAllowed(true);
-                          _meetingStore.setMode(MeetingMode.Video);
                         }
                         Navigator.pop(context);
                         Navigator.pop(context);
                       },
                       contentPadding: EdgeInsets.zero,
                       leading: SvgPicture.asset(
-                        _meetingStore.meetingMode == MeetingMode.Audio
-                            ? 'assets/icons/cam_state_on.svg'
-                            : 'assets/icons/mic_state_on.svg',
+                        'assets/icons/mic_state_on.svg',
+                        color: _meetingStore.meetingMode == MeetingMode.Audio
+                            ? errorColor
+                            : themeDefaultColor,
                         semanticsLabel: "fl_audio_video_view",
                         fit: BoxFit.scaleDown,
                       ),
                       title: Text(
-                        _meetingStore.meetingMode == MeetingMode.Audio
-                            ? "Video View"
-                            : "Audio View",
+                        "Audio View",
                         semanticsLabel: "fl_audio_video_mode",
                         style: GoogleFonts.inter(
                             fontSize: 14,
-                            color: themeDefaultColor,
+                            color:
+                                _meetingStore.meetingMode == MeetingMode.Audio
+                                    ? errorColor
+                                    : themeDefaultColor,
                             letterSpacing: 0.25,
                             fontWeight: FontWeight.w600),
                       ),
@@ -142,8 +180,6 @@ class _MeetingModeSheetState extends State<MeetingModeSheet> {
                       onTap: () async {
                         if (_meetingStore.meetingMode != MeetingMode.Hero) {
                           _meetingStore.setMode(MeetingMode.Hero);
-                        } else {
-                          _meetingStore.setMode(MeetingMode.Video);
                         }
                         Navigator.pop(context);
                         Navigator.pop(context);
@@ -173,8 +209,6 @@ class _MeetingModeSheetState extends State<MeetingModeSheet> {
                       onTap: () async {
                         if (_meetingStore.meetingMode != MeetingMode.Single) {
                           _meetingStore.setMode(MeetingMode.Single);
-                        } else {
-                          _meetingStore.setMode(MeetingMode.Video);
                         }
                         Navigator.pop(context);
                         Navigator.pop(context);

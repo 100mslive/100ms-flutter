@@ -95,42 +95,42 @@ class _HMSAppSettingsState extends State<HMSAppSettings> {
             Expanded(
               child: ListView(
                 children: [
-                  ListTile(
-                    enabled: false,
-                    horizontalTitleGap: 2,
-                    contentPadding: EdgeInsets.zero,
-                    leading: SvgPicture.asset(
-                      isDarkMode
-                          ? "assets/icons/dark_mode.svg"
-                          : 'assets/icons/light_mode.svg',
-                      fit: BoxFit.scaleDown,
-                      color: themeDefaultColor,
-                    ),
-                    title: Text(
-                      "Dark Mode",
-                      semanticsLabel: "fl_dark_light_mode",
-                      style: GoogleFonts.inter(
-                          fontSize: 14,
-                          color: themeDefaultColor,
-                          letterSpacing: 0.25,
-                          fontWeight: FontWeight.w600),
-                    ),
-                    trailing: CupertinoSwitch(
-                        value: isDarkMode,
-                        activeColor: hmsdefaultColor,
-                        onChanged: ((value) => {
-                              Utilities.saveBoolData(
-                                  key: 'dark-mode', value: value),
-                              isDarkMode = !isDarkMode,
-                              if (!isDarkMode)
-                                HMSExampleApp.of(context)
-                                    .changeTheme(ThemeMode.light)
-                              else
-                                HMSExampleApp.of(context)
-                                    .changeTheme(ThemeMode.dark),
-                              setState(() {})
-                            })),
-                  ),
+                  // ListTile(
+                  //   enabled: false,
+                  //   horizontalTitleGap: 2,
+                  //   contentPadding: EdgeInsets.zero,
+                  //   leading: SvgPicture.asset(
+                  //     isDarkMode
+                  //         ? "assets/icons/dark_mode.svg"
+                  //         : 'assets/icons/light_mode.svg',
+                  //     fit: BoxFit.scaleDown,
+                  //     color: themeDefaultColor,
+                  //   ),
+                  //   title: Text(
+                  //     "Dark Mode",
+                  //     semanticsLabel: "fl_dark_light_mode",
+                  //     style: GoogleFonts.inter(
+                  //         fontSize: 14,
+                  //         color: themeDefaultColor,
+                  //         letterSpacing: 0.25,
+                  //         fontWeight: FontWeight.w600),
+                  //   ),
+                  //   trailing: CupertinoSwitch(
+                  //       value: isDarkMode,
+                  //       activeColor: hmsdefaultColor,
+                  //       onChanged: ((value) => {
+                  //             Utilities.saveBoolData(
+                  //                 key: 'dark-mode', value: value),
+                  //             isDarkMode = !isDarkMode,
+                  //             if (!isDarkMode)
+                  //               HMSExampleApp.of(context)
+                  //                   .changeTheme(ThemeMode.light)
+                  //             else
+                  //               HMSExampleApp.of(context)
+                  //                   .changeTheme(ThemeMode.dark),
+                  //             setState(() {})
+                  //           })),
+                  // ),
                   ListTile(
                     horizontalTitleGap: 2,
                     enabled: false,
