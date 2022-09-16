@@ -24,8 +24,8 @@ class HMSSDK {
 
   /// The build function should be called after creating an instance of the [HMSSDK].
   /// Await the result & if true then create [HMSConfig] object to join or preview a room.
-  Future<bool> build() async {
-    return await HmsSdkManager()
+  Future<void> build() async {
+    await HmsSdkManager()
         .createHMSSdk(hmsTrackSetting, appGroup, preferredExtension);
   }
 
