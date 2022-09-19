@@ -13,21 +13,21 @@ class HMSErrorExtension {
     static func toDictionary(_ error: HMSError) -> [String: Any] {
 
         var dict = [String: Any]()
-        dict["id"] = error.id
-        dict["message"] = error.message
+//        dict["id"] = error.id
+//        dict["message"] = error.message
         dict["code"] = getValueOfHMSErrorCode(errorCode: error.code)
 
-        if let info = error.info {
-            dict["info"] = info
-        }
+//        if let info = error.info {
+//            dict["info"] = info
+//        }
 
-        if let action = error.action {
-            dict["action"] = action
-        }
+//        if let action = error.action {
+//            dict["action"] = action
+//        }
 
-        if let params = error.params {
-            dict["params"] = params
-        }
+//        if let params = error.params {
+//            dict["params"] = params
+//        }
 
         dict["description"] = error.localizedDescription
 

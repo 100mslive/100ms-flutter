@@ -532,6 +532,7 @@ class MeetingStore extends ChangeNotifier
       if (track.kind == HMSTrackKind.kHMSTrackKindVideo &&
           track.source == "REGULAR") {
         this.isVideoOn = !track.isMute;
+        _hmsSDKInteractor.enablePIPMode(track as HMSVideoTrack);
       }
       notifyListeners();
     }

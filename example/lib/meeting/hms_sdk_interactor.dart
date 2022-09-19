@@ -325,4 +325,8 @@ class HMSSDKInteractor {
   void destroy() {
     hmsSDK.destroy();
   }
+
+  void enablePIPMode(HMSVideoTrack track) {
+    hmsSDK.enablePIPMode(track);
+  }
 }

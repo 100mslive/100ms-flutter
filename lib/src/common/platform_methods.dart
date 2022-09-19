@@ -148,6 +148,7 @@ enum PlatformMethod {
   audioShareDuration,
   getTrackSettings,
   setTrackSettings,
+  enablePIPmode,
   destroy
 }
 
@@ -345,6 +346,8 @@ extension PlatformMethodValues on PlatformMethod {
         return "set_track_settings";
       case PlatformMethod.destroy:
         return "destroy";
+      case PlatformMethod.enablePIPmode:
+        return "enable_pip_mode";
       default:
         return 'unknown';
     }
@@ -547,6 +550,8 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.setTrackSettings;
       case "destroy":
         return PlatformMethod.destroy;
+      case "enable_pip_mode":
+        return PlatformMethod.enablePIPmode;
       default:
         return PlatformMethod.unknown;
     }
