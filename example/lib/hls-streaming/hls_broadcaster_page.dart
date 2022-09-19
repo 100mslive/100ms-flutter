@@ -32,16 +32,12 @@ class HLSBroadcasterPage extends StatefulWidget {
   final bool isAudioOn;
   final bool isStreamingLink;
   final bool isRoomMute;
-  final bool showStats;
-  final bool mirrorCamera;
   const HLSBroadcasterPage(
       {Key? key,
       required this.meetingLink,
       required this.isAudioOn,
       this.isStreamingLink = false,
-      this.isRoomMute = true,
-      this.showStats = false,
-      this.mirrorCamera = true})
+      this.isRoomMute = true})
       : super(key: key);
 
   @override
@@ -53,7 +49,6 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
   void initState() {
     super.initState();
     checkAudioState();
-    setSettings();
   }
 
   void checkAudioState() async {
@@ -62,14 +57,6 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
     if (widget.isRoomMute) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         context.read<MeetingStore>().toggleSpeaker();
-      });
-    }
-  }
-
-  void setSettings() {
-    if (widget.showStats) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        context.read<MeetingStore>().changeStatsVisible();
       });
     }
   }
@@ -92,6 +79,7 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
               break;
             case 2:
               await UtilityComponents.onEndStream(
+                  leaveRoom: true,
                   context: context,
                   title: 'End Session',
                   content:
@@ -184,7 +172,7 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                     });
                   } else {
                     Utilities.showToast(
-                        "Error : ${data.item2!.code} ${data.item2!.description} ${data.item2!.message}",
+                        "Error : ${data.item2!.code?.errorCode??""} ${data.item2!.description} ${data.item2!.message}",
                         time: 5);
                   }
                   context.read<MeetingStore>().hmsException = null;
@@ -276,10 +264,10 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                 );
                               }
                               return Selector<MeetingStore,
-                                      Tuple2<MeetingMode, int>>(
+                                      Tuple2<MeetingMode,HMSPeer?>>(
                                   selector: (_, meetingStore) => Tuple2(
                                         meetingStore.meetingMode,
-                                        meetingStore.peerTracks.length,
+                                        meetingStore.localPeer
                                       ),
                                   builder: (_, modeData, __) {
                                     Size size = Size(
@@ -299,9 +287,9 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                         bottom:
                                             widget.isStreamingLink ? 108 : 68,
                                         child: Container(
-                                            child: (modeData.item1 ==
-                                                        MeetingMode.Video &&
-                                                    modeData.item2 == 2)
+                                            child: ((modeData.item1 ==
+                                                        MeetingMode.Video) &&
+                                                    (data.item3 == 2) && modeData.item2 !=null)
                                                 ? OneToOneMode(
                                                     bottomMargin:
                                                         widget.isStreamingLink
@@ -697,7 +685,7 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                                       offColor:
                                                           themeHMSBorderColor,
                                                       onColor:
-                                                          themeHMSBorderColor,
+                                                          themeScreenBackgroundColor,
                                                       isActive: isMicOn,
                                                       child: SvgPicture.asset(
                                                         isMicOn

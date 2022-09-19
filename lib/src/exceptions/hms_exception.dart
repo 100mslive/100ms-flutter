@@ -41,7 +41,7 @@ class HMSException {
         message: map['message'] ?? '',
         action: map['action'] ?? '',
         description: map['info'] ?? map['description'] ?? '',
-        params: map['params'] ?? '',
+        params: map['params'] ?? {},
         isTerminal: map['isTerminal'] ?? false,
         canRetry: map['canRetry'] ?? true);
   }

@@ -10,9 +10,7 @@ import 'package:provider/provider.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 class QRCodeScreen extends StatefulWidget {
-  final MeetingFlow meetingFlow;
-
-  QRCodeScreen({required this.meetingFlow});
+  QRCodeScreen();
 
   @override
   State<QRCodeScreen> createState() => _QRCodeScreenState();
@@ -25,30 +23,20 @@ class _QRCodeScreenState extends State<QRCodeScreen> {
   void _onQRViewCreated(QRViewController controller) {
     this.controller = controller;
     controller.scannedDataStream.listen((scanData) async {
-      controller.pauseCamera();
       if (scanData.code != null) {
         MeetingFlow flow = Utilities.deriveFlow(scanData.code!);
         if (flow == MeetingFlow.meeting || flow == MeetingFlow.hlsStreaming) {
           Utilities.setRTMPUrl(scanData.code!);
           FocusManager.instance.primaryFocus?.unfocus();
           Navigator.of(context).pushReplacement(MaterialPageRoute(
-              builder: (_) => ListenableProvider.value(
-                    value: PreviewStore(),
-                    child: PreviewDetails(
+              builder: (_) => PreviewDetails(
                       meetingLink: scanData.code!.trim(),
                       meetingFlow: flow,
                     ),
-                  )));
+                  ));
         } else {
-          bool res = await UtilityComponents.showErrorDialog(
-              context: context,
-              errorMessage: "Please scan a valid meeting URL",
-              errorTitle: "Invalid Meeting Url",
-              actionMessage: "OK",
-              action: () {
-                Navigator.pop(context, true);
-              });
-          if (res) controller.resumeCamera();
+          Utilities.showToast("Invalid meeting url");
+          controller.resumeCamera();
         }
       }
     });

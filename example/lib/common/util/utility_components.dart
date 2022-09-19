@@ -918,7 +918,8 @@ class UtilityComponents {
       required String title,
       required String content,
       required String actionText,
-      required String ignoreText}) {
+      required String ignoreText,
+      bool leaveRoom = false}) {
     MeetingStore _meetingStore = context.read<MeetingStore>();
     return showDialog(
       context: context,
@@ -1004,7 +1005,9 @@ class UtilityComponents {
                       ))),
                   onPressed: () => {
                     _meetingStore.stopHLSStreaming(),
+                    if(leaveRoom){
                     _meetingStore.leave(),
+                    },
                     Navigator.pop(context)
                   },
                   child: Padding(
