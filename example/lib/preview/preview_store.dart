@@ -93,16 +93,16 @@ class PreviewStore extends ChangeNotifier
 
   Future<String> startPreview(
       {required String user, required String meetingLink}) async {
-    List<String?>? token =
-        await RoomService().getToken(user: user, room: meetingLink);
+    // List<String?>? token =
+    //     await RoomService().getToken(user: user, room: meetingLink);
 
-    if (token == null) return "Connection Error";
-    if (token[0] == null) return "Token Error";
-    FirebaseCrashlytics.instance.setUserIdentifier(token[0]!);
+    // if (token == null) return "Connection Error";
+    // if (token[0] == null) return "Token Error";
+    // FirebaseCrashlytics.instance.setUserIdentifier(token[0]!);
     HMSConfig config = HMSConfig(
-        authToken: token[0]!,
+        authToken: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhY2Nlc3Nfa2V5IjoiNjJmYTNkZjhjMTY2NDAwNjU2OTczZGE1Iiwicm9vbV9pZCI6IjYzMjlkY2I0NjdjYzcxMjhmYjk2MjhhNyIsInVzZXJfaWQiOiIzNTQyNjEyMS00NzdkLTRjNGItYmJmYi1hNjQ2ZGZmNjEyYWMiLCJyb2xlIjoiaG9zdCIsImp0aSI6IjU5NjY4YTAwLWU3Y2ItNDA0ZC04ZmIxLWM2N2Y1ZjFkMGFjMyIsInR5cGUiOiJhcHAiLCJ2ZXJzaW9uIjoyLCJleHAiOjE2NjM4NDI3ODJ9.GdSUuEu7DgfUcqpTofRBKteLCjESiHxIxUpRNVVMJ1s",
         userName: user,
-        endPoint: token[1] == "true" ? "" : "https://qa-init.100ms.live/init",
+        // endPoint: token[1] == "true" ? "" : "https://qa-init.100ms.live/init",
         captureNetworkQualityInPreview: true);
     hmsSDKInteractor!.addPreviewListener(this);
     hmsSDKInteractor!.preview(config: config);
