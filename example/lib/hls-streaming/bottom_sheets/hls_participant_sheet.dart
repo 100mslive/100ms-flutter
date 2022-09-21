@@ -206,7 +206,8 @@ class _HLSParticipantSheetState extends State<HLSParticipantSheet> {
                           width: 12,
                         ),
                         HLSTitleText(
-                          text: "${peerTrackNode.audioTrack?.isMute??false?"Unmute":"Mute"} Audio",
+                          text:
+                              "${peerTrackNode.audioTrack?.isMute ?? false ? "Unmute" : "Mute"} Audio",
                           textColor: themeDefaultColor,
                           fontSize: 14,
                           lineHeight: 20,

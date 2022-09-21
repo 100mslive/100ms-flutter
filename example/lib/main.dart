@@ -461,7 +461,8 @@ class _HomePageState extends State<HomePage> {
                                   child: SvgPicture.asset(
                                     "assets/icons/more.svg",
                                     color: meetingLinkController.text.isEmpty
-                                                ? themeDisabledTextColor:hmsWhiteColor,
+                                        ? themeDisabledTextColor
+                                        : hmsWhiteColor,
                                     fit: BoxFit.scaleDown,
                                   ),
                                 ),
@@ -498,11 +499,8 @@ class _HomePageState extends State<HomePage> {
                     onPressed: () async {
                       bool res = await Utilities.getCameraPermissions();
                       if (res) {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (_) => QRCodeScreen(
-                                    )));
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (_) => QRCodeScreen()));
                       }
                     },
                     child: Container(

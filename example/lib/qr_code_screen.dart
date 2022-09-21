@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
-import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
 import 'package:hmssdk_flutter_example/hls-streaming/util/hls_title_text.dart';
 import 'package:hmssdk_flutter_example/preview/preview_details.dart';
-import 'package:hmssdk_flutter_example/preview/preview_store.dart';
-import 'package:provider/provider.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 class QRCodeScreen extends StatefulWidget {
@@ -29,11 +26,11 @@ class _QRCodeScreenState extends State<QRCodeScreen> {
           Utilities.setRTMPUrl(scanData.code!);
           FocusManager.instance.primaryFocus?.unfocus();
           Navigator.of(context).pushReplacement(MaterialPageRoute(
-              builder: (_) => PreviewDetails(
-                      meetingLink: scanData.code!.trim(),
-                      meetingFlow: flow,
-                    ),
-                  ));
+            builder: (_) => PreviewDetails(
+              meetingLink: scanData.code!.trim(),
+              meetingFlow: flow,
+            ),
+          ));
         } else {
           Utilities.showToast("Invalid meeting url");
           controller.resumeCamera();

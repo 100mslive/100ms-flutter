@@ -83,8 +83,9 @@ class _MeetingModeSheetState extends State<MeetingModeSheet> {
                     ListTile(
                       horizontalTitleGap: 2,
                       onTap: () async {
-                        if (_meetingStore.meetingMode != MeetingMode.Video || _meetingStore.isActiveSpeakerMode) {
-                          if(_meetingStore.isVideoOn)
+                        if (_meetingStore.meetingMode != MeetingMode.Video ||
+                            _meetingStore.isActiveSpeakerMode) {
+                          if (_meetingStore.isVideoOn)
                             _meetingStore.setPlayBackAllowed(true);
                         }
                         _meetingStore.setMode(MeetingMode.Video);

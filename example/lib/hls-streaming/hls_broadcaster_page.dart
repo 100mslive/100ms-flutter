@@ -172,7 +172,7 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                     });
                   } else {
                     Utilities.showToast(
-                        "Error : ${data.item2!.code?.errorCode??""} ${data.item2!.description} ${data.item2!.message}",
+                        "Error : ${data.item2!.code?.errorCode ?? ""} ${data.item2!.description} ${data.item2!.message}",
                         time: 5);
                   }
                   context.read<MeetingStore>().hmsException = null;
@@ -264,11 +264,10 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                 );
                               }
                               return Selector<MeetingStore,
-                                      Tuple2<MeetingMode,HMSPeer?>>(
+                                      Tuple2<MeetingMode, HMSPeer?>>(
                                   selector: (_, meetingStore) => Tuple2(
-                                        meetingStore.meetingMode,
-                                        meetingStore.localPeer
-                                      ),
+                                      meetingStore.meetingMode,
+                                      meetingStore.localPeer),
                                   builder: (_, modeData, __) {
                                     Size size = Size(
                                         MediaQuery.of(context).size.width,
@@ -289,7 +288,8 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                         child: Container(
                                             child: ((modeData.item1 ==
                                                         MeetingMode.Video) &&
-                                                    (data.item3 == 2) && modeData.item2 !=null)
+                                                    (data.item3 == 2) &&
+                                                    modeData.item2 != null)
                                                 ? OneToOneMode(
                                                     bottomMargin:
                                                         widget.isStreamingLink
