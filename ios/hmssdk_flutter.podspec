@@ -12,8 +12,8 @@ Pod::Spec.new do |s|
   s.source           = { :git => 'https://github.com/100mslive/100ms-flutter.git' }
   s.source_files = 'Classes/**/*'
   s.dependency 'Flutter'
-  s.dependency 'HMSSDK', '0.4.1'
-  s.dependency 'HMSBroadcastExtensionSDK', '0.0.2'
+  s.dependency 'HMSSDK', '0.4.2'
+  s.dependency 'HMSBroadcastExtensionSDK', '0.0.3'
   s.platform = :ios, '12.0'
   s.ios.deployment_target  = '12.0'
   # Flutter.framework does not contain a i386 slice.
