@@ -17,6 +17,6 @@ class HmsSdkManager {
       "hms_track_setting": hmsTrackSetting?.toMap(),
       "app_group": appGroup,
       "preferred_extension": preferredExtension
-    }); 
+    });
   }
 }

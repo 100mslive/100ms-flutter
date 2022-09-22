@@ -177,13 +177,13 @@ PODS:
     - GoogleUtilities/Logger
   - GoogleUtilities/UserDefaults (7.8.0):
     - GoogleUtilities/Logger
-  - HMSBroadcastExtensionSDK (0.0.2)
-  - HMSSDK (0.4.1):
+  - HMSBroadcastExtensionSDK (0.0.3)
+  - HMSSDK (0.4.2):
     - HMSWebRTC (= 1.0.4898)
   - hmssdk_flutter (0.7.6):
     - Flutter
-    - HMSBroadcastExtensionSDK (= 0.0.2)
-    - HMSSDK (= 0.4.1)
+    - HMSBroadcastExtensionSDK (= 0.0.3)
+    - HMSSDK (= 0.4.2)
   - HMSWebRTC (1.0.4898)
   - MTBBarcodeScanner (5.0.11)
   - nanopb (2.30909.0):
@@ -201,9 +201,9 @@ PODS:
   - qr_code_scanner (0.2.0):
     - Flutter
     - MTBBarcodeScanner
-  - SDWebImage (5.13.2):
-    - SDWebImage/Core (= 5.13.2)
-  - SDWebImage/Core (5.13.2)
+  - SDWebImage (5.13.3):
+    - SDWebImage/Core (= 5.13.3)
+  - SDWebImage/Core (5.13.3)
   - shared_preferences_ios (0.0.1):
     - Flutter
   - SwiftyGif (5.4.3)
@@ -329,9 +329,9 @@ SPEC CHECKSUMS:
   GoogleAppMeasurement: 6ee231473fbd75c11221dfce489894334024eead
   GoogleDataTransport: 1c8145da7117bd68bbbed00cf304edb6a24de00f
   GoogleUtilities: 1d20a6ad97ef46f67bbdec158ce00563a671ebb7
-  HMSBroadcastExtensionSDK: 2c3bf5b25453459d60799697bab1e30576690ab5
-  HMSSDK: 3fdc3b3513a99c8e485d11112903342e1b0ad3a1
-  hmssdk_flutter: 2f81f96d77e165a24f36f48b1150befa5724d6d5
+  HMSBroadcastExtensionSDK: a69a4503a1708b5d51e2890d70f574b9cdfea760
+  HMSSDK: 50c5ea8edf7093472d4254c6f69ccce11323be10
+  hmssdk_flutter: d01a09c586d25afda61f5535963f06aa1d992af5
   HMSWebRTC: d3a9b2866e4a36a1d3834728a548a4a46309bb86
   MTBBarcodeScanner: f453b33c4b7dfe545d8c6484ed744d55671788cb
   nanopb: b552cce312b6c8484180ef47159bc0f65a1f0431
@@ -340,7 +340,7 @@ SPEC CHECKSUMS:
   permission_handler_apple: 44366e37eaf29454a1e7b1b7d736c2cceaeb17ce
   PromisesObjC: ab77feca74fa2823e7af4249b8326368e61014cb
   qr_code_scanner: bb67d64904c3b9658ada8c402e8b4d406d5d796e
-  SDWebImage: 72f86271a6f3139cc7e4a89220946489d4b9a866
+  SDWebImage: af5bbffef2cde09f148d826f9733dcde1a9414cd
   shared_preferences_ios: 548a61f8053b9b8a49ac19c1ffbc8b92c50d68ad
   SwiftyGif: 6c3eafd0ce693cad58bb63d2b2fb9bacb8552780
   Toast: 91b396c56ee72a5790816f40d3a94dd357abc196

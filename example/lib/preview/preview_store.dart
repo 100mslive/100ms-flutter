@@ -100,10 +100,12 @@ class PreviewStore extends ChangeNotifier
     if (token[0] == null) return "Token Error";
     FirebaseCrashlytics.instance.setUserIdentifier(token[0]!);
     HMSConfig config = HMSConfig(
-        authToken: token[0]!,
-        userName: user,
-        endPoint: token[1] == "true" ? "" : "https://qa-init.100ms.live/init",
-        captureNetworkQualityInPreview: true);
+      authToken: token[0]!,
+      userName: user,
+      captureNetworkQualityInPreview: true,
+      // endPoint is only required by 100ms Team. Client developers should not use `endPoint`
+      endPoint: token[1] == "true" ? "" : "https://qa-init.100ms.live/init",
+    );
     hmsSDKInteractor!.addPreviewListener(this);
     hmsSDKInteractor!.preview(config: config);
     meetingUrl = meetingLink;

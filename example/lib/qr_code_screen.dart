@@ -45,11 +45,11 @@ class _QRCodeScreenState extends State<QRCodeScreen> {
           Utilities.setRTMPUrl(scanData.code!);
           FocusManager.instance.primaryFocus?.unfocus();
           Navigator.of(context).pushReplacement(MaterialPageRoute(
-              builder: (_) => PreviewDetails(
-                      meetingLink: scanData.code!.trim(),
-                      meetingFlow: flow,
-                    ),
-                  ));
+            builder: (_) => PreviewDetails(
+              meetingLink: scanData.code!.trim(),
+              meetingFlow: flow,
+            ),
+          ));
         } else {
           Utilities.showToast("Invalid meeting url");
           controller!.resumeCamera();

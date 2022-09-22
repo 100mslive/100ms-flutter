@@ -505,7 +505,7 @@ class UtilityComponents {
                             children: [
                               ElevatedButton(
                                   style: ElevatedButton.styleFrom(
-                                      primary: Colors.red),
+                                      backgroundColor: Colors.red),
                                   onPressed: () {
                                     Navigator.pop(context);
                                   },
@@ -1005,9 +1005,10 @@ class UtilityComponents {
                       ))),
                   onPressed: () => {
                     _meetingStore.stopHLSStreaming(),
-                    if(leaveRoom){
-                    _meetingStore.leave(),
-                    },
+                    if (leaveRoom)
+                      {
+                        _meetingStore.leave(),
+                      },
                     Navigator.pop(context)
                   },
                   child: Padding(

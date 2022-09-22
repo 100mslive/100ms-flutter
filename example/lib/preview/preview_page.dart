@@ -90,29 +90,28 @@ class _PreviewPageState extends State<PreviewPage> {
           child: Selector<PreviewStore, HMSException?>(
               selector: (_, previewStore) => previewStore.error,
               builder: (_, error, __) {
-                if (error != null){
-                    if((error.code?.errorCode == 1003) ||
-                        (error.code?.errorCode == 2000) ||
-                        (error.code?.errorCode == 4005)) {
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    UtilityComponents.showErrorDialog(
-                        context: context,
-                        errorMessage:
-                            "Error Code: ${error.code?.errorCode ?? ""} ${error.description}",
-                        errorTitle: error.message ?? "",
-                        actionMessage: "Leave Room",
-                        action: () {
-                          Navigator.of(context)
-                              .popUntil((route) => route.isFirst);
-                        });
-                  });
-                }
-                else{
+                if (error != null) {
+                  if ((error.code?.errorCode == 1003) ||
+                      (error.code?.errorCode == 2000) ||
+                      (error.code?.errorCode == 4005)) {
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      UtilityComponents.showErrorDialog(
+                          context: context,
+                          errorMessage:
+                              "Error Code: ${error.code?.errorCode ?? ""} ${error.description}",
+                          errorTitle: error.message ?? "",
+                          actionMessage: "Leave Room",
+                          action: () {
+                            Navigator.of(context)
+                                .popUntil((route) => route.isFirst);
+                          });
+                    });
+                  } else {
                     Utilities.showToast(
-                        "Error : ${error.code?.errorCode??""} ${error.description} ${error.message}",
+                        "Error : ${error.code?.errorCode ?? ""} ${error.description} ${error.message}",
                         time: 5);
+                  }
                 }
-  }           
                 return Scaffold(
                   body: Stack(
                     children: [
