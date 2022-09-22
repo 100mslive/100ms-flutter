@@ -16,7 +16,10 @@ class PreviewDetails extends StatefulWidget {
   final String meetingLink;
   final MeetingFlow meetingFlow;
   final bool autofocusField;
-  PreviewDetails({required this.meetingLink, required this.meetingFlow,this.autofocusField = false});
+  PreviewDetails(
+      {required this.meetingLink,
+      required this.meetingFlow,
+      this.autofocusField = false});
   @override
   State<PreviewDetails> createState() => _PreviewDetailsState();
 }
