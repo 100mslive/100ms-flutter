@@ -362,8 +362,7 @@ class _HomePageState extends State<HomePage> {
                     },
                     decoration: InputDecoration(
                         focusColor: hmsdefaultColor,
-                        contentPadding:
-                            EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                        contentPadding: EdgeInsets.only(left: 16),
                         fillColor: themeSurfaceColor,
                         filled: true,
                         hintText: 'Paste the link here',
@@ -410,16 +409,14 @@ class _HomePageState extends State<HomePage> {
                               Expanded(
                                   child: ElevatedButton(
                                 style: ButtonStyle(
-                                    elevation: MaterialStateProperty
-                                        .resolveWith<double>((states) => 0),
                                     shadowColor: MaterialStateProperty.all(
                                         themeSurfaceColor),
-                                    backgroundColor: meetingLinkController
-                                            .text.isEmpty
-                                        ? MaterialStateProperty.all(
-                                            themeSurfaceColor)
-                                        : MaterialStateProperty.all(
-                                            hmsdefaultColor),
+                                    backgroundColor:
+                                        meetingLinkController.text.isEmpty
+                                            ? MaterialStateProperty.all(
+                                                themeSurfaceColor)
+                                            : MaterialStateProperty.all(
+                                                hmsdefaultColor),
                                     shape: MaterialStateProperty.all<
                                             RoundedRectangleBorder>(
                                         RoundedRectangleBorder(
