@@ -192,9 +192,19 @@ class _PreviewPageState extends State<PreviewPage> {
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
-                                      HLSTitleText(
-                                          text: "Configure",
-                                          textColor: themeDefaultColor),
+                                      Row(
+                                        children: [
+                                          IconButton(
+                                              onPressed: () {
+                                                Navigator.of(context).popUntil(
+                                                    (route) => route.isFirst);
+                                              },
+                                              icon: Icon(Icons.arrow_back_ios)),
+                                          HLSTitleText(
+                                              text: "Configure",
+                                              textColor: themeDefaultColor),
+                                        ],
+                                      ),
                                       Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
