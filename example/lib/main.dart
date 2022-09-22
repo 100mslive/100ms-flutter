@@ -410,14 +410,16 @@ class _HomePageState extends State<HomePage> {
                               Expanded(
                                   child: ElevatedButton(
                                 style: ButtonStyle(
+                                    elevation: MaterialStateProperty
+                                        .resolveWith<double>((states) => 0),
                                     shadowColor: MaterialStateProperty.all(
                                         themeSurfaceColor),
-                                    backgroundColor:
-                                        meetingLinkController.text.isEmpty
-                                            ? MaterialStateProperty.all(
-                                                themeSurfaceColor)
-                                            : MaterialStateProperty.all(
-                                                hmsdefaultColor),
+                                    backgroundColor: meetingLinkController
+                                            .text.isEmpty
+                                        ? MaterialStateProperty.all(
+                                            themeSurfaceColor)
+                                        : MaterialStateProperty.all(
+                                            hmsdefaultColor),
                                     shape: MaterialStateProperty.all<
                                             RoundedRectangleBorder>(
                                         RoundedRectangleBorder(
@@ -428,7 +430,7 @@ class _HomePageState extends State<HomePage> {
                                 },
                                 child: Container(
                                   padding:
-                                      const EdgeInsets.fromLTRB(8, 12, 8, 12),
+                                      const EdgeInsets.fromLTRB(60, 12, 8, 12),
                                   decoration: BoxDecoration(
                                       borderRadius:
                                           BorderRadius.all(Radius.circular(8))),
