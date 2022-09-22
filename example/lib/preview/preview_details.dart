@@ -123,7 +123,6 @@ class _PreviewDetailsState extends State<PreviewDetails> {
                 onSubmitted: (value) {
                   showPreview(res);
                 },
-                autofocus: true,
                 textCapitalization: TextCapitalization.words,
                 style: GoogleFonts.inter(),
                 controller: nameController,
