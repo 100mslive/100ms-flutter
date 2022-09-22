@@ -130,6 +130,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
     HMSConfig config = HMSConfig(
         authToken: token[0]!,
         userName: user,
+        // endPoint is only required by 100ms Team. Client developers should not use `endPoint`
         endPoint: token[1] == "true" ? "" : "https://qa-init.100ms.live/init");
 
     await _hmsSDKInteractor.join(config: config);

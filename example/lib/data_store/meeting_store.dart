@@ -155,10 +155,12 @@ class MeetingStore extends ChangeNotifier
         await RoomService().getToken(user: user, room: roomUrl);
     if (token == null) return false;
     HMSConfig config = HMSConfig(
-        authToken: token[0]!,
-        userName: user,
-        endPoint: token[1] == "true" ? "" : "https://qa-init.100ms.live/init",
-        captureNetworkQualityInPreview: true);
+      authToken: token[0]!,
+      userName: user,
+      captureNetworkQualityInPreview: true,
+      // endPoint is only required by 100ms Team. Client developers should not use `endPoint`
+      endPoint: token[1] == "true" ? "" : "https://qa-init.100ms.live/init",
+    );
 
     _hmsSDKInteractor.addUpdateListener(this);
     WidgetsBinding.instance.addObserver(this);
@@ -905,6 +907,10 @@ class MeetingStore extends ChangeNotifier
         break;
 
       case HMSPeerUpdate.roleUpdated:
+        if (hlsVideoController != null && !peer.role.name.contains("hls-")) {
+          hlsVideoController!.dispose();
+          hlsVideoController = null;
+        }
         if (peer.isLocal) localPeer = peer;
         if (peer.role.name.contains("hls-")) {
           isHLSLink = peer.isLocal;
@@ -923,7 +929,6 @@ class MeetingStore extends ChangeNotifier
         Utilities.showToast("${peer.name}'s role changed to " + peer.role.name);
         updatePeerAt(peer);
         updateFilteredList(update, peer);
-
         notifyListeners();
         break;
 
@@ -1057,20 +1062,20 @@ class MeetingStore extends ChangeNotifier
   // }
 
   void setMode(MeetingMode meetingMode) {
+    if (isActiveSpeakerMode) {
+      isActiveSpeakerMode = false;
+    }
     switch (meetingMode) {
       case MeetingMode.Video:
-        if (isActiveSpeakerMode) {
-          isActiveSpeakerMode = false;
-        }
         break;
       case MeetingMode.Audio:
+        isActiveSpeakerMode = false;
         setPlayBackAllowed(false);
         break;
       case MeetingMode.Hero:
         if (this.meetingMode == MeetingMode.Audio) {
           setPlayBackAllowed(true);
         }
-        this.isActiveSpeakerMode = false;
         break;
       case MeetingMode.Single:
         if (this.meetingMode == MeetingMode.Audio) {
@@ -1100,8 +1105,7 @@ class MeetingStore extends ChangeNotifier
 
   void setActiveSpeakerMode() {
     this.isActiveSpeakerMode = !this.isActiveSpeakerMode;
-    if (meetingMode == MeetingMode.Hero || meetingMode == MeetingMode.Single)
-      this.meetingMode = MeetingMode.Video;
+    this.meetingMode = MeetingMode.Video;
     notifyListeners();
   }
 

@@ -121,7 +121,7 @@ class _PreviewScreenState extends ConsumerState<PreviewScreen> {
                     _previewStore.peer != null
                         ? ElevatedButton(
                             style:
-                                ElevatedButton.styleFrom(primary: Colors.blue),
+                                ElevatedButton.styleFrom(backgroundColor: Colors.blue),
                             onPressed: () {
                               _previewStore.removePreviewListener();
                               Navigator.of(context)

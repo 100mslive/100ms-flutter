@@ -1,12 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
-import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
 import 'package:hmssdk_flutter_example/hls-streaming/util/hls_title_text.dart';
 import 'package:hmssdk_flutter_example/preview/preview_details.dart';
-import 'package:hmssdk_flutter_example/preview/preview_store.dart';
-import 'package:provider/provider.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 class QRCodeScreen extends StatefulWidget {
@@ -20,23 +19,40 @@ class _QRCodeScreenState extends State<QRCodeScreen> {
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   QRViewController? controller;
 
-  void _onQRViewCreated(QRViewController controller) {
-    this.controller = controller;
-    controller.scannedDataStream.listen((scanData) async {
+  @override
+  void reassemble() {
+    super.reassemble();
+    if (Platform.isAndroid) {
+      controller!.pauseCamera();
+    } else if (Platform.isIOS) {
+      controller!.resumeCamera();
+    }
+  }
+
+  @override
+  void dispose() {
+    controller?.dispose();
+    super.dispose();
+  }
+
+  void _onQRViewCreated(QRViewController qrController) {
+    this.controller = qrController;
+    controller!.resumeCamera();
+    controller!.scannedDataStream.listen((scanData) async {
       if (scanData.code != null) {
         MeetingFlow flow = Utilities.deriveFlow(scanData.code!);
         if (flow == MeetingFlow.meeting || flow == MeetingFlow.hlsStreaming) {
           Utilities.setRTMPUrl(scanData.code!);
           FocusManager.instance.primaryFocus?.unfocus();
           Navigator.of(context).pushReplacement(MaterialPageRoute(
-              builder: (_) => PreviewDetails(
-                      meetingLink: scanData.code!.trim(),
-                      meetingFlow: flow,
-                    ),
-                  ));
+            builder: (_) => PreviewDetails(
+              meetingLink: scanData.code!.trim(),
+              meetingFlow: flow,
+            ),
+          ));
         } else {
           Utilities.showToast("Invalid meeting url");
-          controller.resumeCamera();
+          controller!.resumeCamera();
         }
       }
     });

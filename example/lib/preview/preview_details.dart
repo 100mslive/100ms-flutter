@@ -15,7 +15,8 @@ import 'package:provider/provider.dart';
 class PreviewDetails extends StatefulWidget {
   final String meetingLink;
   final MeetingFlow meetingFlow;
-  PreviewDetails({required this.meetingLink, required this.meetingFlow});
+  final bool autofocusField;
+  PreviewDetails({required this.meetingLink, required this.meetingFlow,this.autofocusField = false});
   @override
   State<PreviewDetails> createState() => _PreviewDetailsState();
 }
@@ -123,7 +124,7 @@ class _PreviewDetailsState extends State<PreviewDetails> {
                 onSubmitted: (value) {
                   showPreview(res);
                 },
-                autofocus: true,
+                autofocus: widget.autofocusField,
                 textCapitalization: TextCapitalization.words,
                 style: GoogleFonts.inter(),
                 controller: nameController,

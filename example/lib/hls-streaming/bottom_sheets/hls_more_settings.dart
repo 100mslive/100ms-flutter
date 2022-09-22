@@ -106,6 +106,7 @@ class _HLSMoreSettingsState extends State<HLSMoreSettings> {
                   ListTile(
                     horizontalTitleGap: 2,
                     onTap: () async {
+                      Navigator.pop(context);
                       showModalBottomSheet(
                         isScrollControlled: true,
                         backgroundColor: themeBottomSheetColor,
@@ -137,6 +138,7 @@ class _HLSMoreSettingsState extends State<HLSMoreSettings> {
                   ListTile(
                     horizontalTitleGap: 2,
                     onTap: () async {
+                      Navigator.pop(context);
                       FocusManager.instance.primaryFocus?.unfocus();
                       String name =
                           await UtilityComponents.showNameChangeDialog(
@@ -262,6 +264,7 @@ class _HLSMoreSettingsState extends State<HLSMoreSettings> {
                     ListTile(
                         horizontalTitleGap: 2,
                         onTap: () async {
+                          Navigator.pop(context);
                           List<HMSRole> roles = await _meetingStore.getRoles();
                           UtilityComponents.showRoleList(
                               context, roles, _meetingStore);
@@ -283,155 +286,159 @@ class _HLSMoreSettingsState extends State<HLSMoreSettings> {
                         )),
                   if (!(_meetingStore.localPeer?.role.name.contains("hls-") ??
                       true))
-                    Selector<MeetingStore,bool>(
-                      selector: (_, meetingStore) => meetingStore.streamingType["rtmp"]??false,
-                      builder: (_,isRTMPRunning,__) {
-                        return ListTile(
-                            horizontalTitleGap: 2,
-                            onTap: () async {
-                              if (isRTMPRunning) {
-                                _meetingStore.stopRtmpAndRecording();
-                                Navigator.pop(context);
-                              } else {
-                                Map<String, dynamic> data =
-                                    await UtilityComponents.showRTMPInputDialog(
-                                        context: context,
-                                        placeholder:
-                                            "Enter Comma separated RTMP Urls",
-                                        isRecordingEnabled: _meetingStore
-                                                .recordingType["browser"] ==
-                                            true);
-                                List<String>? urls;
-                                if (data["url"]!.isNotEmpty) {
-                                  urls = data["url"]!.split(",");
+                    Selector<MeetingStore, bool>(
+                        selector: (_, meetingStore) =>
+                            meetingStore.streamingType["rtmp"] ?? false,
+                        builder: (_, isRTMPRunning, __) {
+                          return ListTile(
+                              horizontalTitleGap: 2,
+                              onTap: () async {
+                                if (isRTMPRunning) {
+                                  _meetingStore.stopRtmpAndRecording();
+                                  Navigator.pop(context);
+                                } else {
+                                  Navigator.pop(context);
+                                  Map<String, dynamic> data =
+                                      await UtilityComponents.showRTMPInputDialog(
+                                          context: context,
+                                          placeholder:
+                                              "Enter Comma separated RTMP Urls",
+                                          isRecordingEnabled: _meetingStore
+                                                  .recordingType["browser"] ==
+                                              true);
+                                  List<String>? urls;
+                                  if (data["url"]!.isNotEmpty) {
+                                    urls = data["url"]!.split(",");
+                                  }
+                                  if (urls != null) {
+                                    _meetingStore.startRtmpOrRecording(
+                                        meetingUrl: Constant.streamingUrl,
+                                        toRecord: false,
+                                        rtmpUrls: urls);
+                                  }
                                 }
-                                if (urls != null) {
+                              },
+                              contentPadding: EdgeInsets.zero,
+                              leading: SvgPicture.asset(
+                                "assets/icons/stream.svg",
+                                fit: BoxFit.scaleDown,
+                                color: isRTMPRunning
+                                    ? errorColor
+                                    : themeDefaultColor,
+                              ),
+                              title: Text(
+                                isRTMPRunning ? "Stop RTMP" : "Start RTMP",
+                                semanticsLabel: isRTMPRunning
+                                    ? "fl_stop_rtmp"
+                                    : "fl_start_rtmp",
+                                style: GoogleFonts.inter(
+                                    fontSize: 14,
+                                    color: isRTMPRunning
+                                        ? errorColor
+                                        : themeDefaultColor,
+                                    letterSpacing: 0.25,
+                                    fontWeight: FontWeight.w600),
+                              ));
+                        }),
+                  if (!(_meetingStore.localPeer?.role.name.contains("hls-") ??
+                      true))
+                    Selector<MeetingStore, bool>(
+                        selector: (_, meetingStore) =>
+                            meetingStore.recordingType["browser"] ?? false,
+                        builder: (_, isBrowserRecording, __) {
+                          return ListTile(
+                              horizontalTitleGap: 2,
+                              onTap: () async {
+                                if (isBrowserRecording) {
+                                  _meetingStore.stopRtmpAndRecording();
+                                } else {
                                   _meetingStore.startRtmpOrRecording(
                                       meetingUrl: Constant.streamingUrl,
-                                      toRecord: false,
-                                      rtmpUrls: urls);
+                                      toRecord: true,
+                                      rtmpUrls: []);
                                 }
-                              }
-                            },
-                            contentPadding: EdgeInsets.zero,
-                            leading: SvgPicture.asset(
-                              "assets/icons/stream.svg",
-                              fit: BoxFit.scaleDown,
-                              color: isRTMPRunning
-                                  ? errorColor
-                                  : themeDefaultColor,
-                            ),
-                            title: Text(isRTMPRunning
-                                  ? "Stop RTMP"
-                                  : "Start RTMP",
-                              semanticsLabel:isRTMPRunning
-                                      ? "fl_stop_rtmp"
-                                      : "fl_start_rtmp",
-                              style: GoogleFonts.inter(
-                                  fontSize: 14,
-                                  color:isRTMPRunning
-                                      ? errorColor
-                                      : themeDefaultColor,
-                                  letterSpacing: 0.25,
-                                  fontWeight: FontWeight.w600),
-                            ));
-                      }
-                    ),
-                  if (!(_meetingStore.localPeer?.role.name.contains("hls-") ??
-                      true))
-                    Selector<MeetingStore,bool>(
-                      selector: (_,meetingStore) => meetingStore.recordingType["browser"]??false,
-                      builder: (_,isBrowserRecording,__) {
-                        return ListTile(
-                            horizontalTitleGap: 2,
-                            onTap: () async {
-                              if (isBrowserRecording) {
-                                _meetingStore.stopRtmpAndRecording();
-                              } else {
-                                _meetingStore.startRtmpOrRecording(
-                                    meetingUrl: Constant.streamingUrl,
-                                    toRecord: true,
-                                    rtmpUrls: []);
-                              }
-                              Navigator.pop(context);
-                            },
-                            contentPadding: EdgeInsets.zero,
-                            leading: SvgPicture.asset(
-                              "assets/icons/record.svg",
-                              fit: BoxFit.scaleDown,
-                              color: isBrowserRecording
-                                  ? errorColor
-                                  : themeDefaultColor,
-                            ),
-                            title: Text(isBrowserRecording
-                                  ? "Stop Recording"
-                                  : "Start Recording",
-                              semanticsLabel:isBrowserRecording
-                                      ? "fl_stop_recording"
-                                      : "fl_start_recording",
-                              style: GoogleFonts.inter(
-                                  fontSize: 14,
-                                  color:isBrowserRecording
-                                          ? errorColor
-                                          : themeDefaultColor,
-                                  letterSpacing: 0.25,
-                                  fontWeight: FontWeight.w600),
-                            ));
-                      }
-                    ),
-                  if (!(_meetingStore.localPeer?.role.name.contains("hls-") ??
-                      true))
-                    Selector<MeetingStore,bool>(
-                      selector: ((_,meetingStore) => meetingStore.hasHlsStarted),
-                      builder: (_,hasHLSStarted,__) {
-                        return ListTile(
-                            horizontalTitleGap: 2,
-                            onTap: () async {
-                              if (hasHLSStarted) {
-                                _meetingStore.stopHLSStreaming();
                                 Navigator.pop(context);
-                                return;
-                              }
-                              showModalBottomSheet(
-                                isScrollControlled: true,
-                                backgroundColor: themeBottomSheetColor,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                context: context,
-                                builder: (ctx) => ChangeNotifierProvider.value(
-                                    value: context.read<MeetingStore>(),
-                                    child: HLSStartBottomSheet()),
-                              );
-                            },
-                            contentPadding: EdgeInsets.zero,
-                            leading: SvgPicture.asset(
-                              "assets/icons/hls.svg",
-                              fit: BoxFit.scaleDown,
-                              color: hasHLSStarted?errorColor
-                                  : themeDefaultColor,
-                            ),
-                            title: Text(hasHLSStarted
-                                  ? "Stop HLS"
-                                  : "Start HLS",
-                              semanticsLabel: hasHLSStarted
-                                  ? "fl_stop_hls"
-                                  : "fl_start_hls",
-                              style: GoogleFonts.inter(
-                                  fontSize: 14,
-                                  color:hasHLSStarted
-                                      ? errorColor
-                                      : themeDefaultColor,
-                                  letterSpacing: 0.25,
-                                  fontWeight: FontWeight.w600),
-                            ));
-                      }
-                    ),
+                              },
+                              contentPadding: EdgeInsets.zero,
+                              leading: SvgPicture.asset(
+                                "assets/icons/record.svg",
+                                fit: BoxFit.scaleDown,
+                                color: isBrowserRecording
+                                    ? errorColor
+                                    : themeDefaultColor,
+                              ),
+                              title: Text(
+                                isBrowserRecording
+                                    ? "Stop Recording"
+                                    : "Start Recording",
+                                semanticsLabel: isBrowserRecording
+                                    ? "fl_stop_recording"
+                                    : "fl_start_recording",
+                                style: GoogleFonts.inter(
+                                    fontSize: 14,
+                                    color: isBrowserRecording
+                                        ? errorColor
+                                        : themeDefaultColor,
+                                    letterSpacing: 0.25,
+                                    fontWeight: FontWeight.w600),
+                              ));
+                        }),
+                  if (!(_meetingStore.localPeer?.role.name.contains("hls-") ??
+                      true))
+                    Selector<MeetingStore, bool>(
+                        selector: ((_, meetingStore) =>
+                            meetingStore.hasHlsStarted),
+                        builder: (_, hasHLSStarted, __) {
+                          return ListTile(
+                              horizontalTitleGap: 2,
+                              onTap: () async {
+                                if (hasHLSStarted) {
+                                  _meetingStore.stopHLSStreaming();
+                                  Navigator.pop(context);
+                                  return;
+                                }
+                                Navigator.pop(context);
+                                showModalBottomSheet(
+                                  isScrollControlled: true,
+                                  backgroundColor: themeBottomSheetColor,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  context: context,
+                                  builder: (ctx) =>
+                                      ChangeNotifierProvider.value(
+                                          value: context.read<MeetingStore>(),
+                                          child: HLSStartBottomSheet()),
+                                );
+                              },
+                              contentPadding: EdgeInsets.zero,
+                              leading: SvgPicture.asset(
+                                "assets/icons/hls.svg",
+                                fit: BoxFit.scaleDown,
+                                color: hasHLSStarted
+                                    ? errorColor
+                                    : themeDefaultColor,
+                              ),
+                              title: Text(
+                                hasHLSStarted ? "Stop HLS" : "Start HLS",
+                                semanticsLabel: hasHLSStarted
+                                    ? "fl_stop_hls"
+                                    : "fl_start_hls",
+                                style: GoogleFonts.inter(
+                                    fontSize: 14,
+                                    color: hasHLSStarted
+                                        ? errorColor
+                                        : themeDefaultColor,
+                                    letterSpacing: 0.25,
+                                    fontWeight: FontWeight.w600),
+                              ));
+                        }),
                   if (!(_meetingStore.localPeer?.role.name.contains("hls-") ??
                       true))
                     ListTile(
                         horizontalTitleGap: 2,
                         onTap: () async {
+                          Navigator.pop(context);
                           if (Platform.isAndroid) {
                             if (_meetingStore.isAudioShareStarted) {
                               _meetingStore.stopAudioShare();

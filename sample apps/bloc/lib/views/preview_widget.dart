@@ -60,7 +60,7 @@ class PreviewWidget extends StatelessWidget {
                               left: itemWidth / 2 - 50.0,
                               child: ElevatedButton(
                                 style: ElevatedButton.styleFrom(
-                                    primary: Colors.blue,
+                                    backgroundColor: Colors.blue,
                                     padding: const EdgeInsets.all(14)),
                                 onPressed: () {
                                   Navigator.of(context).pushReplacement(

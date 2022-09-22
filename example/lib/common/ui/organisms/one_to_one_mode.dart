@@ -1,7 +1,6 @@
 import 'package:draggable_widget/draggable_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/video_tile.dart';
-import 'package:hmssdk_flutter_example/data_store/meeting_store.dart';
 import 'package:hmssdk_flutter_example/model/peer_track_node.dart';
 import 'package:provider/provider.dart';
 
