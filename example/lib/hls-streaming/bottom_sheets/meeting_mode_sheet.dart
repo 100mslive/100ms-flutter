@@ -27,7 +27,7 @@ class _MeetingModeSheetState extends State<MeetingModeSheet> {
   Widget build(BuildContext context) {
     MeetingStore _meetingStore = context.read<MeetingStore>();
     return FractionallySizedBox(
-      heightFactor: 0.5,
+      heightFactor: 0.6,
       child: Padding(
           padding: const EdgeInsets.only(top: 20.0, left: 15, right: 15),
           child: Column(
@@ -85,11 +85,9 @@ class _MeetingModeSheetState extends State<MeetingModeSheet> {
                       onTap: () async {
                         if (_meetingStore.meetingMode != MeetingMode.Video ||
                             _meetingStore.isActiveSpeakerMode) {
-                          if (_meetingStore.isVideoOn)
-                            _meetingStore.setPlayBackAllowed(true);
+                          _meetingStore.setPlayBackAllowed(true);
                         }
                         _meetingStore.setMode(MeetingMode.Video);
-                        Navigator.pop(context);
                         Navigator.pop(context);
                       },
                       contentPadding: EdgeInsets.zero,
@@ -119,10 +117,12 @@ class _MeetingModeSheetState extends State<MeetingModeSheet> {
                     ListTile(
                       horizontalTitleGap: 2,
                       onTap: () async {
+                        if (_meetingStore.meetingMode == MeetingMode.Audio) {
+                          _meetingStore.setPlayBackAllowed(true);
+                        }
                         if (!_meetingStore.isActiveSpeakerMode) {
                           _meetingStore.setActiveSpeakerMode();
                         }
-                        Navigator.pop(context);
                         Navigator.pop(context);
                       },
                       contentPadding: EdgeInsets.zero,
@@ -152,7 +152,6 @@ class _MeetingModeSheetState extends State<MeetingModeSheet> {
                           _meetingStore.setMode(MeetingMode.Audio);
                         }
                         Navigator.pop(context);
-                        Navigator.pop(context);
                       },
                       contentPadding: EdgeInsets.zero,
                       leading: SvgPicture.asset(
@@ -179,10 +178,12 @@ class _MeetingModeSheetState extends State<MeetingModeSheet> {
                     ListTile(
                       horizontalTitleGap: 2,
                       onTap: () async {
+                        if (_meetingStore.meetingMode == MeetingMode.Audio) {
+                          _meetingStore.setPlayBackAllowed(true);
+                        }
                         if (_meetingStore.meetingMode != MeetingMode.Hero) {
                           _meetingStore.setMode(MeetingMode.Hero);
                         }
-                        Navigator.pop(context);
                         Navigator.pop(context);
                       },
                       contentPadding: EdgeInsets.zero,
@@ -208,10 +209,12 @@ class _MeetingModeSheetState extends State<MeetingModeSheet> {
                     ListTile(
                       horizontalTitleGap: 2,
                       onTap: () async {
+                        if (_meetingStore.meetingMode == MeetingMode.Audio) {
+                          _meetingStore.setPlayBackAllowed(true);
+                        }
                         if (_meetingStore.meetingMode != MeetingMode.Single) {
                           _meetingStore.setMode(MeetingMode.Single);
                         }
-                        Navigator.pop(context);
                         Navigator.pop(context);
                       },
                       contentPadding: EdgeInsets.zero,

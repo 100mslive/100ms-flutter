@@ -106,6 +106,7 @@ class _HLSMoreSettingsState extends State<HLSMoreSettings> {
                   ListTile(
                     horizontalTitleGap: 2,
                     onTap: () async {
+                      Navigator.pop(context);
                       showModalBottomSheet(
                         isScrollControlled: true,
                         backgroundColor: themeBottomSheetColor,
@@ -137,6 +138,7 @@ class _HLSMoreSettingsState extends State<HLSMoreSettings> {
                   ListTile(
                     horizontalTitleGap: 2,
                     onTap: () async {
+                      Navigator.pop(context);
                       FocusManager.instance.primaryFocus?.unfocus();
                       String name =
                           await UtilityComponents.showNameChangeDialog(
@@ -262,6 +264,7 @@ class _HLSMoreSettingsState extends State<HLSMoreSettings> {
                     ListTile(
                         horizontalTitleGap: 2,
                         onTap: () async {
+                          Navigator.pop(context);
                           List<HMSRole> roles = await _meetingStore.getRoles();
                           UtilityComponents.showRoleList(
                               context, roles, _meetingStore);
@@ -294,6 +297,7 @@ class _HLSMoreSettingsState extends State<HLSMoreSettings> {
                                   _meetingStore.stopRtmpAndRecording();
                                   Navigator.pop(context);
                                 } else {
+                                  Navigator.pop(context);
                                   Map<String, dynamic> data =
                                       await UtilityComponents.showRTMPInputDialog(
                                           context: context,
@@ -393,6 +397,7 @@ class _HLSMoreSettingsState extends State<HLSMoreSettings> {
                                   Navigator.pop(context);
                                   return;
                                 }
+                                Navigator.pop(context);
                                 showModalBottomSheet(
                                   isScrollControlled: true,
                                   backgroundColor: themeBottomSheetColor,
@@ -433,6 +438,7 @@ class _HLSMoreSettingsState extends State<HLSMoreSettings> {
                     ListTile(
                         horizontalTitleGap: 2,
                         onTap: () async {
+                          Navigator.pop(context);
                           if (Platform.isAndroid) {
                             if (_meetingStore.isAudioShareStarted) {
                               _meetingStore.stopAudioShare();
