@@ -42,6 +42,7 @@ class _QRCodeScreenState extends State<QRCodeScreen> {
       if (scanData.code != null) {
         MeetingFlow flow = Utilities.deriveFlow(scanData.code!);
         if (flow == MeetingFlow.meeting || flow == MeetingFlow.hlsStreaming) {
+          controller!.pauseCamera();
           Utilities.setRTMPUrl(scanData.code!);
           FocusManager.instance.primaryFocus?.unfocus();
           Navigator.of(context).pushReplacement(MaterialPageRoute(
