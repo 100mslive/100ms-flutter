@@ -274,6 +274,7 @@ class _HomePageState extends State<HomePage> {
           context,
           MaterialPageRoute(
               builder: (_) => PreviewDetails(
+                    autofocusField: true,
                     meetingLink: meetingLinkController.text.trim(),
                     meetingFlow: flow,
                   )));
