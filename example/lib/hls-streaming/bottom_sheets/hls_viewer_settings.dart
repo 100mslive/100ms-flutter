@@ -3,8 +3,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
-import 'package:hmssdk_flutter_example/hls-streaming/util/hls_participant_sheet.dart';
-import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
+import 'package:hmssdk_flutter_example/hls-streaming/bottom_sheets/hls_participant_sheet.dart';
+import 'package:hmssdk_flutter_example/data_store/meeting_store.dart';
 import 'package:provider/provider.dart';
 
 class HLSViewerSettings extends StatefulWidget {
@@ -32,7 +32,7 @@ class _HLSViewerSettingsState extends State<HLSViewerSettings> {
                         "More Options",
                         style: GoogleFonts.inter(
                             fontSize: 16,
-                            color: defaultColor,
+                            color: themeDefaultColor,
                             letterSpacing: 0.15,
                             fontWeight: FontWeight.w600),
                       ),
@@ -84,7 +84,7 @@ class _HLSViewerSettingsState extends State<HLSViewerSettings> {
                   "Change Name",
                   style: GoogleFonts.inter(
                       fontSize: 14,
-                      color: defaultColor,
+                      color: themeDefaultColor,
                       letterSpacing: 0.25,
                       fontWeight: FontWeight.w600),
                 ),
@@ -94,7 +94,7 @@ class _HLSViewerSettingsState extends State<HLSViewerSettings> {
                 onTap: () {
                   showModalBottomSheet(
                     isScrollControlled: true,
-                    backgroundColor: bottomSheetColor,
+                    backgroundColor: themeBottomSheetColor,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
                     ),
@@ -113,7 +113,7 @@ class _HLSViewerSettingsState extends State<HLSViewerSettings> {
                   "Participants",
                   style: GoogleFonts.inter(
                       fontSize: 14,
-                      color: defaultColor,
+                      color: themeDefaultColor,
                       letterSpacing: 0.25,
                       fontWeight: FontWeight.w600),
                 ),

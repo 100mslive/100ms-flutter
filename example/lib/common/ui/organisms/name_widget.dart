@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 
 //Project imports
-import 'package:hmssdk_flutter_example/meeting/peer_track_node.dart';
+import 'package:hmssdk_flutter_example/model/peer_track_node.dart';
 
 class NameWidget extends StatefulWidget {
   @override
@@ -33,7 +33,7 @@ class _NameWidgetState extends State<NameWidget> {
                       child: HLSSubtitleText(
                         text:
                             "${data.item3 ? "You (" : ""}${data.item1}${data.item3 ? ")" : ""} ${data.item2 ? " Degraded" : ""}",
-                        textColor: defaultColor,
+                        textColor: themeDefaultColor,
                         lineHeight: 20,
                         fontSize: 14,
                         letterSpacing: 0.25,

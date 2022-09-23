@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter/src/manager/hms_sdk_manager.dart';
 import 'package:hmssdk_flutter/src/service/platform_service.dart';
 import '../hmssdk_flutter.dart';
@@ -25,8 +24,8 @@ class HMSSDK {
 
   /// The build function should be called after creating an instance of the [HMSSDK].
   /// Await the result & if true then create [HMSConfig] object to join or preview a room.
-  Future<bool> build() async {
-    return await HmsSdkManager()
+  Future<void> build() async {
+    await HmsSdkManager()
         .createHMSSdk(hmsTrackSetting, appGroup, preferredExtension);
   }
 
@@ -759,11 +758,17 @@ class HMSSDK {
     return HMSAudioDevice.UNKNOWN;
   }
 
-  ///Method to switch audio output device(Android Only)
-  void switchAudioOutput({required HMSAudioDevice audioDevice}) {
+  ///Method to switch audio output device
+  ///
+  ///Android requires [audioDevice] parameter compulsorily for switching Audio Device.
+  ///
+  ///iOS doesn't requires any value in [audioDevice] paramter (you can pass null value).
+  void switchAudioOutput({HMSAudioDevice? audioDevice}) {
     if (Platform.isAndroid)
       PlatformService.invokeMethod(PlatformMethod.switchAudioOutput,
-          arguments: {"audio_device_name": audioDevice.name});
+          arguments: {"audio_device_name": audioDevice!.name});
+    if (Platform.isIOS)
+      PlatformService.invokeMethod(PlatformMethod.switchAudioOutput);
   }
 
   Future<void> startAudioShare(

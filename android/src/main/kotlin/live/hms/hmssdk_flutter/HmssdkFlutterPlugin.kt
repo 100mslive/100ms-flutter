@@ -513,7 +513,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         val config = getConfig(call)
 
         hmssdk!!.preview(config, this.hmsPreviewListener)
-
+        hmssdk!!.setAudioDeviceChangeListener(audioPreviewDeviceChangeListener)
         result.success(null)
     }
 
@@ -908,6 +908,8 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
                 }
         }
 
+
+
     }
 
     var finalargs = mutableListOf<Any?>()
@@ -1158,6 +1160,41 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
 
     }
 
+    private val audioPreviewDeviceChangeListener = object: AudioManagerDeviceChangeListener {
+        override fun onAudioDeviceChanged(p0: AudioDevice?, p1: Set<AudioDevice>?) {
+            val args = HashMap<String, Any?>()
+            args["event_name"] = "on_audio_device_changed"
+            val dict = HashMap<String, Any?>()
+            if (p0!=null){
+                dict["current_audio_device"] = p0.name
+            }
+            if(p1!=null){
+                val audioDevicesList = ArrayList<String>();
+                for (device in hmssdk!!.getAudioDevicesList()){
+                    audioDevicesList.add(device.name);
+                }
+                dict["available_audio_device"] = audioDevicesList
+            }
+            args["data"] = dict
+            if (args["data"] != null)
+                CoroutineScope(Dispatchers.Main).launch {
+                    previewSink?.success(args)
+                }
+        }
+
+        override fun onError(e: HMSException?){
+
+            val args = HashMap<String, Any?>()
+            args.put("event_name", "on_error")
+            args.put("data", HMSExceptionExtension.toDictionary(e))
+
+            if (args["data"] != null)
+                CoroutineScope(Dispatchers.Main).launch {
+                    previewSink?.success(args)
+                }
+        }
+    }
+
     private val audioDeviceChangeListener = object: AudioManagerDeviceChangeListener {
         override fun onAudioDeviceChanged(p0: AudioDevice?, p1: Set<AudioDevice>?) {
             val args = HashMap<String, Any?>()
@@ -1188,7 +1225,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
 
             if (args["data"] != null)
                 CoroutineScope(Dispatchers.Main).launch {
-                    previewSink?.success(args)
+                    eventSink?.success(args)
                 }
         }
     }

@@ -25,7 +25,7 @@ class  HMSRoomExtension {
         if let data = room.metaData {
             dict["meta_data"] = data
         }
-        
+
         if let sessionId = room.sessionID {
             dict["session_id"] = sessionId
         }
@@ -41,7 +41,7 @@ class  HMSRoomExtension {
         dict["server_recording_state"] = HMSStreamingStateExtension.toDictionary(server: room.serverRecordingState)
 
         dict["hls_streaming_state"] = HMSStreamingStateExtension.toDictionary(hlsStreaming: room.hlsStreamingState)
-        
+
         dict["hls_recording_state"] = HMSStreamingStateExtension.toDictionary(hlsRecording: room.hlsRecordingState)
 
         return dict

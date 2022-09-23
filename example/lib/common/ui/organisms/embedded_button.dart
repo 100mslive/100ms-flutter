@@ -38,7 +38,7 @@ class EmbeddedButton extends StatelessWidget {
                       width: 1)
                   : Border.all(
                       color: (disabledBorderColor == null)
-                          ? defaultColor
+                          ? themeDefaultColor
                           : disabledBorderColor!,
                       width: 1),
               borderRadius: BorderRadius.all(Radius.circular(12)),

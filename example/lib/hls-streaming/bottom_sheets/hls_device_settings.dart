@@ -5,7 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/hls-streaming/util/hls_subtitle_text.dart';
-import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
+import 'package:hmssdk_flutter_example/data_store/meeting_store.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 import 'package:collection/collection.dart';
@@ -56,7 +56,7 @@ class _HLSDeviceSettingsState extends State<HLSDeviceSettings> {
                           icon: Icon(
                             Icons.arrow_back_ios_new,
                             size: 16,
-                            color: defaultColor,
+                            color: hmsWhiteColor,
                           ),
                           onPressed: () {
                             Navigator.pop(context);
@@ -69,7 +69,7 @@ class _HLSDeviceSettingsState extends State<HLSDeviceSettings> {
                           textAlign: TextAlign.center,
                           style: GoogleFonts.inter(
                               fontSize: 16,
-                              color: defaultColor,
+                              color: themeDefaultColor,
                               letterSpacing: 0.15,
                               fontWeight: FontWeight.w600),
                         ),
@@ -94,7 +94,7 @@ class _HLSDeviceSettingsState extends State<HLSDeviceSettings> {
                   ),
                   Text("Speakers",
                       style: GoogleFonts.inter(
-                          color: defaultColor,
+                          color: themeDefaultColor,
                           fontSize: 14,
                           fontWeight: FontWeight.w400,
                           letterSpacing: 0.25)),
@@ -104,7 +104,7 @@ class _HLSDeviceSettingsState extends State<HLSDeviceSettings> {
                   Container(
                     padding: EdgeInsets.only(left: 10, right: 5),
                     decoration: BoxDecoration(
-                      color: surfaceColor,
+                      color: themeSurfaceColor,
                       borderRadius: BorderRadius.circular(10.0),
                       border: Border.all(
                           color: borderColor,
@@ -122,14 +122,14 @@ class _HLSDeviceSettingsState extends State<HLSDeviceSettings> {
                       icon: Icon(Icons.keyboard_arrow_down),
                       dropdownDecoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(8),
-                          color: surfaceColor),
+                          color: themeSurfaceColor),
                       offset: Offset(-10, -10),
                       iconEnabledColor: iconColor,
                       onChanged: (dynamic newvalue) {
                         if (newvalue != null)
                           context
                               .read<MeetingStore>()
-                              .switchAudioOutput(newvalue);
+                              .switchAudioOutput(audioDevice: newvalue);
                         dropdownKey = null;
                       },
                       items: <DropdownMenuItem>[
@@ -140,14 +140,16 @@ class _HLSDeviceSettingsState extends State<HLSDeviceSettings> {
                                   child: Row(
                                     children: [
                                       SvgPicture.asset(
-                                          "assets/icons/music_wave.svg"),
+                                        "assets/icons/music_wave.svg",
+                                        color: themeDefaultColor,
+                                      ),
                                       SizedBox(
                                         width: 10,
                                       ),
                                       Container(
                                         child: HLSSubtitleText(
                                           text: device.name,
-                                          textColor: defaultColor,
+                                          textColor: themeDefaultColor,
                                         ),
                                       ),
                                     ],

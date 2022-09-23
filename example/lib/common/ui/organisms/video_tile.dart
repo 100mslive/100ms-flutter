@@ -18,8 +18,8 @@ import 'package:hmssdk_flutter_example/common/ui/organisms/peer_name.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/tile_border.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/rtc_stats_view.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/video_view.dart';
-import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
-import 'package:hmssdk_flutter_example/meeting/peer_track_node.dart';
+import 'package:hmssdk_flutter_example/data_store/meeting_store.dart';
+import 'package:hmssdk_flutter_example/model/peer_track_node.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/remote_peer_tile_dialog.dart';
 
 class VideoTile extends StatefulWidget {
@@ -27,12 +27,14 @@ class VideoTile extends StatefulWidget {
   final double itemWidth;
   final ScaleType scaleType;
   final bool islongPressEnabled;
+  final bool isOneToOne;
   VideoTile(
       {Key? key,
       this.itemHeight = 200.0,
       this.itemWidth = 200.0,
       this.scaleType = ScaleType.SCALE_ASPECT_FILL,
-      this.islongPressEnabled = true})
+      this.islongPressEnabled = true,
+      this.isOneToOne = false})
       : super(key: key);
 
   @override
@@ -57,7 +59,7 @@ class _VideoTileState extends State<VideoTile> {
         _meetingStore.localPeer?.role.permissions.changeRole ?? false;
 
     return Semantics(
-      label: "${context.read<PeerTrackNode>().peer.name}_video_tile",
+      label: "fl_${context.read<PeerTrackNode>().peer.name}_video_tile",
       child: FocusDetector(
         onFocusLost: () {
           if (mounted) {
@@ -175,11 +177,11 @@ class _VideoTileState extends State<VideoTile> {
                   width: widget.itemWidth - 5.0,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
-                    color: bottomSheetColor,
+                    color: themeBottomSheetColor,
                   ),
                   child: Semantics(
                     label:
-                        "${context.read<PeerTrackNode>().peer.name}_video_on",
+                        "fl_${context.read<PeerTrackNode>().peer.name}_video_on",
                     child: Stack(
                       children: [
                         VideoView(
@@ -189,39 +191,50 @@ class _VideoTileState extends State<VideoTile> {
                           itemWidth: widget.itemWidth,
                         ),
 
-                        DegradeTile(
-                          itemHeight: widget.itemHeight,
-                          itemWidth: widget.itemWidth,
+                        Semantics(
+                          label:
+                              "fl_${context.read<PeerTrackNode>().peer.name}_degraded_tile",
+                          child: DegradeTile(
+                            itemHeight: widget.itemHeight,
+                            itemWidth: widget.itemWidth,
+                          ),
                         ),
-                        Positioned(
-                          //Bottom left
-                          bottom: 5,
-                          left: 5,
-                          child: Container(
-                            decoration: BoxDecoration(
-                                color: Color.fromRGBO(0, 0, 0, 0.9),
-                                borderRadius: BorderRadius.circular(8)),
-                            child: Center(
-                              child: Padding(
-                                padding: const EdgeInsets.all(4),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    NetworkIconWidget(),
-                                    PeerName(),
-                                  ],
+                        if (!widget.isOneToOne)
+                          Positioned(
+                            //Bottom left
+                            bottom: 5,
+                            left: 5,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  color: themeTileNameColor,
+                                  borderRadius: BorderRadius.circular(8)),
+                              child: Center(
+                                child: Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 8.0, right: 4, top: 4, bottom: 4),
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      NetworkIconWidget(),
+                                      PeerName(),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
                         HandRaise(), //top left
                         BRBTag(), //bottom right
                         AudioMuteStatus(), //top right
-                        RTCStatsView(
-                            isLocal:
-                                context.read<PeerTrackNode>().peer.isLocal),
+                        if (!widget.isOneToOne)
+                          Semantics(
+                            label: "fl_stats_on_tile",
+                            child: RTCStatsView(
+                                isLocal:
+                                    context.read<PeerTrackNode>().peer.isLocal),
+                          ),
                         TileBorder(
                             itemHeight: widget.itemHeight,
                             itemWidth: widget.itemWidth,
@@ -234,7 +247,7 @@ class _VideoTileState extends State<VideoTile> {
               )
             : Semantics(
                 label:
-                    "${context.read<PeerTrackNode>().peer.name}_screen_share_tile",
+                    "fl_${context.read<PeerTrackNode>().peer.name}_screen_share_tile",
                 child: Container(
                   decoration: BoxDecoration(
                       border: Border.all(color: Colors.grey, width: 1.0),
@@ -256,8 +269,10 @@ class _VideoTileState extends State<VideoTile> {
                         bottom: 5,
                         left: 5,
                         child: Container(
+                          key: Key(
+                              "fl_${context.read<PeerTrackNode>().peer.name}_name"),
                           decoration: BoxDecoration(
-                              color: Color.fromRGBO(0, 0, 0, 0.9),
+                              color: themeTileNameColor,
                               borderRadius: BorderRadius.circular(8)),
                           child: Center(
                             child: Padding(

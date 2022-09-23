@@ -94,6 +94,12 @@ abstract class HMSUpdateListener {
   void onRemovedFromRoom(
       {required HMSPeerRemovedFromPeer hmsPeerRemovedFromPeer});
 
+  ///whenever a new audio device is plugged in or audio output is changed we
+  ///get the onAudioDeviceChanged update
+  ///This callback is only fired on Android devices. On iOS, this callback will not be triggered.
+  /// - Parameters:
+  ///   - currentAudioDevice: Current audio output route
+  ///   - availableAudioDevice: List of available audio output devices
   void onAudioDeviceChanged(
       {HMSAudioDevice? currentAudioDevice,
       List<HMSAudioDevice>? availableAudioDevice});

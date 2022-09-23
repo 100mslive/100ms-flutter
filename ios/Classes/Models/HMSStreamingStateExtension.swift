@@ -65,7 +65,7 @@ class HMSStreamingStateExtension {
 
         return dict
     }
-    
+
     static func toDictionary(hlsRecording: HMSHLSRecordingState) -> [String: Any] {
         var dict = [String: Any]()
 

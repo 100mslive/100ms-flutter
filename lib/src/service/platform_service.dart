@@ -253,7 +253,6 @@ class PlatformService {
           method: method, data: data, response: event);
     }).listen((event) {
       HMSPreviewUpdateListenerMethod method = event.method;
-
       switch (method) {
         case HMSPreviewUpdateListenerMethod.onPreviewVideo:
           HMSRoom? room = HMSRoom.fromMap(event.data['room']);
@@ -295,6 +294,27 @@ class PlatformService {
           HMSRoomUpdate? update = HMSRoomUpdateValues.getHMSRoomUpdateFromName(
               event.data['update']);
           notifyPreviewListeners(method, {'room': room, 'update': update});
+          break;
+        case HMSPreviewUpdateListenerMethod.onAudioDeviceChanged:
+          HMSAudioDevice? currentAudioDevice =
+              event.data.containsKey("current_audio_device")
+                  ? HMSAudioDeviceValues.getHMSAudioDeviceFromName(
+                      event.data['current_audio_device'])
+                  : null;
+          List<HMSAudioDevice> availableAudioDevice = [];
+          if (event.data["available_audio_device"] != null)
+            for (var device in event.data["available_audio_device"]) {
+              availableAudioDevice
+                  .add(HMSAudioDeviceValues.getHMSAudioDeviceFromName(device));
+            }
+
+          notifyPreviewListeners(method, {
+            'current_audio_device': currentAudioDevice,
+            "available_audio_device":
+                event.data["available_audio_device"] != null
+                    ? availableAudioDevice
+                    : null
+          });
           break;
       }
     });
@@ -439,6 +459,13 @@ class PlatformService {
       case HMSPreviewUpdateListenerMethod.onRoomUpdate:
         previewListeners.forEach((e) {
           e.onRoomUpdate(room: arguments['room'], update: arguments['update']);
+        });
+        break;
+      case HMSPreviewUpdateListenerMethod.onAudioDeviceChanged:
+        previewListeners.forEach((e) {
+          e.onAudioDeviceChanged(
+              currentAudioDevice: arguments["current_audio_device"],
+              availableAudioDevice: arguments["available_audio_device"]);
         });
         break;
     }

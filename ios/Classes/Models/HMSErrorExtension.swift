@@ -10,31 +10,33 @@ import HMSSDK
 
 class HMSErrorExtension {
 
-    static func toDictionary(_ error: HMSError) -> [String: Any] {
-
+    static func toDictionary(_ error: Error) -> [String: Any] {
+        guard let error = error as? HMSError else { return [:] }
         var dict = [String: Any]()
-        dict["id"] = error.id
-        dict["message"] = error.message
-        dict["code"] = getValueOfHMSErrorCode(errorCode: error.code)
 
-        if let info = error.info {
-            dict["info"] = info
-        }
+        dict["code"] = error.code.rawValue
 
-        if let action = error.action {
-            dict["action"] = action
-        }
+        dict["isTerminal"] = error.isTerminal
 
-        if let params = error.params {
-            dict["params"] = params
-        }
+        dict["canRetry"] = error.canRetry
 
         dict["description"] = error.localizedDescription
 
         return ["error": dict]
     }
 
-    static func getValueOfHMSErrorCode(errorCode: HMSErrorCode) -> Int {
-        return errorCode.rawValue
+    static func getError(_ description: String) -> [String: Any] {
+        var dict = [String: Any]()
+
+        dict["code"] = 6004
+
+        dict["isTerminal"] = false
+
+        dict["canRetry"] = false
+
+        dict["description"] = description
+
+        return ["error": dict]
     }
+
 }

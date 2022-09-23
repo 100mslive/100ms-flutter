@@ -14,6 +14,7 @@ import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
 import 'package:hmssdk_flutter_example/hls-streaming/util/hls_title_text.dart';
+import 'package:hmssdk_flutter_example/hms_app_settings.dart';
 import 'package:hmssdk_flutter_example/preview/preview_details.dart';
 import 'package:hmssdk_flutter_example/qr_code_screen.dart';
 import 'package:provider/provider.dart';
@@ -56,19 +57,28 @@ class _HMSExampleAppState extends State<HMSExampleApp> {
   ThemeMode _themeMode = ThemeMode.dark;
   Uri? _currentURI;
   bool isDarkMode =
-      WidgetsBinding.instance?.window.platformBrightness == Brightness.dark;
+      WidgetsBinding.instance.window.platformBrightness == Brightness.dark;
 
   ThemeData _darkTheme = ThemeData(
+      bottomSheetTheme: BottomSheetThemeData(
+          backgroundColor: themeBottomSheetColor, elevation: 5),
       brightness: Brightness.dark,
       primaryColor: Color.fromARGB(255, 13, 107, 184),
       backgroundColor: Colors.black,
       scaffoldBackgroundColor: Colors.black);
 
   ThemeData _lightTheme = ThemeData(
-    primaryColor: Color.fromARGB(255, 13, 107, 184),
+    bottomSheetTheme: BottomSheetThemeData(
+        backgroundColor: themeDefaultColor,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        elevation: 5),
+    primaryTextTheme: TextTheme(bodyText1: TextStyle(color: themeSurfaceColor)),
+    primaryColor: hmsdefaultColor,
     brightness: Brightness.light,
     scaffoldBackgroundColor: Colors.white,
-    backgroundColor: Colors.black,
+    backgroundColor: Colors.white,
     dividerColor: Colors.white54,
   );
 
@@ -78,6 +88,7 @@ class _HMSExampleAppState extends State<HMSExampleApp> {
     _initURIHandler();
     _incomingLinkHandler();
     initDynamicLinks();
+    setThemeMode();
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   }
 
@@ -155,6 +166,15 @@ class _HMSExampleAppState extends State<HMSExampleApp> {
     }
   }
 
+  void setThemeMode() async {
+    _themeMode = await Utilities.getBoolData(key: "dark-mode") ?? true
+        ? ThemeMode.dark
+        : ThemeMode.light;
+    if (_themeMode == ThemeMode.light) {
+      changeTheme(_themeMode);
+    }
+  }
+
   @override
   void dispose() {
     _streamSubscription?.cancel();
@@ -189,15 +209,13 @@ class HomePage extends StatefulWidget {
 
   @override
   _HomePageState createState() => _HomePageState();
+  static _HomePageState of(BuildContext context) =>
+      context.findAncestorStateOfType<_HomePageState>()!;
 }
 
 class _HomePageState extends State<HomePage> {
   TextEditingController meetingLinkController = TextEditingController();
   CustomLogger logger = CustomLogger();
-  bool skipPreview = false;
-  bool mirrorCamera = true;
-  bool showStats = false;
-  List<bool> mode = [true, false]; //0-> meeting ,1 -> HLS mode
 
   PackageInfo _packageInfo = PackageInfo(
     appName: 'Unknown',
@@ -222,9 +240,6 @@ class _HomePageState extends State<HomePage> {
     } else {
       meetingLinkController.text = widget.deepLinkURL ?? "";
     }
-    int index = await Utilities.getIntData(key: 'mode');
-    mode[index] = true;
-    mode[1 - index] = false;
   }
 
   Future<bool> _closeApp() {
@@ -239,22 +254,6 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  void handleClick(int value) {
-    switch (value) {
-      case 1:
-        skipPreview = !skipPreview;
-        break;
-      case 2:
-        mirrorCamera = !mirrorCamera;
-        break;
-      case 3:
-        showStats = !showStats;
-        break;
-      case 4:
-        break;
-    }
-  }
-
   @override
   void didUpdateWidget(covariant HomePage oldWidget) {
     if (widget.deepLinkURL != null) {
@@ -267,7 +266,6 @@ class _HomePageState extends State<HomePage> {
     if (meetingLinkController.text.isEmpty) {
       return;
     }
-    Utilities.saveIntData(key: "mode", value: mode[0] == true ? 0 : 1);
     FocusManager.instance.primaryFocus?.unfocus();
     Utilities.setRTMPUrl(meetingLinkController.text);
     MeetingFlow flow = Utilities.deriveFlow(meetingLinkController.text.trim());
@@ -276,6 +274,7 @@ class _HomePageState extends State<HomePage> {
           context,
           MaterialPageRoute(
               builder: (_) => PreviewDetails(
+                    autofocusField: true,
                     meetingLink: meetingLinkController.text.trim(),
                     meetingFlow: flow,
                   )));
@@ -286,126 +285,11 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    bool isDarkMode = HMSExampleApp.of(context).isDarkMode;
     double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
     return WillPopScope(
       onWillPop: _closeApp,
       child: SafeArea(
         child: Scaffold(
-            // appBar: AppBar(
-            //   backgroundColor: isDarkMode ? Colors.black : Colors.white,
-            //   elevation: 0,
-            //   title: Text(
-            //     '100ms',
-            //     style: GoogleFonts.inter(color: iconColor),
-            //   ),
-            //   actions: [
-            //     IconButton(
-            //         onPressed: () {
-            //           if (isDarkMode) {
-            //             HMSExampleApp.of(context).changeTheme(ThemeMode.light);
-            //           } else {
-            //             HMSExampleApp.of(context).changeTheme(ThemeMode.dark);
-            //           }
-            //         },
-            //         icon: isDarkMode
-            //             ? SvgPicture.asset(
-            //                 'assets/icons/light_mode.svg',
-            //                 color: iconColor,
-            //               )
-            //             : SvgPicture.asset(
-            //                 'assets/icons/dark_mode.svg',
-            //                 color: iconColor,
-            //               )),
-            //     PopupMenuButton<int>(
-            //       onSelected: handleClick,
-            //       icon: SvgPicture.asset(
-            //         'assets/icons/settings.svg',
-            //         color: iconColor,
-            //       ),
-            //       itemBuilder: (BuildContext context) {
-            //         return [
-            //           PopupMenuItem(
-            //             child: Row(
-            //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //               children: [
-            //                 if (skipPreview)
-            //                   Text("Enable Preview",
-            //                       style: GoogleFonts.inter(color: iconColor))
-            //                 else
-            //                   Text(
-            //                     "Disable Preview",
-            //                     style: GoogleFonts.inter(color: Colors.blue),
-            //                   ),
-            //                 if (skipPreview)
-            //                   SvgPicture.asset(
-            //                       'assets/icons/preview_state_on.svg',
-            //                       color: iconColor)
-            //                 else
-            //                   SvgPicture.asset(
-            //                     'assets/icons/preview_state_off.svg',
-            //                     color: Colors.blue,
-            //                   ),
-            //               ],
-            //             ),
-            //             value: 1,
-            //           ),
-            //           PopupMenuItem(
-            //             child: Row(
-            //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //               children: [
-            //                 if (mirrorCamera)
-            //                   Text("Disable Mirroring",
-            //                       style: GoogleFonts.inter(color: Colors.blue))
-            //                 else
-            //                   Text(
-            //                     "Enable Mirroring",
-            //                     style: GoogleFonts.inter(color: iconColor),
-            //                   ),
-            //                 Icon(
-            //                   Icons.camera_front,
-            //                   color: mirrorCamera ? Colors.blue : iconColor,
-            //                 ),
-            //               ],
-            //             ),
-            //             value: 2,
-            //           ),
-            //           PopupMenuItem(
-            //             child: Row(
-            //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //               children: [
-            //                 if (showStats)
-            //                   Text("Disable Stats",
-            //                       style: GoogleFonts.inter(color: Colors.blue))
-            //                 else
-            //                   Text(
-            //                     "Enable Stats",
-            //                     style: GoogleFonts.inter(color: iconColor),
-            //                   ),
-            //                 SvgPicture.asset(
-            //                   'assets/icons/stats.svg',
-            //                   color: showStats ? Colors.blue : iconColor,
-            //                 ),
-            //               ],
-            //             ),
-            //             value: 3,
-            //           ),
-            //           PopupMenuItem(
-            //             child: Row(
-            //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //               children: [
-            //                 Text("Version ${_packageInfo.version}",
-            //                     style: GoogleFonts.inter(color: iconColor)),
-            //               ],
-            //             ),
-            //             value: 4,
-            //           ),
-            //         ];
-            //       },
-            //     ),
-            //   ],
-            // ),
             body: Center(
           child: SingleChildScrollView(
             child: Column(
@@ -423,7 +307,7 @@ class _HomePageState extends State<HomePage> {
                       textAlign: TextAlign.center,
                       style: GoogleFonts.inter(
                           letterSpacing: 0.25,
-                          color: defaultColor,
+                          color: themeDefaultColor,
                           height: 1.17,
                           fontSize: 34,
                           fontWeight: FontWeight.w600)),
@@ -438,7 +322,7 @@ class _HomePageState extends State<HomePage> {
                       textAlign: TextAlign.center,
                       style: GoogleFonts.inter(
                           letterSpacing: 0.5,
-                          color: subHeadingColor,
+                          color: themeSubHeadingColor,
                           height: 1.5,
                           fontSize: 16,
                           fontWeight: FontWeight.w400)),
@@ -456,34 +340,10 @@ class _HomePageState extends State<HomePage> {
                       Text("Joining Link",
                           key: Key('joining_link_text'),
                           style: GoogleFonts.inter(
-                              color: defaultColor,
+                              color: themeDefaultColor,
                               height: 1.5,
                               fontSize: 14,
                               fontWeight: FontWeight.w400)),
-                      // ToggleButtons(
-                      //     key: Key('mode_toggle_button'),
-                      //     selectedColor: hmsdefaultColor,
-                      //     selectedBorderColor: hmsdefaultColor,
-                      //     borderRadius: BorderRadius.circular(10),
-                      //     textStyle: GoogleFonts.inter(
-                      //         color: defaultColor,
-                      //         fontSize: 12,
-                      //         fontWeight: FontWeight.w600),
-                      //     children: [Text(" Meeting "), Text("HLS")],
-                      //     onPressed: (int index) {
-                      //       setState(() {
-                      //         for (int buttonIndex = 0;
-                      //             buttonIndex < mode.length;
-                      //             buttonIndex++) {
-                      //           if (buttonIndex == index) {
-                      //             mode[buttonIndex] = true;
-                      //           } else {
-                      //             mode[buttonIndex] = false;
-                      //           }
-                      //         }
-                      //       });
-                      //     },
-                      //     isSelected: mode)
                     ],
                   ),
                 ),
@@ -502,13 +362,12 @@ class _HomePageState extends State<HomePage> {
                     },
                     decoration: InputDecoration(
                         focusColor: hmsdefaultColor,
-                        contentPadding:
-                            EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                        fillColor: surfaceColor,
+                        contentPadding: EdgeInsets.only(left: 16),
+                        fillColor: themeSurfaceColor,
                         filled: true,
                         hintText: 'Paste the link here',
                         hintStyle: GoogleFonts.inter(
-                            color: hintColor,
+                            color: hmsHintColor,
                             height: 1.5,
                             fontSize: 16,
                             fontWeight: FontWeight.w400),
@@ -538,40 +397,77 @@ class _HomePageState extends State<HomePage> {
                   child: ValueListenableBuilder<TextEditingValue>(
                       valueListenable: meetingLinkController,
                       builder: (context, value, child) {
-                        return ElevatedButton(
-                          style: ButtonStyle(
-                              shadowColor:
-                                  MaterialStateProperty.all(surfaceColor),
-                              backgroundColor: meetingLinkController
-                                      .text.isEmpty
-                                  ? MaterialStateProperty.all(surfaceColor)
-                                  : MaterialStateProperty.all(hmsdefaultColor),
-                              shape: MaterialStateProperty.all<
-                                      RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8.0),
-                              ))),
-                          onPressed: () async {
-                            joinMeeting();
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.fromLTRB(8, 12, 8, 12),
-                            decoration: BoxDecoration(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(8))),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                HLSTitleText(
-                                  key: Key('join_now'),
-                                  text: 'Join Now',
-                                  textColor: meetingLinkController.text.isEmpty
-                                      ? disabledTextColor
-                                      : enabledTextColor,
-                                )
-                              ],
-                            ),
+                        return Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            color: meetingLinkController.text.isEmpty
+                                ? themeSurfaceColor
+                                : hmsdefaultColor,
+                          ),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                  child: ElevatedButton(
+                                style: ButtonStyle(
+                                    shadowColor: MaterialStateProperty.all(
+                                        themeSurfaceColor),
+                                    backgroundColor:
+                                        meetingLinkController.text.isEmpty
+                                            ? MaterialStateProperty.all(
+                                                themeSurfaceColor)
+                                            : MaterialStateProperty.all(
+                                                hmsdefaultColor),
+                                    shape: MaterialStateProperty.all<
+                                            RoundedRectangleBorder>(
+                                        RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8.0),
+                                    ))),
+                                onPressed: () async {
+                                  joinMeeting();
+                                },
+                                child: Container(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(60, 12, 8, 12),
+                                  decoration: BoxDecoration(
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(8))),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      HLSTitleText(
+                                        key: Key('join_now'),
+                                        text: 'Join Now',
+                                        textColor:
+                                            meetingLinkController.text.isEmpty
+                                                ? themeDisabledTextColor
+                                                : enabledTextColor,
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              )),
+                              GestureDetector(
+                                onTap: (() => showModalBottomSheet(
+                                    isScrollControlled: true,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    context: context,
+                                    builder: (ctx) => HMSAppSettings())),
+                                child: Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 8.0, right: 8),
+                                  child: SvgPicture.asset(
+                                    "assets/icons/more.svg",
+                                    color: meetingLinkController.text.isEmpty
+                                        ? themeDisabledTextColor
+                                        : hmsWhiteColor,
+                                    fit: BoxFit.scaleDown,
+                                  ),
+                                ),
+                              )
+                            ],
                           ),
                         );
                       }),
@@ -603,14 +499,8 @@ class _HomePageState extends State<HomePage> {
                     onPressed: () async {
                       bool res = await Utilities.getCameraPermissions();
                       if (res) {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (_) => QRCodeScreen(
-                                      meetingFlow: mode[0]
-                                          ? MeetingFlow.meeting
-                                          : MeetingFlow.hlsStreaming,
-                                    )));
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (_) => QRCodeScreen()));
                       }
                     },
                     child: Container(

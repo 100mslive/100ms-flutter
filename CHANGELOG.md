@@ -1,3 +1,14 @@
+## 0.7.6 - 2022-09-23
+
+- Added audio output change listener callback while in Preview on Android
+- Added API to show Native Audio Output Picker on iOS
+- Corrected an issue where audio was always coming from the Earpiece instead of Built-In Speaker on iOS
+- Fixed an issue where audio gets distorted when headset is used while sharing audio playing on iOS
+- Updated `HMSException` class. Added `canRetry` attribute
+
+Full Changelog: [0.7.6...0.7.5](https://github.com/100mslive/100ms-flutter/compare/0.7.6...0.7.5)
+
+
 ## 0.7.5 - 2022-08-18
 
 - Added support on iOS for sharing audio from local files on your device & from other audio playing apps

@@ -103,4 +103,11 @@ class PreviewStore extends ChangeNotifier
   void updateError(HMSException error) {
     this.error = error;
   }
+
+  @override
+  void onAudioDeviceChanged(
+      {HMSAudioDevice? currentAudioDevice,
+      List<HMSAudioDevice>? availableAudioDevice}) {
+    // TODO: implement onAudioDeviceChanged
+  }
 }

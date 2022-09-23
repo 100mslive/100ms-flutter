@@ -1,18 +1,15 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
-import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
 import 'package:hmssdk_flutter_example/hls-streaming/util/hls_title_text.dart';
 import 'package:hmssdk_flutter_example/preview/preview_details.dart';
-import 'package:hmssdk_flutter_example/preview/preview_store.dart';
-import 'package:provider/provider.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 class QRCodeScreen extends StatefulWidget {
-  final MeetingFlow meetingFlow;
-
-  QRCodeScreen({required this.meetingFlow});
+  QRCodeScreen();
 
   @override
   State<QRCodeScreen> createState() => _QRCodeScreenState();
@@ -22,33 +19,41 @@ class _QRCodeScreenState extends State<QRCodeScreen> {
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   QRViewController? controller;
 
-  void _onQRViewCreated(QRViewController controller) {
-    this.controller = controller;
-    controller.scannedDataStream.listen((scanData) async {
-      controller.pauseCamera();
+  @override
+  void reassemble() {
+    super.reassemble();
+    if (Platform.isAndroid) {
+      controller!.pauseCamera();
+    } else if (Platform.isIOS) {
+      controller!.resumeCamera();
+    }
+  }
+
+  @override
+  void dispose() {
+    controller?.dispose();
+    super.dispose();
+  }
+
+  void _onQRViewCreated(QRViewController qrController) {
+    this.controller = qrController;
+    controller!.resumeCamera();
+    controller!.scannedDataStream.listen((scanData) async {
       if (scanData.code != null) {
         MeetingFlow flow = Utilities.deriveFlow(scanData.code!);
         if (flow == MeetingFlow.meeting || flow == MeetingFlow.hlsStreaming) {
+          controller!.pauseCamera();
           Utilities.setRTMPUrl(scanData.code!);
           FocusManager.instance.primaryFocus?.unfocus();
           Navigator.of(context).pushReplacement(MaterialPageRoute(
-              builder: (_) => ListenableProvider.value(
-                    value: PreviewStore(),
-                    child: PreviewDetails(
-                      meetingLink: scanData.code!.trim(),
-                      meetingFlow: flow,
-                    ),
-                  )));
+            builder: (_) => PreviewDetails(
+              meetingLink: scanData.code!.trim(),
+              meetingFlow: flow,
+            ),
+          ));
         } else {
-          bool res = await UtilityComponents.showErrorDialog(
-              context: context,
-              errorMessage: "Please scan a valid meeting URL",
-              errorTitle: "Invalid Meeting Url",
-              actionMessage: "OK",
-              action: () {
-                Navigator.pop(context, true);
-              });
-          if (res) controller.resumeCamera();
+          Utilities.showToast("Invalid meeting url");
+          controller!.resumeCamera();
         }
       }
     });
@@ -74,7 +79,7 @@ class _QRCodeScreenState extends State<QRCodeScreen> {
                       icon: Icon(
                         Icons.arrow_back_ios_new,
                         size: 16,
-                        color: defaultColor,
+                        color: themeDefaultColor,
                       ),
                       onPressed: () {
                         Navigator.pop(context);
@@ -89,7 +94,7 @@ class _QRCodeScreenState extends State<QRCodeScreen> {
                         children: [
                           HLSTitleText(
                             text: "Scan QR Code",
-                            textColor: subHeadingColor,
+                            textColor: themeSubHeadingColor,
                             letterSpacing: 0.15,
                           ),
                         ],
@@ -121,7 +126,8 @@ class _QRCodeScreenState extends State<QRCodeScreen> {
                   width: width * 0.95,
                   child: ElevatedButton(
                     style: ButtonStyle(
-                        shadowColor: MaterialStateProperty.all(surfaceColor),
+                        shadowColor:
+                            MaterialStateProperty.all(themeSurfaceColor),
                         backgroundColor:
                             MaterialStateProperty.all(Colors.transparent),
                         side: MaterialStateProperty.all(

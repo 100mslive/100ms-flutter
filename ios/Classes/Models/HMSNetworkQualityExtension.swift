@@ -15,5 +15,3 @@ class HMSNetworkQualityExtension {
         return dict
     }
 }
-
-    

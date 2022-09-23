@@ -17,7 +17,7 @@ import 'package:provider/provider.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/role_change_request_dialog.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/track_change_request_dialog.dart';
-import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
+import 'package:hmssdk_flutter_example/data_store/meeting_store.dart';
 
 class UtilityComponents {
   static Future<dynamic> onBackPressed(BuildContext context) {
@@ -55,7 +55,7 @@ class UtilityComponents {
         content: Text(
             "You will leave the room immediately. You can’t undo this action.",
             style: GoogleFonts.inter(
-                color: hintColor,
+                color: themeHintColor,
                 fontSize: 14,
                 fontWeight: FontWeight.w400,
                 letterSpacing: 0.25)),
@@ -66,7 +66,8 @@ class UtilityComponents {
               Expanded(
                 child: ElevatedButton(
                     style: ButtonStyle(
-                        shadowColor: MaterialStateProperty.all(surfaceColor),
+                        shadowColor:
+                            MaterialStateProperty.all(themeSurfaceColor),
                         backgroundColor: MaterialStateProperty.all(
                           Color.fromRGBO(32, 22, 23, 1),
                         ),
@@ -83,7 +84,7 @@ class UtilityComponents {
                           horizontal: 8.0, vertical: 12),
                       child: Text('Nevermind',
                           style: GoogleFonts.inter(
-                              color: defaultColor,
+                              color: hmsWhiteColor,
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
                               letterSpacing: 0.50)),
@@ -95,7 +96,7 @@ class UtilityComponents {
               Expanded(
                 child: ElevatedButton(
                   style: ButtonStyle(
-                      shadowColor: MaterialStateProperty.all(surfaceColor),
+                      shadowColor: MaterialStateProperty.all(themeSurfaceColor),
                       backgroundColor: MaterialStateProperty.all(errorColor),
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
@@ -112,7 +113,7 @@ class UtilityComponents {
                     child: Text(
                       'Leave Room',
                       style: GoogleFonts.inter(
-                          color: defaultColor,
+                          color: themeDefaultColor,
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
                           letterSpacing: 0.50),
@@ -135,7 +136,7 @@ class UtilityComponents {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         insetPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         actionsPadding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
-        backgroundColor: bottomSheetColor,
+        backgroundColor: themeBottomSheetColor,
         title: Container(
           width: 300,
           child: Row(
@@ -151,7 +152,7 @@ class UtilityComponents {
               Text(
                 'Leave Studio',
                 style: GoogleFonts.inter(
-                    color: defaultColor,
+                    color: themeDefaultColor,
                     fontSize: 20,
                     height: 24 / 20,
                     fontWeight: FontWeight.w600,
@@ -163,7 +164,7 @@ class UtilityComponents {
         content: Text(
             "Others will continue after you leave. You can join the studio again.",
             style: GoogleFonts.inter(
-                color: hintColor,
+                color: themeHintColor,
                 fontSize: 14,
                 fontWeight: FontWeight.w400,
                 height: 20 / 14,
@@ -175,9 +176,10 @@ class UtilityComponents {
               Expanded(
                 child: ElevatedButton(
                     style: ButtonStyle(
-                        shadowColor: MaterialStateProperty.all(surfaceColor),
+                        shadowColor:
+                            MaterialStateProperty.all(themeSurfaceColor),
                         backgroundColor:
-                            MaterialStateProperty.all(bottomSheetColor),
+                            MaterialStateProperty.all(themeBottomSheetColor),
                         shape:
                             MaterialStateProperty.all<RoundedRectangleBorder>(
                                 RoundedRectangleBorder(
@@ -190,7 +192,7 @@ class UtilityComponents {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 8.0, vertical: 12),
                       child: HLSTitleText(
-                          text: 'Don’t Leave', textColor: defaultColor),
+                          text: 'Don’t Leave', textColor: themeDefaultColor),
                     )),
               ),
               SizedBox(
@@ -199,7 +201,7 @@ class UtilityComponents {
               Expanded(
                 child: ElevatedButton(
                   style: ButtonStyle(
-                      shadowColor: MaterialStateProperty.all(surfaceColor),
+                      shadowColor: MaterialStateProperty.all(themeSurfaceColor),
                       backgroundColor: MaterialStateProperty.all(errorColor),
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
@@ -215,7 +217,7 @@ class UtilityComponents {
                         horizontal: 25.0, vertical: 12),
                     child: HLSTitleText(
                       text: 'Leave',
-                      textColor: defaultColor,
+                      textColor: hmsWhiteColor,
                     ),
                   ),
                 ),
@@ -260,7 +262,7 @@ class UtilityComponents {
           return AlertDialog(
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-            backgroundColor: bottomSheetColor,
+            backgroundColor: themeBottomSheetColor,
             content: Text(
               message,
               style: GoogleFonts.inter(
@@ -293,7 +295,7 @@ class UtilityComponents {
         builder: (context) => AlertDialog(
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12)),
-              backgroundColor: bottomSheetColor,
+              backgroundColor: themeBottomSheetColor,
               content: Container(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -349,7 +351,7 @@ class UtilityComponents {
               return AlertDialog(
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12)),
-                backgroundColor: bottomSheetColor,
+                backgroundColor: themeBottomSheetColor,
                 content: Container(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
@@ -437,7 +439,7 @@ class UtilityComponents {
               return AlertDialog(
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12)),
-                backgroundColor: bottomSheetColor,
+                backgroundColor: themeBottomSheetColor,
                 title: Text(
                   "Select Role for Mute",
                   style: GoogleFonts.inter(
@@ -503,7 +505,7 @@ class UtilityComponents {
                             children: [
                               ElevatedButton(
                                   style: ElevatedButton.styleFrom(
-                                      primary: Colors.red),
+                                      backgroundColor: Colors.red),
                                   onPressed: () {
                                     Navigator.pop(context);
                                   },
@@ -550,7 +552,7 @@ class UtilityComponents {
               return AlertDialog(
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12)),
-                backgroundColor: bottomSheetColor,
+                backgroundColor: themeBottomSheetColor,
                 contentPadding:
                     EdgeInsets.only(left: 14, right: 10, top: 15, bottom: 15),
                 content: Container(
@@ -593,9 +595,9 @@ class UtilityComponents {
                       ElevatedButton(
                           style: ButtonStyle(
                               shadowColor:
-                                  MaterialStateProperty.all(surfaceColor),
-                              backgroundColor:
-                                  MaterialStateProperty.all(bottomSheetColor),
+                                  MaterialStateProperty.all(themeSurfaceColor),
+                              backgroundColor: MaterialStateProperty.all(
+                                  themeBottomSheetColor),
                               shape: MaterialStateProperty.all<
                                       RoundedRectangleBorder>(
                                   RoundedRectangleBorder(
@@ -611,7 +613,7 @@ class UtilityComponents {
                                 horizontal: 6, vertical: 12),
                             child: Text('Cancel',
                                 style: GoogleFonts.inter(
-                                    color: defaultColor,
+                                    color: themeDefaultColor,
                                     fontSize: 16,
                                     fontWeight: FontWeight.w600,
                                     letterSpacing: 0.50)),
@@ -619,7 +621,7 @@ class UtilityComponents {
                       ElevatedButton(
                         style: ButtonStyle(
                             shadowColor:
-                                MaterialStateProperty.all(surfaceColor),
+                                MaterialStateProperty.all(themeSurfaceColor),
                             backgroundColor:
                                 MaterialStateProperty.all(hmsdefaultColor),
                             shape: MaterialStateProperty.all<
@@ -643,7 +645,7 @@ class UtilityComponents {
                           child: Text(
                             'Start RTMP',
                             style: GoogleFonts.inter(
-                                color: defaultColor,
+                                color: hmsWhiteColor,
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
                                 letterSpacing: 0.50),
@@ -707,7 +709,8 @@ class UtilityComponents {
               Expanded(
                 child: ElevatedButton(
                     style: ButtonStyle(
-                        shadowColor: MaterialStateProperty.all(surfaceColor),
+                        shadowColor:
+                            MaterialStateProperty.all(themeSurfaceColor),
                         backgroundColor: MaterialStateProperty.all(
                           Color.fromRGBO(32, 22, 23, 1),
                         ),
@@ -724,7 +727,7 @@ class UtilityComponents {
                           horizontal: 8.0, vertical: 12),
                       child: Text("Don't End",
                           style: GoogleFonts.inter(
-                              color: defaultColor,
+                              color: themeDefaultColor,
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
                               letterSpacing: 0.50)),
@@ -736,7 +739,7 @@ class UtilityComponents {
               Expanded(
                 child: ElevatedButton(
                   style: ButtonStyle(
-                      shadowColor: MaterialStateProperty.all(surfaceColor),
+                      shadowColor: MaterialStateProperty.all(themeSurfaceColor),
                       backgroundColor: MaterialStateProperty.all(errorColor),
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
@@ -754,7 +757,7 @@ class UtilityComponents {
                     child: Text(
                       "End Room",
                       style: GoogleFonts.inter(
-                          color: defaultColor,
+                          color: hmsWhiteColor,
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
                           letterSpacing: 0.50),
@@ -805,7 +808,7 @@ class UtilityComponents {
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12)),
               insetPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-              backgroundColor: bottomSheetColor,
+              backgroundColor: themeBottomSheetColor,
               title: Center(
                 child: Text(
                   errorTitle,
@@ -817,7 +820,7 @@ class UtilityComponents {
               ),
               content: Text(errorMessage,
                   style: GoogleFonts.inter(
-                      color: defaultColor,
+                      color: themeDefaultColor,
                       fontSize: 14,
                       fontWeight: FontWeight.w400)),
               actions: [
@@ -827,7 +830,7 @@ class UtilityComponents {
                     ElevatedButton(
                         style: ButtonStyle(
                             shadowColor:
-                                MaterialStateProperty.all(surfaceColor),
+                                MaterialStateProperty.all(themeSurfaceColor),
                             backgroundColor:
                                 MaterialStateProperty.all(hmsdefaultColor),
                             shape: MaterialStateProperty.all<
@@ -857,7 +860,7 @@ class UtilityComponents {
       child: AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         insetPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-        backgroundColor: bottomSheetColor,
+        backgroundColor: themeBottomSheetColor,
         title: Text(
           "Reconnecting...",
           style: GoogleFonts.inter(
@@ -876,7 +879,7 @@ class UtilityComponents {
             ),
             Text('Oops, No internet Connection.\nReconnecting...',
                 style: GoogleFonts.inter(
-                    color: defaultColor,
+                    color: themeDefaultColor,
                     fontSize: 14,
                     fontWeight: FontWeight.w400)),
           ],
@@ -887,7 +890,7 @@ class UtilityComponents {
             children: [
               ElevatedButton(
                   style: ButtonStyle(
-                      shadowColor: MaterialStateProperty.all(surfaceColor),
+                      shadowColor: MaterialStateProperty.all(themeSurfaceColor),
                       backgroundColor:
                           MaterialStateProperty.all(hmsdefaultColor),
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
@@ -915,7 +918,8 @@ class UtilityComponents {
       required String title,
       required String content,
       required String actionText,
-      required String ignoreText}) {
+      required String ignoreText,
+      bool leaveRoom = false}) {
     MeetingStore _meetingStore = context.read<MeetingStore>();
     return showDialog(
       context: context,
@@ -962,7 +966,8 @@ class UtilityComponents {
               Expanded(
                 child: ElevatedButton(
                     style: ButtonStyle(
-                        shadowColor: MaterialStateProperty.all(surfaceColor),
+                        shadowColor:
+                            MaterialStateProperty.all(themeSurfaceColor),
                         backgroundColor: MaterialStateProperty.all(
                           Color.fromRGBO(32, 22, 23, 1),
                         ),
@@ -979,7 +984,7 @@ class UtilityComponents {
                           horizontal: 8.0, vertical: 12),
                       child: Text(ignoreText,
                           style: GoogleFonts.inter(
-                              color: defaultColor,
+                              color: hmsWhiteColor,
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
                               letterSpacing: 0.50)),
@@ -991,7 +996,7 @@ class UtilityComponents {
               Expanded(
                 child: ElevatedButton(
                   style: ButtonStyle(
-                      shadowColor: MaterialStateProperty.all(surfaceColor),
+                      shadowColor: MaterialStateProperty.all(themeSurfaceColor),
                       backgroundColor: MaterialStateProperty.all(errorColor),
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
@@ -1000,6 +1005,10 @@ class UtilityComponents {
                       ))),
                   onPressed: () => {
                     _meetingStore.stopHLSStreaming(),
+                    if (leaveRoom)
+                      {
+                        _meetingStore.leave(),
+                      },
                     Navigator.pop(context)
                   },
                   child: Padding(
@@ -1008,7 +1017,7 @@ class UtilityComponents {
                     child: Text(
                       actionText,
                       style: GoogleFonts.inter(
-                          color: defaultColor,
+                          color: themeDefaultColor,
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
                           letterSpacing: 0.50),
@@ -1036,10 +1045,10 @@ class UtilityComponents {
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12)),
               insetPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-              backgroundColor: bottomSheetColor,
+              backgroundColor: themeBottomSheetColor,
               title: Text("Change Name",
                   style: GoogleFonts.inter(
-                      color: defaultColor,
+                      color: themeDefaultColor,
                       fontWeight: FontWeight.w600,
                       letterSpacing: 0.15,
                       fontSize: 20)),
@@ -1056,7 +1065,7 @@ class UtilityComponents {
                       autofocus: true,
                       controller: textController,
                       decoration: InputDecoration(
-                        fillColor: surfaceColor,
+                        fillColor: themeSurfaceColor,
                         filled: true,
                         hintText: "Enter Name",
                         contentPadding: EdgeInsets.only(left: 10, right: 10),
@@ -1079,9 +1088,9 @@ class UtilityComponents {
                     ElevatedButton(
                         style: ButtonStyle(
                             shadowColor:
-                                MaterialStateProperty.all(surfaceColor),
-                            backgroundColor:
-                                MaterialStateProperty.all(bottomSheetColor),
+                                MaterialStateProperty.all(themeSurfaceColor),
+                            backgroundColor: MaterialStateProperty.all(
+                                themeBottomSheetColor),
                             shape: MaterialStateProperty.all<
                                 RoundedRectangleBorder>(RoundedRectangleBorder(
                               side: BorderSide(
@@ -1095,14 +1104,15 @@ class UtilityComponents {
                               horizontal: 6, vertical: 12),
                           child: Text('Cancel',
                               style: GoogleFonts.inter(
-                                  color: defaultColor,
+                                  color: themeDefaultColor,
                                   fontSize: 16,
                                   fontWeight: FontWeight.w600,
                                   letterSpacing: 0.50)),
                         )),
                     ElevatedButton(
                       style: ButtonStyle(
-                          shadowColor: MaterialStateProperty.all(surfaceColor),
+                          shadowColor:
+                              MaterialStateProperty.all(themeSurfaceColor),
                           backgroundColor:
                               MaterialStateProperty.all(hmsdefaultColor),
                           shape:
@@ -1125,7 +1135,7 @@ class UtilityComponents {
                         child: Text(
                           'Change',
                           style: GoogleFonts.inter(
-                              color: defaultColor,
+                              color: hmsWhiteColor,
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
                               letterSpacing: 0.50),
@@ -1153,7 +1163,7 @@ class UtilityComponents {
                     borderRadius: BorderRadius.circular(12)),
                 actionsPadding:
                     EdgeInsets.only(left: 20, right: 20, bottom: 10),
-                backgroundColor: bottomSheetColor,
+                backgroundColor: themeBottomSheetColor,
                 insetPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
                 contentPadding:
                     EdgeInsets.only(top: 20, bottom: 15, left: 24, right: 24),
@@ -1164,20 +1174,20 @@ class UtilityComponents {
                       text: "Change Audio Mixing Mode",
                       fontSize: 20,
                       letterSpacing: 0.15,
-                      textColor: defaultColor,
+                      textColor: themeDefaultColor,
                     ),
                     SizedBox(
                       height: 8,
                     ),
                     HLSSubtitleText(
                         text: "Select Audio Mixing mode",
-                        textColor: subHeadingColor),
+                        textColor: themeSubHeadingColor),
                   ],
                 ),
                 content: Container(
                   padding: EdgeInsets.only(left: 10, right: 5),
                   decoration: BoxDecoration(
-                    color: surfaceColor,
+                    color: themeSurfaceColor,
                     borderRadius: BorderRadius.circular(10.0),
                     border: Border.all(
                         color: borderColor,
@@ -1194,14 +1204,14 @@ class UtilityComponents {
                     value: valueChoose,
                     icon: Icon(Icons.keyboard_arrow_down),
                     buttonDecoration: BoxDecoration(
-                      color: surfaceColor,
+                      color: themeSurfaceColor,
                     ),
                     dropdownDecoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(8),
-                        color: surfaceColor,
+                        color: themeSurfaceColor,
                         border: Border.all(color: borderColor)),
                     offset: Offset(-10, -10),
-                    iconEnabledColor: defaultColor,
+                    iconEnabledColor: themeDefaultColor,
                     selectedItemHighlightColor: hmsdefaultColor,
                     onChanged: (dynamic newvalue) {
                       setState(() {
@@ -1212,7 +1222,7 @@ class UtilityComponents {
                       DropdownMenuItem(
                         child: HLSTitleText(
                           text: HMSAudioMixingMode.TALK_AND_MUSIC.name,
-                          textColor: defaultColor,
+                          textColor: themeDefaultColor,
                           fontWeight: FontWeight.w400,
                         ),
                         value: HMSAudioMixingMode.TALK_AND_MUSIC,
@@ -1220,7 +1230,7 @@ class UtilityComponents {
                       DropdownMenuItem(
                         child: HLSTitleText(
                           text: HMSAudioMixingMode.TALK_ONLY.name,
-                          textColor: defaultColor,
+                          textColor: themeDefaultColor,
                           fontWeight: FontWeight.w400,
                         ),
                         value: HMSAudioMixingMode.TALK_ONLY,
@@ -1228,7 +1238,7 @@ class UtilityComponents {
                       DropdownMenuItem(
                         child: HLSTitleText(
                           text: HMSAudioMixingMode.MUSIC_ONLY.name,
-                          textColor: defaultColor,
+                          textColor: themeDefaultColor,
                           fontWeight: FontWeight.w400,
                         ),
                         value: HMSAudioMixingMode.MUSIC_ONLY,
@@ -1243,9 +1253,9 @@ class UtilityComponents {
                       ElevatedButton(
                           style: ButtonStyle(
                               shadowColor:
-                                  MaterialStateProperty.all(surfaceColor),
-                              backgroundColor:
-                                  MaterialStateProperty.all(bottomSheetColor),
+                                  MaterialStateProperty.all(themeSurfaceColor),
+                              backgroundColor: MaterialStateProperty.all(
+                                  themeBottomSheetColor),
                               shape: MaterialStateProperty.all<
                                       RoundedRectangleBorder>(
                                   RoundedRectangleBorder(
@@ -1260,7 +1270,7 @@ class UtilityComponents {
                                 vertical: 12, horizontal: 10),
                             child: Text('Cancel',
                                 style: GoogleFonts.inter(
-                                    color: defaultColor,
+                                    color: themeDefaultColor,
                                     fontSize: 16,
                                     fontWeight: FontWeight.w600,
                                     letterSpacing: 0.50)),
@@ -1268,7 +1278,7 @@ class UtilityComponents {
                       ElevatedButton(
                         style: ButtonStyle(
                             shadowColor:
-                                MaterialStateProperty.all(surfaceColor),
+                                MaterialStateProperty.all(themeSurfaceColor),
                             backgroundColor:
                                 MaterialStateProperty.all(hmsdefaultColor),
                             shape: MaterialStateProperty.all<
@@ -1290,7 +1300,7 @@ class UtilityComponents {
                           child: Text(
                             'Change',
                             style: GoogleFonts.inter(
-                                color: defaultColor,
+                                color: themeDefaultColor,
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
                                 letterSpacing: 0.50),
@@ -1315,7 +1325,7 @@ class UtilityComponents {
               return AlertDialog(
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12)),
-                backgroundColor: bottomSheetColor,
+                backgroundColor: themeBottomSheetColor,
                 contentPadding:
                     EdgeInsets.only(left: 14, right: 10, top: 15, bottom: 15),
                 content: Column(
@@ -1349,9 +1359,9 @@ class UtilityComponents {
                       ElevatedButton(
                           style: ButtonStyle(
                               shadowColor:
-                                  MaterialStateProperty.all(surfaceColor),
-                              backgroundColor:
-                                  MaterialStateProperty.all(bottomSheetColor),
+                                  MaterialStateProperty.all(themeSurfaceColor),
+                              backgroundColor: MaterialStateProperty.all(
+                                  themeBottomSheetColor),
                               shape: MaterialStateProperty.all<
                                       RoundedRectangleBorder>(
                                   RoundedRectangleBorder(
@@ -1366,7 +1376,7 @@ class UtilityComponents {
                                 horizontal: 6, vertical: 12),
                             child: Text('Cancel',
                                 style: GoogleFonts.inter(
-                                    color: defaultColor,
+                                    color: themeDefaultColor,
                                     fontSize: 16,
                                     fontWeight: FontWeight.w600,
                                     letterSpacing: 0.50)),
@@ -1374,7 +1384,7 @@ class UtilityComponents {
                       ElevatedButton(
                         style: ButtonStyle(
                             shadowColor:
-                                MaterialStateProperty.all(surfaceColor),
+                                MaterialStateProperty.all(themeSurfaceColor),
                             backgroundColor:
                                 MaterialStateProperty.all(hmsdefaultColor),
                             shape: MaterialStateProperty.all<
@@ -1404,7 +1414,7 @@ class UtilityComponents {
                           child: Text(
                             isPlaying ? 'Stop' : 'Select',
                             style: GoogleFonts.inter(
-                                color: defaultColor,
+                                color: themeDefaultColor,
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
                                 letterSpacing: 0.50),

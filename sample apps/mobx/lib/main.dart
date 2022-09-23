@@ -31,7 +31,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   TextEditingController txtName = TextEditingController(text: "");
-  TextEditingController txtId = TextEditingController(text: "");
+  TextEditingController txtId = TextEditingController(
+      text: "https://shaik.app.100ms.live/meeting/ajk-stp-ebs");
   @override
   Widget build(BuildContext context) {
     return Scaffold(
