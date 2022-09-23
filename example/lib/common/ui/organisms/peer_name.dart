@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 
 //Project imports
-import 'package:hmssdk_flutter_example/meeting/peer_track_node.dart';
+import 'package:hmssdk_flutter_example/model/peer_track_node.dart';
 
 class PeerName extends StatefulWidget {
   @override
@@ -30,7 +30,7 @@ class _PeerNameState extends State<PeerName> {
               overflow: TextOverflow.ellipsis,
               style: GoogleFonts.inter(
                   fontWeight: FontWeight.w400,
-                  color: defaultColor,
+                  color: themeDefaultColor,
                   fontSize: 14,
                   letterSpacing: 0.25,
                   height: 20 / 14),

@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 
 //Project imports
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
+import 'package:hmssdk_flutter_example/data_store/meeting_store.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/change_role_options.dart';
 
 class ParticipantOrganism extends StatefulWidget {
@@ -38,7 +38,7 @@ class _ParticipantOrganismState extends State<ParticipantOrganism> {
     return Card(
       child: Container(
         padding: EdgeInsets.all(20.0),
-        color: surfaceColor,
+        color: themeSurfaceColor,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [

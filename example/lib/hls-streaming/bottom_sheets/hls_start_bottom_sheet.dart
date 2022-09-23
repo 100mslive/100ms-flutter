@@ -5,19 +5,18 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/hms_button.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/hls-streaming/util/hls_title_text.dart';
-import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
+import 'package:hmssdk_flutter_example/data_store/meeting_store.dart';
 import 'package:provider/provider.dart';
 
-class HLSBottomSheet extends StatefulWidget {
-  final String meetingLink;
-
-  HLSBottomSheet({required this.meetingLink});
+class HLSStartBottomSheet extends StatefulWidget {
+  final Key? key;
+  HLSStartBottomSheet({this.key}) : super(key: key);
 
   @override
-  State<HLSBottomSheet> createState() => _HLSBottomSheetState();
+  State<HLSStartBottomSheet> createState() => _HLSStartBottomSheetState();
 }
 
-class _HLSBottomSheetState extends State<HLSBottomSheet> {
+class _HLSStartBottomSheetState extends State<HLSStartBottomSheet> {
   bool _isRecordingOn = false;
   @override
   Widget build(BuildContext context) {
@@ -38,7 +37,7 @@ class _HLSBottomSheetState extends State<HLSBottomSheet> {
                       icon: Icon(
                         Icons.arrow_back_ios_new,
                         size: 16,
-                        color: defaultColor,
+                        color: hmsWhiteColor,
                       ),
                       onPressed: () {
                         Navigator.pop(context);
@@ -54,13 +53,13 @@ class _HLSBottomSheetState extends State<HLSBottomSheet> {
                     children: [
                       HLSTitleText(
                         text: "START STREAMING",
-                        textColor: subHeadingColor,
+                        textColor: themeSubHeadingColor,
                         fontSize: 10,
                         lineHeight: 16,
                       ),
                       HLSTitleText(
                         text: "HLS",
-                        textColor: defaultColor,
+                        textColor: themeDefaultColor,
                         fontSize: 20,
                         letterSpacing: 0.15,
                         lineHeight: 24,
@@ -78,7 +77,7 @@ class _HLSBottomSheetState extends State<HLSBottomSheet> {
               ),
               SvgPicture.asset(
                 "assets/icons/live.svg",
-                color: defaultColor,
+                color: themeDefaultColor,
                 width: 33,
               ),
               SizedBox(
@@ -86,7 +85,7 @@ class _HLSBottomSheetState extends State<HLSBottomSheet> {
               ),
               HLSTitleText(
                 text: "HLS Streaming",
-                textColor: defaultColor,
+                textColor: themeDefaultColor,
                 fontSize: 20,
                 letterSpacing: 0.15,
                 lineHeight: 24,
@@ -98,7 +97,7 @@ class _HLSBottomSheetState extends State<HLSBottomSheet> {
                 "Stream directly from the browser using any device with multiple hosts and real-time messaging, all within this platform.",
                 maxLines: 2,
                 style: GoogleFonts.inter(
-                    color: subHeadingColor,
+                    color: themeSubHeadingColor,
                     fontSize: 14,
                     height: 20 / 14,
                     letterSpacing: 0.25,
@@ -110,7 +109,7 @@ class _HLSBottomSheetState extends State<HLSBottomSheet> {
               Container(
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8),
-                    color: surfaceColor),
+                    color: themeSurfaceColor),
                 height: 56,
                 child: Padding(
                   padding: EdgeInsets.symmetric(vertical: 7, horizontal: 10),
@@ -121,14 +120,14 @@ class _HLSBottomSheetState extends State<HLSBottomSheet> {
                         children: [
                           SvgPicture.asset(
                             "assets/icons/record.svg",
-                            color: defaultColor,
+                            color: themeDefaultColor,
                           ),
                           SizedBox(
                             width: 10,
                           ),
                           HLSTitleText(
                             text: "Record the stream",
-                            textColor: defaultColor,
+                            textColor: themeDefaultColor,
                             fontSize: 14,
                             letterSpacing: 0.25,
                             lineHeight: 20,
@@ -172,13 +171,14 @@ class _HLSBottomSheetState extends State<HLSBottomSheet> {
                       children: [
                         SvgPicture.asset(
                           "assets/icons/live.svg",
-                          color: defaultColor,
+                          color: themeDefaultColor,
                           width: 24,
                         ),
                         SizedBox(
                           width: 11,
                         ),
-                        HLSTitleText(text: "Go Live", textColor: defaultColor)
+                        HLSTitleText(
+                            text: "Go Live", textColor: themeDefaultColor)
                       ],
                     ),
                   )),
@@ -192,7 +192,7 @@ class _HLSBottomSheetState extends State<HLSBottomSheet> {
                   children: [
                     SvgPicture.asset(
                       "assets/icons/info.svg",
-                      color: subHeadingColor,
+                      color: themeSubHeadingColor,
                       width: 15,
                     ),
                     SizedBox(
@@ -204,7 +204,7 @@ class _HLSBottomSheetState extends State<HLSBottomSheet> {
                         "If recording has to be enabled later, streaming has to be stopped first.",
                         style: GoogleFonts.inter(
                             fontSize: 12,
-                            color: subHeadingColor,
+                            color: themeSubHeadingColor,
                             letterSpacing: 0.4,
                             fontWeight: FontWeight.w400),
                       ),

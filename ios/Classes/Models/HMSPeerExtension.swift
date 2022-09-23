@@ -40,7 +40,7 @@ class  HMSPeerExtension {
             aux.forEach { auxilaryTracks.append(HMSTrackExtension.toDictionary($0)) }
             dict["auxilary_tracks"] = auxilaryTracks
         }
-        
+
         if let quality = peer.networkQuality {
             dict["network_quality"] = HMSNetworkQualityExtension.toDictionary(quality)
         }

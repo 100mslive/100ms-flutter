@@ -7,7 +7,7 @@ import 'package:hmssdk_flutter_example/hls-streaming/util/hls_subtitle_text.dart
 import 'package:provider/provider.dart';
 
 //Package imports
-import 'package:hmssdk_flutter_example/meeting/peer_track_node.dart';
+import 'package:hmssdk_flutter_example/model/peer_track_node.dart';
 
 class DegradeTile extends StatefulWidget {
   final double itemHeight;
@@ -34,7 +34,7 @@ class _DegradeTileState extends State<DegradeTile> {
                 height: widget.itemHeight + 110,
                 width: widget.itemWidth - 4,
                 decoration: BoxDecoration(
-                    color: bottomSheetColor,
+                    color: themeBottomSheetColor,
                     borderRadius: BorderRadius.all(Radius.circular(10))),
                 child: Stack(
                   children: [

@@ -14,7 +14,7 @@ import live.hms.video.utils.HmsUtilities
 
 
 class HMSVideoViewWidget(private val context: Context, id: Int, creationParams: Map<String?, Any?>?, private val track: HMSVideoTrack, private val setMirror:Boolean,
-                         private val scaleType : Int?,private val matchParent: Boolean? = true
+                        private val scaleType : Int?,private val matchParent: Boolean? = true
 ) : PlatformView {
 
     private var hmsVideoView: HMSVideoView? = null

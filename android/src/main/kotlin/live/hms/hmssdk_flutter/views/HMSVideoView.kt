@@ -33,7 +33,6 @@ class HMSVideoView(
         if ((scaleType ?: 0) <= RendererCommon.ScalingType.values().size) {
             surfaceViewRenderer.setScalingType(RendererCommon.ScalingType.values()[scaleType ?: 0])
         }
-
     }
 
     override fun onAttachedToWindow() {

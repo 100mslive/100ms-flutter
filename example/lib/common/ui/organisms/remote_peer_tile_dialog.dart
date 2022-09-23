@@ -38,7 +38,7 @@ class _RemotePeerTileDialogState extends State<RemotePeerTileDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      backgroundColor: bottomSheetColor,
+      backgroundColor: themeBottomSheetColor,
       title: Text(
         widget.peerName,
         style: GoogleFonts.inter(color: iconColor, fontWeight: FontWeight.bold),

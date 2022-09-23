@@ -9,12 +9,12 @@ import 'package:hmssdk_flutter_example/common/ui/organisms/stream_timer.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
-import 'package:hmssdk_flutter_example/hls-streaming/hls_message.dart';
+import 'package:hmssdk_flutter_example/hls-streaming/bottom_sheets/hls_message.dart';
 import 'package:hmssdk_flutter_example/hls-streaming/util/hls_subtitle_text.dart';
 import 'package:hmssdk_flutter_example/hls-streaming/util/hls_title_text.dart';
-import 'package:hmssdk_flutter_example/hls-streaming/util/hls_viewer_settings.dart';
+import 'package:hmssdk_flutter_example/hls-streaming/bottom_sheets/hls_viewer_settings.dart';
 import 'package:hmssdk_flutter_example/hls_viewer/hls_viewer.dart';
-import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
+import 'package:hmssdk_flutter_example/data_store/meeting_store.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 
@@ -46,7 +46,7 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                     (data.item2?.code?.errorCode == 1003 ||
                         data.item2?.code?.errorCode == 2000 ||
                         data.item2?.code?.errorCode == 4005)) {
-                  WidgetsBinding.instance?.addPostFrameCallback((_) {
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
                     UtilityComponents.showErrorDialog(
                         context: context,
                         errorMessage:
@@ -60,7 +60,7 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                   });
                 }
                 if (data.item1) {
-                  WidgetsBinding.instance?.addPostFrameCallback((_) {
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
                     Utilities.showToast(
                         context.read<MeetingStore>().description);
                     Navigator.of(context).popUntil((route) => route.isFirst);
@@ -103,7 +103,8 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                 child: HLSTitleText(
                                                     text:
                                                         "Waiting for HLS to start...",
-                                                    textColor: defaultColor)),
+                                                    textColor:
+                                                        themeDefaultColor)),
                                           ],
                                         ),
                                       ),
@@ -171,7 +172,8 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                         "Live",
                                                         style: GoogleFonts.inter(
                                                             fontSize: 16,
-                                                            color: defaultColor,
+                                                            color:
+                                                                themeDefaultColor,
                                                             letterSpacing: 0.5,
                                                             fontWeight:
                                                                 FontWeight
@@ -189,7 +191,7 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                           SvgPicture.asset(
                                                             "assets/icons/clock.svg",
                                                             color:
-                                                                subHeadingColor,
+                                                                themeSubHeadingColor,
                                                             fit: BoxFit
                                                                 .scaleDown,
                                                           ),
@@ -228,7 +230,7 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                                 return HLSSubtitleText(
                                                                   text: "00:00",
                                                                   textColor:
-                                                                      subHeadingColor,
+                                                                      themeSubHeadingColor,
                                                                 );
                                                               }),
                                                         ],
@@ -242,7 +244,7 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                           SvgPicture.asset(
                                                             "assets/icons/watching.svg",
                                                             color:
-                                                                subHeadingColor,
+                                                                themeSubHeadingColor,
                                                             fit: BoxFit
                                                                 .scaleDown,
                                                           ),
@@ -262,7 +264,7 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                                     text: length
                                                                         .toString(),
                                                                     textColor:
-                                                                        subHeadingColor);
+                                                                        themeSubHeadingColor);
                                                               })
                                                         ],
                                                       )
@@ -289,12 +291,13 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                               width: 40,
                                               height: 40,
                                               disabledBorderColor: borderColor,
-                                              offColor: screenBackgroundColor,
-                                              onColor: hintColor,
+                                              offColor:
+                                                  themeScreenBackgroundColor,
+                                              onColor: themeHintColor,
                                               isActive: handRaised,
                                               child: SvgPicture.asset(
                                                 "assets/icons/hand_outline.svg",
-                                                color: defaultColor,
+                                                color: themeDefaultColor,
                                                 fit: BoxFit.scaleDown,
                                                 semanticsLabel:
                                                     "hand_raise_button",
@@ -317,7 +320,7 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                 showModalBottomSheet(
                                                   isScrollControlled: true,
                                                   backgroundColor:
-                                                      bottomSheetColor,
+                                                      themeBottomSheetColor,
                                                   shape: RoundedRectangleBorder(
                                                     borderRadius:
                                                         BorderRadius.circular(
@@ -333,8 +336,9 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                               },
                                               width: 40,
                                               height: 40,
-                                              offColor: hintColor,
-                                              onColor: screenBackgroundColor,
+                                              offColor: themeHintColor,
+                                              onColor:
+                                                  themeScreenBackgroundColor,
                                               isActive: true,
                                               child: SvgPicture.asset(
                                                 isNewMessageReceived
@@ -352,7 +356,8 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                         onTap: () => {
                                           showModalBottomSheet(
                                               isScrollControlled: true,
-                                              backgroundColor: bottomSheetColor,
+                                              backgroundColor:
+                                                  themeBottomSheetColor,
                                               shape: RoundedRectangleBorder(
                                                 borderRadius:
                                                     BorderRadius.circular(20),
@@ -367,12 +372,12 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                         },
                                         width: 40,
                                         height: 40,
-                                        offColor: hintColor,
-                                        onColor: screenBackgroundColor,
+                                        offColor: themeHintColor,
+                                        onColor: themeScreenBackgroundColor,
                                         isActive: true,
                                         child: SvgPicture.asset(
                                           "assets/icons/more.svg",
-                                          color: defaultColor,
+                                          color: themeDefaultColor,
                                           fit: BoxFit.scaleDown,
                                           semanticsLabel: "more_button",
                                         ),
@@ -394,7 +399,7 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                 context
                                     .read<MeetingStore>()
                                     .currentRoleChangeRequest = null;
-                                WidgetsBinding.instance!
+                                WidgetsBinding.instance
                                     .addPostFrameCallback((_) {
                                   UtilityComponents.showRoleChangeDialog(
                                       currentRequest, context);
@@ -412,7 +417,7 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                 context
                                     .read<MeetingStore>()
                                     .hmsTrackChangeRequest = null;
-                                WidgetsBinding.instance!
+                                WidgetsBinding.instance
                                     .addPostFrameCallback((_) {
                                   UtilityComponents.showTrackChangeDialog(
                                       context, currentRequest);
@@ -428,7 +433,7 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                 context
                                     .read<MeetingStore>()
                                     .showAudioDeviceChangePopup = false;
-                                WidgetsBinding.instance!
+                                WidgetsBinding.instance
                                     .addPostFrameCallback((_) {
                                   showDialog(
                                       context: context,
@@ -443,7 +448,7 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                               context
                                                   .read<MeetingStore>()
                                                   .switchAudioOutput(
-                                                      audioDevice);
+                                                      audioDevice: audioDevice);
                                             },
                                           ));
                                 });

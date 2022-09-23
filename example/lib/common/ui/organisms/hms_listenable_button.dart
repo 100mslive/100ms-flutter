@@ -27,9 +27,9 @@ class HMSListenableButton extends StatelessWidget {
             return ElevatedButton(
                 style: ButtonStyle(
                     shadowColor: MaterialStateProperty.all(
-                        shadowColor == null ? surfaceColor : shadowColor),
+                        shadowColor == null ? themeSurfaceColor : shadowColor),
                     backgroundColor: textController.text.isEmpty
-                        ? MaterialStateProperty.all(surfaceColor)
+                        ? MaterialStateProperty.all(themeSurfaceColor)
                         : MaterialStateProperty.all(hmsdefaultColor),
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(

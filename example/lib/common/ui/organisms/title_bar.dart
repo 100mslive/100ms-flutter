@@ -2,11 +2,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
-import 'package:hmssdk_flutter_example/hls-streaming/util/hls_participant_sheet.dart';
+import 'package:hmssdk_flutter_example/hls-streaming/bottom_sheets/hls_participant_sheet.dart';
 import 'package:provider/provider.dart';
 
 //Project imports
-import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
+import 'package:hmssdk_flutter_example/data_store/meeting_store.dart';
 import 'package:hmssdk_flutter_example/common/constant.dart';
 
 class TitleBar extends StatelessWidget {
@@ -14,7 +14,7 @@ class TitleBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => showModalBottomSheet(
-          backgroundColor: bottomSheetColor,
+          backgroundColor: themeBottomSheetColor,
           context: context,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),

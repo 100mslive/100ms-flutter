@@ -17,9 +17,9 @@ class HMSHLSVariantExtension {
         dict["meeting_url"] = hmshlsVariant.meetingURL.absoluteString
 
         dict["metadata"] = hmshlsVariant.metadata
-        
+
         dict["hls_stream_url"] = hmshlsVariant.url.absoluteString
-        
+
         if let startedAt = hmshlsVariant.startedAt {
             dict["started_at"] = "\(startedAt)"
         }

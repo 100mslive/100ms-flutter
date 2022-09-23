@@ -1,9 +1,11 @@
 //Package imports
+import 'dart:developer';
+
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
-import 'package:hmssdk_flutter_example/meeting/hms_sdk_interactor.dart';
+import 'package:hmssdk_flutter_example/hms_sdk_interactor.dart';
 import 'package:hmssdk_flutter_example/service/room_service.dart';
 
 class PreviewStore extends ChangeNotifier
@@ -40,13 +42,25 @@ class PreviewStore extends ChangeNotifier
 
   String meetingUrl = "";
 
+  bool isRoomMute = false;
+
+  List<HMSRole> roles = [];
+
+  List<HMSAudioDevice> availableAudioOutputDevices = [];
+
+  HMSAudioDevice? currentAudioOutputDevice;
+
+  HMSAudioDevice currentAudioDeviceMode = HMSAudioDevice.AUTOMATIC;
+
   @override
   void onHMSError({required HMSException error}) {
-    updateError(error);
+    this.error = error;
+    notifyListeners();
   }
 
   @override
   void onPreview({required HMSRoom room, required List<HMSTrack> localTracks}) {
+    log("onPreview-> room: ${room.toString()}");
     this.room = room;
     for (HMSPeer each in room.peers!) {
       if (each.isLocal) {
@@ -71,6 +85,9 @@ class PreviewStore extends ChangeNotifier
     }
     this.localTracks = videoTracks;
     Utilities.saveStringData(key: "meetingLink", value: this.meetingUrl);
+    getRoles();
+    getCurrentAudioDevice();
+    getAudioDevicesList();
     notifyListeners();
   }
 
@@ -83,10 +100,12 @@ class PreviewStore extends ChangeNotifier
     if (token[0] == null) return "Token Error";
     FirebaseCrashlytics.instance.setUserIdentifier(token[0]!);
     HMSConfig config = HMSConfig(
-        authToken: token[0]!,
-        userName: user,
-        endPoint: token[1] == "true" ? "" : "https://qa-init.100ms.live/init",
-        captureNetworkQualityInPreview: true);
+      authToken: token[0]!,
+      userName: user,
+      captureNetworkQualityInPreview: true,
+      // endPoint is only required by 100ms Team. Client developers should not use `endPoint`
+      endPoint: token[1] == "true" ? "" : "https://qa-init.100ms.live/init",
+    );
     hmsSDKInteractor!.addPreviewListener(this);
     hmsSDKInteractor!.preview(config: config);
     meetingUrl = meetingLink;
@@ -95,6 +114,7 @@ class PreviewStore extends ChangeNotifier
 
   @override
   void onPeerUpdate({required HMSPeer peer, required HMSPeerUpdate update}) {
+    log("onPeerUpdate-> peer: ${peer.name} update: ${update.name}");
     switch (update) {
       case HMSPeerUpdate.peerJoined:
         peers.add(peer);
@@ -120,6 +140,7 @@ class PreviewStore extends ChangeNotifier
 
   @override
   void onRoomUpdate({required HMSRoom room, required HMSRoomUpdate update}) {
+    log("onRoomUpdate-> room: ${room.toString()} update: ${update.name}");
     switch (update) {
       case HMSRoomUpdate.browserRecordingStateUpdated:
         isRecordingStarted = room.hmsBrowserRecordingState?.running ?? false;
@@ -182,10 +203,6 @@ class PreviewStore extends ChangeNotifier
     FirebaseCrashlytics.instance.log(hmsLogList.toString());
   }
 
-  void updateError(HMSException error) {
-    this.error = error;
-  }
-
   void destroy() {
     hmsSDKInteractor!.removePreviewListener(this);
     hmsSDKInteractor!.destroy();
@@ -195,5 +212,56 @@ class PreviewStore extends ChangeNotifier
   void leave() {
     hmsSDKInteractor!.leave();
     destroy();
+  }
+
+  void toggleSpeaker() async {
+    if (!this.isRoomMute) {
+      hmsSDKInteractor!.muteAll();
+    } else {
+      hmsSDKInteractor!.unMuteAll();
+    }
+    this.isRoomMute = !this.isRoomMute;
+    notifyListeners();
+  }
+
+  void getRoles() async {
+    roles = await hmsSDKInteractor!.getRoles();
+    notifyListeners();
+  }
+
+  Future<void> getAudioDevicesList() async {
+    availableAudioOutputDevices.clear();
+    availableAudioOutputDevices
+        .addAll(await hmsSDKInteractor!.getAudioDevicesList());
+    notifyListeners();
+  }
+
+  Future<void> getCurrentAudioDevice() async {
+    currentAudioOutputDevice = await hmsSDKInteractor!.getCurrentAudioDevice();
+    notifyListeners();
+  }
+
+  void switchAudioOutput(HMSAudioDevice audioDevice) {
+    currentAudioDeviceMode = audioDevice;
+    hmsSDKInteractor!.switchAudioOutput(audioDevice);
+    notifyListeners();
+  }
+
+  @override
+  void onAudioDeviceChanged(
+      {HMSAudioDevice? currentAudioDevice,
+      List<HMSAudioDevice>? availableAudioDevice}) {
+    if (currentAudioDevice != null &&
+        this.currentAudioOutputDevice != currentAudioDevice) {
+      Utilities.showToast(
+          "Output Device changed to ${currentAudioDevice.name}");
+      this.currentAudioOutputDevice = currentAudioDevice;
+    }
+
+    if (availableAudioDevice != null) {
+      this.availableAudioOutputDevices.clear();
+      this.availableAudioOutputDevices.addAll(availableAudioDevice);
+    }
+    notifyListeners();
   }
 }

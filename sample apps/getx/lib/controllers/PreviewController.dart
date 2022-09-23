@@ -111,4 +111,11 @@ class PreviewController extends GetxController
   void onRoomUpdate({required HMSRoom room, required HMSRoomUpdate update}) {
     // TODO: implement onRoomUpdate
   }
+
+  @override
+  void onAudioDeviceChanged(
+      {HMSAudioDevice? currentAudioDevice,
+      List<HMSAudioDevice>? availableAudioDevice}) {
+    // TODO: implement onAudioDeviceChanged
+  }
 }

@@ -13,7 +13,7 @@ import 'package:tuple/tuple.dart';
 
 //Project imports
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
+import 'package:hmssdk_flutter_example/data_store/meeting_store.dart';
 
 class HLSMessage extends StatefulWidget {
   @override
@@ -34,7 +34,7 @@ class _HLSMessageState extends State<HLSMessage> {
   }
 
   void _scrollToEnd() {
-    WidgetsBinding.instance?.addPostFrameCallback((_) =>
+    WidgetsBinding.instance.addPostFrameCallback((_) =>
         _scrollController.animateTo(_scrollController.position.maxScrollExtent,
             duration: Duration(milliseconds: 200), curve: Curves.easeInOut));
   }
@@ -108,7 +108,7 @@ class _HLSMessageState extends State<HLSMessage> {
                                 Text(
                                   "Chat",
                                   style: GoogleFonts.inter(
-                                      color: defaultColor,
+                                      color: themeDefaultColor,
                                       fontSize: 20,
                                       letterSpacing: 0.15,
                                       fontWeight: FontWeight.w600),
@@ -153,7 +153,7 @@ class _HLSMessageState extends State<HLSMessage> {
                                             dropdownDecoration: BoxDecoration(
                                                 borderRadius:
                                                     BorderRadius.circular(8),
-                                                color: surfaceColor),
+                                                color: themeSurfaceColor),
                                             offset: Offset(-10, -10),
                                             iconEnabledColor: iconColor,
                                             // selectedItemHighlightColor: Colors.blue,
@@ -261,7 +261,7 @@ class _HLSMessageState extends State<HLSMessage> {
                             padding: EdgeInsets.all(16),
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(8),
-                                color: surfaceColor),
+                                color: themeSurfaceColor),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -276,7 +276,7 @@ class _HLSMessageState extends State<HLSMessage> {
                                         "Messages can only be seen by people in the call and are deleted when the call ends.",
                                         style: GoogleFonts.inter(
                                             fontWeight: FontWeight.w400,
-                                            color: subHeadingColor,
+                                            color: themeSubHeadingColor,
                                             letterSpacing: 0.4,
                                             height: 16 / 12,
                                             fontSize: 12),
@@ -356,7 +356,7 @@ class _HLSMessageState extends State<HLSMessage> {
                   Container(
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(8),
-                        color: surfaceColor),
+                        color: themeSurfaceColor),
                     child: Row(
                       children: [
                         Container(
@@ -376,7 +376,7 @@ class _HLSMessageState extends State<HLSMessage> {
                                 errorBorder: InputBorder.none,
                                 disabledBorder: InputBorder.none,
                                 hintStyle: GoogleFonts.inter(
-                                    color: hintColor,
+                                    color: themeHintColor,
                                     fontSize: 14,
                                     letterSpacing: 0.25,
                                     fontWeight: FontWeight.w400),
@@ -398,7 +398,7 @@ class _HLSMessageState extends State<HLSMessage> {
                               height: 40,
                               child: SvgPicture.asset(
                                 "assets/icons/send_message.svg",
-                                color: defaultColor,
+                                color: themeDefaultColor,
                                 fit: BoxFit.scaleDown,
                               ),
                             ))

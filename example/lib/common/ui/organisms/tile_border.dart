@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 
 //Project imports
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
-import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
+import 'package:hmssdk_flutter_example/data_store/meeting_store.dart';
 
 class TileBorder extends StatelessWidget {
   final double itemHeight;
@@ -31,7 +31,7 @@ class TileBorder extends StatelessWidget {
               border: Border.all(
                   color: (isHighestSpeaker != -1)
                       ? Utilities.getBackgroundColour(name)
-                      : bottomSheetColor,
+                      : themeBottomSheetColor,
                   width: (isHighestSpeaker != -1) ? 4.0 : 0.0),
               borderRadius: BorderRadius.all(Radius.circular(10)),
             ),

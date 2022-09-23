@@ -12,8 +12,8 @@ import 'package:provider/provider.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/video_tile.dart';
-import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
-import 'package:hmssdk_flutter_example/meeting/peer_track_node.dart';
+import 'package:hmssdk_flutter_example/data_store/meeting_store.dart';
+import 'package:hmssdk_flutter_example/model/peer_track_node.dart';
 
 Widget hlsGridView(
     {required List<PeerTrackNode> peerTracks,
@@ -54,7 +54,7 @@ Widget hlsGridView(
                         Text("You are sharing your screen",
                             textAlign: TextAlign.center,
                             style: GoogleFonts.inter(
-                              color: defaultColor,
+                              color: themeDefaultColor,
                               fontSize: 20,
                               letterSpacing: 0.15,
                               height: 24 / 20,

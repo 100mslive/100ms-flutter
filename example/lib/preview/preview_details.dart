@@ -4,7 +4,10 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/hms_listenable_button.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
+import 'package:hmssdk_flutter_example/data_store/meeting_store.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
+import 'package:hmssdk_flutter_example/hls-streaming/hls_screen_controller.dart';
+import 'package:hmssdk_flutter_example/hms_sdk_interactor.dart';
 import 'package:hmssdk_flutter_example/preview/preview_page.dart';
 import 'package:hmssdk_flutter_example/preview/preview_store.dart';
 import 'package:provider/provider.dart';
@@ -12,14 +15,15 @@ import 'package:provider/provider.dart';
 class PreviewDetails extends StatefulWidget {
   final String meetingLink;
   final MeetingFlow meetingFlow;
-  PreviewDetails({required this.meetingLink, required this.meetingFlow});
+  final bool autofocusField;
+  PreviewDetails({required this.meetingLink, required this.meetingFlow,this.autofocusField = false});
   @override
   State<PreviewDetails> createState() => _PreviewDetailsState();
 }
 
 class _PreviewDetailsState extends State<PreviewDetails> {
   TextEditingController nameController = TextEditingController();
-
+  bool toShowPreview = true;
   @override
   void initState() {
     super.initState();
@@ -30,6 +34,7 @@ class _PreviewDetailsState extends State<PreviewDetails> {
     nameController.text = await Utilities.getStringData(key: "name");
     nameController.selection = TextSelection.fromPosition(
         TextPosition(offset: nameController.text.length));
+    toShowPreview = await Utilities.getBoolData(key: 'show-preview') ?? false;
     setState(() {});
   }
 
@@ -39,15 +44,41 @@ class _PreviewDetailsState extends State<PreviewDetails> {
     } else {
       Utilities.saveStringData(key: "name", value: nameController.text.trim());
       res = await Utilities.getPermissions();
+      bool skipPreview =
+          await Utilities.getBoolData(key: 'skip-preview') ?? false;
       if (res) {
-        Navigator.of(context).pushReplacement(MaterialPageRoute(
-            builder: (_) => ListenableProvider.value(
-                  value: PreviewStore(),
-                  child: PreviewPage(
-                      meetingFlow: widget.meetingFlow,
-                      name: nameController.text,
-                      meetingLink: widget.meetingLink),
-                )));
+        if (!skipPreview) {
+          Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (_) => ListenableProvider.value(
+                    value: PreviewStore(),
+                    child: PreviewPage(
+                        meetingFlow: widget.meetingFlow,
+                        name: nameController.text,
+                        meetingLink: widget.meetingLink),
+                  )));
+        } else {
+          bool showStats =
+              await Utilities.getBoolData(key: 'show-stats') ?? false;
+          bool mirrorCamera =
+              await Utilities.getBoolData(key: 'mirror-camera') ?? false;
+          HMSSDKInteractor _hmsSDKInteractor = HMSSDKInteractor();
+          Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (_) => ListenableProvider.value(
+                    value: MeetingStore(hmsSDKInteractor: _hmsSDKInteractor),
+                    child: HLSScreenController(
+                      isRoomMute: false,
+                      isStreamingLink: widget.meetingFlow == MeetingFlow.meeting
+                          ? false
+                          : true,
+                      isAudioOn: true,
+                      meetingLink: widget.meetingLink,
+                      localPeerNetworkQuality: -1,
+                      user: nameController.text.trim(),
+                      mirrorCamera: mirrorCamera,
+                      showStats: showStats,
+                    ),
+                  )));
+        }
       }
     }
   }
@@ -55,7 +86,6 @@ class _PreviewDetailsState extends State<PreviewDetails> {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
     bool res = false;
     return Scaffold(
       body: Center(
@@ -72,7 +102,7 @@ class _PreviewDetailsState extends State<PreviewDetails> {
             ),
             Text("Go live in five!",
                 style: GoogleFonts.inter(
-                    color: defaultColor,
+                    color: themeDefaultColor,
                     fontSize: 34,
                     fontWeight: FontWeight.w600)),
             SizedBox(
@@ -80,7 +110,7 @@ class _PreviewDetailsState extends State<PreviewDetails> {
             ),
             Text("Let's get started with your name",
                 style: GoogleFonts.inter(
-                    color: subHeadingColor,
+                    color: themeSubHeadingColor,
                     height: 1.5,
                     fontSize: 16,
                     fontWeight: FontWeight.w400)),
@@ -94,7 +124,7 @@ class _PreviewDetailsState extends State<PreviewDetails> {
                 onSubmitted: (value) {
                   showPreview(res);
                 },
-                autofocus: true,
+                autofocus: widget.autofocusField,
                 textCapitalization: TextCapitalization.words,
                 style: GoogleFonts.inter(),
                 controller: nameController,
@@ -114,11 +144,11 @@ class _PreviewDetailsState extends State<PreviewDetails> {
                           ),
                     contentPadding:
                         EdgeInsets.symmetric(vertical: 14, horizontal: 16),
-                    fillColor: surfaceColor,
+                    fillColor: themeSurfaceColor,
                     filled: true,
                     hintText: 'Enter your name here',
                     hintStyle: GoogleFonts.inter(
-                        color: hintColor,
+                        color: themeHintColor,
                         height: 1.5,
                         fontSize: 16,
                         fontWeight: FontWeight.w400),
@@ -149,7 +179,7 @@ class _PreviewDetailsState extends State<PreviewDetails> {
                       Text('Get Started',
                           style: GoogleFonts.inter(
                               color: nameController.text.isEmpty
-                                  ? disabledTextColor
+                                  ? themeDisabledTextColor
                                   : enabledTextColor,
                               height: 1,
                               fontSize: 16,
@@ -160,7 +190,7 @@ class _PreviewDetailsState extends State<PreviewDetails> {
                       Icon(
                         Icons.arrow_forward,
                         color: nameController.text.isEmpty
-                            ? disabledTextColor
+                            ? themeDisabledTextColor
                             : enabledTextColor,
                         size: 16,
                       )

@@ -2,12 +2,15 @@ package live.hms.hmssdk_flutter
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.PictureInPictureParams
 import android.content.Context
 import android.content.Intent
 import android.media.projection.MediaProjectionManager
 import android.os.Build
 import android.util.Log
+import android.util.Rational
 import androidx.annotation.NonNull
+import androidx.annotation.RequiresApi
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
@@ -516,7 +519,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         val config = getConfig(call)
 
         hmssdk!!.preview(config, this.hmsPreviewListener)
-
+        hmssdk!!.setAudioDeviceChangeListener(audioPreviewDeviceChangeListener)
         result.success(null)
     }
 
@@ -911,6 +914,8 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
                 }
         }
 
+
+
     }
 
     var finalargs = mutableListOf<Any?>()
@@ -988,6 +993,13 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         }, data)
     }
 
+    var isPipOn = true;
+    fun togglePipMode(){
+        if(isPipOn){
+
+        }
+    }
+
 
 
     private fun stopScreenShare(result: Result) {
@@ -1060,12 +1072,21 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         result.success(HMSTrackExtension.toDictionary(peer?.getTrackById(trackId!!)))
     }
 
-    private fun startPip(call:MethodCall,result: Result){
-        if (Build.VERSION.SDK_INT > 24){
-            activity.enterPictureInPictureMode()
+    private fun startPip(call:MethodCall, result: Result){
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O){
+            val aspectRatio : List<Int> = listOf(16,9)
+            val autoEnter = true
+            val seamlessResize = true
+            var params = PictureInPictureParams.Builder().setAspectRatio(Rational(aspectRatio!![0], aspectRatio[1]))
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                params = params.setAutoEnterEnabled(autoEnter!!)
+                    .setSeamlessResizeEnabled(seamlessResize!!)
+            }
+            Log.d("Activity : ",activity.toString())
+            result.success(activity.enterPictureInPictureMode(params.build()))
         };
-        result.success("Android " + android.os.Build.VERSION.RELEASE);
     }
+
 
     private val hmsStatsListener = object : HMSStatsObserver {
 
@@ -1167,6 +1188,41 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
 
     }
 
+    private val audioPreviewDeviceChangeListener = object: AudioManagerDeviceChangeListener {
+        override fun onAudioDeviceChanged(p0: AudioDevice?, p1: Set<AudioDevice>?) {
+            val args = HashMap<String, Any?>()
+            args["event_name"] = "on_audio_device_changed"
+            val dict = HashMap<String, Any?>()
+            if (p0!=null){
+                dict["current_audio_device"] = p0.name
+            }
+            if(p1!=null){
+                val audioDevicesList = ArrayList<String>();
+                for (device in hmssdk!!.getAudioDevicesList()){
+                    audioDevicesList.add(device.name);
+                }
+                dict["available_audio_device"] = audioDevicesList
+            }
+            args["data"] = dict
+            if (args["data"] != null)
+                CoroutineScope(Dispatchers.Main).launch {
+                    previewSink?.success(args)
+                }
+        }
+
+        override fun onError(e: HMSException?){
+
+            val args = HashMap<String, Any?>()
+            args.put("event_name", "on_error")
+            args.put("data", HMSExceptionExtension.toDictionary(e))
+
+            if (args["data"] != null)
+                CoroutineScope(Dispatchers.Main).launch {
+                    previewSink?.success(args)
+                }
+        }
+    }
+
     private val audioDeviceChangeListener = object: AudioManagerDeviceChangeListener {
         override fun onAudioDeviceChanged(p0: AudioDevice?, p1: Set<AudioDevice>?) {
             val args = HashMap<String, Any?>()
@@ -1197,7 +1253,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
 
             if (args["data"] != null)
                 CoroutineScope(Dispatchers.Main).launch {
-                    previewSink?.success(args)
+                    eventSink?.success(args)
                 }
         }
     }

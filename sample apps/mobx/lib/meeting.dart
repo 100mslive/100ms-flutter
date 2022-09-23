@@ -33,7 +33,7 @@ class _MeetingState extends State<Meeting> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance!.addObserver(this);
+    WidgetsBinding.instance.addObserver(this);
     _meetingStore = MeetingStore();
     initMeeting();
   }
@@ -203,7 +203,7 @@ class _MeetingState extends State<Meeting> with WidgetsBindingObserver {
                   style: TextStyle(fontSize: 24)),
               actions: [
                 ElevatedButton(
-                    style: ElevatedButton.styleFrom(primary: Colors.red),
+                    style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
                     onPressed: () => {
                           _meetingStore.leave(),
                           Navigator.pop(context, true),
