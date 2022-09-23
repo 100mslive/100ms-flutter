@@ -37,13 +37,6 @@ Here you will find everything you need to build experiences with video using 100
 
 4. Get the HMSSDK via [pub.dev](https://pub.dev/packages/hmssdk_flutter). Add the `hmssdk_flutter` to your pubspec.yaml.
 
-### Note for Flutter 3.0+
-
-At this moment, Flutter 3.0 or higher is not supported due to ongoing issues in Flutter 3.x release for Platform Views. Refer issues: [107313](https://github.com/flutter/flutter/issues/107313) & [103630](https://github.com/flutter/flutter/issues/103630). We are actively monitoring these issues & once [Flutter](https://github.com/flutter/flutter) team releases a fix for these issues on [stable](https://github.com/flutter/flutter/tree/stable) branch, we'll release a compatible version of 100ms SDK.
-
-
-Until then, please use Flutter version `2.10.5` or any other 2.x series.
-
 ## 🏃‍♀️ How to run the Sample App
 
 The Example app can be found [here](https://github.com/100mslive/100ms-flutter/tree/main/example).
@@ -52,18 +45,27 @@ The Example app can be found [here](https://github.com/100mslive/100ms-flutter/t
 2. Change directory to `example` folder & run either `flutter build ios` OR `flutter build apk`
 3. Finally, `flutter run`
 
-## ☝️ Pre-requisites
+## ☝️ Minimum Configuration
 
-- Support for Android API level 24 or higher
+- Support for Android API level 21 or higher
 - Support for Java 8
-- Support for iOS 12 or higher
+- Support for iOS 10 or higher
+- Support for Flutter 2.x.x or higher (except 3.0.0 to 3.0.5)
 - Xcode 12 or higher
+
+## 🤝 Recommanded Configuration
+
+- Android API level 29 or higher
+- Java 11 or higher
+- iOS 15 or higher
+- Flutter 3.3.0 or higher
+- Xcode 13 or higher
 
 ## 📱 Supported Devices
 
-The Android SDK supports Android API level 21 and higher. It is built for armeabi-v7a, arm64-v8a, x86, and x86_64 architectures.
+- The Android SDK supports Android API level 21 and higher. It is built for armeabi-v7a, arm64-v8a, x86, and x86_64 architectures.
 
-iPhone & iPads with iOS version 10 or higher.
+- iPhone & iPads with iOS version 10 or higher.
 
 ## Android Permissions
 
