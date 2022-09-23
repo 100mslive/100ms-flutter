@@ -53,7 +53,7 @@ The Example app can be found [here](https://github.com/100mslive/100ms-flutter/t
 - Support for Flutter 2.x.x or higher (except 3.0.0 to 3.0.5)
 - Xcode 12 or higher
 
-## 🤝 Recommanded Configuration
+## 🤝 Recommended Configuration
 
 - Android API level 29 or higher
 - Java 11 or higher
