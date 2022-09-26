@@ -133,7 +133,7 @@ A few resources to get you started if this is your first Flutter project:
   
 ## How to use PeerTrackNode model class
 
-This model class is used for some changes in a Peer.So that getx can only rebuild that particular changes.
+This model class is used to listen for changes corresponding to a peer.So that getx can only rebuild that particular changes.
 
 ```dart
 
