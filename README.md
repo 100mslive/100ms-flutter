@@ -45,7 +45,7 @@ The Example app can be found [here](https://github.com/100mslive/100ms-flutter/t
 2. Change directory to `example` folder & run either `flutter build ios` OR `flutter build apk`
 3. Finally, `flutter run`
 
-The example app uses provider as it's state management library.For other implementations please check:
+The default [Example app](https://github.com/100mslive/100ms-flutter/tree/main/example) uses Provider State Management library. For other implementations please check out -
 
 * [Bloc](https://github.com/100mslive/100ms-flutter/tree/main/sample%20apps/bloc)
 * [Getx](https://github.com/100mslive/100ms-flutter/tree/main/sample%20apps/getx)
