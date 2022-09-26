@@ -206,19 +206,29 @@ abstract class HMSUpdateListener {
   /// [speakers] the list of speakers
   void onUpdateSpeakers({required List<HMSSpeaker> updateSpeakers});
 
-  ///when network or some other error happens it will be called
+  /// when network or some other error happens it will be called
   void onReconnecting();
 
-  ///when you are back in the room after reconnection
+  /// when you are back in the room after reconnection
   void onReconnected();
 
-  ///when someone requests for track change of yours be it video or audio this will be triggered
+  /// when someone requests for track change of yours be it video or audio this will be triggered
   /// [hmsTrackChangeRequest] request instance consisting of all the required info about track change
   void onChangeTrackStateRequest({required HMSTrackChangeRequest hmsTrackChangeRequest});
 
-  ///when someone kicks you out or when someone ends the room at that time it is triggered
+  /// when someone kicks you out or when someone ends the room at that time it is triggered
   /// [hmsPeerRemovedFromPeer] it consists of info about who removed you and why.
   void onRemovedFromRoom({required HMSPeerRemovedFromPeer hmsPeerRemovedFromPeer});
+  
+  /// whenever a new audio device is plugged in or audio output is changed we
+  /// get the onAudioDeviceChanged update
+  /// This callback is only fired on Android devices. On iOS, this callback will not be triggered.
+  /// - Parameters:
+  ///   - currentAudioDevice: Current audio output route
+  ///   - availableAudioDevice: List of available audio output devices
+  void onAudioDeviceChanged(
+      {HMSAudioDevice? currentAudioDevice,
+      List<HMSAudioDevice>? availableAudioDevice});
 }
 
 ```
@@ -337,7 +347,7 @@ HMSTrack
 HMSVideoView(track: videoTrack);
 ```
 
-## Change a Role
+## 🔁 Change a Role
 
   To change role, you will provide the selected peer and new roleName from roles. If forceChange is true, the system will prompt the user for the change. If forceChange is false, the user will get a prompt to accept/reject the role.
   After changeRole is called, HMSUpdateListener's onRoleChangeRequest will be called on selected user's end.
