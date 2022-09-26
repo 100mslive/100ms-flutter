@@ -416,6 +416,8 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             logLevel = getLogLevel(from: level)
             setLogger = true
         }
+        let dartSDKVersion = arguments["dart_sdk_version"] as! String
+        let hmsSDKVersion = arguments["hmssdk_version"] as! String
         audioMixerSourceMap = [:]
         hmsSDK = HMSSDK.build { [self] sdk in
 
