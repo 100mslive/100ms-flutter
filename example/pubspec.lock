@@ -78,13 +78,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.16.0"
-  connectivity_checker:
-    dependency: "direct main"
-    description:
-      name: connectivity_checker
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.1.0"
   crypto:
     dependency: transitive
     description:
@@ -316,7 +309,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "0.7.6"
+    version: "0.7.7"
   html:
     dependency: transitive
     description:

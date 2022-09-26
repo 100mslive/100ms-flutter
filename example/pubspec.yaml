@@ -30,7 +30,6 @@ dependencies:
   package_info_plus: 
   logger: 
   path_provider: 
-  connectivity_checker: 
   dropdown_button2: 
   video_player:
   focus_detector: 
