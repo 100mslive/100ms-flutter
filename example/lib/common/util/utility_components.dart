@@ -855,60 +855,68 @@ class UtilityComponents {
 
   static Widget showReconnectingDialog(BuildContext context,
       {String alertMessage = "Leave Room"}) {
-    return WillPopScope(
-      onWillPop: () async => false,
-      child: AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        insetPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-        backgroundColor: themeBottomSheetColor,
-        title: Text(
-          "Reconnecting...",
-          style: GoogleFonts.inter(
-              color: Colors.red.shade300,
-              fontSize: 16,
-              fontWeight: FontWeight.w600),
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
+    return Container(
+      height: MediaQuery.of(context).size.height,
+      color: Colors.black.withOpacity(0.5),
+      child: Center(
+        child: Container(
+          margin: EdgeInsets.symmetric(horizontal: 10),
+          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(12)),
+            color: themeBottomSheetColor,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black,
+                offset: Offset(0.0, 1.0),
+                blurRadius: 6.0,
+              ),
+            ],
+          ),
+          child: Column(mainAxisSize: MainAxisSize.min, children: [
+            Text(
+              "Reconnecting...",
+              style: GoogleFonts.inter(
+                  color: Colors.red.shade300,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600),
+            ),
+            SizedBox(
+              height: 15,
+            ),
             LinearProgressIndicator(
               color: hmsdefaultColor,
             ),
             SizedBox(
-              height: 10,
+              height: 15,
             ),
             Text('Oops, No internet Connection.\nReconnecting...',
                 style: GoogleFonts.inter(
                     color: themeDefaultColor,
                     fontSize: 14,
                     fontWeight: FontWeight.w400)),
-          ],
+            SizedBox(
+              height: 15,
+            ),
+            ElevatedButton(
+                style: ButtonStyle(
+                    shadowColor: MaterialStateProperty.all(themeSurfaceColor),
+                    backgroundColor: MaterialStateProperty.all(hmsdefaultColor),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                      side: BorderSide(width: 1, color: hmsdefaultColor),
+                      borderRadius: BorderRadius.circular(8.0),
+                    ))),
+                child: Text(
+                  alertMessage,
+                  style: GoogleFonts.inter(),
+                ),
+                onPressed: () {
+                  context.read<MeetingStore>().leave();
+                  Navigator.of(context).popUntil((route) => route.isFirst);
+                })
+          ]),
         ),
-        actions: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ElevatedButton(
-                  style: ButtonStyle(
-                      shadowColor: MaterialStateProperty.all(themeSurfaceColor),
-                      backgroundColor:
-                          MaterialStateProperty.all(hmsdefaultColor),
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                          RoundedRectangleBorder(
-                        side: BorderSide(width: 1, color: hmsdefaultColor),
-                        borderRadius: BorderRadius.circular(8.0),
-                      ))),
-                  child: Text(
-                    alertMessage,
-                    style: GoogleFonts.inter(),
-                  ),
-                  onPressed: () {
-                    context.read<MeetingStore>().leave();
-                    Navigator.of(context).popUntil((route) => route.isFirst);
-                  }),
-            ],
-          )
-        ],
       ),
     );
   }
