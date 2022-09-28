@@ -187,6 +187,9 @@ class _PreviewPageState extends State<PreviewPage> {
                                     children: [
                                       IconButton(
                                           onPressed: () {
+                                            context
+                                                .read<PreviewStore>()
+                                                .leave();
                                             Navigator.of(context).popUntil(
                                                 (route) => route.isFirst);
                                           },
