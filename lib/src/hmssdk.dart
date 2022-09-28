@@ -847,6 +847,37 @@ class HMSSDK {
     PlatformService.invokeMethod(PlatformMethod.destroy);
   }
 
+  Future<void> setSessionMetadata(
+      {required String metadata,
+      HMSActionResultListener? hmsActionResultListener}) async {
+    var arguments = {"session_metadata": metadata};
+    var result = await PlatformService.invokeMethod(
+        PlatformMethod.setSessionMetadata,
+        arguments: arguments);
+
+    if (hmsActionResultListener != null) {
+      if (result != null && result["error"] != null) {
+        hmsActionResultListener.onException(
+            methodType: HMSActionResultListenerMethod.setSessionMetadata,
+            arguments: arguments,
+            hmsException: HMSException.fromMap(result["error"]));
+      } else {
+        hmsActionResultListener.onSuccess(
+            methodType: HMSActionResultListenerMethod.setSessionMetadata,
+            arguments: arguments);
+      }
+    }
+  }
+
+  Future<String?> getSessionMetadata() async {
+    var result =
+        await PlatformService.invokeMethod(PlatformMethod.getSessionMetadata);
+    if (result != null) {
+      return result["data"]["metadata"] as String;
+    }
+    return null;
+  }
+
   /// To modify local peer's audio & video track settings use the [hmsTrackSetting]. Only required for advanced use-cases.
   HMSTrackSetting? hmsTrackSetting;
 

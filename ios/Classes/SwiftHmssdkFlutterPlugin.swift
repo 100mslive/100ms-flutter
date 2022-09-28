@@ -173,6 +173,9 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             audioShareAction(call, result)
         case "switch_audio_output":
             switchAudioOutput(call, result)
+            
+        case "get_session_metadata","set_session_metadata":
+            sessionMetadataAction(call, result)
 
         default:
             result(FlutterMethodNotImplemented)
@@ -275,6 +278,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         }
     }
 
+    // MARK: - Track Setting
     var audioMixerSourceMap = [String: HMSAudioNode]()
     private func trackSettingsAction(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         switch call.method {
@@ -313,6 +317,8 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             result(FlutterMethodNotImplemented)
         }
     }
+    
+    // MARK: - Audio Share
 
     private func audioShareAction(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         let arguments = call.arguments as! [AnyHashable: Any]
@@ -352,6 +358,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         }
     }
 
+    // MARK: - Audio Output
     private func switchAudioOutput(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         let routerPicker = AVRoutePickerView()
         for view in routerPicker.subviews {
@@ -398,6 +405,21 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
         case "is_screen_share_active":
             result(isScreenShareOn)
+        default:
+            result(FlutterMethodNotImplemented)
+        }
+    }
+    
+    // MARK: - Session Metadata
+    private func sessionMetadataAction(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+        switch call.method {
+
+        case "get_session_metadata":
+            getSessionMetadata(result)
+
+        case "set_session_metadata":
+            setSessionMetadata(call, result)
+
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -744,6 +766,45 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         logLevel = .off
         hmsSDK?.logger = nil
     }
+    
+    private func getSessionMetadata(_ result: @escaping FlutterResult) {
+        hmsSDK?.getSessionMetadata(completion: { metadata, _ in
+            if let metadata = metadata {
+                let data = [
+                        "event_name": "session_metadata",
+                    "data": [
+                        "metadata": metadata
+                    ]
+                ] as [String: Any]
+                result(data)
+            }
+            else {
+                result(nil)
+            }
+        })
+    }
+    
+    private func setSessionMetadata(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+        
+        let arguments = call.arguments as! [AnyHashable: Any]
+
+        guard let metadata = arguments["session_metadata"] as? String else {
+            result(HMSErrorExtension.getError("No session metadata found in \(#function)"))
+            return
+        }
+
+        hmsSDK?.setSessionMetadata(metadata, completion: { _, error in
+            if let error = error {
+                result(HMSErrorExtension.toDictionary(error))
+                return
+            } else {
+                self.hmsSDK?.sendBroadcastMessage(type: "metadata", message: "refresh")
+                result(nil)
+            }
+        }
+        )
+    }
+    
 
     // MARK: - 100ms SDK Delegate Callbacks
 

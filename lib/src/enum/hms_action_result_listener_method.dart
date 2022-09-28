@@ -20,5 +20,6 @@ enum HMSActionResultListenerMethod {
   startAudioShare,
   stopAudioShare,
   setTrackSettings,
+  setSessionMetadata,
   unknown
 }

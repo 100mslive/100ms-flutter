@@ -318,4 +318,15 @@ class HMSSDKInteractor {
   void destroy() {
     hmsSDK.destroy();
   }
+
+  void setSessionMetadata(
+      {required String metadata,
+      HMSActionResultListener? hmsActionResultListener}) {
+    hmsSDK.setSessionMetadata(
+        metadata: metadata, hmsActionResultListener: hmsActionResultListener);
+  }
+
+  Future<String?> getSessionMetadata() {
+    return hmsSDK.getSessionMetadata();
+  }
 }

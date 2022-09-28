@@ -150,6 +150,8 @@ class MeetingStore extends ChangeNotifier
 
   bool retryHLS = true;
 
+  String? sessionMetadata;
+
   Future<bool> join(String user, String roomUrl) async {
     List<String?>? token =
         await RoomService().getToken(user: user, room: roomUrl);
@@ -590,10 +592,19 @@ class MeetingStore extends ChangeNotifier
 
   @override
   void onMessage({required HMSMessage message}) {
-    log("onMessage-> sender: ${message.sender} message: ${message.message} time: ${message.time}");
-    addMessage(message);
-    isNewMessageReceived = true;
-    notifyListeners();
+    log("onMessage-> sender: ${message.sender} message: ${message.message} time: ${message.time}, type: ${message.type}");
+    switch (message.type) {
+      case "chat":
+        addMessage(message);
+        isNewMessageReceived = true;
+        notifyListeners();
+        break;
+      case "metadata":
+        getSessionMetadata();
+        break;
+      default:
+        break;
+    }
   }
 
   @override
@@ -1217,6 +1228,18 @@ class MeetingStore extends ChangeNotifier
     audioPlayerVolume = volume;
   }
 
+  void setSessionMetadata(String metadata) {
+    _hmsSDKInteractor.setSessionMetadata(
+        metadata: metadata, hmsActionResultListener: this);
+    sessionMetadata = metadata;
+    notifyListeners();
+  }
+
+  void getSessionMetadata() async {
+    sessionMetadata = await _hmsSDKInteractor.getSessionMetadata();
+    notifyListeners();
+  }
+
 //Get onSuccess or onException callbacks for HMSActionResultListenerMethod
 
   @override
@@ -1353,6 +1376,9 @@ class MeetingStore extends ChangeNotifier
       case HMSActionResultListenerMethod.setTrackSettings:
         // TODO: Handle this case.
         break;
+      case HMSActionResultListenerMethod.setSessionMetadata:
+        Utilities.showToast("Session Metadata changed");
+        break;
     }
   }
 
@@ -1421,7 +1447,8 @@ class MeetingStore extends ChangeNotifier
       case HMSActionResultListenerMethod.stopAudioShare:
         break;
       case HMSActionResultListenerMethod.setTrackSettings:
-        // TODO: Handle this case.
+        break;
+      case HMSActionResultListenerMethod.setSessionMetadata:
         break;
     }
     notifyListeners();
