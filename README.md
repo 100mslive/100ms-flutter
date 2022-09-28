@@ -371,16 +371,34 @@ To send a message first create an instance of `HMSMessage` object.
 
 Add the information to be sent in the `message` property of `HMSMessage`.
 
-Then use the `void sendBroadcastMessage(message: String)` function on the instance of HMSSDK.
+Then use the `sendBroadcastMessage` function on the instance of HMSSDK for broadcast message, `sendGroupMessage` for group message and `sendDirectMessage` for direct message.
 
 When you(the local peer) receives a message from others(any remote peer), `void onMessage({required HMSMessage message})` function of `HMSUpdateListener` is invoked.
   
 ```dart
 // following is an example implementation of chat messaging
 
-// to send a broadcast message
 String message = 'Hello World!'
-hmsSDK.sendBroadcastMessage(message);  // meeting is an instance of `HMSSDK` object
+
+// to send a broadcast message
+hmsSDK.sendBroadcastMessage(                               // hmsSDK is an instance of `HMSSDK` object
+        message: message,
+        type: "chat",
+        hmsActionResultListener: hmsActionResultListener);  
+
+// to send a group message
+hmsSDK.sendGroupMessage(
+        message: message,
+        hmsRolesTo: hmsRolesTo,
+        type: "chat",
+        hmsActionResultListener: hmsActionResultListener);
+        
+// to send a direct message
+hmsSDK.sendDirectMessage(
+        message: message,
+        peerTo: peerTo,
+        type: "chat",
+        hmsActionResultListener: hmsActionResultListener);
 
 
 // receiving messages
