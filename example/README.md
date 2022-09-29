@@ -672,8 +672,6 @@ Example app shows toast for the errors which will not affect the meeting and pee
 
 ## Common Mistakes and FAQs
 
----
-
 `HMSSDK` does not support hot reload,hot restart as of now.So to verify the intended changes please follow below steps:
 
 1. Perform changes.
