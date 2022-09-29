@@ -8,6 +8,8 @@ class HMSSDKInteractor {
   late List<HMSMessage> messages;
   late HMSSDK hmsSDK;
 
+  /// [appGroup] & [preferredExtension] are optional values only required for implementing Screen & Audio Share on iOS. They are not required for Android.
+  /// Remove [appGroup] & [preferredExtension] if your app does not implements Screen or Audio Share on iOS.
   HMSSDKInteractor({String? appGroup, String? preferredExtension}) {
     HMSTrackSetting trackSetting = HMSTrackSetting(
         audioTrackSetting: HMSAudioTrackSetting(
