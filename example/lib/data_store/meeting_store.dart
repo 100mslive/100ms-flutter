@@ -648,12 +648,14 @@ class MeetingStore extends ChangeNotifier
   void onReconnecting() {
     reconnected = false;
     reconnecting = true;
+    notifyListeners();
   }
 
   @override
   void onReconnected() {
     reconnecting = false;
     reconnected = true;
+    notifyListeners();
   }
 
   @override

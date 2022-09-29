@@ -45,12 +45,19 @@ The Example app can be found [here](https://github.com/100mslive/100ms-flutter/t
 2. Change directory to `example` folder & run either `flutter build ios` OR `flutter build apk`
 3. Finally, `flutter run`
 
+The default [Example app](https://github.com/100mslive/100ms-flutter/tree/main/example) uses Provider State Management library. For other implementations please check out -
+
+* [Bloc](https://github.com/100mslive/100ms-flutter/tree/main/sample%20apps/bloc)
+* [Getx](https://github.com/100mslive/100ms-flutter/tree/main/sample%20apps/getx)
+* [Riverpod](https://github.com/100mslive/100ms-flutter/tree/main/sample%20apps/riverpod)
+* [Mobx](https://github.com/100mslive/100ms-flutter/tree/main/sample%20apps/mobx)
+
 ## ☝️ Minimum Configuration
 
 - Support for Android API level 21 or higher
 - Support for Java 8
 - Support for iOS 10 or higher
-- Support for Flutter 2.x.x or higher (except 3.0.0 to 3.0.5)
+- Support for Flutter 2.10.x or higher (except 3.0.0 to 3.0.5)
 - Xcode 12 or higher
 
 ## 🤝 Recommended Configuration
@@ -67,7 +74,7 @@ The Example app can be found [here](https://github.com/100mslive/100ms-flutter/t
 
 - iPhone & iPads with iOS version 10 or higher.
 
-## Android Permissions
+## [Android Permissions](https://www.100ms.live/docs/flutter/v2/features/integration#android)
 
 Add the following permissions in the Android AndroidManifest.xml file
 
@@ -93,7 +100,7 @@ Add the following permissions in the Android AndroidManifest.xml file
 <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 ```
 
-## iOS Permissions
+## [iOS Permissions](https://www.100ms.live/docs/flutter/v2/features/integration#i-os)
 
 Add following permissions in iOS Info.plist file
 
@@ -108,14 +115,14 @@ Add following permissions in iOS Info.plist file
 <string>{YourAppName} App wants to use your local network</string>
 ```
 
-## 🧐 Key Concepts
+## 🧐 [Key Concepts](https://www.100ms.live/docs/flutter/v2/foundation/basics)
 
 - `Room` - A room represents real-time audio, video session, the basic building block of the 100mslive Video SDK
 - `Track` - A track represents either the audio or video that makes up a stream
 - `Peer` - A peer represents all participants connected to a room. Peers can be "local" or "remote"
 - `Broadcast` - A local peer can send any message/data to all remote peers in the room
 
-## Generating Auth Token
+## 🔐 Generating Auth Token
   
   Auth Token is used in HMSConfig instance to setup configuration.
   So you need to make an HTTP request. you can use any package we are using `http` package.
@@ -137,7 +144,7 @@ Add following permissions in iOS Info.plist file
 
   You will need this token later explained below.
 
-## ♻️ Setup event listeners
+## ♻️ [Setup event listeners](https://www.100ms.live/docs/flutter/v2/features/update-listeners)
 
 100ms SDK provides callbacks to the client app about any change or update happening in the room after a user has joined by implementing `HMSUpdateListener`. These updates can be used to render the video on the screen or to display other info regarding the room.
 
@@ -206,24 +213,34 @@ abstract class HMSUpdateListener {
   /// [speakers] the list of speakers
   void onUpdateSpeakers({required List<HMSSpeaker> updateSpeakers});
 
-  ///when network or some other error happens it will be called
+  /// when network or some other error happens it will be called
   void onReconnecting();
 
-  ///when you are back in the room after reconnection
+  /// when you are back in the room after reconnection
   void onReconnected();
 
-  ///when someone requests for track change of yours be it video or audio this will be triggered
+  /// when someone requests for track change of yours be it video or audio this will be triggered
   /// [hmsTrackChangeRequest] request instance consisting of all the required info about track change
   void onChangeTrackStateRequest({required HMSTrackChangeRequest hmsTrackChangeRequest});
 
-  ///when someone kicks you out or when someone ends the room at that time it is triggered
+  /// when someone kicks you out or when someone ends the room at that time it is triggered
   /// [hmsPeerRemovedFromPeer] it consists of info about who removed you and why.
   void onRemovedFromRoom({required HMSPeerRemovedFromPeer hmsPeerRemovedFromPeer});
+  
+  /// whenever a new audio device is plugged in or audio output is changed we
+  /// get the onAudioDeviceChanged update
+  /// This callback is only fired on Android devices. On iOS, this callback will not be triggered.
+  /// - Parameters:
+  ///   - currentAudioDevice: Current audio output route
+  ///   - availableAudioDevice: List of available audio output devices
+  void onAudioDeviceChanged(
+      {HMSAudioDevice? currentAudioDevice,
+      List<HMSAudioDevice>? availableAudioDevice});
 }
 
 ```
 
-## 🤔 How to listen to Track, Peer and Room updates?
+## 🤔 [How to listen to Track, Peer and Room updates?](https://www.100ms.live/docs/flutter/v2/features/update-listener-enums)
 
   The HMS SDK sends updates to the application about any change in HMSPeer, HMSTrack or HMSRoom via the callbacks in HMSUpdateListener.
   Application need to listen to the corresponding updates in onPeerUpdate, onTrackUpdate or onRoomUpdate
@@ -276,7 +293,7 @@ HMSConfig config = HMSConfig(authToken: token,
  `token`:  follow the above step 1 to generate a token.
  `userName`: your name using which you want to join the room.
 
-## 🙏 Join a room
+## 🙏 [Join a room](https://www.100ms.live/docs/flutter/v2/features/join)
 
 Use the HMSConfig and HMSUpdateListener instances to call the join method on the instance of HMSSDK created above.
 Once Join succeeds, all the callbacks keep coming on every change in the room and the app can react accordingly
@@ -287,7 +304,7 @@ hmsSDK.build()
 hmsSDK.joinMeeting(config: this.config);
 ```
 
-## 👋 Leave Room
+## 👋 [Leave Room](https://www.100ms.live/docs/flutter/v2/features/leave)
 
 Call the leave method on the HMSSDK instance
 
@@ -295,7 +312,7 @@ Call the leave method on the HMSSDK instance
 hmsSDK.leave() // to leave a room
 ```
   
-## 🙊 Mute/Unmute Local Audio
+## 🙊 [Mute/Unmute Local Audio](https://www.100ms.live/docs/flutter/v2/features/mute)
   
 ```dart
 // Turn on
@@ -305,7 +322,7 @@ hmsSDK.switchAudio(isOn: true)
 hmsSDK.switchAudio(isOn: false)
 ```
 
-## 🙈 Mute/Unmute Local Video  
+## 🙈 [Mute/Unmute Local Video](https://www.100ms.live/docs/flutter/v2/features/mute)  
   
 ```dart  
 hmsSDK.startCapturing()
@@ -329,7 +346,7 @@ HMSTrack
         - RemoteVideoTrack
 ```
   
-## 🎞 Display a Track
+## 🎞 [Display a Track](https://www.100ms.live/docs/flutter/v2/features/render-video)
 
   To display a video track, first get the `HMSVideoTrack` & pass it on to `HMSVideoView` using `setVideoTrack` function. Ensure to attach the `HMSVideoView` to your UI hierarchy.
 
@@ -337,7 +354,7 @@ HMSTrack
 HMSVideoView(track: videoTrack);
 ```
 
-## Change a Role
+## 🔁 [Change a Role](https://www.100ms.live/docs/flutter/v2/features/change-role)
 
   To change role, you will provide the selected peer and new roleName from roles. If forceChange is true, the system will prompt the user for the change. If forceChange is false, the user will get a prompt to accept/reject the role.
   After changeRole is called, HMSUpdateListener's onRoleChangeRequest will be called on selected user's end.
@@ -346,7 +363,7 @@ HMSVideoView(track: videoTrack);
  hmsSDK.changeRole(peer: peer, roleName: roleName, forceChange: true);
 ```
 
-## 📨 Chat Messaging
+## 📨 [Chat Messaging](https://www.100ms.live/docs/flutter/v2/features/chat)
 
 You can send a chat or any other kind of message from a local peer to all remote peers in the room.
 
@@ -354,16 +371,31 @@ To send a message first create an instance of `HMSMessage` object.
 
 Add the information to be sent in the `message` property of `HMSMessage`.
 
-Then use the `void sendBroadcastMessage(message: String)` function on the instance of HMSSDK.
+Then use the `sendBroadcastMessage` function on the instance of HMSSDK for broadcast message, `sendGroupMessage` for group message and `sendDirectMessage` for direct message.
 
 When you(the local peer) receives a message from others(any remote peer), `void onMessage({required HMSMessage message})` function of `HMSUpdateListener` is invoked.
   
 ```dart
 // following is an example implementation of chat messaging
 
-// to send a broadcast message
 String message = 'Hello World!'
-hmsSDK.sendBroadcastMessage(message);  // meeting is an instance of `HMSSDK` object
+
+// to send a broadcast message
+hmsSDK.sendBroadcastMessage(                               // hmsSDK is an instance of `HMSSDK` object
+        message: message,
+        hmsActionResultListener: hmsActionResultListener);  
+
+// to send a group message
+hmsSDK.sendGroupMessage(
+        message: message,
+        hmsRolesTo: hmsRolesTo,
+        hmsActionResultListener: hmsActionResultListener);
+        
+// to send a direct message
+hmsSDK.sendDirectMessage(
+        message: message,
+        peerTo: peerTo,
+        hmsActionResultListener: hmsActionResultListener);
 
 
 // receiving messages
@@ -376,7 +408,7 @@ void onMessage({required HMSMessage message}){
 
  🏃‍♀️ Checkout the sample implementation in the [Example app folder](https://github.com/100mslive/100ms-flutter/tree/main/example).
 
-## 🎞 Preview
+## 🎞 [Preview](https://www.100ms.live/docs/flutter/v2/features/preview)
 
   You can use our preview feature to unmute/mute audio/video before joining the room.
   
@@ -394,7 +426,7 @@ abstract class HMSPreviewListener {
 }
 ```
 
-📖 Read the Complete Documentation here: <https://docs.100ms.live/flutter/v2/foundation/basics>
+📖 Read the Complete Documentation here: <https://www.100ms.live/docs/flutter/v2/guides/quickstart>
 
 📲 Download the Sample iOS app here: <https://testflight.apple.com/join/Uhzebmut>
 
