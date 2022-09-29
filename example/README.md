@@ -1,5 +1,7 @@
 <a href="https://100ms.live/">
-<img src="https://github.com/100mslive/100ms-flutter/blob/develop/100ms.svg" title="100ms logo" float=center height=150>
+<p align="center">
+<img src="https://github.com/100mslive/100ms-flutter/blob/develop/100ms.svg" title="100ms logo" float=center height=150 >
+</p>
 </a>
 
 ## HMSSDK Sample App
