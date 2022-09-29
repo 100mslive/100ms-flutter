@@ -50,28 +50,31 @@ class HMSSDKInteractor {
   }
 
   void sendBroadcastMessage(
-      String message, HMSActionResultListener hmsActionResultListener) {
+      String message, HMSActionResultListener hmsActionResultListener,
+      {String type = "chat"}) {
     hmsSDK.sendBroadcastMessage(
         message: message,
-        type: "chat",
+        type: type,
         hmsActionResultListener: hmsActionResultListener);
   }
 
   void sendDirectMessage(String message, HMSPeer peerTo,
-      HMSActionResultListener hmsActionResultListener) {
+      HMSActionResultListener hmsActionResultListener,
+      {String type = "chat"}) {
     hmsSDK.sendDirectMessage(
         message: message,
         peerTo: peerTo,
-        type: "chat",
+        type: type,
         hmsActionResultListener: hmsActionResultListener);
   }
 
   void sendGroupMessage(String message, List<HMSRole> hmsRolesTo,
-      HMSActionResultListener hmsActionResultListener) {
+      HMSActionResultListener hmsActionResultListener,
+      {String type = "chat"}) {
     hmsSDK.sendGroupMessage(
         message: message,
         hmsRolesTo: hmsRolesTo,
-        type: "chat",
+        type: type,
         hmsActionResultListener: hmsActionResultListener);
   }
 

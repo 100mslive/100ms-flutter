@@ -1312,8 +1312,10 @@ class MeetingStore extends ChangeNotifier
                 recipientPeer: null,
                 recipientRoles: null,
                 hmsMessageRecipientType: HMSMessageRecipientType.BROADCAST));
-        addMessage(message);
-        notifyListeners();
+        if (arguments['type'] != "metadata") {
+          addMessage(message);
+          notifyListeners();
+        }
         break;
       case HMSActionResultListenerMethod.sendGroupMessage:
         var message = HMSMessage(
@@ -1375,6 +1377,8 @@ class MeetingStore extends ChangeNotifier
         // TODO: Handle this case.
         break;
       case HMSActionResultListenerMethod.setSessionMetadata:
+        _hmsSDKInteractor.sendBroadcastMessage("refresh", this,
+            type: "metadata");
         Utilities.showToast("Session Metadata changed");
         sessionMetadata = arguments!["session_metadata"];
         notifyListeners();
