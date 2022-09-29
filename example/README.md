@@ -703,7 +703,7 @@ For more FAQs please visit [FAQ's](https://www.100ms.live/docs/flutter/v2/debugg
 
 <p align=center>
 <b> Made with ❤️ by 
-<a href="https://100ms.live/" color="white">
+<a href="https://100ms.live/" style="color:white;">
 100ms
 </a></b>
 </p>
