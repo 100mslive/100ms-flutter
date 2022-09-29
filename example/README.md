@@ -1,14 +1,10 @@
 <a href="https://100ms.live/">
 <p align="center">
-<img src="https://github.com/100mslive/100ms-flutter/blob/develop/100ms.svg" title="100ms logo" float=center height=150 >
+<img src="https://github.com/100mslive/100ms-flutter/blob/851/docs-provider-app/logo.svg" title="100ms logo" float=center height=150 >
 </p>
 </a>
 
-<p align="center">
-<h1>
- HMSSDK Sample App 🚀
-</h1>
-</p>
+## HMSSDK Sample App 🚀
 
 Clone the example app from [here](https://github.com/100mslive/100ms-flutter/tree/main).
 *"example"* folder contains code relevant to the example app.
