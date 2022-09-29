@@ -4,7 +4,7 @@
 </p>
 </a>
 
-## HMSSDK Sample App
+## HMSSDK Sample App 🚀
 
 Clone the example app from [here](https://github.com/100mslive/100ms-flutter/tree/main).
 *"example"* folder contains code relevant to the example app.
@@ -702,5 +702,6 @@ Please ensure that `build` method is called on `HMSSDK` object before performing
 For more FAQs please visit [FAQ's](https://www.100ms.live/docs/flutter/v2/debugging/faq)
 
 <p align=center>
-Made with ❤️ by 100ms
+Made with ❤️ by 
+<img src="https://github.com/100mslive/100ms-flutter/blob/develop/logo.svg" title="100ms logo" height=50 >
 </p>
