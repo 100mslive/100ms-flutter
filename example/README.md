@@ -1,3 +1,8 @@
+<a href="https://100ms.live/">
+<img src="https://github.com/100mslive/100ms-flutter/blob/develop/100ms.gif" height=256/>
+<img src="https://github.com/100mslive/100ms-flutter/blob/develop/100ms.svg" title="100ms logo" float=center height=256>
+</a>
+
 ## HMSSDK Sample App
 
 Clone the example app from [here](https://github.com/100mslive/100ms-flutter/tree/main).
@@ -694,6 +699,3 @@ Please ensure that `build` method is called on `HMSSDK` object before performing
 ---
 
 For more FAQs please visit [FAQ's](https://www.100ms.live/docs/flutter/v2/debugging/faq)
-
-
-
