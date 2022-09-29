@@ -5,7 +5,9 @@
 </a>
 
 <p align="center">
-# HMSSDK Sample App 🚀
+<h1>
+ HMSSDK Sample App 🚀
+</h1>
 </p>
 
 Clone the example app from [here](https://github.com/100mslive/100ms-flutter/tree/main).
