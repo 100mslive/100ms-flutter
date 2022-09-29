@@ -1,6 +1,6 @@
 <a href="https://100ms.live/">
-<img src="https://github.com/100mslive/100ms-flutter/blob/develop/100ms.gif" height=256/>
-<img src="https://github.com/100mslive/100ms-flutter/blob/develop/100ms.svg" title="100ms logo" float=center height=256>
+<img src="https://github.com/100mslive/100ms-flutter/blob/develop/100ms.gif" height=100/>
+<img src="https://github.com/100mslive/100ms-flutter/blob/develop/100ms.svg" title="100ms logo" float=center height=50>
 </a>
 
 ## HMSSDK Sample App
