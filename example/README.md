@@ -1,6 +1,7 @@
 ## HMSSDK Sample App
 
-Clone the example app from [here](https://github.com/100mslive/100ms-flutter/tree/main).`example` folder contains code relevant to the example app.
+Clone the example app from [here](https://github.com/100mslive/100ms-flutter/tree/main).
+*"example"* folder contains code relevant to the example app.
 
 > 🔑 Note: This uses provider as the state management library
 
@@ -71,16 +72,19 @@ class PeerTrackNode extends ChangeNotifier {
 
 Let's dive deeper into each feature and their implementation.
 
-1. Join a room
+#### 1. Join a room
 
 `HMSSDK` provides join room method to join the room.`join` method requires `HMSConfig` as a parameter used while joining the room.
-Before calling join method it's recommended to attach the `HMSUpdateListener` So that once join is successful we can get the callbacks.`HMSUpdateLister` can be attached as follows:
+Before calling join method it's recommended to attach the `HMSUpdateListener` So that once join is successful we can get the callbacks.`HMSUpdateListener` can be attached as follows:
 
 ```dart
-HMSSDK.addUpdateListener(listener: listener);
+//We can use this since the MeetingStore class implements 
+//HMSUpdateListener
+HMSSDK.addUpdateListener(listener: this);
 ```
+Methods which needs to be overriden while implementing `HMSUpdateListener` can be found [here](https://www.100ms.live/docs/flutter/v2/features/update-listeners)
 
-Now we are good to go for the join method.Let's look at the  `HMSConfig` class first:
+Now we are good to go for the join method.Let's look at the `HMSConfig` class first:
 
 ```dart
 class HMSConfig {
@@ -109,5 +113,114 @@ We need to pass `HMSConfig` object to the join method while joining the room.
 ```dart
 HMSSDK.join(config: config)
 ```
+If join is successful we will get `onJoin` callback and in case of error we will get `onHMSError` callback.So the UI can be handled accordingly.
 
-After calling the join method we need to attach `HMSUpdateListener`
+Let's understand `onJoin` method and what is expected to be done in this callback.
+So,`onJoin` callback contains the `HMSRoom` object which can be used to get the recording/streaming state of the room along with list of peers in the room.The `HMSRoom` object has following info: 
+
+```dart
+class HMSRoom {
+  ///[id] of the room
+  String id;
+  ///[name] the name of this room
+  String? name;
+  String? metaData;
+  HMSBrowserRecordingState? hmsBrowserRecordingState;
+  HMSRtmpStreamingState? hmsRtmpStreamingState;
+  HMSServerRecordingState? hmsServerRecordingState;
+  HMSHLSStreamingState? hmshlsStreamingState;
+  HMSHLSRecordingState? hmshlsRecordingState;
+  int peerCount;
+  int startedAt;
+  String sessionId;
+
+  ///[peers] list that are present in this room currently
+  final List<HMSPeer>? peers;
+}
+```
+
+We can extract the peers from the  `peers` list and set it accordingly.More information about how this should be handled can be found in `onJoin` method [here](https://github.com/100mslive/100ms-flutter/blob/main/example/lib/data_store/meeting_store.dart)
+
+#### 2. Join a room with preview
+
+In some use cases it is required to show preview before joining the room so that the user can set the camera , audio device,mic.
+HMSSDK provides `preview` method which can be called before `join`.With preview included the subsequent join request becomes faster.
+
+The `preview` method also requires the config object similar to `join` method.Before calling `preview` it is
+recommended to attach `HMSPreviewListener` So that we can get the callbacks related to preview.
+
+```dart
+//We can use this since the PreviewStore class implements 
+//HMSPreviewListener
+HMSSDK.addPreviewListener(listener: this);
+```
+Methods which needs to be overriden while implementing `HMSUpdateListener` can be found [here](https://www.100ms.live/docs/flutter/v2/features/preview-update-listeners).
+After attaching `HMSPreviewListener` we are good to call `preview` method.
+
+```dart
+HMSSDK.preview(config: config);
+```
+Similar to `onJoin` here we have `onPreview` callback which gets called when `preview` gets succeeded and `onHMSError` in case the `preview` fails.
+
+After preview  `join` method can be called similar to the steps mentioned above in [1](#1-join-a-room).
+
+#### 3. Leave Room
+
+`HMSSDK` provides `leave` method to leave the room.`leave` method
+has an optional parameter `HMSActionResultListener` which provides callbacks as `onSuccess` for successful execution and 
+`onException` in case of error.
+More info on `HMSActionResultListener` can be found [here](https://www.100ms.live/docs/flutter/v2/features/action-result-listeners)
+
+`leave` method can be called as:
+
+```dart
+//`this` is used here since MeetingStore already implements 
+//HMSActionResultListener
+HMSSDK.leave(hmsActionResultListener:this);
+```
+
+We will get `onSuccess` callback if `leave` is successful so that we can perform complete cleanup of resources and `onException` in case of error.
+
+#### 4. Mute/Unmute local audio
+ 
+Audio mute/unmute can be performed using `switchAudio` method
+of `HMSSDK`
+
+```dart
+// [isOn] is the current audio state
+HMSSDK.switchAudio(isOn: isOn);
+```
+
+#### 5. Mute/Unmute local video
+
+Video mute/unmute can be performed using `switchVideo` method
+of `HMSSDK`
+
+```dart
+// [isOn] is the current state video state
+HMSSDK.switchVideo(isOn: isOn);
+```
+
+#### 6. Mute Audio/Video for other roles and peers
+
+`HMSSDK` provides dedicated methods to mute/unmute:
+- Individual peer
+- Specific role
+- Everyone
+
+Let's look at each of them:
+
+- Individual peer
+
+We can use the `changeTrackState` method to mute/unmute remote peer's audio/video
+
+```dart
+// [forRemoteTrack] : track whose state needs to be changed
+// Set [mute] to true if the track needs to be muted, false otherwise.
+HMSSDK.changeTrackState(
+        forRemoteTrack: forRemoteTrack,
+        mute: mute,
+        hmsActionResultListener: hmsActionResultListener);
+```
+
+
