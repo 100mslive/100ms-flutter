@@ -702,8 +702,6 @@ Please ensure that `build` method is called on `HMSSDK` object before performing
 For more FAQs please visit [FAQ's](https://www.100ms.live/docs/flutter/v2/debugging/faq)
 
 <p align=center>
-<b> Made with ❤️ by 
-<a href="https://100ms.live/" style="color:white;">
-100ms
-</a></b>
+<b> Made with ❤️ by 100ms
+</b>
 </p>
