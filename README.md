@@ -383,21 +383,18 @@ String message = 'Hello World!'
 // to send a broadcast message
 hmsSDK.sendBroadcastMessage(                               // hmsSDK is an instance of `HMSSDK` object
         message: message,
-        type: "chat",
         hmsActionResultListener: hmsActionResultListener);  
 
 // to send a group message
 hmsSDK.sendGroupMessage(
         message: message,
         hmsRolesTo: hmsRolesTo,
-        type: "chat",
         hmsActionResultListener: hmsActionResultListener);
         
 // to send a direct message
 hmsSDK.sendDirectMessage(
         message: message,
         peerTo: peerTo,
-        type: "chat",
         hmsActionResultListener: hmsActionResultListener);
 
 
