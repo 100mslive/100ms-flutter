@@ -798,7 +798,6 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                 result(HMSErrorExtension.toDictionary(error))
                 return
             } else {
-                self.hmsSDK?.sendBroadcastMessage(type: "metadata", message: "refresh")
                 result(nil)
             }
         }

@@ -1231,8 +1231,6 @@ class MeetingStore extends ChangeNotifier
   void setSessionMetadata(String metadata) {
     _hmsSDKInteractor.setSessionMetadata(
         metadata: metadata, hmsActionResultListener: this);
-    sessionMetadata = metadata;
-    notifyListeners();
   }
 
   void getSessionMetadata() async {
@@ -1378,6 +1376,8 @@ class MeetingStore extends ChangeNotifier
         break;
       case HMSActionResultListenerMethod.setSessionMetadata:
         Utilities.showToast("Session Metadata changed");
+        sessionMetadata = arguments!["session_metadata"];
+        notifyListeners();
         break;
     }
   }
