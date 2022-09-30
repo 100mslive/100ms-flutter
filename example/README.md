@@ -103,19 +103,17 @@ Example app offers some settings to configure the application.Some of them are :
 - Mirror Camera(To set whether to mirror local camera)
 - Enable Stats(To enable webrtc stats)
 
-<p align="center">
 <img src="https://github.com/100mslive/100ms-flutter/blob/851/docs-provider-app/app-settings.png" title="app-settings" float=center height=300>
-</p>
 
 ---
 
 Example app offers various meeting modes which decides the tile orientation on the mobile screen.
 
-<p align="center">
 <img src="https://github.com/100mslive/100ms-flutter/blob/851/docs-provider-app/meeting-mode.png" title="meeting-mode" height=300>
-</p>
 
-#### Normal Mode
+Let's look at each mode one by one
+
+#### [Normal Mode](https://github.com/100mslive/100ms-flutter/blob/develop/example/lib/common/ui/organisms/grid_video_view.dart)
 
 <img src="https://github.com/100mslive/100ms-flutter/blob/851/docs-provider-app/normal-mode.gif" title="normal-mode" height=300>
 
