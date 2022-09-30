@@ -585,6 +585,9 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                           onTap: () => {
                                             context
                                                 .read<MeetingStore>()
+                                                .getSessionMetadata(),
+                                            context
+                                                .read<MeetingStore>()
                                                 .setNewMessageFalse(),
                                             showModalBottomSheet(
                                               isScrollControlled: true,

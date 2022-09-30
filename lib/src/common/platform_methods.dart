@@ -148,7 +148,9 @@ enum PlatformMethod {
   audioShareDuration,
   getTrackSettings,
   setTrackSettings,
-  destroy
+  destroy,
+  setSessionMetadata,
+  getSessionMetadata
 }
 
 extension PlatformMethodValues on PlatformMethod {
@@ -345,6 +347,10 @@ extension PlatformMethodValues on PlatformMethod {
         return "set_track_settings";
       case PlatformMethod.destroy:
         return "destroy";
+      case PlatformMethod.setSessionMetadata:
+        return "set_session_metadata";
+      case PlatformMethod.getSessionMetadata:
+        return "get_session_metadata";
       default:
         return 'unknown';
     }
@@ -547,6 +553,10 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.setTrackSettings;
       case "destroy":
         return PlatformMethod.destroy;
+      case "set_session_metadata":
+        return PlatformMethod.setSessionMetadata;
+      case "get_session_metadata":
+        return PlatformMethod.getSessionMetadata;
       default:
         return PlatformMethod.unknown;
     }
