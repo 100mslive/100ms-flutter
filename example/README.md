@@ -30,6 +30,7 @@ Sample application contains all the features provided by `HMSSDK`. Just to name 
 * 🙋‍♂️ Hand Raise
 * 🏃‍♀️ BRB(Be Right Back sign)
 * ❌ Remove Peer
+* 📡 HLS Streaming
 
 ## Sample app architecture
 
@@ -77,10 +78,22 @@ class PeerTrackNode extends ChangeNotifier {
 
 ## Sample app data flow
 
+### Data flow overview
+
+<p align="center">
+<img src="https://github.com/100mslive/100ms-flutter/blob/851/docs-provider-app/app-breakdown.png" title="app-flow" float=center height=300>
+</p>
+
+### How example app uses the updates from SDK and update the UI efficiently without extra rebuilds
+
+Let's see how we are handling the updates in an efficient manner to avoid extra rebuilds.This is achieved by breaking down the data store in two parts.
+
+- Updates related to application(Meeting Store class)
+- Updates related to peer(PeerTrackNode class)
+
 <p align="center">
 <img src="https://github.com/100mslive/100ms-flutter/blob/851/docs-provider-app/app-flow-diagram.png" title="app-flow" float=center height=300>
 </p>
-
 
 ## Deep Dive into SDK and features
 
@@ -310,7 +323,7 @@ How this is implemented in example app can be found [here](https://github.com/10
 To display video tracks `HMSSDK` provides `HMSVideoView` widget.
 
 ```dart
-class 7H()MSVideoView extends StatelessWidget {
+class HMSVideoView extends StatelessWidget {
 
   //[track] - track to be displayed
   final HMSVideoTrack track;
@@ -622,6 +635,21 @@ HMSSDK.removePeer(
 ```
 
 If the `removePeer` method is successful we will get `onSuccess` callback and `onPeerUpdate`.
+
+#### 15. HLS Streaming
+
+In today's world there are endless scenarios where a user broadcasts it's stream and thousands of user consumes it.`HMSSDK`
+provides `startHLSStreaming` method to handle such scenarios where a user with publish permissions publishes the content and 
+user with `hls-viewer` consumes the stream.
+
+```dart
+//[hmshlsConfig] - it's an object of HMSHLSConfig which contains meeting url variants and recording configs
+hmsSDK.startHlsStreaming(
+    hmshlsConfig: hmshlsConfig,
+    hmsActionResultListener: this);
+```
+
+After calling `startHLSStreaming` we will get `onSuccess` callback if the method invocation is successful.It takes around 5-6 seconds for HLS to start. 
 
 ## Handling Errors
 
