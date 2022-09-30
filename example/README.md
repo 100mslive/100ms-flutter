@@ -95,6 +95,19 @@ Let's see how we are handling the updates in an efficient manner to avoid extra 
 <img src="https://github.com/100mslive/100ms-flutter/blob/851/docs-provider-app/app-breakdown.png" title="app-flow" float=center height=300>
 </p>
 
+### Application settings
+
+Example app offers some settings to configure the application.Some of them are :
+
+- Skip preview(Directly join meeting)
+- Mirror Camera(To set whether to mirror local camera)
+- Enable Stats(To enable webrtc stats)
+
+
+<p align="center">
+<img src="https://github.com/100mslive/100ms-flutter/blob/851/docs-provider-app/app-settings.png" title="app-settings" float=center height=250>
+</p>
+
 ## Deep Dive into SDK and features
 
 `HMSSDK` object needs to be created and build method is required to be called at the earliest as:
@@ -541,6 +554,10 @@ More info about audio share can be found [here](https://www.100ms.live/docs/flut
 
 Consider a scenario where bluetooth earpodes are connected to phone but you want your friends sitting with you to also listen to the stream.So,you disconnnect the bluetooth and then audio comes from external speaker.Well gone are those days when you need to do this `HMSSDK` provides inbuilt methods to easily switch audio routing.
 
+<p align="center">
+<img src="https://github.com/100mslive/100ms-flutter/blob/851/docs-provider-app/audio-device-setting.png" title="audio-device-setting" height=250>
+</p>
+
 `HMSSDK` has `switchAudioOutput` method to do so.It takes 
 `HMSAudioDevice` as a parameter which is an enum as:
 
@@ -596,9 +613,8 @@ Suppose you are in a meeting and someone's at the door unmuting and informing or
 odd,HMSSDK's BRB(Be Right Back) comes to rescue.
 
 <p align="center">
-<img src="https://github.com/100mslive/100ms-flutter/blob/851/docs-provider-app/hand-raise.png" title="hand-raise" height=150>
-<img src="https://github.com/100mslive/100ms-flutter/blob/851/docs-provider-app/brb.png" title="brb" height=150>
-
+<img src="https://github.com/100mslive/100ms-flutter/blob/851/docs-provider-app/hand-raise.png" title="hand-raise" height=250>
+<img src="https://github.com/100mslive/100ms-flutter/blob/851/docs-provider-app/brb.png" title="brb" height=250>
 </p>
 
 
