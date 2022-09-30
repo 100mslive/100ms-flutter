@@ -81,7 +81,7 @@ class PeerTrackNode extends ChangeNotifier {
 ### Data flow overview
 
 <p align="center">
-<img src="https://github.com/100mslive/100ms-flutter/blob/851/docs-provider-app/app-breakdown.png" title="app-flow" float=center height=300>
+<img src="https://github.com/100mslive/100ms-flutter/blob/851/docs-provider-app/app-flow-diagram.png" title="app-flow" float=center height=300>
 </p>
 
 ### How example app uses the updates from SDK and update the UI efficiently without extra rebuilds
@@ -92,7 +92,7 @@ Let's see how we are handling the updates in an efficient manner to avoid extra 
 - Updates related to peer(PeerTrackNode class)
 
 <p align="center">
-<img src="https://github.com/100mslive/100ms-flutter/blob/851/docs-provider-app/app-flow-diagram.png" title="app-flow" float=center height=300>
+<img src="https://github.com/100mslive/100ms-flutter/blob/851/docs-provider-app/app-breakdown.png" title="app-flow" float=center height=300>
 </p>
 
 ## Deep Dive into SDK and features
@@ -594,6 +594,13 @@ Let's take the seminar case again where someone has a question so how will the h
 
 Suppose you are in a meeting and someone's at the door unmuting and informing or using chat to inform seems a bit 
 odd,HMSSDK's BRB(Be Right Back) comes to rescue.
+
+<p align="center">
+<img src="https://github.com/100mslive/100ms-flutter/blob/851/docs-provider-app/hand-raise.png" title="hand-raise" height=150>
+<img src="https://github.com/100mslive/100ms-flutter/blob/851/docs-provider-app/brb.png" title="brb" height=150>
+
+</p>
+
 
 Hand raise and BRB feature can be implemented using HMSPeer's metadata property as:
 
