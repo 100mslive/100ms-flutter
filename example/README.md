@@ -1,3 +1,9 @@
+<style>
+td, th {
+   border: none!important;
+}
+</style>
+
 <a href="https://100ms.live/">
 <p align="center">
 <img src="https://github.com/100mslive/100ms-flutter/blob/851/docs-provider-app/logo.svg" title="100ms logo" float=center height=150 >
@@ -114,8 +120,8 @@ Example app offers various meeting modes which decides the tile orientation on t
 Let's look at each mode one by one
 
 <table style="border: none;">
-<tr>
-<td>
+<tr style="border: none;">
+<td style="border: none;">
 <a href="https://github.com/100mslive/100ms-flutter/blob/develop/example/lib/common/ui/organisms/grid_video_view.dart">
 Normal Mode
 </a>
