@@ -104,21 +104,16 @@ Example app offers some settings to configure the application.Some of them are :
 - Enable Stats(To enable webrtc stats)
 
 
-<p align="center">
-<img src="https://github.com/100mslive/100ms-flutter/blob/851/docs-provider-app/app-settings.png" title="app-settings" float=center height=300>
-</p>
+<img src="https://github.com/100mslive/100ms-flutter/blob/851/docs-provider-app/app-settings.png" title="app-settings" height=300>
 
 Example app offers various meeting modes which decides the tile orientation on the mobile screen.
 
-<p align="center">
-<img src="https://github.com/100mslive/100ms-flutter/blob/851/docs-provider-app/meeting-mode.png" title="meeting-mode" float=center height=300>
-</p>
+<img src="https://github.com/100mslive/100ms-flutter/blob/851/docs-provider-app/meeting-mode.png" title="meeting-mode" height=300>
 
 - Normal Mode
 
-<p align="center">
-<video src="https://github.com/100mslive/100ms-flutter/blob/851/docs-provider-app/normal-mode.mp4" title="normal-mode" float=center height=300>
-</p>
+<video src="https://github.com/100mslive/100ms-flutter/blob/851/docs-provider-app/normal-mode.mp4" title="normal-mode" height=300>
+</video>
 
 ## Deep Dive into SDK and features
 
