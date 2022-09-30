@@ -119,25 +119,25 @@ Let's look at each mode one by one
 
 ---
 
-#### Active Speaker Mode
+#### [Active Speaker Mode](https://github.com/100mslive/100ms-flutter/blob/develop/example/lib/common/ui/organisms/grid_video_view.dart)
 
 <img src="https://github.com/100mslive/100ms-flutter/blob/851/docs-provider-app/active-speaker-mode.gif" title="active-speaker-mode" height=300>
 
 ---
 
-#### Hero Mode
+#### [Hero Mode](https://github.com/100mslive/100ms-flutter/blob/develop/example/lib/common/ui/organisms/grid_hero_view.dart)
 
 <img src="https://github.com/100mslive/100ms-flutter/blob/851/docs-provider-app/hero-mode.gif" title="hero-mode" height=300>
 
 ---
 
-#### Audio Mode
+#### [Audio Mode](https://github.com/100mslive/100ms-flutter/blob/develop/example/lib/common/ui/organisms/grid_audio_view.dart)
 
 <img src="https://github.com/100mslive/100ms-flutter/blob/851/docs-provider-app/audio-mode.gif" title="audio-mode" height=300>
 
 ---
 
-#### Single Tile Mode
+#### [Single Tile Mode](https://github.com/100mslive/100ms-flutter/blob/develop/example/lib/common/ui/organisms/full_screen_view.dart)
 
 <img src="https://github.com/100mslive/100ms-flutter/blob/851/docs-provider-app/single-tile-mode.gif" title="single-tile-mode" height=300>
 
