@@ -115,23 +115,22 @@ Let's look at each mode one by one
 
 <p float="left" style="padding: 50px">
 
-<a href="https://github.com/100mslive/100ms-flutter/blob/develop/example/lib/common/ui/organisms/grid_video_view.dart">
+<a href="https://github.com/100mslive/100ms-flutter/blob/develop/example/lib/common/ui/organisms/grid_video_view.dart"  hspace="50">
 Normal Mode
 </a>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
 <a href="https://github.com/100mslive/100ms-flutter/blob/develop/example/lib/common/ui/organisms/grid_video_view.dart">
 Active Speaker Mode
 </a>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
 <a href="https://github.com/100mslive/100ms-flutter/blob/develop/example/lib/common/ui/organisms/grid_hero_view.dart">
 Hero Mode
 </a>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-<a href="https://github.com/100mslive/100ms-flutter/blob/develop/example/lib/common/ui/organisms/grid_audio_view.dart">
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+<a href="https://github.com/100mslive/100ms-flutter/blob/develop/example/lib/common/ui/organisms/grid_audio_view.dart" hspace="50" >
 Audio Mode
 </a>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-<a href="https://github.com/100mslive/100ms-flutter/blob/develop/example/lib/common/ui/organisms/full_screen_view.dart">
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+<a href="https://github.com/100mslive/100ms-flutter/blob/develop/example/lib/common/ui/organisms/full_screen_view.dart" >
 Single Tile Mode
 </a>
 </p>
