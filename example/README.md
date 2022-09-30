@@ -75,6 +75,13 @@ class PeerTrackNode extends ChangeNotifier {
 }
 ```
 
+## Sample app data flow
+
+<p align="center">
+<img src="https://github.com/100mslive/100ms-flutter/blob/851/docs-provider-app/app-flow.png" title="100ms logo" float=center height=250 >
+</p>
+
+
 ## Deep Dive into SDK and features
 
 `HMSSDK` object needs to be created and build method is required to be called at the earliest as:
