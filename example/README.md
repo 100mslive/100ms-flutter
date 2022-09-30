@@ -668,6 +668,7 @@ odd,HMSSDK's BRB(Be Right Back) comes to rescue.
 
 <p align="center">
 <img src="https://github.com/100mslive/100ms-flutter/blob/851/docs-provider-app/hand-raise.png" title="hand-raise" height=300>
+&nbsp; &nbsp; &nbsp; &nbsp;
 <img src="https://github.com/100mslive/100ms-flutter/blob/851/docs-provider-app/brb.png" title="brb" height=300>
 </p>
 
