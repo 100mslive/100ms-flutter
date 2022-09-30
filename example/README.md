@@ -113,42 +113,52 @@ Example app offers various meeting modes which decides the tile orientation on t
 
 Let's look at each mode one by one
 
-<p float="left" style="padding: 50px">
-
+<table>
+<tr>
+<td>
 <a href="https://github.com/100mslive/100ms-flutter/blob/develop/example/lib/common/ui/organisms/grid_video_view.dart">
 Normal Mode
 </a>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+</td>
+<td>
 <a href="https://github.com/100mslive/100ms-flutter/blob/develop/example/lib/common/ui/organisms/grid_video_view.dart">
 Active Speaker Mode
 </a>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+</td>
+<td>
 <a href="https://github.com/100mslive/100ms-flutter/blob/develop/example/lib/common/ui/organisms/grid_hero_view.dart">
 Hero Mode
 </a>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+</td>
+<td>
 <a href="https://github.com/100mslive/100ms-flutter/blob/develop/example/lib/common/ui/organisms/grid_audio_view.dart" hspace="50" >
 Audio Mode
 </a>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+</td>
+<td>
 <a href="https://github.com/100mslive/100ms-flutter/blob/develop/example/lib/common/ui/organisms/full_screen_view.dart" >
 Single Tile Mode
 </a>
-</p>
-
-<p float="left"  style="padding: 50px">
-
+</td>
+</tr>
+<tr>
+<td>
 <img src="https://github.com/100mslive/100ms-flutter/blob/851/docs-provider-app/normal-mode.gif" title="normal-mode" height=300>
-&nbsp; &nbsp; &nbsp; &nbsp;
+</td>
+<td>
 <img src="https://github.com/100mslive/100ms-flutter/blob/851/docs-provider-app/active-speaker-mode.gif" title="active-speaker-mode" height=300>
-&nbsp; &nbsp; &nbsp; &nbsp;
+</td>
+<td>
 <img src="https://github.com/100mslive/100ms-flutter/blob/851/docs-provider-app/hero-mode.gif" title="hero-mode" height=300>
-&nbsp; &nbsp; &nbsp; &nbsp;
+</td>
+<td>
 <img src="https://github.com/100mslive/100ms-flutter/blob/851/docs-provider-app/audio-mode.gif" title="audio-mode" height=300>
-&nbsp; &nbsp; &nbsp; &nbsp;
+</td>
+<td>
 <img src="https://github.com/100mslive/100ms-flutter/blob/851/docs-provider-app/single-tile-mode.gif" title="single-tile-mode" height=300>
-
-</p>
+</td>
+</tr>
+</table>
 
 Try out your own UI or use one of these.It's completely customizable.
 
