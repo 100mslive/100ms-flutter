@@ -667,8 +667,9 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
 
         val hmsAudioTrackHashMap: HashMap<String, Any?>? = hmsTrackSettingMap["audio_track_setting"]
         val hmsVideoTrackHashMap: HashMap<String, Any?>? = hmsTrackSettingMap["video_track_setting"]
-
         val hmsTrackSettings = HMSTrackSettingsExtension.setTrackSettings(hmsAudioTrackHashMap,hmsVideoTrackHashMap)
+        val dartSDKVersion = call.argument<String>("dart_sdk_version")
+        val hmsSDKVersion = call.argument<String>("hmssdk_version")
         hmssdk = HMSSDK
             .Builder(activity)
             .setTrackSettings(hmsTrackSettings)
