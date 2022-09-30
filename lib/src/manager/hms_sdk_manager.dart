@@ -27,7 +27,7 @@ class HmsSdkManager {
       "preferred_extension": preferredExtension,
       "dart_sdk_version":
           dartSDKVersion.length > 0 ? dartSDKVersion[0] : "null",
-      "hmssdk_version": "0.7.6"
+      "hmssdk_version": "0.7.7"
     });
   }
 }

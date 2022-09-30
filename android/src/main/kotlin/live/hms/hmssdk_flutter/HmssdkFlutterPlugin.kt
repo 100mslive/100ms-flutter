@@ -41,6 +41,7 @@ import live.hms.video.sdk.models.role.HMSRole
 import live.hms.video.sdk.models.trackchangerequest.HMSChangeTrackStateRequest
 import live.hms.video.utils.HMSLogger
 import live.hms.video.audio.HMSAudioManager.*
+import live.hms.video.events.AgentType
 
 
 /** HmssdkFlutterPlugin */
@@ -670,9 +671,11 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         val hmsTrackSettings = HMSTrackSettingsExtension.setTrackSettings(hmsAudioTrackHashMap,hmsVideoTrackHashMap)
         val dartSDKVersion = call.argument<String>("dart_sdk_version")
         val hmsSDKVersion = call.argument<String>("hmssdk_version")
+        val framework = FrameworkInfo(framework = AgentType.FLUTTER, frameworkVersion = dartSDKVersion, frameworkSdkVersion = hmsSDKVersion)
         hmssdk = HMSSDK
             .Builder(activity)
             .setTrackSettings(hmsTrackSettings)
+            .setFrameworkInfo(framework)
             .build()
         result.success(true)
     }
