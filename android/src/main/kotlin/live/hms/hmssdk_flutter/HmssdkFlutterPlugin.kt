@@ -21,6 +21,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import live.hms.hmssdk_flutter.hms_role_components.AudioParamsExtension
 import live.hms.hmssdk_flutter.hms_role_components.VideoParamsExtension
+import live.hms.hmssdk_flutter.methods.HMSSessionMetadataAction
 import live.hms.hmssdk_flutter.views.HMSVideoViewFactory
 import live.hms.video.audio.HMSAudioManager.*
 import live.hms.video.connection.stats.*
@@ -41,6 +42,7 @@ import live.hms.video.sdk.models.role.HMSRole
 import live.hms.video.sdk.models.trackchangerequest.HMSChangeTrackStateRequest
 import live.hms.video.utils.HMSLogger
 import live.hms.video.audio.HMSAudioManager.*
+import live.hms.video.events.AgentType
 
 
 /** HmssdkFlutterPlugin */
@@ -177,6 +179,9 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
 
             "get_track_settings"->{
                 trackSettings(call, result)
+            }
+            "get_session_metadata","set_session_metadata" -> {
+                HMSSessionMetadataAction.sessionMetadataActions(call, result,hmssdk!!)
             }
             else -> {
                 result.notImplemented()
@@ -670,9 +675,11 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         val hmsTrackSettings = HMSTrackSettingsExtension.setTrackSettings(hmsAudioTrackHashMap,hmsVideoTrackHashMap)
         val dartSDKVersion = call.argument<String>("dart_sdk_version")
         val hmsSDKVersion = call.argument<String>("hmssdk_version")
+        val framework = FrameworkInfo(framework = AgentType.FLUTTER, frameworkVersion = dartSDKVersion, frameworkSdkVersion = hmsSDKVersion)
         hmssdk = HMSSDK
             .Builder(activity)
             .setTrackSettings(hmsTrackSettings)
+            .setFrameworkInfo(framework)
             .build()
         result.success(true)
     }
