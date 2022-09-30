@@ -113,7 +113,7 @@ Example app offers various meeting modes which decides the tile orientation on t
 
 Let's look at each mode one by one
 
-<table style="border=none">
+<table style="border: none;">
 <tr>
 <td>
 <a href="https://github.com/100mslive/100ms-flutter/blob/develop/example/lib/common/ui/organisms/grid_video_view.dart">
