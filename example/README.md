@@ -113,14 +113,22 @@ Example app offers various meeting modes which decides the tile orientation on t
 
 Let's look at each mode one by one
 
-<p float="left">
+<p float="left" style="padding: 10px">
+<span>
 
 #### [Normal Mode](https://github.com/100mslive/100ms-flutter/blob/develop/example/lib/common/ui/organisms/grid_video_view.dart)
+
+</span>
+
+<span>
+
 #### [Active Speaker Mode](https://github.com/100mslive/100ms-flutter/blob/develop/example/lib/common/ui/organisms/grid_video_view.dart)
+
+</span>
 
 </p>
 
-<p float="left">
+<p float="left"  style="padding: 10px">
 
 <img src="https://github.com/100mslive/100ms-flutter/blob/851/docs-provider-app/normal-mode.gif" title="normal-mode" height=300>
 <img src="https://github.com/100mslive/100ms-flutter/blob/851/docs-provider-app/active-speaker-mode.gif" title="active-speaker-mode" height=300>
