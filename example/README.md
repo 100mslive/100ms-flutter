@@ -78,7 +78,7 @@ class PeerTrackNode extends ChangeNotifier {
 ## Sample app data flow
 
 <p align="center">
-<img src="https://github.com/100mslive/100ms-flutter/blob/851/docs-provider-app/app-flow.png" title="100ms logo" float=center height=300 >
+<img src="https://github.com/100mslive/100ms-flutter/blob/851/docs-provider-app/app-flow-diagram.png" title="app-flow" float=center height=300>
 </p>
 
 
