@@ -113,19 +113,19 @@ Example app offers various meeting modes which decides the tile orientation on t
 <img src="https://github.com/100mslive/100ms-flutter/blob/851/docs-provider-app/meeting-mode.png" title="meeting-mode" height=300>
 </p>
 
-- Normal Mode
+##### Normal Mode
 
 <img src="https://github.com/100mslive/100ms-flutter/blob/851/docs-provider-app/normal-mode.gif" title="normal-mode" height=300>
 
-- Active Speaker Mode
+Active Speaker Mode
 
-<img src="https://github.com/100mslive/100ms-flutter/blob/851/docs-provider-app/active-speaker-mode.gif" title="active-speaker-mode "height=300>
+<img src="https://github.com/100mslive/100ms-flutter/blob/851/docs-provider-app/active-speaker-mode.gif" title="active-speaker-mode" height=300>
 
-- Hero Mode
+Hero Mode
 
 <img src="https://github.com/100mslive/100ms-flutter/blob/851/docs-provider-app/hero-mode.gif" title="hero-mode" height=300>
 
-- Audio Mode
+Audio Mode
 
 <img src="https://github.com/100mslive/100ms-flutter/blob/851/docs-provider-app/audio-mode.gif" title="audio-mode" height=300>
 
