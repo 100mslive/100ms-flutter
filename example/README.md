@@ -1,6 +1,6 @@
 <a href="https://100ms.live/">
 <p align="center">
-<img src="https://github.com/100mslive/100ms-flutter/blob/851/example-app-readme/assets/logo.svg" title="100ms logo" float=center height=150 >
+<img src="https://github.com/100mslive/100ms-flutter/blob/main/assets/logo.svg" title="100ms logo" float=center height=150 >
 </p>
 </a>
 
@@ -76,7 +76,7 @@ class PeerTrackNode extends ChangeNotifier {
 ### Data flow overview
 
 <p align="center">
-<img src="https://github.com/100mslive/100ms-flutter/blob/851/example-app-readme/assets/app-flow-diagram.png" title="app-flow" float=center height=300>
+<img src="https://github.com/100mslive/100ms-flutter/blob/main/assets/app-flow-diagram.png" title="app-flow" float=center height=300>
 </p>
 
 ### How example app uses the updates from SDK and updates the UI efficiently without extra rebuilds
@@ -87,7 +87,7 @@ Let's see how we are handling the updates in an efficient manner to avoid extra 
 - Updates related to peer(PeerTrackNode class)
 
 <p align="center">
-<img src="https://github.com/100mslive/100ms-flutter/blob/851/example-app-readme/assets/app-breakdown.png" title="app-flow" float=center height=300>
+<img src="https://github.com/100mslive/100ms-flutter/blob/main/assets/app-breakdown.png" title="app-flow" float=center height=300>
 </p>
 
 ### Application settings and meeting modes
@@ -98,13 +98,13 @@ The example app offers some settings to configure the application. Some of them 
 - Mirror Camera(To set whether to mirror local camera)
 - Enable Stats(To enable webRTC stats)
 
-<img src="https://github.com/100mslive/100ms-flutter/blob/851/example-app-readme/assets/app-settings.png" title="app-settings" float=center height=300>
+<img src="https://github.com/100mslive/100ms-flutter/blob/main/assets/app-settings.png" title="app-settings" float=center height=300>
 
 ---
 
 The example app offers various meeting modes which decide the tile orientation on the mobile screen.
 
-<img src="https://github.com/100mslive/100ms-flutter/blob/851/example-app-readme/assets/meeting-mode.png" title="meeting-mode" height=300>
+<img src="https://github.com/100mslive/100ms-flutter/blob/main/assets/meeting-mode.png" title="meeting-mode" height=300>
 
 Let's look at each mode one by one
 
@@ -138,19 +138,19 @@ Single Tile Mode
 </tr>
 <tr>
 <td>
-<img src="https://github.com/100mslive/100ms-flutter/blob/851/example-app-readme/assets/normal-mode.gif" title="normal-mode" height=300>
+<img src="https://github.com/100mslive/100ms-flutter/blob/main/assets/normal-mode.gif" title="normal-mode" height=300>
 </td>
 <td>
-<img src="https://github.com/100mslive/100ms-flutter/blob/851/example-app-readme/assets/active-speaker-mode.gif" title="active-speaker-mode" height=300>
+<img src="https://github.com/100mslive/100ms-flutter/blob/main/assets/active-speaker-mode.gif" title="active-speaker-mode" height=300>
 </td>
 <td>
-<img src="https://github.com/100mslive/100ms-flutter/blob/851/example-app-readme/assets/hero-mode.gif" title="hero-mode" height=300>
+<img src="https://github.com/100mslive/100ms-flutter/blob/main/assets/hero-mode.gif" title="hero-mode" height=300>
 </td>
 <td>
-<img src="https://github.com/100mslive/100ms-flutter/blob/851/example-app-readme/assets/audio-mode.gif" title="audio-mode" height=300>
+<img src="https://github.com/100mslive/100ms-flutter/blob/main/assets/audio-mode.gif" title="audio-mode" height=300>
 </td>
 <td>
-<img src="https://github.com/100mslive/100ms-flutter/blob/851/example-app-readme/assets/single-tile-mode.gif" title="single-tile-mode" height=300>
+<img src="https://github.com/100mslive/100ms-flutter/blob/main/assets/single-tile-mode.gif" title="single-tile-mode" height=300>
 </td>
 </tr>
 </table>
@@ -581,7 +581,7 @@ More info about audio share can be found [here](https://www.100ms.live/docs/flut
 Consider a scenario where Bluetooth earphones are connected to the phone but you want your friends sitting with you to also listen to the stream. So, you disconnect the Bluetooth and then the audio comes from an external speaker. Well gone are those days when you need to do this `HMSSDK` provides inbuilt methods to easily switch audio routing.
 
 <p align="center">
-<img src="https://github.com/100mslive/100ms-flutter/blob/851/example-app-readme/assets/audio-device-setting.png" title="audio-device-setting" height=300>
+<img src="https://github.com/100mslive/100ms-flutter/blob/main/assets/audio-device-setting.png" title="audio-device-setting" height=300>
 </p>
 
 `HMSSDK` has `switchAudioOutput` method to do so. It takes 
@@ -638,9 +638,9 @@ Let's take the seminar case again where someone has a question so how will the h
 Suppose you are in a meeting and someone's at the door unmuting and informing or using chat to inform seems a bit odd, HMSSDK's BRB(Be Right Back) comes to rescue.
 
 <p align="center">
-<img src="https://github.com/100mslive/100ms-flutter/blob/851/example-app-readme/assets/hand-raise.png" title="hand-raise" height=300>
+<img src="https://github.com/100mslive/100ms-flutter/blob/main/assets/hand-raise.png" title="hand-raise" height=300>
 &nbsp; &nbsp; &nbsp; &nbsp;
-<img src="https://github.com/100mslive/100ms-flutter/blob/851/example-app-readme/assets/brb.png" title="brb" height=300>
+<img src="https://github.com/100mslive/100ms-flutter/blob/main/assets/brb.png" title="brb" height=300>
 </p>
 
 
