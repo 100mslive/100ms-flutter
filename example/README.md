@@ -6,10 +6,11 @@
 
 ## HMSSDK Sample App 🚀
 
-Clone the example app from [here](https://github.com/100mslive/100ms-flutter/tree/main).
-*"example"* folder contains code relevant to the example app.
-Features in the sample app
-The sample application contains all the features provided by `HMSSDK`. Just to name a few:
+Clone the Example app from provided in the repo [here](https://github.com/100mslive/100ms-flutter/tree/main).
+
+The *"example"* folder contains code relevant to the Example app.
+
+The Example application contains implementation of all the features provided by `HMSSDK` some of which are listes below
 
 * 🙏 Join a room
 * 🎞 Join with a preview
@@ -27,6 +28,8 @@ The sample application contains all the features provided by `HMSSDK`. Just to n
 * 🏃‍♀️ BRB(Be Right Back sign)
 * ❌ Remove Peer
 * 📡 HLS Streaming
+* And many more...
+
 
 ## Sample app architecture
 The sample app uses a provider as its state management library. We have created separate `changeNotifier` classes namely:
