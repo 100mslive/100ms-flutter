@@ -7,6 +7,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import live.hms.hmssdk_flutter.HMSCommonAction
 import live.hms.hmssdk_flutter.HMSExceptionExtension
+import live.hms.hmssdk_flutter.HMSSessionMetadataExtension
 import live.hms.video.error.HMSException
 import live.hms.video.sdk.HMSSDK
 import live.hms.video.sdk.HMSSessionMetadataListener
@@ -51,8 +52,8 @@ class HMSSessionMetadataAction {
             override fun onSuccess(sessionMetadata: String?) {
                 val args = HashMap<String, Any?>()
                 args["event_name"] = "session_metadata"
-                args["metadata"] = sessionMetadata
-                if (args["metadata"] != null)
+                args["data"] = HMSSessionMetadataExtension.toDictionary(sessionMetadata)
+                if (args["data"] != null)
                     CoroutineScope(Dispatchers.Main).launch {
                         result.success(args)
                     }
