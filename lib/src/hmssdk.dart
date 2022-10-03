@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:hmssdk_flutter/src/manager/hms_sdk_manager.dart';
+import 'package:hmssdk_flutter/src/model/hms_session_metadata.dart';
 import 'package:hmssdk_flutter/src/service/platform_service.dart';
 import '../hmssdk_flutter.dart';
 
@@ -771,6 +772,7 @@ class HMSSDK {
       PlatformService.invokeMethod(PlatformMethod.switchAudioOutput);
   }
 
+  ///Method to start audio share of other apps.(Android Only)
   Future<void> startAudioShare(
       {HMSActionResultListener? hmsActionResultListener,
       HMSAudioMixingMode audioMixingMode =
@@ -791,6 +793,7 @@ class HMSSDK {
     }
   }
 
+  ///Method to stop audio share of other apps.(Android Only)
   Future<void> stopAudioShare(
       {HMSActionResultListener? hmsActionResultListener}) async {
     if (!Platform.isAndroid) return;
@@ -808,12 +811,14 @@ class HMSSDK {
     }
   }
 
+  ///Method to change audio mixing mode of shared audio from other apps.(Android only)
   void setAudioMixingMode({required HMSAudioMixingMode audioMixingMode}) {
     if (Platform.isAndroid)
       PlatformService.invokeMethod(PlatformMethod.setAudioMixingMode,
           arguments: {"audio_mixing_mode": audioMixingMode.name});
   }
 
+  ///Method to get Track Settings.
   Future<HMSTrackSetting> getTrackSettings() async {
     var result =
         await PlatformService.invokeMethod(PlatformMethod.getTrackSettings);
@@ -821,6 +826,7 @@ class HMSSDK {
     return trackSetting;
   }
 
+  ///Method to set Track Settings.
   void setTrackSettings(
       {HMSActionResultListener? hmsActionResultListener,
       required HMSTrackSetting hmsTrackSetting}) async {
@@ -843,10 +849,12 @@ class HMSSDK {
     }
   }
 
+  ///Method to destroy HMSSDK instance.
   void destroy() {
     PlatformService.invokeMethod(PlatformMethod.destroy);
   }
 
+  /// Method to update the value of the session metadata.
   Future<void> setSessionMetadata(
       {required String metadata,
       HMSActionResultListener? hmsActionResultListener}) async {
@@ -869,11 +877,12 @@ class HMSSDK {
     }
   }
 
+  ///Method to fetches the latest metadata from the server and returns it
   Future<String?> getSessionMetadata() async {
     var result =
         await PlatformService.invokeMethod(PlatformMethod.getSessionMetadata);
     if (result != null) {
-      return result["data"]["metadata"] as String;
+      return HMSSessionMetadata.fromMap(result).metadata;
     }
     return null;
   }
