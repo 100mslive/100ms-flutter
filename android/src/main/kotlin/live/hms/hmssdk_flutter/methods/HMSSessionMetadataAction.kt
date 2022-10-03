@@ -40,13 +40,7 @@ class HMSSessionMetadataAction {
         private fun getSessionMetadataResultListener(result: MethodChannel.Result) = object:
             HMSSessionMetadataListener {
             override fun onError(error: HMSException) {
-                val args = HashMap<String, Any?>()
-                args["event_name"] = "on_error"
-                args["data"] = HMSExceptionExtension.toDictionary(error)
-                if (args["data"] != null)
-                    CoroutineScope(Dispatchers.Main).launch {
-                        result.success(args)
-                    }
+                result.success(null)
             }
 
             override fun onSuccess(sessionMetadata: String?) {

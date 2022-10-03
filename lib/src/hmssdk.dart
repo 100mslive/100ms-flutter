@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:hmssdk_flutter/src/manager/hms_sdk_manager.dart';
+import 'package:hmssdk_flutter/src/model/hms_session_metadata.dart';
 import 'package:hmssdk_flutter/src/service/platform_service.dart';
 import '../hmssdk_flutter.dart';
 
@@ -873,7 +874,7 @@ class HMSSDK {
     var result =
         await PlatformService.invokeMethod(PlatformMethod.getSessionMetadata);
     if (result != null) {
-      return result["data"]["metadata"] as String;
+      return HMSSessionMetadata.fromMap(result).metadata;
     }
     return null;
   }
