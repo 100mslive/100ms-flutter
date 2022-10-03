@@ -51,12 +51,17 @@ The default [Example app](https://github.com/100mslive/100ms-flutter/tree/main/e
 * [Riverpod](https://github.com/100mslive/100ms-flutter/tree/main/sample%20apps/riverpod)
 * [Mobx](https://github.com/100mslive/100ms-flutter/tree/main/sample%20apps/mobx)
 
+
+
+🚀 We have added explanations & recommended usage guide for different features, UI Layouts, Data Store, etc in [Example app ReadMe](https://github.com/100mslive/100ms-flutter/blob/main/example/README.md).
+
+
 ## ☝️ Minimum Configuration
 
 - Support for Android API level 21 or higher
 - Support for Java 8
-- Support for iOS 10 or higher
-- Support for Flutter 2.10.x or higher (except 3.0.0 to 3.0.5)
+- Support for iOS 12 or higher
+- Support for Flutter 3.3.0 or higher
 - Xcode 12 or higher
 
 ## 🤝 Recommended Configuration
@@ -426,6 +431,8 @@ abstract class HMSPreviewListener {
 ```
 
 📖 Read the Complete Documentation here: <https://www.100ms.live/docs/flutter/v2/guides/quickstart>
+
+🚀 We have added explanations & recommended usage guide for different features, UI Layouts, Data Store, etc in [Example app ReadMe](https://github.com/100mslive/100ms-flutter/blob/main/example/README.md).
 
 📲 Download the Sample iOS app here: <https://testflight.apple.com/join/Uhzebmut>
 
