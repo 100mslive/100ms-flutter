@@ -1,3 +1,4 @@
+///[HMSSessionMetadata] contain metadata for the current session room.
 class HMSSessionMetadata {
   final String? metadata;
 
