@@ -65,9 +65,9 @@ class _PreviewDetailsState extends State<PreviewDetails> {
           bool mirrorCamera =
               await Utilities.getBoolData(key: 'mirror-camera') ?? false;
           HMSSDKInteractor _hmsSDKInteractor = HMSSDKInteractor(
-        appGroup: "group.flutterhms",
-        preferredExtension:
-            "live.100ms.flutter.FlutterBroadcastUploadExtension");
+              appGroup: "group.flutterhms",
+              preferredExtension:
+                  "live.100ms.flutter.FlutterBroadcastUploadExtension");
           Navigator.of(context).pushReplacement(MaterialPageRoute(
               builder: (_) => ListenableProvider.value(
                     value: MeetingStore(hmsSDKInteractor: _hmsSDKInteractor),

@@ -15,11 +15,10 @@ class HmsSdkManager {
   }
 
   Future<bool> createHMSSdk(
-   HMSTrackSetting? hmsTrackSetting,
+    HMSTrackSetting? hmsTrackSetting,
     String? appGroup,
     String? preferredExtension,
   ) async {
-
     List<String> dartSDKVersion = Platform.version.split(" ");
     return await PlatformService.invokeMethod(PlatformMethod.build, arguments: {
       "hms_track_setting": hmsTrackSetting?.toMap(),

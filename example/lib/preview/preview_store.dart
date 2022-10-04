@@ -12,9 +12,7 @@ class PreviewStore extends ChangeNotifier
     implements HMSPreviewListener, HMSLogListener {
   HMSSDKInteractor? hmsSDKInteractor;
 
-  
   PreviewStore() {
-    
     /// [appGroup] & [preferredExtension] of [HMSSDKInteractor] are optional values only required for implementing Screen & Audio Share on iOS. They are not required for Android.
     /// Remove [appGroup] & [preferredExtension] if your app does not implements Screen or Audio Share on iOS.
     hmsSDKInteractor = HMSSDKInteractor(

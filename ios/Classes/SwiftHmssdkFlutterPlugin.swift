@@ -173,8 +173,8 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             audioShareAction(call, result)
         case "switch_audio_output":
             switchAudioOutput(call, result)
-            
-        case "get_session_metadata","set_session_metadata":
+
+        case "get_session_metadata", "set_session_metadata":
             sessionMetadataAction(call, result)
 
         default:
@@ -317,7 +317,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             result(FlutterMethodNotImplemented)
         }
     }
-    
+
     // MARK: - Audio Share
 
     private func audioShareAction(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
@@ -409,7 +409,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             result(FlutterMethodNotImplemented)
         }
     }
-    
+
     // MARK: - Session Metadata
     private func sessionMetadataAction(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         switch call.method {
@@ -447,7 +447,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             if let appGroup = arguments["app_group"] as? String {
                 sdk.appGroup = appGroup
             }
-            
+
             sdk.frameworkInfo = framework
 
             if setLogger {
@@ -771,7 +771,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         logLevel = .off
         hmsSDK?.logger = nil
     }
-    
+
     private func getSessionMetadata(_ result: @escaping FlutterResult) {
         hmsSDK?.getSessionMetadata(completion: { metadata, _ in
             if let metadata = metadata {
@@ -782,15 +782,14 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                     ]
                 ] as [String: Any]
                 result(data)
-            }
-            else {
+            } else {
                 result(nil)
             }
         })
     }
-    
+
     private func setSessionMetadata(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
-        
+
         let arguments = call.arguments as! [AnyHashable: Any]
 
         guard let metadata = arguments["session_metadata"] as? String else {
@@ -808,7 +807,6 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         }
         )
     }
-    
 
     // MARK: - 100ms SDK Delegate Callbacks
 
