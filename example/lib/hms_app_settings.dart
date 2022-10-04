@@ -28,7 +28,6 @@ class _HMSAppSettingsState extends State<HMSAppSettings> {
   }
 
   Future<void> getAppSettings() async {
-    
     joinWithMutedAudio =
         await Utilities.getBoolData(key: 'join-with-muted-audio') ?? true;
     joinWithMutedVideo =

@@ -14,8 +14,8 @@ class HMSTrackInitStateExtension {
 
         fun getValueFromHMSTrackInitState(hmsTrackInitState:HMSTrackSettings.InitState):String{
             return when(hmsTrackInitState){
-                HMSTrackSettings.InitState.UNMUTED->"UNMUTED"
-                HMSTrackSettings.InitState.MUTED->"MUTED"
+                HMSTrackSettings.InitState.UNMUTED-> "UNMUTED"
+                HMSTrackSettings.InitState.MUTED-> "MUTED"
                 else->"MUTED"
             }
         }

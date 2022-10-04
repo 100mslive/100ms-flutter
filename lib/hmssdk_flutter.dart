@@ -6,7 +6,6 @@ export 'src/common/platform_methods.dart';
 // ENUMS
 export 'src/enum/hms_audio_codec.dart';
 export 'src/enum/hms_camera_facing.dart';
-export 'src/enum/hms_codec.dart';
 export 'src/enum/hms_peer_update.dart';
 export 'src/enum/hms_preview_update_listener_method.dart';
 export 'src/enum/hms_room_update.dart';

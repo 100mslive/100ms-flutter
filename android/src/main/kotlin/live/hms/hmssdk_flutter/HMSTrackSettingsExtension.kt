@@ -32,21 +32,10 @@ class HMSTrackSettingsExtension {
 
             var hmsAudioTrackSettings = HMSAudioTrackSettings.Builder()
             if (hmsAudioTrackHashMap != null) {
-                val maxBitRate = hmsAudioTrackHashMap["bit_rate"] as Int?
-                val volume = hmsAudioTrackHashMap["volume"] as Double?
                 val useHardwareAcousticEchoCanceler =
                     hmsAudioTrackHashMap["user_hardware_acoustic_echo_canceler"] as Boolean?
-                val audioCodec =
-                    AudioParamsExtension.getValueOfHMSAudioCodecFromString(hmsAudioTrackHashMap["audio_codec"] as String?) as HMSAudioCodec?
-                val initState = HMSTrackInitStateExtension.getHMSTrackInitStatefromValue(hmsAudioTrackHashMap["hms_audio_track_init_state"] as String)
 
-                if (maxBitRate != null) {
-                    hmsAudioTrackSettings = hmsAudioTrackSettings.maxBitrate(maxBitRate)
-                }
-
-                if (volume != null) {
-                    hmsAudioTrackSettings = hmsAudioTrackSettings.volume(volume)
-                }
+                val initialState = HMSTrackInitStateExtension.getHMSTrackInitStatefromValue(hmsAudioTrackHashMap["track_initial_state"] as String)
 
                 if (useHardwareAcousticEchoCanceler != null) {
                     hmsAudioTrackSettings = hmsAudioTrackSettings.setUseHardwareAcousticEchoCanceler(
@@ -54,35 +43,38 @@ class HMSTrackSettingsExtension {
                     )
                 }
 
-                if (audioCodec != null) {
-                    hmsAudioTrackSettings = hmsAudioTrackSettings.codec(audioCodec)
+                if(initialState != null){
+                    hmsAudioTrackSettings = hmsAudioTrackSettings.initialState(initialState)
                 }
-                hmsAudioTrackSettings = hmsAudioTrackSettings.initialState(initState)
             }
-
 
             var hmsVideoTrackSettings = HMSVideoTrackSettings.Builder()
             if (hmsVideoTrackHashMap != null) {
-                val maxBitRate = hmsVideoTrackHashMap["max_bit_rate"] as Int?
-                val maxFrameRate = hmsVideoTrackHashMap["max_frame_rate"] as Int?
-                val videoCodec =
-                    VideoParamsExtension.getValueOfHMSAudioCodecFromString(hmsVideoTrackHashMap["video_codec"] as String?) as HMSVideoCodec?
-                val initState = HMSTrackInitStateExtension.getHMSTrackInitStatefromValue(hmsVideoTrackHashMap["hms_video_track_init_state"] as String)
 
-                if (maxBitRate != null) {
-                    hmsVideoTrackSettings = hmsVideoTrackSettings.maxBitrate(maxBitRate)
-                }
+                val cameraFacing =  getHMSCameraFacingFromValue(hmsVideoTrackHashMap["camera_facing"] as String?)
+                val disableAutoResize = hmsVideoTrackHashMap["disable_auto_resize"] as Boolean
+                val initialState = HMSTrackInitStateExtension.getHMSTrackInitStatefromValue(hmsVideoTrackHashMap["track_initial_state"] as String)
 
-                if (maxFrameRate != null) {
-                    hmsVideoTrackSettings = hmsVideoTrackSettings.maxFrameRate(maxFrameRate)
+                if(cameraFacing != null){
+                    hmsVideoTrackSettings = hmsVideoTrackSettings.cameraFacing(cameraFacing)
                 }
-                if (videoCodec != null) {
-                    hmsVideoTrackSettings = hmsVideoTrackSettings.codec(videoCodec)
+                if(disableAutoResize != null){
+                    hmsVideoTrackSettings = hmsVideoTrackSettings.disableAutoResize(disableAutoResize);
                 }
-                hmsVideoTrackSettings = hmsVideoTrackSettings.initialState(initState)
+                if(initialState != null){
+                    hmsVideoTrackSettings = hmsVideoTrackSettings.initialState(initialState)
+                }
             }
 
             return HMSTrackSettings.Builder().audio(hmsAudioTrackSettings.build()).video(hmsVideoTrackSettings.build()).build()
+        }
+
+        private fun getHMSCameraFacingFromValue(cameraFacing:String?):HMSVideoTrackSettings.CameraFacing{
+            return when(cameraFacing){
+                "back" -> HMSVideoTrackSettings.CameraFacing.BACK
+                "front" -> HMSVideoTrackSettings.CameraFacing.FRONT
+                else -> HMSVideoTrackSettings.CameraFacing.FRONT
+            }
         }
     }
 }

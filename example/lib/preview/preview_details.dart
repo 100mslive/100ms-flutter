@@ -55,7 +55,9 @@ class _PreviewDetailsState extends State<PreviewDetails> {
         if (!skipPreview) {
           Navigator.of(context).pushReplacement(MaterialPageRoute(
               builder: (_) => ListenableProvider.value(
-                    value: PreviewStore(joinWithMutedAudio: joinWithMutedAudio,joinWithMutedVideo: joinWithMutedVideo),
+                    value: PreviewStore(
+                        joinWithMutedAudio: joinWithMutedAudio,
+                        joinWithMutedVideo: joinWithMutedVideo),
                     child: PreviewPage(
                         meetingFlow: widget.meetingFlow,
                         name: nameController.text,
@@ -70,8 +72,8 @@ class _PreviewDetailsState extends State<PreviewDetails> {
               appGroup: "group.flutterhms",
               preferredExtension:
                   "live.100ms.flutter.FlutterBroadcastUploadExtension",
-                  joinWithMutedAudio: joinWithMutedAudio,
-                  joinWithMutedVideo: joinWithMutedVideo);
+              joinWithMutedAudio: joinWithMutedAudio,
+              joinWithMutedVideo: joinWithMutedVideo);
           Navigator.of(context).pushReplacement(MaterialPageRoute(
               builder: (_) => ListenableProvider.value(
                     value: MeetingStore(hmsSDKInteractor: _hmsSDKInteractor),
