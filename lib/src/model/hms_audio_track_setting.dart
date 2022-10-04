@@ -1,5 +1,6 @@
 // Project imports:
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:hmssdk_flutter/src/enum/hms_track_init_state.dart';
 import 'package:hmssdk_flutter/src/model/hms_audio_node.dart';
 
 class HMSAudioTrackSetting {
@@ -9,6 +10,7 @@ class HMSAudioTrackSetting {
   final double? volume;
   final String? trackDescription;
   HMSAudioMixerSource? audioSource;
+  final HMSTrackInitState hmsAudioTrackInitState;
 
   HMSAudioTrackSetting(
       {this.maxBitrate = 32,
@@ -16,7 +18,8 @@ class HMSAudioTrackSetting {
       this.useHardwareAcousticEchoCanceler,
       this.volume,
       this.trackDescription = "This is an audio Track",
-      this.audioSource});
+      this.audioSource,
+      this.hmsAudioTrackInitState = HMSTrackInitState.MUTED});
 
   factory HMSAudioTrackSetting.fromMap(Map map) {
     List<HMSAudioNode> nodeList = [];
@@ -42,7 +45,10 @@ class HMSAudioTrackSetting {
         useHardwareAcousticEchoCanceler:
             map['user_hardware_acoustic_echo_canceler'] ?? null,
         trackDescription: map['track_description'] ?? "This is an audio Track",
-        audioSource: audioMixerSource);
+        audioSource: audioMixerSource,
+        hmsAudioTrackInitState:
+            HMSTrackInitStateValue.getHMSTrackInitStateFromName(
+                map['hms_audio_track_init_state']));
   }
 
   Map<String, dynamic> toMap() {
@@ -54,7 +60,10 @@ class HMSAudioTrackSetting {
           : null,
       'user_hardware_acoustic_echo_canceler': useHardwareAcousticEchoCanceler,
       'track_description': trackDescription,
-      'audio_source': audioSource?.toList()
+      'audio_source': audioSource?.toList(),
+      'hms_audio_track_init_state':
+          HMSTrackInitStateValue.getValuefromHMSTrackInitState(
+              hmsAudioTrackInitState)
     };
   }
 }

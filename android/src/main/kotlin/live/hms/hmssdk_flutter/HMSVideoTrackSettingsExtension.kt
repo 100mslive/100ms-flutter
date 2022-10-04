@@ -15,6 +15,7 @@ class HMSVideoTrackSettingsExtension {
             map["max_bit_rate"] = hmsVideoTrackSettings?.maxBitRate!!
             map["max_frame_rate"] = hmsVideoTrackSettings.maxFrameRate
             map["disable_auto_resize"] = hmsVideoTrackSettings.disableAutoResize
+            map["hms_video_track_init_state"] = HMSTrackInitStateExtension.getValueFromHMSTrackInitState(hmsVideoTrackSettings.initialState)
             return  map
         }
 

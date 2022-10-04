@@ -15,6 +15,7 @@ class HMSAudioTrackSettingsExtension {
             map["volume"] = hmsAudioTrackSettings.volume
             map["codec"]=AudioParamsExtension.getValueOfHMSAudioCodec(hmsAudioTrackSettings.codec)
             map["user_hardware_acoustic_echo_canceler"] = hmsAudioTrackSettings.useHardwareAcousticEchoCanceler
+            map["hms_audio_track_init_state"] = HMSTrackInitStateExtension.getValueFromHMSTrackInitState(hmsAudioTrackSettings.initialState)
             return  map
         }
     }
