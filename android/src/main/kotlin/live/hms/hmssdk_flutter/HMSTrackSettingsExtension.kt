@@ -38,6 +38,7 @@ class HMSTrackSettingsExtension {
                     hmsAudioTrackHashMap["user_hardware_acoustic_echo_canceler"] as Boolean?
                 val audioCodec =
                     AudioParamsExtension.getValueOfHMSAudioCodecFromString(hmsAudioTrackHashMap["audio_codec"] as String?) as HMSAudioCodec?
+                val initState = HMSTrackInitStateExtension.getHMSTrackInitStatefromValue(hmsAudioTrackHashMap["hms_audio_track_init_state"] as String)
 
                 if (maxBitRate != null) {
                     hmsAudioTrackSettings = hmsAudioTrackSettings.maxBitrate(maxBitRate)
@@ -56,6 +57,7 @@ class HMSTrackSettingsExtension {
                 if (audioCodec != null) {
                     hmsAudioTrackSettings = hmsAudioTrackSettings.codec(audioCodec)
                 }
+                hmsAudioTrackSettings = hmsAudioTrackSettings.initialState(initState)
             }
 
 
@@ -65,7 +67,7 @@ class HMSTrackSettingsExtension {
                 val maxFrameRate = hmsVideoTrackHashMap["max_frame_rate"] as Int?
                 val videoCodec =
                     VideoParamsExtension.getValueOfHMSAudioCodecFromString(hmsVideoTrackHashMap["video_codec"] as String?) as HMSVideoCodec?
-
+                val initState = HMSTrackInitStateExtension.getHMSTrackInitStatefromValue(hmsVideoTrackHashMap["hms_video_track_init_state"] as String)
 
                 if (maxBitRate != null) {
                     hmsVideoTrackSettings = hmsVideoTrackSettings.maxBitrate(maxBitRate)
@@ -77,6 +79,7 @@ class HMSTrackSettingsExtension {
                 if (videoCodec != null) {
                     hmsVideoTrackSettings = hmsVideoTrackSettings.codec(videoCodec)
                 }
+                hmsVideoTrackSettings = hmsVideoTrackSettings.initialState(initState)
             }
 
             return HMSTrackSettings.Builder().audio(hmsAudioTrackSettings.build()).video(hmsVideoTrackSettings.build()).build()
