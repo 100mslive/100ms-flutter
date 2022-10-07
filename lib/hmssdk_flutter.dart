@@ -6,7 +6,6 @@ export 'src/common/platform_methods.dart';
 // ENUMS
 export 'src/enum/hms_audio_codec.dart';
 export 'src/enum/hms_camera_facing.dart';
-export 'src/enum/hms_codec.dart';
 export 'src/enum/hms_peer_update.dart';
 export 'src/enum/hms_preview_update_listener_method.dart';
 export 'src/enum/hms_room_update.dart';
@@ -17,6 +16,7 @@ export 'src/enum/hms_video_codec.dart';
 export 'src/enum/hms_message_recipient_type.dart';
 export 'src/enum/hms_log_level.dart';
 export 'src/enum/hms_stats_listener_method.dart';
+export 'src/enum/hms_track_init_state.dart';
 //EXCEPTIONS
 export 'src/exceptions/hms_exception.dart';
 export 'src/exceptions/hms_in_sufficient_data.dart';

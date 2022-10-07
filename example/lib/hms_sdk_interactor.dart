@@ -10,15 +10,27 @@ class HMSSDKInteractor {
 
   /// [appGroup] & [preferredExtension] are optional values only required for implementing Screen & Audio Share on iOS. They are not required for Android.
   /// Remove [appGroup] & [preferredExtension] if your app does not implements Screen or Audio Share on iOS.
-  HMSSDKInteractor({String? appGroup, String? preferredExtension}) {
+  /// [joinWithMutedAudio] & [joinWithMutedVideo] are required to set the initial audio/video state i.e what should be camera and mic
+  /// state while room is joined.By default both audio and video are kept as mute.
+  HMSSDKInteractor(
+      {String? appGroup,
+      String? preferredExtension,
+      bool joinWithMutedAudio = true,
+      bool joinWithMutedVideo = true}) {
     HMSTrackSetting trackSetting = HMSTrackSetting(
         audioTrackSetting: HMSAudioTrackSetting(
             audioSource: HMSAudioMixerSource(node: [
-          HMSAudioFilePlayerNode("audioFilePlayerNode"),
-          HMSMicNode(),
-          HMSScreenBroadcastAudioReceiverNode()
-        ])),
-        videoTrackSetting: HMSVideoTrackSetting());
+              HMSAudioFilePlayerNode("audioFilePlayerNode"),
+              HMSMicNode(),
+              HMSScreenBroadcastAudioReceiverNode()
+            ]),
+            trackInitialState: joinWithMutedAudio
+                ? HMSTrackInitState.MUTED
+                : HMSTrackInitState.UNMUTED),
+        videoTrackSetting: HMSVideoTrackSetting(
+            trackInitialState: joinWithMutedVideo
+                ? HMSTrackInitState.MUTED
+                : HMSTrackInitState.UNMUTED));
     hmsSDK = HMSSDK(
         appGroup: appGroup,
         preferredExtension: preferredExtension,

@@ -26,7 +26,6 @@ class PreviewDetails extends StatefulWidget {
 
 class _PreviewDetailsState extends State<PreviewDetails> {
   TextEditingController nameController = TextEditingController();
-  bool toShowPreview = true;
   @override
   void initState() {
     super.initState();
@@ -37,7 +36,6 @@ class _PreviewDetailsState extends State<PreviewDetails> {
     nameController.text = await Utilities.getStringData(key: "name");
     nameController.selection = TextSelection.fromPosition(
         TextPosition(offset: nameController.text.length));
-    toShowPreview = await Utilities.getBoolData(key: 'show-preview') ?? false;
     setState(() {});
   }
 
@@ -49,11 +47,17 @@ class _PreviewDetailsState extends State<PreviewDetails> {
       res = await Utilities.getPermissions();
       bool skipPreview =
           await Utilities.getBoolData(key: 'skip-preview') ?? false;
+      bool joinWithMutedAudio =
+          await Utilities.getBoolData(key: 'join-with-muted-audio') ?? true;
+      bool joinWithMutedVideo =
+          await Utilities.getBoolData(key: 'join-with-muted-video') ?? true;
       if (res) {
         if (!skipPreview) {
           Navigator.of(context).pushReplacement(MaterialPageRoute(
               builder: (_) => ListenableProvider.value(
-                    value: PreviewStore(),
+                    value: PreviewStore(
+                        joinWithMutedAudio: joinWithMutedAudio,
+                        joinWithMutedVideo: joinWithMutedVideo),
                     child: PreviewPage(
                         meetingFlow: widget.meetingFlow,
                         name: nameController.text,
@@ -67,7 +71,9 @@ class _PreviewDetailsState extends State<PreviewDetails> {
           HMSSDKInteractor _hmsSDKInteractor = HMSSDKInteractor(
               appGroup: "group.flutterhms",
               preferredExtension:
-                  "live.100ms.flutter.FlutterBroadcastUploadExtension");
+                  "live.100ms.flutter.FlutterBroadcastUploadExtension",
+              joinWithMutedAudio: joinWithMutedAudio,
+              joinWithMutedVideo: joinWithMutedVideo);
           Navigator.of(context).pushReplacement(MaterialPageRoute(
               builder: (_) => ListenableProvider.value(
                     value: MeetingStore(hmsSDKInteractor: _hmsSDKInteractor),

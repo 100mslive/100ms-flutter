@@ -11,10 +11,8 @@ class HMSVideoTrackSettingsExtension {
         fun toDictionary(hmsVideoTrackSettings: HMSVideoTrackSettings?):HashMap<String,Any>?{
             val map = HashMap<String,Any>()
             map["camera_facing"] = getValueOfHMSCameraFacing(hmsVideoTrackSettings?.cameraFacing)!!
-            map["video_codec"] = getValueOfHMSVideoCodec(hmsVideoTrackSettings?.codec)!!
-            map["max_bit_rate"] = hmsVideoTrackSettings?.maxBitRate!!
-            map["max_frame_rate"] = hmsVideoTrackSettings.maxFrameRate
-            map["disable_auto_resize"] = hmsVideoTrackSettings.disableAutoResize
+            map["disable_auto_resize"] = hmsVideoTrackSettings?.disableAutoResize!!
+            map["track_initial_state"] = HMSTrackInitStateExtension.getValueFromHMSTrackInitState(hmsVideoTrackSettings.initialState)
             return  map
         }
 
@@ -29,15 +27,5 @@ class HMSVideoTrackSettingsExtension {
             }
         }
 
-        private fun getValueOfHMSVideoCodec(codec: HMSVideoCodec?):String?{
-            if(codec==null)return null
-
-            return when(codec){
-                HMSVideoCodec.H264-> "h264"
-                HMSVideoCodec.VP8->"vp8"
-                HMSVideoCodec.VP9->"vp9"
-                else-> "defaultCodec"
-            }
-        }
     }
 }
