@@ -23,6 +23,8 @@ abstract class HMSPreviewListener {
 
   /// This is called when there is a change in any property of the Room
   ///
+  /// To Enable [onRoomUpdate] activate Enable Room-State from dashboard under templates->Advance Settings.
+  ///
   /// - Parameters:
   ///   - room: the room which was joined
   ///   - update: the triggered update type. Should be used to perform different UI Actions
@@ -30,6 +32,8 @@ abstract class HMSPreviewListener {
 
   /// This will be called whenever there is an update on an existing peer
   /// or a new peer got added/existing peer is removed.
+  ///
+  /// To Enable [onPeerUpdate] activate Send Peer List in Room-state from dashboard under templates->Advance Settings.
   ///
   /// This callback can be used to keep a track of all the peers in the room
   /// - Parameters:
