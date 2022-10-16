@@ -11,10 +11,14 @@ class HMSVideoTrackSetting {
   /// [trackInitialState] property to set the initial state of the video track i.e Mute/Unmute.
   final HMSTrackInitState trackInitialState;
 
+  /// [forceSoftwareDecoder] property to use software decoder. By default it's set to false.(Android Only)
+  final bool? forceSoftwareDecoder;
+
   HMSVideoTrackSetting(
       {this.cameraFacing = HMSCameraFacing.FRONT,
       this.disableAutoResize = false,
-      this.trackInitialState = HMSTrackInitState.UNMUTED});
+      this.trackInitialState = HMSTrackInitState.UNMUTED,
+      this.forceSoftwareDecoder = false});
 
   factory HMSVideoTrackSetting.fromMap(Map map) {
     return HMSVideoTrackSetting(
@@ -22,7 +26,8 @@ class HMSVideoTrackSetting {
             map['camera_facing']),
         disableAutoResize: map['disable_auto_resize'] ?? false,
         trackInitialState: HMSTrackInitStateValue.getHMSTrackInitStateFromName(
-            map['track_initial_state']));
+            map['track_initial_state']),
+        forceSoftwareDecoder: map['force_software_decoder']);
   }
 
   Map<String, dynamic> toMap() {
@@ -33,7 +38,8 @@ class HMSVideoTrackSetting {
       'disable_auto_resize': disableAutoResize ?? false,
       'track_initial_state':
           HMSTrackInitStateValue.getValuefromHMSTrackInitState(
-              trackInitialState)
+              trackInitialState),
+      'force_software_decoder': forceSoftwareDecoder ?? false
     };
   }
 }
