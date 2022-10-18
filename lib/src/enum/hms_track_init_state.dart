@@ -12,19 +12,19 @@ extension HMSTrackInitStateValue on HMSTrackInitState {
       case 'UNMUTED':
         return HMSTrackInitState.UNMUTED;
       default:
-        return HMSTrackInitState.MUTED;
+        return HMSTrackInitState.UNMUTED;
     }
   }
 
   static String getValuefromHMSTrackInitState(
-      HMSTrackInitState hmsTrackInitState) {
+      HMSTrackInitState? hmsTrackInitState) {
     switch (hmsTrackInitState) {
       case HMSTrackInitState.MUTED:
         return 'MUTED';
       case HMSTrackInitState.UNMUTED:
         return 'UNMUTED';
       default:
-        return "MUTED";
+        return "UNMUTED";
     }
   }
 }

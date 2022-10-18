@@ -13,7 +13,7 @@ class HMSAudioTrackSetting {
   HMSAudioMixerSource? audioSource;
 
   ///[trackInitialState] property to set the initial state of the audio track i.e Mute/Unmute.By default it's unmuted.
-  final HMSTrackInitState trackInitialState;
+  final HMSTrackInitState? trackInitialState;
 
   HMSAudioTrackSetting(
       {this.useHardwareAcousticEchoCanceler,
@@ -39,8 +39,10 @@ class HMSAudioTrackSetting {
         useHardwareAcousticEchoCanceler:
             map['user_hardware_acoustic_echo_canceler'] ?? null,
         audioSource: audioMixerSource,
-        trackInitialState: HMSTrackInitStateValue.getHMSTrackInitStateFromName(
-            map['track_initial_state']));
+        trackInitialState: 
+        map.containsKey("track_initial_state")?
+        HMSTrackInitStateValue.getHMSTrackInitStateFromName(
+            map['track_initial_state']):HMSTrackInitState.UNMUTED);
   }
 
   Map<String, dynamic> toMap() {

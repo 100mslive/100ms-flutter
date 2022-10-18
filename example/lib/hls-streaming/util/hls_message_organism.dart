@@ -28,7 +28,7 @@ class HLSMessageOrganism extends StatelessWidget {
     return Align(
       alignment: isLocalMessage ? Alignment.centerRight : Alignment.centerLeft,
       child: Container(
-        width: width - 100,
+        width: width - (role == ""?80:60),
         padding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(8), color: themeSurfaceColor),
@@ -68,6 +68,9 @@ class HLSMessageOrganism extends StatelessWidget {
                           ? Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
+                                SizedBox(
+                            width: 5,
+                          ),
                                 Container(
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(4),
@@ -81,15 +84,16 @@ class HLSMessageOrganism extends StatelessWidget {
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: [
+                                        if(role != "PRIVATE")
                                         Text(
-                                          (isLocalMessage ? "" : "TO YOU"),
+                                          (isLocalMessage ? "" : "TO"),
                                           style: GoogleFonts.inter(
                                               fontSize: 10.0,
                                               color: themeSubHeadingColor,
                                               letterSpacing: 1.5,
                                               fontWeight: FontWeight.w600),
                                         ),
-                                        isLocalMessage
+                                        (isLocalMessage || (role == "PRIVATE")) 
                                             ? SizedBox()
                                             : Padding(
                                                 padding:
@@ -153,6 +157,7 @@ class HLSMessageOrganism extends StatelessWidget {
                 ],
               ),
             ),
+            if(role == "")
             Positioned(
               top: 0,
               right: 0,
