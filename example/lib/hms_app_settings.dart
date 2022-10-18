@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -136,6 +138,7 @@ class _HMSAppSettingsState extends State<HMSAppSettings> {
                   //             setState(() {})
                   //           })),
                   // ),
+                  if(Platform.isAndroid)
                   ListTile(
                     horizontalTitleGap: 2,
                     enabled: false,
@@ -164,6 +167,7 @@ class _HMSAppSettingsState extends State<HMSAppSettings> {
                               setState(() {})
                             }),
                   ),
+                  if(Platform.isAndroid)
                   ListTile(
                     horizontalTitleGap: 2,
                     enabled: false,
