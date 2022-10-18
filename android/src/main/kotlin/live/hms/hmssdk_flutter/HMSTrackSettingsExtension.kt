@@ -54,6 +54,7 @@ class HMSTrackSettingsExtension {
                 val cameraFacing =  getHMSCameraFacingFromValue(hmsVideoTrackHashMap["camera_facing"] as String?)
                 val disableAutoResize = hmsVideoTrackHashMap["disable_auto_resize"] as Boolean
                 val initialState = HMSTrackInitStateExtension.getHMSTrackInitStatefromValue(hmsVideoTrackHashMap["track_initial_state"] as String)
+                val forceSoftwareDecoder = hmsVideoTrackHashMap["force_software_decoder"] as Boolean
 
                 if(cameraFacing != null){
                     hmsVideoTrackSettings = hmsVideoTrackSettings.cameraFacing(cameraFacing)
@@ -63,6 +64,9 @@ class HMSTrackSettingsExtension {
                 }
                 if(initialState != null){
                     hmsVideoTrackSettings = hmsVideoTrackSettings.initialState(initialState)
+                }
+                if(forceSoftwareDecoder != null){
+                    hmsVideoTrackSettings = hmsVideoTrackSettings.forceSoftwareDecoder(forceSoftwareDecoder)
                 }
             }
 
