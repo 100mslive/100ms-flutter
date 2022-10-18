@@ -616,7 +616,6 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                                 ? "assets/icons/message_badge_on.svg"
                                                 : "assets/icons/message_badge_off.svg",
                                             fit: BoxFit.scaleDown,
-                                            color: themeDefaultColor,
                                             semanticsLabel: "chat_button",
                                           ),
                                         );
