@@ -62,31 +62,33 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
     }
 
     override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
-        this.channel = MethodChannel(flutterPluginBinding.binaryMessenger, "hmssdk_flutter")
-        this.meetingEventChannel =
-            EventChannel(flutterPluginBinding.binaryMessenger, "meeting_event_channel")
-        this.previewChannel =
-            EventChannel(flutterPluginBinding.binaryMessenger, "preview_event_channel")
+        if(hmssdkFlutterPlugin == null) {
+            this.channel = MethodChannel(flutterPluginBinding.binaryMessenger, "hmssdk_flutter")
+            this.meetingEventChannel =
+                EventChannel(flutterPluginBinding.binaryMessenger, "meeting_event_channel")
+            this.previewChannel =
+                EventChannel(flutterPluginBinding.binaryMessenger, "preview_event_channel")
 
-        this.logsEventChannel =
-            EventChannel(flutterPluginBinding.binaryMessenger, "logs_event_channel")
+            this.logsEventChannel =
+                EventChannel(flutterPluginBinding.binaryMessenger, "logs_event_channel")
 
-        this.rtcStatsChannel = EventChannel(flutterPluginBinding.binaryMessenger, "rtc_event_channel")
+            this.rtcStatsChannel =
+                EventChannel(flutterPluginBinding.binaryMessenger, "rtc_event_channel")
 
 
-        this.meetingEventChannel.setStreamHandler(this)
-        this.channel.setMethodCallHandler(this)
-        this.previewChannel.setStreamHandler(this)
-        this.logsEventChannel.setStreamHandler(this)
-        this.rtcStatsChannel.setStreamHandler(this)
-        this.hmsVideoFactory = HMSVideoViewFactory(this)
+            this.meetingEventChannel.setStreamHandler(this)
+            this.channel.setMethodCallHandler(this)
+            this.previewChannel.setStreamHandler(this)
+            this.logsEventChannel.setStreamHandler(this)
+            this.rtcStatsChannel.setStreamHandler(this)
+            this.hmsVideoFactory = HMSVideoViewFactory(this)
 
-        flutterPluginBinding.platformViewRegistry.registerViewFactory(
-            "HMSVideoView",
-            hmsVideoFactory
-        )
-        hmssdkFlutterPlugin = this
-
+            flutterPluginBinding.platformViewRegistry.registerViewFactory(
+                "HMSVideoView",
+                hmsVideoFactory
+            )
+            hmssdkFlutterPlugin = this
+        }
     }
 
     override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
@@ -343,12 +345,14 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
     }
 
     override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
-        channel.setMethodCallHandler(null)
-        meetingEventChannel.setStreamHandler(null)
-        previewChannel.setStreamHandler(null)
-        logsEventChannel.setStreamHandler(null)
-        rtcStatsChannel.setStreamHandler(null)
-        hmssdkFlutterPlugin = null
+        if(hmssdkFlutterPlugin != null){
+            channel.setMethodCallHandler(null)
+            meetingEventChannel.setStreamHandler(null)
+            previewChannel.setStreamHandler(null)
+            logsEventChannel.setStreamHandler(null)
+            rtcStatsChannel.setStreamHandler(null)
+            hmssdkFlutterPlugin = null
+        }
     }
 
     override fun onAttachedToActivity(binding: ActivityPluginBinding) {
