@@ -3,15 +3,13 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 class HMSSpeaker {
   final HMSPeer peer;
-  final HMSTrack? track;
+  final HMSTrack track;
   final int audioLevel;
 
   factory HMSSpeaker.fromMap(Map data) {
     return new HMSSpeaker(
       peer: HMSPeer.fromMap(data['peer']),
-      track: data["track"] == null
-          ? null
-          : data['track']['instance_of']
+      track: data['track']['instance_of']
               ? HMSVideoTrack.fromMap(map: data['track'])
               : HMSAudioTrack.fromMap(map: data['track']),
       audioLevel: data['audioLevel'] as int,
