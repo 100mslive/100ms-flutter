@@ -110,7 +110,6 @@ enum PlatformMethod {
   stopRtmpAndRecording,
   build,
   getRoom,
-  updateHMSLocalVideoTrackSettings,
 
   ///change metadata for local peer
   changeMetadata,
@@ -147,7 +146,6 @@ enum PlatformMethod {
   audioShareCurrentTime,
   audioShareDuration,
   getTrackSettings,
-  setTrackSettings,
   destroy,
   setSessionMetadata,
   getSessionMetadata
@@ -279,9 +277,6 @@ extension PlatformMethodValues on PlatformMethod {
       case PlatformMethod.build:
         return 'build';
 
-      case PlatformMethod.updateHMSLocalVideoTrackSettings:
-        return "update_hms_video_track_settings";
-
       case PlatformMethod.changeMetadata:
         return "change_metadata";
 
@@ -343,8 +338,6 @@ extension PlatformMethodValues on PlatformMethod {
         return "audio_share_duration";
       case PlatformMethod.getTrackSettings:
         return "get_track_settings";
-      case PlatformMethod.setTrackSettings:
-        return "set_track_settings";
       case PlatformMethod.destroy:
         return "destroy";
       case PlatformMethod.setSessionMetadata:
@@ -484,9 +477,6 @@ extension PlatformMethodValues on PlatformMethod {
       case "get_room":
         return PlatformMethod.getRoom;
 
-      case "update_hms_video_track_settings":
-        return PlatformMethod.updateHMSLocalVideoTrackSettings;
-
       case "change_metadata":
         return PlatformMethod.changeMetadata;
 
@@ -549,8 +539,6 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.audioShareDuration;
       case "get_track_settings":
         return PlatformMethod.getTrackSettings;
-      case "set_track_settings":
-        return PlatformMethod.setTrackSettings;
       case "destroy":
         return PlatformMethod.destroy;
       case "set_session_metadata":

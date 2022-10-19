@@ -19,7 +19,6 @@ enum HMSActionResultListenerMethod {
   stopScreenShare,
   startAudioShare,
   stopAudioShare,
-  setTrackSettings,
   setSessionMetadata,
   switchCamera,
   unknown

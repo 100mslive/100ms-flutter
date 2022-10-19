@@ -838,29 +838,6 @@ class HMSSDK {
     return trackSetting;
   }
 
-  ///Method to set Track Settings.
-  void setTrackSettings(
-      {HMSActionResultListener? hmsActionResultListener,
-      required HMSTrackSetting hmsTrackSetting}) async {
-    var result = await PlatformService.invokeMethod(
-        PlatformMethod.setTrackSettings,
-        arguments: {"hms_track_setting": hmsTrackSetting.toMap()});
-    if (hmsActionResultListener != null) {
-      if (result == null) {
-        hmsActionResultListener.onSuccess(
-            methodType: HMSActionResultListenerMethod.setTrackSettings);
-      } else {
-        hmsActionResultListener.onException(
-            methodType: HMSActionResultListenerMethod.setTrackSettings,
-            hmsException: HMSException(
-                message: "Unable to Set track Settings",
-                action: '',
-                description: 'Unable to Set track Settings',
-                isTerminal: false));
-      }
-    }
-  }
-
   ///Method to destroy HMSSDK instance.
   void destroy() {
     PlatformService.invokeMethod(PlatformMethod.destroy);

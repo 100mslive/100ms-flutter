@@ -152,10 +152,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             "start_screen_share", "stop_screen_share", "is_screen_share_active" -> {
                 screenshareActions(call, result)
             }
-
-            "update_hms_video_track_settings" -> {
-                updateHMSLocalTrackSetting(call)
-            }
+            
             "get_track_by_id" -> {
                 getTrackById(call, result)
             }
@@ -682,33 +679,6 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             .setFrameworkInfo(framework)
             .build()
         result.success(true)
-    }
-
-    private fun updateHMSLocalTrackSetting(call: MethodCall) {
-        val localPeerVideoTrack = getLocalPeer()!!.videoTrack
-        var hmsVideoTrackSettings = localPeerVideoTrack!!.settings.builder()
-        val hmsVideoTrackHashMap: HashMap<String, Any?>? = call.argument("video_track_setting")
-        if (hmsVideoTrackHashMap != null) {
-            val maxBitRate = hmsVideoTrackHashMap["max_bit_rate"] as Int?
-            val maxFrameRate = hmsVideoTrackHashMap["max_frame_rate"] as Int?
-            val videoCodec =
-                VideoParamsExtension.getValueOfHMSAudioCodecFromString(hmsVideoTrackHashMap["video_codec"] as String?) as HMSVideoCodec?
-
-            if (maxBitRate != null) {
-                hmsVideoTrackSettings = hmsVideoTrackSettings.maxBitrate(maxBitRate)
-            }
-
-            if (maxFrameRate != null) {
-                hmsVideoTrackSettings = hmsVideoTrackSettings.maxFrameRate(maxFrameRate)
-            }
-            if (videoCodec != null) {
-                hmsVideoTrackSettings = hmsVideoTrackSettings.codec(videoCodec)
-            }
-        }
-
-        CoroutineScope(Dispatchers.Default).launch {
-            localPeerVideoTrack.setSettings(hmsVideoTrackSettings.build())
-        }
     }
 
     private var hasChangedMetadata: Boolean = false

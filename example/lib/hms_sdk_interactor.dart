@@ -328,12 +328,6 @@ class HMSSDKInteractor {
     return await hmsSDK.getTrackSettings();
   }
 
-  void setTrackSettings(
-      {HMSActionResultListener? hmsActionResultListener,
-      required HMSTrackSetting hmsTrackSetting}) {
-    hmsSDK.setTrackSettings(hmsTrackSetting: hmsTrackSetting);
-  }
-
   void destroy() {
     hmsSDK.destroy();
   }

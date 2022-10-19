@@ -1192,35 +1192,21 @@ class MeetingStore extends ChangeNotifier
   HMSAudioFilePlayerNode audioFilePlayerNode =
       HMSAudioFilePlayerNode("audioFilePlayerNode");
   HMSMicNode micNode = HMSMicNode();
-  // void setTrackSettings() async {
-  //   HMSTrackSetting trackSetting = HMSTrackSetting(
-  //       audioTrackSetting: HMSAudioTrackSetting(
-  //           maxBitrate: 32,
-  //           audioSource: HMSAudioMixerSource(node: [
-  //             HMSAudioFilePlayerNode("audioFilePlayerNode"),
-  //             HMSMicNode()
-  //           ])),
-  //       videoTrackSetting: HMSVideoTrackSetting(
-  //           cameraFacing: HMSCameraFacing.FRONT,
-  //           maxBitrate: 512,
-  //           maxFrameRate: 25,
-  //           resolution: HMSResolution(height: 180, width: 320)));
-  //   _hmsSDKInteractor.setTrackSettings(hmsTrackSetting: trackSetting);
-  //   isTrackSettingApplied = true;
-  //   notifyListeners();
-  // }
 
   void playAudioIos(String url) {
     audioFilePlayerNode.play(fileUrl: url);
+    isPlayerRunningIos();
   }
 
   Future<bool> isPlayerRunningIos() async {
     bool isPlaying = await audioFilePlayerNode.isPlaying();
+    isAudioShareStarted = isPlaying;
     return isPlaying;
   }
 
   void stopAudioIos() {
     audioFilePlayerNode.stop();
+    isPlayerRunningIos();
   }
 
   void setAudioPlayerVolume(double volume) {
@@ -1373,9 +1359,6 @@ class MeetingStore extends ChangeNotifier
         isAudioShareStarted = false;
         notifyListeners();
         break;
-      case HMSActionResultListenerMethod.setTrackSettings:
-        // TODO: Handle this case.
-        break;
       case HMSActionResultListenerMethod.setSessionMetadata:
         _hmsSDKInteractor.sendBroadcastMessage("refresh", this,
             type: "metadata");
@@ -1451,8 +1434,6 @@ class MeetingStore extends ChangeNotifier
         notifyListeners();
         break;
       case HMSActionResultListenerMethod.stopAudioShare:
-        break;
-      case HMSActionResultListenerMethod.setTrackSettings:
         break;
       case HMSActionResultListenerMethod.setSessionMetadata:
         break;
