@@ -774,9 +774,6 @@ abstract class MeetingStoreBase extends ChangeNotifier
       case HMSActionResultListenerMethod.stopAudioShare:
         // TODO: Handle this case.
         break;
-      case HMSActionResultListenerMethod.setTrackSettings:
-        // TODO: Handle this case.
-        break;
     }
   }
 
@@ -843,9 +840,6 @@ abstract class MeetingStoreBase extends ChangeNotifier
         // TODO: Handle this case.
         break;
       case HMSActionResultListenerMethod.stopAudioShare:
-        // TODO: Handle this case.
-        break;
-      case HMSActionResultListenerMethod.setTrackSettings:
         // TODO: Handle this case.
         break;
     }

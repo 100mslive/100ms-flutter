@@ -166,7 +166,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         case "start_screen_share", "stop_screen_share", "is_screen_share_active":
             screenShareActions(call, result)
 
-        case "get_track_settings", "set_track_settings":
+        case "get_track_settings":
             trackSettingsAction(call, result)
             break
         case "play_audio_share", "stop_audio_share", "pause_audio_share", "resume_audio_share", "set_audio_share_volume", "audio_share_playing", "audio_share_current_time", "audio_share_duration":
@@ -284,34 +284,6 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         switch call.method {
         case "get_track_settings":
             result(HMSTrackSettingsExtension.toDictionary(hmsSDK!, audioMixerSourceMap))
-            break
-        case "set_track_settings":
-            let arguments = call.arguments as! [AnyHashable: Any]
-            let settingsDict = arguments["hms_track_setting"] as! [AnyHashable: Any]
-            let audioTrackSetting = settingsDict["audio_track_setting"] as! [AnyHashable: Any]
-
-            if let playerNode = audioTrackSetting["audio_source"] as? [String] {
-                for node in playerNode {
-                    if audioMixerSourceMap[node] == nil {
-                        if node=="mic_node" {
-                            audioMixerSourceMap["mic_node"] = HMSMicNode()
-                        } else if node == "screen_broadcast_audio_receiver_node" {
-                            do {
-                                audioMixerSourceMap["screen_broadcast_audio_receiver_node"] = try hmsSDK!.screenBroadcastAudioReceiverNode()
-                            } catch {
-                                result(HMSErrorExtension.toDictionary(error))
-                            }
-                        } else {
-                            audioMixerSourceMap[node] = HMSAudioFilePlayerNode()
-                        }
-                    }
-                }
-            }
-            let trackSetting = HMSTrackSettingsExtension.setTrackSetting(settingsDict, audioMixerSourceMap, result)
-            if let settings = trackSetting {
-                hmsSDK?.trackSettings = settings
-            }
-            result(nil)
             break
         default:
             result(FlutterMethodNotImplemented)
@@ -485,6 +457,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
             result(true)
         }
+        print(audioMixerSourceMap)
     }
 
     private func preview(_ call: FlutterMethodCall, _ result: FlutterResult) {

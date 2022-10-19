@@ -59,47 +59,37 @@ class HMSTrackSettingsExtension {
     static func setTrackSetting(_ settingsDict: [AnyHashable: Any], _ audioMixerSourceMap: [String: HMSAudioNode], _ result: @escaping FlutterResult) -> HMSTrackSettings? {
 
             var audioSettings: HMSAudioTrackSettings?
-            if let audioSettingsDict = settingsDict["audio_track_setting"] as? [AnyHashable: Any] {
                 if #available(iOS 13.0, *) {
                     do {
                         let audioMixerSource = try HMSAudioMixerSource(nodes: audioMixerSourceMap.values.map {$0})
-                        if let bitrate = audioSettingsDict["bit_rate"] as? Int, let desc = audioSettingsDict["track_description"] as? String {
-                            audioSettings = HMSAudioTrackSettings(maxBitrate: bitrate, trackDescription: desc, audioSource: audioMixerSource)
-                        }
+                        audioSettings = HMSAudioTrackSettings(maxBitrate: 32, trackDescription: "track_description", audioSource: audioMixerSource)
                     } catch {
                         result(HMSErrorExtension.toDictionary(error))
                     }
-                } else {
-                    if let bitrate = audioSettingsDict["bit_rate"] as? Int, let desc = audioSettingsDict["track_description"] as? String {
-                        audioSettings = HMSAudioTrackSettings(maxBitrate: bitrate, trackDescription: desc)
-                    }
                 }
-            }
 
             var videoSettings: HMSVideoTrackSettings?
             if let videoSettingsDict = settingsDict["video_track_setting"] as? [AnyHashable: Any] {
-                if let codec = videoSettingsDict["video_codec"] as? String,
-                   let bitrate = videoSettingsDict["max_bit_rate"] as? Int,
-                   let framerate = videoSettingsDict["max_frame_rate"] as? Int,
-                   let desc = videoSettingsDict["track_description"] as? String {
-
-                    videoSettings = HMSVideoTrackSettings(codec: getCodec(from: codec),
+                if let cameraFacing = videoSettingsDict["camera_facing"] as? String
+                   {
+                    videoSettings = HMSVideoTrackSettings(codec: HMSCodec.VP8,
                                                           resolution: .init(width: 320, height: 180),
-                                                          maxBitrate: bitrate,
-                                                          maxFrameRate: framerate,
-                                                          cameraFacing: .front,
-                                                          trackDescription: desc,
+                                                          maxBitrate: 32,
+                                                          maxFrameRate: 30,
+                                                          cameraFacing: getCameraFacing(from: cameraFacing),
+                                                          trackDescription: "track_description",
                                                           videoPlugins: nil)
                 }
             }
 
         return HMSTrackSettings(videoSettings: videoSettings, audioSettings: audioSettings)
     }
-
-    static private func getCodec(from string: String) -> HMSCodec {
-        if string.lowercased().contains("h264") {
-            return HMSCodec.H264
+    
+    static private func getCameraFacing(from string: String) -> HMSCameraFacing {
+        if string.lowercased().contains("back") {
+            return HMSCameraFacing.back
         }
-        return HMSCodec.VP8
+        return HMSCameraFacing.front
     }
+    
 }
