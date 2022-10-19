@@ -457,7 +457,6 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
             result(true)
         }
-        print(audioMixerSourceMap)
     }
 
     private func preview(_ call: FlutterMethodCall, _ result: FlutterResult) {
