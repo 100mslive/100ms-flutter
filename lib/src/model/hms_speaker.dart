@@ -10,8 +10,8 @@ class HMSSpeaker {
     return new HMSSpeaker(
       peer: HMSPeer.fromMap(data['peer']),
       track: data['track']['instance_of']
-              ? HMSVideoTrack.fromMap(map: data['track'])
-              : HMSAudioTrack.fromMap(map: data['track']),
+          ? HMSVideoTrack.fromMap(map: data['track'])
+          : HMSAudioTrack.fromMap(map: data['track']),
       audioLevel: data['audioLevel'] as int,
     );
   }

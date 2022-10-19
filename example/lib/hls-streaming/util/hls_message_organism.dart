@@ -28,7 +28,7 @@ class HLSMessageOrganism extends StatelessWidget {
     return Align(
       alignment: isLocalMessage ? Alignment.centerRight : Alignment.centerLeft,
       child: Container(
-        width: width - (role == ""?80:60),
+        width: width - (role == "" ? 80 : 60),
         padding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(8), color: themeSurfaceColor),
@@ -69,8 +69,8 @@ class HLSMessageOrganism extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
                                 SizedBox(
-                            width: 5,
-                          ),
+                                  width: 5,
+                                ),
                                 Container(
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(4),
@@ -84,16 +84,16 @@ class HLSMessageOrganism extends StatelessWidget {
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: [
-                                        if(role != "PRIVATE")
-                                        Text(
-                                          (isLocalMessage ? "" : "TO"),
-                                          style: GoogleFonts.inter(
-                                              fontSize: 10.0,
-                                              color: themeSubHeadingColor,
-                                              letterSpacing: 1.5,
-                                              fontWeight: FontWeight.w600),
-                                        ),
-                                        (isLocalMessage || (role == "PRIVATE")) 
+                                        if (role != "PRIVATE")
+                                          Text(
+                                            (isLocalMessage ? "" : "TO"),
+                                            style: GoogleFonts.inter(
+                                                fontSize: 10.0,
+                                                color: themeSubHeadingColor,
+                                                letterSpacing: 1.5,
+                                                fontWeight: FontWeight.w600),
+                                          ),
+                                        (isLocalMessage || (role == "PRIVATE"))
                                             ? SizedBox()
                                             : Padding(
                                                 padding:
@@ -157,31 +157,31 @@ class HLSMessageOrganism extends StatelessWidget {
                 ],
               ),
             ),
-            if(role == "")
-            Positioned(
-              top: 0,
-              right: 0,
-              bottom: 0,
-              child: PopupMenuButton(
-                color: themeSurfaceColor,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10)),
-                itemBuilder: (context) {
-                  return List.generate(1, (index) {
-                    return PopupMenuItem(
-                      child: Text('Pin Message'),
-                      onTap: () => context
-                          .read<MeetingStore>()
-                          .setSessionMetadata(senderName! + ": " + message),
-                    );
-                  });
-                },
-                child: SvgPicture.asset(
-                  "assets/icons/more.svg",
-                  fit: BoxFit.scaleDown,
+            if (role == "")
+              Positioned(
+                top: 0,
+                right: 0,
+                bottom: 0,
+                child: PopupMenuButton(
+                  color: themeSurfaceColor,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                  itemBuilder: (context) {
+                    return List.generate(1, (index) {
+                      return PopupMenuItem(
+                        child: Text('Pin Message'),
+                        onTap: () => context
+                            .read<MeetingStore>()
+                            .setSessionMetadata(senderName! + ": " + message),
+                      );
+                    });
+                  },
+                  child: SvgPicture.asset(
+                    "assets/icons/more.svg",
+                    fit: BoxFit.scaleDown,
+                  ),
                 ),
-              ),
-            )
+              )
           ],
         ),
       ),

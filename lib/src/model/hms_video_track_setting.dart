@@ -25,13 +25,13 @@ class HMSVideoTrackSetting {
         cameraFacing: HMSCameraFacingValues.getHMSCameraFacingFromName(
             map['camera_facing']),
         disableAutoResize: map['disable_auto_resize'] ?? false,
-        trackInitialState: 
-        map.containsKey('track_initial_state')?
-        HMSTrackInitStateValue.getHMSTrackInitStateFromName(
-            map['track_initial_state']):HMSTrackInitState.UNMUTED,
-        forceSoftwareDecoder: 
-        map.containsKey('force_software_decoder')?
-        map['force_software_decoder']:false);
+        trackInitialState: map.containsKey('track_initial_state')
+            ? HMSTrackInitStateValue.getHMSTrackInitStateFromName(
+                map['track_initial_state'])
+            : HMSTrackInitState.UNMUTED,
+        forceSoftwareDecoder: map.containsKey('force_software_decoder')
+            ? map['force_software_decoder']
+            : false);
   }
 
   Map<String, dynamic> toMap() {
