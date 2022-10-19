@@ -570,7 +570,10 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
 
             if (speakers.isNotEmpty()) {
                 speakers.forEach {
-                    speakersList.add(HMSSpeakerExtension.toDictionary(it)!!)
+                    val hmsSpeakerMap = HMSSpeakerExtension.toDictionary(it)
+                    if(hmsSpeakerMap != null){
+                        speakersList.add(hmsSpeakerMap!!)
+                    }
                 }
             }
             val speakersMap = HashMap<String, Any>()
