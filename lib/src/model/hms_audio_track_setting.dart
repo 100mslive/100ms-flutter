@@ -39,10 +39,10 @@ class HMSAudioTrackSetting {
         useHardwareAcousticEchoCanceler:
             map['user_hardware_acoustic_echo_canceler'] ?? null,
         audioSource: audioMixerSource,
-        trackInitialState: 
-        map.containsKey("track_initial_state")?
-        HMSTrackInitStateValue.getHMSTrackInitStateFromName(
-            map['track_initial_state']):HMSTrackInitState.UNMUTED);
+        trackInitialState: map.containsKey("track_initial_state")
+            ? HMSTrackInitStateValue.getHMSTrackInitStateFromName(
+                map['track_initial_state'])
+            : HMSTrackInitState.UNMUTED);
   }
 
   Map<String, dynamic> toMap() {
