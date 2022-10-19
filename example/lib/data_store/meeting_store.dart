@@ -1383,6 +1383,9 @@ class MeetingStore extends ChangeNotifier
         sessionMetadata = arguments!["session_metadata"];
         notifyListeners();
         break;
+      case HMSActionResultListenerMethod.switchCamera:
+        Utilities.showToast("Camera switched successfully");
+        break;
     }
   }
 
@@ -1401,7 +1404,6 @@ class MeetingStore extends ChangeNotifier
       case HMSActionResultListenerMethod.changeTrackState:
         break;
       case HMSActionResultListenerMethod.changeMetadata:
-        // TODO: Handle this case.
         break;
       case HMSActionResultListenerMethod.endRoom:
         break;
@@ -1453,6 +1455,9 @@ class MeetingStore extends ChangeNotifier
       case HMSActionResultListenerMethod.setTrackSettings:
         break;
       case HMSActionResultListenerMethod.setSessionMetadata:
+        break;
+      case HMSActionResultListenerMethod.switchCamera:
+        Utilities.showToast("Camera switching failed");
         break;
     }
     notifyListeners();

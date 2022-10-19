@@ -55,8 +55,10 @@ class HMSSDKInteractor {
     return await hmsSDK.switchVideo(isOn: isOn);
   }
 
-  Future<void> switchCamera() async {
-    return await hmsSDK.switchCamera();
+  Future<void> switchCamera(
+      {HMSActionResultListener? hmsActionResultListener}) async {
+    return await hmsSDK.switchCamera(
+        hmsActionResultListener: hmsActionResultListener);
   }
 
   Future<bool> isScreenShareActive() async {

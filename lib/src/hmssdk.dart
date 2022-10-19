@@ -130,10 +130,22 @@ class HMSSDK {
   }
 
   /// Switch camera to front or rear mode
-  Future<void> switchCamera() async {
-    return await PlatformService.invokeMethod(
+  Future<void> switchCamera(
+      {HMSActionResultListener? hmsActionResultListener}) async {
+    var result = await PlatformService.invokeMethod(
       PlatformMethod.switchCamera,
     );
+    if (hmsActionResultListener != null) {
+      if (result != null && result["error"] != null) {
+        hmsActionResultListener.onException(
+            methodType: HMSActionResultListenerMethod.switchCamera,
+            hmsException: HMSException.fromMap(result["error"]));
+      } else {
+        hmsActionResultListener.onSuccess(
+          methodType: HMSActionResultListenerMethod.switchCamera,
+        );
+      }
+    }
   }
 
   /// To start capturing the local peer's video & send it to other peer's in the room
