@@ -1,3 +1,17 @@
+## 0.7.7 - 2022-10-20
+
+- Added ability to set & get session metadata
+- Added ability to join with muted audio & video using Initial states (Muted / Unmuted) `HMSVideoTrackSettings` & `HMSAudioTrackSettings` in the builder of HMSSDK
+- Added better Telemetrics for analytics
+- Added option to use Software Decoder for Video rendering on Android devices
+- Added action result listener to `switchCamera` function on local video track
+- Fixed LetterBoxing (Black borders on top and bottom) observed when sharing the screen in landscape mode on Android
+- Fixed incorrect sending of Speaker Updates when peer has left the room
+- Removed unused setters for Local Audio & Video Track Settings
+- Updated to Native Android SDK 2.5.0 & Native iOS SDK 0.4.5
+
+Full Changelog: [0.7.6...0.7.7](https://github.com/100mslive/100ms-flutter/compare/0.7.6...0.7.7)
+
 ## 0.7.6 - 2022-09-23
 
 - Added audio output change listener callback while in Preview on Android
