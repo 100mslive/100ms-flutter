@@ -2,50 +2,48 @@
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 class HMSVideoTrackSetting {
-  final HMSCodec? codec;
-  final HMSResolution? resolution;
-  final int? maxBitrate;
-  final int? maxFrameRate;
+  /// [cameraFacing] property specifies which camera to use while joining. It can be toggled later on. The default value is `HMSCameraFacing.FRONT`.
   final HMSCameraFacing? cameraFacing;
-  final String? trackDescription;
+
+  /// [disableAutoResize] property to disable auto-resizing. By default it's set to false.
   final bool? disableAutoResize;
 
+  /// [trackInitialState] property to set the initial state of the video track i.e Mute/Unmute.
+  final HMSTrackInitState? trackInitialState;
+
+  /// [forceSoftwareDecoder] property to use software decoder. By default it's set to false.(Android Only)
+  final bool? forceSoftwareDecoder;
+
   HMSVideoTrackSetting(
-      {this.codec = HMSCodec.VP8,
-      this.resolution,
-      this.maxBitrate = 512,
-      this.maxFrameRate = 25,
-      this.cameraFacing = HMSCameraFacing.FRONT,
-      this.trackDescription = "This a video track",
-      this.disableAutoResize = false});
+      {this.cameraFacing = HMSCameraFacing.FRONT,
+      this.disableAutoResize = false,
+      this.trackInitialState = HMSTrackInitState.UNMUTED,
+      this.forceSoftwareDecoder = false});
 
   factory HMSVideoTrackSetting.fromMap(Map map) {
-    HMSResolution? resolution;
-    if (map.containsKey('resolution')) {
-      resolution = HMSResolution.fromMap(map['resolution']);
-    }
     return HMSVideoTrackSetting(
-        codec: HMSCodecValues.getHMSCodecFromName(map['video_codec']),
-        resolution: resolution,
-        maxBitrate: map['bit_rate'] ?? 0,
-        maxFrameRate: map['max_frame_rate'] ?? 0,
         cameraFacing: HMSCameraFacingValues.getHMSCameraFacingFromName(
             map['camera_facing']),
-        disableAutoResize: map['disable_auto_resize'] ?? false);
+        disableAutoResize: map['disable_auto_resize'] ?? false,
+        trackInitialState: map.containsKey('track_initial_state')
+            ? HMSTrackInitStateValue.getHMSTrackInitStateFromName(
+                map['track_initial_state'])
+            : HMSTrackInitState.UNMUTED,
+        forceSoftwareDecoder: map.containsKey('force_software_decoder')
+            ? map['force_software_decoder']
+            : false);
   }
 
   Map<String, dynamic> toMap() {
     return {
-      'video_codec':
-          codec != null ? HMSCodecValues.getValueFromHMSCodec(codec!) : null,
-      'max_bit_rate': maxBitrate,
-      'max_frame_rate': maxFrameRate,
-      'resolution': resolution?.toMap(),
       'camera_facing': cameraFacing != null
           ? HMSCameraFacingValues.getValueFromHMSCameraFacing(cameraFacing!)
           : null,
-      'track_description': trackDescription,
-      'disable_auto_resize': disableAutoResize ?? false
+      'disable_auto_resize': disableAutoResize ?? false,
+      'track_initial_state':
+          HMSTrackInitStateValue.getValuefromHMSTrackInitState(
+              trackInitialState),
+      'force_software_decoder': forceSoftwareDecoder ?? false
     };
   }
 }

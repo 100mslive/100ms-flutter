@@ -3,20 +3,22 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter/src/model/hms_audio_node.dart';
 
 class HMSAudioTrackSetting {
-  final int? maxBitrate;
-  final HMSAudioCodec? hmsAudioCodec;
+  /// [useHardwareAcousticEchoCanceler] controls if the built-in HW acoustic echo canceler should be used or not.
+  /// The default is on if it is supported.
+  /// Please note that on some devices the hardware wrongly reports the HW echo canceler to be present whereas it does not work
+  /// In such as application need to set this to false, so that SW echo canceler is picked up.
   final bool? useHardwareAcousticEchoCanceler;
-  final double? volume;
-  final String? trackDescription;
+
+  ///[audioSource] only for iOS.Used for audioSharing use cases.
   HMSAudioMixerSource? audioSource;
 
+  ///[trackInitialState] property to set the initial state of the audio track i.e Mute/Unmute.By default it's unmuted.
+  final HMSTrackInitState? trackInitialState;
+
   HMSAudioTrackSetting(
-      {this.maxBitrate = 32,
-      this.hmsAudioCodec,
-      this.useHardwareAcousticEchoCanceler,
-      this.volume,
-      this.trackDescription = "This is an audio Track",
-      this.audioSource});
+      {this.useHardwareAcousticEchoCanceler,
+      this.audioSource,
+      this.trackInitialState = HMSTrackInitState.UNMUTED});
 
   factory HMSAudioTrackSetting.fromMap(Map map) {
     List<HMSAudioNode> nodeList = [];
@@ -34,27 +36,22 @@ class HMSAudioTrackSetting {
     }
     HMSAudioMixerSource(node: nodeList);
     return HMSAudioTrackSetting(
-        volume: map['volume'] ?? null,
-        maxBitrate: map['bit_rate'] ?? 32,
-        hmsAudioCodec: map["audio_codec"] == null
-            ? null
-            : HMSAudioCodecValues.getHMSCodecFromName(map['audio_codec']),
         useHardwareAcousticEchoCanceler:
             map['user_hardware_acoustic_echo_canceler'] ?? null,
-        trackDescription: map['track_description'] ?? "This is an audio Track",
-        audioSource: audioMixerSource);
+        audioSource: audioMixerSource,
+        trackInitialState: map.containsKey("track_initial_state")
+            ? HMSTrackInitStateValue.getHMSTrackInitStateFromName(
+                map['track_initial_state'])
+            : HMSTrackInitState.UNMUTED);
   }
 
   Map<String, dynamic> toMap() {
     return {
-      'bit_rate': maxBitrate,
-      'volume': volume,
-      'audio_codec': hmsAudioCodec != null
-          ? HMSAudioCodecValues.getValueFromHMSAudioCodec(hmsAudioCodec!)
-          : null,
       'user_hardware_acoustic_echo_canceler': useHardwareAcousticEchoCanceler,
-      'track_description': trackDescription,
-      'audio_source': audioSource?.toList()
+      'audio_source': audioSource?.toList(),
+      'track_initial_state':
+          HMSTrackInitStateValue.getValuefromHMSTrackInitState(
+              trackInitialState)
     };
   }
 }

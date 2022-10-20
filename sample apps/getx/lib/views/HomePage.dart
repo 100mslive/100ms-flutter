@@ -13,7 +13,8 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final meetingTextController = TextEditingController(
-        text: "https://yogi-livestreamingkit.app.100ms.live/meeting/xuq-zjx-ovh");
+        text:
+            "https://yogi-livestreamingkit.app.100ms.live/meeting/xuq-zjx-ovh");
     final nameTextController = TextEditingController();
 
     return SafeArea(

@@ -47,7 +47,8 @@ class RoomService {
     codeAndDomain =
         isProd ? url.split(".app.100ms.live") : url.split(".qa-app.100ms.live");
     code = codeAndDomain[1];
-    subDomain = codeAndDomain[0].split("https://")[1] +
+    subDomain = codeAndDomain[0]
+            .split(roomUrl.contains("https") ? "https://" : "http://")[1] +
         (isProd ? ".app.100ms.live" : ".qa-app.100ms.live");
     if (code.contains("meeting"))
       code = code.split("/meeting/")[1];

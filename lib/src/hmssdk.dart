@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:hmssdk_flutter/src/manager/hms_sdk_manager.dart';
+import 'package:hmssdk_flutter/src/model/hms_session_metadata.dart';
 import 'package:hmssdk_flutter/src/service/platform_service.dart';
 import '../hmssdk_flutter.dart';
 
@@ -129,10 +130,22 @@ class HMSSDK {
   }
 
   /// Switch camera to front or rear mode
-  Future<void> switchCamera() async {
-    return await PlatformService.invokeMethod(
+  Future<void> switchCamera(
+      {HMSActionResultListener? hmsActionResultListener}) async {
+    var result = await PlatformService.invokeMethod(
       PlatformMethod.switchCamera,
     );
+    if (hmsActionResultListener != null) {
+      if (result != null && result["error"] != null) {
+        hmsActionResultListener.onException(
+            methodType: HMSActionResultListenerMethod.switchCamera,
+            hmsException: HMSException.fromMap(result["error"]));
+      } else {
+        hmsActionResultListener.onSuccess(
+          methodType: HMSActionResultListenerMethod.switchCamera,
+        );
+      }
+    }
   }
 
   /// To start capturing the local peer's video & send it to other peer's in the room
@@ -645,6 +658,10 @@ class HMSSDK {
   /// [hmsActionResultListener] is a callback instance on which [HMSActionResultListener.onSuccess]
   ///  and [HMSActionResultListener.onException] will be called
   /// [preferredExtension] is only used for screen share (broadcast screen) in iOS.
+  ///
+  /// ❗️ NOTE on iOS 16: If you start Screenshare from an iPhone/iPad running iOS 16 version, then if the app is in foreground then Screenshare will work fine. But if you start Screenshare & background the app, then Screenshare pauses as the SDK is unable to send video frames using IPC. This results in other peers in room seeing stuck frame. We are actively working to resolve this issue. On iOS 15 or below, this issue does not exists.
+  ///
+  /// Note viewing Screenshare on iOS 16 devices is unaffected by this & works fine.
   Future<void> startScreenShare(
       {HMSActionResultListener? hmsActionResultListener}) async {
     HMSLocalPeer? localPeer = await getLocalPeer();
@@ -771,6 +788,7 @@ class HMSSDK {
       PlatformService.invokeMethod(PlatformMethod.switchAudioOutput);
   }
 
+  ///Method to start audio share of other apps.(Android Only)
   Future<void> startAudioShare(
       {HMSActionResultListener? hmsActionResultListener,
       HMSAudioMixingMode audioMixingMode =
@@ -791,6 +809,7 @@ class HMSSDK {
     }
   }
 
+  ///Method to stop audio share of other apps.(Android Only)
   Future<void> stopAudioShare(
       {HMSActionResultListener? hmsActionResultListener}) async {
     if (!Platform.isAndroid) return;
@@ -808,12 +827,14 @@ class HMSSDK {
     }
   }
 
+  ///Method to change audio mixing mode of shared audio from other apps.(Android only)
   void setAudioMixingMode({required HMSAudioMixingMode audioMixingMode}) {
     if (Platform.isAndroid)
       PlatformService.invokeMethod(PlatformMethod.setAudioMixingMode,
           arguments: {"audio_mixing_mode": audioMixingMode.name});
   }
 
+  ///Method to get Track Settings.
   Future<HMSTrackSetting> getTrackSettings() async {
     var result =
         await PlatformService.invokeMethod(PlatformMethod.getTrackSettings);
@@ -821,30 +842,42 @@ class HMSSDK {
     return trackSetting;
   }
 
-  void setTrackSettings(
-      {HMSActionResultListener? hmsActionResultListener,
-      required HMSTrackSetting hmsTrackSetting}) async {
+  ///Method to destroy HMSSDK instance.
+  void destroy() {
+    PlatformService.invokeMethod(PlatformMethod.destroy);
+  }
+
+  /// Method to update the value of the session metadata.
+  Future<void> setSessionMetadata(
+      {required String metadata,
+      HMSActionResultListener? hmsActionResultListener}) async {
+    var arguments = {"session_metadata": metadata};
     var result = await PlatformService.invokeMethod(
-        PlatformMethod.setTrackSettings,
-        arguments: {"hms_track_setting": hmsTrackSetting.toMap()});
+        PlatformMethod.setSessionMetadata,
+        arguments: arguments);
+
     if (hmsActionResultListener != null) {
-      if (result == null) {
-        hmsActionResultListener.onSuccess(
-            methodType: HMSActionResultListenerMethod.setTrackSettings);
-      } else {
+      if (result != null && result["error"] != null) {
         hmsActionResultListener.onException(
-            methodType: HMSActionResultListenerMethod.setTrackSettings,
-            hmsException: HMSException(
-                message: "Unable to Set track Settings",
-                action: '',
-                description: 'Unable to Set track Settings',
-                isTerminal: false));
+            methodType: HMSActionResultListenerMethod.setSessionMetadata,
+            arguments: arguments,
+            hmsException: HMSException.fromMap(result["error"]));
+      } else {
+        hmsActionResultListener.onSuccess(
+            methodType: HMSActionResultListenerMethod.setSessionMetadata,
+            arguments: arguments);
       }
     }
   }
 
-  void destroy() {
-    PlatformService.invokeMethod(PlatformMethod.destroy);
+  ///Method to fetches the latest metadata from the server and returns it
+  Future<String?> getSessionMetadata() async {
+    var result =
+        await PlatformService.invokeMethod(PlatformMethod.getSessionMetadata);
+    if (result != null) {
+      return HMSSessionMetadata.fromMap(result).metadata;
+    }
+    return null;
   }
 
   /// To modify local peer's audio & video track settings use the [hmsTrackSetting]. Only required for advanced use-cases.

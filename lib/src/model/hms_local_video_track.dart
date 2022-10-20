@@ -47,11 +47,4 @@ class HMSLocalVideoTrack extends HMSVideoTrack {
         isDegraded: map['is_degraded'],
         setting: HMSVideoTrackSetting.fromMap(map["hms_video_track_settings"]));
   }
-
-  set setHMSTrackSetting(HMSVideoTrackSetting hmsVideoTrackSetting) {
-    this.setting = hmsVideoTrackSetting;
-    PlatformService.invokeMethod(
-        PlatformMethod.updateHMSLocalVideoTrackSettings,
-        arguments: {"video_track_setting": this.setting.toMap()});
-  }
 }

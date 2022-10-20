@@ -17,8 +17,7 @@ class HMSVideoAction {
                 }
 
                 "switch_camera" -> {
-                    switchCamera(hmssdk)
-                    result.success("switch_camera")
+                    switchCamera(result,hmssdk)
                 }
 
                 "start_capturing" -> {
@@ -77,11 +76,11 @@ class HMSVideoAction {
             }
         }
 
-        private fun switchCamera(hmssdk:HMSSDK) {
+        private fun switchCamera(result : Result,hmssdk:HMSSDK) {
             val peer = hmssdk.getLocalPeer()
             val videoTrack = peer?.videoTrack
             CoroutineScope(Dispatchers.Default).launch {
-                videoTrack?.switchCamera()
+                videoTrack?.switchCamera(onAction = HMSCommonAction.getActionListener(result))
             }
         }
 

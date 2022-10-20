@@ -257,6 +257,63 @@ class _HLSMessageState extends State<HLSMessage> {
                           meetingStore.isMessageInfoShown,
                       builder: (context, infoDialog, _) {
                         if (infoDialog)
+                          return Column(
+                            children: [
+                              Container(
+                                padding: EdgeInsets.all(16),
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8),
+                                    color: themeSurfaceColor),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        SvgPicture.asset(
+                                            "assets/icons/info.svg"),
+                                        SizedBox(width: 18.5),
+                                        SizedBox(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.66,
+                                          child: Text(
+                                            "Messages can only be seen by people in the call and are deleted when the call ends.",
+                                            style: GoogleFonts.inter(
+                                                fontWeight: FontWeight.w400,
+                                                color: themeSubHeadingColor,
+                                                letterSpacing: 0.4,
+                                                height: 16 / 12,
+                                                fontSize: 12),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    GestureDetector(
+                                        onTap: () {
+                                          context
+                                              .read<MeetingStore>()
+                                              .setMessageInfoFalse();
+                                        },
+                                        child: SvgPicture.asset(
+                                            "assets/icons/close.svg"))
+                                  ],
+                                ),
+                              ),
+                              SizedBox(
+                                height: 15,
+                              ),
+                            ],
+                          );
+                        else
+                          return SizedBox();
+                      }),
+                  Selector<MeetingStore, String?>(
+                      selector: (_, meetingStore) =>
+                          meetingStore.sessionMetadata,
+                      builder: (context, sessionMetadata, _) {
+                        if (sessionMetadata != null && sessionMetadata != "")
                           return Container(
                             padding: EdgeInsets.all(16),
                             decoration: BoxDecoration(
@@ -267,13 +324,13 @@ class _HLSMessageState extends State<HLSMessage> {
                               children: [
                                 Row(
                                   children: [
-                                    SvgPicture.asset("assets/icons/info.svg"),
+                                    SvgPicture.asset("assets/icons/pin.svg"),
                                     SizedBox(width: 18.5),
                                     SizedBox(
                                       width: MediaQuery.of(context).size.width *
                                           0.66,
                                       child: Text(
-                                        "Messages can only be seen by people in the call and are deleted when the call ends.",
+                                        sessionMetadata,
                                         style: GoogleFonts.inter(
                                             fontWeight: FontWeight.w400,
                                             color: themeSubHeadingColor,
@@ -288,7 +345,7 @@ class _HLSMessageState extends State<HLSMessage> {
                                     onTap: () {
                                       context
                                           .read<MeetingStore>()
-                                          .setMessageInfoFalse();
+                                          .setSessionMetadata("");
                                     },
                                     child: SvgPicture.asset(
                                         "assets/icons/close.svg"))
@@ -321,7 +378,7 @@ class _HLSMessageState extends State<HLSMessage> {
                               (index) => Container(
                                   padding: EdgeInsets.fromLTRB(
                                     (data.item1[index].sender?.isLocal ?? false)
-                                        ? 24.0
+                                        ? 50.0
                                         : 8.0,
                                     10,
                                     (data.item1[index].sender?.isLocal ?? false)

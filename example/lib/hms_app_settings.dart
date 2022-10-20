@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -13,23 +15,30 @@ class HMSAppSettings extends StatefulWidget {
 }
 
 class _HMSAppSettingsState extends State<HMSAppSettings> {
+  bool joinWithMutedAudio = true;
+  bool joinWithMutedVideo = true;
   bool isDarkMode = true;
   bool skipPreview = false;
-  bool mirrorCamera = false;
+  bool mirrorCamera = true;
   bool showStats = false;
-
+  bool isSoftwareDecoder = false;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     getAppSettings();
   }
 
   Future<void> getAppSettings() async {
+    joinWithMutedAudio =
+        await Utilities.getBoolData(key: 'join-with-muted-audio') ?? true;
+    joinWithMutedVideo =
+        await Utilities.getBoolData(key: 'join-with-muted-video') ?? true;
     skipPreview = await Utilities.getBoolData(key: 'skip-preview') ?? false;
-    mirrorCamera = await Utilities.getBoolData(key: 'mirror-camera') ?? false;
+    mirrorCamera = await Utilities.getBoolData(key: 'mirror-camera') ?? true;
     showStats = await Utilities.getBoolData(key: 'show-stats') ?? false;
     isDarkMode = await Utilities.getBoolData(key: 'dark-mode') ?? true;
+    isSoftwareDecoder =
+        await Utilities.getBoolData(key: 'software-decoder') ?? false;
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() {});
@@ -130,6 +139,64 @@ class _HMSAppSettingsState extends State<HMSAppSettings> {
                   //             setState(() {})
                   //           })),
                   // ),
+                  if (Platform.isAndroid)
+                    ListTile(
+                      horizontalTitleGap: 2,
+                      enabled: false,
+                      contentPadding: EdgeInsets.zero,
+                      leading: SvgPicture.asset(
+                        "assets/icons/mic_state_off.svg",
+                        fit: BoxFit.scaleDown,
+                        color: themeDefaultColor,
+                      ),
+                      title: Text(
+                        "Join with muted audio",
+                        semanticsLabel: "fl_join_with_muted_audio",
+                        style: GoogleFonts.inter(
+                            fontSize: 14,
+                            color: themeDefaultColor,
+                            letterSpacing: 0.25,
+                            fontWeight: FontWeight.w600),
+                      ),
+                      trailing: CupertinoSwitch(
+                          activeColor: hmsdefaultColor,
+                          value: joinWithMutedAudio,
+                          onChanged: (value) => {
+                                joinWithMutedAudio = value,
+                                Utilities.saveBoolData(
+                                    key: 'join-with-muted-audio', value: value),
+                                setState(() {})
+                              }),
+                    ),
+                  if (Platform.isAndroid)
+                    ListTile(
+                      horizontalTitleGap: 2,
+                      enabled: false,
+                      contentPadding: EdgeInsets.zero,
+                      leading: SvgPicture.asset(
+                        "assets/icons/cam_state_off.svg",
+                        fit: BoxFit.scaleDown,
+                        color: themeDefaultColor,
+                      ),
+                      title: Text(
+                        "Join with muted video",
+                        semanticsLabel: "fl_join_with_muted_video",
+                        style: GoogleFonts.inter(
+                            fontSize: 14,
+                            color: themeDefaultColor,
+                            letterSpacing: 0.25,
+                            fontWeight: FontWeight.w600),
+                      ),
+                      trailing: CupertinoSwitch(
+                          activeColor: hmsdefaultColor,
+                          value: joinWithMutedVideo,
+                          onChanged: (value) => {
+                                joinWithMutedVideo = value,
+                                Utilities.saveBoolData(
+                                    key: 'join-with-muted-video', value: value),
+                                setState(() {})
+                              }),
+                    ),
                   ListTile(
                     horizontalTitleGap: 2,
                     enabled: false,
@@ -212,6 +279,34 @@ class _HMSAppSettingsState extends State<HMSAppSettings> {
                               setState(() {})
                             }),
                   ),
+                  if (Platform.isAndroid)
+                    ListTile(
+                      horizontalTitleGap: 2,
+                      enabled: false,
+                      contentPadding: EdgeInsets.zero,
+                      leading: SvgPicture.asset(
+                        'assets/icons/decoder.svg',
+                        color: themeDefaultColor,
+                      ),
+                      title: Text(
+                        "Software Decoder",
+                        semanticsLabel: "fl_software_decoder_enable",
+                        style: GoogleFonts.inter(
+                            fontSize: 14,
+                            color: themeDefaultColor,
+                            letterSpacing: 0.25,
+                            fontWeight: FontWeight.w600),
+                      ),
+                      trailing: CupertinoSwitch(
+                          activeColor: hmsdefaultColor,
+                          value: isSoftwareDecoder,
+                          onChanged: (value) => {
+                                isSoftwareDecoder = value,
+                                Utilities.saveBoolData(
+                                    key: 'software-decoder', value: value),
+                                setState(() {})
+                              }),
+                    ),
                   ListTile(
                     horizontalTitleGap: 2,
                     enabled: true,

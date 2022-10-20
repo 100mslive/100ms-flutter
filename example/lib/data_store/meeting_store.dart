@@ -150,6 +150,8 @@ class MeetingStore extends ChangeNotifier
 
   bool retryHLS = true;
 
+  String? sessionMetadata;
+
   Future<bool> join(String user, String roomUrl) async {
     List<String?>? token =
         await RoomService().getToken(user: user, room: roomUrl);
@@ -197,7 +199,7 @@ class MeetingStore extends ChangeNotifier
 
   Future<void> switchCamera() async {
     if (isVideoOn) {
-      await _hmsSDKInteractor.switchCamera();
+      await _hmsSDKInteractor.switchCamera(hmsActionResultListener: this);
     }
   }
 
@@ -590,10 +592,19 @@ class MeetingStore extends ChangeNotifier
 
   @override
   void onMessage({required HMSMessage message}) {
-    log("onMessage-> sender: ${message.sender} message: ${message.message} time: ${message.time}");
-    addMessage(message);
-    isNewMessageReceived = true;
-    notifyListeners();
+    log("onMessage-> sender: ${message.sender} message: ${message.message} time: ${message.time}, type: ${message.type}");
+    switch (message.type) {
+      case "chat":
+        addMessage(message);
+        isNewMessageReceived = true;
+        notifyListeners();
+        break;
+      case "metadata":
+        getSessionMetadata();
+        break;
+      default:
+        break;
+    }
   }
 
   @override
@@ -648,12 +659,14 @@ class MeetingStore extends ChangeNotifier
   void onReconnecting() {
     reconnected = false;
     reconnecting = true;
+    notifyListeners();
   }
 
   @override
   void onReconnected() {
     reconnecting = false;
     reconnected = true;
+    notifyListeners();
   }
 
   @override
@@ -1179,40 +1192,36 @@ class MeetingStore extends ChangeNotifier
   HMSAudioFilePlayerNode audioFilePlayerNode =
       HMSAudioFilePlayerNode("audioFilePlayerNode");
   HMSMicNode micNode = HMSMicNode();
-  // void setTrackSettings() async {
-  //   HMSTrackSetting trackSetting = HMSTrackSetting(
-  //       audioTrackSetting: HMSAudioTrackSetting(
-  //           maxBitrate: 32,
-  //           audioSource: HMSAudioMixerSource(node: [
-  //             HMSAudioFilePlayerNode("audioFilePlayerNode"),
-  //             HMSMicNode()
-  //           ])),
-  //       videoTrackSetting: HMSVideoTrackSetting(
-  //           cameraFacing: HMSCameraFacing.FRONT,
-  //           maxBitrate: 512,
-  //           maxFrameRate: 25,
-  //           resolution: HMSResolution(height: 180, width: 320)));
-  //   _hmsSDKInteractor.setTrackSettings(hmsTrackSetting: trackSetting);
-  //   isTrackSettingApplied = true;
-  //   notifyListeners();
-  // }
 
   void playAudioIos(String url) {
     audioFilePlayerNode.play(fileUrl: url);
+    isPlayerRunningIos();
   }
 
   Future<bool> isPlayerRunningIos() async {
     bool isPlaying = await audioFilePlayerNode.isPlaying();
+    isAudioShareStarted = isPlaying;
     return isPlaying;
   }
 
   void stopAudioIos() {
     audioFilePlayerNode.stop();
+    isPlayerRunningIos();
   }
 
   void setAudioPlayerVolume(double volume) {
     audioFilePlayerNode.setVolume(volume);
     audioPlayerVolume = volume;
+  }
+
+  void setSessionMetadata(String metadata) {
+    _hmsSDKInteractor.setSessionMetadata(
+        metadata: metadata, hmsActionResultListener: this);
+  }
+
+  void getSessionMetadata() async {
+    sessionMetadata = await _hmsSDKInteractor.getSessionMetadata();
+    notifyListeners();
   }
 
 //Get onSuccess or onException callbacks for HMSActionResultListenerMethod
@@ -1289,8 +1298,10 @@ class MeetingStore extends ChangeNotifier
                 recipientPeer: null,
                 recipientRoles: null,
                 hmsMessageRecipientType: HMSMessageRecipientType.BROADCAST));
-        addMessage(message);
-        notifyListeners();
+        if (arguments['type'] != "metadata") {
+          addMessage(message);
+          notifyListeners();
+        }
         break;
       case HMSActionResultListenerMethod.sendGroupMessage:
         var message = HMSMessage(
@@ -1348,8 +1359,15 @@ class MeetingStore extends ChangeNotifier
         isAudioShareStarted = false;
         notifyListeners();
         break;
-      case HMSActionResultListenerMethod.setTrackSettings:
-        // TODO: Handle this case.
+      case HMSActionResultListenerMethod.setSessionMetadata:
+        _hmsSDKInteractor.sendBroadcastMessage("refresh", this,
+            type: "metadata");
+        Utilities.showToast("Session Metadata changed");
+        sessionMetadata = arguments!["session_metadata"];
+        notifyListeners();
+        break;
+      case HMSActionResultListenerMethod.switchCamera:
+        Utilities.showToast("Camera switched successfully");
         break;
     }
   }
@@ -1369,7 +1387,6 @@ class MeetingStore extends ChangeNotifier
       case HMSActionResultListenerMethod.changeTrackState:
         break;
       case HMSActionResultListenerMethod.changeMetadata:
-        // TODO: Handle this case.
         break;
       case HMSActionResultListenerMethod.endRoom:
         break;
@@ -1418,8 +1435,10 @@ class MeetingStore extends ChangeNotifier
         break;
       case HMSActionResultListenerMethod.stopAudioShare:
         break;
-      case HMSActionResultListenerMethod.setTrackSettings:
-        // TODO: Handle this case.
+      case HMSActionResultListenerMethod.setSessionMetadata:
+        break;
+      case HMSActionResultListenerMethod.switchCamera:
+        Utilities.showToast("Camera switching failed");
         break;
     }
     notifyListeners();

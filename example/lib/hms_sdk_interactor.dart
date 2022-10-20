@@ -10,15 +10,29 @@ class HMSSDKInteractor {
 
   /// [appGroup] & [preferredExtension] are optional values only required for implementing Screen & Audio Share on iOS. They are not required for Android.
   /// Remove [appGroup] & [preferredExtension] if your app does not implements Screen or Audio Share on iOS.
-  HMSSDKInteractor({String? appGroup, String? preferredExtension}) {
+  /// [joinWithMutedAudio] & [joinWithMutedVideo] are required to set the initial audio/video state i.e what should be camera and mic
+  /// state while room is joined.By default both audio and video are kept as mute.
+  HMSSDKInteractor(
+      {String? appGroup,
+      String? preferredExtension,
+      bool joinWithMutedAudio = true,
+      bool joinWithMutedVideo = true,
+      bool softwareDecoder = false}) {
     HMSTrackSetting trackSetting = HMSTrackSetting(
         audioTrackSetting: HMSAudioTrackSetting(
             audioSource: HMSAudioMixerSource(node: [
-          HMSAudioFilePlayerNode("audioFilePlayerNode"),
-          HMSMicNode(),
-          HMSScreenBroadcastAudioReceiverNode()
-        ])),
-        videoTrackSetting: HMSVideoTrackSetting());
+              HMSAudioFilePlayerNode("audioFilePlayerNode"),
+              HMSMicNode(),
+              HMSScreenBroadcastAudioReceiverNode()
+            ]),
+            trackInitialState: joinWithMutedAudio
+                ? HMSTrackInitState.MUTED
+                : HMSTrackInitState.UNMUTED),
+        videoTrackSetting: HMSVideoTrackSetting(
+            trackInitialState: joinWithMutedVideo
+                ? HMSTrackInitState.MUTED
+                : HMSTrackInitState.UNMUTED,
+            forceSoftwareDecoder: softwareDecoder));
     hmsSDK = HMSSDK(
         appGroup: appGroup,
         preferredExtension: preferredExtension,
@@ -43,8 +57,10 @@ class HMSSDKInteractor {
     return await hmsSDK.switchVideo(isOn: isOn);
   }
 
-  Future<void> switchCamera() async {
-    return await hmsSDK.switchCamera();
+  Future<void> switchCamera(
+      {HMSActionResultListener? hmsActionResultListener}) async {
+    return await hmsSDK.switchCamera(
+        hmsActionResultListener: hmsActionResultListener);
   }
 
   Future<bool> isScreenShareActive() async {
@@ -52,28 +68,31 @@ class HMSSDKInteractor {
   }
 
   void sendBroadcastMessage(
-      String message, HMSActionResultListener hmsActionResultListener) {
+      String message, HMSActionResultListener hmsActionResultListener,
+      {String type = "chat"}) {
     hmsSDK.sendBroadcastMessage(
         message: message,
-        type: "chat",
+        type: type,
         hmsActionResultListener: hmsActionResultListener);
   }
 
   void sendDirectMessage(String message, HMSPeer peerTo,
-      HMSActionResultListener hmsActionResultListener) {
+      HMSActionResultListener hmsActionResultListener,
+      {String type = "chat"}) {
     hmsSDK.sendDirectMessage(
         message: message,
         peerTo: peerTo,
-        type: "chat",
+        type: type,
         hmsActionResultListener: hmsActionResultListener);
   }
 
   void sendGroupMessage(String message, List<HMSRole> hmsRolesTo,
-      HMSActionResultListener hmsActionResultListener) {
+      HMSActionResultListener hmsActionResultListener,
+      {String type = "chat"}) {
     hmsSDK.sendGroupMessage(
         message: message,
         hmsRolesTo: hmsRolesTo,
-        type: "chat",
+        type: type,
         hmsActionResultListener: hmsActionResultListener);
   }
 
@@ -311,13 +330,18 @@ class HMSSDKInteractor {
     return await hmsSDK.getTrackSettings();
   }
 
-  void setTrackSettings(
-      {HMSActionResultListener? hmsActionResultListener,
-      required HMSTrackSetting hmsTrackSetting}) {
-    hmsSDK.setTrackSettings(hmsTrackSetting: hmsTrackSetting);
-  }
-
   void destroy() {
     hmsSDK.destroy();
+  }
+
+  void setSessionMetadata(
+      {required String metadata,
+      HMSActionResultListener? hmsActionResultListener}) {
+    hmsSDK.setSessionMetadata(
+        metadata: metadata, hmsActionResultListener: hmsActionResultListener);
+  }
+
+  Future<String?> getSessionMetadata() {
+    return hmsSDK.getSessionMetadata();
   }
 }

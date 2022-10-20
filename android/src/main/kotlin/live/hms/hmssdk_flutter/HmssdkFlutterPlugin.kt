@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.Intent
 import android.media.projection.MediaProjectionManager
 import android.os.Build
-import android.util.Log
 import androidx.annotation.NonNull
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
@@ -19,17 +18,13 @@ import io.flutter.plugin.common.MethodChannel.Result
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import live.hms.hmssdk_flutter.hms_role_components.AudioParamsExtension
 import live.hms.hmssdk_flutter.hms_role_components.VideoParamsExtension
+import live.hms.hmssdk_flutter.methods.HMSSessionMetadataAction
 import live.hms.hmssdk_flutter.views.HMSVideoViewFactory
 import live.hms.video.audio.HMSAudioManager.*
 import live.hms.video.connection.stats.*
 import live.hms.video.error.HMSException
-import live.hms.video.media.codec.HMSAudioCodec
 import live.hms.video.media.codec.HMSVideoCodec
-import live.hms.video.media.settings.HMSAudioTrackSettings
-import live.hms.video.media.settings.HMSTrackSettings
-import live.hms.video.media.settings.HMSVideoTrackSettings
 import live.hms.video.media.tracks.*
 import live.hms.video.sdk.*
 import live.hms.video.sdk.models.*
@@ -40,7 +35,7 @@ import live.hms.video.sdk.models.enums.HMSTrackUpdate
 import live.hms.video.sdk.models.role.HMSRole
 import live.hms.video.sdk.models.trackchangerequest.HMSChangeTrackStateRequest
 import live.hms.video.utils.HMSLogger
-import live.hms.video.audio.HMSAudioManager.*
+import live.hms.video.events.AgentType
 
 
 /** HmssdkFlutterPlugin */
@@ -67,31 +62,33 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
     }
 
     override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
-        this.channel = MethodChannel(flutterPluginBinding.binaryMessenger, "hmssdk_flutter")
-        this.meetingEventChannel =
-            EventChannel(flutterPluginBinding.binaryMessenger, "meeting_event_channel")
-        this.previewChannel =
-            EventChannel(flutterPluginBinding.binaryMessenger, "preview_event_channel")
+        if(hmssdkFlutterPlugin == null) {
+            this.channel = MethodChannel(flutterPluginBinding.binaryMessenger, "hmssdk_flutter")
+            this.meetingEventChannel =
+                EventChannel(flutterPluginBinding.binaryMessenger, "meeting_event_channel")
+            this.previewChannel =
+                EventChannel(flutterPluginBinding.binaryMessenger, "preview_event_channel")
 
-        this.logsEventChannel =
-            EventChannel(flutterPluginBinding.binaryMessenger, "logs_event_channel")
+            this.logsEventChannel =
+                EventChannel(flutterPluginBinding.binaryMessenger, "logs_event_channel")
 
-        this.rtcStatsChannel = EventChannel(flutterPluginBinding.binaryMessenger, "rtc_event_channel")
+            this.rtcStatsChannel =
+                EventChannel(flutterPluginBinding.binaryMessenger, "rtc_event_channel")
 
 
-        this.meetingEventChannel.setStreamHandler(this)
-        this.channel.setMethodCallHandler(this)
-        this.previewChannel.setStreamHandler(this)
-        this.logsEventChannel.setStreamHandler(this)
-        this.rtcStatsChannel.setStreamHandler(this)
-        this.hmsVideoFactory = HMSVideoViewFactory(this)
+            this.meetingEventChannel.setStreamHandler(this)
+            this.channel.setMethodCallHandler(this)
+            this.previewChannel.setStreamHandler(this)
+            this.logsEventChannel.setStreamHandler(this)
+            this.rtcStatsChannel.setStreamHandler(this)
+            this.hmsVideoFactory = HMSVideoViewFactory(this)
 
-        flutterPluginBinding.platformViewRegistry.registerViewFactory(
-            "HMSVideoView",
-            hmsVideoFactory
-        )
-        hmssdkFlutterPlugin = this
-
+            flutterPluginBinding.platformViewRegistry.registerViewFactory(
+                "HMSVideoView",
+                hmsVideoFactory
+            )
+            hmssdkFlutterPlugin = this
+        }
     }
 
     override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
@@ -155,10 +152,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             "start_screen_share", "stop_screen_share", "is_screen_share_active" -> {
                 screenshareActions(call, result)
             }
-
-            "update_hms_video_track_settings" -> {
-                updateHMSLocalTrackSetting(call)
-            }
+            
             "get_track_by_id" -> {
                 getTrackById(call, result)
             }
@@ -177,6 +171,9 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
 
             "get_track_settings"->{
                 trackSettings(call, result)
+            }
+            "get_session_metadata","set_session_metadata" -> {
+                HMSSessionMetadataAction.sessionMetadataActions(call, result,hmssdk!!)
             }
             else -> {
                 result.notImplemented()
@@ -345,12 +342,14 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
     }
 
     override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
-        channel.setMethodCallHandler(null)
-        meetingEventChannel.setStreamHandler(null)
-        previewChannel.setStreamHandler(null)
-        logsEventChannel.setStreamHandler(null)
-        rtcStatsChannel.setStreamHandler(null)
-        hmssdkFlutterPlugin = null
+        if(hmssdkFlutterPlugin != null){
+            channel.setMethodCallHandler(null)
+            meetingEventChannel.setStreamHandler(null)
+            previewChannel.setStreamHandler(null)
+            logsEventChannel.setStreamHandler(null)
+            rtcStatsChannel.setStreamHandler(null)
+            hmssdkFlutterPlugin = null
+        }
     }
 
     override fun onAttachedToActivity(binding: ActivityPluginBinding) {
@@ -568,7 +567,10 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
 
             if (speakers.isNotEmpty()) {
                 speakers.forEach {
-                    speakersList.add(HMSSpeakerExtension.toDictionary(it)!!)
+                    val hmsSpeakerMap = HMSSpeakerExtension.toDictionary(it)
+                    if(hmsSpeakerMap != null){
+                        speakersList.add(hmsSpeakerMap!!)
+                    }
                 }
             }
             val speakersMap = HashMap<String, Any>()
@@ -667,40 +669,16 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
 
         val hmsAudioTrackHashMap: HashMap<String, Any?>? = hmsTrackSettingMap["audio_track_setting"]
         val hmsVideoTrackHashMap: HashMap<String, Any?>? = hmsTrackSettingMap["video_track_setting"]
-
         val hmsTrackSettings = HMSTrackSettingsExtension.setTrackSettings(hmsAudioTrackHashMap,hmsVideoTrackHashMap)
+        val dartSDKVersion = call.argument<String>("dart_sdk_version")
+        val hmsSDKVersion = call.argument<String>("hmssdk_version")
+        val framework = FrameworkInfo(framework = AgentType.FLUTTER, frameworkVersion = dartSDKVersion, frameworkSdkVersion = hmsSDKVersion)
         hmssdk = HMSSDK
             .Builder(activity)
             .setTrackSettings(hmsTrackSettings)
+            .setFrameworkInfo(framework)
             .build()
         result.success(true)
-    }
-
-    private fun updateHMSLocalTrackSetting(call: MethodCall) {
-        val localPeerVideoTrack = getLocalPeer()!!.videoTrack
-        var hmsVideoTrackSettings = localPeerVideoTrack!!.settings.builder()
-        val hmsVideoTrackHashMap: HashMap<String, Any?>? = call.argument("video_track_setting")
-        if (hmsVideoTrackHashMap != null) {
-            val maxBitRate = hmsVideoTrackHashMap["max_bit_rate"] as Int?
-            val maxFrameRate = hmsVideoTrackHashMap["max_frame_rate"] as Int?
-            val videoCodec =
-                VideoParamsExtension.getValueOfHMSAudioCodecFromString(hmsVideoTrackHashMap["video_codec"] as String?) as HMSVideoCodec?
-
-            if (maxBitRate != null) {
-                hmsVideoTrackSettings = hmsVideoTrackSettings.maxBitrate(maxBitRate)
-            }
-
-            if (maxFrameRate != null) {
-                hmsVideoTrackSettings = hmsVideoTrackSettings.maxFrameRate(maxFrameRate)
-            }
-            if (videoCodec != null) {
-                hmsVideoTrackSettings = hmsVideoTrackSettings.codec(videoCodec)
-            }
-        }
-
-        CoroutineScope(Dispatchers.Default).launch {
-            localPeerVideoTrack.setSettings(hmsVideoTrackSettings.build())
-        }
     }
 
     private var hasChangedMetadata: Boolean = false

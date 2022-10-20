@@ -26,7 +26,6 @@ class PreviewDetails extends StatefulWidget {
 
 class _PreviewDetailsState extends State<PreviewDetails> {
   TextEditingController nameController = TextEditingController();
-  bool toShowPreview = true;
   @override
   void initState() {
     super.initState();
@@ -37,7 +36,6 @@ class _PreviewDetailsState extends State<PreviewDetails> {
     nameController.text = await Utilities.getStringData(key: "name");
     nameController.selection = TextSelection.fromPosition(
         TextPosition(offset: nameController.text.length));
-    toShowPreview = await Utilities.getBoolData(key: 'show-preview') ?? false;
     setState(() {});
   }
 
@@ -49,11 +47,20 @@ class _PreviewDetailsState extends State<PreviewDetails> {
       res = await Utilities.getPermissions();
       bool skipPreview =
           await Utilities.getBoolData(key: 'skip-preview') ?? false;
+      bool joinWithMutedAudio =
+          await Utilities.getBoolData(key: 'join-with-muted-audio') ?? true;
+      bool joinWithMutedVideo =
+          await Utilities.getBoolData(key: 'join-with-muted-video') ?? true;
+      bool sotfwareDecoder =
+          await Utilities.getBoolData(key: 'software-decoder') ?? false;
       if (res) {
         if (!skipPreview) {
           Navigator.of(context).pushReplacement(MaterialPageRoute(
               builder: (_) => ListenableProvider.value(
-                    value: PreviewStore(),
+                    value: PreviewStore(
+                        joinWithMutedAudio: joinWithMutedAudio,
+                        joinWithMutedVideo: joinWithMutedVideo,
+                        softwareDecoder: sotfwareDecoder),
                     child: PreviewPage(
                         meetingFlow: widget.meetingFlow,
                         name: nameController.text,
@@ -64,7 +71,15 @@ class _PreviewDetailsState extends State<PreviewDetails> {
               await Utilities.getBoolData(key: 'show-stats') ?? false;
           bool mirrorCamera =
               await Utilities.getBoolData(key: 'mirror-camera') ?? false;
-          HMSSDKInteractor _hmsSDKInteractor = HMSSDKInteractor();
+          bool softwareDecoder =
+              await Utilities.getBoolData(key: 'software-decoder') ?? false;
+          HMSSDKInteractor _hmsSDKInteractor = HMSSDKInteractor(
+              appGroup: "group.flutterhms",
+              preferredExtension:
+                  "live.100ms.flutter.FlutterBroadcastUploadExtension",
+              joinWithMutedAudio: joinWithMutedAudio,
+              joinWithMutedVideo: joinWithMutedVideo,
+              softwareDecoder: softwareDecoder);
           Navigator.of(context).pushReplacement(MaterialPageRoute(
               builder: (_) => ListenableProvider.value(
                     value: MeetingStore(hmsSDKInteractor: _hmsSDKInteractor),

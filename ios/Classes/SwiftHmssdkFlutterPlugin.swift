@@ -166,13 +166,16 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         case "start_screen_share", "stop_screen_share", "is_screen_share_active":
             screenShareActions(call, result)
 
-        case "get_track_settings", "set_track_settings":
+        case "get_track_settings":
             trackSettingsAction(call, result)
             break
         case "play_audio_share", "stop_audio_share", "pause_audio_share", "resume_audio_share", "set_audio_share_volume", "audio_share_playing", "audio_share_current_time", "audio_share_duration":
             audioShareAction(call, result)
         case "switch_audio_output":
             switchAudioOutput(call, result)
+
+        case "get_session_metadata", "set_session_metadata":
+            sessionMetadataAction(call, result)
 
         default:
             result(FlutterMethodNotImplemented)
@@ -275,44 +278,19 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         }
     }
 
+    // MARK: - Track Setting
     var audioMixerSourceMap = [String: HMSAudioNode]()
     private func trackSettingsAction(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         switch call.method {
         case "get_track_settings":
             result(HMSTrackSettingsExtension.toDictionary(hmsSDK!, audioMixerSourceMap))
             break
-        case "set_track_settings":
-            let arguments = call.arguments as! [AnyHashable: Any]
-            let settingsDict = arguments["hms_track_setting"] as! [AnyHashable: Any]
-            let audioTrackSetting = settingsDict["audio_track_setting"] as! [AnyHashable: Any]
-
-            if let playerNode = audioTrackSetting["audio_source"] as? [String] {
-                for node in playerNode {
-                    if audioMixerSourceMap[node] == nil {
-                        if node=="mic_node" {
-                            audioMixerSourceMap["mic_node"] = HMSMicNode()
-                        } else if node == "screen_broadcast_audio_receiver_node" {
-                            do {
-                                audioMixerSourceMap["screen_broadcast_audio_receiver_node"] = try hmsSDK!.screenBroadcastAudioReceiverNode()
-                            } catch {
-                                result(HMSErrorExtension.toDictionary(error))
-                            }
-                        } else {
-                            audioMixerSourceMap[node] = HMSAudioFilePlayerNode()
-                        }
-                    }
-                }
-            }
-            let trackSetting = HMSTrackSettingsExtension.setTrackSetting(settingsDict, audioMixerSourceMap, result)
-            if let settings = trackSetting {
-                hmsSDK?.trackSettings = settings
-            }
-            result(nil)
-            break
         default:
             result(FlutterMethodNotImplemented)
         }
     }
+
+    // MARK: - Audio Share
 
     private func audioShareAction(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         let arguments = call.arguments as! [AnyHashable: Any]
@@ -352,6 +330,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         }
     }
 
+    // MARK: - Audio Output
     private func switchAudioOutput(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         let routerPicker = AVRoutePickerView()
         for view in routerPicker.subviews {
@@ -403,6 +382,21 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         }
     }
 
+    // MARK: - Session Metadata
+    private func sessionMetadataAction(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+        switch call.method {
+
+        case "get_session_metadata":
+            getSessionMetadata(result)
+
+        case "set_session_metadata":
+            setSessionMetadata(call, result)
+
+        default:
+            result(FlutterMethodNotImplemented)
+        }
+    }
+
     // MARK: - Room Actions
     private func build(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         let arguments = call.arguments as! [AnyHashable: Any]
@@ -416,12 +410,17 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             logLevel = getLogLevel(from: level)
             setLogger = true
         }
+        let dartSDKVersion = arguments["dart_sdk_version"] as! String
+        let hmsSDKVersion = arguments["hmssdk_version"] as! String
+        let framework = HMSFrameworkInfo(type: .flutter, version: dartSDKVersion, sdkVersion: hmsSDKVersion)
         audioMixerSourceMap = [:]
         hmsSDK = HMSSDK.build { [self] sdk in
 
             if let appGroup = arguments["app_group"] as? String {
                 sdk.appGroup = appGroup
             }
+
+            sdk.frameworkInfo = framework
 
             if setLogger {
                 sdk.logger = self
@@ -743,6 +742,42 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     private func removeHMSLogger() {
         logLevel = .off
         hmsSDK?.logger = nil
+    }
+
+    private func getSessionMetadata(_ result: @escaping FlutterResult) {
+        hmsSDK?.getSessionMetadata(completion: { metadata, _ in
+            if let metadata = metadata {
+                let data = [
+                        "event_name": "session_metadata",
+                    "data": [
+                        "metadata": metadata
+                    ]
+                ] as [String: Any]
+                result(data)
+            } else {
+                result(nil)
+            }
+        })
+    }
+
+    private func setSessionMetadata(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+
+        let arguments = call.arguments as! [AnyHashable: Any]
+
+        guard let metadata = arguments["session_metadata"] as? String else {
+            result(HMSErrorExtension.getError("No session metadata found in \(#function)"))
+            return
+        }
+
+        hmsSDK?.setSessionMetadata(metadata, completion: { _, error in
+            if let error = error {
+                result(HMSErrorExtension.toDictionary(error))
+                return
+            } else {
+                result(nil)
+            }
+        }
+        )
     }
 
     // MARK: - 100ms SDK Delegate Callbacks

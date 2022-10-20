@@ -12,15 +12,21 @@ class PreviewStore extends ChangeNotifier
     implements HMSPreviewListener, HMSLogListener {
   HMSSDKInteractor? hmsSDKInteractor;
 
-  
-  PreviewStore() {
-    
+  PreviewStore(
+      {bool joinWithMutedAudio = true,
+      bool joinWithMutedVideo = true,
+      bool softwareDecoder = false}) {
     /// [appGroup] & [preferredExtension] of [HMSSDKInteractor] are optional values only required for implementing Screen & Audio Share on iOS. They are not required for Android.
     /// Remove [appGroup] & [preferredExtension] if your app does not implements Screen or Audio Share on iOS.
+    /// [joinWithMutedAudio] & [joinWithMutedVideo] are required to set the initial audio/video state i.e what should be camera and mic
+    /// state while room is joined.By default both audio and video are kept as mute.
     hmsSDKInteractor = HMSSDKInteractor(
         appGroup: "group.flutterhms",
         preferredExtension:
-            "live.100ms.flutter.FlutterBroadcastUploadExtension");
+            "live.100ms.flutter.FlutterBroadcastUploadExtension",
+        joinWithMutedAudio: joinWithMutedAudio,
+        joinWithMutedVideo: joinWithMutedVideo,
+        softwareDecoder: softwareDecoder);
   }
 
   List<HMSVideoTrack> localTracks = [];
@@ -84,7 +90,11 @@ class PreviewStore extends ChangeNotifier
     List<HMSVideoTrack> videoTracks = [];
     for (var track in localTracks) {
       if (track.kind == HMSTrackKind.kHMSTrackKindVideo) {
+        isVideoOn = !(track.isMute);
         videoTracks.add(track as HMSVideoTrack);
+      }
+      if (track.kind == HMSTrackKind.kHMSTrackKindAudio) {
+        isAudioOn = !(track.isMute);
       }
     }
     this.localTracks = videoTracks;
