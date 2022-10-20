@@ -658,6 +658,10 @@ class HMSSDK {
   /// [hmsActionResultListener] is a callback instance on which [HMSActionResultListener.onSuccess]
   ///  and [HMSActionResultListener.onException] will be called
   /// [preferredExtension] is only used for screen share (broadcast screen) in iOS.
+  ///
+  /// ❗️ NOTE on iOS 16: If you start Screenshare from an iPhone/iPad running iOS 16 version, then if the app is in foreground then Screenshare will work fine. But if you start Screenshare & background the app, then Screenshare pauses as the SDK is unable to send video frames using IPC. This results in other peers in room seeing stuck frame. We are actively working to resolve this issue. On iOS 15 or below, this issue does not exists.
+  ///
+  /// Note viewing Screenshare on iOS 16 devices is unaffected by this & works fine.
   Future<void> startScreenShare(
       {HMSActionResultListener? hmsActionResultListener}) async {
     HMSLocalPeer? localPeer = await getLocalPeer();
