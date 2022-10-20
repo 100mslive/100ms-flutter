@@ -16,7 +16,8 @@ class HMSSDKInteractor {
       {String? appGroup,
       String? preferredExtension,
       bool joinWithMutedAudio = true,
-      bool joinWithMutedVideo = true}) {
+      bool joinWithMutedVideo = true,
+      bool softwareDecoder = false}) {
     HMSTrackSetting trackSetting = HMSTrackSetting(
         audioTrackSetting: HMSAudioTrackSetting(
             audioSource: HMSAudioMixerSource(node: [
@@ -30,7 +31,8 @@ class HMSSDKInteractor {
         videoTrackSetting: HMSVideoTrackSetting(
             trackInitialState: joinWithMutedVideo
                 ? HMSTrackInitState.MUTED
-                : HMSTrackInitState.UNMUTED));
+                : HMSTrackInitState.UNMUTED,
+            forceSoftwareDecoder: softwareDecoder));
     hmsSDK = HMSSDK(
         appGroup: appGroup,
         preferredExtension: preferredExtension,

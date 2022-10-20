@@ -51,13 +51,16 @@ class _PreviewDetailsState extends State<PreviewDetails> {
           await Utilities.getBoolData(key: 'join-with-muted-audio') ?? true;
       bool joinWithMutedVideo =
           await Utilities.getBoolData(key: 'join-with-muted-video') ?? true;
+      bool sotfwareDecorder =
+          await Utilities.getBoolData(key: 'software-decorder') ?? false;
       if (res) {
         if (!skipPreview) {
           Navigator.of(context).pushReplacement(MaterialPageRoute(
               builder: (_) => ListenableProvider.value(
                     value: PreviewStore(
                         joinWithMutedAudio: joinWithMutedAudio,
-                        joinWithMutedVideo: joinWithMutedVideo),
+                        joinWithMutedVideo: joinWithMutedVideo,
+                        softwareDecorder: sotfwareDecorder),
                     child: PreviewPage(
                         meetingFlow: widget.meetingFlow,
                         name: nameController.text,
@@ -68,12 +71,15 @@ class _PreviewDetailsState extends State<PreviewDetails> {
               await Utilities.getBoolData(key: 'show-stats') ?? false;
           bool mirrorCamera =
               await Utilities.getBoolData(key: 'mirror-camera') ?? false;
+          bool softwareDecorder =
+              await Utilities.getBoolData(key: 'software-decorder') ?? false;
           HMSSDKInteractor _hmsSDKInteractor = HMSSDKInteractor(
               appGroup: "group.flutterhms",
               preferredExtension:
                   "live.100ms.flutter.FlutterBroadcastUploadExtension",
               joinWithMutedAudio: joinWithMutedAudio,
-              joinWithMutedVideo: joinWithMutedVideo);
+              joinWithMutedVideo: joinWithMutedVideo,
+              softwareDecoder: softwareDecorder);
           Navigator.of(context).pushReplacement(MaterialPageRoute(
               builder: (_) => ListenableProvider.value(
                     value: MeetingStore(hmsSDKInteractor: _hmsSDKInteractor),

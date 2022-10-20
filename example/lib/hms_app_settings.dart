@@ -21,10 +21,9 @@ class _HMSAppSettingsState extends State<HMSAppSettings> {
   bool skipPreview = false;
   bool mirrorCamera = true;
   bool showStats = false;
-
+  bool isSoftwareDecorder = false;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     getAppSettings();
   }
@@ -38,6 +37,8 @@ class _HMSAppSettingsState extends State<HMSAppSettings> {
     mirrorCamera = await Utilities.getBoolData(key: 'mirror-camera') ?? true;
     showStats = await Utilities.getBoolData(key: 'show-stats') ?? false;
     isDarkMode = await Utilities.getBoolData(key: 'dark-mode') ?? true;
+    isSoftwareDecorder =
+        await Utilities.getBoolData(key: 'software-decorder') ?? false;
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() {});
@@ -278,6 +279,34 @@ class _HMSAppSettingsState extends State<HMSAppSettings> {
                               setState(() {})
                             }),
                   ),
+                  if (Platform.isAndroid)
+                    ListTile(
+                      horizontalTitleGap: 2,
+                      enabled: false,
+                      contentPadding: EdgeInsets.zero,
+                      leading: SvgPicture.asset(
+                        'assets/icons/decoder.svg',
+                        color: themeDefaultColor,
+                      ),
+                      title: Text(
+                        "Software Decorder",
+                        semanticsLabel: "fl_software_decorder_enable",
+                        style: GoogleFonts.inter(
+                            fontSize: 14,
+                            color: themeDefaultColor,
+                            letterSpacing: 0.25,
+                            fontWeight: FontWeight.w600),
+                      ),
+                      trailing: CupertinoSwitch(
+                          activeColor: hmsdefaultColor,
+                          value: isSoftwareDecorder,
+                          onChanged: (value) => {
+                                isSoftwareDecorder = value,
+                                Utilities.saveBoolData(
+                                    key: 'software-decorder', value: value),
+                                setState(() {})
+                              }),
+                    ),
                   ListTile(
                     horizontalTitleGap: 2,
                     enabled: true,

@@ -233,7 +233,9 @@ class _HLSMoreSettingsState extends State<HLSMoreSettings> {
                       semanticsLabel: "fl_brb_list_tile",
                       style: GoogleFonts.inter(
                           fontSize: 14,
-                          color: themeDefaultColor,
+                          color: _meetingStore.isBRB
+                              ? errorColor
+                              : themeDefaultColor,
                           letterSpacing: 0.25,
                           fontWeight: FontWeight.w600),
                     ),
