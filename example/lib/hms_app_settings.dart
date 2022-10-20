@@ -21,7 +21,7 @@ class _HMSAppSettingsState extends State<HMSAppSettings> {
   bool skipPreview = false;
   bool mirrorCamera = true;
   bool showStats = false;
-  bool isSoftwareDecorder = false;
+  bool isSoftwareDecoder = false;
   @override
   void initState() {
     super.initState();
@@ -37,8 +37,8 @@ class _HMSAppSettingsState extends State<HMSAppSettings> {
     mirrorCamera = await Utilities.getBoolData(key: 'mirror-camera') ?? true;
     showStats = await Utilities.getBoolData(key: 'show-stats') ?? false;
     isDarkMode = await Utilities.getBoolData(key: 'dark-mode') ?? true;
-    isSoftwareDecorder =
-        await Utilities.getBoolData(key: 'software-decorder') ?? false;
+    isSoftwareDecoder =
+        await Utilities.getBoolData(key: 'software-decoder') ?? false;
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() {});
@@ -289,8 +289,8 @@ class _HMSAppSettingsState extends State<HMSAppSettings> {
                         color: themeDefaultColor,
                       ),
                       title: Text(
-                        "Software Decorder",
-                        semanticsLabel: "fl_software_decorder_enable",
+                        "Software Decoder",
+                        semanticsLabel: "fl_software_decoder_enable",
                         style: GoogleFonts.inter(
                             fontSize: 14,
                             color: themeDefaultColor,
@@ -299,11 +299,11 @@ class _HMSAppSettingsState extends State<HMSAppSettings> {
                       ),
                       trailing: CupertinoSwitch(
                           activeColor: hmsdefaultColor,
-                          value: isSoftwareDecorder,
+                          value: isSoftwareDecoder,
                           onChanged: (value) => {
-                                isSoftwareDecorder = value,
+                                isSoftwareDecoder = value,
                                 Utilities.saveBoolData(
-                                    key: 'software-decorder', value: value),
+                                    key: 'software-decoder', value: value),
                                 setState(() {})
                               }),
                     ),

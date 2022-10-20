@@ -51,8 +51,8 @@ class _PreviewDetailsState extends State<PreviewDetails> {
           await Utilities.getBoolData(key: 'join-with-muted-audio') ?? true;
       bool joinWithMutedVideo =
           await Utilities.getBoolData(key: 'join-with-muted-video') ?? true;
-      bool sotfwareDecorder =
-          await Utilities.getBoolData(key: 'software-decorder') ?? false;
+      bool sotfwareDecoder =
+          await Utilities.getBoolData(key: 'software-decoder') ?? false;
       if (res) {
         if (!skipPreview) {
           Navigator.of(context).pushReplacement(MaterialPageRoute(
@@ -60,7 +60,7 @@ class _PreviewDetailsState extends State<PreviewDetails> {
                     value: PreviewStore(
                         joinWithMutedAudio: joinWithMutedAudio,
                         joinWithMutedVideo: joinWithMutedVideo,
-                        softwareDecorder: sotfwareDecorder),
+                        softwareDecoder: sotfwareDecoder),
                     child: PreviewPage(
                         meetingFlow: widget.meetingFlow,
                         name: nameController.text,
@@ -71,15 +71,15 @@ class _PreviewDetailsState extends State<PreviewDetails> {
               await Utilities.getBoolData(key: 'show-stats') ?? false;
           bool mirrorCamera =
               await Utilities.getBoolData(key: 'mirror-camera') ?? false;
-          bool softwareDecorder =
-              await Utilities.getBoolData(key: 'software-decorder') ?? false;
+          bool softwareDecoder =
+              await Utilities.getBoolData(key: 'software-decoder') ?? false;
           HMSSDKInteractor _hmsSDKInteractor = HMSSDKInteractor(
               appGroup: "group.flutterhms",
               preferredExtension:
                   "live.100ms.flutter.FlutterBroadcastUploadExtension",
               joinWithMutedAudio: joinWithMutedAudio,
               joinWithMutedVideo: joinWithMutedVideo,
-              softwareDecoder: softwareDecorder);
+              softwareDecoder: softwareDecoder);
           Navigator.of(context).pushReplacement(MaterialPageRoute(
               builder: (_) => ListenableProvider.value(
                     value: MeetingStore(hmsSDKInteractor: _hmsSDKInteractor),
