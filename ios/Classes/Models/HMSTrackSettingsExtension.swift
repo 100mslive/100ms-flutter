@@ -68,7 +68,7 @@ class HMSTrackSettingsExtension {
                 } catch {
                     result(HMSErrorExtension.toDictionary(error))
                 }
-            }else{
+            } else {
                 audioSettings = HMSAudioTrackSettings(maxBitrate: 32, trackDescription: "track_description", initialMuteState: getinitialMuteState(from: initialMuteState), audioSource: nil)
             }
         }
@@ -76,8 +76,7 @@ class HMSTrackSettingsExtension {
             var videoSettings: HMSVideoTrackSettings?
             if let videoSettingsDict = settingsDict["video_track_setting"] as? [AnyHashable: Any] {
                 if let cameraFacing = videoSettingsDict["camera_facing"] as? String,
-                   let initialMuteState = videoSettingsDict["track_initial_state"] as? String
-                   {
+                   let initialMuteState = videoSettingsDict["track_initial_state"] as? String {
                     videoSettings = HMSVideoTrackSettings(codec: HMSCodec.VP8,
                                                           resolution: .init(width: 320, height: 180),
                                                           maxBitrate: 32,
@@ -92,19 +91,19 @@ class HMSTrackSettingsExtension {
 
         return HMSTrackSettings(videoSettings: videoSettings, audioSettings: audioSettings)
     }
-    
+
     static private func getCameraFacing(from string: String) -> HMSCameraFacing {
         if string.lowercased().contains("back") {
             return HMSCameraFacing.back
         }
         return HMSCameraFacing.front
     }
-    
+
     static private func getinitialMuteState(from string: String) -> HMSTrackMuteState {
         if string.lowercased().contains("unmuted") {
             return HMSTrackMuteState.unmute
         }
         return HMSTrackMuteState.mute
     }
-    
+
 }
