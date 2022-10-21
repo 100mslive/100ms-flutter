@@ -60,14 +60,16 @@ class HMSTrackSettingsExtension {
 
             var audioSettings: HMSAudioTrackSettings?
         if let audioSettingsDict = settingsDict["audio_track_setting"] as? [AnyHashable: Any] {
+            let initialMuteState = audioSettingsDict["track_initial_state"] as! String
             if #available(iOS 13.0, *) {
                 do {
                     let audioMixerSource = try HMSAudioMixerSource(nodes: audioMixerSourceMap.values.map {$0})
-                    let initialMuteState = audioSettingsDict["track_initial_state"] as! String
                     audioSettings = HMSAudioTrackSettings(maxBitrate: 32, trackDescription: "track_description", initialMuteState: getinitialMuteState(from: initialMuteState), audioSource: audioMixerSource)
                 } catch {
                     result(HMSErrorExtension.toDictionary(error))
                 }
+            }else{
+                audioSettings = HMSAudioTrackSettings(maxBitrate: 32, trackDescription: "track_description", initialMuteState: getinitialMuteState(from: initialMuteState), audioSource: nil)
             }
         }
 
