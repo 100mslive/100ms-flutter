@@ -59,25 +59,31 @@ class HMSTrackSettingsExtension {
     static func setTrackSetting(_ settingsDict: [AnyHashable: Any], _ audioMixerSourceMap: [String: HMSAudioNode], _ result: @escaping FlutterResult) -> HMSTrackSettings? {
 
             var audioSettings: HMSAudioTrackSettings?
-                if #available(iOS 13.0, *) {
-                    do {
-                        let audioMixerSource = try HMSAudioMixerSource(nodes: audioMixerSourceMap.values.map {$0})
-                        audioSettings = HMSAudioTrackSettings(maxBitrate: 32, trackDescription: "track_description", audioSource: audioMixerSource)
-                    } catch {
-                        result(HMSErrorExtension.toDictionary(error))
-                    }
+        if let audioSettingsDict = settingsDict["audio_track_setting"] as? [AnyHashable: Any] {
+            if #available(iOS 13.0, *) {
+                do {
+                    let audioMixerSource = try HMSAudioMixerSource(nodes: audioMixerSourceMap.values.map {$0})
+                    let initialMuteState = audioSettingsDict["track_initial_state"] as! String
+                    audioSettings = HMSAudioTrackSettings(maxBitrate: 32, trackDescription: "track_description", initialMuteState: getinitialMuteState(from: initialMuteState), audioSource: audioMixerSource)
+                } catch {
+                    result(HMSErrorExtension.toDictionary(error))
                 }
+            }
+        }
 
             var videoSettings: HMSVideoTrackSettings?
             if let videoSettingsDict = settingsDict["video_track_setting"] as? [AnyHashable: Any] {
-                if let cameraFacing = videoSettingsDict["camera_facing"] as? String
+                if let cameraFacing = videoSettingsDict["camera_facing"] as? String,
+                   let initialMuteState = videoSettingsDict["track_initial_state"] as? String
                    {
                     videoSettings = HMSVideoTrackSettings(codec: HMSCodec.VP8,
                                                           resolution: .init(width: 320, height: 180),
                                                           maxBitrate: 32,
                                                           maxFrameRate: 30,
                                                           cameraFacing: getCameraFacing(from: cameraFacing),
+                                                          simulcastSettings: [HMSSimulcastLayerSettings()],
                                                           trackDescription: "track_description",
+                                                          initialMuteState: getinitialMuteState(from: initialMuteState),
                                                           videoPlugins: nil)
                 }
             }
@@ -90,6 +96,13 @@ class HMSTrackSettingsExtension {
             return HMSCameraFacing.back
         }
         return HMSCameraFacing.front
+    }
+    
+    static private func getinitialMuteState(from string: String) -> HMSTrackMuteState {
+        if string.lowercased().contains("unmuted") {
+            return HMSTrackMuteState.unmute
+        }
+        return HMSTrackMuteState.mute
     }
     
 }

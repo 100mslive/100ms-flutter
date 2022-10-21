@@ -139,64 +139,62 @@ class _HMSAppSettingsState extends State<HMSAppSettings> {
                   //             setState(() {})
                   //           })),
                   // ),
-                  if (Platform.isAndroid)
-                    ListTile(
-                      horizontalTitleGap: 2,
-                      enabled: false,
-                      contentPadding: EdgeInsets.zero,
-                      leading: SvgPicture.asset(
-                        "assets/icons/mic_state_off.svg",
-                        fit: BoxFit.scaleDown,
-                        color: themeDefaultColor,
-                      ),
-                      title: Text(
-                        "Join with muted audio",
-                        semanticsLabel: "fl_join_with_muted_audio",
-                        style: GoogleFonts.inter(
-                            fontSize: 14,
-                            color: themeDefaultColor,
-                            letterSpacing: 0.25,
-                            fontWeight: FontWeight.w600),
-                      ),
-                      trailing: CupertinoSwitch(
-                          activeColor: hmsdefaultColor,
-                          value: joinWithMutedAudio,
-                          onChanged: (value) => {
-                                joinWithMutedAudio = value,
-                                Utilities.saveBoolData(
-                                    key: 'join-with-muted-audio', value: value),
-                                setState(() {})
-                              }),
+                  ListTile(
+                    horizontalTitleGap: 2,
+                    enabled: false,
+                    contentPadding: EdgeInsets.zero,
+                    leading: SvgPicture.asset(
+                      "assets/icons/mic_state_off.svg",
+                      fit: BoxFit.scaleDown,
+                      color: themeDefaultColor,
                     ),
-                  if (Platform.isAndroid)
-                    ListTile(
-                      horizontalTitleGap: 2,
-                      enabled: false,
-                      contentPadding: EdgeInsets.zero,
-                      leading: SvgPicture.asset(
-                        "assets/icons/cam_state_off.svg",
-                        fit: BoxFit.scaleDown,
-                        color: themeDefaultColor,
-                      ),
-                      title: Text(
-                        "Join with muted video",
-                        semanticsLabel: "fl_join_with_muted_video",
-                        style: GoogleFonts.inter(
-                            fontSize: 14,
-                            color: themeDefaultColor,
-                            letterSpacing: 0.25,
-                            fontWeight: FontWeight.w600),
-                      ),
-                      trailing: CupertinoSwitch(
-                          activeColor: hmsdefaultColor,
-                          value: joinWithMutedVideo,
-                          onChanged: (value) => {
-                                joinWithMutedVideo = value,
-                                Utilities.saveBoolData(
-                                    key: 'join-with-muted-video', value: value),
-                                setState(() {})
-                              }),
+                    title: Text(
+                      "Join with muted audio",
+                      semanticsLabel: "fl_join_with_muted_audio",
+                      style: GoogleFonts.inter(
+                          fontSize: 14,
+                          color: themeDefaultColor,
+                          letterSpacing: 0.25,
+                          fontWeight: FontWeight.w600),
                     ),
+                    trailing: CupertinoSwitch(
+                        activeColor: hmsdefaultColor,
+                        value: joinWithMutedAudio,
+                        onChanged: (value) => {
+                              joinWithMutedAudio = value,
+                              Utilities.saveBoolData(
+                                  key: 'join-with-muted-audio', value: value),
+                              setState(() {})
+                            }),
+                  ),
+                  ListTile(
+                    horizontalTitleGap: 2,
+                    enabled: false,
+                    contentPadding: EdgeInsets.zero,
+                    leading: SvgPicture.asset(
+                      "assets/icons/cam_state_off.svg",
+                      fit: BoxFit.scaleDown,
+                      color: themeDefaultColor,
+                    ),
+                    title: Text(
+                      "Join with muted video",
+                      semanticsLabel: "fl_join_with_muted_video",
+                      style: GoogleFonts.inter(
+                          fontSize: 14,
+                          color: themeDefaultColor,
+                          letterSpacing: 0.25,
+                          fontWeight: FontWeight.w600),
+                    ),
+                    trailing: CupertinoSwitch(
+                        activeColor: hmsdefaultColor,
+                        value: joinWithMutedVideo,
+                        onChanged: (value) => {
+                              joinWithMutedVideo = value,
+                              Utilities.saveBoolData(
+                                  key: 'join-with-muted-video', value: value),
+                              setState(() {})
+                            }),
+                  ),
                   ListTile(
                     horizontalTitleGap: 2,
                     enabled: false,
