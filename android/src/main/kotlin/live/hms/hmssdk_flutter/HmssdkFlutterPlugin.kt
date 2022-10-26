@@ -666,6 +666,9 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             result.success(true)
             return
         }
+        val hmsLogSettingsMap =
+            call.argument<HashMap<String, Any>?>("hms_log_settings")
+
 
         val hmsAudioTrackHashMap: HashMap<String, Any?>? = hmsTrackSettingMap["audio_track_setting"]
         val hmsVideoTrackHashMap: HashMap<String, Any?>? = hmsTrackSettingMap["video_track_setting"]
@@ -673,10 +676,15 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         val dartSDKVersion = call.argument<String>("dart_sdk_version")
         val hmsSDKVersion = call.argument<String>("hmssdk_version")
         val framework = FrameworkInfo(framework = AgentType.FLUTTER, frameworkVersion = dartSDKVersion, frameworkSdkVersion = hmsSDKVersion)
+        val maxDirSizeInBytes:Double? = hmsLogSettingsMap!!["max_dir_size_in_bytes"] as Double?
+        val isLogStorageEnabled:Boolean? = hmsLogSettingsMap["log_storage_enabled"] as Boolean?
+        val level:String? = hmsLogSettingsMap["log_level"] as String?
+        val logSettings = HMSLogSettings.setLogSettings(maxDirSizeInBytes,isLogStorageEnabled,level)
         hmssdk = HMSSDK
             .Builder(activity)
             .setTrackSettings(hmsTrackSettings)
             .setFrameworkInfo(framework)
+            .setLogSettings(logSettings)
             .build()
         result.success(true)
     }

@@ -16,7 +16,7 @@ class HMSLog {
   factory HMSLog.fromMap(Map map) {
     map = map["log"];
     return HMSLog(
-        level: HMSLogLevelValue.getHMSTrackKindFromName(map["level"]),
+        level: HMSLogLevelValue.getHMSLogLevelFromName(map["level"]),
         tag: map["tag"],
         message: map["message"],
         isWebRtcLog: map["is_web_rtc_log"]);
