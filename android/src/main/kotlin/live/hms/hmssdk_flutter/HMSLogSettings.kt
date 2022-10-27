@@ -13,9 +13,7 @@ class HMSLogSettings {
 
         private fun getLogLevel(logLevel:String?): HMSLogger.LogLevel {
             return when(logLevel){
-//                "debug" -> HMSLogger.LogLevel.DEBUG
                 "error" -> HMSLogger.LogLevel.ERROR
-//                "info" -> HMSLogger.LogLevel.INFO
                 "off" -> HMSLogger.LogLevel.OFF
                 "verbose" -> HMSLogger.LogLevel.VERBOSE
                 "warn" -> HMSLogger.LogLevel.WARN
