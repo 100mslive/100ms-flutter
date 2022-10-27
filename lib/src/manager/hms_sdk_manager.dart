@@ -24,7 +24,9 @@ class HmsSdkManager {
       "hms_track_setting": hmsTrackSetting?.toMap(),
       "app_group": appGroup,
       "preferred_extension": preferredExtension,
-      "hms_log_settings": hmsLogSettings?.toMap(),
+      "hms_log_settings": hmsLogSettings != null
+          ? hmsLogSettings.toMap()
+          : HMSLogSettings().toMap(),
       "dart_sdk_version":
           dartSDKVersion.length > 0 ? dartSDKVersion[0] : "null",
       "hmssdk_version": "0.7.8"

@@ -35,8 +35,8 @@ class HMSSDKInteractor {
             forceSoftwareDecoder: softwareDecoder));
     HMSLogSettings hmsLogSettings = HMSLogSettings(
         maxDirSizeInBytes: 2000,
-        isLogStorageEnabled: false,
-        level: HMSLogLevel.ERROR);
+        isLogStorageEnabled: true,
+        level: HMSLogLevel.VERBOSE);
     hmsSDK = HMSSDK(
         appGroup: appGroup,
         preferredExtension: preferredExtension,
