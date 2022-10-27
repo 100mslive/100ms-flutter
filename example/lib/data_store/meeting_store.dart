@@ -562,6 +562,13 @@ class MeetingStore extends ChangeNotifier
         PeerTrackNode peerTrackNode = peerTracks[index];
         peerTrackNode.audioTrack = track as HMSAudioTrack;
         peerTrackNode.notify();
+      } else {
+        peerTracks.add(new PeerTrackNode(
+            peer: peer,
+            uid: peer.peerId + "mainVideo",
+            stats: RTCStats(),
+            audioTrack: track as HMSAudioTrack));
+        notifyListeners();
       }
       return;
     }
@@ -577,6 +584,12 @@ class MeetingStore extends ChangeNotifier
           rearrangeTile(peerTrackNode, index);
         }
       } else {
+        peerTracks.add(new PeerTrackNode(
+            peer: peer,
+            uid: peer.peerId + "mainVideo",
+            stats: RTCStats(),
+            track: track as HMSVideoTrack));
+        notifyListeners();
         return;
       }
     }
@@ -895,14 +908,11 @@ class MeetingStore extends ChangeNotifier
   void peerOperation(HMSPeer peer, HMSPeerUpdate update) {
     switch (update) {
       case HMSPeerUpdate.peerJoined:
-        if (peer.role.name.contains("hls-") == false) {
-          int index = peerTracks.indexWhere(
-              (element) => element.uid == peer.peerId + "mainVideo");
-          if (index == -1)
-            peerTracks.add(new PeerTrackNode(
-                peer: peer, uid: peer.peerId + "mainVideo", stats: RTCStats()));
-          notifyListeners();
-        }
+        // if (peer.role.name.contains("hls-") == false) {
+        //   int index = peerTracks.indexWhere(
+        //       (element) => element.uid == peer.peerId + "mainVideo");
+        //   if (index == -1)
+        // }
         addPeer(peer);
         break;
 
@@ -933,11 +943,11 @@ class MeetingStore extends ChangeNotifier
           if (peer.isLocal) {
             isHLSLink = false;
           }
-          int index = peerTracks.indexWhere(
-              (element) => element.uid == peer.peerId + "mainVideo");
-          if (index == -1)
-            peerTracks.add(new PeerTrackNode(
-                peer: peer, uid: peer.peerId + "mainVideo", stats: RTCStats()));
+          // int index = peerTracks.indexWhere(
+          //     (element) => element.uid == peer.peerId + "mainVideo");
+          // if (index == -1)
+          //   peerTracks.add(new PeerTrackNode(
+          //       peer: peer, uid: peer.peerId + "mainVideo", stats: RTCStats()));
         }
         Utilities.showToast("${peer.name}'s role changed to " + peer.role.name);
         updatePeerAt(peer);
@@ -1032,6 +1042,17 @@ class MeetingStore extends ChangeNotifier
             }
             isScreenShareActive();
             notifyListeners();
+          }
+        } else {
+          int peerIndex = peerTracks.indexWhere(
+              (element) => element.uid == peer.peerId + "mainVideo");
+          if (peerIndex != -1) {
+            if ((track.kind == HMSTrackKind.kHMSTrackKindAudio &&
+                peerTracks[peerIndex].track == null) ||
+                (track.kind == HMSTrackKind.kHMSTrackKindVideo &&
+                peerTracks[peerIndex].audioTrack == null)) {
+              peerTracks.removeAt(peerIndex);
+            }
           }
         }
         break;
