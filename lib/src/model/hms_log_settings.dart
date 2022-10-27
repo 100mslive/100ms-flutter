@@ -6,7 +6,7 @@ class HMSLogSettings {
   final HMSLogLevel level;
 
   HMSLogSettings(
-      {this.maxDirSizeInBytes = 2000,
+      {this.maxDirSizeInBytes = 1000000,
       this.isLogStorageEnabled = false,
       this.level = HMSLogLevel.OFF});
 

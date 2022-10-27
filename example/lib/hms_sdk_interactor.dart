@@ -34,7 +34,7 @@ class HMSSDKInteractor {
                 : HMSTrackInitState.UNMUTED,
             forceSoftwareDecoder: softwareDecoder));
     HMSLogSettings hmsLogSettings = HMSLogSettings(
-        maxDirSizeInBytes: 2000,
+        maxDirSizeInBytes: 1000000,
         isLogStorageEnabled: true,
         level: HMSLogLevel.VERBOSE);
     hmsSDK = HMSSDK(
