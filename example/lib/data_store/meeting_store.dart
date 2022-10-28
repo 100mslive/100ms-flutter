@@ -629,43 +629,43 @@ class MeetingStore extends ChangeNotifier
 
   @override
   void onUpdateSpeakers({required List<HMSSpeaker> updateSpeakers}) {
-    if (updateSpeakers.isNotEmpty) {
-      highestSpeaker = updateSpeakers[0].peer.name;
-    } else {
-      highestSpeaker = null;
-    }
-    activeSpeakerIds.clear();
-    updateSpeakers.forEach((element) {
-      activeSpeakerIds[element.peer.peerId + "mainVideo"] = element.audioLevel;
-    });
-    int firstScreenPeersCount = (meetingMode == MeetingMode.Audio) ? 6 : 4;
-    if ((isActiveSpeakerMode && peerTracks.length > firstScreenPeersCount) ||
-        meetingMode == MeetingMode.Hero) {
-      List<HMSSpeaker> activeSpeaker = [];
-      if (updateSpeakers.length > firstScreenPeersCount) {
-        activeSpeaker.addAll(updateSpeakers.sublist(0, firstScreenPeersCount));
-      } else {
-        activeSpeaker.addAll(updateSpeakers);
-      }
-      for (int i = activeSpeaker.length - 1; i > -1; i--) {
-        if (isActiveSpeakerMode) {
-          List<PeerTrackNode> tempTracks = peerTracks.sublist(
-              screenShareCount, screenShareCount + firstScreenPeersCount);
-          int indexTrack = tempTracks.indexWhere(
-              (peer) => activeSpeaker[i].peer.peerId + "mainVideo" == peer.uid);
-          if (indexTrack != -1) {
-            continue;
-          }
-        }
-        int index = peerTracks.indexWhere(
-            (peer) => activeSpeaker[i].peer.peerId + "mainVideo" == peer.uid);
-        if (index != -1) {
-          PeerTrackNode peerTrackNode = peerTracks.removeAt(index);
-          peerTracks.insert(screenShareCount, peerTrackNode);
-        }
-      }
-    }
-    notifyListeners();
+    // if (updateSpeakers.isNotEmpty) {
+    //   highestSpeaker = updateSpeakers[0].peer.name;
+    // } else {
+    //   highestSpeaker = null;
+    // }
+    // activeSpeakerIds.clear();
+    // updateSpeakers.forEach((element) {
+    //   activeSpeakerIds[element.peer.peerId + "mainVideo"] = element.audioLevel;
+    // });
+    // int firstScreenPeersCount = (meetingMode == MeetingMode.Audio) ? 6 : 4;
+    // if ((isActiveSpeakerMode && peerTracks.length > firstScreenPeersCount) ||
+    //     meetingMode == MeetingMode.Hero) {
+    //   List<HMSSpeaker> activeSpeaker = [];
+    //   if (updateSpeakers.length > firstScreenPeersCount) {
+    //     activeSpeaker.addAll(updateSpeakers.sublist(0, firstScreenPeersCount));
+    //   } else {
+    //     activeSpeaker.addAll(updateSpeakers);
+    //   }
+    //   for (int i = activeSpeaker.length - 1; i > -1; i--) {
+    //     if (isActiveSpeakerMode) {
+    //       List<PeerTrackNode> tempTracks = peerTracks.sublist(
+    //           screenShareCount, screenShareCount + firstScreenPeersCount);
+    //       int indexTrack = tempTracks.indexWhere(
+    //           (peer) => activeSpeaker[i].peer.peerId + "mainVideo" == peer.uid);
+    //       if (indexTrack != -1) {
+    //         continue;
+    //       }
+    //     }
+    //     int index = peerTracks.indexWhere(
+    //         (peer) => activeSpeaker[i].peer.peerId + "mainVideo" == peer.uid);
+    //     if (index != -1) {
+    //       PeerTrackNode peerTrackNode = peerTracks.removeAt(index);
+    //       peerTracks.insert(screenShareCount, peerTrackNode);
+    //     }
+    //   }
+    // }
+    // notifyListeners();
   }
 
   @override
