@@ -21,13 +21,17 @@ import '../hmssdk_flutter.dart';
 ///
 
 class HMSSDK {
-  HMSSDK({this.hmsTrackSetting, this.appGroup, this.preferredExtension});
+  HMSSDK(
+      {this.hmsTrackSetting,
+      this.appGroup,
+      this.preferredExtension,
+      this.hmsLogSettings});
 
   /// The build function should be called after creating an instance of the [HMSSDK].
   /// Await the result & if true then create [HMSConfig] object to join or preview a room.
   Future<void> build() async {
-    await HmsSdkManager()
-        .createHMSSdk(hmsTrackSetting, appGroup, preferredExtension);
+    await HmsSdkManager().createHMSSdk(
+        hmsTrackSetting, appGroup, preferredExtension, hmsLogSettings);
   }
 
   ///add MeetingListener it will add all the listeners.
@@ -888,6 +892,8 @@ class HMSSDK {
 
   /// [preferredExtension] is only used for screen share (broadcast screen) in iOS.
   String? preferredExtension;
+
+  HMSLogSettings? hmsLogSettings;
 
   bool previewState = false;
 }

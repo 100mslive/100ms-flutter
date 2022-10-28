@@ -406,7 +406,8 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         }
 
         var setLogger = false
-        if let level = arguments["log_level"] as? String {
+        if let hmsLogSettings = arguments["hms_log_settings"] as? [AnyHashable: Any] {
+            let level = hmsLogSettings["log_level"] as! String
             logLevel = getLogLevel(from: level)
             setLogger = true
         }
@@ -714,7 +715,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         switch level {
         case "verbose":
             return .verbose
-        case "warning":
+        case "warn":
             return .warning
         case "error":
             return .error

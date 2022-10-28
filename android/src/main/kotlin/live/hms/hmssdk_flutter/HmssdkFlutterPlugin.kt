@@ -658,26 +658,34 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
     }
 
     fun build(activity: Activity, call: MethodCall, result: Result) {
-        val hmsTrackSettingMap =
-            call.argument<HashMap<String, HashMap<String, Any?>?>?>("hms_track_setting")
 
-        if (hmsTrackSettingMap == null) {
-            this.hmssdk = HMSSDK.Builder(activity).build()
-            result.success(true)
-            return
-        }
-
-        val hmsAudioTrackHashMap: HashMap<String, Any?>? = hmsTrackSettingMap["audio_track_setting"]
-        val hmsVideoTrackHashMap: HashMap<String, Any?>? = hmsTrackSettingMap["video_track_setting"]
-        val hmsTrackSettings = HMSTrackSettingsExtension.setTrackSettings(hmsAudioTrackHashMap,hmsVideoTrackHashMap)
         val dartSDKVersion = call.argument<String>("dart_sdk_version")
         val hmsSDKVersion = call.argument<String>("hmssdk_version")
         val framework = FrameworkInfo(framework = AgentType.FLUTTER, frameworkVersion = dartSDKVersion, frameworkSdkVersion = hmsSDKVersion)
-        hmssdk = HMSSDK
-            .Builder(activity)
-            .setTrackSettings(hmsTrackSettings)
-            .setFrameworkInfo(framework)
-            .build()
+        val builder = HMSSDK.Builder(activity).setFrameworkInfo(framework)
+
+        val hmsTrackSettingMap =
+            call.argument<HashMap<String, HashMap<String, Any?>?>?>("hms_track_setting")
+
+        if (hmsTrackSettingMap != null) {
+            val hmsAudioTrackHashMap: HashMap<String, Any?>? = hmsTrackSettingMap["audio_track_setting"]
+            val hmsVideoTrackHashMap: HashMap<String, Any?>? = hmsTrackSettingMap["video_track_setting"]
+            val hmsTrackSettings = HMSTrackSettingsExtension.setTrackSettings(hmsAudioTrackHashMap,hmsVideoTrackHashMap)
+            builder.setTrackSettings(hmsTrackSettings)
+        }
+
+        val hmsLogSettingsMap =
+            call.argument<HashMap<String, Any>?>("hms_log_settings")
+
+        if(hmsLogSettingsMap != null) {
+            val maxDirSizeInBytes:Double = hmsLogSettingsMap!!["max_dir_size_in_bytes"] as Double
+            val isLogStorageEnabled:Boolean = hmsLogSettingsMap["log_storage_enabled"] as Boolean
+            val level:String = hmsLogSettingsMap["log_level"] as String
+            val logSettings = HMSLogSettings.setLogSettings(maxDirSizeInBytes,isLogStorageEnabled,level)
+            builder.setLogSettings(logSettings)
+        }
+
+        hmssdk = builder.build()
         result.success(true)
     }
 
