@@ -908,11 +908,6 @@ class MeetingStore extends ChangeNotifier
   void peerOperation(HMSPeer peer, HMSPeerUpdate update) {
     switch (update) {
       case HMSPeerUpdate.peerJoined:
-        // if (peer.role.name.contains("hls-") == false) {
-        //   int index = peerTracks.indexWhere(
-        //       (element) => element.uid == peer.peerId + "mainVideo");
-        //   if (index == -1)
-        // }
         addPeer(peer);
         break;
 
@@ -943,11 +938,6 @@ class MeetingStore extends ChangeNotifier
           if (peer.isLocal) {
             isHLSLink = false;
           }
-          // int index = peerTracks.indexWhere(
-          //     (element) => element.uid == peer.peerId + "mainVideo");
-          // if (index == -1)
-          //   peerTracks.add(new PeerTrackNode(
-          //       peer: peer, uid: peer.peerId + "mainVideo", stats: RTCStats()));
         }
         Utilities.showToast("${peer.name}'s role changed to " + peer.role.name);
         updatePeerAt(peer);
@@ -1035,8 +1025,7 @@ class MeetingStore extends ChangeNotifier
               (element) => element.uid == peer.peerId + track.trackId);
           if (peerIndex != -1) {
             screenShareCount--;
-            peerTracks.removeWhere(
-                (element) => element.uid == peer.peerId + track.trackId);
+            peerTracks.removeAt(peerIndex);
             if (screenShareCount == 0) {
               setLandscapeLock(false);
             }
@@ -1047,10 +1036,13 @@ class MeetingStore extends ChangeNotifier
           int peerIndex = peerTracks.indexWhere(
               (element) => element.uid == peer.peerId + "mainVideo");
           if (peerIndex != -1) {
-            if ((track.kind == HMSTrackKind.kHMSTrackKindAudio &&
-                peerTracks[peerIndex].track == null) ||
-                (track.kind == HMSTrackKind.kHMSTrackKindVideo &&
-                peerTracks[peerIndex].audioTrack == null)) {
+            if (track.kind == HMSTrackKind.kHMSTrackKindAudio) {
+              peerTracks[peerIndex].audioTrack = null;
+            } else if (track.kind == HMSTrackKind.kHMSTrackKindVideo) {
+              peerTracks[peerIndex].track = null;
+            }
+            if (peerTracks[peerIndex].track == null &&
+                peerTracks[peerIndex].audioTrack == null) {
               peerTracks.removeAt(peerIndex);
             }
           }
