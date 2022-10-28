@@ -6,9 +6,9 @@ class HMSLogSettings {
   final HMSLogLevel level;
 
   HMSLogSettings(
-      {this.maxDirSizeInBytes = 1000000,
-      this.isLogStorageEnabled = false,
-      this.level = HMSLogLevel.OFF});
+      {required this.maxDirSizeInBytes,
+      required this.isLogStorageEnabled,
+      required this.level});
 
   Map<String, dynamic> toMap() {
     return {
