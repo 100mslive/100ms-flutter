@@ -725,7 +725,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             return .off
         }
     }
-    
+
     var finalargs = [Any]()
     public func log(_ message: String, _ level: HMSLogLevel) {
         guard level.rawValue <= logLevel.rawValue else { return }
@@ -736,15 +736,14 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         var logArgs = [String: Any]()
         logArgs["log"] = ["message": message, "level": level.rawValue]
         args["data"] = logArgs
-        
-        if(finalargs.count<1000){
+
+        if finalargs.count<1000 {
             finalargs.append(args)
-        }else{
+        } else {
             logsSink?(finalargs)
             finalargs = []
         }
-        
-        
+
     }
 
     private func removeHMSLogger() {
