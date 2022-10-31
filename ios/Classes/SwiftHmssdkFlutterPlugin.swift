@@ -827,7 +827,9 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     }
 
     public func on(peer: HMSPeer, update: HMSPeerUpdate) {
-
+        guard peer.peerID != "" else {
+            return
+        }
         let data = [
             "event_name": "on_peer_update",
             "data": [
