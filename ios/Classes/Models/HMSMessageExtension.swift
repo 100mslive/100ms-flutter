@@ -22,7 +22,7 @@ class HMSMessageExtension {
 
         dict["hms_message_recipient"] = HMSMessageRecipientExtension.toDictionary(message.recipient)
 
-        if (message.sender?.peerID) != "" {
+        if ((message.sender != nil) || (message.sender?.peerID) != "") {
             dict["sender"] = HMSPeerExtension.toDictionary(message.sender!)
         }
 
