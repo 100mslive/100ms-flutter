@@ -406,7 +406,8 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         }
 
         var setLogger = false
-        if let level = arguments["log_level"] as? String {
+        if let hmsLogSettings = arguments["hms_log_settings"] as? [AnyHashable: Any] {
+            let level = hmsLogSettings["log_level"] as! String
             logLevel = getLogLevel(from: level)
             setLogger = true
         }
@@ -714,7 +715,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         switch level {
         case "verbose":
             return .verbose
-        case "warning":
+        case "warn":
             return .warning
         case "error":
             return .error
@@ -725,6 +726,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         }
     }
 
+    var finalargs = [Any]()
     public func log(_ message: String, _ level: HMSLogLevel) {
         guard level.rawValue <= logLevel.rawValue else { return }
 
@@ -733,10 +735,15 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
         var logArgs = [String: Any]()
         logArgs["log"] = ["message": message, "level": level.rawValue]
-
         args["data"] = logArgs
 
-        logsSink?(args)
+        if finalargs.count<1000 {
+            finalargs.append(args)
+        } else {
+            logsSink?(finalargs)
+            finalargs = []
+        }
+
     }
 
     private func removeHMSLogger() {
@@ -826,7 +833,9 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     }
 
     public func on(peer: HMSPeer, update: HMSPeerUpdate) {
-
+        guard peer.peerID != "" else {
+            return
+        }
         let data = [
             "event_name": "on_peer_update",
             "data": [

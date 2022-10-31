@@ -396,7 +396,8 @@ class _HLSMessageState extends State<HLSMessage> {
                                     message:
                                         data.item1[index].message.toString(),
                                     senderName:
-                                        data.item1[index].sender?.name ?? "",
+                                        data.item1[index].sender?.name ??
+                                            "Anonymous",
                                     date: formatter
                                         .format(data.item1[index].time),
                                     role:

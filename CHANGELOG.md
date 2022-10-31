@@ -1,3 +1,14 @@
+## 0.7.8 - 2022-10-31
+
+- Added support for Joining with Muted Audio & Video on iOS devices
+- Added Maven Central repository to look for Android dependencies
+- Added support for receiving Server-side `HMSMessage`
+- Added `HMSLogSettings` to configure Native Android SDK logs
+- Corrected setters for local audio/video track settings while building the `HMSSDK` object
+- Updated to Native Android SDK 2.5.1 & Native iOS SDK 0.4.6
+
+Full Changelog: [0.7.7...0.7.8](https://github.com/100mslive/100ms-flutter/compare/0.7.7...0.7.8)
+
 ## 0.7.7 - 2022-10-20
 
 - Added ability to set & get session metadata

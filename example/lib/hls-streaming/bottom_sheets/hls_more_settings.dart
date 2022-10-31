@@ -70,11 +70,11 @@ class _HLSMoreSettingsState extends State<HLSMoreSettings> {
             Expanded(
               child: ListView(
                 children: [
-                  if (Platform.isAndroid)
-                    ListTile(
-                      horizontalTitleGap: 2,
-                      onTap: () async {
-                        Navigator.pop(context);
+                  ListTile(
+                    horizontalTitleGap: 2,
+                    onTap: () async {
+                      Navigator.pop(context);
+                      if (Platform.isAndroid) {
                         showModalBottomSheet(
                           isScrollControlled: true,
                           backgroundColor: themeBottomSheetColor,
@@ -86,23 +86,26 @@ class _HLSMoreSettingsState extends State<HLSMoreSettings> {
                               value: context.read<MeetingStore>(),
                               child: HLSDeviceSettings()),
                         );
-                      },
-                      contentPadding: EdgeInsets.zero,
-                      leading: SvgPicture.asset(
-                        "assets/icons/settings.svg",
-                        fit: BoxFit.scaleDown,
-                        color: themeDefaultColor,
-                      ),
-                      title: Text(
-                        "Device Settings",
-                        semanticsLabel: "fl_device_settings",
-                        style: GoogleFonts.inter(
-                            fontSize: 14,
-                            color: themeDefaultColor,
-                            letterSpacing: 0.25,
-                            fontWeight: FontWeight.w600),
-                      ),
+                      } else if (Platform.isIOS) {
+                        context.read<MeetingStore>().switchAudioOutput();
+                      }
+                    },
+                    contentPadding: EdgeInsets.zero,
+                    leading: SvgPicture.asset(
+                      "assets/icons/settings.svg",
+                      fit: BoxFit.scaleDown,
+                      color: themeDefaultColor,
                     ),
+                    title: Text(
+                      Platform.isAndroid ? "Device Settings" : "Audio Settings",
+                      semanticsLabel: "fl_device_settings",
+                      style: GoogleFonts.inter(
+                          fontSize: 14,
+                          color: themeDefaultColor,
+                          letterSpacing: 0.25,
+                          fontWeight: FontWeight.w600),
+                    ),
+                  ),
                   ListTile(
                     horizontalTitleGap: 2,
                     onTap: () async {

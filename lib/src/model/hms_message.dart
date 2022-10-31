@@ -39,7 +39,9 @@ class HMSMessage {
 
   factory HMSMessage.fromMap(Map map) {
     Map messageMap = map;
-    HMSPeer sender = HMSPeer.fromMap(messageMap['sender']);
+    HMSPeer? sender = messageMap.containsKey("sender")
+        ? HMSPeer.fromMap(messageMap['sender'])
+        : null;
     HMSMessageRecipient recipient =
         HMSMessageRecipient.fromMap(messageMap['hms_message_recipient']);
     return HMSMessage(

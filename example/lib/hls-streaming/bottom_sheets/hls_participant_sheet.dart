@@ -262,7 +262,7 @@ class _HLSParticipantSheetState extends State<HLSParticipantSheet> {
                 Row(
                   children: [
                     Text(
-                      "Participants",
+                      "Participants(${context.read<MeetingStore>().peers.length})",
                       textAlign: TextAlign.center,
                       style: GoogleFonts.inter(
                           fontSize: 16,
