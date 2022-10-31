@@ -70,7 +70,6 @@ class _HLSMoreSettingsState extends State<HLSMoreSettings> {
             Expanded(
               child: ListView(
                 children: [
-                  if (Platform.isAndroid)
                     ListTile(
                       horizontalTitleGap: 2,
                       onTap: () async {
