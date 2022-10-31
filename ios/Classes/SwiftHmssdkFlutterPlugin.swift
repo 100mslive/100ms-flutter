@@ -406,11 +406,11 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         }
 
         var setLogger = false
-//        if let hmsLogSettings = arguments["hms_log_settings"] as? [AnyHashable: Any] {
-//            let level = hmsLogSettings["log_level"] as! String
-//            logLevel = getLogLevel(from: level)
-//            setLogger = true
-//        }
+        if let hmsLogSettings = arguments["hms_log_settings"] as? [AnyHashable: Any] {
+            let level = hmsLogSettings["log_level"] as! String
+            logLevel = getLogLevel(from: level)
+            setLogger = true
+        }
         let dartSDKVersion = arguments["dart_sdk_version"] as! String
         let hmsSDKVersion = arguments["hmssdk_version"] as! String
         let framework = HMSFrameworkInfo(type: .flutter, version: dartSDKVersion, sdkVersion: hmsSDKVersion)
