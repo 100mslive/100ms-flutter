@@ -20,6 +20,9 @@ enum HMSRoomUpdate {
   ///When browser recording state is changed
   browserRecordingStateUpdated,
 
+  //When peer Count is changed
+  roomPeerCountUpdated,
+
   ///Default Update
   defaultUpdate
 }
@@ -48,6 +51,9 @@ extension HMSRoomUpdateValues on HMSRoomUpdate {
       case 'hls_recording_state_updated':
         return HMSRoomUpdate.hlsRecordingStateUpdated;
 
+      case 'room_peer_count_updated':
+        return HMSRoomUpdate.roomPeerCountUpdated;
+
       default:
         return HMSRoomUpdate.defaultUpdate;
     }
@@ -75,6 +81,9 @@ extension HMSRoomUpdateValues on HMSRoomUpdate {
 
       case HMSRoomUpdate.hlsRecordingStateUpdated:
         return 'hls_recording_state_updated';
+
+      case HMSRoomUpdate.roomPeerCountUpdated:
+        return 'room_peer_count_updated';
 
       default:
         return 'defaultUpdate';

@@ -517,6 +517,9 @@ class MeetingStore extends ChangeNotifier
             ? "HLS Streaming Started"
             : "HLS Streaming Stopped");
         break;
+      case HMSRoomUpdate.roomPeerCountUpdated:
+        hmsRoom = room;
+        return;
       default:
         break;
     }
