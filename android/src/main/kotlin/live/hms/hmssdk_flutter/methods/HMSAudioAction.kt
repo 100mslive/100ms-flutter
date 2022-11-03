@@ -17,11 +17,11 @@ class HMSAudioAction {
                 "is_audio_mute" -> {
                     result.success(isAudioMute(call,hmssdk))
                 }
-                "mute_all" -> {
-                    muteAll(result,hmssdk)
+                "mute_room_audio_locally" -> {
+                    muteRoomAudioLocally(result,hmssdk)
                 }
-                "un_mute_all" -> {
-                    unMuteAll(result,hmssdk)
+                "un_mute_room_audio_locally" -> {
+                    unMuteRoomAudioLocally(result,hmssdk)
                 }
                 "set_volume" -> {
                     setVolume(call, result,hmssdk)
@@ -44,7 +44,7 @@ class HMSAudioAction {
             }
         }
 
-        private fun muteAll(result: Result,hmssdk:HMSSDK) {
+        private fun muteRoomAudioLocally(result: Result,hmssdk:HMSSDK) {
             val peersList = hmssdk.getRemotePeers()
 
             peersList.forEach {
@@ -55,10 +55,9 @@ class HMSAudioAction {
                     }
                 }
             }
-//        result(null)
         }
 
-        private fun unMuteAll(result: Result,hmssdk:HMSSDK) {
+        private fun unMuteRoomAudioLocally(result: Result,hmssdk:HMSSDK) {
             val peersList = hmssdk.getRemotePeers()
 
             peersList.forEach {
@@ -69,7 +68,6 @@ class HMSAudioAction {
                     }
                 }
             }
-//        result(null)
         }
 
 

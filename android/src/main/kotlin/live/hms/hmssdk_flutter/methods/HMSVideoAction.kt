@@ -32,8 +32,8 @@ class HMSVideoAction {
                     result.success(isVideoMute(call,hmssdk))
                 }
 
-                "set_playback_allowed"->{
-                    setPlayBackAllowed(call, result,hmssdk)
+                "set_video_playback_allowed"->{
+                    setVideoPlayBackAllowed(call, result,hmssdk)
                 }
                 else -> {
                     result.notImplemented()
@@ -93,7 +93,7 @@ class HMSVideoAction {
             return peer?.videoTrack?.isMute?:true
         }
 
-        private fun setPlayBackAllowed(call: MethodCall, result: Result,hmssdk:HMSSDK) {
+        private fun setVideoPlayBackAllowed(call: MethodCall, result: Result,hmssdk:HMSSDK) {
             val allowed = call.argument<Boolean>("allowed")
             hmssdk.getRemotePeers().forEach {
                 it.videoTrack?.isPlaybackAllowed = allowed!!

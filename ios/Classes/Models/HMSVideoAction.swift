@@ -26,8 +26,8 @@ class HMSVideoAction {
         case "is_video_mute":
             isVideoMute(call, result, hmsSDK)
 
-        case "set_playback_allowed":
-            setPlaybackAllowed(call, result, hmsSDK)
+        case "set_video_playback_allowed":
+            setVideoPlaybackAllowed(call, result, hmsSDK)
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -106,7 +106,7 @@ class HMSVideoAction {
         result(false)
     }
 
-    static private func setPlaybackAllowed(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?) {
+    static private func setVideoPlaybackAllowed(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?) {
         let arguments = call.arguments as! [AnyHashable: Any]
 
         let allowed = arguments["allowed"] as! Bool

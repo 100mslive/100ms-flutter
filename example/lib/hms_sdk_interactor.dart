@@ -211,9 +211,12 @@ class HMSSDKInteractor {
     return await hmsSDK.isVideoMute(peer: peer);
   }
 
-  void muteAll() {
-    // TODO: add permission checks in exmaple app UI
-    hmsSDK.muteAll();
+  void muteRoomAudioLocally() {
+    hmsSDK.muteRoomAudioLocally();
+  }
+
+  void unMuteRoomAudioLocally() {
+    hmsSDK.unMuteRoomAudioLocally();
   }
 
   void startScreenShare({HMSActionResultListener? hmsActionResultListener}) {
@@ -224,12 +227,8 @@ class HMSSDKInteractor {
     hmsSDK.stopScreenShare(hmsActionResultListener: hmsActionResultListener);
   }
 
-  void unMuteAll() {
-    hmsSDK.unMuteAll();
-  }
-
-  void setPlayBackAllowed(bool allow) {
-    hmsSDK.setPlayBackAllowed(allow: allow);
+  void setVideoPlaybackAllowed(bool allow) {
+    hmsSDK.setVideoPlaybackAllowed(allow: allow);
   }
 
   void startRtmpOrRecording(HMSRecordingConfig hmsRecordingConfig,

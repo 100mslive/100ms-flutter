@@ -87,10 +87,10 @@ enum PlatformMethod {
 
   ///remove peer from room
   removePeer,
-  //mute all peers in room
-  muteAll,
-  //send unmute request to all peer
-  unMuteAll,
+  //mute all peers in room for yourself
+  muteRoomAudioLocally,
+  //unmute all peers in room for yourself
+  unMuteRoomAudioLocally,
 
   //get local peer
   getLocalPeer,
@@ -113,7 +113,7 @@ enum PlatformMethod {
 
   ///change metadata for local peer
   changeMetadata,
-  setPlayBackAllowed,
+  setVideoPlaybackAllowed,
   setVolume,
 
   ///change name of local peer
@@ -244,11 +244,11 @@ extension PlatformMethodValues on PlatformMethod {
       case PlatformMethod.removePeer:
         return 'remove_peer';
 
-      case PlatformMethod.muteAll:
-        return 'mute_all';
+      case PlatformMethod.muteRoomAudioLocally:
+        return 'mute_room_audio_locally';
 
-      case PlatformMethod.unMuteAll:
-        return 'un_mute_all';
+      case PlatformMethod.unMuteRoomAudioLocally:
+        return 'un_mute_room_audio_locally';
 
       case PlatformMethod.getLocalPeer:
         return 'get_local_peer';
@@ -280,8 +280,8 @@ extension PlatformMethodValues on PlatformMethod {
       case PlatformMethod.changeMetadata:
         return "change_metadata";
 
-      case PlatformMethod.setPlayBackAllowed:
-        return "set_playback_allowed";
+      case PlatformMethod.setVideoPlaybackAllowed:
+        return "set_video_playback_allowed";
 
       case PlatformMethod.setVolume:
         return "set_volume";
@@ -441,11 +441,11 @@ extension PlatformMethodValues on PlatformMethod {
       case 'remove_peer':
         return PlatformMethod.removePeer;
 
-      case 'mute_all':
-        return PlatformMethod.muteAll;
+      case 'mute_room_audio_locally':
+        return PlatformMethod.muteRoomAudioLocally;
 
-      case 'un_mute_all':
-        return PlatformMethod.unMuteAll;
+      case 'un_mute_room_audio_locally':
+        return PlatformMethod.unMuteRoomAudioLocally;
 
       case 'get_local_peer':
         return PlatformMethod.getLocalPeer;
@@ -480,8 +480,8 @@ extension PlatformMethodValues on PlatformMethod {
       case "change_metadata":
         return PlatformMethod.changeMetadata;
 
-      case "set_playback_allowed":
-        return PlatformMethod.setPlayBackAllowed;
+      case "set_video_playback_allowed":
+        return PlatformMethod.setVideoPlaybackAllowed;
 
       case "set_volume":
         return PlatformMethod.setVolume;
