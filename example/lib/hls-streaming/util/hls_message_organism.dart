@@ -50,7 +50,7 @@ class HLSMessageOrganism extends StatelessWidget {
                                 maxWidth:
                                     role != "" ? width * 0.25 : width * 0.5),
                             child: HLSTitleText(
-                              text: senderName ?? "",
+                              text: senderName ?? "Anonymous",
                               fontSize: 14,
                               letterSpacing: 0.1,
                               lineHeight: 20,
