@@ -35,6 +35,12 @@ class HMSVideoView(
         }
     }
 
+    fun onDisposeCalled(){
+        super.onDetachedFromWindow()
+        track.removeSink(surfaceViewRenderer)
+        surfaceViewRenderer.release()
+    }
+
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         surfaceViewRenderer.init(SharedEglContext.context, null)

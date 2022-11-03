@@ -17,11 +17,10 @@ class _AudioLevelAvatarState extends State<AudioLevelAvatar> {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Selector<MeetingStore, int>(
-          selector: (_, meetingStore) =>
-              meetingStore.isActiveSpeaker(context.read<PeerTrackNode>().uid),
-          builder: (_, isSpeaking, __) {
-            return isSpeaking == -1
+      child: Selector<PeerTrackNode, int>(
+          selector: (_, peerTrackNode) => peerTrackNode.audioLevel,
+          builder: (_, audioLevel, __) {
+            return audioLevel == -1
                 ? CircleAvatar(
                     backgroundColor: Utilities.getBackgroundColour(
                         context.read<PeerTrackNode>().peer.name),
@@ -37,7 +36,7 @@ class _AudioLevelAvatarState extends State<AudioLevelAvatar> {
                     showTwoGlows: true,
                     duration: Duration(seconds: 1),
                     endRadius:
-                        (isSpeaking != -1) ? 36 + (isSpeaking).toDouble() : 36,
+                        (audioLevel != -1) ? 36 + (audioLevel).toDouble() : 36,
                     glowColor: Utilities.getBackgroundColour(
                         context.read<PeerTrackNode>().peer.name),
                     child: CircleAvatar(
