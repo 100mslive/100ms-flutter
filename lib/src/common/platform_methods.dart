@@ -89,9 +89,12 @@ enum PlatformMethod {
   removePeer,
   //mute all peers in room for yourself
   muteRoomAudioLocally,
-  //unmute all peers in room for yourself
+  //unMute all peers in room for yourself
   unMuteRoomAudioLocally,
-
+  //mute all peers video in room for yourself
+  muteRoomVideoLocally,
+  //unMute all peers video in room for yourself
+  unMuteRoomVideoLocally,
   //get local peer
   getLocalPeer,
   //get list of all remote peers
@@ -113,7 +116,6 @@ enum PlatformMethod {
 
   ///change metadata for local peer
   changeMetadata,
-  setVideoPlaybackAllowed,
   setVolume,
 
   ///change name of local peer
@@ -250,6 +252,12 @@ extension PlatformMethodValues on PlatformMethod {
       case PlatformMethod.unMuteRoomAudioLocally:
         return 'un_mute_room_audio_locally';
 
+      case PlatformMethod.muteRoomVideoLocally:
+        return 'mute_room_video_locally';
+
+      case PlatformMethod.unMuteRoomVideoLocally:
+        return 'un_mute_room_video_locally';
+
       case PlatformMethod.getLocalPeer:
         return 'get_local_peer';
 
@@ -279,9 +287,6 @@ extension PlatformMethodValues on PlatformMethod {
 
       case PlatformMethod.changeMetadata:
         return "change_metadata";
-
-      case PlatformMethod.setVideoPlaybackAllowed:
-        return "set_video_playback_allowed";
 
       case PlatformMethod.setVolume:
         return "set_volume";
@@ -447,6 +452,12 @@ extension PlatformMethodValues on PlatformMethod {
       case 'un_mute_room_audio_locally':
         return PlatformMethod.unMuteRoomAudioLocally;
 
+      case 'mute_room_video_locally':
+        return PlatformMethod.muteRoomVideoLocally;
+
+      case 'un_mute_room_video_locally':
+        return PlatformMethod.unMuteRoomVideoLocally;
+
       case 'get_local_peer':
         return PlatformMethod.getLocalPeer;
 
@@ -479,9 +490,6 @@ extension PlatformMethodValues on PlatformMethod {
 
       case "change_metadata":
         return PlatformMethod.changeMetadata;
-
-      case "set_video_playback_allowed":
-        return PlatformMethod.setVideoPlaybackAllowed;
 
       case "set_volume":
         return PlatformMethod.setVolume;

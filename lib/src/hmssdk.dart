@@ -180,21 +180,29 @@ class HMSSDK {
   /// Audio from other peers will be stopped for the local peer after invoking [muteRoomAudioLocally]
   /// Note: Other peers can still listen each other in the room, just you (the local peer) won't listen any audio from the peers in the room
   Future<void> muteRoomAudioLocally() async {
-    return await PlatformService.invokeMethod(PlatformMethod.muteRoomAudioLocally);
+    return await PlatformService.invokeMethod(
+        PlatformMethod.muteRoomAudioLocally);
   }
 
   /// To unmute audio of all peers in the room for yourself if you had previously invoked [muteRoomAudioLocally]
   Future<void> unMuteRoomAudioLocally() async {
-    return await PlatformService. invokeMethod(PlatformMethod.unMuteRoomAudioLocally);
+    return await PlatformService.invokeMethod(
+        PlatformMethod.unMuteRoomAudioLocally);
   }
 
-  /// To mute/umute video of all peers in the room for yourself. Use the [allow] bool to toggle the status
-  /// Video from other peers will be stopped for the local peer after invoking [setVideoPlaybackAllowed] with [allow] as false
+  /// To mute video of all peers in the room for yourself.
+  /// Video from other peers will be stopped for the local peer after invoking [muteRoomVideoLocally]
   /// Note: Other peers can still see each other in the room, just you (the local peer) won't see any video from the peers in the room
-  Future<void> setVideoPlaybackAllowed({required bool allow}) async {
+  Future<void> muteRoomVideoLocally() async {
     return await PlatformService.invokeMethod(
-        PlatformMethod.setVideoPlaybackAllowed,
-        arguments: {"allowed": allow});
+        PlatformMethod.muteRoomVideoLocally);
+  }
+
+  /// To unmute video of all peers in the room for yourself.
+  /// Video from other peers will be displayed for the local peer after invoking [unMuteRoomVideoLocally] if they were previously muted using [muteRoomVideoLocally]
+  Future<void> unMuteRoomVideoLocally() async {
+    return await PlatformService.invokeMethod(
+        PlatformMethod.unMuteRoomVideoLocally);
   }
 
   /// Get the [HMSRoom] room object which the local peer has currently joined. Returns null if no room is joined.

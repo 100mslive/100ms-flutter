@@ -114,7 +114,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             }
 
             // MARK: Video Helpers
-            "switch_video", "switch_camera", "start_capturing", "stop_capturing", "is_video_mute", "set_video_playback_allowed" -> {
+            "switch_video", "switch_camera", "start_capturing", "stop_capturing", "is_video_mute", "mute_room_video_locally", "un_mute_room_video_locally" -> {
                 HMSVideoAction.videoActions(call, result, hmssdk!!)
             }
 

@@ -240,6 +240,14 @@ class MeetingStore extends ChangeNotifier
     _hmsSDKInteractor.unMuteRoomAudioLocally();
   }
 
+  void muteRoomVideoLocally() {
+    _hmsSDKInteractor.muteRoomVideoLocally();
+  }
+
+  void unMuteRoomVideoLocally() {
+    _hmsSDKInteractor.unMuteRoomVideoLocally();
+  }
+
   void startAudioShare() {
     _hmsSDKInteractor.startAudioShare(hmsActionResultListener: this);
   }
@@ -357,10 +365,6 @@ class MeetingStore extends ChangeNotifier
       switchVideo();
     }
     notifyListeners();
-  }
-
-  void setVideoPlaybackAllowed(bool allow) {
-    _hmsSDKInteractor.setVideoPlaybackAllowed(allow);
   }
 
   void acceptChangeRole(HMSRoleChangeRequest hmsRoleChangeRequest) {
@@ -538,7 +542,9 @@ class MeetingStore extends ChangeNotifier
       required HMSTrackUpdate trackUpdate,
       required HMSPeer peer}) {
     log("onTrackUpdate-> track: ${track.toString()} peer: ${peer.name} update: ${trackUpdate.name}");
-    if(!isSpeakerOn && track.kind == HMSTrackKind.kHMSTrackKindAudio && trackUpdate == HMSTrackUpdate.trackAdded){
+    if (!isSpeakerOn &&
+        track.kind == HMSTrackKind.kHMSTrackKindAudio &&
+        trackUpdate == HMSTrackUpdate.trackAdded){
       muteRoomAudioLocally();
     }
 
@@ -1107,16 +1113,16 @@ class MeetingStore extends ChangeNotifier
         break;
       case MeetingMode.Audio:
         isActiveSpeakerMode = false;
-        setVideoPlaybackAllowed(false);
+        muteRoomVideoLocally();
         break;
       case MeetingMode.Hero:
         if (this.meetingMode == MeetingMode.Audio) {
-          setVideoPlaybackAllowed(true);
+          unMuteRoomVideoLocally();
         }
         break;
       case MeetingMode.Single:
         if (this.meetingMode == MeetingMode.Audio) {
-          setVideoPlaybackAllowed(true);
+          unMuteRoomVideoLocally();
         }
         int type0 = 0;
         int type1 = peerTracks.length - 1;

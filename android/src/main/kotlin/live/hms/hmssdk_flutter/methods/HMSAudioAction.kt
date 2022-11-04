@@ -18,10 +18,10 @@ class HMSAudioAction {
                     result.success(isAudioMute(call,hmssdk))
                 }
                 "mute_room_audio_locally" -> {
-                    muteRoomAudioLocally(result,hmssdk)
+                    toggleAudioMuteAll(true,result,hmssdk)
                 }
                 "un_mute_room_audio_locally" -> {
-                    unMuteRoomAudioLocally(result,hmssdk)
+                    toggleAudioMuteAll(false,result,hmssdk)
                 }
                 "set_volume" -> {
                     setVolume(call, result,hmssdk)
@@ -44,32 +44,18 @@ class HMSAudioAction {
             }
         }
 
-        private fun muteRoomAudioLocally(result: Result,hmssdk:HMSSDK) {
+        private fun toggleAudioMuteAll(shouldMute: Boolean,result: Result,hmssdk:HMSSDK) {
             val peersList = hmssdk.getRemotePeers()
 
-            peersList.forEach {
-                it.audioTrack?.isPlaybackAllowed = false
+            peersList.forEach { it ->
+                it.audioTrack?.isPlaybackAllowed = (!shouldMute)
                 it.auxiliaryTracks.forEach {
                     if (it is HMSRemoteAudioTrack) {
-                        it.isPlaybackAllowed = false
+                        it.isPlaybackAllowed = (!shouldMute)
                     }
                 }
             }
         }
-
-        private fun unMuteRoomAudioLocally(result: Result,hmssdk:HMSSDK) {
-            val peersList = hmssdk.getRemotePeers()
-
-            peersList.forEach {
-                it.audioTrack?.isPlaybackAllowed = true
-                it.auxiliaryTracks.forEach {
-                    if (it is HMSRemoteAudioTrack) {
-                        it.isPlaybackAllowed = true
-                    }
-                }
-            }
-        }
-
 
         private fun setVolume(call: MethodCall, result: Result,hmssdk:HMSSDK){
             val trackId = call.argument<String>("track_id")

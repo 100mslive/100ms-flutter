@@ -219,16 +219,20 @@ class HMSSDKInteractor {
     hmsSDK.unMuteRoomAudioLocally();
   }
 
+  void muteRoomVideoLocally() {
+    hmsSDK.muteRoomVideoLocally();
+  }
+
+  void unMuteRoomVideoLocally() {
+    hmsSDK.unMuteRoomVideoLocally();
+  }
+
   void startScreenShare({HMSActionResultListener? hmsActionResultListener}) {
     hmsSDK.startScreenShare(hmsActionResultListener: hmsActionResultListener);
   }
 
   void stopScreenShare({HMSActionResultListener? hmsActionResultListener}) {
     hmsSDK.stopScreenShare(hmsActionResultListener: hmsActionResultListener);
-  }
-
-  void setVideoPlaybackAllowed(bool allow) {
-    hmsSDK.setVideoPlaybackAllowed(allow: allow);
   }
 
   void startRtmpOrRecording(HMSRecordingConfig hmsRecordingConfig,

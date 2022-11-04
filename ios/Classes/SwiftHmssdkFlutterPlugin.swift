@@ -124,7 +124,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
             // MARK: - Video Helpers
 
-        case "switch_video", "switch_camera", "start_capturing", "stop_capturing", "is_video_mute", "set_video_playback_allowed":
+        case "switch_video", "switch_camera", "start_capturing", "stop_capturing", "is_video_mute", "mute_room_video_locally", "un_mute_room_video_locally":
             HMSVideoAction.videoActions(call, result, hmsSDK)
 
             // MARK: - Messaging
