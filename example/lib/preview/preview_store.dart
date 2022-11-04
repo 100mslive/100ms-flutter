@@ -230,9 +230,9 @@ class PreviewStore extends ChangeNotifier
 
   void toggleSpeaker() async {
     if (!this.isRoomMute) {
-      hmsSDKInteractor!.muteAll();
+      hmsSDKInteractor!.muteRoomAudioLocally();
     } else {
-      hmsSDKInteractor!.unMuteAll();
+      hmsSDKInteractor!.unMuteRoomAudioLocally();
     }
     this.isRoomMute = !this.isRoomMute;
     notifyListeners();

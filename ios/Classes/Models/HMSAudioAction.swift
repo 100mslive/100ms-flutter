@@ -17,10 +17,10 @@ class HMSAudioAction {
         case "is_audio_mute":
             isAudioMute(call, result, hmsSDK)
 
-        case "mute_all":
+        case "mute_room_audio_locally":
             toggleAudioMuteAll(result, hmsSDK, shouldMute: true)
 
-        case "un_mute_all":
+        case "un_mute_room_audio_locally":
             toggleAudioMuteAll(result, hmsSDK, shouldMute: false)
 
         case "set_volume":

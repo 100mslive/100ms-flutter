@@ -17,11 +17,11 @@ class HMSAudioAction {
                 "is_audio_mute" -> {
                     result.success(isAudioMute(call,hmssdk))
                 }
-                "mute_all" -> {
-                    muteAll(result,hmssdk)
+                "mute_room_audio_locally" -> {
+                    toggleAudioMuteAll(true,result,hmssdk)
                 }
-                "un_mute_all" -> {
-                    unMuteAll(result,hmssdk)
+                "un_mute_room_audio_locally" -> {
+                    toggleAudioMuteAll(false,result,hmssdk)
                 }
                 "set_volume" -> {
                     setVolume(call, result,hmssdk)
@@ -44,34 +44,18 @@ class HMSAudioAction {
             }
         }
 
-        private fun muteAll(result: Result,hmssdk:HMSSDK) {
+        private fun toggleAudioMuteAll(shouldMute: Boolean,result: Result,hmssdk:HMSSDK) {
             val peersList = hmssdk.getRemotePeers()
 
-            peersList.forEach {
-                it.audioTrack?.isPlaybackAllowed = false
+            peersList.forEach { it ->
+                it.audioTrack?.isPlaybackAllowed = (!shouldMute)
                 it.auxiliaryTracks.forEach {
                     if (it is HMSRemoteAudioTrack) {
-                        it.isPlaybackAllowed = false
+                        it.isPlaybackAllowed = (!shouldMute)
                     }
                 }
             }
-//        result(null)
         }
-
-        private fun unMuteAll(result: Result,hmssdk:HMSSDK) {
-            val peersList = hmssdk.getRemotePeers()
-
-            peersList.forEach {
-                it.audioTrack?.isPlaybackAllowed = true
-                it.auxiliaryTracks.forEach {
-                    if (it is HMSRemoteAudioTrack) {
-                        it.isPlaybackAllowed = true
-                    }
-                }
-            }
-//        result(null)
-        }
-
 
         private fun setVolume(call: MethodCall, result: Result,hmssdk:HMSSDK){
             val trackId = call.argument<String>("track_id")

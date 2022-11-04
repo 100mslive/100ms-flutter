@@ -232,12 +232,20 @@ class MeetingStore extends ChangeNotifier
     _hmsSDKInteractor.stopScreenShare(hmsActionResultListener: this);
   }
 
-  void muteAll() {
-    _hmsSDKInteractor.muteAll();
+  void muteRoomAudioLocally() {
+    _hmsSDKInteractor.muteRoomAudioLocally();
   }
 
-  void unMuteAll() {
-    _hmsSDKInteractor.unMuteAll();
+  void unMuteRoomAudioLocally() {
+    _hmsSDKInteractor.unMuteRoomAudioLocally();
+  }
+
+  void muteRoomVideoLocally() {
+    _hmsSDKInteractor.muteRoomVideoLocally();
+  }
+
+  void unMuteRoomVideoLocally() {
+    _hmsSDKInteractor.unMuteRoomVideoLocally();
   }
 
   void startAudioShare() {
@@ -357,10 +365,6 @@ class MeetingStore extends ChangeNotifier
       switchVideo();
     }
     notifyListeners();
-  }
-
-  void setPlayBackAllowed(bool allow) {
-    _hmsSDKInteractor.setPlayBackAllowed(allow);
   }
 
   void acceptChangeRole(HMSRoleChangeRequest hmsRoleChangeRequest) {
@@ -538,10 +542,10 @@ class MeetingStore extends ChangeNotifier
       required HMSTrackUpdate trackUpdate,
       required HMSPeer peer}) {
     log("onTrackUpdate-> track: ${track.toString()} peer: ${peer.name} update: ${trackUpdate.name}");
-    if (isSpeakerOn) {
-      unMuteAll();
-    } else {
-      muteAll();
+    if (!isSpeakerOn &&
+        track.kind == HMSTrackKind.kHMSTrackKindAudio &&
+        trackUpdate == HMSTrackUpdate.trackAdded){
+      muteRoomAudioLocally();
     }
 
     if (peer.isLocal) {
@@ -808,9 +812,9 @@ class MeetingStore extends ChangeNotifier
 
   void toggleSpeaker() {
     if (isSpeakerOn) {
-      muteAll();
+      muteRoomAudioLocally();
     } else {
-      unMuteAll();
+      unMuteRoomAudioLocally();
     }
     isSpeakerOn = !isSpeakerOn;
     notifyListeners();
@@ -1109,16 +1113,16 @@ class MeetingStore extends ChangeNotifier
         break;
       case MeetingMode.Audio:
         isActiveSpeakerMode = false;
-        setPlayBackAllowed(false);
+        muteRoomVideoLocally();
         break;
       case MeetingMode.Hero:
         if (this.meetingMode == MeetingMode.Audio) {
-          setPlayBackAllowed(true);
+          unMuteRoomVideoLocally();
         }
         break;
       case MeetingMode.Single:
         if (this.meetingMode == MeetingMode.Audio) {
-          setPlayBackAllowed(true);
+          unMuteRoomVideoLocally();
         }
         int type0 = 0;
         int type1 = peerTracks.length - 1;
