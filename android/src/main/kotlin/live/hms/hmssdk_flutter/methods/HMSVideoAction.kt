@@ -32,8 +32,12 @@ class HMSVideoAction {
                     result.success(isVideoMute(call,hmssdk))
                 }
 
-                "set_playback_allowed"->{
-                    setPlayBackAllowed(call, result,hmssdk)
+                "mute_room_video_locally"->{
+                    toggleVideoMuteAll(true,result,hmssdk)
+                }
+
+                "un_mute_room_video_locally"->{
+                    toggleVideoMuteAll(false,result,hmssdk)
                 }
                 else -> {
                     result.notImplemented()
@@ -93,18 +97,17 @@ class HMSVideoAction {
             return peer?.videoTrack?.isMute?:true
         }
 
-        private fun setPlayBackAllowed(call: MethodCall, result: Result,hmssdk:HMSSDK) {
-            val allowed = call.argument<Boolean>("allowed")
+        private fun toggleVideoMuteAll(shouldMute : Boolean, result: Result,hmssdk:HMSSDK) {
             hmssdk.getRemotePeers().forEach {
-                it.videoTrack?.isPlaybackAllowed = allowed!!
+                it.videoTrack?.isPlaybackAllowed = (!shouldMute)
 
                 it.auxiliaryTracks.forEach {
                     if (it is HMSRemoteVideoTrack) {
-                        it.isPlaybackAllowed = allowed!!
+                        it.isPlaybackAllowed = (!shouldMute)
                     }
                 }
             }
-            HMSCommonAction.getLocalPeer(hmssdk)!!.videoTrack?.setMute(!(allowed!!))
+            HMSCommonAction.getLocalPeer(hmssdk)!!.videoTrack?.setMute((shouldMute))
             result.success(null)
         }
     }

@@ -85,7 +85,7 @@ class _MeetingModeSheetState extends State<MeetingModeSheet> {
                       onTap: () async {
                         if (_meetingStore.meetingMode != MeetingMode.Video ||
                             _meetingStore.isActiveSpeakerMode) {
-                          _meetingStore.setPlayBackAllowed(true);
+                          _meetingStore.unMuteRoomVideoLocally();
                         }
                         _meetingStore.setMode(MeetingMode.Video);
                         Navigator.pop(context);
@@ -118,7 +118,7 @@ class _MeetingModeSheetState extends State<MeetingModeSheet> {
                       horizontalTitleGap: 2,
                       onTap: () async {
                         if (_meetingStore.meetingMode == MeetingMode.Audio) {
-                          _meetingStore.setPlayBackAllowed(true);
+                          _meetingStore.unMuteRoomVideoLocally();
                         }
                         if (!_meetingStore.isActiveSpeakerMode) {
                           _meetingStore.setActiveSpeakerMode();
@@ -179,7 +179,7 @@ class _MeetingModeSheetState extends State<MeetingModeSheet> {
                       horizontalTitleGap: 2,
                       onTap: () async {
                         if (_meetingStore.meetingMode == MeetingMode.Audio) {
-                          _meetingStore.setPlayBackAllowed(true);
+                          _meetingStore.unMuteRoomVideoLocally();
                         }
                         if (_meetingStore.meetingMode != MeetingMode.Hero) {
                           _meetingStore.setMode(MeetingMode.Hero);
@@ -210,7 +210,7 @@ class _MeetingModeSheetState extends State<MeetingModeSheet> {
                       horizontalTitleGap: 2,
                       onTap: () async {
                         if (_meetingStore.meetingMode == MeetingMode.Audio) {
-                          _meetingStore.setPlayBackAllowed(true);
+                          _meetingStore.unMuteRoomVideoLocally();
                         }
                         if (_meetingStore.meetingMode != MeetingMode.Single) {
                           _meetingStore.setMode(MeetingMode.Single);

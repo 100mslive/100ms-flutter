@@ -26,8 +26,12 @@ class HMSVideoAction {
         case "is_video_mute":
             isVideoMute(call, result, hmsSDK)
 
-        case "set_playback_allowed":
-            setPlaybackAllowed(call, result, hmsSDK)
+        case "mute_room_video_locally":
+            toggleVideoMuteAll(true,result,hmsSDK)
+        
+        case "un_mute_room_video_locally":
+            toggleVideoMuteAll(false,result,hmsSDK)
+            
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -106,25 +110,22 @@ class HMSVideoAction {
         result(false)
     }
 
-    static private func setPlaybackAllowed(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?) {
-        let arguments = call.arguments as! [AnyHashable: Any]
-
-        let allowed = arguments["allowed"] as! Bool
+    static private func toggleVideoMuteAll(_ shouldMute: Bool, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?) {
 
         if let localPeer = hmsSDK?.localPeer {
             if let video = localPeer.videoTrack as? HMSLocalVideoTrack {
-                video.setMute(!allowed)
+                video.setMute(shouldMute)
             }
         }
 
         if let remotePeers = hmsSDK?.remotePeers {
             remotePeers.forEach { peer in
                 if let video = peer.remoteVideoTrack() {
-                    video.setPlaybackAllowed(allowed)
+                    video.setPlaybackAllowed(!shouldMute)
                 }
                 peer.auxiliaryTracks?.forEach { track in
                     if let video = track as? HMSRemoteVideoTrack {
-                        video.setPlaybackAllowed(allowed)
+                        video.setPlaybackAllowed(!shouldMute)
                     }
                 }
             }
