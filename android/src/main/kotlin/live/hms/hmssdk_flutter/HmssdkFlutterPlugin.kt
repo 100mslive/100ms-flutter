@@ -175,6 +175,9 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             "get_session_metadata","set_session_metadata" -> {
                 HMSSessionMetadataAction.sessionMetadataActions(call, result,hmssdk!!)
             }
+            "set_playback_allowed_for_track"-> {
+                setPlaybackAllowedForTrack(call,result)
+            }
             else -> {
                 result.notImplemented()
             }
@@ -650,7 +653,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         }
         hmssdk!!.changeTrackState(
             mute = mute!!,
-            type = HMSTrackExtension.getStringFromKind(type),
+            type = HMSTrackExtension.getKindFromString(type),
             source = source,
             roles = hmsRoles,
             hmsActionResultListener = HMSCommonAction.getActionListener(result)
@@ -1044,7 +1047,54 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         result.success(HMSTrackExtension.toDictionary(peer?.getTrackById(trackId!!)))
     }
 
+    private fun setPlaybackAllowedForTrack(call: MethodCall, result: Result){
+        val trackId : String? = call.argument<String>("track_id")
+        val isPlaybackAllowed : Boolean = call.argument<String>("is_playback_allowed") as Boolean
+        val trackKind : String? = call.argument<String>("track_kind")
 
+        val peersList = hmssdk!!.getRemotePeers()
+
+        if(HMSTrackExtension.getKindFromString(trackKind)!! == HMSTrackType.AUDIO){
+            peersList.forEach { it ->
+                if(it.audioTrack?.trackId == (trackId)){
+                    it.audioTrack?.isPlaybackAllowed = isPlaybackAllowed
+                    result.success(null)
+                    return
+                }
+                it.auxiliaryTracks.forEach {
+                    if (it is HMSRemoteAudioTrack &&  it.trackId == (trackId)) {
+                        it.isPlaybackAllowed = (isPlaybackAllowed)
+                        result.success(null)
+                        return
+                    }
+                }
+            }
+        }
+        else if(HMSTrackExtension.getKindFromString(trackKind)!! == HMSTrackType.VIDEO){
+            peersList.forEach { it ->
+                if(it.videoTrack?.trackId == (trackId)){
+                    it.videoTrack?.isPlaybackAllowed = isPlaybackAllowed
+                    result.success(null)
+                    return
+                }
+                it.auxiliaryTracks.forEach {
+                    if (it is HMSRemoteVideoTrack &&  it.trackId == (trackId)) {
+                        it.isPlaybackAllowed = (isPlaybackAllowed)
+                        result.success(null)
+                        return
+                    }
+                }
+            }
+        }
+
+        val map = HashMap<String,Map<String,String>>()
+        val error = HashMap<String, String>()
+        error["message"] = "Could not set isPlaybackAllowed for track"
+        error["action"] = "NONE"
+        error["description"] = "Track not found to set isPlaybackAllowed"
+        map["error"] = error
+        result.success(map)
+    }
 
     private val hmsStatsListener = object : HMSStatsObserver {
 

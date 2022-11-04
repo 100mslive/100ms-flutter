@@ -177,6 +177,9 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         case "get_session_metadata", "set_session_metadata":
             sessionMetadataAction(call, result)
 
+        case "set_playback_allowed_for_track":
+            setPlaybackAllowedForTrack(call, result)
+            
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -785,6 +788,56 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             }
         }
         )
+    }
+    
+    private func setPlaybackAllowedForTrack(_ call: FlutterMethodCall, _ result: @escaping FlutterResult){
+        let arguments = call.arguments as! [AnyHashable: Any]
+
+        guard let isPlaybackAllowed = arguments["is_playback_allowed"] as? Bool,
+              let trackID = arguments["track_id"] as? String,
+              let trackKind = arguments["track_kind"] as? String
+        else {
+            result(HMSErrorExtension.getError("Invalid arguments passed in \(#function)"))
+            return
+        }
+        
+        if(kind(from: trackKind) == HMSTrackKind.audio){
+            hmsSDK?.remotePeers?.forEach { peer in
+                if let audio = peer.remoteAudioTrack() {
+                    if(audio.trackId == trackID){
+                        audio.setPlaybackAllowed(isPlaybackAllowed)
+                        result(nil)
+                        return
+                    }
+                    
+                }
+                peer.auxiliaryTracks?.forEach { track in
+                    if let audio = track as? HMSRemoteAudioTrack {
+                        audio.setPlaybackAllowed(isPlaybackAllowed)
+                        result(nil)
+                        return
+                    }
+                }
+            }
+        }
+        else if(kind(from: trackKind) == HMSTrackKind.video){
+            hmsSDK?.remotePeers?.forEach { peer in
+                if let video = peer.remoteVideoTrack() {
+                    if(video.trackId == trackID){
+                        video.setPlaybackAllowed(isPlaybackAllowed)
+                        result(nil)
+                        return
+                    }
+                    
+                }
+                peer.auxiliaryTracks?.forEach { track in
+                    if let video = track as? HMSRemoteVideoTrack {
+                        video.setPlaybackAllowed(isPlaybackAllowed)
+                    }
+                }
+            }
+        }
+        result(HMSErrorExtension.getError("Could not set isPlaybackAllowed for track in \(#function)"))
     }
 
     // MARK: - 100ms SDK Delegate Callbacks

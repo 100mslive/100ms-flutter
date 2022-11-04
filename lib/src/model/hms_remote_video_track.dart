@@ -1,10 +1,12 @@
 // Project imports:
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:hmssdk_flutter/src/service/platform_service.dart';
 
 ///100ms HMSRemotelVideoTrack
 ///
 ///[HMSLocalVideoTrack] contains the remote peer video track infomation.
 class HMSRemoteVideoTrack extends HMSVideoTrack {
+  bool isPlaybackAllowed;
   HMSRemoteVideoTrack(
       {required bool isDegraded,
       required HMSTrackKind kind,
@@ -12,7 +14,7 @@ class HMSRemoteVideoTrack extends HMSVideoTrack {
       required String trackId,
       required String trackDescription,
       required bool isMute,
-      required bool isPlaybackAllowed})
+      required this.isPlaybackAllowed})
       : super(
           isDegraded: isDegraded,
           kind: kind,
@@ -33,7 +35,20 @@ class HMSRemoteVideoTrack extends HMSVideoTrack {
         isPlaybackAllowed: map['is_playback_allowed']);
   }
 
-  // Future<HMSException?> setPlaybackAllowed(bool allow) {
-  //   // var result = await
-  // }
+  Future<HMSException?> setPlaybackAllowed(bool isPlaybackAllowed) async {
+    var result = await PlatformService.invokeMethod(
+        PlatformMethod.setPlaybackAllowedForTrack,
+        arguments: {
+          "is_playback_allowed": isPlaybackAllowed,
+          "track_id": trackId,
+          "track_kind": HMSTrackKindValue.getValueFromHMSTrackKind(HMSTrackKind.kHMSTrackKindVideo)
+        });
+
+    if (result == null) {
+      this.isPlaybackAllowed = isPlaybackAllowed;
+      return null;
+    } else {
+      return HMSException.fromMap(result["error"]);
+    }
+  }
 }

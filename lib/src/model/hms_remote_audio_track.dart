@@ -6,13 +6,14 @@ import 'package:hmssdk_flutter/src/service/platform_service.dart';
 ///
 ///[HMSLocalVideoTrack] contains the remote peer audio track infomation.
 class HMSRemoteAudioTrack extends HMSAudioTrack {
+  bool isPlaybackAllowed;
   HMSRemoteAudioTrack({
     required HMSTrackKind kind,
     required String source,
     required String trackId,
     required String trackDescription,
     required bool isMute,
-    required bool isPlaybackAllowed,
+    required this.isPlaybackAllowed,
   }) : super(
           kind: kind,
           source: source,
@@ -23,13 +24,12 @@ class HMSRemoteAudioTrack extends HMSAudioTrack {
 
   factory HMSRemoteAudioTrack.fromMap({required Map map}) {
     return HMSRemoteAudioTrack(
-      trackId: map['track_id'],
-      trackDescription: map['track_description'],
-      source: map['track_source'],
-      kind: HMSTrackKindValue.getHMSTrackKindFromName(map['track_kind']),
-      isMute: map['track_mute'],
-      isPlaybackAllowed:  map['is_playback_allowed']
-    );
+        trackId: map['track_id'],
+        trackDescription: map['track_description'],
+        source: map['track_source'],
+        kind: HMSTrackKindValue.getHMSTrackKindFromName(map['track_kind']),
+        isMute: map['track_mute'],
+        isPlaybackAllowed: map['is_playback_allowed']);
   }
 
   Future<HMSException?> setVolume(double volume) async {
@@ -43,7 +43,20 @@ class HMSRemoteAudioTrack extends HMSAudioTrack {
     }
   }
 
-  // Future<HMSException?> setPlaybackAllowed(bool allow) {
-  //   // var result = await 
-  // }
+  Future<HMSException?> setPlaybackAllowed(bool isPlaybackAllowed) async {
+    var result = await PlatformService.invokeMethod(
+        PlatformMethod.setPlaybackAllowedForTrack,
+        arguments: {
+          "is_playback_allowed": isPlaybackAllowed,
+          "track_id": trackId,
+          "track_kind": HMSTrackKindValue.getValueFromHMSTrackKind(HMSTrackKind.kHMSTrackKindAudio)
+        });
+
+    if (result == null) {
+      this.isPlaybackAllowed = isPlaybackAllowed;
+      return null;
+    } else {
+      return HMSException.fromMap(result["error"]);
+    }
+  }
 }

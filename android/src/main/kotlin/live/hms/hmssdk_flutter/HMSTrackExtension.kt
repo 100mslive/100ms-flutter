@@ -10,7 +10,7 @@ class HMSTrackExtension {
             if(track==null)return null
             hashMap["track_id"] = track.trackId
             hashMap["track_description"] = track.description?:""
-            hashMap["track_kind"] = getKindInString(track.type)
+            hashMap["track_kind"] = getStringFromKind(track.type)
             hashMap["track_source"] = track.source.uppercase()
             hashMap["track_mute"] = track.isMute
             if(track is HMSVideoTrack){
@@ -44,7 +44,7 @@ class HMSTrackExtension {
             return hashMap
         }
 
-        private fun getKindInString(type:HMSTrackType?):String{
+         private fun getStringFromKind(type:HMSTrackType?):String{
             if(type==null)return ""
             return when(type){
                 HMSTrackType.AUDIO->{
@@ -59,7 +59,7 @@ class HMSTrackExtension {
             }
         }
 
-        fun getStringFromKind(type:String?) : HMSTrackType?{
+        fun getKindFromString(type:String?) : HMSTrackType?{
             if(type == null)return null
 
             return when(type){
