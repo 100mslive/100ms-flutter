@@ -115,7 +115,7 @@ enum PlatformMethod {
   changeMetadata,
   setPlayBackAllowed,
   setVolume,
-
+  
   ///change name of local peer
   changeName,
 

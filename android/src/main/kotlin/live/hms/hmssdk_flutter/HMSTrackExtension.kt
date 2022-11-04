@@ -33,6 +33,14 @@ class HMSTrackExtension {
                 hashMap["instance_of"] = false
             }
 
+            if(track is HMSRemoteAudioTrack){
+                hashMap["is_playback_allowed"] = track.isPlaybackAllowed
+            }
+
+            if(track is HMSRemoteVideoTrack){
+                hashMap["is_playback_allowed"] = track.isPlaybackAllowed
+            }
+
             return hashMap
         }
 

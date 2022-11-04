@@ -36,6 +36,12 @@ class HMSTrackExtension {
         if let localAudio = track as? HMSLocalAudioTrack {
             dict["hms_audio_track_settings"] = HMSTrackExtension.toDictionary(audio: localAudio.settings)
         }
+        
+        if let remoteAudio = track as? HMSRemoteAudioTrack {
+            dict["is_playback_allowed"] = remoteAudio.isPlaybackAllowed
+        }
+        
+        if let remoteVideo = track as? HMSRE
 
         return dict
     }

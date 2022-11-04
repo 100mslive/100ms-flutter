@@ -12,6 +12,7 @@ class HMSRemoteAudioTrack extends HMSAudioTrack {
     required String trackId,
     required String trackDescription,
     required bool isMute,
+    required bool isPlaybackAllowed,
   }) : super(
           kind: kind,
           source: source,
@@ -27,6 +28,7 @@ class HMSRemoteAudioTrack extends HMSAudioTrack {
       source: map['track_source'],
       kind: HMSTrackKindValue.getHMSTrackKindFromName(map['track_kind']),
       isMute: map['track_mute'],
+      isPlaybackAllowed:  map['is_playback_allowed']
     );
   }
 
@@ -40,4 +42,8 @@ class HMSRemoteAudioTrack extends HMSAudioTrack {
       return HMSException.fromMap(result["error"]);
     }
   }
+
+  // Future<HMSException?> setPlaybackAllowed(bool allow) {
+  //   // var result = await 
+  // }
 }
