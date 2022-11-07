@@ -177,6 +177,9 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         case "get_session_metadata", "set_session_metadata":
             sessionMetadataAction(call, result)
 
+        case "set_playback_allowed_for_track":
+            setPlaybackAllowedForTrack(call, result)
+            
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -785,6 +788,39 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             }
         }
         )
+    }
+    
+    private func setPlaybackAllowedForTrack(_ call: FlutterMethodCall, _ result: @escaping FlutterResult){
+        let arguments = call.arguments as! [AnyHashable: Any]
+
+        guard let isPlaybackAllowed = arguments["is_playback_allowed"] as? Bool,
+              let trackID = arguments["track_id"] as? String,
+              let trackKind = arguments["track_kind"] as? String
+        else {
+            result(HMSErrorExtension.getError("Invalid arguments passed in \(#function)"))
+            return
+        }
+        
+        let room = hmsSDK?.room
+        if(room != nil){
+            if(kind(from: trackKind) == HMSTrackKind.audio){
+                let audioTrack = HMSUtilities.getAudioTrack(for: trackID, in: room!) as HMSAudioTrack?
+                if(audioTrack != nil && audioTrack is HMSRemoteAudioTrack){
+                    (audioTrack as! HMSRemoteAudioTrack).setPlaybackAllowed(isPlaybackAllowed)
+                    result(nil)
+                    return
+                }
+            }
+            else if(kind(from: trackKind) == HMSTrackKind.video){
+                let videoTrack = HMSUtilities.getVideoTrack(for: trackID, in: room!) as HMSVideoTrack?
+                if(videoTrack != nil && videoTrack is HMSRemoteVideoTrack){
+                    (videoTrack as! HMSRemoteVideoTrack).setPlaybackAllowed(isPlaybackAllowed)
+                    result(nil)
+                    return
+                }
+            }
+        }
+        result(HMSErrorExtension.getError("Could not set isPlaybackAllowed for track in \(#function)"))
     }
 
     // MARK: - 100ms SDK Delegate Callbacks

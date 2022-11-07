@@ -7,6 +7,7 @@ import live.hms.video.sdk.models.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import live.hms.video.utils.HmsUtilities
 
 class HMSVideoAction {
     companion object {
@@ -98,17 +99,16 @@ class HMSVideoAction {
         }
 
         private fun toggleVideoMuteAll(shouldMute : Boolean, result: Result,hmssdk:HMSSDK) {
-            hmssdk.getRemotePeers().forEach {
-                it.videoTrack?.isPlaybackAllowed = (!shouldMute)
-
-                it.auxiliaryTracks.forEach {
+            val room: HMSRoom? = hmssdk.getRoom()
+            if (room != null) {
+                val videoTracks: List<HMSVideoTrack> = HmsUtilities.getAllVideoTracks(room)
+                videoTracks.forEach { it ->
                     if (it is HMSRemoteVideoTrack) {
                         it.isPlaybackAllowed = (!shouldMute)
                     }
                 }
+                HMSCommonAction.getLocalPeer(hmssdk)!!.videoTrack?.setMute((shouldMute))
             }
-            HMSCommonAction.getLocalPeer(hmssdk)!!.videoTrack?.setMute((shouldMute))
-            result.success(null)
         }
     }
 }

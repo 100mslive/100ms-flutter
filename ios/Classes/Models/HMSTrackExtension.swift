@@ -14,7 +14,7 @@ class HMSTrackExtension {
 
         var dict = [
             "track_id": track.trackId,
-            "track_kind": getKindInString(kind: track.kind),
+            "track_kind": getStringFromKind(kind: track.kind),
             "track_source": track.source.uppercased(),
             "track_description": track.trackDescription,
             "track_mute": track.isMute()
@@ -36,11 +36,19 @@ class HMSTrackExtension {
         if let localAudio = track as? HMSLocalAudioTrack {
             dict["hms_audio_track_settings"] = HMSTrackExtension.toDictionary(audio: localAudio.settings)
         }
+        
+        if let remoteAudio = track as? HMSRemoteAudioTrack {
+            dict["is_playback_allowed"] = remoteAudio.isPlaybackAllowed()
+        }
+        
+        if let remoteVideo = track as? HMSRemoteVideoTrack {
+            dict["is_playback_allowed"] = remoteVideo.isPlaybackAllowed()
+        }
 
         return dict
     }
 
-    static func getKindInString(kind: HMSTrackKind) -> String {
+    static func getStringFromKind(kind: HMSTrackKind) -> String {
         switch kind {
         case .audio:
             return "kHMSTrackKindAudio"

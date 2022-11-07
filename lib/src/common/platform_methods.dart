@@ -150,7 +150,8 @@ enum PlatformMethod {
   getTrackSettings,
   destroy,
   setSessionMetadata,
-  getSessionMetadata
+  getSessionMetadata,
+  setPlaybackAllowedForTrack
 }
 
 extension PlatformMethodValues on PlatformMethod {
@@ -349,6 +350,8 @@ extension PlatformMethodValues on PlatformMethod {
         return "set_session_metadata";
       case PlatformMethod.getSessionMetadata:
         return "get_session_metadata";
+      case PlatformMethod.setPlaybackAllowedForTrack:
+        return "set_playback_allowed_for_track";
       default:
         return 'unknown';
     }
@@ -553,6 +556,8 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.setSessionMetadata;
       case "get_session_metadata":
         return PlatformMethod.getSessionMetadata;
+      case "set_playback_allowed_for_track":
+        return PlatformMethod.setPlaybackAllowedForTrack;
       default:
         return PlatformMethod.unknown;
     }

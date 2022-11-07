@@ -65,17 +65,17 @@ class HMSAudioAction {
 
     static private func toggleAudioMuteAll(_ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?, shouldMute: Bool) {
 
-        hmsSDK?.remotePeers?.forEach { peer in
-            if let audio = peer.remoteAudioTrack() {
-                audio.setPlaybackAllowed(!shouldMute)
-            }
-            peer.auxiliaryTracks?.forEach { track in
-                if let audio = track as? HMSRemoteAudioTrack {
-                    audio.setPlaybackAllowed(!shouldMute)
+        
+        let room = hmsSDK?.room
+        if(room != nil){
+            let audioTracks = HMSUtilities.getAllAudioTracks(in: room!) as [HMSAudioTrack]?
+            
+            audioTracks?.forEach{track in
+                if(track is HMSRemoteAudioTrack){
+                    (track as! HMSRemoteAudioTrack).setPlaybackAllowed(!shouldMute)
                 }
             }
         }
-
         result(nil)
     }
 
