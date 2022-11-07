@@ -801,39 +801,22 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             return
         }
         
-        if(kind(from: trackKind) == HMSTrackKind.audio){
-            hmsSDK?.remotePeers?.forEach { peer in
-                if let audio = peer.remoteAudioTrack() {
-                    if(audio.trackId == trackID){
-                        audio.setPlaybackAllowed(isPlaybackAllowed)
-                        result(nil)
-                        return
-                    }
-                    
-                }
-                peer.auxiliaryTracks?.forEach { track in
-                    if let audio = track as? HMSRemoteAudioTrack {
-                        audio.setPlaybackAllowed(isPlaybackAllowed)
-                        result(nil)
-                        return
-                    }
+        let room = hmsSDK?.room
+        if(room != nil){
+            if(kind(from: trackKind) == HMSTrackKind.audio){
+                let audioTrack = HMSUtilities.getAudioTrack(for: trackID, in: room!) as HMSAudioTrack?
+                if(audioTrack != nil && audioTrack is HMSRemoteAudioTrack){
+                    (audioTrack as! HMSRemoteAudioTrack).setPlaybackAllowed(isPlaybackAllowed)
+                    result(nil)
+                    return
                 }
             }
-        }
-        else if(kind(from: trackKind) == HMSTrackKind.video){
-            hmsSDK?.remotePeers?.forEach { peer in
-                if let video = peer.remoteVideoTrack() {
-                    if(video.trackId == trackID){
-                        video.setPlaybackAllowed(isPlaybackAllowed)
-                        result(nil)
-                        return
-                    }
-                    
-                }
-                peer.auxiliaryTracks?.forEach { track in
-                    if let video = track as? HMSRemoteVideoTrack {
-                        video.setPlaybackAllowed(isPlaybackAllowed)
-                    }
+            else if(kind(from: trackKind) == HMSTrackKind.video){
+                let videoTrack = HMSUtilities.getVideoTrack(for: trackID, in: room!) as HMSVideoTrack?
+                if(videoTrack != nil && videoTrack is HMSRemoteVideoTrack){
+                    (videoTrack as! HMSRemoteVideoTrack).setPlaybackAllowed(isPlaybackAllowed)
+                    result(nil)
+                    return
                 }
             }
         }

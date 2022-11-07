@@ -118,19 +118,15 @@ class HMSVideoAction {
             }
         }
 
-        if let remotePeers = hmsSDK?.remotePeers {
-            remotePeers.forEach { peer in
-                if let video = peer.remoteVideoTrack() {
-                    video.setPlaybackAllowed(!shouldMute)
-                }
-                peer.auxiliaryTracks?.forEach { track in
-                    if let video = track as? HMSRemoteVideoTrack {
-                        video.setPlaybackAllowed(!shouldMute)
-                    }
+        let room = hmsSDK?.room
+        if(room != nil){
+            let videoTracks = HMSUtilities.getAllVideoTracks(in: room!) as [HMSVideoTrack]?
+            videoTracks?.forEach{track in
+                if(track is HMSRemoteVideoTrack){
+                    (track as! HMSRemoteVideoTrack).setPlaybackAllowed(!shouldMute)
                 }
             }
         }
-
         result(nil)
     }
 }

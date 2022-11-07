@@ -4,7 +4,7 @@ import io.flutter.plugin.common.MethodChannel.Result
 import live.hms.video.media.tracks.*
 import live.hms.video.sdk.*
 import live.hms.video.sdk.models.*
-
+import live.hms.video.utils.HmsUtilities
 
 
 class HMSAudioAction {
@@ -45,12 +45,11 @@ class HMSAudioAction {
         }
 
         private fun toggleAudioMuteAll(shouldMute: Boolean,result: Result,hmssdk:HMSSDK) {
-            val peersList = hmssdk.getRemotePeers()
-
-            peersList.forEach { it ->
-                it.audioTrack?.isPlaybackAllowed = (!shouldMute)
-                it.auxiliaryTracks.forEach {
-                    if (it is HMSRemoteAudioTrack) {
+            val room : HMSRoom? = hmssdk.getRoom()
+            if(room != null){
+                val audioTracks : List<HMSAudioTrack> = HmsUtilities.getAllAudioTracks(room)
+                audioTracks.forEach{ it ->
+                    if(it is HMSRemoteAudioTrack){
                         it.isPlaybackAllowed = (!shouldMute)
                     }
                 }
@@ -61,26 +60,18 @@ class HMSAudioAction {
             val trackId = call.argument<String>("track_id")
             val volume = call.argument<Double>("volume")
 
-            hmssdk.getPeers().forEach { it ->
-                if(it.audioTrack?.trackId == trackId){
-                    if(it.audioTrack is HMSRemoteAudioTrack){
-                        (it.audioTrack as HMSRemoteAudioTrack).setVolume(volume!!)
-                        result.success(null)
-                        return
+            val room : HMSRoom? = hmssdk.getRoom()
+            if(room != null && trackId != null && volume != null){
+                val audioTrack : HMSAudioTrack? = HmsUtilities.getAudioTrack(trackId,room);
+                if (audioTrack != null){
+                    if(audioTrack is HMSRemoteAudioTrack){
+                        audioTrack.setVolume(volume)
                     }
-                    else if(it.audioTrack is HMSLocalAudioTrack){
-                        (it.audioTrack as HMSLocalAudioTrack).volume = volume!!
-                        result.success(null)
-                        return
+                    else if(audioTrack is HMSLocalAudioTrack){
+                        audioTrack.volume = volume
                     }
-                }
-
-                it.auxiliaryTracks.forEach {
-                    if(it.trackId == trackId && it is HMSRemoteAudioTrack){
-                        it.setVolume(volume!!.toDouble())
-                        result.success(null)
-                        return
-                    }
+                    result.success(null)
+                    return
                 }
             }
 

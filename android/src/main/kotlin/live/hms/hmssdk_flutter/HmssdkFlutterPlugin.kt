@@ -36,6 +36,7 @@ import live.hms.video.sdk.models.role.HMSRole
 import live.hms.video.sdk.models.trackchangerequest.HMSChangeTrackStateRequest
 import live.hms.video.utils.HMSLogger
 import live.hms.video.events.AgentType
+import live.hms.video.utils.HmsUtilities
 
 
 /** HmssdkFlutterPlugin */
@@ -1048,41 +1049,27 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
     }
 
     private fun setPlaybackAllowedForTrack(call: MethodCall, result: Result){
-        val trackId : String? = call.argument<String>("track_id")
+        val trackId = call.argument<String>("track_id")
         val isPlaybackAllowed : Boolean = call.argument<String>("is_playback_allowed") as Boolean
-        val trackKind : String? = call.argument<String>("track_kind")
+        val trackKind = call.argument<String>("track_kind")
 
-        val peersList = hmssdk!!.getRemotePeers()
+        val room : HMSRoom? = hmssdk?.getRoom();
 
-        if(HMSTrackExtension.getKindFromString(trackKind)!! == HMSTrackType.AUDIO){
-            peersList.forEach { it ->
-                if(it.audioTrack?.trackId == (trackId)){
-                    it.audioTrack?.isPlaybackAllowed = isPlaybackAllowed
+        if(room != null && trackId != null){
+            if(HMSTrackExtension.getKindFromString(trackKind)!! == HMSTrackType.AUDIO){
+               val audioTrack : HMSAudioTrack? = HmsUtilities.getAudioTrack(trackId,room);
+                if (audioTrack != null && audioTrack is HMSRemoteAudioTrack){
+                    audioTrack.isPlaybackAllowed = isPlaybackAllowed;
                     result.success(null)
                     return
-                }
-                it.auxiliaryTracks.forEach {
-                    if (it is HMSRemoteAudioTrack &&  it.trackId == (trackId)) {
-                        it.isPlaybackAllowed = (isPlaybackAllowed)
-                        result.success(null)
-                        return
-                    }
                 }
             }
-        }
-        else if(HMSTrackExtension.getKindFromString(trackKind)!! == HMSTrackType.VIDEO){
-            peersList.forEach { it ->
-                if(it.videoTrack?.trackId == (trackId)){
-                    it.videoTrack?.isPlaybackAllowed = isPlaybackAllowed
+            else if(HMSTrackExtension.getKindFromString(trackKind)!! == HMSTrackType.VIDEO){
+                val videoTrack : HMSVideoTrack? = HmsUtilities.getVideoTrack(trackId,room);
+                if (videoTrack != null && videoTrack is HMSRemoteVideoTrack){
+                    videoTrack.isPlaybackAllowed = isPlaybackAllowed;
                     result.success(null)
                     return
-                }
-                it.auxiliaryTracks.forEach {
-                    if (it is HMSRemoteVideoTrack &&  it.trackId == (trackId)) {
-                        it.isPlaybackAllowed = (isPlaybackAllowed)
-                        result.success(null)
-                        return
-                    }
                 }
             }
         }
