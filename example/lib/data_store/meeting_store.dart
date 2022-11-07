@@ -615,15 +615,13 @@ class MeetingStore extends ChangeNotifier
   void onMessage({required HMSMessage message}) {
     log("onMessage-> sender: ${message.sender} message: ${message.message} time: ${message.time}, type: ${message.type}");
     switch (message.type) {
-      case "chat":
-        addMessage(message);
-        isNewMessageReceived = true;
-        notifyListeners();
-        break;
       case "metadata":
         getSessionMetadata();
         break;
       default:
+        addMessage(message);
+        isNewMessageReceived = true;
+        notifyListeners();
         break;
     }
   }
