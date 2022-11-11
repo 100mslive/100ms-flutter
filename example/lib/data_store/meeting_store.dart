@@ -943,11 +943,13 @@ class MeetingStore extends ChangeNotifier
         break;
 
       case HMSPeerUpdate.roleUpdated:
-        if (hlsVideoController != null && !peer.role.name.contains("hls-")) {
-          hlsVideoController!.dispose();
-          hlsVideoController = null;
+        if (peer.isLocal){
+          localPeer = peer;
+          if (hlsVideoController != null && !peer.role.name.contains("hls-")) {
+            hlsVideoController!.dispose();
+            hlsVideoController = null;
+          }
         }
-        if (peer.isLocal) localPeer = peer;
         if (peer.role.name.contains("hls-")) {
           isHLSLink = peer.isLocal;
           peerTracks.removeWhere(

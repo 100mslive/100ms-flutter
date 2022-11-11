@@ -24,8 +24,6 @@ Widget hlsGridView(
     required Size size}) {
   return GridView.builder(
       shrinkWrap: true,
-      addAutomaticKeepAlives: false,
-      addRepaintBoundaries: false,
       itemCount: itemCount,
       scrollDirection: Axis.horizontal,
       physics: PageScrollPhysics(),
