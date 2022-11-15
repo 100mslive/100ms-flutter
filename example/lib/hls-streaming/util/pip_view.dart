@@ -27,15 +27,15 @@ class _PipViewState extends State<PipView> {
                   meetingStore.screenShareCount,
                   meetingStore.peerTracks.length),
               builder: (_, data, __) {
-                late PeerTrackNode peerTrackToDisplay;
+                late int peerIndex;
                 if (!data.item2) {
                   if (data.item4 != 1) {
-                    peerTrackToDisplay = data.item1.firstWhere(
+                    peerIndex = data.item1.indexWhere(
                       (element) => (element.peer.isLocal == false ||
                           element.track?.source != "REGULAR"),
                     );
                   } else {
-                    peerTrackToDisplay = data.item1[0];
+                    peerIndex = 0;
                   }
                 }
                 return (data.item2)
@@ -75,26 +75,32 @@ class _PipViewState extends State<PipView> {
                                 );
                         })
                     : ChangeNotifierProvider.value(
-                        key: ValueKey(peerTrackToDisplay.uid + "video_view"),
-                        value: peerTrackToDisplay,
-                        child:
-                         (peerTrackToDisplay.track == null ||
-                                peerTrackToDisplay.track!.isMute)
-                            ? Semantics(
-                                label: "fl_video_off",
-                                child: AudioLevelAvatar())
-                            : HMSVideoView(
-                                key: Key(
-                                    peerTrackToDisplay.track!.trackId + "pipView"),
-                                track: peerTrackToDisplay.track!,
-                                scaleType:
-                                    (peerTrackToDisplay.track!.source != "REGULAR")
-                                        ? ScaleType.SCALE_ASPECT_FIT
-                                        : ScaleType.SCALE_ASPECT_FILL,
-                                setMirror:
-                                    peerTrackToDisplay.peer.isLocal ? true : false,
-                                matchParent: false)
-                                );
+                        key: ValueKey(data.item1[peerIndex].uid + "video_view"),
+                        value: data.item1[peerIndex],
+                        child: Selector<PeerTrackNode,
+                            Tuple2<HMSVideoTrack?, bool>>(
+                          selector: (_, peerTrackNode) => Tuple2(
+                              peerTrackNode.track,
+                              peerTrackNode.track?.isMute ?? true),
+                          builder: (_, peerTrackToDisplay, __) {
+                            return (peerTrackToDisplay.item1 == null ||
+                                    peerTrackToDisplay.item2)
+                                ? Semantics(
+                                    label: "fl_video_off",
+                                    child: AudioLevelAvatar())
+                                : HMSVideoView(
+                                    key: Key(peerTrackToDisplay.item1!.trackId +
+                                        "pipView"),
+                                    track: peerTrackToDisplay.item1!,
+                                    scaleType:
+                                        (peerTrackToDisplay.item1!.source !=
+                                                "REGULAR")
+                                            ? ScaleType.SCALE_ASPECT_FIT
+                                            : ScaleType.SCALE_ASPECT_FILL,
+                                    setMirror: false,
+                                    matchParent: false);
+                          },
+                        ));
               })),
     );
   }

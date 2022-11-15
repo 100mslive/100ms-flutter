@@ -1259,8 +1259,8 @@ class MeetingStore extends ChangeNotifier
     //to check whether pip is available
     bool _isPipAvailable = await _hmsSDKInteractor.isPipAvailable();
     if (_isPipAvailable) {
-      _hmsSDKInteractor.enterPipMode(autoEnterPip: isPipAutoEnabled);
-      isPipActive = await _hmsSDKInteractor.isPipActive();
+      //[isPipActive] method can also be used to check whether application is in pip Mode or not
+      isPipActive =  await _hmsSDKInteractor.enterPipMode(autoEnterPip: isPipAutoEnabled);
       notifyListeners();
     }
   }
