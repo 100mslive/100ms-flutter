@@ -18,13 +18,12 @@ import io.flutter.plugin.common.MethodChannel.Result
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import live.hms.hmssdk_flutter.hms_role_components.VideoParamsExtension
+import live.hms.hmssdk_flutter.methods.HMSPipAction
 import live.hms.hmssdk_flutter.methods.HMSSessionMetadataAction
 import live.hms.hmssdk_flutter.views.HMSVideoViewFactory
 import live.hms.video.audio.HMSAudioManager.*
 import live.hms.video.connection.stats.*
 import live.hms.video.error.HMSException
-import live.hms.video.media.codec.HMSVideoCodec
 import live.hms.video.media.tracks.*
 import live.hms.video.sdk.*
 import live.hms.video.sdk.models.*
@@ -179,6 +178,9 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             "set_playback_allowed_for_track"-> {
                 setPlaybackAllowedForTrack(call,result)
             }
+            "enter_pip_mode","is_pip_active","is_pip_available"->{
+                HMSPipAction.pipActions(call,result,this.activity)
+            }
             else -> {
                 result.notImplemented()
             }
@@ -331,17 +333,6 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             "get_track_settings"->{
                 result.success(HMSTrackSettingsExtension.toDictionary(hmssdk!!))
             }
-//            "set_track_settings"->{
-//                val hmsTrackSettingMap =
-//                    call.argument<HashMap<String, HashMap<String, Any?>?>?>("hms_track_setting")
-//                if(hmsTrackSettingMap!=null){
-//                    val hmsAudioTrackHashMap: HashMap<String, Any?>? = hmsTrackSettingMap["audio_track_setting"]
-//                    val hmsVideoTrackHashMap: HashMap<String, Any?>? = hmsTrackSettingMap["video_track_setting"]
-//
-//                    val hmsTrackSettings = HMSTrackSettingsExtension.setTrackSettings(hmsAudioTrackHashMap,hmsVideoTrackHashMap)
-//                    hmssdk.setTrackSettings()
-//                }
-//            }
         }
     }
 
@@ -470,42 +461,13 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         return null
     }
 
-    private fun getAudioTracks(): ArrayList<HMSTrack> {
-        val audioTracks = ArrayList<HMSTrack>();
-        val peers = hmssdk!!.getPeers()
-        peers.forEach {
-            if (it.audioTrack != null)
-                audioTracks.add(it.audioTrack!!)
-        }
-        return audioTracks;
-    }
-
-    private fun getVideoTracks(): ArrayList<HMSTrack> {
-        val videoTracks = ArrayList<HMSTrack>();
-        val peers = hmssdk!!.getPeers()
-        peers.forEach {
-            if (it.videoTrack != null)
-                videoTracks.add(it.videoTrack!!)
-        }
-        return videoTracks;
-    }
-
-    private fun getAuxiliaryTracks(): ArrayList<HMSTrack> {
-        val auxiliaryTracks = ArrayList<HMSTrack>();
-        val peers = hmssdk!!.getPeers()
-        peers.forEach {
-            if (it.auxiliaryTracks != null)
-                auxiliaryTracks.addAll(it.auxiliaryTracks!!)
-        }
-        return auxiliaryTracks;
-    }
-
     private fun getAllTracks(): ArrayList<HMSTrack> {
+        val room = hmssdk!!.getRoom()
         val allTracks = ArrayList<HMSTrack>()
-        allTracks.addAll(getAudioTracks())
-        allTracks.addAll(getVideoTracks())
-        allTracks.addAll(getAuxiliaryTracks())
-
+        if(room != null){
+            allTracks.addAll(HmsUtilities.getAllAudioTracks(room))
+            allTracks.addAll(HmsUtilities.getAllVideoTracks(room))
+        }
         return allTracks
     }
 
@@ -1027,7 +989,6 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         }
 
     }
-
 
     private fun getAllTracks(call: MethodCall, result: Result) {
         val peerId: String? = call.argument<String>("peer_id")

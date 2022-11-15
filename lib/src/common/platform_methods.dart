@@ -151,7 +151,10 @@ enum PlatformMethod {
   destroy,
   setSessionMetadata,
   getSessionMetadata,
-  setPlaybackAllowedForTrack
+  setPlaybackAllowedForTrack,
+  enterPipMode,
+  isPipActive,
+  isPipAvailable
 }
 
 extension PlatformMethodValues on PlatformMethod {
@@ -352,6 +355,12 @@ extension PlatformMethodValues on PlatformMethod {
         return "get_session_metadata";
       case PlatformMethod.setPlaybackAllowedForTrack:
         return "set_playback_allowed_for_track";
+      case PlatformMethod.enterPipMode:
+        return "enter_pip_mode";
+      case PlatformMethod.isPipActive:
+        return "is_pip_active";
+      case PlatformMethod.isPipAvailable:
+        return "is_pip_available";
       default:
         return 'unknown';
     }
@@ -558,6 +567,12 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.getSessionMetadata;
       case "set_playback_allowed_for_track":
         return PlatformMethod.setPlaybackAllowedForTrack;
+      case "enter_pip_mode":
+        return PlatformMethod.enterPipMode;
+      case "is_pip_active":
+        return PlatformMethod.isPipActive;
+      case "is_pip_available":
+        return PlatformMethod.isPipAvailable;
       default:
         return PlatformMethod.unknown;
     }

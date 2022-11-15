@@ -152,6 +152,10 @@ class MeetingStore extends ChangeNotifier
 
   String? sessionMetadata;
 
+  bool isPipActive = false;
+
+  bool isPipAutoEnabled = true;
+
   Future<bool> join(String user, String roomUrl) async {
     List<String?>? token =
         await RoomService().getToken(user: user, room: roomUrl);
@@ -1253,6 +1257,16 @@ class MeetingStore extends ChangeNotifier
     notifyListeners();
   }
 
+  void enterPipMode() async {
+    //to check whether pip is available
+    bool _isPipAvailable = await _hmsSDKInteractor.isPipAvailable();
+    if (_isPipAvailable) {
+      //[isPipActive] method can also be used to check whether application is in pip Mode or not
+      isPipActive =  await _hmsSDKInteractor.enterPipMode(autoEnterPip: isPipAutoEnabled);
+      notifyListeners();
+    }
+  }
+
 //Get onSuccess or onException callbacks for HMSActionResultListenerMethod
 
   @override
@@ -1480,6 +1494,10 @@ class MeetingStore extends ChangeNotifier
       return;
     }
     if (state == AppLifecycleState.resumed) {
+      if (isPipActive) {
+        isPipActive = false;
+        notifyListeners();
+      }
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (localPeer?.role.name.contains("hls-") ?? false)
           hlsVideoController = new VideoPlayerController.network(
@@ -1515,6 +1533,11 @@ class MeetingStore extends ChangeNotifier
         peerTrackNode.setOffScreenStatus(true);
       }
     } else if (state == AppLifecycleState.inactive) {
+      
+      if (isPipAutoEnabled && !isPipActive) {
+        isPipActive = true;
+        notifyListeners();
+      }
       HMSLocalPeer? localPeer = await getLocalPeer();
       if (localPeer != null && !(localPeer.videoTrack?.isMute ?? true)) {
         switchVideo();

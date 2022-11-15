@@ -3,6 +3,7 @@ import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:hmssdk_flutter_example/hls-streaming/hls_broadcaster_page.dart';
 import 'package:hmssdk_flutter_example/hls-streaming/hls_viewer_page.dart';
 import 'package:hmssdk_flutter_example/data_store/meeting_store.dart';
+import 'package:hmssdk_flutter_example/hls-streaming/util/pip_view.dart';
 import 'package:provider/provider.dart';
 
 class HLSScreenController extends StatefulWidget {
@@ -62,7 +63,9 @@ class _HLSScreenControllerState extends State<HLSScreenController> {
             .role
             .name
             .contains("hls-")) {
-      return HLSViewerPage();
+      return 
+      context.read<MeetingStore>().isPipActive?PipView():
+      HLSViewerPage();
     } else {
       return HLSBroadcasterPage(
         isStreamingLink: widget.isStreamingLink,

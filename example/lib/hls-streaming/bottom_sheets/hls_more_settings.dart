@@ -505,6 +505,27 @@ class _HLSMoreSettingsState extends State<HLSMoreSettings> {
                   ListTile(
                       horizontalTitleGap: 2,
                       onTap: () async {
+                        Navigator.pop(context);
+                        context.read<MeetingStore>().enterPipMode();
+                      },
+                      contentPadding: EdgeInsets.zero,
+                      leading: SvgPicture.asset(
+                        "assets/icons/screen_share.svg",
+                        fit: BoxFit.scaleDown,
+                        color: themeDefaultColor,
+                      ),
+                      title: Text(
+                        "Enter Pip Mode",
+                        semanticsLabel: "fl_pip_mode",
+                        style: GoogleFonts.inter(
+                            fontSize: 14,
+                            color: themeDefaultColor,
+                            letterSpacing: 0.25,
+                            fontWeight: FontWeight.w600),
+                      )),
+                  ListTile(
+                      horizontalTitleGap: 2,
+                      onTap: () async {
                         UtilityComponents.onEndRoomPressed(context);
                       },
                       contentPadding: EdgeInsets.zero,
