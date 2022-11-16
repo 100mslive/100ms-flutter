@@ -1524,7 +1524,7 @@ class MeetingStore extends ChangeNotifier
         hlsVideoController = null;
         notifyListeners();
       }
-      if (localPeer != null && !(localPeer.videoTrack?.isMute ?? true)) {
+      if (localPeer != null && !(localPeer.videoTrack?.isMute ?? true) && !isPipActive) {
         switchVideo();
       }
       for (PeerTrackNode peerTrackNode in peerTracks) {
@@ -1537,7 +1537,7 @@ class MeetingStore extends ChangeNotifier
         notifyListeners();
       }
       HMSLocalPeer? localPeer = await getLocalPeer();
-      if (localPeer != null && !(localPeer.videoTrack?.isMute ?? true)) {
+      if (localPeer != null && !(localPeer.videoTrack?.isMute ?? true) && !isPipActive) {
         switchVideo();
       }
       for (PeerTrackNode peerTrackNode in peerTracks) {
