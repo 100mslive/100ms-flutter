@@ -81,7 +81,7 @@ class _PlatformView extends StatelessWidget {
         gestureRecognizers: {},
       );
     } else if (Platform.isIOS) {
-      ///UiKitView for ios it uses VideoView provided by 100ms ios_sdk internally.
+      ///UIKitView for ios it uses VideoView provided by 100ms ios_sdk internally.
       return UiKitView(
         viewType: 'HMSFlutterPlatformView',
         onPlatformViewCreated: onPlatformViewCreated,
