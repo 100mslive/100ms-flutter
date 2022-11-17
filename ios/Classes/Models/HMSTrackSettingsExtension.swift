@@ -82,7 +82,7 @@ class HMSTrackSettingsExtension {
                                                           maxBitrate: 32,
                                                           maxFrameRate: 30,
                                                           cameraFacing: getCameraFacing(from: cameraFacing),
-                                                          simulcastSettings: [HMSSimulcastLayerSettings()],
+                                                          simulcastSettings: nil,
                                                           trackDescription: "track_description",
                                                           initialMuteState: getinitialMuteState(from: initialMuteState),
                                                           videoPlugins: nil)
