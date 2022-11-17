@@ -21,7 +21,8 @@ class _HMSAppSettingsState extends State<HMSAppSettings> {
   bool skipPreview = false;
   bool mirrorCamera = true;
   bool showStats = false;
-  bool isSoftwareDecoder = false;
+  bool isSoftwareDecoderDisabled = true;
+  bool isAudioMixerDisabled = true;
   @override
   void initState() {
     super.initState();
@@ -37,8 +38,10 @@ class _HMSAppSettingsState extends State<HMSAppSettings> {
     mirrorCamera = await Utilities.getBoolData(key: 'mirror-camera') ?? true;
     showStats = await Utilities.getBoolData(key: 'show-stats') ?? false;
     isDarkMode = await Utilities.getBoolData(key: 'dark-mode') ?? true;
-    isSoftwareDecoder =
-        await Utilities.getBoolData(key: 'software-decoder') ?? false;
+    isSoftwareDecoderDisabled =
+        await Utilities.getBoolData(key: 'software-decoder-disabled') ?? true;
+    isAudioMixerDisabled =
+        await Utilities.getBoolData(key: 'audio-mixer-disabled') ?? true;
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() {});
@@ -297,11 +300,40 @@ class _HMSAppSettingsState extends State<HMSAppSettings> {
                       ),
                       trailing: CupertinoSwitch(
                           activeColor: hmsdefaultColor,
-                          value: isSoftwareDecoder,
+                          value: isSoftwareDecoderDisabled,
                           onChanged: (value) => {
-                                isSoftwareDecoder = value,
+                                isSoftwareDecoderDisabled = value,
                                 Utilities.saveBoolData(
-                                    key: 'software-decoder', value: value),
+                                    key: 'software-decoder-disabled',
+                                    value: value),
+                                setState(() {})
+                              }),
+                    ),
+                  if(Platform.isIOS)
+                    ListTile(
+                      horizontalTitleGap: 2,
+                      enabled: true,
+                      contentPadding: EdgeInsets.zero,
+                      leading: SvgPicture.asset(
+                        'assets/icons/settings.svg',
+                        color: themeDefaultColor,
+                      ),
+                      title: Text(
+                        "Disable Audio Mixer",
+                        semanticsLabel: "fl_track_settings",
+                        style: GoogleFonts.inter(
+                            fontSize: 14,
+                            color: themeDefaultColor,
+                            letterSpacing: 0.25,
+                            fontWeight: FontWeight.w600),
+                      ),
+                      trailing: CupertinoSwitch(
+                          activeColor: hmsdefaultColor,
+                          value: isAudioMixerDisabled,
+                          onChanged: (value) => {
+                                isAudioMixerDisabled = value,
+                                Utilities.saveBoolData(
+                                    key: 'audio-mixer-disabled', value: value),
                                 setState(() {})
                               }),
                     ),

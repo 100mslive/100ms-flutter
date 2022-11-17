@@ -224,9 +224,6 @@ class _PreviewPageState extends State<PreviewPage> {
                                                             PreviewDeviceSettings()),
                                               )
                                             : _previewStore.toggleSpeaker(),
-                                        // {
-
-                                        //   _previewStore.toggleSpeaker()},
                                         offColor: themeHintColor,
                                         onColor: themeScreenBackgroundColor,
                                         isActive: true,

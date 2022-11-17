@@ -1,7 +1,10 @@
 //Dart imports
 
 //Project imports
+import 'dart:io';
+
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 
 class HMSSDKInteractor {
   late HMSConfig config;
@@ -17,26 +20,18 @@ class HMSSDKInteractor {
       String? preferredExtension,
       bool joinWithMutedAudio = true,
       bool joinWithMutedVideo = true,
-      bool softwareDecoder = false}) {
-    HMSTrackSetting trackSetting = HMSTrackSetting(
-        audioTrackSetting: HMSAudioTrackSetting(
-            audioSource: HMSAudioMixerSource(node: [
-              HMSAudioFilePlayerNode("audioFilePlayerNode"),
-              HMSMicNode(),
-              HMSScreenBroadcastAudioReceiverNode()
-            ]),
-            trackInitialState: joinWithMutedAudio
-                ? HMSTrackInitState.MUTED
-                : HMSTrackInitState.UNMUTED),
-        videoTrackSetting: HMSVideoTrackSetting(
-            trackInitialState: joinWithMutedVideo
-                ? HMSTrackInitState.MUTED
-                : HMSTrackInitState.UNMUTED,
-            forceSoftwareDecoder: softwareDecoder));
+      bool isSoftwareDecoderDisabled = true,
+      bool isAudioMixerDisabled = true}) {
     HMSLogSettings hmsLogSettings = HMSLogSettings(
         maxDirSizeInBytes: 1000000,
         isLogStorageEnabled: true,
         level: HMSLogLevel.OFF);
+
+    HMSTrackSetting trackSetting = Utilities.getTrackSetting(
+        isAudioMixerDisabled: (Platform.isIOS && isAudioMixerDisabled),
+        joinWithMutedVideo: joinWithMutedVideo,
+        joinWithMutedAudio: joinWithMutedAudio,
+        isSoftwareDecoderDisabled: isSoftwareDecoderDisabled);
     hmsSDK = HMSSDK(
         appGroup: appGroup,
         preferredExtension: preferredExtension,
@@ -353,9 +348,9 @@ class HMSSDKInteractor {
     return hmsSDK.getSessionMetadata();
   }
 
-  Future<bool> enterPipMode({List<int>? aspectRatio,
-    bool? autoEnterPip}) {
-    return hmsSDK.enterPipMode(autoEnterPip: autoEnterPip,aspectRatio: aspectRatio);
+  Future<bool> enterPipMode({List<int>? aspectRatio, bool? autoEnterPip}) {
+    return hmsSDK.enterPipMode(
+        autoEnterPip: autoEnterPip, aspectRatio: aspectRatio);
   }
 
   Future<bool> isPipActive() {
