@@ -352,4 +352,8 @@ class HMSSDKInteractor {
   Future<String?> getSessionMetadata() {
     return hmsSDK.getSessionMetadata();
   }
+
+  void enablePIPMode(HMSVideoTrack track) {
+    hmsSDK.enablePIPMode(track);
+  }
 }

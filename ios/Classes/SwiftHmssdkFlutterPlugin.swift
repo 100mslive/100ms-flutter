@@ -180,6 +180,9 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         case "set_playback_allowed_for_track":
             setPlaybackAllowedForTrack(call, result)
             
+        case "enable_PIP_mode":
+            enablePIPMode(call, result)
+            
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -822,6 +825,32 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         }
         result(HMSErrorExtension.getError("Could not set isPlaybackAllowed for track in \(#function)"))
     }
+    
+    //MARK: - PIP mode
+    var pipVideoCallViewController: UIViewController? = nil
+    private func enablePIPMode(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+           let arguments = call.arguments as! [AnyHashable: Any]
+           if #available(iOS 15.0, *) {
+               guard let trackID = arguments["track_id"] as? String,
+                     let track = HMSUtilities.getVideoTrack(for: trackID, in: hmsSDK!.room!)
+               else {
+                   result(HMSErrorExtension.getError("Could not find track for PIP mode"))
+                    return
+               }
+               pipVideoCallViewController = AVPictureInPictureVideoCallViewController()
+               let pipContentSource = AVPictureInPictureController.ContentSource(
+                          activeVideoCallSourceView: UIView(frame: CGRect(x: 0, y: 0, width: 500, height: 500)),
+                          contentViewController: pipVideoCallViewController as! AVPictureInPictureVideoCallViewController)
+               let pipController = AVPictureInPictureController(contentSource: pipContentSource)
+               pipController.canStartPictureInPictureAutomaticallyFromInline = true
+               pipController.startPictureInPicture()
+               let trackVideoView = HMSSampleBufferDisplayView(frame: .zero)
+                   trackVideoView.track = track
+               pipVideoCallViewController!.view.addSubview(trackVideoView)
+           } else {
+               result(HMSErrorExtension.getError("PIP mode is not available"))
+           }
+       }
 
     // MARK: - 100ms SDK Delegate Callbacks
 

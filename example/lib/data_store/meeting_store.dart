@@ -347,6 +347,7 @@ class MeetingStore extends ChangeNotifier
     _hmsSDKInteractor.changeMetadata(
         metadata: "{\"isHandRaised\":$value,\"isBRBOn\":false}",
         hmsActionResultListener: this);
+    _hmsSDKInteractor.enablePIPMode(peerTracks[0].track!);
   }
 
   bool isBRB = false;
@@ -943,7 +944,7 @@ class MeetingStore extends ChangeNotifier
         break;
 
       case HMSPeerUpdate.roleUpdated:
-        if (peer.isLocal){
+        if (peer.isLocal) {
           localPeer = peer;
           if (hlsVideoController != null && !peer.role.name.contains("hls-")) {
             hlsVideoController!.dispose();

@@ -893,6 +893,12 @@ class HMSSDK {
     return null;
   }
 
+  void enablePIPMode(HMSVideoTrack track) {
+    var arguments = {"track_id": track.trackId};
+    PlatformService.invokeMethod(PlatformMethod.enablePIPmode,
+        arguments: arguments);
+  }
+
   /// To modify local peer's audio & video track settings use the [hmsTrackSetting]. Only required for advanced use-cases.
   HMSTrackSetting? hmsTrackSetting;
 
