@@ -1,5 +1,5 @@
 <a href="https://100ms.live/">
-<img src="https://github.com/100mslive/100ms-flutter/blob/main/assets/100ms.svg" title="100ms logo" float=center height=256>
+<img src="https://raw.githubusercontent.com/100mslive/100ms-flutter/main/assets/100ms.svg" title="100ms logo" float=center height=256>
 </a>
 
 [![Pub Version](https://img.shields.io/pub/v/hmssdk_flutter)](https://pub.dev/packages/hmssdk_flutter)
@@ -76,7 +76,7 @@ The default [Example app](https://github.com/100mslive/100ms-flutter/tree/main/e
 
 - The Android SDK supports Android API level 21 and higher. It is built for armeabi-v7a, arm64-v8a, x86, and x86_64 architectures.
 
-- iPhone & iPads with iOS version 10 or higher.
+- iPhone & iPads with iOS version 12 or higher.
 
 ## [Android Permissions](https://www.100ms.live/docs/flutter/v2/features/integration#android)
 
