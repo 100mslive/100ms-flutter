@@ -348,9 +348,8 @@ class HMSSDKInteractor {
     return hmsSDK.getSessionMetadata();
   }
 
-  Future<bool> enterPipMode({List<int>? aspectRatio, bool? autoEnterPip}) {
-    return hmsSDK.enterPipMode(
-        autoEnterPip: autoEnterPip, aspectRatio: aspectRatio);
+  Future<bool> enterPipMode({required HMSPipConfig hmsPipConfig}) {
+    return hmsSDK.enterPipMode(hmsPipConfig: hmsPipConfig);
   }
 
   Future<bool> isPipActive() {

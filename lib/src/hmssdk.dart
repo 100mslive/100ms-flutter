@@ -894,14 +894,11 @@ class HMSSDK {
   }
 
   ///Method to activate pipMode in application
-  Future<bool> enterPipMode ({
-    List<int>? aspectRatio,
-    bool? autoEnterPip
-  }) async {
-    final bool? result =  await PlatformService.invokeMethod(PlatformMethod.enterPipMode,
-    arguments: {"aspect_ratio":aspectRatio??[16,9],
-                "auto_enter_pip":autoEnterPip??false});
-    return result??false;
+  Future<bool> enterPipMode({required HMSPipConfig hmsPipConfig}) async {
+    final bool? result = await PlatformService.invokeMethod(
+        PlatformMethod.enterPipMode,
+        arguments: {"pip_config": hmsPipConfig.toMap()});
+    return result ?? false;
   }
 
   ///Method to check whether pip mode is active currently

@@ -1262,13 +1262,12 @@ class MeetingStore extends ChangeNotifier
     bool _isPipAvailable = await _hmsSDKInteractor.isPipAvailable();
     if (_isPipAvailable) {
       //[isPipActive] method can also be used to check whether application is in pip Mode or not
-      isPipActive =  await _hmsSDKInteractor.enterPipMode(autoEnterPip: isPipAutoEnabled);
+      isPipActive =  await _hmsSDKInteractor.enterPipMode(hmsPipConfig: HMSPipConfig(addAudioMuteButton: true,addVideoMuteButton: true,addLeaveRoomButton: true,autoEnterPip: true));
       notifyListeners();
     }
   }
 
 //Get onSuccess or onException callbacks for HMSActionResultListenerMethod
-
   @override
   void onSuccess(
       {HMSActionResultListenerMethod methodType =

@@ -20,6 +20,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import live.hms.hmssdk_flutter.methods.HMSPipAction
 import live.hms.hmssdk_flutter.methods.HMSSessionMetadataAction
+import live.hms.hmssdk_flutter.pip.PipBroadcastReceiver
 import live.hms.hmssdk_flutter.views.HMSVideoViewFactory
 import live.hms.video.audio.HMSAudioManager.*
 import live.hms.video.connection.stats.*
@@ -56,7 +57,13 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
     var hmssdk: HMSSDK? = null
     private lateinit var hmsVideoFactory: HMSVideoViewFactory
     private var requestChange: HMSRoleChangeRequest? = null
-
+    private val pipReceiver by lazy {
+        PipBroadcastReceiver(
+            toogleLocalAudio =  { switchAudio() },
+            toggleLocalVideo = { switchVideo() },
+            leaveRoom = { hmssdk!!.leave() }
+        )
+    }
     companion object {
         var hmssdkFlutterPlugin: HmssdkFlutterPlugin? = null
     }
@@ -179,7 +186,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
                 setPlaybackAllowedForTrack(call,result)
             }
             "enter_pip_mode","is_pip_active","is_pip_available"->{
-                HMSPipAction.pipActions(call,result,this.activity)
+                HMSPipAction.pipActions(call,result,this.activity,hmssdk!!)
             }
             else -> {
                 result.notImplemented()
@@ -349,6 +356,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
 
     override fun onAttachedToActivity(binding: ActivityPluginBinding) {
         this.activity = binding.activity
+        pipReceiver.register(this.activity)
     }
 
     override fun onDetachedFromActivityForConfigChanges() {
@@ -359,7 +367,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
     }
 
     override fun onDetachedFromActivity() {
-
+        pipReceiver.unregister(this.activity)
     }
 
     private fun join(call: MethodCall, result: Result) {
@@ -1042,6 +1050,24 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         error["description"] = "Track not found to set isPlaybackAllowed"
         map["error"] = error
         result.success(map)
+    }
+
+    private fun switchAudio() {
+        val peer = hmssdk!!.getLocalPeer()
+        val audioTrack = peer?.audioTrack
+        if (audioTrack != null) {
+            audioTrack?.setMute(!(peer.audioTrack!!.isMute))
+            HMSPipAction.updatePipActions(audioTrack.isMute,this.activity,"localAudioToggle",344)
+        }
+    }
+
+    private fun switchVideo() {
+        val peer = hmssdk!!.getLocalPeer()
+        val videoTrack = peer?.videoTrack
+        if (videoTrack != null) {
+            videoTrack?.setMute(!(peer.videoTrack!!.isMute))
+            HMSPipAction.updatePipActions(videoTrack.isMute,this.activity,"localVideoToggle",345)
+        }
     }
 
     private val hmsStatsListener = object : HMSStatsObserver {
