@@ -53,6 +53,8 @@ class _PreviewDetailsState extends State<PreviewDetails> {
           await Utilities.getBoolData(key: 'join-with-muted-video') ?? true;
       bool sotfwareDecoder =
           await Utilities.getBoolData(key: 'software-decoder') ?? false;
+      bool isAudioMixerEnabled =
+          await Utilities.getBoolData(key: 'audio-mixer-enabled') ?? false;
       if (res) {
         if (!skipPreview) {
           Navigator.of(context).pushReplacement(MaterialPageRoute(
@@ -60,7 +62,8 @@ class _PreviewDetailsState extends State<PreviewDetails> {
                     value: PreviewStore(
                         joinWithMutedAudio: joinWithMutedAudio,
                         joinWithMutedVideo: joinWithMutedVideo,
-                        softwareDecoder: sotfwareDecoder),
+                        softwareDecoder: sotfwareDecoder,
+                        isAudioMixerEnabled: isAudioMixerEnabled),
                     child: PreviewPage(
                         meetingFlow: widget.meetingFlow,
                         name: nameController.text,
@@ -71,15 +74,14 @@ class _PreviewDetailsState extends State<PreviewDetails> {
               await Utilities.getBoolData(key: 'show-stats') ?? false;
           bool mirrorCamera =
               await Utilities.getBoolData(key: 'mirror-camera') ?? false;
-          bool softwareDecoder =
-              await Utilities.getBoolData(key: 'software-decoder') ?? false;
           HMSSDKInteractor _hmsSDKInteractor = HMSSDKInteractor(
               appGroup: "group.flutterhms",
               preferredExtension:
                   "live.100ms.flutter.FlutterBroadcastUploadExtension",
               joinWithMutedAudio: joinWithMutedAudio,
               joinWithMutedVideo: joinWithMutedVideo,
-              softwareDecoder: softwareDecoder);
+              softwareDecoder: sotfwareDecoder,
+              isAudioMixerEnabled: isAudioMixerEnabled);
           Navigator.of(context).pushReplacement(MaterialPageRoute(
               builder: (_) => ListenableProvider.value(
                     value: MeetingStore(hmsSDKInteractor: _hmsSDKInteractor),

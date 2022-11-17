@@ -1,6 +1,8 @@
 //Dart imports
 
 //Project imports
+import 'dart:io';
+
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 class HMSSDKInteractor {
@@ -17,26 +19,43 @@ class HMSSDKInteractor {
       String? preferredExtension,
       bool joinWithMutedAudio = true,
       bool joinWithMutedVideo = true,
-      bool softwareDecoder = false}) {
-    HMSTrackSetting trackSetting = HMSTrackSetting(
-        audioTrackSetting: HMSAudioTrackSetting(
-            audioSource: HMSAudioMixerSource(node: [
-              HMSAudioFilePlayerNode("audioFilePlayerNode"),
-              HMSMicNode(),
-              HMSScreenBroadcastAudioReceiverNode()
-            ]),
-            trackInitialState: joinWithMutedAudio
-                ? HMSTrackInitState.MUTED
-                : HMSTrackInitState.UNMUTED),
-        videoTrackSetting: HMSVideoTrackSetting(
-            trackInitialState: joinWithMutedVideo
-                ? HMSTrackInitState.MUTED
-                : HMSTrackInitState.UNMUTED,
-            forceSoftwareDecoder: softwareDecoder));
+      bool softwareDecoder = false,
+      bool isAudioMixerEnabled = false}) {
     HMSLogSettings hmsLogSettings = HMSLogSettings(
         maxDirSizeInBytes: 1000000,
         isLogStorageEnabled: true,
         level: HMSLogLevel.OFF);
+
+    late HMSTrackSetting trackSetting;
+    if (Platform.isIOS && !isAudioMixerEnabled) {
+      trackSetting = HMSTrackSetting(
+          audioTrackSetting: HMSAudioTrackSetting(
+              trackInitialState: joinWithMutedAudio
+                  ? HMSTrackInitState.MUTED
+                  : HMSTrackInitState.UNMUTED),
+          videoTrackSetting: HMSVideoTrackSetting(
+              trackInitialState: joinWithMutedVideo
+                  ? HMSTrackInitState.MUTED
+                  : HMSTrackInitState.UNMUTED,
+              forceSoftwareDecoder: softwareDecoder));
+
+    } else {
+      trackSetting = HMSTrackSetting(
+          audioTrackSetting: HMSAudioTrackSetting(
+              audioSource: HMSAudioMixerSource(node: [
+                HMSAudioFilePlayerNode("audioFilePlayerNode"),
+                HMSMicNode(),
+                HMSScreenBroadcastAudioReceiverNode()
+              ]),
+              trackInitialState: joinWithMutedAudio
+                  ? HMSTrackInitState.MUTED
+                  : HMSTrackInitState.UNMUTED),
+          videoTrackSetting: HMSVideoTrackSetting(
+              trackInitialState: joinWithMutedVideo
+                  ? HMSTrackInitState.MUTED
+                  : HMSTrackInitState.UNMUTED,
+              forceSoftwareDecoder: softwareDecoder));
+    }
     hmsSDK = HMSSDK(
         appGroup: appGroup,
         preferredExtension: preferredExtension,
@@ -353,9 +372,9 @@ class HMSSDKInteractor {
     return hmsSDK.getSessionMetadata();
   }
 
-  Future<bool> enterPipMode({List<int>? aspectRatio,
-    bool? autoEnterPip}) {
-    return hmsSDK.enterPipMode(autoEnterPip: autoEnterPip,aspectRatio: aspectRatio);
+  Future<bool> enterPipMode({List<int>? aspectRatio, bool? autoEnterPip}) {
+    return hmsSDK.enterPipMode(
+        autoEnterPip: autoEnterPip, aspectRatio: aspectRatio);
   }
 
   Future<bool> isPipActive() {

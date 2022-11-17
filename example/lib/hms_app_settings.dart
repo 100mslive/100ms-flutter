@@ -22,6 +22,7 @@ class _HMSAppSettingsState extends State<HMSAppSettings> {
   bool mirrorCamera = true;
   bool showStats = false;
   bool isSoftwareDecoder = false;
+  bool isAudioMixerEnabled = false;
   @override
   void initState() {
     super.initState();
@@ -39,6 +40,8 @@ class _HMSAppSettingsState extends State<HMSAppSettings> {
     isDarkMode = await Utilities.getBoolData(key: 'dark-mode') ?? true;
     isSoftwareDecoder =
         await Utilities.getBoolData(key: 'software-decoder') ?? false;
+    isAudioMixerEnabled =
+        await Utilities.getBoolData(key: 'audio-mixer-enabled') ?? false;
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() {});
@@ -305,6 +308,34 @@ class _HMSAppSettingsState extends State<HMSAppSettings> {
                                 setState(() {})
                               }),
                     ),
+                    if(Platform.isIOS)
+                    ListTile(
+                    horizontalTitleGap: 2,
+                    enabled: true,
+                    contentPadding: EdgeInsets.zero,
+                    leading: SvgPicture.asset(
+                      'assets/icons/settings.svg',
+                      color: themeDefaultColor,
+                    ),
+                    title: Text(
+                      "Enable Audio Mixer",
+                      semanticsLabel: "fl_track_settings",
+                      style: GoogleFonts.inter(
+                          fontSize: 14,
+                          color: themeDefaultColor,
+                          letterSpacing: 0.25,
+                          fontWeight: FontWeight.w600),
+                    ),
+                      trailing: CupertinoSwitch(
+                          activeColor: hmsdefaultColor,
+                          value: isAudioMixerEnabled,
+                          onChanged: (value) => {
+                                isAudioMixerEnabled = value,
+                                Utilities.saveBoolData(
+                                    key: 'audio-mixer-enabled', value: value),
+                                setState(() {})
+                              }),
+                  ),
                   ListTile(
                     horizontalTitleGap: 2,
                     enabled: true,
