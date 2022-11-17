@@ -19,11 +19,11 @@ class HMSFlutterPlatformView: NSObject, FlutterPlatformView {
     private var videoView: HMSVideoView?
 
     init(frame: CGRect,
-         viewIdentifier: Int64,
-         videoContentMode: UIView.ContentMode,
-         mirror: Bool,
-         disableAutoSimulcastLayerSelect: Bool,
-         videoTrack: HMSVideoTrack) {
+        viewIdentifier: Int64,
+        videoContentMode: UIView.ContentMode,
+        mirror: Bool,
+        disableAutoSimulcastLayerSelect: Bool,
+        videoTrack: HMSVideoTrack) {
 
         self.frame = frame
         self.viewIdentifier = viewIdentifier

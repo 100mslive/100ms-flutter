@@ -53,5 +53,3 @@ class HMSVideoView(
         surfaceViewRenderer.release()
     }
 }
-
-
