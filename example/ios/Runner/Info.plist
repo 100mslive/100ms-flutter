@@ -67,9 +67,16 @@
 	<string>100ms needs access to storage for sharing file.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>100ms needs access to storage for sharing file.</string>
+    <key>NSAppTransportSecurity</key>
+    <dict>
+    <key>NSAllowsArbitraryLoads</key>
+    <true/>
+    </dict>
 	<key>UIBackgroundModes</key>
 	<array>
-		<string>audio</string>
+        <string>audio</string>
+        <string>processing</string>
+        <string>remote-notification</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>

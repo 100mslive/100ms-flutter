@@ -46,6 +46,8 @@ dependencies:
   draggable_widget:
   badges:
   url_launcher:
+  pip_flutter:
+    path: ../../pip_flutter/
   
 dev_dependencies:
   flutter_test:

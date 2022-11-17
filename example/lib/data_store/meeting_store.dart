@@ -17,6 +17,7 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/hms_sdk_interactor.dart';
 import 'package:hmssdk_flutter_example/model/peer_track_node.dart';
 import 'package:hmssdk_flutter_example/service/room_service.dart';
+import 'package:pip_flutter/pipflutter_player_controller.dart';
 import 'package:video_player/video_player.dart';
 
 class MeetingStore extends ChangeNotifier
@@ -140,7 +141,10 @@ class MeetingStore extends ChangeNotifier
 
   int trackChange = -1;
 
-  VideoPlayerController? hlsVideoController;
+  // VideoPlayerController? hlsVideoController;
+
+  PipFlutterPlayerController? hlsVideoController;
+  final GlobalKey pipFlutterPlayerKey = GlobalKey();
 
   bool hlsStreamingRetry = false;
 
@@ -947,7 +951,7 @@ class MeetingStore extends ChangeNotifier
         break;
 
       case HMSPeerUpdate.roleUpdated:
-        if (peer.isLocal){
+        if (peer.isLocal) {
           localPeer = peer;
           if (hlsVideoController != null && !peer.role.name.contains("hls-")) {
             hlsVideoController!.dispose();
@@ -1262,7 +1266,8 @@ class MeetingStore extends ChangeNotifier
     bool _isPipAvailable = await _hmsSDKInteractor.isPipAvailable();
     if (_isPipAvailable) {
       //[isPipActive] method can also be used to check whether application is in pip Mode or not
-      isPipActive =  await _hmsSDKInteractor.enterPipMode(autoEnterPip: isPipAutoEnabled);
+      isPipActive =
+          await _hmsSDKInteractor.enterPipMode(autoEnterPip: isPipAutoEnabled);
       notifyListeners();
     }
   }
@@ -1499,13 +1504,13 @@ class MeetingStore extends ChangeNotifier
         notifyListeners();
       }
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (localPeer?.role.name.contains("hls-") ?? false)
-          hlsVideoController = new VideoPlayerController.network(
-            streamUrl,
-          )..initialize().then((_) {
-              hlsVideoController!.play();
-              notifyListeners();
-            });
+        // if (localPeer?.role.name.contains("hls-") ?? false)
+        // hlsVideoController = new VideoPlayerController.network(
+        //   streamUrl,
+        // )..initialize().then((_) {
+        //     hlsVideoController!.play();
+        //     notifyListeners();
+        //   });
       });
       List<HMSPeer>? peersList = await getPeers();
 
@@ -1522,24 +1527,34 @@ class MeetingStore extends ChangeNotifier
     } else if (state == AppLifecycleState.paused) {
       HMSLocalPeer? localPeer = await getLocalPeer();
       if (localPeer?.role.name.contains("hls-") ?? false) {
-        hlsVideoController?.dispose();
-        hlsVideoController = null;
-        notifyListeners();
+        // hlsVideoController?.dispose();
+        // hlsVideoController = null;
+        // notifyListeners();
+        hlsVideoController?.enablePictureInPicture(pipFlutterPlayerKey);
       }
-      if (localPeer != null && !(localPeer.videoTrack?.isMute ?? true) && !isPipActive) {
+      if (localPeer != null &&
+          !(localPeer.videoTrack?.isMute ?? true) &&
+          !isPipActive) {
         switchVideo();
       }
       for (PeerTrackNode peerTrackNode in peerTracks) {
         peerTrackNode.setOffScreenStatus(true);
       }
     } else if (state == AppLifecycleState.inactive) {
-      
       if (isPipAutoEnabled && !isPipActive) {
         isPipActive = true;
         notifyListeners();
       }
       HMSLocalPeer? localPeer = await getLocalPeer();
-      if (localPeer != null && !(localPeer.videoTrack?.isMute ?? true) && !isPipActive) {
+      if (localPeer?.role.name.contains("hls-") ?? false) {
+        // hlsVideoController?.dispose();
+        // hlsVideoController = null;
+        // notifyListeners();
+        hlsVideoController?.enablePictureInPicture(pipFlutterPlayerKey);
+      }
+      if (localPeer != null &&
+          !(localPeer.videoTrack?.isMute ?? true) &&
+          !isPipActive) {
         switchVideo();
       }
       for (PeerTrackNode peerTrackNode in peerTracks) {
