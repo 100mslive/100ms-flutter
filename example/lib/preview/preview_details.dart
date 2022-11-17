@@ -51,10 +51,10 @@ class _PreviewDetailsState extends State<PreviewDetails> {
           await Utilities.getBoolData(key: 'join-with-muted-audio') ?? true;
       bool joinWithMutedVideo =
           await Utilities.getBoolData(key: 'join-with-muted-video') ?? true;
-      bool sotfwareDecoder =
-          await Utilities.getBoolData(key: 'software-decoder') ?? false;
-      bool isAudioMixerEnabled =
-          await Utilities.getBoolData(key: 'audio-mixer-enabled') ?? false;
+      bool isSoftwareDecoderDisabled =
+          await Utilities.getBoolData(key: 'software-decoder-disabled') ?? true;
+      bool isAudioMixerDisabled =
+          await Utilities.getBoolData(key: 'audio-mixer-disabled') ?? true;
       if (res) {
         if (!skipPreview) {
           Navigator.of(context).pushReplacement(MaterialPageRoute(
@@ -62,8 +62,8 @@ class _PreviewDetailsState extends State<PreviewDetails> {
                     value: PreviewStore(
                         joinWithMutedAudio: joinWithMutedAudio,
                         joinWithMutedVideo: joinWithMutedVideo,
-                        softwareDecoder: sotfwareDecoder,
-                        isAudioMixerEnabled: isAudioMixerEnabled),
+                        isSoftwareDecoderDisabled: isSoftwareDecoderDisabled,
+                        isAudioMixerDisabled: isAudioMixerDisabled),
                     child: PreviewPage(
                         meetingFlow: widget.meetingFlow,
                         name: nameController.text,
@@ -80,8 +80,8 @@ class _PreviewDetailsState extends State<PreviewDetails> {
                   "live.100ms.flutter.FlutterBroadcastUploadExtension",
               joinWithMutedAudio: joinWithMutedAudio,
               joinWithMutedVideo: joinWithMutedVideo,
-              softwareDecoder: sotfwareDecoder,
-              isAudioMixerEnabled: isAudioMixerEnabled);
+              isSoftwareDecoderDisabled: isSoftwareDecoderDisabled,
+              isAudioMixerDisabled: isAudioMixerDisabled);
           Navigator.of(context).pushReplacement(MaterialPageRoute(
               builder: (_) => ListenableProvider.value(
                     value: MeetingStore(hmsSDKInteractor: _hmsSDKInteractor),

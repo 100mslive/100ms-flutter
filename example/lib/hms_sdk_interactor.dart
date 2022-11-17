@@ -4,6 +4,7 @@
 import 'dart:io';
 
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 
 class HMSSDKInteractor {
   late HMSConfig config;
@@ -19,43 +20,18 @@ class HMSSDKInteractor {
       String? preferredExtension,
       bool joinWithMutedAudio = true,
       bool joinWithMutedVideo = true,
-      bool softwareDecoder = false,
-      bool isAudioMixerEnabled = false}) {
+      bool isSoftwareDecoderDisabled = true,
+      bool isAudioMixerDisabled = true}) {
     HMSLogSettings hmsLogSettings = HMSLogSettings(
         maxDirSizeInBytes: 1000000,
         isLogStorageEnabled: true,
         level: HMSLogLevel.OFF);
 
-    late HMSTrackSetting trackSetting;
-    if (Platform.isIOS && !isAudioMixerEnabled) {
-      trackSetting = HMSTrackSetting(
-          audioTrackSetting: HMSAudioTrackSetting(
-              trackInitialState: joinWithMutedAudio
-                  ? HMSTrackInitState.MUTED
-                  : HMSTrackInitState.UNMUTED),
-          videoTrackSetting: HMSVideoTrackSetting(
-              trackInitialState: joinWithMutedVideo
-                  ? HMSTrackInitState.MUTED
-                  : HMSTrackInitState.UNMUTED,
-              forceSoftwareDecoder: softwareDecoder));
-
-    } else {
-      trackSetting = HMSTrackSetting(
-          audioTrackSetting: HMSAudioTrackSetting(
-              audioSource: HMSAudioMixerSource(node: [
-                HMSAudioFilePlayerNode("audioFilePlayerNode"),
-                HMSMicNode(),
-                HMSScreenBroadcastAudioReceiverNode()
-              ]),
-              trackInitialState: joinWithMutedAudio
-                  ? HMSTrackInitState.MUTED
-                  : HMSTrackInitState.UNMUTED),
-          videoTrackSetting: HMSVideoTrackSetting(
-              trackInitialState: joinWithMutedVideo
-                  ? HMSTrackInitState.MUTED
-                  : HMSTrackInitState.UNMUTED,
-              forceSoftwareDecoder: softwareDecoder));
-    }
+    HMSTrackSetting trackSetting = Utilities.getTrackSetting(
+        isAudioMixerDisabled: (Platform.isIOS && isAudioMixerDisabled),
+        joinWithMutedVideo: joinWithMutedVideo,
+        joinWithMutedAudio: joinWithMutedAudio,
+        isSoftwareDecoderDisabled: isSoftwareDecoderDisabled);
     hmsSDK = HMSSDK(
         appGroup: appGroup,
         preferredExtension: preferredExtension,
