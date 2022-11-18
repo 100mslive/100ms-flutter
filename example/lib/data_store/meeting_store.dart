@@ -1526,12 +1526,12 @@ class MeetingStore extends ChangeNotifier
       });
     } else if (state == AppLifecycleState.paused) {
       HMSLocalPeer? localPeer = await getLocalPeer();
-      if (localPeer?.role.name.contains("hls-") ?? false) {
-        // hlsVideoController?.dispose();
-        // hlsVideoController = null;
-        // notifyListeners();
-        hlsVideoController?.enablePictureInPicture(pipFlutterPlayerKey);
-      }
+      // if (localPeer?.role.name.contains("hls-") ?? false) {
+      //   // hlsVideoController?.dispose();
+      //   // hlsVideoController = null;
+      //   // notifyListeners();
+      //   hlsVideoController?.enablePictureInPicture(pipFlutterPlayerKey);
+      // }
       if (localPeer != null &&
           !(localPeer.videoTrack?.isMute ?? true) &&
           !isPipActive) {
@@ -1546,12 +1546,11 @@ class MeetingStore extends ChangeNotifier
         notifyListeners();
       }
       HMSLocalPeer? localPeer = await getLocalPeer();
-      if (localPeer?.role.name.contains("hls-") ?? false) {
-        // hlsVideoController?.dispose();
-        // hlsVideoController = null;
-        // notifyListeners();
-        hlsVideoController?.enablePictureInPicture(pipFlutterPlayerKey);
-      }
+      // if (localPeer?.role.name.contains("hls-") ?? false) {
+      // hlsVideoController?.dispose();
+      // hlsVideoController = null;
+      // notifyListeners();
+      // }
       if (localPeer != null &&
           !(localPeer.videoTrack?.isMute ?? true) &&
           !isPipActive) {

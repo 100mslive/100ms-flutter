@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -119,26 +121,34 @@ class _HLSViewerSettingsState extends State<HLSViewerSettings> {
                 ),
               ),
               ListTile(
-                      horizontalTitleGap: 2,
-                      onTap: () async {
-                        Navigator.pop(context);
-                        context.read<MeetingStore>().enterPipMode();
-                      },
-                      contentPadding: EdgeInsets.zero,
-                      leading: SvgPicture.asset(
-                        "assets/icons/screen_share.svg",
-                        fit: BoxFit.scaleDown,
+                  horizontalTitleGap: 2,
+                  onTap: () async {
+                    if (Platform.isAndroid) {
+                      Navigator.pop(context);
+                      context.read<MeetingStore>().enterPipMode();
+                    } else if (Platform.isIOS) {
+                      context
+                          .read<MeetingStore>()
+                          .hlsVideoController
+                          ?.enablePictureInPicture(
+                              context.read<MeetingStore>().pipFlutterPlayerKey);
+                    }
+                  },
+                  contentPadding: EdgeInsets.zero,
+                  leading: SvgPicture.asset(
+                    "assets/icons/screen_share.svg",
+                    fit: BoxFit.scaleDown,
+                    color: themeDefaultColor,
+                  ),
+                  title: Text(
+                    "Enter Pip Mode",
+                    semanticsLabel: "fl_pip_mode",
+                    style: GoogleFonts.inter(
+                        fontSize: 14,
                         color: themeDefaultColor,
-                      ),
-                      title: Text(
-                        "Enter Pip Mode",
-                        semanticsLabel: "fl_pip_mode",
-                        style: GoogleFonts.inter(
-                            fontSize: 14,
-                            color: themeDefaultColor,
-                            letterSpacing: 0.25,
-                            fontWeight: FontWeight.w600),
-                      )),
+                        letterSpacing: 0.25,
+                        fontWeight: FontWeight.w600),
+                  )),
             ],
           ),
         ),

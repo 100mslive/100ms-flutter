@@ -44,6 +44,13 @@ class _HLSPlayerState extends State<HLSPlayer> {
         .read<MeetingStore>()
         .hlsVideoController!
         .setupDataSource(dataSource);
+    context.read<MeetingStore>().hlsVideoController!.setControlsEnabled(false);
+    context.read<MeetingStore>().hlsVideoController!.play();
+    context
+        .read<MeetingStore>()
+        .hlsVideoController!
+        .seekTo(Duration(seconds: 0));
+
     context
         .read<MeetingStore>()
         .hlsVideoController!
@@ -63,7 +70,7 @@ class _HLSPlayerState extends State<HLSPlayer> {
   void dispose() async {
     super.dispose();
     try {
-      // await context.read<MeetingStore>().hlsVideoController?.dispose();
+      context.read<MeetingStore>().hlsVideoController?.dispose();
       context.read<MeetingStore>().hlsVideoController = null;
     } catch (e) {
       //To handle the error when the user calls leave from hls-viewer role.
@@ -80,7 +87,10 @@ class _HLSPlayerState extends State<HLSPlayer> {
               key: GlobalKey(),
               body: Center(
                   child: AspectRatio(
-                aspectRatio: 16 / 9,
+                aspectRatio: context
+                    .read<MeetingStore>()
+                    .hlsVideoController!
+                    .getAspectRatio()!,
                 child: PipFlutterPlayer(
                   controller: controller!,
                   key: context.read<MeetingStore>().pipFlutterPlayerKey,
