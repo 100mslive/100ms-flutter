@@ -2,8 +2,8 @@
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 class HMSTrackSetting {
-  HMSAudioTrackSetting? audioTrackSetting = HMSAudioTrackSetting();
-  HMSVideoTrackSetting? videoTrackSetting = HMSVideoTrackSetting();
+  HMSAudioTrackSetting? audioTrackSetting;
+  HMSVideoTrackSetting? videoTrackSetting;
 
   HMSTrackSetting({this.audioTrackSetting, this.videoTrackSetting});
 
