@@ -14,6 +14,13 @@ import 'package:hmssdk_flutter_example/data_store/meeting_store.dart';
 import 'package:provider/provider.dart';
 
 class HLSMoreSettings extends StatefulWidget {
+  
+  final bool isAudioMixerDisabled ;
+
+  const HLSMoreSettings({
+    Key? key,
+    this.isAudioMixerDisabled = true
+  }) : super(key: key);
   @override
   State<HLSMoreSettings> createState() => _HLSMoreSettingsState();
 }
@@ -439,7 +446,8 @@ class _HLSMoreSettingsState extends State<HLSMoreSettings> {
                               ));
                         }),
                   if (!(_meetingStore.localPeer?.role.name.contains("hls-") ??
-                      true))
+                          true) &&
+                      !(Platform.isIOS && widget.isAudioMixerDisabled))
                     ListTile(
                         horizontalTitleGap: 2,
                         onTap: () async {
