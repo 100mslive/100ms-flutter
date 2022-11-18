@@ -432,27 +432,8 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
             var trackSettings: HMSTrackSettings?
             if let settingsDict = arguments["hms_track_setting"] as? [AnyHashable: Any] {
-                if let audioTrackSetting = settingsDict["audio_track_setting"] as? [AnyHashable: Any] {
-                    if let playerNode = audioTrackSetting["audio_source"] as? [String] {
-                        for node in playerNode {
-                            if self.audioMixerSourceMap[node] == nil {
-                                if node=="mic_node" {
-                                    self.audioMixerSourceMap["mic_node"] = HMSMicNode()
-                                } else if node == "screen_broadcast_audio_receiver_node" {
-                                    do {
-                                        self.audioMixerSourceMap["screen_broadcast_audio_receiver_node"] = try sdk.screenBroadcastAudioReceiverNode()
-                                    } catch {
-                                        result(HMSErrorExtension.toDictionary(error))
-                                    }
-                                } else {
-                                    self.audioMixerSourceMap[node] = HMSAudioFilePlayerNode()
-                                }
-                            }
-                        }
-                    }
-
-                    trackSettings = HMSTrackSettingsExtension.setTrackSetting(settingsDict, audioMixerSourceMap, result)
-                }
+                audioMixerSourceInit(settingsDict, sdk, result)
+                trackSettings = HMSTrackSettingsExtension.setTrackSetting(settingsDict, audioMixerSourceMap, result)
             }
 
             if let settings = trackSettings {
@@ -1108,6 +1089,28 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             return HMSCodec.H264
         }
         return HMSCodec.VP8
+    }
+    
+    private func audioMixerSourceInit(_ settingsDict:[AnyHashable: Any], _ sdk: HMSSDK, _ result: FlutterResult) {
+        if let audioTrackSetting = settingsDict["audio_track_setting"] as? [AnyHashable: Any] {
+            if let playerNode = audioTrackSetting["audio_source"] as? [String] {
+                for node in playerNode {
+                    if self.audioMixerSourceMap[node] == nil {
+                        if node=="mic_node" {
+                            self.audioMixerSourceMap["mic_node"] = HMSMicNode()
+                        } else if node == "screen_broadcast_audio_receiver_node" {
+                            do {
+                                self.audioMixerSourceMap["screen_broadcast_audio_receiver_node"] = try sdk.screenBroadcastAudioReceiverNode()
+                            } catch {
+                                result(HMSErrorExtension.toDictionary(error))
+                            }
+                        } else {
+                            self.audioMixerSourceMap[node] = HMSAudioFilePlayerNode()
+                        }
+                    }
+                }
+            }
+        }
     }
 
 }
