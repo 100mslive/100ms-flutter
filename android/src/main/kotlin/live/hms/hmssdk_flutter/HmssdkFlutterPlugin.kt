@@ -61,7 +61,9 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         PipBroadcastReceiver(
             toogleLocalAudio =  { switchAudio() },
             toggleLocalVideo = { switchVideo() },
-            leaveRoom = { hmssdk!!.leave() }
+            leaveRoom = { hmssdk!!.leave(hmsActionResultListener = HMSCommonAction.getActionListener(HMSPipAction.actionResult!!))
+                activity?.moveTaskToBack(false)
+            }
         )
     }
     companion object {

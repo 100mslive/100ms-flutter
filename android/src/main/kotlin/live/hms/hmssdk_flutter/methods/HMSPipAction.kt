@@ -25,7 +25,7 @@ class HMSPipAction {
         private const val leaveRoom = "leaveRoom"
         private const val localAudioToggle = "localAudioToggle"
         private const val localVideoToggle = "localVideoToggle"
-
+        var actionResult : MethodChannel.Result? = null;
         private var pipRemoteAction  = mutableMapOf<String, RemoteAction>()
 
         fun pipActions(call: MethodCall, result: MethodChannel.Result, activity : Activity,hmssdk:HMSSDK){
@@ -54,7 +54,7 @@ class HMSPipAction {
             val hmsPipConfigMap = call.argument<HashMap<String,Any>>("pip_config")
             val hmsPipConfig : HMSPipConfig = HMSPipConfigExtension.setHMSPipConfig(hmsPipConfigMap)
                 ?: return;
-
+            this.actionResult = result
             val localPeer = hmssdk.getLocalPeer()
             if(hmsPipConfig.addAudioMuteButton){
                 pipRemoteAction[localAudioToggle] = RemoteAction(
@@ -112,10 +112,7 @@ class HMSPipAction {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 params = params.setAutoEnterEnabled(hmsPipConfig.autoEnterEnabled)
             }
-
-            result.success(
-                activity.enterPictureInPictureMode(params.build())
-            )
+            activity.enterPictureInPictureMode(params.build())
         }
 
         fun updatePipActions(isMute:Boolean,activity : Activity,type:String,requestCode : Int){

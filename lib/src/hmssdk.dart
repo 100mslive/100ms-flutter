@@ -894,11 +894,25 @@ class HMSSDK {
   }
 
   ///Method to activate pipMode in application
-  Future<bool> enterPipMode({required HMSPipConfig hmsPipConfig}) async {
-    final bool? result = await PlatformService.invokeMethod(
+  ///Pass the [HMSActionResultListener] instance for receiving the leave callback while in PIP
+  Future<void> enterPipMode({required HMSPipConfig hmsPipConfig,HMSActionResultListener? hmsActionResultListener}) async {
+     var arguments = {"pip_config": hmsPipConfig.toMap()};
+     var result = await PlatformService.invokeMethod(
         PlatformMethod.enterPipMode,
-        arguments: {"pip_config": hmsPipConfig.toMap()});
-    return result ?? false;
+        arguments: arguments);
+
+    if (hmsActionResultListener != null) {
+      if (result != null && result["error"] != null) {
+        hmsActionResultListener.onException(
+            methodType: HMSActionResultListenerMethod.leave,
+            arguments: arguments,
+            hmsException: HMSException.fromMap(result["error"]));
+      } else {
+        hmsActionResultListener.onSuccess(
+            methodType: HMSActionResultListenerMethod.leave,
+            arguments: arguments);
+      }
+    }
   }
 
   ///Method to check whether pip mode is active currently
