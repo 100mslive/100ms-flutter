@@ -45,6 +45,8 @@ class HLSBroadcasterPage extends StatefulWidget {
 }
 
 class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
+
+  bool isAudioMixerDisabled = true;
   @override
   void initState() {
     super.initState();
@@ -1004,7 +1006,8 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                                 .localPeer !=
                                             null)
                                           EmbeddedButton(
-                                            onTap: () => {
+                                            onTap: () async => {
+                                              isAudioMixerDisabled = await Utilities.getBoolData(key: "audio-mixer-disabled")??true,
                                               showModalBottomSheet(
                                                 isScrollControlled: true,
                                                 backgroundColor:
@@ -1018,7 +1021,7 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                                     ChangeNotifierProvider.value(
                                                         value: context
                                                             .read<MeetingStore>(),
-                                                        child: HLSMoreSettings()),
+                                                        child: HLSMoreSettings(isAudioMixerDisabled: isAudioMixerDisabled,)),
                                               )
                                             },
                                             width: 40,
