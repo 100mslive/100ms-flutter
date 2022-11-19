@@ -895,20 +895,20 @@ class HMSSDK {
 
   ///Method to activate pipMode in application
   ///Pass the [HMSActionResultListener] instance for receiving the leave callback while in PIP
-  Future<void> enterPipMode({required HMSPipConfig hmsPipConfig,HMSActionResultListener? hmsActionResultListener}) async {
+  Future<void> enterPipMode({required HMSPipConfig hmsPipConfig}) async {
      var arguments = {"pip_config": hmsPipConfig.toMap()};
      var result = await PlatformService.invokeMethod(
         PlatformMethod.enterPipMode,
         arguments: arguments);
 
-    if (hmsActionResultListener != null) {
+    if (hmsPipConfig.leaveRoomListener != null) {
       if (result != null && result["error"] != null) {
-        hmsActionResultListener.onException(
+        hmsPipConfig.leaveRoomListener!.onException(
             methodType: HMSActionResultListenerMethod.leave,
             arguments: arguments,
             hmsException: HMSException.fromMap(result["error"]));
       } else {
-        hmsActionResultListener.onSuccess(
+        hmsPipConfig.leaveRoomListener!.onSuccess(
             methodType: HMSActionResultListenerMethod.leave,
             arguments: arguments);
       }

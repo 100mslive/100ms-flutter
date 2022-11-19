@@ -1,3 +1,5 @@
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+
 ///100ms pip config
 ///
 ///To use, import `package:hmssdk_flutter/model/hms_pip_config.dart`.
@@ -5,7 +7,6 @@
 ///[HMSPipConfig] contains configuration about the pip mode.This config is used to
 ///setup the pip functionality for the application.
 class HMSPipConfig {
-
   ///[aspectRatio] defines the width and height ratio as [width,height]
   List<int>? aspectRatio;
 
@@ -22,12 +23,17 @@ class HMSPipConfig {
   ///[addLeaveRoomButton] flag to leave the room while in pip
   bool? addLeaveRoomButton;
 
+  ///[leaveRoomListener] object to get update when the room is left from pip mode
+  ///This should not be null while setting [addLeaveRoomButton] as true because this may lead to memory leak in application
+  HMSActionResultListener? leaveRoomListener;
+
   HMSPipConfig(
       {this.aspectRatio = const [16, 9],
       this.autoEnterPip = false,
       this.addAudioMuteButton = false,
       this.addVideoMuteButton = false,
-      this.addLeaveRoomButton = false});
+      this.addLeaveRoomButton = false,
+      this.leaveRoomListener = null});
 
   @override
   String toString() {

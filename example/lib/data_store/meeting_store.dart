@@ -1267,8 +1267,9 @@ class MeetingStore extends ChangeNotifier
               addAudioMuteButton: true,
               addVideoMuteButton: true,
               addLeaveRoomButton: true,
-              autoEnterPip: true),
-          hmsActionResultListener: this);
+              autoEnterPip: true,
+              leaveRoomListener: this
+              ));
       isPipActive = await _hmsSDKInteractor.isPipActive();
       notifyListeners();
     }
