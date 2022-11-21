@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/constant.dart';
+import 'package:hmssdk_flutter_example/common/ui/organisms/share_link_option.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
 import 'package:hmssdk_flutter_example/hls-streaming/bottom_sheets/hls_device_settings.dart';
@@ -14,13 +15,10 @@ import 'package:hmssdk_flutter_example/data_store/meeting_store.dart';
 import 'package:provider/provider.dart';
 
 class HLSMoreSettings extends StatefulWidget {
-  
-  final bool isAudioMixerDisabled ;
+  final bool isAudioMixerDisabled;
 
-  const HLSMoreSettings({
-    Key? key,
-    this.isAudioMixerDisabled = true
-  }) : super(key: key);
+  const HLSMoreSettings({Key? key, this.isAudioMixerDisabled = true})
+      : super(key: key);
   @override
   State<HLSMoreSettings> createState() => _HLSMoreSettingsState();
 }
@@ -162,7 +160,7 @@ class _HLSMoreSettingsState extends State<HLSMoreSettings> {
                       if (name.isNotEmpty) {
                         _meetingStore.changeName(name: name);
                       }
-                      Navigator.pop(context);
+                      // Navigator.pop(context);
                     },
                     contentPadding: EdgeInsets.zero,
                     leading: SvgPicture.asset(
@@ -525,6 +523,30 @@ class _HLSMoreSettingsState extends State<HLSMoreSettings> {
                       title: Text(
                         "Enter Pip Mode",
                         semanticsLabel: "fl_pip_mode",
+                        style: GoogleFonts.inter(
+                            fontSize: 14,
+                            color: themeDefaultColor,
+                            letterSpacing: 0.25,
+                            fontWeight: FontWeight.w600),
+                      )),
+                  ListTile(
+                      horizontalTitleGap: 2,
+                      onTap: () async {
+                        showDialog(
+                            context: context,
+                            builder: (_) => ShareLinkOptionDialog(
+                                roles: _meetingStore.roles,
+                                roomID: _meetingStore.hmsRoom!.id));
+                      },
+                      contentPadding: EdgeInsets.zero,
+                      leading: SvgPicture.asset(
+                        "assets/icons/share.svg",
+                        fit: BoxFit.scaleDown,
+                        color: themeDefaultColor,
+                      ),
+                      title: Text(
+                        "Share Link",
+                        semanticsLabel: "fl_share_link",
                         style: GoogleFonts.inter(
                             fontSize: 14,
                             color: themeDefaultColor,
