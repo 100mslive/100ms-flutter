@@ -17,8 +17,10 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/hms_sdk_interactor.dart';
 import 'package:hmssdk_flutter_example/model/peer_track_node.dart';
 import 'package:hmssdk_flutter_example/service/room_service.dart';
+import 'package:pip_flutter/pipflutter_player_configuration.dart';
 import 'package:pip_flutter/pipflutter_player_controller.dart';
-import 'package:video_player/video_player.dart';
+import 'package:pip_flutter/pipflutter_player_data_source.dart';
+import 'package:pip_flutter/pipflutter_player_data_source_type.dart';
 
 class MeetingStore extends ChangeNotifier
     with WidgetsBindingObserver
@@ -1270,6 +1272,28 @@ class MeetingStore extends ChangeNotifier
           await _hmsSDKInteractor.enterPipMode(autoEnterPip: isPipAutoEnabled);
       notifyListeners();
     }
+  }
+
+  void setPIPVideoController(String streamUrl, bool reinitialise) {
+    if (hlsVideoController == null) {
+      hlsVideoController?.dispose();
+      hlsVideoController = null;
+    }
+    PipFlutterPlayerConfiguration pipFlutterPlayerConfiguration =
+        const PipFlutterPlayerConfiguration(
+      fit: BoxFit.contain,
+    );
+    PipFlutterPlayerDataSource dataSource = PipFlutterPlayerDataSource(
+      PipFlutterPlayerDataSourceType.network,
+      streamUrl,
+    );
+    hlsVideoController =
+        PipFlutterPlayerController(pipFlutterPlayerConfiguration);
+    hlsVideoController!.setupDataSource(dataSource);
+    hlsVideoController!.setControlsEnabled(false);
+    hlsVideoController!.play();
+    hlsVideoController!.setPipFlutterPlayerGlobalKey(pipFlutterPlayerKey);
+    if (reinitialise) notifyListeners();
   }
 
 //Get onSuccess or onException callbacks for HMSActionResultListenerMethod

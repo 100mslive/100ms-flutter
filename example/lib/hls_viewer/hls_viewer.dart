@@ -2,15 +2,9 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:hmssdk_flutter_example/common/util/app_color.dart';
-import 'package:hmssdk_flutter_example/hls-streaming/util/hls_title_text.dart';
 import 'package:pip_flutter/pipflutter_player.dart';
-import 'package:pip_flutter/pipflutter_player_configuration.dart';
 import 'package:pip_flutter/pipflutter_player_controller.dart';
-import 'package:pip_flutter/pipflutter_player_data_source.dart';
-import 'package:pip_flutter/pipflutter_player_data_source_type.dart';
 import 'package:provider/provider.dart';
-import 'package:video_player/video_player.dart';
 
 //Project imports
 import 'package:hmssdk_flutter_example/data_store/meeting_store.dart';
@@ -28,35 +22,7 @@ class _HLSPlayerState extends State<HLSPlayer> {
   @override
   void initState() {
     super.initState();
-
-    PipFlutterPlayerConfiguration pipFlutterPlayerConfiguration =
-        const PipFlutterPlayerConfiguration(
-      aspectRatio: 16 / 9,
-      fit: BoxFit.contain,
-    );
-    PipFlutterPlayerDataSource dataSource = PipFlutterPlayerDataSource(
-      PipFlutterPlayerDataSourceType.network,
-      widget.streamUrl,
-    );
-    context.read<MeetingStore>().hlsVideoController =
-        PipFlutterPlayerController(pipFlutterPlayerConfiguration);
-    context
-        .read<MeetingStore>()
-        .hlsVideoController!
-        .setupDataSource(dataSource);
-    context.read<MeetingStore>().hlsVideoController!.setControlsEnabled(false);
-    context.read<MeetingStore>().hlsVideoController!.play();
-    context
-        .read<MeetingStore>()
-        .hlsVideoController!
-        .seekTo(Duration(seconds: 0));
-
-    context
-        .read<MeetingStore>()
-        .hlsVideoController!
-        .setPipFlutterPlayerGlobalKey(
-            context.read<MeetingStore>().pipFlutterPlayerKey);
-
+    context.read<MeetingStore>().setPIPVideoController(widget.streamUrl, false);
     // context.read<MeetingStore>().hlsVideoController =
     //     VideoPlayerController.network(
     //   widget.streamUrl,
@@ -83,16 +49,28 @@ class _HLSPlayerState extends State<HLSPlayer> {
     return Selector<MeetingStore, PipFlutterPlayerController?>(
         selector: (_, meetingStore) => meetingStore.hlsVideoController,
         builder: (_, controller, __) {
+          if (controller == null) {
+            return Scaffold();
+          }
           return Scaffold(
               key: GlobalKey(),
+              floatingActionButton: FloatingActionButton(
+                  backgroundColor: Colors.red,
+                  child: Text(
+                    "LIVE",
+                    style: TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.bold),
+                  ),
+                  onPressed: () {
+                    context
+                        .read<MeetingStore>()
+                        .setPIPVideoController(widget.streamUrl, true);
+                  }),
               body: Center(
                   child: AspectRatio(
-                aspectRatio: context
-                    .read<MeetingStore>()
-                    .hlsVideoController!
-                    .getAspectRatio()!,
+                aspectRatio: 16 / 9,
                 child: PipFlutterPlayer(
-                  controller: controller!,
+                  controller: controller,
                   key: context.read<MeetingStore>().pipFlutterPlayerKey,
                 ),
               )));
