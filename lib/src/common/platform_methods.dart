@@ -154,7 +154,10 @@ enum PlatformMethod {
   setPlaybackAllowedForTrack,
   enterPipMode,
   isPipActive,
-  isPipAvailable
+  isPipAvailable,
+  switchVideoButtonStatus,
+  switchAudioButtonStatus,
+  updatePipConfig
 }
 
 extension PlatformMethodValues on PlatformMethod {
@@ -361,6 +364,12 @@ extension PlatformMethodValues on PlatformMethod {
         return "is_pip_active";
       case PlatformMethod.isPipAvailable:
         return "is_pip_available";
+      case PlatformMethod.switchVideoButtonStatus:
+        return "switch_video_button_status";
+      case PlatformMethod.switchAudioButtonStatus:
+        return "switch_audio_button_status";
+      case PlatformMethod.updatePipConfig:
+        return "update_pip_config";
       default:
         return 'unknown';
     }
@@ -573,6 +582,12 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.isPipActive;
       case "is_pip_available":
         return PlatformMethod.isPipAvailable;
+      case "switch_audio_button_status":
+        return PlatformMethod.switchAudioButtonStatus;
+      case "switch_video_button_status":
+        return PlatformMethod.switchVideoButtonStatus;
+      case "update_pip_config":
+        return PlatformMethod.updatePipConfig;
       default:
         return PlatformMethod.unknown;
     }

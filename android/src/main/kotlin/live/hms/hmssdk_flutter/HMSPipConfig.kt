@@ -9,11 +9,11 @@ class HMSPipConfigExtension{
             }
             return HMSPipConfig(aspectRatio = hmsPipConfig["aspect_ratio"] as List<Int>,
             autoEnterEnabled = hmsPipConfig["auto_enter_pip"] as Boolean,
-            addAudioMuteButton = hmsPipConfig["add_audio_mute_button"] as Boolean,
-            addVideoMuteButton = hmsPipConfig["add_video_mute_button"] as Boolean,
-            addLeaveRoomButton = hmsPipConfig["add_leave_room_button"] as Boolean)
+            showAudioButton = hmsPipConfig["show_audio_button"] as Boolean,
+            showVideoButton = hmsPipConfig["show_video_button"] as Boolean,
+            showLeaveRoomButton = hmsPipConfig["show_leave_room_button"] as Boolean)
         }
     }
 }
 
-class HMSPipConfig(val aspectRatio:List<Int>, val autoEnterEnabled :Boolean = false, val addAudioMuteButton:Boolean = false, val addVideoMuteButton:Boolean = false, val addLeaveRoomButton:Boolean = false){}
+class HMSPipConfig(val aspectRatio:List<Int>, val autoEnterEnabled :Boolean = false, val showAudioButton:Boolean = false, val showVideoButton:Boolean = false, val showLeaveRoomButton:Boolean = false){}

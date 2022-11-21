@@ -156,6 +156,8 @@ class MeetingStore extends ChangeNotifier
 
   bool isPipAutoEnabled = true;
 
+  HMSPipConfig? hmsPipConfig;
+
   Future<bool> join(String user, String roomUrl) async {
     List<String?>? token =
         await RoomService().getToken(user: user, room: roomUrl);
@@ -727,8 +729,14 @@ class MeetingStore extends ChangeNotifier
     } else {
       if (hmsTrackChangeRequest.track.kind == HMSTrackKind.kHMSTrackKindVideo) {
         isVideoOn = false;
+        if (isPipActive && hmsPipConfig!.showVideoButton!) { 
+          hmsPipConfig!.switchVideoButtonStatus();
+        }
       } else {
         isMicOn = false;
+        if (isPipActive  && hmsPipConfig!.showAudioButton!) {
+          hmsPipConfig!.switchAudioButtonStatus();
+        }
       }
     }
     notifyListeners();
@@ -963,6 +971,18 @@ class MeetingStore extends ChangeNotifier
       case HMSPeerUpdate.roleUpdated:
         if (peer.isLocal) {
           localPeer = peer;
+          if (isPipActive) {
+            HMSPipConfig newPipConfig = HMSPipConfig(
+                showAudioButton: ((hmsPipConfig!.showAudioButton!) &&
+                    (peer.role.publishSettings?.allowed.contains("audio") ??
+                        false)),
+                showVideoButton: ((hmsPipConfig!.showVideoButton!) &&
+                    (peer.role.publishSettings?.allowed.contains("video") ??
+                        false)),
+                showLeaveRoomButton: true,
+                leaveRoomListener: this);
+            hmsPipConfig!.updatePipConfig(hmsPipConfig: newPipConfig);
+          }
           if (hlsVideoController != null && !peer.role.name.contains("hls-")) {
             hlsVideoController!.dispose();
             hlsVideoController = null;
@@ -1272,17 +1292,21 @@ class MeetingStore extends ChangeNotifier
   }
 
   void enterPipMode() async {
+
+    //Creating HMSPipConfig object
+    HMSPipConfig pipConfig = HMSPipConfig(
+        showAudioButton: true,
+        showVideoButton: true,
+        showLeaveRoomButton: true,
+        autoEnterPip: true,
+        leaveRoomListener: this);
+    this.hmsPipConfig = pipConfig;
     //to check whether pip is available
     bool _isPipAvailable = await _hmsSDKInteractor.isPipAvailable();
     if (_isPipAvailable) {
       //[isPipActive] method can also be used to check whether application is in pip Mode or not
-      HMSException? exception = await _hmsSDKInteractor.enterPipMode(
-          hmsPipConfig: HMSPipConfig(
-            addAudioMuteButton: true,
-            addVideoMuteButton: true,
-            addLeaveRoomButton: true,
-              autoEnterPip: true,
-              leaveRoomListener: this));
+      HMSException? exception =
+          await _hmsSDKInteractor.enterPipMode(hmsPipConfig: pipConfig);
       if (exception != null) {
         Utilities.showToast(exception.message ?? "");
       }

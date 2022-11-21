@@ -188,7 +188,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             "set_playback_allowed_for_track"-> {
                 setPlaybackAllowedForTrack(call,result)
             }
-            "enter_pip_mode","is_pip_active","is_pip_available"->{
+            "enter_pip_mode","is_pip_active","is_pip_available","switch_audio_button_status","switch_video_button_status","update_pip_config"->{
                 HMSPipAction.pipActions(call,result,this.activity,hmssdk!!)
             }
             else -> {
@@ -742,33 +742,11 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             val args = HashMap<String, Any?>()
             args["event_name"] = "on_peer_update"
             args["data"] = HMSPeerUpdateExtension.toDictionary(peer, type)
-            if(type == HMSPeerUpdate.ROLE_CHANGED){
-                if(peer.isLocal && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && activity.isInPictureInPictureMode){
-                    if(HMSPipAction.addAudioMuteButton && peer?.hmsRole?.publishParams?.allowed?.contains("audio") == true){
-                        HMSPipAction.updatePipActions(peer.audioTrack?.isMute?:true,activity,HMSPipAction.localAudioToggle,344)
-                    }
-                    else{
-                        HMSPipAction.pipRemoteAction -= HMSPipAction.localAudioToggle
-                    }
-                    if(HMSPipAction.addVideoMuteButton && peer?.hmsRole?.publishParams?.allowed?.contains("video") == true){
-                        HMSPipAction.updatePipActions(peer.videoTrack?.isMute?:true,activity,HMSPipAction.localVideoToggle,345)
-                    }
-                    else{
-                        HMSPipAction.pipRemoteAction -= HMSPipAction.localVideoToggle
-                    }
-                    activity.setPictureInPictureParams(
-                        PictureInPictureParams.Builder()
-                            .setActions(HMSPipAction.pipRemoteAction.map { it.value }.toList())
-                            .build()
-                    )
-                }
-            }
             if (args["data"] != null)
                 CoroutineScope(Dispatchers.Main).launch {
                     eventSink?.success(args)
                 }
         }
-
 
         override fun onRoomUpdate(type: HMSRoomUpdate, hmsRoom: HMSRoom) {
             val args = HashMap<String, Any?>()

@@ -899,7 +899,7 @@ class HMSSDK {
   Future<HMSException?> enterPipMode(
       {required HMSPipConfig hmsPipConfig}) async {
     var arguments = {"pip_config": hmsPipConfig.toMap()};
-    if ((hmsPipConfig.addLeaveRoomButton!) &&
+    if ((hmsPipConfig.showLeaveRoomButton!) &&
         hmsPipConfig.leaveRoomListener == null) {
       return HMSException(
           message:
