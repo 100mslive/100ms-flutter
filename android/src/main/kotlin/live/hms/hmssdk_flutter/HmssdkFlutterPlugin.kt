@@ -2,6 +2,7 @@ package live.hms.hmssdk_flutter
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.PictureInPictureParams
 import android.content.Context
 import android.content.Intent
 import android.media.projection.MediaProjectionManager
@@ -740,9 +741,28 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
 
             val args = HashMap<String, Any?>()
             args["event_name"] = "on_peer_update"
-
             args["data"] = HMSPeerUpdateExtension.toDictionary(peer, type)
-
+            if(type == HMSPeerUpdate.ROLE_CHANGED){
+                if(peer.isLocal && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && activity.isInPictureInPictureMode){
+                    if(HMSPipAction.addAudioMuteButton && peer?.hmsRole?.publishParams?.allowed?.contains("audio") == true){
+                        HMSPipAction.updatePipActions(peer.audioTrack?.isMute?:true,activity,HMSPipAction.localAudioToggle,344)
+                    }
+                    else{
+                        HMSPipAction.pipRemoteAction -= HMSPipAction.localAudioToggle
+                    }
+                    if(HMSPipAction.addVideoMuteButton && peer?.hmsRole?.publishParams?.allowed?.contains("video") == true){
+                        HMSPipAction.updatePipActions(peer.videoTrack?.isMute?:true,activity,HMSPipAction.localVideoToggle,345)
+                    }
+                    else{
+                        HMSPipAction.pipRemoteAction -= HMSPipAction.localVideoToggle
+                    }
+                    activity.setPictureInPictureParams(
+                        PictureInPictureParams.Builder()
+                            .setActions(HMSPipAction.pipRemoteAction.map { it.value }.toList())
+                            .build()
+                    )
+                }
+            }
             if (args["data"] != null)
                 CoroutineScope(Dispatchers.Main).launch {
                     eventSink?.success(args)
@@ -775,11 +795,14 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             val args = HashMap<String, Any?>()
             args.put("event_name", "on_removed_from_room")
             args.put("data", HMSRemovedFromRoomExtension.toDictionary(notification))
-
-            if (args["data"] != null)
+            if (args["data"] != null){
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && activity.isInPictureInPictureMode){
+                    activity.moveTaskToBack(false)
+                }
                 CoroutineScope(Dispatchers.Main).launch {
                     eventSink?.success(args)
                 }
+            }
         }
 
         override fun onReconnected() {

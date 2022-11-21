@@ -348,7 +348,7 @@ class HMSSDKInteractor {
     return hmsSDK.getSessionMetadata();
   }
 
-  Future<void> enterPipMode({required HMSPipConfig hmsPipConfig}) {
+  Future<HMSException?> enterPipMode({required HMSPipConfig hmsPipConfig}) {
     return hmsSDK.enterPipMode(hmsPipConfig: hmsPipConfig);
   }
 

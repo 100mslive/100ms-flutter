@@ -22,11 +22,13 @@ class HMSPipAction {
     companion object {
 
         private const val PIP_ACTION_EVENT = "PIP_ACTION_EVENT"
-        private const val leaveRoom = "leaveRoom"
-        private const val localAudioToggle = "localAudioToggle"
-        private const val localVideoToggle = "localVideoToggle"
+        const val leaveRoom = "leaveRoom"
+        const val localAudioToggle = "localAudioToggle"
+        const val localVideoToggle = "localVideoToggle"
+        var addAudioMuteButton = false
+        var addVideoMuteButton = false
         var actionResult : MethodChannel.Result? = null;
-        private var pipRemoteAction  = mutableMapOf<String, RemoteAction>()
+        var pipRemoteAction  = mutableMapOf<String, RemoteAction>()
 
         fun pipActions(call: MethodCall, result: MethodChannel.Result, activity : Activity,hmssdk:HMSSDK){
             when(call.method){
@@ -56,7 +58,8 @@ class HMSPipAction {
                 ?: return;
             this.actionResult = result
             val localPeer = hmssdk.getLocalPeer()
-            if(hmsPipConfig.addAudioMuteButton){
+            if(hmsPipConfig.addAudioMuteButton && (localPeer?.hmsRole?.publishParams?.allowed?.contains("audio") == true)){
+                addAudioMuteButton = true
                 pipRemoteAction[localAudioToggle] = RemoteAction(
                     Icon.createWithResource(
                         activity,
@@ -73,7 +76,8 @@ class HMSPipAction {
                 )
             }
 
-            if(hmsPipConfig.addVideoMuteButton){
+            if(hmsPipConfig.addVideoMuteButton && (localPeer?.hmsRole?.publishParams?.allowed?.contains("video") == true)){
+                addVideoMuteButton = true
                 pipRemoteAction[localVideoToggle] = RemoteAction(
                     Icon.createWithResource(
                         activity,
@@ -154,7 +158,7 @@ class HMSPipAction {
                             PendingIntent.FLAG_IMMUTABLE
                         )
                     )
-                    activity?.setPictureInPictureParams(
+                    activity.setPictureInPictureParams(
                         PictureInPictureParams.Builder()
                             .setActions(pipRemoteAction.map { it.value }.toList())
                             .build()

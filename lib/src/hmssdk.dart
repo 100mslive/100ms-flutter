@@ -895,10 +895,20 @@ class HMSSDK {
 
   ///Method to activate pipMode in application
   ///Pass the [HMSActionResultListener] instance for receiving the leave callback while in PIP
-  Future<void> enterPipMode({required HMSPipConfig hmsPipConfig}) async {
-     var arguments = {"pip_config": hmsPipConfig.toMap()};
-     var result = await PlatformService.invokeMethod(
-        PlatformMethod.enterPipMode,
+  ///[enterPipMode] is android only method
+  Future<HMSException?> enterPipMode(
+      {required HMSPipConfig hmsPipConfig}) async {
+    var arguments = {"pip_config": hmsPipConfig.toMap()};
+    if ((hmsPipConfig.addLeaveRoomButton!) &&
+        hmsPipConfig.leaveRoomListener == null) {
+      return HMSException(
+          message:
+              "leaveRoomListener can't be null if addLeaveRoomButton is set to TRUE",
+          description: "Malformed PIP config parameters passed",
+          action: "Set leaveRoomListener as HMSActionListener instance",
+          isTerminal: false);
+    }
+    var result = await PlatformService.invokeMethod(PlatformMethod.enterPipMode,
         arguments: arguments);
 
     if (hmsPipConfig.leaveRoomListener != null) {
@@ -913,9 +923,11 @@ class HMSSDK {
             arguments: arguments);
       }
     }
+    return null;
   }
 
   ///Method to check whether pip mode is active currently
+  ///[isPipActive] is android only method
   Future<bool> isPipActive() async {
     final bool? result =
         await PlatformService.invokeMethod(PlatformMethod.isPipActive);
@@ -923,8 +935,10 @@ class HMSSDK {
   }
 
   ///Method to check whether pip mode is available for current device
+  ///[isPipAvailable] is android only method
   Future<bool> isPipAvailable() async {
-    final bool? result = await PlatformService.invokeMethod(PlatformMethod.isPipAvailable);
+    final bool? result =
+        await PlatformService.invokeMethod(PlatformMethod.isPipAvailable);
     return result ?? false;
   }
 
