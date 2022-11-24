@@ -488,6 +488,7 @@ class MeetingStore extends ChangeNotifier
       }
     }
     roles = await getRoles();
+    roles.removeWhere((element) => element.name == "__internal_recorder");
     Utilities.saveStringData(key: "meetingLink", value: this.meetingUrl);
     getCurrentAudioDevice();
     getAudioDevicesList();
@@ -947,7 +948,7 @@ class MeetingStore extends ChangeNotifier
         break;
 
       case HMSPeerUpdate.roleUpdated:
-        if (peer.isLocal){
+        if (peer.isLocal) {
           localPeer = peer;
           if (hlsVideoController != null && !peer.role.name.contains("hls-")) {
             hlsVideoController!.dispose();
@@ -1262,7 +1263,8 @@ class MeetingStore extends ChangeNotifier
     bool _isPipAvailable = await _hmsSDKInteractor.isPipAvailable();
     if (_isPipAvailable) {
       //[isPipActive] method can also be used to check whether application is in pip Mode or not
-      isPipActive =  await _hmsSDKInteractor.enterPipMode(autoEnterPip: isPipAutoEnabled);
+      isPipActive =
+          await _hmsSDKInteractor.enterPipMode(autoEnterPip: isPipAutoEnabled);
       notifyListeners();
     }
   }
@@ -1526,20 +1528,23 @@ class MeetingStore extends ChangeNotifier
         hlsVideoController = null;
         notifyListeners();
       }
-      if (localPeer != null && !(localPeer.videoTrack?.isMute ?? true) && !isPipActive) {
+      if (localPeer != null &&
+          !(localPeer.videoTrack?.isMute ?? true) &&
+          !isPipActive) {
         switchVideo();
       }
       for (PeerTrackNode peerTrackNode in peerTracks) {
         peerTrackNode.setOffScreenStatus(true);
       }
     } else if (state == AppLifecycleState.inactive) {
-      
       if (isPipAutoEnabled && !isPipActive) {
         isPipActive = true;
         notifyListeners();
       }
       HMSLocalPeer? localPeer = await getLocalPeer();
-      if (localPeer != null && !(localPeer.videoTrack?.isMute ?? true) && !isPipActive) {
+      if (localPeer != null &&
+          !(localPeer.videoTrack?.isMute ?? true) &&
+          !isPipActive) {
         switchVideo();
       }
       for (PeerTrackNode peerTrackNode in peerTracks) {
