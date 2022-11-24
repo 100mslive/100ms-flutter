@@ -63,9 +63,9 @@ class _HLSScreenControllerState extends State<HLSScreenController> {
             .role
             .name
             .contains("hls-")) {
-      return 
-      context.read<MeetingStore>().isPipActive?PipView():
-      HLSViewerPage();
+      return context.read<MeetingStore>().isPipActive
+          ? PipView()
+          : HLSViewerPage();
     } else {
       return HLSBroadcasterPage(
         isStreamingLink: widget.isStreamingLink,

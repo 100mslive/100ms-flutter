@@ -41,7 +41,8 @@ class HMSRemoteVideoTrack extends HMSVideoTrack {
         arguments: {
           "is_playback_allowed": isPlaybackAllowed,
           "track_id": trackId,
-          "track_kind": HMSTrackKindValue.getValueFromHMSTrackKind(HMSTrackKind.kHMSTrackKindVideo)
+          "track_kind": HMSTrackKindValue.getValueFromHMSTrackKind(
+              HMSTrackKind.kHMSTrackKindVideo)
         });
 
     if (result == null) {

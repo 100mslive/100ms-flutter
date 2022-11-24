@@ -23,11 +23,11 @@ class Utilities {
   }
 
   static List<Color> colors = [
-    Color(0xFFFAC919),
-    Color(0xFF00AE63),
-    Color(0xFF6554C0),
-    Color(0xFFF69133),
-    Color(0xFF8FF5FB)
+    const Color(0xFFFAC919),
+    const Color(0xFF00AE63),
+    const Color(0xFF6554C0),
+    const Color(0xFFF69133),
+    const Color(0xFF8FF5FB)
   ];
 
   static double getRatio(Size size, BuildContext context) {

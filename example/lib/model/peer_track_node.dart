@@ -57,7 +57,7 @@ class PeerTrackNode extends ChangeNotifier {
       }
     }
   }
-  
+
   @override
   bool operator ==(Object other) {
     return super == other;
