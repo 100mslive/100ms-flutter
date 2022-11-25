@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -18,7 +20,10 @@ import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 
 class HLSViewerPage extends StatefulWidget {
-  const HLSViewerPage({
+  final String? streamUrl;
+
+  HLSViewerPage({
+    this.streamUrl = null,
     Key? key,
   }) : super(key: key);
   @override
@@ -68,14 +73,16 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                         selector: (_, meetingStore) =>
                             meetingStore.hasHlsStarted,
                         builder: (_, hasHlsStarted, __) {
-                          return hasHlsStarted
+                          return (hasHlsStarted || widget.streamUrl != null)
                               ? Container(
                                   height: MediaQuery.of(context).size.height,
                                   child: Center(
                                     child: HLSPlayer(
-                                        streamUrl: context
-                                            .read<MeetingStore>()
-                                            .streamUrl),
+                                        streamUrl: (widget.streamUrl != null)
+                                            ? widget.streamUrl!
+                                            : context
+                                              .read<MeetingStore>()
+                                              .streamUrl),
                                   ),
                                 )
                               : Container(
