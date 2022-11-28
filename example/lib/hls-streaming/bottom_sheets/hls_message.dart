@@ -252,11 +252,11 @@ class _HLSMessageState extends State<HLSMessage> {
                       color: dividerColor,
                     ),
                   ),
-                  Selector<MeetingStore, bool>(
+                  Selector<MeetingStore, Tuple2<bool,String?>>(
                       selector: (_, meetingStore) =>
-                          meetingStore.isMessageInfoShown,
-                      builder: (context, infoDialog, _) {
-                        if (infoDialog)
+                          Tuple2(meetingStore.isMessageInfoShown,meetingStore.sessionMetadata),
+                      builder: (context, displayFlags, _) {
+                        if (displayFlags.item1 && (displayFlags.item2 == null))
                           return Column(
                             children: [
                               Container(
