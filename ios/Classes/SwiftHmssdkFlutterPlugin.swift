@@ -755,7 +755,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
         let arguments = call.arguments as! [AnyHashable: Any]
 
-        guard let metadata = arguments["session_metadata"] as? String else {
+        guard var metadata = arguments["session_metadata"] as? String? ?? "" else {
             result(HMSErrorExtension.getError("No session metadata found in \(#function)"))
             return
         }
