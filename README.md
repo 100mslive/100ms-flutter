@@ -30,9 +30,9 @@ Here you will find everything you need to build experiences with video using 100
 
 1. Sign up on <https://dashboard.100ms.live/register> & visit the Developer tab to access your credentials.
 
-2. Get familiarized with [Tokens & Security here](https://docs.100ms.live/flutter/foundation/security-and-tokens)
+2. Get familiarized with [Tokens & Security here](https://www.100ms.live/docs/flutter/v2/foundation/security-and-tokens)
 
-3. Complete the steps in [Auth Token Quick Start Guide](https://docs.100ms.live/flutter/guides/token)
+3. Complete the steps in [Auth Token Quick Start Guide](https://www.100ms.live/docs/flutter/v2/guides/token)
 
 4. Get the HMSSDK via [pub.dev](https://pub.dev/packages/hmssdk_flutter). Add the `hmssdk_flutter` to your pubspec.yaml.
 
