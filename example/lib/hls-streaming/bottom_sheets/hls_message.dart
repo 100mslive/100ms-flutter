@@ -345,7 +345,7 @@ class _HLSMessageState extends State<HLSMessage> {
                                     onTap: () {
                                       context
                                           .read<MeetingStore>()
-                                          .setSessionMetadata("");
+                                          .setSessionMetadata(null);
                                     },
                                     child: SvgPicture.asset(
                                         "assets/icons/close.svg"))

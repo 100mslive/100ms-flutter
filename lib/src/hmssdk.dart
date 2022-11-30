@@ -862,7 +862,7 @@ class HMSSDK {
 
   /// Method to update the value of the session metadata.
   Future<void> setSessionMetadata(
-      {required String metadata,
+      {required String? metadata,
       HMSActionResultListener? hmsActionResultListener}) async {
     var arguments = {"session_metadata": metadata};
     var result = await PlatformService.invokeMethod(

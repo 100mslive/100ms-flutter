@@ -1248,7 +1248,7 @@ class MeetingStore extends ChangeNotifier
     audioPlayerVolume = volume;
   }
 
-  void setSessionMetadata(String metadata) {
+  void setSessionMetadata(String? metadata) {
     _hmsSDKInteractor.setSessionMetadata(
         metadata: metadata, hmsActionResultListener: this);
   }
