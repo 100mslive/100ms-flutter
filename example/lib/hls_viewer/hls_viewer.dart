@@ -18,11 +18,21 @@ class HLSPlayer extends StatefulWidget {
   _HLSPlayerState createState() => _HLSPlayerState();
 }
 
-class _HLSPlayerState extends State<HLSPlayer> {
+class _HLSPlayerState extends State<HLSPlayer> with TickerProviderStateMixin {
+  late AnimationController animation;
+  late Animation<double> fadeInFadeOut;
+
   @override
   void initState() {
     super.initState();
+    animation = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 500),
+    );
+    fadeInFadeOut = Tween<double>(begin: 0.0, end: 1).animate(animation);
+
     context.read<MeetingStore>().setPIPVideoController(widget.streamUrl, false);
+    animation.forward();
     // context.read<MeetingStore>().hlsVideoController =
     //     VideoPlayerController.network(
     //   widget.streamUrl,
@@ -62,16 +72,21 @@ class _HLSPlayerState extends State<HLSPlayer> {
                         color: Colors.white, fontWeight: FontWeight.bold),
                   ),
                   onPressed: () {
+                    animation.reverse();
                     context
                         .read<MeetingStore>()
                         .setPIPVideoController(widget.streamUrl, true);
+                    animation.forward();
                   }),
               body: Center(
-                  child: AspectRatio(
-                aspectRatio: 16 / 9,
-                child: PipFlutterPlayer(
-                  controller: controller,
-                  key: context.read<MeetingStore>().pipFlutterPlayerKey,
+                  child: FadeTransition(
+                opacity: fadeInFadeOut,
+                child: AspectRatio(
+                  aspectRatio: 16 / 9,
+                  child: PipFlutterPlayer(
+                    controller: controller,
+                    key: context.read<MeetingStore>().pipFlutterPlayerKey,
+                  ),
                 ),
               )));
         });
