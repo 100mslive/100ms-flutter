@@ -205,7 +205,7 @@ PODS:
     - PINCache/Core
   - PINCache/Core (3.0.3):
     - PINOperation (~> 1.2.1)
-  - PINOperation (1.2.1)
+  - PINOperation (1.2.2)
   - pip_flutter (0.0.3):
     - Cache (~> 6.0.0)
     - Flutter
@@ -226,8 +226,6 @@ PODS:
   - uni_links (0.0.1):
     - Flutter
   - url_launcher_ios (0.0.1):
-    - Flutter
-  - video_player_avfoundation (0.0.1):
     - Flutter
   - wakelock (0.0.1):
     - Flutter
@@ -252,7 +250,6 @@ DEPENDENCIES:
   - shared_preferences_ios (from `.symlinks/plugins/shared_preferences_ios/ios`)
   - uni_links (from `.symlinks/plugins/uni_links/ios`)
   - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
-  - video_player_avfoundation (from `.symlinks/plugins/video_player_avfoundation/ios`)
   - wakelock (from `.symlinks/plugins/wakelock/ios`)
 
 SPEC REPOS:
@@ -324,8 +321,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/uni_links/ios"
   url_launcher_ios:
     :path: ".symlinks/plugins/url_launcher_ios/ios"
-  video_player_avfoundation:
-    :path: ".symlinks/plugins/video_player_avfoundation/ios"
   wakelock:
     :path: ".symlinks/plugins/wakelock/ios"
 
@@ -366,7 +361,7 @@ SPEC CHECKSUMS:
   path_provider_ios: 14f3d2fd28c4fdb42f44e0f751d12861c43cee02
   permission_handler_apple: 44366e37eaf29454a1e7b1b7d736c2cceaeb17ce
   PINCache: 7a8fc1a691173d21dbddbf86cd515de6efa55086
-  PINOperation: 00c935935f1e8cf0d1e2d6b542e75b88fc3e5e20
+  PINOperation: daa34d4aa1d8449089be7d405b9d974abc4724c6
   pip_flutter: ab714aa0773b07b3e8c41a5ab314c8e22fd53c25
   PromisesObjC: ab77feca74fa2823e7af4249b8326368e61014cb
   qr_code_scanner: bb67d64904c3b9658ada8c402e8b4d406d5d796e
@@ -377,7 +372,6 @@ SPEC CHECKSUMS:
   Toast: 91b396c56ee72a5790816f40d3a94dd357abc196
   uni_links: d97da20c7701486ba192624d99bffaaffcfc298a
   url_launcher_ios: 839c58cdb4279282219f5e248c3321761ff3c4de
-  video_player_avfoundation: e489aac24ef5cf7af82702979ed16f2a5ef84cff
   wakelock: d0fc7c864128eac40eba1617cb5264d9c940b46f
 
 PODFILE CHECKSUM: 221b73efa3037ee6ba244e0d288118f24b41d294
