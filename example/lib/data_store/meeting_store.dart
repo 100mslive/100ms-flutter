@@ -1298,6 +1298,7 @@ class MeetingStore extends ChangeNotifier
               ),
             ),
             controlsConfiguration: PipFlutterPlayerControlsConfiguration(
+                controlBarColor: Colors.transparent,
                 enablePlayPause: false,
                 enableOverflowMenu: false,
                 enableSkips: false));
