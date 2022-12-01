@@ -768,14 +768,11 @@ class HMSSDK {
 
   ///Method to get available audio devices(Android Only)
   Future<List<HMSAudioDevice>> getAudioDevicesList() async {
-    if (Platform.isAndroid) {
-      List result = await PlatformService.invokeMethod(
-          PlatformMethod.getAudioDevicesList);
-      return result
-          .map((e) => HMSAudioDeviceValues.getHMSAudioDeviceFromName(e))
-          .toList();
-    }
-    return [];
+    List result =
+        await PlatformService.invokeMethod(PlatformMethod.getAudioDevicesList);
+    return result
+        .map((e) => HMSAudioDeviceValues.getHMSAudioDeviceFromName(e))
+        .toList();
   }
 
   ///Method to get current audio output device(Android Only)
@@ -793,12 +790,9 @@ class HMSSDK {
   ///Android requires [audioDevice] parameter compulsorily for switching Audio Device.
   ///
   ///iOS doesn't requires any value in [audioDevice] paramter (you can pass null value).
-  void switchAudioOutput({HMSAudioDevice? audioDevice}) {
-    if (Platform.isAndroid)
-      PlatformService.invokeMethod(PlatformMethod.switchAudioOutput,
-          arguments: {"audio_device_name": audioDevice!.name});
-    if (Platform.isIOS)
-      PlatformService.invokeMethod(PlatformMethod.switchAudioOutput);
+  void switchAudioOutput(HMSAudioDevice audioDevice) {
+    PlatformService.invokeMethod(PlatformMethod.switchAudioOutput,
+        arguments: {"audio_device_name": audioDevice.name});
   }
 
   ///Method to start audio share of other apps.(Android Only)

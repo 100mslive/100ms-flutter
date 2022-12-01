@@ -79,21 +79,17 @@ class _HLSMoreSettingsState extends State<HLSMoreSettings> {
                     horizontalTitleGap: 2,
                     onTap: () async {
                       Navigator.pop(context);
-                      if (Platform.isAndroid) {
-                        showModalBottomSheet(
-                          isScrollControlled: true,
-                          backgroundColor: themeBottomSheetColor,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          context: context,
-                          builder: (ctx) => ChangeNotifierProvider.value(
-                              value: context.read<MeetingStore>(),
-                              child: HLSDeviceSettings()),
-                        );
-                      } else if (Platform.isIOS) {
-                        context.read<MeetingStore>().switchAudioOutput();
-                      }
+                      showModalBottomSheet(
+                        isScrollControlled: true,
+                        backgroundColor: themeBottomSheetColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        context: context,
+                        builder: (ctx) => ChangeNotifierProvider.value(
+                            value: context.read<MeetingStore>(),
+                            child: HLSDeviceSettings()),
+                      );
                     },
                     contentPadding: EdgeInsets.zero,
                     leading: SvgPicture.asset(

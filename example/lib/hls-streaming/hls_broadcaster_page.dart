@@ -1267,8 +1267,7 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                                       context
                                                           .read<MeetingStore>()
                                                           .switchAudioOutput(
-                                                              audioDevice:
-                                                                  audioDevice);
+                                                              audioDevice);
                                                     },
                                                   ));
                                         });

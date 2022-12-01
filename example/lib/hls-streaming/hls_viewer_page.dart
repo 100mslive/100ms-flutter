@@ -81,8 +81,8 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                         streamUrl: (widget.streamUrl != null)
                                             ? widget.streamUrl!
                                             : context
-                                              .read<MeetingStore>()
-                                              .streamUrl),
+                                                .read<MeetingStore>()
+                                                .streamUrl),
                                   ),
                                 )
                               : Container(
@@ -429,8 +429,7 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                         changeAudioDevice: (audioDevice) {
                                           context
                                               .read<MeetingStore>()
-                                              .switchAudioOutput(
-                                                  audioDevice: audioDevice);
+                                              .switchAudioOutput(audioDevice);
                                         },
                                       ));
                             });

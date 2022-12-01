@@ -14,12 +14,12 @@ class  HMSSimulcastSettingsPolicyExtension {
 
         var dict = [String: Any]()
 
-        if let width = policy.width {
-            dict["width"] = width
-        }
-        if let height = policy.height {
-            dict["height"] = height
-        }
+//        if let width = policy.width {
+//            dict["width"] = width
+//        }
+//        if let height = policy.height {
+//            dict["height"] = height
+//        }
 
         if let layersPolicy = policy.layers {
             var layers = [[String: Any]]()

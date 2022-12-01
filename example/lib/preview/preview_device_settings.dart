@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -117,7 +119,7 @@ class _PreviewDeviceSettingsState extends State<PreviewDeviceSettings> {
                       buttonHeight: 48,
                       itemHeight: 45,
                       selectedItemHighlightColor: hmsdefaultColor,
-                      value: data.item3,
+                      value: Platform.isAndroid ? data.item3 : data.item1[0],
                       icon: Icon(Icons.keyboard_arrow_down),
                       dropdownDecoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(8),
