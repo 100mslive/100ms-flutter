@@ -87,6 +87,7 @@ class HMSTrackSettingsExtension {
                                                       trackDescription: "track_description",
                                                       initialMuteState: getinitialMuteState(from: initialMuteState),
                                                       videoPlugins: nil)
+
             }
         }
 

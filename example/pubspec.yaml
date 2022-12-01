@@ -46,6 +46,7 @@ dependencies:
   draggable_widget:
   badges:
   url_launcher:
+  pip_flutter:
   share_plus:
   
 dev_dependencies:

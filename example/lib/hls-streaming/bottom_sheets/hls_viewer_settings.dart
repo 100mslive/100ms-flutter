@@ -121,8 +121,11 @@ class _HLSViewerSettingsState extends State<HLSViewerSettings> {
               ListTile(
                   horizontalTitleGap: 2,
                   onTap: () async {
-                    Navigator.pop(context);
-                    context.read<MeetingStore>().enterPipMode();
+                    context
+                        .read<MeetingStore>()
+                        .hlsVideoController
+                        ?.enablePictureInPicture(
+                            context.read<MeetingStore>().pipFlutterPlayerKey);
                   },
                   contentPadding: EdgeInsets.zero,
                   leading: SvgPicture.asset(

@@ -6,8 +6,10 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hmssdk_flutter_example/common/constant.dart';
+import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_mode.dart';
+import 'package:hmssdk_flutter_example/hls-streaming/util/hls_title_text.dart';
 import 'package:hmssdk_flutter_example/model/rtc_stats.dart';
 import 'package:intl/intl.dart';
 import 'package:collection/collection.dart';
@@ -17,7 +19,11 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/hms_sdk_interactor.dart';
 import 'package:hmssdk_flutter_example/model/peer_track_node.dart';
 import 'package:hmssdk_flutter_example/service/room_service.dart';
-import 'package:video_player/video_player.dart';
+import 'package:pip_flutter/pipflutter_player_configuration.dart';
+import 'package:pip_flutter/pipflutter_player_controller.dart';
+import 'package:pip_flutter/pipflutter_player_controls_configuration.dart';
+import 'package:pip_flutter/pipflutter_player_data_source.dart';
+import 'package:pip_flutter/pipflutter_player_data_source_type.dart';
 
 class MeetingStore extends ChangeNotifier
     with WidgetsBindingObserver
@@ -140,7 +146,10 @@ class MeetingStore extends ChangeNotifier
 
   int trackChange = -1;
 
-  VideoPlayerController? hlsVideoController;
+  // VideoPlayerController? hlsVideoController;
+
+  PipFlutterPlayerController? hlsVideoController;
+  final GlobalKey pipFlutterPlayerKey = GlobalKey();
 
   bool hlsStreamingRetry = false;
 
@@ -182,7 +191,7 @@ class MeetingStore extends ChangeNotifier
     WidgetsBinding.instance.removeObserver(this);
     hmsException = null;
     if ((localPeer?.role.name.contains("hls-") ?? false) && hasHlsStarted) {
-      hlsVideoController!.dispose();
+      hlsVideoController!.dispose(forceDispose: true);
       hlsVideoController = null;
     }
     _hmsSDKInteractor.leave(hmsActionResultListener: this);
@@ -951,7 +960,7 @@ class MeetingStore extends ChangeNotifier
         if (peer.isLocal) {
           localPeer = peer;
           if (hlsVideoController != null && !peer.role.name.contains("hls-")) {
-            hlsVideoController!.dispose();
+            hlsVideoController!.dispose(forceDispose: true);
             hlsVideoController = null;
           }
         }
@@ -1269,6 +1278,36 @@ class MeetingStore extends ChangeNotifier
     }
   }
 
+  void setPIPVideoController(String streamUrl, bool reinitialise) {
+    if (hlsVideoController != null) {
+      hlsVideoController!.dispose(forceDispose: true);
+      hlsVideoController = null;
+    }
+    PipFlutterPlayerConfiguration pipFlutterPlayerConfiguration =
+        PipFlutterPlayerConfiguration(
+            fit: BoxFit.contain,
+            showPlaceholderUntilPlay: true,
+            placeholder: Center(
+              child: HLSTitleText(
+                text: "Going Live...",
+                textColor: themeDefaultColor,
+              ),
+            ),
+            controlsConfiguration: PipFlutterPlayerControlsConfiguration(
+                enablePlayPause: false,
+                enableOverflowMenu: false,
+                enableSkips: false));
+    PipFlutterPlayerDataSource dataSource = PipFlutterPlayerDataSource(
+        PipFlutterPlayerDataSourceType.network, streamUrl,
+        liveStream: true);
+    hlsVideoController =
+        PipFlutterPlayerController(pipFlutterPlayerConfiguration);
+    hlsVideoController!.setupDataSource(dataSource);
+    hlsVideoController!.play();
+    hlsVideoController!.setPipFlutterPlayerGlobalKey(pipFlutterPlayerKey);
+    if (reinitialise) notifyListeners();
+  }
+
 //Get onSuccess or onException callbacks for HMSActionResultListenerMethod
 
   @override
@@ -1500,15 +1539,6 @@ class MeetingStore extends ChangeNotifier
         isPipActive = false;
         notifyListeners();
       }
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (localPeer?.role.name.contains("hls-") ?? false)
-          hlsVideoController = new VideoPlayerController.network(
-            streamUrl,
-          )..initialize().then((_) {
-              hlsVideoController!.play();
-              notifyListeners();
-            });
-      });
       List<HMSPeer>? peersList = await getPeers();
 
       peersList?.forEach((element) {
@@ -1523,11 +1553,6 @@ class MeetingStore extends ChangeNotifier
       });
     } else if (state == AppLifecycleState.paused) {
       HMSLocalPeer? localPeer = await getLocalPeer();
-      if (localPeer?.role.name.contains("hls-") ?? false) {
-        hlsVideoController?.dispose();
-        hlsVideoController = null;
-        notifyListeners();
-      }
       if (localPeer != null &&
           !(localPeer.videoTrack?.isMute ?? true) &&
           !isPipActive) {

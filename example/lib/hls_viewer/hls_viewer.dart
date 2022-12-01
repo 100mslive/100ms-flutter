@@ -2,10 +2,9 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:hmssdk_flutter_example/common/util/app_color.dart';
-import 'package:hmssdk_flutter_example/hls-streaming/util/hls_title_text.dart';
+import 'package:pip_flutter/pipflutter_player.dart';
+import 'package:pip_flutter/pipflutter_player_controller.dart';
 import 'package:provider/provider.dart';
-import 'package:video_player/video_player.dart';
 
 //Project imports
 import 'package:hmssdk_flutter_example/data_store/meeting_store.dart';
@@ -19,24 +18,31 @@ class HLSPlayer extends StatefulWidget {
   _HLSPlayerState createState() => _HLSPlayerState();
 }
 
-class _HLSPlayerState extends State<HLSPlayer> {
+class _HLSPlayerState extends State<HLSPlayer> with TickerProviderStateMixin {
+  late AnimationController animation;
+  late Animation<double> fadeInFadeOut;
+
   @override
   void initState() {
     super.initState();
-    context.read<MeetingStore>().hlsVideoController =
-        VideoPlayerController.network(
-      widget.streamUrl,
-    )..initialize().then((_) {
-            context.read<MeetingStore>().hlsVideoController!.play();
-            setState(() {});
-          });
+    animation = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 500),
+    );
+    fadeInFadeOut = Tween<double>(begin: 0.0, end: 1).animate(animation);
+
+    context.read<MeetingStore>().setPIPVideoController(widget.streamUrl, false);
+    animation.forward();
   }
 
   @override
   void dispose() async {
     super.dispose();
     try {
-      await context.read<MeetingStore>().hlsVideoController?.dispose();
+      context
+          .read<MeetingStore>()
+          .hlsVideoController
+          ?.dispose(forceDispose: true);
       context.read<MeetingStore>().hlsVideoController = null;
     } catch (e) {
       //To handle the error when the user calls leave from hls-viewer role.
@@ -46,22 +52,39 @@ class _HLSPlayerState extends State<HLSPlayer> {
 
   @override
   Widget build(BuildContext context) {
-    return Selector<MeetingStore, VideoPlayerController?>(
+    return Selector<MeetingStore, PipFlutterPlayerController?>(
         selector: (_, meetingStore) => meetingStore.hlsVideoController,
         builder: (_, controller, __) {
+          if (controller == null) {
+            return Scaffold();
+          }
           return Scaffold(
               key: GlobalKey(),
+              floatingActionButton: FloatingActionButton(
+                  backgroundColor: Colors.red,
+                  child: Text(
+                    "LIVE",
+                    style: TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.bold),
+                  ),
+                  onPressed: () {
+                    animation.reverse();
+                    context
+                        .read<MeetingStore>()
+                        .setPIPVideoController(widget.streamUrl, true);
+                    animation.forward();
+                  }),
               body: Center(
-                child: controller?.value.isInitialized ?? false
-                    ? AspectRatio(
-                        aspectRatio: controller!.value.aspectRatio,
-                        child: VideoPlayer(controller),
-                      )
-                    : HLSTitleText(
-                        text: "Waiting for the HLS Streaming to start...",
-                        textColor: themeDefaultColor,
-                      ),
-              ));
+                  child: FadeTransition(
+                opacity: fadeInFadeOut,
+                child: AspectRatio(
+                  aspectRatio: 16 / 9,
+                  child: PipFlutterPlayer(
+                    controller: controller,
+                    key: context.read<MeetingStore>().pipFlutterPlayerKey,
+                  ),
+                ),
+              )));
         });
   }
 }
