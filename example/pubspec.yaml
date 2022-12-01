@@ -31,7 +31,6 @@ dependencies:
   logger: 
   path_provider: 
   dropdown_button2: 
-  video_player:
   focus_detector: 
   flutter_staggered_grid_view: 
   tuple:

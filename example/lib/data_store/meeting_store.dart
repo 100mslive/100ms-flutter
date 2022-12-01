@@ -1287,9 +1287,13 @@ class MeetingStore extends ChangeNotifier
         PipFlutterPlayerConfiguration(
             fit: BoxFit.contain,
             showPlaceholderUntilPlay: true,
+            deviceOrientationsAfterFullScreen: [
+              DeviceOrientation.portraitUp,
+              DeviceOrientation.portraitDown
+            ],
             placeholder: Center(
               child: HLSTitleText(
-                text: "Going Live...",
+                text: "Loading...",
                 textColor: themeDefaultColor,
               ),
             ),

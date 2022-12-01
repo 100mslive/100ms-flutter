@@ -36,21 +36,6 @@ class _HLSPlayerState extends State<HLSPlayer> with TickerProviderStateMixin {
   }
 
   @override
-  void dispose() async {
-    super.dispose();
-    try {
-      context
-          .read<MeetingStore>()
-          .hlsVideoController
-          ?.dispose(forceDispose: true);
-      context.read<MeetingStore>().hlsVideoController = null;
-    } catch (e) {
-      //To handle the error when the user calls leave from hls-viewer role.
-      log(e.toString());
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Selector<MeetingStore, PipFlutterPlayerController?>(
         selector: (_, meetingStore) => meetingStore.hlsVideoController,
