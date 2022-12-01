@@ -33,13 +33,6 @@ class _HLSPlayerState extends State<HLSPlayer> with TickerProviderStateMixin {
 
     context.read<MeetingStore>().setPIPVideoController(widget.streamUrl, false);
     animation.forward();
-    // context.read<MeetingStore>().hlsVideoController =
-    //     VideoPlayerController.network(
-    //   widget.streamUrl,
-    // )..initialize().then((_) {
-    //         context.read<MeetingStore>().hlsVideoController!.play();
-    //         setState(() {});
-    //       });
   }
 
   @override
