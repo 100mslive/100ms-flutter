@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:hmssdk_flutter_example/hls-streaming/hls_broadcaster_page.dart';
 import 'package:hmssdk_flutter_example/hls-streaming/hls_viewer_page.dart';
 import 'package:hmssdk_flutter_example/data_store/meeting_store.dart';
-import 'package:hmssdk_flutter_example/hls-streaming/util/pip_view.dart';
 import 'package:provider/provider.dart';
 
 class HLSScreenController extends StatefulWidget {
@@ -16,6 +16,7 @@ class HLSScreenController extends StatefulWidget {
   final bool showStats;
   final bool mirrorCamera;
   final String? streamUrl;
+  final HMSRole? role;
   const HLSScreenController(
       {Key? key,
       required this.meetingLink,
@@ -26,7 +27,8 @@ class HLSScreenController extends StatefulWidget {
       this.isRoomMute = false,
       this.showStats = false,
       this.mirrorCamera = true,
-      this.streamUrl = null})
+      this.streamUrl,
+      this.role})
       : super(key: key);
 
   @override
@@ -60,14 +62,16 @@ class _HLSScreenControllerState extends State<HLSScreenController> {
   @override
   Widget build(BuildContext context) {
     if ((Provider.of<MeetingStore>(context).localPeer != null &&
-        Provider.of<MeetingStore>(context)
-            .localPeer!
-            .role
-            .name
-            .contains("hls-")) || widget.streamUrl != null) {
-      return context.read<MeetingStore>().isPipActive
-          ? PipView()
-          : HLSViewerPage(streamUrl: widget.streamUrl,);
+            Provider.of<MeetingStore>(context)
+                .localPeer!
+                .role
+                .name
+                .contains("hls-")) ||
+        ((widget.role?.name.contains("hls-") ?? false) &&
+            widget.streamUrl != null)) {
+      return HLSViewerPage(
+        streamUrl: widget.streamUrl,
+      );
     } else {
       return HLSBroadcasterPage(
         isStreamingLink: widget.isStreamingLink,
