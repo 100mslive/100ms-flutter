@@ -1289,7 +1289,7 @@ class MeetingStore extends ChangeNotifier
             showPlaceholderUntilPlay: true,
             placeholder: Center(
               child: HLSTitleText(
-                text: "Waiting for the HLS Streaming to start...",
+                text: "Going Live...",
                 textColor: themeDefaultColor,
               ),
             ),
