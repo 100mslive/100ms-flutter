@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:demo_with_getx_and_100ms/views/PreviewWidget.dart';
-import 'package:demo_with_getx_and_100ms/views/RoomWidget.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

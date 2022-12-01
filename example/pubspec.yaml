@@ -47,6 +47,7 @@ dependencies:
   badges:
   url_launcher:
   pip_flutter:
+  share_plus:
   
 dev_dependencies:
   flutter_test:

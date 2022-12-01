@@ -309,7 +309,7 @@ class _HMSAppSettingsState extends State<HMSAppSettings> {
                                 setState(() {})
                               }),
                     ),
-                  if(Platform.isIOS)
+                  if (Platform.isIOS)
                     ListTile(
                       horizontalTitleGap: 2,
                       enabled: true,

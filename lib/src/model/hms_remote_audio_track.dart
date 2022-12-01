@@ -49,7 +49,8 @@ class HMSRemoteAudioTrack extends HMSAudioTrack {
         arguments: {
           "is_playback_allowed": isPlaybackAllowed,
           "track_id": trackId,
-          "track_kind": HMSTrackKindValue.getValueFromHMSTrackKind(HMSTrackKind.kHMSTrackKindAudio)
+          "track_kind": HMSTrackKindValue.getValueFromHMSTrackKind(
+              HMSTrackKind.kHMSTrackKindAudio)
         });
 
     if (result == null) {

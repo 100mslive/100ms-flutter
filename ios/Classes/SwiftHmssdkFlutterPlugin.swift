@@ -179,7 +179,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
         case "set_playback_allowed_for_track":
             setPlaybackAllowedForTrack(call, result)
-            
+
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -755,7 +755,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
         let arguments = call.arguments as! [AnyHashable: Any]
 
-        guard let metadata = arguments["session_metadata"] as? String else {
+        guard var metadata = arguments["session_metadata"] as? String? ?? "" else {
             result(HMSErrorExtension.getError("No session metadata found in \(#function)"))
             return
         }
@@ -770,8 +770,8 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         }
         )
     }
-    
-    private func setPlaybackAllowedForTrack(_ call: FlutterMethodCall, _ result: @escaping FlutterResult){
+
+    private func setPlaybackAllowedForTrack(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         let arguments = call.arguments as! [AnyHashable: Any]
 
         guard let isPlaybackAllowed = arguments["is_playback_allowed"] as? Bool,
@@ -781,20 +781,19 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             result(HMSErrorExtension.getError("Invalid arguments passed in \(#function)"))
             return
         }
-        
+
         let room = hmsSDK?.room
-        if(room != nil){
-            if(kind(from: trackKind) == HMSTrackKind.audio){
+        if room != nil {
+            if kind(from: trackKind) == HMSTrackKind.audio {
                 let audioTrack = HMSUtilities.getAudioTrack(for: trackID, in: room!) as HMSAudioTrack?
-                if(audioTrack != nil && audioTrack is HMSRemoteAudioTrack){
+                if audioTrack != nil && audioTrack is HMSRemoteAudioTrack {
                     (audioTrack as! HMSRemoteAudioTrack).setPlaybackAllowed(isPlaybackAllowed)
                     result(nil)
                     return
                 }
-            }
-            else if(kind(from: trackKind) == HMSTrackKind.video){
+            } else if kind(from: trackKind) == HMSTrackKind.video {
                 let videoTrack = HMSUtilities.getVideoTrack(for: trackID, in: room!) as HMSVideoTrack?
-                if(videoTrack != nil && videoTrack is HMSRemoteVideoTrack){
+                if videoTrack != nil && videoTrack is HMSRemoteVideoTrack {
                     (videoTrack as! HMSRemoteVideoTrack).setPlaybackAllowed(isPlaybackAllowed)
                     result(nil)
                     return
@@ -1090,8 +1089,8 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         }
         return HMSCodec.VP8
     }
-    
-    private func audioMixerSourceInit(_ settingsDict:[AnyHashable: Any], _ sdk: HMSSDK, _ result: FlutterResult) {
+
+    private func audioMixerSourceInit(_ settingsDict: [AnyHashable: Any], _ sdk: HMSSDK, _ result: FlutterResult) {
         if let audioTrackSetting = settingsDict["audio_track_setting"] as? [AnyHashable: Any] {
             if let playerNode = audioTrackSetting["audio_source"] as? [String] {
                 for node in playerNode {

@@ -27,11 +27,11 @@ class HMSVideoAction {
             isVideoMute(call, result, hmsSDK)
 
         case "mute_room_video_locally":
-            toggleVideoMuteAll(true,result,hmsSDK)
-        
+            toggleVideoMuteAll(true, result, hmsSDK)
+
         case "un_mute_room_video_locally":
-            toggleVideoMuteAll(false,result,hmsSDK)
-            
+            toggleVideoMuteAll(false, result, hmsSDK)
+
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -119,10 +119,10 @@ class HMSVideoAction {
         }
 
         let room = hmsSDK?.room
-        if(room != nil){
+        if room != nil {
             let videoTracks = HMSUtilities.getAllVideoTracks(in: room!) as [HMSVideoTrack]?
-            videoTracks?.forEach{track in
-                if(track is HMSRemoteVideoTrack){
+            videoTracks?.forEach { track in
+                if track is HMSRemoteVideoTrack {
                     (track as! HMSRemoteVideoTrack).setPlaybackAllowed(!shouldMute)
                 }
             }

@@ -15,6 +15,7 @@ class HLSScreenController extends StatefulWidget {
   final bool isRoomMute;
   final bool showStats;
   final bool mirrorCamera;
+  final String? streamUrl;
   const HLSScreenController(
       {Key? key,
       required this.meetingLink,
@@ -24,7 +25,8 @@ class HLSScreenController extends StatefulWidget {
       this.isStreamingLink = false,
       this.isRoomMute = false,
       this.showStats = false,
-      this.mirrorCamera = true})
+      this.mirrorCamera = true,
+      this.streamUrl = null})
       : super(key: key);
 
   @override
@@ -57,15 +59,15 @@ class _HLSScreenControllerState extends State<HLSScreenController> {
 
   @override
   Widget build(BuildContext context) {
-    if (Provider.of<MeetingStore>(context).localPeer != null &&
+    if ((Provider.of<MeetingStore>(context).localPeer != null &&
         Provider.of<MeetingStore>(context)
             .localPeer!
             .role
             .name
-            .contains("hls-")) {
-      return 
-      context.read<MeetingStore>().isPipActive?PipView():
-      HLSViewerPage();
+            .contains("hls-")) || widget.streamUrl != null) {
+      return context.read<MeetingStore>().isPipActive
+          ? PipView()
+          : HLSViewerPage(streamUrl: widget.streamUrl,);
     } else {
       return HLSBroadcasterPage(
         isStreamingLink: widget.isStreamingLink,

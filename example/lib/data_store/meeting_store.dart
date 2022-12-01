@@ -494,6 +494,7 @@ class MeetingStore extends ChangeNotifier
       }
     }
     roles = await getRoles();
+    roles.removeWhere((element) => element.name == "__internal_recorder");
     Utilities.saveStringData(key: "meetingLink", value: this.meetingUrl);
     getCurrentAudioDevice();
     getAudioDevicesList();
@@ -1253,7 +1254,7 @@ class MeetingStore extends ChangeNotifier
     audioPlayerVolume = volume;
   }
 
-  void setSessionMetadata(String metadata) {
+  void setSessionMetadata(String? metadata) {
     _hmsSDKInteractor.setSessionMetadata(
         metadata: metadata, hmsActionResultListener: this);
   }

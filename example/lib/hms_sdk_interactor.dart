@@ -338,7 +338,7 @@ class HMSSDKInteractor {
   }
 
   void setSessionMetadata(
-      {required String metadata,
+      {required String? metadata,
       HMSActionResultListener? hmsActionResultListener}) {
     hmsSDK.setSessionMetadata(
         metadata: metadata, hmsActionResultListener: hmsActionResultListener);

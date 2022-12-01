@@ -862,7 +862,7 @@ class HMSSDK {
 
   /// Method to update the value of the session metadata.
   Future<void> setSessionMetadata(
-      {required String metadata,
+      {required String? metadata,
       HMSActionResultListener? hmsActionResultListener}) async {
     var arguments = {"session_metadata": metadata};
     var result = await PlatformService.invokeMethod(
@@ -894,14 +894,15 @@ class HMSSDK {
   }
 
   ///Method to activate pipMode in application
-  Future<bool> enterPipMode ({
-    List<int>? aspectRatio,
-    bool? autoEnterPip
-  }) async {
-    final bool? result =  await PlatformService.invokeMethod(PlatformMethod.enterPipMode,
-    arguments: {"aspect_ratio":aspectRatio??[16,9],
-                "auto_enter_pip":autoEnterPip??false});
-    return result??false;
+  Future<bool> enterPipMode(
+      {List<int>? aspectRatio, bool? autoEnterPip}) async {
+    final bool? result = await PlatformService.invokeMethod(
+        PlatformMethod.enterPipMode,
+        arguments: {
+          "aspect_ratio": aspectRatio ?? [16, 9],
+          "auto_enter_pip": autoEnterPip ?? false
+        });
+    return result ?? false;
   }
 
   ///Method to check whether pip mode is active currently
@@ -913,7 +914,8 @@ class HMSSDK {
 
   ///Method to check whether pip mode is available for current device
   Future<bool> isPipAvailable() async {
-    final bool? result = await PlatformService.invokeMethod(PlatformMethod.isPipAvailable);
+    final bool? result =
+        await PlatformService.invokeMethod(PlatformMethod.isPipAvailable);
     return result ?? false;
   }
 

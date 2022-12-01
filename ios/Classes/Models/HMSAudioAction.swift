@@ -65,13 +65,12 @@ class HMSAudioAction {
 
     static private func toggleAudioMuteAll(_ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?, shouldMute: Bool) {
 
-        
         let room = hmsSDK?.room
-        if(room != nil){
+        if room != nil {
             let audioTracks = HMSUtilities.getAllAudioTracks(in: room!) as [HMSAudioTrack]?
-            
-            audioTracks?.forEach{track in
-                if(track is HMSRemoteAudioTrack){
+
+            audioTracks?.forEach { track in
+                if track is HMSRemoteAudioTrack {
                     (track as! HMSRemoteAudioTrack).setPlaybackAllowed(!shouldMute)
                 }
             }

@@ -126,12 +126,12 @@ class _HLSDeviceSettingsState extends State<HLSDeviceSettings> {
                       offset: Offset(-10, -10),
                       iconEnabledColor: iconColor,
                       onChanged: (dynamic newvalue) {
-                        if (newvalue != null){
+                        if (newvalue != null) {
                           Navigator.pop(context);
                           context
                               .read<MeetingStore>()
                               .switchAudioOutput(audioDevice: newvalue);
-                        dropdownKey = null;
+                          dropdownKey = null;
                         }
                       },
                       items: <DropdownMenuItem>[
