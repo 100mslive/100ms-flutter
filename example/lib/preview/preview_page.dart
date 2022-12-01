@@ -445,8 +445,18 @@ class _PreviewPageState extends State<PreviewPage> {
                                                       ),
                                                       child:
                                                           HLSScreenController(
-                                                        streamUrl: context.read<PreviewStore>().isStreamingStarted?
-                                                                   context.read<PreviewStore>().room?.hmshlsStreamingState?.variants[0]?.hlsStreamUrl:null,
+                                                        streamUrl: context
+                                                                .read<
+                                                                    PreviewStore>()
+                                                                .isStreamingStarted
+                                                            ? context
+                                                                .read<
+                                                                    PreviewStore>()
+                                                                .room
+                                                                ?.hmshlsStreamingState
+                                                                ?.variants[0]
+                                                                ?.hlsStreamUrl
+                                                            : null,
                                                         isRoomMute:
                                                             _previewStore
                                                                 .isRoomMute,
@@ -464,6 +474,8 @@ class _PreviewPageState extends State<PreviewPage> {
                                                             _previewStore
                                                                 .networkQuality,
                                                         user: widget.name,
+                                                        role: _previewStore
+                                                            .peer?.role,
                                                       ),
                                                     )))
                                         // }
