@@ -134,7 +134,7 @@ class _HLSDeviceSettingsState extends State<HLSDeviceSettings> {
                           Navigator.pop(context);
                           context
                               .read<MeetingStore>()
-                              .switchAudioOutput(newvalue);
+                              .switchAudioOutput(audioDevice: newvalue);
                           dropdownKey = null;
                         }
                       },

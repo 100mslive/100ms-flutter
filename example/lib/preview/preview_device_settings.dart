@@ -130,7 +130,7 @@ class _PreviewDeviceSettingsState extends State<PreviewDeviceSettings> {
                         if (newvalue != null)
                           context
                               .read<PreviewStore>()
-                              .switchAudioOutput(newvalue);
+                              .switchAudioOutput(audioDevice: newvalue);
                         dropdownKey = null;
                       },
                       items: <DropdownMenuItem>[

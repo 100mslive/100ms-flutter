@@ -766,7 +766,7 @@ class HMSSDK {
     PlatformService.removeLogsListener(hmsLogListener);
   }
 
-  ///Method to get available audio devices(Android Only)
+  ///Method to get available audio devices
   Future<List<HMSAudioDevice>> getAudioDevicesList() async {
     List result =
         await PlatformService.invokeMethod(PlatformMethod.getAudioDevicesList);
@@ -787,10 +787,8 @@ class HMSSDK {
 
   ///Method to switch audio output device
   ///
-  ///Android requires [audioDevice] parameter compulsorily for switching Audio Device.
-  ///
-  ///iOS doesn't requires any value in [audioDevice] paramter (you can pass null value).
-  void switchAudioOutput(HMSAudioDevice audioDevice) {
+  ///[audioDevice] parameter compulsorily for switching Audio Device.
+  void switchAudioOutput({required HMSAudioDevice audioDevice}) {
     PlatformService.invokeMethod(PlatformMethod.switchAudioOutput,
         arguments: {"audio_device_name": audioDevice.name});
   }

@@ -429,7 +429,8 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                         changeAudioDevice: (audioDevice) {
                                           context
                                               .read<MeetingStore>()
-                                              .switchAudioOutput(audioDevice);
+                                              .switchAudioOutput(
+                                                  audioDevice: audioDevice);
                                         },
                                       ));
                             });

@@ -258,9 +258,9 @@ class PreviewStore extends ChangeNotifier
     notifyListeners();
   }
 
-  void switchAudioOutput(HMSAudioDevice audioDevice) {
+  void switchAudioOutput({required HMSAudioDevice audioDevice}) {
     currentAudioDeviceMode = audioDevice;
-    hmsSDKInteractor!.switchAudioOutput(audioDevice);
+    hmsSDKInteractor!.switchAudioOutput(audioDevice: audioDevice);
     notifyListeners();
   }
 
