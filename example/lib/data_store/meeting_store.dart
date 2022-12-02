@@ -24,6 +24,7 @@ import 'package:pip_flutter/pipflutter_player_controller.dart';
 import 'package:pip_flutter/pipflutter_player_controls_configuration.dart';
 import 'package:pip_flutter/pipflutter_player_data_source.dart';
 import 'package:pip_flutter/pipflutter_player_data_source_type.dart';
+import 'package:pip_flutter/pipflutter_player_theme.dart';
 
 class MeetingStore extends ChangeNotifier
     with WidgetsBindingObserver
@@ -1291,6 +1292,8 @@ class MeetingStore extends ChangeNotifier
               DeviceOrientation.portraitUp,
               DeviceOrientation.portraitDown
             ],
+            autoDispose: false,
+            handleLifecycle: false,
             placeholder: Center(
               child: HLSTitleText(
                 text: "Loading...",
@@ -1301,7 +1304,8 @@ class MeetingStore extends ChangeNotifier
                 controlBarColor: Colors.transparent,
                 enablePlayPause: false,
                 enableOverflowMenu: false,
-                enableSkips: false));
+                enableSkips: false,
+                playerTheme: PipFlutterPlayerTheme.cupertino));
     PipFlutterPlayerDataSource dataSource = PipFlutterPlayerDataSource(
         PipFlutterPlayerDataSourceType.network, streamUrl,
         liveStream: true);
