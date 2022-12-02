@@ -1303,7 +1303,6 @@ class MeetingStore extends ChangeNotifier
                 controlBarColor: Colors.transparent,
                 enablePlayPause: false,
                 enableOverflowMenu: false,
-                loadingWidget: Container(),
                 enableSkips: false));
     PipFlutterPlayerDataSource dataSource = PipFlutterPlayerDataSource(
         PipFlutterPlayerDataSourceType.network, streamUrl,
