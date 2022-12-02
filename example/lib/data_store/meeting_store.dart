@@ -1291,6 +1291,8 @@ class MeetingStore extends ChangeNotifier
               DeviceOrientation.portraitUp,
               DeviceOrientation.portraitDown
             ],
+            autoDispose: false,
+            handleLifecycle: false,
             placeholder: Center(
               child: HLSTitleText(
                 text: "Loading...",
@@ -1301,6 +1303,7 @@ class MeetingStore extends ChangeNotifier
                 controlBarColor: Colors.transparent,
                 enablePlayPause: false,
                 enableOverflowMenu: false,
+                loadingWidget: Container(),
                 enableSkips: false));
     PipFlutterPlayerDataSource dataSource = PipFlutterPlayerDataSource(
         PipFlutterPlayerDataSourceType.network, streamUrl,
