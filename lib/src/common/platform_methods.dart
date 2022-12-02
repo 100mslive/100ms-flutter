@@ -154,7 +154,8 @@ enum PlatformMethod {
   setPlaybackAllowedForTrack,
   enterPipMode,
   isPipActive,
-  isPipAvailable
+  isPipAvailable,
+  changeRolesAllPeers
 }
 
 extension PlatformMethodValues on PlatformMethod {
@@ -361,6 +362,8 @@ extension PlatformMethodValues on PlatformMethod {
         return "is_pip_active";
       case PlatformMethod.isPipAvailable:
         return "is_pip_available";
+      case PlatformMethod.changeRolesAllPeers:
+        return "change_roles_all_peers";
       default:
         return 'unknown';
     }
@@ -573,6 +576,8 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.isPipActive;
       case "is_pip_available":
         return PlatformMethod.isPipAvailable;
+      case "change_roles_all_peers":
+        return PlatformMethod.changeRolesAllPeers;
       default:
         return PlatformMethod.unknown;
     }

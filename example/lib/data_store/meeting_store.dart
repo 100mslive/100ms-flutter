@@ -1313,6 +1313,11 @@ class MeetingStore extends ChangeNotifier
     if (reinitialise) notifyListeners();
   }
 
+  void changeRolesOfAllPeers(HMSRole toRole, List<HMSRole>? limitToRoles) {
+    _hmsSDKInteractor.changeRolesOfAllPeers(
+        toRole: toRole, limitToRoles: limitToRoles);
+  }
+
 //Get onSuccess or onException callbacks for HMSActionResultListenerMethod
 
   @override
@@ -1458,6 +1463,9 @@ class MeetingStore extends ChangeNotifier
       case HMSActionResultListenerMethod.switchCamera:
         Utilities.showToast("Camera switched successfully");
         break;
+      case HMSActionResultListenerMethod.changeRolesAllPeers:
+        Utilities.showToast("Change Roles of all peers successfully");
+        break;
     }
   }
 
@@ -1528,6 +1536,9 @@ class MeetingStore extends ChangeNotifier
         break;
       case HMSActionResultListenerMethod.switchCamera:
         Utilities.showToast("Camera switching failed");
+        break;
+      case HMSActionResultListenerMethod.changeRolesAllPeers:
+        Utilities.showToast("Change Roles of All Peers failed");
         break;
     }
     notifyListeners();

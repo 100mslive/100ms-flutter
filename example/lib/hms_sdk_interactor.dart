@@ -360,4 +360,9 @@ class HMSSDKInteractor {
   Future<bool> isPipAvailable() {
     return hmsSDK.isPipAvailable();
   }
+
+  void changeRolesOfAllPeers(
+      {required HMSRole toRole, List<HMSRole>? limitToRoles}) {
+    hmsSDK.changeRolesOfAllPeers(toRole: toRole, limitToRoles: limitToRoles);
+  }
 }

@@ -18,6 +18,7 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/role_change_request_dialog.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/track_change_request_dialog.dart';
 import 'package:hmssdk_flutter_example/data_store/meeting_store.dart';
+import 'package:collection/collection.dart';
 
 class UtilityComponents {
   static Future<dynamic> onBackPressed(BuildContext context) {
@@ -429,7 +430,7 @@ class UtilityComponents {
             }));
   }
 
-  static showRoleList(BuildContext context, List<HMSRole> roles,
+  static showRoleListForMute(BuildContext context, List<HMSRole> roles,
       MeetingStore _meetingStore) async {
     List<HMSRole> _selectedRoles = [];
     bool muteAll = false;
@@ -526,6 +527,152 @@ class UtilityComponents {
                                   },
                                   child: Text(
                                     "Mute",
+                                    style: GoogleFonts.inter(),
+                                  ))
+                            ],
+                          )
+                        ],
+                      ),
+                    )),
+              );
+            }));
+  }
+
+  static showDialogForBulkRoleChange(BuildContext context, List<HMSRole> roles,
+      MeetingStore _meetingStore) async {
+    double width = MediaQuery.of(context).size.width;
+    List<HMSRole> _selectedRoles = [];
+    HMSRole toRole = roles[0];
+    showDialog(
+        context: context,
+        builder: (context) => StatefulBuilder(builder: (context, setState) {
+              return AlertDialog(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12)),
+                backgroundColor: themeBottomSheetColor,
+                title: Text(
+                  "Select Roles for change Role",
+                  style: GoogleFonts.inter(
+                    color: iconColor,
+                  ),
+                ),
+                content: Container(
+                    width: 300,
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          ListView.builder(
+                              shrinkWrap: true,
+                              itemCount: roles.length,
+                              itemBuilder: (context, index) {
+                                return Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      roles[index].name,
+                                      style: GoogleFonts.inter(
+                                        color: iconColor,
+                                      ),
+                                    ),
+                                    Checkbox(
+                                        value: _selectedRoles
+                                            .contains(roles[index]),
+                                        activeColor: Colors.blue,
+                                        onChanged: (bool? value) {
+                                          if (value != null && value) {
+                                            _selectedRoles.add(roles[index]);
+                                          } else if (_selectedRoles
+                                              .contains(roles[index])) {
+                                            _selectedRoles.remove(roles[index]);
+                                          }
+                                          setState(() {});
+                                        }),
+                                  ],
+                                );
+                              }),
+                          Text(
+                            "change Roles to",
+                            style: GoogleFonts.inter(
+                              color: iconColor,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 8,
+                          ),
+                          Container(
+                            padding: EdgeInsets.only(left: 10, right: 5),
+                            decoration: BoxDecoration(
+                              color: themeSurfaceColor,
+                              borderRadius: BorderRadius.circular(10.0),
+                              border: Border.all(
+                                  color: borderColor,
+                                  style: BorderStyle.solid,
+                                  width: 0.80),
+                            ),
+                            child: DropdownButtonHideUnderline(
+                                child: DropdownButton2(
+                              isExpanded: true,
+                              dropdownWidth: width * 0.7,
+                              buttonWidth: width * 0.7,
+                              buttonHeight: 48,
+                              itemHeight: 48,
+                              value: toRole,
+                              icon: Icon(Icons.keyboard_arrow_down),
+                              buttonDecoration: BoxDecoration(
+                                color: themeSurfaceColor,
+                              ),
+                              dropdownDecoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8),
+                                  color: themeSurfaceColor,
+                                  border: Border.all(color: borderColor)),
+                              offset: Offset(-10, -10),
+                              iconEnabledColor: themeDefaultColor,
+                              selectedItemHighlightColor: hmsdefaultColor,
+                              onChanged: (dynamic newvalue) {
+                                setState(() {
+                                  toRole = newvalue;
+                                });
+                              },
+                              items: roles
+                                  .sortedBy(
+                                      (element) => element.priority.toString())
+                                  .map((role) => DropdownMenuItem(
+                                        child: HLSTitleText(
+                                          text: role.name,
+                                          textColor: themeDefaultColor,
+                                          fontWeight: FontWeight.w400,
+                                        ),
+                                        value: role,
+                                      ))
+                                  .toList(),
+                            )),
+                          ),
+                          SizedBox(
+                            height: 8,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.red),
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: Text(
+                                    "Cancel",
+                                    style: GoogleFonts.inter(),
+                                  )),
+                              ElevatedButton(
+                                  onPressed: () {
+                                    _meetingStore.changeRolesOfAllPeers(
+                                        toRole, _selectedRoles);
+                                    Navigator.pop(context);
+                                  },
+                                  child: Text(
+                                    "Change Roles",
                                     style: GoogleFonts.inter(),
                                   ))
                             ],

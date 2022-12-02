@@ -276,7 +276,7 @@ class _HLSMoreSettingsState extends State<HLSMoreSettings> {
                         onTap: () async {
                           Navigator.pop(context);
                           List<HMSRole> roles = await _meetingStore.getRoles();
-                          UtilityComponents.showRoleList(
+                          UtilityComponents.showRoleListForMute(
                               context, roles, _meetingStore);
                         },
                         contentPadding: EdgeInsets.zero,
@@ -294,6 +294,33 @@ class _HLSMoreSettingsState extends State<HLSMoreSettings> {
                               letterSpacing: 0.25,
                               fontWeight: FontWeight.w600),
                         )),
+                  if (Platform.isIOS)
+                    if (_meetingStore.localPeer?.role.permissions.changeRole ??
+                        false)
+                      ListTile(
+                          horizontalTitleGap: 2,
+                          onTap: () async {
+                            Navigator.pop(context);
+                            List<HMSRole> roles =
+                                await _meetingStore.getRoles();
+                            UtilityComponents.showDialogForBulkRoleChange(
+                                context, roles, _meetingStore);
+                          },
+                          contentPadding: EdgeInsets.zero,
+                          leading: SvgPicture.asset(
+                            "assets/icons/role_change.svg",
+                            fit: BoxFit.scaleDown,
+                            color: themeDefaultColor,
+                          ),
+                          title: Text(
+                            "Bulk Roles Change",
+                            semanticsLabel: "fl_bulk_roles_change",
+                            style: GoogleFonts.inter(
+                                fontSize: 14,
+                                color: themeDefaultColor,
+                                letterSpacing: 0.25,
+                                fontWeight: FontWeight.w600),
+                          )),
                   if (!(_meetingStore.localPeer?.role.name.contains("hls-") ??
                       true))
                     Selector<MeetingStore, bool>(

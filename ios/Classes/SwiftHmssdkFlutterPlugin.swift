@@ -134,7 +134,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
             // MARK: - Role based Actions
 
-        case "get_roles", "change_role", "accept_change_role", "end_room", "remove_peer", "on_change_track_state_request", "change_track_state_for_role":
+        case "get_roles", "change_role", "accept_change_role", "end_room", "remove_peer", "on_change_track_state_request", "change_track_state_for_role","change_roles_all_peers":
             roleActions(call, result)
 
             // MARK: - Peer Action
@@ -231,6 +231,9 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
         case "change_track_state_for_role":
             changeTrackStateForRole(call, result)
+        
+        case "change_roles_all_peers":
+            changeRolesAllPeers(call, result)
 
         default:
             result(FlutterMethodNotImplemented)
@@ -629,6 +632,28 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         }
 
         hmsSDK?.changeTrackState(mute: mute, for: trackKind, source: source, roles: roles) { _, error in
+            if let error = error {
+                result(HMSErrorExtension.toDictionary(error))
+            } else {
+                result(nil)
+            }
+        }
+    }
+    
+    private func changeRolesAllPeers(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+        let arguments = call.arguments as! [AnyHashable: Any]
+        guard let roleString = arguments["to_role"] as? String,
+              let role = HMSCommonAction.getRole(by: roleString, hmsSDK: hmsSDK) else {
+            result(HMSErrorExtension.getError("Could not find role in \(#function)"))
+            return
+        }
+        
+        var limitToRoles: [HMSRole]?
+        if let limitToRolesString = arguments["limit_to_roles"] as? [String] {
+            limitToRoles = hmsSDK?.roles.filter { limitToRolesString.contains($0.name) }
+        }
+        
+        hmsSDK?.changeRolesOfAllPeers(to: role, limitToRoles: limitToRoles) { _, error in
             if let error = error {
                 result(HMSErrorExtension.toDictionary(error))
             } else {

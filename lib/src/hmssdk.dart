@@ -919,6 +919,34 @@ class HMSSDK {
     return result ?? false;
   }
 
+  void changeRolesOfAllPeers(
+      {required HMSRole toRole,
+      List<HMSRole>? limitToRoles,
+      HMSActionResultListener? hmsActionResultListener}) async {
+    List<String> limitToRolesMap = [];
+
+    if (limitToRoles != null)
+      limitToRoles.forEach((role) => limitToRolesMap.add(role.name));
+
+    var arguments = {"to_role": toRole.name, "limit_to_roles": limitToRolesMap};
+    var result = await PlatformService.invokeMethod(
+        PlatformMethod.changeRolesAllPeers,
+        arguments: arguments);
+
+    if (hmsActionResultListener != null) {
+      if (result != null && result["error"] != null) {
+        hmsActionResultListener.onException(
+            methodType: HMSActionResultListenerMethod.changeRolesAllPeers,
+            arguments: arguments,
+            hmsException: HMSException.fromMap(result["error"]));
+      } else {
+        hmsActionResultListener.onSuccess(
+            methodType: HMSActionResultListenerMethod.changeRolesAllPeers,
+            arguments: arguments);
+      }
+    }
+  }
+
   /// To modify local peer's audio & video track settings use the [hmsTrackSetting]. Only required for advanced use-cases.
   HMSTrackSetting? hmsTrackSetting;
 
