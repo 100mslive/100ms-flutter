@@ -1,8 +1,6 @@
 //Package imports
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:pip_flutter/pipflutter_player.dart';
 import 'package:pip_flutter/pipflutter_player_controller.dart';
 import 'package:provider/provider.dart';

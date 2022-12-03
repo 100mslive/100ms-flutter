@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -23,7 +22,7 @@ class HLSViewerPage extends StatefulWidget {
   final String? streamUrl;
 
   HLSViewerPage({
-    this.streamUrl = null,
+    this.streamUrl,
     Key? key,
   }) : super(key: key);
   @override
