@@ -64,6 +64,19 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                 Navigator.of(context).popUntil((route) => route.isFirst);
               });
             }
+            if (!(context.read<MeetingStore>().hasHlsStarted ||
+                    widget.streamUrl != null) &&
+                context.read<MeetingStore>().isPipActive) {
+              return Scaffold(
+                body: Center(
+                  child: Padding(
+                      padding: const EdgeInsets.only(bottom: 8.0),
+                      child: HLSTitleText(
+                          text: "Waiting for HLS to start...",
+                          textColor: themeDefaultColor)),
+                ),
+              );
+            }
             return Scaffold(
               resizeToAvoidBottomInset: false,
               body: SafeArea(
@@ -81,30 +94,17 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                         streamUrl: (widget.streamUrl != null)
                                             ? widget.streamUrl!
                                             : context
-                                              .read<MeetingStore>()
-                                              .streamUrl),
+                                                .read<MeetingStore>()
+                                                .streamUrl),
                                   ),
                                 )
-                              : Container(
-                                  height: MediaQuery.of(context).size.height *
-                                      0.735,
-                                  child: Center(
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        Padding(
-                                            padding: const EdgeInsets.only(
-                                                bottom: 8.0),
-                                            child: HLSTitleText(
-                                                text:
-                                                    "Waiting for HLS to start...",
-                                                textColor: themeDefaultColor)),
-                                      ],
-                                    ),
-                                  ),
+                              : Center(
+                                  child: Padding(
+                                      padding:
+                                          const EdgeInsets.only(bottom: 8.0),
+                                      child: HLSTitleText(
+                                          text: "Waiting for HLS to start...",
+                                          textColor: themeDefaultColor)),
                                 );
                         }),
                     Column(
