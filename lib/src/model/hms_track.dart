@@ -39,17 +39,6 @@ class HMSTrack {
         isMute: track.isMute);
   }
 
-  static List<HMSTrack> getHMSTracksFromList(
-      {required List listOfMap, HMSPeer? peer}) {
-    List<HMSTrack> tracks = [];
-
-    listOfMap.forEach((each) {
-      tracks.add(HMSTrack.fromMap(map: each, isLocal: peer != null));
-    });
-
-    return tracks;
-  }
-
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||

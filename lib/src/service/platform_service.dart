@@ -265,8 +265,10 @@ class PlatformService {
             }
           }
 
-          List<HMSTrack> tracks = HMSTrack.getHMSTracksFromList(
-              listOfMap: event.data['local_tracks'], peer: localPeer);
+          List<HMSTrack> tracks = [];
+          event.data['local_tracks'].forEach((each) {
+            tracks.add(HMSTrack.fromMap(map: each, isLocal: localPeer != null));
+          });
 
           notifyPreviewListeners(
               method, {'room': room, 'local_tracks': tracks});
