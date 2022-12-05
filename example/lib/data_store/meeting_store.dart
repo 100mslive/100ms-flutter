@@ -164,7 +164,7 @@ class MeetingStore extends ChangeNotifier
 
   bool isPipActive = false;
 
-  bool isPipAutoEnabled = true;
+  bool isPipAutoEnabled = false;
 
   Future<bool> join(String user, String roomUrl) async {
     List<String?>? token =
@@ -1572,7 +1572,7 @@ class MeetingStore extends ChangeNotifier
         peerTrackNode.setOffScreenStatus(true);
       }
     } else if (state == AppLifecycleState.inactive) {
-      if (isPipAutoEnabled && !isPipActive && Platform.isAndroid) {
+      if (Platform.isAndroid && isPipAutoEnabled && !isPipActive) {
         isPipActive = true;
         notifyListeners();
       }
