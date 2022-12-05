@@ -148,8 +148,9 @@ class PlatformService {
         case HMSUpdateListenerMethod.onTrackUpdate:
           HMSPeer? peer = HMSPeer.fromMap(event.data['peer']);
           HMSTrack? track = data['track']['instance_of']
-              ? HMSVideoTrack.fromMap(map: data['track'])
-              : HMSAudioTrack.fromMap(map: data['track']);
+              ? HMSVideoTrack.fromMap(map: data['track'], isLocal: peer.isLocal)
+              : HMSAudioTrack.fromMap(
+                  map: data['track'], isLocal: peer.isLocal);
 
           HMSTrackUpdate? update =
               HMSTrackUpdateValues.getHMSTrackUpdateFromName(data['update']);
@@ -264,8 +265,10 @@ class PlatformService {
             }
           }
 
-          List<HMSTrack> tracks = HMSTrack.getHMSTracksFromList(
-              listOfMap: event.data['local_tracks'], peer: localPeer);
+          List<HMSTrack> tracks = [];
+          event.data['local_tracks'].forEach((each) {
+            tracks.add(HMSTrack.fromMap(map: each, isLocal: localPeer != null));
+          });
 
           notifyPreviewListeners(
               method, {'room': room, 'local_tracks': tracks});

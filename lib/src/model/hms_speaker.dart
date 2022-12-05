@@ -7,11 +7,12 @@ class HMSSpeaker {
   final int audioLevel;
 
   factory HMSSpeaker.fromMap(Map data) {
+    HMSPeer peer = HMSPeer.fromMap(data['peer']);
     return new HMSSpeaker(
-      peer: HMSPeer.fromMap(data['peer']),
+      peer: peer,
       track: data['track']['instance_of']
-          ? HMSVideoTrack.fromMap(map: data['track'])
-          : HMSAudioTrack.fromMap(map: data['track']),
+          ? HMSVideoTrack.fromMap(map: data['track'], isLocal: peer.isLocal)
+          : HMSAudioTrack.fromMap(map: data['track'], isLocal: peer.isLocal),
       audioLevel: data['audioLevel'] as int,
     );
   }
