@@ -52,7 +52,7 @@ class _ShareLinkOptionDialogState extends State<ShareLinkOptionDialog> {
             height: 8,
           ),
           HLSSubtitleText(
-              text: "Generate Share Link for $valueChoose Role",
+              text: "Generate Share Link for the following role:",
               textColor: themeSubHeadingColor),
         ],
       ),

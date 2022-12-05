@@ -1548,6 +1548,7 @@ class MeetingStore extends ChangeNotifier
         isPipActive = false;
         notifyListeners();
       }
+
       List<HMSPeer>? peersList = await getPeers();
 
       peersList?.forEach((element) {
@@ -1571,7 +1572,7 @@ class MeetingStore extends ChangeNotifier
         peerTrackNode.setOffScreenStatus(true);
       }
     } else if (state == AppLifecycleState.inactive) {
-      if (isPipAutoEnabled && !isPipActive) {
+      if (isPipAutoEnabled && !isPipActive && Platform.isAndroid) {
         isPipActive = true;
         notifyListeners();
       }
