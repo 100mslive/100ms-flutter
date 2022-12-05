@@ -148,8 +148,9 @@ class PlatformService {
         case HMSUpdateListenerMethod.onTrackUpdate:
           HMSPeer? peer = HMSPeer.fromMap(event.data['peer']);
           HMSTrack? track = data['track']['instance_of']
-              ? HMSVideoTrack.fromMap(map: data['track'])
-              : HMSAudioTrack.fromMap(map: data['track']);
+              ? HMSVideoTrack.fromMap(map: data['track'], isLocal: peer.isLocal)
+              : HMSAudioTrack.fromMap(
+                  map: data['track'], isLocal: peer.isLocal);
 
           HMSTrackUpdate? update =
               HMSTrackUpdateValues.getHMSTrackUpdateFromName(data['update']);

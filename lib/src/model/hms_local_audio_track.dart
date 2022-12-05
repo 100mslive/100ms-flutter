@@ -6,10 +6,8 @@ import 'package:hmssdk_flutter/src/service/platform_service.dart';
 ///
 ///[HMSLocalAudioTrack] contains the local peer audio track infomation.
 class HMSLocalAudioTrack extends HMSAudioTrack {
-  final HMSAudioTrackSetting setting;
   double? volume;
   HMSLocalAudioTrack({
-    required this.setting,
     required HMSTrackKind kind,
     required String source,
     required String trackId,
@@ -42,7 +40,6 @@ class HMSLocalAudioTrack extends HMSAudioTrack {
         source: map['track_source'],
         kind: HMSTrackKindValue.getHMSTrackKindFromName(map['track_kind']),
         isMute: map['track_mute'],
-        volume: (map["volume"]),
-        setting: HMSAudioTrackSetting.fromMap(map["hms_audio_track_settings"]));
+        volume: (map["volume"]));
   }
 }
