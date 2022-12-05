@@ -704,7 +704,11 @@ After calling `startHLSStreaming` we will get an `onSuccess` callback if the met
 
 #### 16. PIP Mode
 
-Sometimes we want our application to appear in a small floating window as we press the back button or navigate to home PIP comes to the rescue.100ms flutter SDK provides support for creating a Picture in Picture mode experience for video calls.
+100ms Flutter SDK provides support for creating Picture in Picture mode experience for video calls.
+
+PIP Mode lets the user watch the room video in a small window pinned to a corner of the screen while navigating between apps or browsing content on the main screen.
+
+Currently this functionality is only available on Android.
 
 To know more about how to implement PIP mode. Please check: [PIP Mode](https://www.100ms.live/docs/flutter/v2/advanced-features/pip-mode)
 
