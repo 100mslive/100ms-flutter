@@ -28,6 +28,7 @@ The Example application contains implementation of all the features provided by 
 * 🏃‍♀️ BRB(Be Right Back sign)
 * ❌ Remove Peer
 * 📡 HLS Streaming
+* 📱 PIP Mode
 * And many more...
 
 
@@ -700,6 +701,14 @@ hmsSDK.startHlsStreaming(
 ```
 
 After calling `startHLSStreaming` we will get an `onSuccess` callback if the method invocation is successful. It takes around 5-6 seconds for HLS to start. 
+
+#### 16. PIP Mode
+
+Sometimes we want our application to appear in a small floating window as we press the back button or navigate to home PIP comes to the rescue.100ms flutter SDK provides support for creating a Picture in Picture mode experience for video calls.
+
+To know more about how to implement PIP mode. Please check: [PIP Mode](https://www.100ms.live/docs/flutter/v2/advanced-features/pip-mode)
+
+https://user-images.githubusercontent.com/93931528/205587304-772a5dd6-ed64-4d9e-8bb5-4fc3eed83bea.mp4
 
 ## Handling Errors
 
