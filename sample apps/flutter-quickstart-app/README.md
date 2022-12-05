@@ -1,16 +1,12 @@
-# flutter_integration_guide
+# 100ms quickstart application
 
-A new Flutter project.
+A quick start video calling application using 100ms.
 
-## Getting Started
+## Getting Started 
 
-This project is a starting point for a Flutter application.
+Just plugin following values and run the application :
 
-A few resources to get you started if this is your first Flutter project:
+- userName : Enter the username with which you wish to join
+- authToken : Auth token of the room which you wish to join
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+That's it. Press the join button and start conversing 🥳🥳🥳
