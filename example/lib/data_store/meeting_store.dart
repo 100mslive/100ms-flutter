@@ -166,8 +166,6 @@ class MeetingStore extends ChangeNotifier
 
   bool isPipAutoEnabled = true;
 
-  bool lastVideoStatus = false;
-
   Future<bool> join(String user, String roomUrl) async {
     List<String?>? token =
         await RoomService().getToken(user: user, room: roomUrl);
@@ -1550,10 +1548,7 @@ class MeetingStore extends ChangeNotifier
         isPipActive = false;
         notifyListeners();
       }
-      if (lastVideoStatus) {
-        switchVideo();
-        lastVideoStatus = false;
-      }
+
       List<HMSPeer>? peersList = await getPeers();
 
       peersList?.forEach((element) {
@@ -1572,7 +1567,6 @@ class MeetingStore extends ChangeNotifier
           !(localPeer.videoTrack?.isMute ?? true) &&
           !isPipActive) {
         switchVideo();
-        lastVideoStatus = true;
       }
       for (PeerTrackNode peerTrackNode in peerTracks) {
         peerTrackNode.setOffScreenStatus(true);
@@ -1587,7 +1581,6 @@ class MeetingStore extends ChangeNotifier
           !(localPeer.videoTrack?.isMute ?? true) &&
           !isPipActive) {
         switchVideo();
-        lastVideoStatus = true;
       }
       for (PeerTrackNode peerTrackNode in peerTracks) {
         peerTrackNode.setOffScreenStatus(true);
