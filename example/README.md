@@ -28,6 +28,7 @@ The Example application contains implementation of all the features provided by 
 * 🏃‍♀️ BRB(Be Right Back sign)
 * ❌ Remove Peer
 * 📡 HLS Streaming
+* 📱 PIP Mode
 * And many more...
 
 
@@ -700,6 +701,18 @@ hmsSDK.startHlsStreaming(
 ```
 
 After calling `startHLSStreaming` we will get an `onSuccess` callback if the method invocation is successful. It takes around 5-6 seconds for HLS to start. 
+
+#### 16. PIP Mode
+
+100ms Flutter SDK provides support for creating Picture in Picture mode experience for video calls.
+
+PIP Mode lets the user watch the room video in a small window pinned to a corner of the screen while navigating between apps or browsing content on the main screen.
+
+Currently this functionality is only available on Android.
+
+To know more about how to implement PIP mode. Please check: [PIP Mode](https://www.100ms.live/docs/flutter/v2/advanced-features/pip-mode)
+
+https://user-images.githubusercontent.com/93931528/205587304-772a5dd6-ed64-4d9e-8bb5-4fc3eed83bea.mp4
 
 ## Handling Errors
 
