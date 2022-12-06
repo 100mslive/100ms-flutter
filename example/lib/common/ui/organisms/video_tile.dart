@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:focus_detector/focus_detector.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/change_role_options.dart';
+import 'package:hmssdk_flutter_example/common/ui/organisms/change_simulcast_layer_option.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/local_peer_tile_dialog.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
@@ -127,10 +128,26 @@ class _VideoTileState extends State<VideoTile> {
                                           },
                                         ));
                               },
+                              changeLayer: () {
+                                Navigator.pop(context);
+                                HMSRemoteVideoTrack track =
+                                    peerTrackNode.track as HMSRemoteVideoTrack;
+                                showDialog(
+                                    context: context,
+                                    builder: (_) =>
+                                        ChangeSimulcastLayerOptionDialog(
+                                            track: track));
+                              },
                               mute: mutePermission,
                               unMute: unMutePermission,
                               removeOthers: removePeerPermission,
                               roles: changeRolePermission,
+                              simulcast: (peerTrackNode.track
+                                              as HMSRemoteVideoTrack)
+                                          .layerDefinitions !=
+                                      null &&
+                                  (!(peerTrackNode.track as HMSRemoteVideoTrack)
+                                      .isMute),
                             ));
                   else
                     showDialog(

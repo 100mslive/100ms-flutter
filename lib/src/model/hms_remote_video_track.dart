@@ -4,9 +4,11 @@ import 'package:hmssdk_flutter/src/service/platform_service.dart';
 
 ///100ms HMSRemotelVideoTrack
 ///
-///[HMSLocalVideoTrack] contains the remote peer video track infomation.
+///[HMSRemoteVideoTrack] contains the remote peer video track information.
 class HMSRemoteVideoTrack extends HMSVideoTrack {
   bool isPlaybackAllowed;
+  List<HMSSimulcastLayerDefinition>? layerDefinitions;
+  HMSSimulcastLayer layer;
   HMSRemoteVideoTrack(
       {required bool isDegraded,
       required HMSTrackKind kind,
@@ -14,7 +16,9 @@ class HMSRemoteVideoTrack extends HMSVideoTrack {
       required String trackId,
       required String trackDescription,
       required bool isMute,
-      required this.isPlaybackAllowed})
+      required this.isPlaybackAllowed,
+      required this.layer,
+      this.layerDefinitions})
       : super(
           isDegraded: isDegraded,
           kind: kind,
@@ -25,14 +29,24 @@ class HMSRemoteVideoTrack extends HMSVideoTrack {
         );
 
   factory HMSRemoteVideoTrack.fromMap({required Map map}) {
-    return HMSRemoteVideoTrack(
+    List<HMSSimulcastLayerDefinition> layerDefinitions = [];
+
+    for (Map layer in map["layer_definitions"]) {
+      layerDefinitions.add(HMSSimulcastLayerDefinition.fromMap(layer));
+    }
+
+    HMSRemoteVideoTrack track = HMSRemoteVideoTrack(
         trackId: map['track_id'],
         trackDescription: map['track_description'],
         source: (map['track_source']),
         kind: HMSTrackKindValue.getHMSTrackKindFromName(map['track_kind']),
         isMute: map['track_mute'],
         isDegraded: map['is_degraded'],
-        isPlaybackAllowed: map['is_playback_allowed']);
+        isPlaybackAllowed: map['is_playback_allowed'],
+        layer:
+            HMSSimulcastLayerValue.getHMSSimulcastLayerFromName(map['layer']),
+        layerDefinitions: layerDefinitions);
+    return track;
   }
 
   Future<HMSException?> setPlaybackAllowed(bool isPlaybackAllowed) async {
@@ -47,6 +61,20 @@ class HMSRemoteVideoTrack extends HMSVideoTrack {
 
     if (result == null) {
       this.isPlaybackAllowed = isPlaybackAllowed;
+      return null;
+    } else {
+      return HMSException.fromMap(result["error"]);
+    }
+  }
+
+  Future<HMSException?> setSimulcastLayer(HMSSimulcastLayer layer) async {
+    var result = await PlatformService.invokeMethod(
+        PlatformMethod.setSimulcastLayer,
+        arguments: {
+          "track_id": trackId,
+          "layer": HMSSimulcastLayerValue.getValueFromHMSSimulcastLayer(layer)
+        });
+    if (result == null) {
       return null;
     } else {
       return HMSException.fromMap(result["error"]);

@@ -154,7 +154,8 @@ enum PlatformMethod {
   setPlaybackAllowedForTrack,
   enterPipMode,
   isPipActive,
-  isPipAvailable
+  isPipAvailable,
+  setSimulcastLayer
 }
 
 extension PlatformMethodValues on PlatformMethod {
@@ -361,6 +362,8 @@ extension PlatformMethodValues on PlatformMethod {
         return "is_pip_active";
       case PlatformMethod.isPipAvailable:
         return "is_pip_available";
+      case PlatformMethod.setSimulcastLayer:
+        return "set_simulcast_layer";
       default:
         return 'unknown';
     }
@@ -573,6 +576,8 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.isPipActive;
       case "is_pip_available":
         return PlatformMethod.isPipAvailable;
+      case "set_simulcast_layer":
+        return PlatformMethod.setSimulcastLayer;
       default:
         return PlatformMethod.unknown;
     }
