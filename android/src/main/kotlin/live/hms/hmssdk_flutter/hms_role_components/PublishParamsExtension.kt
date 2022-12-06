@@ -26,6 +26,10 @@ class PublishParamsExtension {
                 args.put("screen",VideoParamsExtension.toDictionary(publishParams?.screen!!))
             }
 
+//            publishParams.simulcast?.let {
+//                args.put("simulcast",)
+//            }
+
             return args
         }
     }
