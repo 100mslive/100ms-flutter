@@ -1286,6 +1286,7 @@ class MeetingStore extends ChangeNotifier
     }
     PipFlutterPlayerConfiguration pipFlutterPlayerConfiguration =
         PipFlutterPlayerConfiguration(
+            allowedScreenSleep: false,
             fit: BoxFit.contain,
             showPlaceholderUntilPlay: true,
             deviceOrientationsAfterFullScreen: [
