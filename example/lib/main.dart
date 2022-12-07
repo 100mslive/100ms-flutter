@@ -454,7 +454,7 @@ class _HomePageState extends State<HomePage> {
                                       borderRadius: BorderRadius.circular(20),
                                     ),
                                     context: context,
-                                    builder: (ctx) => HMSAppSettings())),
+                                    builder: (ctx) => HMSAppSettings(appVersion:_packageInfo.version,))),
                                 child: Padding(
                                   padding: const EdgeInsets.only(
                                       left: 8.0, right: 8),

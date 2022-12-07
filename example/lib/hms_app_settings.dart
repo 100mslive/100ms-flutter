@@ -4,12 +4,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:hmssdk_flutter_example/hls-streaming/util/hls_title_text.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class HMSAppSettings extends StatefulWidget {
+  final String appVersion;
+  HMSAppSettings({required this.appVersion});
   @override
   State<HMSAppSettings> createState() => _HMSAppSettingsState();
 }
@@ -354,6 +357,90 @@ class _HMSAppSettingsState extends State<HMSAppSettings> {
                           color: themeDefaultColor,
                           letterSpacing: 0.25,
                           fontWeight: FontWeight.w600),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 30,
+                    child: ListTile(
+                      horizontalTitleGap: 2,
+                      enabled: true,
+                      contentPadding: EdgeInsets.zero,
+                      leading: Text(
+                        "Version",
+                        semanticsLabel: "app_version",
+                        style: GoogleFonts.inter(
+                            fontSize: 12,
+                            color: themeDefaultColor,
+                            letterSpacing: 0.25,
+                            fontWeight: FontWeight.w400),
+                      ),
+                      trailing: Text(
+                        widget.appVersion,
+                        semanticsLabel: "app_version",
+                        style: GoogleFonts.inter(
+                            fontSize: 12,
+                            color: themeDefaultColor,
+                            letterSpacing: 0.25,
+                            fontWeight: FontWeight.w400),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 30,
+                    child: ListTile(
+                      horizontalTitleGap: 2,
+                      enabled: true,
+                      contentPadding: EdgeInsets.zero,
+                      leading: Text(
+                        "HMSSDK Version",
+                        semanticsLabel: "hmssdk_version",
+                        style: GoogleFonts.inter(
+                            fontSize: 12,
+                            color: themeDefaultColor,
+                            letterSpacing: 0.25,
+                            fontWeight: FontWeight.w400),
+                      ),
+                      trailing: Text(
+                        HMSSDKConstants.hmsSDKVersion,
+                        semanticsLabel: "hmssdk_version",
+                        style: GoogleFonts.inter(
+                            fontSize: 12,
+                            color: themeDefaultColor,
+                            letterSpacing: 0.25,
+                            fontWeight: FontWeight.w400),
+                      ),
+                    ),
+                  ),
+
+                  ListTile(
+                    horizontalTitleGap: 2,
+                    enabled: true,
+                    contentPadding: EdgeInsets.zero,
+                    leading: Text(
+                      Platform.isAndroid
+                          ? "Android SDK Version"
+                          : "iOS SDK Version",
+                      semanticsLabel: Platform.isAndroid
+                          ? "android_sdk_version"
+                          : "iOS_sdk_version",
+                      style: GoogleFonts.inter(
+                          fontSize: 12,
+                          color: themeDefaultColor,
+                          letterSpacing: 0.25,
+                          fontWeight: FontWeight.w400),
+                    ),
+                    trailing: Text(
+                      Platform.isAndroid
+                          ? HMSSDKConstants.androidSDKVersion
+                          : HMSSDKConstants.iOSSDKVersion,
+                      semanticsLabel: Platform.isAndroid
+                          ? "android_sdk_version"
+                          : "iOS_sdk_version",
+                      style: GoogleFonts.inter(
+                          fontSize: 12,
+                          color: themeDefaultColor,
+                          letterSpacing: 0.25,
+                          fontWeight: FontWeight.w400),
                     ),
                   ),
                 ],
