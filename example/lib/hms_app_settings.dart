@@ -366,7 +366,7 @@ class _HMSAppSettingsState extends State<HMSAppSettings> {
                       enabled: true,
                       contentPadding: EdgeInsets.zero,
                       leading: Text(
-                        "Version",
+                        "App Version",
                         semanticsLabel: "app_version",
                         style: GoogleFonts.inter(
                             fontSize: 12,
