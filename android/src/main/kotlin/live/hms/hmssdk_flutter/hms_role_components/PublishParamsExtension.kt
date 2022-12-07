@@ -1,6 +1,7 @@
 package live.hms.hmssdk_flutter.hms_role_components
 
 import android.util.Log
+import live.hms.hmssdk_flutter.HMSSimulcastSettingsExtension
 import live.hms.video.sdk.models.role.PublishParams
 
 class PublishParamsExtension {
@@ -26,9 +27,9 @@ class PublishParamsExtension {
                 args.put("screen",VideoParamsExtension.toDictionary(publishParams?.screen!!))
             }
 
-//            publishParams.simulcast?.let {
-//                args.put("simulcast",)
-//            }
+            publishParams.simulcast?.let {
+                args.put("simulcast",HMSSimulcastSettingsExtension.toDictionary(publishParams?.simulcast!!))
+            }
 
             return args
         }
