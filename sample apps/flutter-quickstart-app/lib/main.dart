@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
@@ -100,8 +99,7 @@ class _MeetingPageState extends State<MeetingPage>
     implements HMSUpdateListener {
   late HMSSDK hmsSDK;
   String userName = "Enter username here";
-  String authToken =
-      "Enter token here";
+  String authToken = "Enter token here";
   Offset position = const Offset(5, 5);
   bool isJoinSuccessful = false;
   HMSPeer? localPeer, remotePeer;
@@ -158,17 +156,16 @@ class _MeetingPageState extends State<MeetingPage>
       }
     } else if (update == HMSPeerUpdate.peerLeft) {
       if (!peer.isLocal) {
-          if(mounted){
-setState(() {
-              remotePeer = null;
-          });
-          }
-            
-      } else {
-        if(mounted) {
+        if (mounted) {
           setState(() {
-              localPeer = null;
-            });
+            remotePeer = null;
+          });
+        }
+      } else {
+        if (mounted) {
+          setState(() {
+            localPeer = null;
+          });
         }
       }
     }
@@ -182,16 +179,16 @@ setState(() {
     if (track.kind == HMSTrackKind.kHMSTrackKindVideo) {
       if (trackUpdate == HMSTrackUpdate.trackRemoved) {
         if (peer.isLocal) {
-          if(mounted) {
+          if (mounted) {
             setState(() {
-                localPeerVideoTrack = null;
-              });
+              localPeerVideoTrack = null;
+            });
           }
         } else {
-          if(mounted) {
+          if (mounted) {
             setState(() {
-                remotePeerVideoTrack = null;
-              });
+              remotePeerVideoTrack = null;
+            });
           }
         }
         return;
@@ -263,58 +260,67 @@ setState(() {
                 height: MediaQuery.of(context).size.height,
                 child: GridView(
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      mainAxisExtent: (remotePeerVideoTrack == null)?MediaQuery.of(context).size.height:MediaQuery.of(context).size.height/2,
+                      mainAxisExtent: (remotePeerVideoTrack == null)
+                          ? MediaQuery.of(context).size.height
+                          : MediaQuery.of(context).size.height / 2,
                       crossAxisCount: 1),
                   children: [
                     if (remotePeerVideoTrack != null && remotePeer != null)
-                      peerTile(Key(remotePeerVideoTrack?.trackId??"" "mainVideo"),remotePeerVideoTrack, remotePeer, context),
-                    peerTile(Key(localPeerVideoTrack?.trackId??"" "mainVideo"),localPeerVideoTrack, localPeer, context)
+                      peerTile(
+                          Key(remotePeerVideoTrack?.trackId ?? "" "mainVideo"),
+                          remotePeerVideoTrack,
+                          remotePeer,
+                          context),
+                    peerTile(
+                        Key(localPeerVideoTrack?.trackId ?? "" "mainVideo"),
+                        localPeerVideoTrack,
+                        localPeer,
+                        context)
                   ],
                 )),
-                        Align(
-                          alignment: Alignment.bottomCenter,
-                          child: Container(
-                            color: Colors.black,
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(vertical:8.0),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  GestureDetector(
-                                    onTap: () async {
-                                      hmsSDK.leave();
-                                      Navigator.pop(context);
-                                    },
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: Colors.red.withAlpha(60),
-                                              blurRadius: 3.0,
-                                              spreadRadius: 5.0,
-                                            ),
-                                          ]),
-                                      child: const CircleAvatar(
-                                        radius: 25,
-                                        backgroundColor: Colors.red,
-                                        child: Icon(Icons.call_end, color: Colors.white),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                color: Colors.black,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      GestureDetector(
+                        onTap: () async {
+                          hmsSDK.leave();
+                          Navigator.pop(context);
+                        },
+                        child: Container(
+                          decoration:
+                              BoxDecoration(shape: BoxShape.circle, boxShadow: [
+                            BoxShadow(
+                              color: Colors.red.withAlpha(60),
+                              blurRadius: 3.0,
+                              spreadRadius: 5.0,
                             ),
+                          ]),
+                          child: const CircleAvatar(
+                            radius: 25,
+                            backgroundColor: Colors.red,
+                            child: Icon(Icons.call_end, color: Colors.white),
                           ),
                         ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       )),
     );
   }
 
-  Widget peerTile(Key key,
-      HMSVideoTrack? videoTrack, HMSPeer? peer, BuildContext context) {
+  Widget peerTile(
+      Key key, HMSVideoTrack? videoTrack, HMSPeer? peer, BuildContext context) {
     return Container(
       key: key,
       color: Colors.black,

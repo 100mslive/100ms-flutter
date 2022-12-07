@@ -29,7 +29,7 @@ class  HMSRoomExtension {
         if let sessionId = room.sessionID {
             dict["session_id"] = sessionId
         }
-        
+
         if let peerCount = room.peerCount {
             dict["peer_count"] = peerCount
         }
