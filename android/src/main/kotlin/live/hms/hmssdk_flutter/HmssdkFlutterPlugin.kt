@@ -181,6 +181,9 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             "enter_pip_mode","is_pip_active","is_pip_available"->{
                 HMSPipAction.pipActions(call,result,this.activity)
             }
+            "set_simulcast_layer"->{
+                setSimulcastLayer(call,result)
+            }
             else -> {
                 result.notImplemented()
             }
@@ -1042,6 +1045,40 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         error["description"] = "Track not found to set isPlaybackAllowed"
         map["error"] = error
         result.success(map)
+    }
+
+    private fun setSimulcastLayer(call: MethodCall, result: Result){
+        val trackId = call.argument<String>("track_id")
+        val simulcastLayer : String? = call.argument<String>("layer")
+
+        if(trackId == null || simulcastLayer == null){
+            val map = HashMap<String,Map<String,String>>()
+            val error = HashMap<String, String>()
+            error["message"] = "Could not set simulcast layer for track"
+            error["action"] = "NONE"
+            error["description"] = "Either trackId or simulcastLayer is null"
+            map["error"] = error
+            result.success(map)
+        }
+
+        val room = hmssdk!!.getRoom()
+        if(room != null){
+            val track:HMSRemoteVideoTrack? = HmsUtilities.getVideoTrack(trackId!!,room) as HMSRemoteVideoTrack?;
+            if(track != null){
+                track.setLayer(HMSSimulcastLayerExtension.getLayerFromString(layer = simulcastLayer!!))
+                result.success(null)
+            }
+            else{
+                val map = HashMap<String,Map<String,String>>()
+                val error = HashMap<String, String>()
+                error["message"] = "Could not set simulcast layer for track"
+                error["action"] = "NONE"
+                error["description"] = "No track found for corresponding trackId"
+                map["error"] = error
+                result.success(map)
+            }
+        }
+
     }
 
     private val hmsStatsListener = object : HMSStatsObserver {

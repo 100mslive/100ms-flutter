@@ -33,6 +33,13 @@ class HMSTrackExtension {
 
             if(track is HMSRemoteVideoTrack){
                 hashMap["is_playback_allowed"] = track.isPlaybackAllowed
+                hashMap["layer"] = HMSSimulcastLayerExtension.getStringFromLayer(track.getLayer())
+                val layers : ArrayList<HashMap<String,Any?>> = ArrayList()
+                track.getLayerDefinition().forEach{
+                    layers.add(HMSSimulcastLayerExtension.toDictionary(it))
+                }
+                hashMap["layer_definitions"] = layers
+
             }
 
             return hashMap
