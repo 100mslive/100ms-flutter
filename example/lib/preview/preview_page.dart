@@ -243,7 +243,7 @@ class _PreviewPageState extends State<PreviewPage> {
                                         animationType: BadgeAnimationType.fade,
                                         badgeColor: hmsdefaultColor,
                                         badgeContent: Text(
-                                            "${_previewStore.peers.length.toString()}"),
+                                            "${_previewStore.peerCount.toString()}"),
                                         child: EmbeddedButton(
                                           height: 40,
                                           width: 40,
