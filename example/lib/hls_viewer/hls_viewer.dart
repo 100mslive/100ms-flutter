@@ -57,40 +57,41 @@ class _HLSPlayerState extends State<HLSPlayer> with TickerProviderStateMixin {
                       ),
                     ),
                   )),
-                  Positioned(
-                    bottom: 10,
-                    right: 20,
-                    child: GestureDetector(
-                      onTap: () {
-                        animation.reverse();
-                        context
-                            .read<MeetingStore>()
-                            .setPIPVideoController(widget.streamUrl, true);
-                        animation.forward();
-                      },
-                      child: Container(
-                        padding: EdgeInsets.all(5),
-                        child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Icons.circle,
-                                color: Colors.red,
-                                size: 15,
-                              ),
-                              SizedBox(
-                                width: 5,
-                              ),
-                              Text(
-                                "Go Live",
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold),
-                              )
-                            ]),
+                  if (!context.read<MeetingStore>().isPipActive)
+                    Positioned(
+                      bottom: 10,
+                      right: 20,
+                      child: GestureDetector(
+                        onTap: () {
+                          animation.reverse();
+                          context
+                              .read<MeetingStore>()
+                              .setPIPVideoController(widget.streamUrl, true);
+                          animation.forward();
+                        },
+                        child: Container(
+                          padding: EdgeInsets.all(5),
+                          child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.circle,
+                                  color: Colors.red,
+                                  size: 15,
+                                ),
+                                SizedBox(
+                                  width: 5,
+                                ),
+                                Text(
+                                  "Go Live",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold),
+                                )
+                              ]),
+                        ),
                       ),
-                    ),
-                  )
+                    )
                 ],
               ));
         });

@@ -24,6 +24,8 @@ import 'package:pip_flutter/pipflutter_player_controller.dart';
 import 'package:pip_flutter/pipflutter_player_controls_configuration.dart';
 import 'package:pip_flutter/pipflutter_player_data_source.dart';
 import 'package:pip_flutter/pipflutter_player_data_source_type.dart';
+import 'package:pip_flutter/pipflutter_player_event.dart';
+import 'package:pip_flutter/pipflutter_player_event_type.dart';
 import 'package:pip_flutter/pipflutter_player_theme.dart';
 
 class MeetingStore extends ChangeNotifier
@@ -1301,6 +1303,13 @@ class MeetingStore extends ChangeNotifier
                 textColor: themeDefaultColor,
               ),
             ),
+            eventListener: (PipFlutterPlayerEvent event) {
+              if (event.pipFlutterPlayerEventType ==
+                      PipFlutterPlayerEventType.initialized &&
+                  isPipActive) {
+                hlsVideoController!.enablePictureInPicture(pipFlutterPlayerKey);
+              }
+            },
             controlsConfiguration: PipFlutterPlayerControlsConfiguration(
                 controlBarColor: Colors.transparent,
                 enablePlayPause: false,
