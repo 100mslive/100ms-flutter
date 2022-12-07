@@ -500,6 +500,12 @@ class MeetingStore extends ChangeNotifier
       case HMSActionResultListenerMethod.stopAudioShare:
         // TODO: Handle this case.
         break;
+      case HMSActionResultListenerMethod.setSessionMetadata:
+        // TODO: Handle this case.
+        break;
+      case HMSActionResultListenerMethod.switchCamera:
+        // TODO: Handle this case.
+        break;
     }
   }
 
@@ -557,6 +563,12 @@ class MeetingStore extends ChangeNotifier
         // TODO: Handle this case.
         break;
       case HMSActionResultListenerMethod.stopAudioShare:
+        // TODO: Handle this case.
+        break;
+      case HMSActionResultListenerMethod.setSessionMetadata:
+        // TODO: Handle this case.
+        break;
+      case HMSActionResultListenerMethod.switchCamera:
         // TODO: Handle this case.
         break;
     }
