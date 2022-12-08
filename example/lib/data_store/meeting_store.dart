@@ -588,6 +588,7 @@ class MeetingStore extends ChangeNotifier
         peerTrackNode.audioTrack = track as HMSAudioTrack;
         peerTrackNode.notify();
       } else {
+        if (peer.role.name.contains("hls-")) return;
         peerTracks.add(new PeerTrackNode(
             peer: peer,
             uid: peer.peerId + "mainVideo",
@@ -609,6 +610,7 @@ class MeetingStore extends ChangeNotifier
           rearrangeTile(peerTrackNode, index);
         }
       } else {
+        if (peer.role.name.contains("hls-")) return;
         peerTracks.add(new PeerTrackNode(
             peer: peer,
             uid: peer.peerId + "mainVideo",
