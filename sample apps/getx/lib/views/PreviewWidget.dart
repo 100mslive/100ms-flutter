@@ -27,7 +27,7 @@ class PreviewWidget extends StatelessWidget {
           Expanded(
             child: GetX<PreviewController>(builder: (controller) {
               return Container(
-                child: controller.localTracks.length > 0
+                child: controller.localTracks.isNotEmpty
                     ? SizedBox(
                         height: itemHeight,
                         width: itemWidth,

@@ -1,3 +1,46 @@
+## 1.0.0 - 2022-12-09
+
+### Added
+
+- Added support for Picture in Picture mode on Android.
+
+    PIP Mode lets the user watch the room video in a small window pinned to a corner of the screen while navigating between apps or browsing content on the main screen.
+
+    Example implementation for checking device support & enabling PIP mode:
+    ```dart
+    // to start PIP mode invoke the `enterPipMode` function, the parameters passed to it are optional
+    hmsSDK.enterPipMode(aspectRatio: [16, 9], autoEnterPip: true);
+
+    // method to check whether PIP mode is available for current device
+    bool isPipAvailable = await hmsSDK.isPipAvailable();
+
+    // method to check whether PIP mode is active currently
+    bool isPipActive = await hmsSDK.isPipActive();
+    ```
+
+- Added `roomPeerCountUpdated` type in `HMSRoomUpdate`
+
+- Added `isPlaybackAllowed` to Remote Audio & Video Tracks to check if the track is allowed to be played locally
+
+- Added convenience APIs to Mute / Unmute Audio or Video of the entire room locally
+
+
+### Fixed
+
+- Corrected parsing of `HMSMessage` objects sent Server-side APIs
+- Session Metadata can now be reset to a null value
+- Importing Native Android SDK dependency from Maven Central instead of Jitpack
+- HMSTrackSettings is now nullable while building the HMSSDK object
+- Corrected usage of Native Util functions to fetch Audio & Video tracks 
+- Corrected default local audio track settings for iOS devices
+- Corrected sending of peer count in `HMSRoom` instance on iOS
+
+Updated to Native Android SDK 2.5.1 & Native iOS SDK 0.4.7
+
+Full Changelog: [0.7.8...1.0.0](https://github.com/100mslive/100ms-flutter/compare/0.7.8...1.0.0)
+
+
+
 ## 0.7.8 - 2022-10-31
 
 - Added support for Joining with Muted Audio & Video on iOS devices

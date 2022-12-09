@@ -46,6 +46,7 @@ class HMSVideoViewWidget(private val context: Context, id: Int, creationParams: 
     }
 
     override fun dispose() {
+        hmsVideoView?.onDisposeCalled();
         hmsVideoView = null
     }
 }

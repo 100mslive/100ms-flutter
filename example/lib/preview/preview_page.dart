@@ -224,9 +224,6 @@ class _PreviewPageState extends State<PreviewPage> {
                                                             PreviewDeviceSettings()),
                                               )
                                             : _previewStore.toggleSpeaker(),
-                                        // {
-
-                                        //   _previewStore.toggleSpeaker()},
                                         offColor: themeHintColor,
                                         onColor: themeScreenBackgroundColor,
                                         isActive: true,
@@ -246,7 +243,7 @@ class _PreviewPageState extends State<PreviewPage> {
                                         animationType: BadgeAnimationType.fade,
                                         badgeColor: hmsdefaultColor,
                                         badgeContent: Text(
-                                            "${_previewStore.peers.length.toString()}"),
+                                            "${_previewStore.peerCount.toString()}"),
                                         child: EmbeddedButton(
                                           height: 40,
                                           width: 40,
@@ -448,6 +445,18 @@ class _PreviewPageState extends State<PreviewPage> {
                                                       ),
                                                       child:
                                                           HLSScreenController(
+                                                        streamUrl: context
+                                                                .read<
+                                                                    PreviewStore>()
+                                                                .isStreamingStarted
+                                                            ? context
+                                                                .read<
+                                                                    PreviewStore>()
+                                                                .room
+                                                                ?.hmshlsStreamingState
+                                                                ?.variants[0]
+                                                                ?.hlsStreamUrl
+                                                            : null,
                                                         isRoomMute:
                                                             _previewStore
                                                                 .isRoomMute,
@@ -465,6 +474,8 @@ class _PreviewPageState extends State<PreviewPage> {
                                                             _previewStore
                                                                 .networkQuality,
                                                         user: widget.name,
+                                                        role: _previewStore
+                                                            .peer?.role,
                                                       ),
                                                     )))
                                         // }

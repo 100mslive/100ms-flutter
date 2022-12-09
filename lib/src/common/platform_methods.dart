@@ -87,11 +87,14 @@ enum PlatformMethod {
 
   ///remove peer from room
   removePeer,
-  //mute all peers in room
-  muteAll,
-  //send unmute request to all peer
-  unMuteAll,
-
+  //mute all peers in room for yourself
+  muteRoomAudioLocally,
+  //unMute all peers in room for yourself
+  unMuteRoomAudioLocally,
+  //mute all peers video in room for yourself
+  muteRoomVideoLocally,
+  //unMute all peers video in room for yourself
+  unMuteRoomVideoLocally,
   //get local peer
   getLocalPeer,
   //get list of all remote peers
@@ -113,7 +116,6 @@ enum PlatformMethod {
 
   ///change metadata for local peer
   changeMetadata,
-  setPlayBackAllowed,
   setVolume,
 
   ///change name of local peer
@@ -148,7 +150,11 @@ enum PlatformMethod {
   getTrackSettings,
   destroy,
   setSessionMetadata,
-  getSessionMetadata
+  getSessionMetadata,
+  setPlaybackAllowedForTrack,
+  enterPipMode,
+  isPipActive,
+  isPipAvailable
 }
 
 extension PlatformMethodValues on PlatformMethod {
@@ -244,11 +250,17 @@ extension PlatformMethodValues on PlatformMethod {
       case PlatformMethod.removePeer:
         return 'remove_peer';
 
-      case PlatformMethod.muteAll:
-        return 'mute_all';
+      case PlatformMethod.muteRoomAudioLocally:
+        return 'mute_room_audio_locally';
 
-      case PlatformMethod.unMuteAll:
-        return 'un_mute_all';
+      case PlatformMethod.unMuteRoomAudioLocally:
+        return 'un_mute_room_audio_locally';
+
+      case PlatformMethod.muteRoomVideoLocally:
+        return 'mute_room_video_locally';
+
+      case PlatformMethod.unMuteRoomVideoLocally:
+        return 'un_mute_room_video_locally';
 
       case PlatformMethod.getLocalPeer:
         return 'get_local_peer';
@@ -279,9 +291,6 @@ extension PlatformMethodValues on PlatformMethod {
 
       case PlatformMethod.changeMetadata:
         return "change_metadata";
-
-      case PlatformMethod.setPlayBackAllowed:
-        return "set_playback_allowed";
 
       case PlatformMethod.setVolume:
         return "set_volume";
@@ -344,6 +353,14 @@ extension PlatformMethodValues on PlatformMethod {
         return "set_session_metadata";
       case PlatformMethod.getSessionMetadata:
         return "get_session_metadata";
+      case PlatformMethod.setPlaybackAllowedForTrack:
+        return "set_playback_allowed_for_track";
+      case PlatformMethod.enterPipMode:
+        return "enter_pip_mode";
+      case PlatformMethod.isPipActive:
+        return "is_pip_active";
+      case PlatformMethod.isPipAvailable:
+        return "is_pip_available";
       default:
         return 'unknown';
     }
@@ -441,11 +458,17 @@ extension PlatformMethodValues on PlatformMethod {
       case 'remove_peer':
         return PlatformMethod.removePeer;
 
-      case 'mute_all':
-        return PlatformMethod.muteAll;
+      case 'mute_room_audio_locally':
+        return PlatformMethod.muteRoomAudioLocally;
 
-      case 'un_mute_all':
-        return PlatformMethod.unMuteAll;
+      case 'un_mute_room_audio_locally':
+        return PlatformMethod.unMuteRoomAudioLocally;
+
+      case 'mute_room_video_locally':
+        return PlatformMethod.muteRoomVideoLocally;
+
+      case 'un_mute_room_video_locally':
+        return PlatformMethod.unMuteRoomVideoLocally;
 
       case 'get_local_peer':
         return PlatformMethod.getLocalPeer;
@@ -479,9 +502,6 @@ extension PlatformMethodValues on PlatformMethod {
 
       case "change_metadata":
         return PlatformMethod.changeMetadata;
-
-      case "set_playback_allowed":
-        return PlatformMethod.setPlayBackAllowed;
 
       case "set_volume":
         return PlatformMethod.setVolume;
@@ -545,6 +565,14 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.setSessionMetadata;
       case "get_session_metadata":
         return PlatformMethod.getSessionMetadata;
+      case "set_playback_allowed_for_track":
+        return PlatformMethod.setPlaybackAllowedForTrack;
+      case "enter_pip_mode":
+        return PlatformMethod.enterPipMode;
+      case "is_pip_active":
+        return PlatformMethod.isPipActive;
+      case "is_pip_available":
+        return PlatformMethod.isPipAvailable;
       default:
         return PlatformMethod.unknown;
     }

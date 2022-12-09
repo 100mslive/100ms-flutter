@@ -119,12 +119,12 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
             // MARK: - Audio Helpers
 
-        case "switch_audio", "is_audio_mute", "mute_all", "un_mute_all", "set_volume":
+        case "switch_audio", "is_audio_mute", "mute_room_audio_locally", "un_mute_room_audio_locally", "set_volume":
             HMSAudioAction.audioActions(call, result, hmsSDK)
 
             // MARK: - Video Helpers
 
-        case "switch_video", "switch_camera", "start_capturing", "stop_capturing", "is_video_mute", "set_playback_allowed":
+        case "switch_video", "switch_camera", "start_capturing", "stop_capturing", "is_video_mute", "mute_room_video_locally", "un_mute_room_video_locally":
             HMSVideoAction.videoActions(call, result, hmsSDK)
 
             // MARK: - Messaging
@@ -176,6 +176,9 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
         case "get_session_metadata", "set_session_metadata":
             sessionMetadataAction(call, result)
+
+        case "set_playback_allowed_for_track":
+            setPlaybackAllowedForTrack(call, result)
 
         default:
             result(FlutterMethodNotImplemented)
@@ -429,27 +432,8 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
             var trackSettings: HMSTrackSettings?
             if let settingsDict = arguments["hms_track_setting"] as? [AnyHashable: Any] {
-                if let audioTrackSetting = settingsDict["audio_track_setting"] as? [AnyHashable: Any] {
-                    if let playerNode = audioTrackSetting["audio_source"] as? [String] {
-                        for node in playerNode {
-                            if self.audioMixerSourceMap[node] == nil {
-                                if node=="mic_node" {
-                                    self.audioMixerSourceMap["mic_node"] = HMSMicNode()
-                                } else if node == "screen_broadcast_audio_receiver_node" {
-                                    do {
-                                        self.audioMixerSourceMap["screen_broadcast_audio_receiver_node"] = try sdk.screenBroadcastAudioReceiverNode()
-                                    } catch {
-                                        result(HMSErrorExtension.toDictionary(error))
-                                    }
-                                } else {
-                                    self.audioMixerSourceMap[node] = HMSAudioFilePlayerNode()
-                                }
-                            }
-                        }
-                    }
-
-                    trackSettings = HMSTrackSettingsExtension.setTrackSetting(settingsDict, audioMixerSourceMap, result)
-                }
+                audioMixerSourceInit(settingsDict, sdk, result)
+                trackSettings = HMSTrackSettingsExtension.setTrackSetting(settingsDict, audioMixerSourceMap, result)
             }
 
             if let settings = trackSettings {
@@ -771,7 +755,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
         let arguments = call.arguments as! [AnyHashable: Any]
 
-        guard let metadata = arguments["session_metadata"] as? String else {
+        guard var metadata = arguments["session_metadata"] as? String? ?? "" else {
             result(HMSErrorExtension.getError("No session metadata found in \(#function)"))
             return
         }
@@ -785,6 +769,38 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             }
         }
         )
+    }
+
+    private func setPlaybackAllowedForTrack(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+        let arguments = call.arguments as! [AnyHashable: Any]
+
+        guard let isPlaybackAllowed = arguments["is_playback_allowed"] as? Bool,
+              let trackID = arguments["track_id"] as? String,
+              let trackKind = arguments["track_kind"] as? String
+        else {
+            result(HMSErrorExtension.getError("Invalid arguments passed in \(#function)"))
+            return
+        }
+
+        let room = hmsSDK?.room
+        if room != nil {
+            if kind(from: trackKind) == HMSTrackKind.audio {
+                let audioTrack = HMSUtilities.getAudioTrack(for: trackID, in: room!) as HMSAudioTrack?
+                if audioTrack != nil && audioTrack is HMSRemoteAudioTrack {
+                    (audioTrack as! HMSRemoteAudioTrack).setPlaybackAllowed(isPlaybackAllowed)
+                    result(nil)
+                    return
+                }
+            } else if kind(from: trackKind) == HMSTrackKind.video {
+                let videoTrack = HMSUtilities.getVideoTrack(for: trackID, in: room!) as HMSVideoTrack?
+                if videoTrack != nil && videoTrack is HMSRemoteVideoTrack {
+                    (videoTrack as! HMSRemoteVideoTrack).setPlaybackAllowed(isPlaybackAllowed)
+                    result(nil)
+                    return
+                }
+            }
+        }
+        result(HMSErrorExtension.getError("Could not set isPlaybackAllowed for track in \(#function)"))
     }
 
     // MARK: - 100ms SDK Delegate Callbacks
@@ -1072,6 +1088,28 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             return HMSCodec.H264
         }
         return HMSCodec.VP8
+    }
+
+    private func audioMixerSourceInit(_ settingsDict: [AnyHashable: Any], _ sdk: HMSSDK, _ result: FlutterResult) {
+        if let audioTrackSetting = settingsDict["audio_track_setting"] as? [AnyHashable: Any] {
+            if let playerNode = audioTrackSetting["audio_source"] as? [String] {
+                for node in playerNode {
+                    if self.audioMixerSourceMap[node] == nil {
+                        if node=="mic_node" {
+                            self.audioMixerSourceMap["mic_node"] = HMSMicNode()
+                        } else if node == "screen_broadcast_audio_receiver_node" {
+                            do {
+                                self.audioMixerSourceMap["screen_broadcast_audio_receiver_node"] = try sdk.screenBroadcastAudioReceiverNode()
+                            } catch {
+                                result(HMSErrorExtension.toDictionary(error))
+                            }
+                        } else {
+                            self.audioMixerSourceMap[node] = HMSAudioFilePlayerNode()
+                        }
+                    }
+                }
+            }
+        }
     }
 
 }

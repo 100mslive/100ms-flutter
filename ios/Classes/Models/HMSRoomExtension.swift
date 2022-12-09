@@ -30,6 +30,10 @@ class  HMSRoomExtension {
             dict["session_id"] = sessionId
         }
 
+        if let peerCount = room.peerCount {
+            dict["peer_count"] = peerCount
+        }
+
         var peers = [[String: Any]]()
         room.peers.forEach { peers.append(HMSPeerExtension.toDictionary($0)) }
         dict["peers"] = peers
@@ -62,7 +66,7 @@ class  HMSRoomExtension {
         case .hlsRecordingStateUpdated:
             return "hls_recording_state_updated"
         case .metaDataUpdated:
-            return "meta_data_updated"
+            return "room_peer_count_updated"
         default:
             return "unknown_update"
         }

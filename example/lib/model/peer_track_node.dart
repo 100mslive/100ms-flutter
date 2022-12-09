@@ -13,6 +13,7 @@ class PeerTrackNode extends ChangeNotifier {
   bool isOffscreen;
   int? networkQuality;
   RTCStats? stats;
+  int audioLevel;
 
   PeerTrackNode(
       {required this.peer,
@@ -21,7 +22,8 @@ class PeerTrackNode extends ChangeNotifier {
       required this.uid,
       this.isOffscreen = true,
       this.networkQuality = -1,
-      this.stats});
+      this.stats,
+      this.audioLevel = -1});
 
   @override
   String toString() {
@@ -38,6 +40,22 @@ class PeerTrackNode extends ChangeNotifier {
   void setOffScreenStatus(bool currentState) {
     this.isOffscreen = currentState;
     notify();
+  }
+
+  void setAudioLevel(int audioLevel) {
+    this.audioLevel = audioLevel;
+    if (!this.isOffscreen) {
+      notify();
+    }
+  }
+
+  void setNetworkQuality(int? networkQuality) {
+    if (networkQuality != null) {
+      this.networkQuality = networkQuality;
+      if (!this.isOffscreen) {
+        notify();
+      }
+    }
   }
 
   @override

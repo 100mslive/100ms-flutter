@@ -2,8 +2,8 @@
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 class HMSTrackSetting {
-  final HMSAudioTrackSetting? audioTrackSetting;
-  final HMSVideoTrackSetting? videoTrackSetting;
+  HMSAudioTrackSetting? audioTrackSetting;
+  HMSVideoTrackSetting? videoTrackSetting;
 
   HMSTrackSetting({this.audioTrackSetting, this.videoTrackSetting});
 
@@ -26,8 +26,8 @@ class HMSTrackSetting {
 
   Map<String, dynamic> toMap() {
     return {
-      'audio_track_setting': audioTrackSetting?.toMap() ?? {},
-      'video_track_setting': this.videoTrackSetting?.toMap() ?? {},
+      'audio_track_setting': audioTrackSetting?.toMap(),
+      'video_track_setting': videoTrackSetting?.toMap(),
     };
   }
 }

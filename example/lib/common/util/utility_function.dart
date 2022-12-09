@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/constant.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -171,5 +172,38 @@ class Utilities {
     url = url.split("&")[0];
     url = url.replaceAll("%3A", ":").replaceAll("%2F", "/");
     return url;
+  }
+
+  static HMSTrackSetting getTrackSetting(
+      {required bool isAudioMixerDisabled,
+      required bool joinWithMutedVideo,
+      required bool joinWithMutedAudio,
+      required bool isSoftwareDecoderDisabled}) {
+    return isAudioMixerDisabled
+        ? HMSTrackSetting(
+            audioTrackSetting: HMSAudioTrackSetting(
+                trackInitialState: joinWithMutedAudio
+                    ? HMSTrackInitState.MUTED
+                    : HMSTrackInitState.UNMUTED),
+            videoTrackSetting: HMSVideoTrackSetting(
+                trackInitialState: joinWithMutedVideo
+                    ? HMSTrackInitState.MUTED
+                    : HMSTrackInitState.UNMUTED,
+                forceSoftwareDecoder: isSoftwareDecoderDisabled))
+        : HMSTrackSetting(
+            audioTrackSetting: HMSAudioTrackSetting(
+                audioSource: HMSAudioMixerSource(node: [
+                  HMSAudioFilePlayerNode("audioFilePlayerNode"),
+                  HMSMicNode(),
+                  HMSScreenBroadcastAudioReceiverNode()
+                ]),
+                trackInitialState: joinWithMutedAudio
+                    ? HMSTrackInitState.MUTED
+                    : HMSTrackInitState.UNMUTED),
+            videoTrackSetting: HMSVideoTrackSetting(
+                trackInitialState: joinWithMutedVideo
+                    ? HMSTrackInitState.MUTED
+                    : HMSTrackInitState.UNMUTED,
+                forceSoftwareDecoder: isSoftwareDecoderDisabled));
   }
 }

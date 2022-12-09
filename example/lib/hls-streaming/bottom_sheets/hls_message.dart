@@ -252,11 +252,12 @@ class _HLSMessageState extends State<HLSMessage> {
                       color: dividerColor,
                     ),
                   ),
-                  Selector<MeetingStore, bool>(
-                      selector: (_, meetingStore) =>
+                  Selector<MeetingStore, Tuple2<bool, String?>>(
+                      selector: (_, meetingStore) => Tuple2(
                           meetingStore.isMessageInfoShown,
-                      builder: (context, infoDialog, _) {
-                        if (infoDialog)
+                          meetingStore.sessionMetadata),
+                      builder: (context, displayFlags, _) {
+                        if (displayFlags.item1 && (displayFlags.item2 == null))
                           return Column(
                             children: [
                               Container(
@@ -345,7 +346,7 @@ class _HLSMessageState extends State<HLSMessage> {
                                     onTap: () {
                                       context
                                           .read<MeetingStore>()
-                                          .setSessionMetadata("");
+                                          .setSessionMetadata(null);
                                     },
                                     child: SvgPicture.asset(
                                         "assets/icons/close.svg"))

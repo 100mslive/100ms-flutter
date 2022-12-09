@@ -15,7 +15,8 @@ class PreviewStore extends ChangeNotifier
   PreviewStore(
       {bool joinWithMutedAudio = true,
       bool joinWithMutedVideo = true,
-      bool softwareDecoder = false}) {
+      bool isSoftwareDecoderDisabled = true,
+      bool isAudioMixerDisabled = true}) {
     /// [appGroup] & [preferredExtension] of [HMSSDKInteractor] are optional values only required for implementing Screen & Audio Share on iOS. They are not required for Android.
     /// Remove [appGroup] & [preferredExtension] if your app does not implements Screen or Audio Share on iOS.
     /// [joinWithMutedAudio] & [joinWithMutedVideo] are required to set the initial audio/video state i.e what should be camera and mic
@@ -26,7 +27,8 @@ class PreviewStore extends ChangeNotifier
             "live.100ms.flutter.FlutterBroadcastUploadExtension",
         joinWithMutedAudio: joinWithMutedAudio,
         joinWithMutedVideo: joinWithMutedVideo,
-        softwareDecoder: softwareDecoder);
+        isSoftwareDecoderDisabled: isSoftwareDecoderDisabled,
+        isAudioMixerDisabled: isAudioMixerDisabled);
   }
 
   List<HMSVideoTrack> localTracks = [];
@@ -62,6 +64,8 @@ class PreviewStore extends ChangeNotifier
 
   HMSAudioDevice currentAudioDeviceMode = HMSAudioDevice.AUTOMATIC;
 
+  int peerCount = 0;
+
   @override
   void onHMSError({required HMSException error}) {
     this.error = error;
@@ -77,13 +81,12 @@ class PreviewStore extends ChangeNotifier
         peer = each;
         if (each.role.name.indexOf("hls-") == 0) {
           isHLSLink = true;
-          notifyListeners();
         }
         if (!each.role.publishSettings!.allowed.contains("video")) {
           isVideoOn = false;
-          notifyListeners();
         }
-
+        peerCount = room.peerCount;
+        notifyListeners();
         break;
       }
     }
@@ -154,6 +157,7 @@ class PreviewStore extends ChangeNotifier
 
   @override
   void onRoomUpdate({required HMSRoom room, required HMSRoomUpdate update}) {
+    this.room = room;
     log("onRoomUpdate-> room: ${room.toString()} update: ${update.name}");
     switch (update) {
       case HMSRoomUpdate.browserRecordingStateUpdated:
@@ -173,6 +177,9 @@ class PreviewStore extends ChangeNotifier
         break;
       case HMSRoomUpdate.hlsStreamingStateUpdated:
         isStreamingStarted = room.hmshlsStreamingState?.running ?? false;
+        break;
+      case HMSRoomUpdate.roomPeerCountUpdated:
+        peerCount = room.peerCount;
         break;
       default:
         break;
@@ -230,9 +237,9 @@ class PreviewStore extends ChangeNotifier
 
   void toggleSpeaker() async {
     if (!this.isRoomMute) {
-      hmsSDKInteractor!.muteAll();
+      hmsSDKInteractor!.muteRoomAudioLocally();
     } else {
-      hmsSDKInteractor!.unMuteAll();
+      hmsSDKInteractor!.unMuteRoomAudioLocally();
     }
     this.isRoomMute = !this.isRoomMute;
     notifyListeners();

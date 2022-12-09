@@ -6,7 +6,7 @@ import 'package:permission_handler/permission_handler.dart';
 
 class HomePage extends StatelessWidget {
   static Route route() {
-    return MaterialPageRoute<void>(builder: (_) => HomePage());
+    return MaterialPageRoute<void>(builder: (_) => const HomePage());
   }
 
   const HomePage({Key? key}) : super(key: key);

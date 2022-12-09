@@ -18,10 +18,9 @@ class HMSAudioTrack extends HMSTrack {
         );
 
   ///returns true if audio is mute
-  factory HMSAudioTrack.fromMap({required Map map}) {
-    if (map["hms_audio_track_settings"] == null) {
-      return HMSRemoteAudioTrack.fromMap(map: map);
-    }
-    return HMSLocalAudioTrack.fromMap(map: map);
+  factory HMSAudioTrack.fromMap({required Map map, required bool isLocal}) {
+    return isLocal
+        ? HMSLocalAudioTrack.fromMap(map: map)
+        : HMSRemoteAudioTrack.fromMap(map: map);
   }
 }
