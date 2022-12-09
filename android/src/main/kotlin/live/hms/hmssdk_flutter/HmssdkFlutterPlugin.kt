@@ -124,7 +124,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             }
 
             // MARK: Role based Actions
-            "get_roles", "change_role", "accept_change_role", "end_room", "remove_peer", "on_change_track_state_request", "change_track_state_for_role" -> {
+            "get_roles", "change_role", "accept_change_role", "end_room", "remove_peer", "on_change_track_state_request", "change_track_state_for_role","change_roles_all_peers" -> {
                 roleActions(call, result)
             }
 
@@ -234,6 +234,9 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             }
             "change_track_state_for_role" -> {
                 changeTrackStateForRole(call, result)
+            }
+            "change_roles_all_peers" -> {
+                changeRolesAllPeers(call, result)
             }
             else -> {
                 result.notImplemented()
@@ -495,7 +498,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             it.name == roleUWant
         }
         val peer = getPeerById(peerId!!) as HMSPeer
-        hmssdk!!.changeRole(
+        hmssdk!!.changeRoleOfPeer(
             peer,
             roleToChangeTo,
             forceChange ?: false,
@@ -621,6 +624,22 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             roles = hmsRoles,
             hmsActionResultListener = HMSCommonAction.getActionListener(result)
         )
+    }
+
+    private fun changeRolesAllPeers(call: MethodCall, result: Result) {
+        val roleString = call.argument<String>("to_role")
+        val roles = hmssdk!!.getRoles()
+        val toRole: HMSRole = roles.first {
+            it.name == roleString
+        }
+        val limitToRoles: List<HMSRole>?
+        val limitToRoleString:List<String>? = call.argument<List<String>>("limit_to_roles")
+        if(limitToRoleString != null){
+            limitToRoles = hmssdk!!.getRoles().filter { limitToRoleString.contains(it.name) }
+        }else {
+            limitToRoles = null
+        }
+        hmssdk!!.changeRoleOfPeersWithRoles(toRole = toRole,ofRoles = limitToRoles,hmsActionResultListener = HMSCommonAction.getActionListener(result))
     }
 
     fun build(activity: Activity, call: MethodCall, result: Result) {
