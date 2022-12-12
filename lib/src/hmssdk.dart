@@ -807,16 +807,13 @@ class HMSSDK {
     PlatformService.removeLogsListener(hmsLogListener);
   }
 
-  ///Method to get available audio devices(Android Only)
+  ///Method to get available audio devices
   Future<List<HMSAudioDevice>> getAudioDevicesList() async {
-    if (Platform.isAndroid) {
-      List result = await PlatformService.invokeMethod(
-          PlatformMethod.getAudioDevicesList);
-      return result
-          .map((e) => HMSAudioDeviceValues.getHMSAudioDeviceFromName(e))
-          .toList();
-    }
-    return [];
+    List result =
+        await PlatformService.invokeMethod(PlatformMethod.getAudioDevicesList);
+    return result
+        .map((e) => HMSAudioDeviceValues.getHMSAudioDeviceFromName(e))
+        .toList();
   }
 
   ///Method to get current audio output device(Android Only)

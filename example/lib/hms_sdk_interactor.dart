@@ -313,7 +313,7 @@ class HMSSDKInteractor {
     return await hmsSDK.getCurrentAudioDevice();
   }
 
-  void switchAudioOutput(HMSAudioDevice? audioDevice) {
+  void switchAudioOutput({required HMSAudioDevice audioDevice}) {
     hmsSDK.switchAudioOutput(audioDevice: audioDevice);
   }
 
