@@ -829,15 +829,10 @@ class HMSSDK {
 
   ///Method to switch audio output device
   ///
-  ///Android requires [audioDevice] parameter compulsorily for switching Audio Device.
-  ///
-  ///iOS doesn't require any value in [audioDevice] parameter (you can pass a null value).
+  ///requires [audioDevice] parameter compulsorily for switching Audio Device.
   void switchAudioOutput({HMSAudioDevice? audioDevice}) {
-    if (Platform.isAndroid)
-      PlatformService.invokeMethod(PlatformMethod.switchAudioOutput,
-          arguments: {"audio_device_name": audioDevice!.name});
-    if (Platform.isIOS)
-      PlatformService.invokeMethod(PlatformMethod.switchAudioOutput);
+    PlatformService.invokeMethod(PlatformMethod.switchAudioOutput,
+        arguments: {"audio_device_name": audioDevice!.name});
   }
 
   ///Method to start audio share of other apps. (Android Only)

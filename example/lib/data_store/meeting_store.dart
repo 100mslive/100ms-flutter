@@ -139,7 +139,9 @@ class MeetingStore extends ChangeNotifier
 
   HMSAudioDevice? currentAudioOutputDevice;
 
-  HMSAudioDevice currentAudioDeviceMode = HMSAudioDevice.AUTOMATIC;
+  HMSAudioDevice currentAudioDeviceMode = Platform.isAndroid
+      ? HMSAudioDevice.AUTOMATIC
+      : HMSAudioDevice.SPEAKER_PHONE;
 
   bool showAudioDeviceChangePopup = false;
 
