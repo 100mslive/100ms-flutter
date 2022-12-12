@@ -290,7 +290,9 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                                 MediaQuery.of(context)
                                                         .size
                                                         .height -
-                                                    (widget.isStreamingLink
+                                                    ((widget.isStreamingLink && 
+                                                        (modeData.item2?.role.permissions.hlsStreaming == true) 
+                                                    )
                                                         ? 163
                                                         : 122) -
                                                     MediaQuery.of(context)
@@ -303,7 +305,9 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                                 top: 55,
                                                 left: 0,
                                                 right: 0,
-                                                bottom: widget.isStreamingLink
+                                                bottom: (widget.isStreamingLink && 
+                                                        (modeData.item2?.role.permissions.hlsStreaming == true) 
+                                                    )
                                                     ? 108
                                                     : 68,
                                                 child: Container(
@@ -316,8 +320,9 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                                             (modeData.item3 ==
                                                                 2))
                                                         ? OneToOneMode(
-                                                            bottomMargin:
-                                                                widget.isStreamingLink
+                                                            bottomMargin:(widget.isStreamingLink && 
+                                                        (modeData.item2?.role.permissions.hlsStreaming == true) 
+                                                    )
                                                                     ? 272
                                                                     : 235,
                                                             peerTracks:
@@ -890,10 +895,11 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                                                       "stats_button"),
                                                             );
                                                           }),
-                                                if (Provider.of<MeetingStore>(
+                                                if ((Provider.of<MeetingStore>(
                                                                 context)
                                                             .localPeer !=
-                                                        null &&
+                                                        null) &&
+                                                        (context.read<MeetingStore>().localPeer?.role.permissions.hlsStreaming == true) &&
                                                     widget.isStreamingLink)
                                                   Selector<MeetingStore,
                                                           Tuple2<bool, bool>>(
