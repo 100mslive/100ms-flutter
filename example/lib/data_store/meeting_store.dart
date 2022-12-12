@@ -1482,7 +1482,7 @@ class MeetingStore extends ChangeNotifier
       case HMSActionResultListenerMethod.switchCamera:
         Utilities.showToast("Camera switched successfully");
         break;
-      case HMSActionResultListenerMethod.changeRolesAllPeers:
+      case HMSActionResultListenerMethod.changeRoleOfPeersWithRoles:
         Utilities.showToast("Change Roles of all peers successfully");
         break;
     }
@@ -1558,7 +1558,7 @@ class MeetingStore extends ChangeNotifier
       case HMSActionResultListenerMethod.switchCamera:
         Utilities.showToast("Camera switching failed");
         break;
-      case HMSActionResultListenerMethod.changeRolesAllPeers:
+      case HMSActionResultListenerMethod.changeRoleOfPeersWithRoles:
         Utilities.showToast("Change Roles of All Peers failed");
         break;
     }
