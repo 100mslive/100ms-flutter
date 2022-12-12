@@ -312,7 +312,7 @@ class MeetingStore extends ChangeNotifier
     notifyListeners();
   }
 
-  void changeRole(
+  void changeRoleOfPeer(
       {required HMSPeer peer,
       required HMSRole roleName,
       bool forceChange = false}) {
@@ -1331,7 +1331,7 @@ class MeetingStore extends ChangeNotifier
     if (reinitialise) notifyListeners();
   }
 
-  void changeRolesOfAllPeers(HMSRole toRole, List<HMSRole>? limitToRoles) {
+  void changeRoleOfPeersWithRoles(HMSRole toRole, List<HMSRole>? limitToRoles) {
     _hmsSDKInteractor.changeRoleOfPeersWithRoles(
         toRole: toRole, limitToRoles: limitToRoles);
   }

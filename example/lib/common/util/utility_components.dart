@@ -552,7 +552,7 @@ class UtilityComponents {
                     borderRadius: BorderRadius.circular(12)),
                 backgroundColor: themeBottomSheetColor,
                 title: Text(
-                  "Select roles for change Role",
+                  "Select roles for change role",
                   style: GoogleFonts.inter(
                     color: iconColor,
                   ),
@@ -579,7 +579,6 @@ class UtilityComponents {
                                         ),
                                       ),
                                       Checkbox(
-                                          
                                           value: allRoles,
                                           activeColor: hmsdefaultColor,
                                           onChanged: (bool? value) {
@@ -683,39 +682,54 @@ class UtilityComponents {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               ElevatedButton(
-                                
                                   style: ButtonStyle(
-                      shadowColor: MaterialStateProperty.all(themeSurfaceColor),
-                      backgroundColor: MaterialStateProperty.all(errorColor),
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                          RoundedRectangleBorder(
-                        side: BorderSide(width: 1, color: errorColor),
-                        borderRadius: BorderRadius.circular(8.0),
-                      ))),
+                                      shadowColor: MaterialStateProperty.all(
+                                          themeSurfaceColor),
+                                      backgroundColor:
+                                          MaterialStateProperty.all(errorColor),
+                                      shape: MaterialStateProperty.all<
+                                              RoundedRectangleBorder>(
+                                          RoundedRectangleBorder(
+                                        side: BorderSide(
+                                            width: 1, color: errorColor),
+                                        borderRadius:
+                                            BorderRadius.circular(8.0),
+                                      ))),
                                   onPressed: () {
                                     Navigator.pop(context);
                                   },
                                   child: Text(
                                     "Cancel",
-                                    style: GoogleFonts.inter(),
+                                    style: GoogleFonts.inter(
+                                      fontWeight: FontWeight.w600
+                                    ),
                                   )),
                               ElevatedButton(
                                   style: ButtonStyle(
-                      shadowColor: MaterialStateProperty.all(themeSurfaceColor),
-                      backgroundColor: MaterialStateProperty.all(hmsdefaultColor),
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                          RoundedRectangleBorder(
-                        side: BorderSide(width: 1, color: hmsdefaultColor),
-                        borderRadius: BorderRadius.circular(8.0),
-                      ))),
+                                      shadowColor: MaterialStateProperty.all(
+                                          themeSurfaceColor),
+                                      backgroundColor:
+                                          MaterialStateProperty.all(
+                                              hmsdefaultColor),
+                                      shape: MaterialStateProperty.all<
+                                              RoundedRectangleBorder>(
+                                          RoundedRectangleBorder(
+                                        side: BorderSide(
+                                            width: 1, color: hmsdefaultColor),
+                                        borderRadius:
+                                            BorderRadius.circular(8.0),
+                                      ))),
                                   onPressed: () {
-                                    _meetingStore.changeRolesOfAllPeers(
+                                    _meetingStore.changeRoleOfPeersWithRoles(
                                         toRole, _selectedRoles);
                                     Navigator.pop(context);
                                   },
                                   child: Text(
                                     "Change Role",
-                                    style: GoogleFonts.inter(),
+                                    style: GoogleFonts.inter(
+                                      fontWeight: FontWeight.w600
+                                    ),
+
                                   ))
                             ],
                           )
