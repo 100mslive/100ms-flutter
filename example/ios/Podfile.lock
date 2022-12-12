@@ -345,7 +345,7 @@ SPEC CHECKSUMS:
   FirebasePerformance: 8f1c8e5a4fcc5a68400835518ee63a6d63dbff0c
   FirebaseRemoteConfig: c24f767c17b0440ee63c7e93380d599173556113
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
-  fluttertoast: 74526702fea2c060ea55dde75895b7e1bde1c86b
+  fluttertoast: eb263d302cc92e04176c053d2385237e9f43fad0
   GCDWebServer: 2c156a56c8226e2d5c0c3f208a3621ccffbe3ce4
   GoogleAppMeasurement: c7d6fff39bf2d829587d74088d582e32d75133c3
   GoogleDataTransport: 1c8145da7117bd68bbbed00cf304edb6a24de00f
