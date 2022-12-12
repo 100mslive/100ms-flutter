@@ -28,7 +28,6 @@ class HMSAudioDeviceAction {
         for device in availableAudioOutputDevices {
             audioDevicesList.append(getAudioDeviceName(device))
         }
-        audioDevicesList.append("AUTOMATIC")
         result(audioDevicesList)
     }
     
@@ -37,13 +36,13 @@ class HMSAudioDeviceAction {
 
         guard let audioDeviceName = arguments["audio_device_name"] as? String
         else {
-            result(false)
+            result(HMSErrorExtension.getError("Invalid arguments passed in \(#function)"))
             return
         }
         do{
             try hmsSDK?.switchAudioOutput(to: getAudioDeviceName(audioDeviceName))
         }catch {
-            result(false)
+            result(HMSErrorExtension.getError("Unable to switch audio output"))
             return
         }
         result(true)
@@ -54,8 +53,6 @@ class HMSAudioDeviceAction {
         case "EARPIECE":
             return HMSAudioOutputDevice.earpiece
         case "SPEAKER_PHONE":
-            return HMSAudioOutputDevice.speaker
-        case "AUTOMATIC":
             return HMSAudioOutputDevice.speaker
         default:
             return HMSAudioOutputDevice.speaker
