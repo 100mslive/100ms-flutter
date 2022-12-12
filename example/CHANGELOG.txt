@@ -1,0 +1,5 @@
+- Added Bulk Role Change APIs & Example app UI
+
+- Added ability to Switch Audio Output on iOS
+
+- Corrected showing of Start / Stop HLS / RTMP Streams CTAs only if the role has permission
