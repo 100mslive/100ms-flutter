@@ -5,7 +5,7 @@ enum HMSActionResultListenerMethod {
   endRoom,
   removePeer,
   acceptChangeRole,
-  @Deprecated('use changeRoleOfPeer')
+  @Deprecated('use [changeRoleOfPeer]')
   changeRole,
   changeRoleOfPeer,
   changeTrackStateForRole,

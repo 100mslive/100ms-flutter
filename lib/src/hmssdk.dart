@@ -349,7 +349,7 @@ class HMSSDK {
   /// The [roleName] new role the HMSPeer would have if they accept or are forced to change to.
   /// Set [forceChange] to false if the peer should be requested to accept the new role (they can choose to deny). Set [forceChange] to true if their role should be changed without asking them.
   /// [hmsActionResultListener] - Listener that will return HMSActionResultListener.onSuccess if the role change request is successful else will call [HMSActionResultListener.onException] with the error received from server
-  @Deprecated('Use changeRoleOfPeer')
+  @Deprecated('Use [changeRoleOfPeer]')
   Future<void> changeRole(
       {required HMSPeer forPeer,
       required HMSRole toRole,
