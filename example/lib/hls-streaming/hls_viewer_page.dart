@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -81,8 +79,8 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                         streamUrl: (widget.streamUrl != null)
                                             ? widget.streamUrl!
                                             : context
-                                              .read<MeetingStore>()
-                                              .streamUrl),
+                                                .read<MeetingStore>()
+                                                .streamUrl),
                                   ),
                                 )
                               : Container(

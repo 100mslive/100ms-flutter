@@ -124,7 +124,7 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             }
 
             // MARK: Role based Actions
-            "get_roles", "change_role", "accept_change_role", "end_room", "remove_peer", "on_change_track_state_request", "change_track_state_for_role","change_roles_all_peers" -> {
+            "get_roles", "change_role", "accept_change_role", "end_room", "remove_peer", "on_change_track_state_request", "change_track_state_for_role","change_roles_all_peers","change_role_of_peer" -> {
                 roleActions(call, result)
             }
 
@@ -237,6 +237,9 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
             }
             "change_roles_all_peers" -> {
                 changeRolesAllPeers(call, result)
+            }
+            "change_role_of_peer" -> {
+                changeRoleOfPeer(call, result)
             }
             else -> {
                 result.notImplemented()
@@ -490,6 +493,23 @@ class HmssdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
     }
 
     private fun changeRole(call: MethodCall, result: Result) {
+        val roleUWant = call.argument<String>("role_name")
+        val peerId = call.argument<String>("peer_id")
+        val forceChange = call.argument<Boolean>("force_change")
+        val roles = hmssdk!!.getRoles()
+        val roleToChangeTo: HMSRole = roles.first {
+            it.name == roleUWant
+        }
+        val peer = getPeerById(peerId!!) as HMSPeer
+        hmssdk!!.changeRole(
+            peer,
+            roleToChangeTo,
+            forceChange ?: false,
+            hmsActionResultListener = HMSCommonAction.getActionListener(result)
+        )
+    }
+
+    private fun changeRoleOfPeer(call: MethodCall, result: Result) {
         val roleUWant = call.argument<String>("role_name")
         val peerId = call.argument<String>("peer_id")
         val forceChange = call.argument<Boolean>("force_change")

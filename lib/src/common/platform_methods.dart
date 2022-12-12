@@ -69,6 +69,9 @@ enum PlatformMethod {
   ///change your peer role.
   changeRole,
 
+  ///change role for peer.
+  changeRoleOfPeer,
+
 // turn on screen share start
   startScreenShare,
 
@@ -238,6 +241,9 @@ extension PlatformMethodValues on PlatformMethod {
 
       case PlatformMethod.changeRole:
         return 'change_role';
+
+      case PlatformMethod.changeRoleOfPeer:
+        return 'change_role_of_peer';
 
       case PlatformMethod.getRoles:
         return 'get_roles';
@@ -448,6 +454,9 @@ extension PlatformMethodValues on PlatformMethod {
 
       case 'change_role':
         return PlatformMethod.changeRole;
+
+      case 'change_role_of_peer':
+        return PlatformMethod.changeRoleOfPeer;
 
       case 'get_roles':
         return PlatformMethod.getRoles;

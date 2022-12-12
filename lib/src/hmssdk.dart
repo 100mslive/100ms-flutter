@@ -349,6 +349,7 @@ class HMSSDK {
   /// The [roleName] new role the HMSPeer would have if they accept or are forced to change to.
   /// Set [forceChange] to false if the peer should be requested to accept the new role (they can choose to deny). Set [forceChange] to true if their role should be changed without asking them.
   /// [hmsActionResultListener] - Listener that will return HMSActionResultListener.onSuccess if the role change request is successful else will call [HMSActionResultListener.onException] with the error received from server
+  @Deprecated('Use changeRoleOfPeer')
   Future<void> changeRole(
       {required HMSPeer forPeer,
       required HMSRole toRole,
@@ -383,8 +384,48 @@ class HMSSDK {
     }
   }
 
+  /// Requests a change of HMSRole to a new role.
+  /// The [peer] HMSPeer whose role should be requested to be changed.
+  /// The [roleName] new role the HMSPeer would have if they accept or are forced to change to.
+  /// Set [forceChange] to false if the peer should be requested to accept the new role (they can choose to deny). Set [forceChange] to true if their role should be changed without asking them.
+  /// [hmsActionResultListener] - Listener that will return HMSActionResultListener.onSuccess if the role change request is successful else will call [HMSActionResultListener.onException] with the error received from server
+  Future<void> changeRoleOfPeer(
+      {required HMSPeer forPeer,
+      required HMSRole toRole,
+      bool force = false,
+      HMSActionResultListener? hmsActionResultListener}) async {
+    var arguments = {
+      'peer_id': forPeer.peerId,
+      'role_name': toRole.name,
+      'force_change': force
+    };
+    var result = await PlatformService.invokeMethod(
+        PlatformMethod.changeRoleOfPeer,
+        arguments: arguments);
+
+    if (hmsActionResultListener != null) {
+      if (result == null)
+        hmsActionResultListener.onSuccess(
+            methodType: HMSActionResultListenerMethod.changeRoleOfPeer,
+            arguments: {
+              'peer': forPeer,
+              'role_name': toRole,
+              'force_change': force
+            });
+      else
+        hmsActionResultListener.onException(
+            arguments: {
+              'peer': forPeer,
+              'role_name': toRole,
+              'force_change': force
+            },
+            methodType: HMSActionResultListenerMethod.changeRoleOfPeer,
+            hmsException: HMSException.fromMap(result["error"]));
+    }
+  }
+
   ///accept the change role request
-  /// When a peer is requested to change their role (see [changeRole]) to accept the new role this has to be called. Once this method is called, the peer's role will be changed to the requested one. The HMSRoleChangeRequest that the SDK had sent to this peer (in HMSUpdateListener.onRoleChangeRequest) to inform them that a role change was requested.
+  /// When a peer is requested to change their role (see [changeRoleOfPeer]) to accept the new role this has to be called. Once this method is called, the peer's role will be changed to the requested one. The HMSRoleChangeRequest that the SDK had sent to this peer (in HMSUpdateListener.onRoleChangeRequest) to inform them that a role change was requested.
   /// [hmsActionResultListener] - Listener that will return HMSActionResultListener.onSuccess if the role change request is successful else will call HMSActionResultListener.onException with the error received from server
 
   Future<void> acceptChangeRole(

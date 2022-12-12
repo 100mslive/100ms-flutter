@@ -311,7 +311,7 @@ class MeetingStore extends ChangeNotifier
       {required HMSPeer peer,
       required HMSRole roleName,
       bool forceChange = false}) {
-    _hmsSDKInteractor.changeRole(
+    _hmsSDKInteractor.changeRoleOfPeer(
         toRole: roleName,
         forPeer: peer,
         force: forceChange,
@@ -1357,6 +1357,9 @@ class MeetingStore extends ChangeNotifier
       case HMSActionResultListenerMethod.changeRole:
         Utilities.showToast("Change role successful");
         break;
+      case HMSActionResultListenerMethod.changeRoleOfPeer:
+        Utilities.showToast("Change role successful");
+        break;
       case HMSActionResultListenerMethod.changeTrackStateForRole:
         message = arguments!['roles'] == null
             ? "Successfully Muted All"
@@ -1492,6 +1495,8 @@ class MeetingStore extends ChangeNotifier
       case HMSActionResultListenerMethod.acceptChangeRole:
         break;
       case HMSActionResultListenerMethod.changeRole:
+        break;
+      case HMSActionResultListenerMethod.changeRoleOfPeer:
         break;
       case HMSActionResultListenerMethod.changeTrackStateForRole:
         break;
