@@ -58,14 +58,16 @@ class HMSTrackSettingsExtension {
 
     static func setTrackSetting(_ settingsDict: [AnyHashable: Any], _ audioMixerSourceMap: [String: HMSAudioNode], _ result: @escaping FlutterResult) -> HMSTrackSettings? {
 
-            var audioSettings: HMSAudioTrackSettings?
+        var audioSettings: HMSAudioTrackSettings?
         if let audioSettingsDict = settingsDict["audio_track_setting"] as? [AnyHashable: Any],
            let initialMuteState = audioSettingsDict["track_initial_state"] as? String {
 
-            if #available(iOS 13.0, *) {
+            if #available(iOS 13.0, *), !audioMixerSourceMap.isEmpty {
                 do {
                     let audioMixerSource = try HMSAudioMixerSource(nodes: audioMixerSourceMap.values.map {$0})
+
                     audioSettings = HMSAudioTrackSettings(maxBitrate: 32, trackDescription: "track_description", initialMuteState: getinitialMuteState(from: initialMuteState), audioSource: audioMixerSource)
+
                 } catch {
                     result(HMSErrorExtension.toDictionary(error))
                 }

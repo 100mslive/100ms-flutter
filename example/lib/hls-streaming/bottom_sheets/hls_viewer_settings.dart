@@ -126,6 +126,7 @@ class _HLSViewerSettingsState extends State<HLSViewerSettings> {
                         .hlsVideoController
                         ?.enablePictureInPicture(
                             context.read<MeetingStore>().pipFlutterPlayerKey);
+                    Navigator.pop(context);
                   },
                   contentPadding: EdgeInsets.zero,
                   leading: SvgPicture.asset(

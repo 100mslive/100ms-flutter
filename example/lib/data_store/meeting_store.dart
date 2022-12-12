@@ -24,6 +24,9 @@ import 'package:pip_flutter/pipflutter_player_controller.dart';
 import 'package:pip_flutter/pipflutter_player_controls_configuration.dart';
 import 'package:pip_flutter/pipflutter_player_data_source.dart';
 import 'package:pip_flutter/pipflutter_player_data_source_type.dart';
+import 'package:pip_flutter/pipflutter_player_event.dart';
+import 'package:pip_flutter/pipflutter_player_event_type.dart';
+import 'package:pip_flutter/pipflutter_player_theme.dart';
 
 class MeetingStore extends ChangeNotifier
     with WidgetsBindingObserver
@@ -163,7 +166,7 @@ class MeetingStore extends ChangeNotifier
 
   bool isPipActive = false;
 
-  bool isPipAutoEnabled = true;
+  bool isPipAutoEnabled = false;
 
   Future<bool> join(String user, String roomUrl) async {
     List<String?>? token =
@@ -585,6 +588,7 @@ class MeetingStore extends ChangeNotifier
         peerTrackNode.audioTrack = track as HMSAudioTrack;
         peerTrackNode.notify();
       } else {
+        if (peer.role.name.contains("hls-")) return;
         peerTracks.add(new PeerTrackNode(
             peer: peer,
             uid: peer.peerId + "mainVideo",
@@ -606,6 +610,7 @@ class MeetingStore extends ChangeNotifier
           rearrangeTile(peerTrackNode, index);
         }
       } else {
+        if (peer.role.name.contains("hls-")) return;
         peerTracks.add(new PeerTrackNode(
             peer: peer,
             uid: peer.peerId + "mainVideo",
@@ -1285,18 +1290,34 @@ class MeetingStore extends ChangeNotifier
     }
     PipFlutterPlayerConfiguration pipFlutterPlayerConfiguration =
         PipFlutterPlayerConfiguration(
+            allowedScreenSleep: false,
             fit: BoxFit.contain,
             showPlaceholderUntilPlay: true,
+            deviceOrientationsAfterFullScreen: [
+              DeviceOrientation.portraitUp,
+              DeviceOrientation.portraitDown
+            ],
+            autoDispose: false,
+            handleLifecycle: false,
             placeholder: Center(
               child: HLSTitleText(
-                text: "Going Live...",
+                text: "Loading...",
                 textColor: themeDefaultColor,
               ),
             ),
+            eventListener: (PipFlutterPlayerEvent event) {
+              if (event.pipFlutterPlayerEventType ==
+                      PipFlutterPlayerEventType.initialized &&
+                  isPipActive) {
+                hlsVideoController!.enablePictureInPicture(pipFlutterPlayerKey);
+              }
+            },
             controlsConfiguration: PipFlutterPlayerControlsConfiguration(
+                controlBarColor: Colors.transparent,
                 enablePlayPause: false,
                 enableOverflowMenu: false,
-                enableSkips: false));
+                enableSkips: false,
+                playerTheme: PipFlutterPlayerTheme.cupertino));
     PipFlutterPlayerDataSource dataSource = PipFlutterPlayerDataSource(
         PipFlutterPlayerDataSourceType.network, streamUrl,
         liveStream: true);
@@ -1539,6 +1560,7 @@ class MeetingStore extends ChangeNotifier
         isPipActive = false;
         notifyListeners();
       }
+
       List<HMSPeer>? peersList = await getPeers();
 
       peersList?.forEach((element) {
@@ -1562,7 +1584,7 @@ class MeetingStore extends ChangeNotifier
         peerTrackNode.setOffScreenStatus(true);
       }
     } else if (state == AppLifecycleState.inactive) {
-      if (isPipAutoEnabled && !isPipActive) {
+      if (Platform.isAndroid && isPipAutoEnabled && !isPipActive) {
         isPipActive = true;
         notifyListeners();
       }

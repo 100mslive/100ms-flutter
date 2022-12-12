@@ -69,13 +69,15 @@ class HMSRemotePeer extends HMSPeer {
             : null);
 
     if (map['audio_track'] != null) {
-      peer.audioRemoteTrack = HMSAudioTrack.fromMap(map: map['audio_track']!)
-          as HMSRemoteAudioTrack;
+      peer.audioRemoteTrack =
+          HMSAudioTrack.fromMap(map: map['audio_track']!, isLocal: false)
+              as HMSRemoteAudioTrack;
     }
 
     if (map['video_track'] != null) {
-      peer.videoRemoteTrack = HMSVideoTrack.fromMap(map: map['video_track']!)
-          as HMSRemoteVideoTrack;
+      peer.videoRemoteTrack =
+          HMSVideoTrack.fromMap(map: map['video_track']!, isLocal: false)
+              as HMSRemoteVideoTrack;
     }
 
     return peer;

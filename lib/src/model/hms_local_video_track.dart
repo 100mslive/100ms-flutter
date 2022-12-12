@@ -6,10 +6,7 @@ import 'package:hmssdk_flutter/src/service/platform_service.dart';
 ///
 ///[HMSLocalVideoTrack] contains the local peer video track infomation.
 class HMSLocalVideoTrack extends HMSVideoTrack {
-  HMSVideoTrackSetting setting;
-
   HMSLocalVideoTrack({
-    required this.setting,
     required bool isDegraded,
     required HMSTrackKind kind,
     required String source,
@@ -44,7 +41,6 @@ class HMSLocalVideoTrack extends HMSVideoTrack {
         source: (map['track_source']),
         kind: HMSTrackKindValue.getHMSTrackKindFromName(map['track_kind']),
         isMute: map['track_mute'],
-        isDegraded: map['is_degraded'],
-        setting: HMSVideoTrackSetting.fromMap(map["hms_video_track_settings"]));
+        isDegraded: map['is_degraded']);
   }
 }
