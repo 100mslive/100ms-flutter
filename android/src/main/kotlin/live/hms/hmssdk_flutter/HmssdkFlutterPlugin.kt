@@ -124,7 +124,7 @@ class HmssdkFlutterPlugin :
             }
 
             // MARK: Role based Actions
-            "get_roles", "change_role", "accept_change_role", "end_room", "remove_peer", "on_change_track_state_request", "change_track_state_for_role" -> {
+            "get_roles", "change_role", "accept_change_role", "end_room", "remove_peer", "on_change_track_state_request", "change_track_state_for_role","change_role_of_peers_with_roles","change_role_of_peer" -> {
                 roleActions(call, result)
             }
 
@@ -234,6 +234,12 @@ class HmssdkFlutterPlugin :
             }
             "change_track_state_for_role" -> {
                 changeTrackStateForRole(call, result)
+            }
+            "change_role_of_peers_with_roles" -> {
+                changeRoleOfPeersWithRoles(call, result)
+            }
+            "change_role_of_peer" -> {
+                changeRoleOfPeer(call, result)
             }
             else -> {
                 result.notImplemented()
@@ -494,6 +500,23 @@ class HmssdkFlutterPlugin :
         )
     }
 
+    private fun changeRoleOfPeer(call: MethodCall, result: Result) {
+        val roleUWant = call.argument<String>("role_name")
+        val peerId = call.argument<String>("peer_id")
+        val forceChange = call.argument<Boolean>("force_change")
+        val roles = hmssdk!!.getRoles()
+        val roleToChangeTo: HMSRole = roles.first {
+            it.name == roleUWant
+        }
+        val peer = getPeerById(peerId!!) as HMSPeer
+        hmssdk!!.changeRoleOfPeer(
+            peer,
+            roleToChangeTo,
+            forceChange ?: false,
+            hmsActionResultListener = HMSCommonAction.getActionListener(result)
+        )
+    }
+
     private fun getRoles(result: Result) {
         val args = HashMap<String, Any?>()
 
@@ -610,6 +633,22 @@ class HmssdkFlutterPlugin :
             roles = hmsRoles,
             hmsActionResultListener = HMSCommonAction.getActionListener(result)
         )
+    }
+
+    private fun changeRoleOfPeersWithRoles(call: MethodCall, result: Result) {
+        val roleString = call.argument<String>("to_role")
+        val roles = hmssdk!!.getRoles()
+        val toRole: HMSRole = roles.first {
+            it.name == roleString
+        }
+        val limitToRoles: List<HMSRole>?
+        val limitToRoleString:List<String>? = call.argument<List<String>>("limit_to_roles")
+        if(limitToRoleString != null){
+            limitToRoles = hmssdk!!.getRoles().filter { limitToRoleString.contains(it.name) }
+        }else {
+            limitToRoles = null
+        }
+        hmssdk!!.changeRoleOfPeersWithRoles(toRole = toRole,ofRoles = limitToRoles,hmsActionResultListener = HMSCommonAction.getActionListener(result))
     }
 
     fun build(activity: Activity, call: MethodCall, result: Result) {

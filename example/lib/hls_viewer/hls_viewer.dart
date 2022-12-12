@@ -1,5 +1,3 @@
-//Package imports
-
 import 'package:flutter/material.dart';
 import 'package:pip_flutter/pipflutter_player.dart';
 import 'package:pip_flutter/pipflutter_player_controller.dart';

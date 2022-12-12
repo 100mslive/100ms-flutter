@@ -85,7 +85,7 @@ class _ParticipantOrganismState extends State<ParticipantOrganism> {
                                 peer: peer,
                                 changeRole: (role, forceChange) {
                                   Navigator.pop(context);
-                                  _meetingStore!.changeRole(
+                                  _meetingStore!.changeRoleOfPeer(
                                       peer: peer,
                                       roleName: role,
                                       forceChange: forceChange);

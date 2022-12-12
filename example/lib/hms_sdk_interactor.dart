@@ -182,12 +182,12 @@ class HMSSDKInteractor {
         hmsActionResultListener: hmsActionResultListener);
   }
 
-  void changeRole(
+  void changeRoleOfPeer(
       {required HMSPeer forPeer,
       required HMSRole toRole,
       bool force = false,
       required HMSActionResultListener hmsActionResultListener}) {
-    hmsSDK.changeRole(
+    hmsSDK.changeRoleOfPeer(
         forPeer: forPeer,
         toRole: toRole,
         force: force,
@@ -359,5 +359,10 @@ class HMSSDKInteractor {
 
   Future<bool> isPipAvailable() {
     return hmsSDK.isPipAvailable();
+  }
+
+  void changeRoleOfPeersWithRoles(
+      {required HMSRole toRole, List<HMSRole>? limitToRoles}) {
+    hmsSDK.changeRoleOfPeersWithRoles(toRole: toRole, limitToRoles: limitToRoles);
   }
 }

@@ -312,11 +312,11 @@ class MeetingStore extends ChangeNotifier
     notifyListeners();
   }
 
-  void changeRole(
+  void changeRoleOfPeer(
       {required HMSPeer peer,
       required HMSRole roleName,
       bool forceChange = false}) {
-    _hmsSDKInteractor.changeRole(
+    _hmsSDKInteractor.changeRoleOfPeer(
         toRole: roleName,
         forPeer: peer,
         force: forceChange,
@@ -1331,6 +1331,11 @@ class MeetingStore extends ChangeNotifier
     if (reinitialise) notifyListeners();
   }
 
+  void changeRoleOfPeersWithRoles(HMSRole toRole, List<HMSRole>? limitToRoles) {
+    _hmsSDKInteractor.changeRoleOfPeersWithRoles(
+        toRole: toRole, limitToRoles: limitToRoles);
+  }
+
 //Get onSuccess or onException callbacks for HMSActionResultListenerMethod
 
   @override
@@ -1368,6 +1373,9 @@ class MeetingStore extends ChangeNotifier
         Utilities.showToast("Accept role change successful");
         break;
       case HMSActionResultListenerMethod.changeRole:
+        Utilities.showToast("Change role successful");
+        break;
+      case HMSActionResultListenerMethod.changeRoleOfPeer:
         Utilities.showToast("Change role successful");
         break;
       case HMSActionResultListenerMethod.changeTrackStateForRole:
@@ -1476,6 +1484,9 @@ class MeetingStore extends ChangeNotifier
       case HMSActionResultListenerMethod.switchCamera:
         Utilities.showToast("Camera switched successfully");
         break;
+      case HMSActionResultListenerMethod.changeRoleOfPeersWithRoles:
+        Utilities.showToast("Change Role successful");
+        break;
     }
   }
 
@@ -1502,6 +1513,8 @@ class MeetingStore extends ChangeNotifier
       case HMSActionResultListenerMethod.acceptChangeRole:
         break;
       case HMSActionResultListenerMethod.changeRole:
+        break;
+      case HMSActionResultListenerMethod.changeRoleOfPeer:
         break;
       case HMSActionResultListenerMethod.changeTrackStateForRole:
         break;
@@ -1546,6 +1559,9 @@ class MeetingStore extends ChangeNotifier
         break;
       case HMSActionResultListenerMethod.switchCamera:
         Utilities.showToast("Camera switching failed");
+        break;
+      case HMSActionResultListenerMethod.changeRoleOfPeersWithRoles:
+        Utilities.showToast("Change Roles of All Peers failed");
         break;
     }
     notifyListeners();
