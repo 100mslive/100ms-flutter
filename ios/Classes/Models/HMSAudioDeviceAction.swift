@@ -21,7 +21,7 @@ class HMSAudioDeviceAction {
             result(FlutterMethodNotImplemented)
         }
     }
-    
+
     static private func getAudioDeviceList(_ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?) {
         var audioDevicesList = [String]()
         let availableAudioOutputDevices = hmsSDK!.getAudioOutputDeviceList()
@@ -30,7 +30,7 @@ class HMSAudioDeviceAction {
         }
         result(audioDevicesList)
     }
-    
+
     static private func switchAudioOutput(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?) {
         let arguments = call.arguments as! [AnyHashable: Any]
 
@@ -39,15 +39,15 @@ class HMSAudioDeviceAction {
             result(HMSErrorExtension.getError("Invalid arguments passed in \(#function)"))
             return
         }
-        do{
+        do {
             try hmsSDK?.switchAudioOutput(to: getAudioDeviceName(audioDeviceName))
-        }catch {
+        } catch {
             result(HMSErrorExtension.getError("Unable to switch audio output"))
             return
         }
         result(true)
     }
-    
+
    static private func getAudioDeviceName(_ audioDevice: String) -> HMSAudioOutputDevice {
         switch audioDevice {
         case "EARPIECE":
@@ -58,7 +58,7 @@ class HMSAudioDeviceAction {
             return HMSAudioOutputDevice.speaker
         }
     }
-    
+
     static private func getAudioDeviceName(_ audioDevice: HMSAudioOutputDevice) -> String {
          switch audioDevice {
          case .earpiece:

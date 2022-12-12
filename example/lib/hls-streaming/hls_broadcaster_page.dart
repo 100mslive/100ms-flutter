@@ -290,9 +290,13 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                                 MediaQuery.of(context)
                                                         .size
                                                         .height -
-                                                    ((widget.isStreamingLink && 
-                                                        (modeData.item2?.role.permissions.hlsStreaming == true) 
-                                                    )
+                                                    ((widget.isStreamingLink &&
+                                                            (modeData
+                                                                    .item2
+                                                                    ?.role
+                                                                    .permissions
+                                                                    .hlsStreaming ==
+                                                                true))
                                                         ? 163
                                                         : 122) -
                                                     MediaQuery.of(context)
@@ -305,24 +309,25 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                                 top: 55,
                                                 left: 0,
                                                 right: 0,
-                                                bottom: (widget.isStreamingLink && 
-                                                        (modeData.item2?.role.permissions.hlsStreaming == true) 
-                                                    )
+                                                bottom: (widget.isStreamingLink &&
+                                                        (modeData
+                                                                .item2
+                                                                ?.role
+                                                                .permissions
+                                                                .hlsStreaming ==
+                                                            true))
                                                     ? 108
                                                     : 68,
                                                 child: Container(
-                                                    child: ((modeData.item1 ==
-                                                                MeetingMode
-                                                                    .Video) &&
+                                                    child: ((modeData.item1 == MeetingMode.Video) &&
                                                             (data.item3 == 2) &&
                                                             (modeData.item2 !=
                                                                 null) &&
                                                             (modeData.item3 ==
                                                                 2))
                                                         ? OneToOneMode(
-                                                            bottomMargin:(widget.isStreamingLink && 
-                                                        (modeData.item2?.role.permissions.hlsStreaming == true) 
-                                                    )
+                                                            bottomMargin:
+                                                                (widget.isStreamingLink && (modeData.item2?.role.permissions.hlsStreaming == true))
                                                                     ? 272
                                                                     : 235,
                                                             peerTracks:
@@ -335,28 +340,14 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                                                 MeetingMode
                                                                     .Hero)
                                                             ? gridHeroView(
-                                                                peerTracks:
-                                                                    data.item1,
-                                                                itemCount:
-                                                                    data.item3,
-                                                                screenShareCount:
-                                                                    data.item4,
-                                                                context:
-                                                                    context,
-                                                                isPortrait:
-                                                                    isPortraitMode,
+                                                                peerTracks: data.item1,
+                                                                itemCount: data.item3,
+                                                                screenShareCount: data.item4,
+                                                                context: context,
+                                                                isPortrait: isPortraitMode,
                                                                 size: size)
-                                                            : (modeData.item1 ==
-                                                                    MeetingMode
-                                                                        .Audio)
-                                                                ? gridAudioView(
-                                                                    peerTracks: data
-                                                                        .item1
-                                                                        .sublist(data.item4),
-                                                                    itemCount: data.item1.sublist(data.item4).length,
-                                                                    context: context,
-                                                                    isPortrait: isPortraitMode,
-                                                                    size: size)
+                                                            : (modeData.item1 == MeetingMode.Audio)
+                                                                ? gridAudioView(peerTracks: data.item1.sublist(data.item4), itemCount: data.item1.sublist(data.item4).length, context: context, isPortrait: isPortraitMode, size: size)
                                                                 : (data.item5 == MeetingMode.Single)
                                                                     ? fullScreenView(peerTracks: data.item1, itemCount: data.item3, screenShareCount: data.item4, context: context, isPortrait: isPortraitMode, size: size)
                                                                     : hlsGridView(peerTracks: data.item1, itemCount: data.item3, screenShareCount: data.item4, context: context, isPortrait: true, size: size)));
@@ -899,7 +890,14 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                                                 context)
                                                             .localPeer !=
                                                         null) &&
-                                                        (context.read<MeetingStore>().localPeer?.role.permissions.hlsStreaming == true) &&
+                                                    (context
+                                                            .read<
+                                                                MeetingStore>()
+                                                            .localPeer
+                                                            ?.role
+                                                            .permissions
+                                                            .hlsStreaming ==
+                                                        true) &&
                                                     widget.isStreamingLink)
                                                   Selector<MeetingStore,
                                                           Tuple2<bool, bool>>(

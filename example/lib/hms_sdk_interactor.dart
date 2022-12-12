@@ -363,6 +363,7 @@ class HMSSDKInteractor {
 
   void changeRoleOfPeersWithRoles(
       {required HMSRole toRole, List<HMSRole>? limitToRoles}) {
-    hmsSDK.changeRoleOfPeersWithRoles(toRole: toRole, limitToRoles: limitToRoles);
+    hmsSDK.changeRoleOfPeersWithRoles(
+        toRole: toRole, limitToRoles: limitToRoles);
   }
 }

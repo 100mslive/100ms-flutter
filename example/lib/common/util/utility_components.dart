@@ -701,8 +701,7 @@ class UtilityComponents {
                                   child: Text(
                                     "Cancel",
                                     style: GoogleFonts.inter(
-                                      fontWeight: FontWeight.w600
-                                    ),
+                                        fontWeight: FontWeight.w600),
                                   )),
                               ElevatedButton(
                                   style: ButtonStyle(
@@ -727,9 +726,7 @@ class UtilityComponents {
                                   child: Text(
                                     "Change Role",
                                     style: GoogleFonts.inter(
-                                      fontWeight: FontWeight.w600
-                                    ),
-
+                                        fontWeight: FontWeight.w600),
                                   ))
                             ],
                           )

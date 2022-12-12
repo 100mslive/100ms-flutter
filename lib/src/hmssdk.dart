@@ -740,7 +740,8 @@ class HMSSDK {
             hmsException: HMSException(
                 message: "Permission denied",
                 description: "Screen share is not included in publish settings",
-                action: "Enable screen share from the dashboard for the current role",
+                action:
+                    "Enable screen share from the dashboard for the current role",
                 isTerminal: false));
       }
     }
@@ -978,12 +979,14 @@ class HMSSDK {
     if (hmsActionResultListener != null) {
       if (result != null && result["error"] != null) {
         hmsActionResultListener.onException(
-            methodType: HMSActionResultListenerMethod.changeRoleOfPeersWithRoles,
+            methodType:
+                HMSActionResultListenerMethod.changeRoleOfPeersWithRoles,
             arguments: arguments,
             hmsException: HMSException.fromMap(result["error"]));
       } else {
         hmsActionResultListener.onSuccess(
-            methodType: HMSActionResultListenerMethod.changeRoleOfPeersWithRoles,
+            methodType:
+                HMSActionResultListenerMethod.changeRoleOfPeersWithRoles,
             arguments: arguments);
       }
     }

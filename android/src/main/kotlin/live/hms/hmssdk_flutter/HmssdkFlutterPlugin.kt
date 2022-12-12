@@ -124,7 +124,7 @@ class HmssdkFlutterPlugin :
             }
 
             // MARK: Role based Actions
-            "get_roles", "change_role", "accept_change_role", "end_room", "remove_peer", "on_change_track_state_request", "change_track_state_for_role","change_role_of_peers_with_roles","change_role_of_peer" -> {
+            "get_roles", "change_role", "accept_change_role", "end_room", "remove_peer", "on_change_track_state_request", "change_track_state_for_role", "change_role_of_peers_with_roles", "change_role_of_peer" -> {
                 roleActions(call, result)
             }
 
@@ -642,13 +642,13 @@ class HmssdkFlutterPlugin :
             it.name == roleString
         }
         val limitToRoles: List<HMSRole>?
-        val limitToRoleString:List<String>? = call.argument<List<String>>("limit_to_roles")
-        if(limitToRoleString != null){
+        val limitToRoleString: List<String>? = call.argument<List<String>>("limit_to_roles")
+        if (limitToRoleString != null) {
             limitToRoles = hmssdk!!.getRoles().filter { limitToRoleString.contains(it.name) }
-        }else {
+        } else {
             limitToRoles = null
         }
-        hmssdk!!.changeRoleOfPeersWithRoles(toRole = toRole,ofRoles = limitToRoles,hmsActionResultListener = HMSCommonAction.getActionListener(result))
+        hmssdk!!.changeRoleOfPeersWithRoles(toRole = toRole, ofRoles = limitToRoles, hmsActionResultListener = HMSCommonAction.getActionListener(result))
     }
 
     fun build(activity: Activity, call: MethodCall, result: Result) {
