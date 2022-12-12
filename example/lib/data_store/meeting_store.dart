@@ -431,10 +431,10 @@ class MeetingStore extends ChangeNotifier
     currentAudioOutputDevice = await _hmsSDKInteractor.getCurrentAudioDevice();
   }
 
-  void switchAudioOutput({HMSAudioDevice? audioDevice}) {
+  void switchAudioOutput({required HMSAudioDevice audioDevice}) {
     selfChangeAudioDevice = true;
-    if (Platform.isAndroid) currentAudioDeviceMode = audioDevice!;
-    _hmsSDKInteractor.switchAudioOutput(audioDevice);
+    currentAudioDeviceMode = audioDevice;
+    _hmsSDKInteractor.switchAudioOutput(audioDevice: audioDevice);
   }
 
 // Override Methods
