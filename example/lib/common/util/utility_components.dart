@@ -552,7 +552,7 @@ class UtilityComponents {
                     borderRadius: BorderRadius.circular(12)),
                 backgroundColor: themeBottomSheetColor,
                 title: Text(
-                  "Select Roles for change Role",
+                  "Select roles for change Role",
                   style: GoogleFonts.inter(
                     color: iconColor,
                   ),
@@ -579,8 +579,9 @@ class UtilityComponents {
                                         ),
                                       ),
                                       Checkbox(
+                                          
                                           value: allRoles,
-                                          activeColor: Colors.blue,
+                                          activeColor: hmsdefaultColor,
                                           onChanged: (bool? value) {
                                             if (value != null) {
                                               if (value) _selectedRoles = [];
@@ -604,7 +605,7 @@ class UtilityComponents {
                                     Checkbox(
                                         value: _selectedRoles
                                             .contains(roles[index]),
-                                        activeColor: Colors.blue,
+                                        activeColor: hmsdefaultColor,
                                         onChanged: (bool? value) {
                                           if (value != null && value) {
                                             _selectedRoles.add(roles[index]);
@@ -619,7 +620,7 @@ class UtilityComponents {
                                 );
                               }),
                           Text(
-                            "change Roles to",
+                            "Change roles to",
                             style: GoogleFonts.inter(
                               color: iconColor,
                             ),
@@ -679,11 +680,18 @@ class UtilityComponents {
                             height: 8,
                           ),
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.red),
+                                
+                                  style: ButtonStyle(
+                      shadowColor: MaterialStateProperty.all(themeSurfaceColor),
+                      backgroundColor: MaterialStateProperty.all(errorColor),
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                        side: BorderSide(width: 1, color: errorColor),
+                        borderRadius: BorderRadius.circular(8.0),
+                      ))),
                                   onPressed: () {
                                     Navigator.pop(context);
                                   },
@@ -692,13 +700,21 @@ class UtilityComponents {
                                     style: GoogleFonts.inter(),
                                   )),
                               ElevatedButton(
+                                  style: ButtonStyle(
+                      shadowColor: MaterialStateProperty.all(themeSurfaceColor),
+                      backgroundColor: MaterialStateProperty.all(hmsdefaultColor),
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                        side: BorderSide(width: 1, color: hmsdefaultColor),
+                        borderRadius: BorderRadius.circular(8.0),
+                      ))),
                                   onPressed: () {
                                     _meetingStore.changeRolesOfAllPeers(
                                         toRole, _selectedRoles);
                                     Navigator.pop(context);
                                   },
                                   child: Text(
-                                    "Change Roles",
+                                    "Change Role",
                                     style: GoogleFonts.inter(),
                                   ))
                             ],

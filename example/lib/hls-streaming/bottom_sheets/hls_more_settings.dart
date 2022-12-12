@@ -307,7 +307,7 @@ class _HLSMoreSettingsState extends State<HLSMoreSettings> {
                           color: themeDefaultColor,
                         ),
                         title: Text(
-                          "Bulk Roles Change",
+                          "Bulk Role Change",
                           semanticsLabel: "fl_bulk_roles_change",
                           style: GoogleFonts.inter(
                               fontSize: 14,

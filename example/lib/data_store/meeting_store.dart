@@ -1483,7 +1483,7 @@ class MeetingStore extends ChangeNotifier
         Utilities.showToast("Camera switched successfully");
         break;
       case HMSActionResultListenerMethod.changeRoleOfPeersWithRoles:
-        Utilities.showToast("Change Roles of all peers successfully");
+        Utilities.showToast("Change Role successful");
         break;
     }
   }
