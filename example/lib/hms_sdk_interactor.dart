@@ -361,8 +361,8 @@ class HMSSDKInteractor {
     return hmsSDK.isPipAvailable();
   }
 
-  void changeRolesOfAllPeers(
+  void changeRoleOfPeersWithRoles(
       {required HMSRole toRole, List<HMSRole>? limitToRoles}) {
-    hmsSDK.changeRolesOfAllPeers(toRole: toRole, limitToRoles: limitToRoles);
+    hmsSDK.changeRoleOfPeersWithRoles(toRole: toRole, limitToRoles: limitToRoles);
   }
 }

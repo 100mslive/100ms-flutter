@@ -134,7 +134,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
             // MARK: - Role based Actions
 
-        case "get_roles", "change_role", "accept_change_role", "end_room", "remove_peer", "on_change_track_state_request", "change_track_state_for_role","change_roles_all_peers":
+        case "get_roles", "change_role", "accept_change_role", "end_room", "remove_peer", "on_change_track_state_request", "change_track_state_for_role","change_role_of_peers_with_roles","change_role_of_peer":
             roleActions(call, result)
 
             // MARK: - Peer Action
@@ -232,8 +232,11 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         case "change_track_state_for_role":
             changeTrackStateForRole(call, result)
         
-        case "change_roles_all_peers":
-            changeRolesAllPeers(call, result)
+        case "change_role_of_peers_with_roles":
+            changeRoleOfPeersWithRoles(call, result)
+            
+        case "change_role_of_peer":
+            changeRole(call,result)
 
         default:
             result(FlutterMethodNotImplemented)
@@ -640,7 +643,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         }
     }
     
-    private func changeRolesAllPeers(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+    private func changeRoleOfPeersWithRoles(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         let arguments = call.arguments as! [AnyHashable: Any]
         guard let roleString = arguments["to_role"] as? String,
               let role = HMSCommonAction.getRole(by: roleString, hmsSDK: hmsSDK) else {

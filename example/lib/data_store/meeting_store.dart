@@ -1330,7 +1330,7 @@ class MeetingStore extends ChangeNotifier
   }
 
   void changeRolesOfAllPeers(HMSRole toRole, List<HMSRole>? limitToRoles) {
-    _hmsSDKInteractor.changeRolesOfAllPeers(
+    _hmsSDKInteractor.changeRoleOfPeersWithRoles(
         toRole: toRole, limitToRoles: limitToRoles);
   }
 

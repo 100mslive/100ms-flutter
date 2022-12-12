@@ -23,6 +23,6 @@ enum HMSActionResultListenerMethod {
   stopAudioShare,
   setSessionMetadata,
   switchCamera,
-  changeRolesAllPeers,
+  changeRoleOfPeersWithRoles,
   unknown
 }

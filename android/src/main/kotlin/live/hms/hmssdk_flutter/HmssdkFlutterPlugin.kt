@@ -124,7 +124,7 @@ class HmssdkFlutterPlugin :
             }
 
             // MARK: Role based Actions
-            "get_roles", "change_role", "accept_change_role", "end_room", "remove_peer", "on_change_track_state_request", "change_track_state_for_role","change_roles_all_peers","change_role_of_peer" -> {
+            "get_roles", "change_role", "accept_change_role", "end_room", "remove_peer", "on_change_track_state_request", "change_track_state_for_role","change_role_of_peers_with_roles","change_role_of_peer" -> {
                 roleActions(call, result)
             }
 
@@ -235,8 +235,8 @@ class HmssdkFlutterPlugin :
             "change_track_state_for_role" -> {
                 changeTrackStateForRole(call, result)
             }
-            "change_roles_all_peers" -> {
-                changeRolesAllPeers(call, result)
+            "change_role_of_peers_with_roles" -> {
+                changeRoleOfPeersWithRoles(call, result)
             }
             "change_role_of_peer" -> {
                 changeRoleOfPeer(call, result)
@@ -635,7 +635,7 @@ class HmssdkFlutterPlugin :
         )
     }
 
-    private fun changeRolesAllPeers(call: MethodCall, result: Result) {
+    private fun changeRoleOfPeersWithRoles(call: MethodCall, result: Result) {
         val roleString = call.argument<String>("to_role")
         val roles = hmssdk!!.getRoles()
         val toRole: HMSRole = roles.first {
