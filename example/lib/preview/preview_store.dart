@@ -64,6 +64,8 @@ class PreviewStore extends ChangeNotifier
 
   HMSAudioDevice currentAudioDeviceMode = HMSAudioDevice.AUTOMATIC;
 
+  int peerCount = 0;
+
   @override
   void onHMSError({required HMSException error}) {
     this.error = error;
@@ -79,13 +81,12 @@ class PreviewStore extends ChangeNotifier
         peer = each;
         if (each.role.name.indexOf("hls-") == 0) {
           isHLSLink = true;
-          notifyListeners();
         }
         if (!each.role.publishSettings!.allowed.contains("video")) {
           isVideoOn = false;
-          notifyListeners();
         }
-
+        peerCount = room.peerCount;
+        notifyListeners();
         break;
       }
     }
@@ -176,6 +177,9 @@ class PreviewStore extends ChangeNotifier
         break;
       case HMSRoomUpdate.hlsStreamingStateUpdated:
         isStreamingStarted = room.hmshlsStreamingState?.running ?? false;
+        break;
+      case HMSRoomUpdate.roomPeerCountUpdated:
+        peerCount = room.peerCount;
         break;
       default:
         break;

@@ -88,11 +88,13 @@ class HMSPeer {
                 : HMSNetworkQuality.fromMap(map['network_quality']));
 
     if (map['audio_track'] != null) {
-      peer.audioTrack = HMSAudioTrack.fromMap(map: map['audio_track']!);
+      peer.audioTrack = HMSAudioTrack.fromMap(
+          map: map['audio_track']!, isLocal: peer.isLocal);
     }
 
     if (map['video_track'] != null) {
-      peer.videoTrack = HMSVideoTrack.fromMap(map: map['video_track']!);
+      peer.videoTrack = HMSVideoTrack.fromMap(
+          map: map['video_track']!, isLocal: peer.isLocal);
     }
 
     return peer;
@@ -108,7 +110,7 @@ class HMSPeer {
         arguments: {"peer_id": this.peerId});
     List<HMSTrack> tracks = [];
     result.forEach((element) {
-      HMSTrack hmsTrack = HMSTrack.fromMap(map: element);
+      HMSTrack hmsTrack = HMSTrack.fromMap(map: element, isLocal: isLocal);
       tracks.add(hmsTrack);
     });
 
@@ -119,7 +121,7 @@ class HMSPeer {
     var result = await PlatformService.invokeMethod(PlatformMethod.getTrackById,
         arguments: {"peer_id": this.peerId, "track_id": trackId});
 
-    HMSTrack hmsTrack = HMSTrack.fromMap(map: result);
+    HMSTrack hmsTrack = HMSTrack.fromMap(map: result, isLocal: isLocal);
     return hmsTrack;
   }
 }

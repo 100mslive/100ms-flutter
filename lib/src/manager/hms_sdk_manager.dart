@@ -27,7 +27,7 @@ class HmsSdkManager {
       "hms_log_settings": hmsLogSettings?.toMap(),
       "dart_sdk_version":
           dartSDKVersion.length > 0 ? dartSDKVersion[0] : "null",
-      "hmssdk_version": "1.0.0"
+      "hmssdk_version": HMSSDKConstants.hmsSDKVersion
     });
   }
 }

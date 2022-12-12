@@ -42,31 +42,56 @@ class _HLSPlayerState extends State<HLSPlayer> with TickerProviderStateMixin {
           }
           return Scaffold(
               key: GlobalKey(),
-              floatingActionButton: FloatingActionButton(
-                  backgroundColor: Colors.red,
-                  child: Text(
-                    "LIVE",
-                    style: TextStyle(
-                        color: Colors.white, fontWeight: FontWeight.bold),
-                  ),
-                  onPressed: () {
-                    animation.reverse();
-                    context
-                        .read<MeetingStore>()
-                        .setPIPVideoController(widget.streamUrl, true);
-                    animation.forward();
-                  }),
-              body: Center(
-                  child: FadeTransition(
-                opacity: fadeInFadeOut,
-                child: AspectRatio(
-                  aspectRatio: 16 / 9,
-                  child: PipFlutterPlayer(
-                    controller: controller,
-                    key: context.read<MeetingStore>().pipFlutterPlayerKey,
-                  ),
-                ),
-              )));
+              body: Stack(
+                children: [
+                  Center(
+                      child: FadeTransition(
+                    opacity: fadeInFadeOut,
+                    child: AspectRatio(
+                      aspectRatio: 16 / 9,
+                      child: PipFlutterPlayer(
+                        controller: controller,
+                        key: context.read<MeetingStore>().pipFlutterPlayerKey,
+                      ),
+                    ),
+                  )),
+                  if (!context.read<MeetingStore>().isPipActive)
+                    Positioned(
+                      bottom: 10,
+                      right: 20,
+                      child: GestureDetector(
+                        onTap: () {
+                          animation.reverse();
+                          context
+                              .read<MeetingStore>()
+                              .setPIPVideoController(widget.streamUrl, true);
+                          animation.forward();
+                        },
+                        child: Container(
+                          padding: EdgeInsets.all(5),
+                          child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.circle,
+                                  color: Colors.red,
+                                  size: 15,
+                                ),
+                                SizedBox(
+                                  width: 5,
+                                ),
+                                Text(
+                                  "Go Live",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold),
+                                )
+                              ]),
+                        ),
+                      ),
+                    )
+                ],
+              ));
         });
   }
 }

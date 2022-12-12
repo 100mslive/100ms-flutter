@@ -22,9 +22,9 @@ class HMSVideoTrack extends HMSTrack {
           isMute: isMute,
         );
 
-  factory HMSVideoTrack.fromMap({required Map map}) {
-    return map['hms_video_track_settings'] == null
-        ? HMSRemoteVideoTrack.fromMap(map: map)
-        : HMSLocalVideoTrack.fromMap(map: map);
+  factory HMSVideoTrack.fromMap({required Map map, required bool isLocal}) {
+    return isLocal
+        ? HMSLocalVideoTrack.fromMap(map: map)
+        : HMSRemoteVideoTrack.fromMap(map: map);
   }
 }
