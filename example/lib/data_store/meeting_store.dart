@@ -1589,7 +1589,7 @@ class MeetingStore extends ChangeNotifier
       List<HMSPeer>? peersList = await getPeers();
 
       peersList?.forEach((element) {
-        if (!element.isLocal) {
+        if (!element.isLocal && (Platform.isAndroid)) {
           (element.audioTrack as HMSRemoteAudioTrack?)?.setVolume(10.0);
           element.auxiliaryTracks?.forEach((element) {
             if (element.kind == HMSTrackKind.kHMSTrackKindAudio) {
