@@ -19,14 +19,6 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/hms_sdk_interactor.dart';
 import 'package:hmssdk_flutter_example/model/peer_track_node.dart';
 import 'package:hmssdk_flutter_example/service/room_service.dart';
-import 'package:pip_flutter/pipflutter_player_configuration.dart';
-import 'package:pip_flutter/pipflutter_player_controller.dart';
-import 'package:pip_flutter/pipflutter_player_controls_configuration.dart';
-import 'package:pip_flutter/pipflutter_player_data_source.dart';
-import 'package:pip_flutter/pipflutter_player_data_source_type.dart';
-import 'package:pip_flutter/pipflutter_player_event.dart';
-import 'package:pip_flutter/pipflutter_player_event_type.dart';
-import 'package:pip_flutter/pipflutter_player_theme.dart';
 
 class MeetingStore extends ChangeNotifier
     with WidgetsBindingObserver
@@ -153,7 +145,6 @@ class MeetingStore extends ChangeNotifier
 
   // VideoPlayerController? hlsVideoController;
 
-  PipFlutterPlayerController? hlsVideoController;
   final GlobalKey pipFlutterPlayerKey = GlobalKey();
 
   bool hlsStreamingRetry = false;
@@ -198,8 +189,8 @@ class MeetingStore extends ChangeNotifier
     WidgetsBinding.instance.removeObserver(this);
     hmsException = null;
     if ((localPeer?.role.name.contains("hls-") ?? false) && hasHlsStarted) {
-      hlsVideoController!.dispose(forceDispose: true);
-      hlsVideoController = null;
+      // hlsVideoController!.dispose(forceDispose: true);
+      // hlsVideoController = null;
     }
     _hmsSDKInteractor.leave(hmsActionResultListener: this);
     _hmsSDKInteractor.destroy();
@@ -968,10 +959,10 @@ class MeetingStore extends ChangeNotifier
       case HMSPeerUpdate.roleUpdated:
         if (peer.isLocal) {
           localPeer = peer;
-          if (hlsVideoController != null && !peer.role.name.contains("hls-")) {
-            hlsVideoController!.dispose(forceDispose: true);
-            hlsVideoController = null;
-          }
+          // if (hlsVideoController != null && !peer.role.name.contains("hls-")) {
+          //   hlsVideoController!.dispose(forceDispose: true);
+          //   hlsVideoController = null;
+          // }
         }
         if (peer.role.name.contains("hls-")) {
           isHLSLink = peer.isLocal;
@@ -1287,51 +1278,51 @@ class MeetingStore extends ChangeNotifier
     }
   }
 
-  void setPIPVideoController(String streamUrl, bool reinitialise) {
-    if (hlsVideoController != null) {
-      hlsVideoController!.dispose(forceDispose: true);
-      hlsVideoController = null;
-    }
-    PipFlutterPlayerConfiguration pipFlutterPlayerConfiguration =
-        PipFlutterPlayerConfiguration(
-            allowedScreenSleep: false,
-            fit: BoxFit.contain,
-            showPlaceholderUntilPlay: true,
-            deviceOrientationsAfterFullScreen: [
-              DeviceOrientation.portraitUp,
-              DeviceOrientation.portraitDown
-            ],
-            autoDispose: false,
-            handleLifecycle: false,
-            placeholder: Center(
-              child: HLSTitleText(
-                text: "Loading...",
-                textColor: themeDefaultColor,
-              ),
-            ),
-            eventListener: (PipFlutterPlayerEvent event) {
-              if (event.pipFlutterPlayerEventType ==
-                      PipFlutterPlayerEventType.initialized &&
-                  isPipActive) {
-                hlsVideoController!.enablePictureInPicture(pipFlutterPlayerKey);
-              }
-            },
-            controlsConfiguration: PipFlutterPlayerControlsConfiguration(
-                controlBarColor: Colors.transparent,
-                enablePlayPause: false,
-                enableOverflowMenu: false,
-                enableSkips: false,
-                playerTheme: PipFlutterPlayerTheme.cupertino));
-    PipFlutterPlayerDataSource dataSource = PipFlutterPlayerDataSource(
-        PipFlutterPlayerDataSourceType.network, streamUrl,
-        liveStream: true);
-    hlsVideoController =
-        PipFlutterPlayerController(pipFlutterPlayerConfiguration);
-    hlsVideoController!.setupDataSource(dataSource);
-    hlsVideoController!.play();
-    hlsVideoController!.setPipFlutterPlayerGlobalKey(pipFlutterPlayerKey);
-    if (reinitialise) notifyListeners();
-  }
+  // void setPIPVideoController(String streamUrl, bool reinitialise) {
+  //   if (hlsVideoController != null) {
+  //     hlsVideoController!.dispose(forceDispose: true);
+  //     hlsVideoController = null;
+  //   }
+  //   PipFlutterPlayerConfiguration pipFlutterPlayerConfiguration =
+  //       PipFlutterPlayerConfiguration(
+  //           allowedScreenSleep: false,
+  //           fit: BoxFit.contain,
+  //           showPlaceholderUntilPlay: true,
+  //           deviceOrientationsAfterFullScreen: [
+  //             DeviceOrientation.portraitUp,
+  //             DeviceOrientation.portraitDown
+  //           ],
+  //           autoDispose: false,
+  //           handleLifecycle: false,
+  //           placeholder: Center(
+  //             child: HLSTitleText(
+  //               text: "Loading...",
+  //               textColor: themeDefaultColor,
+  //             ),
+  //           ),
+  //           eventListener: (PipFlutterPlayerEvent event) {
+  //             if (event.pipFlutterPlayerEventType ==
+  //                     PipFlutterPlayerEventType.initialized &&
+  //                 isPipActive) {
+  //               hlsVideoController!.enablePictureInPicture(pipFlutterPlayerKey);
+  //             }
+  //           },
+  //           controlsConfiguration: PipFlutterPlayerControlsConfiguration(
+  //               controlBarColor: Colors.transparent,
+  //               enablePlayPause: false,
+  //               enableOverflowMenu: false,
+  //               enableSkips: false,
+  //               playerTheme: PipFlutterPlayerTheme.cupertino));
+  //   PipFlutterPlayerDataSource dataSource = PipFlutterPlayerDataSource(
+  //       PipFlutterPlayerDataSourceType.network, streamUrl,
+  //       liveStream: true);
+  //   hlsVideoController =
+  //       PipFlutterPlayerController(pipFlutterPlayerConfiguration);
+  //   hlsVideoController!.setupDataSource(dataSource);
+  //   hlsVideoController!.play();
+  //   hlsVideoController!.setPipFlutterPlayerGlobalKey(pipFlutterPlayerKey);
+  //   if (reinitialise) notifyListeners();
+  // }
 
   void changeRoleOfPeersWithRoles(HMSRole toRole, List<HMSRole>? limitToRoles) {
     _hmsSDKInteractor.changeRoleOfPeersWithRoles(

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:pip_flutter/pipflutter_player.dart';
-import 'package:pip_flutter/pipflutter_player_controller.dart';
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+
 import 'package:provider/provider.dart';
 
 //Project imports
@@ -28,70 +28,61 @@ class _HLSPlayerState extends State<HLSPlayer> with TickerProviderStateMixin {
     );
     fadeInFadeOut = Tween<double>(begin: 0.0, end: 1).animate(animation);
 
-    context.read<MeetingStore>().setPIPVideoController(widget.streamUrl, false);
+    // context.read<MeetingStore>().setPIPVideoController(widget.streamUrl, false);
     animation.forward();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Selector<MeetingStore, PipFlutterPlayerController?>(
-        selector: (_, meetingStore) => meetingStore.hlsVideoController,
-        builder: (_, controller, __) {
-          if (controller == null) {
-            return Scaffold();
-          }
-          return Scaffold(
-              key: GlobalKey(),
-              body: Stack(
-                children: [
-                  Center(
-                      child: FadeTransition(
-                    opacity: fadeInFadeOut,
-                    child: AspectRatio(
-                      aspectRatio: 16 / 9,
-                      child: PipFlutterPlayer(
-                        controller: controller,
-                        key: context.read<MeetingStore>().pipFlutterPlayerKey,
-                      ),
-                    ),
-                  )),
-                  if (!context.read<MeetingStore>().isPipActive)
-                    Positioned(
-                      bottom: 10,
-                      right: 20,
-                      child: GestureDetector(
-                        onTap: () {
-                          animation.reverse();
-                          context
-                              .read<MeetingStore>()
-                              .setPIPVideoController(widget.streamUrl, true);
-                          animation.forward();
-                        },
-                        child: Container(
-                          padding: EdgeInsets.all(5),
-                          child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  Icons.circle,
-                                  color: Colors.red,
-                                  size: 15,
-                                ),
-                                SizedBox(
-                                  width: 5,
-                                ),
-                                Text(
-                                  "Go Live",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold),
-                                )
-                              ]),
-                        ),
-                      ),
-                    )
-                ],
-              ));
-        });
+    return Scaffold(
+        key: GlobalKey(),
+        body: Stack(
+          children: [
+            Center(
+                child: FadeTransition(
+              opacity: fadeInFadeOut,
+              child: Container(
+                  color: Colors.red,
+                  width: MediaQuery.of(context).size.width,
+                  height: 300,
+                  child: HMSHLSPlayer(url: widget.streamUrl)),
+            )),
+            if (!context.read<MeetingStore>().isPipActive)
+              Positioned(
+                bottom: 10,
+                right: 20,
+                child: GestureDetector(
+                  onTap: () {
+                    animation.reverse();
+                    // context
+                    //     .read<MeetingStore>()
+                    //     .setPIPVideoController(widget.streamUrl, true);
+                    animation.forward();
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(5),
+                    child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.circle,
+                            color: Colors.red,
+                            size: 15,
+                          ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Text(
+                            "Go Live",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          )
+                        ]),
+                  ),
+                ),
+              )
+          ],
+        ));
   }
 }
