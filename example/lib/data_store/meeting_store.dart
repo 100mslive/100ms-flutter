@@ -24,6 +24,8 @@ import 'package:pip_flutter/pipflutter_player_controller.dart';
 import 'package:pip_flutter/pipflutter_player_controls_configuration.dart';
 import 'package:pip_flutter/pipflutter_player_data_source.dart';
 import 'package:pip_flutter/pipflutter_player_data_source_type.dart';
+import 'package:pip_flutter/pipflutter_player_event.dart';
+import 'package:pip_flutter/pipflutter_player_event_type.dart';
 import 'package:pip_flutter/pipflutter_player_theme.dart';
 
 class MeetingStore extends ChangeNotifier
@@ -137,7 +139,9 @@ class MeetingStore extends ChangeNotifier
 
   HMSAudioDevice? currentAudioOutputDevice;
 
-  HMSAudioDevice currentAudioDeviceMode = HMSAudioDevice.AUTOMATIC;
+  HMSAudioDevice currentAudioDeviceMode = Platform.isAndroid
+      ? HMSAudioDevice.AUTOMATIC
+      : HMSAudioDevice.SPEAKER_PHONE;
 
   bool showAudioDeviceChangePopup = false;
 
@@ -165,6 +169,8 @@ class MeetingStore extends ChangeNotifier
   bool isPipActive = false;
 
   bool isPipAutoEnabled = false;
+
+  bool lastVideoStatus = false;
 
   Future<bool> join(String user, String roomUrl) async {
     List<String?>? token =
@@ -308,11 +314,11 @@ class MeetingStore extends ChangeNotifier
     notifyListeners();
   }
 
-  void changeRole(
+  void changeRoleOfPeer(
       {required HMSPeer peer,
       required HMSRole roleName,
       bool forceChange = false}) {
-    _hmsSDKInteractor.changeRole(
+    _hmsSDKInteractor.changeRoleOfPeer(
         toRole: roleName,
         forPeer: peer,
         force: forceChange,
@@ -429,10 +435,10 @@ class MeetingStore extends ChangeNotifier
     currentAudioOutputDevice = await _hmsSDKInteractor.getCurrentAudioDevice();
   }
 
-  void switchAudioOutput({HMSAudioDevice? audioDevice}) {
+  void switchAudioOutput({required HMSAudioDevice audioDevice}) {
     selfChangeAudioDevice = true;
-    if (Platform.isAndroid) currentAudioDeviceMode = audioDevice!;
-    _hmsSDKInteractor.switchAudioOutput(audioDevice);
+    currentAudioDeviceMode = audioDevice;
+    _hmsSDKInteractor.switchAudioOutput(audioDevice: audioDevice);
   }
 
 // Override Methods
@@ -586,6 +592,7 @@ class MeetingStore extends ChangeNotifier
         peerTrackNode.audioTrack = track as HMSAudioTrack;
         peerTrackNode.notify();
       } else {
+        if (peer.role.name.contains("hls-")) return;
         peerTracks.add(new PeerTrackNode(
             peer: peer,
             uid: peer.peerId + "mainVideo",
@@ -607,6 +614,7 @@ class MeetingStore extends ChangeNotifier
           rearrangeTile(peerTrackNode, index);
         }
       } else {
+        if (peer.role.name.contains("hls-")) return;
         peerTracks.add(new PeerTrackNode(
             peer: peer,
             uid: peer.peerId + "mainVideo",
@@ -1301,6 +1309,13 @@ class MeetingStore extends ChangeNotifier
                 textColor: themeDefaultColor,
               ),
             ),
+            eventListener: (PipFlutterPlayerEvent event) {
+              if (event.pipFlutterPlayerEventType ==
+                      PipFlutterPlayerEventType.initialized &&
+                  isPipActive) {
+                hlsVideoController!.enablePictureInPicture(pipFlutterPlayerKey);
+              }
+            },
             controlsConfiguration: PipFlutterPlayerControlsConfiguration(
                 controlBarColor: Colors.transparent,
                 enablePlayPause: false,
@@ -1316,6 +1331,11 @@ class MeetingStore extends ChangeNotifier
     hlsVideoController!.play();
     hlsVideoController!.setPipFlutterPlayerGlobalKey(pipFlutterPlayerKey);
     if (reinitialise) notifyListeners();
+  }
+
+  void changeRoleOfPeersWithRoles(HMSRole toRole, List<HMSRole>? limitToRoles) {
+    _hmsSDKInteractor.changeRoleOfPeersWithRoles(
+        toRole: toRole, limitToRoles: limitToRoles);
   }
 
 //Get onSuccess or onException callbacks for HMSActionResultListenerMethod
@@ -1355,6 +1375,9 @@ class MeetingStore extends ChangeNotifier
         Utilities.showToast("Accept role change successful");
         break;
       case HMSActionResultListenerMethod.changeRole:
+        Utilities.showToast("Change role successful");
+        break;
+      case HMSActionResultListenerMethod.changeRoleOfPeer:
         Utilities.showToast("Change role successful");
         break;
       case HMSActionResultListenerMethod.changeTrackStateForRole:
@@ -1463,6 +1486,9 @@ class MeetingStore extends ChangeNotifier
       case HMSActionResultListenerMethod.switchCamera:
         Utilities.showToast("Camera switched successfully");
         break;
+      case HMSActionResultListenerMethod.changeRoleOfPeersWithRoles:
+        Utilities.showToast("Change Role successful");
+        break;
     }
   }
 
@@ -1489,6 +1515,8 @@ class MeetingStore extends ChangeNotifier
       case HMSActionResultListenerMethod.acceptChangeRole:
         break;
       case HMSActionResultListenerMethod.changeRole:
+        break;
+      case HMSActionResultListenerMethod.changeRoleOfPeer:
         break;
       case HMSActionResultListenerMethod.changeTrackStateForRole:
         break;
@@ -1534,6 +1562,9 @@ class MeetingStore extends ChangeNotifier
       case HMSActionResultListenerMethod.switchCamera:
         Utilities.showToast("Camera switching failed");
         break;
+      case HMSActionResultListenerMethod.changeRoleOfPeersWithRoles:
+        Utilities.showToast("Change Roles of All Peers failed");
+        break;
     }
     notifyListeners();
   }
@@ -1548,6 +1579,11 @@ class MeetingStore extends ChangeNotifier
       if (isPipActive) {
         isPipActive = false;
         notifyListeners();
+      }
+
+      if (lastVideoStatus) {
+        switchVideo();
+        lastVideoStatus = false;
       }
 
       List<HMSPeer>? peersList = await getPeers();
@@ -1568,6 +1604,7 @@ class MeetingStore extends ChangeNotifier
           !(localPeer.videoTrack?.isMute ?? true) &&
           !isPipActive) {
         switchVideo();
+        lastVideoStatus = true;
       }
       for (PeerTrackNode peerTrackNode in peerTracks) {
         peerTrackNode.setOffScreenStatus(true);
@@ -1582,6 +1619,7 @@ class MeetingStore extends ChangeNotifier
           !(localPeer.videoTrack?.isMute ?? true) &&
           !isPipActive) {
         switchVideo();
+        lastVideoStatus = true;
       }
       for (PeerTrackNode peerTrackNode in peerTracks) {
         peerTrackNode.setOffScreenStatus(true);

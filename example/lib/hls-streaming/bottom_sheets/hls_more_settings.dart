@@ -79,21 +79,17 @@ class _HLSMoreSettingsState extends State<HLSMoreSettings> {
                     horizontalTitleGap: 2,
                     onTap: () async {
                       Navigator.pop(context);
-                      if (Platform.isAndroid) {
-                        showModalBottomSheet(
-                          isScrollControlled: true,
-                          backgroundColor: themeBottomSheetColor,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          context: context,
-                          builder: (ctx) => ChangeNotifierProvider.value(
-                              value: context.read<MeetingStore>(),
-                              child: HLSDeviceSettings()),
-                        );
-                      } else if (Platform.isIOS) {
-                        context.read<MeetingStore>().switchAudioOutput();
-                      }
+                      showModalBottomSheet(
+                        isScrollControlled: true,
+                        backgroundColor: themeBottomSheetColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        context: context,
+                        builder: (ctx) => ChangeNotifierProvider.value(
+                            value: context.read<MeetingStore>(),
+                            child: HLSDeviceSettings()),
+                      );
                     },
                     contentPadding: EdgeInsets.zero,
                     leading: SvgPicture.asset(
@@ -276,7 +272,7 @@ class _HLSMoreSettingsState extends State<HLSMoreSettings> {
                         onTap: () async {
                           Navigator.pop(context);
                           List<HMSRole> roles = await _meetingStore.getRoles();
-                          UtilityComponents.showRoleList(
+                          UtilityComponents.showRoleListForMute(
                               context, roles, _meetingStore);
                         },
                         contentPadding: EdgeInsets.zero,
@@ -288,6 +284,31 @@ class _HLSMoreSettingsState extends State<HLSMoreSettings> {
                         title: Text(
                           "Mute Role",
                           semanticsLabel: "fl_mute_role",
+                          style: GoogleFonts.inter(
+                              fontSize: 14,
+                              color: themeDefaultColor,
+                              letterSpacing: 0.25,
+                              fontWeight: FontWeight.w600),
+                        )),
+                  if (_meetingStore.localPeer?.role.permissions.changeRole ??
+                      false)
+                    ListTile(
+                        horizontalTitleGap: 2,
+                        onTap: () async {
+                          Navigator.pop(context);
+                          List<HMSRole> roles = await _meetingStore.getRoles();
+                          UtilityComponents.showDialogForBulkRoleChange(
+                              context, roles, _meetingStore);
+                        },
+                        contentPadding: EdgeInsets.zero,
+                        leading: SvgPicture.asset(
+                          "assets/icons/role_change.svg",
+                          fit: BoxFit.scaleDown,
+                          color: themeDefaultColor,
+                        ),
+                        title: Text(
+                          "Bulk Role Change",
+                          semanticsLabel: "fl_bulk_roles_change",
                           style: GoogleFonts.inter(
                               fontSize: 14,
                               color: themeDefaultColor,

@@ -9,7 +9,7 @@ import '../hmssdk_flutter.dart';
 ///
 /// **Key Concepts**
 ///
-/// **Room** - A room represents a real-time audio, video session, the basic building block of the 100mslive Video SDK
+/// **Room** - A room represents real-time audio, and video sessions, the basic building block of the 100mslive Video SDK
 ///
 /// **Track** - A track represents either the audio or video that makes up a stream
 ///
@@ -47,7 +47,7 @@ class HMSSDK {
     PlatformService.removeRTCStatsListener(listener);
   }
 
-  /// Join the room with configuration options passed as a [HMSConfig] object
+  /// Join the room with configuration options passed as an [HMSConfig] object
   Future<dynamic> join({
     required HMSConfig config,
   }) async {
@@ -69,7 +69,7 @@ class HMSSDK {
   }
 
   /// Begin a preview so that the local peer's audio and video can be displayed to them before they join a call.
-  /// The details of the call they want to join is passed using [HMSConfig]. This may affect whether they are allowed to publish audio or video at all.
+  /// The details of the call they want to join are passed using [HMSConfig]. This may affect whether they are allowed to publish audio or video at all.
   Future<void> preview({
     required HMSConfig config,
   }) async {
@@ -82,7 +82,7 @@ class HMSSDK {
   }
 
   /// Call this method to leave the room
-  /// [HMSActionResultListener] callback will be used by SDK to inform application if there was a success or failure when the leave was executed
+  /// [HMSActionResultListener] callback will be used by SDK to inform the application if there was a success or failure when the leave was executed
   Future<void> leave({HMSActionResultListener? hmsActionResultListener}) async {
     var result = await PlatformService.invokeMethod(PlatformMethod.leave);
     if (hmsActionResultListener != null) {
@@ -98,7 +98,7 @@ class HMSSDK {
   }
 
   /// To switch local peer's audio on/off.
-  /// Pass bool value to [isOn] to change current audio status
+  /// Pass the bool value to [isOn] to change the current audio status
   Future<HMSException?> switchAudio({bool isOn = false}) async {
     bool result = await PlatformService.invokeMethod(PlatformMethod.switchAudio,
         arguments: {'is_on': isOn});
@@ -116,7 +116,7 @@ class HMSSDK {
   }
 
   /// To switch local peer's video on/off.
-  /// Pass bool value to [isOn] to change current video status
+  /// Pass the bool value to [isOn] to change the current video status
   Future<HMSException?> switchVideo({bool isOn = false}) async {
     bool result = await PlatformService.invokeMethod(PlatformMethod.switchVideo,
         arguments: {'is_on': isOn});
@@ -133,7 +133,7 @@ class HMSSDK {
     }
   }
 
-  /// Switch camera to front or rear mode
+  /// Switch camera to the front or rear mode
   Future<void> switchCamera(
       {HMSActionResultListener? hmsActionResultListener}) async {
     var result = await PlatformService.invokeMethod(
@@ -152,7 +152,7 @@ class HMSSDK {
     }
   }
 
-  /// To start capturing the local peer's video & send it to other peer's in the room
+  /// To start capturing the local peer's video & send it to other peers in the room
   Future<bool> startCapturing() async {
     return await PlatformService.invokeMethod(PlatformMethod.startCapturing);
   }
@@ -176,21 +176,21 @@ class HMSSDK {
         arguments: {"peer_id": peer != null ? peer.peerId : "null"});
   }
 
-  /// To mute audio of all peers in the room for yourself
+  /// To mute the audio of all peers in the room for yourself
   /// Audio from other peers will be stopped for the local peer after invoking [muteRoomAudioLocally]
-  /// Note: Other peers can still listen each other in the room, just you (the local peer) won't listen any audio from the peers in the room
+  /// Note: Other peers can still listen to each other in the room, just you (the local peer) won't listen to any audio from the peers in the room
   Future<void> muteRoomAudioLocally() async {
     return await PlatformService.invokeMethod(
         PlatformMethod.muteRoomAudioLocally);
   }
 
-  /// To unmute audio of all peers in the room for yourself if you had previously invoked [muteRoomAudioLocally]
+  /// To unmute the audio of all peers in the room for yourself if you had previously invoked [muteRoomAudioLocally]
   Future<void> unMuteRoomAudioLocally() async {
     return await PlatformService.invokeMethod(
         PlatformMethod.unMuteRoomAudioLocally);
   }
 
-  /// To mute video of all peers in the room for yourself.
+  /// To mute the video of all peers in the room for yourself.
   /// Video from other peers will be stopped for the local peer after invoking [muteRoomVideoLocally]
   /// Note: Other peers can still see each other in the room, just you (the local peer) won't see any video from the peers in the room
   Future<void> muteRoomVideoLocally() async {
@@ -198,14 +198,14 @@ class HMSSDK {
         PlatformMethod.muteRoomVideoLocally);
   }
 
-  /// To unmute video of all peers in the room for yourself.
+  /// To unmute the video of all peers in the room for yourself.
   /// Video from other peers will be displayed for the local peer after invoking [unMuteRoomVideoLocally] if they were previously muted using [muteRoomVideoLocally]
   Future<void> unMuteRoomVideoLocally() async {
     return await PlatformService.invokeMethod(
         PlatformMethod.unMuteRoomVideoLocally);
   }
 
-  /// Get the [HMSRoom] room object which the local peer has currently joined. Returns null if no room is joined.
+  /// Get the [HMSRoom] room object that the local peer has currently joined. Returns null if no room is joined.
   Future<HMSRoom?> getRoom() async {
     var hmsRoomMap = await PlatformService.invokeMethod(PlatformMethod.getRoom);
     if (hmsRoomMap == null) return null;
@@ -220,7 +220,7 @@ class HMSSDK {
     return HMSLocalPeer.fromMap(hmsLocalPeerMap);
   }
 
-  /// Returns only remote peers. The peer's own instance will not be included in this. To get all peers including the local one consider getPeers or for only the local one consider getLocalPeer. Returns null if no room is joined.
+  /// Returns only remote peers. The peer's own instance will not be included in this. To get all peers including the local one consider [getPeers] or for only the local one consider [getLocalPeer]. Returns null if no room is joined.
   Future<List<HMSPeer>?> getRemotePeers() async {
     List? peers =
         await PlatformService.invokeMethod(PlatformMethod.getRemotePeers);
@@ -243,7 +243,7 @@ class HMSSDK {
     return listOfPeers;
   }
 
-  /// Sends a message to everyone in the call. [message] contains the content of the message.
+  /// Sends a message to everyone on the call. [message] contains the content of the message.
   /// The [hmsActionResultListener] informs about whether the message was successfully sent, or the kind of error if not.
   Future<void> sendBroadcastMessage(
       {required String message,
@@ -268,7 +268,7 @@ class HMSSDK {
     }
   }
 
-  /// Sends a message to all the peers of a role defined in [roleName]. All peers currently with that role will receive the message.
+  /// Sends a message to all the peers of a role defined in [roleName]. All peers currently in that role will receive the message.
   /// [message] contains the content of the message.
   /// The [hmsActionResultListener] informs about whether the message was successfully sent, or the kind of error if not.
   Future<void> sendGroupMessage(
@@ -298,7 +298,7 @@ class HMSSDK {
     }
   }
 
-  /// Sends a message a particular peer only. The one specified in [peer].
+  /// Sends a message to a particular peer only. The one specified in [peer].
   /// [message] contains the content of the message.
   /// The [hmsActionResultListener] informs about whether the message was successfully sent, or the kind of error if not.
   Future<void> sendDirectMessage(
@@ -348,7 +348,8 @@ class HMSSDK {
   /// The [peer] HMSPeer whose role should be requested to be changed.
   /// The [roleName] new role the HMSPeer would have if they accept or are forced to change to.
   /// Set [forceChange] to false if the peer should be requested to accept the new role (they can choose to deny). Set [forceChange] to true if their role should be changed without asking them.
-  /// [hmsActionResultListener] - Listener that will return HMSActionResultListener.onSuccess if the role change request is successful else will call [HMSActionResultListener.onException] with the error received from server
+  /// [hmsActionResultListener] - Listener that will return HMSActionResultListener.onSuccess if the role change request is successful else will call [HMSActionResultListener.onException] with the error received from the server
+  @Deprecated('Use [changeRoleOfPeer]')
   Future<void> changeRole(
       {required HMSPeer forPeer,
       required HMSRole toRole,
@@ -383,9 +384,49 @@ class HMSSDK {
     }
   }
 
+  /// Requests a change of HMSRole to a new role.
+  /// The [peer] HMSPeer whose role should be requested to be changed.
+  /// The [roleName] new role the HMSPeer would have if they accept or are forced to change to.
+  /// Set [forceChange] to false if the peer should be requested to accept the new role (they can choose to deny). Set [forceChange] to true if their role should be changed without asking them.
+  /// [hmsActionResultListener] - Listener that will return HMSActionResultListener.onSuccess if the role change request is successful else will call [HMSActionResultListener.onException] with the error received from the server
+  Future<void> changeRoleOfPeer(
+      {required HMSPeer forPeer,
+      required HMSRole toRole,
+      bool force = false,
+      HMSActionResultListener? hmsActionResultListener}) async {
+    var arguments = {
+      'peer_id': forPeer.peerId,
+      'role_name': toRole.name,
+      'force_change': force
+    };
+    var result = await PlatformService.invokeMethod(
+        PlatformMethod.changeRoleOfPeer,
+        arguments: arguments);
+
+    if (hmsActionResultListener != null) {
+      if (result == null)
+        hmsActionResultListener.onSuccess(
+            methodType: HMSActionResultListenerMethod.changeRoleOfPeer,
+            arguments: {
+              'peer': forPeer,
+              'role_name': toRole,
+              'force_change': force
+            });
+      else
+        hmsActionResultListener.onException(
+            arguments: {
+              'peer': forPeer,
+              'role_name': toRole,
+              'force_change': force
+            },
+            methodType: HMSActionResultListenerMethod.changeRoleOfPeer,
+            hmsException: HMSException.fromMap(result["error"]));
+    }
+  }
+
   ///accept the change role request
-  /// When a peer is requested to change their role (see [changeRole]) to accept the new role this has to be called. Once this method is called, the peer's role will be changed to the requested one. The HMSRoleChangeRequest that the SDK had sent to this peer (in HMSUpdateListener.onRoleChangeRequest) to inform them that a role change was requested.
-  /// [hmsActionResultListener] - Listener that will return HMSActionResultListener.onSuccess if the role change request is successful else will call HMSActionResultListener.onException with the error received from server
+  /// When a peer is requested to change their role (see [changeRoleOfPeer]) to accept the new role this has to be called. Once this method is called, the peer's role will be changed to the requested one. The HMSRoleChangeRequest that the SDK had sent to this peer (in HMSUpdateListener.onRoleChangeRequest) to inform them that a role change was requested.
+  /// [hmsActionResultListener] - Listener that will return HMSActionResultListener.onSuccess if the role change request is successful else will call HMSActionResultListener.onException with the error received from the server
 
   Future<void> acceptChangeRole(
       {required HMSRoleChangeRequest hmsRoleChangeRequest,
@@ -405,7 +446,7 @@ class HMSSDK {
 
   /// To change the mute status of a single remote peer's track
   /// Set [mute] to true if the track needs to be muted, false otherwise.
-  /// [hmsActionResultListener] - the callback that would be called by SDK in case of a success or failure.
+  /// [hmsActionResultListener] - the callback that would be called by SDK in case of success or failure.
   Future<void> changeTrackState(
       {required HMSTrack forRemoteTrack,
       required bool mute,
@@ -437,10 +478,10 @@ class HMSSDK {
 
   /// To change the mute status of one or many remote HMSTrack for all peers of a particular role, or all tracks of a particular source, type or source AND type.
   /// Set [mute] true if the track needs to be muted, false otherwise
-  /// [type] is the HMSTrackType which should be affected. If this and source are specified, it is considered an AND operation. If not specified, all track sources are affected.
-  /// [source] is the HMSTrackSource which should be affected. If this and type are specified, it is considered an AND operation. If not specified, all track types are affected.
-  /// [roles] is a list of roles, may have a single item in a list, whose tracks should be affected. If not specified, all roles are affected.
-  /// [hmsActionResultListener] - the callback that would be called by SDK in case of a success or failure.
+  /// [type] is the HMSTrackType that should be affected. If this and the source are specified, it is considered an AND operation. If not specified, all track sources are affected.
+  /// [source] is the HMSTrackSource that should be affected. If this and type are specified, it is considered an AND operation. If not specified, all track types are affected.
+  /// [roles] is a list of roles, that may have a single item in a list, whose tracks should be affected. If not specified, all roles are affected.
+  /// [hmsActionResultListener] - the callback that would be called by SDK in case of success or failure.
   Future<void> changeTrackStateForRole(
       {required bool mute,
       required HMSTrackKind? kind,
@@ -487,7 +528,7 @@ class HMSSDK {
 
   /// Removes the given peer from the room
   /// A [reason] string will be shown to them.
-  /// [hmsActionResultListener] is the callback that would be called by SDK in case of a success or failure
+  /// [hmsActionResultListener] is the callback that would be called by SDK in case of success or failure
   Future<void> removePeer(
       {required HMSPeer peer,
       required String reason,
@@ -513,7 +554,7 @@ class HMSSDK {
   /// Remove all the peers from the room & end the room.
   /// [reason] is the reason why the room is being ended.
   /// [lock] bool is whether rejoining the room should be disabled for the foreseeable future.
-  /// [hmsActionResultListener] is the callback that would be called by SDK in case of a success or failure
+  /// [hmsActionResultListener] is the callback that would be called by SDK in case of success or failure
 
   Future<void> endRoom(
       {required bool lock,
@@ -539,7 +580,7 @@ class HMSSDK {
 
   /// Starts rtmp streaming or recording on the parameters described in config.
   /// [config] is the HMSRecordingConfig which defines streaming/recording parameters for this start request.
-  /// [hmsActionResultListener] is the callback that would be called by SDK in case of a success or failure.
+  /// [hmsActionResultListener] is the callback that would be called by SDK in case of success or failure.
   Future<void> startRtmpOrRecording(
       {required HMSRecordingConfig hmsRecordingConfig,
       HMSActionResultListener? hmsActionResultListener}) async {
@@ -562,7 +603,7 @@ class HMSSDK {
   }
 
   /// Stops a previously started rtmp recording or stream. See startRtmpOrRecording for starting.
-  /// [hmsActionResultListener] is the callback that would be called by SDK in case of a success or failure.
+  /// [hmsActionResultListener] is the callback that would be called by SDK in case of success or failure.
 
   Future<void> stopRtmpAndRecording(
       {HMSActionResultListener? hmsActionResultListener}) async {
@@ -582,7 +623,7 @@ class HMSSDK {
 
   /// Starts HLS streaming for the [meetingUrl] room.
   /// You can set a custom [metadata] for the HLS Stream
-  /// [hmsActionResultListener] is callback whose [HMSActionResultListener.onSuccess] will be called when the the action completes successfully.
+  /// [hmsActionResultListener] is a callback whose [HMSActionResultListener.onSuccess] will be called when the action completes successfully.
   Future<void> startHlsStreaming(
       {HMSHLSConfig? hmshlsConfig,
       HMSActionResultListener? hmsActionResultListener}) async {
@@ -601,7 +642,7 @@ class HMSSDK {
   }
 
   /// Stops ongoing HLS streaming in the room
-  /// [hmsActionResultListener] is callback whose [HMSActionResultListener.onSuccess] will be called when the the action completes successfully.
+  /// [hmsActionResultListener] is a callback whose [HMSActionResultListener.onSuccess] will be called when the action completes successfully.
   Future<void> stopHlsStreaming(
       {HMSHLSConfig? hmshlsConfig,
       HMSActionResultListener? hmsActionResultListener}) async {
@@ -621,7 +662,7 @@ class HMSSDK {
 
   /// Change the metadata that appears inside [HMSPeer.metadata]. This change is persistent and all peers joining after the change will still see these values.
   /// [metadata] is the string data to be set now
-  /// [hmsActionResultListener] is callback whose [HMSActionResultListener.onSuccess] will be called when the the action completes successfully.
+  /// [hmsActionResultListener] is a callback whose [HMSActionResultListener.onSuccess] will be called when the action completes successfully.
   Future<void> changeMetadata(
       {required String metadata,
       HMSActionResultListener? hmsActionResultListener}) async {
@@ -643,10 +684,10 @@ class HMSSDK {
     }
   }
 
-  ///Method to change name of localPeer
+  ///Method to change name of local peer
   /// Change the name that appears inside [HMSPeer.name] This change is persistent and all peers joining after the change will still see these values.
-  /// [name] is the string which is to be set as the [HMSPeer.name]
-  /// [hmsActionResultListener] is the callback whose [HMSActionResultListener.onSuccess] will be called when the the action completes successfully.
+  /// [name] is the string that is to be set as the [HMSPeer.name]
+  /// [hmsActionResultListener] is the callback whose [HMSActionResultListener.onSuccess] will be called when the action completes successfully.
   Future<void> changeName(
       {required String name,
       HMSActionResultListener? hmsActionResultListener}) async {
@@ -672,7 +713,7 @@ class HMSSDK {
   ///  and [HMSActionResultListener.onException] will be called
   /// [preferredExtension] is only used for screen share (broadcast screen) in iOS.
   ///
-  /// ❗️ NOTE on iOS 16: If you start Screenshare from an iPhone/iPad running iOS 16 version, then if the app is in foreground then Screenshare will work fine. But if you start Screenshare & background the app, then Screenshare pauses as the SDK is unable to send video frames using IPC. This results in other peers in room seeing stuck frame. We are actively working to resolve this issue. On iOS 15 or below, this issue does not exists.
+  /// ❗️ NOTE on iOS 16: If you start Screenshare from an iPhone/iPad running the iOS 16 version, then if the app is in the foreground Screenshare will work fine. But if you start Screenshare & background the app, then Screenshare pauses as the SDK is unable to send video frames using IPC. This results in other peers in the room seeing the stuck frame. We are actively working to resolve this issue. On iOS 15 or below, this issue does not exist.
   ///
   /// Note viewing Screenshare on iOS 16 devices is unaffected by this & works fine.
   Future<void> startScreenShare(
@@ -699,13 +740,14 @@ class HMSSDK {
             hmsException: HMSException(
                 message: "Permission denied",
                 description: "Screen share is not included in publish settings",
-                action: "Enable screen share from dashboard for current role",
+                action:
+                    "Enable screen share from the dashboard for the current role",
                 isTerminal: false));
       }
     }
   }
 
-  /// A method to check if the screen share is currently active on device i.e. is this Android device doing screen share. Note: This API is not available on iOS.
+  /// A method to check if the screen share is currently active on the device i.e. is this Android device doing screen share Note: This API is not available on iOS.
   Future<bool> isScreenShareActive() async {
     return await PlatformService.invokeMethod(
       PlatformMethod.isScreenShareActive,
@@ -731,7 +773,7 @@ class HMSSDK {
     }
   }
 
-  ///remove a update listener
+  ///remove an update listener
   void removeUpdateListener({required HMSUpdateListener listener}) {
     PlatformService.removeUpdateListener(listener);
   }
@@ -766,16 +808,13 @@ class HMSSDK {
     PlatformService.removeLogsListener(hmsLogListener);
   }
 
-  ///Method to get available audio devices(Android Only)
+  ///Method to get available audio devices
   Future<List<HMSAudioDevice>> getAudioDevicesList() async {
-    if (Platform.isAndroid) {
-      List result = await PlatformService.invokeMethod(
-          PlatformMethod.getAudioDevicesList);
-      return result
-          .map((e) => HMSAudioDeviceValues.getHMSAudioDeviceFromName(e))
-          .toList();
-    }
-    return [];
+    List result =
+        await PlatformService.invokeMethod(PlatformMethod.getAudioDevicesList);
+    return result
+        .map((e) => HMSAudioDeviceValues.getHMSAudioDeviceFromName(e))
+        .toList();
   }
 
   ///Method to get current audio output device(Android Only)
@@ -790,18 +829,13 @@ class HMSSDK {
 
   ///Method to switch audio output device
   ///
-  ///Android requires [audioDevice] parameter compulsorily for switching Audio Device.
-  ///
-  ///iOS doesn't requires any value in [audioDevice] paramter (you can pass null value).
-  void switchAudioOutput({HMSAudioDevice? audioDevice}) {
-    if (Platform.isAndroid)
-      PlatformService.invokeMethod(PlatformMethod.switchAudioOutput,
-          arguments: {"audio_device_name": audioDevice!.name});
-    if (Platform.isIOS)
-      PlatformService.invokeMethod(PlatformMethod.switchAudioOutput);
+  ///requires [audioDevice] parameter compulsorily for switching Audio Device.
+  void switchAudioOutput({required HMSAudioDevice audioDevice}) {
+    PlatformService.invokeMethod(PlatformMethod.switchAudioOutput,
+        arguments: {"audio_device_name": audioDevice.name});
   }
 
-  ///Method to start audio share of other apps.(Android Only)
+  ///Method to start audio share of other apps. (Android Only)
   Future<void> startAudioShare(
       {HMSActionResultListener? hmsActionResultListener,
       HMSAudioMixingMode audioMixingMode =
@@ -822,7 +856,7 @@ class HMSSDK {
     }
   }
 
-  ///Method to stop audio share of other apps.(Android Only)
+  ///Method to stop audio share of other apps. (Android Only)
   Future<void> stopAudioShare(
       {HMSActionResultListener? hmsActionResultListener}) async {
     if (!Platform.isAndroid) return;
@@ -840,7 +874,7 @@ class HMSSDK {
     }
   }
 
-  ///Method to change audio mixing mode of shared audio from other apps.(Android only)
+  ///Method to change the audio mixing mode of shared audio from other apps. (Android only)
   void setAudioMixingMode({required HMSAudioMixingMode audioMixingMode}) {
     if (Platform.isAndroid)
       PlatformService.invokeMethod(PlatformMethod.setAudioMixingMode,
@@ -883,7 +917,7 @@ class HMSSDK {
     }
   }
 
-  ///Method to fetches the latest metadata from the server and returns it
+  ///Method to fetch the latest metadata from the server and returns it
   Future<String?> getSessionMetadata() async {
     var result =
         await PlatformService.invokeMethod(PlatformMethod.getSessionMetadata);
@@ -893,7 +927,7 @@ class HMSSDK {
     return null;
   }
 
-  ///Method to activate pipMode in application
+  ///Method to activate pipMode in the application
   Future<bool> enterPipMode(
       {List<int>? aspectRatio, bool? autoEnterPip}) async {
     final bool? result = await PlatformService.invokeMethod(
@@ -912,14 +946,48 @@ class HMSSDK {
     return result ?? false;
   }
 
-  ///Method to check whether pip mode is available for current device
+  ///Method to check whether pip mode is available for the current device
   Future<bool> isPipAvailable() async {
     final bool? result =
         await PlatformService.invokeMethod(PlatformMethod.isPipAvailable);
     return result ?? false;
   }
 
-  /// To modify local peer's audio & video track settings use the [hmsTrackSetting]. Only required for advanced use-cases.
+  ///Method to change the role of all the peers with the same role
+  ///[toRole] is the role that you wish the peer to be in
+  ///[limitToRoles] is a list of roles whose roles you wish to change
+  ///[hmsActionResultListener] is an object of HMSActionResultListener to listen to the success or error callbacks.
+  void changeRoleOfPeersWithRoles(
+      {required HMSRole toRole,
+      List<HMSRole>? limitToRoles,
+      HMSActionResultListener? hmsActionResultListener}) async {
+    List<String> limitToRolesMap = [];
+
+    if (limitToRoles != null)
+      limitToRoles.forEach((role) => limitToRolesMap.add(role.name));
+
+    var arguments = {"to_role": toRole.name, "limit_to_roles": limitToRolesMap};
+    var result = await PlatformService.invokeMethod(
+        PlatformMethod.changeRoleOfPeersWithRoles,
+        arguments: arguments);
+
+    if (hmsActionResultListener != null) {
+      if (result != null && result["error"] != null) {
+        hmsActionResultListener.onException(
+            methodType:
+                HMSActionResultListenerMethod.changeRoleOfPeersWithRoles,
+            arguments: arguments,
+            hmsException: HMSException.fromMap(result["error"]));
+      } else {
+        hmsActionResultListener.onSuccess(
+            methodType:
+                HMSActionResultListenerMethod.changeRoleOfPeersWithRoles,
+            arguments: arguments);
+      }
+    }
+  }
+
+  /// To modify local peer's audio & video tracks settings use the [hmsTrackSetting]. Only required for advanced use cases.
   HMSTrackSetting? hmsTrackSetting;
 
   /// [appGroup] is only used for screen share (broadcast screen) in iOS.

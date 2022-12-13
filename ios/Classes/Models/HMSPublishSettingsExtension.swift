@@ -21,7 +21,6 @@ class  HMSPublishSettingsExtension {
         if let allowed = publishSettings.allowed {
             dict["allowed"] = allowed
         }
-            
         if let simulcast =  publishSettings.simulcast {
             dict["simulcast"] = HMSSimulcastSettingsExtension.toDictionary(simulcast)
         }
