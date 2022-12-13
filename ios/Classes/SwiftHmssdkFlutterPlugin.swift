@@ -179,7 +179,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
         case "set_playback_allowed_for_track":
             setPlaybackAllowedForTrack(call, result)
-        
+
         case "set_simulcast_layer":
             setSimulcastLayer(call, result)
 
@@ -699,7 +699,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             }
         }
     }
-    
+
     private func setSimulcastLayer(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         let arguments = call.arguments as![AnyHashable: Any]
 
@@ -710,14 +710,14 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             result(HMSErrorExtension.getError("No track ID or HMSSimulcastLayer found in \(#function)"))
             return
         }
-        
+
         if let track = trackId as? HMSRemoteVideoTrack {
             track.layer = HMSSimulcastLayerDefinitionExtension.getLayerFromString(layer: layer)
             result(nil)
-        }else{
+        } else {
             result(HMSErrorExtension.getError("Track Id must be HMSRemoteVideoTrack Type \(#function)"))
         }
-        
+
     }
 
     // MARK: - Logging

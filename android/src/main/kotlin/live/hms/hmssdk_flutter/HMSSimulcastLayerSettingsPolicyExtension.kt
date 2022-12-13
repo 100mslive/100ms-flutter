@@ -1,7 +1,6 @@
 package live.hms.hmssdk_flutter
 
 import live.hms.video.sdk.models.role.LayerParams
-import live.hms.video.sdk.models.role.VideoSimulcastLayersParams
 
 class HMSSimulcastLayerSettingsPolicyExtension {
 

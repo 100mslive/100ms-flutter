@@ -181,8 +181,8 @@ class HmssdkFlutterPlugin :
             "enter_pip_mode", "is_pip_active", "is_pip_available" -> {
                 HMSPipAction.pipActions(call, result, this.activity)
             }
-            "set_simulcast_layer"->{
-                setSimulcastLayer(call,result)
+            "set_simulcast_layer" -> {
+                setSimulcastLayer(call, result)
             }
             else -> {
                 result.notImplemented()
@@ -1074,12 +1074,12 @@ class HmssdkFlutterPlugin :
         result.success(map)
     }
 
-    private fun setSimulcastLayer(call: MethodCall, result: Result){
+    private fun setSimulcastLayer(call: MethodCall, result: Result) {
         val trackId = call.argument<String>("track_id")
-        val simulcastLayer : String? = call.argument<String>("layer")
+        val simulcastLayer: String? = call.argument<String>("layer")
 
-        if(trackId == null || simulcastLayer == null){
-            val map = HashMap<String,Map<String,String>>()
+        if (trackId == null || simulcastLayer == null) {
+            val map = HashMap<String, Map<String, String>>()
             val error = HashMap<String, String>()
             error["message"] = "Could not set simulcast layer for track"
             error["action"] = "NONE"
@@ -1089,14 +1089,13 @@ class HmssdkFlutterPlugin :
         }
 
         val room = hmssdk!!.getRoom()
-        if(room != null){
-            val track:HMSRemoteVideoTrack? = HmsUtilities.getVideoTrack(trackId!!,room) as HMSRemoteVideoTrack?;
-            if(track != null){
+        if (room != null) {
+            val track: HMSRemoteVideoTrack? = HmsUtilities.getVideoTrack(trackId!!, room) as HMSRemoteVideoTrack?
+            if (track != null) {
                 track.setLayer(HMSSimulcastLayerExtension.getLayerFromString(layer = simulcastLayer!!))
                 result.success(null)
-            }
-            else{
-                val map = HashMap<String,Map<String,String>>()
+            } else {
+                val map = HashMap<String, Map<String, String>>()
                 val error = HashMap<String, String>()
                 error["message"] = "Could not set simulcast layer for track"
                 error["action"] = "NONE"
@@ -1105,7 +1104,6 @@ class HmssdkFlutterPlugin :
                 result.success(map)
             }
         }
-
     }
 
     private val hmsStatsListener = object : HMSStatsObserver {

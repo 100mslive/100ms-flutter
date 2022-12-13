@@ -1,15 +1,14 @@
 package live.hms.hmssdk_flutter
 
-import live.hms.video.media.settings.HMSSimulcastLayerDefinition
 import live.hms.video.sdk.models.role.VideoSimulcastLayersParams
 
 class HMSSimulcastSettingsPolicyExtension {
 
-    companion object{
+    companion object {
         fun toDictionary(layerParams: VideoSimulcastLayersParams): HashMap<String, Any?> {
             val hashMap = HashMap<String, Any?>()
 
-            if(layerParams.layers == null){
+            if (layerParams.layers == null) {
                 return hashMap
             }
             var layers = ArrayList<HashMap<String, Any?>>()
@@ -21,5 +20,5 @@ class HMSSimulcastSettingsPolicyExtension {
             hashMap["layers"] = layers
             return hashMap
         }
-        }
+    }
 }

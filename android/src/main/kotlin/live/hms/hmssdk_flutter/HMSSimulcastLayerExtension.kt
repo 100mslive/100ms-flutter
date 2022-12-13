@@ -7,7 +7,6 @@ class HMSSimulcastLayerExtension {
 
     companion object {
         fun toDictionary(layerDefinition: HMSSimulcastLayerDefinition): HashMap<String, Any?> {
-
             val hashMap = HashMap<String, Any?>()
 
             hashMap["hms_simulcast_layer"] = getStringFromLayer(layerDefinition.layer)
@@ -16,17 +15,17 @@ class HMSSimulcastLayerExtension {
             return hashMap
         }
 
-         fun getLayerFromString(layer:String):HMSLayer{
-            return when(layer){
-                "high"-> HMSLayer.HIGH
-                "medium"-> HMSLayer.MEDIUM
-                "low"-> HMSLayer.LOW
+        fun getLayerFromString(layer: String): HMSLayer {
+            return when (layer) {
+                "high" -> HMSLayer.HIGH
+                "medium" -> HMSLayer.MEDIUM
+                "low" -> HMSLayer.LOW
                 else -> HMSLayer.MEDIUM
             }
         }
 
-        fun getStringFromLayer(layer:HMSLayer):String{
-            return when(layer){
+        fun getStringFromLayer(layer: HMSLayer): String {
+            return when (layer) {
                 HMSLayer.HIGH -> "high"
                 HMSLayer.MEDIUM -> "medium"
                 HMSLayer.LOW -> "low"

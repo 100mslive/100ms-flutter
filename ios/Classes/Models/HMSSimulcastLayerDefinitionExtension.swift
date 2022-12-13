@@ -9,12 +9,12 @@ import Foundation
 import HMSSDK
 
 class HMSSimulcastLayerDefinitionExtension {
-    static func toDictionary(_ layerDefinition: HMSSimulcastLayerDefinition) -> [String:Any] {
+    static func toDictionary(_ layerDefinition: HMSSimulcastLayerDefinition) -> [String: Any] {
         let dict = [
-            "hms_simulcast_layer":getStringFromLayer(layer: layerDefinition.layer),
-            "hms_resolution":HMSVideoResolutionExtension.toDictionary(layerDefinition.resolution)
-        ] as [String:Any]
-        
+            "hms_simulcast_layer": getStringFromLayer(layer: layerDefinition.layer),
+            "hms_resolution": HMSVideoResolutionExtension.toDictionary(layerDefinition.resolution)
+        ] as [String: Any]
+
         return dict
     }
     static func getStringFromLayer(layer: HMSSimulcastLayer) -> String {
@@ -29,7 +29,7 @@ class HMSSimulcastLayerDefinitionExtension {
                 return ""
             }
     }
-    
+
     static func getLayerFromString(layer: String) -> HMSSimulcastLayer {
         switch layer {
         case "high":
