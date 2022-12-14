@@ -172,6 +172,8 @@ class MeetingStore extends ChangeNotifier
 
   bool lastVideoStatus = false;
 
+  double hlsAspectRatio = 16 / 9;
+
   Future<bool> join(String user, String roomUrl) async {
     List<String?>? token =
         await RoomService().getToken(user: user, room: roomUrl);
@@ -1287,18 +1289,20 @@ class MeetingStore extends ChangeNotifier
     }
   }
 
-  void setPIPVideoController(String streamUrl, bool reinitialise,
-      {double? aspectRatio = 16/9}) {
+  void setPIPVideoController(bool reinitialise, {double? aspectRatio}) {
     if (hlsVideoController != null) {
       hlsVideoController!.dispose(forceDispose: true);
       hlsVideoController = null;
+    }
+    if (aspectRatio != null) {
+      hlsAspectRatio = aspectRatio;
     }
     PipFlutterPlayerConfiguration pipFlutterPlayerConfiguration =
         PipFlutterPlayerConfiguration(
             //aspectRatio parameter can be used to set the player view based on the ratio selected from dashboard
             //Stream aspectRatio can be selected from Dashboard->Templates->Destinations->Customise stream video output->Video aspect ratio
             //The selected aspectRatio can be set here to get expected stream resolution
-            aspectRatio: aspectRatio,
+            aspectRatio: hlsAspectRatio,
             allowedScreenSleep: false,
             fit: BoxFit.contain,
             showPlaceholderUntilPlay: true,
