@@ -47,5 +47,11 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>100ms needs access to Camera to enable high quality video conferencing.</string>
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>100ms needs access to Local Network to enable high quality video conferencing.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>100ms needs access to Microphone to enable high quality video conferencing.</string>
 </dict>
 </plist>
