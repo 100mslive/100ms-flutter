@@ -218,11 +218,7 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                                                   .height *
                                                               0.735,
                                                       child: Center(
-                                                        child: HLSPlayer(
-                                                            streamUrl: context
-                                                                .read<
-                                                                    MeetingStore>()
-                                                                .streamUrl),
+                                                        child: HLSPlayer(),
                                                       ),
                                                     )
                                                   : Container(
