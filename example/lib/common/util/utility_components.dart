@@ -543,7 +543,6 @@ class UtilityComponents {
     double width = MediaQuery.of(context).size.width;
     List<HMSRole> _selectedRoles = [];
     HMSRole toRole = roles[0];
-    bool allRoles = true;
     showDialog(
         context: context,
         builder: (context) => StatefulBuilder(builder: (context, setState) {
@@ -565,32 +564,8 @@ class UtilityComponents {
                         children: [
                           ListView.builder(
                               shrinkWrap: true,
-                              itemCount: roles.length + 1,
+                              itemCount: roles.length,
                               itemBuilder: (context, index) {
-                                if (index == roles.length) {
-                                  return Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        "All Roles",
-                                        style: GoogleFonts.inter(
-                                          color: iconColor,
-                                        ),
-                                      ),
-                                      Checkbox(
-                                          value: allRoles,
-                                          activeColor: hmsdefaultColor,
-                                          onChanged: (bool? value) {
-                                            if (value != null) {
-                                              if (value) _selectedRoles = [];
-                                              allRoles = value;
-                                            }
-                                            setState(() {});
-                                          }),
-                                    ],
-                                  );
-                                }
                                 return Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
@@ -612,7 +587,6 @@ class UtilityComponents {
                                               .contains(roles[index])) {
                                             _selectedRoles.remove(roles[index]);
                                           }
-                                          allRoles = false;
                                           setState(() {});
                                         }),
                                   ],
@@ -719,9 +693,14 @@ class UtilityComponents {
                                             BorderRadius.circular(8.0),
                                       ))),
                                   onPressed: () {
-                                    _meetingStore.changeRoleOfPeersWithRoles(
-                                        toRole, _selectedRoles);
-                                    Navigator.pop(context);
+                                    if (_selectedRoles.isEmpty) {
+                                      Utilities.showToast(
+                                          "Please select a role");
+                                    } else {
+                                      _meetingStore.changeRoleOfPeersWithRoles(
+                                          toRole, _selectedRoles);
+                                      Navigator.pop(context);
+                                    }
                                   },
                                   child: Text(
                                     "Change Role",
