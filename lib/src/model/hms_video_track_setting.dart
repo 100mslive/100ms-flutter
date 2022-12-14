@@ -14,11 +14,14 @@ class HMSVideoTrackSetting {
   /// [forceSoftwareDecoder] property to use software decoder. By default it's set to false.(Android Only)
   final bool? forceSoftwareDecoder;
 
+  final HMSCameraFocusMode? cameraFocusMode;
+
   HMSVideoTrackSetting(
       {this.cameraFacing = HMSCameraFacing.FRONT,
       this.disableAutoResize = false,
       this.trackInitialState = HMSTrackInitState.UNMUTED,
-      this.forceSoftwareDecoder = false});
+      this.forceSoftwareDecoder = false,
+      this.cameraFocusMode = HMSCameraFocusMode.auto});
 
   factory HMSVideoTrackSetting.fromMap(Map map) {
     return HMSVideoTrackSetting(
@@ -31,7 +34,11 @@ class HMSVideoTrackSetting {
             : HMSTrackInitState.UNMUTED,
         forceSoftwareDecoder: map.containsKey('force_software_decoder')
             ? map['force_software_decoder']
-            : false);
+            : false,
+        cameraFocusMode: map.containsKey('camera_focus_mode')
+            ? HMSCameraFocusModeValues.getHMSCameraFacingFromName(
+                map["camera_focus_mode"])
+            : null);
   }
 
   Map<String, dynamic> toMap() {
@@ -43,7 +50,11 @@ class HMSVideoTrackSetting {
       'track_initial_state':
           HMSTrackInitStateValue.getValuefromHMSTrackInitState(
               trackInitialState),
-      'force_software_decoder': forceSoftwareDecoder ?? false
+      'force_software_decoder': forceSoftwareDecoder ?? false,
+      'camera_focus_mode': cameraFocusMode != null
+          ? HMSCameraFocusModeValues.getValueFromHMSCameraFocusMode(
+              cameraFocusMode!)
+          : null
     };
   }
 }

@@ -31,7 +31,8 @@ class HMSSDKInteractor {
         isAudioMixerDisabled: (Platform.isIOS && isAudioMixerDisabled),
         joinWithMutedVideo: joinWithMutedVideo,
         joinWithMutedAudio: joinWithMutedAudio,
-        isSoftwareDecoderDisabled: isSoftwareDecoderDisabled);
+        isSoftwareDecoderDisabled: isSoftwareDecoderDisabled,
+        cameraFocusMode: HMSCameraFocusMode.auto);
     hmsSDK = HMSSDK(
         appGroup: appGroup,
         preferredExtension: preferredExtension,

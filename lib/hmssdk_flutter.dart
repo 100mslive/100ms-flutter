@@ -19,6 +19,7 @@ export 'src/enum/hms_message_recipient_type.dart';
 export 'src/enum/hms_log_level.dart';
 export 'src/enum/hms_stats_listener_method.dart';
 export 'src/enum/hms_track_init_state.dart';
+export 'src/enum/hms_camera_focus_mode.dart';
 //EXCEPTIONS
 export 'src/exceptions/hms_exception.dart';
 export 'src/exceptions/hms_in_sufficient_data.dart';

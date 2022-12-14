@@ -43,6 +43,7 @@ class HMSTrackSettingsExtension {
         dict["simulcast_settings"] = hmsVideoTrackSettings.simulcastSettings
         dict["track_description"] = hmsVideoTrackSettings.trackDescription
         dict["video_plugins"] = hmsVideoTrackSettings.videoPlugins
+        dict["camera_focus_mode"] = getCameraFocusModeString(from: hmsVideoTrackSettings.cameraFocusMode)
         return dict
     }
 
@@ -79,6 +80,7 @@ class HMSTrackSettingsExtension {
         var videoSettings: HMSVideoTrackSettings?
         if let videoSettingsDict = settingsDict["video_track_setting"] as? [AnyHashable: Any] {
             if let cameraFacing = videoSettingsDict["camera_facing"] as? String,
+               let cameraFocusMode = videoSettingsDict["camera_focus_mode"] as? String,
                let initialMuteState = videoSettingsDict["track_initial_state"] as? String {
                 videoSettings = HMSVideoTrackSettings(codec: HMSCodec.VP8,
                                                       resolution: .init(width: 320, height: 180),
@@ -88,6 +90,7 @@ class HMSTrackSettingsExtension {
                                                       simulcastSettings: nil,
                                                       trackDescription: "track_description",
                                                       initialMuteState: getinitialMuteState(from: initialMuteState),
+                                                      cameraFocusMode: getCameraFocusMode(from: cameraFocusMode),
                                                       videoPlugins: nil)
 
             }
@@ -108,6 +111,32 @@ class HMSTrackSettingsExtension {
             return HMSTrackMuteState.unmute
         }
         return HMSTrackMuteState.mute
+    }
+    
+    static private func getCameraFocusMode(from string: String) -> HMSCameraFocusMode {
+        switch string.lowercased(){
+        case "focusmodetaptoautofocus":
+            return HMSCameraFocusMode.focusModeTapToAutoFocus
+        case "focusmodetaptolockfocus":
+            return HMSCameraFocusMode.focusModeTapToLockFocus
+        case "focusmodeauto":
+            return HMSCameraFocusMode.focusModeAuto
+        default:
+            return HMSCameraFocusMode.focusModeAuto
+        }
+    }
+    
+    static private func getCameraFocusModeString(from cameraFocusMode: HMSCameraFocusMode) -> String {
+        switch cameraFocusMode {
+        case HMSCameraFocusMode.focusModeTapToAutoFocus:
+            return "focusmodetaptoautofocus"
+        case HMSCameraFocusMode.focusModeTapToLockFocus:
+            return "focusmodetaptolockfocus"
+        case HMSCameraFocusMode.focusModeAuto:
+            return "focusmodeauto"
+        default:
+            return "focusmodeauto"
+        }
     }
 
 }

@@ -178,7 +178,8 @@ class Utilities {
       {required bool isAudioMixerDisabled,
       required bool joinWithMutedVideo,
       required bool joinWithMutedAudio,
-      required bool isSoftwareDecoderDisabled}) {
+      required bool isSoftwareDecoderDisabled,
+      required HMSCameraFocusMode cameraFocusMode}) {
     return isAudioMixerDisabled
         ? HMSTrackSetting(
             audioTrackSetting: HMSAudioTrackSetting(
@@ -189,7 +190,8 @@ class Utilities {
                 trackInitialState: joinWithMutedVideo
                     ? HMSTrackInitState.MUTED
                     : HMSTrackInitState.UNMUTED,
-                forceSoftwareDecoder: isSoftwareDecoderDisabled))
+                forceSoftwareDecoder: isSoftwareDecoderDisabled,
+                cameraFocusMode: cameraFocusMode))
         : HMSTrackSetting(
             audioTrackSetting: HMSAudioTrackSetting(
                 audioSource: HMSAudioMixerSource(node: [
@@ -204,6 +206,7 @@ class Utilities {
                 trackInitialState: joinWithMutedVideo
                     ? HMSTrackInitState.MUTED
                     : HMSTrackInitState.UNMUTED,
-                forceSoftwareDecoder: isSoftwareDecoderDisabled));
+                forceSoftwareDecoder: isSoftwareDecoderDisabled,
+                cameraFocusMode: cameraFocusMode));
   }
 }
