@@ -6,4 +6,4 @@
 
 Flutter SDK: 1.1.0
 Native Android SDK: 2.5.3
-Native iOS SDK: 0.5.2
+Native iOS SDK: 0.5.3
