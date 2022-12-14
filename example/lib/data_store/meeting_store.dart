@@ -1294,6 +1294,10 @@ class MeetingStore extends ChangeNotifier
     }
     PipFlutterPlayerConfiguration pipFlutterPlayerConfiguration =
         PipFlutterPlayerConfiguration(
+            //aspectRatio parameter can be used to set the player view based on the ratio selected from dashboard
+            //Stream aspectRatio can be selected from Dashboard->Templates->Destinations->Customise stream video output->Video aspect ratio
+            //The selected aspectRatio can be set here to get expected stream resolution
+            aspectRatio: 16/9,
             allowedScreenSleep: false,
             fit: BoxFit.contain,
             showPlaceholderUntilPlay: true,
