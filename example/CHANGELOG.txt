@@ -4,6 +4,12 @@
 
 - Corrected showing of Start / Stop HLS / RTMP Streams CTAs only if the role has permission
 
+- Added option to change Aspect Ratio of HLS Player to match Video Stream Output
+
+- Corrected local peer video status during app transitions
+
+- Corrected local mute status of Room on iOS during app transitions
+
 Flutter SDK: 1.1.0
 Native Android SDK: 2.5.3
 Native iOS SDK: 0.5.3
