@@ -359,10 +359,10 @@ HMSVideoView(track: videoTrack);
 ## 🔁 [Change a Role](https://www.100ms.live/docs/flutter/v2/features/change-role)
 
   To change role, you will provide the selected peer and new roleName from roles. If forceChange is true, the system will prompt the user for the change. If forceChange is false, the user will get a prompt to accept/reject the role.
-  After changeRole is called, HMSUpdateListener's onRoleChangeRequest will be called on selected user's end.
+  After changeRoleOfPeer is called, HMSUpdateListener's onRoleChangeRequest will be called on selected user's end.
 
 ```dart
- hmsSDK.changeRole(peer: peer, roleName: roleName, forceChange: true);
+ hmsSDK.changeRoleOfPeer(peer: peer, roleName: roleName, forceChange: true);
 ```
 
 ## 📨 [Chat Messaging](https://www.100ms.live/docs/flutter/v2/features/chat)
