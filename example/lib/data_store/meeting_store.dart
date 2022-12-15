@@ -1342,9 +1342,9 @@ class MeetingStore extends ChangeNotifier
     if (reinitialise) notifyListeners();
   }
 
-  void changeRoleOfPeersWithRoles(HMSRole toRole, List<HMSRole> limitToRoles) {
+  void changeRoleOfPeersWithRoles(HMSRole toRole, List<HMSRole> ofRoles) {
     _hmsSDKInteractor.changeRoleOfPeersWithRoles(
-        toRole: toRole, limitToRoles: limitToRoles);
+        toRole: toRole, ofRoles: ofRoles);
   }
 
 //Get onSuccess or onException callbacks for HMSActionResultListenerMethod

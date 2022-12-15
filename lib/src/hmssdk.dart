@@ -955,15 +955,15 @@ class HMSSDK {
 
   ///Method to change the role of all the peers with the same role
   ///[toRole] is the role that you wish the peer to be in
-  ///[limitToRoles] is a list of roles whose roles you wish to change
+  ///[ofRoles] is a list of roles whose roles you wish to change
   ///[hmsActionResultListener] is an object of HMSActionResultListener to listen to the success or error callbacks.
   void changeRoleOfPeersWithRoles(
       {required HMSRole toRole,
-      required List<HMSRole> limitToRoles,
+      required List<HMSRole> ofRoles,
       HMSActionResultListener? hmsActionResultListener}) async {
-    List<String> limitToRolesMap = [];
-    limitToRoles.forEach((role) => limitToRolesMap.add(role.name));
-    var arguments = {"to_role": toRole.name, "limit_to_roles": limitToRolesMap};
+    List<String> ofRolesMap = [];
+    ofRoles.forEach((role) => ofRolesMap.add(role.name));
+    var arguments = {"to_role": toRole.name, "of_roles": ofRolesMap};
     var result = await PlatformService.invokeMethod(
         PlatformMethod.changeRoleOfPeersWithRoles,
         arguments: arguments);
