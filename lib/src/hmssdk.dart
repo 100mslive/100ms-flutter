@@ -959,13 +959,10 @@ class HMSSDK {
   ///[hmsActionResultListener] is an object of HMSActionResultListener to listen to the success or error callbacks.
   void changeRoleOfPeersWithRoles(
       {required HMSRole toRole,
-      List<HMSRole>? limitToRoles,
+      required List<HMSRole> limitToRoles,
       HMSActionResultListener? hmsActionResultListener}) async {
     List<String> limitToRolesMap = [];
-
-    if (limitToRoles != null)
-      limitToRoles.forEach((role) => limitToRolesMap.add(role.name));
-
+    limitToRoles.forEach((role) => limitToRolesMap.add(role.name));
     var arguments = {"to_role": toRole.name, "limit_to_roles": limitToRolesMap};
     var result = await PlatformService.invokeMethod(
         PlatformMethod.changeRoleOfPeersWithRoles,

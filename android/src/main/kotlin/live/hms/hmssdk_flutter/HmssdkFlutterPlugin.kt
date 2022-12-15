@@ -637,17 +637,12 @@ class HmssdkFlutterPlugin :
 
     private fun changeRoleOfPeersWithRoles(call: MethodCall, result: Result) {
         val roleString = call.argument<String>("to_role")
+        val limitToRoleString: List<String>? = call.argument<List<String>>("limit_to_roles")
         val roles = hmssdk!!.getRoles()
         val toRole: HMSRole = roles.first {
             it.name == roleString
         }
-        val limitToRoles: List<HMSRole>?
-        val limitToRoleString: List<String>? = call.argument<List<String>>("limit_to_roles")
-        if (limitToRoleString != null) {
-            limitToRoles = hmssdk!!.getRoles().filter { limitToRoleString.contains(it.name) }
-        } else {
-            limitToRoles = null
-        }
+        val limitToRoles : List<HMSRole> = hmssdk!!.getRoles().filter { limitToRoleString!!.contains(it.name) }
         hmssdk!!.changeRoleOfPeersWithRoles(toRole = toRole, ofRoles = limitToRoles, hmsActionResultListener = HMSCommonAction.getActionListener(result))
     }
 
