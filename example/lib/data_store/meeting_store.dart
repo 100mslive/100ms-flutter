@@ -1344,7 +1344,7 @@ class MeetingStore extends ChangeNotifier
 
   void changeRoleOfPeersWithRoles(HMSRole toRole, List<HMSRole> ofRoles) {
     _hmsSDKInteractor.changeRoleOfPeersWithRoles(
-        toRole: toRole, ofRoles: ofRoles);
+        toRole: toRole, ofRoles: ofRoles, hmsActionResultListener: this);
   }
 
 //Get onSuccess or onException callbacks for HMSActionResultListenerMethod
@@ -1572,7 +1572,7 @@ class MeetingStore extends ChangeNotifier
         Utilities.showToast("Camera switching failed");
         break;
       case HMSActionResultListenerMethod.changeRoleOfPeersWithRoles:
-        Utilities.showToast("Change Roles of All Peers failed");
+        Utilities.showToast("Change role failed");
         break;
     }
     notifyListeners();
