@@ -772,7 +772,7 @@ class MeetingStore extends ChangeNotifier
     }
     if (index != -1) {
       peerTracks[index].stats?.hmsLocalAudioStats = hmsLocalAudioStats;
-      peerTracks[index].notify();
+      if (!peerTracks[index].isOffscreen) peerTracks[index].notify();
     }
   }
 
@@ -791,7 +791,7 @@ class MeetingStore extends ChangeNotifier
     }
     if (index != -1) {
       peerTracks[index].stats?.hmsLocalVideoStats = hmsLocalVideoStats;
-      peerTracks[index].notify();
+      if (!peerTracks[index].isOffscreen) peerTracks[index].notify();
     }
   }
 
@@ -810,7 +810,7 @@ class MeetingStore extends ChangeNotifier
     }
     if (index != -1) {
       peerTracks[index].stats?.hmsRemoteAudioStats = hmsRemoteAudioStats;
-      peerTracks[index].notify();
+      if (!peerTracks[index].isOffscreen) peerTracks[index].notify();
     }
   }
 
@@ -829,7 +829,7 @@ class MeetingStore extends ChangeNotifier
     }
     if (index != -1) {
       peerTracks[index].stats?.hmsRemoteVideoStats = hmsRemoteVideoStats;
-      peerTracks[index].notify();
+      if (!peerTracks[index].isOffscreen) peerTracks[index].notify();
     }
   }
 
