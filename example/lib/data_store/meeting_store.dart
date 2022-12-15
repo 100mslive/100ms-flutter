@@ -475,7 +475,7 @@ class MeetingStore extends ChangeNotifier
       if (each.isLocal) {
         int index = peerTracks
             .indexWhere((element) => element.uid == each.peerId + "mainVideo");
-        if (index == -1)
+        if (index == -1 && (each.role.publishSettings != null) && (!each.role.publishSettings!.allowed.contains("video") || !each.role.publishSettings!.allowed.contains("audio")))
           peerTracks.add(PeerTrackNode(
               peer: each,
               uid: each.peerId + "mainVideo",

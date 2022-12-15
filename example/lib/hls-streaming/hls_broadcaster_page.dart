@@ -265,9 +265,9 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                                   .height *
                                               0.735,
                                           child: Center(
-                                              child: CircularProgressIndicator(
-                                            strokeWidth: 2,
-                                          )),
+                                              child: 
+                                              Image.asset("assets/images/welcome.png"),
+                                              ),
                                         );
                                       }
                                       return Selector<
