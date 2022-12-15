@@ -11,5 +11,5 @@
 - Corrected local mute status of Room on iOS during app transitions
 
 Flutter SDK: 1.1.0
-Native Android SDK: 2.5.3
-Native iOS SDK: 0.5.3
+Android SDK: 2.5.4
+iOS SDK: 0.5.3
