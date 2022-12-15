@@ -771,8 +771,7 @@ class MeetingStore extends ChangeNotifier
           .indexWhere((element) => element.uid == peer.peerId + "mainVideo");
     }
     if (index != -1) {
-      peerTracks[index].stats?.hmsLocalAudioStats = hmsLocalAudioStats;
-      if (!peerTracks[index].isOffscreen) peerTracks[index].notify();
+      peerTracks[index].setStats(hmsLocalAudioStats: hmsLocalAudioStats);
     }
   }
 
@@ -790,8 +789,7 @@ class MeetingStore extends ChangeNotifier
           .indexWhere((element) => element.uid == peer.peerId + "mainVideo");
     }
     if (index != -1) {
-      peerTracks[index].stats?.hmsLocalVideoStats = hmsLocalVideoStats;
-      if (!peerTracks[index].isOffscreen) peerTracks[index].notify();
+      peerTracks[index].setStats(hmsLocalVideoStats: hmsLocalVideoStats);
     }
   }
 
@@ -809,8 +807,7 @@ class MeetingStore extends ChangeNotifier
           .indexWhere((element) => element.uid == peer.peerId + "mainVideo");
     }
     if (index != -1) {
-      peerTracks[index].stats?.hmsRemoteAudioStats = hmsRemoteAudioStats;
-      if (!peerTracks[index].isOffscreen) peerTracks[index].notify();
+      peerTracks[index].setStats(hmsRemoteAudioStats: hmsRemoteAudioStats);
     }
   }
 
@@ -828,8 +825,7 @@ class MeetingStore extends ChangeNotifier
           .indexWhere((element) => element.uid == peer.peerId + "mainVideo");
     }
     if (index != -1) {
-      peerTracks[index].stats?.hmsRemoteVideoStats = hmsRemoteVideoStats;
-      if (!peerTracks[index].isOffscreen) peerTracks[index].notify();
+      peerTracks[index].setStats(hmsRemoteVideoStats: hmsRemoteVideoStats);
     }
   }
 

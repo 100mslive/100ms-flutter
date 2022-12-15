@@ -39,7 +39,6 @@ class Stats extends StatelessWidget {
                 peerTrackNode.networkQuality),
             builder: (_, data, __) {
               return Container(
-                height: 100,
                 padding: EdgeInsets.all(5),
                 margin: EdgeInsets.all(2),
                 decoration: BoxDecoration(
@@ -48,6 +47,7 @@ class Stats extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
                       "Width\t ${data.item3?.hmsLocalVideoStats?.resolution.width.toStringAsFixed(2) ?? "0.00"}",
@@ -86,13 +86,13 @@ class Stats extends StatelessWidget {
               return Container(
                 padding: EdgeInsets.all(5),
                 margin: EdgeInsets.all(2),
-                height: 130,
                 decoration: BoxDecoration(
                     color: Colors.black38.withOpacity(0.3),
                     borderRadius: BorderRadius.all(Radius.circular(10))),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
                         "Width\t ${data.item3?.hmsRemoteVideoStats?.resolution.width.toStringAsFixed(2) ?? "0.00"}",
