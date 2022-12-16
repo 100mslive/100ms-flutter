@@ -643,7 +643,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
         var ofRoles = [HMSRole]()
         if let ofRolesString = arguments["of_roles"] as? [String] {
-            ofRoles = hmsSDK?.roles.filter { ofRolesString.contains($0.name) }
+            ofRoles = hmsSDK?.roles.filter { ofRolesString.contains($0.name) } ?? []
         }
 
         hmsSDK?.changeRolesOfAllPeers(to: role, limitToRoles: ofRoles) { _, error in

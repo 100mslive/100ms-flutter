@@ -502,11 +502,22 @@ class UtilityComponents {
                             ],
                           ),
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.red),
+                                  style: ButtonStyle(
+                                      shadowColor: MaterialStateProperty.all(
+                                          themeSurfaceColor),
+                                      backgroundColor:
+                                          MaterialStateProperty.all(errorColor),
+                                      shape: MaterialStateProperty.all<
+                                              RoundedRectangleBorder>(
+                                          RoundedRectangleBorder(
+                                        side: BorderSide(
+                                            width: 1, color: errorColor),
+                                        borderRadius:
+                                            BorderRadius.circular(8.0),
+                                      ))),
                                   onPressed: () {
                                     Navigator.pop(context);
                                   },
@@ -515,6 +526,20 @@ class UtilityComponents {
                                     style: GoogleFonts.inter(),
                                   )),
                               ElevatedButton(
+                                style: ButtonStyle(
+                                      shadowColor: MaterialStateProperty.all(
+                                          themeSurfaceColor),
+                                      backgroundColor:
+                                          MaterialStateProperty.all(
+                                              hmsdefaultColor),
+                                      shape: MaterialStateProperty.all<
+                                              RoundedRectangleBorder>(
+                                          RoundedRectangleBorder(
+                                        side: BorderSide(
+                                            width: 1, color: hmsdefaultColor),
+                                        borderRadius:
+                                            BorderRadius.circular(8.0),
+                                      ))),
                                   onPressed: () {
                                     if (muteAll) {
                                       _meetingStore.changeTrackStateForRole(
