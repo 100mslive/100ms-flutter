@@ -526,7 +526,7 @@ class UtilityComponents {
                                     style: GoogleFonts.inter(),
                                   )),
                               ElevatedButton(
-                                style: ButtonStyle(
+                                  style: ButtonStyle(
                                       shadowColor: MaterialStateProperty.all(
                                           themeSurfaceColor),
                                       backgroundColor:
