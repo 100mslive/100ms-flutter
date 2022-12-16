@@ -37,6 +37,8 @@
   hmsSDK.switchAudioOutput(audioDevice: HMSAudioDevice.SPEAKER_PHONE);
   ```
 
+  For More Information, refer: https://www.100ms.live/docs/flutter/v2/features/audio-output-routing
+
 
 ### Fixed
 
