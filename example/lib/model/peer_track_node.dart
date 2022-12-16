@@ -58,39 +58,31 @@ class PeerTrackNode extends ChangeNotifier {
     }
   }
 
-  void setHMSRemoteAudioStats(HMSRemoteAudioStats? hmsRemoteAudioStats) {
-    if (hmsRemoteAudioStats != null) {
-      stats?.hmsRemoteAudioStats = hmsRemoteAudioStats;
-      if (!this.isOffscreen) {
-        notify();
-      }
+  void setHMSRemoteAudioStats(HMSRemoteAudioStats hmsRemoteAudioStats) {
+    stats?.hmsRemoteAudioStats = hmsRemoteAudioStats;
+    if (!this.isOffscreen) {
+      notify();
     }
   }
 
-  void setHMSRemoteVideoStats(HMSRemoteVideoStats? hmsRemoteVideoStats) {
-    if (hmsRemoteVideoStats != null) {
-      stats?.hmsRemoteVideoStats = hmsRemoteVideoStats;
-      if (!this.isOffscreen) {
-        notify();
-      }
+  void setHMSRemoteVideoStats(HMSRemoteVideoStats hmsRemoteVideoStats) {
+    stats?.hmsRemoteVideoStats = hmsRemoteVideoStats;
+    if (!this.isOffscreen) {
+      notify();
     }
   }
 
-  void setHMSLocalVideoStats(HMSLocalVideoStats? hmsLocalVideoStats) {
-    if (hmsLocalVideoStats != null) {
-      stats?.hmsLocalVideoStats = hmsLocalVideoStats;
-      if (!this.isOffscreen) {
-        notify();
-      }
+  void setHMSLocalVideoStats(HMSLocalVideoStats hmsLocalVideoStats) {
+    stats?.hmsLocalVideoStats = hmsLocalVideoStats;
+    if (!this.isOffscreen) {
+      notify();
     }
   }
 
-  void setHMSLocalAudioStats(HMSLocalAudioStats? hmsLocalAudioStats) {
-    if (hmsLocalAudioStats != null) {
-      stats?.hmsLocalAudioStats = hmsLocalAudioStats;
-      if (!this.isOffscreen) {
-        notify();
-      }
+  void setHMSLocalAudioStats(HMSLocalAudioStats hmsLocalAudioStats) {
+    stats?.hmsLocalAudioStats = hmsLocalAudioStats;
+    if (!this.isOffscreen) {
+      notify();
     }
   }
 
