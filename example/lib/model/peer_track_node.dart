@@ -58,6 +58,34 @@ class PeerTrackNode extends ChangeNotifier {
     }
   }
 
+  void setHMSRemoteAudioStats(HMSRemoteAudioStats hmsRemoteAudioStats) {
+    stats?.hmsRemoteAudioStats = hmsRemoteAudioStats;
+    if (!this.isOffscreen) {
+      notify();
+    }
+  }
+
+  void setHMSRemoteVideoStats(HMSRemoteVideoStats hmsRemoteVideoStats) {
+    stats?.hmsRemoteVideoStats = hmsRemoteVideoStats;
+    if (!this.isOffscreen) {
+      notify();
+    }
+  }
+
+  void setHMSLocalVideoStats(HMSLocalVideoStats hmsLocalVideoStats) {
+    stats?.hmsLocalVideoStats = hmsLocalVideoStats;
+    if (!this.isOffscreen) {
+      notify();
+    }
+  }
+
+  void setHMSLocalAudioStats(HMSLocalAudioStats hmsLocalAudioStats) {
+    stats?.hmsLocalAudioStats = hmsLocalAudioStats;
+    if (!this.isOffscreen) {
+      notify();
+    }
+  }
+
   @override
   bool operator ==(Object other) {
     return super == other;
