@@ -771,7 +771,7 @@ class MeetingStore extends ChangeNotifier
           .indexWhere((element) => element.uid == peer.peerId + "mainVideo");
     }
     if (index != -1) {
-      peerTracks[index].setStats(hmsLocalAudioStats: hmsLocalAudioStats);
+      peerTracks[index].setHMSLocalAudioStats(hmsLocalAudioStats);
     }
   }
 
@@ -789,7 +789,7 @@ class MeetingStore extends ChangeNotifier
           .indexWhere((element) => element.uid == peer.peerId + "mainVideo");
     }
     if (index != -1) {
-      peerTracks[index].setStats(hmsLocalVideoStats: hmsLocalVideoStats);
+      peerTracks[index].setHMSLocalVideoStats(hmsLocalVideoStats);
     }
   }
 
@@ -807,7 +807,7 @@ class MeetingStore extends ChangeNotifier
           .indexWhere((element) => element.uid == peer.peerId + "mainVideo");
     }
     if (index != -1) {
-      peerTracks[index].setStats(hmsRemoteAudioStats: hmsRemoteAudioStats);
+      peerTracks[index].setHMSRemoteAudioStats(hmsRemoteAudioStats);
     }
   }
 
@@ -825,7 +825,7 @@ class MeetingStore extends ChangeNotifier
           .indexWhere((element) => element.uid == peer.peerId + "mainVideo");
     }
     if (index != -1) {
-      peerTracks[index].setStats(hmsRemoteVideoStats: hmsRemoteVideoStats);
+      peerTracks[index].setHMSRemoteVideoStats(hmsRemoteVideoStats);
     }
   }
 

@@ -58,22 +58,39 @@ class PeerTrackNode extends ChangeNotifier {
     }
   }
 
-  void setStats(
-      {HMSRemoteAudioStats? hmsRemoteAudioStats,
-      HMSLocalVideoStats? hmsLocalVideoStats,
-      HMSRemoteVideoStats? hmsRemoteVideoStats,
-      HMSLocalAudioStats? hmsLocalAudioStats}) {
+  void setHMSRemoteAudioStats(HMSRemoteAudioStats? hmsRemoteAudioStats) {
+    if (hmsRemoteAudioStats != null) {
+      stats?.hmsRemoteAudioStats = hmsRemoteAudioStats;
+      if (!this.isOffscreen) {
+        notify();
+      }
+    }
+  }
+
+  void setHMSRemoteVideoStats(HMSRemoteVideoStats? hmsRemoteVideoStats) {
+    if (hmsRemoteVideoStats != null) {
+      stats?.hmsRemoteVideoStats = hmsRemoteVideoStats;
+      if (!this.isOffscreen) {
+        notify();
+      }
+    }
+  }
+
+  void setHMSLocalVideoStats(HMSLocalVideoStats? hmsLocalVideoStats) {
+    if (hmsLocalVideoStats != null) {
+      stats?.hmsLocalVideoStats = hmsLocalVideoStats;
+      if (!this.isOffscreen) {
+        notify();
+      }
+    }
+  }
+
+  void setHMSLocalAudioStats(HMSLocalAudioStats? hmsLocalAudioStats) {
     if (hmsLocalAudioStats != null) {
       stats?.hmsLocalAudioStats = hmsLocalAudioStats;
-    } else if (hmsLocalVideoStats != null) {
-      stats?.hmsLocalVideoStats = hmsLocalVideoStats;
-    } else if (hmsRemoteAudioStats != null) {
-      stats?.hmsRemoteAudioStats = hmsRemoteAudioStats;
-    } else if (hmsRemoteVideoStats != null) {
-      stats?.hmsRemoteVideoStats = hmsRemoteVideoStats;
-    }
-    if (!this.isOffscreen) {
-      notify();
+      if (!this.isOffscreen) {
+        notify();
+      }
     }
   }
 
