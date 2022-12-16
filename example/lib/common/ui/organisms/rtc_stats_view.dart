@@ -39,45 +39,39 @@ class Stats extends StatelessWidget {
                 peerTrackNode.networkQuality),
             builder: (_, data, __) {
               return Container(
-                width: MediaQuery.of(context).size.width,
-                padding: EdgeInsets.only(left: 5),
+                padding: EdgeInsets.all(5),
+                margin: EdgeInsets.all(2),
                 decoration: BoxDecoration(
                     color: Colors.black38.withOpacity(0.3),
                     borderRadius: BorderRadius.all(Radius.circular(10))),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
                       "Width\t ${data.item3?.hmsLocalVideoStats?.resolution.width.toStringAsFixed(2) ?? "0.00"}",
-                      style: GoogleFonts.inter(
-                        color: iconColor,
-                      ),
+                      style: GoogleFonts.inter(color: iconColor, fontSize: 12),
                     ),
                     Text(
                         "Height\t ${data.item3?.hmsLocalVideoStats?.resolution.height.toStringAsFixed(2) ?? "0.00"}",
-                        style: GoogleFonts.inter(
-                          color: iconColor,
-                        )),
+                        style:
+                            GoogleFonts.inter(color: iconColor, fontSize: 12)),
                     Text(
                         "FPS\t ${data.item3?.hmsLocalVideoStats?.frameRate.toStringAsFixed(2) ?? "0.00"}",
-                        style: GoogleFonts.inter(
-                          color: iconColor,
-                        )),
+                        style:
+                            GoogleFonts.inter(color: iconColor, fontSize: 12)),
                     Text("Downlink\t ${data.item4 ?? "-1"}",
-                        style: GoogleFonts.inter(
-                          color: iconColor,
-                        )),
+                        style:
+                            GoogleFonts.inter(color: iconColor, fontSize: 12)),
                     Text(
                         "Bitrate(V)\t ${data.item3?.hmsLocalVideoStats?.bitrate.toStringAsFixed(2) ?? "0.00"}",
-                        style: GoogleFonts.inter(
-                          color: iconColor,
-                        )),
+                        style:
+                            GoogleFonts.inter(color: iconColor, fontSize: 12)),
                     Text(
                         "Bitrate(A)\t ${data.item3?.hmsLocalAudioStats?.bitrate.toStringAsFixed(2) ?? "0.00"}",
-                        style: GoogleFonts.inter(
-                          color: iconColor,
-                        )),
+                        style:
+                            GoogleFonts.inter(color: iconColor, fontSize: 12)),
                   ],
                 ),
               );
@@ -90,54 +84,47 @@ class Stats extends StatelessWidget {
                 peerTrackNode.networkQuality),
             builder: (_, data, __) {
               return Container(
-                width: MediaQuery.of(context).size.width,
-                padding: EdgeInsets.only(left: 5),
+                padding: EdgeInsets.all(5),
+                margin: EdgeInsets.all(2),
                 decoration: BoxDecoration(
                     color: Colors.black38.withOpacity(0.3),
                     borderRadius: BorderRadius.all(Radius.circular(10))),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
                         "Width\t ${data.item3?.hmsRemoteVideoStats?.resolution.width.toStringAsFixed(2) ?? "0.00"}",
-                        style: GoogleFonts.inter(
-                          color: iconColor,
-                        )),
+                        style:
+                            GoogleFonts.inter(color: iconColor, fontSize: 12)),
                     Text(
                         "Height\t ${data.item3?.hmsRemoteVideoStats?.resolution.height.toStringAsFixed(2) ?? "0.00"}",
-                        style: GoogleFonts.inter(
-                          color: iconColor,
-                        )),
+                        style:
+                            GoogleFonts.inter(color: iconColor, fontSize: 12)),
                     Text(
                         "FPS\t ${data.item3?.hmsRemoteVideoStats?.frameRate.toStringAsFixed(2) ?? "0.00"}",
-                        style: GoogleFonts.inter(
-                          color: iconColor,
-                        )),
+                        style:
+                            GoogleFonts.inter(color: iconColor, fontSize: 12)),
                     Text("Downlink\t ${data.item4 ?? "-1"}",
-                        style: GoogleFonts.inter(
-                          color: iconColor,
-                        )),
+                        style:
+                            GoogleFonts.inter(color: iconColor, fontSize: 12)),
                     Text(
                         "Bitrate(V)\t ${data.item3?.hmsRemoteVideoStats?.bitrate.toStringAsFixed(2) ?? "0.00"}",
-                        style: GoogleFonts.inter(
-                          color: iconColor,
-                        )),
+                        style:
+                            GoogleFonts.inter(color: iconColor, fontSize: 12)),
                     Text(
                         "Bitrate(A)\t ${data.item3?.hmsRemoteAudioStats?.bitrate.toStringAsFixed(2) ?? "0.00"}",
-                        style: GoogleFonts.inter(
-                          color: iconColor,
-                        )),
+                        style:
+                            GoogleFonts.inter(color: iconColor, fontSize: 12)),
                     Text(
                         "Jitter(V)\t ${data.item3?.hmsRemoteVideoStats?.jitter.toStringAsFixed(2) ?? "0.00"}",
-                        style: GoogleFonts.inter(
-                          color: iconColor,
-                        )),
+                        style:
+                            GoogleFonts.inter(color: iconColor, fontSize: 12)),
                     Text(
                         "Jitter(A)\t ${data.item3?.hmsRemoteAudioStats?.jitter.toStringAsFixed(2) ?? "0.00"}",
-                        style: GoogleFonts.inter(
-                          color: iconColor,
-                        )),
+                        style:
+                            GoogleFonts.inter(color: iconColor, fontSize: 12)),
                   ],
                 ),
               );

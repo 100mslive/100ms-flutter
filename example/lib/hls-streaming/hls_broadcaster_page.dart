@@ -259,16 +259,25 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                             });
                                       }
                                       if (data.item3 == 0) {
-                                        return Container(
-                                          height: MediaQuery.of(context)
-                                                  .size
-                                                  .height *
-                                              0.735,
-                                          child: Center(
-                                              child: CircularProgressIndicator(
-                                            strokeWidth: 2,
-                                          )),
-                                        );
+                                        return Center(
+                                            child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            CircularProgressIndicator(
+                                              strokeWidth: 2,
+                                            ),
+                                            SizedBox(
+                                              height: 10,
+                                            ),
+                                            if (context
+                                                    .read<MeetingStore>()
+                                                    .peers
+                                                    .length >
+                                                0)
+                                              Text(
+                                                  "Please wait for broadcaster to join")
+                                          ],
+                                        ));
                                       }
                                       return Selector<
                                               MeetingStore,
