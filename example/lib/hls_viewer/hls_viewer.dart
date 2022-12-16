@@ -41,11 +41,30 @@ class _HLSPlayerState extends State<HLSPlayer> with TickerProviderStateMixin {
             Center(
                 child: FadeTransition(
               opacity: fadeInFadeOut,
-              child: Container(
-                  color: Colors.red,
-                  width: MediaQuery.of(context).size.width,
-                  height: 300,
-                  child: HMSHLSPlayer(url: widget.streamUrl)),
+              child: AspectRatio(
+                  aspectRatio: 16 / 9,
+                  child: NativeVideoView(
+                    keepAspectRatio: true,
+                    showMediaController: true,
+                    onCreated: (controller) {
+                      controller.setVideoSource(
+                        widget.streamUrl,
+                        sourceType: VideoSourceType.network,
+                      );
+                    },
+                    onPrepared: (controller, info) {
+                      controller.play();
+                    },
+                    onError: (controller, what, extra, message) {
+                      print('Player Error ($what | $extra | $message)');
+                    },
+                    onCompletion: (controller) {
+                      print('Video completed');
+                    },
+                    onProgress: (progress, duration) {
+                      print('$progress | $duration');
+                    },
+                  )),
             )),
             if (!context.read<MeetingStore>().isPipActive)
               Positioned(

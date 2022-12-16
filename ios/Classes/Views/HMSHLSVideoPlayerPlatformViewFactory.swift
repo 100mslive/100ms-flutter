@@ -10,19 +10,16 @@ import HMSSDK
 import UIKit
 
 class HMSHLSVideoPlayerPlatformViewFactory: NSObject, FlutterPlatformViewFactory {
+    
+    let registrar: FlutterPluginRegistrar
 
-    let plugin: SwiftHmssdkFlutterPlugin
-
-    init(plugin: SwiftHmssdkFlutterPlugin) {
-        self.plugin = plugin
+    init(registrar: FlutterPluginRegistrar) {
+        self.registrar = registrar
         super.init()
     }
 
     func create(withFrame frame: CGRect, viewIdentifier viewId: Int64, arguments args: Any?) -> FlutterPlatformView {
-
-        let arguments = args as! [String: AnyObject]
-
-        return HMSHLSVideoPlayerController(url: arguments["url"] as! String,frame: frame)
+        return NativeVideoViewController(frame: frame, viewId: viewId, registrar: registrar)
     }
 
     func createArgsCodec() -> FlutterMessageCodec & NSObjectProtocol {

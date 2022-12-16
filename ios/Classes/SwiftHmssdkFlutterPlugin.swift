@@ -43,8 +43,8 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         let videoViewFactory = HMSFlutterPlatformViewFactory(plugin: instance)
         registrar.register(videoViewFactory, withId: "HMSFlutterPlatformView")
         
-        let hlsViewFactory = HMSHLSVideoPlayerPlatformViewFactory(plugin: instance)
-        registrar.register(hlsViewFactory, withId: "HMSHLSPlayer")
+        let hlsViewFactory = HMSHLSVideoPlayerPlatformViewFactory(registrar:registrar)
+        registrar.register(hlsViewFactory, withId: "native_video_view")
 
         eventChannel.setStreamHandler(instance)
         previewChannel.setStreamHandler(instance)

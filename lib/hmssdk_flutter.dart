@@ -83,3 +83,10 @@ export 'src/model/hms_mic_node.dart';
 export 'src/model/hms_audio_mixer_source.dart';
 export 'src/model/hms_screen_broadcast_audio_receiver_node.dart';
 export 'src/model/hms_log_settings.dart';
+
+export 'src/ui/src/controller.dart';
+export 'src/ui/src/media_control.dart';
+export 'src/ui/src/media_controller.dart';
+export 'src/ui/src/video_file.dart';
+export 'src/ui/src/video_source_type.dart';
+export 'src/ui/src/video_widget.dart';
