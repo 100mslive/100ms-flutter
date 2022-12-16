@@ -565,68 +565,108 @@ class MeetingStore extends ChangeNotifier
       required HMSTrackUpdate trackUpdate,
       required HMSPeer peer}) {
     log("onTrackUpdate-> track: ${track.toString()} peer: ${peer.name} update: ${trackUpdate.name}");
-    if (!isSpeakerOn &&
-        track.kind == HMSTrackKind.kHMSTrackKindAudio &&
-        trackUpdate == HMSTrackUpdate.trackAdded) {
-      if (track.runtimeType == HMSRemoteAudioTrack) {
-        HMSRemoteAudioTrack currentTrack = track as HMSRemoteAudioTrack;
-        currentTrack.setPlaybackAllowed(false);
-      }
-    }
-
-    if (peer.isLocal) {
-      if (track.kind == HMSTrackKind.kHMSTrackKindAudio &&
-          track.source == "REGULAR") {
-        this.isMicOn = !track.isMute;
-      }
-      if (track.kind == HMSTrackKind.kHMSTrackKindVideo &&
-          track.source == "REGULAR") {
-        this.isVideoOn = !track.isMute;
-      }
-      notifyListeners();
-    }
-
-    if (track.kind == HMSTrackKind.kHMSTrackKindAudio) {
-      int index = peerTracks
-          .indexWhere((element) => element.uid == peer.peerId + "mainVideo");
-      if (index != -1) {
-        PeerTrackNode peerTrackNode = peerTracks[index];
-        peerTrackNode.audioTrack = track as HMSAudioTrack;
-        peerTrackNode.notify();
-      } else {
-        if (peer.role.name.contains("hls-")) return;
-        peerTracks.add(new PeerTrackNode(
-            peer: peer,
-            uid: peer.peerId + "mainVideo",
-            stats: RTCStats(),
-            audioTrack: track as HMSAudioTrack));
-        notifyListeners();
-      }
-      return;
-    }
-
-    if (track.source == "REGULAR") {
-      int index = peerTracks
-          .indexWhere((element) => element.uid == peer.peerId + "mainVideo");
-      if (index != -1) {
-        PeerTrackNode peerTrackNode = peerTracks[index];
-        peerTrackNode.track = track as HMSVideoTrack;
-        peerTrackNode.notify();
-        if (meetingMode == MeetingMode.Single) {
-          rearrangeTile(peerTrackNode, index);
+    if (peer.role.name.contains("hls-")) return;
+    switch (trackUpdate) {
+      case HMSTrackUpdate.trackAdded:
+        if (track.kind == HMSTrackKind.kHMSTrackKindAudio) {
+          if (!isSpeakerOn && track.runtimeType == HMSRemoteAudioTrack) {
+            HMSRemoteAudioTrack currentTrack = track as HMSRemoteAudioTrack;
+            currentTrack.setPlaybackAllowed(false);
+          }
+          int index = peerTracks.indexWhere(
+              (element) => element.uid == peer.peerId + "mainVideo");
+          if (index != -1) {
+            PeerTrackNode peerTrackNode = peerTracks[index];
+            peerTrackNode.audioTrack = track as HMSAudioTrack;
+            peerTrackNode.notify();
+          } else {
+            peerTracks.add(new PeerTrackNode(
+                peer: peer,
+                uid: peer.peerId + "mainVideo",
+                stats: RTCStats(),
+                audioTrack: track as HMSAudioTrack));
+          }
+        } else if (track.kind == HMSTrackKind.kHMSTrackKindVideo) {
+          if (track.source == "REGULAR") {
+            int index = peerTracks.indexWhere(
+                (element) => element.uid == peer.peerId + "mainVideo");
+            if (index != -1) {
+              PeerTrackNode peerTrackNode = peerTracks[index];
+              peerTrackNode.track = track as HMSVideoTrack;
+              peerTrackNode.notify();
+              if (meetingMode == MeetingMode.Single) {
+                rearrangeTile(peerTrackNode, index);
+              }
+            } else {
+              peerTracks.add(new PeerTrackNode(
+                  peer: peer,
+                  uid: peer.peerId + "mainVideo",
+                  stats: RTCStats(),
+                  track: track as HMSVideoTrack));
+            }
+          } else {
+            int peerIndex = peerTracks.indexWhere(
+                (element) => element.uid == peer.peerId + track.trackId);
+            if (peerIndex == -1) {
+              screenShareCount++;
+              peerTracks.insert(
+                  0,
+                  PeerTrackNode(
+                      peer: peer,
+                      uid: peer.peerId + track.trackId,
+                      track: track as HMSVideoTrack,
+                      stats: RTCStats()));
+              isScreenShareActive();
+            }
+          }
         }
-      } else {
-        if (peer.role.name.contains("hls-")) return;
-        peerTracks.add(new PeerTrackNode(
-            peer: peer,
-            uid: peer.peerId + "mainVideo",
-            stats: RTCStats(),
-            track: track as HMSVideoTrack));
-        notifyListeners();
-        return;
-      }
+        break;
+      case HMSTrackUpdate.trackRemoved:
+        if (track.source == "REGULAR") {
+          int peerIndex = peerTracks.indexWhere(
+              (element) => element.uid == peer.peerId + "mainVideo");
+          if (peerIndex != -1) {
+            if (track.kind == HMSTrackKind.kHMSTrackKindAudio) {
+              peerTracks[peerIndex].audioTrack = null;
+            } else if (track.kind == HMSTrackKind.kHMSTrackKindVideo) {
+              peerTracks[peerIndex].track = null;
+            }
+            if (peerTracks[peerIndex].track == null &&
+                peerTracks[peerIndex].audioTrack == null) {
+              peerTracks.removeAt(peerIndex);
+            }
+          }
+        } else {
+          int peerIndex = peerTracks.indexWhere(
+              (element) => element.uid == peer.peerId + track.trackId);
+          if (peerIndex != -1) {
+            screenShareCount--;
+            peerTracks.removeAt(peerIndex);
+            if (screenShareCount == 0) {
+              setLandscapeLock(false);
+            }
+            isScreenShareActive();
+          }
+        }
+        break;
+      default:
+        if (track.source == "REGULAR") updateTrack(peer, track);
+        break;
     }
-    peerOperationWithTrack(peer, trackUpdate, track);
+    notifyListeners();
+  }
+
+  void updateTrack(HMSPeer peer, HMSTrack track) {
+    int index = peerTracks
+        .indexWhere((element) => element.uid == peer.peerId + "mainVideo");
+    if (index != -1) {
+      PeerTrackNode peerTrackNode = peerTracks[index];
+      if (track.kind == HMSTrackKind.kHMSTrackKindAudio)
+        peerTrackNode.audioTrack = track as HMSAudioTrack;
+      else
+        peerTrackNode.track = track as HMSVideoTrack;
+      peerTrackNode.notify();
+    }
   }
 
   @override
@@ -1038,73 +1078,6 @@ class MeetingStore extends ChangeNotifier
       case HMSPeerUpdate.defaultUpdate:
         break;
 
-      default:
-    }
-  }
-
-  void peerOperationWithTrack(
-      HMSPeer peer, HMSTrackUpdate update, HMSTrack track) {
-    switch (update) {
-      case HMSTrackUpdate.trackAdded:
-        if (track.source != "REGULAR") {
-          int peerIndex = peerTracks.indexWhere(
-              (element) => element.uid == peer.peerId + track.trackId);
-          if (peerIndex == -1) {
-            screenShareCount++;
-            peerTracks.insert(
-                0,
-                PeerTrackNode(
-                    peer: peer,
-                    uid: peer.peerId + track.trackId,
-                    track: track as HMSVideoTrack,
-                    stats: RTCStats()));
-            isScreenShareActive();
-            notifyListeners();
-          }
-        }
-        break;
-      case HMSTrackUpdate.trackRemoved:
-        if (track.source != "REGULAR") {
-          int peerIndex = peerTracks.indexWhere(
-              (element) => element.uid == peer.peerId + track.trackId);
-          if (peerIndex != -1) {
-            screenShareCount--;
-            peerTracks.removeAt(peerIndex);
-            if (screenShareCount == 0) {
-              setLandscapeLock(false);
-            }
-            isScreenShareActive();
-            notifyListeners();
-          }
-        } else {
-          int peerIndex = peerTracks.indexWhere(
-              (element) => element.uid == peer.peerId + "mainVideo");
-          if (peerIndex != -1) {
-            if (track.kind == HMSTrackKind.kHMSTrackKindAudio) {
-              peerTracks[peerIndex].audioTrack = null;
-            } else if (track.kind == HMSTrackKind.kHMSTrackKindVideo) {
-              peerTracks[peerIndex].track = null;
-            }
-            if (peerTracks[peerIndex].track == null &&
-                peerTracks[peerIndex].audioTrack == null) {
-              peerTracks.removeAt(peerIndex);
-              notifyListeners();
-            }
-          }
-        }
-        break;
-      case HMSTrackUpdate.trackMuted:
-        break;
-      case HMSTrackUpdate.trackUnMuted:
-        break;
-      case HMSTrackUpdate.trackDescriptionChanged:
-        break;
-      case HMSTrackUpdate.trackDegraded:
-        break;
-      case HMSTrackUpdate.trackRestored:
-        break;
-      case HMSTrackUpdate.defaultUpdate:
-        break;
       default:
     }
   }
