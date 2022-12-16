@@ -565,6 +565,8 @@ class MeetingStore extends ChangeNotifier
       required HMSTrackUpdate trackUpdate,
       required HMSPeer peer}) {
     log("onTrackUpdate-> track: ${track.toString()} peer: ${peer.name} update: ${trackUpdate.name}");
+    if (peer.role.name.contains("hls-")) return;
+
     if (!isSpeakerOn &&
         track.kind == HMSTrackKind.kHMSTrackKindAudio &&
         trackUpdate == HMSTrackUpdate.trackAdded) {
@@ -586,7 +588,8 @@ class MeetingStore extends ChangeNotifier
       notifyListeners();
     }
 
-    if (track.kind == HMSTrackKind.kHMSTrackKindAudio) {
+    if (track.kind == HMSTrackKind.kHMSTrackKindAudio &&
+        trackUpdate != HMSTrackUpdate.trackRemoved) {
       int index = peerTracks
           .indexWhere((element) => element.uid == peer.peerId + "mainVideo");
       if (index != -1) {
@@ -594,7 +597,6 @@ class MeetingStore extends ChangeNotifier
         peerTrackNode.audioTrack = track as HMSAudioTrack;
         peerTrackNode.notify();
       } else {
-        if (peer.role.name.contains("hls-")) return;
         peerTracks.add(new PeerTrackNode(
             peer: peer,
             uid: peer.peerId + "mainVideo",
@@ -605,7 +607,8 @@ class MeetingStore extends ChangeNotifier
       return;
     }
 
-    if (track.source == "REGULAR") {
+    if (track.source == "REGULAR" &&
+        trackUpdate != HMSTrackUpdate.trackRemoved) {
       int index = peerTracks
           .indexWhere((element) => element.uid == peer.peerId + "mainVideo");
       if (index != -1) {
@@ -616,7 +619,6 @@ class MeetingStore extends ChangeNotifier
           rearrangeTile(peerTrackNode, index);
         }
       } else {
-        if (peer.role.name.contains("hls-")) return;
         peerTracks.add(new PeerTrackNode(
             peer: peer,
             uid: peer.peerId + "mainVideo",
