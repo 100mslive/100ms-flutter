@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hmssdk_flutter_example/common/ui/organisms/hls_aspect_ratio_options.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
 import 'package:hmssdk_flutter_example/hls-streaming/bottom_sheets/hls_participant_sheet.dart';
@@ -118,6 +119,42 @@ class _HLSViewerSettingsState extends State<HLSViewerSettings> {
                       fontWeight: FontWeight.w600),
                 ),
               ),
+              ListTile(
+                  horizontalTitleGap: 2,
+                  onTap: () async {
+                    showDialog(
+                        context: context,
+                        builder: (_) => AspectRatioOptionDialog(
+                                availableAspectRatios: [
+                                  "16:9",
+                                  "4:3",
+                                  "1:1",
+                                  "3:4",
+                                  "9:16"
+                                ],
+                                setAspectRatio: (double aspectRatio) {
+                                  context
+                                      .read<MeetingStore>()
+                                      .setPIPVideoController(true,
+                                          aspectRatio: aspectRatio);
+                                  Navigator.pop(context);
+                                }));
+                  },
+                  contentPadding: EdgeInsets.zero,
+                  leading: SvgPicture.asset(
+                    "assets/icons/aspect_ratio.svg",
+                    fit: BoxFit.scaleDown,
+                    color: themeDefaultColor,
+                  ),
+                  title: Text(
+                    "Set Aspect Ratio",
+                    semanticsLabel: "fl_aspect_ratio",
+                    style: GoogleFonts.inter(
+                        fontSize: 14,
+                        color: themeDefaultColor,
+                        letterSpacing: 0.25,
+                        fontWeight: FontWeight.w600),
+                  )),
               ListTile(
                   horizontalTitleGap: 2,
                   onTap: () async {

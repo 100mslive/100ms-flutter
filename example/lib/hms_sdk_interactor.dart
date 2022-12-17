@@ -182,12 +182,12 @@ class HMSSDKInteractor {
         hmsActionResultListener: hmsActionResultListener);
   }
 
-  void changeRole(
+  void changeRoleOfPeer(
       {required HMSPeer forPeer,
       required HMSRole toRole,
       bool force = false,
       required HMSActionResultListener hmsActionResultListener}) {
-    hmsSDK.changeRole(
+    hmsSDK.changeRoleOfPeer(
         forPeer: forPeer,
         toRole: toRole,
         force: force,
@@ -313,7 +313,7 @@ class HMSSDKInteractor {
     return await hmsSDK.getCurrentAudioDevice();
   }
 
-  void switchAudioOutput(HMSAudioDevice? audioDevice) {
+  void switchAudioOutput({required HMSAudioDevice audioDevice}) {
     hmsSDK.switchAudioOutput(audioDevice: audioDevice);
   }
 
@@ -359,5 +359,15 @@ class HMSSDKInteractor {
 
   Future<bool> isPipAvailable() {
     return hmsSDK.isPipAvailable();
+  }
+
+  void changeRoleOfPeersWithRoles(
+      {required HMSRole toRole,
+      required List<HMSRole> ofRoles,
+      HMSActionResultListener? hmsActionResultListener}) {
+    hmsSDK.changeRoleOfPeersWithRoles(
+        toRole: toRole,
+        ofRoles: ofRoles,
+        hmsActionResultListener: hmsActionResultListener);
   }
 }

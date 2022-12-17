@@ -1,6 +1,6 @@
 <a href="https://100ms.live/">
 <p align="center">
-<img src="https://github.com/100mslive/100ms-flutter/blob/maintion/example/assets/images/logo.svg" title="100ms logo" float=center height=150 >
+<img src="https://github.com/100mslive/100ms-flutter/blob/main/example/assets/images/logo.svg" title="100ms logo" float=center height=150 >
 </p>
 </a>
 

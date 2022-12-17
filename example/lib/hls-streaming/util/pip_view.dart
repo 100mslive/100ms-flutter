@@ -46,10 +46,7 @@ class _PipViewState extends State<PipView> {
                           return hasHlsStarted
                               ? Container(
                                   child: Center(
-                                    child: HLSPlayer(
-                                        streamUrl: context
-                                            .read<MeetingStore>()
-                                            .streamUrl),
+                                    child: HLSPlayer(),
                                   ),
                                 )
                               : Container(

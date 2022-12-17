@@ -139,7 +139,9 @@ class MeetingStore extends ChangeNotifier
 
   HMSAudioDevice? currentAudioOutputDevice;
 
-  HMSAudioDevice currentAudioDeviceMode = HMSAudioDevice.AUTOMATIC;
+  HMSAudioDevice currentAudioDeviceMode = Platform.isAndroid
+      ? HMSAudioDevice.AUTOMATIC
+      : HMSAudioDevice.SPEAKER_PHONE;
 
   bool showAudioDeviceChangePopup = false;
 
@@ -167,6 +169,10 @@ class MeetingStore extends ChangeNotifier
   bool isPipActive = false;
 
   bool isPipAutoEnabled = false;
+
+  bool lastVideoStatus = false;
+
+  double hlsAspectRatio = 16 / 9;
 
   Future<bool> join(String user, String roomUrl) async {
     List<String?>? token =
@@ -310,11 +316,11 @@ class MeetingStore extends ChangeNotifier
     notifyListeners();
   }
 
-  void changeRole(
+  void changeRoleOfPeer(
       {required HMSPeer peer,
       required HMSRole roleName,
       bool forceChange = false}) {
-    _hmsSDKInteractor.changeRole(
+    _hmsSDKInteractor.changeRoleOfPeer(
         toRole: roleName,
         forPeer: peer,
         force: forceChange,
@@ -431,10 +437,10 @@ class MeetingStore extends ChangeNotifier
     currentAudioOutputDevice = await _hmsSDKInteractor.getCurrentAudioDevice();
   }
 
-  void switchAudioOutput({HMSAudioDevice? audioDevice}) {
+  void switchAudioOutput({required HMSAudioDevice audioDevice}) {
     selfChangeAudioDevice = true;
-    if (Platform.isAndroid) currentAudioDeviceMode = audioDevice!;
-    _hmsSDKInteractor.switchAudioOutput(audioDevice);
+    currentAudioDeviceMode = audioDevice;
+    _hmsSDKInteractor.switchAudioOutput(audioDevice: audioDevice);
   }
 
 // Override Methods
@@ -559,6 +565,8 @@ class MeetingStore extends ChangeNotifier
       required HMSTrackUpdate trackUpdate,
       required HMSPeer peer}) {
     log("onTrackUpdate-> track: ${track.toString()} peer: ${peer.name} update: ${trackUpdate.name}");
+    if (peer.role.name.contains("hls-")) return;
+
     if (!isSpeakerOn &&
         track.kind == HMSTrackKind.kHMSTrackKindAudio &&
         trackUpdate == HMSTrackUpdate.trackAdded) {
@@ -580,7 +588,8 @@ class MeetingStore extends ChangeNotifier
       notifyListeners();
     }
 
-    if (track.kind == HMSTrackKind.kHMSTrackKindAudio) {
+    if (track.kind == HMSTrackKind.kHMSTrackKindAudio &&
+        trackUpdate != HMSTrackUpdate.trackRemoved) {
       int index = peerTracks
           .indexWhere((element) => element.uid == peer.peerId + "mainVideo");
       if (index != -1) {
@@ -588,7 +597,6 @@ class MeetingStore extends ChangeNotifier
         peerTrackNode.audioTrack = track as HMSAudioTrack;
         peerTrackNode.notify();
       } else {
-        if (peer.role.name.contains("hls-")) return;
         peerTracks.add(new PeerTrackNode(
             peer: peer,
             uid: peer.peerId + "mainVideo",
@@ -599,7 +607,8 @@ class MeetingStore extends ChangeNotifier
       return;
     }
 
-    if (track.source == "REGULAR") {
+    if (track.source == "REGULAR" &&
+        trackUpdate != HMSTrackUpdate.trackRemoved) {
       int index = peerTracks
           .indexWhere((element) => element.uid == peer.peerId + "mainVideo");
       if (index != -1) {
@@ -610,7 +619,6 @@ class MeetingStore extends ChangeNotifier
           rearrangeTile(peerTrackNode, index);
         }
       } else {
-        if (peer.role.name.contains("hls-")) return;
         peerTracks.add(new PeerTrackNode(
             peer: peer,
             uid: peer.peerId + "mainVideo",
@@ -765,8 +773,7 @@ class MeetingStore extends ChangeNotifier
           .indexWhere((element) => element.uid == peer.peerId + "mainVideo");
     }
     if (index != -1) {
-      peerTracks[index].stats?.hmsLocalAudioStats = hmsLocalAudioStats;
-      peerTracks[index].notify();
+      peerTracks[index].setHMSLocalAudioStats(hmsLocalAudioStats);
     }
   }
 
@@ -784,8 +791,7 @@ class MeetingStore extends ChangeNotifier
           .indexWhere((element) => element.uid == peer.peerId + "mainVideo");
     }
     if (index != -1) {
-      peerTracks[index].stats?.hmsLocalVideoStats = hmsLocalVideoStats;
-      peerTracks[index].notify();
+      peerTracks[index].setHMSLocalVideoStats(hmsLocalVideoStats);
     }
   }
 
@@ -803,8 +809,7 @@ class MeetingStore extends ChangeNotifier
           .indexWhere((element) => element.uid == peer.peerId + "mainVideo");
     }
     if (index != -1) {
-      peerTracks[index].stats?.hmsRemoteAudioStats = hmsRemoteAudioStats;
-      peerTracks[index].notify();
+      peerTracks[index].setHMSRemoteAudioStats(hmsRemoteAudioStats);
     }
   }
 
@@ -822,8 +827,7 @@ class MeetingStore extends ChangeNotifier
           .indexWhere((element) => element.uid == peer.peerId + "mainVideo");
     }
     if (index != -1) {
-      peerTracks[index].stats?.hmsRemoteVideoStats = hmsRemoteVideoStats;
-      peerTracks[index].notify();
+      peerTracks[index].setHMSRemoteVideoStats(hmsRemoteVideoStats);
     }
   }
 
@@ -1283,13 +1287,20 @@ class MeetingStore extends ChangeNotifier
     }
   }
 
-  void setPIPVideoController(String streamUrl, bool reinitialise) {
+  void setPIPVideoController(bool reinitialise, {double? aspectRatio}) {
     if (hlsVideoController != null) {
       hlsVideoController!.dispose(forceDispose: true);
       hlsVideoController = null;
     }
+    if (aspectRatio != null) {
+      hlsAspectRatio = aspectRatio;
+    }
     PipFlutterPlayerConfiguration pipFlutterPlayerConfiguration =
         PipFlutterPlayerConfiguration(
+            //aspectRatio parameter can be used to set the player view based on the ratio selected from dashboard
+            //Stream aspectRatio can be selected from Dashboard->Templates->Destinations->Customise stream video output->Video aspect ratio
+            //The selected aspectRatio can be set here to get expected stream resolution
+            aspectRatio: hlsAspectRatio,
             allowedScreenSleep: false,
             fit: BoxFit.contain,
             showPlaceholderUntilPlay: true,
@@ -1329,6 +1340,11 @@ class MeetingStore extends ChangeNotifier
     if (reinitialise) notifyListeners();
   }
 
+  void changeRoleOfPeersWithRoles(HMSRole toRole, List<HMSRole> ofRoles) {
+    _hmsSDKInteractor.changeRoleOfPeersWithRoles(
+        toRole: toRole, ofRoles: ofRoles, hmsActionResultListener: this);
+  }
+
 //Get onSuccess or onException callbacks for HMSActionResultListenerMethod
 
   @override
@@ -1366,6 +1382,9 @@ class MeetingStore extends ChangeNotifier
         Utilities.showToast("Accept role change successful");
         break;
       case HMSActionResultListenerMethod.changeRole:
+        Utilities.showToast("Change role successful");
+        break;
+      case HMSActionResultListenerMethod.changeRoleOfPeer:
         Utilities.showToast("Change role successful");
         break;
       case HMSActionResultListenerMethod.changeTrackStateForRole:
@@ -1474,6 +1493,9 @@ class MeetingStore extends ChangeNotifier
       case HMSActionResultListenerMethod.switchCamera:
         Utilities.showToast("Camera switched successfully");
         break;
+      case HMSActionResultListenerMethod.changeRoleOfPeersWithRoles:
+        Utilities.showToast("Change Role successful");
+        break;
     }
   }
 
@@ -1500,6 +1522,8 @@ class MeetingStore extends ChangeNotifier
       case HMSActionResultListenerMethod.acceptChangeRole:
         break;
       case HMSActionResultListenerMethod.changeRole:
+        break;
+      case HMSActionResultListenerMethod.changeRoleOfPeer:
         break;
       case HMSActionResultListenerMethod.changeTrackStateForRole:
         break;
@@ -1545,6 +1569,9 @@ class MeetingStore extends ChangeNotifier
       case HMSActionResultListenerMethod.switchCamera:
         Utilities.showToast("Camera switching failed");
         break;
+      case HMSActionResultListenerMethod.changeRoleOfPeersWithRoles:
+        Utilities.showToast("Change role failed");
+        break;
     }
     notifyListeners();
   }
@@ -1561,10 +1588,15 @@ class MeetingStore extends ChangeNotifier
         notifyListeners();
       }
 
+      if (lastVideoStatus) {
+        switchVideo();
+        lastVideoStatus = false;
+      }
+
       List<HMSPeer>? peersList = await getPeers();
 
       peersList?.forEach((element) {
-        if (!element.isLocal) {
+        if (!element.isLocal && (Platform.isAndroid)) {
           (element.audioTrack as HMSRemoteAudioTrack?)?.setVolume(10.0);
           element.auxiliaryTracks?.forEach((element) {
             if (element.kind == HMSTrackKind.kHMSTrackKindAudio) {
@@ -1579,6 +1611,7 @@ class MeetingStore extends ChangeNotifier
           !(localPeer.videoTrack?.isMute ?? true) &&
           !isPipActive) {
         switchVideo();
+        lastVideoStatus = true;
       }
       for (PeerTrackNode peerTrackNode in peerTracks) {
         peerTrackNode.setOffScreenStatus(true);
@@ -1593,6 +1626,7 @@ class MeetingStore extends ChangeNotifier
           !(localPeer.videoTrack?.isMute ?? true) &&
           !isPipActive) {
         switchVideo();
+        lastVideoStatus = true;
       }
       for (PeerTrackNode peerTrackNode in peerTracks) {
         peerTrackNode.setOffScreenStatus(true);

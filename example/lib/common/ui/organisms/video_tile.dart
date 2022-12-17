@@ -120,7 +120,7 @@ class _VideoTileState extends State<VideoTile> {
                                           roles: _meetingStore.roles,
                                           peer: peerNode,
                                           changeRole: (role, forceChange) {
-                                            _meetingStore.changeRole(
+                                            _meetingStore.changeRoleOfPeer(
                                                 peer: peerNode,
                                                 roleName: role,
                                                 forceChange: forceChange);
@@ -151,7 +151,7 @@ class _VideoTileState extends State<VideoTile> {
                                         roles: _meetingStore.roles,
                                         peer: peerNode,
                                         changeRole: (role, forceChange) {
-                                          _meetingStore.changeRole(
+                                          _meetingStore.changeRoleOfPeer(
                                               peer: peerNode,
                                               roleName: role,
                                               forceChange: forceChange);

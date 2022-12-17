@@ -26,7 +26,7 @@ class _HLSParticipantSheetState extends State<HLSParticipantSheet> {
     PeerTrackNode? peerTrackNode;
     try {
       peerTrackNode = _meetingStore.peerTracks
-          .firstWhere((element) => element.peer.peerId == peer.peerId);
+          .firstWhere((element) => element.uid == peer.peerId + "mainVideo");
     } catch (e) {
       peerTrackNode = null;
     }
@@ -61,7 +61,7 @@ class _HLSParticipantSheetState extends State<HLSParticipantSheet> {
                               roles: _meetingStore.roles,
                               peer: peer,
                               changeRole: (role, forceChange) {
-                                _meetingStore.changeRole(
+                                _meetingStore.changeRoleOfPeer(
                                     peer: peer,
                                     roleName: role,
                                     forceChange: forceChange);
@@ -110,7 +110,7 @@ class _HLSParticipantSheetState extends State<HLSParticipantSheet> {
                             roles: _meetingStore.roles,
                             peer: peerTrackNode.peer,
                             changeRole: (role, forceChange) {
-                              _meetingStore.changeRole(
+                              _meetingStore.changeRoleOfPeer(
                                   peer: peerTrackNode!.peer,
                                   roleName: role,
                                   forceChange: forceChange);
