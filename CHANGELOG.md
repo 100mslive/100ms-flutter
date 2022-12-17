@@ -1,4 +1,6 @@
-## 1.1.0 - 2022-12-16
+## 1.1.0 - 2022-12-17
+
+### Added
 
 ### Added
 
@@ -27,17 +29,21 @@
 
   For More Information, refer: https://www.100ms.live/docs/flutter/v2/features/change-role
 
-- Deprecated `changeRole` API in favour of `changeRoleOfPeer`
-
 - Added Switch Audio Output APIs on iOS
 
-  Audio Output Routing is helpful when users wants to switch output to a connected device other than the default one.
+  Audio Output Routing is helpful when users want to switch output to a connected device other than the default one. This functionality is already available on Android.
 
   ```dart
   hmsSDK.switchAudioOutput(audioDevice: HMSAudioDevice.SPEAKER_PHONE);
   ```
-
   For More Information, refer: https://www.100ms.live/docs/flutter/v2/features/audio-output-routing
+
+
+### Deprecated
+
+- Deprecated `changeRole` API in favour of `changeRoleOfPeer`
+
+  No change in functionality or method signature.
 
 
 ### Fixed
