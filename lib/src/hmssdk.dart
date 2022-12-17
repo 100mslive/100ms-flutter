@@ -424,6 +424,37 @@ class HMSSDK {
     }
   }
 
+  ///Method to change the role of all the peers with the same role
+  ///[toRole] is the role that you wish the peer to be in
+  ///[ofRoles] is a list of roles whose roles you wish to change
+  ///[hmsActionResultListener] is an object of HMSActionResultListener to listen to the success or error callbacks.
+  void changeRoleOfPeersWithRoles(
+      {required HMSRole toRole,
+      required List<HMSRole> ofRoles,
+      HMSActionResultListener? hmsActionResultListener}) async {
+    List<String> ofRolesMap = [];
+    ofRoles.forEach((role) => ofRolesMap.add(role.name));
+    var arguments = {"to_role": toRole.name, "of_roles": ofRolesMap};
+    var result = await PlatformService.invokeMethod(
+        PlatformMethod.changeRoleOfPeersWithRoles,
+        arguments: arguments);
+
+    if (hmsActionResultListener != null) {
+      if (result != null && result["error"] != null) {
+        hmsActionResultListener.onException(
+            methodType:
+                HMSActionResultListenerMethod.changeRoleOfPeersWithRoles,
+            arguments: arguments,
+            hmsException: HMSException.fromMap(result["error"]));
+      } else {
+        hmsActionResultListener.onSuccess(
+            methodType:
+                HMSActionResultListenerMethod.changeRoleOfPeersWithRoles,
+            arguments: arguments);
+      }
+    }
+  }
+
   ///accept the change role request
   /// When a peer is requested to change their role (see [changeRoleOfPeer]) to accept the new role this has to be called. Once this method is called, the peer's role will be changed to the requested one. The HMSRoleChangeRequest that the SDK had sent to this peer (in HMSUpdateListener.onRoleChangeRequest) to inform them that a role change was requested.
   /// [hmsActionResultListener] - Listener that will return HMSActionResultListener.onSuccess if the role change request is successful else will call HMSActionResultListener.onException with the error received from the server
@@ -951,37 +982,6 @@ class HMSSDK {
     final bool? result =
         await PlatformService.invokeMethod(PlatformMethod.isPipAvailable);
     return result ?? false;
-  }
-
-  ///Method to change the role of all the peers with the same role
-  ///[toRole] is the role that you wish the peer to be in
-  ///[ofRoles] is a list of roles whose roles you wish to change
-  ///[hmsActionResultListener] is an object of HMSActionResultListener to listen to the success or error callbacks.
-  void changeRoleOfPeersWithRoles(
-      {required HMSRole toRole,
-      required List<HMSRole> ofRoles,
-      HMSActionResultListener? hmsActionResultListener}) async {
-    List<String> ofRolesMap = [];
-    ofRoles.forEach((role) => ofRolesMap.add(role.name));
-    var arguments = {"to_role": toRole.name, "of_roles": ofRolesMap};
-    var result = await PlatformService.invokeMethod(
-        PlatformMethod.changeRoleOfPeersWithRoles,
-        arguments: arguments);
-
-    if (hmsActionResultListener != null) {
-      if (result != null && result["error"] != null) {
-        hmsActionResultListener.onException(
-            methodType:
-                HMSActionResultListenerMethod.changeRoleOfPeersWithRoles,
-            arguments: arguments,
-            hmsException: HMSException.fromMap(result["error"]));
-      } else {
-        hmsActionResultListener.onSuccess(
-            methodType:
-                HMSActionResultListenerMethod.changeRoleOfPeersWithRoles,
-            arguments: arguments);
-      }
-    }
   }
 
   /// To modify local peer's audio & video tracks settings use the [hmsTrackSetting]. Only required for advanced use cases.
