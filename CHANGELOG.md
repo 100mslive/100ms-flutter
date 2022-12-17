@@ -2,8 +2,6 @@
 
 ### Added
 
-### Added
-
 - Added support for Bulk Role Change
 
   Bulk Role Change is used when you want to convert all Roles from a list of Roles, to another Role.
