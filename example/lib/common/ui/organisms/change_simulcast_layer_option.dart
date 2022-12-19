@@ -12,8 +12,11 @@ import 'package:hmssdk_flutter_example/hls-streaming/util/hls_title_text.dart';
 import 'package:collection/collection.dart';
 
 class ChangeSimulcastLayerOptionDialog extends StatefulWidget {
-  final HMSRemoteVideoTrack track;
-  ChangeSimulcastLayerOptionDialog({required this.track});
+  List<HMSSimulcastLayerDefinition> layerDefinitions;
+  HMSSimulcastLayer selectedLayer;
+  HMSRemoteVideoTrack track;
+  ChangeSimulcastLayerOptionDialog(
+      {required this.layerDefinitions, required this.selectedLayer,required this.track});
 
   @override
   _ChangeSimulcastLayerOptionDialogState createState() =>
@@ -22,16 +25,16 @@ class ChangeSimulcastLayerOptionDialog extends StatefulWidget {
 
 class _ChangeSimulcastLayerOptionDialogState
     extends State<ChangeSimulcastLayerOptionDialog> {
-  HMSSimulcastLayerDefinition? valueChoose;
+  HMSSimulcastLayer? valueChoose;
   @override
   void initState() {
     super.initState();
-    valueChoose = widget.track.layerDefinitions![0];
+    valueChoose = widget.selectedLayer;
   }
 
   @override
   Widget build(BuildContext context) {
-    String message = "current:${widget.track.layer.name}";
+    String message = "Current Layer: ${widget.selectedLayer.name}";
     double width = MediaQuery.of(context).size.width;
     return AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -91,7 +94,7 @@ class _ChangeSimulcastLayerOptionDialogState
                 });
               },
               items: <DropdownMenuItem>[
-                ...widget.track.layerDefinitions!
+                ...widget.layerDefinitions
                     .sortedBy((element) => element.hmsSimulcastLayer.toString())
                     .map((layer) => DropdownMenuItem(
                           child: HLSTitleText(
@@ -103,7 +106,7 @@ class _ChangeSimulcastLayerOptionDialogState
                             textColor: themeDefaultColor,
                             fontWeight: FontWeight.w400,
                           ),
-                          value: layer,
+                          value: layer.hmsSimulcastLayer,
                         ))
                     .toList(),
               ],
@@ -149,7 +152,7 @@ class _ChangeSimulcastLayerOptionDialogState
                     side: BorderSide(width: 1, color: hmsdefaultColor),
                     borderRadius: BorderRadius.circular(8.0),
                   ))),
-              onPressed: () => {
+              onPressed: () async => {
                 if (valueChoose == null)
                   {
                     Utilities.showToast("Please select a streaming Quality"),
@@ -158,7 +161,7 @@ class _ChangeSimulcastLayerOptionDialogState
                   {
                     Navigator.pop(context),
                     widget.track
-                        .setSimulcastLayer(valueChoose!.hmsSimulcastLayer)
+                        .setSimulcastLayer(valueChoose!),
                   }
               },
               child: Padding(

@@ -7,8 +7,6 @@ import 'package:hmssdk_flutter/src/service/platform_service.dart';
 ///[HMSRemoteVideoTrack] contains the remote peer video track information.
 class HMSRemoteVideoTrack extends HMSVideoTrack {
   bool isPlaybackAllowed;
-  List<HMSSimulcastLayerDefinition>? layerDefinitions;
-  HMSSimulcastLayer layer;
   HMSRemoteVideoTrack(
       {required bool isDegraded,
       required HMSTrackKind kind,
@@ -16,9 +14,7 @@ class HMSRemoteVideoTrack extends HMSVideoTrack {
       required String trackId,
       required String trackDescription,
       required bool isMute,
-      required this.isPlaybackAllowed,
-      required this.layer,
-      this.layerDefinitions})
+      required this.isPlaybackAllowed,})
       : super(
           isDegraded: isDegraded,
           kind: kind,
@@ -42,10 +38,7 @@ class HMSRemoteVideoTrack extends HMSVideoTrack {
         kind: HMSTrackKindValue.getHMSTrackKindFromName(map['track_kind']),
         isMute: map['track_mute'],
         isDegraded: map['is_degraded'],
-        isPlaybackAllowed: map['is_playback_allowed'],
-        layer:
-            HMSSimulcastLayerValue.getHMSSimulcastLayerFromName(map['layer']),
-        layerDefinitions: layerDefinitions.isEmpty?null:layerDefinitions);
+        isPlaybackAllowed: map['is_playback_allowed']);
     return track;
   }
 
@@ -79,5 +72,26 @@ class HMSRemoteVideoTrack extends HMSVideoTrack {
     } else {
       return HMSException.fromMap(result["error"]);
     }
+  }
+
+  Future<HMSSimulcastLayer> getLayer() async {
+    var result =
+        await PlatformService.invokeMethod(PlatformMethod.getLayer, arguments: {
+      "track_id": trackId,
+    });
+    return HMSSimulcastLayerValue.getHMSSimulcastLayerFromName(result);
+  }
+
+  Future<List<HMSSimulcastLayerDefinition>> getLayerDefinition() async {
+    var result = await PlatformService.invokeMethod(
+        PlatformMethod.getLayerDefinition,
+        arguments: {
+          "track_id": trackId,
+        });
+    List<HMSSimulcastLayerDefinition> layers = [];
+    for (Map map in result) {
+      layers.add(HMSSimulcastLayerDefinition.fromMap(map));
+    }
+    return layers;
   }
 }

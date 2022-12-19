@@ -89,14 +89,20 @@ class AudioTile extends StatelessWidget {
                               },
                             ));
                   },
-                  changeLayer: () {
+                  changeLayer: () async {
                     Navigator.pop(context);
                     HMSRemoteVideoTrack track =
                         peerTrackNode.track as HMSRemoteVideoTrack;
+                    List<HMSSimulcastLayerDefinition> layerDefinitions =
+                        await track.getLayerDefinition();
+                    HMSSimulcastLayer selectedLayer = await track.getLayer();
+                    if(layerDefinitions.isNotEmpty)
                     showDialog(
                         context: context,
-                        builder: (_) =>
-                            ChangeSimulcastLayerOptionDialog(track: track));
+                        builder: (_) => ChangeSimulcastLayerOptionDialog(
+                            layerDefinitions: layerDefinitions,
+                            selectedLayer: selectedLayer,
+                            track: track));
                   },
                   mute: mutePermission,
                   unMute: unMutePermission,

@@ -158,8 +158,10 @@ enum PlatformMethod {
   enterPipMode,
   isPipActive,
   isPipAvailable,
+  changeRoleOfPeersWithRoles,
   setSimulcastLayer,
-  changeRoleOfPeersWithRoles
+  getLayer,
+  getLayerDefinition
 }
 
 extension PlatformMethodValues on PlatformMethod {
@@ -373,6 +375,10 @@ extension PlatformMethodValues on PlatformMethod {
         return "set_simulcast_layer";
       case PlatformMethod.changeRoleOfPeersWithRoles:
         return "change_role_of_peers_with_roles";
+      case PlatformMethod.getLayer:
+        return "get_layer";
+      case PlatformMethod.getLayerDefinition:
+        return "get_layer_definition";
       default:
         return 'unknown';
     }
@@ -592,6 +598,10 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.setSimulcastLayer;
       case "change_role_of_peers_with_roles":
         return PlatformMethod.changeRoleOfPeersWithRoles;
+      case "get_layer":
+        return PlatformMethod.getLayer;
+      case "get_layer_definition":
+        return PlatformMethod.getLayerDefinition;
       default:
         return PlatformMethod.unknown;
     }

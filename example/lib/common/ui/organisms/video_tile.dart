@@ -59,7 +59,8 @@ class _VideoTileState extends State<VideoTile> {
     bool changeRolePermission =
         _meetingStore.localPeer?.role.permissions.changeRole ?? false;
     bool isSimulcastEnabled =
-        (_meetingStore.localPeer?.role.publishSettings?.simulcast?.video != null);
+        (_meetingStore.localPeer?.role.publishSettings?.simulcast?.video !=
+            null);
 
     return Semantics(
       label: "fl_${context.read<PeerTrackNode>().peer.name}_video_tile",
@@ -130,15 +131,24 @@ class _VideoTileState extends State<VideoTile> {
                                           },
                                         ));
                               },
-                              changeLayer: () {
+                              changeLayer: () async {
                                 Navigator.pop(context);
                                 HMSRemoteVideoTrack track =
                                     peerTrackNode.track as HMSRemoteVideoTrack;
-                                showDialog(
-                                    context: context,
-                                    builder: (_) =>
-                                        ChangeSimulcastLayerOptionDialog(
-                                            track: track));
+                                List<HMSSimulcastLayerDefinition>
+                                    layerDefinitions =
+                                    await track.getLayerDefinition();
+                                HMSSimulcastLayer selectedLayer =
+                                    await track.getLayer();
+                                if (layerDefinitions.isNotEmpty)
+                                  showDialog(
+                                      context: context,
+                                      builder: (_) =>
+                                          ChangeSimulcastLayerOptionDialog(
+                                              layerDefinitions:
+                                                  layerDefinitions,
+                                              selectedLayer: selectedLayer,
+                                              track: track));
                               },
                               mute: mutePermission,
                               unMute: unMutePermission,
