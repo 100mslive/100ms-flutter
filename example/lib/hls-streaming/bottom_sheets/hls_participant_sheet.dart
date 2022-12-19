@@ -26,7 +26,7 @@ class _HLSParticipantSheetState extends State<HLSParticipantSheet> {
     PeerTrackNode? peerTrackNode;
     try {
       peerTrackNode = _meetingStore.peerTracks
-          .firstWhere((element) => element.peer.peerId == peer.peerId);
+          .firstWhere((element) => element.uid == peer.peerId + "mainVideo");
     } catch (e) {
       peerTrackNode = null;
     }

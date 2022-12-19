@@ -1,7 +1,10 @@
+require 'json'
+
+sdkVersions = JSON.parse(File.read(File.join(__dir__, "../sdk-versions.json")))
 
 Pod::Spec.new do |s|
   s.name             = 'hmssdk_flutter'
-  s.version          = '1.0.0'
+  s.version          = sdkVersions["flutter"]
   s.summary          = 'The Flutter plugin for 100ms SDK'
   s.description      = <<-DESC
   A Flutter Project for 100ms SDK.
@@ -12,8 +15,8 @@ Pod::Spec.new do |s|
   s.source           = { :git => 'https://github.com/100mslive/100ms-flutter.git' }
   s.source_files = 'Classes/**/*'
   s.dependency 'Flutter'
-  s.dependency 'HMSSDK', '0.5.2'
-  s.dependency 'HMSBroadcastExtensionSDK', '0.0.5'
+  s.dependency "HMSSDK", sdkVersions["ios"]
+  s.dependency 'HMSBroadcastExtensionSDK', sdkVersions['iOSBroadcastExtension']
   s.platform = :ios, '12.0'
   s.ios.deployment_target  = '12.0'
   # Flutter.framework does not contain a i386 slice.

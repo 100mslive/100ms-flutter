@@ -644,12 +644,12 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             return
         }
 
-        var limitToRoles: [HMSRole]?
-        if let limitToRolesString = arguments["limit_to_roles"] as? [String] {
-            limitToRoles = hmsSDK?.roles.filter { limitToRolesString.contains($0.name) }
+        var ofRoles = [HMSRole]()
+        if let ofRolesString = arguments["of_roles"] as? [String] {
+            ofRoles = hmsSDK?.roles.filter { ofRolesString.contains($0.name) } ?? []
         }
 
-        hmsSDK?.changeRolesOfAllPeers(to: role, limitToRoles: limitToRoles) { _, error in
+        hmsSDK?.changeRolesOfAllPeers(to: role, limitToRoles: ofRoles) { _, error in
             if let error = error {
                 result(HMSErrorExtension.toDictionary(error))
             } else {

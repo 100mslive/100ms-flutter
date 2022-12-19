@@ -265,8 +265,10 @@ class _HLSMoreSettingsState extends State<HLSMoreSettings> {
                             letterSpacing: 0.25,
                             fontWeight: FontWeight.w600),
                       )),
-                  if (_meetingStore.localPeer?.role.permissions.changeRole ??
-                      false)
+                  if ((_meetingStore.localPeer?.role.permissions.mute ??
+                          false) &&
+                      (_meetingStore.localPeer?.role.permissions.unMute ??
+                          false))
                     ListTile(
                         horizontalTitleGap: 2,
                         onTap: () async {
@@ -315,8 +317,8 @@ class _HLSMoreSettingsState extends State<HLSMoreSettings> {
                               letterSpacing: 0.25,
                               fontWeight: FontWeight.w600),
                         )),
-                  if (!(_meetingStore.localPeer?.role.name.contains("hls-") ??
-                      true))
+                  if (_meetingStore.localPeer?.role.permissions.rtmpStreaming ??
+                      false)
                     Selector<MeetingStore, bool>(
                         selector: (_, meetingStore) =>
                             meetingStore.streamingType["rtmp"] ?? false,
@@ -371,8 +373,9 @@ class _HLSMoreSettingsState extends State<HLSMoreSettings> {
                                     fontWeight: FontWeight.w600),
                               ));
                         }),
-                  if (!(_meetingStore.localPeer?.role.name.contains("hls-") ??
-                      true))
+                  if (_meetingStore
+                          .localPeer?.role.permissions.browserRecording ??
+                      false)
                     Selector<MeetingStore, bool>(
                         selector: (_, meetingStore) =>
                             meetingStore.recordingType["browser"] ?? false,
@@ -414,8 +417,8 @@ class _HLSMoreSettingsState extends State<HLSMoreSettings> {
                                     fontWeight: FontWeight.w600),
                               ));
                         }),
-                  if (!(_meetingStore.localPeer?.role.name.contains("hls-") ??
-                      true))
+                  if (_meetingStore.localPeer?.role.permissions.hlsStreaming ??
+                      false)
                     Selector<MeetingStore, bool>(
                         selector: ((_, meetingStore) =>
                             meetingStore.hasHlsStarted),
@@ -575,26 +578,28 @@ class _HLSMoreSettingsState extends State<HLSMoreSettings> {
                             letterSpacing: 0.25,
                             fontWeight: FontWeight.w600),
                       )),
-                  ListTile(
-                      horizontalTitleGap: 2,
-                      onTap: () async {
-                        UtilityComponents.onEndRoomPressed(context);
-                      },
-                      contentPadding: EdgeInsets.zero,
-                      leading: SvgPicture.asset(
-                        "assets/icons/end_room.svg",
-                        fit: BoxFit.scaleDown,
-                        color: themeDefaultColor,
-                      ),
-                      title: Text(
-                        "End Room",
-                        semanticsLabel: "fl_end_room",
-                        style: GoogleFonts.inter(
-                            fontSize: 14,
-                            color: themeDefaultColor,
-                            letterSpacing: 0.25,
-                            fontWeight: FontWeight.w600),
-                      )),
+                  if (_meetingStore.localPeer?.role.permissions.endRoom ??
+                      false)
+                    ListTile(
+                        horizontalTitleGap: 2,
+                        onTap: () async {
+                          UtilityComponents.onEndRoomPressed(context);
+                        },
+                        contentPadding: EdgeInsets.zero,
+                        leading: SvgPicture.asset(
+                          "assets/icons/end_room.svg",
+                          fit: BoxFit.scaleDown,
+                          color: themeDefaultColor,
+                        ),
+                        title: Text(
+                          "End Room",
+                          semanticsLabel: "fl_end_room",
+                          style: GoogleFonts.inter(
+                              fontSize: 14,
+                              color: themeDefaultColor,
+                              letterSpacing: 0.25,
+                              fontWeight: FontWeight.w600),
+                        )),
                 ],
               ),
             )

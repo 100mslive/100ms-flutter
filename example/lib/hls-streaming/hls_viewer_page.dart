@@ -88,12 +88,7 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                               ? Container(
                                   height: MediaQuery.of(context).size.height,
                                   child: Center(
-                                    child: HLSPlayer(
-                                        streamUrl: (widget.streamUrl != null)
-                                            ? widget.streamUrl!
-                                            : context
-                                                .read<MeetingStore>()
-                                                .streamUrl),
+                                    child: HLSPlayer(),
                                   ),
                                 )
                               : Center(

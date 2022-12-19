@@ -238,7 +238,7 @@ packages:
       name: firebase_dynamic_links
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "5.0.8"
+    version: "5.0.9"
   firebase_dynamic_links_platform_interface:
     dependency: transitive
     description:
@@ -386,7 +386,7 @@ packages:
       name: intl
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.17.0"
+    version: "0.18.0"
   js:
     dependency: transitive
     description:
@@ -617,7 +617,7 @@ packages:
       name: provider
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "6.0.4"
+    version: "6.0.5"
   qr_code_scanner:
     dependency: "direct main"
     description:
@@ -666,7 +666,7 @@ packages:
       name: shared_preferences_linux
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.1"
+    version: "2.1.2"
   shared_preferences_macos:
     dependency: transitive
     description:
@@ -694,7 +694,7 @@ packages:
       name: shared_preferences_windows
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.1"
+    version: "2.1.2"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -895,7 +895,7 @@ packages:
       name: win32
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.1.2"
+    version: "3.1.3"
   xdg_directories:
     dependency: transitive
     description:

@@ -172,6 +172,8 @@ class MeetingStore extends ChangeNotifier
 
   bool lastVideoStatus = false;
 
+  double hlsAspectRatio = 16 / 9;
+
   Future<bool> join(String user, String roomUrl) async {
     List<String?>? token =
         await RoomService().getToken(user: user, room: roomUrl);
@@ -563,6 +565,8 @@ class MeetingStore extends ChangeNotifier
       required HMSTrackUpdate trackUpdate,
       required HMSPeer peer}) {
     log("onTrackUpdate-> track: ${track.toString()} peer: ${peer.name} update: ${trackUpdate.name}");
+    if (peer.role.name.contains("hls-")) return;
+
     if (!isSpeakerOn &&
         track.kind == HMSTrackKind.kHMSTrackKindAudio &&
         trackUpdate == HMSTrackUpdate.trackAdded) {
@@ -584,7 +588,8 @@ class MeetingStore extends ChangeNotifier
       notifyListeners();
     }
 
-    if (track.kind == HMSTrackKind.kHMSTrackKindAudio) {
+    if (track.kind == HMSTrackKind.kHMSTrackKindAudio &&
+        trackUpdate != HMSTrackUpdate.trackRemoved) {
       int index = peerTracks
           .indexWhere((element) => element.uid == peer.peerId + "mainVideo");
       if (index != -1) {
@@ -592,7 +597,6 @@ class MeetingStore extends ChangeNotifier
         peerTrackNode.audioTrack = track as HMSAudioTrack;
         peerTrackNode.notify();
       } else {
-        if (peer.role.name.contains("hls-")) return;
         peerTracks.add(new PeerTrackNode(
             peer: peer,
             uid: peer.peerId + "mainVideo",
@@ -603,7 +607,8 @@ class MeetingStore extends ChangeNotifier
       return;
     }
 
-    if (track.source == "REGULAR") {
+    if (track.source == "REGULAR" &&
+        trackUpdate != HMSTrackUpdate.trackRemoved) {
       int index = peerTracks
           .indexWhere((element) => element.uid == peer.peerId + "mainVideo");
       if (index != -1) {
@@ -614,7 +619,6 @@ class MeetingStore extends ChangeNotifier
           rearrangeTile(peerTrackNode, index);
         }
       } else {
-        if (peer.role.name.contains("hls-")) return;
         peerTracks.add(new PeerTrackNode(
             peer: peer,
             uid: peer.peerId + "mainVideo",
@@ -769,8 +773,7 @@ class MeetingStore extends ChangeNotifier
           .indexWhere((element) => element.uid == peer.peerId + "mainVideo");
     }
     if (index != -1) {
-      peerTracks[index].stats?.hmsLocalAudioStats = hmsLocalAudioStats;
-      peerTracks[index].notify();
+      peerTracks[index].setHMSLocalAudioStats(hmsLocalAudioStats);
     }
   }
 
@@ -788,8 +791,7 @@ class MeetingStore extends ChangeNotifier
           .indexWhere((element) => element.uid == peer.peerId + "mainVideo");
     }
     if (index != -1) {
-      peerTracks[index].stats?.hmsLocalVideoStats = hmsLocalVideoStats;
-      peerTracks[index].notify();
+      peerTracks[index].setHMSLocalVideoStats(hmsLocalVideoStats);
     }
   }
 
@@ -807,8 +809,7 @@ class MeetingStore extends ChangeNotifier
           .indexWhere((element) => element.uid == peer.peerId + "mainVideo");
     }
     if (index != -1) {
-      peerTracks[index].stats?.hmsRemoteAudioStats = hmsRemoteAudioStats;
-      peerTracks[index].notify();
+      peerTracks[index].setHMSRemoteAudioStats(hmsRemoteAudioStats);
     }
   }
 
@@ -826,8 +827,7 @@ class MeetingStore extends ChangeNotifier
           .indexWhere((element) => element.uid == peer.peerId + "mainVideo");
     }
     if (index != -1) {
-      peerTracks[index].stats?.hmsRemoteVideoStats = hmsRemoteVideoStats;
-      peerTracks[index].notify();
+      peerTracks[index].setHMSRemoteVideoStats(hmsRemoteVideoStats);
     }
   }
 
@@ -1287,13 +1287,20 @@ class MeetingStore extends ChangeNotifier
     }
   }
 
-  void setPIPVideoController(String streamUrl, bool reinitialise) {
+  void setPIPVideoController(bool reinitialise, {double? aspectRatio}) {
     if (hlsVideoController != null) {
       hlsVideoController!.dispose(forceDispose: true);
       hlsVideoController = null;
     }
+    if (aspectRatio != null) {
+      hlsAspectRatio = aspectRatio;
+    }
     PipFlutterPlayerConfiguration pipFlutterPlayerConfiguration =
         PipFlutterPlayerConfiguration(
+            //aspectRatio parameter can be used to set the player view based on the ratio selected from dashboard
+            //Stream aspectRatio can be selected from Dashboard->Templates->Destinations->Customise stream video output->Video aspect ratio
+            //The selected aspectRatio can be set here to get expected stream resolution
+            aspectRatio: hlsAspectRatio,
             allowedScreenSleep: false,
             fit: BoxFit.contain,
             showPlaceholderUntilPlay: true,
@@ -1333,9 +1340,9 @@ class MeetingStore extends ChangeNotifier
     if (reinitialise) notifyListeners();
   }
 
-  void changeRoleOfPeersWithRoles(HMSRole toRole, List<HMSRole>? limitToRoles) {
+  void changeRoleOfPeersWithRoles(HMSRole toRole, List<HMSRole> ofRoles) {
     _hmsSDKInteractor.changeRoleOfPeersWithRoles(
-        toRole: toRole, limitToRoles: limitToRoles);
+        toRole: toRole, ofRoles: ofRoles, hmsActionResultListener: this);
   }
 
 //Get onSuccess or onException callbacks for HMSActionResultListenerMethod
@@ -1563,7 +1570,7 @@ class MeetingStore extends ChangeNotifier
         Utilities.showToast("Camera switching failed");
         break;
       case HMSActionResultListenerMethod.changeRoleOfPeersWithRoles:
-        Utilities.showToast("Change Roles of All Peers failed");
+        Utilities.showToast("Change role failed");
         break;
     }
     notifyListeners();

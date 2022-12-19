@@ -1,3 +1,60 @@
+## 1.1.0 - 2022-12-17
+
+### Added
+
+- Added support for Bulk Role Change
+
+  Bulk Role Change is used when you want to convert all Roles from a list of Roles, to another Role.
+
+  For example, if peers join a room with a _Waiting_ Role and now you want to change all these peers to _Viewer_ Role then use the `changeRoleOfPeersWithRoles` API.
+
+  ```dart
+  // fetch all available Roles in the room
+  List<HMSRole> roles = await hmsSDK.getRoles();
+
+  // get the Host Role object
+  HMSRole toHostRole = roles.firstWhere((element) => element.name == "host");
+
+  // get list of Roles to be updated - in this case "Waiting" and "Guest" Roles
+  roles.retainWhere((element) => ((element.name == "waiting") || (element.name == "guest")));
+
+  // now perform Role Change of all peers in "Waiting" and "Guest" Roles to the "Host" Role
+  hmsSDK.changeRoleOfPeersWithRoles(
+      toRole: toHostRole,
+      ofRoles: roles,
+      hmsActionResultListener: hmsActionResultListener);
+  ```
+
+  For More Information, refer: https://www.100ms.live/docs/flutter/v2/features/change-role
+
+- Added Switch Audio Output APIs on iOS
+
+  Audio Output Routing is helpful when users want to switch output to a connected device other than the default one. This functionality is already available on Android.
+
+  ```dart
+  hmsSDK.switchAudioOutput(audioDevice: HMSAudioDevice.SPEAKER_PHONE);
+  ```
+  For More Information, refer: https://www.100ms.live/docs/flutter/v2/features/audio-output-routing
+
+
+### Deprecated
+
+- Deprecated `changeRole` API in favour of `changeRoleOfPeer`
+
+  No change in functionality or method signature.
+
+
+### Fixed
+
+- Microphone not getting captured on Role Change from a non-publishing to publishing Role on iOS
+- Corrected an issue where on iOS a default Audio Mixer was getting created if Track Settings was passed while building the HMSSDK instance
+
+
+Updated to Native Android SDK 2.5.4 & Native iOS SDK 0.5.3
+
+Full Changelog: [1.0.0...1.1.0](https://github.com/100mslive/100ms-flutter/compare/1.0.0...1.1.0)
+
+
 ## 1.0.0 - 2022-12-09
 
 ### Added
