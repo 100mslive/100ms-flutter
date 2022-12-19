@@ -180,6 +180,9 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         case "set_playback_allowed_for_track":
             setPlaybackAllowedForTrack(call, result)
 
+        case "set_simulcast_layer","get_layer","get_layer_definition":
+            HMSRemoteVideoTrackExtension.remoteVideoTrackActions(call,result,hmsSDK!)
+
         default:
             result(FlutterMethodNotImplemented)
         }

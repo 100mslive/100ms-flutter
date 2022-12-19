@@ -19,6 +19,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import live.hms.hmssdk_flutter.methods.HMSPipAction
+import live.hms.hmssdk_flutter.methods.HMSRemoteVideoTrackAction
 import live.hms.hmssdk_flutter.methods.HMSSessionMetadataAction
 import live.hms.hmssdk_flutter.views.HMSVideoViewFactory
 import live.hms.video.audio.HMSAudioManager.*
@@ -180,6 +181,9 @@ class HmssdkFlutterPlugin :
             }
             "enter_pip_mode", "is_pip_active", "is_pip_available" -> {
                 HMSPipAction.pipActions(call, result, this.activity)
+            }
+            "set_simulcast_layer","get_layer","get_layer_definition" -> {
+                HMSRemoteVideoTrackAction.remoteVideoTrackActions(call,result,hmssdk!!)
             }
             else -> {
                 result.notImplemented()

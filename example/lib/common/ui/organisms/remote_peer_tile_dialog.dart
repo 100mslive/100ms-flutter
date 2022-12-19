@@ -12,23 +12,26 @@ class RemotePeerTileDialog extends StatefulWidget {
   final bool unMute;
   final bool removeOthers;
   final bool roles;
+  final bool simulcast;
   final Function(bool, bool) changeVideoTrack;
   final Function(bool, bool) changeAudioTrack;
   final Function() removePeer;
   final Function() changeRole;
-  const RemotePeerTileDialog({
-    required this.isVideoMuted,
-    required this.isAudioMuted,
-    required this.changeVideoTrack,
-    required this.changeAudioTrack,
-    required this.peerName,
-    required this.removePeer,
-    required this.changeRole,
-    required this.mute,
-    required this.unMute,
-    required this.removeOthers,
-    required this.roles,
-  });
+  final Function() changeLayer;
+  const RemotePeerTileDialog(
+      {required this.isVideoMuted,
+      required this.isAudioMuted,
+      required this.changeVideoTrack,
+      required this.changeAudioTrack,
+      required this.peerName,
+      required this.removePeer,
+      required this.changeRole,
+      required this.mute,
+      required this.unMute,
+      required this.removeOthers,
+      required this.roles,
+      required this.simulcast,
+      required this.changeLayer});
 
   @override
   _RemotePeerTileDialogState createState() => _RemotePeerTileDialogState();
@@ -158,6 +161,30 @@ class _RemotePeerTileDialogState extends State<RemotePeerTileDialog> {
                       ),
                       Text(
                         "Change Role",
+                        style: GoogleFonts.inter(color: iconColor),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            if (widget.simulcast)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 20.0),
+                child: GestureDetector(
+                  onTap: () {
+                    widget.changeLayer();
+                  },
+                  child: Row(
+                    children: [
+                      SvgPicture.asset(
+                        "assets/icons/layers.svg",
+                        color: iconColor,
+                      ),
+                      SizedBox(
+                        width: 16,
+                      ),
+                      Text(
+                        "Streaming Quality",
                         style: GoogleFonts.inter(color: iconColor),
                       )
                     ],

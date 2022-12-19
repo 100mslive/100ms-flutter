@@ -21,13 +21,8 @@ class  HMSPublishSettingsExtension {
         if let allowed = publishSettings.allowed {
             dict["allowed"] = allowed
         }
-
-        if let videoSimulcastLayer: HMSSimulcastSettingsPolicy =  publishSettings.simulcast?.video {
-            dict["video_simul_cast"] = HMSSimulcastSettingsPolicyExtension.toDictionary(videoSimulcastLayer)
-        }
-
-        if let screenSimulcastLayer: HMSSimulcastSettingsPolicy =  publishSettings.simulcast?.screen {
-            dict["screen_simul_cast"] = HMSSimulcastSettingsPolicyExtension.toDictionary(screenSimulcastLayer)
+        if let simulcast =  publishSettings.simulcast {
+            dict["simulcast"] = HMSSimulcastSettingsExtension.toDictionary(simulcast)
         }
 
         return dict
