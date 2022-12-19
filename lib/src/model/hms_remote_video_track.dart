@@ -45,7 +45,7 @@ class HMSRemoteVideoTrack extends HMSVideoTrack {
         isPlaybackAllowed: map['is_playback_allowed'],
         layer:
             HMSSimulcastLayerValue.getHMSSimulcastLayerFromName(map['layer']),
-        layerDefinitions: layerDefinitions);
+        layerDefinitions: layerDefinitions.isEmpty?null:layerDefinitions);
     return track;
   }
 

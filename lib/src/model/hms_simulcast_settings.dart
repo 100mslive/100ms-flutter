@@ -8,10 +8,10 @@ class HMSSimulcastSettings {
 
   factory HMSSimulcastSettings.fromMap(Map map) {
     return HMSSimulcastSettings(
-        video: map.containsKey("video")
+        video: map.containsKey("video") && map["video"].isNotEmpty
             ? HMSSimulcastSettingsPolicy.fromMap(map["video"])
             : null,
-        screen: map.containsKey("screen")
+        screen: map.containsKey("screen")  && map["screen"].isNotEmpty
             ? HMSSimulcastSettingsPolicy.fromMap(map["screen"])
             : null);
   }
