@@ -652,7 +652,7 @@ class MeetingStore extends ChangeNotifier
         addMessage(message);
         isNewMessageReceived = true;
         Utilities.showNotification(
-            "New message from ${message.sender?.name??""}", "message");
+            "New message from ${message.sender?.name ?? ""}", "message");
         notifyListeners();
         break;
     }
@@ -1598,7 +1598,7 @@ class MeetingStore extends ChangeNotifier
         notifyListeners();
       }
 
-      if (lastVideoStatus) {
+      if (lastVideoStatus && !reconnecting) {
         switchVideo();
         lastVideoStatus = false;
       }
