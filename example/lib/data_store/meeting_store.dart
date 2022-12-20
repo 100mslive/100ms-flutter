@@ -174,6 +174,8 @@ class MeetingStore extends ChangeNotifier
 
   double hlsAspectRatio = 16 / 9;
 
+  bool showNotification = false;
+
   Future<bool> join(String user, String roomUrl) async {
     List<String?>? token =
         await RoomService().getToken(user: user, room: roomUrl);
@@ -635,6 +637,7 @@ class MeetingStore extends ChangeNotifier
   void onHMSError({required HMSException error}) {
     log("onHMSError-> error: ${error.message}");
     this.hmsException = error;
+    Utilities.showNotification(error.message ?? "", "error");
     notifyListeners();
   }
 
@@ -648,6 +651,8 @@ class MeetingStore extends ChangeNotifier
       default:
         addMessage(message);
         isNewMessageReceived = true;
+        Utilities.showNotification(
+            "New message from ${message.sender?.name??""}", "message");
         notifyListeners();
         break;
     }
@@ -953,9 +958,11 @@ class MeetingStore extends ChangeNotifier
     switch (update) {
       case HMSPeerUpdate.peerJoined:
         addPeer(peer);
+        Utilities.showNotification("${peer.name} joined", "peer-joined");
         break;
 
       case HMSPeerUpdate.peerLeft:
+        Utilities.showNotification("${peer.name} left", "peer-left");
         int index = peerTracks.indexWhere(
             (leftPeer) => leftPeer.uid == peer.peerId + "mainVideo");
         if (index != -1) {
@@ -995,6 +1002,9 @@ class MeetingStore extends ChangeNotifier
         if (index != -1) {
           PeerTrackNode peerTrackNode = peerTracks[index];
           peerTrackNode.peer = peer;
+          if (peer.metadata?.contains("\"isHandRaised\":true") ?? false)
+            Utilities.showNotification(
+                "${peer.name} raised hand", "hand-raise");
           peerTrackNode.notify();
         }
         updatePeerAt(peer);
