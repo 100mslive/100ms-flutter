@@ -1,6 +1,7 @@
 package live.hms.hmssdk_flutter
 
 import android.util.Log
+import live.hms.video.connection.degredation.QualityLimitationReasons
 import live.hms.video.connection.stats.HMSLocalAudioStats
 import live.hms.video.connection.stats.HMSLocalVideoStats
 import live.hms.video.connection.stats.HMSRemoteAudioStats
@@ -82,8 +83,20 @@ class HMSRtcStatsExtension {
             hmsLocaVideoStatsMap["round_trip_time"] = hmsLocalVideoStats.roundTripTime
             hmsLocaVideoStatsMap["frame_rate"] = hmsLocalVideoStats.frameRate
             hmsLocaVideoStatsMap["resolution"] = HMSVideoResolutionExtension.toDictionary(hmsLocalVideoStats.resolution)
+            hmsLocaVideoStatsMap["quality_limitation_reason"] = toDictionary(hmsLocalVideoStats.qualityLimitationReason)
             args.put("local_video_stats",hmsLocaVideoStatsMap)
             return args;
+        }
+
+        fun toDictionary(qualityLimitationReason: QualityLimitationReasons):HashMap<String,Any?>?{
+            val qualityLimitationReasonMap = HashMap<String,Any?>()
+                qualityLimitationReasonMap["band_width"] = qualityLimitationReason.bandWidth
+            qualityLimitationReasonMap["cpu"] = qualityLimitationReason.cpu
+            qualityLimitationReasonMap["none"] = qualityLimitationReason.none
+            qualityLimitationReasonMap["other"] = qualityLimitationReason.other
+            qualityLimitationReasonMap["quality_limitation_resolution_changes"] = qualityLimitationReason.qualityLimitationResolutionChanges
+            qualityLimitationReasonMap["reason"] = qualityLimitationReason.reason.name
+            return qualityLimitationReasonMap
         }
 
     }
