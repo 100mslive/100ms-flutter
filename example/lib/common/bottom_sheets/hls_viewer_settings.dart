@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/hls_aspect_ratio_options.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
-import 'package:hmssdk_flutter_example/hls-streaming/bottom_sheets/hls_participant_sheet.dart';
+import 'package:hmssdk_flutter_example/common/bottom_sheets/hls_participant_sheet.dart';
 import 'package:hmssdk_flutter_example/data_store/meeting_store.dart';
 import 'package:provider/provider.dart';
 
