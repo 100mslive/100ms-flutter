@@ -157,6 +157,12 @@ class _VideoTileState extends State<VideoTile> {
                               simulcast: isSimulcastEnabled &&
                                   (!(peerTrackNode.track as HMSRemoteVideoTrack)
                                       .isMute),
+                              pinTile: peerTrackNode.pinTile,
+                              changePinTileStatus: () {
+                                _meetingStore
+                                    .changePinTileStatus(peerTrackNode);
+                                Navigator.pop(context);
+                              },
                             ));
                   else
                     showDialog(

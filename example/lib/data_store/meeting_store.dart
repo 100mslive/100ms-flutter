@@ -652,7 +652,7 @@ class MeetingStore extends ChangeNotifier
         addMessage(message);
         isNewMessageReceived = true;
         Utilities.showNotification(
-            "New message from ${message.sender?.name??""}", "message");
+            "New message from ${message.sender?.name ?? ""}", "message");
         notifyListeners();
         break;
     }
@@ -1353,6 +1353,17 @@ class MeetingStore extends ChangeNotifier
   void changeRoleOfPeersWithRoles(HMSRole toRole, List<HMSRole> ofRoles) {
     _hmsSDKInteractor.changeRoleOfPeersWithRoles(
         toRole: toRole, ofRoles: ofRoles, hmsActionResultListener: this);
+  }
+
+  void changePinTileStatus(PeerTrackNode peerTrackNode) {
+    peerTrackNode.pinTile = !peerTrackNode.pinTile;
+    peerTracks.remove(peerTrackNode);
+    if (peerTrackNode.pinTile) {
+      peerTracks.insert(0, peerTrackNode);
+    } else {
+      peerTracks.add(peerTrackNode);
+    }
+    notifyListeners();
   }
 
 //Get onSuccess or onException callbacks for HMSActionResultListenerMethod

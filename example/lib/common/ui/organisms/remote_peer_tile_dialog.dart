@@ -13,11 +13,13 @@ class RemotePeerTileDialog extends StatefulWidget {
   final bool removeOthers;
   final bool roles;
   final bool simulcast;
+  final bool pinTile;
   final Function(bool, bool) changeVideoTrack;
   final Function(bool, bool) changeAudioTrack;
   final Function() removePeer;
   final Function() changeRole;
   final Function() changeLayer;
+  final Function() changePinTileStatus;
   const RemotePeerTileDialog(
       {required this.isVideoMuted,
       required this.isAudioMuted,
@@ -31,7 +33,9 @@ class RemotePeerTileDialog extends StatefulWidget {
       required this.removeOthers,
       required this.roles,
       required this.simulcast,
-      required this.changeLayer});
+      required this.changeLayer,
+      required this.pinTile,
+      required this.changePinTileStatus});
 
   @override
   _RemotePeerTileDialogState createState() => _RemotePeerTileDialogState();
@@ -191,6 +195,29 @@ class _RemotePeerTileDialogState extends State<RemotePeerTileDialog> {
                   ),
                 ),
               ),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 20.0),
+              child: GestureDetector(
+                onTap: () {
+                  widget.changePinTileStatus();
+                },
+                child: Row(
+                  children: [
+                    SvgPicture.asset(
+                      "assets/icons/pin.svg",
+                      color: iconColor,
+                    ),
+                    SizedBox(
+                      width: 16,
+                    ),
+                    Text(
+                      widget.pinTile ? "Unpin Tile" : "Pin Tile",
+                      style: GoogleFonts.inter(color: iconColor),
+                    )
+                  ],
+                ),
+              ),
+            ),
           ],
         ),
       ),
