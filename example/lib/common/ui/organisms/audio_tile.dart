@@ -52,63 +52,70 @@ class AudioTile extends StatelessWidget {
           showDialog(
               context: context,
               builder: (_) => RemotePeerTileDialog(
-                  isAudioMuted: peerTrackNode.audioTrack?.isMute ?? true,
-                  isVideoMuted: peerTrackNode.track == null
-                      ? true
-                      : peerTrackNode.track!.isMute,
-                  peerName: peerNode.name,
-                  changeVideoTrack: (mute, isVideoTrack) {
-                    Navigator.pop(context);
-                    _meetingStore.changeTrackState(peerTrackNode.track!, mute);
-                  },
-                  changeAudioTrack: (mute, isAudioTrack) {
-                    Navigator.pop(context);
-                    _meetingStore.changeTrackState(
-                        peerTrackNode.audioTrack!, mute);
-                  },
-                  removePeer: () async {
-                    Navigator.pop(context);
-                    var peer =
-                        await _meetingStore.getPeer(peerId: peerNode.peerId);
-                    _meetingStore.removePeerFromRoom(peer!);
-                  },
-                  changeRole: () {
-                    Navigator.pop(context);
-                    showDialog(
-                        context: context,
-                        builder: (_) => ChangeRoleOptionDialog(
-                              peerName: peerNode.name,
-                              roles: _meetingStore.roles,
-                              peer: peerNode,
-                              changeRole: (role, forceChange) {
-                                Navigator.pop(context);
-                                _meetingStore.changeRoleOfPeer(
-                                    peer: peerNode,
-                                    roleName: role,
-                                    forceChange: forceChange);
-                              },
-                            ));
-                  },
-                  changeLayer: () async {
-                    Navigator.pop(context);
-                    HMSRemoteVideoTrack track =
-                        peerTrackNode.track as HMSRemoteVideoTrack;
-                    List<HMSSimulcastLayerDefinition> layerDefinitions =
-                        await track.getLayerDefinition();
-                    HMSSimulcastLayer selectedLayer = await track.getLayer();
-                    if(layerDefinitions.isNotEmpty)
-                    showDialog(
-                        context: context,
-                        builder: (_) => ChangeSimulcastLayerOptionDialog(
-                            layerDefinitions: layerDefinitions,
-                            selectedLayer: selectedLayer,
-                            track: track));
-                  },
-                  mute: mutePermission,
-                  unMute: unMutePermission,
-                  removeOthers: removePeerPermission,
-                  roles: changeRolePermission,
-                  simulcast: false));
+                    isAudioMuted: peerTrackNode.audioTrack?.isMute ?? true,
+                    isVideoMuted: peerTrackNode.track == null
+                        ? true
+                        : peerTrackNode.track!.isMute,
+                    peerName: peerNode.name,
+                    changeVideoTrack: (mute, isVideoTrack) {
+                      Navigator.pop(context);
+                      _meetingStore.changeTrackState(
+                          peerTrackNode.track!, mute);
+                    },
+                    changeAudioTrack: (mute, isAudioTrack) {
+                      Navigator.pop(context);
+                      _meetingStore.changeTrackState(
+                          peerTrackNode.audioTrack!, mute);
+                    },
+                    removePeer: () async {
+                      Navigator.pop(context);
+                      var peer =
+                          await _meetingStore.getPeer(peerId: peerNode.peerId);
+                      _meetingStore.removePeerFromRoom(peer!);
+                    },
+                    changeRole: () {
+                      Navigator.pop(context);
+                      showDialog(
+                          context: context,
+                          builder: (_) => ChangeRoleOptionDialog(
+                                peerName: peerNode.name,
+                                roles: _meetingStore.roles,
+                                peer: peerNode,
+                                changeRole: (role, forceChange) {
+                                  Navigator.pop(context);
+                                  _meetingStore.changeRoleOfPeer(
+                                      peer: peerNode,
+                                      roleName: role,
+                                      forceChange: forceChange);
+                                },
+                              ));
+                    },
+                    changeLayer: () async {
+                      Navigator.pop(context);
+                      HMSRemoteVideoTrack track =
+                          peerTrackNode.track as HMSRemoteVideoTrack;
+                      List<HMSSimulcastLayerDefinition> layerDefinitions =
+                          await track.getLayerDefinition();
+                      HMSSimulcastLayer selectedLayer = await track.getLayer();
+                      if (layerDefinitions.isNotEmpty)
+                        showDialog(
+                            context: context,
+                            builder: (_) => ChangeSimulcastLayerOptionDialog(
+                                layerDefinitions: layerDefinitions,
+                                selectedLayer: selectedLayer,
+                                track: track));
+                    },
+                    mute: mutePermission,
+                    unMute: unMutePermission,
+                    removeOthers: removePeerPermission,
+                    roles: changeRolePermission,
+                    simulcast: false,
+                    pinTile: peerTrackNode.pinTile,
+                    changePinTileStatus: () {
+                      _meetingStore.changePinTileStatus(peerTrackNode);
+                      Navigator.pop(context);
+                    },
+                  ));
         else
           showDialog(
               context: context,
