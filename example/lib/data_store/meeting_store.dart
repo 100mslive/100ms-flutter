@@ -1359,7 +1359,7 @@ class MeetingStore extends ChangeNotifier
     peerTrackNode.pinTile = !peerTrackNode.pinTile;
     peerTracks.remove(peerTrackNode);
     if (peerTrackNode.pinTile) {
-      peerTracks.insert(0, peerTrackNode);
+      peerTracks.insert(screenShareCount, peerTrackNode);
     } else {
       peerTracks.add(peerTrackNode);
     }
