@@ -182,8 +182,8 @@ class HmssdkFlutterPlugin :
             "enter_pip_mode", "is_pip_active", "is_pip_available" -> {
                 HMSPipAction.pipActions(call, result, this.activity)
             }
-            "set_simulcast_layer","get_layer","get_layer_definition" -> {
-                HMSRemoteVideoTrackAction.remoteVideoTrackActions(call,result,hmssdk!!)
+            "set_simulcast_layer", "get_layer", "get_layer_definition" -> {
+                HMSRemoteVideoTrackAction.remoteVideoTrackActions(call, result, hmssdk!!)
             }
             else -> {
                 result.notImplemented()

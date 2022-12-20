@@ -4,8 +4,6 @@ import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import live.hms.hmssdk_flutter.HMSSimulcastLayerDefinitionExtension
 import live.hms.hmssdk_flutter.HMSSimulcastLayerExtension
-import live.hms.video.media.settings.HMSLayer
-import live.hms.video.media.settings.HMSSimulcastLayerDefinition
 import live.hms.video.media.tracks.HMSRemoteVideoTrack
 import live.hms.video.sdk.HMSSDK
 import live.hms.video.sdk.models.HMSRoom
@@ -13,16 +11,16 @@ import live.hms.video.utils.HmsUtilities
 
 class HMSRemoteVideoTrackAction {
 
-    companion object{
-        fun remoteVideoTrackActions(call: MethodCall, result: MethodChannel.Result, hmssdk: HMSSDK){
-            when(call.method){
-                "set_simulcast_layer" -> setSimulcastLayer(call,result,hmssdk)
-                "get_layer" -> getLayer(call,result,hmssdk)
-                "get_layer_definition" -> getLayerDefinition(call,result,hmssdk)
+    companion object {
+        fun remoteVideoTrackActions(call: MethodCall, result: MethodChannel.Result, hmssdk: HMSSDK) {
+            when (call.method) {
+                "set_simulcast_layer" -> setSimulcastLayer(call, result, hmssdk)
+                "get_layer" -> getLayer(call, result, hmssdk)
+                "get_layer_definition" -> getLayerDefinition(call, result, hmssdk)
             }
         }
 
-        private fun setSimulcastLayer(call: MethodCall, result: MethodChannel.Result,hmssdk: HMSSDK) {
+        private fun setSimulcastLayer(call: MethodCall, result: MethodChannel.Result, hmssdk: HMSSDK) {
             val trackId = call.argument<String>("track_id")
             val simulcastLayer: String? = call.argument<String>("layer")
 
@@ -54,28 +52,28 @@ class HMSRemoteVideoTrackAction {
             }
         }
 
-        private fun getLayer(call: MethodCall, result: MethodChannel.Result,hmssdk: HMSSDK) {
+        private fun getLayer(call: MethodCall, result: MethodChannel.Result, hmssdk: HMSSDK) {
             val trackId = call.argument<String>("track_id")
-            val room : HMSRoom? = hmssdk.getRoom()
-            if(trackId == null || room == null){
+            val room: HMSRoom? = hmssdk.getRoom()
+            if (trackId == null || room == null) {
                 result.success(null)
             }
             val track: HMSRemoteVideoTrack? = HmsUtilities.getVideoTrack(trackId!!, room!!) as HMSRemoteVideoTrack?
-            if(track != null){
+            if (track != null) {
                 result.success(HMSSimulcastLayerExtension.getStringFromLayer(track.getLayer()))
             }
             result.success(null)
         }
 
-        private fun getLayerDefinition(call: MethodCall, result: MethodChannel.Result,hmssdk: HMSSDK){
+        private fun getLayerDefinition(call: MethodCall, result: MethodChannel.Result, hmssdk: HMSSDK) {
             val trackId = call.argument<String>("track_id")
-            val room : HMSRoom? = hmssdk.getRoom()
-            if(trackId == null || room == null){
+            val room: HMSRoom? = hmssdk.getRoom()
+            if (trackId == null || room == null) {
                 result.success(null)
             }
             val track: HMSRemoteVideoTrack? = HmsUtilities.getVideoTrack(trackId!!, room!!) as HMSRemoteVideoTrack?
             var hashMap = ArrayList<HashMap<String, Any?>>()
-            if (track != null){
+            if (track != null) {
                 track?.getLayerDefinition()?.forEach {
                     hashMap.add(HMSSimulcastLayerDefinitionExtension.toDictionary(it))
                 }
