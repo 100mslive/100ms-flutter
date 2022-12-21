@@ -1,5 +1,7 @@
 - Added support for Simulcast
 
+- Migrated from SurfaceViewRenderer to HMSVideoView on Android
+
 - Added options to Enable/Disable Notifications in Room
 
 
