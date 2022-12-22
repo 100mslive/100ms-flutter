@@ -23,8 +23,10 @@ Widget hlsGridView(
     required bool isPortrait,
     required Size size}) {
   return GridView.builder(
+      cacheExtent: 0,
       shrinkWrap: true,
       itemCount: itemCount,
+      addAutomaticKeepAlives: false,
       scrollDirection: Axis.horizontal,
       physics: PageScrollPhysics(),
       itemBuilder: (context, index) {

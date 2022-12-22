@@ -28,24 +28,26 @@ class HMSVideoView extends StatelessWidget {
   final ScaleType scaleType;
   final bool setMirror;
   final bool addVideoViewListener;
-  HMSVideoView({
-    Key? key,
-    required this.track,
-    this.setMirror = false,
-    this.matchParent = true,
-    this.scaleType = ScaleType.SCALE_ASPECT_FIT,
-    this.addVideoViewListener = false
-  }) : super(key: key);
+
+  HMSVideoView(
+      {Key? key,
+      required this.track,
+      this.setMirror = false,
+      this.matchParent = true,
+      this.scaleType = ScaleType.SCALE_ASPECT_FIT,
+      this.addVideoViewListener = false,
+      })
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return _PlatformView(
-        track: track,
-        matchParent: matchParent,
-        setMirror: setMirror,
-        scaleType: scaleType,
-        addVideoViewListener: addVideoViewListener,
-        );
+      track: track,
+      matchParent: matchParent,
+      setMirror: setMirror,
+      scaleType: scaleType,
+      addVideoViewListener: addVideoViewListener,
+    );
   }
 }
 

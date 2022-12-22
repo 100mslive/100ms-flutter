@@ -1,4 +1,6 @@
 //Package Imports
+import 'dart:developer';
+
 import 'package:flutter/foundation.dart';
 
 //Project Imports
@@ -15,17 +17,19 @@ class PeerTrackNode extends ChangeNotifier {
   RTCStats? stats;
   int audioLevel;
   bool pinTile;
+  bool isFirstFrameRendered;
 
   PeerTrackNode(
       {required this.peer,
       this.track,
       this.audioTrack,
       required this.uid,
-      this.isOffscreen = true,
+      this.isOffscreen = false,
       this.networkQuality = -1,
       this.stats,
       this.audioLevel = -1,
-      this.pinTile = false});
+      this.pinTile = false,
+      this.isFirstFrameRendered = false});
 
   @override
   String toString() {
@@ -83,6 +87,14 @@ class PeerTrackNode extends ChangeNotifier {
 
   void setHMSLocalAudioStats(HMSLocalAudioStats hmsLocalAudioStats) {
     stats?.hmsLocalAudioStats = hmsLocalAudioStats;
+    if (!this.isOffscreen) {
+      notify();
+    }
+  }
+
+  void setFirstFrameRendered(bool isFirstFrameRendered) {
+    log("onFirstFrame rendered set : $isFirstFrameRendered");
+    this.isFirstFrameRendered = isFirstFrameRendered;
     if (!this.isOffscreen) {
       notify();
     }

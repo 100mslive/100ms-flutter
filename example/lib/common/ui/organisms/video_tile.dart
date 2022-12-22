@@ -69,6 +69,7 @@ class _VideoTileState extends State<VideoTile> {
           if (mounted) {
             Provider.of<PeerTrackNode>(context, listen: false)
                 .setOffScreenStatus(true);
+            context.read<PeerTrackNode>().setFirstFrameRendered(false);
           }
         },
         onFocusGained: () {

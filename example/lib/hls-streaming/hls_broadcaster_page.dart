@@ -16,7 +16,7 @@ import 'package:hmssdk_flutter_example/enum/meeting_mode.dart';
 import 'package:hmssdk_flutter_example/common/bottom_sheets/hls_start_bottom_sheet.dart';
 import 'package:hmssdk_flutter_example/common/bottom_sheets/hls_message.dart';
 import 'package:hmssdk_flutter_example/common/bottom_sheets/hls_more_settings.dart';
-import 'package:hmssdk_flutter_example/hls-streaming/meeting_mode/hls_grid_view.dart';
+import 'package:hmssdk_flutter_example/common/ui/organisms/hls_grid_view.dart';
 import 'package:hmssdk_flutter_example/common/bottom_sheets/hls_participant_sheet.dart';
 import 'package:hmssdk_flutter_example/hls-streaming/util/hls_subtitle_text.dart';
 import 'package:hmssdk_flutter_example/hls-streaming/util/hls_title_text.dart';

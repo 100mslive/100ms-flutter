@@ -1387,6 +1387,7 @@ class MeetingStore extends ChangeNotifier
         isScreenShareOn = false;
         isAudioShareStarted = false;
         _hmsSDKInteractor.removeUpdateListener(this);
+        _hmsSDKInteractor.removeVideoViewStateChangeListener(this);
         setLandscapeLock(false);
         notifyListeners();
         break;
@@ -1662,7 +1663,13 @@ class MeetingStore extends ChangeNotifier
 
   @override
   void onFirstFrameRendered({required String trackId}) {
-    log("onFirstFrameRendered called");
+    if (this.peerTracks.isNotEmpty) {
+      PeerTrackNode node = peerTracks.firstWhere(
+        (element) => element.track?.trackId == trackId,
+      );
+      node.setFirstFrameRendered(true);
+      log("onFirstFrameRendered called $trackId");
+    }
   }
 
   @override
@@ -1670,6 +1677,6 @@ class MeetingStore extends ChangeNotifier
       {required String trackId,
       required int newWidth,
       required int newHeight}) {
-    log("onFirstFrameRendered called");
+    log("onResolutionChanged called");
   }
 }

@@ -3,6 +3,9 @@ package live.hms.hmssdk_flutter.views
 import android.content.Context
 import android.view.LayoutInflater
 import android.widget.FrameLayout
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import live.hms.hmssdk_flutter.HmssdkFlutterPlugin
 import live.hms.hmssdk_flutter.R
 import live.hms.video.media.tracks.HMSVideoTrack
@@ -25,7 +28,6 @@ class HMSVideoView(
         val inflater =
             getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val view = inflater.inflate(R.layout.hms_video_view, this)
-
         hmsVideoView = view.findViewById(R.id.hmsVideoView)
         hmsVideoView.setEnableHardwareScaler(false)
         hmsVideoView.setMirror(setMirror)
@@ -39,7 +41,6 @@ class HMSVideoView(
     }
 
     fun onDisposeCalled(){
-        super.onDetachedFromWindow()
         hmsVideoView.removeTrack()
     }
 
@@ -60,7 +61,9 @@ class HMSVideoView(
         hashMap["event_name"] = "on_first_frame_rendered"
         data["track_id"] = track.trackId
         hashMap["data"] = data
-        HmssdkFlutterPlugin.hmssdkFlutterPlugin?.videoViewSink?.success(hashMap)
+        CoroutineScope(Dispatchers.Main).launch {
+            HmssdkFlutterPlugin.hmssdkFlutterPlugin?.videoViewSink?.success(hashMap)
+        }
     }
 
     override fun onResolutionChange(newWidth: Int, newHeight: Int) {
@@ -72,6 +75,8 @@ class HMSVideoView(
         data["new_width"] = newWidth
         data["new_height"] = newHeight
         hashMap["data"] = data
-        HmssdkFlutterPlugin.hmssdkFlutterPlugin?.videoViewSink?.success(hashMap)
+        CoroutineScope(Dispatchers.Main).launch {
+            HmssdkFlutterPlugin.hmssdkFlutterPlugin?.videoViewSink?.success(hashMap)
+        }
     }
 }
