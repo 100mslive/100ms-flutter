@@ -1360,6 +1360,17 @@ class MeetingStore extends ChangeNotifier
         toRole: toRole, ofRoles: ofRoles, hmsActionResultListener: this);
   }
 
+  void changePinTileStatus(PeerTrackNode peerTrackNode) {
+    peerTrackNode.pinTile = !peerTrackNode.pinTile;
+    peerTracks.remove(peerTrackNode);
+    if (peerTrackNode.pinTile) {
+      peerTracks.insert(screenShareCount, peerTrackNode);
+    } else {
+      peerTracks.add(peerTrackNode);
+    }
+    notifyListeners();
+  }
+
 //Get onSuccess or onException callbacks for HMSActionResultListenerMethod
 
   @override
@@ -1603,7 +1614,7 @@ class MeetingStore extends ChangeNotifier
         notifyListeners();
       }
 
-      if (lastVideoStatus) {
+      if (lastVideoStatus && !reconnecting) {
         switchVideo();
         lastVideoStatus = false;
       }
