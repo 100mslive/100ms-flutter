@@ -56,7 +56,6 @@ class HMSRemotePeer extends HMSPeer {
 
   factory HMSRemotePeer.fromMap(Map map) {
     HMSRole role = HMSRole.fromMap(map['role']);
-    // TODO: add auxiliary tracks
     HMSRemotePeer peer = HMSRemotePeer(
         peerId: map['peer_id'],
         name: map['name'],

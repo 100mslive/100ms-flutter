@@ -63,7 +63,6 @@ class HMSPeer {
   factory HMSPeer.fromMap(Map map) {
     HMSRole role = HMSRole.fromMap(map['role']);
 
-    // TODO: add auxiliary tracks
 
     HMSPeer peer = (map['is_local'] == true)
         ? HMSLocalPeer(

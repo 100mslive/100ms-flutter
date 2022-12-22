@@ -31,7 +31,6 @@ class _HLSDeviceSettingsState extends State<HLSDeviceSettings> {
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
     return FractionallySizedBox(
       heightFactor: 0.5,
       child: Padding(
