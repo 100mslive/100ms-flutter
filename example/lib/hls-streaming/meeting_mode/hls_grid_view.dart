@@ -94,17 +94,12 @@ Widget hlsGridView(
                   ),
           );
         }
-
-        if (screenShareCount == 0 &&
-            index < 4 &&
-            peerTracks[index].isOffscreen) {
-          peerTracks[index].setOffScreenStatus(false);
-        }
+        
         return ChangeNotifierProvider.value(
             key: ValueKey(peerTracks[index].uid + "video_view"),
             value: peerTracks[index],
             child: VideoTile(
-              islongPressEnabled: false,
+              islongPressEnabled: true,
               key: ValueKey(peerTracks[index].uid + "audio_view"),
               itemHeight: size.height,
               itemWidth: size.width,

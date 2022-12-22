@@ -57,6 +57,7 @@ class _OneToOneModeState extends State<OneToOneMode> {
               child: VideoTile(
                 itemHeight: widget.size.height,
                 itemWidth: widget.size.width,
+                islongPressEnabled: true,
               ),
             ),
             DraggableWidget(
@@ -77,6 +78,7 @@ class _OneToOneModeState extends State<OneToOneMode> {
                         isOneToOne: true,
                         itemHeight: 150,
                         itemWidth: 100,
+                        islongPressEnabled: true,
                       ),
                     ),
                   ),

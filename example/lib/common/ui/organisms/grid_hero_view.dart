@@ -90,6 +90,7 @@ Widget gridHeroView(
                     scaleType: ScaleType.SCALE_ASPECT_FIT,
                     itemHeight: size.height,
                     itemWidth: size.width,
+                    islongPressEnabled: true,
                   ),
           );
         }
@@ -100,6 +101,7 @@ Widget gridHeroView(
               key: ValueKey(peerTracks[index].uid),
               itemHeight: size.height,
               itemWidth: size.width,
+              islongPressEnabled: true,
             ));
       },
       controller: Provider.of<MeetingStore>(context).controller,

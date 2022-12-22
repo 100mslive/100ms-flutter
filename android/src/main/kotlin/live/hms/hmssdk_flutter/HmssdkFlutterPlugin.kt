@@ -50,10 +50,13 @@ class HmssdkFlutterPlugin :
     private lateinit var previewChannel: EventChannel
     private lateinit var logsEventChannel: EventChannel
     private lateinit var rtcStatsChannel: EventChannel
+    private lateinit var videoViewChannel: EventChannel
     private var eventSink: EventChannel.EventSink? = null
     private var previewSink: EventChannel.EventSink? = null
     private var logsSink: EventChannel.EventSink? = null
     private var rtcSink: EventChannel.EventSink? = null
+    var videoViewSink: EventChannel.EventSink? = null
+
     private lateinit var activity: Activity
     var hmssdk: HMSSDK? = null
     private lateinit var hmsVideoFactory: HMSVideoViewFactory
@@ -77,11 +80,14 @@ class HmssdkFlutterPlugin :
             this.rtcStatsChannel =
                 EventChannel(flutterPluginBinding.binaryMessenger, "rtc_event_channel")
 
+            this.videoViewChannel = EventChannel(flutterPluginBinding.binaryMessenger,"video_view_channel")
+
             this.meetingEventChannel.setStreamHandler(this)
             this.channel.setMethodCallHandler(this)
             this.previewChannel.setStreamHandler(this)
             this.logsEventChannel.setStreamHandler(this)
             this.rtcStatsChannel.setStreamHandler(this)
+            this.videoViewChannel.setStreamHandler(this)
             this.hmsVideoFactory = HMSVideoViewFactory(this)
 
             flutterPluginBinding.platformViewRegistry.registerViewFactory(
@@ -444,11 +450,24 @@ class HmssdkFlutterPlugin :
             this.logsSink = events
         } else if (nameOfEventSink == "rtc_stats") {
             this.rtcSink = events
+        } else if(nameOfEventSink == "video_view") {
+            this.videoViewSink = events
         }
     }
 
     override fun onCancel(arguments: Any?) {
-        this.eventSink = null
+        val nameOfEventSink = (arguments as HashMap<String, Any>)["name"]
+        if (nameOfEventSink!! == "meeting") {
+            this.eventSink = null
+        } else if (nameOfEventSink == "preview") {
+            this.previewSink = null
+        } else if (nameOfEventSink == "logs") {
+            this.logsSink = null
+        } else if (nameOfEventSink == "rtc_stats") {
+            this.rtcSink = null
+        } else if(nameOfEventSink == "video_view") {
+            this.videoViewSink = null
+        }
     }
 
     fun getPeerById(id: String): HMSPeer? {

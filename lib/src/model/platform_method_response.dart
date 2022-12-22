@@ -2,6 +2,7 @@
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter/src/enum/hms_logs_update_listener.dart';
 import 'package:hmssdk_flutter/src/enum/hms_network_update_listener_method.dart';
+import 'package:hmssdk_flutter/src/enum/hms_video_view_state_change_listener_method.dart';
 
 ///PlatformMethodResponse contains all the responses sent back from the platform
 ///
@@ -50,7 +51,7 @@ class HMSLogsUpdateListenerMethodResponse {
       {required this.method, required this.data, required this.response});
 }
 
-///HMSNetworkUpdateListenerMethodResponse contains all the responses sent back from the Network.
+///HMSNetworkUpdateListenerMethodResponse contains all the responses sent back from the network.
 ///
 /// Check out different responses in [HMSNetworkUpdateListenerMethod] enum.
 class HMSNetworkUpdateListenerMethodResponse {
@@ -61,10 +62,25 @@ class HMSNetworkUpdateListenerMethodResponse {
       {required this.method, required this.data, required this.response});
 }
 
+///HMSStatsListenerMethodResponse contains all the responses sent back from the room.
+///
+///Check out different responses in [HMSStatsListenerMethod] enum
 class HMSStatsListenerMethodResponse {
   final HMSStatsListenerMethod method;
   final Map<String, dynamic> data;
   final dynamic response;
   HMSStatsListenerMethodResponse(
+      {required this.method, required this.data, required this.response});
+}
+
+///HMSVideoViewStateChangeListenerMethodResponse contains all the responses sent back from the HMSVideoView.
+///
+///Check out different responses in [HMSVideoViewStateChangeListenerMethod] enum
+class HMSVideoViewStateChangeListenerMethodResponse {
+  final HMSVideoViewStateChangeListenerMethod method;
+  final Map<String, dynamic> data;
+  final dynamic response;
+
+  HMSVideoViewStateChangeListenerMethodResponse(
       {required this.method, required this.data, required this.response});
 }

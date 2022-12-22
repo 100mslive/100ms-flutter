@@ -34,18 +34,62 @@ class HMSSDK {
         hmsTrackSetting, appGroup, preferredExtension, hmsLogSettings);
   }
 
-  ///add MeetingListener it will add all the listeners.
+  ///Call this method to listen to updates of [HMSPreviewListener]
+  void addPreviewListener({required HMSPreviewListener listener}) {
+    PlatformService.addPreviewListener(listener);
+  }
+
+  ///This method removes the attached [HMSPreviewListener] 
+  void removePreviewListener({required HMSPreviewListener listener}) {
+    PlatformService.removePreviewListener(listener);
+  }
+
+  ///Call this method to listen to room updates of [HMSUpdateListener].
   void addUpdateListener({required HMSUpdateListener listener}) {
     PlatformService.addUpdateListener(listener);
   }
 
+  ///This method removes the attached [HMSUpdateListener] 
+  void removeUpdateListener({required HMSUpdateListener listener}) {
+    PlatformService.removeUpdateListener(listener);
+  }
+
+  ///Call this method to listen to the stats updates of [HMSStatsListener]
   void addStatsListener({required HMSStatsListener listener}) {
     PlatformService.addRTCStatsListener(listener);
   }
 
+  ///This method removes the attached [HMSStatsListener] 
   void removeStatsListener({required HMSStatsListener listener}) {
     PlatformService.removeRTCStatsListener(listener);
   }
+
+  ///Call this method to listen to the log updates of [HMSLogListener]
+  void addLogListener({required HMSLogListener hmsLogListener}) {
+    PlatformService.addLogsListener(hmsLogListener);
+  }
+
+  ///This method removes the attached [HMSLogListener] 
+  void removeLogListener({required HMSLogListener hmsLogListener}) {
+    PlatformService.removeLogsListener(hmsLogListener);
+  }
+
+  ///Call this method to listen to the HMSVideoView updates of [addVideoViewStateChangeListener]
+  void addVideoViewStateChangeListener(
+      {required HMSVideoViewStateChangeListener
+          hmsVideoViewStateChangeListener}) {
+    PlatformService.addVideoViewStateChangeListener(
+        hmsVideoViewStateChangeListener);
+  }
+
+  ///This method removes the attached [HMSVideoViewStateChangeListener] 
+  void removeVideoViewStateChangeListener(
+      {required HMSVideoViewStateChangeListener
+          hmsVideoViewStateChangeListener}) {
+    PlatformService.removeVideoViewStateChangeListener(
+        hmsVideoViewStateChangeListener);
+  }
+
 
   /// Join the room with configuration options passed as an [HMSConfig] object
   Future<dynamic> join({
@@ -61,11 +105,6 @@ class HMSSDK {
     }
     return await PlatformService.invokeMethod(PlatformMethod.join,
         arguments: {...config.getJson()});
-  }
-
-  ///add one or more previewListeners.
-  void addPreviewListener({required HMSPreviewListener listener}) {
-    PlatformService.addPreviewListener(listener);
   }
 
   /// Begin a preview so that the local peer's audio and video can be displayed to them before they join a call.
@@ -715,7 +754,7 @@ class HMSSDK {
     }
   }
 
-  ///Method to change name of local peer
+  ///Method to change the name of local peer
   /// Change the name that appears inside [HMSPeer.name] This change is persistent and all peers joining after the change will still see these values.
   /// [name] is the string that is to be set as the [HMSPeer.name]
   /// [hmsActionResultListener] is the callback whose [HMSActionResultListener.onSuccess] will be called when the action completes successfully.
@@ -804,16 +843,6 @@ class HMSSDK {
     }
   }
 
-  ///remove an update listener
-  void removeUpdateListener({required HMSUpdateListener listener}) {
-    PlatformService.removeUpdateListener(listener);
-  }
-
-  ///remove a preview listener
-  void removePreviewListener({required HMSPreviewListener listener}) {
-    PlatformService.removePreviewListener(listener);
-  }
-
   ///Method to start HMSLogger for logs
   void startHMSLogger(
       {required HMSLogLevel webRtclogLevel, required HMSLogLevel logLevel}) {
@@ -827,16 +856,6 @@ class HMSSDK {
   ///Method to remove attached HMSLogger
   void removeHMSLogger() {
     PlatformService.invokeMethod(PlatformMethod.removeHMSLogger);
-  }
-
-  ///Method to add Log Listener to listen to the logs
-  void addLogListener({required HMSLogListener hmsLogListener}) {
-    PlatformService.addLogsListener(hmsLogListener);
-  }
-
-  ///Method to remove Log Listener
-  void removeLogListener({required HMSLogListener hmsLogListener}) {
-    PlatformService.removeLogsListener(hmsLogListener);
   }
 
   ///Method to get available audio devices

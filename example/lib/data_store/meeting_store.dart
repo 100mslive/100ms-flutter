@@ -30,7 +30,11 @@ import 'package:pip_flutter/pipflutter_player_theme.dart';
 
 class MeetingStore extends ChangeNotifier
     with WidgetsBindingObserver
-    implements HMSUpdateListener, HMSActionResultListener, HMSStatsListener {
+    implements
+        HMSUpdateListener,
+        HMSActionResultListener,
+        HMSStatsListener,
+        HMSVideoViewStateChangeListener {
   late HMSSDKInteractor _hmsSDKInteractor;
 
   MeetingStore({required HMSSDKInteractor hmsSDKInteractor}) {
@@ -189,6 +193,7 @@ class MeetingStore extends ChangeNotifier
     );
 
     _hmsSDKInteractor.addUpdateListener(this);
+    _hmsSDKInteractor.addVideoViewStateChangeListener(this);
     WidgetsBinding.instance.addObserver(this);
     _hmsSDKInteractor.join(config: config);
     this.meetingUrl = roomUrl;
@@ -652,7 +657,7 @@ class MeetingStore extends ChangeNotifier
         addMessage(message);
         isNewMessageReceived = true;
         Utilities.showNotification(
-            "New message from ${message.sender?.name??""}", "message");
+            "New message from ${message.sender?.name ?? ""}", "message");
         notifyListeners();
         break;
     }
@@ -1642,5 +1647,18 @@ class MeetingStore extends ChangeNotifier
         peerTrackNode.setOffScreenStatus(true);
       }
     }
+  }
+
+  @override
+  void onFirstFrameRendered({required String trackId}) {
+    log("onFirstFrameRendered called");
+  }
+
+  @override
+  void onResolutionChange(
+      {required String trackId,
+      required int newWidth,
+      required int newHeight}) {
+    log("onFirstFrameRendered called");
   }
 }

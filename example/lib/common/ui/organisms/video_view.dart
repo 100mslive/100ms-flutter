@@ -52,7 +52,8 @@ class _VideoViewState extends State<VideoView> {
                           scaleType: widget.scaleType,
                           track: data.item1!,
                           setMirror: false,
-                          matchParent: false),
+                          matchParent: false,
+                          addVideoViewListener: true,),
                     ),
                   )
                 : ClipRRect(
@@ -72,6 +73,7 @@ class _VideoViewState extends State<VideoView> {
                             ? context.read<MeetingStore>().isMirror
                             : false,
                         matchParent: false,
+                          addVideoViewListener: true,
                       ),
                     ),
                   );

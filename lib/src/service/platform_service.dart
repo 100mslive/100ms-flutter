@@ -14,6 +14,7 @@ import 'package:flutter/services.dart';
 // Project imports:
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter/src/enum/hms_logs_update_listener.dart';
+import 'package:hmssdk_flutter/src/enum/hms_video_view_state_change_listener_method.dart';
 import 'package:hmssdk_flutter/src/model/hms_log_list.dart';
 
 class PlatformService {
@@ -35,6 +36,9 @@ class PlatformService {
   static const EventChannel _rtcStatsChannel =
       const EventChannel("rtc_event_channel");
 
+  static const EventChannel _videoViewChannel =
+      const EventChannel("video_view_channel");
+
   ///add meeting listeners.
   static List<HMSUpdateListener> updateListeners = [];
 
@@ -45,6 +49,9 @@ class PlatformService {
 
   ///List for event Listener
   static List<HMSStatsListener> statsListeners = [];
+
+  static List<HMSVideoViewStateChangeListener> videoViewListeners = [];
+
   static bool isStartedListening = false;
 
   ///add meetingListener
@@ -93,6 +100,16 @@ class PlatformService {
     logsListeners.remove(hmsLogListener);
   }
 
+  static void addVideoViewStateChangeListener(
+      HMSVideoViewStateChangeListener listener) {
+    videoViewListeners.add(listener);
+  }
+
+  static void removeVideoViewStateChangeListener(
+      HMSVideoViewStateChangeListener listener) {
+    videoViewListeners.remove(listener);
+  }
+
   ///used to invoke different methods at platform side and returns something but not neccessarily
   static Future<dynamic> invokeMethod(PlatformMethod method,
       {Map? arguments}) async {
@@ -107,6 +124,7 @@ class PlatformService {
 
   ///recieves all the meeting updates here as streams
   static void updatesFromPlatform() {
+
     _meetingEventChannel.receiveBroadcastStream(
         {'name': 'meeting'}).map<HMSUpdateListenerMethodResponse>((event) {
       Map<String, dynamic>? data = {};
@@ -396,7 +414,6 @@ class PlatformService {
           break;
 
         case HMSStatsListenerMethod.unknown:
-          // TODO: Handle this case.
           break;
       }
     });
@@ -421,6 +438,41 @@ class PlatformService {
           break;
       }
     });
+
+    _videoViewChannel
+        .receiveBroadcastStream({'name': 'video_view'}).map((event) {
+      Map<String, dynamic>? data = {};
+      if (event is Map && event['data'] != null && event['data'] is Map) {
+        (event['data'] as Map).forEach((key, value) {
+          data[key.toString()] = value;
+        });
+      }
+
+      HMSVideoViewStateChangeListenerMethod method =
+          HMSVideoViewStateChangeListenerMethodValues.getMethodFromName(
+              event['event_name']);
+      return HMSVideoViewStateChangeListenerMethodResponse(
+          method: method, data: data, response: event);
+    }).listen((event) {
+      HMSVideoViewStateChangeListenerMethod method = event.method;
+      Map data = event.data;
+      switch (method) {
+        case HMSVideoViewStateChangeListenerMethod.onFirstFrameRendered:
+          notifyVideoViewStateChangeListeners(
+              method, {'track_id': data['track_id']});
+          break;
+        case HMSVideoViewStateChangeListenerMethod.onResolutionChange:
+          notifyVideoViewStateChangeListeners(method, {
+            'track_id': data['track_id'],
+            'new_width': data['new_width'],
+            'new_height': data['new_height']
+          });
+          break;
+        case HMSVideoViewStateChangeListenerMethod.unknown:
+          break;
+      }
+    });
+
   }
 
   static void notifyLogsUpdateListeners(
@@ -572,6 +624,26 @@ class PlatformService {
         break;
 
       case HMSUpdateListenerMethod.unknown:
+        break;
+    }
+  }
+
+  ///notifying all HMSVideoViewStateChangeListener attached about updates
+  static void notifyVideoViewStateChangeListeners(
+      HMSVideoViewStateChangeListenerMethod method,
+      Map<String, dynamic> arguments) {
+    switch (method) {
+      case HMSVideoViewStateChangeListenerMethod.onFirstFrameRendered:
+        videoViewListeners.forEach(
+            (e) => e.onFirstFrameRendered(trackId: arguments['track_id']));
+        break;
+      case HMSVideoViewStateChangeListenerMethod.onResolutionChange:
+        videoViewListeners.forEach((e) => e.onResolutionChange(
+            trackId: arguments['track_id'],
+            newWidth: arguments['new_width'],
+            newHeight: arguments['new_height']));
+        break;
+      case HMSVideoViewStateChangeListenerMethod.unknown:
         break;
     }
   }

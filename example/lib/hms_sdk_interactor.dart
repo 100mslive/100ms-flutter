@@ -133,6 +133,18 @@ class HMSSDKInteractor {
     hmsSDK.removePreviewListener(listener: listener);
   }
 
+  void addVideoViewStateChangeListener(
+      HMSVideoViewStateChangeListener listener) {
+    hmsSDK.addVideoViewStateChangeListener(
+        hmsVideoViewStateChangeListener: listener);
+  }
+
+  void removeVideoViewStateChangeListener(
+      HMSVideoViewStateChangeListener listener) {
+    hmsSDK.removeVideoViewStateChangeListener(
+        hmsVideoViewStateChangeListener: listener);
+  }
+
   void acceptChangeRole(HMSRoleChangeRequest hmsRoleChangeRequest,
       HMSActionResultListener hmsActionResultListener) {
     hmsSDK.acceptChangeRole(

@@ -81,6 +81,7 @@ Widget fullScreenView(
                     scaleType: ScaleType.SCALE_ASPECT_FIT,
                     itemHeight: size.height,
                     itemWidth: size.width,
+                    islongPressEnabled: true,
                   ),
           );
         }
