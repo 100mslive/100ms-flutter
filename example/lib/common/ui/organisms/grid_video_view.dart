@@ -94,11 +94,11 @@ Widget gridVideoView(
           );
         }
 
-        if (screenShareCount == 0 &&
-            index < 4 &&
-            peerTracks[index].isOffscreen) {
-          peerTracks[index].setOffScreenStatus(false);
-        }
+        // if (screenShareCount == 0 &&
+        //     index < 4 &&
+        //     peerTracks[index].isOffscreen && peerTracks.length > 3) {
+        //   peerTracks[index].setOffScreenStatus(false);
+        // }
         return ChangeNotifierProvider.value(
             key: ValueKey(peerTracks[index].uid + "video_view"),
             value: peerTracks[index],

@@ -158,7 +158,9 @@ enum PlatformMethod {
   enterPipMode,
   isPipActive,
   isPipAvailable,
-  changeRoleOfPeersWithRoles
+  changeRoleOfPeersWithRoles,
+  addTrack,
+  removeTrack
 }
 
 extension PlatformMethodValues on PlatformMethod {
@@ -370,6 +372,10 @@ extension PlatformMethodValues on PlatformMethod {
         return "is_pip_available";
       case PlatformMethod.changeRoleOfPeersWithRoles:
         return "change_role_of_peers_with_roles";
+      case PlatformMethod.addTrack:
+        return "add_track";
+      case PlatformMethod.removeTrack:
+        return "remove_track";
       default:
         return 'unknown';
     }
@@ -587,6 +593,10 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.isPipAvailable;
       case "change_role_of_peers_with_roles":
         return PlatformMethod.changeRoleOfPeersWithRoles;
+      case "add_track":
+        return PlatformMethod.addTrack;
+      case "remove_track":
+        return PlatformMethod.removeTrack;
       default:
         return PlatformMethod.unknown;
     }

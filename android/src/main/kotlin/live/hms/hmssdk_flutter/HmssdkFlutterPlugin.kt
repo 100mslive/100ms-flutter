@@ -82,7 +82,7 @@ class HmssdkFlutterPlugin :
             this.previewChannel.setStreamHandler(this)
             this.logsEventChannel.setStreamHandler(this)
             this.rtcStatsChannel.setStreamHandler(this)
-            this.hmsVideoFactory = HMSVideoViewFactory(this)
+            this.hmsVideoFactory = HMSVideoViewFactory(this,flutterPluginBinding.binaryMessenger)
 
             flutterPluginBinding.platformViewRegistry.registerViewFactory(
                 "HMSVideoView",
