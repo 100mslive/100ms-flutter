@@ -454,7 +454,6 @@ class UtilityComponents {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           ListView.builder(
-                              shrinkWrap: true,
                               itemCount: roles.length,
                               itemBuilder: (context, index) {
                                 return Row(
@@ -588,7 +587,6 @@ class UtilityComponents {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           ListView.builder(
-                              shrinkWrap: true,
                               itemCount: roles.length,
                               itemBuilder: (context, index) {
                                 return Row(

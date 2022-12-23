@@ -7,6 +7,7 @@ import 'package:hmssdk_flutter_example/common/ui/organisms/embedded_button.dart'
 import 'package:hmssdk_flutter_example/common/ui/organisms/full_screen_view.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/grid_audio_view.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/grid_hero_view.dart';
+import 'package:hmssdk_flutter_example/common/ui/organisms/hls_custom_grid_view.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/one_to_one_mode.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/stream_timer.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
@@ -355,7 +356,7 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                                                 ? gridAudioView(peerTracks: data.item1.sublist(data.item4), itemCount: data.item1.sublist(data.item4).length, context: context, isPortrait: isPortraitMode, size: size)
                                                                 : (data.item5 == MeetingMode.Single)
                                                                     ? fullScreenView(peerTracks: data.item1, itemCount: data.item3, screenShareCount: data.item4, context: context, isPortrait: isPortraitMode, size: size)
-                                                                    : hlsGridView(peerTracks: data.item1, itemCount: data.item3, screenShareCount: data.item4, context: context, isPortrait: true, size: size)));
+                                                                    : hlsCustomGridView(peerTracks: data.item1, itemCount: data.item3, screenShareCount: data.item4, context: context, isPortrait: true, size: size)));
                                           });
                                     }),
                                 Column(

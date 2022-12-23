@@ -23,7 +23,6 @@ Widget gridHeroView(
     required bool isPortrait,
     required Size size}) {
   return GridView.builder(
-      shrinkWrap: true,
       cacheExtent: 600,
       physics: PageScrollPhysics(),
       itemCount: itemCount,

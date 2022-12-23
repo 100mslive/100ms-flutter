@@ -218,7 +218,6 @@ class _PreviewParticipantSheetState extends State<PreviewParticipantSheet> {
                       return Container(
                         height: MediaQuery.of(context).size.height * 0.65,
                         child: ListView.builder(
-                            shrinkWrap: true,
                             itemCount: data.item2,
                             itemBuilder: (context, index) {
                               return ListTile(
