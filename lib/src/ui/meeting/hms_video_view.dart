@@ -28,22 +28,26 @@ class HMSVideoView extends StatelessWidget {
 
   final ScaleType scaleType;
   final bool setMirror;
+  final bool isAutoSimulcastDisabled;
 
   HMSVideoView(
       {Key? key,
       required this.track,
       this.setMirror = false,
       this.matchParent = true,
-      this.scaleType = ScaleType.SCALE_ASPECT_FIT})
+      this.scaleType = ScaleType.SCALE_ASPECT_FIT,
+      this.isAutoSimulcastDisabled = false})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return _PlatformView(
-        track: track,
-        matchParent: this.matchParent,
-        setMirror: setMirror,
-        scaleType: this.scaleType);
+      track: track,
+      matchParent: this.matchParent,
+      setMirror: setMirror,
+      scaleType: this.scaleType,
+      isAutoSimulcastDisabled: isAutoSimulcastDisabled,
+    );
   }
 }
 
@@ -53,13 +57,15 @@ class _PlatformView extends StatelessWidget {
   final bool setMirror;
   final bool matchParent;
   final ScaleType scaleType;
+  final bool isAutoSimulcastDisabled;
 
   _PlatformView(
       {Key? key,
       required this.track,
       this.setMirror = false,
       this.matchParent = true,
-      required this.scaleType})
+      required this.scaleType,
+      this.isAutoSimulcastDisabled = false})
       : super(key: key);
 
   void onPlatformViewCreated(int id) {}
@@ -76,7 +82,8 @@ class _PlatformView extends StatelessWidget {
           'track_id': track.trackId,
           'set_mirror': track.source != "REGULAR" ? false : setMirror,
           'scale_type': scaleType.value,
-          'match_parent': matchParent
+          'match_parent': matchParent,
+          'is_auto_simulcast_disabled': isAutoSimulcastDisabled
         },
         gestureRecognizers: {},
       );
@@ -90,7 +97,8 @@ class _PlatformView extends StatelessWidget {
           'track_id': track.trackId,
           'set_mirror': track.source != "REGULAR" ? false : setMirror,
           'scale_type': scaleType.value,
-          'match_parent': matchParent
+          'match_parent': matchParent,
+          'is_auto_simulcast_disabled': isAutoSimulcastDisabled
         },
         gestureRecognizers: {},
       );

@@ -27,6 +27,7 @@ class _HMSAppSettingsState extends State<HMSAppSettings> {
   bool showStats = false;
   bool isSoftwareDecoderDisabled = true;
   bool isAudioMixerDisabled = true;
+  bool isAutoSimulcastDisabled = false;
   @override
   void initState() {
     super.initState();
@@ -46,6 +47,8 @@ class _HMSAppSettingsState extends State<HMSAppSettings> {
         await Utilities.getBoolData(key: 'software-decoder-disabled') ?? true;
     isAudioMixerDisabled =
         await Utilities.getBoolData(key: 'audio-mixer-disabled') ?? true;
+    isAutoSimulcastDisabled =
+        await Utilities.getBoolData(key: 'is-auto-simulcast-disabled') ?? false;
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() {});
@@ -341,36 +344,61 @@ class _HMSAppSettingsState extends State<HMSAppSettings> {
                                 setState(() {})
                               }),
                     ),
-
                   ListTile(
-                              horizontalTitleGap: 2,
-                              onTap: () async {
-                                Navigator.pop(context);
-                                showModalBottomSheet(
-                                  isScrollControlled: true,
-                                  backgroundColor: themeBottomSheetColor,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  context: context,
-                                  builder: (ctx) =>
-                                      NotificationSettings()
-                                );
-                              },
-                              contentPadding: EdgeInsets.zero,
-                              leading: SvgPicture.asset(
-                                "assets/icons/notification.svg",
-                                fit: BoxFit.scaleDown,
-                                color: themeDefaultColor,
-                              ),
-                              title: Text("Modify Notifications",
-                                semanticsLabel: "fl_notification_setting",
-                                style: GoogleFonts.inter(
-                                    fontSize: 14,
-                                    color:themeDefaultColor,
-                                    letterSpacing: 0.25,
-                                    fontWeight: FontWeight.w600),
-                              )),
+                    horizontalTitleGap: 2,
+                    enabled: true,
+                    contentPadding: EdgeInsets.zero,
+                    leading: SvgPicture.asset(
+                      'assets/icons/simulcast.svg',
+                      color: themeDefaultColor,
+                    ),
+                    title: Text(
+                      "Disable Auto Simulcast",
+                      semanticsLabel: "fl_auto_simulcast",
+                      style: GoogleFonts.inter(
+                          fontSize: 14,
+                          color: themeDefaultColor,
+                          letterSpacing: 0.25,
+                          fontWeight: FontWeight.w600),
+                    ),
+                    trailing: CupertinoSwitch(
+                        activeColor: hmsdefaultColor,
+                        value: isAutoSimulcastDisabled,
+                        onChanged: (value) => {
+                              isAutoSimulcastDisabled = value,
+                              Utilities.saveBoolData(
+                                  key: 'is-auto-simulcast-disabled', value: value),
+                              setState(() {})
+                            }),
+                  ),
+                  ListTile(
+                      horizontalTitleGap: 2,
+                      onTap: () async {
+                        Navigator.pop(context);
+                        showModalBottomSheet(
+                            isScrollControlled: true,
+                            backgroundColor: themeBottomSheetColor,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            context: context,
+                            builder: (ctx) => NotificationSettings());
+                      },
+                      contentPadding: EdgeInsets.zero,
+                      leading: SvgPicture.asset(
+                        "assets/icons/notification.svg",
+                        fit: BoxFit.scaleDown,
+                        color: themeDefaultColor,
+                      ),
+                      title: Text(
+                        "Modify Notifications",
+                        semanticsLabel: "fl_notification_setting",
+                        style: GoogleFonts.inter(
+                            fontSize: 14,
+                            color: themeDefaultColor,
+                            letterSpacing: 0.25,
+                            fontWeight: FontWeight.w600),
+                      )),
                   ListTile(
                     horizontalTitleGap: 2,
                     enabled: true,

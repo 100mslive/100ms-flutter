@@ -13,7 +13,8 @@ class HMSVideoView(
         context: Context,
         setMirror: Boolean,
         scaleType: Int? = RendererCommon.ScalingType.SCALE_ASPECT_FIT.ordinal,
-        private val track:HMSVideoTrack
+        private val track:HMSVideoTrack,
+        private val isAutoSimulcastDisabled:Boolean= false
 ) : FrameLayout(context, null) {
 
     private val hmsVideoView: HMSVideoView
@@ -26,8 +27,9 @@ class HMSVideoView(
         hmsVideoView = view.findViewById(R.id.hmsVideoView)
         hmsVideoView.setEnableHardwareScaler(false)
         hmsVideoView.setMirror(setMirror)
-        hmsVideoView.setAutoSimulcast(true)
-
+        if(!isAutoSimulcastDisabled){
+            hmsVideoView.setAutoSimulcast(true)
+        }
         if ((scaleType ?: 0) <= RendererCommon.ScalingType.values().size) {
             hmsVideoView.setScalingType(RendererCommon.ScalingType.values()[scaleType ?: 0])
         }
