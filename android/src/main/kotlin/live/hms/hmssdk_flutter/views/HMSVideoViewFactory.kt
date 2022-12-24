@@ -1,7 +1,6 @@
 package live.hms.hmssdk_flutter.views
 
 import android.content.Context
-import android.util.Log
 import android.view.View
 import android.widget.FrameLayout
 import io.flutter.plugin.platform.PlatformView
@@ -39,10 +38,6 @@ class HMSVideoViewWidget(private val context: Context, id: Int, creationParams: 
             )
         }
         view.layoutParams = frameLayoutParams
-    }
-
-    override fun onFlutterViewDetached() {
-        super.onFlutterViewDetached()
     }
 
     override fun dispose() {
