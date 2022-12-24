@@ -34,6 +34,9 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   bool res = false;
+  String userName = "Enter username here";
+  String authToken =
+      "Enter your token here";
 
   static Future<bool> getPermissions() async {
     if (Platform.isIOS) return true;
@@ -69,10 +72,29 @@ class _MyHomePageState extends State<MyHomePage> {
               borderRadius: BorderRadius.circular(8.0),
             ))),
             onPressed: () async => {
-              res = await getPermissions(),
-              if (res)
-                Navigator.push(context,
-                    CupertinoPageRoute(builder: (_) => const MeetingPage()))
+              if (authToken.isNotEmpty)
+                {
+                  res = await getPermissions(),
+                  if (res)
+                    Navigator.push(
+                        context,
+                        CupertinoPageRoute(
+                            builder: (_) => MeetingPage(
+                                  authToken: authToken,
+                                  userName: userName,
+                                )))
+                }
+              else
+                {
+                  WidgetsBinding.instance.addPostFrameCallback((_) async {
+                    showDialog(
+                        context: context,
+                        builder: (context) => const AlertDialog(
+                              backgroundColor: Colors.grey,
+                              title: Text("Please check the token"),
+                            ));
+                  })
+                }
             },
             child: const Padding(
               padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
@@ -89,7 +111,10 @@ class _MyHomePageState extends State<MyHomePage> {
 }
 
 class MeetingPage extends StatefulWidget {
-  const MeetingPage({super.key});
+  final String authToken;
+  final String userName;
+  const MeetingPage(
+      {super.key, required this.authToken, required this.userName});
 
   @override
   State<MeetingPage> createState() => _MeetingPageState();
@@ -98,19 +123,20 @@ class MeetingPage extends StatefulWidget {
 class _MeetingPageState extends State<MeetingPage>
     implements HMSUpdateListener {
   late HMSSDK hmsSDK;
-  String userName = "Enter username here";
-  String authToken = "Enter token here";
   Offset position = const Offset(5, 5);
-  bool isJoinSuccessful = false;
+  bool isJoinSuccessful = false, isVideoOn = true, isAudioOn = true;
   HMSPeer? localPeer, remotePeer;
   HMSVideoTrack? localPeerVideoTrack, remotePeerVideoTrack;
+  int speakerStatus = 0;
   @override
   void initState() {
     super.initState();
     hmsSDK = HMSSDK();
     hmsSDK.build();
     hmsSDK.addUpdateListener(listener: this);
-    hmsSDK.join(config: HMSConfig(authToken: authToken, userName: userName));
+    hmsSDK.join(
+        config:
+            HMSConfig(authToken: widget.authToken, userName: widget.userName));
   }
 
   @override
@@ -241,89 +267,176 @@ class _MeetingPageState extends State<MeetingPage>
   void onRoomUpdate({required HMSRoom room, required HMSRoomUpdate update}) {}
 
   @override
-  void onUpdateSpeakers({required List<HMSSpeaker> updateSpeakers}) {}
+  void onUpdateSpeakers({required List<HMSSpeaker> updateSpeakers}) {
+    if (updateSpeakers.isEmpty) {
+      //If no one is speaking
+      speakerStatus = 0;
+    } else {
+      if (updateSpeakers.length == 2) {
+        //If both peers are speaking
+        speakerStatus = 2;
+      } else if (updateSpeakers[0].peer.peerId == localPeer?.peerId) {
+        //If local peer is speaking
+        speakerStatus = 3;
+      } else {
+        //If remote peer is speaking
+        speakerStatus = 1;
+      }
+    }
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
         hmsSDK.leave();
+        hmsSDK.removeUpdateListener(listener: this);
         Navigator.pop(context);
         return true;
       },
       child: SafeArea(
           child: Scaffold(
-        body: Stack(
-          children: [
-            Container(
-                color: Colors.black,
-                height: MediaQuery.of(context).size.height,
-                child: GridView(
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      mainAxisExtent: (remotePeerVideoTrack == null)
-                          ? MediaQuery.of(context).size.height
-                          : MediaQuery.of(context).size.height / 2,
-                      crossAxisCount: 1),
-                  children: [
-                    if (remotePeerVideoTrack != null && remotePeer != null)
-                      peerTile(
-                          Key(remotePeerVideoTrack?.trackId ?? "" "mainVideo"),
-                          remotePeerVideoTrack,
-                          remotePeer,
-                          context),
-                    peerTile(
-                        Key(localPeerVideoTrack?.trackId ?? "" "mainVideo"),
-                        localPeerVideoTrack,
-                        localPeer,
-                        context)
-                  ],
-                )),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Container(
-                color: Colors.black,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      GestureDetector(
-                        onTap: () async {
-                          hmsSDK.leave();
-                          Navigator.pop(context);
-                        },
-                        child: Container(
-                          decoration:
-                              BoxDecoration(shape: BoxShape.circle, boxShadow: [
-                            BoxShadow(
-                              color: Colors.red.withAlpha(60),
-                              blurRadius: 3.0,
-                              spreadRadius: 5.0,
+        body: Container(
+          height: MediaQuery.of(context).size.height-10,
+          child: Stack(
+            children: [
+              Align(
+                alignment: Alignment.center,
+                child: Container(
+                        height: MediaQuery.of(context).size.height-10,
+                    color: Colors.black,
+                    child: GridView(
+                      physics: const NeverScrollableScrollPhysics(),
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          mainAxisExtent: (remotePeerVideoTrack == null)
+                              ? MediaQuery.of(context).size.height
+                              : MediaQuery.of(context).size.height / 2,
+                          crossAxisCount: 1),
+                      children: [
+                        if (remotePeerVideoTrack != null && remotePeer != null)
+                          peerTile(
+                              Key(remotePeerVideoTrack?.trackId ?? "" "mainVideo"),
+                              remotePeerVideoTrack,
+                              remotePeer,
+                              context,
+                              (speakerStatus==1 || speakerStatus == 2),
+                              ),
+                        peerTile(
+                            Key(localPeerVideoTrack?.trackId ?? "" "mainVideo"),
+                            localPeerVideoTrack,
+                            localPeer,
+                            context,
+                            (speakerStatus==3 || speakerStatus == 2),
+                            )
+                      ],
+                    )),
+              ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                  color: Colors.transparent,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        GestureDetector(
+                          onTap: () async {
+                            hmsSDK.switchAudio(isOn: isAudioOn);
+                            setState(() {
+                              isAudioOn = !isAudioOn;
+                            });
+                          },
+                          child: Container(
+                            decoration:
+                                BoxDecoration(shape: BoxShape.circle, boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withAlpha(60),
+                                blurRadius: 3.0,
+                                spreadRadius: 5.0,
+                              ),
+                            ]),
+                            child: CircleAvatar(
+                              radius: 25,
+                              backgroundColor: Colors.grey,
+                              child: Icon(
+                                  isAudioOn
+                                      ? Icons.mic_none_outlined
+                                      : Icons.mic_off_outlined,
+                                  color: Colors.white),
                             ),
-                          ]),
-                          child: const CircleAvatar(
-                            radius: 25,
-                            backgroundColor: Colors.red,
-                            child: Icon(Icons.call_end, color: Colors.white),
                           ),
                         ),
-                      ),
-                    ],
+                        GestureDetector(
+                          onTap: () async {
+                            hmsSDK.switchVideo(isOn: isVideoOn);
+                            setState(() {
+                              isVideoOn = !isVideoOn;
+                            });
+                          },
+                          child: Container(
+                            decoration:
+                                BoxDecoration(shape: BoxShape.circle, boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withAlpha(60),
+                                blurRadius: 3.0,
+                                spreadRadius: 5.0,
+                              ),
+                            ]),
+                            child: CircleAvatar(
+                              radius: 25,
+                              backgroundColor: Colors.grey,
+                              child: Icon(
+                                  isVideoOn
+                                      ? Icons.videocam_outlined
+                                      : Icons.videocam_off_outlined,
+                                  color: Colors.white),
+                            ),
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () async {
+                            hmsSDK.leave();
+                            hmsSDK.removeUpdateListener(listener: this);
+                            Navigator.pop(context);
+                          },
+                          child: Container(
+                            decoration:
+                                BoxDecoration(shape: BoxShape.circle, boxShadow: [
+                              BoxShadow(
+                                color: Colors.red.withAlpha(60),
+                                blurRadius: 3.0,
+                                spreadRadius: 5.0,
+                              ),
+                            ]),
+                            child: const CircleAvatar(
+                              radius: 25,
+                              backgroundColor: Colors.red,
+                              child: Icon(Icons.call_end, color: Colors.white),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       )),
     );
   }
 
   Widget peerTile(
-      Key key, HMSVideoTrack? videoTrack, HMSPeer? peer, BuildContext context) {
+      Key key, HMSVideoTrack? videoTrack, HMSPeer? peer, BuildContext context,bool isSpeaking) {
     return Container(
       key: key,
-      color: Colors.black,
+      decoration: BoxDecoration(
+      color: Color.fromRGBO(0, 0, 0, 1),
+      border: Border.all(color:isSpeaking? Colors.yellow:Colors.transparent,width: 2)
+      ),
       child: (videoTrack != null && !(videoTrack.isMute))
           ? HMSVideoView(
               track: videoTrack,
