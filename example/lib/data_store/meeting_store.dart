@@ -115,7 +115,7 @@ class MeetingStore extends ChangeNotifier
 
   bool isMirror = false;
 
-  bool isAutoSimulcastDisabled = false;
+  bool isAutoSimulcast = true;
   
   bool isNewMessageReceived = false;
 
@@ -422,8 +422,8 @@ class MeetingStore extends ChangeNotifier
   void setSettings() async {
     isMirror = await Utilities.getBoolData(key: 'mirror-camera') ?? false;
     isStatsVisible = await Utilities.getBoolData(key: 'show-stats') ?? false;
-    isAutoSimulcastDisabled =
-        await Utilities.getBoolData(key: 'is-auto-simulcast-disabled') ?? false;
+    isAutoSimulcast =
+        await Utilities.getBoolData(key: 'is-auto-simulcast') ?? true;
     if (isStatsVisible) {
       _hmsSDKInteractor.addStatsListener(this);
     }

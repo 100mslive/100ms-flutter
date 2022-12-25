@@ -27,7 +27,7 @@ class _HMSAppSettingsState extends State<HMSAppSettings> {
   bool showStats = false;
   bool isSoftwareDecoderDisabled = true;
   bool isAudioMixerDisabled = true;
-  bool isAutoSimulcastDisabled = false;
+  bool isAutoSimulcast = true;
   @override
   void initState() {
     super.initState();
@@ -47,8 +47,8 @@ class _HMSAppSettingsState extends State<HMSAppSettings> {
         await Utilities.getBoolData(key: 'software-decoder-disabled') ?? true;
     isAudioMixerDisabled =
         await Utilities.getBoolData(key: 'audio-mixer-disabled') ?? true;
-    isAutoSimulcastDisabled =
-        await Utilities.getBoolData(key: 'is-auto-simulcast-disabled') ?? false;
+    isAutoSimulcast =
+        await Utilities.getBoolData(key: 'is-auto-simulcast') ?? true;
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() {});
@@ -353,7 +353,7 @@ class _HMSAppSettingsState extends State<HMSAppSettings> {
                       color: themeDefaultColor,
                     ),
                     title: Text(
-                      "Disable Auto Simulcast",
+                      "Enable Auto Simulcast",
                       semanticsLabel: "fl_auto_simulcast",
                       style: GoogleFonts.inter(
                           fontSize: 14,
@@ -363,11 +363,11 @@ class _HMSAppSettingsState extends State<HMSAppSettings> {
                     ),
                     trailing: CupertinoSwitch(
                         activeColor: hmsdefaultColor,
-                        value: isAutoSimulcastDisabled,
+                        value: isAutoSimulcast,
                         onChanged: (value) => {
-                              isAutoSimulcastDisabled = value,
+                              isAutoSimulcast = value,
                               Utilities.saveBoolData(
-                                  key: 'is-auto-simulcast-disabled', value: value),
+                                  key: 'is-auto-simulcast', value: value),
                               setState(() {})
                             }),
                   ),

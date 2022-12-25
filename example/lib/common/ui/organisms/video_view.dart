@@ -53,9 +53,9 @@ class _VideoViewState extends State<VideoView> {
                         track: data.item1!,
                         setMirror: false,
                         matchParent: false,
-                        isAutoSimulcastDisabled: context
+                        isAutoSimulcast: context
                             .read<MeetingStore>()
-                            .isAutoSimulcastDisabled,
+                            .isAutoSimulcast,
                       ),
                     ),
                   )
@@ -76,9 +76,9 @@ class _VideoViewState extends State<VideoView> {
                             ? context.read<MeetingStore>().isMirror
                             : false,
                         matchParent: false,
-                        isAutoSimulcastDisabled: context
+                        isAutoSimulcast: context
                             .read<MeetingStore>()
-                            .isAutoSimulcastDisabled,
+                            .isAutoSimulcast,
                       ),
                     ),
                   );
