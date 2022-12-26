@@ -17,20 +17,13 @@ class HMSRole {
   HMSSubscribeSettings? subscribeSettings;
   HMSPermissions permissions;
   int priority;
-  Map? generalPermissions;
-
-  Map? internalPlugins;
-  Map? externalPlugins;
 
   HMSRole(
       {required this.name,
       required this.publishSettings,
       required this.subscribeSettings,
       required this.priority,
-      required this.permissions,
-      required this.generalPermissions,
-      required this.internalPlugins,
-      required this.externalPlugins});
+      required this.permissions});
 
   factory HMSRole.fromMap(Map map) {
     String name = map['name'] as String;
@@ -49,15 +42,11 @@ class HMSRole {
     HMSPermissions permissions = HMSPermissions.fromMap(map['permissions']);
 
     return HMSRole(
-      name: name,
-      publishSettings: publishSetting,
-      subscribeSettings: subscribeSettings,
-      priority: map['priority'] as int,
-      permissions: permissions,
-      generalPermissions: map['general_permissions'] ?? null,
-      internalPlugins: map['internal_plugins'] ?? null,
-      externalPlugins: map['external_plugins'] ?? null,
-    );
+        name: name,
+        publishSettings: publishSetting,
+        subscribeSettings: subscribeSettings,
+        priority: map['priority'] as int,
+        permissions: permissions);
   }
 
   Map<String, dynamic> toMap() {
@@ -66,9 +55,6 @@ class HMSRole {
       'publishSettings': this.publishSettings,
       'subscribeSettings': this.subscribeSettings,
       'priority': this.priority,
-      'generalPermissions': this.generalPermissions,
-      'internalPlugins': this.internalPlugins,
-      'externalPlugins': this.externalPlugins,
       'permissions': permissions
     };
   }
