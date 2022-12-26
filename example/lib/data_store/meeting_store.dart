@@ -1634,23 +1634,10 @@ class MeetingStore extends ChangeNotifier
         switchVideo();
         lastVideoStatus = true;
       }
-      for (PeerTrackNode peerTrackNode in peerTracks) {
-        peerTrackNode.setOffScreenStatus(true);
-      }
     } else if (state == AppLifecycleState.inactive) {
       if (Platform.isAndroid && isPipAutoEnabled && !isPipActive) {
         isPipActive = true;
         notifyListeners();
-      }
-      HMSLocalPeer? localPeer = await getLocalPeer();
-      if (localPeer != null &&
-          !(localPeer.videoTrack?.isMute ?? true) &&
-          !isPipActive) {
-        switchVideo();
-        lastVideoStatus = true;
-      }
-      for (PeerTrackNode peerTrackNode in peerTracks) {
-        peerTrackNode.setOffScreenStatus(true);
       }
     }
   }

@@ -84,12 +84,6 @@ Widget fullScreenView(
                   ),
           );
         }
-
-        if (screenShareCount == 0 &&
-            index < 4 &&
-            peerTracks[index].isOffscreen) {
-          peerTracks[index].setOffScreenStatus(false);
-        }
         return ChangeNotifierProvider.value(
             key: ValueKey(peerTracks[index].uid),
             value: peerTracks[index],
