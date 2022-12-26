@@ -7,15 +7,15 @@ import 'package:hmssdk_flutter/src/service/platform_service.dart';
 ///[HMSRemoteVideoTrack] contains the remote peer video track information.
 class HMSRemoteVideoTrack extends HMSVideoTrack {
   bool isPlaybackAllowed;
-  HMSRemoteVideoTrack(
-      {required bool isDegraded,
-      required HMSTrackKind kind,
-      required String source,
-      required String trackId,
-      required String trackDescription,
-      required bool isMute,
-      required this.isPlaybackAllowed,})
-      : super(
+  HMSRemoteVideoTrack({
+    required bool isDegraded,
+    required HMSTrackKind kind,
+    required String source,
+    required String trackId,
+    required String trackDescription,
+    required bool isMute,
+    required this.isPlaybackAllowed,
+  }) : super(
           isDegraded: isDegraded,
           kind: kind,
           source: source,
@@ -25,12 +25,6 @@ class HMSRemoteVideoTrack extends HMSVideoTrack {
         );
 
   factory HMSRemoteVideoTrack.fromMap({required Map map}) {
-    List<HMSSimulcastLayerDefinition> layerDefinitions = [];
-
-    for (Map layer in map["layer_definitions"]) {
-      layerDefinitions.add(HMSSimulcastLayerDefinition.fromMap(layer));
-    }
-
     HMSRemoteVideoTrack track = HMSRemoteVideoTrack(
         trackId: map['track_id'],
         trackDescription: map['track_description'],

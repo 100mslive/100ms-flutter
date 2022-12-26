@@ -1,17 +1,23 @@
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+
 class HMSSubscribeSettings {
   final List? subcribesToRoles;
   final int maxSubsBitRate;
-  final int? maxDisplayTiles;
+  final HMSSubscribeDegradationParams? subscribeDegradationParam;
 
   HMSSubscribeSettings(
       {this.subcribesToRoles,
       required this.maxSubsBitRate,
-      this.maxDisplayTiles});
+      this.subscribeDegradationParam});
 
   factory HMSSubscribeSettings.fromMap(Map map) {
     return HMSSubscribeSettings(
         maxSubsBitRate: map['max_subs_bit_rate'],
-        maxDisplayTiles: map['map_display_tiles'],
+        subscribeDegradationParam:
+            map.containsKey("subscribe_degradation_param")
+                ? HMSSubscribeDegradationParams.fromMap(
+                    map['subscribe_degradation_param'])
+                : null,
         subcribesToRoles: map['subscribe_to_roles']);
   }
 }
