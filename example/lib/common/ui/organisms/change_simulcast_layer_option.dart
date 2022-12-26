@@ -16,7 +16,9 @@ class ChangeSimulcastLayerOptionDialog extends StatefulWidget {
   HMSSimulcastLayer selectedLayer;
   HMSRemoteVideoTrack track;
   ChangeSimulcastLayerOptionDialog(
-      {required this.layerDefinitions, required this.selectedLayer,required this.track});
+      {required this.layerDefinitions,
+      required this.selectedLayer,
+      required this.track});
 
   @override
   _ChangeSimulcastLayerOptionDialogState createState() =>
@@ -160,8 +162,7 @@ class _ChangeSimulcastLayerOptionDialogState
                 else
                   {
                     Navigator.pop(context),
-                    widget.track
-                        .setSimulcastLayer(valueChoose!),
+                    widget.track.setSimulcastLayer(valueChoose!),
                   }
               },
               child: Padding(

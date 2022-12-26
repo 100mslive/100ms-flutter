@@ -580,34 +580,33 @@ class _HLSMoreSettingsState extends State<HLSMoreSettings> {
                             fontWeight: FontWeight.w600),
                       )),
                   ListTile(
-                              horizontalTitleGap: 2,
-                              onTap: () async {
-                                Navigator.pop(context);
-                                showModalBottomSheet(
-                                  isScrollControlled: true,
-                                  backgroundColor: themeBottomSheetColor,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  context: context,
-                                  builder: (ctx) =>
-                                      NotificationSettings()
-                                );
-                              },
-                              contentPadding: EdgeInsets.zero,
-                              leading: SvgPicture.asset(
-                                "assets/icons/notification.svg",
-                                fit: BoxFit.scaleDown,
-                                color: themeDefaultColor,
-                              ),
-                              title: Text("Modify Notifications",
-                                semanticsLabel: "fl_notification_setting",
-                                style: GoogleFonts.inter(
-                                    fontSize: 14,
-                                    color:themeDefaultColor,
-                                    letterSpacing: 0.25,
-                                    fontWeight: FontWeight.w600),
-                              )),
+                      horizontalTitleGap: 2,
+                      onTap: () async {
+                        Navigator.pop(context);
+                        showModalBottomSheet(
+                            isScrollControlled: true,
+                            backgroundColor: themeBottomSheetColor,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            context: context,
+                            builder: (ctx) => NotificationSettings());
+                      },
+                      contentPadding: EdgeInsets.zero,
+                      leading: SvgPicture.asset(
+                        "assets/icons/notification.svg",
+                        fit: BoxFit.scaleDown,
+                        color: themeDefaultColor,
+                      ),
+                      title: Text(
+                        "Modify Notifications",
+                        semanticsLabel: "fl_notification_setting",
+                        style: GoogleFonts.inter(
+                            fontSize: 14,
+                            color: themeDefaultColor,
+                            letterSpacing: 0.25,
+                            fontWeight: FontWeight.w600),
+                      )),
                   if (_meetingStore.localPeer?.role.permissions.endRoom ??
                       false)
                     ListTile(

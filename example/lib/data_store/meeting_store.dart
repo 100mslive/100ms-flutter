@@ -116,7 +116,7 @@ class MeetingStore extends ChangeNotifier
   bool isMirror = false;
 
   bool isAutoSimulcast = true;
-  
+
   bool isNewMessageReceived = false;
 
   String? highestSpeaker;

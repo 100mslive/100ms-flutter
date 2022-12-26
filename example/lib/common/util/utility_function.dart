@@ -202,8 +202,7 @@ class Utilities {
         break;
 
       case "error":
-        toShowNotif =
-            await Utilities.getBoolData(key: "error-notif") ?? true;
+        toShowNotif = await Utilities.getBoolData(key: "error-notif") ?? true;
         if (toShowNotif) showToast(message);
         break;
     }

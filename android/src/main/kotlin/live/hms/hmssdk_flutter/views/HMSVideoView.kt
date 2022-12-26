@@ -8,13 +8,12 @@ import live.hms.video.media.tracks.HMSVideoTrack
 import live.hms.videoview.HMSVideoView
 import org.webrtc.RendererCommon
 
-
 class HMSVideoView(
-        context: Context,
-        setMirror: Boolean,
-        scaleType: Int? = RendererCommon.ScalingType.SCALE_ASPECT_FIT.ordinal,
-        private val track:HMSVideoTrack,
-        isAutoSimulcast:Boolean
+    context: Context,
+    setMirror: Boolean,
+    scaleType: Int? = RendererCommon.ScalingType.SCALE_ASPECT_FIT.ordinal,
+    private val track: HMSVideoTrack,
+    isAutoSimulcast: Boolean
 ) : FrameLayout(context, null) {
 
     private val hmsVideoView: HMSVideoView
@@ -33,7 +32,7 @@ class HMSVideoView(
         }
     }
 
-    fun onDisposeCalled(){
+    fun onDisposeCalled() {
         super.onDetachedFromWindow()
         hmsVideoView.removeTrack()
     }

@@ -1,6 +1,7 @@
 {
   "flutter": "1.2.0",
-  "ios": "0.5.3",
+  "ios": "0.5.4",
+  "iOSBroadcastExtension": "0.0.7",
   "android": "2.5.5",
-  "iOSBroadcastExtension": "0.0.7"
+  "androidVideoView": "2.5.5"
 }

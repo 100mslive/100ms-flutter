@@ -8,25 +8,24 @@
 import Foundation
 import HMSSDK
 
-class HMSRemoteVideoTrackExtension{
-    
+class HMSRemoteVideoTrackExtension {
+
     static func remoteVideoTrackActions(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK) {
-        
-        switch call.method{
+
+        switch call.method {
         case "set_simulcast_layer":
-            setSimulcastLayer(call,result,hmsSDK)
+            setSimulcastLayer(call, result, hmsSDK)
         case "get_layer":
-            getLayer(call,result,hmsSDK)
+            getLayer(call, result, hmsSDK)
         case "get_layer_definition":
-            getLayerDefinition(call, result,hmsSDK) 
+            getLayerDefinition(call, result, hmsSDK)
         default:
             result(FlutterMethodNotImplemented)
         }
-        
+
     }
-    
-    
-    static private func setSimulcastLayer(_ call: FlutterMethodCall, _ result: @escaping FlutterResult,_ hmsSDK: HMSSDK) {
+
+    static private func setSimulcastLayer(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK) {
         let arguments = call.arguments as![AnyHashable: Any]
 
         guard let trackIdString = arguments["track_id"] as? String,
@@ -44,13 +43,13 @@ class HMSRemoteVideoTrackExtension{
             result(HMSErrorExtension.getError("Track Id must be HMSRemoteVideoTrack Type \(#function)"))
         }
     }
-    
-    static private func getLayer(_ call: FlutterMethodCall, _ result: @escaping FlutterResult,_ hmsSDK: HMSSDK) {
+
+    static private func getLayer(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK) {
         let arguments = call.arguments as![AnyHashable: Any]
 
         guard let trackIdString = arguments["track_id"] as? String,
               let trackId = HMSUtilities.getTrack(for: trackIdString, in: hmsSDK.room!)
-        else{
+        else {
             result(nil)
             return
         }
@@ -60,19 +59,19 @@ class HMSRemoteVideoTrackExtension{
             result(nil)
         }
     }
-    
-    static private func getLayerDefinition(_ call: FlutterMethodCall, _ result: @escaping FlutterResult,_ hmsSDK: HMSSDK) {
+
+    static private func getLayerDefinition(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK) {
         let arguments = call.arguments as![AnyHashable: Any]
 
         guard let trackIdString = arguments["track_id"] as? String,
               let trackId = HMSUtilities.getTrack(for: trackIdString, in: hmsSDK.room!)
-        else{
+        else {
             result(nil)
             return
         }
         var dict = [[String: Any]]()
         if let track = trackId as? HMSRemoteVideoTrack {
-            track.layerDefinitions?.forEach{ layerDefinition in
+            track.layerDefinitions?.forEach { layerDefinition in
                 dict.append(HMSSimulcastLayerDefinitionExtension.toDictionary(layerDefinition))
             }
             result(dict)
@@ -80,5 +79,5 @@ class HMSRemoteVideoTrackExtension{
             result(nil)
         }
     }
-    
+
 }
