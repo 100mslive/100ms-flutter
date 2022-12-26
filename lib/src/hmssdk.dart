@@ -39,15 +39,8 @@ class HMSSDK {
     PlatformService.addUpdateListener(listener);
   }
 
-  void addStatsListener({required HMSStatsListener listener}) {
-    PlatformService.addRTCStatsListener(listener);
-  }
-
-  void removeStatsListener({required HMSStatsListener listener}) {
-    PlatformService.removeRTCStatsListener(listener);
-  }
-
-  /// Join the room with configuration options passed as an [HMSConfig] object
+  /// Join the room with configuration options passed as an [HMSConfig] object.
+  /// Refer [Join Room guide here](https://www.100ms.live/docs/flutter/v2/features/join).
   Future<dynamic> join({
     required HMSConfig config,
   }) async {
@@ -982,6 +975,15 @@ class HMSSDK {
     final bool? result =
         await PlatformService.invokeMethod(PlatformMethod.isPipAvailable);
     return result ?? false;
+  }
+
+  /// add listener to RTC Stats of the room to diagnose Metrics
+  void addStatsListener({required HMSStatsListener listener}) {
+    PlatformService.addRTCStatsListener(listener);
+  }
+
+  void removeStatsListener({required HMSStatsListener listener}) {
+    PlatformService.removeRTCStatsListener(listener);
   }
 
   /// To modify local peer's audio & video tracks settings use the [hmsTrackSetting]. Only required for advanced use cases.
