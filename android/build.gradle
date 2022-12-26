@@ -1,6 +1,6 @@
 import groovy.json.JsonSlurper
 
-def sdkVersions = new JsonSlurper().parse file("$rootDir/../../sdk-versions.json")
+def sdkVersions = new JsonSlurper().parse file("$rootDir/../../lib/assets/sdk-versions.json")
 
 group 'live.hms.hmssdk_flutter'
 version '1.0-SNAPSHOT'
