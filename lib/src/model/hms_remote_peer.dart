@@ -10,6 +10,7 @@
 
 // Project imports:
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:hmssdk_flutter/src/model/hms_date_extension.dart';
 
 class HMSRemotePeer extends HMSPeer {
   @override
@@ -30,7 +31,9 @@ class HMSRemotePeer extends HMSPeer {
       this.audioRemoteTrack,
       this.videoRemoteTrack,
       List<HMSTrack>? auxiliaryTracks,
-      HMSNetworkQuality? networkQuality})
+      HMSNetworkQuality? networkQuality,
+      DateTime? joinedAt,
+      DateTime? updatedAt})
       : super(
             peerId: peerId,
             name: name,
@@ -41,7 +44,9 @@ class HMSRemotePeer extends HMSPeer {
             audioTrack: audioRemoteTrack,
             videoTrack: videoRemoteTrack,
             auxiliaryTracks: auxiliaryTracks,
-            networkQuality: networkQuality);
+            networkQuality: networkQuality,
+            joinedAt: joinedAt,
+            updatedAt: updatedAt);
 
   ///important to compare using [peerId]
   @override
@@ -58,15 +63,22 @@ class HMSRemotePeer extends HMSPeer {
     HMSRole role = HMSRole.fromMap(map['role']);
     // TODO: add auxiliary tracks
     HMSRemotePeer peer = HMSRemotePeer(
-        peerId: map['peer_id'],
-        name: map['name'],
-        isLocal: map['is_local'],
-        role: role,
-        metadata: map['metadata'],
-        customerUserId: map['customer_user_id'],
-        networkQuality: map["network_quality"] != null
-            ? HMSNetworkQuality.fromMap(map["network_quality"])
-            : null);
+      peerId: map['peer_id'],
+      name: map['name'],
+      isLocal: map['is_local'],
+      role: role,
+      metadata: map['metadata'],
+      customerUserId: map['customer_user_id'],
+      networkQuality: map["network_quality"] != null
+          ? HMSNetworkQuality.fromMap(map["network_quality"])
+          : null,
+      joinedAt: map.containsKey("joined_at")
+          ? HMSDateExtension.convertDate(map["joined_at"])
+          : null,
+      updatedAt: map.containsKey("updated_at")
+          ? HMSDateExtension.convertDate(map["updated_at"])
+          : null,
+    );
 
     if (map['audio_track'] != null) {
       peer.audioRemoteTrack =
