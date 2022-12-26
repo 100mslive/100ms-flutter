@@ -2,7 +2,7 @@
 ///
 /// To use, import `package:hmssdk_flutter/model/hms_peer.dart`.
 ///
-///[HMSPeer] model contains everything about a peer and it's tracks information.
+///[HMSPeer] model contains everything about a peer and it's track information.
 ///
 /// A [peer] is the object returned by 100ms SDKs that contains all information about a user - name, role, video track etc.
 ///
@@ -20,7 +20,7 @@ class HMSPeer {
   ///name of the peer in the room.
   final String name;
 
-  ///returns whether peer is local or not.
+  ///returns whether the peer is local or not.
   final bool isLocal;
 
   @override
@@ -30,13 +30,29 @@ class HMSPeer {
 
   ///role of the peer in the room.
   final HMSRole role;
+
+  ///userId to identify users sent with HMSConfig metadata 
   final String? customerUserId;
+
+  ///metadata of the peer in the room
   final String? metadata;
+
+  ///audioTrack of the peer in the room
   HMSAudioTrack? audioTrack;
+
+  ///videoTrack of the peer in the room
   HMSVideoTrack? videoTrack;
+
+  ///auxiliary tracks(screenshare track etc.) of the peer in room
   final List<HMSTrack>? auxiliaryTracks;
+
+  ///networkQuality of the peer in room
   final HMSNetworkQuality? networkQuality;
+
+  ///joinedAt is the time when peer joined the room
   final DateTime? joinedAt;
+
+  ///updatedAt is the time when the peer object was last updated
   final DateTime? updatedAt;
 
   HMSPeer(
