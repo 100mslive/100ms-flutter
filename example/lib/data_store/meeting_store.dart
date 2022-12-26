@@ -113,6 +113,10 @@ class MeetingStore extends ChangeNotifier
 
   bool isStatsVisible = false;
 
+  bool isMirror = false;
+
+  bool isAutoSimulcast = true;
+  
   bool isNewMessageReceived = false;
 
   String? highestSpeaker;
@@ -121,8 +125,6 @@ class MeetingStore extends ChangeNotifier
   String message = "";
 
   final DateFormat formatter = DateFormat('d MMM y h:mm:ss a');
-
-  bool isMirror = false;
 
   ScrollController controller = ScrollController();
 
@@ -420,6 +422,8 @@ class MeetingStore extends ChangeNotifier
   void setSettings() async {
     isMirror = await Utilities.getBoolData(key: 'mirror-camera') ?? false;
     isStatsVisible = await Utilities.getBoolData(key: 'show-stats') ?? false;
+    isAutoSimulcast =
+        await Utilities.getBoolData(key: 'is-auto-simulcast') ?? true;
     if (isStatsVisible) {
       _hmsSDKInteractor.addStatsListener(this);
     }

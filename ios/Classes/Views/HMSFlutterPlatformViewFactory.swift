@@ -26,7 +26,7 @@ class HMSFlutterPlatformViewFactory: NSObject, FlutterPlatformViewFactory {
                                       viewIdentifier: viewId,
                                       videoContentMode: getMode(from: arguments),
                                       mirror: getMirror(from: arguments),
-                                      disableAutoSimulcastLayerSelect: false,
+                                      disableAutoSimulcastLayerSelect: !(getIsAutoSimulcast(from: arguments)),
                                       videoTrack: getVideoTrack(from: arguments))
     }
 
@@ -47,7 +47,11 @@ class HMSFlutterPlatformViewFactory: NSObject, FlutterPlatformViewFactory {
     private func getMirror(from arguments: [String: AnyObject]) -> Bool {
         arguments["set_mirror"] as? Bool ?? false
     }
-
+    
+    private func getIsAutoSimulcast(from arguments: [String: AnyObject]) -> Bool{
+        arguments["is_auto_simulcast"] as? Bool ?? true
+    }
+    
     private func getMode(from arguments: [String: AnyObject]) -> UIView.ContentMode {
         let scaleTypeInt = arguments["scale_type"] as? Int
         return getViewContentMode(scaleTypeInt)
