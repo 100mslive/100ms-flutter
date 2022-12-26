@@ -86,3 +86,4 @@ export 'src/model/hms_screen_broadcast_audio_receiver_node.dart';
 export 'src/model/hms_log_settings.dart';
 export 'src/model/hms_quality_limitation_reasons.dart';
 export 'src/model/hms_simulcast_layer_definition.dart';
+export 'src/model/hms_subscribe_degradation_params.dart';
