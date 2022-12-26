@@ -28,13 +28,13 @@ class HMSPeer {
     return 'HMSPeer{name: $name, isLocal: $isLocal}';
   }
 
-  ///role of the peer in the room.
+  ///the current role of the peer in the room
   final HMSRole role;
 
-  ///userId to identify users sent with HMSConfig metadata 
+  ///optional data which can be linked to a peer while joining room
   final String? customerUserId;
 
-  ///metadata of the peer in the room
+  ///optional metadata of the peer in the room
   final String? metadata;
 
   ///audioTrack of the peer in the room
@@ -43,7 +43,7 @@ class HMSPeer {
   ///videoTrack of the peer in the room
   HMSVideoTrack? videoTrack;
 
-  ///auxiliary tracks(screenshare track etc.) of the peer in room
+  ///auxiliary tracks include Screenshare, Audio or Video files, etc published by this peer in the room
   final List<HMSTrack>? auxiliaryTracks;
 
   ///networkQuality of the peer in room
