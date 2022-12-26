@@ -10,6 +10,7 @@
 
 // Project imports:
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:hmssdk_flutter/src/model/hms_date_extension.dart';
 
 ///HMSLocalPeer instance of the localPeer means your instance in the room.
 class HMSLocalPeer extends HMSPeer {
@@ -23,7 +24,9 @@ class HMSLocalPeer extends HMSPeer {
       HMSLocalAudioTrack? audioTrack,
       HMSLocalVideoTrack? videoTrack,
       List<HMSTrack>? auxiliaryTracks,
-      HMSNetworkQuality? networkQuality})
+      HMSNetworkQuality? networkQuality,
+      DateTime? joinedAt,
+      DateTime? updatedAt})
       : super(
             isLocal: isLocal,
             name: name,
@@ -34,24 +37,33 @@ class HMSLocalPeer extends HMSPeer {
             audioTrack: audioTrack,
             videoTrack: videoTrack,
             auxiliaryTracks: auxiliaryTracks,
-            networkQuality: networkQuality);
+            networkQuality: networkQuality,
+            joinedAt: joinedAt,
+            updatedAt: updatedAt);
 
   factory HMSLocalPeer.fromMap(Map map) {
     return HMSLocalPeer(
-        peerId: map['peer_id'],
-        name: map['name'],
-        isLocal: map['is_local'],
-        role: HMSRole.fromMap(map['role']),
-        metadata: map['metadata'],
-        customerUserId: map['customer_user_id'],
-        audioTrack: map["audio_track"] != null
-            ? HMSLocalAudioTrack.fromMap(map: map["audio_track"])
-            : null,
-        videoTrack: map["video_track"] != null
-            ? HMSLocalVideoTrack.fromMap(map: map["video_track"])
-            : null,
-        networkQuality: map["network_quality"] != null
-            ? HMSNetworkQuality.fromMap(map["network_quality"])
-            : null);
+      peerId: map['peer_id'],
+      name: map['name'],
+      isLocal: map['is_local'],
+      role: HMSRole.fromMap(map['role']),
+      metadata: map['metadata'],
+      customerUserId: map['customer_user_id'],
+      audioTrack: map["audio_track"] != null
+          ? HMSLocalAudioTrack.fromMap(map: map["audio_track"])
+          : null,
+      videoTrack: map["video_track"] != null
+          ? HMSLocalVideoTrack.fromMap(map: map["video_track"])
+          : null,
+      networkQuality: map["network_quality"] != null
+          ? HMSNetworkQuality.fromMap(map["network_quality"])
+          : null,
+      joinedAt: map.containsKey("joined_at")
+          ? HMSDateExtension.convertDate(map["joined_at"])
+          : null,
+      updatedAt: map.containsKey("updated_at")
+          ? HMSDateExtension.convertDate(map["updated_at"])
+          : null,
+    );
   }
 }

@@ -10,6 +10,7 @@
 
 // Project imports:
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:hmssdk_flutter/src/model/hms_date_extension.dart';
 import 'package:hmssdk_flutter/src/service/platform_service.dart';
 
 class HMSPeer {
@@ -35,19 +36,22 @@ class HMSPeer {
   HMSVideoTrack? videoTrack;
   final List<HMSTrack>? auxiliaryTracks;
   final HMSNetworkQuality? networkQuality;
+  final DateTime? joinedAt;
+  final DateTime? updatedAt;
 
-  HMSPeer({
-    required this.peerId,
-    required this.name,
-    required this.isLocal,
-    required this.role,
-    this.customerUserId,
-    this.metadata,
-    this.audioTrack,
-    this.videoTrack,
-    this.auxiliaryTracks,
-    this.networkQuality,
-  });
+  HMSPeer(
+      {required this.peerId,
+      required this.name,
+      required this.isLocal,
+      required this.role,
+      this.customerUserId,
+      this.metadata,
+      this.audioTrack,
+      this.videoTrack,
+      this.auxiliaryTracks,
+      this.networkQuality,
+      this.joinedAt,
+      this.updatedAt});
 
   ///important to compare using [peerId]
   @override
@@ -75,7 +79,16 @@ class HMSPeer {
             customerUserId: map['customer_user_id'],
             networkQuality: map['network_quality'] == null
                 ? null
-                : HMSNetworkQuality.fromMap(map['network_quality']))
+                : HMSNetworkQuality.fromMap(
+                    map['network_quality'],
+                  ),
+            joinedAt: map.containsKey("joined_at")
+                ? HMSDateExtension.convertDate(map["joined_at"])
+                : null,
+            updatedAt: map.containsKey("updated_at")
+                ? HMSDateExtension.convertDate(map["updated_at"])
+                : null,
+          )
         : HMSRemotePeer(
             peerId: map['peer_id'],
             name: map['name'],
@@ -85,7 +98,14 @@ class HMSPeer {
             customerUserId: map['customer_user_id'],
             networkQuality: map['network_quality'] == null
                 ? null
-                : HMSNetworkQuality.fromMap(map['network_quality']));
+                : HMSNetworkQuality.fromMap(map['network_quality']),
+            joinedAt: map.containsKey("joined_at")
+                ? HMSDateExtension.convertDate(map["joined_at"])
+                : null,
+            updatedAt: map.containsKey("updated_at")
+                ? HMSDateExtension.convertDate(map["updated_at"])
+                : null,
+          );
 
     if (map['audio_track'] != null) {
       peer.audioTrack = HMSAudioTrack.fromMap(
