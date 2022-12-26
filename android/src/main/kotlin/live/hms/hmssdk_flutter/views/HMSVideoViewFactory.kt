@@ -13,14 +13,14 @@ import live.hms.video.utils.HmsUtilities
 
 
 class HMSVideoViewWidget(private val context: Context, id: Int, creationParams: Map<String?, Any?>?, private val track: HMSVideoTrack, private val setMirror:Boolean,
-                        private val scaleType : Int?,private val matchParent: Boolean? = true, private val isAutoSimulcast:Boolean?= true
+                        private val scaleType : Int?,private val matchParent: Boolean? = true, private val isAutoSimulcast:Boolean
 ) : PlatformView {
 
     private var hmsVideoView: HMSVideoView? = null
 
     override fun getView(): View {        
         if (hmsVideoView == null) {
-            hmsVideoView = HMSVideoView(context, setMirror, scaleType, track,isAutoSimulcast!!)
+            hmsVideoView = HMSVideoView(context, setMirror, scaleType, track,isAutoSimulcast)
         }
         return hmsVideoView!!
     }
@@ -65,7 +65,7 @@ class HMSVideoViewFactory(private val plugin: HmssdkFlutterPlugin) :
 
         val track = HmsUtilities.getVideoTrack(trackId!!, room!!)
 
-        val isAutoSimulcast = args!!["is_auto_simulcast"] as? Boolean
+        val isAutoSimulcast = args!!["is_auto_simulcast"] as? Boolean?:true
 
         return HMSVideoViewWidget(requireNotNull(context), viewId, creationParams, track!!, setMirror!!, scaleType, matchParent,isAutoSimulcast)
     }
