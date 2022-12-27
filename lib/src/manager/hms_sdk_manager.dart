@@ -21,18 +21,23 @@ class HmsSdkManager {
 
   Future<bool> createHMSSdk(HMSTrackSetting? hmsTrackSetting, String? appGroup,
       String? preferredExtension, HMSLogSettings? hmsLogSettings) async {
-    final String sdkVersions =
-        await rootBundle.loadString('packages/hmssdk_flutter/lib/assets/sdk-versions.json');
+    final String sdkVersions = await rootBundle
+        .loadString('packages/hmssdk_flutter/lib/assets/sdk-versions.json');
     var versions = json.decode(sdkVersions);
-    List<String> dartSDKVersion = Platform.version.split(" ");
-    return await PlatformService.invokeMethod(PlatformMethod.build, arguments: {
-      "hms_track_setting": hmsTrackSetting?.toMap(),
-      "app_group": appGroup,
-      "preferred_extension": preferredExtension,
-      "hms_log_settings": hmsLogSettings?.toMap(),
-      "dart_sdk_version":
-          dartSDKVersion.length > 0 ? dartSDKVersion[0] : "null",
-      "hmssdk_version": versions['flutter']??"null"
-    });
+    if (versions['flutter'] == null) {
+      throw FormatException("flutter version not found");
+    } else {
+      List<String> dartSDKVersion = Platform.version.split(" ");
+      return await PlatformService.invokeMethod(PlatformMethod.build,
+          arguments: {
+            "hms_track_setting": hmsTrackSetting?.toMap(),
+            "app_group": appGroup,
+            "preferred_extension": preferredExtension,
+            "hms_log_settings": hmsLogSettings?.toMap(),
+            "dart_sdk_version":
+                dartSDKVersion.length > 0 ? dartSDKVersion[0] : "null",
+            "hmssdk_version": versions['flutter']
+          });
+    }
   }
 }

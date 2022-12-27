@@ -30,6 +30,7 @@ class _HMSAppSettingsState extends State<HMSAppSettings> {
   bool isAudioMixerDisabled = true;
   bool isAutoSimulcast = true;
   var versions = {};
+
   @override
   void initState() {
     super.initState();
@@ -40,6 +41,15 @@ class _HMSAppSettingsState extends State<HMSAppSettings> {
     final String sdkVersions = await rootBundle
         .loadString('packages/hmssdk_flutter/assets/sdk-versions.json');
     versions = json.decode(sdkVersions);
+    if (versions['flutter'] == null) {
+      throw FormatException("flutter version not found");
+    }
+    if (Platform.isIOS && versions['ios'] == null) {
+      throw FormatException("ios version not found");
+    }
+    if (Platform.isAndroid && versions['android'] == null) {
+      throw FormatException("android version not found");
+    }
     joinWithMutedAudio =
         await Utilities.getBoolData(key: 'join-with-muted-audio') ?? true;
     joinWithMutedVideo =
@@ -464,7 +474,7 @@ class _HMSAppSettingsState extends State<HMSAppSettings> {
                             fontWeight: FontWeight.w400),
                       ),
                       trailing: Text(
-                        versions["flutter"]??"",
+                        versions["flutter"] ?? "",
                         semanticsLabel: "hmssdk_version",
                         style: GoogleFonts.inter(
                             fontSize: 12,
@@ -494,8 +504,8 @@ class _HMSAppSettingsState extends State<HMSAppSettings> {
                     ),
                     trailing: Text(
                       Platform.isAndroid
-                          ? versions["android"]??""
-                          : versions["ios"]??"",
+                          ? versions["android"] ?? ""
+                          : versions["ios"] ?? "",
                       semanticsLabel: Platform.isAndroid
                           ? "android_sdk_version"
                           : "iOS_sdk_version",
