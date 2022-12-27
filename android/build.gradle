@@ -41,8 +41,8 @@ android {
 }
 
 dependencies {
-    implementation "com.github.100mslive.android-sdk:lib:release-v2-SNAPSHOT"
-    implementation 'com.github.100mslive.android-sdk:videoview:release-v2-SNAPSHOT'
+    implementation "live.100ms:android-sdk:${sdkVersions['android']}"
+    implementation "live.100ms:video-view:${sdkVersions['androidVideoView']}"
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.0'
     implementation "org.jetbrains.kotlin:kotlin-script-runtime:1.5.0"
