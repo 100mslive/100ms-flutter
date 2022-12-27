@@ -58,9 +58,14 @@ class _VideoTileState extends State<VideoTile> {
         _meetingStore.localPeer?.role.permissions.removeOthers ?? false;
     bool changeRolePermission =
         _meetingStore.localPeer?.role.permissions.changeRole ?? false;
-    bool isSimulcastEnabled =
-        (_meetingStore.localPeer?.role.publishSettings?.simulcast?.video !=
-            null);
+    bool isSimulcastEnabled = (context
+            .read<PeerTrackNode>()
+            .peer
+            .role
+            .publishSettings
+            ?.simulcast
+            ?.video !=
+        null);
 
     return Semantics(
       label: "fl_${context.read<PeerTrackNode>().peer.name}_video_tile",
@@ -84,10 +89,6 @@ class _VideoTileState extends State<VideoTile> {
                   }
                   var peerTrackNode = context.read<PeerTrackNode>();
                   HMSPeer peerNode = peerTrackNode.peer;
-                  if (!mutePermission ||
-                      !unMutePermission ||
-                      !removePeerPermission ||
-                      !changeRolePermission) return;
                   if (peerTrackNode.peer.peerId !=
                       _meetingStore.localPeer!.peerId)
                     showDialog(
