@@ -3,7 +3,6 @@
 library hmssdk_flutter;
 
 export 'src/common/platform_methods.dart';
-export 'src/common/constant.dart';
 
 // ENUMS
 export 'src/enum/hms_audio_codec.dart';
