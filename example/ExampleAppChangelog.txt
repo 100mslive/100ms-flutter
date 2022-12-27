@@ -12,5 +12,5 @@
 
 
 Flutter SDK: 1.2.0
-Android SDK: release-v2-SNAPSHOT
+Android SDK: 2.5.5
 iOS SDK: 0.5.4
