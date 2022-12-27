@@ -189,10 +189,10 @@ class HmssdkFlutterPlugin :
             "set_playback_allowed_for_track" -> {
                 setPlaybackAllowedForTrack(call, result)
             }
-            "enter_pip_mode","is_pip_active","is_pip_available","switch_audio_button_status","switch_video_button_status","update_pip_config"->{
-                HMSPipAction.pipActions(call,result,this.activity,hmssdk!!)
-            
-            "set_simulcast_layer", "get_layer", "get_layer_definition" -> {
+            "enter_pip_mode","is_pip_active","is_pip_available","switch_audio_button_status","switch_video_button_status","update_pip_config"-> {
+                HMSPipAction.pipActions(call, result, this.activity, hmssdk!!)
+            }
+            "set_simulcast_layer","get_layer", "get_layer_definition" -> {
                 HMSRemoteVideoTrackAction.remoteVideoTrackActions(call, result, hmssdk!!)
             }
             else -> {
@@ -772,6 +772,7 @@ class HmssdkFlutterPlugin :
             args["event_name"] = "on_peer_update"
             args["data"] = HMSPeerUpdateExtension.toDictionary(peer, type)
             if (args["data"] != null) {
+                CoroutineScope(Dispatchers.Main).launch {
                     eventSink?.success(args)
                 }
             }
@@ -804,46 +805,47 @@ class HmssdkFlutterPlugin :
             val args = HashMap<String, Any?>()
             args.put("event_name", "on_removed_from_room")
             args.put("data", HMSRemovedFromRoomExtension.toDictionary(notification))
-            if (args["data"] != null){
-                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && activity.isInPictureInPictureMode){
+            if (args["data"] != null) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && activity.isInPictureInPictureMode) {
                     activity.moveTaskToBack(false)
                 }
 
-            if (args["data"] != null) {
-                CoroutineScope(Dispatchers.Main).launch {
-                    eventSink?.success(args)
+                if (args["data"] != null) {
+                    CoroutineScope(Dispatchers.Main).launch {
+                        eventSink?.success(args)
+                    }
                 }
             }
         }
 
-        override fun onReconnected() {
-            val args = HashMap<String, Any?>()
-            args.put("event_name", "on_re_connected")
-            CoroutineScope(Dispatchers.Main).launch {
-                eventSink?.success(args)
-            }
-        }
-
-        override fun onReconnecting(error: HMSException) {
-            val args = HashMap<String, Any>()
-            args.put("event_name", "on_re_connecting")
-            CoroutineScope(Dispatchers.Main).launch {
-                eventSink?.success(args)
-            }
-        }
-
-        override fun onRoleChangeRequest(request: HMSRoleChangeRequest) {
-            val args = HashMap<String, Any?>()
-            args.put("event_name", "on_role_change_request")
-            args.put("data", HMSRoleChangedExtension.toDictionary(request))
-            requestChange = request
-            if (args["data"] != null) {
+            override fun onReconnected() {
+                val args = HashMap<String, Any?>()
+                args.put("event_name", "on_re_connected")
                 CoroutineScope(Dispatchers.Main).launch {
                     eventSink?.success(args)
                 }
             }
+
+            override fun onReconnecting(error: HMSException) {
+                val args = HashMap<String, Any>()
+                args.put("event_name", "on_re_connecting")
+                CoroutineScope(Dispatchers.Main).launch {
+                    eventSink?.success(args)
+                }
+            }
+
+            override fun onRoleChangeRequest(request: HMSRoleChangeRequest) {
+                val args = HashMap<String, Any?>()
+                args.put("event_name", "on_role_change_request")
+                args.put("data", HMSRoleChangedExtension.toDictionary(request))
+                requestChange = request
+                if (args["data"] != null) {
+                    CoroutineScope(Dispatchers.Main).launch {
+                        eventSink?.success(args)
+                    }
+                }
+            }
         }
-    }
 
     private val hmsPreviewListener = object : HMSPreviewListener {
         override fun onError(error: HMSException) {
