@@ -21,13 +21,13 @@ class HMSTrack {
     required this.isMute,
   });
 
-  factory HMSTrack.fromMap({required Map map}) {
+  factory HMSTrack.fromMap({required Map map, required bool isLocal}) {
     HMSTrackKind hmsTrackKind =
         HMSTrackKindValue.getHMSTrackKindFromName(map['track_kind']);
     if (hmsTrackKind == HMSTrackKind.kHMSTrackKindVideo) {
-      return HMSVideoTrack.fromMap(map: map);
+      return HMSVideoTrack.fromMap(map: map, isLocal: isLocal);
     }
-    return HMSAudioTrack.fromMap(map: map);
+    return HMSAudioTrack.fromMap(map: map, isLocal: isLocal);
   }
 
   factory HMSTrack.copyWith(bool? isHighest, {required HMSTrack track}) {
@@ -37,17 +37,6 @@ class HMSTrack {
         trackId: track.trackId,
         trackDescription: track.trackDescription,
         isMute: track.isMute);
-  }
-
-  static List<HMSTrack> getHMSTracksFromList(
-      {required List listOfMap, HMSPeer? peer}) {
-    List<HMSTrack> tracks = [];
-
-    listOfMap.forEach((each) {
-      tracks.add(HMSTrack.fromMap(map: each));
-    });
-
-    return tracks;
   }
 
   @override

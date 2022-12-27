@@ -94,17 +94,10 @@ Widget hlsGridView(
                   ),
           );
         }
-
-        if (screenShareCount == 0 &&
-            index < 4 &&
-            peerTracks[index].isOffscreen) {
-          peerTracks[index].setOffScreenStatus(false);
-        }
         return ChangeNotifierProvider.value(
             key: ValueKey(peerTracks[index].uid + "video_view"),
             value: peerTracks[index],
             child: VideoTile(
-              islongPressEnabled: false,
               key: ValueKey(peerTracks[index].uid + "audio_view"),
               itemHeight: size.height,
               itemWidth: size.width,
@@ -114,18 +107,23 @@ Widget hlsGridView(
       gridDelegate: SliverStairedGridDelegate(
           startCrossAxisDirectionReversed: true,
           pattern: isPortrait
-              ? portraitPattern(itemCount, screenShareCount, size, context)
+              ? portraitPattern(peerTracks, screenShareCount, size, context)
               : landscapePattern(itemCount, screenShareCount, size, context)));
 }
 
-List<StairedGridTile> portraitPattern(
-    int itemCount, int screenShareCount, Size size, BuildContext context) {
+List<StairedGridTile> portraitPattern(List<PeerTrackNode> peerTrack,
+    int screenShareCount, Size size, BuildContext context) {
   double ratio = Utilities.getHLSRatio(size, context);
   List<StairedGridTile> tiles = [];
   for (int i = 0; i < screenShareCount; i++) {
     tiles.add(StairedGridTile(1, ratio));
   }
-  int normalTile = (itemCount - screenShareCount);
+  int pinTileCount = 0;
+  while (peerTrack[pinTileCount + screenShareCount].pinTile) {
+    tiles.add(StairedGridTile(1, ratio));
+    pinTileCount++;
+  }
+  int normalTile = peerTrack.length - screenShareCount - pinTileCount;
   int gridView = normalTile ~/ 4;
   int tileLeft = normalTile - (gridView * 4);
   for (int i = 0; i < (normalTile - tileLeft); i++) {

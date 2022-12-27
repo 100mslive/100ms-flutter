@@ -174,6 +174,40 @@ class Utilities {
     return url;
   }
 
+  static void showNotification(String message, String type) async {
+    bool toShowNotif = false;
+    switch (type) {
+      case "peer-joined":
+        toShowNotif =
+            await Utilities.getBoolData(key: "peer-join-notif") ?? true;
+        if (toShowNotif) showToast(message);
+        break;
+
+      case "peer-left":
+        toShowNotif =
+            await Utilities.getBoolData(key: "peer-leave-notif") ?? true;
+        if (toShowNotif) showToast(message);
+        break;
+
+      case "message":
+        toShowNotif =
+            await Utilities.getBoolData(key: "new-message-notif") ?? true;
+        if (toShowNotif) showToast(message);
+        break;
+
+      case "hand-raise":
+        toShowNotif =
+            await Utilities.getBoolData(key: "hand-raise-notif") ?? true;
+        if (toShowNotif) showToast(message);
+        break;
+
+      case "error":
+        toShowNotif = await Utilities.getBoolData(key: "error-notif") ?? true;
+        if (toShowNotif) showToast(message);
+        break;
+    }
+  }
+
   static HMSTrackSetting getTrackSetting(
       {required bool isAudioMixerDisabled,
       required bool joinWithMutedVideo,

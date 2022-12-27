@@ -31,7 +31,6 @@ dependencies:
   logger: 
   path_provider: 
   dropdown_button2: 
-  video_player:
   focus_detector: 
   flutter_staggered_grid_view: 
   tuple:
@@ -46,6 +45,8 @@ dependencies:
   draggable_widget:
   badges:
   url_launcher:
+  pip_flutter:
+  share_plus:
   
 dev_dependencies:
   flutter_test:
@@ -67,6 +68,7 @@ flutter:
   assets:
   - assets/icons/
   - assets/
+  - packages/hmssdk_flutter/assets/sdk-versions.json
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

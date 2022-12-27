@@ -1,6 +1,4 @@
-<a href="https://100ms.live/">
-<img src="https://raw.githubusercontent.com/100mslive/100ms-flutter/main/assets/100ms.svg" title="100ms logo" float=center height=256>
-</a>
+[![100ms-svg](https://user-images.githubusercontent.com/93931528/205858417-8c0a0d1b-2d46-4710-9316-7418092fd3d6.svg)](https://100ms.live/)
 
 [![Pub Version](https://img.shields.io/pub/v/hmssdk_flutter)](https://pub.dev/packages/hmssdk_flutter)
 [![License](https://img.shields.io/github/license/100mslive/100ms-flutter)](https://www.100ms.live/)
@@ -30,9 +28,9 @@ Here you will find everything you need to build experiences with video using 100
 
 1. Sign up on <https://dashboard.100ms.live/register> & visit the Developer tab to access your credentials.
 
-2. Get familiarized with [Tokens & Security here](https://docs.100ms.live/flutter/foundation/security-and-tokens)
+2. Get familiarized with [Tokens & Security here](https://www.100ms.live/docs/flutter/v2/foundation/security-and-tokens)
 
-3. Complete the steps in [Auth Token Quick Start Guide](https://docs.100ms.live/flutter/guides/token)
+3. Complete the steps in [Auth Token Quick Start Guide](https://www.100ms.live/docs/flutter/v2/guides/token)
 
 4. Get the HMSSDK via [pub.dev](https://pub.dev/packages/hmssdk_flutter). Add the `hmssdk_flutter` to your pubspec.yaml.
 
@@ -361,10 +359,10 @@ HMSVideoView(track: videoTrack);
 ## 🔁 [Change a Role](https://www.100ms.live/docs/flutter/v2/features/change-role)
 
   To change role, you will provide the selected peer and new roleName from roles. If forceChange is true, the system will prompt the user for the change. If forceChange is false, the user will get a prompt to accept/reject the role.
-  After changeRole is called, HMSUpdateListener's onRoleChangeRequest will be called on selected user's end.
+  After changeRoleOfPeer is called, HMSUpdateListener's onRoleChangeRequest will be called on selected user's end.
 
 ```dart
- hmsSDK.changeRole(peer: peer, roleName: roleName, forceChange: true);
+ hmsSDK.changeRoleOfPeer(peer: peer, roleName: roleName, forceChange: true);
 ```
 
 ## 📨 [Chat Messaging](https://www.100ms.live/docs/flutter/v2/features/chat)

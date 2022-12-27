@@ -1,55 +1,49 @@
 package live.hms.hmssdk_flutter.views
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.widget.FrameLayout
 import live.hms.hmssdk_flutter.R
 import live.hms.video.media.tracks.HMSVideoTrack
-import live.hms.video.utils.SharedEglContext
-import org.webrtc.NetworkMonitor.init
+import live.hms.videoview.HMSVideoView
 import org.webrtc.RendererCommon
-import org.webrtc.SurfaceViewRenderer
-
 
 class HMSVideoView(
-        context: Context,
-        setMirror: Boolean,
-        scaleType: Int? = RendererCommon.ScalingType.SCALE_ASPECT_FIT.ordinal,
-        private val track:HMSVideoTrack
+    context: Context,
+    setMirror: Boolean,
+    scaleType: Int? = RendererCommon.ScalingType.SCALE_ASPECT_FIT.ordinal,
+    private val track: HMSVideoTrack,
+    isAutoSimulcast: Boolean
 ) : FrameLayout(context, null) {
 
-    private val surfaceViewRenderer: SurfaceViewRenderer
+    private val hmsVideoView: HMSVideoView
 
     init {
         val inflater =
             getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val view = inflater.inflate(R.layout.hms_video_view, this)
 
-        surfaceViewRenderer = view.findViewById(R.id.surfaceViewRenderer)
-        surfaceViewRenderer.setEnableHardwareScaler(false)
-        surfaceViewRenderer.setMirror(setMirror)
-
+        hmsVideoView = view.findViewById(R.id.hmsVideoView)
+        hmsVideoView.setEnableHardwareScaler(false)
+        hmsVideoView.setMirror(setMirror)
+        hmsVideoView.setAutoSimulcast(isAutoSimulcast)
         if ((scaleType ?: 0) <= RendererCommon.ScalingType.values().size) {
-            surfaceViewRenderer.setScalingType(RendererCommon.ScalingType.values()[scaleType ?: 0])
+            hmsVideoView.setScalingType(RendererCommon.ScalingType.values()[scaleType ?: 0])
         }
     }
 
-    fun onDisposeCalled(){
+    fun onDisposeCalled() {
         super.onDetachedFromWindow()
-        track.removeSink(surfaceViewRenderer)
-        surfaceViewRenderer.release()
+        hmsVideoView.removeTrack()
     }
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        surfaceViewRenderer.init(SharedEglContext.context, null)
-        track.addSink(surfaceViewRenderer)
+        hmsVideoView.addTrack(track)
     }
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
-        track.removeSink(surfaceViewRenderer)
-        surfaceViewRenderer.release()
+        hmsVideoView.removeTrack()
     }
 }

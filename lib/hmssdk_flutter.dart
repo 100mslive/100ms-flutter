@@ -3,6 +3,7 @@
 library hmssdk_flutter;
 
 export 'src/common/platform_methods.dart';
+
 // ENUMS
 export 'src/enum/hms_audio_codec.dart';
 export 'src/enum/hms_camera_facing.dart';
@@ -17,6 +18,8 @@ export 'src/enum/hms_message_recipient_type.dart';
 export 'src/enum/hms_log_level.dart';
 export 'src/enum/hms_stats_listener_method.dart';
 export 'src/enum/hms_track_init_state.dart';
+export 'src/enum/hms_Quality_limitation_reason.dart';
+export 'src/enum/hms_simulcast_layer.dart';
 //EXCEPTIONS
 export 'src/exceptions/hms_exception.dart';
 export 'src/exceptions/hms_in_sufficient_data.dart';
@@ -40,7 +43,7 @@ export 'src/model/hms_remote_video_track.dart';
 export 'src/model/hms_role.dart';
 export 'src/model/hms_role_change_request.dart';
 export 'src/model/hms_room.dart';
-export 'src/model/hms_simul_cast_settings.dart';
+export 'src/model/hms_simulcast_settings.dart';
 export 'src/model/hms_speaker.dart';
 export 'src/model/hms_subscribe_settings.dart';
 export 'src/model/hms_track.dart';
@@ -81,3 +84,6 @@ export 'src/model/hms_audio_mixer_source.dart';
 export 'src/model/hms_screen_broadcast_audio_receiver_node.dart';
 export 'src/model/hms_log_settings.dart';
 export 'src/model/hms_pip_config.dart';
+export 'src/model/hms_quality_limitation_reasons.dart';
+export 'src/model/hms_simulcast_layer_definition.dart';
+export 'src/model/hms_subscribe_degradation_params.dart';

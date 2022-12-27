@@ -29,20 +29,22 @@ class HMSTrackExtension {
             dict["instance_of"] = true
         }
 
-        if let localVideo = track as? HMSLocalVideoTrack {
-            dict["hms_video_track_settings"] = HMSTrackExtension.toDictionary(video: localVideo.settings)
-        }
-
-        if let localAudio = track as? HMSLocalAudioTrack {
-            dict["hms_audio_track_settings"] = HMSTrackExtension.toDictionary(audio: localAudio.settings)
-        }
-        
         if let remoteAudio = track as? HMSRemoteAudioTrack {
             dict["is_playback_allowed"] = remoteAudio.isPlaybackAllowed()
         }
-        
+
         if let remoteVideo = track as? HMSRemoteVideoTrack {
             dict["is_playback_allowed"] = remoteVideo.isPlaybackAllowed()
+        }
+
+        if let remoteVideo = track as? HMSRemoteVideoTrack {
+            dict["layer"] = HMSSimulcastLayerDefinitionExtension.getStringFromLayer(layer: remoteVideo.layer)
+        }
+
+        if let remoteVideo = track as? HMSRemoteVideoTrack {
+            var layers = [[String: Any]]()
+            remoteVideo.layerDefinitions?.forEach { layers.append(HMSSimulcastLayerDefinitionExtension.toDictionary($0)) }
+            dict["layer_definitions"] = layers
         }
 
         return dict

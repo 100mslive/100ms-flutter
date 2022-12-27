@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/audio_level_avatar.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/change_role_options.dart';
+import 'package:hmssdk_flutter_example/common/ui/organisms/change_simulcast_layer_option.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/local_peer_tile_dialog.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
@@ -82,17 +83,38 @@ class AudioTile extends StatelessWidget {
                                 peer: peerNode,
                                 changeRole: (role, forceChange) {
                                   Navigator.pop(context);
-                                  _meetingStore.changeRole(
+                                  _meetingStore.changeRoleOfPeer(
                                       peer: peerNode,
                                       roleName: role,
                                       forceChange: forceChange);
                                 },
                               ));
                     },
+                    changeLayer: () async {
+                      Navigator.pop(context);
+                      HMSRemoteVideoTrack track =
+                          peerTrackNode.track as HMSRemoteVideoTrack;
+                      List<HMSSimulcastLayerDefinition> layerDefinitions =
+                          await track.getLayerDefinition();
+                      HMSSimulcastLayer selectedLayer = await track.getLayer();
+                      if (layerDefinitions.isNotEmpty)
+                        showDialog(
+                            context: context,
+                            builder: (_) => ChangeSimulcastLayerOptionDialog(
+                                layerDefinitions: layerDefinitions,
+                                selectedLayer: selectedLayer,
+                                track: track));
+                    },
                     mute: mutePermission,
                     unMute: unMutePermission,
                     removeOthers: removePeerPermission,
                     roles: changeRolePermission,
+                    simulcast: false,
+                    pinTile: peerTrackNode.pinTile,
+                    changePinTileStatus: () {
+                      _meetingStore.changePinTileStatus(peerTrackNode);
+                      Navigator.pop(context);
+                    },
                   ));
         else
           showDialog(
@@ -113,7 +135,7 @@ class AudioTile extends StatelessWidget {
                               peer: peerNode,
                               changeRole: (role, forceChange) {
                                 Navigator.pop(context);
-                                _meetingStore.changeRole(
+                                _meetingStore.changeRoleOfPeer(
                                     peer: peerNode,
                                     roleName: role,
                                     forceChange: forceChange);

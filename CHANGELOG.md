@@ -1,3 +1,103 @@
+## 1.1.0 - 2022-12-17
+
+### Added
+
+- Added support for Bulk Role Change
+
+  Bulk Role Change is used when you want to convert all Roles from a list of Roles, to another Role.
+
+  For example, if peers join a room with a _Waiting_ Role and now you want to change all these peers to _Viewer_ Role then use the `changeRoleOfPeersWithRoles` API.
+
+  ```dart
+  // fetch all available Roles in the room
+  List<HMSRole> roles = await hmsSDK.getRoles();
+
+  // get the Host Role object
+  HMSRole toHostRole = roles.firstWhere((element) => element.name == "host");
+
+  // get list of Roles to be updated - in this case "Waiting" and "Guest" Roles
+  roles.retainWhere((element) => ((element.name == "waiting") || (element.name == "guest")));
+
+  // now perform Role Change of all peers in "Waiting" and "Guest" Roles to the "Host" Role
+  hmsSDK.changeRoleOfPeersWithRoles(
+      toRole: toHostRole,
+      ofRoles: roles,
+      hmsActionResultListener: hmsActionResultListener);
+  ```
+
+  For More Information, refer: https://www.100ms.live/docs/flutter/v2/features/change-role
+
+- Added Switch Audio Output APIs on iOS
+
+  Audio Output Routing is helpful when users want to switch output to a connected device other than the default one. This functionality is already available on Android.
+
+  ```dart
+  hmsSDK.switchAudioOutput(audioDevice: HMSAudioDevice.SPEAKER_PHONE);
+  ```
+  For More Information, refer: https://www.100ms.live/docs/flutter/v2/features/audio-output-routing
+
+
+### Deprecated
+
+- Deprecated `changeRole` API in favour of `changeRoleOfPeer`
+
+  No change in functionality or method signature.
+
+
+### Fixed
+
+- Microphone not getting captured on Role Change from a non-publishing to publishing Role on iOS
+- Corrected an issue where on iOS a default Audio Mixer was getting created if Track Settings was passed while building the HMSSDK instance
+
+
+Updated to Native Android SDK 2.5.4 & Native iOS SDK 0.5.3
+
+Full Changelog: [1.0.0...1.1.0](https://github.com/100mslive/100ms-flutter/compare/1.0.0...1.1.0)
+
+
+## 1.0.0 - 2022-12-09
+
+### Added
+
+- Added support for Picture in Picture mode on Android.
+
+    PIP Mode lets the user watch the room video in a small window pinned to a corner of the screen while navigating between apps or browsing content on the main screen.
+
+    Example implementation for checking device support & enabling PIP mode:
+    ```dart
+    // to start PIP mode invoke the `enterPipMode` function, the parameters passed to it are optional
+    hmsSDK.enterPipMode(aspectRatio: [16, 9], autoEnterPip: true);
+
+    // method to check whether PIP mode is available for current device
+    bool isPipAvailable = await hmsSDK.isPipAvailable();
+
+    // method to check whether PIP mode is active currently
+    bool isPipActive = await hmsSDK.isPipActive();
+    ```
+
+- Added `roomPeerCountUpdated` type in `HMSRoomUpdate`
+
+- Added `isPlaybackAllowed` to Remote Audio & Video Tracks to check if the track is allowed to be played locally
+
+- Added convenience APIs to Mute / Unmute Audio or Video of the entire room locally
+
+
+### Fixed
+
+- Corrected parsing of `HMSMessage` objects sent Server-side APIs
+- Session Metadata can now be reset to a null value
+- Importing Native Android SDK dependency from Maven Central instead of Jitpack
+- HMSTrackSettings is now nullable while building the HMSSDK object
+- Corrected usage of Native Util functions to fetch Audio & Video tracks 
+- Corrected default local audio track settings for iOS devices
+- Corrected sending of peer count in `HMSRoom` instance on iOS
+
+Updated to Native Android SDK 2.5.1 & Native iOS SDK 0.4.7
+
+Full Changelog: [0.7.8...1.0.0](https://github.com/100mslive/100ms-flutter/compare/0.7.8...1.0.0)
+
+
+
 ## 0.7.8 - 2022-10-31
 
 - Added support for Joining with Muted Audio & Video on iOS devices

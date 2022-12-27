@@ -1,16 +1,16 @@
 <a href="https://100ms.live/">
 <p align="center">
-<img src="https://github.com/100mslive/100ms-flutter/blob/main/assets/logo.svg" title="100ms logo" float=center height=150 >
+<img src="https://github.com/100mslive/100ms-flutter/blob/main/example/assets/images/logo.svg" title="100ms logo" float=center height=150 >
 </p>
 </a>
 
 ## HMSSDK Sample App 🚀
 
-Clone the Example app from provided in the repo [here](https://github.com/100mslive/100ms-flutter/tree/main).
+Clone the Example app provided in the repo [here](https://github.com/100mslive/100ms-flutter/tree/main).
 
 The *"example"* folder contains code relevant to the Example app.
 
-The Example application contains implementation of all the features provided by `HMSSDK` some of which are listes below
+The Example application contains the implementation of all the features provided by `HMSSDK` some of which are listed below
 
 * 🙏 Join a room
 * 🎞 Join with a preview
@@ -28,6 +28,7 @@ The Example application contains implementation of all the features provided by 
 * 🏃‍♀️ BRB(Be Right Back sign)
 * ❌ Remove Peer
 * 📡 HLS Streaming
+* 📱 PIP Mode
 * And many more...
 
 
@@ -79,7 +80,7 @@ class PeerTrackNode extends ChangeNotifier {
 ### Data flow overview
 
 <p align="center">
-<img src="https://github.com/100mslive/100ms-flutter/blob/main/assets/app-flow-diagram.png" title="app-flow" float=center height=300>
+<img src="https://github.com/100mslive/100ms-flutter/blob/main/example/assets/images/app-flow-diagram.png" title="app-flow" float=center height=300>
 </p>
 
 ### How example app uses the updates from SDK and updates the UI efficiently without extra rebuilds
@@ -90,7 +91,7 @@ Let's see how we are handling the updates in an efficient manner to avoid extra 
 - Updates related to peer(PeerTrackNode class)
 
 <p align="center">
-<img src="https://github.com/100mslive/100ms-flutter/blob/main/assets/app-breakdown.png" title="app-flow" float=center height=300>
+<img src="https://github.com/100mslive/100ms-flutter/blob/main/example/assets/images/app-breakdown.png" title="app-flow" float=center height=300>
 </p>
 
 ### Application settings and meeting modes
@@ -101,13 +102,13 @@ The example app offers some settings to configure the application. Some of them 
 - Mirror Camera(To set whether to mirror local camera)
 - Enable Stats(To enable webRTC stats)
 
-<img src="https://github.com/100mslive/100ms-flutter/blob/main/assets/app-settings.png" title="app-settings" float=center height=300>
+<img src="https://github.com/100mslive/100ms-flutter/blob/main/example/assets/images/app-settings.png" title="app-settings" float=center height=300>
 
 ---
 
 The example app offers various meeting modes which decide the tile orientation on the mobile screen.
 
-<img src="https://github.com/100mslive/100ms-flutter/blob/main/assets/meeting-mode.png" title="meeting-mode" height=300>
+<img src="https://github.com/100mslive/100ms-flutter/blob/main/example/assets/meeting-mode.png" title="meeting-mode" height=300>
 
 Let's look at each mode one by one
 
@@ -141,19 +142,19 @@ Single Tile Mode
 </tr>
 <tr>
 <td>
-<img src="https://github.com/100mslive/100ms-flutter/blob/main/assets/normal-mode.gif" title="normal-mode" height=300>
+<img src="https://github.com/100mslive/100ms-flutter/blob/main/example/assets/images/normal-mode.gif" title="normal-mode" height=300>
 </td>
 <td>
-<img src="https://github.com/100mslive/100ms-flutter/blob/main/assets/active-speaker-mode.gif" title="active-speaker-mode" height=300>
+<img src="https://github.com/100mslive/100ms-flutter/blob/main/example/assets/images/active-speaker-mode.gif" title="active-speaker-mode" height=300>
 </td>
 <td>
-<img src="https://github.com/100mslive/100ms-flutter/blob/main/assets/hero-mode.gif" title="hero-mode" height=300>
+<img src="https://github.com/100mslive/100ms-flutter/blob/main/example/assets/images/hero-mode.gif" title="hero-mode" height=300>
 </td>
 <td>
-<img src="https://github.com/100mslive/100ms-flutter/blob/main/assets/audio-mode.gif" title="audio-mode" height=300>
+<img src="https://github.com/100mslive/100ms-flutter/blob/main/example/assets/images/audio-mode.gif" title="audio-mode" height=300>
 </td>
 <td>
-<img src="https://github.com/100mslive/100ms-flutter/blob/main/assets/single-tile-mode.gif" title="single-tile-mode" height=300>
+<img src="https://github.com/100mslive/100ms-flutter/blob/main/example/assets/images/single-tile-mode.gif" title="single-tile-mode" height=300>
 </td>
 </tr>
 </table>
@@ -237,10 +238,10 @@ We can extract the peers from the `peers` list and set it accordingly. More info
 #### 2. Join a room with a preview
 
 In some use cases, it is required to show a preview before joining the room so that the user can set the camera, audio device, microphone etc.
-HMSSDK provides a `preview` method that can be called before `join`. With preview included the subsequent join request becomes faster.
+HMSSDK provides a `preview` method that can be called before `join`. With a preview included the subsequent join request becomes faster.
 
 The `preview` method also requires the config object similar to the `join` method. Before calling `preview` it is
-recommended to attach `HMSPreviewListener` So that we can get the callbacks related to preview.
+recommended to attach `HMSPreviewListener` So that we can get the callbacks related to previewing.
 
 Methods that need to be overridden while implementing `HMSUpdateListener` can be found [here](https://www.100ms.live/docs/flutter/v2/features/preview-update-listeners).
 After attaching `HMSPreviewListener` we are good to call the `preview` method.
@@ -258,7 +259,7 @@ After preview `join` method can be called similar to the steps mentioned above i
 `onException` in case of error.
 More info on `HMSActionResultListener` can be found [here](https://www.100ms.live/docs/flutter/v2/features/action-result-listeners)
 
-`leave` method can be called as:
+`leave` method can be called as :
 
 ```dart
 //`this` is used here since MeetingStore already implements 
@@ -411,7 +412,7 @@ This is done in the example app by setting the `isOffscreen` property of `PeerTr
 Consider a seminar use case where participants(with no audio/video publish permissions) wish to ask questions.
 The host(with audio/video publish permissions) can permit them to publish audio so that they can ask questions and then revoke it after they have asked the question.`changeRole` method comes to the rescue.
 
-The peer can change a participant's role to some other role using `changeRole` method providing the peer's role must have role change permission which can be checked on 100ms dashboard. The permissions can be checked as:
+The peer can change a participant's role to some other role using `changeRole` method providing the peer's role must have role change permission which can be checked on the 100ms dashboard. The permissions can be checked as:
 
 ```dart
     //localPeer is an HMSPeer object
@@ -433,7 +434,7 @@ HMSSDK.changeRole(
         hmsActionResultListener: this);
 ```
 
-If we get an `onSuccess` callback then role change is performed successfully and we will get updates in `onPeerUpdate`.
+If we get an `onSuccess` callback then the role change is performed successfully and we will get updates in `onPeerUpdate`.
 
 Let's turn the table now on what happens if a remote peer wishes to change our role.
 
@@ -457,7 +458,7 @@ If we get an `onSuccess` callback then role change is performed successfully.
 
 #### 9. Chat messaging
 
-Chats are one of the most important parts of any conferencing or live streaming application.`HMSSDK` provides inbuilt methods for a chat as well.
+Chats are one of the most important parts of any conferencing or live-streaming application.`HMSSDK` provides inbuilt methods for a chat as well.
 
 There are three types of methods based on whom to send a message
 
@@ -518,13 +519,13 @@ To know more about chat messaging please head over to the docs [here](https://ww
 `HMSSDK` offers methods to share screen for both iOS and android.
 The setup required for screen share can be found [here](https://www.100ms.live/docs/flutter/v2/features/screen-share).
 
-To start screenshare:
+To start screen share:
 
 ```dart
 HMSSDK.startScreenShare(hmsActionResultListener: this);
 ```
 
-To stop screenshare:
+To stop screen share:
 
 ```dart
 HMSSDK.stopScreenShare(hmsActionResultListener: this);
@@ -538,13 +539,13 @@ Sometimes we need to share audio from our phones we can do so using the audio sh
 
 > Audio share only works on android 10+ devices.
 
-To start audioshare:
+To start audio share:
 
 ```dart
 HMSSDK.startAudioShare(hmsActionResultListener: this);
 ```
 
-To stop audioshare:
+To stop audio share:
 
 ```dart
 HMSSDK.stopAudioShare(hmsActionResultListener: this);
@@ -584,7 +585,7 @@ More info about audio share can be found [here](https://www.100ms.live/docs/flut
 Consider a scenario where Bluetooth earphones are connected to the phone but you want your friends sitting with you to also listen to the stream. So, you disconnect the Bluetooth and then the audio comes from an external speaker. Well gone are those days when you need to do this `HMSSDK` provides inbuilt methods to easily switch audio routing.
 
 <p align="center">
-<img src="https://github.com/100mslive/100ms-flutter/blob/main/assets/audio-device-setting.png" title="audio-device-setting" height=300>
+<img src="https://github.com/100mslive/100ms-flutter/blob/main/example/assets/images/audio-device-setting.png" title="audio-device-setting" height=300>
 </p>
 
 `HMSSDK` has `switchAudioOutput` method to do so. It takes 
@@ -641,9 +642,9 @@ Let's take the seminar case again where someone has a question so how will the h
 Suppose you are in a meeting and someone's at the door unmuting and informing or using chat to inform seems a bit odd, HMSSDK's BRB(Be Right Back) comes to rescue.
 
 <p align="center">
-<img src="https://github.com/100mslive/100ms-flutter/blob/main/assets/hand-raise.png" title="hand-raise" height=300>
+<img src="https://github.com/100mslive/100ms-flutter/blob/main/example/assets/images/hand-raise.png" title="hand-raise" height=300>
 &nbsp; &nbsp; &nbsp; &nbsp;
-<img src="https://github.com/100mslive/100ms-flutter/blob/main/assets/brb.png" title="brb" height=300>
+<img src="https://github.com/100mslive/100ms-flutter/blob/main/example/assets/images/brb.png" title="brb" height=300>
 </p>
 
 
@@ -701,6 +702,17 @@ hmsSDK.startHlsStreaming(
 
 After calling `startHLSStreaming` we will get an `onSuccess` callback if the method invocation is successful. It takes around 5-6 seconds for HLS to start. 
 
+#### 16. PIP Mode
+
+100ms Flutter SDK provides support for creating a Picture in Picture mode experience for video calls.
+
+PIP Mode lets the user watch the room video in a small window pinned to a corner of the screen while navigating between apps or browsing content on the main screen.
+Currently, this functionality is only available on Android.
+
+To know more about how to implement PIP mode. Please check: [PIP Mode](https://www.100ms.live/docs/flutter/v2/advanced-features/pip-mode)
+
+https://user-images.githubusercontent.com/93931528/205587304-772a5dd6-ed64-4d9e-8bb5-4fc3eed83bea.mp4
+
 ## Handling Errors
 
 Error handling is an important part of the application.`HMSSDK` has `HMSException` class for errors and exceptions.
@@ -751,11 +763,11 @@ void onHMSError({required HMSException error}) {
 These callbacks should be handled properly and UI should be updated accordingly.
 
 How errors are handled in [example app](https://github.com/100mslive/100ms-flutter/blob/main/example/lib/data_store/meeting_store.dart).
-Example app shows toast for the errors which will not affect the meeting and peer is still in the room but for the other errors, it shows an alert dialog with an option to leave the room.
+Example app shows toast for the errors which will not affect the meeting and the peer is still in the room but for the other errors, it shows an alert dialog with an option to leave the room.
 
 ## Common Mistakes and FAQs
 
-`HMSSDK` does not support hot reload, hot restart as of now. So to verify the intended changes please follow the below steps:
+`HMSSDK` does not support hot reload, or hot restart as of now. So to verify the intended changes please follow the below steps:
 
 1. Perform changes.
 2. Leave the room.

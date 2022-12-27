@@ -69,6 +69,9 @@ enum PlatformMethod {
   ///change your peer role.
   changeRole,
 
+  ///change role for peer.
+  changeRoleOfPeer,
+
 // turn on screen share start
   startScreenShare,
 
@@ -157,7 +160,11 @@ enum PlatformMethod {
   isPipAvailable,
   switchVideoButtonStatus,
   switchAudioButtonStatus,
-  updatePipConfig
+  updatePipConfig,
+  changeRoleOfPeersWithRoles,
+  setSimulcastLayer,
+  getLayer,
+  getLayerDefinition
 }
 
 extension PlatformMethodValues on PlatformMethod {
@@ -240,6 +247,9 @@ extension PlatformMethodValues on PlatformMethod {
 
       case PlatformMethod.changeRole:
         return 'change_role';
+
+      case PlatformMethod.changeRoleOfPeer:
+        return 'change_role_of_peer';
 
       case PlatformMethod.getRoles:
         return 'get_roles';
@@ -370,6 +380,14 @@ extension PlatformMethodValues on PlatformMethod {
         return "switch_audio_button_status";
       case PlatformMethod.updatePipConfig:
         return "update_pip_config";
+      case PlatformMethod.setSimulcastLayer:
+        return "set_simulcast_layer";
+      case PlatformMethod.changeRoleOfPeersWithRoles:
+        return "change_role_of_peers_with_roles";
+      case PlatformMethod.getLayer:
+        return "get_layer";
+      case PlatformMethod.getLayerDefinition:
+        return "get_layer_definition";
       default:
         return 'unknown';
     }
@@ -454,6 +472,9 @@ extension PlatformMethodValues on PlatformMethod {
 
       case 'change_role':
         return PlatformMethod.changeRole;
+
+      case 'change_role_of_peer':
+        return PlatformMethod.changeRoleOfPeer;
 
       case 'get_roles':
         return PlatformMethod.getRoles;
@@ -588,6 +609,14 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.switchVideoButtonStatus;
       case "update_pip_config":
         return PlatformMethod.updatePipConfig;
+      case "set_simulcast_layer":
+        return PlatformMethod.setSimulcastLayer;
+      case "change_role_of_peers_with_roles":
+        return PlatformMethod.changeRoleOfPeersWithRoles;
+      case "get_layer":
+        return PlatformMethod.getLayer;
+      case "get_layer_definition":
+        return PlatformMethod.getLayerDefinition;
       default:
         return PlatformMethod.unknown;
     }

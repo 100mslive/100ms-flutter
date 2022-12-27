@@ -8,7 +8,7 @@ class RoomService {
       {required String user, required String room}) async {
     Constant.meetingUrl = room;
     List<String?> codeAndDomain = getCode(room) ?? [];
-    if (codeAndDomain.length == 0) {
+    if (codeAndDomain.isEmpty) {
       return null;
     }
     Constant.meetingCode = codeAndDomain[1] ?? '';

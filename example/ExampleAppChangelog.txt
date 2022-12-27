@@ -1,0 +1,16 @@
+- Added support for Simulcast
+
+- Migrated from SurfaceViewRenderer to HMSVideoView on Android
+
+- Added options to Enable/Disable Notifications in Room
+
+- Added option to Disable Automatic Simulcast before joining Room
+
+- Added option to Pin a Tile in Full Screen Mode
+
+- Fixed black tile showing up after background to foreground app transitions
+
+
+Flutter SDK: 1.2.0
+Android SDK: 2.5.5
+iOS SDK: 0.5.4

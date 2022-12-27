@@ -1,66 +1,96 @@
-//Package imports
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
-import 'package:hmssdk_flutter_example/common/util/app_color.dart';
-import 'package:hmssdk_flutter_example/hls-streaming/util/hls_title_text.dart';
+import 'package:pip_flutter/pipflutter_player.dart';
+import 'package:pip_flutter/pipflutter_player_controller.dart';
 import 'package:provider/provider.dart';
-import 'package:video_player/video_player.dart';
 
 //Project imports
 import 'package:hmssdk_flutter_example/data_store/meeting_store.dart';
 
 class HLSPlayer extends StatefulWidget {
-  final String streamUrl;
-
-  HLSPlayer({Key? key, required this.streamUrl}) : super(key: key);
+  HLSPlayer({Key? key}) : super(key: key);
 
   @override
   _HLSPlayerState createState() => _HLSPlayerState();
 }
 
-class _HLSPlayerState extends State<HLSPlayer> {
+class _HLSPlayerState extends State<HLSPlayer> with TickerProviderStateMixin {
+  late AnimationController animation;
+  late Animation<double> fadeInFadeOut;
+
   @override
   void initState() {
     super.initState();
-    context.read<MeetingStore>().hlsVideoController =
-        VideoPlayerController.network(
-      widget.streamUrl,
-    )..initialize().then((_) {
-            context.read<MeetingStore>().hlsVideoController!.play();
-            setState(() {});
-          });
-  }
+    animation = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 500),
+    );
+    fadeInFadeOut = Tween<double>(begin: 0.0, end: 1).animate(animation);
 
-  @override
-  void dispose() async {
-    super.dispose();
-    try {
-      await context.read<MeetingStore>().hlsVideoController?.dispose();
-      context.read<MeetingStore>().hlsVideoController = null;
-    } catch (e) {
-      //To handle the error when the user calls leave from hls-viewer role.
-      log(e.toString());
-    }
+    context
+        .read<MeetingStore>()
+        .setPIPVideoController(false, aspectRatio: 16 / 9);
+    animation.forward();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Selector<MeetingStore, VideoPlayerController?>(
+    return Selector<MeetingStore, PipFlutterPlayerController?>(
         selector: (_, meetingStore) => meetingStore.hlsVideoController,
         builder: (_, controller, __) {
+          if (controller == null) {
+            return Scaffold();
+          }
           return Scaffold(
               key: GlobalKey(),
-              body: Center(
-                child: controller?.value.isInitialized ?? false
-                    ? AspectRatio(
-                        aspectRatio: controller!.value.aspectRatio,
-                        child: VideoPlayer(controller),
-                      )
-                    : HLSTitleText(
-                        text: "Waiting for the HLS Streaming to start...",
-                        textColor: themeDefaultColor,
+              body: Stack(
+                children: [
+                  Center(
+                      child: FadeTransition(
+                    opacity: fadeInFadeOut,
+                    child: AspectRatio(
+                      aspectRatio: context.read<MeetingStore>().hlsAspectRatio,
+                      child: PipFlutterPlayer(
+                        controller: controller,
+                        key: context.read<MeetingStore>().pipFlutterPlayerKey,
                       ),
+                    ),
+                  )),
+                  if (!context.read<MeetingStore>().isPipActive)
+                    Positioned(
+                      bottom: 10,
+                      right: 20,
+                      child: GestureDetector(
+                        onTap: () {
+                          animation.reverse();
+                          context
+                              .read<MeetingStore>()
+                              .setPIPVideoController(true);
+                          animation.forward();
+                        },
+                        child: Container(
+                          padding: EdgeInsets.all(5),
+                          child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.circle,
+                                  color: Colors.red,
+                                  size: 15,
+                                ),
+                                SizedBox(
+                                  width: 5,
+                                ),
+                                Text(
+                                  "Go Live",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold),
+                                )
+                              ]),
+                        ),
+                      ),
+                    )
+                ],
               ));
         });
   }

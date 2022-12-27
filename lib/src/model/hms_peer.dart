@@ -2,7 +2,7 @@
 ///
 /// To use, import `package:hmssdk_flutter/model/hms_peer.dart`.
 ///
-///[HMSPeer] model contains everything about a peer and it's tracks information.
+///[HMSPeer] model contains everything about a peer and it's track information.
 ///
 /// A [peer] is the object returned by 100ms SDKs that contains all information about a user - name, role, video track etc.
 ///
@@ -10,6 +10,7 @@
 
 // Project imports:
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:hmssdk_flutter/src/model/hms_date_extension.dart';
 import 'package:hmssdk_flutter/src/service/platform_service.dart';
 
 class HMSPeer {
@@ -19,7 +20,7 @@ class HMSPeer {
   ///name of the peer in the room.
   final String name;
 
-  ///returns whether peer is local or not.
+  ///returns whether the peer is local or not.
   final bool isLocal;
 
   @override
@@ -27,27 +28,46 @@ class HMSPeer {
     return 'HMSPeer{name: $name, isLocal: $isLocal}';
   }
 
-  ///role of the peer in the room.
+  ///the current role of the peer in the room
   final HMSRole role;
+
+  ///optional data which can be linked to a peer while joining room
   final String? customerUserId;
+
+  ///optional metadata of the peer in the room
   final String? metadata;
+
+  ///audioTrack of the peer in the room
   HMSAudioTrack? audioTrack;
+
+  ///videoTrack of the peer in the room
   HMSVideoTrack? videoTrack;
+
+  ///auxiliary tracks include Screenshare, Audio or Video files, etc published by this peer in the room
   final List<HMSTrack>? auxiliaryTracks;
+
+  ///networkQuality of the peer in room
   final HMSNetworkQuality? networkQuality;
 
-  HMSPeer({
-    required this.peerId,
-    required this.name,
-    required this.isLocal,
-    required this.role,
-    this.customerUserId,
-    this.metadata,
-    this.audioTrack,
-    this.videoTrack,
-    this.auxiliaryTracks,
-    this.networkQuality,
-  });
+  ///joinedAt is the time when peer joined the room
+  final DateTime? joinedAt;
+
+  ///updatedAt is the time when the peer object was last updated
+  final DateTime? updatedAt;
+
+  HMSPeer(
+      {required this.peerId,
+      required this.name,
+      required this.isLocal,
+      required this.role,
+      this.customerUserId,
+      this.metadata,
+      this.audioTrack,
+      this.videoTrack,
+      this.auxiliaryTracks,
+      this.networkQuality,
+      this.joinedAt,
+      this.updatedAt});
 
   ///important to compare using [peerId]
   @override
@@ -75,7 +95,16 @@ class HMSPeer {
             customerUserId: map['customer_user_id'],
             networkQuality: map['network_quality'] == null
                 ? null
-                : HMSNetworkQuality.fromMap(map['network_quality']))
+                : HMSNetworkQuality.fromMap(
+                    map['network_quality'],
+                  ),
+            joinedAt: map.containsKey("joined_at")
+                ? HMSDateExtension.convertDate(map["joined_at"])
+                : null,
+            updatedAt: map.containsKey("updated_at")
+                ? HMSDateExtension.convertDate(map["updated_at"])
+                : null,
+          )
         : HMSRemotePeer(
             peerId: map['peer_id'],
             name: map['name'],
@@ -85,14 +114,23 @@ class HMSPeer {
             customerUserId: map['customer_user_id'],
             networkQuality: map['network_quality'] == null
                 ? null
-                : HMSNetworkQuality.fromMap(map['network_quality']));
+                : HMSNetworkQuality.fromMap(map['network_quality']),
+            joinedAt: map.containsKey("joined_at")
+                ? HMSDateExtension.convertDate(map["joined_at"])
+                : null,
+            updatedAt: map.containsKey("updated_at")
+                ? HMSDateExtension.convertDate(map["updated_at"])
+                : null,
+          );
 
     if (map['audio_track'] != null) {
-      peer.audioTrack = HMSAudioTrack.fromMap(map: map['audio_track']!);
+      peer.audioTrack = HMSAudioTrack.fromMap(
+          map: map['audio_track']!, isLocal: peer.isLocal);
     }
 
     if (map['video_track'] != null) {
-      peer.videoTrack = HMSVideoTrack.fromMap(map: map['video_track']!);
+      peer.videoTrack = HMSVideoTrack.fromMap(
+          map: map['video_track']!, isLocal: peer.isLocal);
     }
 
     return peer;
@@ -108,7 +146,7 @@ class HMSPeer {
         arguments: {"peer_id": this.peerId});
     List<HMSTrack> tracks = [];
     result.forEach((element) {
-      HMSTrack hmsTrack = HMSTrack.fromMap(map: element);
+      HMSTrack hmsTrack = HMSTrack.fromMap(map: element, isLocal: isLocal);
       tracks.add(hmsTrack);
     });
 
@@ -119,7 +157,7 @@ class HMSPeer {
     var result = await PlatformService.invokeMethod(PlatformMethod.getTrackById,
         arguments: {"peer_id": this.peerId, "track_id": trackId});
 
-    HMSTrack hmsTrack = HMSTrack.fromMap(map: result);
+    HMSTrack hmsTrack = HMSTrack.fromMap(map: result, isLocal: isLocal);
     return hmsTrack;
   }
 }

@@ -8,17 +8,20 @@ import 'package:hmssdk_flutter_example/common/ui/organisms/stream_timer.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
-import 'package:hmssdk_flutter_example/hls-streaming/bottom_sheets/hls_message.dart';
+import 'package:hmssdk_flutter_example/common/bottom_sheets/hls_message.dart';
 import 'package:hmssdk_flutter_example/hls-streaming/util/hls_subtitle_text.dart';
 import 'package:hmssdk_flutter_example/hls-streaming/util/hls_title_text.dart';
-import 'package:hmssdk_flutter_example/hls-streaming/bottom_sheets/hls_viewer_settings.dart';
+import 'package:hmssdk_flutter_example/common/bottom_sheets/hls_viewer_settings.dart';
 import 'package:hmssdk_flutter_example/hls_viewer/hls_viewer.dart';
 import 'package:hmssdk_flutter_example/data_store/meeting_store.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 
 class HLSViewerPage extends StatefulWidget {
-  const HLSViewerPage({
+  final String? streamUrl;
+
+  HLSViewerPage({
+    this.streamUrl,
     Key? key,
   }) : super(key: key);
   @override
@@ -59,6 +62,19 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                 Navigator.of(context).popUntil((route) => route.isFirst);
               });
             }
+            if (!(context.read<MeetingStore>().hasHlsStarted ||
+                    widget.streamUrl != null) &&
+                context.read<MeetingStore>().isPipActive) {
+              return Scaffold(
+                body: Center(
+                  child: Padding(
+                      padding: const EdgeInsets.only(bottom: 8.0),
+                      child: HLSTitleText(
+                          text: "Waiting for HLS to start...",
+                          textColor: themeDefaultColor)),
+                ),
+              );
+            }
             return Scaffold(
               resizeToAvoidBottomInset: false,
               body: SafeArea(
@@ -68,306 +84,296 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                         selector: (_, meetingStore) =>
                             meetingStore.hasHlsStarted,
                         builder: (_, hasHlsStarted, __) {
-                          return hasHlsStarted
+                          return (hasHlsStarted || widget.streamUrl != null)
                               ? Container(
                                   height: MediaQuery.of(context).size.height,
                                   child: Center(
-                                    child: HLSPlayer(
-                                        streamUrl: context
-                                            .read<MeetingStore>()
-                                            .streamUrl),
+                                    child: HLSPlayer(),
                                   ),
                                 )
-                              : Container(
-                                  height: MediaQuery.of(context).size.height *
-                                      0.735,
-                                  child: Center(
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        Padding(
-                                            padding: const EdgeInsets.only(
-                                                bottom: 8.0),
-                                            child: HLSTitleText(
-                                                text:
-                                                    "Waiting for HLS to start...",
-                                                textColor: themeDefaultColor)),
-                                      ],
-                                    ),
-                                  ),
+                              : Center(
+                                  child: Padding(
+                                      padding:
+                                          const EdgeInsets.only(bottom: 8.0),
+                                      child: HLSTitleText(
+                                          text: "Waiting for HLS to start...",
+                                          textColor: themeDefaultColor)),
                                 );
                         }),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              left: 15, right: 15, top: 5, bottom: 2),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Row(
-                                children: [
-                                  EmbeddedButton(
-                                    onTap: () async => {
-                                      await UtilityComponents.onBackPressed(
-                                          context)
-                                    },
-                                    disabledBorderColor: Color(0xffCC525F),
-                                    width: 40,
-                                    height: 40,
-                                    offColor: Color(0xffCC525F),
-                                    onColor: Color(0xffCC525F),
-                                    isActive: false,
-                                    child: SvgPicture.asset(
-                                      "assets/icons/leave_hls.svg",
-                                      color: Colors.white,
-                                      fit: BoxFit.scaleDown,
-                                      semanticsLabel: "leave_button",
+                    if (!context.read<MeetingStore>().isPipActive)
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                left: 15, right: 15, top: 5, bottom: 2),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  children: [
+                                    EmbeddedButton(
+                                      onTap: () async => {
+                                        await UtilityComponents.onBackPressed(
+                                            context)
+                                      },
+                                      disabledBorderColor: Color(0xffCC525F),
+                                      width: 40,
+                                      height: 40,
+                                      offColor: Color(0xffCC525F),
+                                      onColor: Color(0xffCC525F),
+                                      isActive: false,
+                                      child: SvgPicture.asset(
+                                        "assets/icons/leave_hls.svg",
+                                        color: Colors.white,
+                                        fit: BoxFit.scaleDown,
+                                        semanticsLabel: "leave_button",
+                                      ),
                                     ),
-                                  ),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                  Selector<MeetingStore, bool>(
-                                      selector: (_, meetingStore) =>
-                                          meetingStore.hasHlsStarted,
-                                      builder: (_, hasHlsStarted, __) {
-                                        if (hasHlsStarted)
-                                          return Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Row(
-                                                children: [
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            right: 5.0),
-                                                    child: SvgPicture.asset(
-                                                      "assets/icons/live_stream.svg",
-                                                      color: errorColor,
-                                                      fit: BoxFit.scaleDown,
-                                                    ),
-                                                  ),
-                                                  Text(
-                                                    "Live",
-                                                    style: GoogleFonts.inter(
-                                                        fontSize: 16,
-                                                        color:
-                                                            themeDefaultColor,
-                                                        letterSpacing: 0.5,
-                                                        fontWeight:
-                                                            FontWeight.w600),
-                                                  ),
-                                                ],
-                                              ),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Row(
-                                                    children: [
-                                                      SvgPicture.asset(
-                                                        "assets/icons/clock.svg",
-                                                        color:
-                                                            themeSubHeadingColor,
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Selector<MeetingStore, bool>(
+                                        selector: (_, meetingStore) =>
+                                            meetingStore.hasHlsStarted,
+                                        builder: (_, hasHlsStarted, __) {
+                                          if (hasHlsStarted)
+                                            return Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Row(
+                                                  children: [
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              right: 5.0),
+                                                      child: SvgPicture.asset(
+                                                        "assets/icons/live_stream.svg",
+                                                        color: errorColor,
                                                         fit: BoxFit.scaleDown,
                                                       ),
-                                                      SizedBox(
-                                                        width: 6,
-                                                      ),
-                                                      Selector<MeetingStore,
-                                                              HMSRoom?>(
-                                                          selector:
-                                                              (_, meetingStore) =>
-                                                                  meetingStore
-                                                                      .hmsRoom,
-                                                          builder:
-                                                              (_, hmsRoom, __) {
-                                                            if (hmsRoom !=
-                                                                    null &&
-                                                                hmsRoom.hmshlsStreamingState !=
-                                                                    null &&
-                                                                hmsRoom
-                                                                        .hmshlsStreamingState!
-                                                                        .variants
-                                                                        .length !=
-                                                                    0 &&
-                                                                hmsRoom
+                                                    ),
+                                                    Text(
+                                                      "Live",
+                                                      style: GoogleFonts.inter(
+                                                          fontSize: 16,
+                                                          color:
+                                                              themeDefaultColor,
+                                                          letterSpacing: 0.5,
+                                                          fontWeight:
+                                                              FontWeight.w600),
+                                                    ),
+                                                  ],
+                                                ),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    Row(
+                                                      children: [
+                                                        SvgPicture.asset(
+                                                          "assets/icons/clock.svg",
+                                                          color:
+                                                              themeSubHeadingColor,
+                                                          fit: BoxFit.scaleDown,
+                                                        ),
+                                                        SizedBox(
+                                                          width: 6,
+                                                        ),
+                                                        Selector<MeetingStore,
+                                                                HMSRoom?>(
+                                                            selector: (_,
+                                                                    meetingStore) =>
+                                                                meetingStore
+                                                                    .hmsRoom,
+                                                            builder: (_,
+                                                                hmsRoom, __) {
+                                                              if (hmsRoom !=
+                                                                      null &&
+                                                                  hmsRoom.hmshlsStreamingState !=
+                                                                      null &&
+                                                                  hmsRoom
+                                                                          .hmshlsStreamingState!
+                                                                          .variants
+                                                                          .length !=
+                                                                      0 &&
+                                                                  hmsRoom
+                                                                          .hmshlsStreamingState!
+                                                                          .variants[
+                                                                              0]!
+                                                                          .startedAt !=
+                                                                      null) {
+                                                                return StreamTimer(
+                                                                    startedAt: hmsRoom
                                                                         .hmshlsStreamingState!
                                                                         .variants[
                                                                             0]!
-                                                                        .startedAt !=
-                                                                    null) {
-                                                              return StreamTimer(
-                                                                  startedAt: hmsRoom
-                                                                      .hmshlsStreamingState!
-                                                                      .variants[
-                                                                          0]!
-                                                                      .startedAt!);
-                                                            }
-                                                            return HLSSubtitleText(
-                                                              text: "00:00",
-                                                              textColor:
-                                                                  themeSubHeadingColor,
-                                                            );
-                                                          }),
-                                                    ],
-                                                  ),
-                                                  HLSSubtitleText(
-                                                    text: " | ",
-                                                    textColor: dividerColor,
-                                                  ),
-                                                  Row(
-                                                    children: [
-                                                      SvgPicture.asset(
-                                                        "assets/icons/watching.svg",
-                                                        color:
-                                                            themeSubHeadingColor,
-                                                        fit: BoxFit.scaleDown,
-                                                      ),
-                                                      SizedBox(
-                                                        width: 6,
-                                                      ),
-                                                      Selector<MeetingStore,
-                                                              int>(
-                                                          selector:
-                                                              (_, meetingStore) =>
-                                                                  meetingStore
-                                                                      .peers
-                                                                      .length,
-                                                          builder:
-                                                              (_, length, __) {
-                                                            return HLSSubtitleText(
-                                                                text: length
-                                                                    .toString(),
+                                                                        .startedAt!);
+                                                              }
+                                                              return HLSSubtitleText(
+                                                                text: "00:00",
                                                                 textColor:
-                                                                    themeSubHeadingColor);
-                                                          })
-                                                    ],
-                                                  )
-                                                ],
-                                              )
-                                            ],
+                                                                    themeSubHeadingColor,
+                                                              );
+                                                            }),
+                                                      ],
+                                                    ),
+                                                    HLSSubtitleText(
+                                                      text: " | ",
+                                                      textColor: dividerColor,
+                                                    ),
+                                                    Row(
+                                                      children: [
+                                                        SvgPicture.asset(
+                                                          "assets/icons/watching.svg",
+                                                          color:
+                                                              themeSubHeadingColor,
+                                                          fit: BoxFit.scaleDown,
+                                                        ),
+                                                        SizedBox(
+                                                          width: 6,
+                                                        ),
+                                                        Selector<MeetingStore,
+                                                                int>(
+                                                            selector:
+                                                                (_, meetingStore) =>
+                                                                    meetingStore
+                                                                        .peers
+                                                                        .length,
+                                                            builder: (_, length,
+                                                                __) {
+                                                              return HLSSubtitleText(
+                                                                  text: length
+                                                                      .toString(),
+                                                                  textColor:
+                                                                      themeSubHeadingColor);
+                                                            })
+                                                      ],
+                                                    )
+                                                  ],
+                                                )
+                                              ],
+                                            );
+                                          return SizedBox();
+                                        })
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Selector<MeetingStore, bool>(
+                                        selector: (_, meetingStore) =>
+                                            meetingStore.isRaisedHand,
+                                        builder: (_, handRaised, __) {
+                                          return EmbeddedButton(
+                                            onTap: () => {
+                                              context
+                                                  .read<MeetingStore>()
+                                                  .changeMetadata()
+                                            },
+                                            width: 40,
+                                            height: 40,
+                                            disabledBorderColor: borderColor,
+                                            offColor:
+                                                themeScreenBackgroundColor,
+                                            onColor: themeHintColor,
+                                            isActive: handRaised,
+                                            child: SvgPicture.asset(
+                                              "assets/icons/hand_outline.svg",
+                                              color: themeDefaultColor,
+                                              fit: BoxFit.scaleDown,
+                                              semanticsLabel:
+                                                  "hand_raise_button",
+                                            ),
                                           );
-                                        return SizedBox();
-                                      })
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  Selector<MeetingStore, bool>(
-                                      selector: (_, meetingStore) =>
-                                          meetingStore.isRaisedHand,
-                                      builder: (_, handRaised, __) {
-                                        return EmbeddedButton(
-                                          onTap: () => {
-                                            context
-                                                .read<MeetingStore>()
-                                                .changeMetadata()
-                                          },
-                                          width: 40,
-                                          height: 40,
-                                          disabledBorderColor: borderColor,
-                                          offColor: themeScreenBackgroundColor,
-                                          onColor: themeHintColor,
-                                          isActive: handRaised,
-                                          child: SvgPicture.asset(
-                                            "assets/icons/hand_outline.svg",
-                                            color: themeDefaultColor,
-                                            fit: BoxFit.scaleDown,
-                                            semanticsLabel: "hand_raise_button",
-                                          ),
-                                        );
-                                      }),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                  Selector<MeetingStore, bool>(
-                                      selector: (_, meetingStore) =>
-                                          meetingStore.isNewMessageReceived,
-                                      builder: (_, isNewMessageReceived, __) {
-                                        return EmbeddedButton(
-                                          onTap: () => {
-                                            context
-                                                .read<MeetingStore>()
-                                                .setNewMessageFalse(),
-                                            showModalBottomSheet(
-                                              isScrollControlled: true,
-                                              backgroundColor:
-                                                  themeBottomSheetColor,
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(20),
-                                              ),
-                                              context: context,
-                                              builder: (ctx) =>
-                                                  ChangeNotifierProvider.value(
-                                                      value: context
-                                                          .read<MeetingStore>(),
-                                                      child: HLSMessage()),
-                                            )
-                                          },
-                                          width: 40,
-                                          height: 40,
-                                          offColor: themeHintColor,
-                                          onColor: themeScreenBackgroundColor,
-                                          isActive: true,
-                                          child: SvgPicture.asset(
-                                            isNewMessageReceived
-                                                ? "assets/icons/message_badge_on.svg"
-                                                : "assets/icons/message_badge_off.svg",
-                                            fit: BoxFit.scaleDown,
-                                            semanticsLabel: "chat_button",
-                                          ),
-                                        );
-                                      }),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                  EmbeddedButton(
-                                    onTap: () => {
-                                      showModalBottomSheet(
-                                          isScrollControlled: true,
-                                          backgroundColor:
-                                              themeBottomSheetColor,
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(20),
-                                          ),
-                                          context: context,
-                                          builder: (ctx) =>
-                                              ChangeNotifierProvider.value(
-                                                  value: context
-                                                      .read<MeetingStore>(),
-                                                  child: HLSViewerSettings()))
-                                    },
-                                    width: 40,
-                                    height: 40,
-                                    offColor: themeHintColor,
-                                    onColor: themeScreenBackgroundColor,
-                                    isActive: true,
-                                    child: SvgPicture.asset(
-                                      "assets/icons/more.svg",
-                                      color: themeDefaultColor,
-                                      fit: BoxFit.scaleDown,
-                                      semanticsLabel: "more_button",
+                                        }),
+                                    SizedBox(
+                                      width: 10,
                                     ),
-                                  ),
-                                ],
-                              )
-                            ],
+                                    Selector<MeetingStore, bool>(
+                                        selector: (_, meetingStore) =>
+                                            meetingStore.isNewMessageReceived,
+                                        builder: (_, isNewMessageReceived, __) {
+                                          return EmbeddedButton(
+                                            onTap: () => {
+                                              context
+                                                  .read<MeetingStore>()
+                                                  .setNewMessageFalse(),
+                                              showModalBottomSheet(
+                                                isScrollControlled: true,
+                                                backgroundColor:
+                                                    themeBottomSheetColor,
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(20),
+                                                ),
+                                                context: context,
+                                                builder: (ctx) =>
+                                                    ChangeNotifierProvider
+                                                        .value(
+                                                            value: context.read<
+                                                                MeetingStore>(),
+                                                            child:
+                                                                HLSMessage()),
+                                              )
+                                            },
+                                            width: 40,
+                                            height: 40,
+                                            offColor: themeHintColor,
+                                            onColor: themeScreenBackgroundColor,
+                                            isActive: true,
+                                            child: SvgPicture.asset(
+                                              isNewMessageReceived
+                                                  ? "assets/icons/message_badge_on.svg"
+                                                  : "assets/icons/message_badge_off.svg",
+                                              fit: BoxFit.scaleDown,
+                                              semanticsLabel: "chat_button",
+                                            ),
+                                          );
+                                        }),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    EmbeddedButton(
+                                      onTap: () => {
+                                        showModalBottomSheet(
+                                            isScrollControlled: true,
+                                            backgroundColor:
+                                                themeBottomSheetColor,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                            ),
+                                            context: context,
+                                            builder: (ctx) =>
+                                                ChangeNotifierProvider.value(
+                                                    value: context
+                                                        .read<MeetingStore>(),
+                                                    child: HLSViewerSettings()))
+                                      },
+                                      width: 40,
+                                      height: 40,
+                                      offColor: themeHintColor,
+                                      onColor: themeScreenBackgroundColor,
+                                      isActive: true,
+                                      child: SvgPicture.asset(
+                                        "assets/icons/more.svg",
+                                        color: themeDefaultColor,
+                                        fit: BoxFit.scaleDown,
+                                        semanticsLabel: "more_button",
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
+                        ],
+                      ),
                     Selector<MeetingStore, HMSRoleChangeRequest?>(
                         selector: (_, meetingStore) =>
                             meetingStore.currentRoleChangeRequest,

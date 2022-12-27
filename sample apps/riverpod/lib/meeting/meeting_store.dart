@@ -133,9 +133,9 @@ class MeetingStore extends ChangeNotifier
   }
 
   void updatePeerAt(peer) {
-    int index = this.peers.indexOf(peer);
-    this.peers.removeAt(index);
-    this.peers.insert(index, peer);
+    int index = peers.indexOf(peer);
+    peers.removeAt(index);
+    peers.insert(index, peer);
   }
 
   @override
@@ -243,7 +243,7 @@ class MeetingStore extends ChangeNotifier
 
   @override
   void onHMSError({required HMSException error}) {
-    this.hmsException = hmsException;
+    hmsException = hmsException;
     notifyListeners();
   }
 
@@ -454,7 +454,7 @@ class MeetingStore extends ChangeNotifier
         notifyListeners();
         break;
       case HMSActionResultListenerMethod.endRoom:
-        this.isRoomEnded = true;
+        isRoomEnded = true;
         notifyListeners();
         break;
       case HMSActionResultListenerMethod.removePeer:
@@ -498,6 +498,12 @@ class MeetingStore extends ChangeNotifier
         // TODO: Handle this case.
         break;
       case HMSActionResultListenerMethod.stopAudioShare:
+        // TODO: Handle this case.
+        break;
+      case HMSActionResultListenerMethod.setSessionMetadata:
+        // TODO: Handle this case.
+        break;
+      case HMSActionResultListenerMethod.switchCamera:
         // TODO: Handle this case.
         break;
     }
@@ -557,6 +563,12 @@ class MeetingStore extends ChangeNotifier
         // TODO: Handle this case.
         break;
       case HMSActionResultListenerMethod.stopAudioShare:
+        // TODO: Handle this case.
+        break;
+      case HMSActionResultListenerMethod.setSessionMetadata:
+        // TODO: Handle this case.
+        break;
+      case HMSActionResultListenerMethod.switchCamera:
         // TODO: Handle this case.
         break;
     }

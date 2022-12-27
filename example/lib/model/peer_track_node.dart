@@ -14,6 +14,7 @@ class PeerTrackNode extends ChangeNotifier {
   int? networkQuality;
   RTCStats? stats;
   int audioLevel;
+  bool pinTile;
 
   PeerTrackNode(
       {required this.peer,
@@ -23,7 +24,8 @@ class PeerTrackNode extends ChangeNotifier {
       this.isOffscreen = true,
       this.networkQuality = -1,
       this.stats,
-      this.audioLevel = -1});
+      this.audioLevel = -1,
+      this.pinTile = false});
 
   @override
   String toString() {
@@ -57,7 +59,35 @@ class PeerTrackNode extends ChangeNotifier {
       }
     }
   }
-  
+
+  void setHMSRemoteAudioStats(HMSRemoteAudioStats hmsRemoteAudioStats) {
+    stats?.hmsRemoteAudioStats = hmsRemoteAudioStats;
+    if (!this.isOffscreen) {
+      notify();
+    }
+  }
+
+  void setHMSRemoteVideoStats(HMSRemoteVideoStats hmsRemoteVideoStats) {
+    stats?.hmsRemoteVideoStats = hmsRemoteVideoStats;
+    if (!this.isOffscreen) {
+      notify();
+    }
+  }
+
+  void setHMSLocalVideoStats(HMSLocalVideoStats hmsLocalVideoStats) {
+    stats?.hmsLocalVideoStats = hmsLocalVideoStats;
+    if (!this.isOffscreen) {
+      notify();
+    }
+  }
+
+  void setHMSLocalAudioStats(HMSLocalAudioStats hmsLocalAudioStats) {
+    stats?.hmsLocalAudioStats = hmsLocalAudioStats;
+    if (!this.isOffscreen) {
+      notify();
+    }
+  }
+
   @override
   bool operator ==(Object other) {
     return super == other;

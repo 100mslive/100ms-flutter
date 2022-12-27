@@ -9,16 +9,16 @@
 /* Begin PBXBuildFile section */
 		1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */ = {isa = PBXBuildFile; fileRef = 1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */; };
 		3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */; };
+		6A8DAA457993A7BBF808447F /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 650E3B08A6C973442370ABD8 /* Pods_Runner.framework */; };
 		74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74858FAE1ED2DC5600515810 /* AppDelegate.swift */; };
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
-		A6291DF792801F9A6A7EACA8 /* libPods-FlutterBroadcastUploadExtension.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DC902E842ECD88C50127D92B /* libPods-FlutterBroadcastUploadExtension.a */; };
+		C45DFE66D74DCDD1B6244A17 /* Pods_FlutterBroadcastUploadExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 683C65A6AADC79CE61E0513E /* Pods_FlutterBroadcastUploadExtension.framework */; };
 		EC1052B22858A77D005EAB9E /* ReplayKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EC1052B12858A77D005EAB9E /* ReplayKit.framework */; };
 		EC1052B52858A77D005EAB9E /* SampleHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC1052B42858A77D005EAB9E /* SampleHandler.swift */; };
 		EC1052B92858A77D005EAB9E /* FlutterBroadcastUploadExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = EC1052B02858A77D005EAB9E /* FlutterBroadcastUploadExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		EC9BCD2B26B1CFDB00D378A0 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = EC9BCD2A26B1CFDB00D378A0 /* GoogleService-Info.plist */; };
-		EE34C22A67AA1F5AB40D3D81 /* libPods-Runner.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 63ECF97ABDF354FEEEDB85D5 /* libPods-Runner.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -61,7 +61,8 @@
 		238323F347131537C23069F5 /* Pods-Runner.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile.xcconfig"; sourceTree = "<group>"; };
 		3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = AppFrameworkInfo.plist; path = Flutter/AppFrameworkInfo.plist; sourceTree = "<group>"; };
 		41AA5D92A2CC1BB27F1A83DE /* Pods-Runner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"; sourceTree = "<group>"; };
-		63ECF97ABDF354FEEEDB85D5 /* libPods-Runner.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Runner.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		650E3B08A6C973442370ABD8 /* Pods_Runner.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Runner.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		683C65A6AADC79CE61E0513E /* Pods_FlutterBroadcastUploadExtension.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FlutterBroadcastUploadExtension.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Runner-Bridging-Header.h"; sourceTree = "<group>"; };
 		74858FAE1ED2DC5600515810 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7AFA3C8E1D35360C0083082E /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Release.xcconfig; path = Flutter/Release.xcconfig; sourceTree = "<group>"; };
@@ -75,7 +76,6 @@
 		97C147021CF9000F007C117D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B0623F8FBD08D7EF79FF5844 /* Pods-FlutterBroadcastUploadExtension.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FlutterBroadcastUploadExtension.profile.xcconfig"; path = "Target Support Files/Pods-FlutterBroadcastUploadExtension/Pods-FlutterBroadcastUploadExtension.profile.xcconfig"; sourceTree = "<group>"; };
 		CD3C8BA7497CF5A349499EE7 /* Pods-FlutterBroadcastUploadExtension.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FlutterBroadcastUploadExtension.release.xcconfig"; path = "Target Support Files/Pods-FlutterBroadcastUploadExtension/Pods-FlutterBroadcastUploadExtension.release.xcconfig"; sourceTree = "<group>"; };
-		DC902E842ECD88C50127D92B /* libPods-FlutterBroadcastUploadExtension.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-FlutterBroadcastUploadExtension.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		EC1052B02858A77D005EAB9E /* FlutterBroadcastUploadExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = FlutterBroadcastUploadExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		EC1052B12858A77D005EAB9E /* ReplayKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ReplayKit.framework; path = System/Library/Frameworks/ReplayKit.framework; sourceTree = SDKROOT; };
 		EC1052B42858A77D005EAB9E /* SampleHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleHandler.swift; sourceTree = "<group>"; };
@@ -91,7 +91,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EE34C22A67AA1F5AB40D3D81 /* libPods-Runner.a in Frameworks */,
+				6A8DAA457993A7BBF808447F /* Pods_Runner.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -100,7 +100,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				EC1052B22858A77D005EAB9E /* ReplayKit.framework in Frameworks */,
-				A6291DF792801F9A6A7EACA8 /* libPods-FlutterBroadcastUploadExtension.a in Frameworks */,
+				C45DFE66D74DCDD1B6244A17 /* Pods_FlutterBroadcastUploadExtension.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -110,9 +110,9 @@
 		6B91F8981D56ACC93535B1B2 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				63ECF97ABDF354FEEEDB85D5 /* libPods-Runner.a */,
 				EC1052B12858A77D005EAB9E /* ReplayKit.framework */,
-				DC902E842ECD88C50127D92B /* libPods-FlutterBroadcastUploadExtension.a */,
+				683C65A6AADC79CE61E0513E /* Pods_FlutterBroadcastUploadExtension.framework */,
+				650E3B08A6C973442370ABD8 /* Pods_Runner.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -206,7 +206,6 @@
 				7B56423DDF1948A38AE2EA10 /* [CP] Embed Pods Frameworks */,
 				CC19BBB77EA3E7F699588CF7 /* [firebase_crashlytics] Crashlytics Upload Symbols */,
 				EC1052BA2858A77D005EAB9E /* Embed App Extensions */,
-				E4ABAC2BDF36E37231B50E15 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -404,23 +403,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		E4ABAC2BDF36E37231B50E15 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */

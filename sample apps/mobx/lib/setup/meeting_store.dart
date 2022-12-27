@@ -657,10 +657,6 @@ abstract class MeetingStoreBase extends ChangeNotifier
         metadata: "{\"isHandRaised\":$value}", hmsActionResultListener: this);
   }
 
-  void setPlayBackAllowed(bool allow) {
-    _hmsSDKInteractor.setPlayBackAllowed(allow);
-  }
-
   void acceptChangeRole(HMSRoleChangeRequest hmsRoleChangeRequest) {
     _hmsSDKInteractor.acceptChangeRole(hmsRoleChangeRequest, this);
   }
@@ -774,6 +770,12 @@ abstract class MeetingStoreBase extends ChangeNotifier
       case HMSActionResultListenerMethod.stopAudioShare:
         // TODO: Handle this case.
         break;
+      case HMSActionResultListenerMethod.setSessionMetadata:
+        // TODO: Handle this case.
+        break;
+      case HMSActionResultListenerMethod.switchCamera:
+        // TODO: Handle this case.
+        break;
     }
   }
 
@@ -804,7 +806,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
         event = "Failed to Mute";
         break;
       case HMSActionResultListenerMethod.startRtmpOrRecording:
-        if (hmsException.code?.errorCode == "400") {
+        if (hmsException.code?.errorCode == 400) {
           isRecordingStarted = true;
         }
         break;
@@ -840,6 +842,12 @@ abstract class MeetingStoreBase extends ChangeNotifier
         // TODO: Handle this case.
         break;
       case HMSActionResultListenerMethod.stopAudioShare:
+        // TODO: Handle this case.
+        break;
+      case HMSActionResultListenerMethod.setSessionMetadata:
+        // TODO: Handle this case.
+        break;
+      case HMSActionResultListenerMethod.switchCamera:
         // TODO: Handle this case.
         break;
     }
