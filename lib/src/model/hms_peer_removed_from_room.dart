@@ -4,13 +4,13 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 /// 100ms HMSPeerRemovedFromPeer
 ///
 ///when someone kicks you out or when someone ends the room at that time it is triggered
-/// [hmsPeerRemovedFromPeer] it consists info about who removed you and why.
-class HMSPeerRemovedFromPeer {
+/// [hmsPeerRemovedFromRoom] it consists info about who removed you and why.
+class HMSPeerRemovedFromRoom {
   final HMSPeer? peerWhoRemoved;
   final String reason;
   final bool roomWasEnded;
 
-  HMSPeerRemovedFromPeer(
+  HMSPeerRemovedFromRoom(
       {required this.peerWhoRemoved,
       required this.reason,
       required this.roomWasEnded});
@@ -28,8 +28,8 @@ class HMSPeerRemovedFromPeer {
     return 'HMSPeerRemovedFromPeer{peerWhoRemoved: $peerWhoRemoved, reason: $reason, roomWasEnded: $roomWasEnded}';
   }
 
-  factory HMSPeerRemovedFromPeer.fromMap(Map map) {
-    return HMSPeerRemovedFromPeer(
+  factory HMSPeerRemovedFromRoom.fromMap(Map map) {
+    return HMSPeerRemovedFromRoom(
       peerWhoRemoved: map['peer_who_removed'] != null
           ? HMSPeer.fromMap(map['peer_who_removed'])
           : null,

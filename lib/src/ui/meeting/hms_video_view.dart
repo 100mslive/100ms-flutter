@@ -23,11 +23,23 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 /// [key] property can be used to forcefully rebuild the video widget by setting a unique key everytime.
 /// Similarly to avoid rebuilding the key should be kept the same for particular HMSVideoView.
 class HMSVideoView extends StatelessWidget {
+  ///  This will render video with trackId present in track.
+  ///
+  ///[track] - track to be displayed
   final HMSVideoTrack track;
+
+  ///[matchParent] - to match the size of parent widget
   final matchParent;
 
+  ///[scaleType] - To set the video scaling
   final ScaleType scaleType;
+
+  ///[setMirror] - To set mirroring of video
+  ///
+  ///Generally true for local peer and false for a remote peer
   final bool setMirror;
+
+  ///[isAutoSimulcast] - To set auto simulcast (Adaptive Bitrate)
   final bool isAutoSimulcast;
 
   HMSVideoView(

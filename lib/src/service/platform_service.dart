@@ -205,10 +205,10 @@ class PlatformService {
           break;
 
         case HMSUpdateListenerMethod.onRemovedFromRoom:
-          HMSPeerRemovedFromPeer hmsPeerRemovedFromPeer =
-              HMSPeerRemovedFromPeer.fromMap(data['removed_from_room'] as Map);
+          HMSPeerRemovedFromRoom hmsPeerRemovedFromRoom =
+              HMSPeerRemovedFromRoom.fromMap(data['removed_from_room'] as Map);
           notifyUpdateListeners(
-              method, {'removed_from_room': hmsPeerRemovedFromPeer});
+              method, {'removed_from_room': hmsPeerRemovedFromRoom});
           break;
         case HMSUpdateListenerMethod.onAudioDeviceChanged:
           HMSAudioDevice? currentAudioDevice =
@@ -561,7 +561,7 @@ class PlatformService {
         if (updateListeners.isEmpty) break;
         updateListeners.forEach((element) {
           element.onRemovedFromRoom(
-              hmsPeerRemovedFromPeer: arguments['removed_from_room']);
+              hmsPeerRemovedFromRoom: arguments['removed_from_room']);
         });
         break;
 

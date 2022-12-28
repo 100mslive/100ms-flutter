@@ -85,7 +85,7 @@ abstract class HMSUpdateListener {
   /// When someone kicks you out or when someone ends the room at that time it is triggered
   /// - Parameter hmsPeerRemovedFromPeer - it consists info about who removed you and why.
   void onRemovedFromRoom(
-      {required HMSPeerRemovedFromPeer hmsPeerRemovedFromPeer});
+      {required HMSPeerRemovedFromRoom hmsPeerRemovedFromRoom});
 
   /// Whenever a new audio device is plugged in or audio output is changed we get the onAudioDeviceChanged update
   /// This callback is only fired on Android devices. On iOS, this callback will not be triggered.
