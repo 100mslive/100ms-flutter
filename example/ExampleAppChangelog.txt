@@ -10,6 +10,7 @@
 
 - Fixed black tile showing up after background to foreground app transitions
 
+- Added Auto Simulcast check for Remote Peer's Video tiles
 
 Flutter SDK: 1.2.0
 Android SDK: 2.5.5
