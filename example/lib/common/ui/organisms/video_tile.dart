@@ -145,7 +145,7 @@ class _VideoTileState extends State<VideoTile> {
                                               track: track));
                                 } else {
                                   Utilities.showToast(
-                                      "Simulcast not enabled for the peer");
+                                      "Simulcast not enabled for the role");
                                 }
                               },
                               mute: mutePermission,
