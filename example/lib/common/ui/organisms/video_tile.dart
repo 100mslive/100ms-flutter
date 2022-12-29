@@ -7,6 +7,7 @@ import 'package:hmssdk_flutter_example/common/ui/organisms/change_simulcast_laye
 import 'package:hmssdk_flutter_example/common/ui/organisms/local_peer_tile_dialog.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
+import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:provider/provider.dart';
 
 // Project imports
@@ -58,14 +59,6 @@ class _VideoTileState extends State<VideoTile> {
         _meetingStore.localPeer?.role.permissions.removeOthers ?? false;
     bool changeRolePermission =
         _meetingStore.localPeer?.role.permissions.changeRole ?? false;
-    bool isSimulcastEnabled = (context
-            .read<PeerTrackNode>()
-            .peer
-            .role
-            .publishSettings
-            ?.simulcast
-            ?.video !=
-        null);
 
     return Semantics(
       label: "fl_${context.read<PeerTrackNode>().peer.name}_video_tile",
@@ -141,7 +134,7 @@ class _VideoTileState extends State<VideoTile> {
                                     await track.getLayerDefinition();
                                 HMSSimulcastLayer selectedLayer =
                                     await track.getLayer();
-                                if (layerDefinitions.isNotEmpty)
+                                if (layerDefinitions.isNotEmpty) {
                                   showDialog(
                                       context: context,
                                       builder: (_) =>
@@ -150,12 +143,16 @@ class _VideoTileState extends State<VideoTile> {
                                                   layerDefinitions,
                                               selectedLayer: selectedLayer,
                                               track: track));
+                                } else {
+                                  Utilities.showToast(
+                                      "Simulcast not enabled for the role");
+                                }
                               },
                               mute: mutePermission,
                               unMute: unMutePermission,
                               removeOthers: removePeerPermission,
                               roles: changeRolePermission,
-                              simulcast: isSimulcastEnabled &&
+                              simulcast:
                                   (!(peerTrackNode.track as HMSRemoteVideoTrack)
                                       .isMute),
                               pinTile: peerTrackNode.pinTile,
