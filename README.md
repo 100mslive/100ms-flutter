@@ -13,6 +13,8 @@
 
 Here you will find everything you need to build experiences with video using 100ms iOS/Android SDK. Dive into our SDKs, quick starts, add real-time video, voice, and screen sharing to your web and mobile applications.
 
+📖 Read the Complete Documentation here: https://www.100ms.live/docs/flutter/v2/guides/quickstart
+
 📲 Download the Sample iOS app here: <https://testflight.apple.com/join/Uhzebmut>
 
 🤖 Download the Sample Android app here: <https://appdistribution.firebase.dev/i/b623e5310929ab70>
@@ -34,9 +36,13 @@ Here you will find everything you need to build experiences with video using 100
 
 4. Get the HMSSDK via [pub.dev](https://pub.dev/packages/hmssdk_flutter). Add the `hmssdk_flutter` to your pubspec.yaml.
 
+📖 Read the Complete Installation Steps here: https://www.100ms.live/docs/flutter/v2/features/integration
+
 ## 🏃‍♀️ How to run the Sample App
 
 The Example app can be found [here](https://github.com/100mslive/100ms-flutter/tree/main/example).
+
+🚀 We have added explanations & recommended usage guide for different features, UI Layouts, Data Store, etc in [Example app ReadMe](https://github.com/100mslive/100ms-flutter/blob/main/example/README.md).
 
 1. In project root, run `flutter pub get`
 2. Change directory to `example` folder & run either `flutter build ios` OR `flutter build apk`
@@ -48,10 +54,7 @@ The default [Example app](https://github.com/100mslive/100ms-flutter/tree/main/e
 * [Getx](https://github.com/100mslive/100ms-flutter/tree/main/sample%20apps/getx)
 * [Riverpod](https://github.com/100mslive/100ms-flutter/tree/main/sample%20apps/riverpod)
 * [Mobx](https://github.com/100mslive/100ms-flutter/tree/main/sample%20apps/mobx)
-
-
-
-🚀 We have added explanations & recommended usage guide for different features, UI Layouts, Data Store, etc in [Example app ReadMe](https://github.com/100mslive/100ms-flutter/blob/main/example/README.md).
+* [Simple QuickStart](https://github.com/100mslive/100ms-flutter/tree/main/sample%20apps/flutter-quickstart-app)
 
 
 ## ☝️ Minimum Configuration
@@ -64,7 +67,7 @@ The default [Example app](https://github.com/100mslive/100ms-flutter/tree/main/e
 
 ## 🤝 Recommended Configuration
 
-- Android API level 29 or higher
+- Android API level 30 or higher
 - Java 11 or higher
 - iOS 15 or higher
 - Flutter 3.3.0 or higher
@@ -93,13 +96,19 @@ Add the following permissions in the Android AndroidManifest.xml file
 
 <uses-permission android:name="android.permission.RECORD_AUDIO"/>
 
-<uses-permission android:name="android.permission.BLUETOOTH"/>
-
 <uses-permission android:name="android.permission.INTERNET"/>
 
 <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
 <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
+<uses-permission android:name="android.permission.BLUETOOTH" android:maxSdkVersion="30" />
+
+<uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
+
+<uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" />
+
+<uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
 ```
 
 ## [iOS Permissions](https://www.100ms.live/docs/flutter/v2/features/integration#i-os)
