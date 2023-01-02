@@ -1,6 +1,11 @@
 // Project imports:
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
+///100ms HMSTrackSetting
+///
+///[HMSTrackSetting] contains audioTrackSetting and videoTrackSetting.
+///
+///Refer [HMSTrackSetting guide here](https://www.100ms.live/docs/flutter/v2/advanced-features/set-track-settings)
 class HMSTrackSetting {
   HMSAudioTrackSetting? audioTrackSetting;
   HMSVideoTrackSetting? videoTrackSetting;

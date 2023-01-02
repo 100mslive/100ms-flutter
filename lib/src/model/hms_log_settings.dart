@@ -1,5 +1,8 @@
 import '../enum/hms_log_level.dart';
 
+///100ms HMSLogSettings
+///
+///[HMSLogSettings] contains maxDirSizeInBytes, isLogStorageEnabled and logLevel.
 class HMSLogSettings {
   final double maxDirSizeInBytes;
   final bool isLogStorageEnabled;

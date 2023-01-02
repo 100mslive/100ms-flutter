@@ -1,5 +1,8 @@
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
+/// 100ms HMSSubscribeSettings
+///
+/// [HMSSubscribeSettings] contains subcribesToRoles, maxSubsBitRate and subscribeDegradationParam.
 class HMSSubscribeSettings {
   final List? subcribesToRoles;
   final int maxSubsBitRate;

@@ -1,3 +1,7 @@
+///100ms HMSSimulcastLayerSettingsPolicy
+///
+///[HMSSimulcastLayerSettingsPolicy] contains rid, scaleResolutionDownBy, maxBitrate and maxFramerate.
+
 class HMSSimulcastLayerSettingsPolicy {
   final String rid;
   double? scaleResolutionDownBy;

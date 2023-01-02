@@ -1,6 +1,9 @@
 // Project imports:
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
+///100ms HMSAudioSetting
+///
+///HMSAudioSetting contains bitrate and codec
 class HMSAudioSetting {
   final int bitRate;
   final HMSAudioCodec codec;
