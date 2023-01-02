@@ -1,5 +1,8 @@
 import 'package:hmssdk_flutter/src/model/hms_simulcast_settings_policy.dart';
 
+///100ms HMSSimulcastSettings
+///
+///[HMSSimulcastSettings] contains [HMSSimulcastSettingsPolicy] for video and screen.
 class HMSSimulcastSettings {
   final HMSSimulcastSettingsPolicy? video;
   final HMSSimulcastSettingsPolicy? screen;

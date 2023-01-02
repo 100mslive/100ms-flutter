@@ -7,6 +7,16 @@ import '../hmssdk_flutter.dart';
 
 /// The public interface of 100ms SDK. Create an instance of HMSSDK to start using the SDK.
 ///
+/// Parameters:
+///
+/// **hmsTrackSetting** - To modify local peer's audio & video tracks settings. Only required for advanced use cases. Refer [hmsTrackSetting guide here](https://www.100ms.live/docs/flutter/v2/advanced-features/set-track-settings)
+///
+/// **appGroup** - It is only used for screen share (broadcast screen) in iOS. Refer [iOS Screen share guide here](https://www.100ms.live/docs/flutter/v2/features/screen-share#i-os-setup)
+///
+/// **preferredExtension** - It is only used for screen share (broadcast screen) in iOS. Refer [iOS Screen share guide here](https://www.100ms.live/docs/flutter/v2/features/screen-share#i-os-setup)
+///
+/// **hmsLogSettings** - It is used to set the Log Level setting. Refer [hmsLogSettings guide here](https://www.100ms.live/docs/flutter/v2/features/error-handling#setting-log-levels-in-sdk)
+///
 /// **Key Concepts**
 ///
 /// **Room** - A room represents real-time audio, and video sessions, the basic building block of the 100mslive Video SDK
@@ -19,6 +29,7 @@ import '../hmssdk_flutter.dart';
 ///
 /// HMSSDK has other methods which the client app can use to get more info about the Room, Peer and Tracks
 ///
+/// Refer [HMSSDK quick start guide available here](https://www.100ms.live/docs/flutter/v2/guides/quickstart)
 
 class HMSSDK {
   HMSSDK(
@@ -28,13 +39,20 @@ class HMSSDK {
       this.hmsLogSettings});
 
   /// The build function should be called after creating an instance of the [HMSSDK].
+  ///
   /// Await the result & if true then create [HMSConfig] object to join or preview a room.
   Future<void> build() async {
     await HmsSdkManager().createHMSSdk(
         hmsTrackSetting, appGroup, preferredExtension, hmsLogSettings);
   }
 
-  ///add MeetingListener it will add all the listeners.
+  ///add UpdateListener it will add all the listeners.
+  ///
+  ///HMSSDK provides callbacks to the client app about any change or update happening in the room after a user has joined by implementing HMSUpdateListener.
+  ///
+  /// Implement this listener in a class where you want to perform UI Actions, update App State, etc. These updates can be used to render the video on screen or to display other info regarding the room.
+  ///
+  /// Depending on your use case, you'll need to implement specific methods of the Update Listener. The most common ones are onJoin, onPeerUpdate, onTrackUpdate & onHMSError.
   void addUpdateListener({required HMSUpdateListener listener}) {
     PlatformService.addUpdateListener(listener);
   }
@@ -57,12 +75,21 @@ class HMSSDK {
   }
 
   ///add one or more previewListeners.
+  ///
+  ///[HMSPreviewListener] listens to updates when you preview.
+  ///
+  ///Just implement it and get the preview updates.
+  ///
+  ///Check out the [Sample App](https://github.com/100mslive/100ms-flutter/blob/main/example/lib/preview/preview_store.dart) how we are using it.
+
   void addPreviewListener({required HMSPreviewListener listener}) {
     PlatformService.addPreviewListener(listener);
   }
 
   /// Begin a preview so that the local peer's audio and video can be displayed to them before they join a call.
   /// The details of the call they want to join are passed using [HMSConfig]. This may affect whether they are allowed to publish audio or video at all.
+  ///
+  /// Refer [Preview guide here](https://www.100ms.live/docs/flutter/v2/features/preview).
   Future<void> preview({
     required HMSConfig config,
   }) async {
@@ -76,6 +103,8 @@ class HMSSDK {
 
   /// Call this method to leave the room
   /// [HMSActionResultListener] callback will be used by SDK to inform the application if there was a success or failure when the leave was executed
+  ///
+  /// Refer [leave guide here](https://www.100ms.live/docs/flutter/v2/features/leave).
   Future<void> leave({HMSActionResultListener? hmsActionResultListener}) async {
     var result = await PlatformService.invokeMethod(PlatformMethod.leave);
     if (hmsActionResultListener != null) {
@@ -92,6 +121,8 @@ class HMSSDK {
 
   /// To switch local peer's audio on/off.
   /// Pass the bool value to [isOn] to change the current audio status
+  ///
+  /// Refer [switch audio guide here](https://www.100ms.live/docs/flutter/v2/features/mute).
   Future<HMSException?> switchAudio({bool isOn = false}) async {
     bool result = await PlatformService.invokeMethod(PlatformMethod.switchAudio,
         arguments: {'is_on': isOn});
@@ -110,6 +141,8 @@ class HMSSDK {
 
   /// To switch local peer's video on/off.
   /// Pass the bool value to [isOn] to change the current video status
+  ///
+  /// Refer [switch video guide here](https://www.100ms.live/docs/flutter/v2/features/mute).
   Future<HMSException?> switchVideo({bool isOn = false}) async {
     bool result = await PlatformService.invokeMethod(PlatformMethod.switchVideo,
         arguments: {'is_on': isOn});
@@ -127,6 +160,8 @@ class HMSSDK {
   }
 
   /// Switch camera to the front or rear mode
+  ///
+  /// Refer [switch camera guide here](https://www.100ms.live/docs/flutter/v2/features/mute).
   Future<void> switchCamera(
       {HMSActionResultListener? hmsActionResultListener}) async {
     var result = await PlatformService.invokeMethod(
@@ -169,30 +204,43 @@ class HMSSDK {
         arguments: {"peer_id": peer != null ? peer.peerId : "null"});
   }
 
-  /// To mute the audio of all peers in the room for yourself
-  /// Audio from other peers will be stopped for the local peer after invoking [muteRoomAudioLocally]
-  /// Note: Other peers can still listen to each other in the room, just you (the local peer) won't listen to any audio from the peers in the room
+  /// To mute the audio of all peers in the room for yourself.
+  ///
+  /// Audio from other peers will be stopped for the local peer after invoking [muteRoomAudioLocally].
+  ///
+  /// Note: Other peers can still listen to each other in the room, just you (the local peer) won't listen to any audio from the peers in the room.
+  ///
+  /// Refer [muteRoomAudioLocally guide here](https://www.100ms.live/docs/flutter/v2/features/mute#mute-remote-peers-locally)
   Future<void> muteRoomAudioLocally() async {
     return await PlatformService.invokeMethod(
         PlatformMethod.muteRoomAudioLocally);
   }
 
-  /// To unmute the audio of all peers in the room for yourself if you had previously invoked [muteRoomAudioLocally]
+  /// To unmute the audio of all peers in the room for yourself if you had previously invoked [muteRoomAudioLocally].
+  ///
+  /// Refer [unMuteRoomAudioLocally guide here](https://www.100ms.live/docs/flutter/v2/features/mute#mute-remote-peers-locally)
   Future<void> unMuteRoomAudioLocally() async {
     return await PlatformService.invokeMethod(
         PlatformMethod.unMuteRoomAudioLocally);
   }
 
   /// To mute the video of all peers in the room for yourself.
-  /// Video from other peers will be stopped for the local peer after invoking [muteRoomVideoLocally]
-  /// Note: Other peers can still see each other in the room, just you (the local peer) won't see any video from the peers in the room
+  ///
+  /// Video from other peers will be stopped for the local peer after invoking [muteRoomVideoLocally].
+  ///
+  /// Note: Other peers can still see each other in the room, just you (the local peer) won't see any video from the peers in the room.
+  ///
+  /// Refer [muteRoomVideoLocally guide here](https://www.100ms.live/docs/flutter/v2/features/mute#mute-remote-peers-locally)
   Future<void> muteRoomVideoLocally() async {
     return await PlatformService.invokeMethod(
         PlatformMethod.muteRoomVideoLocally);
   }
 
   /// To unmute the video of all peers in the room for yourself.
-  /// Video from other peers will be displayed for the local peer after invoking [unMuteRoomVideoLocally] if they were previously muted using [muteRoomVideoLocally]
+  ///
+  /// Video from other peers will be displayed for the local peer after invoking [unMuteRoomVideoLocally] if they were previously muted using [muteRoomVideoLocally].
+  ///
+  /// Refer [unMuteRoomVideoLocally guide here](https://www.100ms.live/docs/flutter/v2/features/mute#mute-remote-peers-locally)
   Future<void> unMuteRoomVideoLocally() async {
     return await PlatformService.invokeMethod(
         PlatformMethod.unMuteRoomVideoLocally);
@@ -236,8 +284,17 @@ class HMSSDK {
     return listOfPeers;
   }
 
-  /// Sends a message to everyone on the call. [message] contains the content of the message.
-  /// The [hmsActionResultListener] informs about whether the message was successfully sent, or the kind of error if not.
+  /// Sends a message to everyone on the call.
+  ///
+  /// **Parameters**:
+  ///
+  /// **message** - contains the content of the message.
+  ///
+  /// **type** - The type of the message, default is chat.
+  ///
+  /// **hmsActionResultListener** - It contain informs about whether the message was successfully sent, or the kind of error if not.
+  ///
+  /// Refer [sendBroadcastMesssage guide here](https://www.100ms.live/docs/flutter/v2/features/chat#sending-broadcast-messages)
   Future<void> sendBroadcastMessage(
       {required String message,
       String? type,
@@ -261,9 +318,19 @@ class HMSSDK {
     }
   }
 
-  /// Sends a message to all the peers of a role defined in [roleName]. All peers currently in that role will receive the message.
-  /// [message] contains the content of the message.
-  /// The [hmsActionResultListener] informs about whether the message was successfully sent, or the kind of error if not.
+  /// Sends a message to all the peers of a role defined in [hmsRolesTo].
+  ///
+  /// **Parameters**:
+  ///
+  ///  **hmsRolesTo** - All peers currently in that role will receive the message.
+  ///
+  /// **message**  - contains the content of the message.
+  ///
+  /// **type** - The type of the message, default is chat.
+  ///
+  /// **hmsActionResultListener** - It contain informs about whether the message was successfully sent, or the kind of error if not.
+  ///
+  /// Refer [sendGroupMessage guide here](https://www.100ms.live/docs/flutter/v2/features/chat#sending-group-messages)
   Future<void> sendGroupMessage(
       {required String message,
       required List<HMSRole> hmsRolesTo,
@@ -291,9 +358,19 @@ class HMSSDK {
     }
   }
 
-  /// Sends a message to a particular peer only. The one specified in [peer].
-  /// [message] contains the content of the message.
-  /// The [hmsActionResultListener] informs about whether the message was successfully sent, or the kind of error if not.
+  /// Sends a message to a particular peer only.
+  ///
+  ///  **Parameters**:
+  ///
+  ///  **peerTo** - The one specified [HMSPeer].
+  ///
+  /// **message** - contains the content of the message.
+  ///
+  /// **type** - The type of the message, default is chat.
+  ///
+  /// **hmsActionResultListener** - It contain informs about whether the message was successfully sent, or the kind of error if not.
+  ///
+  /// Refer [sendDirectMessage guide here](https://www.100ms.live/docs/flutter/v2/features/chat#sending-direct-messages)
   Future<void> sendDirectMessage(
       {required String message,
       required HMSPeer peerTo,
@@ -338,10 +415,18 @@ class HMSSDK {
   }
 
   /// Requests a change of HMSRole to a new role.
-  /// The [peer] HMSPeer whose role should be requested to be changed.
-  /// The [roleName] new role the HMSPeer would have if they accept or are forced to change to.
-  /// Set [forceChange] to false if the peer should be requested to accept the new role (they can choose to deny). Set [forceChange] to true if their role should be changed without asking them.
-  /// [hmsActionResultListener] - Listener that will return HMSActionResultListener.onSuccess if the role change request is successful else will call [HMSActionResultListener.onException] with the error received from the server
+  ///
+  /// **Parameters**:
+  ///
+  /// **forPeer** - HMSPeer whose role should be requested to be changed.
+  ///
+  /// **toRole** - new role the HMSPeer would have if they accept or are forced to change to.
+  ///
+  /// **force** - Set [force] to false if the peer should be requested to accept the new role (they can choose to deny). Set [force] to true if their role should be changed without asking them.
+  ///
+  /// **hmsActionResultListener** - Listener that will return HMSActionResultListener.onSuccess if the role change request is successful else will call [HMSActionResultListener.onException] with the error received from the server.
+  ///
+  /// Refer [changeRole guide here](https://www.100ms.live/docs/flutter/v2/features/change-role#single-peer-role-change).
   @Deprecated('Use [changeRoleOfPeer]')
   Future<void> changeRole(
       {required HMSPeer forPeer,
@@ -378,10 +463,18 @@ class HMSSDK {
   }
 
   /// Requests a change of HMSRole to a new role.
-  /// The [peer] HMSPeer whose role should be requested to be changed.
-  /// The [roleName] new role the HMSPeer would have if they accept or are forced to change to.
-  /// Set [forceChange] to false if the peer should be requested to accept the new role (they can choose to deny). Set [forceChange] to true if their role should be changed without asking them.
-  /// [hmsActionResultListener] - Listener that will return HMSActionResultListener.onSuccess if the role change request is successful else will call [HMSActionResultListener.onException] with the error received from the server
+  ///
+  /// **Parameters**:
+  ///
+  /// **forPeer** - HMSPeer whose role should be requested to be changed.
+  ///
+  /// **toRole** - new role the HMSPeer would have if they accept or are forced to change to.
+  ///
+  /// **force** - Set [force] to false if the peer should be requested to accept the new role (they can choose to deny). Set [force] to true if their role should be changed without asking them.
+  ///
+  /// **hmsActionResultListener** - Listener that will return HMSActionResultListener.onSuccess if the role change request is successful else will call [HMSActionResultListener.onException] with the error received from the server.
+  ///
+  /// Refer [changeRoleOfPeer guide here](https://www.100ms.live/docs/flutter/v2/features/change-role#single-peer-role-change).
   Future<void> changeRoleOfPeer(
       {required HMSPeer forPeer,
       required HMSRole toRole,
@@ -418,9 +511,16 @@ class HMSSDK {
   }
 
   ///Method to change the role of all the peers with the same role
-  ///[toRole] is the role that you wish the peer to be in
-  ///[ofRoles] is a list of roles whose roles you wish to change
-  ///[hmsActionResultListener] is an object of HMSActionResultListener to listen to the success or error callbacks.
+  ///
+  /// **Parameters**:
+  ///
+  /// **toRole** - [toRole] is the role that you wish the peer to be in.
+  ///
+  /// **ofRoles** - [ofRoles] is a list of roles whose roles you wish to change.
+  ///
+  /// **hmsActionResultListener** - [hmsActionResultListener] is an object of [HMSActionResultListener] to listen to the success or error callbacks.
+  ///
+  /// Refer [changeRoleOfPeersWithRoles guide here](https://www.100ms.live/docs/flutter/v2/features/change-role#bulk-role-change).
   void changeRoleOfPeersWithRoles(
       {required HMSRole toRole,
       required List<HMSRole> ofRoles,
@@ -449,9 +549,16 @@ class HMSSDK {
   }
 
   ///accept the change role request
+  ///
   /// When a peer is requested to change their role (see [changeRoleOfPeer]) to accept the new role this has to be called. Once this method is called, the peer's role will be changed to the requested one. The HMSRoleChangeRequest that the SDK had sent to this peer (in HMSUpdateListener.onRoleChangeRequest) to inform them that a role change was requested.
-  /// [hmsActionResultListener] - Listener that will return HMSActionResultListener.onSuccess if the role change request is successful else will call HMSActionResultListener.onException with the error received from the server
-
+  ///
+  /// **Parameters**:
+  ///
+  /// **hmsRoleChangeRequest** - Pass the [HMSRoleChangeRequest] which will be received from [HMSUpdateListenerMethod.onRoleChangeRequest].
+  ///
+  /// **hmsActionResultListener** - Listener that will return HMSActionResultListener.onSuccess if the role change request is successful else will call HMSActionResultListener.onException with the error received from the server
+  ///
+  /// Refer [acceptChangeRole guide here](https://www.100ms.live/docs/flutter/v2/features/change-role#accept-role-change-request)
   Future<void> acceptChangeRole(
       {required HMSRoleChangeRequest hmsRoleChangeRequest,
       HMSActionResultListener? hmsActionResultListener}) async {
@@ -468,9 +575,17 @@ class HMSSDK {
     }
   }
 
-  /// To change the mute status of a single remote peer's track
-  /// Set [mute] to true if the track needs to be muted, false otherwise.
+  /// To change the mute status of a single remote peer's track.
+  ///
+  /// **Parameters**:
+  ///
+  /// **forRemoteTrack** - [HMSTrack] which you want to mute/unmute.
+  ///
+  /// **mute** - Set [mute] to true if the track needs to be muted, false otherwise.
+  ///
   /// [hmsActionResultListener] - the callback that would be called by SDK in case of success or failure.
+  ///
+  ///Refer [changeTrackState guide here](https://www.100ms.live/docs/flutter/v2/features/remote-mute-unmute)
   Future<void> changeTrackState(
       {required HMSTrack forRemoteTrack,
       required bool mute,
@@ -501,11 +616,20 @@ class HMSSDK {
   }
 
   /// To change the mute status of one or many remote HMSTrack for all peers of a particular role, or all tracks of a particular source, type or source AND type.
-  /// Set [mute] true if the track needs to be muted, false otherwise
-  /// [type] is the HMSTrackType that should be affected. If this and the source are specified, it is considered an AND operation. If not specified, all track sources are affected.
-  /// [source] is the HMSTrackSource that should be affected. If this and type are specified, it is considered an AND operation. If not specified, all track types are affected.
-  /// [roles] is a list of roles, that may have a single item in a list, whose tracks should be affected. If not specified, all roles are affected.
-  /// [hmsActionResultListener] - the callback that would be called by SDK in case of success or failure.
+  ///
+  /// **Parameters**:
+  ///
+  /// **mute** - Set [mute] true if the track needs to be muted, false otherwise.
+  ///
+  /// **kind** - [kind] is the HMSTrackKind that should be affected. If this and the source are specified, it is considered an AND operation. If not specified, all track sources are affected.
+  ///
+  /// **source** - [source] is the HMSTrackSource that should be affected. If this and type are specified, it is considered an AND operation. If not specified, all track types are affected.
+  ///
+  /// **roles** - [roles] is a list of roles, that may have a single item in a list, whose tracks should be affected. If not specified, all roles are affected.
+  ///
+  /// **hmsActionResultListener** - the callback that would be called by SDK in case of success or failure.
+  ///
+  /// Refer [changeTrackStateForRole guide here](https://www.100ms.live/docs/flutter/v2/features/remote-mute-unmute)
   Future<void> changeTrackStateForRole(
       {required bool mute,
       required HMSTrackKind? kind,
@@ -550,9 +674,17 @@ class HMSSDK {
     }
   }
 
-  /// Removes the given peer from the room
-  /// A [reason] string will be shown to them.
-  /// [hmsActionResultListener] is the callback that would be called by SDK in case of success or failure
+  /// Removes the given peer from the room.
+  ///
+  /// **Parameters**:
+  ///
+  /// **peer** - is the HMSRemotePeer that you'd like to be removed from the video call room. reason: is the string that should be conveyed to them as the reason for being removed. hmsActionResultListener: is the listener that will convey the success or error of the server accepting the request.
+  ///
+  /// **reason** - A [reason] string will be shown to them.
+  ///
+  /// **hmsActionResultListener** - [hmsActionResultListener] is the callback that would be called by SDK in case of success or failure.
+  ///
+  /// Refer [removePeer guide here](https://www.100ms.live/docs/flutter/v2/features/remove-peer)
   Future<void> removePeer(
       {required HMSPeer peer,
       required String reason,
@@ -576,10 +708,16 @@ class HMSSDK {
   }
 
   /// Remove all the peers from the room & end the room.
-  /// [reason] is the reason why the room is being ended.
-  /// [lock] bool is whether rejoining the room should be disabled for the foreseeable future.
-  /// [hmsActionResultListener] is the callback that would be called by SDK in case of success or failure
-
+  ///
+  /// **Parameters**:
+  ///
+  /// **reason** - [reason] is the reason why the room is being ended.
+  ///
+  /// **lock** - [lock] bool is whether rejoining the room should be disabled for the foreseeable future.
+  ///
+  /// **hmsActionResultListener** - [hmsActionResultListener] is the callback that would be called by SDK in case of success or failure
+  ///
+  /// Refer [endRoom guide here](https://www.100ms.live/docs/flutter/v2/features/end-room)
   Future<void> endRoom(
       {required bool lock,
       required String reason,
@@ -603,8 +741,14 @@ class HMSSDK {
   }
 
   /// Starts rtmp streaming or recording on the parameters described in config.
-  /// [config] is the HMSRecordingConfig which defines streaming/recording parameters for this start request.
-  /// [hmsActionResultListener] is the callback that would be called by SDK in case of success or failure.
+  ///
+  /// Parameters:
+  ///
+  /// **hmsRecordingConfig** - [hmsRecordingConfig] is the HMSRecordingConfig which defines streaming/recording parameters for this start request.
+  ///
+  /// **hmsActionResultListener** - [hmsActionResultListener] is the callback that would be called by SDK in case of success or failure.
+  ///
+  ///Refer [RTMP and Recording guide here](https://www.100ms.live/docs/flutter/v2/features/recording)
   Future<void> startRtmpOrRecording(
       {required HMSRecordingConfig hmsRecordingConfig,
       HMSActionResultListener? hmsActionResultListener}) async {
@@ -627,7 +771,10 @@ class HMSSDK {
   }
 
   /// Stops a previously started rtmp recording or stream. See startRtmpOrRecording for starting.
-  /// [hmsActionResultListener] is the callback that would be called by SDK in case of success or failure.
+  ///
+  /// **hmsActionResultListener** - [hmsActionResultListener] is the callback that would be called by SDK in case of success or failure.
+  ///
+  /// Refer [RTMP and Recording guide here](https://www.100ms.live/docs/flutter/v2/features/recording)
 
   Future<void> stopRtmpAndRecording(
       {HMSActionResultListener? hmsActionResultListener}) async {
@@ -648,6 +795,8 @@ class HMSSDK {
   /// Starts HLS streaming for the [meetingUrl] room.
   /// You can set a custom [metadata] for the HLS Stream
   /// [hmsActionResultListener] is a callback whose [HMSActionResultListener.onSuccess] will be called when the action completes successfully.
+  ///
+  /// Refer [HLS Streaming guide here](https://www.100ms.live/docs/flutter/v2/features/hls)
   Future<void> startHlsStreaming(
       {HMSHLSConfig? hmshlsConfig,
       HMSActionResultListener? hmsActionResultListener}) async {
@@ -667,6 +816,8 @@ class HMSSDK {
 
   /// Stops ongoing HLS streaming in the room
   /// [hmsActionResultListener] is a callback whose [HMSActionResultListener.onSuccess] will be called when the action completes successfully.
+  ///
+  /// Refer [HLS Streaming guide here](https://www.100ms.live/docs/flutter/v2/features/hls)
   Future<void> stopHlsStreaming(
       {HMSHLSConfig? hmshlsConfig,
       HMSActionResultListener? hmsActionResultListener}) async {
@@ -685,8 +836,14 @@ class HMSSDK {
   }
 
   /// Change the metadata that appears inside [HMSPeer.metadata]. This change is persistent and all peers joining after the change will still see these values.
-  /// [metadata] is the string data to be set now
-  /// [hmsActionResultListener] is a callback whose [HMSActionResultListener.onSuccess] will be called when the action completes successfully.
+  ///
+  /// **Parameters**:
+  ///
+  /// **metadata** - [metadata] is the string data to be set now.
+  ///
+  /// **hmsActionResultListener** - [hmsActionResultListener] is a callback whose [HMSActionResultListener.onSuccess] will be called when the action completes successfully.
+  ///
+  /// Refer [changeMetadata guide here](https://www.100ms.live/docs/flutter/v2/advanced-features/peer-metadata-update)
   Future<void> changeMetadata(
       {required String metadata,
       HMSActionResultListener? hmsActionResultListener}) async {
@@ -708,10 +865,17 @@ class HMSSDK {
     }
   }
 
-  ///Method to change name of local peer
+  /// Method to change name of local peer.
+  ///
   /// Change the name that appears inside [HMSPeer.name] This change is persistent and all peers joining after the change will still see these values.
-  /// [name] is the string that is to be set as the [HMSPeer.name]
-  /// [hmsActionResultListener] is the callback whose [HMSActionResultListener.onSuccess] will be called when the action completes successfully.
+  ///
+  /// **Parameters**:
+  ///
+  /// **name** - [name] is the string that is to be set as the [HMSPeer.name].
+  ///
+  /// **hmsActionResultListener** - [hmsActionResultListener] is the callback whose [HMSActionResultListener.onSuccess] will be called when the action completes successfully.
+  ///
+  /// Refer [changeName guide here](https://www.100ms.live/docs/flutter/v2/features/change-user-name)
   Future<void> changeName(
       {required String name,
       HMSActionResultListener? hmsActionResultListener}) async {
@@ -732,14 +896,18 @@ class HMSSDK {
     }
   }
 
-  /// API to start screen share of your android device. Note: This API is not available on iOS.
-  /// [hmsActionResultListener] is a callback instance on which [HMSActionResultListener.onSuccess]
-  ///  and [HMSActionResultListener.onException] will be called
-  /// [preferredExtension] is only used for screen share (broadcast screen) in iOS.
+  /// Method to start screen share.
   ///
-  /// ❗️ NOTE on iOS 16: If you start Screenshare from an iPhone/iPad running the iOS 16 version, then if the app is in the foreground Screenshare will work fine. But if you start Screenshare & background the app, then Screenshare pauses as the SDK is unable to send video frames using IPC. This results in other peers in the room seeing the stuck frame. We are actively working to resolve this issue. On iOS 15 or below, this issue does not exist.
+  /// Parameters:
   ///
-  /// Note viewing Screenshare on iOS 16 devices is unaffected by this & works fine.
+  /// **hmsActionResultListener** - [hmsActionResultListener] is a callback instance on which [HMSActionResultListener.onSuccess] and [HMSActionResultListener.onException] will be called
+  ///
+  /// `Note: Pass [preferredExtension] and [appGroup] in HMSSDK instance for use screen share (broadcast screen) in iOS.`
+  ///
+  /// Refer [screen share in android](https://www.100ms.live/docs/flutter/v2/features/screen-share#android-setup)
+  ///
+  /// Refer [screen share in iOS](https://www.100ms.live/docs/flutter/v2/features/screen-share#i-os-setup)
+  ///
   Future<void> startScreenShare(
       {HMSActionResultListener? hmsActionResultListener}) async {
     HMSLocalPeer? localPeer = await getLocalPeer();
@@ -772,15 +940,22 @@ class HMSSDK {
   }
 
   /// A method to check if the screen share is currently active on the device i.e. is this Android device doing screen share Note: This API is not available on iOS.
+  ///
+  /// Refer [screen share guide here](https://www.100ms.live/docs/flutter/v2/features/screen-share)
   Future<bool> isScreenShareActive() async {
     return await PlatformService.invokeMethod(
       PlatformMethod.isScreenShareActive,
     );
   }
 
-  /// API to stop screen share
-  /// [hmsActionResultListener] is a callback instance on which [HMSActionResultListener.onSuccess]
-  ///  and [HMSActionResultListener.onException] will be called
+  /// Method to stop screen share
+  ///
+  /// **Parameter**:
+  ///
+  /// **hmsActionResultListener** - [hmsActionResultListener] is a callback instance on which [HMSActionResultListener.onSuccess] and [HMSActionResultListener.onException] will be called.
+  ///
+  /// Refer [stop screen share guide here](https://www.100ms.live/docs/flutter/v2/features/screen-share#how-to-stop-screenshare)
+
   void stopScreenShare(
       {HMSActionResultListener? hmsActionResultListener}) async {
     var result =
@@ -833,6 +1008,8 @@ class HMSSDK {
   }
 
   ///Method to get available audio devices
+  ///
+  ///Refer [audio output routing guide here](https://www.100ms.live/docs/flutter/v2/features/audio-output-routing)
   Future<List<HMSAudioDevice>> getAudioDevicesList() async {
     List result =
         await PlatformService.invokeMethod(PlatformMethod.getAudioDevicesList);
@@ -842,6 +1019,8 @@ class HMSSDK {
   }
 
   ///Method to get current audio output device(Android Only)
+  ///
+  ///Refer [audio output routing guide here](https://www.100ms.live/docs/flutter/v2/features/audio-output-routing)
   Future<HMSAudioDevice> getCurrentAudioDevice() async {
     if (Platform.isAndroid) {
       var result = await PlatformService.invokeMethod(
@@ -853,13 +1032,25 @@ class HMSSDK {
 
   ///Method to switch audio output device
   ///
-  ///requires [audioDevice] parameter compulsorily for switching Audio Device.
+  ///**parameter**:
+  ///
+  ///**audioDevice** - requires [audioDevice] parameter compulsorily for switching Audio Device.
+  ///
+  ///Refer [audio output routing guide here](https://www.100ms.live/docs/flutter/v2/features/audio-output-routing)
   void switchAudioOutput({required HMSAudioDevice audioDevice}) {
     PlatformService.invokeMethod(PlatformMethod.switchAudioOutput,
         arguments: {"audio_device_name": audioDevice.name});
   }
 
   ///Method to start audio share of other apps. (Android Only)
+  ///
+  ///**Parameter**:
+  ///
+  ///**audioMixingMode** - the modes of type [HMSAudioMixingMode] in which the user wants to stream.
+  ///
+  /// **hmsActionResultListener** - [hmsActionResultListener] is a callback instance on which [HMSActionResultListener.onSuccess] and [HMSActionResultListener.onException] will be called.
+  ///
+  ///Refer [audio share guide here](https://www.100ms.live/docs/flutter/v2/features/audio_sharing)
   Future<void> startAudioShare(
       {HMSActionResultListener? hmsActionResultListener,
       HMSAudioMixingMode audioMixingMode =
@@ -881,6 +1072,12 @@ class HMSSDK {
   }
 
   ///Method to stop audio share of other apps. (Android Only)
+  ///
+  ///**Parameter**:
+  ///
+  /// **hmsActionResultListener** - [hmsActionResultListener] is a callback instance on which [HMSActionResultListener.onSuccess] and [HMSActionResultListener.onException] will be called.
+  ///
+  ///Refer [audio share guide here](https://www.100ms.live/docs/flutter/v2/features/audio_sharing)
   Future<void> stopAudioShare(
       {HMSActionResultListener? hmsActionResultListener}) async {
     if (!Platform.isAndroid) return;
@@ -899,6 +1096,12 @@ class HMSSDK {
   }
 
   ///Method to change the audio mixing mode of shared audio from other apps. (Android only)
+  ///
+  ///**Parameter**:
+  ///
+  ///**audioMixingMode** - To change the audio sharing mode
+  ///
+  ///Refer [setAudioMixingMode guide here](https://www.100ms.live/docs/flutter/v2/features/audio_sharing#how-to-change-the-audio-mixing-mode)
   void setAudioMixingMode({required HMSAudioMixingMode audioMixingMode}) {
     if (Platform.isAndroid)
       PlatformService.invokeMethod(PlatformMethod.setAudioMixingMode,
@@ -919,6 +1122,14 @@ class HMSSDK {
   }
 
   /// Method to update the value of the session metadata.
+  ///
+  ///**Parameters**:
+  ///
+  ///**metadata** - passing string value you want to set as Session Metadata.
+  ///
+  /// **hmsActionResultListener** - [hmsActionResultListener] is a callback instance on which [HMSActionResultListener.onSuccess] and [HMSActionResultListener.onException] will be called.
+  ///
+  ///Refer [session metadata guide here](https://www.100ms.live/docs/flutter/v2/features/session-metadata)
   Future<void> setSessionMetadata(
       {required String? metadata,
       HMSActionResultListener? hmsActionResultListener}) async {
@@ -942,6 +1153,8 @@ class HMSSDK {
   }
 
   ///Method to fetch the latest metadata from the server and returns it
+  ///
+  ///Refer [session metadata guide here](https://www.100ms.live/docs/flutter/v2/features/session-metadata)
   Future<String?> getSessionMetadata() async {
     var result =
         await PlatformService.invokeMethod(PlatformMethod.getSessionMetadata);
@@ -952,6 +1165,16 @@ class HMSSDK {
   }
 
   ///Method to activate pipMode in the application
+  ///
+  ///**Parameters**:
+  ///
+  ///**aspectRatio** - Ratio for PIP window
+  ///
+  ///**autoEnterPip** - Enable [autoEnterPip] will start pip mode automatically when app minimized.
+  ///
+  ///Refer [PIP mode guide here](https://www.100ms.live/docs/flutter/v2/advanced-features/pip-mode)
+  ///
+  ///`Note: Minimum version required to support PiP is Android 8.0 (API level 26)`
   Future<bool> enterPipMode(
       {List<int>? aspectRatio, bool? autoEnterPip}) async {
     final bool? result = await PlatformService.invokeMethod(
@@ -964,6 +1187,8 @@ class HMSSDK {
   }
 
   ///Method to check whether pip mode is active currently
+  ///
+  ///Refer [PIP mode guide here](https://www.100ms.live/docs/flutter/v2/advanced-features/pip-mode)
   Future<bool> isPipActive() async {
     final bool? result =
         await PlatformService.invokeMethod(PlatformMethod.isPipActive);
@@ -971,6 +1196,8 @@ class HMSSDK {
   }
 
   ///Method to check whether pip mode is available for the current device
+  ///
+  ///Refer [PIP mode guide here](https://www.100ms.live/docs/flutter/v2/advanced-features/pip-mode)
   Future<bool> isPipAvailable() async {
     final bool? result =
         await PlatformService.invokeMethod(PlatformMethod.isPipAvailable);
@@ -978,10 +1205,15 @@ class HMSSDK {
   }
 
   /// add listener to RTC Stats of the room to diagnose Metrics
+  ///
+  /// Refer [Call stats guide here](https://www.100ms.live/docs/flutter/v2/features/call-stats)
   void addStatsListener({required HMSStatsListener listener}) {
     PlatformService.addRTCStatsListener(listener);
   }
 
+  /// remove listener to RTC Stats of the room to diagnose Metrics
+  ///
+  /// Refer [Call stats guide here](https://www.100ms.live/docs/flutter/v2/features/call-stats)
   void removeStatsListener({required HMSStatsListener listener}) {
     PlatformService.removeRTCStatsListener(listener);
   }
@@ -995,6 +1227,7 @@ class HMSSDK {
   /// [preferredExtension] is only used for screen share (broadcast screen) in iOS.
   String? preferredExtension;
 
+  /// [hmsLogSettings] is used to set the Log Level setting.
   HMSLogSettings? hmsLogSettings;
 
   bool previewState = false;

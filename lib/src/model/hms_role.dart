@@ -1,3 +1,6 @@
+// Project imports:
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+
 ///[Role] is a powerful concept that takes a lot of complexity away in handling permissions and supporting features like breakout rooms.
 ///
 ///Each HMSPeer instance has a role property which returns an [HMSRole] instance. You can use this property to do following:
@@ -7,9 +10,6 @@
 ///   2.Check what actions this role can perform. i.e can it change someone else's current role, end meeting, remove someone from the room. This is can be discovered by checking the permissions property.
 ///
 ///[HMSRole] contains details about the role.
-
-// Project imports:
-import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 class HMSRole {
   String name;

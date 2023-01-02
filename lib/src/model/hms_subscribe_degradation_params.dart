@@ -1,3 +1,7 @@
+///100ms HMSSubscribeDegradationParams
+///
+///[HMSSubscribeDegradationParams] contains degradeGracePeriodSeconds, packetLossThreshold and recoverGracePeriodSeconds.
+
 class HMSSubscribeDegradationParams {
   final int degradeGracePeriodSeconds;
   final int packetLossThreshold;

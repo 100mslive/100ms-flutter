@@ -1,6 +1,8 @@
 // Project imports:
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
+///100ms HMSAudioTrack
+///
 ///parent of all audio tracks
 class HMSAudioTrack extends HMSTrack {
   HMSAudioTrack({

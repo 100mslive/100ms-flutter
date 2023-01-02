@@ -1,5 +1,8 @@
 import 'package:hmssdk_flutter/src/model/hms_simulcast_layer_settings_policy.dart';
 
+///100ms HMSSimulcastSettingsPolicy
+///
+///[HMSSimulcastSettingsPolicy] contain list of [HMSSimulcastLayerSettingsPolicy].
 class HMSSimulcastSettingsPolicy {
   List<HMSSimulcastLayerSettingsPolicy>? layers;
 

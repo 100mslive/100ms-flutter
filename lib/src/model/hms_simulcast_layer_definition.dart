@@ -1,5 +1,8 @@
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
+///100ms HMSSimulcastLayerDefinition
+///
+///[HMSSimulcastLayerDefinition] contains hmsSimulcastLayer and hmsResolution.
 class HMSSimulcastLayerDefinition {
   HMSSimulcastLayer hmsSimulcastLayer;
   HMSResolution hmsResolution;

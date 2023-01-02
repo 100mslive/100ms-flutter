@@ -1,11 +1,11 @@
+// Project imports:
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+
 ///[HMSPreviewListener] listens to updates when you preview.
 ///
 ///Just implement it and get the preview updates.
 ///
-/// Check out the [Sample App] how we are using it.
-
-// Project imports:
-import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+/// Check out the [Sample App](https://github.com/100mslive/100ms-flutter/blob/main/example/lib/preview/preview_store.dart) how we are using it.
 
 abstract class HMSPreviewListener {
   ///when an error is caught [onError] will be called
