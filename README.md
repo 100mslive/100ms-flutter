@@ -96,13 +96,19 @@ Add the following permissions in the Android AndroidManifest.xml file
 
 <uses-permission android:name="android.permission.RECORD_AUDIO"/>
 
-<uses-permission android:name="android.permission.BLUETOOTH"/>
-
 <uses-permission android:name="android.permission.INTERNET"/>
 
 <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
 <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
+<uses-permission android:name="android.permission.BLUETOOTH" android:maxSdkVersion="30" />
+
+<uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
+
+<uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" />
+
+<uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
 ```
 
 ## [iOS Permissions](https://www.100ms.live/docs/flutter/v2/features/integration#i-os)
