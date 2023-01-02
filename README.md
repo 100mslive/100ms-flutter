@@ -133,9 +133,12 @@ Add following permissions in iOS Info.plist file
 - `Peer` - A peer represents all participants connected to a room. Peers can be "local" or "remote"
 - `Broadcast` - A local peer can send any message/data to all remote peers in the room
 
-## 🔐 Generating Auth Token
+## 🔐 [Generating Auth Token](https://www.100ms.live/docs/flutter/v2/foundation/security-and-tokens#app-token)
   
-  Auth Token is used in HMSConfig instance to setup configuration.
+  Auth Token (or App Tokens) is used in HMSConfig instance to setup configuration. It is used to authenticate and allow end-users (peers) to join 100ms rooms. It controls Peer identity and Room permissions in your real-time or Interactive live-streaming video application.
+  
+  You must host your server to generate these tokens while transitioning your app to production. For Quick Setup, you can utilize the following implementation.
+
   So you need to make an HTTP request. you can use any package we are using `http` package.
   You will get your token endpoint at your 100ms dashboard and append `api/token` to that endpoint and make an http post request.
   
@@ -154,6 +157,8 @@ Add following permissions in iOS Info.plist file
   ```
 
   You will need this token later explained below.
+  For more details on Auth Tokens, do refer: https://www.100ms.live/docs/flutter/v2/foundation/security-and-tokens#app-token
+  
 
 ## ♻️ [Setup event listeners](https://www.100ms.live/docs/flutter/v2/features/update-listeners)
 
