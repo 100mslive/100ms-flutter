@@ -50,22 +50,22 @@ PODS:
   - Firebase/Performance (10.3.0):
     - Firebase/CoreOnly
     - FirebasePerformance (~> 10.3.0)
-  - firebase_analytics (10.0.8):
+  - firebase_analytics (10.1.0):
     - Firebase/Analytics (= 10.3.0)
     - firebase_core
     - Flutter
-  - firebase_core (2.4.0):
+  - firebase_core (2.4.1):
     - Firebase/CoreOnly (= 10.3.0)
     - Flutter
-  - firebase_crashlytics (3.0.8):
+  - firebase_crashlytics (3.0.9):
     - Firebase/Crashlytics (= 10.3.0)
     - firebase_core
     - Flutter
-  - firebase_dynamic_links (5.0.10):
+  - firebase_dynamic_links (5.0.11):
     - Firebase/DynamicLinks (= 10.3.0)
     - firebase_core
     - Flutter
-  - firebase_performance (0.9.0-8):
+  - firebase_performance (0.9.0-9):
     - Firebase/Performance (= 10.3.0)
     - firebase_core
     - Flutter
@@ -330,11 +330,11 @@ SPEC CHECKSUMS:
   DKPhotoGallery: fdfad5125a9fdda9cc57df834d49df790dbb4179
   file_picker: 817ab1d8cd2da9d2da412a417162deee3500fc95
   Firebase: f92fc551ead69c94168d36c2b26188263860acd9
-  firebase_analytics: b55d5b87440d85c7850067c2fec4e49748aa3291
-  firebase_core: 6f2f753e316765799d88568232ed59e300ff53db
-  firebase_crashlytics: d92ba7149a9cc098b1157ccb39154b83851f7d1f
-  firebase_dynamic_links: 3fded1a843f72e5f3b0f52f9cf6749f8962c8230
-  firebase_performance: f211ac9da1f726d7dc4349b543abfe74cbed77fa
+  firebase_analytics: 9f3a4cb560a59976b2c48707abae2d4cb94bcb3a
+  firebase_core: bf59c32d2e53814f558efa20840c1902fa2fe461
+  firebase_crashlytics: a45cced3521640e1e389d8b3662936ea9afd6055
+  firebase_dynamic_links: e5ca49679928f5d46e2db5168656975eae39d379
+  firebase_performance: 17c38f6a6ef97737aaf5fc4c0e48591e74c25fda
   FirebaseABTesting: e6660693429b4663573c82f8d2f1041deff1753a
   FirebaseAnalytics: 036232b6a1e2918e5f67572417be1173576245f3
   FirebaseCore: 988754646ab3bd4bdcb740f1bfe26b9f6c0d5f2a
