@@ -1,5 +1,5 @@
 require 'json'
-sdkVersions = JSON.parse(File.read(File.join("../lib/assets/sdk-versions.json")))
+sdkVersions = JSON.parse(File.read(File.join(__dir__,"../lib/assets/sdk-versions.json")))
 Pod::Spec.new do |s|
   s.name             = 'hmssdk_flutter'
   s.version          = sdkVersions["flutter"]
