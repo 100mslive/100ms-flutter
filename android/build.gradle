@@ -1,5 +1,7 @@
 import groovy.json.JsonSlurper
 
+def sdkVersions = new JsonSlurper().parse file("../lib/assets/sdk-versions.json")
+
 group 'live.hms.hmssdk_flutter'
 version '1.0-SNAPSHOT'
 
@@ -39,8 +41,8 @@ android {
 }
 
 dependencies {
-    implementation "live.100ms:android-sdk:2.5.5"
-    implementation "live.100ms:video-view:2.5.5"
+    implementation "live.100ms:android-sdk:${sdkVersions['android']}"
+    implementation "live.100ms:video-view:${sdkVersions['androidVideoView']}"
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.0'
     implementation "org.jetbrains.kotlin:kotlin-script-runtime:1.5.0"
