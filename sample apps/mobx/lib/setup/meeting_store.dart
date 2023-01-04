@@ -48,10 +48,10 @@ abstract class MeetingStoreBase extends ChangeNotifier
   @observable
   bool isScreenShareOn = false;
   @observable
-  ObservableList<HMSTrack?> screenShareTrack = ObservableList.of([]);
+  ObservableList<HMSVideoTrack?> screenShareTrack = ObservableList.of([]);
 
   @observable
-  HMSTrack? curentScreenShareTrack;
+  HMSVideoTrack? curentScreenShareTrack;
 
   @observable
   bool reconnecting = false;
@@ -139,10 +139,6 @@ abstract class MeetingStoreBase extends ChangeNotifier
   }
 
   void leave() async {
-    if (isScreenShareOn) {
-      isScreenShareOn = false;
-      _hmsSDKInteractor.stopScreenShare();
-    }
     _hmsSDKInteractor.leave(hmsActionResultListener: this);
     isRoomEnded = true;
     peerTracks.clear();
@@ -555,7 +551,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
               ? HMSTrackUpdate.trackMuted
               : HMSTrackUpdate.trackUnMuted;
         } else {
-          screenShareTrack.add(track);
+          screenShareTrack.add(track as HMSVideoTrack);
           curentScreenShareTrack = screenShareTrack.first;
           screenSharePeerId = peer.peerId;
           isScreenShareActive();
@@ -648,15 +644,6 @@ abstract class MeetingStoreBase extends ChangeNotifier
     return await _hmsSDKInteractor.getPeer(peerId: peerId);
   }
 
-  bool isRaisedHand = false;
-
-  void changeMetadata() {
-    isRaisedHand = !isRaisedHand;
-    String value = isRaisedHand ? "true" : "false";
-    _hmsSDKInteractor.changeMetadata(
-        metadata: "{\"isHandRaised\":$value}", hmsActionResultListener: this);
-  }
-
   void acceptChangeRole(HMSRoleChangeRequest hmsRoleChangeRequest) {
     _hmsSDKInteractor.acceptChangeRole(hmsRoleChangeRequest, this);
   }
@@ -673,9 +660,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
   @override
   void onAudioDeviceChanged(
       {HMSAudioDevice? currentAudioDevice,
-      List<HMSAudioDevice>? availableAudioDevice}) {
-    // TODO: implement onAudioDeviceChanged
-  }
+      List<HMSAudioDevice>? availableAudioDevice}) {}
 
   @override
   void onSuccess(
@@ -686,30 +671,16 @@ abstract class MeetingStoreBase extends ChangeNotifier
       case HMSActionResultListenerMethod.leave:
         isRoomEnded = true;
         break;
-      case HMSActionResultListenerMethod.changeTrackState:
-        break;
       case HMSActionResultListenerMethod.changeMetadata:
         print("raised hand");
         break;
       case HMSActionResultListenerMethod.endRoom:
         isRoomEnded = true;
         break;
-      case HMSActionResultListenerMethod.removePeer:
-        break;
-      case HMSActionResultListenerMethod.acceptChangeRole:
-        break;
-      case HMSActionResultListenerMethod.changeRole:
-        break;
       case HMSActionResultListenerMethod.changeTrackStateForRole:
         event = arguments!['roles'] == null
             ? "Successfully Muted All"
             : "Successfully Muted Role";
-        break;
-      case HMSActionResultListenerMethod.startRtmpOrRecording:
-        break;
-      case HMSActionResultListenerMethod.stopRtmpAndRecording:
-        break;
-      case HMSActionResultListenerMethod.unknown:
         break;
       case HMSActionResultListenerMethod.changeName:
         event = "Name Changed to ${localPeer!.name}";
@@ -750,31 +721,15 @@ abstract class MeetingStoreBase extends ChangeNotifier
                 hmsMessageRecipientType: HMSMessageRecipientType.DIRECT));
         addMessage(message);
         break;
-      case HMSActionResultListenerMethod.hlsStreamingStarted:
-        break;
-      case HMSActionResultListenerMethod.hlsStreamingStopped:
-        break;
-
       case HMSActionResultListenerMethod.startScreenShare:
         print("startScreenShare success");
         isScreenShareActive();
         break;
-
       case HMSActionResultListenerMethod.stopScreenShare:
         print("stopScreenShare success");
         isScreenShareActive();
         break;
-      case HMSActionResultListenerMethod.startAudioShare:
-        // TODO: Handle this case.
-        break;
-      case HMSActionResultListenerMethod.stopAudioShare:
-        // TODO: Handle this case.
-        break;
-      case HMSActionResultListenerMethod.setSessionMetadata:
-        // TODO: Handle this case.
-        break;
-      case HMSActionResultListenerMethod.switchCamera:
-        // TODO: Handle this case.
+      default:
         break;
     }
   }
@@ -788,19 +743,11 @@ abstract class MeetingStoreBase extends ChangeNotifier
     this.hmsException = hmsException;
     switch (methodType) {
       case HMSActionResultListenerMethod.leave:
+        print("Failed to Leave");
         break;
-      case HMSActionResultListenerMethod.changeTrackState:
-        break;
-      case HMSActionResultListenerMethod.changeMetadata:
         break;
       case HMSActionResultListenerMethod.endRoom:
         print("HMSException ${hmsException.message}");
-        break;
-      case HMSActionResultListenerMethod.removePeer:
-        break;
-      case HMSActionResultListenerMethod.acceptChangeRole:
-        break;
-      case HMSActionResultListenerMethod.changeRole:
         break;
       case HMSActionResultListenerMethod.changeTrackStateForRole:
         event = "Failed to Mute";
@@ -810,25 +757,12 @@ abstract class MeetingStoreBase extends ChangeNotifier
           isRecordingStarted = true;
         }
         break;
-      case HMSActionResultListenerMethod.stopRtmpAndRecording:
-        break;
       case HMSActionResultListenerMethod.unknown:
         print("Unknown Method Called");
-        break;
-      case HMSActionResultListenerMethod.changeName:
         break;
       case HMSActionResultListenerMethod.sendBroadcastMessage:
         print("sendBroadcastMessage failure");
         break;
-      case HMSActionResultListenerMethod.sendGroupMessage:
-        break;
-      case HMSActionResultListenerMethod.sendDirectMessage:
-        break;
-      case HMSActionResultListenerMethod.hlsStreamingStarted:
-        break;
-      case HMSActionResultListenerMethod.hlsStreamingStopped:
-        break;
-
       case HMSActionResultListenerMethod.startScreenShare:
         print("startScreenShare exception");
         isScreenShareActive();
@@ -838,17 +772,7 @@ abstract class MeetingStoreBase extends ChangeNotifier
         print("stopScreenShare exception");
         isScreenShareActive();
         break;
-      case HMSActionResultListenerMethod.startAudioShare:
-        // TODO: Handle this case.
-        break;
-      case HMSActionResultListenerMethod.stopAudioShare:
-        // TODO: Handle this case.
-        break;
-      case HMSActionResultListenerMethod.setSessionMetadata:
-        // TODO: Handle this case.
-        break;
-      case HMSActionResultListenerMethod.switchCamera:
-        // TODO: Handle this case.
+      default:
         break;
     }
   }
