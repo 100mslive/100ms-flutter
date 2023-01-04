@@ -11,16 +11,17 @@ import '../../hmssdk_flutter.dart';
 class HmsSdkManager {
   Future<bool> createInstance(
       HMSTrackSetting? hmsTrackSetting,
-      String? appGroup,
-      String? preferredExtension,
+      HMSIOSScreenshareConfig? hmsiosScreenshareConfig,
       HMSLogSettings? hmsLogSettings) async {
     bool isCreated = await createHMSSdk(
-        hmsTrackSetting, appGroup, preferredExtension, hmsLogSettings);
+        hmsTrackSetting, hmsiosScreenshareConfig, hmsLogSettings);
     return isCreated;
   }
 
-  Future<bool> createHMSSdk(HMSTrackSetting? hmsTrackSetting, String? appGroup,
-      String? preferredExtension, HMSLogSettings? hmsLogSettings) async {
+  Future<bool> createHMSSdk(
+      HMSTrackSetting? hmsTrackSetting,
+      HMSIOSScreenshareConfig? hmsiosScreenshareConfig,
+      HMSLogSettings? hmsLogSettings) async {
     final String sdkVersions = await rootBundle
         .loadString('packages/hmssdk_flutter/lib/assets/sdk-versions.json');
     var versions = json.decode(sdkVersions);
@@ -31,8 +32,8 @@ class HmsSdkManager {
       return await PlatformService.invokeMethod(PlatformMethod.build,
           arguments: {
             "hms_track_setting": hmsTrackSetting?.toMap(),
-            "app_group": appGroup,
-            "preferred_extension": preferredExtension,
+            "app_group": hmsiosScreenshareConfig?.appGroup,
+            "preferred_extension": hmsiosScreenshareConfig?.preferredExtension,
             "hms_log_settings": hmsLogSettings?.toMap(),
             "dart_sdk_version":
                 dartSDKVersion.length > 0 ? dartSDKVersion[0] : "null",

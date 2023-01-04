@@ -11,9 +11,7 @@ import '../hmssdk_flutter.dart';
 ///
 /// **hmsTrackSetting** - To modify local peer's audio & video tracks settings. Only required for advanced use cases. Refer [hmsTrackSetting guide here](https://www.100ms.live/docs/flutter/v2/advanced-features/set-track-settings)
 ///
-/// **appGroup** - It is only used for screen share (broadcast screen) in iOS. Refer [iOS Screen share guide here](https://www.100ms.live/docs/flutter/v2/features/screen-share#i-os-setup)
-///
-/// **preferredExtension** - It is only used for screen share (broadcast screen) in iOS. Refer [iOS Screen share guide here](https://www.100ms.live/docs/flutter/v2/features/screen-share#i-os-setup)
+/// **hmsiosScreenshareConfig** - It is only used for screen share (broadcast screen) in iOS. Refer [iOS Screen share guide here](https://www.100ms.live/docs/flutter/v2/features/screen-share#i-os-setup)
 ///
 /// **hmsLogSettings** - It is used to set the Log Level setting. Refer [hmsLogSettings guide here](https://www.100ms.live/docs/flutter/v2/features/error-handling#setting-log-levels-in-sdk)
 ///
@@ -32,18 +30,40 @@ import '../hmssdk_flutter.dart';
 /// Refer [HMSSDK quick start guide available here](https://www.100ms.live/docs/flutter/v2/guides/quickstart)
 
 class HMSSDK {
+  /// The public interface of 100ms SDK. Create an instance of HMSSDK to start using the SDK.
+  ///
+  /// Parameters:
+  ///
+  /// **hmsTrackSetting** - To modify local peer's audio & video tracks settings. Only required for advanced use cases. Refer [hmsTrackSetting guide here](https://www.100ms.live/docs/flutter/v2/advanced-features/set-track-settings)
+  ///
+  /// **hmsiosScreenshareConfig** - It is only used for screen share (broadcast screen) in iOS. Refer [iOS Screen share guide here](https://www.100ms.live/docs/flutter/v2/features/screen-share#i-os-setup)
+  ///
+  /// **hmsLogSettings** - It is used to set the Log Level setting. Refer [hmsLogSettings guide here](https://www.100ms.live/docs/flutter/v2/features/error-handling#setting-log-levels-in-sdk)
+  ///
+  /// **Key Concepts**
+  ///
+  /// **Room** - A room represents real-time audio, and video sessions, the basic building block of the 100mslive Video SDK
+  ///
+  /// **Track** - A track represents either the audio or video that makes up a stream
+  ///
+  /// **Peer** - A peer represents all participants connected to a room. Peers can be "local" or "remote"
+  ///
+  /// **Broadcast** - A local peer can send any message/data to all remote peers in the room
+  ///
+  /// HMSSDK has other methods which the client app can use to get more info about the Room, Peer and Tracks
+  ///
+  /// Refer [HMSSDK quick start guide available here](https://www.100ms.live/docs/flutter/v2/guides/quickstart)
   HMSSDK(
       {this.hmsTrackSetting,
-      this.appGroup,
-      this.preferredExtension,
+      this.hmsiosScreenshareConfig,
       this.hmsLogSettings});
 
   /// The build function should be called after creating an instance of the [HMSSDK].
   ///
   /// Await the result & if true then create [HMSConfig] object to join or preview a room.
   Future<void> build() async {
-    await HmsSdkManager().createHMSSdk(
-        hmsTrackSetting, appGroup, preferredExtension, hmsLogSettings);
+    await HmsSdkManager()
+        .createHMSSdk(hmsTrackSetting, hmsiosScreenshareConfig, hmsLogSettings);
   }
 
   ///add UpdateListener it will add all the listeners.
@@ -1221,11 +1241,8 @@ class HMSSDK {
   /// To modify local peer's audio & video tracks settings use the [hmsTrackSetting]. Only required for advanced use cases.
   HMSTrackSetting? hmsTrackSetting;
 
-  /// [appGroup] is only used for screen share (broadcast screen) in iOS.
-  String? appGroup;
-
-  /// [preferredExtension] is only used for screen share (broadcast screen) in iOS.
-  String? preferredExtension;
+  /// [hmsiosScreenshareConfig] is only used for screen share (broadcast screen) in iOS.
+  HMSIOSScreenshareConfig? hmsiosScreenshareConfig;
 
   /// [hmsLogSettings] is used to set the Log Level setting.
   HMSLogSettings? hmsLogSettings;

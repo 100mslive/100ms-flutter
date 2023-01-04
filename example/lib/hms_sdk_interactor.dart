@@ -32,9 +32,13 @@ class HMSSDKInteractor {
         joinWithMutedVideo: joinWithMutedVideo,
         joinWithMutedAudio: joinWithMutedAudio,
         isSoftwareDecoderDisabled: isSoftwareDecoderDisabled);
+
+    HMSIOSScreenshareConfig? hmsiosScreenshareConfig;
+    if (appGroup != null && preferredExtension != null)
+      hmsiosScreenshareConfig = HMSIOSScreenshareConfig(
+          appGroup: appGroup, preferredExtension: preferredExtension);
     hmsSDK = HMSSDK(
-        appGroup: appGroup,
-        preferredExtension: preferredExtension,
+        hmsiosScreenshareConfig: hmsiosScreenshareConfig,
         hmsLogSettings: hmsLogSettings,
         hmsTrackSetting: trackSetting);
     hmsSDK.build();

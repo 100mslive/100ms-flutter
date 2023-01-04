@@ -433,8 +433,8 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         let hmsSDKVersion = arguments["hmssdk_version"] as! String
         let framework = HMSFrameworkInfo(type: .flutter, version: dartSDKVersion, sdkVersion: hmsSDKVersion)
         audioMixerSourceMap = [:]
-        hmsSDK = HMSSDK.build { [self] sdk in
-
+        hmsSDK = HMSSDK.build { [weak self] sdk in
+            guard let self = self else {return}
             if let appGroup = arguments["app_group"] as? String {
                 sdk.appGroup = appGroup
             }
@@ -447,8 +447,8 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
             var trackSettings: HMSTrackSettings?
             if let settingsDict = arguments["hms_track_setting"] as? [AnyHashable: Any] {
-                audioMixerSourceInit(settingsDict, sdk, result)
-                trackSettings = HMSTrackSettingsExtension.setTrackSetting(settingsDict, audioMixerSourceMap, result)
+                self.audioMixerSourceInit(settingsDict, sdk, result)
+                trackSettings = HMSTrackSettingsExtension.setTrackSetting(settingsDict, self.audioMixerSourceMap, result)
             }
 
             if let settings = trackSettings {
