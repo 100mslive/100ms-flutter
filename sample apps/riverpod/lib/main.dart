@@ -54,7 +54,7 @@ Future<bool> getPermissions() async {
 class _HomePageState extends State<HomePage> {
   TextEditingController txtName = TextEditingController(text: "");
   TextEditingController txtId = TextEditingController(
-      text: "https://yogi-livestreamingkit.app.100ms.live/meeting/xuq-zjx-ovh");
+      text: "https://yogi-live.app.100ms.live/streaming/preview/qii-tow-sjq");
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -60,7 +60,7 @@ class _MeetingPageState extends ConsumerState<MeetingPage> {
         bottomNavigationBar: BottomNavigationBar(
             type: BottomNavigationBarType.fixed,
             backgroundColor: Colors.black,
-            selectedItemColor: Colors.greenAccent,
+            selectedItemColor: Colors.grey,
             unselectedItemColor: Colors.grey,
             items: <BottomNavigationBarItem>[
               BottomNavigationBarItem(
@@ -86,7 +86,10 @@ class _MeetingPageState extends ConsumerState<MeetingPage> {
                     ),
                     label: "ScreenShare"),
               const BottomNavigationBarItem(
-                icon: Icon(Icons.cancel),
+                icon: Icon(
+                  Icons.cancel,
+                  color: Colors.red,
+                ),
                 label: 'Leave',
               ),
             ],
