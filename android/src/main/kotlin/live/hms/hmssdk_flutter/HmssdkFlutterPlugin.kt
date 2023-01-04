@@ -91,6 +91,8 @@ class HmssdkFlutterPlugin :
                 hmsVideoFactory
             )
             hmssdkFlutterPlugin = this
+        } else {
+            Log.e("Plugin Warning", "hmssdkFlutterPlugin already exists in onAttachedToEngine")
         }
     }
 
@@ -354,6 +356,8 @@ class HmssdkFlutterPlugin :
             logsEventChannel?.setStreamHandler(null)?:Log.e("Channel Error","Logs event channel not found")
             rtcStatsChannel?.setStreamHandler(null)?:Log.e("Channel Error","RTC Stats channel not found")
             hmssdkFlutterPlugin = null
+        } else {
+            Log.e("Plugin Error", "hmssdkFlutterPlugin is null in onDetachedFromEngine")
         }
     }
 
