@@ -240,4 +240,13 @@ class Utilities {
                     : HMSTrackInitState.UNMUTED,
                 forceSoftwareDecoder: isSoftwareDecoderDisabled));
   }
+
+  static HMSIOSScreenshareConfig? getIOSScreenshareConfig(
+      {String? appGroup, String? preferredExtension}) {
+    HMSIOSScreenshareConfig? iOSScreenshareConfig;
+    if (appGroup != null && preferredExtension != null)
+      iOSScreenshareConfig = HMSIOSScreenshareConfig(
+          appGroup: appGroup, preferredExtension: preferredExtension);
+    return iOSScreenshareConfig;
+  }
 }

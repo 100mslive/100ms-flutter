@@ -434,7 +434,10 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         let framework = HMSFrameworkInfo(type: .flutter, version: dartSDKVersion, sdkVersion: hmsSDKVersion)
         audioMixerSourceMap = [:]
         hmsSDK = HMSSDK.build { [weak self] sdk in
-            guard let self = self else {return}
+            guard let self = self else {
+                result(false)
+                return
+            }
             if let appGroup = arguments["app_group"] as? String {
                 sdk.appGroup = appGroup
             }

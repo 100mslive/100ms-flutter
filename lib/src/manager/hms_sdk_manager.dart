@@ -11,16 +11,16 @@ import '../../hmssdk_flutter.dart';
 class HmsSdkManager {
   Future<bool> createInstance(
       HMSTrackSetting? hmsTrackSetting,
-      HMSIOSScreenshareConfig? hmsiosScreenshareConfig,
+      HMSIOSScreenshareConfig? iOSScreenshareConfig,
       HMSLogSettings? hmsLogSettings) async {
     bool isCreated = await createHMSSdk(
-        hmsTrackSetting, hmsiosScreenshareConfig, hmsLogSettings);
+        hmsTrackSetting, iOSScreenshareConfig, hmsLogSettings);
     return isCreated;
   }
 
   Future<bool> createHMSSdk(
       HMSTrackSetting? hmsTrackSetting,
-      HMSIOSScreenshareConfig? hmsiosScreenshareConfig,
+      HMSIOSScreenshareConfig? iOSScreenshareConfig,
       HMSLogSettings? hmsLogSettings) async {
     final String sdkVersions = await rootBundle
         .loadString('packages/hmssdk_flutter/lib/assets/sdk-versions.json');
@@ -32,8 +32,8 @@ class HmsSdkManager {
       return await PlatformService.invokeMethod(PlatformMethod.build,
           arguments: {
             "hms_track_setting": hmsTrackSetting?.toMap(),
-            "app_group": hmsiosScreenshareConfig?.appGroup,
-            "preferred_extension": hmsiosScreenshareConfig?.preferredExtension,
+            "app_group": iOSScreenshareConfig?.appGroup,
+            "preferred_extension": iOSScreenshareConfig?.preferredExtension,
             "hms_log_settings": hmsLogSettings?.toMap(),
             "dart_sdk_version":
                 dartSDKVersion.length > 0 ? dartSDKVersion[0] : "null",

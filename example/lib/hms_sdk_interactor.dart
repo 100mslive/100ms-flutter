@@ -11,10 +11,10 @@ class HMSSDKInteractor {
   late List<HMSMessage> messages;
   late HMSSDK hmsSDK;
 
-  /// [appGroup] & [preferredExtension] are optional values only required for implementing Screen & Audio Share on iOS. They are not required for Android.
-  /// Remove [appGroup] & [preferredExtension] if your app does not implements Screen or Audio Share on iOS.
+  /// [iOSScreenshareConfig] is optional values only required for implementing Screen Share on iOS. They are not required for Android.
+  /// Remove [iOSScreenshareConfig] if your app does not implements Screen Share on iOS.
   /// [joinWithMutedAudio] & [joinWithMutedVideo] are required to set the initial audio/video state i.e what should be camera and mic
-  /// state while room is joined.By default both audio and video are kept as mute.
+  /// state while room is joined. By default both audio and video are kept as unmute.
   HMSSDKInteractor(
       {String? appGroup,
       String? preferredExtension,
@@ -33,12 +33,12 @@ class HMSSDKInteractor {
         joinWithMutedAudio: joinWithMutedAudio,
         isSoftwareDecoderDisabled: isSoftwareDecoderDisabled);
 
-    HMSIOSScreenshareConfig? hmsiosScreenshareConfig;
-    if (appGroup != null && preferredExtension != null)
-      hmsiosScreenshareConfig = HMSIOSScreenshareConfig(
-          appGroup: appGroup, preferredExtension: preferredExtension);
+    HMSIOSScreenshareConfig? iOSScreenshareConfig =
+        Utilities.getIOSScreenshareConfig(
+            appGroup: appGroup, preferredExtension: preferredExtension);
+
     hmsSDK = HMSSDK(
-        hmsiosScreenshareConfig: hmsiosScreenshareConfig,
+        iOSScreenshareConfig: iOSScreenshareConfig,
         hmsLogSettings: hmsLogSettings,
         hmsTrackSetting: trackSetting);
     hmsSDK.build();
