@@ -12,6 +12,8 @@
 
 - Added Auto Simulcast check for Remote Peer's Video tiles
 
+- Removed late initializers for Event Channels
+
 Flutter SDK: 1.2.0
 Android SDK: 2.5.5
 iOS SDK: 0.5.4
