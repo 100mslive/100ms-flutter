@@ -32,8 +32,6 @@ dependencies:
 
 
   hmssdk_flutter:
-    path: ../../
-    
   cupertino_icons:
   mobx: 
   flutter_mobx:
