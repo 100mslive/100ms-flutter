@@ -99,23 +99,23 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     public func detachFromEngine(for registrar: FlutterPluginRegistrar) {
         if meetingEventChannel != nil {
             meetingEventChannel!.setStreamHandler(nil)
-        }else {
-           print("meetingEventChannel not found",#function)
+        } else {
+           print("meetingEventChannel not found", #function)
         }
         if previewEventChannel != nil {
             previewEventChannel!.setStreamHandler(nil)
-        }else{
-            print("previewEventChannel not found",#function)
+        } else {
+            print("previewEventChannel not found", #function)
         }
         if logsEventChannel != nil {
             logsEventChannel!.setStreamHandler(nil)
-        }else{
-            print("logsEventChannel not found",#function)
+        } else {
+            print("logsEventChannel not found", #function)
         }
         if rtcStatsEventChannel != nil {
             rtcStatsEventChannel!.setStreamHandler(nil)
-        }else{
-            print("rtcStatsEventChannel not found",#function)
+        } else {
+            print("rtcStatsEventChannel not found", #function)
         }
     }
 
@@ -861,8 +861,8 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     public func on(join room: HMSRoom) {
         if previewEventChannel != nil {
             previewEventChannel!.setStreamHandler(nil)
-        }else {
-            print("previewEventChannel not found",#function)
+        } else {
+            print("previewEventChannel not found", #function)
         }
         let data = [
             "event_name": "on_join_room",

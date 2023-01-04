@@ -79,11 +79,11 @@ class HmssdkFlutterPlugin :
             this.rtcStatsChannel =
                 EventChannel(flutterPluginBinding.binaryMessenger, "rtc_event_channel")
 
-            this.meetingEventChannel?.setStreamHandler(this)?:Log.e("Channel Error","Meeting event channel not found")
-            this.channel?.setMethodCallHandler(this)?:Log.e("Channel Error","Event channel not found")
-            this.previewChannel?.setStreamHandler(this)?:Log.e("Channel Error","Preview channel not found")
-            this.logsEventChannel?.setStreamHandler(this)?:Log.e("Channel Error","Logs event channel not found")
-            this.rtcStatsChannel?.setStreamHandler(this)?:Log.e("Channel Error","RTC Stats channel not found")
+            this.meetingEventChannel?.setStreamHandler(this) ?: Log.e("Channel Error", "Meeting event channel not found")
+            this.channel?.setMethodCallHandler(this) ?: Log.e("Channel Error", "Event channel not found")
+            this.previewChannel?.setStreamHandler(this) ?: Log.e("Channel Error", "Preview channel not found")
+            this.logsEventChannel?.setStreamHandler(this) ?: Log.e("Channel Error", "Logs event channel not found")
+            this.rtcStatsChannel?.setStreamHandler(this) ?: Log.e("Channel Error", "RTC Stats channel not found")
             this.hmsVideoFactory = HMSVideoViewFactory(this)
 
             flutterPluginBinding.platformViewRegistry.registerViewFactory(
@@ -350,11 +350,11 @@ class HmssdkFlutterPlugin :
 
     override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
         if (hmssdkFlutterPlugin != null) {
-            channel?.setMethodCallHandler(null)?:Log.e("Channel Error","Event channel not found")
-            meetingEventChannel?.setStreamHandler(null)?:Log.e("Channel Error","Meeting event channel not found")
-            previewChannel?.setStreamHandler(null)?:Log.e("Channel Error","Preview channel not found")
-            logsEventChannel?.setStreamHandler(null)?:Log.e("Channel Error","Logs event channel not found")
-            rtcStatsChannel?.setStreamHandler(null)?:Log.e("Channel Error","RTC Stats channel not found")
+            channel?.setMethodCallHandler(null) ?: Log.e("Channel Error", "Event channel not found")
+            meetingEventChannel?.setStreamHandler(null) ?: Log.e("Channel Error", "Meeting event channel not found")
+            previewChannel?.setStreamHandler(null) ?: Log.e("Channel Error", "Preview channel not found")
+            logsEventChannel?.setStreamHandler(null) ?: Log.e("Channel Error", "Logs event channel not found")
+            rtcStatsChannel?.setStreamHandler(null) ?: Log.e("Channel Error", "RTC Stats channel not found")
             hmssdkFlutterPlugin = null
         } else {
             Log.e("Plugin Error", "hmssdkFlutterPlugin is null in onDetachedFromEngine")
@@ -726,7 +726,7 @@ class HmssdkFlutterPlugin :
         override fun onJoin(room: HMSRoom) {
 //            hasJoined = true
             hmssdk!!.addAudioObserver(hmsAudioListener)
-            previewChannel?.setStreamHandler(null)?:Log.e("Channel Error","Preview channel not found")
+            previewChannel?.setStreamHandler(null) ?: Log.e("Channel Error", "Preview channel not found")
             val args = HashMap<String, Any?>()
             args.put("event_name", "on_join_room")
 
