@@ -13,7 +13,7 @@ Pod::Spec.new do |s|
   s.source_files = 'Classes/**/*'
   s.dependency 'Flutter'
   s.dependency 'HMSSDK', '0.5.3'
-  s.dependency 'HMSBroadcastExtensionSDK', '0.0.5'
+  s.dependency 'HMSBroadcastExtensionSDK', '0.0.7'
   s.platform = :ios, '12.0'
   s.ios.deployment_target  = '12.0'
   # Flutter.framework does not contain a i386 slice.
