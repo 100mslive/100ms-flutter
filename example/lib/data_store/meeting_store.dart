@@ -1521,6 +1521,8 @@ class MeetingStore extends ChangeNotifier
       case HMSActionResultListenerMethod.changeRoleOfPeersWithRoles:
         Utilities.showToast("Change Role successful");
         break;
+      case HMSActionResultListenerMethod.build:
+        break;
     }
   }
 
@@ -1596,6 +1598,9 @@ class MeetingStore extends ChangeNotifier
         break;
       case HMSActionResultListenerMethod.changeRoleOfPeersWithRoles:
         Utilities.showToast("Change role failed");
+        break;
+      case HMSActionResultListenerMethod.build:
+        Utilities.showToast("HMSSDK build failed");
         break;
     }
     notifyListeners();

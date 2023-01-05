@@ -435,7 +435,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         audioMixerSourceMap = [:]
         hmsSDK = HMSSDK.build { [weak self] sdk in
             guard let self = self else {
-                result(false)
+                result(HMSErrorExtension.getError("Fail to build HMSSDK"))
                 return
             }
             if let appGroup = arguments["app_group"] as? String {
@@ -458,7 +458,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                 sdk.trackSettings = settings
             }
 
-            result(true)
+            result(nil)
         }
     }
 

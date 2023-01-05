@@ -655,7 +655,7 @@ class HmssdkFlutterPlugin :
         hmssdk!!.changeRoleOfPeersWithRoles(toRole = toRole, ofRoles = ofRoles, hmsActionResultListener = HMSCommonAction.getActionListener(result))
     }
 
-    fun build(activity: Activity, call: MethodCall, result: Result) {
+    private fun build(activity: Activity, call: MethodCall, result: Result) {
         val dartSDKVersion = call.argument<String>("dart_sdk_version")
         val hmsSDKVersion = call.argument<String>("hmssdk_version")
         val framework = FrameworkInfo(framework = AgentType.FLUTTER, frameworkVersion = dartSDKVersion, frameworkSdkVersion = hmsSDKVersion)
@@ -675,7 +675,7 @@ class HmssdkFlutterPlugin :
             call.argument<HashMap<String, Any>?>("hms_log_settings")
 
         if (hmsLogSettingsMap != null) {
-            val maxDirSizeInBytes: Double = hmsLogSettingsMap!!["max_dir_size_in_bytes"] as Double
+            val maxDirSizeInBytes: Double = hmsLogSettingsMap["max_dir_size_in_bytes"] as Double
             val isLogStorageEnabled: Boolean = hmsLogSettingsMap["log_storage_enabled"] as Boolean
             val level: String = hmsLogSettingsMap["log_level"] as String
             val logSettings = HMSLogSettings.setLogSettings(maxDirSizeInBytes, isLogStorageEnabled, level)
@@ -683,7 +683,7 @@ class HmssdkFlutterPlugin :
         }
 
         hmssdk = builder.build()
-        result.success(true)
+        result.success(null)
     }
 
     private var hasChangedMetadata: Boolean = false
