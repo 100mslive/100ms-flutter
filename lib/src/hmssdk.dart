@@ -75,12 +75,9 @@ class HMSSDK {
   /// The build function should be called after creating an instance of the [HMSSDK].
   ///
   /// Await the result & if true then create [HMSConfig] object to join or preview a room.
-  Future<void> build({HMSActionResultListener? hmsActionResultListener}) async {
-    if (appGroup != null && preferredExtension != null)
-      iOSScreenshareConfig = HMSIOSScreenshareConfig(
-          appGroup: appGroup!, preferredExtension: preferredExtension!);
+  Future<void> build() async {
     await HmsSdkManager().createHMSSdk(hmsTrackSetting, iOSScreenshareConfig,
-        hmsLogSettings, hmsActionResultListener);
+        appGroup, preferredExtension, hmsLogSettings);
   }
 
   ///add UpdateListener it will add all the listeners.

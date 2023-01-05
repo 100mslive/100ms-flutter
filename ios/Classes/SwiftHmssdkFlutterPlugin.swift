@@ -422,6 +422,15 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         if let prefExtension = arguments["preferred_extension"] as? String {
             preferredExtension = prefExtension
         }
+        
+        if let iOSScreenshareConfig = arguments["ios_screenshare_config"] as? [String: String] {
+            if let prefExtension = iOSScreenshareConfig["preferred_extension"] {
+                preferredExtension = prefExtension
+            }else{
+                print("preferredExtension Not found in iOSScreenshareConfig")
+                result(false)
+            }
+        }
 
         var setLogger = false
         if let hmsLogSettings = arguments["hms_log_settings"] as? [AnyHashable: Any] {
@@ -435,11 +444,21 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         audioMixerSourceMap = [:]
         hmsSDK = HMSSDK.build { [weak self] sdk in
             guard let self = self else {
-                result(HMSErrorExtension.getError("Fail to build HMSSDK"))
+                print("Unable to build HMSSDK")
+                result(false)
                 return
             }
             if let appGroup = arguments["app_group"] as? String {
                 sdk.appGroup = appGroup
+            }
+            
+            if let iOSScreenshareConfig = arguments["ios_screenshare_config"] as? [String: String] {
+                if let appGroup = iOSScreenshareConfig["app_group"] {
+                    sdk.appGroup = appGroup
+                }else{
+                    print("AppGroup Not found in iOSScreenshareConfig")
+                    result(false)
+                }
             }
 
             sdk.frameworkInfo = framework
@@ -458,7 +477,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                 sdk.trackSettings = settings
             }
 
-            result(nil)
+            result(true)
         }
     }
 
@@ -1143,7 +1162,8 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                             do {
                                 self.audioMixerSourceMap["screen_broadcast_audio_receiver_node"] = try sdk.screenBroadcastAudioReceiverNode()
                             } catch {
-                                result(HMSErrorExtension.toDictionary(error))
+                                print(HMSErrorExtension.toDictionary(error))
+                                result(false)
                             }
                         } else {
                             self.audioMixerSourceMap[node] = HMSAudioFilePlayerNode()

@@ -9,11 +9,12 @@ import '../../hmssdk_flutter.dart';
 
 ///100ms HmsSdkManager
 class HmsSdkManager {
-  Future<void> createHMSSdk(
+  Future<bool> createHMSSdk(
       HMSTrackSetting? hmsTrackSetting,
       HMSIOSScreenshareConfig? iOSScreenshareConfig,
-      HMSLogSettings? hmsLogSettings,
-      HMSActionResultListener? hmsActionResultListener) async {
+      String? appGroup,
+      String? preferredExtension,
+      HMSLogSettings? hmsLogSettings) async {
     final String sdkVersions = await rootBundle
         .loadString('packages/hmssdk_flutter/lib/assets/sdk-versions.json');
     var versions = json.decode(sdkVersions);
@@ -23,27 +24,16 @@ class HmsSdkManager {
       List<String> dartSDKVersion = Platform.version.split(" ");
       Map<String, dynamic> arguments = {
         "hms_track_setting": hmsTrackSetting?.toMap(),
-        "app_group": iOSScreenshareConfig?.appGroup,
-        "preferred_extension": iOSScreenshareConfig?.preferredExtension,
+        "app_group": appGroup,
+        "preferred_extension": preferredExtension,
+        "ios_screenshare_config": iOSScreenshareConfig?.toMap(),
         "hms_log_settings": hmsLogSettings?.toMap(),
         "dart_sdk_version":
             dartSDKVersion.length > 0 ? dartSDKVersion[0] : "null",
         "hmssdk_version": versions['flutter']
       };
-      var result = await PlatformService.invokeMethod(PlatformMethod.build,
+      return await PlatformService.invokeMethod(PlatformMethod.build,
           arguments: arguments);
-      if (hmsActionResultListener != null) {
-        if (result != null && result["error"] != null) {
-          hmsActionResultListener.onException(
-              methodType: HMSActionResultListenerMethod.build,
-              arguments: arguments,
-              hmsException: HMSException.fromMap(result["error"]));
-        } else {
-          hmsActionResultListener.onSuccess(
-              methodType: HMSActionResultListenerMethod.build,
-              arguments: arguments);
-        }
-      }
     }
   }
 }

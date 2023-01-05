@@ -21,4 +21,11 @@ class HMSIOSScreenshareConfig {
 
   HMSIOSScreenshareConfig(
       {required this.appGroup, required this.preferredExtension});
+
+  Map<String, String> toMap() {
+    return {
+      'app_group': this.appGroup,
+      'preferred_extension': this.preferredExtension,
+    };
+  }
 }
