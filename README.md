@@ -474,51 +474,54 @@ hmsSDK.sendGroupMessage(
     type: type,
     hmsActionResultListener: this);
 
+
+
 @override
 void onSuccess(
   {HMSActionResultListenerMethod methodType =
-      HMSActionResultListenerMethod.unknown,
-  Map<String, dynamic>? arguments}) {
+    HMSActionResultListenerMethod.unknown,
+    Map<String, dynamic>? arguments}) {
 
-      switch (methodType) {
+    switch (methodType) {
 
-        case HMSActionResultListenerMethod.sendBroadcastMessage:
-        //Broadcast Message sent successfully
-        break;
+      case HMSActionResultListenerMethod.sendBroadcastMessage:
+      //Broadcast Message sent successfully
+      break;
 
-        case HMSActionResultListenerMethod.sendGroupMessage:
-        //Group Message sent successfully
-        break;
+      case HMSActionResultListenerMethod.sendGroupMessage:
+      //Group Message sent successfully
+      break;
 
-        case HMSActionResultListenerMethod.sendDirectMessage:
-        //Direct Message sent successfully
-        break;
-        ...
+      case HMSActionResultListenerMethod.sendDirectMessage:
+      //Direct Message sent successfully
+      break;
+      ...
     }
   }
 
+
 @override
 void onException(
-    {HMSActionResultListenerMethod methodType =
-        HMSActionResultListenerMethod.unknown,
+  {HMSActionResultListenerMethod methodType =
+    HMSActionResultListenerMethod.unknown,
     Map<String, dynamic>? arguments,
     required HMSException hmsException}) {
 
-      switch (methodType) {
+    switch (methodType) {
 
-          case HMSActionResultListenerMethod.sendBroadcastMessage:
-          // Check the HMSException object for details about the error
-          break;
+      case HMSActionResultListenerMethod.sendBroadcastMessage:
+      // Check the HMSException object for details about the error
+      break;
 
-          case HMSActionResultListenerMethod.sendGroupMessage:
-          // Check the HMSException object for details about the error
-          break;
+      case HMSActionResultListenerMethod.sendGroupMessage:
+      // Check the HMSException object for details about the error
+      break;
 
-          case HMSActionResultListenerMethod.sendDirectMessage:
-          // Check the HMSException object for details about the error
-          break;
-          ...
-      }
+      case HMSActionResultListenerMethod.sendDirectMessage:
+      // Check the HMSException object for details about the error
+      break;
+      ...
+    }
 
   }
 ```
