@@ -85,6 +85,8 @@ The default [Example app](https://github.com/100mslive/100ms-flutter/tree/main/e
 
 ## [Android Permissions](https://www.100ms.live/docs/flutter/v2/features/integration#android)
 
+Complete Permissions Guide is [available here](https://www.100ms.live/docs/flutter/v2/features/integration)
+
 Add the following permissions in the Android AndroidManifest.xml file
 
 ```xml
