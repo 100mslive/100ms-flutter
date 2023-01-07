@@ -83,11 +83,11 @@ The default [Example app](https://github.com/100mslive/100ms-flutter/tree/main/e
 
 - iPhone & iPads with iOS version 12 or above are supported. Devices running iOS 16 or above is recommended.
 
-## [Android Permissions](https://www.100ms.live/docs/flutter/v2/features/integration#android)
+## 🤖 [Android Permissions](https://www.100ms.live/docs/flutter/v2/features/integration#android)
 
-Complete Permissions Guide is [available here](https://www.100ms.live/docs/flutter/v2/features/integration)
+Complete Permissions Guide is [available here](https://www.100ms.live/docs/flutter/v2/features/integration).
 
-Add the following permissions in the Android AndroidManifest.xml file
+Add the following permissions in the Android's `AndroidManifest.xml` file -
 
 ```xml
 <uses-feature android:name="android.hardware.camera"/>
@@ -117,7 +117,7 @@ Add the following permissions in the Android AndroidManifest.xml file
 <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
 ```
 
-## [iOS Permissions](https://www.100ms.live/docs/flutter/v2/features/integration#i-os)
+## 🍎 [iOS Permissions](https://www.100ms.live/docs/flutter/v2/features/integration#i-os)
 
 Add following permissions in iOS Info.plist file
 
