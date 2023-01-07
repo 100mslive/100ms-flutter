@@ -434,34 +434,93 @@ When you(the local peer) receives a message from others(any remote peer), `void 
 More information about Chat Messaging is [available here](https://www.100ms.live/docs/flutter/v2/features/chat).
 
 ```dart
-// following is an example implementation of chat messaging
-
-String message = 'Hello World!'
-
-// to send a broadcast message
-hmsSDK.sendBroadcastMessage(                               // hmsSDK is an instance of `HMSSDK` object
-        message: message,
-        hmsActionResultListener: hmsActionResultListener);  
-
-// to send a group message
-hmsSDK.sendGroupMessage(
-        message: message,
-        hmsRolesTo: hmsRolesTo,
-        hmsActionResultListener: hmsActionResultListener);
-        
-// to send a direct message
-hmsSDK.sendDirectMessage(
-        message: message,
-        peerTo: peerTo,
-        hmsActionResultListener: hmsActionResultListener);
-
-
-// receiving messages
-// the object conforming to `HMSUpdateListener` will be invoked with `on(message: HMSMessage)`, add your logic to update Chat UI within this listener
-void onMessage({required HMSMessage message}){
-    let messageReceived = message.message // extract message payload from `HMSMessage` object that is received
-    // update your Chat UI with the messageReceived
+// onMessage is HMSUpdateListener method called when a new message is received
+@override
+void onMessage({required HMSMessage message}) {
+  //Here we will receive messages sent by other peers
 }
+
+
+///[message]: Message to be sent
+///[type]: Message type(More about this at the end)
+///[hmsActionResultListener]: instance of class implementing HMSActionResultListener
+//Here this is an instance of class that implements HMSActionResultListener i.e. Meeting
+hmsSDK.sendBroadcastMessage(
+  message: message,
+  type: type,
+  hmsActionResultListener: this);
+
+
+///[message]: Message to be sent
+///[peerTo]: Peer to whom message needs to be sent
+///[type]: Message type(More about this at the end)
+///[hmsActionResultListener]: instance of class implementing HMSActionResultListener
+//Here this is an instance of class that implements HMSActionResultListener i.e. Meeting
+hmsSDK.sendDirectMessage(
+  message: message,
+  peerTo: peerTo,
+  type: type,
+  hmsActionResultListener: this);
+
+
+///[message]: Message to be sent
+///[hmsRolesTo]: Roles to which this message needs to be sent
+///[type]: Message type(More about this at the end)
+///[hmsActionResultListener]: instance of class implementing HMSActionResultListener
+//Here this is an instance of class that implements HMSActionResultListener i.e. Meeting
+hmsSDK.sendGroupMessage(
+    message: message,
+    hmsRolesTo: rolesToSendMessage,
+    type: type,
+    hmsActionResultListener: this);
+
+@override
+void onSuccess(
+  {HMSActionResultListenerMethod methodType =
+      HMSActionResultListenerMethod.unknown,
+  Map<String, dynamic>? arguments}) {
+
+      switch (methodType) {
+
+        case HMSActionResultListenerMethod.sendBroadcastMessage:
+        //Broadcast Message sent successfully
+        break;
+
+        case HMSActionResultListenerMethod.sendGroupMessage:
+        //Group Message sent successfully
+        break;
+
+        case HMSActionResultListenerMethod.sendDirectMessage:
+        //Direct Message sent successfully
+        break;
+        ...
+    }
+  }
+
+@override
+void onException(
+    {HMSActionResultListenerMethod methodType =
+        HMSActionResultListenerMethod.unknown,
+    Map<String, dynamic>? arguments,
+    required HMSException hmsException}) {
+
+      switch (methodType) {
+
+          case HMSActionResultListenerMethod.sendBroadcastMessage:
+          // Check the HMSException object for details about the error
+          break;
+
+          case HMSActionResultListenerMethod.sendGroupMessage:
+          // Check the HMSException object for details about the error
+          break;
+
+          case HMSActionResultListenerMethod.sendDirectMessage:
+          // Check the HMSException object for details about the error
+          break;
+          ...
+      }
+
+  }
 ```
 
 📖 Read the Complete Documentation [available here](https://www.100ms.live/docs/flutter/v2/guides/quickstart)
