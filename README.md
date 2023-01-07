@@ -289,7 +289,7 @@ HMSRoomUpdate
   .hlsRecordingStateUpdated: When HLS recording state is updated
 ```
   
-## 🙏 [Join a room](https://www.100ms.live/docs/flutter/v2/features/join)
+## 🙏 [Join a Room](https://www.100ms.live/docs/flutter/v2/features/join)
 
 To join and interact with others in audio or video call, the user needs to `join` a `room`.
 
@@ -300,9 +300,9 @@ To join a Room, your app should have -
 
 You can also optionally pass these fields -
 
-1. Track Settings - Such as joining a Room with Muted Audio or Video using the `HMSTrackSetting` object. More information available [here](#join-with-muted-audio-video)
+1. Track Settings - Such as joining a Room with Muted Audio or Video using the `HMSTrackSetting` object. More information is [available here](https://www.100ms.live/docs/flutter/v2/features/join#join-with-muted-audio-video).
 
-2. User Metadata - This can be used to pass any additional metadata associated with the user using `metadata` of `HMSConfig` object. For Eg: user-id mapping at the application side. More information is available [here](../advanced-features/peer-metadata-update).
+2. User Metadata - This can be used to pass any additional metadata associated with the user using `metadata` of `HMSConfig` object. For Eg: user-id mapping at the application side. More information is available [here](https://www.100ms.live/docs/flutter/v2/advanced-features/peer-metadata-update).
 
 More information about Joining a Room is [available here](https://www.100ms.live/docs/flutter/v2/features/join).
 
@@ -369,7 +369,7 @@ hmsSDK.removeUpdateListener(updateListener);
 To leave the meeting, call the `leave` method of `HMSSDK` and pass the `hmsActionResultListener` parameter to get a success callback from SDK in the `onSuccess` override method as follow.
 
 > You will need to implement the `HMSActionResultListener` interface in a class to get `onSuccess` and `onException` callback.
->  To know about how to implement `HMSActionResultListener`  check the docs [here](../features/action-result-listeners)
+>  To know about how to implement `HMSActionResultListener`  check the docs [here](https://www.100ms.live/docs/flutter/v2/features/action-result-listeners)
 
 ```dart
 class Meeting implements HMSActionResultListener{
