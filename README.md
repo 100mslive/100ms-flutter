@@ -430,7 +430,9 @@ Add the information to be sent in the `message` property of `HMSMessage`.
 Then use the `sendBroadcastMessage` function on the instance of HMSSDK for broadcast message, `sendGroupMessage` for group message and `sendDirectMessage` for direct message.
 
 When you(the local peer) receives a message from others(any remote peer), `void onMessage({required HMSMessage message})` function of `HMSUpdateListener` is invoked.
-  
+
+More information about Chat Messaging is [available here](https://www.100ms.live/docs/flutter/v2/features/chat).
+
 ```dart
 // following is an example implementation of chat messaging
 
