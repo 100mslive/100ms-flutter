@@ -10,28 +10,44 @@ import HMSSDK
 
 class HMSStatsExtension {
 
-        static func toDictionary(_ hmsLocalAudioStats: HMSLocalAudioStats) -> [String: Any] {
-
-            var dict = [String: Any]()
-
-            dict["round_trip_time"] =  hmsLocalAudioStats.roundTripTime
-            dict["bytes_sent"] =  hmsLocalAudioStats.bytesSent
-            dict["bitrate"] =  hmsLocalAudioStats.bitrate
-
-            return dict
-        }
-
-    static func toDictionary(_ hmsLocalVideoStats: HMSLocalVideoStats) -> [String: Any] {
+    static func toDictionary(_ hmsLocalAudioStats: HMSLocalAudioStats) -> [String: Any] {
 
         var dict = [String: Any]()
 
-        dict["round_trip_time"] =  hmsLocalVideoStats.roundTripTime
-        dict["bytes_sent"] =  hmsLocalVideoStats.bytesSent
-        dict["bitrate"] =  hmsLocalVideoStats.bitrate
-        dict["resolution"] = HMSVideoResolutionExtension.toDictionary(hmsLocalVideoStats.resolution)
-        dict["frame_rate"] = hmsLocalVideoStats.frameRate
+        dict["round_trip_time"] =  hmsLocalAudioStats.roundTripTime
+        dict["bytes_sent"] =  hmsLocalAudioStats.bytesSent
+        dict["bitrate"] =  hmsLocalAudioStats.bitrate
 
         return dict
+    }
+
+    static func toDictionary(_ localVideoStats: [HMSLocalVideoStats]) -> [[String: Any]] {
+
+        var statsArray = [[String: Any]]()
+
+        for stat in localVideoStats {
+            var dict = [String: Any]()
+
+            dict["simulcast_layer_id"] = stat.simulcastLayerId
+            dict["resolution"] = HMSVideoResolutionExtension.toDictionary(stat.resolution)
+            dict["frame_rate"] = stat.frameRate
+            dict["quality_limitations"] = getQualityLimitations(from: stat.qualityLimitations)
+
+            statsArray.append(dict)
+        }
+
+        return statsArray
+    }
+
+    static private func getQualityLimitations(from limitation: HMSQualityLimitationReasons) -> [String: Any] {
+        [
+            "bandwidth": limitation.bandwidth,
+            "cpu": limitation.cpu,
+            "none": limitation.none,
+            "other": limitation.other,
+            "quality_limitation_resolution_changes": limitation.qualityLimitationResolutionChanges,
+            "reason": limitation.reason.rawValue
+        ]
     }
 
     static func toDictionary(_ hmsRemoteAudioStats: HMSRemoteAudioStats) -> [String: Any] {
