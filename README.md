@@ -526,7 +526,7 @@ void onException(
   }
 ```
 
-📖 Read the Complete Documentation [available here](https://www.100ms.live/docs/flutter/v2/guides/quickstart)
+📖 Do refer the Complete Documentation Guide [available here](https://www.100ms.live/docs/flutter/v2/guides/quickstart).
 
 
 🏃‍♀️ Checkout the Example app implementation [available here](https://github.com/100mslive/100ms-flutter/tree/main/example).
@@ -534,12 +534,7 @@ void onException(
 🚀 We have added explanations & recommended usage guide for different features, UI Layouts, Data Store, etc in [Example app ReadMe](https://github.com/100mslive/100ms-flutter/blob/main/example/README.md).
 
 
-📲 Download the Sample iOS app here: <https://testflight.apple.com/join/Uhzebmut>
-
-🤖 Download the Sample Android app here: <https://appdistribution.firebase.dev/i/b623e5310929ab70>
-
-
-100ms Flutter apps are also released on the App Stores, you can download them here:
+100ms Flutter apps are released on the App Stores, you can download them here:
 
 📲 iOS app on Apple App Store: <https://apps.apple.com/app/100ms-live/id1576541989>
 
