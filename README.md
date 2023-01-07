@@ -261,7 +261,7 @@ abstract class HMSUpdateListener {
 
   The following are the different types of updates that are emitted by the SDK -
 
-```
+```txt
 HMSPeerUpdate
   .peerJoined: A new peer joins the Room
   .peerLeft: An existing peer leaves the Room
@@ -288,8 +288,6 @@ HMSRoomUpdate
   .hlsStreamingStateUpdated: When HLS is started or stopped
   .hlsRecordingStateUpdated: When HLS recording state is updated
 ```
-
-More information about these are [available here](https://www.100ms.live/docs/flutter/v2/guides/quickstart).
   
 ## 🙏 [Join a room](https://www.100ms.live/docs/flutter/v2/features/join)
 
