@@ -49,7 +49,7 @@ To run the Example App on your system follow these steps -
 
 2. In project root, run `flutter pub get` to build the Flutter package
 3. Change directory to `example` folder
-4. To run on Android, simply execute the `flutter run` command to run the app on a connected device, or iOS simulator, or Android Emulator.
+4. Now, to run the app, simply execute the `flutter run` command to run the app on a connected device, or iOS simulator, or Android Emulator.
 5. For running on an iOS Device (iPhone or iPad), ensure you have set the Correct Development Team in Xcode Signing & Capabilities section. 
 
 The default [Example app](https://github.com/100mslive/100ms-flutter/tree/main/example) uses Provider State Management library. For other implementations please check out -
@@ -63,18 +63,18 @@ The default [Example app](https://github.com/100mslive/100ms-flutter/tree/main/e
 
 ## ☝️ Minimum Configuration
 
+- Support for Flutter 3.3.0 or above
 - Support for Android API level 21 or above
 - Support for Java 8 or above
 - Support for iOS 12 or above
-- Support for Flutter 3.3.0 or above
 - Xcode 12 or above
 
 ## 🤝 Recommended Configuration
 
+- Flutter 3.3.0 or above
 - Android API level 32 or above
 - Java 11 or above
 - iOS 16 or above
-- Flutter 3.3.0 or above
 - Xcode 14 or above
 
 ## 📱 Supported Devices
