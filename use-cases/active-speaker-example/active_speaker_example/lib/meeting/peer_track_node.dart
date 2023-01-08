@@ -4,8 +4,9 @@ class PeerTrackNode {
   HMSPeer peer;
   String uid;
   HMSVideoTrack? track;
+  bool isActiveSpeaker;
 
-  PeerTrackNode({required this.peer, this.track, required this.uid});
+  PeerTrackNode({required this.peer, this.track, required this.uid,this.isActiveSpeaker = false});
 
   @override
   String toString() {

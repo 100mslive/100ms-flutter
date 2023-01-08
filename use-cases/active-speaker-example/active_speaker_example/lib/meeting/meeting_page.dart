@@ -126,6 +126,11 @@ class _MeetingPageState extends State<MeetingPage>
 
   @override
   void onUpdateSpeakers({required List<HMSSpeaker> updateSpeakers}) {
+    bool isUIUpdateRequired = false;
+    peers.where((node) => node.isActiveSpeaker == true).forEach((node) {
+      node.isActiveSpeaker = false;
+      isUIUpdateRequired = true;
+    });
     for (var speaker in updateSpeakers.reversed) {
       int index = peers
           .indexWhere((node) => node.uid == "${speaker.peer.peerId}mainVideo");
@@ -133,9 +138,10 @@ class _MeetingPageState extends State<MeetingPage>
         PeerTrackNode activeSpeaker = peers[index];
         peers.removeAt(index);
         peers.insert(0, activeSpeaker);
+        peers[0].isActiveSpeaker = true;
       }
     }
-    if (updateSpeakers.isNotEmpty) {
+    if (updateSpeakers.isNotEmpty || isUIUpdateRequired) {
       updateUI();
     }
   }
@@ -157,7 +163,6 @@ class _MeetingPageState extends State<MeetingPage>
     final heightofEachTile = MediaQuery.of(context).size.height / 2;
     final widthofEachTile = MediaQuery.of(context).size.width;
 
-
     return WillPopScope(
       onWillPop: () async {
         leaveMeeting();
@@ -173,35 +178,43 @@ class _MeetingPageState extends State<MeetingPage>
                 SliverGrid(
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
-                      mainAxisExtent: (peers.length%4==2)?widthofEachTile:widthofEachTile/2,
+                      mainAxisExtent: (peers.length % 4 == 2)
+                          ? widthofEachTile
+                          : widthofEachTile / 2,
                       crossAxisSpacing: 5,
                       mainAxisSpacing: 5,
                       childAspectRatio: heightofEachTile / widthofEachTile),
                   delegate: SliverChildBuilderDelegate(
                       ((context, index) => Stack(children: [
-                            (peers[index].track == null ||
-                                    peers[index].track!.isMute)
-                                ? Container(
-                                    decoration: const BoxDecoration(
-                                      color: Color.fromRGBO(20, 23, 28, 1),
-                                    ),
-                                    child: Center(
-                                      child: CircleAvatar(
-                                          backgroundColor: Colors.purple,
-                                          radius: 36,
-                                          child: Text(
-                                            peers[index].peer.name[0],
-                                            style: const TextStyle(
-                                                fontSize: 36,
-                                                color: Colors.white),
-                                          )),
-                                    ),
-                                  )
-                                : HMSVideoView(
-                                    key: Key(peers[index].uid),
-                                    track: peers[index].track!,
-                                    scaleType: ScaleType.SCALE_ASPECT_FILL,
-                                  ),
+                            Container(
+                                decoration: BoxDecoration(
+                                    border: peers[index].isActiveSpeaker
+                                        ? Border.all(
+                                            width: 3, color: Colors.purple)
+                                        : Border.all(width: 0)),
+                                child: (peers[index].track == null ||
+                                        peers[index].track!.isMute)
+                                    ? Container(
+                                        decoration: const BoxDecoration(
+                                          color: Color.fromRGBO(20, 23, 28, 1),
+                                        ),
+                                        child: Center(
+                                          child: CircleAvatar(
+                                              backgroundColor: Colors.purple,
+                                              radius: 36,
+                                              child: Text(
+                                                peers[index].peer.name[0],
+                                                style: const TextStyle(
+                                                    fontSize: 36,
+                                                    color: Colors.white),
+                                              )),
+                                        ),
+                                      )
+                                    : HMSVideoView(
+                                        key: Key(peers[index].uid),
+                                        track: peers[index].track!,
+                                        scaleType: ScaleType.SCALE_ASPECT_FILL,
+                                      )),
                           ])),
                       childCount: peers.length),
                 )
