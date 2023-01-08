@@ -135,8 +135,7 @@ class _MeetingPageState extends State<MeetingPage>
 
   void leaveMeeting() {
     _hmssdk.removeUpdateListener(listener: this);
-    _hmssdk.leave();
-    _hmssdk.destroy();
+    _hmssdk.leave(hmsActionResultListener: this);
     Navigator.pop(context);
   }
 
@@ -374,6 +373,9 @@ class _MeetingPageState extends State<MeetingPage>
       case HMSActionResultListenerMethod.changeMetadata:
         log("Error occured ${hmsException.message}");
         break;
+      case HMSActionResultListenerMethod.leave:
+        log("Error occured ${hmsException.message}");
+        break;
     }
   }
 
@@ -384,6 +386,10 @@ class _MeetingPageState extends State<MeetingPage>
       Map<String, dynamic>? arguments}) {
     switch (methodType) {
       case HMSActionResultListenerMethod.changeMetadata:
+        log("Hand Raise successful");
+        break;
+      case HMSActionResultListenerMethod.leave:
+        _hmssdk.destroy();
         log("Hand Raise successful");
         break;
     }

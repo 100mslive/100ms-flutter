@@ -1,8 +1,9 @@
 import 'dart:developer';
 
-import 'package:data_store_example/meeting/peer_track_node.dart';
-import 'package:data_store_example/utilities.dart';
+import 'package:active_speaker_example/meeting/peer_track_node.dart';
+import 'package:active_speaker_example/utilities.dart';
 import 'package:flutter/material.dart';
+
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 class MeetingPage extends StatefulWidget {
@@ -13,7 +14,7 @@ class MeetingPage extends StatefulWidget {
 }
 
 class _MeetingPageState extends State<MeetingPage>
-    implements HMSUpdateListener,HMSActionResultListener {
+    implements HMSUpdateListener, HMSActionResultListener {
   List<PeerTrackNode> peers = [];
   late HMSSDK _hmssdk;
   bool isAudioOn = true, isVideoOn = true;
@@ -123,6 +124,22 @@ class _MeetingPageState extends State<MeetingPage>
     }
   }
 
+  @override
+  void onUpdateSpeakers({required List<HMSSpeaker> updateSpeakers}) {
+    for (var speaker in updateSpeakers.reversed) {
+      int index = peers
+          .indexWhere((node) => node.uid == "${speaker.peer.peerId}mainVideo");
+      if (index != -1) {
+        PeerTrackNode activeSpeaker = peers[index];
+        peers.removeAt(index);
+        peers.insert(0, activeSpeaker);
+      }
+    }
+    if (updateSpeakers.isNotEmpty) {
+      updateUI();
+    }
+  }
+
   void leaveMeeting() {
     _hmssdk.removeUpdateListener(listener: this);
     _hmssdk.leave(hmsActionResultListener: this);
@@ -140,6 +157,7 @@ class _MeetingPageState extends State<MeetingPage>
     final heightofEachTile = MediaQuery.of(context).size.height / 2;
     final widthofEachTile = MediaQuery.of(context).size.width;
 
+
     return WillPopScope(
       onWillPop: () async {
         leaveMeeting();
@@ -154,38 +172,42 @@ class _MeetingPageState extends State<MeetingPage>
               slivers: [
                 SliverGrid(
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 1,
-                      mainAxisExtent: widthofEachTile,
+                      crossAxisCount: 2,
+                      mainAxisExtent: (peers.length%4==2)?widthofEachTile:widthofEachTile/2,
                       crossAxisSpacing: 5,
+                      mainAxisSpacing: 5,
                       childAspectRatio: heightofEachTile / widthofEachTile),
                   delegate: SliverChildBuilderDelegate(
-                      ((context, index) => (peers[index].track == null ||
-                              peers[index].track!.isMute)
-                          ? Container(
-                              decoration: const BoxDecoration(
-                                color: Color.fromRGBO(20, 23, 28, 1),
-                              ),
-                              child: Center(
-                                child: CircleAvatar(
-                                    backgroundColor: Colors.purple,
-                                    radius: 36,
-                                    child: Text(
-                                      peers[index].peer.name[0],
-                                      style: const TextStyle(
-                                          fontSize: 36, color: Colors.white),
-                                    )),
-                              ),
-                            )
-                          : HMSVideoView(
-                              key: Key(peers[index].uid),
-                              track: peers[index].track!,
-                              scaleType: ScaleType.SCALE_ASPECT_FILL,
-                            )),
+                      ((context, index) => Stack(children: [
+                            (peers[index].track == null ||
+                                    peers[index].track!.isMute)
+                                ? Container(
+                                    decoration: const BoxDecoration(
+                                      color: Color.fromRGBO(20, 23, 28, 1),
+                                    ),
+                                    child: Center(
+                                      child: CircleAvatar(
+                                          backgroundColor: Colors.purple,
+                                          radius: 36,
+                                          child: Text(
+                                            peers[index].peer.name[0],
+                                            style: const TextStyle(
+                                                fontSize: 36,
+                                                color: Colors.white),
+                                          )),
+                                    ),
+                                  )
+                                : HMSVideoView(
+                                    key: Key(peers[index].uid),
+                                    track: peers[index].track!,
+                                    scaleType: ScaleType.SCALE_ASPECT_FILL,
+                                  ),
+                          ])),
                       childCount: peers.length),
                 )
               ],
             ),
-            (peers.isNotEmpty && peers[0].peer.isLocal)
+            (peers.isNotEmpty)
                 ? Padding(
                     padding: const EdgeInsets.only(bottom: 20.0),
                     child: Align(
@@ -274,7 +296,7 @@ class _MeetingPageState extends State<MeetingPage>
                       ),
                     ),
                   )
-                : Container()
+                : Container(),
           ],
         ),
       ),
@@ -307,12 +329,9 @@ class _MeetingPageState extends State<MeetingPage>
   void onRoleChangeRequest({required HMSRoleChangeRequest roleChangeRequest}) {}
 
   @override
-  void onUpdateSpeakers({required List<HMSSpeaker> updateSpeakers}) {}
-
-  @override
   void onRoomUpdate({required HMSRoom room, required HMSRoomUpdate update}) {}
 
-    @override
+  @override
   void onException(
       {HMSActionResultListenerMethod methodType =
           HMSActionResultListenerMethod.unknown,
