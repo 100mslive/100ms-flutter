@@ -23,8 +23,7 @@ class Utilities {
   }
 
   static HMSConfig getHMSConfig() {
-    String authToken =
-        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhY2Nlc3Nfa2V5IjoiNjIxOGEyMzk2OTJiNmQwNTIzMDlmNGY2Iiwicm9vbV9pZCI6IjYyMThhMjdlN2E5ZDA0ZTI4YzYwYzEwZiIsInVzZXJfaWQiOiJ3YWdvdXVwZyIsInJvbGUiOiJob3N0IiwianRpIjoiZDYxNzI2MWItYjc0Ny00YmE2LWFmYjctMmQzNzNlZmRiNzQwIiwidHlwZSI6ImFwcCIsInZlcnNpb24iOjIsImV4cCI6MTY3MzMzNzY5OH0.gs-xpJyi17wcWYdavsg9w4Yc5aZ5rCl-lAKIDcY-30g";
+    String authToken = "Enter your token here";
     return HMSConfig(authToken: authToken, userName: "test_username");
   }
 }

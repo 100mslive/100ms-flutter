@@ -84,7 +84,7 @@ class _MyHomePageState extends State<MyHomePage> {
               height: 40,
             ),
             const Text(
-              "Data Store example",
+              "Pin Message example",
               style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
             )
           ],
