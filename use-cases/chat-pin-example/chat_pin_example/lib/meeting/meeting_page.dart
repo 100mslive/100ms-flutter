@@ -23,7 +23,10 @@ class _MeetingPageState extends State<MeetingPage>
   List<PeerTrackNode> peers = [];
   late HMSSDK _hmssdk;
   bool isAudioOn = true, isVideoOn = true;
+  // Store value of localpeer
   late HMSLocalPeer localPeer;
+
+  // Store all messages
   List<HMSMessage> messages = [];
 
   @override
@@ -40,6 +43,7 @@ class _MeetingPageState extends State<MeetingPage>
 
   @override
   void onJoin({required HMSRoom room}) {
+    // fetching localpeer from room at time of joining
     if (room.peerCount > 0) {
       for (HMSPeer peer in room.peers!) {
         if (peer.isLocal) {
@@ -254,6 +258,7 @@ class _MeetingPageState extends State<MeetingPage>
                             ),
                             GestureDetector(
                               onTap: () async {
+                                // Open bottom sheet for message Page UI.
                                 showModalBottomSheet(
                                     context: context,
                                     builder: (ctx) => MessagePage(
@@ -325,8 +330,12 @@ class _MeetingPageState extends State<MeetingPage>
 
   @override
   void onMessage({required HMSMessage message}) {
+    if (message.type == "metadata") {
+      // if message type is metadata then don't add it to messages list.
+      return;
+    }
+    // Adding message to list
     messages.add(message);
-    setState(() {});
   }
 
   @override
@@ -354,13 +363,7 @@ class _MeetingPageState extends State<MeetingPage>
           HMSActionResultListenerMethod.unknown,
       Map<String, dynamic>? arguments,
       required HMSException hmsException}) {
-    switch (methodType) {
-      case HMSActionResultListenerMethod.leave:
-        log("Error occured ${hmsException.message}");
-        break;
-      default:
-        break;
-    }
+    log("Error: type: ${methodType.name} hmsException: ${hmsException.message} arguments:$arguments");
   }
 
   @override
@@ -375,19 +378,24 @@ class _MeetingPageState extends State<MeetingPage>
         break;
       case HMSActionResultListenerMethod.sendBroadcastMessage:
         log("message send successfully");
+        if (arguments!['type'] != null && arguments['type'] == "metadata") {
+          // if message type is metadata then don't add it to messages list.
+          break;
+        }
+        // creating message if sendBroadcastMessage is success and adding it to messages list.
         HMSMessage message = HMSMessage(
             sender: localPeer,
-            message: arguments!['message'],
-            type: arguments['type'] == null ? "chat" : arguments['type'],
+            message: arguments['message'],
+            type: arguments['type'] ?? "chat",
             time: DateTime.now(),
             hmsMessageRecipient: HMSMessageRecipient(
                 recipientPeer: null,
                 recipientRoles: null,
                 hmsMessageRecipientType: HMSMessageRecipientType.BROADCAST));
         messages.add(message);
-        setState(() {});
         break;
       default:
+        log("Success: type: ${methodType.name} arguments:$arguments");
         break;
     }
   }

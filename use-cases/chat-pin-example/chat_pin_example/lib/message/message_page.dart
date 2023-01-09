@@ -17,23 +17,30 @@ class MessagePage extends StatefulWidget {
 class _MessagePageState extends State<MessagePage>
     implements HMSUpdateListener, HMSActionResultListener {
   List<HMSMessage> messages = [];
+  //Local Peer
   HMSLocalPeer? localPeer;
-  String? sessionMetadata = "";
+  //Store value of session Metadata (Pin Message)
+  String? sessionMetadata;
   @override
   void initState() {
     messages.addAll(widget.oldMessage);
     widget.hmssdk.addUpdateListener(listener: this);
+    //fetching localpeer
     getLocalpeer();
+
+    //fetching sessionMetadata(current pin message)
     getSessionMetadata();
     super.initState();
   }
 
   getLocalpeer() async {
+    //fetching localpeer
     localPeer = await widget.hmssdk.getLocalPeer();
     setState(() {});
   }
 
   getSessionMetadata() async {
+    //fetching sessionMetadata(current pin message)
     sessionMetadata = await widget.hmssdk.getSessionMetadata();
     setState(() {});
   }
@@ -82,6 +89,7 @@ class _MessagePageState extends State<MessagePage>
                     ],
                   ),
                 ),
+                // Checking if sessionMetdata (Pin message) exist or not if yes then show UI otherwise skip
                 if (sessionMetadata != null && sessionMetadata != "")
                   Container(
                     margin: const EdgeInsets.all(5),
@@ -112,6 +120,7 @@ class _MessagePageState extends State<MessagePage>
                         ),
                         GestureDetector(
                             onTap: () {
+                              // Removing session metadata by setting it value to null.
                               widget.hmssdk.setSessionMetadata(
                                   metadata: null,
                                   hmsActionResultListener: this);
@@ -164,12 +173,14 @@ class _MessagePageState extends State<MessagePage>
                                                 PopupMenuItem(
                                                   child:
                                                       const Text('Pin Message'),
-                                                  onTap: () => widget.hmssdk
-                                                      .setSessionMetadata(
-                                                          metadata:
-                                                              "${messages[index].sender!.name}: ${messages[index].message}",
-                                                          hmsActionResultListener:
-                                                              this),
+                                                  onTap: () {
+                                                    // Setting session metadata to senderName: Message by calling "setSessionMetadata" method of HMSSDK
+                                                    widget.hmssdk.setSessionMetadata(
+                                                        metadata:
+                                                            "${messages[index].sender!.name}: ${messages[index].message}",
+                                                        hmsActionResultListener:
+                                                            this);
+                                                  },
                                                 )
                                               ];
                                             },
@@ -254,13 +265,6 @@ class _MessagePageState extends State<MessagePage>
       {required HMSTrackChangeRequest hmsTrackChangeRequest}) {}
 
   @override
-  void onException(
-      {HMSActionResultListenerMethod methodType =
-          HMSActionResultListenerMethod.unknown,
-      Map<String, dynamic>? arguments,
-      required HMSException hmsException}) {}
-
-  @override
   void onHMSError({required HMSException error}) {}
 
   @override
@@ -269,9 +273,11 @@ class _MessagePageState extends State<MessagePage>
   @override
   void onMessage({required HMSMessage message}) {
     if (message.type == "metadata") {
+      // If message type is metadata then fetch session metadata.
       getSessionMetadata();
       return;
     }
+    // Adding message to list
     messages.add(message);
     setState(() {});
   }
@@ -296,6 +302,15 @@ class _MessagePageState extends State<MessagePage>
   void onRoomUpdate({required HMSRoom room, required HMSRoomUpdate update}) {}
 
   @override
+  void onTrackUpdate(
+      {required HMSTrack track,
+      required HMSTrackUpdate trackUpdate,
+      required HMSPeer peer}) {}
+
+  @override
+  void onUpdateSpeakers({required List<HMSSpeaker> updateSpeakers}) {}
+
+  @override
   Future<void> onSuccess(
       {HMSActionResultListenerMethod methodType =
           HMSActionResultListenerMethod.unknown,
@@ -304,9 +319,11 @@ class _MessagePageState extends State<MessagePage>
       case HMSActionResultListenerMethod.sendBroadcastMessage:
         log("message send successfully");
         if (arguments!['type'] != null && arguments['type'] == "metadata") {
+          // if message type is metadata then call method getSessionMetadata of HMSSDK.
           getSessionMetadata();
           break;
         }
+        // creating message if sendBroadcastMessage is success and adding it to messages list.
         HMSMessage message = HMSMessage(
             sender: localPeer,
             message: arguments['message'],
@@ -317,26 +334,28 @@ class _MessagePageState extends State<MessagePage>
                 recipientRoles: null,
                 hmsMessageRecipientType: HMSMessageRecipientType.BROADCAST));
         messages.add(message);
-
         setState(() {});
         break;
       case HMSActionResultListenerMethod.setSessionMetadata:
+        log("session metadata send successfully");
+        // sendBroadcastMessage if setSessionMetadata is successful with type: "metadata" and message: "refresh".
         widget.hmssdk.sendBroadcastMessage(
             message: "refresh",
             type: "metadata",
             hmsActionResultListener: this);
         break;
       default:
+        log("Success: type: ${methodType.name} arguments:$arguments");
         break;
     }
   }
 
   @override
-  void onTrackUpdate(
-      {required HMSTrack track,
-      required HMSTrackUpdate trackUpdate,
-      required HMSPeer peer}) {}
-
-  @override
-  void onUpdateSpeakers({required List<HMSSpeaker> updateSpeakers}) {}
+  void onException(
+      {HMSActionResultListenerMethod methodType =
+          HMSActionResultListenerMethod.unknown,
+      Map<String, dynamic>? arguments,
+      required HMSException hmsException}) {
+    log("Error: type: ${methodType.name} hmsException: ${hmsException.message} arguments:$arguments");
+  }
 }
