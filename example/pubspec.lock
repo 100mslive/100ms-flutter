@@ -348,9 +348,11 @@ packages:
   hmssdk_flutter:
     dependency: "direct main"
     description:
-      path: ".."
-      relative: true
-    source: path
+      path: "."
+      ref: updateBroadcastExtensionVersion
+      resolved-ref: "855f288171e19518edaf90ff98e74f7d880a1cd5"
+      url: "https://github.com/100mslive/100ms-flutter.git"
+    source: git
     version: "1.1.0"
   html:
     dependency: transitive

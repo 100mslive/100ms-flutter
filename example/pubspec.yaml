@@ -13,7 +13,9 @@ dependencies:
     sdk: flutter
 
   hmssdk_flutter:
-    path: ../
+    git:
+      url: https://github.com/100mslive/100ms-flutter.git
+      ref: updateBroadcastExtensionVersion
 
   wakelock: 
   cupertino_icons: 
