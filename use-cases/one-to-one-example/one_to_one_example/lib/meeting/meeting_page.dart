@@ -1,9 +1,10 @@
 import 'dart:developer';
 
-import 'package:data_store_example/meeting/peer_track_node.dart';
-import 'package:data_store_example/utilities.dart';
+import 'package:draggable_widget/draggable_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:one_to_one_example/meeting/peer_track_node.dart';
+import 'package:one_to_one_example/utilities.dart';
 
 class MeetingPage extends StatefulWidget {
   const MeetingPage({super.key});
@@ -137,31 +138,96 @@ class _MeetingPageState extends State<MeetingPage>
 
   @override
   Widget build(BuildContext context) {
-    final heightofEachTile = MediaQuery.of(context).size.height / 2;
-    final widthofEachTile = MediaQuery.of(context).size.width;
 
     return WillPopScope(
       onWillPop: () async {
         leaveMeeting();
         return true;
       },
-      child: Scaffold(
-        body: Stack(
-          children: [
-            CustomScrollView(
-              scrollDirection: Axis.horizontal,
-              physics: const PageScrollPhysics(),
-              slivers: [
-                SliverGrid(
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 1,
-                      mainAxisExtent: widthofEachTile,
-                      crossAxisSpacing: 5,
-                      childAspectRatio: heightofEachTile / widthofEachTile),
-                  delegate: SliverChildBuilderDelegate(
-                      ((context, index) => (peers[index].track == null ||
-                              peers[index].track!.isMute)
-                          ? Container(
+      child: SafeArea(
+        child: Scaffold(
+          body: (peers.isEmpty)
+              ? Container(
+                decoration: const BoxDecoration(
+                                color: Color.fromRGBO(20, 23, 28, 1),
+                              ),
+                child: const Center(child:  CircularProgressIndicator()))
+              : (peers.length < 2)
+                  ? Container(
+                      color: Colors.black.withOpacity(0.9),
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height,
+                      child: Stack(
+                        children: [
+                          Positioned(
+                              child: IconButton(
+                                  onPressed: () => leaveMeeting(),
+                                  icon: const Icon(
+                                    Icons.arrow_back_ios,
+                                    color: Colors.white,
+                                  ))),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: const [
+                              Padding(
+                                padding:
+                                    EdgeInsets.only(left: 20.0, bottom: 20),
+                                child: Text(
+                                  "You're the only one here",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(left: 20.0),
+                                child: Text(
+                                  "Share meeting link with others",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(left: 20.0),
+                                child: Text(
+                                  "that you want in the meeting",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(left: 20.0, top: 10),
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                ),
+                              ),
+                            ],
+                          ),
+                          DraggableWidget(
+                            topMargin: 10,
+                            bottomMargin: 130,
+                            horizontalSpace: 10,
+                            child: localPeerTile(),
+                          ),
+                        ],
+                      ),
+                    )
+                  : SizedBox(
+                      height: MediaQuery.of(context).size.height,
+                      width: MediaQuery.of(context).size.width,
+                      child: Stack(
+                        children: [
+                          Container(
+                              color: Colors.black.withOpacity(0.9),
+                              child: peers[1].track?.isMute??true
+                                  ? Center(
+                                      child: Container(
                               decoration: const BoxDecoration(
                                 color: Color.fromRGBO(20, 23, 28, 1),
                               ),
@@ -170,29 +236,28 @@ class _MeetingPageState extends State<MeetingPage>
                                     backgroundColor: Colors.purple,
                                     radius: 36,
                                     child: Text(
-                                      peers[index].peer.name[0],
+                                      peers[1].peer.name[0],
                                       style: const TextStyle(
                                           fontSize: 36, color: Colors.white),
                                     )),
                               ),
                             )
-                          : HMSVideoView(
-                              key: Key(peers[index].uid),
-                              track: peers[index].track!,
-                              scaleType: ScaleType.SCALE_ASPECT_FILL,
-                            )),
-                      childCount: peers.length),
-                )
-              ],
-            ),
-            (peers.isNotEmpty && peers[0].peer.isLocal)
+                                    )
+                                  : (peers[1].track != null)
+                                      ? HMSVideoView(
+                                        scaleType:
+                                            ScaleType.SCALE_ASPECT_FILL,
+                                        track: peers[1].track as HMSVideoTrack,
+                                      )
+                                      : const Center(child: Text("No Video"))),
+                                     (peers.isNotEmpty && peers[0].peer.isLocal)
                 ? Padding(
                     padding: const EdgeInsets.only(bottom: 20.0),
                     child: Align(
                       alignment: Alignment.bottomCenter,
                       child: Container(
                         height: 60,
-                        width: widthofEachTile - 20,
+                        width: MediaQuery.of(context).size.width - 20,
                         decoration: BoxDecoration(
                             color: const Color.fromRGBO(29, 34, 41, 1),
                             borderRadius: BorderRadius.circular(10)),
@@ -274,9 +339,60 @@ class _MeetingPageState extends State<MeetingPage>
                       ),
                     ),
                   )
-                : Container()
-          ],
+                : Container(),
+                           Positioned(
+                            top: 10,
+                            left: 10,
+                            child: GestureDetector(
+                              onTap: () {
+                                leaveMeeting();
+                              },
+                              child: const Icon(
+                                Icons.arrow_back_ios,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                          DraggableWidget(
+                            topMargin: 10,
+                            bottomMargin: 130,
+                            horizontalSpace: 10,
+                            child: localPeerTile(),
+                          ),
+                        ],
+                      ),
+                    ),
         ),
+      ),
+    );
+  }
+
+  Widget localPeerTile() {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(10),
+      child: Container(
+        height: 150,
+        width: 100,
+        color: Colors.black,
+        child: (isVideoOn && peers[0].track != null)
+            ? HMSVideoView(
+                track: peers[0].track!,
+              )
+            : Container(
+                              decoration: const BoxDecoration(
+                                color: Color.fromRGBO(20, 23, 28, 1),
+                              ),
+                              child: Center(
+                                child: CircleAvatar(
+                                    backgroundColor: Colors.purple,
+                                    radius: 36,
+                                    child: Text(
+                                      peers[0].peer.name[0],
+                                      style: const TextStyle(
+                                          fontSize: 36, color: Colors.white),
+                                    )),
+                              ),
+                            ),
       ),
     );
   }
