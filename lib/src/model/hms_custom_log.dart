@@ -1,3 +1,6 @@
+///100ms HMSCustomLog
+///
+///[HMSCustomLog] contains tag and message.
 class HMSCustomLog {
   String tag;
   String message;

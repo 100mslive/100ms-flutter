@@ -17,7 +17,9 @@ class  HMSPeerExtension {
             "name": peer.name,
             "is_local": peer.isLocal,
             "customer_description": peer.metadata ?? "",
-            "customer_user_id": peer.customerUserID ?? ""
+            "customer_user_id": peer.customerUserID ?? "",
+            "joined_at": "\(peer.joinedAt)",
+            "updated_at": "\(peer.updatedAt)"
         ] as [String: Any]
 
         if let metadata = peer.metadata {

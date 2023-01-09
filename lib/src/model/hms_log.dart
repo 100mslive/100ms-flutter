@@ -1,6 +1,9 @@
 // Project imports:
 import 'package:hmssdk_flutter/src/enum/hms_log_level.dart';
 
+///100ms HMSLog
+///
+///[HMSLog] contains logLevel, tag, message and isWebRtcLog.
 class HMSLog {
   HMSLogLevel level;
   String tag;

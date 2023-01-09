@@ -19,7 +19,7 @@ class HMSSubscribeSettingsExtension {
         }
 
         if let policy = settings.subscribeDegradation {
-            dict["max_display_tiles"] = HMSSubscribeDegradationPolicyExtension.toDictionary(policy)
+            dict["subscribe_degradation_param"] = HMSSubscribeDegradationPolicyExtension.toDictionary(policy)
         }
 
         return dict

@@ -7,11 +7,11 @@ import MediaPlayer
 
 public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListener, FlutterStreamHandler, HMSPreviewListener, HMSLogger {
 
-    let channel: FlutterMethodChannel
-    let meetingEventChannel: FlutterEventChannel
-    let previewEventChannel: FlutterEventChannel
-    let logsEventChannel: FlutterEventChannel
-    let rtcStatsEventChannel: FlutterEventChannel
+    var channel: FlutterMethodChannel?
+    var meetingEventChannel: FlutterEventChannel?
+    var previewEventChannel: FlutterEventChannel?
+    var logsEventChannel: FlutterEventChannel?
+    var rtcStatsEventChannel: FlutterEventChannel?
 
     var eventSink: FlutterEventSink?
     var previewSink: FlutterEventSink?
@@ -97,10 +97,26 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     }
 
     public func detachFromEngine(for registrar: FlutterPluginRegistrar) {
-        meetingEventChannel.setStreamHandler(nil)
-        previewEventChannel.setStreamHandler(nil)
-        logsEventChannel.setStreamHandler(nil)
-        rtcStatsEventChannel.setStreamHandler(nil)
+        if meetingEventChannel != nil {
+            meetingEventChannel!.setStreamHandler(nil)
+        } else {
+           print("meetingEventChannel not found", #function)
+        }
+        if previewEventChannel != nil {
+            previewEventChannel!.setStreamHandler(nil)
+        } else {
+            print("previewEventChannel not found", #function)
+        }
+        if logsEventChannel != nil {
+            logsEventChannel!.setStreamHandler(nil)
+        } else {
+            print("logsEventChannel not found", #function)
+        }
+        if rtcStatsEventChannel != nil {
+            rtcStatsEventChannel!.setStreamHandler(nil)
+        } else {
+            print("rtcStatsEventChannel not found", #function)
+        }
     }
 
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
@@ -179,6 +195,9 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
         case "set_playback_allowed_for_track":
             setPlaybackAllowedForTrack(call, result)
+
+        case "set_simulcast_layer", "get_layer", "get_layer_definition":
+            HMSRemoteVideoTrackExtension.remoteVideoTrackActions(call, result, hmsSDK!)
 
         default:
             result(FlutterMethodNotImplemented)
@@ -773,7 +792,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
         let arguments = call.arguments as! [AnyHashable: Any]
 
-        guard var metadata = arguments["session_metadata"] as? String? ?? "" else {
+        guard let metadata = arguments["session_metadata"] as? String? ?? "" else {
             result(HMSErrorExtension.getError("No session metadata found in \(#function)"))
             return
         }
@@ -840,9 +859,11 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     }
 
     public func on(join room: HMSRoom) {
-
-        previewEventChannel.setStreamHandler(nil)
-
+        if previewEventChannel != nil {
+            previewEventChannel!.setStreamHandler(nil)
+        } else {
+            print("previewEventChannel not found", #function)
+        }
         let data = [
             "event_name": "on_join_room",
             "data": [
