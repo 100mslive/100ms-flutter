@@ -258,6 +258,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_foreground_task:
+    dependency: "direct main"
+    description:
+      name: flutter_foreground_task
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.10.0"
   flutter_launcher_icons:
     dependency: "direct main"
     description:

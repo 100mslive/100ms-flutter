@@ -47,6 +47,7 @@ dependencies:
   url_launcher:
   pip_flutter:
   share_plus:
+  flutter_foreground_task: ^3.10.0
 
 dev_dependencies:
   flutter_test:

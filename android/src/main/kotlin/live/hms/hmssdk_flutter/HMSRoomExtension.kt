@@ -35,8 +35,8 @@ class HMSRoomExtension {
             if(update==null)return null
 
             return when(update){
-                HMSRoomUpdate.ROOM_MUTED-> "room_unmuted"
-                HMSRoomUpdate.ROOM_UNMUTED-> "room_muted"
+                HMSRoomUpdate.ROOM_MUTED-> "room_muted"
+                HMSRoomUpdate.ROOM_UNMUTED-> "room_unmuted"
                 HMSRoomUpdate.SERVER_RECORDING_STATE_UPDATED-> "server_recording_state_updated"
                 HMSRoomUpdate.RTMP_STREAMING_STATE_UPDATED-> "rtmp_streaming_state_updated"
                 HMSRoomUpdate.HLS_STREAMING_STATE_UPDATED-> "hls_streaming_state_updated"
