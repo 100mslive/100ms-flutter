@@ -32,6 +32,9 @@ class HMSStatsExtension {
             dict["resolution"] = HMSVideoResolutionExtension.toDictionary(stat.resolution)
             dict["frame_rate"] = stat.frameRate
             dict["quality_limitations"] = getQualityLimitations(from: stat.qualityLimitations)
+            dict["bitrate"] = stat.bitrate
+            dict["bytes_sent"] = stat.bytesSent
+            dict["round_trip_time"] = stat.roundTripTime
 
             statsArray.append(dict)
         }
