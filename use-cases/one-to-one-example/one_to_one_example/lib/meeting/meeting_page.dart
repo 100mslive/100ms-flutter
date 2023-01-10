@@ -15,7 +15,7 @@ class MeetingPage extends StatefulWidget {
 
 class _MeetingPageState extends State<MeetingPage>
     implements HMSUpdateListener, HMSActionResultListener {
-  List<PeerTrackNode> peers = [];
+  List<PeerTrackNode> nodes = [];
   late HMSSDK _hmssdk;
   bool isAudioOn = true, isVideoOn = true;
 
@@ -57,25 +57,25 @@ class _MeetingPageState extends State<MeetingPage>
     }
     if (track.kind == HMSTrackKind.kHMSTrackKindVideo) {
       int index =
-          peers.indexWhere((node) => node.uid == "${peer.peerId}mainVideo");
+          nodes.indexWhere((node) => node.uid == "${peer.peerId}mainVideo");
       if (index != -1) {
-        peers[index].track = track as HMSVideoTrack;
+        nodes[index].track = track as HMSVideoTrack;
       } else {
         if (track.source == "SCREEN") {
-          peers.add(PeerTrackNode(
+          nodes.add(PeerTrackNode(
               peer: peer,
               uid: "${peer.peerId}${track.trackId}",
               track: track as HMSVideoTrack));
         } else {
           if (peer.isLocal) {
-            peers.insert(
+            nodes.insert(
                 0,
                 PeerTrackNode(
                     peer: peer,
                     uid: "${peer.peerId}mainVideo",
                     track: track as HMSVideoTrack));
           } else {
-            peers.add(PeerTrackNode(
+            nodes.add(PeerTrackNode(
                 peer: peer,
                 uid: "${peer.peerId}mainVideo",
                 track: track as HMSVideoTrack));
@@ -91,13 +91,13 @@ class _MeetingPageState extends State<MeetingPage>
     switch (update) {
       case HMSPeerUpdate.peerJoined:
         int index =
-            peers.indexWhere((node) => node.uid == "${peer.peerId}mainVideo");
+            nodes.indexWhere((node) => node.uid == "${peer.peerId}mainVideo");
         if (index == -1) {
           if (peer.isLocal) {
-            peers.insert(
+            nodes.insert(
                 0, PeerTrackNode(peer: peer, uid: "${peer.peerId}mainVideo"));
           } else {
-            peers
+            nodes
                 .add(PeerTrackNode(peer: peer, uid: "${peer.peerId}mainVideo"));
           }
         }
@@ -105,9 +105,9 @@ class _MeetingPageState extends State<MeetingPage>
         break;
       case HMSPeerUpdate.peerLeft:
         int index =
-            peers.indexWhere((node) => node.uid == "${peer.peerId}mainVideo");
+            nodes.indexWhere((node) => node.uid == "${peer.peerId}mainVideo");
         if (index != -1) {
-          peers.removeAt(index);
+          nodes.removeAt(index);
         }
         updateUI();
         break;
@@ -137,8 +137,15 @@ class _MeetingPageState extends State<MeetingPage>
   }
 
   @override
-  Widget build(BuildContext context) {
+  void setState(VoidCallback fn) {
+    // TODO: implement setState
+    if (mounted) {
+      super.setState(fn);
+    }
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
         leaveMeeting();
@@ -146,13 +153,13 @@ class _MeetingPageState extends State<MeetingPage>
       },
       child: SafeArea(
         child: Scaffold(
-          body: (peers.isEmpty)
+          body: (nodes.isEmpty)
               ? Container(
-                decoration: const BoxDecoration(
-                                color: Color.fromRGBO(20, 23, 28, 1),
-                              ),
-                child: const Center(child:  CircularProgressIndicator()))
-              : (peers.length < 2)
+                  decoration: const BoxDecoration(
+                    color: Color.fromRGBO(20, 23, 28, 1),
+                  ),
+                  child: const Center(child: CircularProgressIndicator()))
+              : (nodes.length < 2)
                   ? Container(
                       color: Colors.black.withOpacity(0.9),
                       width: MediaQuery.of(context).size.width,
@@ -225,122 +232,135 @@ class _MeetingPageState extends State<MeetingPage>
                         children: [
                           Container(
                               color: Colors.black.withOpacity(0.9),
-                              child: peers[1].track?.isMute??true
+                              child: nodes[1].track?.isMute ?? true
                                   ? Center(
                                       child: Container(
-                              decoration: const BoxDecoration(
-                                color: Color.fromRGBO(20, 23, 28, 1),
-                              ),
-                              child: Center(
-                                child: CircleAvatar(
-                                    backgroundColor: Colors.purple,
-                                    radius: 36,
-                                    child: Text(
-                                      peers[1].peer.name[0],
-                                      style: const TextStyle(
-                                          fontSize: 36, color: Colors.white),
-                                    )),
-                              ),
-                            )
-                                    )
-                                  : (peers[1].track != null)
+                                      decoration: const BoxDecoration(
+                                        color: Color.fromRGBO(20, 23, 28, 1),
+                                      ),
+                                      child: Center(
+                                        child: CircleAvatar(
+                                            backgroundColor: Colors.purple,
+                                            radius: 36,
+                                            child: Text(
+                                              nodes[1].peer.name[0],
+                                              style: const TextStyle(
+                                                  fontSize: 36,
+                                                  color: Colors.white),
+                                            )),
+                                      ),
+                                    ))
+                                  : (nodes[1].track != null)
                                       ? HMSVideoView(
-                                        scaleType:
-                                            ScaleType.SCALE_ASPECT_FILL,
-                                        track: peers[1].track as HMSVideoTrack,
-                                      )
+                                          scaleType:
+                                              ScaleType.SCALE_ASPECT_FILL,
+                                          track:
+                                              nodes[1].track as HMSVideoTrack,
+                                        )
                                       : const Center(child: Text("No Video"))),
-                                     (peers.isNotEmpty && peers[0].peer.isLocal)
-                ? Padding(
-                    padding: const EdgeInsets.only(bottom: 20.0),
-                    child: Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Container(
-                        height: 60,
-                        width: MediaQuery.of(context).size.width - 20,
-                        decoration: BoxDecoration(
-                            color: const Color.fromRGBO(29, 34, 41, 1),
-                            borderRadius: BorderRadius.circular(10)),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            GestureDetector(
-                              onTap: () async {
-                                _hmssdk.switchAudio(isOn: isAudioOn);
-                              },
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.red.withAlpha(60),
-                                        blurRadius: 3.0,
-                                        spreadRadius: 5.0,
+                          (nodes.isNotEmpty && nodes[0].peer.isLocal)
+                              ? Padding(
+                                  padding: const EdgeInsets.only(bottom: 20.0),
+                                  child: Align(
+                                    alignment: Alignment.bottomCenter,
+                                    child: Container(
+                                      height: 60,
+                                      width: MediaQuery.of(context).size.width -
+                                          20,
+                                      decoration: BoxDecoration(
+                                          color: const Color.fromRGBO(
+                                              29, 34, 41, 1),
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          GestureDetector(
+                                            onTap: () async {
+                                              _hmssdk.switchAudio(
+                                                  isOn: isAudioOn);
+                                            },
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                  shape: BoxShape.circle,
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                      color: Colors.red
+                                                          .withAlpha(60),
+                                                      blurRadius: 3.0,
+                                                      spreadRadius: 5.0,
+                                                    ),
+                                                  ]),
+                                              child: CircleAvatar(
+                                                radius: 25,
+                                                backgroundColor: Colors.red,
+                                                child: Icon(
+                                                    isAudioOn
+                                                        ? Icons.mic
+                                                        : Icons.mic_off,
+                                                    color: Colors.white),
+                                              ),
+                                            ),
+                                          ),
+                                          GestureDetector(
+                                            onTap: () async {
+                                              _hmssdk.switchVideo(
+                                                  isOn: isVideoOn);
+                                            },
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                  shape: BoxShape.circle,
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                      color: Colors.red
+                                                          .withAlpha(60),
+                                                      blurRadius: 3.0,
+                                                      spreadRadius: 5.0,
+                                                    ),
+                                                  ]),
+                                              child: CircleAvatar(
+                                                radius: 25,
+                                                backgroundColor: Colors.red,
+                                                child: Icon(
+                                                    isVideoOn
+                                                        ? Icons.videocam
+                                                        : Icons
+                                                            .videocam_off_rounded,
+                                                    color: Colors.white),
+                                              ),
+                                            ),
+                                          ),
+                                          GestureDetector(
+                                            onTap: () async {
+                                              leaveMeeting();
+                                            },
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                  shape: BoxShape.circle,
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                      color: Colors.red
+                                                          .withAlpha(60),
+                                                      blurRadius: 3.0,
+                                                      spreadRadius: 5.0,
+                                                    ),
+                                                  ]),
+                                              child: const CircleAvatar(
+                                                radius: 25,
+                                                backgroundColor: Colors.red,
+                                                child: Icon(Icons.call_end,
+                                                    color: Colors.white),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
                                       ),
-                                    ]),
-                                child: CircleAvatar(
-                                  radius: 25,
-                                  backgroundColor: Colors.red,
-                                  child: Icon(
-                                      isAudioOn ? Icons.mic : Icons.mic_off,
-                                      color: Colors.white),
-                                ),
-                              ),
-                            ),
-                            GestureDetector(
-                              onTap: () async {
-                                _hmssdk.switchVideo(isOn: isVideoOn);
-                              },
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.red.withAlpha(60),
-                                        blurRadius: 3.0,
-                                        spreadRadius: 5.0,
-                                      ),
-                                    ]),
-                                child: CircleAvatar(
-                                  radius: 25,
-                                  backgroundColor: Colors.red,
-                                  child: Icon(
-                                      isVideoOn
-                                          ? Icons.videocam
-                                          : Icons.videocam_off_rounded,
-                                      color: Colors.white),
-                                ),
-                              ),
-                            ),
-                            GestureDetector(
-                              onTap: () async {
-                                leaveMeeting();
-                              },
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.red.withAlpha(60),
-                                        blurRadius: 3.0,
-                                        spreadRadius: 5.0,
-                                      ),
-                                    ]),
-                                child: const CircleAvatar(
-                                  radius: 25,
-                                  backgroundColor: Colors.red,
-                                  child:
-                                      Icon(Icons.call_end, color: Colors.white),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  )
-                : Container(),
-                           Positioned(
+                                    ),
+                                  ),
+                                )
+                              : Container(),
+                          Positioned(
                             top: 10,
                             left: 10,
                             child: GestureDetector(
@@ -374,25 +394,25 @@ class _MeetingPageState extends State<MeetingPage>
         height: 150,
         width: 100,
         color: Colors.black,
-        child: (isVideoOn && peers[0].track != null)
+        child: (isVideoOn && nodes[0].track != null)
             ? HMSVideoView(
-                track: peers[0].track!,
+                track: nodes[0].track!,
               )
             : Container(
-                              decoration: const BoxDecoration(
-                                color: Color.fromRGBO(20, 23, 28, 1),
-                              ),
-                              child: Center(
-                                child: CircleAvatar(
-                                    backgroundColor: Colors.purple,
-                                    radius: 36,
-                                    child: Text(
-                                      peers[0].peer.name[0],
-                                      style: const TextStyle(
-                                          fontSize: 36, color: Colors.white),
-                                    )),
-                              ),
-                            ),
+                decoration: const BoxDecoration(
+                  color: Color.fromRGBO(20, 23, 28, 1),
+                ),
+                child: Center(
+                  child: CircleAvatar(
+                      backgroundColor: Colors.purple,
+                      radius: 36,
+                      child: Text(
+                        nodes[0].peer.name[0],
+                        style:
+                            const TextStyle(fontSize: 36, color: Colors.white),
+                      )),
+                ),
+              ),
       ),
     );
   }

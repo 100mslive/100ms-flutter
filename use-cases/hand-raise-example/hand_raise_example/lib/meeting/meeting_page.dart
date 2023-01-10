@@ -390,7 +390,7 @@ class _MeetingPageState extends State<MeetingPage>
         break;
       case HMSActionResultListenerMethod.leave:
         _hmssdk.destroy();
-        log("Hand Raise successful");
+        log("Leave room successful");
         break;
     }
   }

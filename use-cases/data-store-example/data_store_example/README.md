@@ -1,16 +1,30 @@
 # data_store_example
 
-A new Flutter project.
+This example shows the usage of `PeerTrackNode` class to unify `HMSPeer` and `HMSTrack` for a peer.
+Let's have a look at the application:
 
-## Getting Started
+https://user-images.githubusercontent.com/93931528/211479051-353b986e-66d4-497f-a8a1-c204690da47d.mov
 
-This project is a starting point for a Flutter application.
+Let's have a look at the `PeerTrackNode` class:
 
-A few resources to get you started if this is your first Flutter project:
+```dart
+class PeerTrackNode {
+  HMSPeer peer;
+  String uid;
+  HMSVideoTrack? track;
+}
+```
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+- **uid**: uid is unique id for each peer
+       For normal video uid is defined as "peerId+mainVideo"
+       For screen share tracks it is defined as peerId+trackId
+- **peer**: peer is the HMSPeer object 
+- **track**: track is the HMSVideoTrack object for the peer.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+API's used in the application:
+
+- We are using `HMSUpdateListener` methods to get room updates like onJoin, onPeerUpdate, onTrackUpdate etc. More info regarding HMSUpdateListener can be found [here](https://www.100ms.live/docs/flutter/v2/features/update-listeners)
+
+- To leave room we are using `leave` method. More info can be found [here](https://www.100ms.live/docs/flutter/v2/features/leave)
+
+- For getting method callbacks regarding success or failure, we are using `HMSActionResultListener` callbacks. More info can be found [here](https://www.100ms.live/docs/flutter/v2/features/action-result-listeners)

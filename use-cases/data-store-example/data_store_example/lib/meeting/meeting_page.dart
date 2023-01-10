@@ -14,7 +14,7 @@ class MeetingPage extends StatefulWidget {
 
 class _MeetingPageState extends State<MeetingPage>
     implements HMSUpdateListener, HMSActionResultListener {
-  List<PeerTrackNode> peers = [];
+  List<PeerTrackNode> nodes = [];
   late HMSSDK _hmssdk;
   bool isAudioOn = true, isVideoOn = true;
 
@@ -28,11 +28,11 @@ class _MeetingPageState extends State<MeetingPage>
   }
 
   @override
-  void onHMSError({required HMSException error}) {}
+  void onHMSError({required HMSException error}) {
+    Utilities.showToast(msg: "${error.message}");
+  }
 
-  @override
-  void onJoin({required HMSRoom room}) {}
-
+  //Here we will get track updates after joining the room
   @override
   void onTrackUpdate(
       {required HMSTrack track,
@@ -52,63 +52,64 @@ class _MeetingPageState extends State<MeetingPage>
           isVideoOn = true;
         }
       }
-      updateUI();
+      setState((() => {}));
     }
     if (track.kind == HMSTrackKind.kHMSTrackKindVideo) {
       int index =
-          peers.indexWhere((node) => node.uid == "${peer.peerId}mainVideo");
+          nodes.indexWhere((node) => node.uid == "${peer.peerId}mainVideo");
       if (index != -1) {
-        peers[index].track = track as HMSVideoTrack;
+        nodes[index].track = track as HMSVideoTrack;
       } else {
         if (track.source == "SCREEN") {
-          peers.add(PeerTrackNode(
+          nodes.add(PeerTrackNode(
               peer: peer,
               uid: "${peer.peerId}${track.trackId}",
               track: track as HMSVideoTrack));
         } else {
           if (peer.isLocal) {
-            peers.insert(
+            nodes.insert(
                 0,
                 PeerTrackNode(
                     peer: peer,
                     uid: "${peer.peerId}mainVideo",
                     track: track as HMSVideoTrack));
           } else {
-            peers.add(PeerTrackNode(
+            nodes.add(PeerTrackNode(
                 peer: peer,
                 uid: "${peer.peerId}mainVideo",
                 track: track as HMSVideoTrack));
           }
         }
       }
-      updateUI();
+      setState((() => {}));
     }
   }
 
+//Here we will get all the peer update after joining the room
   @override
   void onPeerUpdate({required HMSPeer peer, required HMSPeerUpdate update}) {
     switch (update) {
       case HMSPeerUpdate.peerJoined:
         int index =
-            peers.indexWhere((node) => node.uid == "${peer.peerId}mainVideo");
+            nodes.indexWhere((node) => node.uid == "${peer.peerId}mainVideo");
         if (index == -1) {
           if (peer.isLocal) {
-            peers.insert(
+            nodes.insert(
                 0, PeerTrackNode(peer: peer, uid: "${peer.peerId}mainVideo"));
           } else {
-            peers
+            nodes
                 .add(PeerTrackNode(peer: peer, uid: "${peer.peerId}mainVideo"));
           }
         }
-        updateUI();
+        setState((() => {}));
         break;
       case HMSPeerUpdate.peerLeft:
         int index =
-            peers.indexWhere((node) => node.uid == "${peer.peerId}mainVideo");
+            nodes.indexWhere((node) => node.uid == "${peer.peerId}mainVideo");
         if (index != -1) {
-          peers.removeAt(index);
+          nodes.removeAt(index);
         }
-        updateUI();
+        setState((() => {}));
         break;
       case HMSPeerUpdate.roleUpdated:
         break;
@@ -129,15 +130,15 @@ class _MeetingPageState extends State<MeetingPage>
     Navigator.pop(context);
   }
 
-  void updateUI() {
+  @override
+  void setState(VoidCallback fn) {
     if (mounted) {
-      setState(() {});
+      super.setState(fn);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final heightofEachTile = MediaQuery.of(context).size.height / 2;
     final widthofEachTile = MediaQuery.of(context).size.width;
 
     return WillPopScope(
@@ -153,14 +154,13 @@ class _MeetingPageState extends State<MeetingPage>
               physics: const PageScrollPhysics(),
               slivers: [
                 SliverGrid(
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 1,
-                      mainAxisExtent: widthofEachTile,
-                      crossAxisSpacing: 5,
-                      childAspectRatio: heightofEachTile / widthofEachTile),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 5,
+                  ),
                   delegate: SliverChildBuilderDelegate(
-                      ((context, index) => (peers[index].track == null ||
-                              peers[index].track!.isMute)
+                      ((context, index) => (nodes[index].track == null ||
+                              nodes[index].track!.isMute)
                           ? Container(
                               decoration: const BoxDecoration(
                                 color: Color.fromRGBO(20, 23, 28, 1),
@@ -170,22 +170,22 @@ class _MeetingPageState extends State<MeetingPage>
                                     backgroundColor: Colors.purple,
                                     radius: 36,
                                     child: Text(
-                                      peers[index].peer.name[0],
+                                      nodes[index].peer.name[0],
                                       style: const TextStyle(
                                           fontSize: 36, color: Colors.white),
                                     )),
                               ),
                             )
                           : HMSVideoView(
-                              key: Key(peers[index].uid),
-                              track: peers[index].track!,
+                              key: Key(nodes[index].uid),
+                              track: nodes[index].track!,
                               scaleType: ScaleType.SCALE_ASPECT_FILL,
                             )),
-                      childCount: peers.length),
+                      childCount: nodes.length),
                 )
               ],
             ),
-            (peers.isNotEmpty && peers[0].peer.isLocal)
+            (nodes.isNotEmpty && nodes[0].peer.isLocal)
                 ? Padding(
                     padding: const EdgeInsets.only(bottom: 20.0),
                     child: Align(
@@ -279,6 +279,11 @@ class _MeetingPageState extends State<MeetingPage>
         ),
       ),
     );
+  }
+
+  @override
+  void onJoin({required HMSRoom room}) {
+    Utilities.showToast(msg: "Room Joined successfully");
   }
 
   @override

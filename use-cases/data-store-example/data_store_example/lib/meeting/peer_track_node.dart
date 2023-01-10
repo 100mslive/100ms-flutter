@@ -1,3 +1,7 @@
+//Class which unifies HMSPeer and HMSTrack for each peer
+///[uid] This is unique id for each peer
+///For normal video uid is defined as "peerId+mainVideo"
+///For screen share tracks it is defined as peerId+trackId
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 class PeerTrackNode {

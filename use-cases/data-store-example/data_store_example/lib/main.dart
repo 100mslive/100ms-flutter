@@ -43,7 +43,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   bool res = false;
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -69,8 +69,11 @@ class _MyHomePageState extends State<MyHomePage> {
               onPressed: () async => {
                 res = await Utilities.getPermissions(),
                 if (res)
-                  Navigator.push(context,
-                      CupertinoPageRoute(builder: (_) =>const  MeetingPage()))
+                  {
+                    //Navigatin to meeting screen
+                    Navigator.push(context,
+                        CupertinoPageRoute(builder: (_) => const MeetingPage()))
+                  }
               },
               child: const Padding(
                 padding: EdgeInsets.symmetric(vertical: 15, horizontal: 25),
@@ -80,8 +83,13 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ),
             ),
-            const SizedBox(height: 40,),
-            const Text("Data Store example",style: TextStyle(fontSize: 14,fontWeight: FontWeight.w600),)
+            const SizedBox(
+              height: 40,
+            ),
+            const Text(
+              "Data Store example",
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+            )
           ],
         ),
       ),
