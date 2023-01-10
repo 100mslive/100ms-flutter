@@ -354,10 +354,15 @@ class PlatformService {
           break;
         case HMSStatsListenerMethod.onLocalVideoStats:
           HMSPeer? peer = HMSPeer.fromMap(data['peer']);
+
           HMSLocalVideoTrack? track =
               HMSLocalVideoTrack.fromMap(map: data['track']);
-          HMSLocalVideoStats localVideoStats =
-              HMSLocalVideoStats.fromMap(data['local_video_stats'] as Map);
+
+          List<HMSLocalVideoStats> localVideoStats = [];
+          (data["local_video_stats"] as List).forEach((element) {
+            localVideoStats.add(HMSLocalVideoStats.fromMap(element as Map));
+          });
+
           notifyStatsListeners(method, {
             'local_video_stats': localVideoStats,
             "track": track,

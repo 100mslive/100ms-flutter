@@ -1,12 +1,11 @@
 enum HMSSimulcastLayer { high, mid, low }
 
-///HMSLogLevel for android and ios
 extension HMSSimulcastLayerValue on HMSSimulcastLayer {
   static HMSSimulcastLayer getHMSSimulcastLayerFromName(String name) {
-    switch (name) {
+    switch (name.toLowerCase()) {
       case 'high':
         return HMSSimulcastLayer.high;
-      case 'mid':
+      case 'medium':
         return HMSSimulcastLayer.mid;
       case 'low':
         return HMSSimulcastLayer.low;
@@ -21,7 +20,7 @@ extension HMSSimulcastLayerValue on HMSSimulcastLayer {
       case HMSSimulcastLayer.high:
         return 'high';
       case HMSSimulcastLayer.mid:
-        return 'mid';
+        return 'medium';
       case HMSSimulcastLayer.low:
         return 'low';
     }

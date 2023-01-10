@@ -10,7 +10,6 @@ enum HMSQualityLimitationReason {
   UNKNOWN
 }
 
-///HMSLogLevel for android and ios
 extension HMSQualityLimitationReasonValue on HMSQualityLimitationReason {
   static HMSQualityLimitationReason getHMSQualityLimitationReasonFromName(
       String name) {

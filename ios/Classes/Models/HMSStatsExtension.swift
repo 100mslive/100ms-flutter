@@ -28,7 +28,9 @@ class HMSStatsExtension {
         for stat in localVideoStats {
             var dict = [String: Any]()
 
-            dict["simulcast_layer_id"] = stat.simulcastLayerId
+            if let layerId = stat.simulcastLayerId {
+                dict["simulcast_layer_id"] = getSimulcastLayerID(from: layerId)
+            }
             dict["resolution"] = HMSVideoResolutionExtension.toDictionary(stat.resolution)
             dict["frame_rate"] = stat.frameRate
             dict["quality_limitations"] = getQualityLimitations(from: stat.qualityLimitations)
@@ -40,6 +42,19 @@ class HMSStatsExtension {
         }
 
         return statsArray
+    }
+    
+    static private func getSimulcastLayerID(from layerId: NSNumber) -> String {
+        
+        switch layerId {
+        case 0:
+            return "low"
+        case 1:
+            return "medium"
+            
+        default:
+            return "high"
+        }
     }
 
     static private func getQualityLimitations(from limitation: HMSQualityLimitationReasons) -> [String: Any] {
