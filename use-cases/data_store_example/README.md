@@ -23,8 +23,10 @@ class PeerTrackNode {
 
 API's used in the application:
 
-- We are using `HMSUpdateListener` methods to get room updates like onJoin, onPeerUpdate, onTrackUpdate etc. More info regarding HMSUpdateListener can be found [here](https://www.100ms.live/docs/flutter/v2/features/update-listeners)
+- To join room we are using  `join` method. More info can be found [here](https://www.100ms.live/docs/flutter/v2/features/join)
 
 - To leave room we are using `leave` method. More info can be found [here](https://www.100ms.live/docs/flutter/v2/features/leave)
+
+- We are using `HMSUpdateListener` methods to get room updates like onJoin, onPeerUpdate, onTrackUpdate etc. More info regarding HMSUpdateListener can be found [here](https://www.100ms.live/docs/flutter/v2/features/update-listeners)
 
 - For getting method callbacks regarding success or failure, we are using `HMSActionResultListener` callbacks. More info can be found [here](https://www.100ms.live/docs/flutter/v2/features/action-result-listeners)

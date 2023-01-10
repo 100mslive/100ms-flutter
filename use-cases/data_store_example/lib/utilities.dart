@@ -24,6 +24,8 @@ class Utilities {
   }
 
   static HMSConfig getHMSConfig() {
+    //Temporary authToken can be found on dashboard.
+    //To know how to get temporary token, check here: https://www.100ms.live/docs/flutter/v2/guides/token
     String authToken =
         "Enter your token here";
     return HMSConfig(authToken: authToken, userName: "test_username");
