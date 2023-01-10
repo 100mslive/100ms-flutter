@@ -43,15 +43,15 @@ class HMSStatsExtension {
 
         return statsArray
     }
-    
+
     static private func getSimulcastLayerID(from layerId: NSNumber) -> String {
-        
+
         switch layerId {
         case 0:
             return "low"
         case 1:
             return "medium"
-            
+
         default:
             return "high"
         }
