@@ -297,7 +297,7 @@ class HMSSDK {
   /// Refer [sendBroadcastMesssage guide here](https://www.100ms.live/docs/flutter/v2/features/chat#sending-broadcast-messages)
   Future<void> sendBroadcastMessage(
       {required String message,
-      String? type,
+      String type = "chat",
       HMSActionResultListener? hmsActionResultListener}) async {
     var arguments = {"message": message, "type": type};
     var result = await PlatformService.invokeMethod(
@@ -334,7 +334,7 @@ class HMSSDK {
   Future<void> sendGroupMessage(
       {required String message,
       required List<HMSRole> hmsRolesTo,
-      String? type,
+      String type = "chat",
       HMSActionResultListener? hmsActionResultListener}) async {
     List<String> rolesMap = [];
     hmsRolesTo.forEach((role) => rolesMap.add(role.name));
@@ -374,7 +374,7 @@ class HMSSDK {
   Future<void> sendDirectMessage(
       {required String message,
       required HMSPeer peerTo,
-      String? type,
+      String type = "chat",
       HMSActionResultListener? hmsActionResultListener}) async {
     var arguments = {
       "message": message,
