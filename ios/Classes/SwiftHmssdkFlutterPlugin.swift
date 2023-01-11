@@ -4,6 +4,7 @@ import HMSSDK
 import ReplayKit
 import AVKit
 import MediaPlayer
+import SwiftUI
 
 public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListener, FlutterStreamHandler, HMSPreviewListener, HMSLogger {
 
@@ -55,8 +56,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                 meetingEventChannel: FlutterEventChannel,
                 previewEventChannel: FlutterEventChannel,
                 logsEventChannel: FlutterEventChannel,
-                rtcStatsEventChannel: FlutterEventChannel
-    ) {
+                rtcStatsEventChannel: FlutterEventChannel) {
 
         self.channel = channel
         self.meetingEventChannel = meetingEventChannel
@@ -100,7 +100,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         if meetingEventChannel != nil {
             meetingEventChannel!.setStreamHandler(nil)
         } else {
-           print("meetingEventChannel not found", #function)
+            print("meetingEventChannel not found", #function)
         }
         if previewEventChannel != nil {
             previewEventChannel!.setStreamHandler(nil)
@@ -198,6 +198,9 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
         case "set_simulcast_layer", "get_layer", "get_layer_definition":
             HMSRemoteVideoTrackExtension.remoteVideoTrackActions(call, result, hmsSDK!)
+            
+        case "start_pip", "stop_pip":
+            print(#function, call)
 
         default:
             result(FlutterMethodNotImplemented)
@@ -776,7 +779,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         hmsSDK?.getSessionMetadata(completion: { metadata, _ in
             if let metadata = metadata {
                 let data = [
-                        "event_name": "session_metadata",
+                    "event_name": "session_metadata",
                     "data": [
                         "metadata": metadata
                     ]
@@ -870,8 +873,78 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                 "room": HMSRoomExtension.toDictionary(room)
             ]
         ] as [String: Any]
+        
+        
+        print(#function)
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5) { [weak self] in
+            self?.setupPIP()
+        }
 
         eventSink?(data)
+    }
+    
+    var pipVideoCallViewController: UIViewController?
+    var pipController: AVPictureInPictureController?
+    
+    func setupPIP() {
+        
+        print(#function)
+        
+        guard #available(iOS 15.0, *) else { return }
+        
+        guard AVPictureInPictureController.isPictureInPictureSupported() else { return }
+        
+        guard let uiView = UIApplication.shared.keyWindow?.visibleViewController?.view else { return }
+        
+        print(#function, "uiview", uiView, uiView.subviews)
+        
+        let scrollView = uiView.subviews[1] //uiView.subviews.first { $0.isKind(of: ChildClippingView.self) }
+        
+//        guard let scrollView = scrollView else { return }
+        
+        print(#function, "#1 scrollView: ", scrollView, uiView, uiView.subviews)
+        
+        let pipVideoCallViewController = AVPictureInPictureVideoCallViewController()
+        
+        self.pipVideoCallViewController = pipVideoCallViewController
+        
+        let model = PiPModel()
+        model.track = hmsSDK?.remotePeers?.first?.videoTrack
+        model.name = hmsSDK?.remotePeers?.first?.name
+        model.isVideoActive = true
+        model.pipViewEnabled = true
+    
+        
+        let controller = UIHostingController(rootView: PiPView(model: model))
+        
+        pipVideoCallViewController.view.addConstrained(subview: controller.view)
+        
+        pipVideoCallViewController.preferredContentSize = CGSize(width: scrollView.frame.size.width, height: scrollView.frame.size.height)
+        
+        let pipContentSource = AVPictureInPictureController.ContentSource(
+            activeVideoCallSourceView: scrollView,
+            contentViewController: pipVideoCallViewController)
+       
+        self.pipController = AVPictureInPictureController(contentSource: pipContentSource)
+        
+        self.pipController?.canStartPictureInPictureAutomaticallyFromInline = true
+        
+        self.pipController?.delegate = self
+       
+       
+        NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification,
+                                               object: nil, queue: .main) { [weak self] _ in
+            
+            print(#function, " #2 didBecomeActiveNotification")
+            self?.stopPiP()
+        }
+        
+        print(#function, "#3", scrollView, controller, pipVideoCallViewController, pipController!)
+    }
+    
+    func stopPiP() {
+        self.pipController?.stopPictureInPicture()
     }
 
     public func on(room: HMSRoom, update: HMSRoomUpdate) {
@@ -1151,4 +1224,67 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         }
     }
 
+}
+
+extension SwiftHmssdkFlutterPlugin: AVPictureInPictureControllerDelegate {
+    
+    public func pictureInPictureControllerWillStartPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
+        print(#function)
+    }
+    
+    public func pictureInPictureControllerDidStartPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
+        print(#function)
+    }
+    
+    public func pictureInPictureControllerDidStopPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
+        print(#function)
+    }
+    
+    public func pictureInPictureController(_ pictureInPictureController: AVPictureInPictureController, failedToStartPictureInPictureWithError error: Error) {
+        print(#function, error)
+        assertionFailure("failedToStartPictureInPictureWithError \(error)")
+    }
+    
+    public func pictureInPictureControllerWillStopPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
+        print(#function)
+    }
+    
+    public func pictureInPictureController(_ pictureInPictureController: AVPictureInPictureController, restoreUserInterfaceForPictureInPictureStopWithCompletionHandler completionHandler: @escaping (Bool) -> Void) {
+        print(#function)
+    }
+}
+
+
+extension UIView {
+    func addConstrained(subview: UIView) {
+        addSubview(subview)
+        subview.translatesAutoresizingMaskIntoConstraints = false
+        subview.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        subview.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+        subview.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
+        subview.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+    }
+}
+
+extension UIWindow {
+    /// Returns the currently visible view controller if any reachable within the window.
+    public var visibleViewController: UIViewController? {
+        return UIWindow.visibleViewController(from: rootViewController)
+    }
+
+    public static func visibleViewController(from viewController: UIViewController?) -> UIViewController? {
+        switch viewController {
+        case let navigationController as UINavigationController:
+            return UIWindow.visibleViewController(from: navigationController.visibleViewController ?? navigationController.topViewController)
+
+        case let tabBarController as UITabBarController:
+            return UIWindow.visibleViewController(from: tabBarController.selectedViewController)
+
+        case let presentingViewController where viewController?.presentedViewController != nil:
+            return UIWindow.visibleViewController(from: presentingViewController?.presentedViewController)
+
+        default:
+            return viewController
+        }
+    }
 }

@@ -33,7 +33,7 @@ class HMSSDKInteractor {
         joinWithMutedAudio: joinWithMutedAudio,
         isSoftwareDecoderDisabled: isSoftwareDecoderDisabled);
     hmsSDK = HMSSDK(
-        appGroup: appGroup,
+        appGroup: 'group.live.100ms.videoapp',
         preferredExtension: preferredExtension,
         hmsLogSettings: hmsLogSettings,
         hmsTrackSetting: trackSetting);

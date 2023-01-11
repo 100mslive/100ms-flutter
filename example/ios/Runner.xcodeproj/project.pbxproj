@@ -80,9 +80,9 @@
 		EC1052B12858A77D005EAB9E /* ReplayKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ReplayKit.framework; path = System/Library/Frameworks/ReplayKit.framework; sourceTree = SDKROOT; };
 		EC1052B42858A77D005EAB9E /* SampleHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleHandler.swift; sourceTree = "<group>"; };
 		EC1052B62858A77D005EAB9E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		EC3386D4296EBF6B00F565A8 /* Runner.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = Runner.entitlements; sourceTree = "<group>"; };
 		EC638D182858ABE8005D0AF2 /* FlutterBroadcastUploadExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = FlutterBroadcastUploadExtension.entitlements; sourceTree = "<group>"; };
 		EC9BCD2A26B1CFDB00D378A0 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
-		ECFB42B6269F435A00A7BDB6 /* Runner.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Runner.entitlements; sourceTree = "<group>"; };
 		FA1DA48EB088E64EABD2ADFE /* Pods-FlutterBroadcastUploadExtension.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FlutterBroadcastUploadExtension.debug.xcconfig"; path = "Target Support Files/Pods-FlutterBroadcastUploadExtension/Pods-FlutterBroadcastUploadExtension.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -153,7 +153,7 @@
 			isa = PBXGroup;
 			children = (
 				EC9BCD2A26B1CFDB00D378A0 /* GoogleService-Info.plist */,
-				ECFB42B6269F435A00A7BDB6 /* Runner.entitlements */,
+				EC3386D4296EBF6B00F565A8 /* Runner.entitlements */,
 				97C146FA1CF9000F007C117D /* Main.storyboard */,
 				97C146FD1CF9000F007C117D /* Assets.xcassets */,
 				97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */,
@@ -527,10 +527,10 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.4.50;
-				PRODUCT_BUNDLE_IDENTIFIER = live.100ms.flutter;
+				PRODUCT_BUNDLE_IDENTIFIER = live.100ms.videoapp;
 				"PRODUCT_BUNDLE_IDENTIFIER[sdk=macosx*]" = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = FlutterAdHocDistribution;
+				PROVISIONING_PROFILE_SPECIFIER = "match AdHoc live.100ms.videoapp";
 				SUPPORTS_MACCATALYST = NO;
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
@@ -671,7 +671,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.4.50;
-				PRODUCT_BUNDLE_IDENTIFIER = live.100ms.flutter;
+				PRODUCT_BUNDLE_IDENTIFIER = live.100ms.videoapp;
 				"PRODUCT_BUNDLE_IDENTIFIER[sdk=macosx*]" = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -704,10 +704,10 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.4.50;
-				PRODUCT_BUNDLE_IDENTIFIER = live.100ms.flutter;
+				PRODUCT_BUNDLE_IDENTIFIER = live.100ms.videoapp;
 				"PRODUCT_BUNDLE_IDENTIFIER[sdk=macosx*]" = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = FlutterAdHocDistribution;
+				PROVISIONING_PROFILE_SPECIFIER = "match AdHoc live.100ms.videoapp";
 				SUPPORTS_MACCATALYST = NO;
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
@@ -747,7 +747,7 @@
 				MARKETING_VERSION = 1.4.50;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = live.100ms.flutter.FlutterBroadcastUploadExtension;
+				PRODUCT_BUNDLE_IDENTIFIER = live.100ms.videoapp.screenshare;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
@@ -789,9 +789,9 @@
 				);
 				MARKETING_VERSION = 1.4.50;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = live.100ms.flutter.FlutterBroadcastUploadExtension;
+				PRODUCT_BUNDLE_IDENTIFIER = live.100ms.videoapp.screenshare;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = FlutterAdhocBroadcastUploadExtension;
+				PROVISIONING_PROFILE_SPECIFIER = "match AdHoc live.100ms.videoapp.screenshare";
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -829,9 +829,9 @@
 				);
 				MARKETING_VERSION = 1.4.50;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = live.100ms.flutter.FlutterBroadcastUploadExtension;
+				PRODUCT_BUNDLE_IDENTIFIER = live.100ms.videoapp.screenshare;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = FlutterAdhocBroadcastUploadExtension;
+				PROVISIONING_PROFILE_SPECIFIER = "match AdHoc live.100ms.videoapp.screenshare";
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
