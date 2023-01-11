@@ -26,10 +26,29 @@ class PreviewDetails extends StatefulWidget {
 
 class _PreviewDetailsState extends State<PreviewDetails> {
   TextEditingController nameController = TextEditingController();
+  late PreviewStore _previewStore;
+  late MeetingStore _meetingStore;
+
   @override
   void initState() {
     super.initState();
     loadData();
+  }
+
+  void setPreviewStore(
+      {required bool joinWithMutedAudio,
+      required bool joinWithMutedVideo,
+      required bool isSoftwareDecoderDisabled,
+      required bool isAudioMixerDisabled}) {
+    _previewStore = PreviewStore(
+        joinWithMutedAudio: joinWithMutedAudio,
+        joinWithMutedVideo: joinWithMutedVideo,
+        isSoftwareDecoderDisabled: isSoftwareDecoderDisabled,
+        isAudioMixerDisabled: isAudioMixerDisabled);
+  }
+
+  void setMeetingStore(HMSSDKInteractor _hmsSDKInteractor) {
+    _meetingStore = MeetingStore(hmsSDKInteractor: _hmsSDKInteractor);
   }
 
   void loadData() async {
@@ -57,13 +76,14 @@ class _PreviewDetailsState extends State<PreviewDetails> {
           await Utilities.getBoolData(key: 'audio-mixer-disabled') ?? true;
       if (res) {
         if (!skipPreview) {
+          setPreviewStore(
+              joinWithMutedAudio: joinWithMutedAudio,
+              joinWithMutedVideo: joinWithMutedVideo,
+              isSoftwareDecoderDisabled: isSoftwareDecoderDisabled,
+              isAudioMixerDisabled: isAudioMixerDisabled);
           Navigator.of(context).pushReplacement(MaterialPageRoute(
               builder: (_) => ListenableProvider.value(
-                    value: PreviewStore(
-                        joinWithMutedAudio: joinWithMutedAudio,
-                        joinWithMutedVideo: joinWithMutedVideo,
-                        isSoftwareDecoderDisabled: isSoftwareDecoderDisabled,
-                        isAudioMixerDisabled: isAudioMixerDisabled),
+                    value: _previewStore,
                     child: PreviewPage(
                         meetingFlow: widget.meetingFlow,
                         name: nameController.text,
@@ -82,9 +102,10 @@ class _PreviewDetailsState extends State<PreviewDetails> {
               joinWithMutedVideo: joinWithMutedVideo,
               isSoftwareDecoderDisabled: isSoftwareDecoderDisabled,
               isAudioMixerDisabled: isAudioMixerDisabled);
+          setMeetingStore(_hmsSDKInteractor);
           Navigator.of(context).pushReplacement(MaterialPageRoute(
               builder: (_) => ListenableProvider.value(
-                    value: MeetingStore(hmsSDKInteractor: _hmsSDKInteractor),
+                    value: _meetingStore,
                     child: HLSScreenController(
                       isRoomMute: false,
                       isStreamingLink: widget.meetingFlow == MeetingFlow.meeting

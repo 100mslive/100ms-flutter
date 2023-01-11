@@ -12,6 +12,7 @@ import 'package:hmssdk_flutter_example/common/constant.dart';
 class TitleBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    MeetingStore _meetingStore = context.read<MeetingStore>();
     return GestureDetector(
       onTap: () => showModalBottomSheet(
           backgroundColor: themeBottomSheetColor,
@@ -20,7 +21,7 @@ class TitleBar extends StatelessWidget {
             borderRadius: BorderRadius.circular(20),
           ),
           builder: (ctx) => ChangeNotifierProvider.value(
-              value: context.read<MeetingStore>(),
+              value: _meetingStore,
               child: HLSParticipantSheet()),
           isScrollControlled: true),
       child: Selector<MeetingStore, String?>(
