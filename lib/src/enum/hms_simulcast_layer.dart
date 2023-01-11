@@ -11,7 +11,7 @@ extension HMSSimulcastLayerValue on HMSSimulcastLayer {
       case 'low':
         return HMSSimulcastLayer.low;
       default:
-        return HMSSimulcastLayer.mid;
+        return HMSSimulcastLayer.high;
     }
   }
 
@@ -25,7 +25,7 @@ extension HMSSimulcastLayerValue on HMSSimulcastLayer {
       case HMSSimulcastLayer.low:
         return 'low';
       default:
-        return 'mid';
+        return 'high';
     }
   }
 }

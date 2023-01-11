@@ -40,32 +40,28 @@ class Stats extends StatelessWidget {
                 peerTrackNode.networkQuality),
             builder: (_, data, __) {
               return Container(
-                  height: 100,
                   padding: EdgeInsets.all(5),
                   margin: EdgeInsets.all(2),
                   decoration: BoxDecoration(
                       color: Colors.black38.withOpacity(0.3),
                       borderRadius: BorderRadius.all(Radius.circular(10))),
-                  child: SingleChildScrollView(
-                    physics: AlwaysScrollableScrollPhysics(),
-                    child: ListView(
-                      physics: NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      children: [
-                        if ((data.item3 != null) &&
-                            (data.item3!.hmsLocalVideoStats != null))
-                          ...data.item3!.hmsLocalVideoStats!
-                              .map((videoStats) => localVideoStats(videoStats))
-                              .toList(),
-                        Text("Downlink\t ${data.item4 ?? "-1"}",
-                            style: GoogleFonts.inter(
-                                color: iconColor, fontSize: 12)),
-                        Text(
-                            "Bitrate(A)\t ${data.item3?.hmsLocalAudioStats?.bitrate.toStringAsFixed(2) ?? "0.00"}",
-                            style: GoogleFonts.inter(
-                                color: iconColor, fontSize: 12)),
-                      ],
-                    ),
+                  child: ListView(
+                    shrinkWrap: true,
+                    children: [
+                      if ((data.item3 != null) &&
+                          (data.item3!.hmsLocalVideoStats != null))
+                        localVideoStats(data.item3!.hmsLocalVideoStats!),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text("Downlink\t ${data.item4 ?? "-1"}",
+                          style: GoogleFonts.inter(
+                              color: iconColor, fontSize: 12)),
+                      Text(
+                          "Bitrate(A)\t ${data.item3?.hmsLocalAudioStats?.bitrate.toStringAsFixed(2) ?? "0.00"}",
+                          style: GoogleFonts.inter(
+                              color: iconColor, fontSize: 12)),
+                    ],
                   ));
             })
         : Selector<PeerTrackNode, Tuple4<double?, double?, RTCStats?, int?>>(
@@ -123,29 +119,96 @@ class Stats extends StatelessWidget {
             });
   }
 
-  Widget localVideoStats(HMSLocalVideoStats? videoStats) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
+  Widget localVideoStats(List<HMSLocalVideoStats?> videoStats) {
+    Map<int, TableColumnWidth> columnWidth = {0:FixedColumnWidth(50)};
+
+    return Table(
+      columnWidths: columnWidth,
       children: [
-        Text(
-          "${HMSSimulcastLayerValue.getValueFromHMSSimulcastLayer(videoStats?.hmsLayer).toUpperCase()}",
-          style:
-              GoogleFonts.inter(color: iconColor, fontWeight: FontWeight.bold),
-        ),
-        Text(
-          "Width\t ${videoStats?.resolution.width.toStringAsFixed(2) ?? "0.00"}",
-          style: GoogleFonts.inter(color: iconColor, fontSize: 12),
-        ),
-        Text(
-            "Height\t ${videoStats?.resolution.height.toStringAsFixed(2) ?? "0.00"}",
-            style: GoogleFonts.inter(color: iconColor, fontSize: 12)),
-        Text("FPS\t ${videoStats?.frameRate.toStringAsFixed(2) ?? "0.00"}",
-            style: GoogleFonts.inter(color: iconColor, fontSize: 12)),
-        Text("Bitrate(V)\t ${videoStats?.bitrate.toStringAsFixed(2) ?? "0.00"}",
-            style: GoogleFonts.inter(color: iconColor, fontSize: 12)),
-        Text("Quality Limitation: ${videoStats?.hmsQualityLimitationReasons?.reason.name??""}",
-        style: GoogleFonts.inter(color: iconColor, fontSize: 12)),
+        TableRow(children: [
+          Text("Layer",
+              style: GoogleFonts.inter(
+                  color: iconColor, fontWeight: FontWeight.bold, fontSize: 10)),
+          ...videoStats
+              .map((layerStats) => Text(
+                  HMSSimulcastLayerValue.getValueFromHMSSimulcastLayer(
+                          layerStats?.hmsLayer)
+                      .toUpperCase(),
+                  style: GoogleFonts.inter(
+                      color: iconColor,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 10)))
+              .toList()
+        ]),
+        TableRow(children: [
+          Text("Width",
+              style: GoogleFonts.inter(
+                  color: iconColor, fontWeight: FontWeight.bold, fontSize: 10)),
+          ...videoStats
+              .map(
+                (layerStats) => Text(
+                  "${layerStats?.resolution.width.toStringAsFixed(2) ?? "0.00"}",
+                  style: GoogleFonts.inter(color: iconColor, fontSize: 10),
+                ),
+              )
+              .toList()
+        ]),
+        TableRow(children: [
+          Text("Height",
+              style: GoogleFonts.inter(
+                  color: iconColor, fontWeight: FontWeight.bold, fontSize: 10)),
+          ...videoStats
+              .map(
+                (layerStats) => Text(
+                  "${layerStats?.resolution.height.toStringAsFixed(2) ?? "0.00"}",
+                  style: GoogleFonts.inter(color: iconColor, fontSize: 10),
+                ),
+              )
+              .toList()
+        ]),
+        TableRow(children: [
+          Text("FPS",
+              style: GoogleFonts.inter(
+                  color: iconColor, fontWeight: FontWeight.bold, fontSize: 10)),
+          ...videoStats
+              .map(
+                (layerStats) => Text(
+                  "${layerStats?.frameRate.toStringAsFixed(2) ?? "0.00"}",
+                  style: GoogleFonts.inter(color: iconColor, fontSize: 10),
+                ),
+              )
+              .toList()
+        ]),
+        TableRow(children: [
+          Text(
+            "Bitrate(V)",
+            style: GoogleFonts.inter(
+                color: iconColor, fontWeight: FontWeight.bold, fontSize: 10),
+          ),
+          ...videoStats
+              .map(
+                (layerStats) => Text(
+                  "${layerStats?.bitrate.toStringAsFixed(2) ?? "0.00"}",
+                  style: GoogleFonts.inter(color: iconColor, fontSize: 10),
+                ),
+              )
+              .toList()
+        ]),
+        TableRow(children: [
+          Text(
+            "Quality Limitation",
+            style: GoogleFonts.inter(
+                color: iconColor, fontWeight: FontWeight.bold, fontSize: 10),
+          ),
+          ...videoStats
+              .map(
+                (layerStats) => Text(
+                  "${layerStats?.hmsQualityLimitationReasons?.reason.name ?? ""}",
+                  style: GoogleFonts.inter(color: iconColor, fontSize: 10),
+                ),
+              )
+              .toList()
+        ]),
       ],
     );
   }

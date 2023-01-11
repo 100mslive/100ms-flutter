@@ -26,7 +26,7 @@ class HMSSimulcastLayerDefinitionExtension {
             case .low:
                 return "low"
             default:
-                return ""
+                return "high"
             }
     }
 
@@ -39,7 +39,7 @@ class HMSSimulcastLayerDefinitionExtension {
         case "low":
             return .low
         default:
-            return .mid
+            return .high
         }
     }
 }
