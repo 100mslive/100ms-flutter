@@ -34,7 +34,7 @@ class Stats extends StatelessWidget {
     return isLocal
         ? Selector<PeerTrackNode, Tuple4<double?, double?, RTCStats?, int?>>(
             selector: (_, peerTrackNode) => Tuple4(
-                peerTrackNode.stats?.hmsLocalVideoStats?[0].bitrate,
+                peerTrackNode.stats?.hmsLocalVideoStats?.fold(0, (previousValue, element) => previousValue!+element.bitrate),
                 peerTrackNode.stats?.hmsLocalAudioStats?.bitrate,
                 peerTrackNode.stats,
                 peerTrackNode.networkQuality),
