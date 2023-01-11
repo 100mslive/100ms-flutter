@@ -16,7 +16,7 @@ extension HMSSimulcastLayerValue on HMSSimulcastLayer {
   }
 
   static String getValueFromHMSSimulcastLayer(
-      HMSSimulcastLayer hmsSimulcastLayer) {
+      HMSSimulcastLayer? hmsSimulcastLayer) {
     switch (hmsSimulcastLayer) {
       case HMSSimulcastLayer.high:
         return 'high';
@@ -24,6 +24,8 @@ extension HMSSimulcastLayerValue on HMSSimulcastLayer {
         return 'mid';
       case HMSSimulcastLayer.low:
         return 'low';
+      default:
+        return 'mid';
     }
   }
 }

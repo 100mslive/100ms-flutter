@@ -28,26 +28,45 @@ class HMSStatsExtension {
         for stat in localVideoStats {
             var dict = [String: Any]()
 
-            dict["simulcast_layer_id"] = stat.simulcastLayerId
+            if let layerId = stat.simulcastLayerId {
+                dict["hms_layer"] = HMSSimulcastLayerDefinitionExtension.getStringFromLayer(layer: HMSSimulcastLayer(rawValue: layerId as! UInt))
+            }
             dict["resolution"] = HMSVideoResolutionExtension.toDictionary(stat.resolution)
             dict["frame_rate"] = stat.frameRate
-            dict["quality_limitations"] = getQualityLimitations(from: stat.qualityLimitations)
-
+            dict["quality_limitation_reason"] = getQualityLimitations(stat.qualityLimitations)
+            dict["bitrate"] =  stat.bitrate
+            dict["round_trip_time"] =  stat.roundTripTime
+            dict["bytes_sent"] =  stat.bytesSent
             statsArray.append(dict)
         }
 
         return statsArray
     }
 
-    static private func getQualityLimitations(from limitation: HMSQualityLimitationReasons) -> [String: Any] {
+    static private func getQualityLimitations(_ limitation: HMSQualityLimitationReasons) -> [String: Any] {
         [
             "bandwidth": limitation.bandwidth,
             "cpu": limitation.cpu,
             "none": limitation.none,
             "other": limitation.other,
-            "quality_limitation_resolution_changes": limitation.qualityLimitationResolutionChanges,
-            "reason": limitation.reason.rawValue
+            "quality_limitation_resolution_changes": Double(limitation.qualityLimitationResolutionChanges),
+            "reason": getStringFromLimitationReason(limitation.reason)
         ]
+    }
+    
+    static private func getStringFromLimitationReason(_ reason: HMSQualityLimitationReason)-> String{
+        switch reason {
+        case .CPU:
+            return "CPU"
+        case .bandwidth:
+            return "BANDWIDTH"
+        case .none:
+            return "NONE"
+        case .other:
+            return "OTHER"
+        default:
+            return "UNKNOWN"
+        }
     }
 
     static func toDictionary(_ hmsRemoteAudioStats: HMSRemoteAudioStats) -> [String: Any] {

@@ -17,7 +17,7 @@ class HMSSimulcastLayerDefinitionExtension {
 
         return dict
     }
-    static func getStringFromLayer(layer: HMSSimulcastLayer) -> String {
+    static func getStringFromLayer(layer: HMSSimulcastLayer?) -> String {
         switch layer {
             case .high:
                 return "high"

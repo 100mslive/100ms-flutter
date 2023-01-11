@@ -26,7 +26,7 @@ class HMSVideoView(
         hmsVideoView = view.findViewById(R.id.hmsVideoView)
         hmsVideoView.setEnableHardwareScaler(false)
         hmsVideoView.setMirror(setMirror)
-        hmsVideoView.setAutoSimulcast(isAutoSimulcast)
+        hmsVideoView.disableAutoSimulcastLayerSelect(!isAutoSimulcast)
         if ((scaleType ?: 0) <= RendererCommon.ScalingType.values().size) {
             hmsVideoView.setScalingType(RendererCommon.ScalingType.values()[scaleType ?: 0])
         }

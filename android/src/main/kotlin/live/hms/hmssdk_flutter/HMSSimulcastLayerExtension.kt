@@ -24,7 +24,7 @@ class HMSSimulcastLayerExtension {
             }
         }
 
-        fun getStringFromLayer(layer: HMSLayer): String {
+        fun getStringFromLayer(layer: HMSLayer?): String {
             return when (layer) {
                 HMSLayer.HIGH -> "high"
                 HMSLayer.MEDIUM -> "medium"
