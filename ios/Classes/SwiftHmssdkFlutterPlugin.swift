@@ -1027,7 +1027,8 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         }
     }
 
-    public func on(localVideoStats: HMSLocalVideoStats, track: HMSLocalVideoTrack, peer: HMSPeer) {
+    public func on(localVideoStats: [HMSLocalVideoStats], track: HMSLocalVideoTrack, peer: HMSPeer) {
+
         if isStatsActive {
             let data = [
                 "event_name": "on_local_video_stats",

@@ -146,7 +146,7 @@ class _NotificationSettingsState extends State<NotificationSettings> {
                         onChanged: (value) => {
                               peerLeaveNotif = value,
                               Utilities.saveBoolData(
-                                  key: 'peer_leave_notif', value: value),
+                                  key: 'peer-leave-notif', value: value),
                               setState(() {})
                             }),
                   ),

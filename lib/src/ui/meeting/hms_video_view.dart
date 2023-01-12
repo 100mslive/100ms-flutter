@@ -30,7 +30,7 @@ class HMSVideoView extends StatelessWidget {
 
   final ScaleType scaleType;
   final bool setMirror;
-  final bool isAutoSimulcast;
+  final bool disableAutoSimulcastLayerSelect;
 
   HMSVideoView(
       {Key? key,
@@ -38,7 +38,7 @@ class HMSVideoView extends StatelessWidget {
       this.setMirror = false,
       this.matchParent = true,
       this.scaleType = ScaleType.SCALE_ASPECT_FIT,
-      this.isAutoSimulcast = true})
+      this.disableAutoSimulcastLayerSelect = false})
       : super(key: key);
 
   @override
@@ -48,7 +48,7 @@ class HMSVideoView extends StatelessWidget {
       matchParent: this.matchParent,
       setMirror: setMirror,
       scaleType: this.scaleType,
-      isAutoSimulcast: isAutoSimulcast,
+      disableAutoSimulcastLayerSelect: disableAutoSimulcastLayerSelect,
     );
   }
 }
@@ -59,7 +59,7 @@ class _PlatformView extends StatelessWidget {
   final bool setMirror;
   final bool matchParent;
   final ScaleType scaleType;
-  final bool isAutoSimulcast;
+  final bool disableAutoSimulcastLayerSelect;
 
   _PlatformView(
       {Key? key,
@@ -67,7 +67,7 @@ class _PlatformView extends StatelessWidget {
       this.setMirror = false,
       this.matchParent = true,
       required this.scaleType,
-      this.isAutoSimulcast = true})
+      this.disableAutoSimulcastLayerSelect = false})
       : super(key: key);
 
   void onPlatformViewCreated(int id) {}
@@ -85,7 +85,7 @@ class _PlatformView extends StatelessWidget {
           'set_mirror': track.source != "REGULAR" ? false : setMirror,
           'scale_type': scaleType.value,
           'match_parent': matchParent,
-          'is_auto_simulcast': isAutoSimulcast
+          'disable_auto_simulcast_layer_select': disableAutoSimulcastLayerSelect
         },
         gestureRecognizers: {},
       );
@@ -100,7 +100,7 @@ class _PlatformView extends StatelessWidget {
           'set_mirror': track.source != "REGULAR" ? false : setMirror,
           'scale_type': scaleType.value,
           'match_parent': matchParent,
-          'is_auto_simulcast': isAutoSimulcast
+          'disable_auto_simulcast_layer_select': disableAutoSimulcastLayerSelect
         },
         gestureRecognizers: {},
       );
