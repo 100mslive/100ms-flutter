@@ -33,7 +33,6 @@ class PreviewPage extends StatefulWidget {
 }
 
 class _PreviewPageState extends State<PreviewPage> {
-
   late MeetingStore _meetingStore;
   @override
   void initState() {
@@ -44,11 +43,9 @@ class _PreviewPageState extends State<PreviewPage> {
     initPreview();
   }
 
-  void setMeetingStore(PreviewStore _previewStore){
+  void setMeetingStore(PreviewStore _previewStore) {
     _meetingStore = MeetingStore(
-      hmsSDKInteractor:
-          _previewStore
-              .hmsSDKInteractor!,
+      hmsSDKInteractor: _previewStore.hmsSDKInteractor!,
     );
   }
 

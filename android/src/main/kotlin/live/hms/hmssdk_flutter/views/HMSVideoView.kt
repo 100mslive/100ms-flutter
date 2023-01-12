@@ -40,10 +40,9 @@ class HMSVideoView(
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        if(track != null){
+        if (track != null) {
             hmsVideoView.addTrack(track)
-        }
-        else{
+        } else {
             Log.e("HMSVideoView Error", "track is null, cannot attach null track")
         }
     }

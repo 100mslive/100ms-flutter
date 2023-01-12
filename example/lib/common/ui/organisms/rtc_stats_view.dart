@@ -34,7 +34,10 @@ class Stats extends StatelessWidget {
     return isLocal
         ? Selector<PeerTrackNode, Tuple4<double?, double?, RTCStats?, int?>>(
             selector: (_, peerTrackNode) => Tuple4(
-                peerTrackNode.stats?.hmsLocalVideoStats?.fold(0, (previousValue, element) => previousValue!+element.bitrate),
+                peerTrackNode.stats?.hmsLocalVideoStats?.fold(
+                    0,
+                    (previousValue, element) =>
+                        previousValue! + element.bitrate),
                 peerTrackNode.stats?.hmsLocalAudioStats?.bitrate,
                 peerTrackNode.stats,
                 peerTrackNode.networkQuality),
@@ -120,7 +123,7 @@ class Stats extends StatelessWidget {
   }
 
   Widget localVideoStats(List<HMSLocalVideoStats?> videoStats) {
-    Map<int, TableColumnWidth> columnWidth = {0:FixedColumnWidth(50)};
+    Map<int, TableColumnWidth> columnWidth = {0: FixedColumnWidth(50)};
 
     return Table(
       columnWidths: columnWidth,

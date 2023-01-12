@@ -88,8 +88,7 @@ class _HLSMoreSettingsState extends State<HLSMoreSettings> {
                         ),
                         context: context,
                         builder: (ctx) => ChangeNotifierProvider.value(
-                            value: _meetingStore,
-                            child: HLSDeviceSettings()),
+                            value: _meetingStore, child: HLSDeviceSettings()),
                       );
                     },
                     contentPadding: EdgeInsets.zero,
@@ -120,8 +119,7 @@ class _HLSMoreSettingsState extends State<HLSMoreSettings> {
                         ),
                         context: context,
                         builder: (ctx) => ChangeNotifierProvider.value(
-                            value: _meetingStore,
-                            child: MeetingModeSheet()),
+                            value: _meetingStore, child: MeetingModeSheet()),
                       );
                     },
                     contentPadding: EdgeInsets.zero,

@@ -79,7 +79,7 @@ class HMSFlutterPlatformViewFactory: NSObject, FlutterPlatformViewFactory {
             print(errorMsg)
             return nil
         }
-        
+
         guard let room = plugin.hmsSDK?.room
         else {
             let errorMsg = "\(#function) Could not find room for trackID: \(trackID)"
@@ -87,7 +87,7 @@ class HMSFlutterPlatformViewFactory: NSObject, FlutterPlatformViewFactory {
             print(errorMsg)
             return nil
         }
-        
+
         guard let videoTrack = HMSUtilities.getVideoTrack(for: trackID, in: room)
         else {
             let errorMsg = "\(#function) Could not find video track in room with trackID: \(trackID)"

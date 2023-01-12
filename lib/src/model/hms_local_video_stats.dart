@@ -48,9 +48,9 @@ class HMSLocalVideoStats {
                 ? HMSQualityLimitationReasons.fromMap(
                     map["quality_limitation_reason"])
                 : null,
-        hmsLayer: map.containsKey("hms_layer")?
-        HMSSimulcastLayerValue.getHMSSimulcastLayerFromName(map["hms_layer"]):null
-        );
+        hmsLayer: map.containsKey("hms_layer")
+            ? HMSSimulcastLayerValue.getHMSSimulcastLayerFromName(
+                map["hms_layer"])
+            : null);
   }
-  
 }

@@ -45,14 +45,14 @@ class HMSFlutterPlatformView: NSObject, FlutterPlatformView {
         videoView?.videoContentMode = videoContentMode
         videoView?.mirror = mirror
         videoView?.disableAutoSimulcastLayerSelect = disableAutoSimulcastLayerSelect
-        
+
         if let track = videoTrack {
             videoView?.setVideoTrack(track)
         } else {
             let errorMsg = "\(#function) Could not find video track to attach to Video View"
             print(errorMsg)
         }
-        
+
         return videoView!
     }
 

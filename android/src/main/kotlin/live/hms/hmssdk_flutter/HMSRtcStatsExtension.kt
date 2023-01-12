@@ -66,7 +66,7 @@ class HMSRtcStatsExtension {
 
             val hmsLocalVideoStatsMap = ArrayList<HashMap<String, Any?>>()
 
-            hmsLocalVideoStats.forEach{
+            hmsLocalVideoStats.forEach {
                 val layerStatsMap = HashMap<String, Any?>()
                 layerStatsMap["bytes_sent"] = it.bytesSent
                 layerStatsMap["bitrate"] = it.bitrate
@@ -78,7 +78,7 @@ class HMSRtcStatsExtension {
                 hmsLocalVideoStatsMap.add(layerStatsMap)
             }
 
-            args["local_video_stats"] =  hmsLocalVideoStatsMap
+            args["local_video_stats"] = hmsLocalVideoStatsMap
             return args
         }
 

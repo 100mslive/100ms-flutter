@@ -21,8 +21,7 @@ class TitleBar extends StatelessWidget {
             borderRadius: BorderRadius.circular(20),
           ),
           builder: (ctx) => ChangeNotifierProvider.value(
-              value: _meetingStore,
-              child: HLSParticipantSheet()),
+              value: _meetingStore, child: HLSParticipantSheet()),
           isScrollControlled: true),
       child: Selector<MeetingStore, String?>(
           selector: (_, meetingStore) => meetingStore.highestSpeaker,

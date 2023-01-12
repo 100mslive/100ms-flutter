@@ -1151,14 +1151,14 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             }
         }
     }
-    
+
     func sendCustomError(_ errorDict: [String: Any]) {
-        
+
         let data = [
             "event_name": "on_error",
             "data": errorDict
         ] as [String: Any]
-        
+
         eventSink?(data)
     }
 }

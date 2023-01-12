@@ -53,8 +53,8 @@ class HMSStatsExtension {
             "reason": getStringFromLimitationReason(limitation.reason)
         ]
     }
-    
-    static private func getStringFromLimitationReason(_ reason: HMSQualityLimitationReason)-> String{
+
+    static private func getStringFromLimitationReason(_ reason: HMSQualityLimitationReason) -> String {
         switch reason {
         case .CPU:
             return "CPU"

@@ -69,14 +69,16 @@ class HMSVideoViewFactory(private val plugin: HmssdkFlutterPlugin) :
         val room = plugin.hmssdk!!.getRoom()
 
         val track = HmsUtilities.getVideoTrack(trackId!!, room!!)
-        if(track == null){
+        if (track == null) {
             val args = HashMap<String, Any?>()
             args["event_name"] = "on_error"
-            val hmsException = HMSException(action = "Check the trackId for the track",
-                                            code = 6004,
-                                            description = "There is no track corresponding to the given trackId",
-                                            message = "Video track is null for corresponding trackId",
-                                            name = "HMSVideoView Error")
+            val hmsException = HMSException(
+                action = "Check the trackId for the track",
+                code = 6004,
+                description = "There is no track corresponding to the given trackId",
+                message = "Video track is null for corresponding trackId",
+                name = "HMSVideoView Error"
+            )
             args["data"] = HMSExceptionExtension.toDictionary(hmsException)
             plugin.onVideoViewError(args)
         }
