@@ -110,10 +110,6 @@ Add the following permissions in the Android's `AndroidManifest.xml` file -
 
 <uses-permission android:name="android.permission.BLUETOOTH" android:maxSdkVersion="30" />
 
-<uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
-
-<uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" />
-
 <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
 ```
 
