@@ -12,9 +12,8 @@ class HMSRtcStatsExtension {
 
     companion object {
 
-        fun toDictionary(hmsRemoteVideoStats: HMSRemoteVideoStats, track: HMSTrack?, peer: HMSPeer?): HashMap<String, Any?>? {
+        fun toDictionary(hmsRemoteVideoStats: HMSRemoteVideoStats, track: HMSTrack, peer: HMSPeer): HashMap<String, Any?> {
             val args = HashMap<String, Any?>()
-            if (peer == null || track == null)return null
             args.put("peer", HMSPeerExtension.toDictionary(peer)!!)
             args.put("track", HMSTrackExtension.toDictionary(track)!!)
 
@@ -31,9 +30,8 @@ class HMSRtcStatsExtension {
             return args
         }
 
-        fun toDictionary(hmsRemoteAudioStats: HMSRemoteAudioStats, track: HMSTrack?, peer: HMSPeer?): HashMap<String, Any?>? {
+        fun toDictionary(hmsRemoteAudioStats: HMSRemoteAudioStats, track: HMSTrack, peer: HMSPeer): HashMap<String, Any?> {
             val args = HashMap<String, Any?>()
-            if (peer == null || track == null)return null
             args.put("peer", HMSPeerExtension.toDictionary(peer)!!)
             args.put("track", HMSTrackExtension.toDictionary(track)!!)
 
@@ -48,9 +46,8 @@ class HMSRtcStatsExtension {
             return args
         }
 
-        fun toDictionary(hmsLocalAudioStats: HMSLocalAudioStats, track: HMSTrack?, peer: HMSPeer?): HashMap<String, Any?>? {
+        fun toDictionary(hmsLocalAudioStats: HMSLocalAudioStats, track: HMSTrack, peer: HMSPeer): HashMap<String, Any?> {
             val args = HashMap<String, Any?>()
-            if (peer == null || track == null)return null
             args.put("peer", HMSPeerExtension.toDictionary(peer)!!)
             args.put("track", HMSTrackExtension.toDictionary(track)!!)
 
@@ -62,9 +59,8 @@ class HMSRtcStatsExtension {
             return args
         }
 
-        fun toDictionary(hmsLocalVideoStats: List<HMSLocalVideoStats>, track: HMSTrack?, peer: HMSPeer?): HashMap<String, Any?>? {
+        fun toDictionary(hmsLocalVideoStats: List<HMSLocalVideoStats>, track: HMSTrack, peer: HMSPeer): HashMap<String, Any?> {
             val args = HashMap<String, Any?>()
-            if (peer == null || track == null)return null
             args["peer"] = HMSPeerExtension.toDictionary(peer)!!
             args["track"] = HMSTrackExtension.toDictionary(track)!!
 
@@ -86,7 +82,7 @@ class HMSRtcStatsExtension {
             return args
         }
 
-        fun toDictionary(qualityLimitationReason: QualityLimitationReasons): HashMap<String, Any?>? {
+        fun toDictionary(qualityLimitationReason: QualityLimitationReasons): HashMap<String, Any?> {
             val qualityLimitationReasonMap = HashMap<String, Any?>()
             qualityLimitationReasonMap["band_width"] = qualityLimitationReason.bandWidth
             qualityLimitationReasonMap["cpu"] = qualityLimitationReason.cpu

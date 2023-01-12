@@ -12,7 +12,7 @@ class HMSVideoView(
     context: Context,
     setMirror: Boolean,
     scaleType: Int? = RendererCommon.ScalingType.SCALE_ASPECT_FIT.ordinal,
-    private val track: HMSVideoTrack,
+    private val track: HMSVideoTrack?,
     disableAutoSimulcastLayerSelect: Boolean
 ) : FrameLayout(context, null) {
 
@@ -39,7 +39,9 @@ class HMSVideoView(
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        hmsVideoView.addTrack(track)
+        if(track != null){
+            hmsVideoView.addTrack(track)
+        }
     }
 
     override fun onDetachedFromWindow() {
