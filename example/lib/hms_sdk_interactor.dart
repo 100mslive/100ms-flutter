@@ -353,6 +353,18 @@ class HMSSDKInteractor {
         autoEnterPip: autoEnterPip, aspectRatio: aspectRatio);
   }
 
+  Future<bool> setupPip(bool? autoEnterPIP) async {
+    return await hmsSDK.setupPIP(autoEnterPIP);
+  }
+
+  void startPip() {
+    hmsSDK.startPIP();
+  }
+
+  void stopPIP() {
+    hmsSDK.stopPIP();
+  }
+
   Future<bool> isPipActive() {
     return hmsSDK.isPipActive();
   }

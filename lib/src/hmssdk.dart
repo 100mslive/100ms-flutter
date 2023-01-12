@@ -1186,6 +1186,24 @@ class HMSSDK {
     return result ?? false;
   }
 
+  Future<bool> setupPIP(bool? autoEnterPip) async {
+    var result = await PlatformService.invokeMethod(PlatformMethod.setupPIP,
+        arguments: {"auto_enter_pip": autoEnterPip ?? false});
+    if (result == null) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  void startPIP() {
+    PlatformService.invokeMethod(PlatformMethod.startPIP);
+  }
+
+  void stopPIP() {
+    PlatformService.invokeMethod(PlatformMethod.stopPIP);
+  }
+
   ///Method to check whether pip mode is active currently
   ///
   ///Refer [PIP mode guide here](https://www.100ms.live/docs/flutter/v2/advanced-features/pip-mode)

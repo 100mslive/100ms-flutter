@@ -1301,6 +1301,25 @@ class MeetingStore extends ChangeNotifier
     }
   }
 
+  void startPIP() async {
+    bool _isPipAvailable = await _hmsSDKInteractor.isPipAvailable();
+    if (_isPipAvailable) {
+      bool isPIPSetup = await _hmsSDKInteractor.setupPip(true);
+      if (isPIPSetup) {
+        _hmsSDKInteractor.startPip();
+      }
+    }
+  }
+
+  void stopPIP() async {
+    if (await isPIPActive()) _hmsSDKInteractor.stopPIP();
+  }
+
+  Future<bool> isPIPActive() async {
+    isPipActive = await _hmsSDKInteractor.isPipActive();
+    return isPipActive;
+  }
+
   void setPIPVideoController(bool reinitialise, {double? aspectRatio}) {
     if (hlsVideoController != null) {
       hlsVideoController!.dispose(forceDispose: true);

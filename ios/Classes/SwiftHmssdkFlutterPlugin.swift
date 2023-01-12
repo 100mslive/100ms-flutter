@@ -199,8 +199,8 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         case "set_simulcast_layer", "get_layer", "get_layer_definition":
             HMSRemoteVideoTrackExtension.remoteVideoTrackActions(call, result, hmsSDK!)
             
-        case "start_pip", "stop_pip":
-            print(#function, call)
+        case "setup_pip","start_pip", "stop_pip","is_pip_available","is_pip_active":
+            HMSPIPAction.pipAction(call, result, hmsSDK)
 
         default:
             result(FlutterMethodNotImplemented)
@@ -877,74 +877,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         
         print(#function)
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 5) { [weak self] in
-            self?.setupPIP()
-        }
-
         eventSink?(data)
-    }
-    
-    var pipVideoCallViewController: UIViewController?
-    var pipController: AVPictureInPictureController?
-    
-    func setupPIP() {
-        
-        print(#function)
-        
-        guard #available(iOS 15.0, *) else { return }
-        
-        guard AVPictureInPictureController.isPictureInPictureSupported() else { return }
-        
-        guard let uiView = UIApplication.shared.keyWindow?.visibleViewController?.view else { return }
-        
-        print(#function, "uiview", uiView, uiView.subviews)
-        
-        let scrollView = uiView.subviews[1] //uiView.subviews.first { $0.isKind(of: ChildClippingView.self) }
-        
-//        guard let scrollView = scrollView else { return }
-        
-        print(#function, "#1 scrollView: ", scrollView, uiView, uiView.subviews)
-        
-        let pipVideoCallViewController = AVPictureInPictureVideoCallViewController()
-        
-        self.pipVideoCallViewController = pipVideoCallViewController
-        
-        let model = PiPModel()
-        model.track = hmsSDK?.remotePeers?.first?.videoTrack
-        model.name = hmsSDK?.remotePeers?.first?.name
-        model.isVideoActive = true
-        model.pipViewEnabled = true
-    
-        
-        let controller = UIHostingController(rootView: PiPView(model: model))
-        
-        pipVideoCallViewController.view.addConstrained(subview: controller.view)
-        
-        pipVideoCallViewController.preferredContentSize = CGSize(width: scrollView.frame.size.width, height: scrollView.frame.size.height)
-        
-        let pipContentSource = AVPictureInPictureController.ContentSource(
-            activeVideoCallSourceView: scrollView,
-            contentViewController: pipVideoCallViewController)
-       
-        self.pipController = AVPictureInPictureController(contentSource: pipContentSource)
-        
-        self.pipController?.canStartPictureInPictureAutomaticallyFromInline = true
-        
-        self.pipController?.delegate = self
-       
-       
-        NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification,
-                                               object: nil, queue: .main) { [weak self] _ in
-            
-            print(#function, " #2 didBecomeActiveNotification")
-            self?.stopPiP()
-        }
-        
-        print(#function, "#3", scrollView, controller, pipVideoCallViewController, pipController!)
-    }
-    
-    func stopPiP() {
-        self.pipController?.stopPictureInPicture()
     }
 
     public func on(room: HMSRoom, update: HMSRoomUpdate) {
