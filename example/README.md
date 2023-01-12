@@ -108,7 +108,7 @@ The example app offers some settings to configure the application. Some of them 
 
 The example app offers various meeting modes which decide the tile orientation on the mobile screen.
 
-<img src="https://github.com/100mslive/100ms-flutter/blob/main/example/assets/meeting-mode.png" title="meeting-mode" height=300>
+<img src="https://github.com/100mslive/100ms-flutter/blob/main/example/assets/images/meeting-mode.png" title="meeting-mode" height=300>
 
 Let's look at each mode one by one
 
