@@ -1,11 +1,14 @@
 // Project imports:
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
+///100ms HMSUpdateListener
+///
 /// 100ms SDK provides callbacks to the client app about any change or update happening in the room after a user has joined by implementing HMSUpdateListener.
+///
 /// Implement this listener in a class where you want to perform UI Actions, update App State, etc. These updates can be used to render the video on screen or to display other info regarding the room.
+///
 /// Depending on your use case, you'll need to implement specific methods of the Update Listener. The most common ones are onJoin, onPeerUpdate, onTrackUpdate & onHMSError.
 abstract class HMSUpdateListener {
-
   /// This will be called on a successful JOIN of the room by the user
   ///
   /// This is the point where applications can stop showing its loading state
@@ -29,7 +32,10 @@ abstract class HMSUpdateListener {
   ///   - track: the track which was added, removed or updated
   ///   - trackUpdate: the triggered update type
   ///   - peer: the peer for which track was added, removed or updated
-  void onTrackUpdate({required HMSTrack track, required HMSTrackUpdate trackUpdate, required HMSPeer peer});
+  void onTrackUpdate(
+      {required HMSTrack track,
+      required HMSTrackUpdate trackUpdate,
+      required HMSPeer peer});
 
   /// This will be called when there is an error in the system
   ///
@@ -77,16 +83,20 @@ abstract class HMSUpdateListener {
 
   /// When someone requests for track change of your Audio, Video or an Auxiliary track like Screenshare, this event will be triggered
   /// - Parameter hmsTrackChangeRequest: request instance consisting of all the required info about track change
-  void onChangeTrackStateRequest({required HMSTrackChangeRequest hmsTrackChangeRequest});
+  void onChangeTrackStateRequest(
+      {required HMSTrackChangeRequest hmsTrackChangeRequest});
 
   /// When someone kicks you out or when someone ends the room at that time it is triggered
   /// - Parameter hmsPeerRemovedFromPeer - it consists info about who removed you and why.
-  void onRemovedFromRoom({required HMSPeerRemovedFromPeer hmsPeerRemovedFromPeer});
+  void onRemovedFromRoom(
+      {required HMSPeerRemovedFromPeer hmsPeerRemovedFromPeer});
 
   /// Whenever a new audio device is plugged in or audio output is changed we get the onAudioDeviceChanged update
   /// This callback is only fired on Android devices. On iOS, this callback will not be triggered.
   /// - Parameters:
   ///   - currentAudioDevice: Current audio output route
   ///   - availableAudioDevice: List of available audio output devices
-  void onAudioDeviceChanged({HMSAudioDevice? currentAudioDevice, List<HMSAudioDevice>? availableAudioDevice});
+  void onAudioDeviceChanged(
+      {HMSAudioDevice? currentAudioDevice,
+      List<HMSAudioDevice>? availableAudioDevice});
 }

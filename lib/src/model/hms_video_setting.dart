@@ -1,6 +1,9 @@
 // Project imports:
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
+///100ms HMSVideoSetting
+///
+///[HMSVideoSetting] contains bitrate, codec, framerate, width and height.
 class HMSVideoSetting {
   final int bitRate;
   final HMSVideoCodec codec;

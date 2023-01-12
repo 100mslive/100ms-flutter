@@ -48,11 +48,14 @@ class _VideoViewState extends State<VideoView> {
                       // [key] property can be used to forcefully rebuild the video widget by setting a unique key everytime.
                       // Similarly to avoid rebuilding the key should be kept the same for particular HMSVideoView.
                       child: HMSVideoView(
-                          key: Key(data.item1!.trackId),
-                          scaleType: widget.scaleType,
-                          track: data.item1!,
-                          setMirror: false,
-                          matchParent: false),
+                        key: Key(data.item1!.trackId),
+                        scaleType: widget.scaleType,
+                        track: data.item1!,
+                        setMirror: false,
+                        matchParent: false,
+                        disableAutoSimulcastLayerSelect:
+                            !(context.read<MeetingStore>().isAutoSimulcast),
+                      ),
                     ),
                   )
                 : ClipRRect(
@@ -72,6 +75,8 @@ class _VideoViewState extends State<VideoView> {
                             ? context.read<MeetingStore>().isMirror
                             : false,
                         matchParent: false,
+                        disableAutoSimulcastLayerSelect:
+                            !(context.read<MeetingStore>().isAutoSimulcast),
                       ),
                     ),
                   );

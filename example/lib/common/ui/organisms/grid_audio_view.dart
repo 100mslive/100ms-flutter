@@ -30,7 +30,7 @@ Widget gridAudioView(
     gridDelegate: SliverStairedGridDelegate(
         startCrossAxisDirectionReversed: true,
         pattern: isPortrait
-            ? portraitPattern(itemCount, size, context)
+            ? portraitPattern(peerTracks, size, context)
             : landscapePattern(itemCount, size, context)),
     physics: PageScrollPhysics(),
     scrollDirection: Axis.horizontal,
@@ -38,13 +38,18 @@ Widget gridAudioView(
 }
 
 List<StairedGridTile> portraitPattern(
-    int itemCount, Size size, BuildContext context) {
+    List<PeerTrackNode> peerTrack, Size size, BuildContext context) {
   double ratio = Utilities.getHLSRatio(size, context);
 
   List<StairedGridTile> tiles = [];
-  int gridView = itemCount ~/ 6;
-  int tileLeft = itemCount - (gridView * 6);
-  for (int i = 0; i < (itemCount - tileLeft); i++) {
+  int pinTileCount = 0;
+  while (peerTrack[pinTileCount].pinTile) {
+    tiles.add(StairedGridTile(1, ratio));
+    pinTileCount++;
+  }
+  int gridView = (peerTrack.length - pinTileCount) ~/ 6;
+  int tileLeft = (peerTrack.length - pinTileCount) - (gridView * 6);
+  for (int i = 0; i < (peerTrack.length - pinTileCount - tileLeft); i++) {
     tiles.add(StairedGridTile(1 / 3, ratio / 1.5));
   }
   if (tileLeft == 1) {

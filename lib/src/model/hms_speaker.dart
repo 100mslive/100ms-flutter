@@ -1,6 +1,9 @@
 // Project imports:
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
+///100ms HMSSpeaker
+///
+///[HMSSpeaker] contains the peer info, track info and audioLevel.
 class HMSSpeaker {
   final HMSPeer peer;
   final HMSTrack track;

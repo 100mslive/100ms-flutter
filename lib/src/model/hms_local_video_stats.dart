@@ -19,13 +19,20 @@ class HMSLocalVideoStats {
   /// Frame rate of video frames being sent (FPS).
   HMSResolution resolution;
 
-  HMSLocalVideoStats({
-    required this.roundTripTime,
-    required this.bytesSent,
-    required this.bitrate,
-    required this.frameRate,
-    required this.resolution,
-  });
+  ///Reason for quality limitations
+  HMSQualityLimitationReasons? hmsQualityLimitationReasons;
+
+  ///Simulcast Layer
+  HMSSimulcastLayer? hmsLayer;
+
+  HMSLocalVideoStats(
+      {required this.roundTripTime,
+      required this.bytesSent,
+      required this.bitrate,
+      required this.frameRate,
+      required this.resolution,
+      required this.hmsQualityLimitationReasons,
+      required this.hmsLayer});
 
   factory HMSLocalVideoStats.fromMap(Map map) {
     return HMSLocalVideoStats(
@@ -35,6 +42,15 @@ class HMSLocalVideoStats {
         frameRate: map["frame_rate"] ?? 0.0,
         resolution: map['resolution'] == null
             ? HMSResolution(height: 0, width: 0)
-            : HMSResolution.fromMap(map['resolution']));
+            : HMSResolution.fromMap(map['resolution']),
+        hmsQualityLimitationReasons:
+            map.containsKey("quality_limitation_reason")
+                ? HMSQualityLimitationReasons.fromMap(
+                    map["quality_limitation_reason"])
+                : null,
+        hmsLayer: map.containsKey("hms_layer")?
+        HMSSimulcastLayerValue.getHMSSimulcastLayerFromName(map["hms_layer"]):null
+        );
   }
+  
 }

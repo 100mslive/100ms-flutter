@@ -61,6 +61,9 @@ class HMSNetworkUpdateListenerMethodResponse {
       {required this.method, required this.data, required this.response});
 }
 
+///HMSStatsListenerMethodResponse contains all the responses sent back from the call stats.
+///
+/// Check out different responses in [HMSStatsListenerMethod] enum.
 class HMSStatsListenerMethodResponse {
   final HMSStatsListenerMethod method;
   final Map<String, dynamic> data;

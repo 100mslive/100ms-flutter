@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:focus_detector/focus_detector.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/change_role_options.dart';
+import 'package:hmssdk_flutter_example/common/ui/organisms/change_simulcast_layer_option.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/local_peer_tile_dialog.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
+import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:provider/provider.dart';
 
 // Project imports
@@ -80,10 +82,6 @@ class _VideoTileState extends State<VideoTile> {
                   }
                   var peerTrackNode = context.read<PeerTrackNode>();
                   HMSPeer peerNode = peerTrackNode.peer;
-                  if (!mutePermission ||
-                      !unMutePermission ||
-                      !removePeerPermission ||
-                      !changeRolePermission) return;
                   if (peerTrackNode.peer.peerId !=
                       _meetingStore.localPeer!.peerId)
                     showDialog(
@@ -127,10 +125,42 @@ class _VideoTileState extends State<VideoTile> {
                                           },
                                         ));
                               },
+                              changeLayer: () async {
+                                Navigator.pop(context);
+                                HMSRemoteVideoTrack track =
+                                    peerTrackNode.track as HMSRemoteVideoTrack;
+                                List<HMSSimulcastLayerDefinition>
+                                    layerDefinitions =
+                                    await track.getLayerDefinition();
+                                HMSSimulcastLayer selectedLayer =
+                                    await track.getLayer();
+                                if (layerDefinitions.isNotEmpty) {
+                                  showDialog(
+                                      context: context,
+                                      builder: (_) =>
+                                          ChangeSimulcastLayerOptionDialog(
+                                              layerDefinitions:
+                                                  layerDefinitions,
+                                              selectedLayer: selectedLayer,
+                                              track: track));
+                                } else {
+                                  Utilities.showToast(
+                                      "Simulcast not enabled for the role");
+                                }
+                              },
                               mute: mutePermission,
                               unMute: unMutePermission,
                               removeOthers: removePeerPermission,
                               roles: changeRolePermission,
+                              simulcast:
+                                  (!(peerTrackNode.track as HMSRemoteVideoTrack)
+                                      .isMute),
+                              pinTile: peerTrackNode.pinTile,
+                              changePinTileStatus: () {
+                                _meetingStore
+                                    .changePinTileStatus(peerTrackNode);
+                                Navigator.pop(context);
+                              },
                             ));
                   else
                     showDialog(

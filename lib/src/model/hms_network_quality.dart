@@ -19,6 +19,8 @@
 /// 4 -> Good.
 ///
 /// 5 -> Best.
+///
+/// Refer [Network Quality guide here](https://www.100ms.live/docs/flutter/v2/advanced-features/network-quality-reports)
 class HMSNetworkQuality {
   int quality;
 

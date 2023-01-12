@@ -32,14 +32,13 @@ dependencies:
 
 
   hmssdk_flutter:
-    path: ../../
-    
   cupertino_icons:
   mobx: 
   flutter_mobx:
   mobx_codegen:
   http:
   intl:
+  permission_handler:
 
     
     

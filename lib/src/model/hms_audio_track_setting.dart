@@ -2,6 +2,11 @@
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter/src/model/hms_audio_node.dart';
 
+///100ms HMSAudioTrackSetting
+///
+///[HMSAudioTrackSetting] contains the useHardwareAcousticEchoCanceler, audioSource(iOS only), and trackInitialState.
+///
+///Refer [HMSAudioTrackSetting guide here](https://www.100ms.live/docs/flutter/v2/advanced-features/set-track-settings#for-the-audio-track-we-can-set-the-following-properties)
 class HMSAudioTrackSetting {
   /// [useHardwareAcousticEchoCanceler] controls if the built-in HW acoustic echo canceler should be used or not.
   /// The default is on if it is supported.
@@ -9,7 +14,7 @@ class HMSAudioTrackSetting {
   /// In such as application need to set this to false, so that SW echo canceler is picked up.
   final bool? useHardwareAcousticEchoCanceler;
 
-  ///[audioSource] only for iOS.Used for audioSharing use cases.
+  ///[audioSource] only for iOS. Used for audioSharing use cases.
   HMSAudioMixerSource? audioSource;
 
   ///[trackInitialState] property to set the initial state of the audio track i.e Mute/Unmute.By default it's unmuted.

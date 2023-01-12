@@ -113,6 +113,10 @@ class MeetingStore extends ChangeNotifier
 
   bool isStatsVisible = false;
 
+  bool isMirror = false;
+
+  bool isAutoSimulcast = true;
+
   bool isNewMessageReceived = false;
 
   String? highestSpeaker;
@@ -121,8 +125,6 @@ class MeetingStore extends ChangeNotifier
   String message = "";
 
   final DateFormat formatter = DateFormat('d MMM y h:mm:ss a');
-
-  bool isMirror = false;
 
   ScrollController controller = ScrollController();
 
@@ -420,6 +422,8 @@ class MeetingStore extends ChangeNotifier
   void setSettings() async {
     isMirror = await Utilities.getBoolData(key: 'mirror-camera') ?? false;
     isStatsVisible = await Utilities.getBoolData(key: 'show-stats') ?? false;
+    isAutoSimulcast =
+        await Utilities.getBoolData(key: 'is-auto-simulcast') ?? true;
     if (isStatsVisible) {
       _hmsSDKInteractor.addStatsListener(this);
     }
@@ -652,7 +656,7 @@ class MeetingStore extends ChangeNotifier
         addMessage(message);
         isNewMessageReceived = true;
         Utilities.showNotification(
-            "New message from ${message.sender?.name??""}", "message");
+            "New message from ${message.sender?.name ?? ""}", "message");
         notifyListeners();
         break;
     }
@@ -784,7 +788,7 @@ class MeetingStore extends ChangeNotifier
 
   @override
   void onLocalVideoStats(
-      {required HMSLocalVideoStats hmsLocalVideoStats,
+      {required List<HMSLocalVideoStats> hmsLocalVideoStats,
       required HMSLocalVideoTrack track,
       required HMSPeer peer}) {
     int index = -1;
@@ -1355,6 +1359,17 @@ class MeetingStore extends ChangeNotifier
         toRole: toRole, ofRoles: ofRoles, hmsActionResultListener: this);
   }
 
+  void changePinTileStatus(PeerTrackNode peerTrackNode) {
+    peerTrackNode.pinTile = !peerTrackNode.pinTile;
+    peerTracks.remove(peerTrackNode);
+    if (peerTrackNode.pinTile) {
+      peerTracks.insert(screenShareCount, peerTrackNode);
+    } else {
+      peerTracks.add(peerTrackNode);
+    }
+    notifyListeners();
+  }
+
 //Get onSuccess or onException callbacks for HMSActionResultListenerMethod
 
   @override
@@ -1598,7 +1613,7 @@ class MeetingStore extends ChangeNotifier
         notifyListeners();
       }
 
-      if (lastVideoStatus) {
+      if (lastVideoStatus && !reconnecting) {
         switchVideo();
         lastVideoStatus = false;
       }
@@ -1623,23 +1638,10 @@ class MeetingStore extends ChangeNotifier
         switchVideo();
         lastVideoStatus = true;
       }
-      for (PeerTrackNode peerTrackNode in peerTracks) {
-        peerTrackNode.setOffScreenStatus(true);
-      }
     } else if (state == AppLifecycleState.inactive) {
       if (Platform.isAndroid && isPipAutoEnabled && !isPipActive) {
         isPipActive = true;
         notifyListeners();
-      }
-      HMSLocalPeer? localPeer = await getLocalPeer();
-      if (localPeer != null &&
-          !(localPeer.videoTrack?.isMute ?? true) &&
-          !isPipActive) {
-        switchVideo();
-        lastVideoStatus = true;
-      }
-      for (PeerTrackNode peerTrackNode in peerTracks) {
-        peerTrackNode.setOffScreenStatus(true);
       }
     }
   }

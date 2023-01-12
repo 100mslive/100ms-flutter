@@ -11,7 +11,6 @@ import 'package:hmssdk_flutter_example/hls-streaming/util/hls_title_text.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class NotificationSettings extends StatefulWidget {
-  
   @override
   State<NotificationSettings> createState() => _NotificationSettingsState();
 }
@@ -33,10 +32,12 @@ class _NotificationSettingsState extends State<NotificationSettings> {
         await Utilities.getBoolData(key: 'peer-join-notif') ?? true;
     peerLeaveNotif =
         await Utilities.getBoolData(key: 'peer-leave-notif') ?? true;
-    newMessageNotif = await Utilities.getBoolData(key: 'new-message-notif') ?? true;
-    handRaiseNotif = await Utilities.getBoolData(key: 'hand-raise-notif') ?? true;
+    newMessageNotif =
+        await Utilities.getBoolData(key: 'new-message-notif') ?? true;
+    handRaiseNotif =
+        await Utilities.getBoolData(key: 'hand-raise-notif') ?? true;
     errorNotif = await Utilities.getBoolData(key: 'error-notif') ?? true;
-    
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() {});
     });
@@ -145,7 +146,7 @@ class _NotificationSettingsState extends State<NotificationSettings> {
                         onChanged: (value) => {
                               peerLeaveNotif = value,
                               Utilities.saveBoolData(
-                                  key: 'peer_leave_notif', value: value),
+                                  key: 'peer-leave-notif', value: value),
                               setState(() {})
                             }),
                   ),
