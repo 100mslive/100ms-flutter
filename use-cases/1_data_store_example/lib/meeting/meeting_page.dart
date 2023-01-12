@@ -30,7 +30,7 @@ class _MeetingPageState extends State<MeetingPage>
   @override
   void onHMSError({required HMSException error}) {
     Utilities.showToast(msg: "${error.message}");
-    log(error.message??"");
+    log(error.message ?? "");
   }
 
   //Here we will get track updates after joining the room
@@ -55,9 +55,26 @@ class _MeetingPageState extends State<MeetingPage>
       }
       setState((() => {}));
     }
+    if (trackUpdate == HMSTrackUpdate.trackRemoved &&
+        track.source == "SCREEN") {
+      int index = nodes
+          .indexWhere((node) => node.uid == "${peer.peerId}${track.trackId}");
+      if (index != -1) {
+        nodes.removeAt(index);
+      }
+      setState((() => {}));
+      return;
+    }
     if (track.kind == HMSTrackKind.kHMSTrackKindVideo) {
-      int index =
-          nodes.indexWhere((node) => node.uid == "${peer.peerId}mainVideo");
+      int index = -1;
+
+      if (track.source == "REGULAR") {
+        index =
+            nodes.indexWhere((node) => node.uid == "${peer.peerId}mainVideo");
+      } else if (track.source == "SCREEN") {
+        index = nodes
+            .indexWhere((node) => node.uid == "${peer.peerId}${track.trackId}");
+      }
       if (index != -1) {
         nodes[index].track = track as HMSVideoTrack;
       } else {
@@ -147,136 +164,148 @@ class _MeetingPageState extends State<MeetingPage>
         leaveMeeting();
         return true;
       },
-      child: Scaffold(
-        body: Stack(
-          children: [
-            CustomScrollView(
-              scrollDirection: Axis.horizontal,
-              physics: const PageScrollPhysics(),
-              slivers: [
-                SliverGrid(
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 5,
-                  ),
-                  delegate: SliverChildBuilderDelegate(
-                      ((context, index) => (nodes[index].track == null ||
-                              nodes[index].track!.isMute)
-                          ? Container(
-                              decoration: const BoxDecoration(
-                                color: Color.fromRGBO(20, 23, 28, 1),
-                              ),
-                              child: Center(
-                                child: CircleAvatar(
-                                    backgroundColor: Colors.purple,
-                                    radius: 36,
-                                    child: Text(
-                                      nodes[index].peer.name[0],
-                                      style: const TextStyle(
-                                          fontSize: 36, color: Colors.white),
-                                    )),
-                              ),
-                            )
-                          : HMSVideoView(
-                              key: Key(nodes[index].uid),
-                              track: nodes[index].track!,
-                              scaleType: ScaleType.SCALE_ASPECT_FILL,
-                            )),
-                      childCount: nodes.length),
-                )
-              ],
-            ),
-            (nodes.isNotEmpty && nodes[0].peer.isLocal)
-                ? Padding(
-                    padding: const EdgeInsets.only(bottom: 20.0),
-                    child: Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Container(
-                        height: 60,
-                        width: widthofEachTile - 20,
-                        decoration: BoxDecoration(
-                            color: const Color.fromRGBO(29, 34, 41, 1),
-                            borderRadius: BorderRadius.circular(10)),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            GestureDetector(
-                              onTap: () async {
-                                _hmssdk.switchAudio(isOn: isAudioOn);
-                              },
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.red.withAlpha(60),
-                                        blurRadius: 3.0,
-                                        spreadRadius: 5.0,
-                                      ),
-                                    ]),
-                                child: CircleAvatar(
-                                  radius: 25,
-                                  backgroundColor: Colors.red,
-                                  child: Icon(
-                                      isAudioOn ? Icons.mic : Icons.mic_off,
-                                      color: Colors.white),
+      child: SafeArea(
+        child: Scaffold(
+          body: Stack(
+            children: [
+              CustomScrollView(
+                scrollDirection: Axis.horizontal,
+                physics: const PageScrollPhysics(),
+                slivers: [
+                  SliverGrid(
+                    gridDelegate:  SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 5,
+                      mainAxisExtent: widthofEachTile
+                    ),
+                    delegate: SliverChildBuilderDelegate(
+                        ((context, index) => (nodes[index].track == null ||
+                                nodes[index].track!.isMute)
+                            ? Container(
+                                decoration: const BoxDecoration(
+                                  color: Color.fromRGBO(20, 23, 28, 1),
+                                ),
+                                child: Center(
+                                  child: CircleAvatar(
+                                      backgroundColor: Colors.purple,
+                                      radius: 36,
+                                      child: Text(
+                                        nodes[index].peer.name[0],
+                                        style: const TextStyle(
+                                            fontSize: 36, color: Colors.white),
+                                      )),
+                                ),
+                              )
+                            : 
+                            (nodes[index].track!.source == "REGULAR")?
+                            //For normal video track
+                            HMSVideoView(
+                                key: Key(nodes[index].uid),
+                                track: nodes[index].track!,
+                                scaleType: ScaleType.SCALE_ASPECT_FILL,
+                              ):
+                              //For screen share tracks
+                              HMSVideoView(
+                                key: Key(nodes[index].uid),
+                                matchParent: false,
+                                track: nodes[index].track!,
+                              )),
+                        childCount: nodes.length),
+                  )
+                ],
+              ),
+              (nodes.isNotEmpty && nodes[0].peer.isLocal)
+                  ? Padding(
+                      padding: const EdgeInsets.only(bottom: 20.0),
+                      child: Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Container(
+                          height: 60,
+                          width: widthofEachTile - 20,
+                          decoration: BoxDecoration(
+                              color: const Color.fromRGBO(29, 34, 41, 1),
+                              borderRadius: BorderRadius.circular(10)),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              GestureDetector(
+                                onTap: () async {
+                                  _hmssdk.switchAudio(isOn: isAudioOn);
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.red.withAlpha(60),
+                                          blurRadius: 3.0,
+                                          spreadRadius: 5.0,
+                                        ),
+                                      ]),
+                                  child: CircleAvatar(
+                                    radius: 25,
+                                    backgroundColor: Colors.red,
+                                    child: Icon(
+                                        isAudioOn ? Icons.mic : Icons.mic_off,
+                                        color: Colors.white),
+                                  ),
                                 ),
                               ),
-                            ),
-                            GestureDetector(
-                              onTap: () async {
-                                _hmssdk.switchVideo(isOn: isVideoOn);
-                              },
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.red.withAlpha(60),
-                                        blurRadius: 3.0,
-                                        spreadRadius: 5.0,
-                                      ),
-                                    ]),
-                                child: CircleAvatar(
-                                  radius: 25,
-                                  backgroundColor: Colors.red,
-                                  child: Icon(
-                                      isVideoOn
-                                          ? Icons.videocam
-                                          : Icons.videocam_off_rounded,
-                                      color: Colors.white),
+                              GestureDetector(
+                                onTap: () async {
+                                  _hmssdk.switchVideo(isOn: isVideoOn);
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.red.withAlpha(60),
+                                          blurRadius: 3.0,
+                                          spreadRadius: 5.0,
+                                        ),
+                                      ]),
+                                  child: CircleAvatar(
+                                    radius: 25,
+                                    backgroundColor: Colors.red,
+                                    child: Icon(
+                                        isVideoOn
+                                            ? Icons.videocam
+                                            : Icons.videocam_off_rounded,
+                                        color: Colors.white),
+                                  ),
                                 ),
                               ),
-                            ),
-                            GestureDetector(
-                              onTap: () async {
-                                leaveMeeting();
-                              },
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.red.withAlpha(60),
-                                        blurRadius: 3.0,
-                                        spreadRadius: 5.0,
-                                      ),
-                                    ]),
-                                child: const CircleAvatar(
-                                  radius: 25,
-                                  backgroundColor: Colors.red,
-                                  child:
-                                      Icon(Icons.call_end, color: Colors.white),
+                              GestureDetector(
+                                onTap: () async {
+                                  leaveMeeting();
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.red.withAlpha(60),
+                                          blurRadius: 3.0,
+                                          spreadRadius: 5.0,
+                                        ),
+                                      ]),
+                                  child: const CircleAvatar(
+                                    radius: 25,
+                                    backgroundColor: Colors.red,
+                                    child:
+                                        Icon(Icons.call_end, color: Colors.white),
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  )
-                : Container()
-          ],
+                    )
+                  : Container()
+            ],
+          ),
         ),
       ),
     );
