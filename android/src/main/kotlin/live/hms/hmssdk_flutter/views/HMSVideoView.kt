@@ -1,6 +1,7 @@
 package live.hms.hmssdk_flutter.views
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.widget.FrameLayout
 import live.hms.hmssdk_flutter.R
@@ -12,7 +13,7 @@ class HMSVideoView(
     context: Context,
     setMirror: Boolean,
     scaleType: Int? = RendererCommon.ScalingType.SCALE_ASPECT_FIT.ordinal,
-    private val track: HMSVideoTrack,
+    private val track: HMSVideoTrack?,
     disableAutoSimulcastLayerSelect: Boolean
 ) : FrameLayout(context, null) {
 
@@ -39,7 +40,12 @@ class HMSVideoView(
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        hmsVideoView.addTrack(track)
+        if(track != null){
+            hmsVideoView.addTrack(track)
+        }
+        else{
+            Log.e("HMSVideoView Error", "track is null, cannot attach null track")
+        }
     }
 
     override fun onDetachedFromWindow() {

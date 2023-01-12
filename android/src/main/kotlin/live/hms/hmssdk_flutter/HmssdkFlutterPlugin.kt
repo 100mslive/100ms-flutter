@@ -935,6 +935,14 @@ class HmssdkFlutterPlugin :
         )
     }
 
+    public fun onVideoViewError(args: HashMap<String, Any?>) {
+        if (args["data"] != null) {
+            CoroutineScope(Dispatchers.Main).launch {
+                eventSink?.success(args)
+            }
+        }
+    }
+
     private var androidScreenshareResult: Result? = null
 
     private fun startScreenShare(result: Result) {
@@ -1082,6 +1090,16 @@ class HmssdkFlutterPlugin :
             hmsTrack: HMSTrack?,
             hmsPeer: HMSPeer?
         ) {
+            if (hmsPeer == null) {
+                Log.e("onRemoteVideoStats error", "Peer is null")
+                return
+            }
+
+            if (hmsTrack == null) {
+                Log.e("onRemoteVideoStats error", "Video Track is null")
+                return
+            }
+
             val args = HashMap<String, Any?>()
             args["event_name"] = "on_remote_video_stats"
             args["data"] = HMSRtcStatsExtension.toDictionary(
@@ -1089,7 +1107,6 @@ class HmssdkFlutterPlugin :
                 peer = hmsPeer,
                 track = hmsTrack
             )
-
             if (args["data"] != null) {
                 CoroutineScope(Dispatchers.Main).launch {
                     rtcSink?.success(args)
@@ -1102,6 +1119,16 @@ class HmssdkFlutterPlugin :
             hmsTrack: HMSTrack?,
             hmsPeer: HMSPeer?
         ) {
+            if (hmsPeer == null) {
+                Log.e("onRemoteAudioStats error", "Peer is null")
+                return
+            }
+
+            if (hmsTrack == null) {
+                Log.e("onRemoteAudioStats error", "Video Track is null")
+                return
+            }
+
             val args = HashMap<String, Any?>()
             args["event_name"] = "on_remote_audio_stats"
             args["data"] = HMSRtcStatsExtension.toDictionary(
@@ -1122,11 +1149,21 @@ class HmssdkFlutterPlugin :
             hmsTrack: HMSTrack?,
             hmsPeer: HMSPeer?
         ) {
+            if (hmsPeer == null) {
+                Log.e("onLocalVideoStats error", "Peer is null")
+                return
+            }
+
+            if (hmsTrack == null) {
+                Log.e("onLocalVideoStats error", "Video Track is null")
+                return
+            }
+
             val args = HashMap<String, Any?>()
             args["event_name"] = "on_local_video_stats"
             args["data"] = HMSRtcStatsExtension.toDictionary(
                 hmsLocalVideoStats = videoStats,
-                peer = getLocalPeer(),
+                peer = hmsPeer,
                 track = hmsTrack
             )
 
@@ -1142,11 +1179,21 @@ class HmssdkFlutterPlugin :
             hmsTrack: HMSTrack?,
             hmsPeer: HMSPeer?
         ) {
+            if (hmsPeer == null) {
+                Log.e("onLocalAudioStats error", "Peer is null")
+                return
+            }
+
+            if (hmsTrack == null) {
+                Log.e("onLocalAudioStats error", "Video Track is null")
+                return
+            }
+
             val args = HashMap<String, Any?>()
             args["event_name"] = "on_local_audio_stats"
             args["data"] = HMSRtcStatsExtension.toDictionary(
                 hmsLocalAudioStats = audioStats,
-                peer = getLocalPeer(),
+                peer = hmsPeer,
                 track = hmsTrack
             )
 
