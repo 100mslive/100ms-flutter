@@ -14,8 +14,11 @@
 
 - Removed late initializers for Event Channels
 
-- Added Simulcast support for local Video RTC Stats
+- Added Simulcast support for Local Video RTC Stats
+
+- Added Android Foreground Service to allow Microphone & Camera access when app is in Background & Screen is locked for more than 60 seconds
+
 
 Flutter SDK: 1.2.0
-Android SDK: 2.5.5
+Android SDK: 2.5.6
 iOS SDK: 0.5.5
