@@ -1,6 +1,7 @@
 package live.hms.hmssdk_flutter.views
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.widget.FrameLayout
 import live.hms.hmssdk_flutter.R
@@ -41,6 +42,9 @@ class HMSVideoView(
         super.onAttachedToWindow()
         if(track != null){
             hmsVideoView.addTrack(track)
+        }
+        else{
+            Log.e("HMSVideoView Error", "track is null, cannot attach null track")
         }
     }
 

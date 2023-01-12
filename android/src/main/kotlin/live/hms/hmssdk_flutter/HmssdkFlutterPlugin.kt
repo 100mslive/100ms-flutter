@@ -1091,6 +1091,7 @@ class HmssdkFlutterPlugin :
             hmsPeer: HMSPeer?
         ) {
             if (hmsPeer == null || hmsTrack == null){
+                Log.e("onRemoteVideoStats err", "peer or track is null")
                 return
             }
             val args = HashMap<String, Any?>()
@@ -1113,6 +1114,7 @@ class HmssdkFlutterPlugin :
             hmsPeer: HMSPeer?
         ) {
             if (hmsPeer == null || hmsTrack == null){
+                Log.e("onRemoteAudioStats err", "peer or track is null")
                 return
             }
             val args = HashMap<String, Any?>()
@@ -1136,6 +1138,7 @@ class HmssdkFlutterPlugin :
             hmsPeer: HMSPeer?
         ) {
             if (hmsPeer == null || hmsTrack == null){
+                Log.e("onLocalVideoStats err", "peer or track is null")
                 return
             }
             val args = HashMap<String, Any?>()
@@ -1159,6 +1162,7 @@ class HmssdkFlutterPlugin :
             hmsPeer: HMSPeer?
         ) {
             if (hmsPeer == null || hmsTrack == null){
+                Log.e("onLocalAudioStats err", "peer or track is null")
                 return
             }
             val args = HashMap<String, Any?>()
