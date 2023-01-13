@@ -1,6 +1,6 @@
+/// The available types of Simulcast layers which imply High, Medium or Low Video quality
 enum HMSSimulcastLayer { high, mid, low }
 
-///HMSLogLevel for android and ios
 extension HMSSimulcastLayerValue on HMSSimulcastLayer {
   static HMSSimulcastLayer getHMSSimulcastLayerFromName(String name) {
     switch (name) {

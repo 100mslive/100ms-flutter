@@ -4,7 +4,7 @@ import 'package:hmssdk_flutter/src/service/platform_service.dart';
 
 ///100ms HMSRemotelVideoTrack
 ///
-///[HMSRemoteVideoTrack] contains the remote peer video track information.
+/// [HMSRemoteVideoTrack] encapsulates the remote peer video track information
 class HMSRemoteVideoTrack extends HMSVideoTrack {
   bool isPlaybackAllowed;
   HMSRemoteVideoTrack({
@@ -54,6 +54,7 @@ class HMSRemoteVideoTrack extends HMSVideoTrack {
     }
   }
 
+  /// Invoke the function with the desired simulcast layer which can be of types - [HMSSimulcastLayer.high], [HMSSimulcastLayer.low], [HMSSimulcastLayer.mid]
   Future<HMSException?> setSimulcastLayer(HMSSimulcastLayer layer) async {
     var result = await PlatformService.invokeMethod(
         PlatformMethod.setSimulcastLayer,
@@ -68,6 +69,7 @@ class HMSRemoteVideoTrack extends HMSVideoTrack {
     }
   }
 
+  /// Invoke the function to get the current Simulcast layer of the Remote Video Track
   Future<HMSSimulcastLayer> getLayer() async {
     var result =
         await PlatformService.invokeMethod(PlatformMethod.getLayer, arguments: {
@@ -76,6 +78,7 @@ class HMSRemoteVideoTrack extends HMSVideoTrack {
     return HMSSimulcastLayerValue.getHMSSimulcastLayerFromName(result);
   }
 
+  /// Invoke the function to get the list of available Simulcast Layers for a Remote Video Track
   Future<List<HMSSimulcastLayerDefinition>> getLayerDefinition() async {
     var result = await PlatformService.invokeMethod(
         PlatformMethod.getLayerDefinition,
