@@ -37,7 +37,11 @@ class HMSSDKInteractor {
         preferredExtension: preferredExtension,
         hmsLogSettings: hmsLogSettings,
         hmsTrackSetting: trackSetting);
-    hmsSDK.build();
+    build();
+  }
+
+  void build() async {
+    await hmsSDK.build();
   }
 
   void join({required HMSConfig config}) {

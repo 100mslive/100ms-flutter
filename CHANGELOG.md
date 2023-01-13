@@ -1,5 +1,22 @@
 ## 1.2.0 - 2023-01-13
 
+### Breaking
+
+- Made `await` while building `HMSSDK` Required
+
+  Adding `await` to the `build()` method was optional earlier. It has been made **Required** now to eliminate edge cases where SDK initialization did not complete before invocation of `join()` method. Adding `await` ensures that an instance of HMSSDK is available before any further usages.
+
+  ```dart
+  hmsSDK = HMSSDK();
+
+  await hmsSDK.build(); // NEW: adding await while invoking build method on HMSSDK is now Required
+
+  hmsSDK.addUpdateListener(this);
+  HMSConfig config = HMSConfig(authToken: 'eyJH5c', // client-side token generated from your token service
+                          userName: 'John Appleseed');
+  hmsSDK.join(config: config);
+  ```
+
 ### Added
 
 - Added support for Adaptive Bitrate (Simulcast)
