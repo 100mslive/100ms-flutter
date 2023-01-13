@@ -33,6 +33,7 @@ class PreviewPage extends StatefulWidget {
 }
 
 class _PreviewPageState extends State<PreviewPage> {
+  late MeetingStore _meetingStore;
   @override
   void initState() {
     MultiProvider(
@@ -40,6 +41,12 @@ class _PreviewPageState extends State<PreviewPage> {
     );
     super.initState();
     initPreview();
+  }
+
+  void setMeetingStore(PreviewStore _previewStore) {
+    _meetingStore = MeetingStore(
+      hmsSDKInteractor: _previewStore.hmsSDKInteractor!,
+    );
   }
 
   void initPreview() async {
@@ -78,7 +85,7 @@ class _PreviewPageState extends State<PreviewPage> {
     final _previewStore = context.watch<PreviewStore>();
     return WillPopScope(
       onWillPop: () async {
-        context.read<PreviewStore>().leave();
+        _previewStore.leave();
         return true;
       },
       child: Selector<PreviewStore, HMSException?>(
@@ -218,8 +225,7 @@ class _PreviewPageState extends State<PreviewPage> {
                                                 context: context,
                                                 builder: (ctx) =>
                                                     ChangeNotifierProvider.value(
-                                                        value: context.read<
-                                                            PreviewStore>(),
+                                                        value: _previewStore,
                                                         child:
                                                             PreviewDeviceSettings()),
                                               )
@@ -434,24 +440,17 @@ class _PreviewPageState extends State<PreviewPage> {
                                         context
                                             .read<PreviewStore>()
                                             .removePreviewListener(),
+                                        setMeetingStore(_previewStore),
                                         Navigator.of(context).pushReplacement(
                                             MaterialPageRoute(
                                                 builder: (_) =>
                                                     ListenableProvider.value(
-                                                      value: MeetingStore(
-                                                        hmsSDKInteractor:
-                                                            _previewStore
-                                                                .hmsSDKInteractor!,
-                                                      ),
+                                                      value: _meetingStore,
                                                       child:
                                                           HLSScreenController(
-                                                        streamUrl: context
-                                                                .read<
-                                                                    PreviewStore>()
+                                                        streamUrl: _previewStore
                                                                 .isStreamingStarted
-                                                            ? context
-                                                                .read<
-                                                                    PreviewStore>()
+                                                            ? _previewStore
                                                                 .room
                                                                 ?.hmshlsStreamingState
                                                                 ?.variants[0]

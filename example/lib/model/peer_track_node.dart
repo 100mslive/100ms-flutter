@@ -14,6 +14,7 @@ class PeerTrackNode extends ChangeNotifier {
   int? networkQuality;
   RTCStats? stats;
   int audioLevel;
+  bool pinTile;
 
   PeerTrackNode(
       {required this.peer,
@@ -23,7 +24,8 @@ class PeerTrackNode extends ChangeNotifier {
       this.isOffscreen = true,
       this.networkQuality = -1,
       this.stats,
-      this.audioLevel = -1});
+      this.audioLevel = -1,
+      this.pinTile = false});
 
   @override
   String toString() {
@@ -72,7 +74,7 @@ class PeerTrackNode extends ChangeNotifier {
     }
   }
 
-  void setHMSLocalVideoStats(HMSLocalVideoStats hmsLocalVideoStats) {
+  void setHMSLocalVideoStats(List<HMSLocalVideoStats> hmsLocalVideoStats) {
     stats?.hmsLocalVideoStats = hmsLocalVideoStats;
     if (!this.isOffscreen) {
       notify();

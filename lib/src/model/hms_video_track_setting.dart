@@ -1,6 +1,11 @@
 // Project imports:
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
+///100ms HMSVideoTrackSetting
+///
+///[HMSVideoTrackSetting] contains cameraFacing, disableAutoResize, trackInitialState and forceSoftwareDecoder.
+///
+///Refer [HMSVideoTrackSetting guide here](https://www.100ms.live/docs/flutter/v2/advanced-features/set-track-settings#for-the-video-track-we-can-set-the-following-properties)
 class HMSVideoTrackSetting {
   /// [cameraFacing] property specifies which camera to use while joining. It can be toggled later on. The default value is `HMSCameraFacing.FRONT`.
   final HMSCameraFacing? cameraFacing;

@@ -131,23 +131,6 @@ class _MeetingState extends State<Meeting> with WidgetsBindingObserver {
                         ),
                       );
                     }),
-                    CircleAvatar(
-                      backgroundColor: Colors.black,
-                      child: IconButton(
-                        icon: Image.asset(
-                          'assets/raise_hand.png',
-                          color:
-                              raisedHand ? Colors.amber.shade300 : Colors.grey,
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            raisedHand = !raisedHand;
-                          });
-                          _meetingStore.changeMetadata();
-                        },
-                        color: Colors.blue,
-                      ),
-                    ),
                     Observer(builder: (context) {
                       return CircleAvatar(
                         backgroundColor: Colors.black,
@@ -227,8 +210,7 @@ class _MeetingState extends State<Meeting> with WidgetsBindingObserver {
             margin:
                 const EdgeInsets.only(bottom: 0, left: 0, right: 100, top: 0),
             child: Observer(builder: (context) {
-              return HMSVideoView(
-                  track: _meetingStore.curentScreenShareTrack as HMSVideoTrack);
+              return HMSVideoView(track: _meetingStore.curentScreenShareTrack!);
             })),
       ));
     }

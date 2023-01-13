@@ -434,9 +434,7 @@ class MeetingStore extends ChangeNotifier
   @override
   void onAudioDeviceChanged(
       {HMSAudioDevice? currentAudioDevice,
-      List<HMSAudioDevice>? availableAudioDevice}) {
-    // TODO: implement onAudioDeviceChanged
-  }
+      List<HMSAudioDevice>? availableAudioDevice}) {}
   @override
   void onSuccess(
       {HMSActionResultListenerMethod methodType =
@@ -448,8 +446,6 @@ class MeetingStore extends ChangeNotifier
         isRoomEnded = true;
         notifyListeners();
         break;
-      case HMSActionResultListenerMethod.changeTrackState:
-        break;
       case HMSActionResultListenerMethod.changeMetadata:
         notifyListeners();
         break;
@@ -457,34 +453,6 @@ class MeetingStore extends ChangeNotifier
         isRoomEnded = true;
         notifyListeners();
         break;
-      case HMSActionResultListenerMethod.removePeer:
-        // TODO: Handle this case.
-        break;
-      case HMSActionResultListenerMethod.acceptChangeRole:
-        break;
-      case HMSActionResultListenerMethod.changeRole:
-        break;
-      case HMSActionResultListenerMethod.changeTrackStateForRole:
-        break;
-      case HMSActionResultListenerMethod.startRtmpOrRecording:
-        break;
-      case HMSActionResultListenerMethod.stopRtmpAndRecording:
-        break;
-      case HMSActionResultListenerMethod.unknown:
-        break;
-      case HMSActionResultListenerMethod.changeName:
-        break;
-      case HMSActionResultListenerMethod.sendBroadcastMessage:
-        break;
-      case HMSActionResultListenerMethod.sendGroupMessage:
-        break;
-      case HMSActionResultListenerMethod.sendDirectMessage:
-        break;
-      case HMSActionResultListenerMethod.hlsStreamingStarted:
-        break;
-      case HMSActionResultListenerMethod.hlsStreamingStopped:
-        break;
-
       case HMSActionResultListenerMethod.startScreenShare:
         isScreenShareOn = true;
         notifyListeners();
@@ -494,17 +462,7 @@ class MeetingStore extends ChangeNotifier
         isScreenShareOn = false;
         notifyListeners();
         break;
-      case HMSActionResultListenerMethod.startAudioShare:
-        // TODO: Handle this case.
-        break;
-      case HMSActionResultListenerMethod.stopAudioShare:
-        // TODO: Handle this case.
-        break;
-      case HMSActionResultListenerMethod.setSessionMetadata:
-        // TODO: Handle this case.
-        break;
-      case HMSActionResultListenerMethod.switchCamera:
-        // TODO: Handle this case.
+      default:
         break;
     }
   }
@@ -516,62 +474,6 @@ class MeetingStore extends ChangeNotifier
       Map<String, dynamic>? arguments,
       required HMSException hmsException}) {
     this.hmsException = hmsException;
-    switch (methodType) {
-      case HMSActionResultListenerMethod.leave:
-        break;
-      case HMSActionResultListenerMethod.changeTrackState:
-        break;
-      case HMSActionResultListenerMethod.changeMetadata:
-        // TODO: Handle this case.
-        break;
-      case HMSActionResultListenerMethod.endRoom:
-        break;
-      case HMSActionResultListenerMethod.removePeer:
-        break;
-      case HMSActionResultListenerMethod.acceptChangeRole:
-        break;
-      case HMSActionResultListenerMethod.changeRole:
-        break;
-      case HMSActionResultListenerMethod.changeTrackStateForRole:
-        break;
-      case HMSActionResultListenerMethod.startRtmpOrRecording:
-        break;
-      case HMSActionResultListenerMethod.stopRtmpAndRecording:
-        break;
-      case HMSActionResultListenerMethod.changeName:
-        break;
-      case HMSActionResultListenerMethod.sendBroadcastMessage:
-        // TODO: Handle this case.
-        break;
-      case HMSActionResultListenerMethod.sendGroupMessage:
-        // TODO: Handle this case.
-        break;
-      case HMSActionResultListenerMethod.sendDirectMessage:
-        // TODO: Handle this case.
-        break;
-      case HMSActionResultListenerMethod.hlsStreamingStarted:
-        break;
-      case HMSActionResultListenerMethod.hlsStreamingStopped:
-        break;
-      case HMSActionResultListenerMethod.startScreenShare:
-        break;
-      case HMSActionResultListenerMethod.stopScreenShare:
-        break;
-      case HMSActionResultListenerMethod.unknown:
-        break;
-      case HMSActionResultListenerMethod.startAudioShare:
-        // TODO: Handle this case.
-        break;
-      case HMSActionResultListenerMethod.stopAudioShare:
-        // TODO: Handle this case.
-        break;
-      case HMSActionResultListenerMethod.setSessionMetadata:
-        // TODO: Handle this case.
-        break;
-      case HMSActionResultListenerMethod.switchCamera:
-        // TODO: Handle this case.
-        break;
-    }
   }
 
   Future<List<HMSPeer>?> getPeers() async {

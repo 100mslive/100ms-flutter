@@ -32,6 +32,7 @@ class _HLSDeviceSettingsState extends State<HLSDeviceSettings> {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
+    MeetingStore _meetingStore = context.read<MeetingStore>();
     return FractionallySizedBox(
       heightFactor: 0.5,
       child: Padding(
@@ -122,7 +123,7 @@ class _HLSDeviceSettingsState extends State<HLSDeviceSettings> {
                       selectedItemHighlightColor: hmsdefaultColor,
                       value: Platform.isAndroid
                           ? data.item3
-                          : context.read<MeetingStore>().currentAudioDeviceMode,
+                          : _meetingStore.currentAudioDeviceMode,
                       icon: Icon(Icons.keyboard_arrow_down),
                       dropdownDecoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(8),

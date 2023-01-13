@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
-import 'package:hmssdk_flutter_example/hls-streaming/bottom_sheets/hls_participant_sheet.dart';
+import 'package:hmssdk_flutter_example/common/bottom_sheets/hls_participant_sheet.dart';
 import 'package:provider/provider.dart';
 
 //Project imports
@@ -12,6 +12,7 @@ import 'package:hmssdk_flutter_example/common/constant.dart';
 class TitleBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    MeetingStore _meetingStore = context.read<MeetingStore>();
     return GestureDetector(
       onTap: () => showModalBottomSheet(
           backgroundColor: themeBottomSheetColor,
@@ -20,8 +21,7 @@ class TitleBar extends StatelessWidget {
             borderRadius: BorderRadius.circular(20),
           ),
           builder: (ctx) => ChangeNotifierProvider.value(
-              value: context.read<MeetingStore>(),
-              child: HLSParticipantSheet()),
+              value: _meetingStore, child: HLSParticipantSheet()),
           isScrollControlled: true),
       child: Selector<MeetingStore, String?>(
           selector: (_, meetingStore) => meetingStore.highestSpeaker,

@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_flutter_example/common/ui/organisms/hls_aspect_ratio_options.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
-import 'package:hmssdk_flutter_example/hls-streaming/bottom_sheets/hls_participant_sheet.dart';
+import 'package:hmssdk_flutter_example/common/bottom_sheets/hls_participant_sheet.dart';
 import 'package:hmssdk_flutter_example/data_store/meeting_store.dart';
 import 'package:provider/provider.dart';
 
@@ -16,6 +16,7 @@ class HLSViewerSettings extends StatefulWidget {
 class _HLSViewerSettingsState extends State<HLSViewerSettings> {
   @override
   Widget build(BuildContext context) {
+    MeetingStore _meetingStore = context.read<MeetingStore>();
     return FractionallySizedBox(
       heightFactor: 0.5,
       child: Padding(
@@ -101,8 +102,7 @@ class _HLSViewerSettingsState extends State<HLSViewerSettings> {
                     ),
                     context: context,
                     builder: (ctx) => ChangeNotifierProvider.value(
-                        value: context.read<MeetingStore>(),
-                        child: HLSParticipantSheet()),
+                        value: _meetingStore, child: HLSParticipantSheet()),
                   );
                 },
                 contentPadding: EdgeInsets.zero,

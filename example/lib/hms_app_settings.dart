@@ -1,14 +1,16 @@
 import 'dart:io';
+import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:hmssdk_flutter_example/common/bottom_sheets/notification_settings.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:hmssdk_flutter_example/hls-streaming/util/hls_title_text.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter/services.dart' show rootBundle;
 
 class HMSAppSettings extends StatefulWidget {
   final String appVersion;
@@ -26,6 +28,9 @@ class _HMSAppSettingsState extends State<HMSAppSettings> {
   bool showStats = false;
   bool isSoftwareDecoderDisabled = true;
   bool isAudioMixerDisabled = true;
+  bool isAutoSimulcast = true;
+  var versions = {};
+
   @override
   void initState() {
     super.initState();
@@ -33,6 +38,18 @@ class _HMSAppSettingsState extends State<HMSAppSettings> {
   }
 
   Future<void> getAppSettings() async {
+    final String sdkVersions = await rootBundle
+        .loadString('packages/hmssdk_flutter/assets/sdk-versions.json');
+    versions = json.decode(sdkVersions);
+    if (versions['flutter'] == null) {
+      throw FormatException("flutter version not found");
+    }
+    if (Platform.isIOS && versions['ios'] == null) {
+      throw FormatException("ios version not found");
+    }
+    if (Platform.isAndroid && versions['android'] == null) {
+      throw FormatException("android version not found");
+    }
     joinWithMutedAudio =
         await Utilities.getBoolData(key: 'join-with-muted-audio') ?? true;
     joinWithMutedVideo =
@@ -45,7 +62,8 @@ class _HMSAppSettingsState extends State<HMSAppSettings> {
         await Utilities.getBoolData(key: 'software-decoder-disabled') ?? true;
     isAudioMixerDisabled =
         await Utilities.getBoolData(key: 'audio-mixer-disabled') ?? true;
-
+    isAutoSimulcast =
+        await Utilities.getBoolData(key: 'is-auto-simulcast') ?? true;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() {});
     });
@@ -343,6 +361,61 @@ class _HMSAppSettingsState extends State<HMSAppSettings> {
                   ListTile(
                     horizontalTitleGap: 2,
                     enabled: true,
+                    contentPadding: EdgeInsets.zero,
+                    leading: SvgPicture.asset(
+                      'assets/icons/simulcast.svg',
+                      color: themeDefaultColor,
+                    ),
+                    title: Text(
+                      "Enable Auto Simulcast",
+                      semanticsLabel: "fl_auto_simulcast",
+                      style: GoogleFonts.inter(
+                          fontSize: 14,
+                          color: themeDefaultColor,
+                          letterSpacing: 0.25,
+                          fontWeight: FontWeight.w600),
+                    ),
+                    trailing: CupertinoSwitch(
+                        activeColor: hmsdefaultColor,
+                        value: isAutoSimulcast,
+                        onChanged: (value) => {
+                              isAutoSimulcast = value,
+                              Utilities.saveBoolData(
+                                  key: 'is-auto-simulcast', value: value),
+                              setState(() {})
+                            }),
+                  ),
+                  ListTile(
+                      horizontalTitleGap: 2,
+                      onTap: () async {
+                        Navigator.pop(context);
+                        showModalBottomSheet(
+                            isScrollControlled: true,
+                            backgroundColor: themeBottomSheetColor,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            context: context,
+                            builder: (ctx) => NotificationSettings());
+                      },
+                      contentPadding: EdgeInsets.zero,
+                      leading: SvgPicture.asset(
+                        "assets/icons/notification.svg",
+                        fit: BoxFit.scaleDown,
+                        color: themeDefaultColor,
+                      ),
+                      title: Text(
+                        "Modify Notifications",
+                        semanticsLabel: "fl_notification_setting",
+                        style: GoogleFonts.inter(
+                            fontSize: 14,
+                            color: themeDefaultColor,
+                            letterSpacing: 0.25,
+                            fontWeight: FontWeight.w600),
+                      )),
+                  ListTile(
+                    horizontalTitleGap: 2,
+                    enabled: true,
                     onTap: _launchUrl,
                     contentPadding: EdgeInsets.zero,
                     leading: SvgPicture.asset(
@@ -401,7 +474,7 @@ class _HMSAppSettingsState extends State<HMSAppSettings> {
                             fontWeight: FontWeight.w400),
                       ),
                       trailing: Text(
-                        HMSSDKConstants.hmsSDKVersion,
+                        versions["flutter"] ?? "",
                         semanticsLabel: "hmssdk_version",
                         style: GoogleFonts.inter(
                             fontSize: 12,
@@ -431,8 +504,8 @@ class _HMSAppSettingsState extends State<HMSAppSettings> {
                     ),
                     trailing: Text(
                       Platform.isAndroid
-                          ? HMSSDKConstants.androidSDKVersion
-                          : HMSSDKConstants.iOSSDKVersion,
+                          ? versions["android"] ?? ""
+                          : versions["ios"] ?? "",
                       semanticsLabel: Platform.isAndroid
                           ? "android_sdk_version"
                           : "iOS_sdk_version",

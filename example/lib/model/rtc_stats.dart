@@ -3,7 +3,7 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 class RTCStats {
   HMSRemoteAudioStats? hmsRemoteAudioStats;
-  HMSLocalVideoStats? hmsLocalVideoStats;
+  List<HMSLocalVideoStats>? hmsLocalVideoStats;
   HMSRemoteVideoStats? hmsRemoteVideoStats;
   HMSLocalAudioStats? hmsLocalAudioStats;
 

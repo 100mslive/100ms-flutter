@@ -6,18 +6,14 @@ class HMSPublishSetting {
   final HMSAudioSetting? audioSetting;
   final HMSVideoSetting? videoSetting;
   final HMSVideoSetting? screenSetting;
-  final HMSSimulCastSettings? audioSimulCast;
-  final HMSSimulCastSettings? videoSimulCast;
-  final HMSSimulCastSettings? screenSimulCast;
+  final HMSSimulcastSettings? simulcast;
 
   HMSPublishSetting(
       {required this.allowed,
       this.audioSetting,
       this.videoSetting,
       this.screenSetting,
-      this.audioSimulCast,
-      this.videoSimulCast,
-      this.screenSimulCast});
+      this.simulcast});
 
   factory HMSPublishSetting.fromMap(Map map) {
     List<String> allowed;
@@ -37,17 +33,9 @@ class HMSPublishSetting {
     if (map.containsKey('screen_setting')) {
       screenSetting = HMSVideoSetting.fromMap(map['screen_setting']);
     }
-    HMSSimulCastSettings? audioSimulCast;
-    if (map.containsKey('audio_simul_cast')) {
-      audioSimulCast = HMSSimulCastSettings.fromMap(map['audio_simul_cast']);
-    }
-    HMSSimulCastSettings? videoSimulCast;
-    if (map.containsKey('video_simul_cast')) {
-      videoSimulCast = HMSSimulCastSettings.fromMap(map['video_simul_cast']);
-    }
-    HMSSimulCastSettings? screenSimulCast;
-    if (map.containsKey('screen_simul_cast')) {
-      screenSimulCast = HMSSimulCastSettings.fromMap(map['screen_simul_cast']);
+    HMSSimulcastSettings? simulcastSettings;
+    if (map.containsKey('simulcast')) {
+      simulcastSettings = HMSSimulcastSettings.fromMap(map['simulcast']);
     }
 
     return HMSPublishSetting(
@@ -55,8 +43,6 @@ class HMSPublishSetting {
         audioSetting: audioSetting,
         videoSetting: videoSetting,
         screenSetting: screenSetting,
-        audioSimulCast: audioSimulCast,
-        videoSimulCast: videoSimulCast,
-        screenSimulCast: screenSimulCast);
+        simulcast: simulcastSettings);
   }
 }

@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.media.projection.MediaProjectionManager
 import android.os.Build
+import android.util.Log
 import androidx.annotation.NonNull
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
@@ -19,6 +20,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import live.hms.hmssdk_flutter.methods.HMSPipAction
+import live.hms.hmssdk_flutter.methods.HMSRemoteVideoTrackAction
 import live.hms.hmssdk_flutter.methods.HMSSessionMetadataAction
 import live.hms.hmssdk_flutter.views.HMSVideoViewFactory
 import live.hms.video.audio.HMSAudioManager.*
@@ -45,11 +47,11 @@ class HmssdkFlutterPlugin :
     ActivityAware,
     EventChannel.StreamHandler {
 
-    private lateinit var channel: MethodChannel
-    private lateinit var meetingEventChannel: EventChannel
-    private lateinit var previewChannel: EventChannel
-    private lateinit var logsEventChannel: EventChannel
-    private lateinit var rtcStatsChannel: EventChannel
+    private var channel: MethodChannel? = null
+    private var meetingEventChannel: EventChannel? = null
+    private var previewChannel: EventChannel? = null
+    private var logsEventChannel: EventChannel? = null
+    private var rtcStatsChannel: EventChannel? = null
     private var eventSink: EventChannel.EventSink? = null
     private var previewSink: EventChannel.EventSink? = null
     private var logsSink: EventChannel.EventSink? = null
@@ -77,11 +79,11 @@ class HmssdkFlutterPlugin :
             this.rtcStatsChannel =
                 EventChannel(flutterPluginBinding.binaryMessenger, "rtc_event_channel")
 
-            this.meetingEventChannel.setStreamHandler(this)
-            this.channel.setMethodCallHandler(this)
-            this.previewChannel.setStreamHandler(this)
-            this.logsEventChannel.setStreamHandler(this)
-            this.rtcStatsChannel.setStreamHandler(this)
+            this.meetingEventChannel?.setStreamHandler(this) ?: Log.e("Channel Error", "Meeting event channel not found")
+            this.channel?.setMethodCallHandler(this) ?: Log.e("Channel Error", "Event channel not found")
+            this.previewChannel?.setStreamHandler(this) ?: Log.e("Channel Error", "Preview channel not found")
+            this.logsEventChannel?.setStreamHandler(this) ?: Log.e("Channel Error", "Logs event channel not found")
+            this.rtcStatsChannel?.setStreamHandler(this) ?: Log.e("Channel Error", "RTC Stats channel not found")
             this.hmsVideoFactory = HMSVideoViewFactory(this)
 
             flutterPluginBinding.platformViewRegistry.registerViewFactory(
@@ -89,6 +91,8 @@ class HmssdkFlutterPlugin :
                 hmsVideoFactory
             )
             hmssdkFlutterPlugin = this
+        } else {
+            Log.e("Plugin Warning", "hmssdkFlutterPlugin already exists in onAttachedToEngine")
         }
     }
 
@@ -180,6 +184,9 @@ class HmssdkFlutterPlugin :
             }
             "enter_pip_mode", "is_pip_active", "is_pip_available" -> {
                 HMSPipAction.pipActions(call, result, this.activity)
+            }
+            "set_simulcast_layer", "get_layer", "get_layer_definition" -> {
+                HMSRemoteVideoTrackAction.remoteVideoTrackActions(call, result, hmssdk!!)
             }
             else -> {
                 result.notImplemented()
@@ -343,12 +350,14 @@ class HmssdkFlutterPlugin :
 
     override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
         if (hmssdkFlutterPlugin != null) {
-            channel.setMethodCallHandler(null)
-            meetingEventChannel.setStreamHandler(null)
-            previewChannel.setStreamHandler(null)
-            logsEventChannel.setStreamHandler(null)
-            rtcStatsChannel.setStreamHandler(null)
+            channel?.setMethodCallHandler(null) ?: Log.e("Channel Error", "Event channel not found")
+            meetingEventChannel?.setStreamHandler(null) ?: Log.e("Channel Error", "Meeting event channel not found")
+            previewChannel?.setStreamHandler(null) ?: Log.e("Channel Error", "Preview channel not found")
+            logsEventChannel?.setStreamHandler(null) ?: Log.e("Channel Error", "Logs event channel not found")
+            rtcStatsChannel?.setStreamHandler(null) ?: Log.e("Channel Error", "RTC Stats channel not found")
             hmssdkFlutterPlugin = null
+        } else {
+            Log.e("Plugin Error", "hmssdkFlutterPlugin is null in onDetachedFromEngine")
         }
     }
 
@@ -717,7 +726,7 @@ class HmssdkFlutterPlugin :
         override fun onJoin(room: HMSRoom) {
 //            hasJoined = true
             hmssdk!!.addAudioObserver(hmsAudioListener)
-            previewChannel.setStreamHandler(null)
+            previewChannel?.setStreamHandler(null) ?: Log.e("Channel Error", "Preview channel not found")
             val args = HashMap<String, Any?>()
             args.put("event_name", "on_join_room")
 
@@ -926,6 +935,14 @@ class HmssdkFlutterPlugin :
         )
     }
 
+    public fun onVideoViewError(args: HashMap<String, Any?>) {
+        if (args["data"] != null) {
+            CoroutineScope(Dispatchers.Main).launch {
+                eventSink?.success(args)
+            }
+        }
+    }
+
     private var androidScreenshareResult: Result? = null
 
     private fun startScreenShare(result: Result) {
@@ -1073,6 +1090,16 @@ class HmssdkFlutterPlugin :
             hmsTrack: HMSTrack?,
             hmsPeer: HMSPeer?
         ) {
+            if (hmsPeer == null) {
+                Log.e("onRemoteVideoStats error", "Peer is null")
+                return
+            }
+
+            if (hmsTrack == null) {
+                Log.e("onRemoteVideoStats error", "Video Track is null")
+                return
+            }
+
             val args = HashMap<String, Any?>()
             args["event_name"] = "on_remote_video_stats"
             args["data"] = HMSRtcStatsExtension.toDictionary(
@@ -1080,7 +1107,6 @@ class HmssdkFlutterPlugin :
                 peer = hmsPeer,
                 track = hmsTrack
             )
-
             if (args["data"] != null) {
                 CoroutineScope(Dispatchers.Main).launch {
                     rtcSink?.success(args)
@@ -1093,6 +1119,16 @@ class HmssdkFlutterPlugin :
             hmsTrack: HMSTrack?,
             hmsPeer: HMSPeer?
         ) {
+            if (hmsPeer == null) {
+                Log.e("onRemoteAudioStats error", "Peer is null")
+                return
+            }
+
+            if (hmsTrack == null) {
+                Log.e("onRemoteAudioStats error", "Video Track is null")
+                return
+            }
+
             val args = HashMap<String, Any?>()
             args["event_name"] = "on_remote_audio_stats"
             args["data"] = HMSRtcStatsExtension.toDictionary(
@@ -1109,15 +1145,25 @@ class HmssdkFlutterPlugin :
         }
 
         override fun onLocalVideoStats(
-            videoStats: HMSLocalVideoStats,
+            videoStats: List<HMSLocalVideoStats>,
             hmsTrack: HMSTrack?,
             hmsPeer: HMSPeer?
         ) {
+            if (hmsPeer == null) {
+                Log.e("onLocalVideoStats error", "Peer is null")
+                return
+            }
+
+            if (hmsTrack == null) {
+                Log.e("onLocalVideoStats error", "Video Track is null")
+                return
+            }
+
             val args = HashMap<String, Any?>()
             args["event_name"] = "on_local_video_stats"
             args["data"] = HMSRtcStatsExtension.toDictionary(
                 hmsLocalVideoStats = videoStats,
-                peer = getLocalPeer(),
+                peer = hmsPeer,
                 track = hmsTrack
             )
 
@@ -1133,11 +1179,21 @@ class HmssdkFlutterPlugin :
             hmsTrack: HMSTrack?,
             hmsPeer: HMSPeer?
         ) {
+            if (hmsPeer == null) {
+                Log.e("onLocalAudioStats error", "Peer is null")
+                return
+            }
+
+            if (hmsTrack == null) {
+                Log.e("onLocalAudioStats error", "Video Track is null")
+                return
+            }
+
             val args = HashMap<String, Any?>()
             args["event_name"] = "on_local_audio_stats"
             args["data"] = HMSRtcStatsExtension.toDictionary(
                 hmsLocalAudioStats = audioStats,
-                peer = getLocalPeer(),
+                peer = hmsPeer,
                 track = hmsTrack
             )
 

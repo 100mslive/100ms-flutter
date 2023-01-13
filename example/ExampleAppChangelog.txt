@@ -1,15 +1,24 @@
-- Added Bulk Role Change APIs & Example app UI
+- Added support for Simulcast
 
-- Added ability to Switch Audio Output on iOS
+- Migrated from SurfaceViewRenderer to HMSVideoView on Android
 
-- Corrected showing of Start / Stop HLS / RTMP Streams CTAs only if the role has permission
+- Added options to Enable/Disable Notifications in Room
 
-- Added option to change Aspect Ratio of HLS Player to match Video Stream Output
+- Added option to Disable Automatic Simulcast before joining Room
 
-- Corrected local peer video status during app transitions
+- Added option to Pin a Tile in Full Screen Mode
 
-- Corrected local mute status of Room on iOS during app transitions
+- Fixed black tile showing up after background to foreground app transitions
 
-Flutter SDK: 1.1.0
-Android SDK: 2.5.4
-iOS SDK: 0.5.3
+- Added Auto Simulcast check for Remote Peer's Video tiles
+
+- Removed late initializers for Event Channels
+
+- Added Simulcast support for Local Video RTC Stats
+
+- Added Android Foreground Service to allow Microphone & Camera access when app is in Background & Screen is locked for more than 60 seconds
+
+
+Flutter SDK: 1.2.0
+Android SDK: 2.5.6
+iOS SDK: 0.5.5
