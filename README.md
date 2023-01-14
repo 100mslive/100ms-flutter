@@ -308,22 +308,17 @@ class Meeting implements HMSUpdateListener {
 
     late HMSSDK hmsSDK;
 
-    Meeting(){
+    Meeting() {
+        initHMSSDK();
+    }
 
-        // create an instance of `HMSSDK` using the `build` function. This can be called in the constructor or on a function call depending on the implementation.
-        hmsSDK = HMSSDK();
-        hmsSDK.build();
-
-        // The methods of `HMSUpdateListener` are invoked to notify updates happening in the room like as soon as `join` is successful we get `onJoin` callback.
-        // `this` value corresponds to the instance implementing HMSUpdateListener
-        hmsSDK.addUpdateListener(this);
-        
-        // create an object of `HMSConfig` class using the available join configurations
+    void initHMSSDK() async {
+        hmsSDK = HMSSDK(); // create an instance of `HMSSDK` by invoking it's constructor
+        await hmsSDK.build(); // ensure to await while invoking the `build` method
+        hmsSDK.addUpdateListener(this); // `this` value corresponds to the instance implementing HMSUpdateListener
         HMSConfig config = HMSConfig(authToken: 'eyJH5c', // client-side token generated from your token service
                                 userName: 'John Appleseed');
-
-        // Now, we are primed to join the room. All you have to do is call `join` by passing the `config` object.
-        hmsSDK.join(config: config);
+        hmsSDK.join(config: config); // Now, we are primed to join the room. All you have to do is call `join` by passing the `config` object.
     }
 
     ... // implement methods of HMSUpdateListener
