@@ -19,7 +19,7 @@ class HMSHLSStreamingState {
 
           variants.add(variant);
         } catch (e) {
-          print(e);
+          print("HMSHLSStreamingState map: $map error: $e");
         }
       }
     }
