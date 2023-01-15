@@ -55,7 +55,7 @@ class HMSRoom {
           HMSPeer peer = HMSPeer.fromMap(each);
           peers.add(peer);
         } catch (e) {
-          print(e);
+          print("HMSRoom map: $map error: $e");
         }
       }
     }
