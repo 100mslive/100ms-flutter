@@ -41,24 +41,24 @@ class HMSPIPAction {
         print(#function)
         
         guard #available(iOS 15.0, *) else {
-            result(HMSErrorExtension.getError("iOS 15 or above is required"))
+            result(HMSErrorExtension.createError(0, false, true, description: "iOS 15 or above is required"))
             return }
         
         guard AVPictureInPictureController.isPictureInPictureSupported() else {
-            result(HMSErrorExtension.getError("PIP is not supported"))
+            result(HMSErrorExtension.createError(0, false, true, description: "PIP is not supported"))
             return }
         
         guard let uiView = UIApplication.shared.keyWindow?.visibleViewController?.view else {
-            result(HMSErrorExtension.getError("Unable to setup PIP"))
+            result(HMSErrorExtension.createError(0, false, true, description: "Unable to setup PIP"))
             return }
         
         print(#function, "uiview", uiView, uiView.subviews)
                 
-        if(uiView.subviews.isEmpty){
-            result(HMSErrorExtension.getError("Unable to setup PIP"))
+        if(uiView.subviews.count < 3){
+            result(HMSErrorExtension.createError(0, false, true, description: "Unable to setup PIP"))
             return
         }
-        let scrollView = uiView.subviews[1] //uiView.subviews.first { $0.isKind(of: ChildClippingView.self) }
+        let scrollView = uiView.subviews[2] //uiView.subviews.first { $0.isKind(of: ChildClippingView.self) }
         
 //        guard let scrollView = scrollView else { return }
         
@@ -68,10 +68,16 @@ class HMSPIPAction {
         
         self.pipVideoCallViewController = pipVideoCallViewController
         
+        let remotePeer = hmsSDK?.remotePeers?.first {!($0.videoTrack?.isMute() ?? true)}
+        
+        guard let remotePeer = remotePeer else {
+            result(HMSErrorExtension.createError(0, false, true, description: "Unable to find Active Remote Peer"))
+            return}
+        
         let model = PiPModel()
-        model.track = hmsSDK?.remotePeers?.first?.videoTrack
-        model.name = hmsSDK?.remotePeers?.first?.name
-        model.isVideoActive = true
+        model.track = remotePeer.videoTrack
+        model.name = remotePeer.name
+        model.isVideoActive = !(remotePeer.videoTrack?.isMute() ?? true)
         model.pipViewEnabled = true
     
         

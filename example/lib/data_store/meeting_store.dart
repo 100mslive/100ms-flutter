@@ -1301,12 +1301,20 @@ class MeetingStore extends ChangeNotifier
     }
   }
 
+  bool isPIPsetup = false;
   void startPIP() async {
+    if (isPIPsetup) {
+      _hmsSDKInteractor.startPIP();
+      return;
+    }
     bool _isPipAvailable = await _hmsSDKInteractor.isPipAvailable();
     if (_isPipAvailable) {
-      bool isPIPSetup = await _hmsSDKInteractor.setupPip(true);
-      if (isPIPSetup) {
-        _hmsSDKInteractor.startPip();
+      HMSException? error = await _hmsSDKInteractor.setupPIP(true);
+      if (error == null) {
+        isPIPsetup = true;
+        _hmsSDKInteractor.startPIP();
+      } else {
+        print(error.description);
       }
     }
   }

@@ -1186,14 +1186,13 @@ class HMSSDK {
     return result ?? false;
   }
 
-  Future<bool> setupPIP(bool? autoEnterPip) async {
+  Future<HMSException?> setupPIP(bool? autoEnterPip) async {
     var result = await PlatformService.invokeMethod(PlatformMethod.setupPIP,
         arguments: {"auto_enter_pip": autoEnterPip ?? false});
-    if (result == null) {
-      return true;
-    } else {
-      return false;
+    if (result != null) {
+      return HMSException.fromMap(result["error"]);
     }
+    return null;
   }
 
   void startPIP() {
