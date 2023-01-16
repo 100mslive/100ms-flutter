@@ -10,10 +10,11 @@ import HMSSDK
 import AVKit
 import SwiftUI
 
+@available(iOS 15.0, *)
 class HMSPIPAction {
     static var pipVideoCallViewController: UIViewController?
     static var pipController: AVPictureInPictureController?
-    
+    static var model: PiPModel?
     static func pipAction(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?) {
         switch call.method {
         case "setup_pip":
@@ -30,6 +31,9 @@ class HMSPIPAction {
         
         case "is_pip_active":
             isPIPActive(result)
+            
+        case "change_track_pip":
+            changeTrack(call, result, hmsSDK)
 
         default:
             result(FlutterMethodNotImplemented)
@@ -39,56 +43,56 @@ class HMSPIPAction {
     static func setupPIP(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?) {
         
         print(#function)
-        
-        guard #available(iOS 15.0, *) else {
-            result(HMSErrorExtension.createError(0, false, true, description: "iOS 15 or above is required"))
-            return }
+//
+//        guard #available(iOS 15.0, *) else {
+//            result(HMSErrorExtension.createError(0, false, true, description: "iOS 15 or above is required"))
+//            return }
         
         guard AVPictureInPictureController.isPictureInPictureSupported() else {
             result(HMSErrorExtension.createError(0, false, true, description: "PIP is not supported"))
             return }
         
-        guard let uiView = UIApplication.shared.keyWindow?.visibleViewController?.view else {
+        guard let uiView = UIApplication.shared.keyWindow?.rootViewController?.view else {
             result(HMSErrorExtension.createError(0, false, true, description: "Unable to setup PIP"))
             return }
         
-        print(#function, "uiview", uiView, uiView.subviews)
-                
-        if(uiView.subviews.count < 3){
-            result(HMSErrorExtension.createError(0, false, true, description: "Unable to setup PIP"))
-            return
-        }
-        let scrollView = uiView.subviews[2] //uiView.subviews.first { $0.isKind(of: ChildClippingView.self) }
-        
+//        print(#function, "uiview", uiView, uiView.subviews)
+//
+//        if(uiView.subviews.count < 3){
+//            result(HMSErrorExtension.createError(0, false, true, description: "Unable to setup PIP"))
+//            return
+//        }
+//        let scrollView = uiView.subviews[2] //uiView.subviews.first { $0.isKind(of: ChildClippingView.self) }
+//
 //        guard let scrollView = scrollView else { return }
         
-        print(#function, "#1 scrollView: ", scrollView, uiView, uiView.subviews)
+//        print(#function, "#1 scrollView: ", scrollView, uiView, uiView)
         
         let pipVideoCallViewController = AVPictureInPictureVideoCallViewController()
         
         self.pipVideoCallViewController = pipVideoCallViewController
         
-        let remotePeer = hmsSDK?.remotePeers?.first {!($0.videoTrack?.isMute() ?? true)}
+//        let remotePeer = hmsSDK?.remotePeers?.first {!($0.videoTrack?.isMute() ?? true)}
+//
+//        guard let remotePeer = remotePeer else {
+//            result(HMSErrorExtension.createError(0, false, true, description: "Unable to find Active Remote Peer"))
+//            return}
         
-        guard let remotePeer = remotePeer else {
-            result(HMSErrorExtension.createError(0, false, true, description: "Unable to find Active Remote Peer"))
-            return}
-        
-        let model = PiPModel()
-        model.track = remotePeer.videoTrack
-        model.name = remotePeer.name
-        model.isVideoActive = !(remotePeer.videoTrack?.isMute() ?? true)
-        model.pipViewEnabled = true
+        model = PiPModel()
+        model!.track = hmsSDK?.localPeer?.videoTrack
+        model!.name = hmsSDK?.localPeer?.name
+        model!.isVideoActive = !(hmsSDK?.localPeer?.videoTrack?.isMute() ?? true)
+        model!.pipViewEnabled = true
     
         
-        let controller = UIHostingController(rootView: PiPView(model: model))
+        let controller = UIHostingController(rootView: PiPView(model: model!))
         
         pipVideoCallViewController.view.addConstrained(subview: controller.view)
         
-        pipVideoCallViewController.preferredContentSize = CGSize(width: scrollView.frame.size.width, height: scrollView.frame.size.height)
+        pipVideoCallViewController.preferredContentSize = CGSize(width: uiView.frame.size.width, height: uiView.frame.size.height)
         
         let pipContentSource = AVPictureInPictureController.ContentSource(
-            activeVideoCallSourceView: scrollView,
+            activeVideoCallSourceView: uiView,
             contentViewController: pipVideoCallViewController)
        
         pipController = AVPictureInPictureController(contentSource: pipContentSource)
@@ -107,7 +111,7 @@ class HMSPIPAction {
             stopPIP()
         }
         
-        print(#function, "#3", scrollView, controller, pipVideoCallViewController, pipController!)
+        print(#function, "#3", uiView, controller, pipVideoCallViewController, pipController!)
         result(nil)
     }
     
@@ -119,6 +123,26 @@ class HMSPIPAction {
         pipController?.stopPictureInPicture()
     }
     
+//    static func changeTrack(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?) {
+//        print(#function,"#1","peerId")
+//        let arguments = call.arguments as! [AnyHashable: Any]
+//        guard let peerId = arguments["peer_id"] as? String,
+//              let peer = HMSUtilities.getPeer(for: peerId, in: hmsSDK!.room!)
+//        else {
+//            result(HMSErrorExtension.createError(0, false, true, description: "Unable to find Active Remote Peer"))
+//            return
+//        }
+//        print(#function,"#2",peerId)
+//        if let trackId = arguments["track_id"] as? String {
+//            let track = HMSUtilities.getVideoTrack(for: trackId, in: hmsSDK!.room!)
+//            model?.track = track
+//            model?.isVideoActive = !(track?.isMute() ?? true)
+//            print(#function,"#3",trackId)
+//        }
+//        print(#function,peerId)
+//        model?.name = peer.name
+//    }
+    
     static func isPIPAvailable(_ result: @escaping FlutterResult) {
         if(AVPictureInPictureController.isPictureInPictureSupported()){
             result(true)
@@ -129,5 +153,58 @@ class HMSPIPAction {
         if(pipController != nil && pipController!.isPictureInPictureActive){
             result(true)
         } else { result(false) }
+    }
+    
+    static func changeTrack(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?) {
+        let arguments = call.arguments as! [AnyHashable: Any]
+        
+        guard let trackID = arguments["track_id"] as? String,
+              let track = HMSUtilities.getVideoTrack(for: trackID, in: (hmsSDK?.room)!)
+        else {
+            result(HMSErrorExtension.createError(0, false, true, description: "Unable to find track ID"))
+            return
+        }
+        model?.track = track
+    }
+    
+}
+
+extension SwiftHmssdkFlutterPlugin: AVPictureInPictureControllerDelegate {
+    
+    public func pictureInPictureControllerWillStartPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
+        print(#function)
+    }
+    
+    public func pictureInPictureControllerDidStartPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
+        print(#function)
+    }
+    
+    public func pictureInPictureControllerDidStopPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
+        print(#function)
+    }
+    
+    public func pictureInPictureController(_ pictureInPictureController: AVPictureInPictureController, failedToStartPictureInPictureWithError error: Error) {
+        print(#function, error)
+        assertionFailure("failedToStartPictureInPictureWithError \(error)")
+    }
+    
+    public func pictureInPictureControllerWillStopPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
+        print(#function)
+    }
+    
+    public func pictureInPictureController(_ pictureInPictureController: AVPictureInPictureController, restoreUserInterfaceForPictureInPictureStopWithCompletionHandler completionHandler: @escaping (Bool) -> Void) {
+        print(#function)
+    }
+}
+
+
+extension UIView {
+    func addConstrained(subview: UIView) {
+        addSubview(subview)
+        subview.translatesAutoresizingMaskIntoConstraints = false
+        subview.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        subview.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+        subview.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
+        subview.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
     }
 }

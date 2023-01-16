@@ -19,18 +19,15 @@ struct PiPView: View {
                 if let roomEndReason = model.roomEndedString {
                     Text(roomEndReason)
                 }
-                else if let track = model.screenTrack {
+                else if let track = model.track {
                     GeometryReader { geo in
                         HMSSampleBufferSwiftUIView(track: track, contentMode: .scaleAspectFit, preferredSize: geo.size, model: model)
                             .frame(width: geo.size.width, height: geo.size.height)
                     }
                 }
-                else if let track = model.track, model.isVideoActive {
-                    HMSSampleBufferSwiftUIView(track: track, contentMode: .scaleAspectFill, model: model)
-                }
-                else {
-                    Text(model.name ?? "NA")
-                }
+//                else if let track = model.track {
+//                    HMSSampleBufferSwiftUIView(track: track, contentMode: .scaleAspectFit, model: model)
+//                }
             }
             .foregroundColor(.white)
             .frame(maxWidth: .infinity, maxHeight: .infinity)

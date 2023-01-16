@@ -164,7 +164,8 @@ enum PlatformMethod {
   getLayerDefinition,
   setupPIP,
   startPIP,
-  stopPIP
+  stopPIP,
+  changeTrackPIP
 }
 
 extension PlatformMethodValues on PlatformMethod {
@@ -388,6 +389,8 @@ extension PlatformMethodValues on PlatformMethod {
         return "stop_pip";
       case PlatformMethod.startPIP:
         return "start_pip";
+      case PlatformMethod.changeTrackPIP:
+        return "change_track_pip";
       default:
         return 'unknown';
     }

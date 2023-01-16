@@ -671,6 +671,10 @@ class MeetingStore extends ChangeNotifier
 
   @override
   void onUpdateSpeakers({required List<HMSSpeaker> updateSpeakers}) {
+    if (updateSpeakers.isNotEmpty && isPipActive) {
+      _hmsSDKInteractor
+          .changeTrackPIP(updateSpeakers[0].peer.videoTrack ?? null);
+    }
     if (activeSpeakerIds.isNotEmpty) {
       activeSpeakerIds.forEach((key) {
         int index = peerTracks.indexWhere((element) => element.uid == key);
@@ -1305,6 +1309,7 @@ class MeetingStore extends ChangeNotifier
   void startPIP() async {
     if (isPIPsetup) {
       _hmsSDKInteractor.startPIP();
+      isPipActive = true;
       return;
     }
     bool _isPipAvailable = await _hmsSDKInteractor.isPipAvailable();
@@ -1313,6 +1318,7 @@ class MeetingStore extends ChangeNotifier
       if (error == null) {
         isPIPsetup = true;
         _hmsSDKInteractor.startPIP();
+        isPipActive = true;
       } else {
         print(error.description);
       }

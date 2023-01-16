@@ -365,6 +365,10 @@ class HMSSDKInteractor {
     hmsSDK.stopPIP();
   }
 
+  void changeTrackPIP(HMSVideoTrack? track) {
+    hmsSDK.changeTrackPIP(track);
+  }
+
   Future<bool> isPipActive() {
     return hmsSDK.isPipActive();
   }

@@ -199,7 +199,10 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         case "set_simulcast_layer", "get_layer", "get_layer_definition":
             HMSRemoteVideoTrackExtension.remoteVideoTrackActions(call, result, hmsSDK!)
             
-        case "setup_pip","start_pip", "stop_pip","is_pip_available","is_pip_active":
+        case "setup_pip","start_pip", "stop_pip","is_pip_available","is_pip_active","change_track_pip":
+            guard #available(iOS 15.0, *) else {
+                        result(HMSErrorExtension.createError(0, false, true, description: "iOS 15 or above is required"))
+                        return }
             HMSPIPAction.pipAction(call, result, hmsSDK)
 
         default:
@@ -511,6 +514,11 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                 result(HMSErrorExtension.toDictionary(error))
             } else {
                 result(nil)
+                if #available(iOS 15.0, *) {
+                    if(HMSPIPAction.pipController?.isPictureInPictureActive ?? false){
+                        HMSPIPAction.pipController?.stopPictureInPicture()
+                    }
+                }
             }
         }
     }
@@ -1004,6 +1012,12 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         ] as [String: Any]
 
         eventSink?(data)
+        if #available(iOS 15.0, *) {
+            if(HMSPIPAction.pipController?.isPictureInPictureActive ?? false){
+                HMSPIPAction.model?.roomEndedString = "Room Ended"
+                HMSPIPAction.pipController?.stopPictureInPicture()
+            }
+        }
     }
 
     public func onReconnecting() {
@@ -1159,65 +1173,25 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
 }
 
-extension SwiftHmssdkFlutterPlugin: AVPictureInPictureControllerDelegate {
-    
-    public func pictureInPictureControllerWillStartPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
-        print(#function)
-    }
-    
-    public func pictureInPictureControllerDidStartPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
-        print(#function)
-    }
-    
-    public func pictureInPictureControllerDidStopPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
-        print(#function)
-    }
-    
-    public func pictureInPictureController(_ pictureInPictureController: AVPictureInPictureController, failedToStartPictureInPictureWithError error: Error) {
-        print(#function, error)
-        assertionFailure("failedToStartPictureInPictureWithError \(error)")
-    }
-    
-    public func pictureInPictureControllerWillStopPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
-        print(#function)
-    }
-    
-    public func pictureInPictureController(_ pictureInPictureController: AVPictureInPictureController, restoreUserInterfaceForPictureInPictureStopWithCompletionHandler completionHandler: @escaping (Bool) -> Void) {
-        print(#function)
-    }
-}
-
-
-extension UIView {
-    func addConstrained(subview: UIView) {
-        addSubview(subview)
-        subview.translatesAutoresizingMaskIntoConstraints = false
-        subview.topAnchor.constraint(equalTo: topAnchor).isActive = true
-        subview.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
-        subview.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
-        subview.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
-    }
-}
-
-extension UIWindow {
-    /// Returns the currently visible view controller if any reachable within the window.
-    public var visibleViewController: UIViewController? {
-        return UIWindow.visibleViewController(from: rootViewController)
-    }
-
-    public static func visibleViewController(from viewController: UIViewController?) -> UIViewController? {
-        switch viewController {
-        case let navigationController as UINavigationController:
-            return UIWindow.visibleViewController(from: navigationController.visibleViewController ?? navigationController.topViewController)
-
-        case let tabBarController as UITabBarController:
-            return UIWindow.visibleViewController(from: tabBarController.selectedViewController)
-
-        case let presentingViewController where viewController?.presentedViewController != nil:
-            return UIWindow.visibleViewController(from: presentingViewController?.presentedViewController)
-
-        default:
-            return viewController
-        }
-    }
-}
+//extension UIWindow {
+//    /// Returns the currently visible view controller if any reachable within the window.
+//    public var visibleViewController: UIViewController? {
+//        return UIWindow.visibleViewController(from: rootViewController)
+//    }
+//
+//    public static func visibleViewController(from viewController: UIViewController?) -> UIViewController? {
+//        switch viewController {
+//        case let navigationController as UINavigationController:
+//            return UIWindow.visibleViewController(from: navigationController.visibleViewController ?? navigationController.topViewController)
+//
+//        case let tabBarController as UITabBarController:
+//            return UIWindow.visibleViewController(from: tabBarController.selectedViewController)
+//
+//        case let presentingViewController where viewController?.presentedViewController != nil:
+//            return UIWindow.visibleViewController(from: presentingViewController?.presentedViewController)
+//
+//        default:
+//            return viewController
+//        }
+//    }
+//}

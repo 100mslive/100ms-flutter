@@ -1203,6 +1203,11 @@ class HMSSDK {
     PlatformService.invokeMethod(PlatformMethod.stopPIP);
   }
 
+  void changeTrackPIP(HMSVideoTrack? track) {
+    PlatformService.invokeMethod(PlatformMethod.changeTrackPIP,
+        arguments: {"track_id": track?.trackId});
+  }
+
   ///Method to check whether pip mode is active currently
   ///
   ///Refer [PIP mode guide here](https://www.100ms.live/docs/flutter/v2/advanced-features/pip-mode)
