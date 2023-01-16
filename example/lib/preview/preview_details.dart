@@ -95,9 +95,9 @@ class _PreviewDetailsState extends State<PreviewDetails> {
           bool mirrorCamera =
               await Utilities.getBoolData(key: 'mirror-camera') ?? false;
           HMSSDKInteractor _hmsSDKInteractor = HMSSDKInteractor(
-              appGroup: "group.flutterhms",
+              appGroup: "group.flutterhms", // Ensure to pass correct AppGroup values set for your Apple Developer Account. This is required for starting Screenshare from iOS Devices.
               preferredExtension:
-                  "live.100ms.flutter.FlutterBroadcastUploadExtension",
+                  "live.100ms.flutter.FlutterBroadcastUploadExtension", // Ensure to pass correct Preferred Extension set in your Xcode project. This is required for starting Screenshare from iOS Devices.
               joinWithMutedAudio: joinWithMutedAudio,
               joinWithMutedVideo: joinWithMutedVideo,
               isSoftwareDecoderDisabled: isSoftwareDecoderDisabled,

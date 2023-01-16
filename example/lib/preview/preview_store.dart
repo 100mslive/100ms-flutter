@@ -22,9 +22,9 @@ class PreviewStore extends ChangeNotifier
     /// [joinWithMutedAudio] & [joinWithMutedVideo] are required to set the initial audio/video state i.e what should be camera and mic
     /// state while room is joined.By default both audio and video are kept as mute.
     hmsSDKInteractor = HMSSDKInteractor(
-        appGroup: "group.flutterhms",
+        appGroup: "group.flutterhms", // Ensure to pass correct AppGroup values set for your Apple Developer Account. This is required for starting Screenshare from iOS Devices.
         preferredExtension:
-            "live.100ms.flutter.FlutterBroadcastUploadExtension",
+            "live.100ms.flutter.FlutterBroadcastUploadExtension", // Ensure to pass correct Preferred Extension set in your Xcode project. This is required for starting Screenshare from iOS Devices.
         joinWithMutedAudio: joinWithMutedAudio,
         joinWithMutedVideo: joinWithMutedVideo,
         isSoftwareDecoderDisabled: isSoftwareDecoderDisabled,

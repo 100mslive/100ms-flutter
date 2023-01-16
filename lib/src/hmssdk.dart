@@ -32,6 +32,18 @@ import '../hmssdk_flutter.dart';
 /// Refer [HMSSDK quick start guide available here](https://www.100ms.live/docs/flutter/v2/guides/quickstart)
 
 class HMSSDK {
+
+  /// The public interface of 100ms SDK. Create an instance of HMSSDK to start using the SDK.
+  ///
+  /// Parameters:
+  ///
+  /// **hmsTrackSetting** - To modify local peer's audio & video tracks settings. Only required for advanced use cases. Refer [hmsTrackSetting guide here](https://www.100ms.live/docs/flutter/v2/advanced-features/set-track-settings)
+  ///
+  /// **appGroup** - Ensure to pass correct AppGroup values set for your Apple Developer Account. This is only required for starting Screenshare (Broadcast Screen) from iOS Devices. Refer [iOS Screen share guide here](https://www.100ms.live/docs/flutter/v2/features/screen-share#i-os-setup)
+  ///
+  /// **preferredExtension** - Ensure to pass correct Preferred Extension set in your Xcode project. This is only required for starting Screenshare (Broadcast Screen) from iOS Devices. Refer [iOS Screen share guide here](https://www.100ms.live/docs/flutter/v2/features/screen-share#i-os-setup)
+  ///
+  /// **hmsLogSettings** - It is used to set the Log Level setting. Refer [hmsLogSettings guide here](https://www.100ms.live/docs/flutter/v2/features/error-handling#setting-log-levels-in-sdk)
   HMSSDK(
       {this.hmsTrackSetting,
       this.appGroup,

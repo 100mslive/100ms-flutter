@@ -33,8 +33,8 @@ class HMSSDKInteractor {
         joinWithMutedAudio: joinWithMutedAudio,
         isSoftwareDecoderDisabled: isSoftwareDecoderDisabled);
     hmsSDK = HMSSDK(
-        appGroup: appGroup,
-        preferredExtension: preferredExtension,
+        appGroup: appGroup, // Ensure to pass correct AppGroup values set for your Apple Developer Account. This is required for starting Screenshare from iOS Devices.
+        preferredExtension: preferredExtension, // Ensure to pass correct Preferred Extension set in your Xcode project. This is required for starting Screenshare from iOS Devices.
         hmsLogSettings: hmsLogSettings,
         hmsTrackSetting: trackSetting);
     build();
