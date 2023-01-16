@@ -14,7 +14,7 @@ class HMSVideoAction {
         fun videoActions(call: MethodCall, result: Result,hmssdk: HMSSDK){
             when (call.method) {
                 "switch_video" -> {
-                    switchVideo(call, result,hmssdk)
+                    switchVideo(result,hmssdk)
                 }
 
                 "switch_camera" -> {
@@ -46,12 +46,11 @@ class HMSVideoAction {
             }
         }
 
-        private fun switchVideo(call: MethodCall, result: Result,hmssdk:HMSSDK) {
-            val argsIsOn = call.argument<Boolean>("is_on")
+        private fun switchVideo(result: Result,hmssdk:HMSSDK) {
             val peer = hmssdk.getLocalPeer()
             val videoTrack = peer?.videoTrack
             if (videoTrack != null) {
-                videoTrack.setMute(argsIsOn ?: false)
+                videoTrack.setMute(!(videoTrack.isMute))
                 result.success(true)
             } else {
                 result.success(false)

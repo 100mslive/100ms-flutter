@@ -132,12 +132,12 @@ class HMSSDK {
   }
 
   /// To switch local peer's audio on/off.
-  /// Pass the bool value to [isOn] to change the current audio status
-  ///
+  /// This function toggles the current microphone state i.e
+  /// If it's unmuted it will get muted
+  /// If it's muted it will get unmuted
   /// Refer [switch audio guide here](https://www.100ms.live/docs/flutter/v2/features/mute).
-  Future<HMSException?> switchAudio({bool isOn = false}) async {
-    bool result = await PlatformService.invokeMethod(PlatformMethod.switchAudio,
-        arguments: {'is_on': isOn});
+  Future<HMSException?> switchAudio() async {
+    bool result = await PlatformService.invokeMethod(PlatformMethod.switchAudio);
 
     if (result) {
       return null;
@@ -147,17 +147,17 @@ class HMSSDK {
           description: "Cannot toggle audio status",
           action: "AUDIO",
           isTerminal: false,
-          params: {'is_on': isOn});
+          params: {});
     }
   }
 
   /// To switch local peer's video on/off.
-  /// Pass the bool value to [isOn] to change the current video status
-  ///
+  /// This function toggles the current camera state i.e
+  /// If camera is unmuted it will get muted
+  /// If camera is muted it will get unmuted
   /// Refer [switch video guide here](https://www.100ms.live/docs/flutter/v2/features/mute).
-  Future<HMSException?> switchVideo({bool isOn = false}) async {
-    bool result = await PlatformService.invokeMethod(PlatformMethod.switchVideo,
-        arguments: {'is_on': isOn});
+  Future<HMSException?> switchVideo() async {
+    bool result = await PlatformService.invokeMethod(PlatformMethod.switchVideo);
 
     if (result) {
       return null;
@@ -166,7 +166,7 @@ class HMSSDK {
           message: "Switch Video failed",
           description: "Cannot toggle video status",
           action: "VIDEO",
-          params: {'is_on': isOn},
+          params: {},
           isTerminal: false);
     }
   }

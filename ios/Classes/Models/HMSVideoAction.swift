@@ -12,7 +12,7 @@ class HMSVideoAction {
     static func videoActions(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?) {
         switch call.method {
         case "switch_video":
-            switchVideo(call, result, hmsSDK)
+            switchVideo(result, hmsSDK)
 
         case "switch_camera":
             switchCamera(result, hmsSDK)
@@ -76,18 +76,15 @@ class HMSVideoAction {
         result(nil)
     }
 
-    static private func switchVideo(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?) {
+    static private func switchVideo(_ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?) {
 
-        let arguments = call.arguments as! [AnyHashable: Any]
-
-        guard let shouldMute = arguments["is_on"] as? Bool,
-              let peer = hmsSDK?.localPeer,
+            guard let peer = hmsSDK?.localPeer,
               let video = peer.videoTrack as? HMSLocalVideoTrack else {
             result(false)
             return
         }
 
-        video.setMute(shouldMute)
+        video.setMute(!(video.isMute()))
 
         result(true)
     }

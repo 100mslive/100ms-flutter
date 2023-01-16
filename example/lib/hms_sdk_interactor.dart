@@ -53,12 +53,12 @@ class HMSSDKInteractor {
     hmsSDK.leave(hmsActionResultListener: hmsActionResultListener);
   }
 
-  Future<HMSException?> switchAudio({bool isOn = false}) async {
-    return await hmsSDK.switchAudio(isOn: isOn);
+  Future<HMSException?> switchAudio() async {
+    return await hmsSDK.switchAudio();
   }
 
-  Future<HMSException?> switchVideo({bool isOn = false}) async {
-    return await hmsSDK.switchVideo(isOn: isOn);
+  Future<HMSException?> switchVideo() async {
+    return await hmsSDK.switchVideo();
   }
 
   Future<void> switchCamera(

@@ -321,8 +321,7 @@ class _PreviewPageState extends State<PreviewPage> {
                                                   width: 40,
                                                   onTap: () async =>
                                                       _previewStore.switchAudio(
-                                                          isOn: _previewStore
-                                                              .isAudioOn),
+                                                          ),
                                                   offColor: hmsWhiteColor,
                                                   onColor: themeHMSBorderColor,
                                                   isActive:
@@ -355,8 +354,7 @@ class _PreviewPageState extends State<PreviewPage> {
                                                       ? null
                                                       : _previewStore
                                                           .switchVideo(
-                                                              isOn: _previewStore
-                                                                  .isVideoOn),
+                                                              ),
                                                   offColor: hmsWhiteColor,
                                                   onColor: themeHMSBorderColor,
                                                   isActive:

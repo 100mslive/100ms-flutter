@@ -12,7 +12,7 @@ class HMSAudioAction {
     static func audioActions(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?) {
         switch call.method {
         case "switch_audio":
-            switchAudio(call, result, hmsSDK)
+            switchAudio(result, hmsSDK)
 
         case "is_audio_mute":
             isAudioMute(call, result, hmsSDK)
@@ -30,17 +30,15 @@ class HMSAudioAction {
         }
     }
 
-    static private func switchAudio(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?) {
-        let arguments = call.arguments as! [AnyHashable: Any]
+    static private func switchAudio(_ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?) {
 
-        guard let shouldMute = arguments["is_on"] as? Bool,
-              let peer = hmsSDK?.localPeer,
+            guard let peer = hmsSDK?.localPeer,
               let audio = peer.audioTrack as? HMSLocalAudioTrack else {
             result(false)
             return
         }
 
-        audio.setMute(shouldMute)
+        audio.setMute(!(audio.isMute()))
 
         result(true)
     }

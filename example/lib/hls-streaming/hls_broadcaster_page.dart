@@ -54,8 +54,6 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
   }
 
   void checkAudioState() async {
-    if (!widget.isAudioOn) context.read<MeetingStore>().switchAudio();
-
     if (widget.isRoomMute) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         context.read<MeetingStore>().toggleSpeaker();

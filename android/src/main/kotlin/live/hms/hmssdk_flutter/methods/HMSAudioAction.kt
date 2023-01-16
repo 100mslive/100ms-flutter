@@ -12,7 +12,7 @@ class HMSAudioAction {
         fun audioActions(call: MethodCall, result: Result,hmssdk:HMSSDK) {
             when (call.method) {
                 "switch_audio" -> {
-                    switchAudio(call, result,hmssdk)
+                    switchAudio(result,hmssdk)
                 }
                 "is_audio_mute" -> {
                     result.success(isAudioMute(call,hmssdk))
@@ -32,12 +32,11 @@ class HMSAudioAction {
             }
         }
 
-        private fun switchAudio(call: MethodCall, result: Result,hmssdk:HMSSDK) {
-            val argsIsOn = call.argument<Boolean>("is_on")
+        private fun switchAudio(result: Result,hmssdk:HMSSDK) {
             val peer = hmssdk.getLocalPeer()
             val audioTrack = peer?.audioTrack
             if (audioTrack != null) {
-                audioTrack?.setMute(argsIsOn!!)
+                audioTrack?.setMute(!(audioTrack.isMute))
                 result.success(true)
             } else {
                 result.success(false)

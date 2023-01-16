@@ -212,13 +212,13 @@ class MeetingStore extends ChangeNotifier
   }
 
   Future<void> switchAudio() async {
-    await _hmsSDKInteractor.switchAudio(isOn: isMicOn);
+    await _hmsSDKInteractor.switchAudio();
     isMicOn = !isMicOn;
     notifyListeners();
   }
 
   Future<void> switchVideo() async {
-    await _hmsSDKInteractor.switchVideo(isOn: isVideoOn);
+    await _hmsSDKInteractor.switchVideo();
     isVideoOn = !isVideoOn;
     notifyListeners();
   }
