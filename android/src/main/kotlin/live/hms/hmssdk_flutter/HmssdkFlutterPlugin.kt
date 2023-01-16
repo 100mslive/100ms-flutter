@@ -1091,12 +1091,12 @@ class HmssdkFlutterPlugin :
             hmsPeer: HMSPeer?
         ) {
             if (hmsPeer == null) {
-                Log.e("onRemoteVideoStats error", "Peer is null")
+                Log.e("RemoteVideoStats err", "Peer is null")
                 return
             }
 
             if (hmsTrack == null) {
-                Log.e("onRemoteVideoStats error", "Video Track is null")
+                Log.e("RemoteVideoStats err", "Video Track is null")
                 return
             }
 
@@ -1120,12 +1120,12 @@ class HmssdkFlutterPlugin :
             hmsPeer: HMSPeer?
         ) {
             if (hmsPeer == null) {
-                Log.e("onRemoteAudioStats error", "Peer is null")
+                Log.e("RemoteAudioStats err", "Peer is null")
                 return
             }
 
             if (hmsTrack == null) {
-                Log.e("onRemoteAudioStats error", "Video Track is null")
+                Log.e("RemoteAudioStats err", "Audio Track is null")
                 return
             }
 
@@ -1150,12 +1150,12 @@ class HmssdkFlutterPlugin :
             hmsPeer: HMSPeer?
         ) {
             if (hmsPeer == null) {
-                Log.e("onLocalVideoStats error", "Peer is null")
+                Log.e("LocalVideoStats err", "Peer is null")
                 return
             }
 
             if (hmsTrack == null) {
-                Log.e("onLocalVideoStats error", "Video Track is null")
+                Log.e("LocalVideoStats err", "Video Track is null")
                 return
             }
 
@@ -1180,12 +1180,12 @@ class HmssdkFlutterPlugin :
             hmsPeer: HMSPeer?
         ) {
             if (hmsPeer == null) {
-                Log.e("onLocalAudioStats error", "Peer is null")
+                Log.e("LocalAudioStats err", "Peer is null")
                 return
             }
 
             if (hmsTrack == null) {
-                Log.e("onLocalAudioStats error", "Video Track is null")
+                Log.e("LocalAudioStats err", "Audio Track is null")
                 return
             }
 

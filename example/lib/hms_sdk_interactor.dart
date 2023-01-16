@@ -37,10 +37,9 @@ class HMSSDKInteractor {
         preferredExtension: preferredExtension, // Ensure to pass correct Preferred Extension set in your Xcode project. This is required for starting Screenshare from iOS Devices.
         hmsLogSettings: hmsLogSettings,
         hmsTrackSetting: trackSetting);
-    build();
   }
 
-  void build() async {
+  Future<void> build() async {
     await hmsSDK.build();
   }
 

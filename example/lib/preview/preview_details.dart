@@ -28,6 +28,7 @@ class _PreviewDetailsState extends State<PreviewDetails> {
   TextEditingController nameController = TextEditingController();
   late PreviewStore _previewStore;
   late MeetingStore _meetingStore;
+  late HMSSDKInteractor _hmsSDKInteractor;
 
   @override
   void initState() {
@@ -35,20 +36,26 @@ class _PreviewDetailsState extends State<PreviewDetails> {
     loadData();
   }
 
-  void setPreviewStore(
+  Future<void> setHMSSDKInteractor(
       {required bool joinWithMutedAudio,
       required bool joinWithMutedVideo,
       required bool isSoftwareDecoderDisabled,
-      required bool isAudioMixerDisabled}) {
-    _previewStore = PreviewStore(
+      required bool isAudioMixerDisabled}) async {
+    /// [appGroup] & [preferredExtension] of [HMSSDKInteractor] are optional values only required for implementing Screen & Audio Share on iOS. They are not required for Android.
+    /// Remove [appGroup] & [preferredExtension] if your app does not implements Screen or Audio Share on iOS.
+    /// [joinWithMutedAudio] & [joinWithMutedVideo] are required to set the initial audio/video state i.e what should be camera and mic
+    /// state while room is joined.By default both audio and video are kept as mute.
+    _hmsSDKInteractor = HMSSDKInteractor(
+        appGroup:
+            "group.flutterhms", // Ensure to pass correct AppGroup values set for your Apple Developer Account. This is required for starting Screenshare from iOS Devices.
+        preferredExtension:
+            "live.100ms.flutter.FlutterBroadcastUploadExtension", // Ensure to pass correct Preferred Extension set in your Xcode project. This is required for starting Screenshare from iOS Devices.
         joinWithMutedAudio: joinWithMutedAudio,
         joinWithMutedVideo: joinWithMutedVideo,
         isSoftwareDecoderDisabled: isSoftwareDecoderDisabled,
         isAudioMixerDisabled: isAudioMixerDisabled);
-  }
-
-  void setMeetingStore(HMSSDKInteractor _hmsSDKInteractor) {
-    _meetingStore = MeetingStore(hmsSDKInteractor: _hmsSDKInteractor);
+    //build call should be a blocking call
+    await _hmsSDKInteractor.build();
   }
 
   void loadData() async {
@@ -75,12 +82,14 @@ class _PreviewDetailsState extends State<PreviewDetails> {
       bool isAudioMixerDisabled =
           await Utilities.getBoolData(key: 'audio-mixer-disabled') ?? true;
       if (res) {
+        await setHMSSDKInteractor(
+            joinWithMutedAudio: joinWithMutedAudio,
+            joinWithMutedVideo: joinWithMutedVideo,
+            isSoftwareDecoderDisabled: isSoftwareDecoderDisabled,
+            isAudioMixerDisabled: isAudioMixerDisabled);
+            
         if (!skipPreview) {
-          setPreviewStore(
-              joinWithMutedAudio: joinWithMutedAudio,
-              joinWithMutedVideo: joinWithMutedVideo,
-              isSoftwareDecoderDisabled: isSoftwareDecoderDisabled,
-              isAudioMixerDisabled: isAudioMixerDisabled);
+          _previewStore = PreviewStore(hmsSDKInteractor: _hmsSDKInteractor);
           Navigator.of(context).pushReplacement(MaterialPageRoute(
               builder: (_) => ListenableProvider.value(
                     value: _previewStore,
@@ -94,15 +103,7 @@ class _PreviewDetailsState extends State<PreviewDetails> {
               await Utilities.getBoolData(key: 'show-stats') ?? false;
           bool mirrorCamera =
               await Utilities.getBoolData(key: 'mirror-camera') ?? false;
-          HMSSDKInteractor _hmsSDKInteractor = HMSSDKInteractor(
-              appGroup: "group.flutterhms", // Ensure to pass correct AppGroup values set for your Apple Developer Account. This is required for starting Screenshare from iOS Devices.
-              preferredExtension:
-                  "live.100ms.flutter.FlutterBroadcastUploadExtension", // Ensure to pass correct Preferred Extension set in your Xcode project. This is required for starting Screenshare from iOS Devices.
-              joinWithMutedAudio: joinWithMutedAudio,
-              joinWithMutedVideo: joinWithMutedVideo,
-              isSoftwareDecoderDisabled: isSoftwareDecoderDisabled,
-              isAudioMixerDisabled: isAudioMixerDisabled);
-          setMeetingStore(_hmsSDKInteractor);
+          _meetingStore = MeetingStore(hmsSDKInteractor: _hmsSDKInteractor);
           Navigator.of(context).pushReplacement(MaterialPageRoute(
               builder: (_) => ListenableProvider.value(
                     value: _meetingStore,
