@@ -419,6 +419,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     private func build(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         let arguments = call.arguments as! [AnyHashable: Any]
 
+        // TODO: add checks for 100ms Extension Target
         if let prefExtension = arguments["preferred_extension"] as? String {
             preferredExtension = prefExtension
         }
@@ -435,6 +436,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         audioMixerSourceMap = [:]
         hmsSDK = HMSSDK.build { [self] sdk in
 
+            // TODO: add checks for 100ms App Group for Screen Share
             if let appGroup = arguments["app_group"] as? String {
                 sdk.appGroup = appGroup
             }
@@ -447,6 +449,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
             var trackSettings: HMSTrackSettings?
             if let settingsDict = arguments["hms_track_setting"] as? [AnyHashable: Any] {
+                // TODO: add checks for 100ms App Group for Audio Share
                 audioMixerSourceInit(settingsDict, sdk, result)
                 trackSettings = HMSTrackSettingsExtension.setTrackSetting(settingsDict, audioMixerSourceMap, result)
             }
@@ -1138,6 +1141,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                         if node=="mic_node" {
                             self.audioMixerSourceMap["mic_node"] = HMSMicNode()
                         } else if node == "screen_broadcast_audio_receiver_node" {
+                            // TODO: add checks for 100ms App Group for Audio Share
                             do {
                                 self.audioMixerSourceMap["screen_broadcast_audio_receiver_node"] = try sdk.screenBroadcastAudioReceiverNode()
                             } catch {
