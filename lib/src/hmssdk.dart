@@ -11,13 +11,13 @@ import '../hmssdk_flutter.dart';
 ///
 /// **hmsTrackSetting** - To modify local peer's audio & video tracks settings. Only required for advanced use cases. Refer [hmsTrackSetting guide here](https://www.100ms.live/docs/flutter/v2/advanced-features/set-track-settings)
 ///
-/// **iOSScreenshareConfig** - It is only used for screen share (broadcast screen) in iOS. Refer [iOS Screen share guide here](https://www.100ms.live/docs/flutter/v2/features/screen-share#i-os-setup)
+/// **iOSScreenshareConfig** - It is required for starting Screen share (broadcast screen) in iOS. Refer [iOS Screen share guide here](https://www.100ms.live/docs/flutter/v2/features/screen-share#i-os-setup)
 ///
 /// **hmsLogSettings** - It is used to set the Log Level setting. Refer [hmsLogSettings guide here](https://www.100ms.live/docs/flutter/v2/features/error-handling#setting-log-levels-in-sdk)
 ///
-/// **appGroup[Deprecated]** - It is only used for screen share (broadcast screen) in iOS. Refer [iOS Screen share guide here](https://www.100ms.live/docs/flutter/v2/features/screen-share#i-os-setup)
+/// **appGroup[Deprecated]** - It is required for starting Screen share (broadcast screen) in iOS. Refer [iOS Screen share guide here](https://www.100ms.live/docs/flutter/v2/features/screen-share#i-os-setup)
 ///
-/// **preferredExtension[Deprecated]** - It is only used for screen share (broadcast screen) in iOS. Refer [iOS Screen share guide here](https://www.100ms.live/docs/flutter/v2/features/screen-share#i-os-setup)
+/// **preferredExtension[Deprecated]** - It is required for starting Screen share (broadcast screen) in iOS. Refer [iOS Screen share guide here](https://www.100ms.live/docs/flutter/v2/features/screen-share#i-os-setup)
 ///
 /// `Note: [appGroup] and [preferredExtension] are deprecated use iOSScreenshareConfig instead.`
 ///
@@ -36,20 +36,19 @@ import '../hmssdk_flutter.dart';
 /// Refer [HMSSDK quick start guide available here](https://www.100ms.live/docs/flutter/v2/guides/quickstart)
 
 class HMSSDK {
-
   /// The public interface of 100ms SDK. Create an instance of HMSSDK to start using the SDK.
   ///
   /// Parameters:
   ///
   /// **hmsTrackSetting** - To modify local peer's audio & video tracks settings. Only required for advanced use cases. Refer [hmsTrackSetting guide here](https://www.100ms.live/docs/flutter/v2/advanced-features/set-track-settings)
   ///
-  /// **iOSScreenshareConfig** - It is only used for screen share (broadcast screen) in iOS. Refer [iOS Screen share guide here](https://www.100ms.live/docs/flutter/v2/features/screen-share#i-os-setup)
+  /// **iOSScreenshareConfig** - It is required for starting Screen share (broadcast screen) in iOS. Refer [iOS Screen share guide here](https://www.100ms.live/docs/flutter/v2/features/screen-share#i-os-setup)
   ///
   /// **hmsLogSettings** - It is used to set the Log Level setting. Refer [hmsLogSettings guide here](https://www.100ms.live/docs/flutter/v2/features/error-handling#setting-log-levels-in-sdk)
   ///
-  /// **appGroup[Deprecated]** -  It is only used for screen share (broadcast screen) in iOS. Refer [iOS Screen share guide here](https://www.100ms.live/docs/flutter/v2/features/screen-share#i-os-setup)
+  /// **appGroup[Deprecated]** -  It is required for starting Screen share (broadcast screen) in iOS. Refer [iOS Screen share guide here](https://www.100ms.live/docs/flutter/v2/features/screen-share#i-os-setup)
   ///
-  /// **preferredExtension[Deprecated]** - It is only used for screen share (broadcast screen) in iOS. Refer [iOS Screen share guide here](https://www.100ms.live/docs/flutter/v2/features/screen-share#i-os-setup)
+  /// **preferredExtension[Deprecated]** - It is required for starting Screen share (broadcast screen) in iOS. Refer [iOS Screen share guide here](https://www.100ms.live/docs/flutter/v2/features/screen-share#i-os-setup)
   ///
   /// `Note: [appGroup] and [preferredExtension] are deprecated use iOSScreenshareConfig instead.`
   ///
@@ -1256,7 +1255,7 @@ class HMSSDK {
   /// To modify local peer's audio & video tracks settings use the [hmsTrackSetting]. Only required for advanced use cases.
   HMSTrackSetting? hmsTrackSetting;
 
-  /// [iOSScreenshareConfig] is only used for screen share (broadcast screen) in iOS. For step by step guide follow [here](https://www.100ms.live/docs/flutter/v2/features/screen-share#i-os-setup).
+  ///  [HMSIOSScreenshareConfig] is required for starting Screen share (Broadcast screen) from iOS devices like iPhones & iPads. To learn more about Screen Share, refer to the guide [here](https://www.100ms.live/docs/flutter/v2/features/screen-share).
   ///
   /// `Note: You can find appGroup and preferredExtension name in Xcode under Signing and Capabilities section under target > yourExtensionName.`
   HMSIOSScreenshareConfig? iOSScreenshareConfig;

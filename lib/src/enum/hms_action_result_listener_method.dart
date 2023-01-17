@@ -1,5 +1,4 @@
 enum HMSActionResultListenerMethod {
-  build,
   leave,
   changeTrackState,
   changeMetadata,

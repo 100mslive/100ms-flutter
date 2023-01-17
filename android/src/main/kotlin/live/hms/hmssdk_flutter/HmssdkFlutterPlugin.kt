@@ -655,7 +655,7 @@ class HmssdkFlutterPlugin :
         hmssdk!!.changeRoleOfPeersWithRoles(toRole = toRole, ofRoles = ofRoles, hmsActionResultListener = HMSCommonAction.getActionListener(result))
     }
 
-    private fun build(activity: Activity, call: MethodCall, result: Result) {
+    fun build(activity: Activity, call: MethodCall, result: Result) {
         val dartSDKVersion = call.argument<String>("dart_sdk_version")
         val hmsSDKVersion = call.argument<String>("hmssdk_version")
         val framework = FrameworkInfo(framework = AgentType.FLUTTER, frameworkVersion = dartSDKVersion, frameworkSdkVersion = hmsSDKVersion)
@@ -665,7 +665,7 @@ class HmssdkFlutterPlugin :
             call.argument<HashMap<String, HashMap<String, Any?>?>?>("hms_track_setting")
 
         if (hmsTrackSettingMap != null) {
-            val hmsAudioTrackHashMap: HashMap<String, Any?>? = hmsTrackSettingMap["audio_track_setting"]
+            val hmsAudioTrackHashMap: HashMap<String, Any?>? = hmsTrackSettingMap!!["audio_track_setting"]
             val hmsVideoTrackHashMap: HashMap<String, Any?>? = hmsTrackSettingMap["video_track_setting"]
             val hmsTrackSettings = HMSTrackSettingsExtension.setTrackSettings(hmsAudioTrackHashMap, hmsVideoTrackHashMap)
             builder.setTrackSettings(hmsTrackSettings)
@@ -683,7 +683,7 @@ class HmssdkFlutterPlugin :
         }
 
         hmssdk = builder.build()
-        result.success(null)
+        result.success(true)
     }
 
     private var hasChangedMetadata: Boolean = false

@@ -241,12 +241,11 @@ class Utilities {
                 forceSoftwareDecoder: isSoftwareDecoderDisabled));
   }
 
-  static HMSIOSScreenshareConfig? getIOSScreenshareConfig(
-      {String? appGroup, String? preferredExtension}) {
+  static HMSIOSScreenshareConfig getIOSScreenshareConfig(
+      {required String appGroup, required String preferredExtension}) {
     HMSIOSScreenshareConfig? iOSScreenshareConfig;
-    if (appGroup != null && preferredExtension != null)
-      iOSScreenshareConfig = HMSIOSScreenshareConfig(
-          appGroup: appGroup, preferredExtension: preferredExtension);
+    iOSScreenshareConfig = HMSIOSScreenshareConfig(
+        appGroup: appGroup, preferredExtension: preferredExtension);
     return iOSScreenshareConfig;
   }
 }

@@ -16,8 +16,7 @@ class HMSSDKInteractor {
   /// [joinWithMutedAudio] & [joinWithMutedVideo] are required to set the initial audio/video state i.e what should be camera and mic
   /// state while room is joined. By default both audio and video are kept as unmute.
   HMSSDKInteractor(
-      {String? appGroup,
-      String? preferredExtension,
+      {HMSIOSScreenshareConfig? iOSScreenshareConfig,
       bool joinWithMutedAudio = true,
       bool joinWithMutedVideo = true,
       bool isSoftwareDecoderDisabled = true,
@@ -32,10 +31,6 @@ class HMSSDKInteractor {
         joinWithMutedVideo: joinWithMutedVideo,
         joinWithMutedAudio: joinWithMutedAudio,
         isSoftwareDecoderDisabled: isSoftwareDecoderDisabled);
-
-    HMSIOSScreenshareConfig? iOSScreenshareConfig =
-        Utilities.getIOSScreenshareConfig(
-            appGroup: appGroup, preferredExtension: preferredExtension);
 
     hmsSDK = HMSSDK(
         iOSScreenshareConfig: iOSScreenshareConfig,

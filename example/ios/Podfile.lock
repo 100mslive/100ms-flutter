@@ -57,7 +57,7 @@ PODS:
   - firebase_core (2.4.1):
     - Firebase/CoreOnly (= 10.3.0)
     - Flutter
-  - firebase_crashlytics (3.0.10):
+  - firebase_crashlytics (3.0.9):
     - Firebase/Crashlytics (= 10.3.0)
     - firebase_core
     - Flutter
@@ -65,7 +65,7 @@ PODS:
     - Firebase/DynamicLinks (= 10.3.0)
     - firebase_core
     - Flutter
-  - firebase_performance (0.9.0-10):
+  - firebase_performance (0.9.0-9):
     - Firebase/Performance (= 10.3.0)
     - firebase_core
     - Flutter
@@ -216,14 +216,14 @@ PODS:
   - qr_code_scanner (0.2.0):
     - Flutter
     - MTBBarcodeScanner
-  - SDWebImage (5.14.3):
-    - SDWebImage/Core (= 5.14.3)
-  - SDWebImage/Core (5.14.3)
+  - SDWebImage (5.15.0):
+    - SDWebImage/Core (= 5.15.0)
+  - SDWebImage/Core (5.15.0)
   - share_plus (0.0.1):
     - Flutter
   - shared_preferences_ios (0.0.1):
     - Flutter
-  - SwiftyGif (5.4.3)
+  - SwiftyGif (5.4.4)
   - Toast (4.0.0)
   - uni_links (0.0.1):
     - Flutter
@@ -337,9 +337,9 @@ SPEC CHECKSUMS:
   Firebase: f92fc551ead69c94168d36c2b26188263860acd9
   firebase_analytics: 9f3a4cb560a59976b2c48707abae2d4cb94bcb3a
   firebase_core: bf59c32d2e53814f558efa20840c1902fa2fe461
-  firebase_crashlytics: 235f15b57f25c74e2c75a03a7fcb619695510857
+  firebase_crashlytics: a45cced3521640e1e389d8b3662936ea9afd6055
   firebase_dynamic_links: e5ca49679928f5d46e2db5168656975eae39d379
-  firebase_performance: 7746e15bd685debbfcb5e862b2ec720ba8f13979
+  firebase_performance: 17c38f6a6ef97737aaf5fc4c0e48591e74c25fda
   FirebaseABTesting: e6660693429b4663573c82f8d2f1041deff1753a
   FirebaseAnalytics: 036232b6a1e2918e5f67572417be1173576245f3
   FirebaseCore: 988754646ab3bd4bdcb740f1bfe26b9f6c0d5f2a
@@ -371,10 +371,10 @@ SPEC CHECKSUMS:
   pip_flutter: ab714aa0773b07b3e8c41a5ab314c8e22fd53c25
   PromisesObjC: ab77feca74fa2823e7af4249b8326368e61014cb
   qr_code_scanner: bb67d64904c3b9658ada8c402e8b4d406d5d796e
-  SDWebImage: 9c36e66c8ce4620b41a7407698dda44211a96764
+  SDWebImage: 9bec4c5cdd9579e1f57104735ee0c37df274d593
   share_plus: 056a1e8ac890df3e33cb503afffaf1e9b4fbae68
   shared_preferences_ios: 548a61f8053b9b8a49ac19c1ffbc8b92c50d68ad
-  SwiftyGif: 6c3eafd0ce693cad58bb63d2b2fb9bacb8552780
+  SwiftyGif: 93a1cc87bf3a51916001cf8f3d63835fb64c819f
   Toast: 91b396c56ee72a5790816f40d3a94dd357abc196
   uni_links: d97da20c7701486ba192624d99bffaaffcfc298a
   url_launcher_ios: 839c58cdb4279282219f5e248c3321761ff3c4de
