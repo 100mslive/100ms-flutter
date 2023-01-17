@@ -113,7 +113,7 @@ class HmssdkFlutterPlugin :
             }
 
             // MARK: Audio Helpers
-            "switch_audio", "is_audio_mute", "mute_room_audio_locally", "un_mute_room_audio_locally", "set_volume","toggle_mic_mute_state" -> {
+            "switch_audio", "is_audio_mute", "mute_room_audio_locally", "un_mute_room_audio_locally", "set_volume", "toggle_mic_mute_state" -> {
                 HMSAudioAction.audioActions(call, result, hmssdk!!)
             }
 

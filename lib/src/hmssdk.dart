@@ -222,8 +222,8 @@ class HMSSDK {
   /// If camera is muted it will get unmuted
   /// Refer [toggle camera state guide here](https://www.100ms.live/docs/flutter/v2/features/mute).
   Future<HMSException?> toggleCameraMuteState() async {
-    bool result =
-        await PlatformService.invokeMethod(PlatformMethod.toggleCameraMuteState);
+    bool result = await PlatformService.invokeMethod(
+        PlatformMethod.toggleCameraMuteState);
 
     if (result) {
       return null;

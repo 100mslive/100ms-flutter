@@ -459,7 +459,6 @@ class _PreviewPageState extends State<PreviewPage> {
                                                                         .meeting
                                                                 ? false
                                                                 : true,
-                                                        
                                                         meetingLink:
                                                             widget.meetingLink,
                                                         localPeerNetworkQuality:
