@@ -15,10 +15,10 @@ class HMSPIPAction {
     static var pipVideoCallViewController: UIViewController?
     static var pipController: AVPictureInPictureController?
     static var model: PiPModel?
-    static func pipAction(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?) {
+    static func pipAction(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?, _ swiftHmssdkFlutterPlugin: SwiftHmssdkFlutterPlugin) {
         switch call.method {
         case "setup_pip":
-            setupPIP(call, result, hmsSDK)
+            setupPIP(call, result, hmsSDK, swiftHmssdkFlutterPlugin)
 
         case "start_pip":
             startPIP()
@@ -40,7 +40,7 @@ class HMSPIPAction {
         }
     }
     
-    static func setupPIP(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?) {
+    static func setupPIP(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?,_ swiftHmssdkFlutterPlugin: SwiftHmssdkFlutterPlugin) {
         
         guard AVPictureInPictureController.isPictureInPictureSupported() else {
             result(HMSErrorExtension.getError("\(#function) PIP is not supported"))
@@ -82,6 +82,8 @@ class HMSPIPAction {
             contentViewController: pipVideoCallViewController)
        
         pipController = AVPictureInPictureController(contentSource: pipContentSource)
+        
+        pipController?.delegate = swiftHmssdkFlutterPlugin
         
         if let autoEnterPIP = arguments["auto_enter_pip"] as? Bool {
             pipController?.canStartPictureInPictureAutomaticallyFromInline = autoEnterPIP

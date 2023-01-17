@@ -20,7 +20,5 @@
 	<true/>
 	<key>com.apple.security.network.client</key>
 	<true/>
-	<key>com.apple.developer.avfoundation.multitasking-camera-access</key>
-	<true/>
 </dict>
 </plist>

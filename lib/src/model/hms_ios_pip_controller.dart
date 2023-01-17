@@ -94,11 +94,8 @@ class HMSIOSPIPController {
   ///
   ///Refer [PIP mode guide here](https://www.100ms.live/docs/flutter/v2/advanced-features/pip-mode)
   static Future<bool> isPipAvailable() async {
-    if (_isPIPSetupDone) {
-      final bool? result =
-          await PlatformService.invokeMethod(PlatformMethod.isPipAvailable);
-      return result ?? false;
-    }
-    return false;
+    final bool? result =
+        await PlatformService.invokeMethod(PlatformMethod.isPipAvailable);
+    return result ?? false;
   }
 }

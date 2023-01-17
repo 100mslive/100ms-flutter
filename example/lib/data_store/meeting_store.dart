@@ -692,14 +692,8 @@ class MeetingStore extends ChangeNotifier
       }
     });
 
-    if (Platform.isIOS &&
-        updateSpeakers.isNotEmpty &&
-        screenShareCount == 0 &&
-        updateSpeakers[0].peer.videoTrack != null) {
-      isPipActive = await isPIPActive();
-      if (isPipActive)
-        HMSIOSPIPController.changeTrackPIP(
-            track: updateSpeakers[0].peer.videoTrack!);
+    if (updateSpeakers.isNotEmpty && screenShareCount == 0) {
+      changeTrackPIP(updateSpeakers[0].peer.videoTrack);
     }
     // if (updateSpeakers.isNotEmpty) {
     //   highestSpeaker = updateSpeakers[0].peer.name;
@@ -1085,6 +1079,7 @@ class MeetingStore extends ChangeNotifier
                     stats: RTCStats()));
             isScreenShareActive();
             notifyListeners();
+            changeTrackPIP(track);
           }
         }
         break;
@@ -1322,6 +1317,15 @@ class MeetingStore extends ChangeNotifier
     else if (Platform.isIOS)
       isPipActive = await HMSIOSPIPController.isPipActive();
     return isPipActive;
+  }
+
+  void changeTrackPIP(HMSVideoTrack? track) async {
+    if (Platform.isIOS && track != null) {
+      isPipActive = await isPIPActive();
+      if (isPipActive) {
+        HMSIOSPIPController.changeTrackPIP(track: track);
+      }
+    }
   }
 
   void setPIPVideoController(bool reinitialise, {double? aspectRatio}) {

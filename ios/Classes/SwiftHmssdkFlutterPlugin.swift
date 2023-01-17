@@ -204,7 +204,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                 print(#function, HMSErrorExtension.getError("iOS 15 or above is required"))
                         result(HMSErrorExtension.getError("iOS 15 or above is required"))
                         return }
-            HMSPIPAction.pipAction(call, result, hmsSDK)
+            HMSPIPAction.pipAction(call, result, hmsSDK, self)
 
         default:
             result(FlutterMethodNotImplemented)
