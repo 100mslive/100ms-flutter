@@ -30,13 +30,11 @@ import 'package:tuple/tuple.dart';
 
 class HLSBroadcasterPage extends StatefulWidget {
   final String meetingLink;
-  final bool isAudioOn;
   final bool isStreamingLink;
   final bool isRoomMute;
   const HLSBroadcasterPage(
       {Key? key,
       required this.meetingLink,
-      required this.isAudioOn,
       this.isStreamingLink = false,
       this.isRoomMute = true})
       : super(key: key);

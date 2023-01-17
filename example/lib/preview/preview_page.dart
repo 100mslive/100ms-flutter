@@ -459,8 +459,7 @@ class _PreviewPageState extends State<PreviewPage> {
                                                                         .meeting
                                                                 ? false
                                                                 : true,
-                                                        isAudioOn: _previewStore
-                                                            .isAudioOn,
+                                                        
                                                         meetingLink:
                                                             widget.meetingLink,
                                                         localPeerNetworkQuality:
