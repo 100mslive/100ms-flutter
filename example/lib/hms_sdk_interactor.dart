@@ -11,13 +11,12 @@ class HMSSDKInteractor {
   late List<HMSMessage> messages;
   late HMSSDK hmsSDK;
 
-  /// [appGroup] & [preferredExtension] are optional values only required for implementing Screen & Audio Share on iOS. They are not required for Android.
-  /// Remove [appGroup] & [preferredExtension] if your app does not implements Screen or Audio Share on iOS.
+  /// [iOSScreenshareConfig] is optional values only required for implementing Screen Share on iOS. They are not required for Android.
+  /// Remove [iOSScreenshareConfig] if your app does not implements Screen Share on iOS.
   /// [joinWithMutedAudio] & [joinWithMutedVideo] are required to set the initial audio/video state i.e what should be camera and mic
-  /// state while room is joined.By default both audio and video are kept as mute.
+  /// state while room is joined. By default both audio and video are kept as unmute.
   HMSSDKInteractor(
-      {String? appGroup,
-      String? preferredExtension,
+      {HMSIOSScreenshareConfig? iOSScreenshareConfig,
       bool joinWithMutedAudio = true,
       bool joinWithMutedVideo = true,
       bool isSoftwareDecoderDisabled = true,
@@ -32,9 +31,9 @@ class HMSSDKInteractor {
         joinWithMutedVideo: joinWithMutedVideo,
         joinWithMutedAudio: joinWithMutedAudio,
         isSoftwareDecoderDisabled: isSoftwareDecoderDisabled);
+
     hmsSDK = HMSSDK(
-        appGroup: appGroup, // Ensure to pass correct AppGroup values set for your Apple Developer Account. This is required for starting Screenshare from iOS Devices.
-        preferredExtension: preferredExtension, // Ensure to pass correct Preferred Extension set in your Xcode project. This is required for starting Screenshare from iOS Devices.
+        iOSScreenshareConfig: iOSScreenshareConfig,
         hmsLogSettings: hmsLogSettings,
         hmsTrackSetting: trackSetting);
   }

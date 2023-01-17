@@ -69,7 +69,8 @@ class HMSTrackSettingsExtension {
                     audioSettings = HMSAudioTrackSettings(maxBitrate: 32, trackDescription: "track_description", initialMuteState: getinitialMuteState(from: initialMuteState), audioSource: audioMixerSource)
 
                 } catch {
-                    result(HMSErrorExtension.toDictionary(error))
+                    print(#function, HMSErrorExtension.toDictionary(error))
+                    result(false)
                 }
             } else {
                 audioSettings = HMSAudioTrackSettings(maxBitrate: 32, trackDescription: "track_description", initialMuteState: getinitialMuteState(from: initialMuteState), audioSource: nil)
