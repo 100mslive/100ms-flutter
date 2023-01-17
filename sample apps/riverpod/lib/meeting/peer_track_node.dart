@@ -38,6 +38,7 @@ class PeerTrackNode extends ChangeNotifier {
 
   @override
   bool operator ==(Object other) {
+    // TODO: implement ==
     return super == other;
   }
 }

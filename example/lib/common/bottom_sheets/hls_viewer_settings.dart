@@ -16,6 +16,7 @@ class HLSViewerSettings extends StatefulWidget {
 class _HLSViewerSettingsState extends State<HLSViewerSettings> {
   @override
   Widget build(BuildContext context) {
+    MeetingStore _meetingStore = context.read<MeetingStore>();
     return FractionallySizedBox(
       heightFactor: 0.5,
       child: Padding(
@@ -101,8 +102,7 @@ class _HLSViewerSettingsState extends State<HLSViewerSettings> {
                     ),
                     context: context,
                     builder: (ctx) => ChangeNotifierProvider.value(
-                        value: context.read<MeetingStore>(),
-                        child: HLSParticipantSheet()),
+                        value: _meetingStore, child: HLSParticipantSheet()),
                   );
                 },
                 contentPadding: EdgeInsets.zero,

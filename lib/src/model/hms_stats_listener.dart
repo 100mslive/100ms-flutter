@@ -17,7 +17,7 @@ abstract class HMSStatsListener {
 
   /// This callback provides stats for a local video track.
   void onLocalVideoStats(
-      {required HMSLocalVideoStats hmsLocalVideoStats,
+      {required List<HMSLocalVideoStats> hmsLocalVideoStats,
       required HMSLocalVideoTrack track,
       required HMSPeer peer});
 

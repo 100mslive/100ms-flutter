@@ -788,7 +788,7 @@ class MeetingStore extends ChangeNotifier
 
   @override
   void onLocalVideoStats(
-      {required HMSLocalVideoStats hmsLocalVideoStats,
+      {required List<HMSLocalVideoStats> hmsLocalVideoStats,
       required HMSLocalVideoTrack track,
       required HMSPeer peer}) {
     int index = -1;

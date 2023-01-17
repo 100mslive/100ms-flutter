@@ -41,7 +41,10 @@ class HMSSDKInteractor {
         iOSScreenshareConfig: iOSScreenshareConfig,
         hmsLogSettings: hmsLogSettings,
         hmsTrackSetting: trackSetting);
-    hmsSDK.build();
+  }
+
+  Future<void> build() async {
+    await hmsSDK.build();
   }
 
   void join({required HMSConfig config}) {

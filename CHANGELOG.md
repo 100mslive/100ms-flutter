@@ -1,3 +1,63 @@
+## 1.2.0 - 2023-01-13
+
+### Breaking
+
+- Made `await` while building `HMSSDK` Required
+
+  Adding `await` to the `build()` method was optional earlier. It has been made **Required** now to eliminate edge cases where SDK initialization did not complete before invocation of `join()` method. Adding `await` ensures that an instance of HMSSDK is available before any further usages.
+
+  ```dart
+  hmsSDK = HMSSDK();
+
+  await hmsSDK.build(); // NEW: adding await while invoking build method on HMSSDK is now Required
+
+  hmsSDK.addUpdateListener(this);
+  HMSConfig config = HMSConfig(authToken: 'eyJH5c', // client-side token generated from your token service
+                          userName: 'John Appleseed');
+  hmsSDK.join(config: config);
+  ```
+
+### Added
+
+- Added support for Adaptive Bitrate (Simulcast)
+
+  Adaptive Bitrate refers to features that enable dynamic adjustments in video quality to optimize for end-user experience under diverse network conditions.
+
+  To learn more about how ABR works & how it enhances your app, refer the guide [here](https://www.100ms.live/docs/flutter/v2/foundation/adaptive-bitrate).
+
+
+- Using HMSVideoView on Android
+
+  HMSVideoView on Android provides a better abstraction to render live video and handles edge cases like managing Release/Init states. It has in-built support to subscribe to video of the correct resolution.
+
+  To learn more about Rendering Video, refer the guide [here](https://www.100ms.live/docs/flutter/v2/features/render-video).
+
+
+- Added Simulcast support for RTC Stats
+
+  RTC Call Stats are updated to show Simulcast layer data if available for Local Peer's Video Track. This can be used to diagnose user experience with metrics such as Audio/Video Bitrate, Round Trip Time, Packet loss, etc.
+
+  To learn more about using RTC Call Stats, refer the guide [here](https://www.100ms.live/docs/flutter/v2/features/call-stats).
+
+
+
+### Changed
+
+- Sending correct `joined_at` property on Android indicating the time when the peer joins the Room
+
+- Logging error messages when the App Group used for starting Screenshare from iOS is incorrect
+
+- On Android, the `onJoin` updates will now be triggered before `onPeerUpdate` when a user joins the room
+
+
+
+Updated to Android SDK 2.5.6 & iOS SDK 0.5.5
+
+
+Full Changelog: [1.1.0...1.2.0](https://github.com/100mslive/100ms-flutter/compare/1.1.0...1.2.0)
+
+
+
 ## 1.1.0 - 2022-12-17
 
 ### Added

@@ -1,11 +1,15 @@
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
-///100ms HMSSimulcastLayerDefinition
+/// 100ms HMSSimulcastLayerDefinition
 ///
-///[HMSSimulcastLayerDefinition] contains hmsSimulcastLayer and hmsResolution.
+/// HMSSimulcastLayerDefinition contains available Simulcast layer and resolution
 class HMSSimulcastLayerDefinition {
+  /// HMSSimulcastLayer layer enum can be of types - high, mid, low
   HMSSimulcastLayer hmsSimulcastLayer;
+
+  /// HMSResolution defines the width and height of the Video Track
   HMSResolution hmsResolution;
+
   HMSSimulcastLayerDefinition(
       {required this.hmsSimulcastLayer, required this.hmsResolution});
 

@@ -419,6 +419,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     private func build(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         let arguments = call.arguments as! [AnyHashable: Any]
 
+        // TODO: add checks for 100ms Extension Target
         if let prefExtension = arguments["preferred_extension"] as? String {
             preferredExtension = prefExtension
         }
@@ -442,6 +443,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         let hmsSDKVersion = arguments["hmssdk_version"] as! String
         let framework = HMSFrameworkInfo(type: .flutter, version: dartSDKVersion, sdkVersion: hmsSDKVersion)
         audioMixerSourceMap = [:]
+        
         hmsSDK = HMSSDK.build { [weak self] sdk in
             guard let self = self else {
                 print("Unable to build HMSSDK")
@@ -469,6 +471,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
             var trackSettings: HMSTrackSettings?
             if let settingsDict = arguments["hms_track_setting"] as? [AnyHashable: Any] {
+                // TODO: add checks for 100ms App Group for Audio Share
                 self.audioMixerSourceInit(settingsDict, sdk, result)
                 trackSettings = HMSTrackSettingsExtension.setTrackSetting(settingsDict, self.audioMixerSourceMap, result)
             }
@@ -1049,7 +1052,8 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         }
     }
 
-    public func on(localVideoStats: HMSLocalVideoStats, track: HMSLocalVideoTrack, peer: HMSPeer) {
+    public func on(localVideoStats: [HMSLocalVideoStats], track: HMSLocalVideoTrack, peer: HMSPeer) {
+
         if isStatsActive {
             let data = [
                 "event_name": "on_local_video_stats",
@@ -1159,6 +1163,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                         if node=="mic_node" {
                             self.audioMixerSourceMap["mic_node"] = HMSMicNode()
                         } else if node == "screen_broadcast_audio_receiver_node" {
+                            // TODO: add checks for 100ms App Group for Audio Share
                             do {
                                 self.audioMixerSourceMap["screen_broadcast_audio_receiver_node"] = try sdk.screenBroadcastAudioReceiverNode()
                             } catch {
@@ -1174,4 +1179,13 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         }
     }
 
+    func sendCustomError(_ errorDict: [String: Any]) {
+
+        let data = [
+            "event_name": "on_error",
+            "data": errorDict
+        ] as [String: Any]
+
+        eventSink?(data)
+    }
 }

@@ -74,7 +74,7 @@ class PeerTrackNode extends ChangeNotifier {
     }
   }
 
-  void setHMSLocalVideoStats(HMSLocalVideoStats hmsLocalVideoStats) {
+  void setHMSLocalVideoStats(List<HMSLocalVideoStats> hmsLocalVideoStats) {
     stats?.hmsLocalVideoStats = hmsLocalVideoStats;
     if (!this.isOffscreen) {
       notify();

@@ -26,7 +26,7 @@ class HMSFlutterPlatformViewFactory: NSObject, FlutterPlatformViewFactory {
                                       viewIdentifier: viewId,
                                       videoContentMode: getMode(from: arguments),
                                       mirror: getMirror(from: arguments),
-                                      disableAutoSimulcastLayerSelect: !(getIsAutoSimulcast(from: arguments)),
+                                      disableAutoSimulcastLayerSelect: getDisableAutoSimulcastLayerSelect(arguments),
                                       videoTrack: getVideoTrack(from: arguments))
     }
 
@@ -48,8 +48,8 @@ class HMSFlutterPlatformViewFactory: NSObject, FlutterPlatformViewFactory {
         arguments["set_mirror"] as? Bool ?? false
     }
 
-    private func getIsAutoSimulcast(from arguments: [String: AnyObject]) -> Bool {
-        arguments["is_auto_simulcast"] as? Bool ?? true
+    private func getDisableAutoSimulcastLayerSelect(_ arguments: [String: AnyObject]) -> Bool {
+        arguments["disable_auto_simulcast_layer_select"] as? Bool ?? false
     }
 
     private func getMode(from arguments: [String: AnyObject]) -> UIView.ContentMode {
@@ -70,14 +70,32 @@ class HMSFlutterPlatformViewFactory: NSObject, FlutterPlatformViewFactory {
         }
     }
 
-    private func getVideoTrack(from arguments: [String: AnyObject]) -> HMSVideoTrack {
+    private func getVideoTrack(from arguments: [String: AnyObject]) -> HMSVideoTrack? {
 
-        let trackID = arguments["track_id"] as? String ?? ""
-
-        if let videoTrack = HMSUtilities.getVideoTrack(for: trackID, in: plugin.hmsSDK!.room!) {
-            return videoTrack
+        guard let trackID = arguments["track_id"] as? String
+        else {
+            let errorMsg = "\(#function) Could not find track_id in arguments: \(arguments)"
+            plugin.sendCustomError(HMSErrorExtension.getError(errorMsg))
+            print(errorMsg)
+            return nil
         }
 
-        return plugin.hmsSDK!.localPeer!.videoTrack!
+        guard let room = plugin.hmsSDK?.room
+        else {
+            let errorMsg = "\(#function) Could not find room for trackID: \(trackID)"
+            plugin.sendCustomError(HMSErrorExtension.getError(errorMsg))
+            print(errorMsg)
+            return nil
+        }
+
+        guard let videoTrack = HMSUtilities.getVideoTrack(for: trackID, in: room)
+        else {
+            let errorMsg = "\(#function) Could not find video track in room with trackID: \(trackID)"
+            plugin.sendCustomError(HMSErrorExtension.getError(errorMsg))
+            print(errorMsg)
+            return nil
+        }
+
+        return videoTrack
     }
 }
