@@ -156,7 +156,7 @@ class HMSSDK {
   /// This function toggles the current microphone state i.e
   /// If it's unmuted it will get muted
   /// If it's muted it will get unmuted
-  /// Refer [switch audio guide here](https://www.100ms.live/docs/flutter/v2/features/mute).
+  /// Refer [toggle microphone state guide here](https://www.100ms.live/docs/flutter/v2/features/mute).
   Future<HMSException?> toggleMicMuteState() async {
     bool result =
         await PlatformService.invokeMethod(PlatformMethod.toggleMicMuteState);
@@ -198,8 +198,8 @@ class HMSSDK {
   /// This function toggles the current camera state i.e
   /// If camera is unmuted it will get muted
   /// If camera is muted it will get unmuted
-  /// Refer [switch video guide here](https://www.100ms.live/docs/flutter/v2/features/mute).
-  Future<HMSException?>  toggleCameraMuteState() async {
+  /// Refer [toggle camera state guide here](https://www.100ms.live/docs/flutter/v2/features/mute).
+  Future<HMSException?> toggleCameraMuteState() async {
     bool result =
         await PlatformService.invokeMethod(PlatformMethod.toggleCameraMuteState);
 
