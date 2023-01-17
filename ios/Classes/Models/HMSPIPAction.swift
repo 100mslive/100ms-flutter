@@ -49,11 +49,11 @@ class HMSPIPAction {
 //            return }
         
         guard AVPictureInPictureController.isPictureInPictureSupported() else {
-            result(HMSErrorExtension.createError(0, false, true, description: "PIP is not supported"))
+            result(HMSErrorExtension.getError("PIP is not supported"))
             return }
         
         guard let uiView = UIApplication.shared.keyWindow?.rootViewController?.view else {
-            result(HMSErrorExtension.createError(0, false, true, description: "Unable to setup PIP"))
+            result(HMSErrorExtension.getError("Unable to setup PIP"))
             return }
             
 //        print(#function, "uiview", uiView, uiView.subviews)
@@ -156,7 +156,7 @@ class HMSPIPAction {
         guard let trackID = arguments["track_id"] as? String,
               let track = HMSUtilities.getVideoTrack(for: trackID, in: (hmsSDK?.room)!)
         else {
-            result(HMSErrorExtension.createError(0, false, true, description: "Unable to find track ID"))
+            result(HMSErrorExtension.getError("Unable to find track ID"))
             return
         }
         model?.track = track

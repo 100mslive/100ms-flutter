@@ -39,18 +39,4 @@ class HMSErrorExtension {
         return ["error": dict]
     }
     
-    static func createError(_ code: Int, _ isTerminal: Bool, _ canRetry: Bool, description: String) ->[String:Any] {
-        var dict = [String: Any]()
-
-        dict["code"] = code
-
-        dict["isTerminal"] = isTerminal
-
-        dict["canRetry"] = canRetry
-
-        dict["description"] = description
-
-        return ["error": dict]
-    }
-
 }
