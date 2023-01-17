@@ -5,19 +5,19 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hmssdk_flutter_example/common/constant.dart';
+import 'package:hmssdk_flutter_example/common/app_dialogs/role_change_request_dialog.dart';
+import 'package:hmssdk_flutter_example/common/app_dialogs/track_change_request_dialog.dart';
+import 'package:hmssdk_flutter_example/service/constant.dart';
+import 'package:hmssdk_flutter_example/common/widgets/subtitle_text.dart';
+import 'package:hmssdk_flutter_example/common/widgets/title_text.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_mode.dart';
-import 'package:hmssdk_flutter_example/hls-streaming/util/hls_subtitle_text.dart';
-import 'package:hmssdk_flutter_example/hls-streaming/util/hls_title_text.dart';
 import 'package:provider/provider.dart';
 
 //Project imports
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-import 'package:hmssdk_flutter_example/common/ui/organisms/role_change_request_dialog.dart';
-import 'package:hmssdk_flutter_example/common/ui/organisms/track_change_request_dialog.dart';
-import 'package:hmssdk_flutter_example/data_store/meeting_store.dart';
+import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:collection/collection.dart';
 
 class UtilityComponents {
@@ -192,7 +192,7 @@ class UtilityComponents {
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 8.0, vertical: 12),
-                      child: HLSTitleText(
+                      child: TitleText(
                           text: 'Don’t Leave', textColor: themeDefaultColor),
                     )),
               ),
@@ -216,7 +216,7 @@ class UtilityComponents {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 25.0, vertical: 12),
-                    child: HLSTitleText(
+                    child: TitleText(
                       text: 'Leave',
                       textColor: hmsWhiteColor,
                     ),
@@ -235,7 +235,7 @@ class UtilityComponents {
     await showDialog(
         barrierDismissible: false,
         context: context,
-        builder: (ctx) => RoleChangeDialogOrganism(
+        builder: (ctx) => RoleChangeRequestDialog(
             roleChangeRequest: event,
             meetingStore: context.read<MeetingStore>()));
   }
@@ -246,7 +246,7 @@ class UtilityComponents {
     await showDialog(
         barrierDismissible: false,
         context: context,
-        builder: (ctx) => TrackChangeDialogOrganism(
+        builder: (ctx) => TrackChangeRequestDialog(
               trackChangeRequest: trackChangeRequest,
               meetingStore: context.read<MeetingStore>(),
               isAudioModeOn: _meetingStore.meetingMode == MeetingMode.Audio,
@@ -664,7 +664,7 @@ class UtilityComponents {
                                   .sortedBy(
                                       (element) => element.priority.toString())
                                   .map((role) => DropdownMenuItem(
-                                        child: HLSTitleText(
+                                        child: TitleText(
                                           text: role.name,
                                           textColor: themeDefaultColor,
                                           fontWeight: FontWeight.w400,
@@ -1382,7 +1382,7 @@ class UtilityComponents {
                 title: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    HLSTitleText(
+                    TitleText(
                       text: "Change Audio Mixing Mode",
                       fontSize: 20,
                       letterSpacing: 0.15,
@@ -1391,7 +1391,7 @@ class UtilityComponents {
                     SizedBox(
                       height: 8,
                     ),
-                    HLSSubtitleText(
+                    SubtitleText(
                         text: "Select Audio Mixing mode",
                         textColor: themeSubHeadingColor),
                   ],
@@ -1432,7 +1432,7 @@ class UtilityComponents {
                     },
                     items: <DropdownMenuItem>[
                       DropdownMenuItem(
-                        child: HLSTitleText(
+                        child: TitleText(
                           text: HMSAudioMixingMode.TALK_AND_MUSIC.name,
                           textColor: themeDefaultColor,
                           fontWeight: FontWeight.w400,
@@ -1440,7 +1440,7 @@ class UtilityComponents {
                         value: HMSAudioMixingMode.TALK_AND_MUSIC,
                       ),
                       DropdownMenuItem(
-                        child: HLSTitleText(
+                        child: TitleText(
                           text: HMSAudioMixingMode.TALK_ONLY.name,
                           textColor: themeDefaultColor,
                           fontWeight: FontWeight.w400,
@@ -1448,7 +1448,7 @@ class UtilityComponents {
                         value: HMSAudioMixingMode.TALK_ONLY,
                       ),
                       DropdownMenuItem(
-                        child: HLSTitleText(
+                        child: TitleText(
                           text: HMSAudioMixingMode.MUSIC_ONLY.name,
                           textColor: themeDefaultColor,
                           fontWeight: FontWeight.w400,
