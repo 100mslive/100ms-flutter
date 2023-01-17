@@ -47,11 +47,10 @@ class _PreviewDetailsState extends State<PreviewDetails> {
     /// [joinWithMutedAudio] & [joinWithMutedVideo] are required to set the initial audio/video state i.e what should be camera and mic
     /// state while room is joined.By default both audio and video are kept as mute.
 
-    HMSIOSScreenshareConfig iOSScreenshareConfig =
-        Utilities.getIOSScreenshareConfig(
-            appGroup: "group.flutterhms",
-            preferredExtension:
-                "live.100ms.flutter.FlutterBroadcastUploadExtension");
+    HMSIOSScreenshareConfig iOSScreenshareConfig = HMSIOSScreenshareConfig(
+        appGroup: "group.flutterhms",
+        preferredExtension:
+            "live.100ms.flutter.FlutterBroadcastUploadExtension");
 
     _hmsSDKInteractor = HMSSDKInteractor(
         iOSScreenshareConfig: iOSScreenshareConfig,
