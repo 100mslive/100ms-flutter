@@ -14,7 +14,6 @@ class HLSViewerSettings extends StatefulWidget {
 }
 
 class _HLSViewerSettingsState extends State<HLSViewerSettings> {
-
   @override
   Widget build(BuildContext context) {
     MeetingStore _meetingStore = context.read<MeetingStore>();
@@ -103,8 +102,7 @@ class _HLSViewerSettingsState extends State<HLSViewerSettings> {
                     ),
                     context: context,
                     builder: (ctx) => ChangeNotifierProvider.value(
-                        value: _meetingStore,
-                        child: HLSParticipantSheet()),
+                        value: _meetingStore, child: HLSParticipantSheet()),
                   );
                 },
                 contentPadding: EdgeInsets.zero,

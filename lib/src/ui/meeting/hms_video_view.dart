@@ -16,29 +16,76 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 ///
 /// just pass the videotracks of local or remote peer and internally it passes [peer_id], [is_local] and [track_id] to specific views.
 ///
-/// if you want to pass height and width you can pass as a map.
-///
 /// [HMSVideoView] will render video using trackId from HMSTrack
 ///
-/// [key] property can be used to forcefully rebuild the video widget by setting a unique key everytime.
+/// **parameters**
+///
+/// **track** - This will render video with trackId present in the track. Use video track only.
+///
+/// **matchParent** - To match the size of the parent widget.
+///
+/// **scaleType** - To set the video scaling. [SCALE_ASPECT_FIT, SCALE_ASPECT_FILL, SCALE_ASPECT_BALANCED]
+///
+/// **setMirror** - To set mirroring of video
+///
+/// **disableAutoSimulcastLayerSelect** -  To disable auto simulcast (Adaptive Bitrate)
+///
+/// **key** - [key] property can be used to forcefully rebuild the video widget by setting a unique key everytime.
 /// Similarly to avoid rebuilding the key should be kept the same for particular HMSVideoView.
 ///
 /// Refer [HMSVideoView guide here](https://www.100ms.live/docs/flutter/v2/features/render-video)
 class HMSVideoView extends StatelessWidget {
+  /// This will render video with trackId present in the track
+  /// [track] - the video track to be displayed
   final HMSVideoTrack track;
-  final matchParent;
 
+  /// [matchParent] - to match the size of the parent widget
+  final bool matchParent;
+
+  /// [scaleType] - To set the video scaling.
+  ///
+  /// ScaleType can be one of the following: [SCALE_ASPECT_FIT, SCALE_ASPECT_FILL, SCALE_ASPECT_BALANCED]
   final ScaleType scaleType;
-  final bool setMirror;
-  final bool isAutoSimulcast;
 
+  /// [setMirror] - To set mirroring of video
+  final bool setMirror;
+
+  /// [disableAutoSimulcastLayerSelect] - To disable auto simulcast (Adaptive Bitrate)
+  final bool disableAutoSimulcastLayerSelect;
+
+  ///100ms HMSVideoView
+  ///
+  ///HMSVideoView used to render video in ios and android devices
+  ///
+  /// To use,import package:`hmssdk_flutter/ui/meeting/hms_video_view.dart`.
+  ///
+  /// just pass the videotracks of local or remote peer and internally it passes [peer_id], [is_local] and [track_id] to specific views.
+  ///
+  /// [HMSVideoView] will render video using trackId from HMSTrack
+  ///
+  /// **parameters**
+  ///
+  /// **track** - This will render video with trackId present in the track. Use video track only.
+  ///
+  /// **matchParent** - To match the size of the parent widget.
+  ///
+  /// **scaleType** - To set the video scaling.`[SCALE_ASPECT_FIT, SCALE_ASPECT_FILL, SCALE_ASPECT_BALANCED]`
+  ///
+  /// **setMirror** - To set mirroring of video
+  ///
+  /// **disableAutoSimulcastLayerSelect** -  To disable auto simulcast (Adaptive Bitrate)
+  ///
+  /// **key** - [key] property can be used to forcefully rebuild the video widget by setting a unique key everytime.
+  /// Similarly to avoid rebuilding the key should be kept the same for particular HMSVideoView.
+  ///
+  /// Refer [HMSVideoView guide here](https://www.100ms.live/docs/flutter/v2/features/render-video)
   HMSVideoView(
       {Key? key,
       required this.track,
       this.setMirror = false,
       this.matchParent = true,
       this.scaleType = ScaleType.SCALE_ASPECT_FIT,
-      this.isAutoSimulcast = true})
+      this.disableAutoSimulcastLayerSelect = false})
       : super(key: key);
 
   @override
@@ -48,7 +95,7 @@ class HMSVideoView extends StatelessWidget {
       matchParent: this.matchParent,
       setMirror: setMirror,
       scaleType: this.scaleType,
-      isAutoSimulcast: isAutoSimulcast,
+      disableAutoSimulcastLayerSelect: disableAutoSimulcastLayerSelect,
     );
   }
 }
@@ -59,7 +106,7 @@ class _PlatformView extends StatelessWidget {
   final bool setMirror;
   final bool matchParent;
   final ScaleType scaleType;
-  final bool isAutoSimulcast;
+  final bool disableAutoSimulcastLayerSelect;
 
   _PlatformView(
       {Key? key,
@@ -67,7 +114,7 @@ class _PlatformView extends StatelessWidget {
       this.setMirror = false,
       this.matchParent = true,
       required this.scaleType,
-      this.isAutoSimulcast = true})
+      this.disableAutoSimulcastLayerSelect = false})
       : super(key: key);
 
   void onPlatformViewCreated(int id) {}
@@ -85,7 +132,7 @@ class _PlatformView extends StatelessWidget {
           'set_mirror': track.source != "REGULAR" ? false : setMirror,
           'scale_type': scaleType.value,
           'match_parent': matchParent,
-          'is_auto_simulcast': isAutoSimulcast
+          'disable_auto_simulcast_layer_select': disableAutoSimulcastLayerSelect
         },
         gestureRecognizers: {},
       );
@@ -100,7 +147,7 @@ class _PlatformView extends StatelessWidget {
           'set_mirror': track.source != "REGULAR" ? false : setMirror,
           'scale_type': scaleType.value,
           'match_parent': matchParent,
-          'is_auto_simulcast': isAutoSimulcast
+          'disable_auto_simulcast_layer_select': disableAutoSimulcastLayerSelect
         },
         gestureRecognizers: {},
       );

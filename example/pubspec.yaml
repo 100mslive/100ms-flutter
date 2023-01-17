@@ -39,7 +39,7 @@ dependencies:
   google_fonts:
   fluttertoast:
   qr_code_scanner:
-  shared_preferences:
+  shared_preferences: 2.0.15
   uni_links:
   file_picker:
   draggable_widget:

@@ -11,13 +11,12 @@ class HMSSDKInteractor {
   late List<HMSMessage> messages;
   late HMSSDK hmsSDK;
 
-  /// [appGroup] & [preferredExtension] are optional values only required for implementing Screen & Audio Share on iOS. They are not required for Android.
-  /// Remove [appGroup] & [preferredExtension] if your app does not implements Screen or Audio Share on iOS.
+  /// [iOSScreenshareConfig] is optional values only required for implementing Screen Share on iOS. They are not required for Android.
+  /// Remove [iOSScreenshareConfig] if your app does not implements Screen Share on iOS.
   /// [joinWithMutedAudio] & [joinWithMutedVideo] are required to set the initial audio/video state i.e what should be camera and mic
-  /// state while room is joined.By default both audio and video are kept as mute.
+  /// state while room is joined. By default both audio and video are kept as unmute.
   HMSSDKInteractor(
-      {String? appGroup,
-      String? preferredExtension,
+      {HMSIOSScreenshareConfig? iOSScreenshareConfig,
       bool joinWithMutedAudio = true,
       bool joinWithMutedVideo = true,
       bool isSoftwareDecoderDisabled = true,
@@ -32,12 +31,15 @@ class HMSSDKInteractor {
         joinWithMutedVideo: joinWithMutedVideo,
         joinWithMutedAudio: joinWithMutedAudio,
         isSoftwareDecoderDisabled: isSoftwareDecoderDisabled);
+
     hmsSDK = HMSSDK(
-        appGroup: 'group.live.100ms.videoapp',
-        preferredExtension: preferredExtension,
+        iOSScreenshareConfig: iOSScreenshareConfig,
         hmsLogSettings: hmsLogSettings,
         hmsTrackSetting: trackSetting);
-    hmsSDK.build();
+  }
+
+  Future<void> build() async {
+    await hmsSDK.build();
   }
 
   void join({required HMSConfig config}) {
@@ -49,12 +51,12 @@ class HMSSDKInteractor {
     hmsSDK.leave(hmsActionResultListener: hmsActionResultListener);
   }
 
-  Future<HMSException?> switchAudio({bool isOn = false}) async {
-    return await hmsSDK.switchAudio(isOn: isOn);
+  Future<HMSException?> toggleMicMuteState() async {
+    return await hmsSDK.toggleMicMuteState();
   }
 
-  Future<HMSException?> switchVideo({bool isOn = false}) async {
-    return await hmsSDK.switchVideo(isOn: isOn);
+  Future<HMSException?> toggleCameraMuteState() async {
+    return await hmsSDK.toggleCameraMuteState();
   }
 
   Future<void> switchCamera(

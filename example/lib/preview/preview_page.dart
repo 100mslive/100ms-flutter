@@ -33,22 +33,16 @@ class PreviewPage extends StatefulWidget {
 }
 
 class _PreviewPageState extends State<PreviewPage> {
-
   late MeetingStore _meetingStore;
   @override
   void initState() {
-    MultiProvider(
-      providers: [ChangeNotifierProvider(create: (_) => PreviewStore())],
-    );
     super.initState();
     initPreview();
   }
 
-  void setMeetingStore(PreviewStore _previewStore){
+  void setMeetingStore(PreviewStore _previewStore) {
     _meetingStore = MeetingStore(
-      hmsSDKInteractor:
-          _previewStore
-              .hmsSDKInteractor!,
+      hmsSDKInteractor: _previewStore.hmsSDKInteractor,
     );
   }
 
@@ -323,9 +317,8 @@ class _PreviewPageState extends State<PreviewPage> {
                                                   height: 40,
                                                   width: 40,
                                                   onTap: () async =>
-                                                      _previewStore.switchAudio(
-                                                          isOn: _previewStore
-                                                              .isAudioOn),
+                                                      _previewStore
+                                                          .toggleMicMuteState(),
                                                   offColor: hmsWhiteColor,
                                                   onColor: themeHMSBorderColor,
                                                   isActive:
@@ -357,9 +350,7 @@ class _PreviewPageState extends State<PreviewPage> {
                                                           .localTracks.isEmpty)
                                                       ? null
                                                       : _previewStore
-                                                          .switchVideo(
-                                                              isOn: _previewStore
-                                                                  .isVideoOn),
+                                                          .toggleCameraMuteState(),
                                                   offColor: hmsWhiteColor,
                                                   onColor: themeHMSBorderColor,
                                                   isActive:
@@ -468,8 +459,7 @@ class _PreviewPageState extends State<PreviewPage> {
                                                                         .meeting
                                                                 ? false
                                                                 : true,
-                                                        isAudioOn: _previewStore
-                                                            .isAudioOn,
+                                                        
                                                         meetingLink:
                                                             widget.meetingLink,
                                                         localPeerNetworkQuality:

@@ -5,6 +5,7 @@ class HMSQualityLimitationReasons {
   double? cpu;
   double? none;
   double? qualityLimitationResolutionChanges;
+  double? other;
   HMSQualityLimitationReason reason;
 
   HMSQualityLimitationReasons(
@@ -12,6 +13,7 @@ class HMSQualityLimitationReasons {
       this.bandWidth,
       this.cpu,
       this.none,
+      this.other,
       this.qualityLimitationResolutionChanges});
 
   factory HMSQualityLimitationReasons.fromMap(Map map) {
@@ -21,6 +23,7 @@ class HMSQualityLimitationReasons {
         bandWidth: map["band_width"],
         cpu: map["cpu"],
         none: map["none"],
+        other: map["other"],
         qualityLimitationResolutionChanges:
             map["quality_limitation_resolution_changes"]);
   }

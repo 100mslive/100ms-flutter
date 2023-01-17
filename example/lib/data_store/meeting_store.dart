@@ -211,14 +211,14 @@ class MeetingStore extends ChangeNotifier
     _hmsSDKInteractor.destroy();
   }
 
-  Future<void> switchAudio() async {
-    await _hmsSDKInteractor.switchAudio(isOn: isMicOn);
+  Future<void> toggleMicMuteState() async {
+    await _hmsSDKInteractor.toggleMicMuteState();
     isMicOn = !isMicOn;
     notifyListeners();
   }
 
-  Future<void> switchVideo() async {
-    await _hmsSDKInteractor.switchVideo(isOn: isVideoOn);
+  Future<void> toggleCameraMuteState() async {
+    await _hmsSDKInteractor.toggleCameraMuteState();
     isVideoOn = !isVideoOn;
     notifyListeners();
   }
@@ -385,10 +385,10 @@ class MeetingStore extends ChangeNotifier
         metadata: "{\"isHandRaised\":false,\"isBRBOn\":$value}",
         hmsActionResultListener: this);
     if (isMicOn) {
-      switchAudio();
+      toggleMicMuteState();
     }
     if (isVideoOn) {
-      switchVideo();
+      toggleCameraMuteState();
     }
     notifyListeners();
   }
@@ -796,7 +796,7 @@ class MeetingStore extends ChangeNotifier
 
   @override
   void onLocalVideoStats(
-      {required HMSLocalVideoStats hmsLocalVideoStats,
+      {required List<HMSLocalVideoStats> hmsLocalVideoStats,
       required HMSLocalVideoTrack track,
       required HMSPeer peer}) {
     int index = -1;
@@ -960,9 +960,9 @@ class MeetingStore extends ChangeNotifier
 
   void changeTracks(HMSTrackChangeRequest hmsTrackChangeRequest) {
     if (hmsTrackChangeRequest.track.kind == HMSTrackKind.kHMSTrackKindVideo) {
-      switchVideo();
+      toggleCameraMuteState();
     } else {
-      switchAudio();
+      toggleMicMuteState();
     }
   }
 
@@ -1646,10 +1646,10 @@ class MeetingStore extends ChangeNotifier
         notifyListeners();
       }
 
-      // if (lastVideoStatus && !reconnecting) {
-      //   switchVideo();
-      //   lastVideoStatus = false;
-      // }
+      if (lastVideoStatus && !reconnecting) {
+        toggleCameraMuteState();
+        lastVideoStatus = false;
+      }
 
       List<HMSPeer>? peersList = await getPeers();
 
@@ -1664,13 +1664,13 @@ class MeetingStore extends ChangeNotifier
         }
       });
     } else if (state == AppLifecycleState.paused) {
-      // HMSLocalPeer? localPeer = await getLocalPeer();
-      // if (localPeer != null &&
-      //     !(localPeer.videoTrack?.isMute ?? true) &&
-      //     !isPipActive) {
-      //   switchVideo();
-      //   lastVideoStatus = true;
-      // }
+      HMSLocalPeer? localPeer = await getLocalPeer();
+      if (localPeer != null &&
+          !(localPeer.videoTrack?.isMute ?? true) &&
+          !isPipActive) {
+        toggleCameraMuteState();
+        lastVideoStatus = true;
+      }
     } else if (state == AppLifecycleState.inactive) {
       if (Platform.isAndroid && isPipAutoEnabled && !isPipActive) {
         isPipActive = true;

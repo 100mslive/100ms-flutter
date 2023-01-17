@@ -356,8 +356,10 @@ class PlatformService {
           HMSPeer? peer = HMSPeer.fromMap(data['peer']);
           HMSLocalVideoTrack? track =
               HMSLocalVideoTrack.fromMap(map: data['track']);
-          HMSLocalVideoStats localVideoStats =
-              HMSLocalVideoStats.fromMap(data['local_video_stats'] as Map);
+          List<HMSLocalVideoStats> localVideoStats = [];
+          for (Map stat in data['local_video_stats']) {
+            localVideoStats.add(HMSLocalVideoStats.fromMap(stat));
+          }
           notifyStatsListeners(method, {
             'local_video_stats': localVideoStats,
             "track": track,
@@ -396,7 +398,6 @@ class PlatformService {
           break;
 
         case HMSStatsListenerMethod.unknown:
-          // TODO: Handle this case.
           break;
       }
     });

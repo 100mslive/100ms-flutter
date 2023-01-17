@@ -32,6 +32,7 @@ class _OneToOneModeState extends State<OneToOneMode> {
     if (widget.peerTracks.isNotEmpty) {
       oneToOnePeer =
           widget.peerTracks.firstWhere((element) => element.peer.isLocal);
+      oneToOnePeer?.setOffScreenStatus(false);
       screenPeer =
           widget.peerTracks.firstWhere((element) => !element.peer.isLocal);
     }

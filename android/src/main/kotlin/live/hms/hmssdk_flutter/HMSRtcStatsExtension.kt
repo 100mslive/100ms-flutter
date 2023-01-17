@@ -12,14 +12,12 @@ class HMSRtcStatsExtension {
 
     companion object {
 
-        fun toDictionary(hmsRemoteVideoStats: HMSRemoteVideoStats, track: HMSTrack?, peer: HMSPeer?): HashMap<String, Any?>? {
+        fun toDictionary(hmsRemoteVideoStats: HMSRemoteVideoStats, track: HMSTrack, peer: HMSPeer): HashMap<String, Any?> {
             val args = HashMap<String, Any?>()
-            if (peer == null || hmsRemoteVideoStats == null || track == null)return null
             args.put("peer", HMSPeerExtension.toDictionary(peer)!!)
             args.put("track", HMSTrackExtension.toDictionary(track)!!)
 
             val hmsRemoteVideoStatsMap = HashMap<String, Any?>()
-            if (hmsRemoteVideoStats == null) return null
             hmsRemoteVideoStatsMap["bytes_received"] = hmsRemoteVideoStats.bytesReceived
             hmsRemoteVideoStatsMap["jitter"] = hmsRemoteVideoStats.jitter
             hmsRemoteVideoStatsMap["bitrate"] = hmsRemoteVideoStats.bitrate
@@ -32,14 +30,12 @@ class HMSRtcStatsExtension {
             return args
         }
 
-        fun toDictionary(hmsRemoteAudioStats: HMSRemoteAudioStats, track: HMSTrack?, peer: HMSPeer?): HashMap<String, Any?>? {
+        fun toDictionary(hmsRemoteAudioStats: HMSRemoteAudioStats, track: HMSTrack, peer: HMSPeer): HashMap<String, Any?> {
             val args = HashMap<String, Any?>()
-            if (peer == null || hmsRemoteAudioStats == null || track == null)return null
             args.put("peer", HMSPeerExtension.toDictionary(peer)!!)
             args.put("track", HMSTrackExtension.toDictionary(track)!!)
 
             val hmsRemoteAudioStatsMap = HashMap<String, Any?>()
-            if (hmsRemoteAudioStats == null) return null
             hmsRemoteAudioStatsMap["bytes_received"] = hmsRemoteAudioStats.bytesReceived
             hmsRemoteAudioStatsMap["jitter"] = hmsRemoteAudioStats.jitter
             hmsRemoteAudioStatsMap["bitrate"] = hmsRemoteAudioStats.bitrate
@@ -50,14 +46,12 @@ class HMSRtcStatsExtension {
             return args
         }
 
-        fun toDictionary(hmsLocalAudioStats: HMSLocalAudioStats, track: HMSTrack?, peer: HMSPeer?): HashMap<String, Any?>? {
+        fun toDictionary(hmsLocalAudioStats: HMSLocalAudioStats, track: HMSTrack, peer: HMSPeer): HashMap<String, Any?> {
             val args = HashMap<String, Any?>()
-            if (peer == null || hmsLocalAudioStats == null || track == null)return null
             args.put("peer", HMSPeerExtension.toDictionary(peer)!!)
             args.put("track", HMSTrackExtension.toDictionary(track)!!)
 
             val hmsLocalAudioStatsMap = HashMap<String, Any?>()
-            if (hmsLocalAudioStats == null) return null
             hmsLocalAudioStatsMap["bytes_received"] = hmsLocalAudioStats.bytesSent
             hmsLocalAudioStatsMap["bitrate"] = hmsLocalAudioStats.bitrate
             hmsLocalAudioStatsMap["round_trip_time"] = hmsLocalAudioStats.roundTripTime
@@ -65,25 +59,30 @@ class HMSRtcStatsExtension {
             return args
         }
 
-        fun toDictionary(hmsLocalVideoStats: HMSLocalVideoStats, track: HMSTrack?, peer: HMSPeer?): HashMap<String, Any?>? {
+        fun toDictionary(hmsLocalVideoStats: List<HMSLocalVideoStats>, track: HMSTrack, peer: HMSPeer): HashMap<String, Any?> {
             val args = HashMap<String, Any?>()
-            if (peer == null || hmsLocalVideoStats == null || track == null)return null
-            args.put("peer", HMSPeerExtension.toDictionary(peer)!!)
-            args.put("track", HMSTrackExtension.toDictionary(track)!!)
+            args["peer"] = HMSPeerExtension.toDictionary(peer)!!
+            args["track"] = HMSTrackExtension.toDictionary(track)!!
 
-            val hmsLocaVideoStatsMap = HashMap<String, Any?>()
-            if (hmsLocalVideoStats == null) return null
-            hmsLocaVideoStatsMap["bytes_received"] = hmsLocalVideoStats.bytesSent
-            hmsLocaVideoStatsMap["bitrate"] = hmsLocalVideoStats.bitrate
-            hmsLocaVideoStatsMap["round_trip_time"] = hmsLocalVideoStats.roundTripTime
-            hmsLocaVideoStatsMap["frame_rate"] = hmsLocalVideoStats.frameRate
-            hmsLocaVideoStatsMap["resolution"] = HMSVideoResolutionExtension.toDictionary(hmsLocalVideoStats.resolution)
-            hmsLocaVideoStatsMap["quality_limitation_reason"] = toDictionary(hmsLocalVideoStats.qualityLimitationReason)
-            args.put("local_video_stats", hmsLocaVideoStatsMap)
+            val hmsLocalVideoStatsMap = ArrayList<HashMap<String, Any?>>()
+
+            hmsLocalVideoStats.forEach {
+                val layerStatsMap = HashMap<String, Any?>()
+                layerStatsMap["bytes_sent"] = it.bytesSent
+                layerStatsMap["bitrate"] = it.bitrate
+                layerStatsMap["round_trip_time"] = it.roundTripTime
+                layerStatsMap["frame_rate"] = it.frameRate
+                layerStatsMap["resolution"] = HMSVideoResolutionExtension.toDictionary(it.resolution)
+                layerStatsMap["quality_limitation_reason"] = toDictionary(it.qualityLimitationReason)
+                layerStatsMap["hms_layer"] = HMSSimulcastLayerExtension.getStringFromLayer(it.hmsLayer)
+                hmsLocalVideoStatsMap.add(layerStatsMap)
+            }
+
+            args["local_video_stats"] = hmsLocalVideoStatsMap
             return args
         }
 
-        fun toDictionary(qualityLimitationReason: QualityLimitationReasons): HashMap<String, Any?>? {
+        fun toDictionary(qualityLimitationReason: QualityLimitationReasons): HashMap<String, Any?> {
             val qualityLimitationReasonMap = HashMap<String, Any?>()
             qualityLimitationReasonMap["band_width"] = qualityLimitationReason.bandWidth
             qualityLimitationReasonMap["cpu"] = qualityLimitationReason.cpu

@@ -10,25 +10,10 @@ import 'package:hmssdk_flutter_example/service/room_service.dart';
 
 class PreviewStore extends ChangeNotifier
     implements HMSPreviewListener, HMSLogListener {
-  HMSSDKInteractor? hmsSDKInteractor;
+  late HMSSDKInteractor hmsSDKInteractor;
 
-  PreviewStore(
-      {bool joinWithMutedAudio = true,
-      bool joinWithMutedVideo = true,
-      bool isSoftwareDecoderDisabled = true,
-      bool isAudioMixerDisabled = true}) {
-    /// [appGroup] & [preferredExtension] of [HMSSDKInteractor] are optional values only required for implementing Screen & Audio Share on iOS. They are not required for Android.
-    /// Remove [appGroup] & [preferredExtension] if your app does not implements Screen or Audio Share on iOS.
-    /// [joinWithMutedAudio] & [joinWithMutedVideo] are required to set the initial audio/video state i.e what should be camera and mic
-    /// state while room is joined.By default both audio and video are kept as mute.
-    hmsSDKInteractor = HMSSDKInteractor(
-        appGroup: "group.flutterhms",
-        preferredExtension:
-            "live.100ms.flutter.FlutterBroadcastUploadExtension",
-        joinWithMutedAudio: joinWithMutedAudio,
-        joinWithMutedVideo: joinWithMutedVideo,
-        isSoftwareDecoderDisabled: isSoftwareDecoderDisabled,
-        isAudioMixerDisabled: isAudioMixerDisabled);
+  PreviewStore({required HMSSDKInteractor hmsSDKInteractor}) {
+    this.hmsSDKInteractor = hmsSDKInteractor;
   }
 
   List<HMSVideoTrack> localTracks = [];
@@ -123,8 +108,8 @@ class PreviewStore extends ChangeNotifier
       // endPoint is only required by 100ms Team. Client developers should not use `endPoint`
       endPoint: token[1] == "true" ? "" : "https://qa-init.100ms.live/init",
     );
-    hmsSDKInteractor!.addPreviewListener(this);
-    hmsSDKInteractor!.preview(config: config);
+    hmsSDKInteractor.addPreviewListener(this);
+    hmsSDKInteractor.preview(config: config);
     meetingUrl = meetingLink;
     return "";
   }
@@ -188,35 +173,35 @@ class PreviewStore extends ChangeNotifier
   }
 
   void removePreviewListener() {
-    hmsSDKInteractor!.removePreviewListener(this);
+    hmsSDKInteractor.removePreviewListener(this);
   }
 
   void stopCapturing() {
-    hmsSDKInteractor!.stopCapturing();
+    hmsSDKInteractor.stopCapturing();
   }
 
   void startCapturing() {
-    hmsSDKInteractor!.startCapturing();
+    hmsSDKInteractor.startCapturing();
   }
 
-  void switchVideo({bool isOn = false}) {
-    hmsSDKInteractor!.switchVideo(isOn: isOn);
+  void toggleCameraMuteState() {
+    hmsSDKInteractor.toggleCameraMuteState();
     isVideoOn = !isVideoOn;
     notifyListeners();
   }
 
-  void switchAudio({bool isOn = false}) {
-    hmsSDKInteractor!.switchAudio(isOn: isOn);
+  void toggleMicMuteState() {
+    hmsSDKInteractor.toggleMicMuteState();
     isAudioOn = !isAudioOn;
     notifyListeners();
   }
 
   void addLogsListener(HMSLogListener hmsLogListener) {
-    hmsSDKInteractor!.addLogsListener(hmsLogListener);
+    hmsSDKInteractor.addLogsListener(hmsLogListener);
   }
 
   void removeLogsListener(HMSLogListener hmsLogListener) {
-    hmsSDKInteractor!.removeLogsListener(hmsLogListener);
+    hmsSDKInteractor.removeLogsListener(hmsLogListener);
   }
 
   @override
@@ -225,46 +210,45 @@ class PreviewStore extends ChangeNotifier
   }
 
   void destroy() {
-    hmsSDKInteractor!.removePreviewListener(this);
-    hmsSDKInteractor!.destroy();
-    hmsSDKInteractor = null;
+    hmsSDKInteractor.removePreviewListener(this);
+    hmsSDKInteractor.destroy();
   }
 
   void leave() {
-    hmsSDKInteractor!.leave();
+    hmsSDKInteractor.leave();
     destroy();
   }
 
   void toggleSpeaker() async {
     if (!this.isRoomMute) {
-      hmsSDKInteractor!.muteRoomAudioLocally();
+      hmsSDKInteractor.muteRoomAudioLocally();
     } else {
-      hmsSDKInteractor!.unMuteRoomAudioLocally();
+      hmsSDKInteractor.unMuteRoomAudioLocally();
     }
     this.isRoomMute = !this.isRoomMute;
     notifyListeners();
   }
 
   void getRoles() async {
-    roles = await hmsSDKInteractor!.getRoles();
+    roles = await hmsSDKInteractor.getRoles();
     notifyListeners();
   }
 
   Future<void> getAudioDevicesList() async {
     availableAudioOutputDevices.clear();
     availableAudioOutputDevices
-        .addAll(await hmsSDKInteractor!.getAudioDevicesList());
+        .addAll(await hmsSDKInteractor.getAudioDevicesList());
     notifyListeners();
   }
 
   Future<void> getCurrentAudioDevice() async {
-    currentAudioOutputDevice = await hmsSDKInteractor!.getCurrentAudioDevice();
+    currentAudioOutputDevice = await hmsSDKInteractor.getCurrentAudioDevice();
     notifyListeners();
   }
 
   void switchAudioOutput({required HMSAudioDevice audioDevice}) {
     currentAudioDeviceMode = audioDevice;
-    hmsSDKInteractor!.switchAudioOutput(audioDevice: audioDevice);
+    hmsSDKInteractor.switchAudioOutput(audioDevice: audioDevice);
     notifyListeners();
   }
 

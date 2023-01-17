@@ -165,7 +165,9 @@ enum PlatformMethod {
   setupPIP,
   startPIP,
   stopPIP,
-  changeTrackPIP
+  changeTrackPIP,
+  toggleMicMuteState,
+  toggleCameraMuteState
 }
 
 extension PlatformMethodValues on PlatformMethod {
@@ -391,6 +393,10 @@ extension PlatformMethodValues on PlatformMethod {
         return "start_pip";
       case PlatformMethod.changeTrackPIP:
         return "change_track_pip";
+      case PlatformMethod.toggleMicMuteState:
+        return "toggle_mic_mute_state";
+      case PlatformMethod.toggleCameraMuteState:
+        return "toggle_camera_mute_state";
       default:
         return 'unknown';
     }
@@ -614,6 +620,12 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.getLayer;
       case "get_layer_definition":
         return PlatformMethod.getLayerDefinition;
+      case "setup_pip":
+        return PlatformMethod.setupPIP;
+      case "toggle_mic_mute_state":
+        return PlatformMethod.toggleMicMuteState;
+      case "toggle_camera_mute_state":
+        return PlatformMethod.toggleCameraMuteState;
       default:
         return PlatformMethod.unknown;
     }
