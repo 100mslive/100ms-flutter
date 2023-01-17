@@ -1175,6 +1175,7 @@ class HMSSDK {
   ///Refer [PIP mode guide here](https://www.100ms.live/docs/flutter/v2/advanced-features/pip-mode)
   ///
   ///`Note: Minimum version required to support PiP is Android 8.0 (API level 26)`
+  @Deprecated('use [HMSPIPAndroidController] class')
   Future<bool> enterPipMode(
       {List<int>? aspectRatio, bool? autoEnterPip}) async {
     final bool? result = await PlatformService.invokeMethod(
@@ -1186,31 +1187,10 @@ class HMSSDK {
     return result ?? false;
   }
 
-  Future<HMSException?> setupPIP(bool? autoEnterPip) async {
-    var result = await PlatformService.invokeMethod(PlatformMethod.setupPIP,
-        arguments: {"auto_enter_pip": autoEnterPip ?? false});
-    if (result != null) {
-      return HMSException.fromMap(result["error"]);
-    }
-    return null;
-  }
-
-  void startPIP() {
-    PlatformService.invokeMethod(PlatformMethod.startPIP);
-  }
-
-  void stopPIP() {
-    PlatformService.invokeMethod(PlatformMethod.stopPIP);
-  }
-
-  void changeTrackPIP(HMSVideoTrack? track) {
-    PlatformService.invokeMethod(PlatformMethod.changeTrackPIP,
-        arguments: {"track_id": track?.trackId});
-  }
-
   ///Method to check whether pip mode is active currently
   ///
   ///Refer [PIP mode guide here](https://www.100ms.live/docs/flutter/v2/advanced-features/pip-mode)
+  @Deprecated('use [HMSPIPAndroidController] class')
   Future<bool> isPipActive() async {
     final bool? result =
         await PlatformService.invokeMethod(PlatformMethod.isPipActive);
@@ -1220,6 +1200,7 @@ class HMSSDK {
   ///Method to check whether pip mode is available for the current device
   ///
   ///Refer [PIP mode guide here](https://www.100ms.live/docs/flutter/v2/advanced-features/pip-mode)
+  @Deprecated('use [HMSPIPAndroidController] class')
   Future<bool> isPipAvailable() async {
     final bool? result =
         await PlatformService.invokeMethod(PlatformMethod.isPipAvailable);

@@ -515,8 +515,8 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             } else {
                 result(nil)
                 if #available(iOS 15.0, *) {
-                    if(HMSPIPAction.pipController?.isPictureInPictureActive ?? false){
-                        HMSPIPAction.pipController?.stopPictureInPicture()
+                    if(HMSPIPAction.pipController != nil){
+                        HMSPIPAction.disposePIP()
                     }
                 }
             }
@@ -1013,9 +1013,9 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
         eventSink?(data)
         if #available(iOS 15.0, *) {
-            if(HMSPIPAction.pipController?.isPictureInPictureActive ?? false){
+            if(HMSPIPAction.pipController != nil){
                 HMSPIPAction.model?.roomEndedString = "Room Ended"
-                HMSPIPAction.pipController?.stopPictureInPicture()
+                HMSPIPAction.disposePIP()
             }
         }
     }

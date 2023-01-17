@@ -55,7 +55,7 @@ class HMSPIPAction {
         guard let uiView = UIApplication.shared.keyWindow?.rootViewController?.view else {
             result(HMSErrorExtension.createError(0, false, true, description: "Unable to setup PIP"))
             return }
-        
+            
 //        print(#function, "uiview", uiView, uiView.subviews)
 //
 //        if(uiView.subviews.count < 3){
@@ -91,13 +91,22 @@ class HMSPIPAction {
         
         pipVideoCallViewController.preferredContentSize = CGSize(width: uiView.frame.size.width, height: uiView.frame.size.height)
         
+        let arguments = call.arguments as! [AnyHashable: Any]
+        
+        if let width = arguments["width"] as? Double {
+            pipVideoCallViewController.preferredContentSize.width = width
+        }
+        
+        if let height = arguments["height"] as? Double {
+            pipVideoCallViewController.preferredContentSize.height = height
+        }
+        
         let pipContentSource = AVPictureInPictureController.ContentSource(
             activeVideoCallSourceView: uiView,
             contentViewController: pipVideoCallViewController)
        
         pipController = AVPictureInPictureController(contentSource: pipContentSource)
         
-        let arguments = call.arguments as! [AnyHashable: Any]
         
         if let autoEnterPIP = arguments["auto_enter_pip"] as? Bool {
             pipController?.canStartPictureInPictureAutomaticallyFromInline = autoEnterPIP
@@ -110,8 +119,6 @@ class HMSPIPAction {
             print(#function, " #2 didBecomeActiveNotification")
             stopPIP()
         }
-        
-        print(#function, "#3", uiView, controller, pipVideoCallViewController, pipController!)
         result(nil)
     }
     
@@ -123,25 +130,13 @@ class HMSPIPAction {
         pipController?.stopPictureInPicture()
     }
     
-//    static func changeTrack(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?) {
-//        print(#function,"#1","peerId")
-//        let arguments = call.arguments as! [AnyHashable: Any]
-//        guard let peerId = arguments["peer_id"] as? String,
-//              let peer = HMSUtilities.getPeer(for: peerId, in: hmsSDK!.room!)
-//        else {
-//            result(HMSErrorExtension.createError(0, false, true, description: "Unable to find Active Remote Peer"))
-//            return
-//        }
-//        print(#function,"#2",peerId)
-//        if let trackId = arguments["track_id"] as? String {
-//            let track = HMSUtilities.getVideoTrack(for: trackId, in: hmsSDK!.room!)
-//            model?.track = track
-//            model?.isVideoActive = !(track?.isMute() ?? true)
-//            print(#function,"#3",trackId)
-//        }
-//        print(#function,peerId)
-//        model?.name = peer.name
-//    }
+    static func disposePIP() {
+        model?.pipViewEnabled = false
+        model?.track = nil
+        pipController = nil
+        pipVideoCallViewController = nil
+        print("dispose complete")
+    }
     
     static func isPIPAvailable(_ result: @escaping FlutterResult) {
         if(AVPictureInPictureController.isPictureInPictureSupported()){
@@ -165,6 +160,14 @@ class HMSPIPAction {
             return
         }
         model?.track = track
+        
+        if let width = arguments["width"] as? Double {
+            pipVideoCallViewController!.preferredContentSize.width = width
+        }
+        
+        if let height = arguments["height"] as? Double {
+            pipVideoCallViewController!.preferredContentSize.height = height
+        }
     }
     
 }

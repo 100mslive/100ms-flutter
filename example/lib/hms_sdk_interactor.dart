@@ -348,35 +348,6 @@ class HMSSDKInteractor {
     return hmsSDK.getSessionMetadata();
   }
 
-  Future<bool> enterPipMode({List<int>? aspectRatio, bool? autoEnterPip}) {
-    return hmsSDK.enterPipMode(
-        autoEnterPip: autoEnterPip, aspectRatio: aspectRatio);
-  }
-
-  Future<HMSException?> setupPIP(bool? autoEnterPIP) async {
-    return await hmsSDK.setupPIP(autoEnterPIP);
-  }
-
-  void startPIP() {
-    hmsSDK.startPIP();
-  }
-
-  void stopPIP() {
-    hmsSDK.stopPIP();
-  }
-
-  void changeTrackPIP(HMSVideoTrack? track) {
-    hmsSDK.changeTrackPIP(track);
-  }
-
-  Future<bool> isPipActive() {
-    return hmsSDK.isPipActive();
-  }
-
-  Future<bool> isPipAvailable() {
-    return hmsSDK.isPipAvailable();
-  }
-
   void changeRoleOfPeersWithRoles(
       {required HMSRole toRole,
       required List<HMSRole> ofRoles,

@@ -531,36 +531,13 @@ class _HLSMoreSettingsState extends State<HLSMoreSettings> {
                               letterSpacing: 0.25,
                               fontWeight: FontWeight.w600),
                         )),
-                  ListTile(
-                      horizontalTitleGap: 2,
-                      onTap: () async {
-                        Navigator.pop(context);
-                        if (Platform.isAndroid)
-                          context.read<MeetingStore>().enterPipMode();
-                        else
-                          context.read<MeetingStore>().startPIP();
-                      },
-                      contentPadding: EdgeInsets.zero,
-                      leading: SvgPicture.asset(
-                        "assets/icons/screen_share.svg",
-                        fit: BoxFit.scaleDown,
-                        color: themeDefaultColor,
-                      ),
-                      title: Text(
-                        "Enter Pip Mode",
-                        semanticsLabel: "fl_pip_mode",
-                        style: GoogleFonts.inter(
-                            fontSize: 14,
-                            color: themeDefaultColor,
-                            letterSpacing: 0.25,
-                            fontWeight: FontWeight.w600),
-                      )),
-                  if (Platform.isIOS)
+                  if (Platform.isAndroid)
                     ListTile(
                         horizontalTitleGap: 2,
                         onTap: () async {
                           Navigator.pop(context);
-                          context.read<MeetingStore>().stopPIP();
+
+                          context.read<MeetingStore>().enterPipMode();
                         },
                         contentPadding: EdgeInsets.zero,
                         leading: SvgPicture.asset(
@@ -569,7 +546,7 @@ class _HLSMoreSettingsState extends State<HLSMoreSettings> {
                           color: themeDefaultColor,
                         ),
                         title: Text(
-                          "Exit Pip Mode",
+                          "Enter Pip Mode",
                           semanticsLabel: "fl_pip_mode",
                           style: GoogleFonts.inter(
                               fontSize: 14,
