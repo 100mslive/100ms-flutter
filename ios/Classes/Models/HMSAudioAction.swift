@@ -12,7 +12,7 @@ class HMSAudioAction {
     static func audioActions(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?) {
         switch call.method {
         case "switch_audio":
-            switchAudio(call, result, hmsSDK)
+            switchAudio(call,result, hmsSDK)
 
         case "is_audio_mute":
             isAudioMute(call, result, hmsSDK)
@@ -25,6 +25,10 @@ class HMSAudioAction {
 
         case "set_volume":
             setVolume(call, result, hmsSDK)
+            
+        case "toggle_mic_mute_state":
+            toggleMicMuteState(result,hmsSDK)
+            
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -41,6 +45,19 @@ class HMSAudioAction {
         }
 
         audio.setMute(shouldMute)
+
+        result(true)
+    }
+    
+    static private func toggleMicMuteState(_ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?) {
+
+            guard let peer = hmsSDK?.localPeer,
+              let audio = peer.audioTrack as? HMSLocalAudioTrack else {
+            result(false)
+            return
+        }
+
+        audio.setMute(!(audio.isMute()))
 
         result(true)
     }

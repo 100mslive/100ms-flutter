@@ -30,13 +30,11 @@ import 'package:tuple/tuple.dart';
 
 class HLSBroadcasterPage extends StatefulWidget {
   final String meetingLink;
-  final bool isAudioOn;
   final bool isStreamingLink;
   final bool isRoomMute;
   const HLSBroadcasterPage(
       {Key? key,
       required this.meetingLink,
-      required this.isAudioOn,
       this.isStreamingLink = false,
       this.isRoomMute = true})
       : super(key: key);
@@ -54,8 +52,6 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
   }
 
   void checkAudioState() async {
-    if (!widget.isAudioOn) context.read<MeetingStore>().switchAudio();
-
     if (widget.isRoomMute) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         context.read<MeetingStore>().toggleSpeaker();
@@ -786,7 +782,7 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                                                     context
                                                                         .read<
                                                                             MeetingStore>()
-                                                                        .switchAudio()
+                                                                        .toggleMicMuteState()
                                                                   },
                                                                   width: 40,
                                                                   height: 40,
@@ -877,7 +873,7 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                                                         ? null
                                                                         : context
                                                                             .read<MeetingStore>()
-                                                                            .switchVideo(),
+                                                                            .toggleCameraMuteState(),
                                                                   },
                                                                   width: 40,
                                                                   height: 40,

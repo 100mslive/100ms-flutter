@@ -9,7 +9,6 @@ import 'package:provider/provider.dart';
 class HLSScreenController extends StatefulWidget {
   final String meetingLink;
   final String user;
-  final bool isAudioOn;
   final int? localPeerNetworkQuality;
   final bool isStreamingLink;
   final bool isRoomMute;
@@ -21,7 +20,6 @@ class HLSScreenController extends StatefulWidget {
       {Key? key,
       required this.meetingLink,
       required this.user,
-      required this.isAudioOn,
       required this.localPeerNetworkQuality,
       this.isStreamingLink = false,
       this.isRoomMute = false,
@@ -76,7 +74,6 @@ class _HLSScreenControllerState extends State<HLSScreenController> {
       return HLSBroadcasterPage(
         isStreamingLink: widget.isStreamingLink,
         meetingLink: widget.meetingLink,
-        isAudioOn: widget.isAudioOn,
         isRoomMute: widget.isRoomMute,
       );
     }

@@ -211,14 +211,14 @@ class MeetingStore extends ChangeNotifier
     _hmsSDKInteractor.destroy();
   }
 
-  Future<void> switchAudio() async {
-    await _hmsSDKInteractor.switchAudio(isOn: isMicOn);
+  Future<void> toggleMicMuteState() async {
+    await _hmsSDKInteractor.toggleMicMuteState();
     isMicOn = !isMicOn;
     notifyListeners();
   }
 
-  Future<void> switchVideo() async {
-    await _hmsSDKInteractor.switchVideo(isOn: isVideoOn);
+  Future<void> toggleCameraMuteState() async {
+    await _hmsSDKInteractor.toggleCameraMuteState();
     isVideoOn = !isVideoOn;
     notifyListeners();
   }
@@ -385,10 +385,10 @@ class MeetingStore extends ChangeNotifier
         metadata: "{\"isHandRaised\":false,\"isBRBOn\":$value}",
         hmsActionResultListener: this);
     if (isMicOn) {
-      switchAudio();
+      toggleMicMuteState();
     }
     if (isVideoOn) {
-      switchVideo();
+      toggleCameraMuteState();
     }
     notifyListeners();
   }
@@ -952,9 +952,9 @@ class MeetingStore extends ChangeNotifier
 
   void changeTracks(HMSTrackChangeRequest hmsTrackChangeRequest) {
     if (hmsTrackChangeRequest.track.kind == HMSTrackKind.kHMSTrackKindVideo) {
-      switchVideo();
+      toggleCameraMuteState();
     } else {
-      switchAudio();
+      toggleMicMuteState();
     }
   }
 
@@ -1614,7 +1614,7 @@ class MeetingStore extends ChangeNotifier
       }
 
       if (lastVideoStatus && !reconnecting) {
-        switchVideo();
+        toggleCameraMuteState();
         lastVideoStatus = false;
       }
 
@@ -1635,7 +1635,7 @@ class MeetingStore extends ChangeNotifier
       if (localPeer != null &&
           !(localPeer.videoTrack?.isMute ?? true) &&
           !isPipActive) {
-        switchVideo();
+        toggleCameraMuteState();
         lastVideoStatus = true;
       }
     } else if (state == AppLifecycleState.inactive) {
