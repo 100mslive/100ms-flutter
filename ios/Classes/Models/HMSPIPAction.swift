@@ -42,63 +42,39 @@ class HMSPIPAction {
     
     static func setupPIP(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?) {
         
-        print(#function)
-//
-//        guard #available(iOS 15.0, *) else {
-//            result(HMSErrorExtension.createError(0, false, true, description: "iOS 15 or above is required"))
-//            return }
-        
         guard AVPictureInPictureController.isPictureInPictureSupported() else {
-            result(HMSErrorExtension.getError("PIP is not supported"))
+            result(HMSErrorExtension.getError("\(#function) PIP is not supported"))
             return }
         
         guard let uiView = UIApplication.shared.keyWindow?.rootViewController?.view else {
-            result(HMSErrorExtension.getError("Unable to setup PIP"))
+            result(HMSErrorExtension.getError("\(#function) Failed to setup PIP"))
             return }
             
-//        print(#function, "uiview", uiView, uiView.subviews)
-//
-//        if(uiView.subviews.count < 3){
-//            result(HMSErrorExtension.createError(0, false, true, description: "Unable to setup PIP"))
-//            return
-//        }
-//        let scrollView = uiView.subviews[2] //uiView.subviews.first { $0.isKind(of: ChildClippingView.self) }
-//
-//        guard let scrollView = scrollView else { return }
-        
-//        print(#function, "#1 scrollView: ", scrollView, uiView, uiView)
-        
         let pipVideoCallViewController = AVPictureInPictureVideoCallViewController()
         
         self.pipVideoCallViewController = pipVideoCallViewController
-        
-//        let remotePeer = hmsSDK?.remotePeers?.first {!($0.videoTrack?.isMute() ?? true)}
-//
-//        guard let remotePeer = remotePeer else {
-//            result(HMSErrorExtension.createError(0, false, true, description: "Unable to find Active Remote Peer"))
-//            return}
-        
+           
         model = PiPModel()
         model!.track = hmsSDK?.localPeer?.videoTrack
-        model!.name = hmsSDK?.localPeer?.name
-        model!.isVideoActive = !(hmsSDK?.localPeer?.videoTrack?.isMute() ?? true)
         model!.pipViewEnabled = true
     
         
         let controller = UIHostingController(rootView: PiPView(model: model!))
         
         pipVideoCallViewController.view.addConstrained(subview: controller.view)
-        
-        pipVideoCallViewController.preferredContentSize = CGSize(width: uiView.frame.size.width, height: uiView.frame.size.height)
-        
+                
         let arguments = call.arguments as! [AnyHashable: Any]
         
         if let width = arguments["width"] as? Double {
             pipVideoCallViewController.preferredContentSize.width = width
+        } else {
+            pipVideoCallViewController.preferredContentSize.width = uiView.frame.size.width
         }
         
         if let height = arguments["height"] as? Double {
             pipVideoCallViewController.preferredContentSize.height = height
+        } else {
+            pipVideoCallViewController.preferredContentSize.width = uiView.frame.size.height
         }
         
         let pipContentSource = AVPictureInPictureController.ContentSource(
@@ -107,16 +83,12 @@ class HMSPIPAction {
        
         pipController = AVPictureInPictureController(contentSource: pipContentSource)
         
-        
         if let autoEnterPIP = arguments["auto_enter_pip"] as? Bool {
             pipController?.canStartPictureInPictureAutomaticallyFromInline = autoEnterPIP
         }
-//        pipController?.delegate = self
-       
+
         NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification,
                                                object: nil, queue: .main) { [self] _ in
-            
-            print(#function, " #2 didBecomeActiveNotification")
             stopPIP()
         }
         result(nil)
@@ -133,9 +105,9 @@ class HMSPIPAction {
     static func disposePIP() {
         model?.pipViewEnabled = false
         model?.track = nil
+        model = nil
         pipController = nil
         pipVideoCallViewController = nil
-        print("dispose complete")
     }
     
     static func isPIPAvailable(_ result: @escaping FlutterResult) {
@@ -156,7 +128,7 @@ class HMSPIPAction {
         guard let trackID = arguments["track_id"] as? String,
               let track = HMSUtilities.getVideoTrack(for: trackID, in: (hmsSDK?.room)!)
         else {
-            result(HMSErrorExtension.getError("Unable to find track ID"))
+            result(HMSErrorExtension.getError("\(#function) Unable to find track ID"))
             return
         }
         model?.track = track
@@ -188,7 +160,6 @@ extension SwiftHmssdkFlutterPlugin: AVPictureInPictureControllerDelegate {
     
     public func pictureInPictureController(_ pictureInPictureController: AVPictureInPictureController, failedToStartPictureInPictureWithError error: Error) {
         print(#function, error)
-        assertionFailure("failedToStartPictureInPictureWithError \(error)")
     }
     
     public func pictureInPictureControllerWillStopPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {

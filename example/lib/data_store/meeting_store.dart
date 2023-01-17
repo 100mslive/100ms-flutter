@@ -517,7 +517,9 @@ class MeetingStore extends ChangeNotifier
     getCurrentAudioDevice();
     getAudioDevicesList();
     notifyListeners();
-    HMSPIPiOSController().setupPIP(true, width: 50, height: 100);
+    if (Platform.isIOS) {
+      HMSIOSPIPController.setupPIP(true, width: 50, height: 100);
+    }
   }
 
   @override
@@ -672,14 +674,6 @@ class MeetingStore extends ChangeNotifier
 
   @override
   void onUpdateSpeakers({required List<HMSSpeaker> updateSpeakers}) async {
-    if (updateSpeakers.isNotEmpty &&
-        screenShareCount == 0 &&
-        updateSpeakers[0].peer.videoTrack != null) {
-      isPipActive = await isPIPActive();
-      if (isPipActive)
-        HMSPIPiOSController()
-            .changeTrackPIP(track: updateSpeakers[0].peer.videoTrack!);
-    }
     if (activeSpeakerIds.isNotEmpty) {
       activeSpeakerIds.forEach((key) {
         int index = peerTracks.indexWhere((element) => element.uid == key);
@@ -697,6 +691,16 @@ class MeetingStore extends ChangeNotifier
         peerTracks[index].setAudioLevel(element.audioLevel);
       }
     });
+
+    if (Platform.isIOS &&
+        updateSpeakers.isNotEmpty &&
+        screenShareCount == 0 &&
+        updateSpeakers[0].peer.videoTrack != null) {
+      isPipActive = await isPIPActive();
+      if (isPipActive)
+        HMSIOSPIPController.changeTrackPIP(
+            track: updateSpeakers[0].peer.videoTrack!);
+    }
     // if (updateSpeakers.isNotEmpty) {
     //   highestSpeaker = updateSpeakers[0].peer.name;
     // } else {
@@ -1081,10 +1085,6 @@ class MeetingStore extends ChangeNotifier
                     stats: RTCStats()));
             isScreenShareActive();
             notifyListeners();
-            isPipActive = await isPIPActive();
-            if (isPipActive)
-              HMSPIPiOSController()
-                  .changeTrackPIP(track: track, width: 200, height: 100);
           }
         }
         break;
@@ -1100,14 +1100,6 @@ class MeetingStore extends ChangeNotifier
             }
             isScreenShareActive();
             notifyListeners();
-            isPipActive = await isPIPActive();
-            if (isPipActive) {
-              HMSVideoTrack track = peerTracks
-                  .firstWhere((element) => !(element.track?.isMute ?? true))
-                  .track!;
-              HMSPIPiOSController()
-                  .changeTrackPIP(track: track, width: 50, height: 100);
-            }
           }
         } else {
           int peerIndex = peerTracks.indexWhere(
@@ -1312,21 +1304,23 @@ class MeetingStore extends ChangeNotifier
   }
 
   void enterPipMode() async {
-    //to check whether pip is available
-    bool _isPipAvailable = await HMSPIPAndroidController().isPipAvailable();
-    if (_isPipAvailable) {
-      //[isPipActive] method can also be used to check whether application is in pip Mode or not
-      isPipActive = await HMSPIPAndroidController()
-          .enterPipMode(autoEnterPip: isPipAutoEnabled);
-      notifyListeners();
+    //to check whether pip is available in android
+    if (Platform.isAndroid) {
+      bool _isPipAvailable = await HMSAndroidPIPController.isPipAvailable();
+      if (_isPipAvailable) {
+        //[isPipActive] method can also be used to check whether application is in pip Mode or not
+        isPipActive = await HMSAndroidPIPController.enterPipMode(
+            autoEnterPip: isPipAutoEnabled);
+        notifyListeners();
+      }
     }
   }
 
   Future<bool> isPIPActive() async {
     if (Platform.isAndroid)
-      isPipActive = await HMSPIPAndroidController().isPipActive();
+      isPipActive = await HMSAndroidPIPController.isPipActive();
     else if (Platform.isIOS)
-      isPipActive = await HMSPIPiOSController().isPipActive();
+      isPipActive = await HMSIOSPIPController.isPipActive();
     return isPipActive;
   }
 

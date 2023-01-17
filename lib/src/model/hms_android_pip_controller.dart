@@ -1,7 +1,8 @@
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter/src/service/platform_service.dart';
 
-class HMSPIPAndroidController {
+/// [HMSAndroidPIPController] is used to setup and start the PIP in android. To know more visit [here](https://www.100ms.live/docs/flutter/v2/advanced-features/pip-mode).
+class HMSAndroidPIPController {
   ///Method to activate pipMode in the application
   ///
   ///**Parameters**:
@@ -13,13 +14,13 @@ class HMSPIPAndroidController {
   ///Refer [PIP mode guide here](https://www.100ms.live/docs/flutter/v2/advanced-features/pip-mode)
   ///
   ///`Note: Minimum version required to support PiP is Android 8.0 (API level 26)`
-  Future<bool> enterPipMode(
+  static Future<bool> enterPipMode(
       {List<int>? aspectRatio, bool? autoEnterPip}) async {
     final bool? result = await PlatformService.invokeMethod(
         PlatformMethod.enterPipMode,
         arguments: {
           "aspect_ratio": aspectRatio ?? [16, 9],
-          "auto_enter_pip": autoEnterPip ?? false
+          "auto_enter_pip": autoEnterPip ?? true
         });
     return result ?? false;
   }
@@ -27,7 +28,7 @@ class HMSPIPAndroidController {
   ///Method to check whether pip mode is active currently
   ///
   ///Refer [PIP mode guide here](https://www.100ms.live/docs/flutter/v2/advanced-features/pip-mode)
-  Future<bool> isPipActive() async {
+  static Future<bool> isPipActive() async {
     final bool? result =
         await PlatformService.invokeMethod(PlatformMethod.isPipActive);
     return result ?? false;
@@ -36,7 +37,7 @@ class HMSPIPAndroidController {
   ///Method to check whether pip mode is available for the current device
   ///
   ///Refer [PIP mode guide here](https://www.100ms.live/docs/flutter/v2/advanced-features/pip-mode)
-  Future<bool> isPipAvailable() async {
+  static Future<bool> isPipAvailable() async {
     final bool? result =
         await PlatformService.invokeMethod(PlatformMethod.isPipAvailable);
     return result ?? false;

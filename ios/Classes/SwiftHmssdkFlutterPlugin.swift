@@ -201,7 +201,8 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             
         case "setup_pip","start_pip", "stop_pip","is_pip_available","is_pip_active","change_track_pip":
             guard #available(iOS 15.0, *) else {
-                        result(HMSErrorExtension.createError(0, false, true, description: "iOS 15 or above is required"))
+                print(#function, HMSErrorExtension.getError("iOS 15 or above is required"))
+                        result(HMSErrorExtension.getError("iOS 15 or above is required"))
                         return }
             HMSPIPAction.pipAction(call, result, hmsSDK)
 
@@ -513,12 +514,12 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             if let error = error {
                 result(HMSErrorExtension.toDictionary(error))
             } else {
-                result(nil)
                 if #available(iOS 15.0, *) {
                     if(HMSPIPAction.pipController != nil){
                         HMSPIPAction.disposePIP()
                     }
                 }
+                result(nil)
             }
         }
     }
@@ -1011,13 +1012,12 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             ]
         ] as [String: Any]
 
-        eventSink?(data)
         if #available(iOS 15.0, *) {
-            if(HMSPIPAction.pipController != nil){
-                HMSPIPAction.model?.roomEndedString = "Room Ended"
+            if(HMSPIPAction.pipController != nil) {
                 HMSPIPAction.disposePIP()
             }
         }
+        eventSink?(data)
     }
 
     public func onReconnecting() {
