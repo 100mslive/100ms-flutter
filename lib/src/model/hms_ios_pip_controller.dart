@@ -68,7 +68,9 @@ class HMSIOSPIPController {
   ///
   /// Refer [PIP mode guide here](https://www.100ms.live/docs/flutter/v2/advanced-features/pip-mode)
   static void changeTrackPIP(
-      {required HMSVideoTrack track, double? width, double? height}) {
+      {required HMSVideoTrack track,
+      required double width,
+      required double height}) {
     if (_isPIPSetupDone) {
       PlatformService.invokeMethod(PlatformMethod.changeTrackPIP, arguments: {
         "track_id": track.trackId,

@@ -64,17 +64,11 @@ class HMSPIPAction {
         pipVideoCallViewController.view.addConstrained(subview: controller.view)
                 
         let arguments = call.arguments as! [AnyHashable: Any]
-        
-        if let width = arguments["width"] as? Double {
-            pipVideoCallViewController.preferredContentSize.width = width
+    
+        if let width = arguments["width"] as? Double, let height = arguments["height"] as? Double {
+            pipVideoCallViewController.preferredContentSize = CGSize(width: width, height: height)
         } else {
-            pipVideoCallViewController.preferredContentSize.width = uiView.frame.size.width
-        }
-        
-        if let height = arguments["height"] as? Double {
-            pipVideoCallViewController.preferredContentSize.height = height
-        } else {
-            pipVideoCallViewController.preferredContentSize.width = uiView.frame.size.height
+            pipVideoCallViewController.preferredContentSize = CGSize(width: uiView.frame.size.width, height: uiView.frame.size.height) 
         }
         
         let pipContentSource = AVPictureInPictureController.ContentSource(
@@ -128,20 +122,17 @@ class HMSPIPAction {
         let arguments = call.arguments as! [AnyHashable: Any]
         
         guard let trackID = arguments["track_id"] as? String,
-              let track = HMSUtilities.getVideoTrack(for: trackID, in: (hmsSDK?.room)!)
+              let track = HMSUtilities.getVideoTrack(for: trackID, in: (hmsSDK?.room)!),
+              let width = arguments["width"] as? Double,
+              let height = arguments["height"] as? Double
         else {
-            result(HMSErrorExtension.getError("\(#function) Unable to find track ID"))
+            result(HMSErrorExtension.getError("\(#function) Unable to find track ID or width and height missing"))
             return
         }
         model?.track = track
         
-        if let width = arguments["width"] as? Double {
-            pipVideoCallViewController!.preferredContentSize.width = width
-        }
+        pipVideoCallViewController!.preferredContentSize = CGSize(width: width, height: height)
         
-        if let height = arguments["height"] as? Double {
-            pipVideoCallViewController!.preferredContentSize.height = height
-        }
     }
     
 }
