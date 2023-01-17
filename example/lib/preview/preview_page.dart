@@ -36,16 +36,13 @@ class _PreviewPageState extends State<PreviewPage> {
   late MeetingStore _meetingStore;
   @override
   void initState() {
-    MultiProvider(
-      providers: [ChangeNotifierProvider(create: (_) => PreviewStore())],
-    );
     super.initState();
     initPreview();
   }
 
   void setMeetingStore(PreviewStore _previewStore) {
     _meetingStore = MeetingStore(
-      hmsSDKInteractor: _previewStore.hmsSDKInteractor!,
+      hmsSDKInteractor: _previewStore.hmsSDKInteractor,
     );
   }
 
