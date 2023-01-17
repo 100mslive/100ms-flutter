@@ -665,7 +665,7 @@ class HmssdkFlutterPlugin :
             call.argument<HashMap<String, HashMap<String, Any?>?>?>("hms_track_setting")
 
         if (hmsTrackSettingMap != null) {
-            val hmsAudioTrackHashMap: HashMap<String, Any?>? = hmsTrackSettingMap!!["audio_track_setting"]
+            val hmsAudioTrackHashMap: HashMap<String, Any?>? = hmsTrackSettingMap["audio_track_setting"]
             val hmsVideoTrackHashMap: HashMap<String, Any?>? = hmsTrackSettingMap["video_track_setting"]
             val hmsTrackSettings = HMSTrackSettingsExtension.setTrackSettings(hmsAudioTrackHashMap, hmsVideoTrackHashMap)
             builder.setTrackSettings(hmsTrackSettings)
