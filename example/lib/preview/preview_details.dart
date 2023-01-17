@@ -112,7 +112,6 @@ class _PreviewDetailsState extends State<PreviewDetails> {
                       isStreamingLink: widget.meetingFlow == MeetingFlow.meeting
                           ? false
                           : true,
-                      isAudioOn: true,
                       meetingLink: widget.meetingLink,
                       localPeerNetworkQuality: -1,
                       user: nameController.text.trim(),

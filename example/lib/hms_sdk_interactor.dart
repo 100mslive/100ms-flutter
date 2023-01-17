@@ -52,12 +52,12 @@ class HMSSDKInteractor {
     hmsSDK.leave(hmsActionResultListener: hmsActionResultListener);
   }
 
-  Future<HMSException?> switchAudio({bool isOn = false}) async {
-    return await hmsSDK.switchAudio(isOn: isOn);
+  Future<HMSException?> toggleMicMuteState() async {
+    return await hmsSDK.toggleMicMuteState();
   }
 
-  Future<HMSException?> switchVideo({bool isOn = false}) async {
-    return await hmsSDK.switchVideo(isOn: isOn);
+  Future<HMSException?> toggleCameraMuteState() async {
+    return await hmsSDK.toggleCameraMuteState();
   }
 
   Future<void> switchCamera(

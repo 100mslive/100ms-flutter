@@ -12,7 +12,7 @@ class HMSVideoAction {
     static func videoActions(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?) {
         switch call.method {
         case "switch_video":
-            switchVideo(call, result, hmsSDK)
+            switchVideo(call,result, hmsSDK)
 
         case "switch_camera":
             switchCamera(result, hmsSDK)
@@ -31,8 +31,11 @@ class HMSVideoAction {
 
         case "un_mute_room_video_locally":
             toggleVideoMuteAll(false, result, hmsSDK)
+            
+        case "toggle_camera_mute_state":
+            toggleCameraMuteState(result,hmsSDK)
 
-        default:
+        default: 
             result(FlutterMethodNotImplemented)
         }
     }
@@ -88,6 +91,20 @@ class HMSVideoAction {
         }
 
         video.setMute(shouldMute)
+
+        result(true)
+    }
+    
+    
+    static private func toggleCameraMuteState(_ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?) {
+
+            guard let peer = hmsSDK?.localPeer,
+              let video = peer.videoTrack as? HMSLocalVideoTrack else {
+            result(false)
+            return
+        }
+
+        video.setMute(!(video.isMute()))
 
         result(true)
     }

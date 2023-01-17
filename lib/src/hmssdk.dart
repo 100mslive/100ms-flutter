@@ -135,6 +135,7 @@ class HMSSDK {
   /// Pass the bool value to [isOn] to change the current audio status
   ///
   /// Refer [switch audio guide here](https://www.100ms.live/docs/flutter/v2/features/mute).
+  @Deprecated('Use [toggleMicMuteState]')
   Future<HMSException?> switchAudio({bool isOn = false}) async {
     bool result = await PlatformService.invokeMethod(PlatformMethod.switchAudio,
         arguments: {'is_on': isOn});
@@ -151,10 +152,32 @@ class HMSSDK {
     }
   }
 
+  /// To switch local peer's audio on/off.
+  /// This function toggles the current microphone state i.e
+  /// If it's unmuted it will get muted
+  /// If it's muted it will get unmuted
+  /// Refer [toggle microphone state guide here](https://www.100ms.live/docs/flutter/v2/features/mute).
+  Future<HMSException?> toggleMicMuteState() async {
+    bool result =
+        await PlatformService.invokeMethod(PlatformMethod.toggleMicMuteState);
+
+    if (result) {
+      return null;
+    } else {
+      return HMSException(
+          message: "Microphone mute/unmute failed",
+          description: "Cannot toggle microphone status",
+          action: "AUDIO",
+          isTerminal: false,
+          params: {});
+    }
+  }
+
   /// To switch local peer's video on/off.
   /// Pass the bool value to [isOn] to change the current video status
   ///
   /// Refer [switch video guide here](https://www.100ms.live/docs/flutter/v2/features/mute).
+  @Deprecated('Use [toggleCameraMuteState]')
   Future<HMSException?> switchVideo({bool isOn = false}) async {
     bool result = await PlatformService.invokeMethod(PlatformMethod.switchVideo,
         arguments: {'is_on': isOn});
@@ -167,6 +190,27 @@ class HMSSDK {
           description: "Cannot toggle video status",
           action: "VIDEO",
           params: {'is_on': isOn},
+          isTerminal: false);
+    }
+  }
+
+  /// To switch local peer's video on/off.
+  /// This function toggles the current camera state i.e
+  /// If camera is unmuted it will get muted
+  /// If camera is muted it will get unmuted
+  /// Refer [toggle camera state guide here](https://www.100ms.live/docs/flutter/v2/features/mute).
+  Future<HMSException?> toggleCameraMuteState() async {
+    bool result =
+        await PlatformService.invokeMethod(PlatformMethod.toggleCameraMuteState);
+
+    if (result) {
+      return null;
+    } else {
+      return HMSException(
+          message: "Camera mute/unmute failed",
+          description: "Cannot toggle camera status",
+          action: "VIDEO",
+          params: {},
           isTerminal: false);
     }
   }

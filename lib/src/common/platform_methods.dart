@@ -161,7 +161,9 @@ enum PlatformMethod {
   changeRoleOfPeersWithRoles,
   setSimulcastLayer,
   getLayer,
-  getLayerDefinition
+  getLayerDefinition,
+  toggleMicMuteState,
+  toggleCameraMuteState
 }
 
 extension PlatformMethodValues on PlatformMethod {
@@ -379,6 +381,10 @@ extension PlatformMethodValues on PlatformMethod {
         return "get_layer";
       case PlatformMethod.getLayerDefinition:
         return "get_layer_definition";
+      case PlatformMethod.toggleMicMuteState:
+        return "toggle_mic_mute_state";
+      case PlatformMethod.toggleCameraMuteState:
+        return "toggle_camera_mute_state";
       default:
         return 'unknown';
     }
@@ -602,6 +608,10 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.getLayer;
       case "get_layer_definition":
         return PlatformMethod.getLayerDefinition;
+      case "toggle_mic_mute_state":
+        return PlatformMethod.toggleMicMuteState;
+      case "toggle_camera_mute_state":
+        return PlatformMethod.toggleCameraMuteState;
       default:
         return PlatformMethod.unknown;
     }
