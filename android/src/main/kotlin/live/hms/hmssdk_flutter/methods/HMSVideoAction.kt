@@ -14,7 +14,7 @@ class HMSVideoAction {
         fun videoActions(call: MethodCall, result: Result,hmssdk: HMSSDK){
             when (call.method) {
                 "switch_video" -> {
-                    switchVideo(result,hmssdk)
+                    switchVideo(call,result,hmssdk)
                 }
 
                 "switch_camera" -> {
@@ -40,13 +40,30 @@ class HMSVideoAction {
                 "un_mute_room_video_locally"->{
                     toggleVideoMuteAll(false,result,hmssdk)
                 }
+
+                "toggle_camera_mute_state" -> {
+                    toggleCameraMuteState(result,hmssdk)
+                }
+
                 else -> {
                     result.notImplemented()
                 }
             }
         }
 
-        private fun switchVideo(result: Result,hmssdk:HMSSDK) {
+        private fun switchVideo(call: MethodCall, result: Result,hmssdk:HMSSDK) {
+            val argsIsOn = call.argument<Boolean>("is_on")
+            val peer = hmssdk.getLocalPeer()
+            val videoTrack = peer?.videoTrack
+            if (videoTrack != null) {
+                videoTrack.setMute(argsIsOn ?: false)
+                result.success(true)
+            } else {
+                result.success(false)
+            }
+        }
+
+        private fun toggleCameraMuteState(result: Result,hmssdk:HMSSDK) {
             val peer = hmssdk.getLocalPeer()
             val videoTrack = peer?.videoTrack
             if (videoTrack != null) {
@@ -56,7 +73,6 @@ class HMSVideoAction {
                 result.success(false)
             }
         }
-
 
         private fun stopCapturing(result: Result,hmssdk:HMSSDK) {
             val peer = hmssdk.getLocalPeer()

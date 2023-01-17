@@ -135,12 +135,12 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
             // MARK: - Audio Helpers
 
-        case "switch_audio", "is_audio_mute", "mute_room_audio_locally", "un_mute_room_audio_locally", "set_volume":
+        case "switch_audio", "is_audio_mute", "mute_room_audio_locally", "un_mute_room_audio_locally", "set_volume", "toggle_mic_mute_state":
             HMSAudioAction.audioActions(call, result, hmsSDK)
 
             // MARK: - Video Helpers
 
-        case "switch_video", "switch_camera", "start_capturing", "stop_capturing", "is_video_mute", "mute_room_video_locally", "un_mute_room_video_locally":
+        case "switch_video", "switch_camera", "start_capturing", "stop_capturing", "is_video_mute", "mute_room_video_locally", "un_mute_room_video_locally", "toggle_camera_mute_state":
             HMSVideoAction.videoActions(call, result, hmsSDK)
 
             // MARK: - Messaging

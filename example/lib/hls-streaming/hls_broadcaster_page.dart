@@ -784,7 +784,7 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                                                     context
                                                                         .read<
                                                                             MeetingStore>()
-                                                                        .switchAudio()
+                                                                        .toggleMicMuteState()
                                                                   },
                                                                   width: 40,
                                                                   height: 40,
@@ -875,7 +875,7 @@ class _HLSBroadcasterPageState extends State<HLSBroadcasterPage> {
                                                                         ? null
                                                                         : context
                                                                             .read<MeetingStore>()
-                                                                            .switchVideo(),
+                                                                            .toggleCameraMuteState(),
                                                                   },
                                                                   width: 40,
                                                                   height: 40,

@@ -113,12 +113,12 @@ class HmssdkFlutterPlugin :
             }
 
             // MARK: Audio Helpers
-            "switch_audio", "is_audio_mute", "mute_room_audio_locally", "un_mute_room_audio_locally", "set_volume" -> {
+            "switch_audio", "is_audio_mute", "mute_room_audio_locally", "un_mute_room_audio_locally", "set_volume","toggle_mic_mute_state" -> {
                 HMSAudioAction.audioActions(call, result, hmssdk!!)
             }
 
             // MARK: Video Helpers
-            "switch_video", "switch_camera", "start_capturing", "stop_capturing", "is_video_mute", "mute_room_video_locally", "un_mute_room_video_locally" -> {
+            "switch_video", "switch_camera", "start_capturing", "stop_capturing", "is_video_mute", "mute_room_video_locally", "un_mute_room_video_locally", "toggle_camera_mute_state" -> {
                 HMSVideoAction.videoActions(call, result, hmssdk!!)
             }
 

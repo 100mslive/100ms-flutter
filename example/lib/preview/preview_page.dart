@@ -320,8 +320,8 @@ class _PreviewPageState extends State<PreviewPage> {
                                                   height: 40,
                                                   width: 40,
                                                   onTap: () async =>
-                                                      _previewStore.switchAudio(
-                                                          ),
+                                                      _previewStore
+                                                          .toggleMicMuteState(),
                                                   offColor: hmsWhiteColor,
                                                   onColor: themeHMSBorderColor,
                                                   isActive:
@@ -353,8 +353,7 @@ class _PreviewPageState extends State<PreviewPage> {
                                                           .localTracks.isEmpty)
                                                       ? null
                                                       : _previewStore
-                                                          .switchVideo(
-                                                              ),
+                                                          .toggleCameraMuteState(),
                                                   offColor: hmsWhiteColor,
                                                   onColor: themeHMSBorderColor,
                                                   isActive:
