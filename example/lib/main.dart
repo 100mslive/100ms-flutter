@@ -10,20 +10,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hmssdk_flutter_example/common/widgets/title_text.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
-import 'package:hmssdk_flutter_example/hls-streaming/util/hls_title_text.dart';
-import 'package:hmssdk_flutter_example/hms_app_settings.dart';
-import 'package:hmssdk_flutter_example/preview/preview_details.dart';
-import 'package:hmssdk_flutter_example/qr_code_screen.dart';
+import 'package:hmssdk_flutter_example/common/bottom_sheets/app_settings_bottom_sheet.dart';
+import 'package:hmssdk_flutter_example/home_screen/user_detail_screen.dart';
+import 'package:hmssdk_flutter_example/home_screen/qr_code_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:wakelock/wakelock.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:uni_links/uni_links.dart';
-
-//Project imports
-import './logs/custom_singleton_logger.dart';
 
 bool _initialURILinkHandled = false;
 StreamSubscription? _streamSubscription;
@@ -215,7 +212,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   TextEditingController meetingLinkController = TextEditingController();
-  CustomLogger logger = CustomLogger();
 
   PackageInfo _packageInfo = PackageInfo(
     appName: 'Unknown',
@@ -228,7 +224,6 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    logger.getCustomLogger();
     _initPackageInfo();
     getData();
   }
@@ -243,7 +238,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<bool> _closeApp() {
-    CustomLogger.file?.delete();
     return Future.value(true);
   }
 
@@ -273,7 +267,7 @@ class _HomePageState extends State<HomePage> {
       Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (_) => PreviewDetails(
+              builder: (_) => UserDetailScreen(
                     autofocusField: true,
                     meetingLink: meetingLinkController.text.trim(),
                     meetingFlow: flow,
@@ -435,7 +429,7 @@ class _HomePageState extends State<HomePage> {
                                     mainAxisSize: MainAxisSize.min,
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      HLSTitleText(
+                                      TitleText(
                                         key: Key('join_now'),
                                         text: 'Join Now',
                                         textColor:
@@ -454,7 +448,7 @@ class _HomePageState extends State<HomePage> {
                                       borderRadius: BorderRadius.circular(20),
                                     ),
                                     context: context,
-                                    builder: (ctx) => HMSAppSettings(
+                                    builder: (ctx) => AppSettingsBottomSheet(
                                           appVersion: _packageInfo.version +
                                               " (${_packageInfo.buildNumber})",
                                         ))),
@@ -522,7 +516,7 @@ class _HomePageState extends State<HomePage> {
                           SizedBox(
                             width: 5,
                           ),
-                          HLSTitleText(
+                          TitleText(
                               key: Key("scan_qr_code"),
                               text: 'Scan QR Code',
                               textColor: enabledTextColor)

@@ -7,20 +7,21 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/widgets/subtitle_text.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
-import 'package:hmssdk_flutter_example/preview/preview_store.dart';
+import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 import 'package:collection/collection.dart';
 
-class PreviewDeviceSettings extends StatefulWidget {
-  PreviewDeviceSettings({
+class DeviceSettingsBottomSheet extends StatefulWidget {
+  DeviceSettingsBottomSheet({
     Key? key,
   }) : super(key: key);
   @override
-  State<PreviewDeviceSettings> createState() => _PreviewDeviceSettingsState();
+  State<DeviceSettingsBottomSheet> createState() =>
+      _DeviceSettingsBottomSheetState();
 }
 
-class _PreviewDeviceSettingsState extends State<PreviewDeviceSettings> {
+class _DeviceSettingsBottomSheetState extends State<DeviceSettingsBottomSheet> {
   GlobalKey? dropdownKey;
 
   @override
@@ -31,16 +32,18 @@ class _PreviewDeviceSettingsState extends State<PreviewDeviceSettings> {
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    MeetingStore _meetingStore = context.read<MeetingStore>();
     return FractionallySizedBox(
       heightFactor: 0.5,
       child: Padding(
         padding: const EdgeInsets.only(top: 20.0, left: 15, right: 15),
-        child: Selector<PreviewStore,
+        child: Selector<MeetingStore,
                 Tuple3<List<HMSAudioDevice>, int, HMSAudioDevice?>>(
-            selector: (_, previewStore) => Tuple3(
-                previewStore.availableAudioOutputDevices,
-                previewStore.availableAudioOutputDevices.length,
-                previewStore.currentAudioOutputDevice),
+            selector: (_, meetingStore) => Tuple3(
+                meetingStore.availableAudioOutputDevices,
+                meetingStore.availableAudioOutputDevices.length,
+                meetingStore.currentAudioOutputDevice),
             builder: (context, data, _) {
               if (dropdownKey != null && dropdownKey!.currentWidget != null) {
                 Navigator.pop(dropdownKey!.currentContext!);
@@ -119,7 +122,9 @@ class _PreviewDeviceSettingsState extends State<PreviewDeviceSettings> {
                       buttonHeight: 48,
                       itemHeight: 45,
                       selectedItemHighlightColor: hmsdefaultColor,
-                      value: Platform.isAndroid ? data.item3 : data.item1[0],
+                      value: Platform.isAndroid
+                          ? data.item3
+                          : _meetingStore.currentAudioDeviceMode,
                       icon: Icon(Icons.keyboard_arrow_down),
                       dropdownDecoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(8),
@@ -127,11 +132,13 @@ class _PreviewDeviceSettingsState extends State<PreviewDeviceSettings> {
                       offset: Offset(-10, -10),
                       iconEnabledColor: iconColor,
                       onChanged: (dynamic newvalue) {
-                        if (newvalue != null)
+                        if (newvalue != null) {
+                          Navigator.pop(context);
                           context
-                              .read<PreviewStore>()
+                              .read<MeetingStore>()
                               .switchAudioOutput(audioDevice: newvalue);
-                        dropdownKey = null;
+                          dropdownKey = null;
+                        }
                       },
                       items: <DropdownMenuItem>[
                         ...data.item1
@@ -161,30 +168,6 @@ class _PreviewDeviceSettingsState extends State<PreviewDeviceSettings> {
                       ],
                     )),
                   ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  ListTile(
-                    horizontalTitleGap: 2,
-                    onTap: () {
-                      Navigator.pop(context);
-                      context.read<PreviewStore>().toggleSpeaker();
-                    },
-                    contentPadding: EdgeInsets.zero,
-                    leading: SvgPicture.asset(
-                      context.read<PreviewStore>().isRoomMute
-                          ? "assets/icons/speaker_state_off.svg"
-                          : "assets/icons/speaker_state_on.svg",
-                      fit: BoxFit.scaleDown,
-                      color: themeDefaultColor,
-                    ),
-                    title: SubtitleText(
-                      text: (context.read<PreviewStore>().isRoomMute
-                          ? "Unmute Room"
-                          : "Mute Room"),
-                      textColor: themeDefaultColor,
-                    ),
-                  )
                 ],
               );
             }),
