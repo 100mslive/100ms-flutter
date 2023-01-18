@@ -22,7 +22,6 @@ class AudioSettingsBottomSheet extends StatefulWidget {
 }
 
 class _AudioSettingsBottomSheetState extends State<AudioSettingsBottomSheet> {
-
   GlobalKey? dropdownKey;
 
   @override

@@ -463,13 +463,31 @@ class _MeetingPageState extends State<MeetingPage> {
                                                   SizedBox(
                                                     width: 10,
                                                   ),
-                                                  Selector<MeetingStore, Tuple2<bool,bool>>(
-                                                      selector: (_,
-                                                              meetingStore) =>
-                                                          Tuple2(((meetingStore.streamingType["rtmp"]??false) || (meetingStore.streamingType["hls"]??false) ),((meetingStore.recordingType["browser"]??false) || (meetingStore.recordingType["server"]??false) || ((meetingStore.recordingType["hls"]??false)))),
-                                                      builder: (_,
-                                                          roomState, __) {
-                                                        if (roomState.item1 || roomState.item2)
+                                                  Selector<MeetingStore,
+                                                          Tuple2<bool, bool>>(
+                                                      selector: (_, meetingStore) => Tuple2(
+                                                          ((meetingStore.streamingType[
+                                                                      "rtmp"] ??
+                                                                  false) ||
+                                                              (meetingStore
+                                                                          .streamingType[
+                                                                      "hls"] ??
+                                                                  false)),
+                                                          ((meetingStore.recordingType[
+                                                                      "browser"] ??
+                                                                  false) ||
+                                                              (meetingStore
+                                                                          .recordingType[
+                                                                      "server"] ??
+                                                                  false) ||
+                                                              ((meetingStore
+                                                                          .recordingType[
+                                                                      "hls"] ??
+                                                                  false)))),
+                                                      builder:
+                                                          (_, roomState, __) {
+                                                        if (roomState.item1 ||
+                                                            roomState.item2)
                                                           return Column(
                                                             mainAxisAlignment:
                                                                 MainAxisAlignment
@@ -490,12 +508,12 @@ class _MeetingPageState extends State<MeetingPage> {
                                                                       "assets/icons/live_stream.svg",
                                                                       color:
                                                                           errorColor,
-                                                                      fit: BoxFit 
+                                                                      fit: BoxFit
                                                                           .scaleDown,
                                                                     ),
                                                                   ),
                                                                   Text(
-                                                                    "${roomState.item1?"Live":""}${((roomState.item1 && roomState.item2)?" & ":"")}${(roomState.item2?"Recording":"")}",
+                                                                    "${roomState.item1 ? "Live" : ""}${((roomState.item1 && roomState.item2) ? " & " : "")}${(roomState.item2 ? "Recording" : "")}",
                                                                     semanticsLabel:
                                                                         "fl_live_stream_running",
                                                                     style: GoogleFonts.inter(
@@ -510,84 +528,61 @@ class _MeetingPageState extends State<MeetingPage> {
                                                                   ),
                                                                 ],
                                                               ),
-                                                              roomState.item1? 
-                                                              Row(
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .spaceBetween,
-                                                                children: [
-                                                                  Row(
-                                                                    children: [
-                                                                      SvgPicture
-                                                                          .asset(
-                                                                        "assets/icons/clock.svg",
-                                                                        color:
-                                                                            themeSubHeadingColor,
-                                                                        fit: BoxFit
-                                                                            .scaleDown,
-                                                                      ),
-                                                                      SizedBox(
-                                                                        width:
-                                                                            6,
-                                                                      ),
-                                                                      Selector<
-                                                                              MeetingStore,
-                                                                              HMSRoom?>(
-                                                                          selector: (_, meetingStore) => meetingStore
-                                                                              .hmsRoom,
-                                                                          builder: (_,
-                                                                              hmsRoom,
-                                                                              __) {
-                                                                            if (hmsRoom != null &&
-                                                                                hmsRoom.hmshlsStreamingState != null &&
-                                                                                hmsRoom.hmshlsStreamingState!.variants.length != 0 &&
-                                                                                hmsRoom.hmshlsStreamingState!.variants[0]!.startedAt != null) {
-                                                                              return HMSStreamTimer(startedAt: hmsRoom.hmshlsStreamingState!.variants[0]!.startedAt!);
-                                                                            }
-                                                                            return SubtitleText(
-                                                                              text: "00:00",
-                                                                              textColor: themeSubHeadingColor,
-                                                                            );
-                                                                          }),
-                                                                    ],
-                                                                  ),
-                                                                  SubtitleText(
-                                                                    text: " | ",
-                                                                    textColor:
-                                                                        dividerColor,
-                                                                  ),
-                                                                  Row(
-                                                                    children: [
-                                                                      SvgPicture
-                                                                          .asset(
-                                                                        "assets/icons/watching.svg",
-                                                                        color:
-                                                                            themeSubHeadingColor,
-                                                                        fit: BoxFit
-                                                                            .scaleDown,
-                                                                      ),
-                                                                      SizedBox(
-                                                                        width:
-                                                                            6,
-                                                                      ),
-                                                                      Selector<
-                                                                              MeetingStore,
-                                                                              int>(
-                                                                          selector: (_, meetingStore) => meetingStore
-                                                                              .peers
-                                                                              .length,
-                                                                          builder: (_,
-                                                                              length,
-                                                                              __) {
-                                                                            return SubtitleText(
-                                                                                text: length.toString(),
-                                                                                textColor: themeSubHeadingColor);
-                                                                          })
-                                                                    ],
-                                                                  )
-                                                                ],
-                                                              )
-                                                            :Container()
+                                                              roomState.item1
+                                                                  ? Row(
+                                                                      mainAxisAlignment:
+                                                                          MainAxisAlignment
+                                                                              .spaceBetween,
+                                                                      children: [
+                                                                        Row(
+                                                                          children: [
+                                                                            SvgPicture.asset(
+                                                                              "assets/icons/clock.svg",
+                                                                              color: themeSubHeadingColor,
+                                                                              fit: BoxFit.scaleDown,
+                                                                            ),
+                                                                            SizedBox(
+                                                                              width: 6,
+                                                                            ),
+                                                                            Selector<MeetingStore, HMSRoom?>(
+                                                                                selector: (_, meetingStore) => meetingStore.hmsRoom,
+                                                                                builder: (_, hmsRoom, __) {
+                                                                                  if (hmsRoom != null && hmsRoom.hmshlsStreamingState != null && hmsRoom.hmshlsStreamingState!.variants.length != 0 && hmsRoom.hmshlsStreamingState!.variants[0]!.startedAt != null) {
+                                                                                    return HMSStreamTimer(startedAt: hmsRoom.hmshlsStreamingState!.variants[0]!.startedAt!);
+                                                                                  }
+                                                                                  return SubtitleText(
+                                                                                    text: "00:00",
+                                                                                    textColor: themeSubHeadingColor,
+                                                                                  );
+                                                                                }),
+                                                                          ],
+                                                                        ),
+                                                                        SubtitleText(
+                                                                          text:
+                                                                              " | ",
+                                                                          textColor:
+                                                                              dividerColor,
+                                                                        ),
+                                                                        Row(
+                                                                          children: [
+                                                                            SvgPicture.asset(
+                                                                              "assets/icons/watching.svg",
+                                                                              color: themeSubHeadingColor,
+                                                                              fit: BoxFit.scaleDown,
+                                                                            ),
+                                                                            SizedBox(
+                                                                              width: 6,
+                                                                            ),
+                                                                            Selector<MeetingStore, int>(
+                                                                                selector: (_, meetingStore) => meetingStore.peers.length,
+                                                                                builder: (_, length, __) {
+                                                                                  return SubtitleText(text: length.toString(), textColor: themeSubHeadingColor);
+                                                                                })
+                                                                          ],
+                                                                        )
+                                                                      ],
+                                                                    )
+                                                                  : Container()
                                                             ],
                                                           );
                                                         return SizedBox();
