@@ -32,7 +32,7 @@ struct PiPView: View {
             }
             .foregroundColor(.white)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(Color.black)
+            .background(model.color)
         }
     }
 }
@@ -79,4 +79,5 @@ class PiPModel: ObservableObject {
     @Published var pipViewEnabled = false
     @Published var scaleType: UIView.ContentMode?
     @Published var text: String?
+    @Published var color: Color = Color.black
 }

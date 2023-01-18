@@ -67,6 +67,12 @@ class HMSPIPAction {
             model?.scaleType = getViewContentMode(scaleType)
         }
         
+        if let color = arguments["color"] as? [Int] {
+            print(#function,color)
+            let colour = Color(red: CGFloat(color[0])/255, green: CGFloat(color[1])/255, blue: CGFloat(color[2])/255)
+            model!.color = colour
+        }
+        
         let controller = UIHostingController(rootView: PiPView(model: model!))
         
         pipVideoCallViewController.view.addConstrained(subview: controller.view)
