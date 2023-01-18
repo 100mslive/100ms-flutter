@@ -199,7 +199,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         case "set_simulcast_layer", "get_layer", "get_layer_definition":
             HMSRemoteVideoTrackExtension.remoteVideoTrackActions(call, result, hmsSDK!)
             
-        case "setup_pip","start_pip", "stop_pip","is_pip_available","is_pip_active","change_track_pip":
+        case "setup_pip", "start_pip", "stop_pip", "is_pip_available", "is_pip_active", "change_track_pip", "change_text_pip":
             guard #available(iOS 15.0, *) else {
                 print(#function, HMSErrorExtension.getError("iOS 15 or above is required"))
                         result(HMSErrorExtension.getError("iOS 15 or above is required"))

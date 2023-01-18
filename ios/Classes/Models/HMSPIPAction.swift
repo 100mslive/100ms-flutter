@@ -34,6 +34,9 @@ class HMSPIPAction {
             
         case "change_track_pip":
             changeTrack(call, result, hmsSDK)
+        
+        case "change_text_pip":
+            changeText(call, result, hmsSDK)
 
         default:
             result(FlutterMethodNotImplemented)
@@ -57,13 +60,17 @@ class HMSPIPAction {
         model = PiPModel()
         model!.track = hmsSDK?.localPeer?.videoTrack
         model!.pipViewEnabled = true
-    
+        
+        let arguments = call.arguments as! [AnyHashable: Any]
+        
+        if let scaleType = arguments["scale_type"] as? Int {
+            model?.scaleType = getViewContentMode(scaleType)
+        }
         
         let controller = UIHostingController(rootView: PiPView(model: model!))
         
         pipVideoCallViewController.view.addConstrained(subview: controller.view)
                 
-        let arguments = call.arguments as! [AnyHashable: Any]
     
         if let ratio = arguments["ratio"] as? [Int], ratio.count == 2 {
             pipVideoCallViewController.preferredContentSize = CGSize(width: ratio[1], height: ratio[0])
@@ -124,15 +131,46 @@ class HMSPIPAction {
         guard let trackID = arguments["track_id"] as? String,
               let track = HMSUtilities.getVideoTrack(for: trackID, in: (hmsSDK?.room)!),
               let ratio = arguments["ratio"] as? [Int],
-                ratio.count == 2
+                ratio.count == 2,
+              let scaleType = arguments["scale_type"] as? Int
         else {
-            result(HMSErrorExtension.getError("\(#function) Unable to find track ID or ratio"))
+            result(HMSErrorExtension.getError("\(#function) Unable to find track ID, ratio or scaleType"))
             return
         }
+        model?.scaleType = getViewContentMode(scaleType)
         model?.track = track
         
         pipVideoCallViewController!.preferredContentSize = CGSize(width: ratio[1], height: ratio[0])
+    }
+    
+    static func changeText(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?) {
+        let arguments = call.arguments as! [AnyHashable: Any]
         
+        guard let text = arguments["text"] as? String,
+              let ratio = arguments["ratio"] as? [Int],
+                ratio.count == 2
+        else {
+            result(HMSErrorExtension.getError("\(#function) Unable to find ratio"))
+            return
+        }
+        model?.track = nil
+        model?.text = text
+        
+        pipVideoCallViewController!.preferredContentSize = CGSize(width: ratio[1], height: ratio[0])
+    }
+    
+    
+    static private func getViewContentMode(_ type: Int?) -> UIView.ContentMode {
+        switch type {
+        case 0:
+            return .scaleAspectFit
+        case 1:
+            return .scaleAspectFill
+        case 2:
+            return .center
+        default:
+            return .scaleAspectFill
+        }
     }
     
 }

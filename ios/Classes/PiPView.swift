@@ -18,9 +18,16 @@ struct PiPView: View {
             VStack {
                 if let track = model.track {
                     GeometryReader { geo in
-                        HMSSampleBufferSwiftUIView(track: track, contentMode: .scaleAspectFit, preferredSize: geo.size, model: model)
-                            .frame(width: geo.size.width, height: geo.size.height)
+                        if let contentMode = model.scaleType {
+                            HMSSampleBufferSwiftUIView(track: track, contentMode: contentMode, preferredSize: geo.size, model: model)
+                                .frame(width: geo.size.width, height: geo.size.height)
+                        } else {
+                            HMSSampleBufferSwiftUIView(track: track, contentMode: .scaleAspectFill, preferredSize: geo.size, model: model)
+                                .frame(width: geo.size.width, height: geo.size.height)
+                        }
                     }
+                } else if let text = model.text {
+                    Text(text)
                 }
             }
             .foregroundColor(.white)
@@ -70,4 +77,6 @@ public struct HMSSampleBufferSwiftUIView: UIViewRepresentable {
 class PiPModel: ObservableObject {
     @Published var track: HMSVideoTrack?
     @Published var pipViewEnabled = false
+    @Published var scaleType: UIView.ContentMode?
+    @Published var text: String?
 }

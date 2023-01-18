@@ -518,7 +518,7 @@ class MeetingStore extends ChangeNotifier
     getAudioDevicesList();
     notifyListeners();
     if (Platform.isIOS) {
-      HMSIOSPIPController.setupPIP(true, ratio: [9, 16]);
+      HMSIOSPIPController.setupPIP(true, aspectRatio: [9, 16]);
     }
   }
 
@@ -692,8 +692,15 @@ class MeetingStore extends ChangeNotifier
       }
     });
 
+    // Below code for change track and text in PIP mode iOS.
     if (updateSpeakers.isNotEmpty && screenShareCount == 0) {
-      changeTrackPIP(track: updateSpeakers[0].peer.videoTrack, ratio: [9, 16]);
+      if (updateSpeakers[0].peer.videoTrack != null &&
+          !(updateSpeakers[0].peer.videoTrack!.isMute)) {
+        changeTrackPIP(
+            track: updateSpeakers[0].peer.videoTrack, ratio: [9, 16]);
+      } else {
+        changeTextPIP(text: updateSpeakers[0].peer.name, ratio: [9, 16]);
+      }
     }
     // if (updateSpeakers.isNotEmpty) {
     //   highestSpeaker = updateSpeakers[0].peer.name;
@@ -1324,7 +1331,19 @@ class MeetingStore extends ChangeNotifier
     if (Platform.isIOS && track != null) {
       isPipActive = await isPIPActive();
       if (isPipActive) {
-        HMSIOSPIPController.changeTrackPIP(track: track, ratio: ratio);
+        HMSIOSPIPController.changeTrackPIP(
+            track: track,
+            aspectRatio: ratio,
+            scaleType: ScaleType.SCALE_ASPECT_FILL);
+      }
+    }
+  }
+
+  void changeTextPIP({String? text, required List<int> ratio}) async {
+    if (Platform.isIOS && text != null) {
+      isPipActive = await isPIPActive();
+      if (isPipActive) {
+        HMSIOSPIPController.changeTextPIP(text: text, aspectRatio: ratio);
       }
     }
   }

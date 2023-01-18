@@ -10,17 +10,19 @@ class HMSIOSPIPController {
   ///
   ///**autoEnterPip** - Enable [autoEnterPip] will start pip mode automatically when app minimized.
   ///
-  ///**aspectRatio** - Ratio for PIP window
+  ///**aspectRatio** - Ratio for PIP window. For example: [16,9], [9,16] ,[1,1]
   ///
   ///`Note: Use [changeTrackPIP] function to change track in PIP window. Default track is local peer video track if available.`
   ///
   ///Refer [PIP mode guide here](https://www.100ms.live/docs/flutter/v2/advanced-features/pip-mode)
   static Future<HMSException?> setupPIP(bool? autoEnterPip,
-      {List<int>? ratio}) async {
+      {List<int>? aspectRatio,
+      ScaleType scaleType = ScaleType.SCALE_ASPECT_FILL}) async {
     var result =
         await PlatformService.invokeMethod(PlatformMethod.setupPIP, arguments: {
       "auto_enter_pip": autoEnterPip ?? true,
-      "ratio": ratio ?? [16, 9]
+      "ratio": aspectRatio ?? [16, 9],
+      "scale_type": scaleType.value
     });
     if (result != null) {
       return HMSException.fromMap(result["error"]);
@@ -57,17 +59,85 @@ class HMSIOSPIPController {
   ///
   ///**track** - [HMSVideoTrack] need to be passed for changing PIP window track.
   ///
-  ///**aspectRatio** - Ratio for PIP window
+  ///**aspectRatio** - Ratio for PIP window. For example: [16,9], [9,16] ,[1,1]
   ///
   /// `Note: [setupPIP] is required to call before calling [changeTrackPIP].`
   ///
   /// Refer [PIP mode guide here](https://www.100ms.live/docs/flutter/v2/advanced-features/pip-mode)
-  static void changeTrackPIP(
-      {required HMSVideoTrack track, required List<int> ratio}) {
-    if (_isPIPSetupDone && ratio.length == 2) {
-      PlatformService.invokeMethod(PlatformMethod.changeTrackPIP,
-          arguments: {"track_id": track.trackId, "ratio": ratio});
+  static Future<HMSException?> changeTrackPIP(
+      {required HMSVideoTrack track,
+      required List<int> aspectRatio,
+      required ScaleType scaleType}) async {
+    if (_isPIPSetupDone && aspectRatio.length == 2) {
+      var result = await PlatformService.invokeMethod(
+          PlatformMethod.changeTrackPIP,
+          arguments: {
+            "track_id": track.trackId,
+            "ratio": aspectRatio,
+            "scale_type": scaleType.value
+          });
+      if (result != null) {
+        return HMSException.fromMap(result["error"]);
+      }
+    } else if (!_isPIPSetupDone) {
+      return HMSException(
+          message:
+              "[setupPIP] is required to call before calling [changeTrackPIP]",
+          description:
+              "[setupPIP] is required to call before calling [changeTrackPIP]",
+          action: "",
+          isTerminal: false);
+    } else if (aspectRatio.length != 2) {
+      return HMSException(
+          message: "ratio must be passed properly",
+          description:
+              "ratio must be passed properly. For example: [16,9], [9,16] ,[1,1]",
+          action: "",
+          isTerminal: false);
     }
+    return null;
+  }
+
+  ///[changeTrackPIP] is used to change the track of PIP window.
+  ///
+  ///**Parameters**:
+  ///
+  ///**text** - [text] need to be passed for show text in PIP window.
+  ///
+  ///**aspectRatio** - Ratio for PIP window. For example: [16,9], [9,16] ,[1,1]
+  ///
+  /// `Note: [setupPIP] is required to call before calling [changeTextPIP].`
+  ///
+  /// Refer [PIP mode guide here](https://www.100ms.live/docs/flutter/v2/advanced-features/pip-mode)
+  static Future<HMSException?> changeTextPIP(
+      {required String text, required List<int> aspectRatio}) async {
+    if (_isPIPSetupDone && aspectRatio.length == 2) {
+      var result = await PlatformService.invokeMethod(
+          PlatformMethod.changeTextPIP,
+          arguments: {
+            "text": text,
+            "ratio": aspectRatio,
+          });
+      if (result != null) {
+        return HMSException.fromMap(result["error"]);
+      }
+    } else if (!_isPIPSetupDone) {
+      return HMSException(
+          message:
+              "[setupPIP] is required to call before calling [changeTrackPIP]",
+          description:
+              "[setupPIP] is required to call before calling [changeTrackPIP]",
+          action: "",
+          isTerminal: false);
+    } else if (aspectRatio.length != 2) {
+      return HMSException(
+          message: "ratio must be passed properly",
+          description:
+              "ratio must be passed properly. For example: [16,9], [9,16] ,[1,1]",
+          action: "",
+          isTerminal: false);
+    }
+    return null;
   }
 
   ///Method to check whether pip mode is active currently
