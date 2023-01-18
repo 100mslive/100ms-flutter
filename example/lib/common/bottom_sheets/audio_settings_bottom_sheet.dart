@@ -12,7 +12,6 @@ import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 import 'package:collection/collection.dart';
 
-<<<<<<<< HEAD:example/lib/common/bottom_sheets/audio_settings_bottom_sheet.dart
 class AudioSettingsBottomSheet extends StatefulWidget {
   AudioSettingsBottomSheet({
     Key? key,
@@ -23,18 +22,7 @@ class AudioSettingsBottomSheet extends StatefulWidget {
 }
 
 class _AudioSettingsBottomSheetState extends State<AudioSettingsBottomSheet> {
-========
-class DeviceSettingsBottomSheet extends StatefulWidget {
-  DeviceSettingsBottomSheet({
-    Key? key,
-  }) : super(key: key);
-  @override
-  State<DeviceSettingsBottomSheet> createState() =>
-      _DeviceSettingsBottomSheetState();
-}
 
-class _DeviceSettingsBottomSheetState extends State<DeviceSettingsBottomSheet> {
->>>>>>>> develop:example/lib/common/bottom_sheets/device_settings_bottom_sheet.dart
   GlobalKey? dropdownKey;
 
   @override

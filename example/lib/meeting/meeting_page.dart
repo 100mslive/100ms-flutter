@@ -19,7 +19,6 @@ import 'package:hmssdk_flutter_example/enum/meeting_mode.dart';
 import 'package:hmssdk_flutter_example/common/bottom_sheets/start_hls_bottom_sheet.dart';
 import 'package:hmssdk_flutter_example/common/bottom_sheets/chat_bottom_sheet.dart';
 import 'package:hmssdk_flutter_example/common/bottom_sheets/more_settings_bottom_sheet.dart';
-import 'package:hmssdk_flutter_example/common/bottom_sheets/participants_bottom_sheet.dart';
 import 'package:hmssdk_flutter_example/hls_viewer/hls_player.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:hmssdk_flutter_example/meeting_modes/basic_grid_view.dart';
