@@ -673,7 +673,7 @@ class MeetingStore extends ChangeNotifier
   }
 
   @override
-  void onUpdateSpeakers({required List<HMSSpeaker> updateSpeakers}) async {
+  void onUpdateSpeakers({required List<HMSSpeaker> updateSpeakers}) {
     if (activeSpeakerIds.isNotEmpty) {
       activeSpeakerIds.forEach((key) {
         int index = peerTracks.indexWhere((element) => element.uid == key);
@@ -691,7 +691,6 @@ class MeetingStore extends ChangeNotifier
         peerTracks[index].setAudioLevel(element.audioLevel);
       }
     });
-
     // Below code for change track and text in PIP mode iOS.
     if (updateSpeakers.isNotEmpty && screenShareCount == 0) {
       if (updateSpeakers[0].peer.videoTrack != null &&
@@ -1069,7 +1068,7 @@ class MeetingStore extends ChangeNotifier
   }
 
   void peerOperationWithTrack(
-      HMSPeer peer, HMSTrackUpdate update, HMSTrack track) async {
+      HMSPeer peer, HMSTrackUpdate update, HMSTrack track) {
     switch (update) {
       case HMSTrackUpdate.trackAdded:
         if (track.source != "REGULAR") {

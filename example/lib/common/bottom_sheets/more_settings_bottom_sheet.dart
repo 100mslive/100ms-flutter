@@ -539,7 +539,6 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                         horizontalTitleGap: 2,
                         onTap: () async {
                           Navigator.pop(context);
-
                           context.read<MeetingStore>().enterPipMode();
                         },
                         contentPadding: EdgeInsets.zero,
