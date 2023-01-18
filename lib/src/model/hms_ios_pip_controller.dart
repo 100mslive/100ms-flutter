@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter/src/service/platform_service.dart';
 
@@ -17,12 +18,18 @@ class HMSIOSPIPController {
   ///Refer [PIP mode guide here](https://www.100ms.live/docs/flutter/v2/advanced-features/pip-mode)
   static Future<HMSException?> setupPIP(bool? autoEnterPip,
       {List<int>? aspectRatio,
-      ScaleType scaleType = ScaleType.SCALE_ASPECT_FILL}) async {
+      ScaleType scaleType = ScaleType.SCALE_ASPECT_FILL,
+      Color backgroundColor = Colors.black}) async {
     var result =
         await PlatformService.invokeMethod(PlatformMethod.setupPIP, arguments: {
       "auto_enter_pip": autoEnterPip ?? true,
       "ratio": aspectRatio ?? [16, 9],
-      "scale_type": scaleType.value
+      "scale_type": scaleType.value,
+      "color": [
+        backgroundColor.red,
+        backgroundColor.green,
+        backgroundColor.blue
+      ]
     });
     if (result != null) {
       return HMSException.fromMap(result["error"]);
