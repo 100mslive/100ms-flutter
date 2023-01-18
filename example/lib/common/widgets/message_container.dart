@@ -5,6 +5,7 @@ import 'package:hmssdk_flutter_example/common/widgets/subtitle_text.dart';
 import 'package:hmssdk_flutter_example/common/widgets/title_text.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../meeting/meeting_store.dart';
 
 class MessageContainer extends StatelessWidget {
@@ -21,6 +22,12 @@ class MessageContainer extends StatelessWidget {
     required this.date,
     required this.role,
   }) : super(key: key);
+
+  bool isLink(String message) {
+    final urlRegExp = new RegExp(
+        r"((https?:www\.)|(https?:\/\/)|(www\.))[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9]{1,6}(\/[-a-zA-Z0-9()@:%_\+.~#?&\/=]*)?");
+    return urlRegExp.hasMatch(message);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -146,13 +153,25 @@ class MessageContainer extends StatelessWidget {
                   SizedBox(
                     height: 8,
                   ),
-                  Text(
-                    message,
-                    style: GoogleFonts.inter(
-                        fontSize: 14.0,
-                        color: themeDefaultColor,
-                        letterSpacing: 0.25,
-                        fontWeight: FontWeight.w400),
+                  GestureDetector(
+                    onTap: isLink(message)
+                        ? (() async {
+                            Uri url = Uri.parse(message);
+                            if (await canLaunchUrl(url)) {
+                              launchUrl(url, mode: LaunchMode.externalApplication);
+                            }
+                          })
+                        : () {},
+                    child: Text(
+                      message,
+                      style: GoogleFonts.inter(
+                          fontSize: 14.0,
+                          color: isLink(message)
+                              ? hmsdefaultColor
+                              : themeDefaultColor,
+                          letterSpacing: 0.25,
+                          fontWeight: FontWeight.w400),
+                    ),
                   ),
                 ],
               ),
