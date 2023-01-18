@@ -113,7 +113,7 @@ class HmssdkFlutterPlugin :
             }
 
             // MARK: Audio Helpers
-            "switch_audio", "is_audio_mute", "mute_room_audio_locally", "un_mute_room_audio_locally", "set_volume","toggle_mic_mute_state" -> {
+            "switch_audio", "is_audio_mute", "mute_room_audio_locally", "un_mute_room_audio_locally", "set_volume", "toggle_mic_mute_state" -> {
                 HMSAudioAction.audioActions(call, result, hmssdk!!)
             }
 
@@ -675,7 +675,7 @@ class HmssdkFlutterPlugin :
             call.argument<HashMap<String, Any>?>("hms_log_settings")
 
         if (hmsLogSettingsMap != null) {
-            val maxDirSizeInBytes: Double = hmsLogSettingsMap!!["max_dir_size_in_bytes"] as Double
+            val maxDirSizeInBytes: Double = hmsLogSettingsMap["max_dir_size_in_bytes"] as Double
             val isLogStorageEnabled: Boolean = hmsLogSettingsMap["log_storage_enabled"] as Boolean
             val level: String = hmsLogSettingsMap["log_level"] as String
             val logSettings = HMSLogSettings.setLogSettings(maxDirSizeInBytes, isLogStorageEnabled, level)

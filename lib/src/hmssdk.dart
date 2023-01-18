@@ -11,11 +11,15 @@ import '../hmssdk_flutter.dart';
 ///
 /// **hmsTrackSetting** - To modify local peer's audio & video tracks settings. Only required for advanced use cases. Refer [hmsTrackSetting guide here](https://www.100ms.live/docs/flutter/v2/advanced-features/set-track-settings)
 ///
-/// **appGroup** - It is only used for screen share (broadcast screen) in iOS. Refer [iOS Screen share guide here](https://www.100ms.live/docs/flutter/v2/features/screen-share#i-os-setup)
-///
-/// **preferredExtension** - It is only used for screen share (broadcast screen) in iOS. Refer [iOS Screen share guide here](https://www.100ms.live/docs/flutter/v2/features/screen-share#i-os-setup)
+/// **iOSScreenshareConfig** - It is required for starting Screen share (broadcast screen) in iOS. Refer [iOS Screen share guide here](https://www.100ms.live/docs/flutter/v2/features/screen-share#i-os-setup)
 ///
 /// **hmsLogSettings** - It is used to set the Log Level setting. Refer [hmsLogSettings guide here](https://www.100ms.live/docs/flutter/v2/features/error-handling#setting-log-levels-in-sdk)
+///
+/// **appGroup[Deprecated]** - It is required for starting Screen share (broadcast screen) in iOS. Refer [iOS Screen share guide here](https://www.100ms.live/docs/flutter/v2/features/screen-share#i-os-setup)
+///
+/// **preferredExtension[Deprecated]** - It is required for starting Screen share (broadcast screen) in iOS. Refer [iOS Screen share guide here](https://www.100ms.live/docs/flutter/v2/features/screen-share#i-os-setup)
+///
+/// `Note: [appGroup] and [preferredExtension] are deprecated use iOSScreenshareConfig instead.`
 ///
 /// **Key Concepts**
 ///
@@ -32,30 +36,48 @@ import '../hmssdk_flutter.dart';
 /// Refer [HMSSDK quick start guide available here](https://www.100ms.live/docs/flutter/v2/guides/quickstart)
 
 class HMSSDK {
-
   /// The public interface of 100ms SDK. Create an instance of HMSSDK to start using the SDK.
   ///
   /// Parameters:
   ///
   /// **hmsTrackSetting** - To modify local peer's audio & video tracks settings. Only required for advanced use cases. Refer [hmsTrackSetting guide here](https://www.100ms.live/docs/flutter/v2/advanced-features/set-track-settings)
   ///
-  /// **appGroup** - Ensure to pass correct AppGroup values set for your Apple Developer Account. This is only required for starting Screenshare (Broadcast Screen) from iOS Devices. Refer [iOS Screen share guide here](https://www.100ms.live/docs/flutter/v2/features/screen-share#i-os-setup)
-  ///
-  /// **preferredExtension** - Ensure to pass correct Preferred Extension set in your Xcode project. This is only required for starting Screenshare (Broadcast Screen) from iOS Devices. Refer [iOS Screen share guide here](https://www.100ms.live/docs/flutter/v2/features/screen-share#i-os-setup)
+  /// **iOSScreenshareConfig** - It is required for starting Screen share (broadcast screen) in iOS. Refer [iOS Screen share guide here](https://www.100ms.live/docs/flutter/v2/features/screen-share#i-os-setup)
   ///
   /// **hmsLogSettings** - It is used to set the Log Level setting. Refer [hmsLogSettings guide here](https://www.100ms.live/docs/flutter/v2/features/error-handling#setting-log-levels-in-sdk)
+  ///
+  /// **appGroup[Deprecated]** -  It is required for starting Screen share (broadcast screen) in iOS. Refer [iOS Screen share guide here](https://www.100ms.live/docs/flutter/v2/features/screen-share#i-os-setup)
+  ///
+  /// **preferredExtension[Deprecated]** - It is required for starting Screen share (broadcast screen) in iOS. Refer [iOS Screen share guide here](https://www.100ms.live/docs/flutter/v2/features/screen-share#i-os-setup)
+  ///
+  /// `Note: [appGroup] and [preferredExtension] are deprecated use iOSScreenshareConfig instead.`
+  ///
+  /// **Key Concepts**
+  ///
+  /// **Room** - A room represents real-time audio, and video sessions, the basic building block of the 100mslive Video SDK
+  ///
+  /// **Track** - A track represents either the audio or video that makes up a stream
+  ///
+  /// **Peer** - A peer represents all participants connected to a room. Peers can be "local" or "remote"
+  ///
+  /// **Broadcast** - A local peer can send any message/data to all remote peers in the room
+  ///
+  /// HMSSDK has other methods which the client app can use to get more info about the Room, Peer and Tracks
+  ///
+  /// Refer [HMSSDK quick start guide available here](https://www.100ms.live/docs/flutter/v2/guides/quickstart)
   HMSSDK(
       {this.hmsTrackSetting,
-      this.appGroup,
-      this.preferredExtension,
-      this.hmsLogSettings});
+      this.iOSScreenshareConfig,
+      this.hmsLogSettings,
+      @Deprecated("Use iOSScreenshareConfig") this.appGroup,
+      @Deprecated("Use iOSScreenshareConfig") this.preferredExtension});
 
   /// The build function should be called after creating an instance of the [HMSSDK].
   ///
   /// Await the result & if true then create [HMSConfig] object to join or preview a room.
   Future<void> build() async {
-    await HmsSdkManager().createHMSSdk(
-        hmsTrackSetting, appGroup, preferredExtension, hmsLogSettings);
+    await HmsSdkManager().createHMSSdk(hmsTrackSetting, iOSScreenshareConfig,
+        appGroup, preferredExtension, hmsLogSettings);
   }
 
   ///add UpdateListener it will add all the listeners.
@@ -200,8 +222,8 @@ class HMSSDK {
   /// If camera is muted it will get unmuted
   /// Refer [toggle camera state guide here](https://www.100ms.live/docs/flutter/v2/features/mute).
   Future<HMSException?> toggleCameraMuteState() async {
-    bool result =
-        await PlatformService.invokeMethod(PlatformMethod.toggleCameraMuteState);
+    bool result = await PlatformService.invokeMethod(
+        PlatformMethod.toggleCameraMuteState);
 
     if (result) {
       return null;
@@ -1277,10 +1299,19 @@ class HMSSDK {
   /// To modify local peer's audio & video tracks settings use the [hmsTrackSetting]. Only required for advanced use cases.
   HMSTrackSetting? hmsTrackSetting;
 
+  ///  [HMSIOSScreenshareConfig] is required for starting Screen share (Broadcast screen) from iOS devices like iPhones & iPads. To learn more about Screen Share, refer to the guide [here](https://www.100ms.live/docs/flutter/v2/features/screen-share).
+  ///
+  /// `Note: You can find appGroup and preferredExtension name in Xcode under Signing and Capabilities section under target > yourExtensionName.`
+  HMSIOSScreenshareConfig? iOSScreenshareConfig;
+
   /// [appGroup] is only used for screen share (broadcast screen) in iOS.
+  ///
+  /// `Note: appGroup is deprecated use [iOSScreenshareConfig].`
   String? appGroup;
 
   /// [preferredExtension] is only used for screen share (broadcast screen) in iOS.
+  ///
+  /// `Note: preferredExtension is deprecated use [iOSScreenshareConfig].`
   String? preferredExtension;
 
   /// [hmsLogSettings] is used to set the Log Level setting.

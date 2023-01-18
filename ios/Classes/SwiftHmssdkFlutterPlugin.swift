@@ -424,6 +424,15 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             preferredExtension = prefExtension
         }
 
+        if let iOSScreenshareConfig = arguments["ios_screenshare_config"] as? [String: String] {
+            if let prefExtension = iOSScreenshareConfig["preferred_extension"] {
+                preferredExtension = prefExtension
+            } else {
+                print(#function, "preferredExtension Not found in iOSScreenshareConfig")
+                result(false)
+            }
+        }
+
         var setLogger = false
         if let hmsLogSettings = arguments["hms_log_settings"] as? [AnyHashable: Any] {
             let level = hmsLogSettings["log_level"] as! String
@@ -434,11 +443,24 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         let hmsSDKVersion = arguments["hmssdk_version"] as! String
         let framework = HMSFrameworkInfo(type: .flutter, version: dartSDKVersion, sdkVersion: hmsSDKVersion)
         audioMixerSourceMap = [:]
-        hmsSDK = HMSSDK.build { [self] sdk in
 
-            // TODO: add checks for 100ms App Group for Screen Share
+        hmsSDK = HMSSDK.build { [weak self] sdk in
+            guard let self = self else {
+                print(#function, "Failed to build HMSSDK")
+                result(false)
+                return
+            }
             if let appGroup = arguments["app_group"] as? String {
                 sdk.appGroup = appGroup
+            }
+
+            if let iOSScreenshareConfig = arguments["ios_screenshare_config"] as? [String: String] {
+                if let appGroup = iOSScreenshareConfig["app_group"] {
+                    sdk.appGroup = appGroup
+                } else {
+                    print(#function, "AppGroup Not found in iOSScreenshareConfig")
+                    result(false)
+                }
             }
 
             sdk.frameworkInfo = framework
@@ -449,9 +471,8 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
             var trackSettings: HMSTrackSettings?
             if let settingsDict = arguments["hms_track_setting"] as? [AnyHashable: Any] {
-                // TODO: add checks for 100ms App Group for Audio Share
-                audioMixerSourceInit(settingsDict, sdk, result)
-                trackSettings = HMSTrackSettingsExtension.setTrackSetting(settingsDict, audioMixerSourceMap, result)
+                self.audioMixerSourceInit(settingsDict, sdk, result)
+                trackSettings = HMSTrackSettingsExtension.setTrackSetting(settingsDict, self.audioMixerSourceMap, result)
             }
 
             if let settings = trackSettings {
@@ -1140,12 +1161,12 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                     if self.audioMixerSourceMap[node] == nil {
                         if node=="mic_node" {
                             self.audioMixerSourceMap["mic_node"] = HMSMicNode()
-                        } else if node == "screen_broadcast_audio_receiver_node" {
-                            // TODO: add checks for 100ms App Group for Audio Share
+                        } else if node == "screen_broadcast_audio_receiver_node" && sdk.appGroup != nil {
                             do {
                                 self.audioMixerSourceMap["screen_broadcast_audio_receiver_node"] = try sdk.screenBroadcastAudioReceiverNode()
                             } catch {
-                                result(HMSErrorExtension.toDictionary(error))
+                                print(#function, HMSErrorExtension.toDictionary(error))
+                                result(false)
                             }
                         } else {
                             self.audioMixerSourceMap[node] = HMSAudioFilePlayerNode()

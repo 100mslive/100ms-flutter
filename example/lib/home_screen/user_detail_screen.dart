@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/widgets/hms_listenable_button.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
@@ -41,15 +42,18 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
       required bool joinWithMutedVideo,
       required bool isSoftwareDecoderDisabled,
       required bool isAudioMixerDisabled}) async {
-    /// [appGroup] & [preferredExtension] of [HMSSDKInteractor] are optional values only required for implementing Screen & Audio Share on iOS. They are not required for Android.
+    /// [iOSScreenshareConfig] of [HMSSDKInteractor] are optional values only required for implementing Screen & Audio Share on iOS. They are not required for Android.
     /// Remove [appGroup] & [preferredExtension] if your app does not implements Screen or Audio Share on iOS.
     /// [joinWithMutedAudio] & [joinWithMutedVideo] are required to set the initial audio/video state i.e what should be camera and mic
     /// state while room is joined.By default both audio and video are kept as mute.
-    _hmsSDKInteractor = HMSSDKInteractor(
-        appGroup:
-            "group.flutterhms", // Ensure to pass correct AppGroup values set for your Apple Developer Account. This is required for starting Screenshare from iOS Devices.
+
+    HMSIOSScreenshareConfig iOSScreenshareConfig = HMSIOSScreenshareConfig(
+        appGroup: "group.flutterhms",
         preferredExtension:
-            "live.100ms.flutter.FlutterBroadcastUploadExtension", // Ensure to pass correct Preferred Extension set in your Xcode project. This is required for starting Screenshare from iOS Devices.
+            "live.100ms.flutter.FlutterBroadcastUploadExtension");
+
+    _hmsSDKInteractor = HMSSDKInteractor(
+        iOSScreenshareConfig: iOSScreenshareConfig,
         joinWithMutedAudio: joinWithMutedAudio,
         joinWithMutedVideo: joinWithMutedVideo,
         isSoftwareDecoderDisabled: isSoftwareDecoderDisabled,
