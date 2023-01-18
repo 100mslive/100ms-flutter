@@ -33,7 +33,6 @@ class _AudioSettingsBottomSheetState extends State<AudioSettingsBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
     MeetingStore _meetingStore = context.read<MeetingStore>();
     return FractionallySizedBox(
       heightFactor: 0.5,
