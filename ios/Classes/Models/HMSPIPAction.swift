@@ -65,8 +65,8 @@ class HMSPIPAction {
                 
         let arguments = call.arguments as! [AnyHashable: Any]
     
-        if let width = arguments["width"] as? Double, let height = arguments["height"] as? Double {
-            pipVideoCallViewController.preferredContentSize = CGSize(width: width, height: height)
+        if let ratio = arguments["ratio"] as? [Int], ratio.count == 2 {
+            pipVideoCallViewController.preferredContentSize = CGSize(width: ratio[1], height: ratio[0])
         } else {
             pipVideoCallViewController.preferredContentSize = CGSize(width: uiView.frame.size.width, height: uiView.frame.size.height) 
         }
@@ -123,15 +123,15 @@ class HMSPIPAction {
         
         guard let trackID = arguments["track_id"] as? String,
               let track = HMSUtilities.getVideoTrack(for: trackID, in: (hmsSDK?.room)!),
-              let width = arguments["width"] as? Double,
-              let height = arguments["height"] as? Double
+              let ratio = arguments["ratio"] as? [Int],
+                ratio.count == 2
         else {
-            result(HMSErrorExtension.getError("\(#function) Unable to find track ID or width and height missing"))
+            result(HMSErrorExtension.getError("\(#function) Unable to find track ID or ratio"))
             return
         }
         model?.track = track
         
-        pipVideoCallViewController!.preferredContentSize = CGSize(width: width, height: height)
+        pipVideoCallViewController!.preferredContentSize = CGSize(width: ratio[1], height: ratio[0])
         
     }
     

@@ -518,7 +518,7 @@ class MeetingStore extends ChangeNotifier
     getAudioDevicesList();
     notifyListeners();
     if (Platform.isIOS) {
-      HMSIOSPIPController.setupPIP(true, width: 50, height: 100);
+      HMSIOSPIPController.setupPIP(true, ratio: [9, 16]);
     }
   }
 
@@ -693,8 +693,7 @@ class MeetingStore extends ChangeNotifier
     });
 
     if (updateSpeakers.isNotEmpty && screenShareCount == 0) {
-      changeTrackPIP(
-          track: updateSpeakers[0].peer.videoTrack, width: 50, height: 100);
+      changeTrackPIP(track: updateSpeakers[0].peer.videoTrack, ratio: [9, 16]);
     }
     // if (updateSpeakers.isNotEmpty) {
     //   highestSpeaker = updateSpeakers[0].peer.name;
@@ -1080,7 +1079,7 @@ class MeetingStore extends ChangeNotifier
                     stats: RTCStats()));
             isScreenShareActive();
             notifyListeners();
-            changeTrackPIP(track: track, width: 100, height: 50);
+            changeTrackPIP(track: track, ratio: [9, 16]);
           }
         }
         break;
@@ -1096,7 +1095,7 @@ class MeetingStore extends ChangeNotifier
             }
             isScreenShareActive();
             notifyListeners();
-            changeTrackPIP(track: peer.videoTrack, width: 50, height: 100);
+            changeTrackPIP(track: peer.videoTrack, ratio: [9, 16]);
           }
         } else {
           int peerIndex = peerTracks.indexWhere(
@@ -1321,15 +1320,11 @@ class MeetingStore extends ChangeNotifier
     return isPipActive;
   }
 
-  void changeTrackPIP(
-      {HMSVideoTrack? track,
-      required double width,
-      required double height}) async {
+  void changeTrackPIP({HMSVideoTrack? track, required List<int> ratio}) async {
     if (Platform.isIOS && track != null) {
       isPipActive = await isPIPActive();
       if (isPipActive) {
-        HMSIOSPIPController.changeTrackPIP(
-            track: track, width: width, height: height);
+        HMSIOSPIPController.changeTrackPIP(track: track, ratio: ratio);
       }
     }
   }

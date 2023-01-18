@@ -527,7 +527,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.4.50;
-				PRODUCT_BUNDLE_IDENTIFIER = live.100ms.videoapp;
+				PRODUCT_BUNDLE_IDENTIFIER = live.100ms.flutter;
 				"PRODUCT_BUNDLE_IDENTIFIER[sdk=macosx*]" = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "match AdHoc live.100ms.videoapp";
@@ -704,7 +704,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.4.50;
-				PRODUCT_BUNDLE_IDENTIFIER = live.100ms.videoapp;
+				PRODUCT_BUNDLE_IDENTIFIER = live.100ms.flutter;
 				"PRODUCT_BUNDLE_IDENTIFIER[sdk=macosx*]" = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "match AdHoc live.100ms.videoapp";
@@ -789,7 +789,7 @@
 				);
 				MARKETING_VERSION = 1.4.50;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = live.100ms.videoapp.screenshare;
+				PRODUCT_BUNDLE_IDENTIFIER = live.100ms.flutter.FlutterBroadcastUploadExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "match AdHoc live.100ms.videoapp.screenshare";
 				SKIP_INSTALL = YES;
@@ -829,7 +829,7 @@
 				);
 				MARKETING_VERSION = 1.4.50;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = live.100ms.videoapp.screenshare;
+				PRODUCT_BUNDLE_IDENTIFIER = live.100ms.flutter.FlutterBroadcastUploadExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "match AdHoc live.100ms.videoapp.screenshare";
 				SKIP_INSTALL = YES;

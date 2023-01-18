@@ -10,21 +10,18 @@ class HMSIOSPIPController {
   ///
   ///**autoEnterPip** - Enable [autoEnterPip] will start pip mode automatically when app minimized.
   ///
-  ///**width** - [width] parameter is used to set the width of PIP window.
-  ///
-  ///**height** - [height] parameter is used to set the height of PIP window.
+  ///**aspectRatio** - Ratio for PIP window
   ///
   ///`Note: Use [changeTrackPIP] function to change track in PIP window. Default track is local peer video track if available.`
   ///
   ///Refer [PIP mode guide here](https://www.100ms.live/docs/flutter/v2/advanced-features/pip-mode)
   static Future<HMSException?> setupPIP(bool? autoEnterPip,
-      {double? width, double? height}) async {
-    var result = await PlatformService.invokeMethod(PlatformMethod.setupPIP,
-        arguments: {
-          "auto_enter_pip": autoEnterPip ?? true,
-          "width": width,
-          "height": height
-        });
+      {List<int>? ratio}) async {
+    var result =
+        await PlatformService.invokeMethod(PlatformMethod.setupPIP, arguments: {
+      "auto_enter_pip": autoEnterPip ?? true,
+      "ratio": ratio ?? [16, 9]
+    });
     if (result != null) {
       return HMSException.fromMap(result["error"]);
     }
@@ -60,23 +57,16 @@ class HMSIOSPIPController {
   ///
   ///**track** - [HMSVideoTrack] need to be passed for changing PIP window track.
   ///
-  ///**width** - [width] parameter is used to set the width of PIP window.
-  ///
-  ///**height** - [height] parameter is used to set the height of PIP window.
+  ///**aspectRatio** - Ratio for PIP window
   ///
   /// `Note: [setupPIP] is required to call before calling [changeTrackPIP].`
   ///
   /// Refer [PIP mode guide here](https://www.100ms.live/docs/flutter/v2/advanced-features/pip-mode)
   static void changeTrackPIP(
-      {required HMSVideoTrack track,
-      required double width,
-      required double height}) {
-    if (_isPIPSetupDone) {
-      PlatformService.invokeMethod(PlatformMethod.changeTrackPIP, arguments: {
-        "track_id": track.trackId,
-        "width": width,
-        "height": height
-      });
+      {required HMSVideoTrack track, required List<int> ratio}) {
+    if (_isPIPSetupDone && ratio.length == 2) {
+      PlatformService.invokeMethod(PlatformMethod.changeTrackPIP,
+          arguments: {"track_id": track.trackId, "ratio": ratio});
     }
   }
 
