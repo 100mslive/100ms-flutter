@@ -517,8 +517,8 @@ class MeetingStore extends ChangeNotifier
     getCurrentAudioDevice();
     getAudioDevicesList();
     notifyListeners();
-    if (Platform.isIOS) {
-      HMSIOSPIPController.setupPIP(true, aspectRatio: [9, 16]);
+    if (Platform.isIOS && !(isHLSLink)) {
+      HMSIOSPIPController.setup(true, aspectRatio: [9, 16]);
     }
   }
 
@@ -1005,6 +1005,16 @@ class MeetingStore extends ChangeNotifier
             isHLSLink = false;
           }
         }
+
+        // Setup or destroy PIP controller on role Based
+        if (peer.isLocal) {
+          if (peer.role.name.contains("hls-")) {
+            HMSIOSPIPController.destroy();
+          } else {
+            HMSIOSPIPController.setup(true, aspectRatio: [9, 16]);
+          }
+        }
+
         Utilities.showToast("${peer.name}'s role changed to " + peer.role.name);
         updatePeerAt(peer);
         updateFilteredList(update, peer);
@@ -1313,11 +1323,11 @@ class MeetingStore extends ChangeNotifier
   void enterPipMode() async {
     //to check whether pip is available in android
     if (Platform.isAndroid) {
-      bool _isPipAvailable = await HMSAndroidPIPController.isPipAvailable();
+      bool _isPipAvailable = await HMSAndroidPIPController.isAvailable();
       if (_isPipAvailable) {
         //[isPipActive] method can also be used to check whether application is in pip Mode or not
-        isPipActive = await HMSAndroidPIPController.enterPipMode(
-            autoEnterPip: isPipAutoEnabled);
+        isPipActive =
+            await HMSAndroidPIPController.start(autoEnterPip: isPipAutoEnabled);
         notifyListeners();
       }
     }
@@ -1325,9 +1335,8 @@ class MeetingStore extends ChangeNotifier
 
   Future<bool> isPIPActive() async {
     if (Platform.isAndroid)
-      isPipActive = await HMSAndroidPIPController.isPipActive();
-    else if (Platform.isIOS)
-      isPipActive = await HMSIOSPIPController.isPipActive();
+      isPipActive = await HMSAndroidPIPController.isActive();
+    else if (Platform.isIOS) isPipActive = await HMSIOSPIPController.isActive();
     return isPipActive;
   }
 
@@ -1338,7 +1347,7 @@ class MeetingStore extends ChangeNotifier
     if (Platform.isIOS && track != null) {
       isPipActive = await isPIPActive();
       if (isPipActive) {
-        HMSIOSPIPController.changeTrackPIP(
+        HMSIOSPIPController.changeTrack(
             track: track,
             aspectRatio: ratio,
             alternativeText: alternativeText,
@@ -1351,8 +1360,14 @@ class MeetingStore extends ChangeNotifier
     if (Platform.isIOS && text != null) {
       isPipActive = await isPIPActive();
       if (isPipActive) {
-        HMSIOSPIPController.changeTextPIP(text: text, aspectRatio: ratio);
+        HMSIOSPIPController.changeText(text: text, aspectRatio: ratio);
       }
+    }
+  }
+
+  void destroyPIP() {
+    if (Platform.isIOS) {
+      HMSIOSPIPController.destroy();
     }
   }
 

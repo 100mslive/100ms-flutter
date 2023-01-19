@@ -16,51 +16,53 @@ class HMSIOSPIPController {
   ///`Note: Use [changeTrackPIP] function to change track in PIP window. Default track is local peer video track if available.`
   ///
   ///Refer [PIP mode guide here](https://www.100ms.live/docs/flutter/v2/advanced-features/pip-mode)
-  static Future<HMSException?> setupPIP(bool? autoEnterPip,
+  static Future<HMSException?> setup(bool? autoEnterPip,
       {List<int>? aspectRatio,
       ScaleType scaleType = ScaleType.SCALE_ASPECT_FILL,
       Color backgroundColor = Colors.black}) async {
-    var result =
-        await PlatformService.invokeMethod(PlatformMethod.setupPIP, arguments: {
-      "auto_enter_pip": autoEnterPip ?? true,
-      "ratio": aspectRatio ?? [16, 9],
-      "scale_type": scaleType.value,
-      "color": [
-        backgroundColor.red,
-        backgroundColor.green,
-        backgroundColor.blue
-      ]
-    });
-    if (result != null) {
-      return HMSException.fromMap(result["error"]);
+    if (!_isPIPSetupDone) {
+      var result = await PlatformService.invokeMethod(PlatformMethod.setupPIP,
+          arguments: {
+            "auto_enter_pip": autoEnterPip ?? true,
+            "ratio": aspectRatio ?? [16, 9],
+            "scale_type": scaleType.value,
+            "color": [
+              backgroundColor.red,
+              backgroundColor.green,
+              backgroundColor.blue
+            ]
+          });
+      if (result != null) {
+        return HMSException.fromMap(result["error"]);
+      }
+      _isPIPSetupDone = true;
     }
-    _isPIPSetupDone = true;
     return null;
   }
 
-  /// [startPIP] is used to start PIP manually.
+  /// [start] is used to start PIP manually.
   ///
   /// `Note: [setupPIP] is required to call before calling [startPIP].`
   ///
   ///Refer [PIP mode guide here](https://www.100ms.live/docs/flutter/v2/advanced-features/pip-mode)
-  static void startPIP() {
+  static void start() {
     if (_isPIPSetupDone) {
       PlatformService.invokeMethod(PlatformMethod.startPIP);
     }
   }
 
-  /// [stopPIP] is used to stop PIP manually.
+  /// [stop] is used to stop PIP manually.
   ///
   /// `Note: [setupPIP] is required to call before calling [stopPIP].`
   ///
   ///Refer [PIP mode guide here](https://www.100ms.live/docs/flutter/v2/advanced-features/pip-mode)
-  static void stopPIP() {
+  static void stop() {
     if (_isPIPSetupDone) {
       PlatformService.invokeMethod(PlatformMethod.stopPIP);
     }
   }
 
-  ///[changeTrackPIP] is used to change the track of PIP window.
+  ///[changeTrack] is used to change the track of PIP window.
   ///
   ///**Parameters**:
   ///
@@ -71,7 +73,7 @@ class HMSIOSPIPController {
   /// `Note: [setupPIP] is required to call before calling [changeTrackPIP].`
   ///
   /// Refer [PIP mode guide here](https://www.100ms.live/docs/flutter/v2/advanced-features/pip-mode)
-  static Future<HMSException?> changeTrackPIP(
+  static Future<HMSException?> changeTrack(
       {required HMSVideoTrack track,
       required List<int> aspectRatio,
       required String alternativeText,
@@ -107,7 +109,7 @@ class HMSIOSPIPController {
     return null;
   }
 
-  ///[changeTrackPIP] is used to change the track of PIP window.
+  ///[changeTrack] is used to change the track of PIP window.
   ///
   ///**Parameters**:
   ///
@@ -118,7 +120,7 @@ class HMSIOSPIPController {
   /// `Note: [setupPIP] is required to call before calling [changeTextPIP].`
   ///
   /// Refer [PIP mode guide here](https://www.100ms.live/docs/flutter/v2/advanced-features/pip-mode)
-  static Future<HMSException?> changeTextPIP(
+  static Future<HMSException?> changeText(
       {required String text, required List<int> aspectRatio}) async {
     if (_isPIPSetupDone && aspectRatio.length == 2) {
       var result = await PlatformService.invokeMethod(
@@ -152,7 +154,7 @@ class HMSIOSPIPController {
   ///Method to check whether pip mode is active currently
   ///
   ///Refer [PIP mode guide here](https://www.100ms.live/docs/flutter/v2/advanced-features/pip-mode)
-  static Future<bool> isPipActive() async {
+  static Future<bool> isActive() async {
     if (_isPIPSetupDone) {
       final bool? result =
           await PlatformService.invokeMethod(PlatformMethod.isPipActive);
@@ -164,9 +166,24 @@ class HMSIOSPIPController {
   ///Method to check whether pip mode is available for the current device
   ///
   ///Refer [PIP mode guide here](https://www.100ms.live/docs/flutter/v2/advanced-features/pip-mode)
-  static Future<bool> isPipAvailable() async {
+  static Future<bool> isAvailable() async {
     final bool? result =
         await PlatformService.invokeMethod(PlatformMethod.isPipAvailable);
     return result ?? false;
+  }
+
+  ///Method to destroy PIP View.
+  ///
+  ///Refer [PIP mode guide here](https://www.100ms.live/docs/flutter/v2/advanced-features/pip-mode)
+  static Future<bool> destroy() async {
+    if (_isPIPSetupDone) {
+      final bool? result =
+          await PlatformService.invokeMethod(PlatformMethod.destroyPIP);
+      if (result ?? false) {
+        _isPIPSetupDone = false;
+      }
+      return result ?? false;
+    }
+    return true;
   }
 }

@@ -167,6 +167,7 @@ enum PlatformMethod {
   stopPIP,
   changeTrackPIP,
   changeTextPIP,
+  destroyPIP,
   toggleMicMuteState,
   toggleCameraMuteState
 }
@@ -396,6 +397,8 @@ extension PlatformMethodValues on PlatformMethod {
         return "change_track_pip";
       case PlatformMethod.changeTextPIP:
         return "change_text_pip";
+      case PlatformMethod.destroyPIP:
+        return "destroy_pip";
       case PlatformMethod.toggleMicMuteState:
         return "toggle_mic_mute_state";
       case PlatformMethod.toggleCameraMuteState:
@@ -629,6 +632,8 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.changeTrackPIP;
       case "change_text_pip":
         return PlatformMethod.changeTextPIP;
+      case "destroy_pip":
+        return PlatformMethod.destroyPIP;
       case "toggle_mic_mute_state":
         return PlatformMethod.toggleMicMuteState;
       case "toggle_camera_mute_state":

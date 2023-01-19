@@ -37,6 +37,9 @@ class HMSPIPAction {
         
         case "change_text_pip":
             changeText(call, result, hmsSDK)
+            
+        case "destroy_pip":
+            disposePIP(result)
 
         default:
             result(FlutterMethodNotImplemented)
@@ -112,12 +115,15 @@ class HMSPIPAction {
         pipController?.stopPictureInPicture()
     }
     
-    static func disposePIP() {
+    static func disposePIP(_ result: FlutterResult?) {
         model?.pipViewEnabled = false
         model?.track = nil
         model = nil
         pipController = nil
         pipVideoCallViewController = nil
+        if(result != nil){
+            result!(true)
+        }
     }
     
     static func isPIPAvailable(_ result: @escaping FlutterResult) {
