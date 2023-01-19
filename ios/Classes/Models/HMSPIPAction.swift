@@ -60,6 +60,7 @@ class HMSPIPAction {
         model = PiPModel()
         model!.track = hmsSDK?.localPeer?.videoTrack
         model!.pipViewEnabled = true
+        model!.text = hmsSDK?.localPeer?.name
         
         let arguments = call.arguments as! [AnyHashable: Any]
         
@@ -136,16 +137,17 @@ class HMSPIPAction {
         
         guard let trackID = arguments["track_id"] as? String,
               let track = HMSUtilities.getVideoTrack(for: trackID, in: (hmsSDK?.room)!),
+              let alternativeText = arguments["alternative_text"] as? String,
               let ratio = arguments["ratio"] as? [Int],
                 ratio.count == 2,
               let scaleType = arguments["scale_type"] as? Int
         else {
-            result(HMSErrorExtension.getError("\(#function) Unable to find track ID, ratio or scaleType"))
+            result(HMSErrorExtension.getError("\(#function) Unable to find track ID, ratio, alternativeText or scaleType"))
             return
         }
         model?.scaleType = getViewContentMode(scaleType)
         model?.track = track
-        
+        model?.text = alternativeText
         pipVideoCallViewController!.preferredContentSize = CGSize(width: ratio[1], height: ratio[0])
     }
     

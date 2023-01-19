@@ -74,6 +74,7 @@ class HMSIOSPIPController {
   static Future<HMSException?> changeTrackPIP(
       {required HMSVideoTrack track,
       required List<int> aspectRatio,
+      required String alternativeText,
       required ScaleType scaleType}) async {
     if (_isPIPSetupDone && aspectRatio.length == 2) {
       var result = await PlatformService.invokeMethod(
@@ -81,6 +82,7 @@ class HMSIOSPIPController {
           arguments: {
             "track_id": track.trackId,
             "ratio": aspectRatio,
+            "alternative_text": alternativeText,
             "scale_type": scaleType.value
           });
       if (result != null) {

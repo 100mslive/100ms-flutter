@@ -16,7 +16,7 @@ struct PiPView: View {
     var body: some View {
         if model.pipViewEnabled {
             VStack {
-                if let track = model.track {
+                if let track = model.track, !(model.track?.isMute() ?? true) {
                     GeometryReader { geo in
                         if let contentMode = model.scaleType {
                             HMSSampleBufferSwiftUIView(track: track, contentMode: contentMode, preferredSize: geo.size, model: model)

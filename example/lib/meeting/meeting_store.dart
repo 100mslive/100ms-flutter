@@ -693,12 +693,11 @@ class MeetingStore extends ChangeNotifier
     });
     // Below code for change track and text in PIP mode iOS.
     if (updateSpeakers.isNotEmpty && screenShareCount == 0) {
-      if (updateSpeakers[0].peer.videoTrack != null &&
-          !(updateSpeakers[0].peer.videoTrack!.isMute)) {
+      if (updateSpeakers[0].peer.videoTrack != null) {
         changeTrackPIP(
-            track: updateSpeakers[0].peer.videoTrack, ratio: [9, 16]);
-      } else {
-        changeTextPIP(text: updateSpeakers[0].peer.name, ratio: [9, 16]);
+            track: updateSpeakers[0].peer.videoTrack,
+            alternativeText: updateSpeakers[0].peer.name,
+            ratio: [9, 16]);
       }
     }
     // if (updateSpeakers.isNotEmpty) {
@@ -1085,7 +1084,10 @@ class MeetingStore extends ChangeNotifier
                     stats: RTCStats()));
             isScreenShareActive();
             notifyListeners();
-            changeTrackPIP(track: track, ratio: [9, 16]);
+            changeTrackPIP(
+                track: track,
+                ratio: [9, 16],
+                alternativeText: "${peer.name} Screen share");
           }
         }
         break;
@@ -1101,7 +1103,10 @@ class MeetingStore extends ChangeNotifier
             }
             isScreenShareActive();
             notifyListeners();
-            changeTrackPIP(track: peer.videoTrack, ratio: [9, 16]);
+            changeTrackPIP(
+                track: peer.videoTrack,
+                alternativeText: peer.name,
+                ratio: [9, 16]);
           }
         } else {
           int peerIndex = peerTracks.indexWhere(
@@ -1326,13 +1331,17 @@ class MeetingStore extends ChangeNotifier
     return isPipActive;
   }
 
-  void changeTrackPIP({HMSVideoTrack? track, required List<int> ratio}) async {
+  void changeTrackPIP(
+      {HMSVideoTrack? track,
+      required String alternativeText,
+      required List<int> ratio}) async {
     if (Platform.isIOS && track != null) {
       isPipActive = await isPIPActive();
       if (isPipActive) {
         HMSIOSPIPController.changeTrackPIP(
             track: track,
             aspectRatio: ratio,
+            alternativeText: alternativeText,
             scaleType: ScaleType.SCALE_ASPECT_FILL);
       }
     }
