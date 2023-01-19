@@ -12,16 +12,16 @@ import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 import 'package:collection/collection.dart';
 
-class DeviceSettingsBottomSheet extends StatefulWidget {
-  DeviceSettingsBottomSheet({
+class AudioSettingsBottomSheet extends StatefulWidget {
+  AudioSettingsBottomSheet({
     Key? key,
   }) : super(key: key);
   @override
-  State<DeviceSettingsBottomSheet> createState() =>
-      _DeviceSettingsBottomSheetState();
+  State<AudioSettingsBottomSheet> createState() =>
+      _AudioSettingsBottomSheetState();
 }
 
-class _DeviceSettingsBottomSheetState extends State<DeviceSettingsBottomSheet> {
+class _AudioSettingsBottomSheetState extends State<AudioSettingsBottomSheet> {
   GlobalKey? dropdownKey;
 
   @override
@@ -32,7 +32,6 @@ class _DeviceSettingsBottomSheetState extends State<DeviceSettingsBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
     MeetingStore _meetingStore = context.read<MeetingStore>();
     return FractionallySizedBox(
       heightFactor: 0.5,
@@ -69,7 +68,7 @@ class _DeviceSettingsBottomSheetState extends State<DeviceSettingsBottomSheet> {
                       ),
                       Expanded(
                         child: Text(
-                          "Device Settings",
+                          "Audio Settings",
                           textAlign: TextAlign.center,
                           style: GoogleFonts.inter(
                               fontSize: 16,
