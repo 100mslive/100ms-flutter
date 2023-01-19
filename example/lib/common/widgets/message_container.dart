@@ -158,7 +158,8 @@ class MessageContainer extends StatelessWidget {
                         ? (() async {
                             Uri url = Uri.parse(message);
                             if (await canLaunchUrl(url)) {
-                              launchUrl(url, mode: LaunchMode.externalApplication);
+                              launchUrl(url,
+                                  mode: LaunchMode.externalApplication);
                             }
                           })
                         : () {},

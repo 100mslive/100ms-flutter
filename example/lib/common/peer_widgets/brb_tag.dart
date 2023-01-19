@@ -26,8 +26,8 @@ class BRBTag extends StatelessWidget {
                       ),
                     ),
                   ),
-                  bottom: 5.0,
-                  right: 5,
+                  top: 5.0,
+                  left: 5,
                 )
               : Container();
         },

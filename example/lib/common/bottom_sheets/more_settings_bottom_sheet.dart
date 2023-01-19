@@ -1,15 +1,17 @@
 import 'dart:io';
 
+import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/bottom_sheets/notification_settings_bottom_sheet.dart';
+import 'package:hmssdk_flutter_example/common/bottom_sheets/participants_bottom_sheet.dart';
 import 'package:hmssdk_flutter_example/service/constant.dart';
 import 'package:hmssdk_flutter_example/common/widgets/share_link_option.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
-import 'package:hmssdk_flutter_example/common/bottom_sheets/device_settings_bottom_sheet.dart';
+import 'package:hmssdk_flutter_example/common/bottom_sheets/audio_settings_bottom_sheet.dart';
 import 'package:hmssdk_flutter_example/common/bottom_sheets/start_hls_bottom_sheet.dart';
 import 'package:hmssdk_flutter_example/common/bottom_sheets/meeting_mode_bottom_sheet.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
@@ -77,37 +79,107 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
             Expanded(
               child: ListView(
                 children: [
-                  ListTile(
-                    horizontalTitleGap: 2,
-                    onTap: () async {
-                      Navigator.pop(context);
-                      showModalBottomSheet(
-                        isScrollControlled: true,
-                        backgroundColor: themeBottomSheetColor,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      InkWell(
+                        onTap: () async {
+                          Navigator.pop(context);
+                          showModalBottomSheet(
+                            isScrollControlled: true,
+                            backgroundColor: themeBottomSheetColor,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            context: context,
+                            builder: (ctx) => ChangeNotifierProvider.value(
+                                value: context.read<MeetingStore>(),
+                                child: ParticipantsBottomSheet()),
+                          );
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: moreSettingsButtonColor,
+                              borderRadius: BorderRadius.circular(10)),
+                          height: 100,
+                          width: 150,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Badge(
+                                badgeColor: hmsdefaultColor,
+                                badgeContent: Text(context
+                                    .read<MeetingStore>()
+                                    .peers
+                                    .length
+                                    .toString()),
+                                child: SvgPicture.asset(
+                                  "assets/icons/participants.svg",
+                                  color: themeDefaultColor,
+                                ),
+                              ),
+                              SizedBox(height: 10),
+                              Text(
+                                "Participants",
+                                semanticsLabel: "participants_button",
+                                style: GoogleFonts.inter(
+                                    fontSize: 14,
+                                    color: themeDefaultColor,
+                                    letterSpacing: 0.25,
+                                    fontWeight: FontWeight.w600),
+                              )
+                            ],
+                          ),
                         ),
-                        context: context,
-                        builder: (ctx) => ChangeNotifierProvider.value(
-                            value: _meetingStore,
-                            child: DeviceSettingsBottomSheet()),
-                      );
-                    },
-                    contentPadding: EdgeInsets.zero,
-                    leading: SvgPicture.asset(
-                      "assets/icons/settings.svg",
-                      fit: BoxFit.scaleDown,
-                      color: themeDefaultColor,
-                    ),
-                    title: Text(
-                      Platform.isAndroid ? "Device Settings" : "Audio Settings",
-                      semanticsLabel: "fl_device_settings",
-                      style: GoogleFonts.inter(
-                          fontSize: 14,
-                          color: themeDefaultColor,
-                          letterSpacing: 0.25,
-                          fontWeight: FontWeight.w600),
-                    ),
+                      ),
+                      InkWell(
+                        onTap: () async {
+                          Navigator.pop(context);
+                          showModalBottomSheet(
+                            isScrollControlled: true,
+                            backgroundColor: themeBottomSheetColor,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            context: context,
+                            builder: (ctx) => ChangeNotifierProvider.value(
+                                value: _meetingStore,
+                                child: AudioSettingsBottomSheet()),
+                          );
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: moreSettingsButtonColor,
+                              borderRadius: BorderRadius.circular(10)),
+                          height: 100,
+                          width: 150,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SvgPicture.asset(
+                                "assets/icons/settings.svg",
+                                color: themeDefaultColor,
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Text(
+                                "Audio Settings",
+                                semanticsLabel: "fl_audio_settings",
+                                style: GoogleFonts.inter(
+                                    fontSize: 14,
+                                    color: themeDefaultColor,
+                                    letterSpacing: 0.25,
+                                    fontWeight: FontWeight.w600),
+                              ),
+                            ],
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                  SizedBox(
+                    height: 10,
                   ),
                   ListTile(
                     horizontalTitleGap: 2,
