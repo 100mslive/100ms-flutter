@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_flutter_example/common/widgets/subtitle_text.dart';
@@ -22,12 +23,6 @@ class MessageContainer extends StatelessWidget {
     required this.date,
     required this.role,
   }) : super(key: key);
-
-  bool isLink(String message) {
-    final urlRegExp = new RegExp(
-        r"((https?:www\.)|(https?:\/\/)|(www\.))[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9]{1,6}(\/[-a-zA-Z0-9()@:%_\+.~#?&\/=]*)?");
-    return urlRegExp.hasMatch(message);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -153,26 +148,26 @@ class MessageContainer extends StatelessWidget {
                   SizedBox(
                     height: 8,
                   ),
-                  GestureDetector(
-                    onTap: isLink(message)
-                        ? (() async {
-                            Uri url = Uri.parse(message);
-                            if (await canLaunchUrl(url)) {
-                              launchUrl(url,
-                                  mode: LaunchMode.externalApplication);
-                            }
-                          })
-                        : () {},
-                    child: Text(
-                      message,
-                      style: GoogleFonts.inter(
-                          fontSize: 14.0,
-                          color: isLink(message)
-                              ? hmsdefaultColor
-                              : themeDefaultColor,
-                          letterSpacing: 0.25,
-                          fontWeight: FontWeight.w400),
-                    ),
+                  SelectableLinkify(
+                    text: message,
+                    onOpen: (link) async {
+                      Uri url = Uri.parse(link.url);
+                      if (await canLaunchUrl(url)) {
+                        await launchUrl(url,
+                            mode: LaunchMode.externalApplication);
+                      }
+                    },
+                    options: LinkifyOptions(humanize: false),
+                    style: GoogleFonts.inter(
+                        fontSize: 14.0,
+                        color: themeDefaultColor,
+                        letterSpacing: 0.25,
+                        fontWeight: FontWeight.w400),
+                    linkStyle: GoogleFonts.inter(
+                        fontSize: 14.0,
+                        color: hmsdefaultColor,
+                        letterSpacing: 0.25,
+                        fontWeight: FontWeight.w400),
                   ),
                 ],
               ),
