@@ -98,8 +98,8 @@ class MoreOption extends StatelessWidget {
                       unMute: unMutePermission,
                       removeOthers: removePeerPermission,
                       roles: changeRolePermission,
-                      simulcast: (!(peerTrackNode.track as HMSRemoteVideoTrack)
-                          .isMute),
+                      simulcast: (peerTrackNode.track != null &&
+                          !(peerTrackNode.track as HMSRemoteVideoTrack).isMute),
                       pinTile: peerTrackNode.pinTile,
                       changePinTileStatus: () {
                         _meetingStore.changePinTileStatus(peerTrackNode);

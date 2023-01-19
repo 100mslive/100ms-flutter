@@ -48,6 +48,26 @@ class _MeetingPageState extends State<MeetingPage> {
   void initState() {
     super.initState();
     checkAudioState();
+    _initForegroundTask();
+  }
+
+  void _initForegroundTask() {
+    FlutterForegroundTask.init(
+        androidNotificationOptions: AndroidNotificationOptions(
+            channelId: '100ms_flutter_notification',
+            channelName: '100ms Flutter Notification',
+            channelDescription:
+                'This notification appears when the foreground service is running.',
+            channelImportance: NotificationChannelImportance.LOW,
+            priority: NotificationPriority.LOW,
+            iconData: const NotificationIconData(
+              resType: ResourceType.mipmap,
+              resPrefix: ResourcePrefix.ic,
+              name: 'launcher',
+            )),
+        iosNotificationOptions:
+            const IOSNotificationOptions(showNotification: false),
+        foregroundTaskOptions: const ForegroundTaskOptions());
   }
 
   void checkAudioState() async {
@@ -143,35 +163,7 @@ class _MeetingPageState extends State<MeetingPage> {
           bool ans = await UtilityComponents.onBackPressed(context) ?? false;
           return ans;
         },
-        child: WillStartForegroundTask(
-          onWillStart: () async {
-            // Return whether to start the foreground service.
-            return true;
-          },
-          androidNotificationOptions: AndroidNotificationOptions(
-            channelId: '100ms_flutter_notification',
-            channelName: '100ms Flutter Notification',
-            channelDescription:
-                'This notification appears when the foreground service is running.',
-            channelImportance: NotificationChannelImportance.LOW,
-            priority: NotificationPriority.LOW,
-            iconData: NotificationIconData(
-              resType: ResourceType.mipmap,
-              resPrefix: ResourcePrefix.ic,
-              name: 'launcher',
-            ),
-          ),
-          iosNotificationOptions: const IOSNotificationOptions(
-            showNotification: false,
-            playSound: false,
-          ),
-          foregroundTaskOptions: const ForegroundTaskOptions(
-            interval: 5000,
-            autoRunOnBoot: false,
-            allowWifiLock: false,
-          ),
-          notificationTitle: '100ms foreground service running',
-          notificationText: 'Tap to return to the app',
+        child: WithForegroundTask(
           child: Selector<MeetingStore, Tuple2<bool, HMSException?>>(
               selector: (_, meetingStore) =>
                   Tuple2(meetingStore.isRoomEnded, meetingStore.hmsException),
