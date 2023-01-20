@@ -611,7 +611,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                         horizontalTitleGap: 2,
                         onTap: () async {
                           Navigator.pop(context);
-                          context.read<MeetingStore>().enterPipMode();
+                          context.read<MeetingStore>().enterPipModeOnAndroid();
                         },
                         contentPadding: EdgeInsets.zero,
                         leading: SvgPicture.asset(

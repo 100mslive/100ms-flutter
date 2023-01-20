@@ -38,5 +38,5 @@ class HMSErrorExtension {
 
         return ["error": dict]
     }
-    
+
 }

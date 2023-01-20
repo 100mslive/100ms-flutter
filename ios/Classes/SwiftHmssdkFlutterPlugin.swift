@@ -198,7 +198,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
         case "set_simulcast_layer", "get_layer", "get_layer_definition":
             HMSRemoteVideoTrackExtension.remoteVideoTrackActions(call, result, hmsSDK!)
-            
+
         case "setup_pip", "start_pip", "stop_pip", "is_pip_available", "is_pip_active", "change_track_pip", "change_text_pip", "destroy_pip":
             guard #available(iOS 15.0, *) else {
                 print(#function, HMSErrorExtension.getError("iOS 15 or above is required"))
@@ -539,7 +539,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                 result(HMSErrorExtension.toDictionary(error))
             } else {
                 if #available(iOS 15.0, *) {
-                    if(HMSPIPAction.pipController != nil){
+                    if HMSPIPAction.pipController != nil {
                         HMSPIPAction.disposePIP(nil)
                     }
                 }
@@ -906,10 +906,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                 "room": HMSRoomExtension.toDictionary(room)
             ]
         ] as [String: Any]
-        
-        
-        print(#function)
-        
+
         eventSink?(data)
     }
 
@@ -1037,7 +1034,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         ] as [String: Any]
 
         if #available(iOS 15.0, *) {
-            if(HMSPIPAction.pipController != nil) {
+            if HMSPIPAction.pipController != nil {
                 HMSPIPAction.disposePIP(nil)
             }
         }
@@ -1207,26 +1204,3 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         eventSink?(data)
     }
 }
-
-//extension UIWindow {
-//    /// Returns the currently visible view controller if any reachable within the window.
-//    public var visibleViewController: UIViewController? {
-//        return UIWindow.visibleViewController(from: rootViewController)
-//    }
-//
-//    public static func visibleViewController(from viewController: UIViewController?) -> UIViewController? {
-//        switch viewController {
-//        case let navigationController as UINavigationController:
-//            return UIWindow.visibleViewController(from: navigationController.visibleViewController ?? navigationController.topViewController)
-//
-//        case let tabBarController as UITabBarController:
-//            return UIWindow.visibleViewController(from: tabBarController.selectedViewController)
-//
-//        case let presentingViewController where viewController?.presentedViewController != nil:
-//            return UIWindow.visibleViewController(from: presentingViewController?.presentedViewController)
-//
-//        default:
-//            return viewController
-//        }
-//    }
-//}

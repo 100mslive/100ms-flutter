@@ -522,7 +522,7 @@ class MeetingStore extends ChangeNotifier
     if (Platform.isIOS && !(isHLSLink)) {
       HMSIOSPIPController.setup(true, aspectRatio: [9, 16]);
     }
-    
+
     FlutterForegroundTask.startService(
         notificationTitle: "100ms foreground service running",
         notificationText: "Tap to return to the app");
@@ -700,7 +700,7 @@ class MeetingStore extends ChangeNotifier
     // Below code for change track and text in PIP mode iOS.
     if (updateSpeakers.isNotEmpty && screenShareCount == 0) {
       if (updateSpeakers[0].peer.videoTrack != null) {
-        changeTrackPIP(
+        changePIPWindowTrackOnIOS(
             track: updateSpeakers[0].peer.videoTrack,
             alternativeText: updateSpeakers[0].peer.name,
             ratio: [9, 16]);
@@ -1100,7 +1100,7 @@ class MeetingStore extends ChangeNotifier
                     stats: RTCStats()));
             isScreenShareActive();
             notifyListeners();
-            changeTrackPIP(
+            changePIPWindowTrackOnIOS(
                 track: track,
                 ratio: [9, 16],
                 alternativeText: "${peer.name} Screen share");
@@ -1119,7 +1119,7 @@ class MeetingStore extends ChangeNotifier
             }
             isScreenShareActive();
             notifyListeners();
-            changeTrackPIP(
+            changePIPWindowTrackOnIOS(
                 track: peer.videoTrack,
                 alternativeText: peer.name,
                 ratio: [9, 16]);
@@ -1326,7 +1326,7 @@ class MeetingStore extends ChangeNotifier
     notifyListeners();
   }
 
-  void enterPipMode() async {
+  void enterPipModeOnAndroid() async {
     //to check whether pip is available in android
     if (Platform.isAndroid) {
       bool _isPipAvailable = await HMSAndroidPIPController.isAvailable();
@@ -1346,14 +1346,14 @@ class MeetingStore extends ChangeNotifier
     return isPipActive;
   }
 
-  void changeTrackPIP(
+  void changePIPWindowTrackOnIOS(
       {HMSVideoTrack? track,
       required String alternativeText,
       required List<int> ratio}) async {
     if (Platform.isIOS && track != null) {
       isPipActive = await isPIPActive();
       if (isPipActive) {
-        HMSIOSPIPController.changeTrack(
+        HMSIOSPIPController.changeVideoTrack(
             track: track,
             aspectRatio: ratio,
             alternativeText: alternativeText,
@@ -1362,7 +1362,8 @@ class MeetingStore extends ChangeNotifier
     }
   }
 
-  void changeTextPIP({String? text, required List<int> ratio}) async {
+  void changePIPWindowTextOnIOS(
+      {String? text, required List<int> ratio}) async {
     if (Platform.isIOS && text != null) {
       isPipActive = await isPIPActive();
       if (isPipActive) {
@@ -1371,7 +1372,7 @@ class MeetingStore extends ChangeNotifier
     }
   }
 
-  void destroyPIP() {
+  void destroyPIPSetupOnIOS() {
     if (Platform.isIOS) {
       HMSIOSPIPController.destroy();
     }

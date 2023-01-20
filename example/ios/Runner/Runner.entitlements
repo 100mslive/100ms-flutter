@@ -5,6 +5,7 @@
 	<key>com.apple.developer.associated-domains</key>
 	<array>
 		<string>applinks:*.100ms.live</string>
+		<string>applinks:flutterhms.page.link</string>
 	</array>
 	<key>com.apple.security.app-sandbox</key>
 	<true/>

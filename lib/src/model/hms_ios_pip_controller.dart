@@ -13,7 +13,9 @@ class HMSIOSPIPController {
   ///
   ///**aspectRatio** - Ratio for PIP window. For example: [16,9], [9,16] ,[1,1]
   ///
-  ///`Note: Use [changeTrackPIP] function to change track in PIP window. Default track is local peer video track if available.`
+  ///`Note: Use [changeVideoTrack] function to change track in PIP window. Default track is local peer video track if available.`
+  ///
+  ///setup PIP function can be called like - onJoin, or on click of a button, or when a Screenshare starts, etc
   ///
   ///Refer [PIP mode guide here](https://www.100ms.live/docs/flutter/v2/advanced-features/pip-mode)
   static Future<HMSException?> setup(bool? autoEnterPip,
@@ -60,7 +62,7 @@ class HMSIOSPIPController {
     }
   }
 
-  ///[changeTrack] is used to change the track of PIP window.
+  ///[changeVideoTrack] is used to change the track of PIP window.
   ///
   ///**Parameters**:
   ///
@@ -71,7 +73,7 @@ class HMSIOSPIPController {
   /// `Note: [setupPIP] is required to call before calling [changeTrackPIP].`
   ///
   /// Refer [PIP mode guide here](https://www.100ms.live/docs/flutter/v2/advanced-features/pip-mode)
-  static Future<HMSException?> changeTrack(
+  static Future<HMSException?> changeVideoTrack(
       {required HMSVideoTrack track,
       required List<int> aspectRatio,
       required String alternativeText,
@@ -107,7 +109,9 @@ class HMSIOSPIPController {
     return null;
   }
 
-  ///[changeTrack] is used to change the track of PIP window.
+  ///[changeText] is used to change the Text of PIP window.
+  ///
+  ///It will remove the video track & only show the Text label
   ///
   ///**Parameters**:
   ///
@@ -171,6 +175,8 @@ class HMSIOSPIPController {
   }
 
   ///Method to destroy PIP View.
+  ///
+  ///This method can be call at time of changing role to hls-viewer role.
   ///
   ///Refer [PIP mode guide here](https://www.100ms.live/docs/flutter/v2/advanced-features/pip-mode)
   static Future<bool> destroy() async {
