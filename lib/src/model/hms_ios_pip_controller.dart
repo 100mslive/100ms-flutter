@@ -20,23 +20,21 @@ class HMSIOSPIPController {
       {List<int>? aspectRatio,
       ScaleType scaleType = ScaleType.SCALE_ASPECT_FILL,
       Color backgroundColor = Colors.black}) async {
-    if (!_isPIPSetupDone) {
-      var result = await PlatformService.invokeMethod(PlatformMethod.setupPIP,
-          arguments: {
-            "auto_enter_pip": autoEnterPip ?? true,
-            "ratio": aspectRatio ?? [16, 9],
-            "scale_type": scaleType.value,
-            "color": [
-              backgroundColor.red,
-              backgroundColor.green,
-              backgroundColor.blue
-            ]
-          });
-      if (result != null) {
-        return HMSException.fromMap(result["error"]);
-      }
-      _isPIPSetupDone = true;
+    var result =
+        await PlatformService.invokeMethod(PlatformMethod.setupPIP, arguments: {
+      "auto_enter_pip": autoEnterPip ?? true,
+      "ratio": aspectRatio ?? [16, 9],
+      "scale_type": scaleType.value,
+      "color": [
+        backgroundColor.red,
+        backgroundColor.green,
+        backgroundColor.blue
+      ]
+    });
+    if (result != null) {
+      return HMSException.fromMap(result["error"]);
     }
+    _isPIPSetupDone = true;
     return null;
   }
 
