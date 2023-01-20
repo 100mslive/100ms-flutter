@@ -142,16 +142,8 @@ class HMSSDKInteractor {
         hmsActionResultListener: hmsActionResultListener);
   }
 
-  void stopCapturing() {
-    hmsSDK.stopCapturing();
-  }
-
   Future<HMSLocalPeer?> getLocalPeer() async {
     return await hmsSDK.getLocalPeer();
-  }
-
-  Future<bool> startCapturing() async {
-    return await hmsSDK.startCapturing();
   }
 
   Future<HMSPeer?> getPeer({required String peerId}) async {

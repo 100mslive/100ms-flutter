@@ -48,7 +48,7 @@ class HMSVideoAction {
             return
         }
 
-        track.startCapturing()
+        track.setMute(false)
 
         result(true)
     }
@@ -61,7 +61,7 @@ class HMSVideoAction {
             return
         }
 
-        track.stopCapturing()
+        track.setMute(true)
 
         result(true)
     }
