@@ -22,6 +22,7 @@ import kotlinx.coroutines.launch
 import live.hms.hmssdk_flutter.methods.HMSPipAction
 import live.hms.hmssdk_flutter.methods.HMSRemoteVideoTrackAction
 import live.hms.hmssdk_flutter.methods.HMSSessionMetadataAction
+import live.hms.hmssdk_flutter.views.HMSVideoView
 import live.hms.hmssdk_flutter.views.HMSVideoViewFactory
 import live.hms.video.audio.HMSAudioManager.*
 import live.hms.video.connection.stats.*
@@ -38,6 +39,7 @@ import live.hms.video.sdk.models.role.HMSRole
 import live.hms.video.sdk.models.trackchangerequest.HMSChangeTrackStateRequest
 import live.hms.video.utils.HMSLogger
 import live.hms.video.utils.HmsUtilities
+import java.lang.ref.WeakReference
 
 /** HmssdkFlutterPlugin */
 @SuppressLint("StaticFieldLeak")
@@ -60,7 +62,7 @@ class HmssdkFlutterPlugin :
     var hmssdk: HMSSDK? = null
     private lateinit var hmsVideoFactory: HMSVideoViewFactory
     private var requestChange: HMSRoleChangeRequest? = null
-
+    var hmsVideoViewInterfaceMap : MutableMap<String,HMSVideoViewTestClass> = mutableMapOf()
     companion object {
         var hmssdkFlutterPlugin: HmssdkFlutterPlugin? = null
     }
@@ -187,6 +189,9 @@ class HmssdkFlutterPlugin :
             }
             "set_simulcast_layer", "get_layer", "get_layer_definition" -> {
                 HMSRemoteVideoTrackAction.remoteVideoTrackActions(call, result, hmssdk!!)
+            }
+            "send_track_notif" -> {
+                sendTrackNotif(call)
             }
             else -> {
                 result.notImplemented()
@@ -435,6 +440,7 @@ class HmssdkFlutterPlugin :
     }
 
     private fun leave(result: Result) {
+        hmsVideoViewInterfaceMap.clear()
         hmssdk!!.leave(hmsActionResultListener = HMSCommonAction.getActionListener(result))
     }
 
@@ -1049,6 +1055,15 @@ class HmssdkFlutterPlugin :
         result.success(HMSTrackExtension.toDictionary(peer?.getTrackById(trackId!!)))
     }
 
+    private fun sendTrackNotif(call:MethodCall){
+        val trackId: String? = call.argument<String>("track_id")
+        if(trackId != null){
+            if(hmsVideoViewInterfaceMap.containsKey(trackId)){
+                hmsVideoViewInterfaceMap[trackId]?.printTrackId()
+            }
+        }
+    }
+
     private fun setPlaybackAllowedForTrack(call: MethodCall, result: Result) {
         val trackId = call.argument<String>("track_id")
         val isPlaybackAllowed: Boolean = call.argument<String>("is_playback_allowed") as Boolean
@@ -1297,3 +1312,4 @@ class HmssdkFlutterPlugin :
         }
     }
 }
+

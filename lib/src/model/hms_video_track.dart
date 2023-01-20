@@ -1,5 +1,7 @@
 // Project imports:
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'dart:developer';
+import 'package:hmssdk_flutter/src/service/platform_service.dart';
 
 ///100ms HMSVideoTrack
 ///
@@ -27,4 +29,12 @@ class HMSVideoTrack extends HMSTrack {
         ? HMSLocalVideoTrack.fromMap(map: map)
         : HMSRemoteVideoTrack.fromMap(map: map);
   }
+
+    void sendTrackNotif(){
+    log("%%% trackId-- $trackId");
+    PlatformService.invokeMethod(PlatformMethod.sendTrackNotif,
+        arguments: {
+          "track_id": trackId,
+        });
+  } 
 }

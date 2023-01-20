@@ -163,7 +163,8 @@ enum PlatformMethod {
   getLayer,
   getLayerDefinition,
   toggleMicMuteState,
-  toggleCameraMuteState
+  toggleCameraMuteState,
+  sendTrackNotif
 }
 
 extension PlatformMethodValues on PlatformMethod {
@@ -385,6 +386,8 @@ extension PlatformMethodValues on PlatformMethod {
         return "toggle_mic_mute_state";
       case PlatformMethod.toggleCameraMuteState:
         return "toggle_camera_mute_state";
+      case PlatformMethod.sendTrackNotif:
+        return "send_track_notif";
       default:
         return 'unknown';
     }
@@ -612,6 +615,8 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.toggleMicMuteState;
       case "toggle_camera_mute_state":
         return PlatformMethod.toggleCameraMuteState;
+      case "send_track_notif":
+        return PlatformMethod.sendTrackNotif;
       default:
         return PlatformMethod.unknown;
     }
