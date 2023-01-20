@@ -923,7 +923,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             ]
         ] as [String: Any]
 
-            previewSink?(data)
+        previewSink?(data)
         eventSink?(data)
     }
 
