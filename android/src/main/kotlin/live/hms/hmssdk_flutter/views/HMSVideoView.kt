@@ -6,6 +6,7 @@ import android.util.Base64
 import android.util.Log
 import android.view.LayoutInflater
 import android.widget.FrameLayout
+import io.flutter.plugin.common.MethodChannel
 import live.hms.hmssdk_flutter.HMSVideoViewTestClass
 import live.hms.hmssdk_flutter.HmssdkFlutterPlugin
 import live.hms.hmssdk_flutter.R
@@ -28,8 +29,12 @@ class HMSVideoView(
     init {
         if(HmssdkFlutterPlugin.hmssdkFlutterPlugin != null){
             Log.i("%%% trackId--",track?.trackId?:"")
-            HmssdkFlutterPlugin.hmssdkFlutterPlugin!!.hmsVideoViewInterfaceMap[track!!.trackId] = HMSVideoViewTestClass(track.trackId,::captureBitmap)
-            Log.i("%%% trackId--"," Added ${track.trackId}")
+            if(HmssdkFlutterPlugin.hmssdkFlutterPlugin != null){
+                HmssdkFlutterPlugin.hmssdkFlutterPlugin!!.hmsVideoViewInterfaceMap?.set(track!!.trackId,
+                    HMSVideoViewTestClass(track.trackId,::captureBitmap)
+                )
+            }
+            Log.i("%%% trackId--"," Added ${track?.trackId}")
         }
         val inflater =
             getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
@@ -43,7 +48,7 @@ class HMSVideoView(
         }
     }
 
-    private fun captureBitmap():String?{
+    private fun captureBitmap(result: MethodChannel.Result){
         var byteArray : ByteArray? = null
         hmsVideoView.captureBitmap({bitmap ->
             if(bitmap != null){
@@ -52,14 +57,17 @@ class HMSVideoView(
                 byteArray = stream.toByteArray()
                 bitmap.recycle()
                 Log.i("bitmap received",byteArray.toString())
-        } })
-        return Base64.encodeToString(byteArray,Base64.DEFAULT)
+                result.success(Base64.encodeToString(byteArray,Base64.DEFAULT))
+            }
+        })
     }
 
     fun onDisposeCalled() {
         super.onDetachedFromWindow()
         Log.i("%%% trackId","removed ${track?.trackId}")
-        HmssdkFlutterPlugin.hmssdkFlutterPlugin!!.hmsVideoViewInterfaceMap.remove(track?.trackId)
+        if(HmssdkFlutterPlugin.hmssdkFlutterPlugin != null) {
+            HmssdkFlutterPlugin.hmssdkFlutterPlugin!!.hmsVideoViewInterfaceMap?.remove(track?.trackId)
+        }
         hmsVideoView.removeTrack()
     }
 

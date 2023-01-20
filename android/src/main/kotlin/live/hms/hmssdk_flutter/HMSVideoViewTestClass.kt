@@ -1,11 +1,10 @@
 package live.hms.hmssdk_flutter
 
-import android.util.Base64
-import android.util.Log
+import io.flutter.plugin.common.MethodChannel.Result
 
-class HMSVideoViewTestClass(override var trackId: String,val onCapture: () -> String?) : HMSVideoViewInterface{
+class HMSVideoViewTestClass(override var trackId: String,val onCapture: (result:Result) -> Unit) : HMSVideoViewInterface{
 
-    override fun captureBitmap():String? {
-        return onCapture()
+    override fun captureBitmap(result: Result):Unit{
+        onCapture(result)
     }
 }

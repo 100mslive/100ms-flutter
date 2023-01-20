@@ -1,13 +1,17 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/app_dialogs/change_role_option_dialog.dart';
 import 'package:hmssdk_flutter_example/common/app_dialogs/change_simulcast_layer_option_dialog.dart';
 import 'package:hmssdk_flutter_example/common/app_dialogs/local_peer_tile_dialog.dart';
 import 'package:hmssdk_flutter_example/common/app_dialogs/remote_peer_tile_dialog.dart';
+import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:hmssdk_flutter_example/model/peer_track_node.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:provider/provider.dart';
 
 class MoreOption extends StatelessWidget {
@@ -32,7 +36,6 @@ class MoreOption extends StatelessWidget {
       child: GestureDetector(
         onTap: () {
           var peerTrackNode = context.read<PeerTrackNode>();
-          HMSPeer peerNode = peerTrackNode.peer;
           if (peerTrackNode.peer.peerId != _meetingStore.localPeer!.peerId)
             showDialog(
                 context: context,
@@ -41,7 +44,7 @@ class MoreOption extends StatelessWidget {
                       isVideoMuted: peerTrackNode.track == null
                           ? true
                           : peerTrackNode.track!.isMute,
-                      peerName: peerNode.name,
+                      peerName: peerTrackNode.peer.name,
                       changeVideoTrack: (mute, isVideoTrack) {
                         Navigator.pop(context);
                         _meetingStore.changeTrackState(
@@ -55,7 +58,7 @@ class MoreOption extends StatelessWidget {
                       removePeer: () async {
                         Navigator.pop(context);
                         var peer = await _meetingStore.getPeer(
-                            peerId: peerNode.peerId);
+                            peerId: peerTrackNode.peer.peerId);
                         _meetingStore.removePeerFromRoom(peer!);
                       },
                       changeRole: () {
@@ -63,12 +66,12 @@ class MoreOption extends StatelessWidget {
                         showDialog(
                             context: context,
                             builder: (_) => ChangeRoleOptionDialog(
-                                  peerName: peerNode.name,
+                                  peerName: peerTrackNode.peer.name,
                                   roles: _meetingStore.roles,
-                                  peer: peerNode,
+                                  peer: peerTrackNode.peer,
                                   changeRole: (role, forceChange) {
                                     _meetingStore.changeRoleOfPeer(
-                                        peer: peerNode,
+                                        peer: peerTrackNode.peer,
                                         roleName: role,
                                         forceChange: forceChange);
                                   },
@@ -94,6 +97,114 @@ class MoreOption extends StatelessWidget {
                               "Simulcast not enabled for the role");
                         }
                       },
+                      captureSnapshot: () async {
+                        Uint8List? bytes = await context
+                            .read<PeerTrackNode>()
+                            .track
+                            ?.captureSnapshot();
+                        if (bytes != null) {
+                          Navigator.pop(context);
+                          showDialog(
+                              context: context,
+                              builder: (_) {
+                                return AlertDialog(
+                                  title: Text(
+                                      context.read<PeerTrackNode>().peer.name +
+                                          "'s Snapshot"),
+                                  content: Image.memory(bytes),
+                                  actions: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        ElevatedButton(
+                                            style: ButtonStyle(
+                                                shadowColor:
+                                                    MaterialStateProperty.all(
+                                                        themeSurfaceColor),
+                                                backgroundColor:
+                                                    MaterialStateProperty.all(
+                                                        themeBottomSheetColor),
+                                                shape: MaterialStateProperty.all<
+                                                        RoundedRectangleBorder>(
+                                                    RoundedRectangleBorder(
+                                                  side: BorderSide(
+                                                      width: 1,
+                                                      color: Color.fromRGBO(
+                                                          107, 125, 153, 1)),
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          8.0),
+                                                ))),
+                                            onPressed: () =>
+                                                Navigator.pop(context),
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: 12,
+                                                      horizontal: 10),
+                                              child: Text('Cancel',
+                                                  style: GoogleFonts.inter(
+                                                      color: themeDefaultColor,
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                      letterSpacing: 0.50)),
+                                            )),
+                                        ElevatedButton(
+                                          style: ButtonStyle(
+                                              shadowColor:
+                                                  MaterialStateProperty.all(
+                                                      themeSurfaceColor),
+                                              backgroundColor:
+                                                  MaterialStateProperty.all(
+                                                      hmsdefaultColor),
+                                              shape: MaterialStateProperty.all<
+                                                      RoundedRectangleBorder>(
+                                                  RoundedRectangleBorder(
+                                                side: BorderSide(
+                                                    width: 1,
+                                                    color: hmsdefaultColor),
+                                                borderRadius:
+                                                    BorderRadius.circular(8.0),
+                                              ))),
+                                          onPressed: () async {
+                                            Map result = await ImageGallerySaver
+                                                .saveImage(bytes,
+                                                    quality: 100,
+                                                    name: peerTrackNode
+                                                            .peer.name +
+                                                        DateTime.now()
+                                                            .toIso8601String());
+                                            if (result
+                                                    .containsKey("isSuccess") &&
+                                                result["isSuccess"]) {
+                                              Utilities.showToast(
+                                                  "Snapshot save to Gallery");
+                                            }
+                                            Navigator.pop(context);
+                                          },
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 12, horizontal: 10),
+                                            child: Text(
+                                              'Save',
+                                              style: GoogleFonts.inter(
+                                                  color: themeDefaultColor,
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w600,
+                                                  letterSpacing: 0.50),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                  ],
+                                );
+                              });
+                        }
+                      },
+                      isCaptureSnapshot: !(peerTrackNode.track?.isMute ?? true),
                       mute: mutePermission,
                       unMute: unMutePermission,
                       removeOthers: removePeerPermission,
@@ -110,35 +221,145 @@ class MoreOption extends StatelessWidget {
             showDialog(
                 context: context,
                 builder: (_) => LocalPeerTileDialog(
-                    isAudioMode: false,
-                    toggleCamera: () {
-                      if (_meetingStore.isVideoOn) _meetingStore.switchCamera();
-                    },
-                    peerName: peerNode.name,
-                    changeRole: () {
-                      Navigator.pop(context);
-                      showDialog(
-                          context: context,
-                          builder: (_) => ChangeRoleOptionDialog(
-                                peerName: peerNode.name,
-                                roles: _meetingStore.roles,
-                                peer: peerNode,
-                                changeRole: (role, forceChange) {
-                                  _meetingStore.changeRoleOfPeer(
-                                      peer: peerNode,
-                                      roleName: role,
-                                      forceChange: forceChange);
-                                },
-                              ));
-                    },
-                    roles: changeRolePermission,
-                    changeName: () async {
-                      String name = await UtilityComponents.showInputDialog(
-                          context: context, placeholder: "Enter Name");
-                      if (name.isNotEmpty) {
-                        _meetingStore.changeName(name: name);
-                      }
-                    }));
+                      isAudioMode: false,
+                      toggleCamera: () {
+                        if (_meetingStore.isVideoOn)
+                          _meetingStore.switchCamera();
+                      },
+                      peerName: peerTrackNode.peer.name,
+                      changeRole: () {
+                        Navigator.pop(context);
+                        showDialog(
+                            context: context,
+                            builder: (_) => ChangeRoleOptionDialog(
+                                  peerName: peerTrackNode.peer.name,
+                                  roles: _meetingStore.roles,
+                                  peer: peerTrackNode.peer,
+                                  changeRole: (role, forceChange) {
+                                    _meetingStore.changeRoleOfPeer(
+                                        peer: peerTrackNode.peer,
+                                        roleName: role,
+                                        forceChange: forceChange);
+                                  },
+                                ));
+                      },
+                      roles: changeRolePermission,
+                      changeName: () async {
+                        String name = await UtilityComponents.showInputDialog(
+                            context: context, placeholder: "Enter Name");
+                        if (name.isNotEmpty) {
+                          _meetingStore.changeName(name: name);
+                        }
+                      },
+                      isCaptureSnapshot: !(peerTrackNode.track?.isMute ?? true),
+                      captureSnapshot: () async {
+                        Uint8List? bytes = await context
+                            .read<PeerTrackNode>()
+                            .track
+                            ?.captureSnapshot();
+                        if (bytes != null) {
+                          Navigator.pop(context);
+                          showDialog(
+                              context: context,
+                              builder: (_) {
+                                return AlertDialog(
+                                  title: Text(
+                                      context.read<PeerTrackNode>().peer.name +
+                                          "'s  Snapshot"),
+                                  content: Image.memory(bytes),
+                                  actions: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        ElevatedButton(
+                                            style: ButtonStyle(
+                                                shadowColor:
+                                                    MaterialStateProperty.all(
+                                                        themeSurfaceColor),
+                                                backgroundColor:
+                                                    MaterialStateProperty.all(
+                                                        themeBottomSheetColor),
+                                                shape: MaterialStateProperty.all<
+                                                        RoundedRectangleBorder>(
+                                                    RoundedRectangleBorder(
+                                                  side: BorderSide(
+                                                      width: 1,
+                                                      color: Color.fromRGBO(
+                                                          107, 125, 153, 1)),
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          8.0),
+                                                ))),
+                                            onPressed: () =>
+                                                Navigator.pop(context),
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: 12,
+                                                      horizontal: 10),
+                                              child: Text('Cancel',
+                                                  style: GoogleFonts.inter(
+                                                      color: themeDefaultColor,
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                      letterSpacing: 0.50)),
+                                            )),
+                                        ElevatedButton(
+                                          style: ButtonStyle(
+                                              shadowColor:
+                                                  MaterialStateProperty.all(
+                                                      themeSurfaceColor),
+                                              backgroundColor:
+                                                  MaterialStateProperty.all(
+                                                      hmsdefaultColor),
+                                              shape: MaterialStateProperty.all<
+                                                      RoundedRectangleBorder>(
+                                                  RoundedRectangleBorder(
+                                                side: BorderSide(
+                                                    width: 1,
+                                                    color: hmsdefaultColor),
+                                                borderRadius:
+                                                    BorderRadius.circular(8.0),
+                                              ))),
+                                          onPressed: () async {
+                                            Map result = await ImageGallerySaver
+                                                .saveImage(bytes,
+                                                    quality: 100,
+                                                    name: peerTrackNode
+                                                            .peer.name +
+                                                        DateTime.now()
+                                                            .toIso8601String());
+                                            if (result
+                                                    .containsKey("isSuccess") &&
+                                                result["isSuccess"]) {
+                                              Utilities.showToast(
+                                                  "Snapshot save to Gallery");
+                                            }
+                                            Navigator.pop(context);
+                                          },
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 12, horizontal: 10),
+                                            child: Text(
+                                              'Save',
+                                              style: GoogleFonts.inter(
+                                                  color: themeDefaultColor,
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w600,
+                                                  letterSpacing: 0.50),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                  ],
+                                );
+                              });
+                        }
+                      },
+                    ));
         },
         child: Semantics(
           label: "fl_${context.read<PeerTrackNode>().peer.name}more_option",

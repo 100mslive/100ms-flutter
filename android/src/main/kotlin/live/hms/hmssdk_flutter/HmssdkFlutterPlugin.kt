@@ -60,7 +60,7 @@ class HmssdkFlutterPlugin :
     var hmssdk: HMSSDK? = null
     private lateinit var hmsVideoFactory: HMSVideoViewFactory
     private var requestChange: HMSRoleChangeRequest? = null
-    var hmsVideoViewInterfaceMap : MutableMap<String,HMSVideoViewTestClass> = mutableMapOf()
+    var hmsVideoViewInterfaceMap : MutableMap<String,HMSVideoViewTestClass>? = null
     companion object {
         var hmssdkFlutterPlugin: HmssdkFlutterPlugin? = null
     }
@@ -438,11 +438,12 @@ class HmssdkFlutterPlugin :
     }
 
     private fun leave(result: Result) {
-        hmsVideoViewInterfaceMap.clear()
+        hmsVideoViewInterfaceMap?.clear()
         hmssdk!!.leave(hmsActionResultListener = HMSCommonAction.getActionListener(result))
     }
 
     private fun destroy(result: Result) {
+        hmsVideoViewInterfaceMap?.clear()
         hmssdk = null
     }
 
@@ -728,7 +729,6 @@ class HmssdkFlutterPlugin :
         }
 
         override fun onJoin(room: HMSRoom) {
-//            hasJoined = true
             hmssdk!!.addAudioObserver(hmsAudioListener)
             previewChannel?.setStreamHandler(null) ?: Log.e("Channel Error", "Preview channel not found")
             val args = HashMap<String, Any?>()
@@ -738,6 +738,7 @@ class HmssdkFlutterPlugin :
             roomArgs.put("room", HMSRoomExtension.toDictionary(room))
             args.put("data", roomArgs)
             if (roomArgs["room"] != null) {
+                hmsVideoViewInterfaceMap = mutableMapOf()
                 CoroutineScope(Dispatchers.Main).launch {
                     eventSink?.success(args)
                 }
@@ -1055,14 +1056,12 @@ class HmssdkFlutterPlugin :
 
     private fun captureSnapshot(call:MethodCall, result: Result){
         val trackId: String? = call.argument<String>("track_id")
-        var imageBase64String : String? = null
         if(trackId != null){
-            if(hmsVideoViewInterfaceMap.containsKey(trackId)){
-                imageBase64String= hmsVideoViewInterfaceMap[trackId]?.captureBitmap()
+            if(hmsVideoViewInterfaceMap != null){
+                if(hmsVideoViewInterfaceMap!!.containsKey(trackId)){
+                   hmsVideoViewInterfaceMap!![trackId]?.captureBitmap(result)
+                }
             }
-        }
-        CoroutineScope(Dispatchers.Main).launch {
-            eventSink?.success(imageBase64String)
         }
     }
 
