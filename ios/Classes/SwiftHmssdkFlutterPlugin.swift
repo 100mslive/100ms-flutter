@@ -179,7 +179,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
             // MARK: - Screen Share
 
-        case "start_screen_share", "stop_screen_share", "is_screen_share_active":
+        case "start_screen_share", "stop_screen_share", "is_screen_share_active", "start_app_screen_share", "stop_app_screen_share":
             screenShareActions(call, result)
 
         case "get_track_settings":
@@ -395,6 +395,25 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
         case "is_screen_share_active":
             result(isScreenShareOn)
+            
+        case "start_app_screen_share":
+            hmsSDK?.startAppScreenCapture { error in
+                if let error = error {
+                    result(HMSErrorExtension.toDictionary(error))
+                    return
+                }
+            }
+            result(nil)
+            
+        case "stop_app_screen_share":
+            hmsSDK?.stopAppScreenCapture { error in
+                if let error = error {
+                    result(HMSErrorExtension.toDictionary(error))
+                    return
+                }
+            }
+            result(nil)
+            
         default:
             result(FlutterMethodNotImplemented)
         }

@@ -364,4 +364,12 @@ class HMSSDKInteractor {
         ofRoles: ofRoles,
         hmsActionResultListener: hmsActionResultListener);
   }
+
+  Future<HMSException?> startAppScreenShare() async {
+    return await hmsSDK.startAppScreenShare();
+  }
+
+  Future<HMSException?> stopAppScreenShare() async {
+    return await hmsSDK.stopAppScreenShare();
+  }
 }

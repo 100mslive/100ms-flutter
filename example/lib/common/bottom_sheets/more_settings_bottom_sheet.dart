@@ -652,6 +652,42 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                             letterSpacing: 0.25,
                             fontWeight: FontWeight.w600),
                       )),
+                  if (Platform.isIOS)
+                    ListTile(
+                        horizontalTitleGap: 2,
+                        onTap: () async {
+                          Navigator.pop(context);
+                          if (context
+                              .read<MeetingStore>()
+                              .isAppScreenShareStarted) {
+                            context.read<MeetingStore>().stopAppScreenShare();
+                          } else {
+                            context.read<MeetingStore>().startAppScreenShare();
+                          }
+                        },
+                        contentPadding: EdgeInsets.zero,
+                        leading: SvgPicture.asset(
+                          "assets/icons/screen_share.svg",
+                          fit: BoxFit.scaleDown,
+                          color: context
+                                  .read<MeetingStore>()
+                                  .isAppScreenShareStarted
+                              ? errorColor
+                              : themeDefaultColor,
+                        ),
+                        title: Text(
+                          "App Screen Share",
+                          semanticsLabel: "fl_app_screen_share",
+                          style: GoogleFonts.inter(
+                              fontSize: 14,
+                              color: context
+                                      .read<MeetingStore>()
+                                      .isAppScreenShareStarted
+                                  ? errorColor
+                                  : themeDefaultColor,
+                              letterSpacing: 0.25,
+                              fontWeight: FontWeight.w600),
+                        )),
                   ListTile(
                       horizontalTitleGap: 2,
                       onTap: () async {

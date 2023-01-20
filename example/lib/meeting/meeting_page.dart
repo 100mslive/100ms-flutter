@@ -1081,6 +1081,11 @@ class _MeetingPageState extends State<MeetingPage> {
                                                                             listen:
                                                                                 false);
                                                                     if (meetingStore
+                                                                        .isAppScreenShareStarted) {
+                                                                      meetingStore
+                                                                          .stopAppScreenShare();
+                                                                    }
+                                                                    if (meetingStore
                                                                         .isScreenShareOn) {
                                                                       meetingStore
                                                                           .stopScreenShare();

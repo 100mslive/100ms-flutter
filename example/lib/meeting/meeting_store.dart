@@ -74,6 +74,8 @@ class MeetingStore extends ChangeNotifier
 
   bool isRoomEnded = false;
 
+  bool isAppScreenShareStarted = false;
+
   Map<String, bool> recordingType = {
     "browser": false,
     "server": false,
@@ -1360,6 +1362,26 @@ class MeetingStore extends ChangeNotifier
       peerTracks.add(peerTrackNode);
     }
     notifyListeners();
+  }
+
+  void startAppScreenShare() async {
+    HMSException? exception = await _hmsSDKInteractor.startAppScreenShare();
+    if (exception == null) {
+      isAppScreenShareStarted = true;
+      notifyListeners();
+    } else {
+      print(exception.description);
+    }
+  }
+
+  void stopAppScreenShare() async {
+    HMSException? exception = await _hmsSDKInteractor.stopAppScreenShare();
+    if (exception == null) {
+      isAppScreenShareStarted = false;
+      notifyListeners();
+    } else {
+      print(exception.description);
+    }
   }
 
 //Get onSuccess or onException callbacks for HMSActionResultListenerMethod

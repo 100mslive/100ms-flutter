@@ -1286,6 +1286,28 @@ class HMSSDK {
     PlatformService.removeRTCStatsListener(listener);
   }
 
+  /// Start sharing in-app screen content (use this to capture the content inside your own app only)
+  Future<HMSException?> startAppScreenShare() async {
+    var result =
+        await PlatformService.invokeMethod(PlatformMethod.startAppScreenShare);
+    if (result != null) {
+      return HMSException.fromMap(result["error"]);
+    } else {
+      return null;
+    }
+  }
+
+  /// Stop sharing in-app screen content
+  Future<HMSException?> stopAppScreenShare() async {
+    var result =
+        await PlatformService.invokeMethod(PlatformMethod.stopAppScreenShare);
+    if (result != null) {
+      return HMSException.fromMap(result["error"]);
+    } else {
+      return null;
+    }
+  }
+
   /// To modify local peer's audio & video tracks settings use the [hmsTrackSetting]. Only required for advanced use cases.
   HMSTrackSetting? hmsTrackSetting;
 

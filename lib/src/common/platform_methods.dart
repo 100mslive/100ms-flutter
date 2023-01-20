@@ -157,7 +157,9 @@ enum PlatformMethod {
   getLayer,
   getLayerDefinition,
   toggleMicMuteState,
-  toggleCameraMuteState
+  toggleCameraMuteState,
+  startAppScreenShare,
+  stopAppScreenShare
 }
 
 extension PlatformMethodValues on PlatformMethod {
@@ -373,6 +375,10 @@ extension PlatformMethodValues on PlatformMethod {
         return "toggle_mic_mute_state";
       case PlatformMethod.toggleCameraMuteState:
         return "toggle_camera_mute_state";
+      case PlatformMethod.startAppScreenShare:
+        return "start_app_screen_share";
+      case PlatformMethod.stopAppScreenShare:
+        return "stop_app_screen_share";
       default:
         return 'unknown';
     }
@@ -594,6 +600,10 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.toggleMicMuteState;
       case "toggle_camera_mute_state":
         return PlatformMethod.toggleCameraMuteState;
+      case "start_app_screen_share":
+        return PlatformMethod.startAppScreenShare;
+      case "stop_app_screen_share":
+        return PlatformMethod.stopAppScreenShare;
       default:
         return PlatformMethod.unknown;
     }

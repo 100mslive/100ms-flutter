@@ -60,7 +60,15 @@ Widget fullScreenMode(
                             buttonBackgroundColor: errorColor,
                             width: MediaQuery.of(context).size.width * 0.6,
                             onPressed: () {
-                              context.read<MeetingStore>().stopScreenShare();
+                              if (context
+                                  .read<MeetingStore>()
+                                  .isAppScreenShareStarted) {
+                                context
+                                    .read<MeetingStore>()
+                                    .stopAppScreenShare();
+                              } else {
+                                context.read<MeetingStore>().stopScreenShare();
+                              }
                             },
                             childWidget: Row(
                               children: [
