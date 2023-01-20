@@ -14,12 +14,14 @@ class RemotePeerTileDialog extends StatefulWidget {
   final bool roles;
   final bool simulcast;
   final bool pinTile;
+  final bool? isCaptureSnapshot;
   final Function(bool, bool) changeVideoTrack;
   final Function(bool, bool) changeAudioTrack;
   final Function() removePeer;
   final Function() changeRole;
   final Function() changeLayer;
   final Function() changePinTileStatus;
+  final Function()? captureSnapshot;
   const RemotePeerTileDialog(
       {required this.isVideoMuted,
       required this.isAudioMuted,
@@ -35,7 +37,9 @@ class RemotePeerTileDialog extends StatefulWidget {
       required this.simulcast,
       required this.changeLayer,
       required this.pinTile,
-      required this.changePinTileStatus});
+      required this.changePinTileStatus,
+      this.isCaptureSnapshot,
+      this.captureSnapshot});
 
   @override
   _RemotePeerTileDialogState createState() => _RemotePeerTileDialogState();
@@ -189,6 +193,27 @@ class _RemotePeerTileDialogState extends State<RemotePeerTileDialog> {
                       ),
                       Text(
                         "Streaming Quality",
+                        style: GoogleFonts.inter(color: iconColor),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            if (widget.isCaptureSnapshot != null && widget.isCaptureSnapshot!)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 20.0),
+                child: GestureDetector(
+                  onTap: () {
+                    widget.captureSnapshot!();
+                  },
+                  child: Row(
+                    children: [
+                      Icon(Icons.camera_alt),
+                      SizedBox(
+                        width: 16,
+                      ),
+                      Text(
+                        "Capture Snapshot",
                         style: GoogleFonts.inter(color: iconColor),
                       )
                     ],

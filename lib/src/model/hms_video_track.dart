@@ -1,5 +1,8 @@
 // Project imports:
+import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:hmssdk_flutter/src/service/platform_service.dart';
 
 ///100ms HMSVideoTrack
 ///
@@ -26,5 +29,15 @@ class HMSVideoTrack extends HMSTrack {
     return isLocal
         ? HMSLocalVideoTrack.fromMap(map: map)
         : HMSRemoteVideoTrack.fromMap(map: map);
+  }
+
+  Future<Uint8List?> captureSnapshot() async {
+    var result = await PlatformService.invokeMethod(
+        PlatformMethod.captureSnapshot,
+        arguments: {"track_id": trackId});
+    if (result != null) {
+      return base64.decode(result);
+    }
+    return null;
   }
 }
