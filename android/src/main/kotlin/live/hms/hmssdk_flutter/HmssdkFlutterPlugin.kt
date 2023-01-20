@@ -22,7 +22,6 @@ import kotlinx.coroutines.launch
 import live.hms.hmssdk_flutter.methods.HMSPipAction
 import live.hms.hmssdk_flutter.methods.HMSRemoteVideoTrackAction
 import live.hms.hmssdk_flutter.methods.HMSSessionMetadataAction
-import live.hms.hmssdk_flutter.views.HMSVideoView
 import live.hms.hmssdk_flutter.views.HMSVideoViewFactory
 import live.hms.video.audio.HMSAudioManager.*
 import live.hms.video.connection.stats.*
@@ -39,7 +38,6 @@ import live.hms.video.sdk.models.role.HMSRole
 import live.hms.video.sdk.models.trackchangerequest.HMSChangeTrackStateRequest
 import live.hms.video.utils.HMSLogger
 import live.hms.video.utils.HmsUtilities
-import java.lang.ref.WeakReference
 
 /** HmssdkFlutterPlugin */
 @SuppressLint("StaticFieldLeak")
@@ -190,8 +188,8 @@ class HmssdkFlutterPlugin :
             "set_simulcast_layer", "get_layer", "get_layer_definition" -> {
                 HMSRemoteVideoTrackAction.remoteVideoTrackActions(call, result, hmssdk!!)
             }
-            "send_track_notif" -> {
-                sendTrackNotif(call)
+            "capture_snapshot" -> {
+                captureSnapshot(call,result)
             }
             else -> {
                 result.notImplemented()
@@ -1055,12 +1053,16 @@ class HmssdkFlutterPlugin :
         result.success(HMSTrackExtension.toDictionary(peer?.getTrackById(trackId!!)))
     }
 
-    private fun sendTrackNotif(call:MethodCall){
+    private fun captureSnapshot(call:MethodCall, result: Result){
         val trackId: String? = call.argument<String>("track_id")
+        var imageBase64String : String? = null
         if(trackId != null){
             if(hmsVideoViewInterfaceMap.containsKey(trackId)){
-                hmsVideoViewInterfaceMap[trackId]?.printTrackId()
+                imageBase64String= hmsVideoViewInterfaceMap[trackId]?.captureBitmap()
             }
+        }
+        CoroutineScope(Dispatchers.Main).launch {
+            eventSink?.success(imageBase64String)
         }
     }
 
