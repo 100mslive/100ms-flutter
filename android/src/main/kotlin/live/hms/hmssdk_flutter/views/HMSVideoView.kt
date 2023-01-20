@@ -1,13 +1,14 @@
 package live.hms.hmssdk_flutter.views
 
+import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.graphics.Bitmap
 import android.util.Base64
 import android.util.Log
 import android.view.LayoutInflater
 import android.widget.FrameLayout
-import io.flutter.plugin.common.MethodChannel
-import live.hms.hmssdk_flutter.HMSVideoViewTestClass
 import live.hms.hmssdk_flutter.HmssdkFlutterPlugin
 import live.hms.hmssdk_flutter.R
 import live.hms.video.media.tracks.HMSVideoTrack
@@ -25,17 +26,21 @@ class HMSVideoView(
 ) : FrameLayout(context, null){
 
     private val hmsVideoView: HMSVideoView
-    private var toggle = 1
-    init {
-        if(HmssdkFlutterPlugin.hmssdkFlutterPlugin != null){
-            Log.i("%%% trackId--",track?.trackId?:"")
-            if(HmssdkFlutterPlugin.hmssdkFlutterPlugin != null){
-                HmssdkFlutterPlugin.hmssdkFlutterPlugin!!.hmsVideoViewInterfaceMap?.set(track!!.trackId,
-                    HMSVideoViewTestClass(track.trackId,::captureBitmap)
-                )
+    private val broadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(contxt: Context?, intent: Intent?) {
+            if(intent?.action == track?.trackId){
+                when(intent?.extras?.getString("method_name")){
+                    "CAPTURE_SNAPSHOT" -> {
+                        return captureSnapshot()
+                    }
+                }
             }
-            Log.i("%%% trackId--"," Added ${track?.trackId}")
+            else{
+                Log.i("Receiver error","No receiver found for given action")
+            }
         }
+    }
+    init {
         val inflater =
             getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val view = inflater.inflate(R.layout.hms_video_view, this)
@@ -48,33 +53,41 @@ class HMSVideoView(
         }
     }
 
-    private fun captureBitmap(result: MethodChannel.Result){
-        var byteArray : ByteArray? = null
+    private fun captureSnapshot(){
+        var byteArray : ByteArray?
         hmsVideoView.captureBitmap({bitmap ->
             if(bitmap != null){
                 val stream = ByteArrayOutputStream()
                 bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
                 byteArray = stream.toByteArray()
                 bitmap.recycle()
-                Log.i("bitmap received",byteArray.toString())
-                result.success(Base64.encodeToString(byteArray,Base64.DEFAULT))
+                val data = Base64.encodeToString(byteArray,Base64.DEFAULT)
+                if(HmssdkFlutterPlugin.hmssdkFlutterPlugin != null){
+                    if(HmssdkFlutterPlugin.hmssdkFlutterPlugin?.hmsVideoViewResult != null){
+                        HmssdkFlutterPlugin.hmssdkFlutterPlugin?.hmsVideoViewResult?.success(data)
+                    }
+                    else{
+                        Log.i("Receiver error","hmsVideoViewResult is null")
+                    }
+                }
+                else{
+                    Log.i("Receiver error","hmssdkFlutterPlugin is null")
+                }
             }
         })
     }
 
     fun onDisposeCalled() {
         super.onDetachedFromWindow()
-        Log.i("%%% trackId","removed ${track?.trackId}")
-        if(HmssdkFlutterPlugin.hmssdkFlutterPlugin != null) {
-            HmssdkFlutterPlugin.hmssdkFlutterPlugin!!.hmsVideoViewInterfaceMap?.remove(track?.trackId)
-        }
         hmsVideoView.removeTrack()
+        context.unregisterReceiver(broadcastReceiver)
     }
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         if (track != null) {
             hmsVideoView.addTrack(track)
+            context.registerReceiver(broadcastReceiver,IntentFilter(track.trackId))
         } else {
             Log.e("HMSVideoView Error", "track is null, cannot attach null track")
         }

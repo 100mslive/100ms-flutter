@@ -60,7 +60,6 @@ class HmssdkFlutterPlugin :
     var hmssdk: HMSSDK? = null
     private lateinit var hmsVideoFactory: HMSVideoViewFactory
     private var requestChange: HMSRoleChangeRequest? = null
-    var hmsVideoViewInterfaceMap : MutableMap<String,HMSVideoViewTestClass>? = null
     companion object {
         var hmssdkFlutterPlugin: HmssdkFlutterPlugin? = null
     }
@@ -438,12 +437,10 @@ class HmssdkFlutterPlugin :
     }
 
     private fun leave(result: Result) {
-        hmsVideoViewInterfaceMap?.clear()
         hmssdk!!.leave(hmsActionResultListener = HMSCommonAction.getActionListener(result))
     }
 
     private fun destroy(result: Result) {
-        hmsVideoViewInterfaceMap?.clear()
         hmssdk = null
     }
 
@@ -738,7 +735,6 @@ class HmssdkFlutterPlugin :
             roomArgs.put("room", HMSRoomExtension.toDictionary(room))
             args.put("data", roomArgs)
             if (roomArgs["room"] != null) {
-                hmsVideoViewInterfaceMap = mutableMapOf()
                 CoroutineScope(Dispatchers.Main).launch {
                     eventSink?.success(args)
                 }
@@ -1054,14 +1050,12 @@ class HmssdkFlutterPlugin :
         result.success(HMSTrackExtension.toDictionary(peer?.getTrackById(trackId!!)))
     }
 
+    var hmsVideoViewResult: Result? = null
     private fun captureSnapshot(call:MethodCall, result: Result){
         val trackId: String? = call.argument<String>("track_id")
         if(trackId != null){
-            if(hmsVideoViewInterfaceMap != null){
-                if(hmsVideoViewInterfaceMap!!.containsKey(trackId)){
-                   hmsVideoViewInterfaceMap!![trackId]?.captureBitmap(result)
-                }
-            }
+            hmsVideoViewResult = result
+            activity.sendBroadcast(Intent(trackId).putExtra("method_name","CAPTURE_SNAPSHOT"))
         }
     }
 
