@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:hmssdk_flutter_example/service/constant.dart';
 import 'package:hmssdk_flutter_example/common/widgets/title_text.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
@@ -517,9 +518,14 @@ class MeetingStore extends ChangeNotifier
     getCurrentAudioDevice();
     getAudioDevicesList();
     notifyListeners();
+
     if (Platform.isIOS && !(isHLSLink)) {
       HMSIOSPIPController.setup(true, aspectRatio: [9, 16]);
     }
+    
+    FlutterForegroundTask.startService(
+        notificationTitle: "100ms foreground service running",
+        notificationText: "Tap to return to the app");
   }
 
   @override
@@ -776,7 +782,7 @@ class MeetingStore extends ChangeNotifier
     description = "Removed by ${hmsPeerRemovedFromPeer.peerWhoRemoved?.name}";
     peerTracks.clear();
     isRoomEnded = true;
-
+    FlutterForegroundTask.stopService();
     notifyListeners();
   }
 
@@ -1458,6 +1464,7 @@ class MeetingStore extends ChangeNotifier
         _hmsSDKInteractor.removeUpdateListener(this);
         setLandscapeLock(false);
         notifyListeners();
+        FlutterForegroundTask.stopService();
         break;
       case HMSActionResultListenerMethod.changeTrackState:
         Utilities.showToast("Track State Changed");
