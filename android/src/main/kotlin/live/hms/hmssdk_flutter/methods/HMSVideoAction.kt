@@ -21,13 +21,6 @@ class HMSVideoAction {
                     switchCamera(result, hmssdk)
                 }
 
-                "start_capturing" -> {
-                    startCapturing(result, hmssdk)
-                }
-
-                "stop_capturing" -> {
-                    stopCapturing(result, hmssdk)
-                }
 
                 "is_video_mute" -> {
                     result.success(isVideoMute(call, hmssdk))
@@ -68,28 +61,6 @@ class HMSVideoAction {
             val videoTrack = peer?.videoTrack
             if (videoTrack != null) {
                 videoTrack.setMute(!(videoTrack.isMute))
-                result.success(true)
-            } else {
-                result.success(false)
-            }
-        }
-
-        private fun stopCapturing(result: Result, hmssdk: HMSSDK) {
-            val peer = hmssdk.getLocalPeer()
-            val videoTrack = peer?.videoTrack
-            if (videoTrack != null) {
-                videoTrack.setMute(true)
-                result.success(true)
-            } else {
-                result.success(false)
-            }
-        }
-
-        private fun startCapturing(result: Result, hmssdk: HMSSDK) {
-            val peer = hmssdk.getLocalPeer()
-            val videoTrack = peer?.videoTrack
-            if (videoTrack != null) {
-                videoTrack.setMute(false)
                 result.success(true)
             } else {
                 result.success(false)

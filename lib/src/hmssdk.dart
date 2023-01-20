@@ -258,18 +258,6 @@ class HMSSDK {
     }
   }
 
-  /// To start capturing the local peer's video & send it to other peers in the room
-  @Deprecated('Use [toggleCameraMuteState]')
-  Future<bool> startCapturing() async {
-    return await PlatformService.invokeMethod(PlatformMethod.startCapturing);
-  }
-
-  /// To stop capturing the local peer's video.
-  @Deprecated('Use [toggleCameraMuteState]')
-  Future<bool> stopCapturing() async {
-    return await PlatformService.invokeMethod(PlatformMethod.stopCapturing);
-  }
-
   /// To check the audio status of a peer is mute/unmute
   /// Pass in the [peer] object for the peer whose audio status you want to check
   Future<bool> isAudioMute({HMSPeer? peer}) async {
