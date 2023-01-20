@@ -54,12 +54,6 @@ enum PlatformMethod {
   ///check whether video is mute or not.
   isVideoMute,
 
-  ///start capturing your video from your camera.
-  startCapturing,
-
-  ///stop capturing your video from your camera.
-  stopCapturing,
-
   ///get tracks for preview.
   preview,
 
@@ -225,12 +219,6 @@ extension PlatformMethodValues on PlatformMethod {
 
       case PlatformMethod.isVideoMute:
         return 'is_video_mute';
-
-      case PlatformMethod.startCapturing:
-        return 'start_capturing';
-
-      case PlatformMethod.stopCapturing:
-        return 'stop_capturing';
 
       case PlatformMethod.getRoom:
         return "get_room";
@@ -463,12 +451,6 @@ extension PlatformMethodValues on PlatformMethod {
 
       case 'is_video_mute':
         return PlatformMethod.isVideoMute;
-
-      case 'stop_capturing':
-        return PlatformMethod.stopCapturing;
-
-      case 'start_capturing':
-        return PlatformMethod.startCapturing;
 
       case 'send_broadcast_message':
         return PlatformMethod.sendBroadcastMessage;
