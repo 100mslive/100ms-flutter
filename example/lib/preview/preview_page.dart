@@ -442,7 +442,7 @@ class _PreviewPageState extends State<PreviewPage> {
                                                       value: _meetingStore,
                                                       child: ScreenController(
                                                         streamUrl: _previewStore
-                                                                .isStreamingStarted
+                                                                .isHLSStreamingStarted
                                                             ? _previewStore
                                                                 .room
                                                                 ?.hmshlsStreamingState

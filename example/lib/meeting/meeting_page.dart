@@ -78,6 +78,36 @@ class _MeetingPageState extends State<MeetingPage> {
     }
   }
 
+  String recordingState() {
+    String _message = "";
+
+    Map<String, bool> _recordingType =
+        context.read<MeetingStore>().recordingType;
+
+    if (_recordingType["hls"] ?? false) {
+      _message += "HLS Recording ";
+    }
+    if (_recordingType["server"] ?? false) {
+      _message += "SFU Recording ";
+    }
+    if (_recordingType["browser"] ?? false) {
+      _message += "BEAM Recording ";
+    }
+    return _message;
+  }
+
+  String streamingState() {
+    String _message = "Live";
+    Map<String, bool> _streamingType =
+        context.read<MeetingStore>().streamingType;
+    if (_streamingType["hls"] ?? false) {
+      _message += " with HLS";  
+    } else if (_streamingType["rtmp"] ?? false) {
+      _message += " with RTMP";
+    }
+    return _message;
+  }
+
   Widget _showPopupMenuButton({required bool isHLSRunning}) {
     return PopupMenuButton(
         tooltip: "leave_end_stream",
@@ -455,9 +485,15 @@ class _MeetingPageState extends State<MeetingPage> {
                                                   SizedBox(
                                                     width: 10,
                                                   ),
-                                                  Selector<MeetingStore,
-                                                          Tuple2<bool, bool>>(
-                                                      selector: (_, meetingStore) => Tuple2(
+                                                  Selector<
+                                                          MeetingStore,
+                                                          Tuple4<
+                                                              bool,
+                                                              bool,
+                                                              Map<String, bool>,
+                                                              Map<String,
+                                                                  bool>>>(
+                                                      selector: (_, meetingStore) => Tuple4(
                                                           ((meetingStore.streamingType[
                                                                       "rtmp"] ??
                                                                   false) ||
@@ -475,7 +511,11 @@ class _MeetingPageState extends State<MeetingPage> {
                                                               ((meetingStore
                                                                           .recordingType[
                                                                       "hls"] ??
-                                                                  false)))),
+                                                                  false))),
+                                                          meetingStore
+                                                              .streamingType,
+                                                          meetingStore
+                                                              .recordingType),
                                                       builder:
                                                           (_, roomState, __) {
                                                         if (roomState.item1 ||
@@ -505,7 +545,14 @@ class _MeetingPageState extends State<MeetingPage> {
                                                                     ),
                                                                   ),
                                                                   Text(
-                                                                    "${roomState.item1 ? "Live" : ""}${((roomState.item1 && roomState.item2) ? " & " : "")}${(roomState.item2 ? "Recording" : "")}",
+                                                                    (roomState.item1 &&
+                                                                            roomState.item2)
+                                                                        ? "Live & Recording"
+                                                                        : (roomState.item1)
+                                                                            ? streamingState()
+                                                                            : (roomState.item2)
+                                                                                ? recordingState()
+                                                                                : "",
                                                                     semanticsLabel:
                                                                         "fl_live_stream_running",
                                                                     style: GoogleFonts.inter(
@@ -526,7 +573,7 @@ class _MeetingPageState extends State<MeetingPage> {
                                                                           MainAxisAlignment
                                                                               .spaceBetween,
                                                                       children: [
-                                                                        Row(
+                                                                        (roomState.item3["hls"]??false)?Row(
                                                                           children: [
                                                                             SvgPicture.asset(
                                                                               "assets/icons/clock.svg",
@@ -548,7 +595,7 @@ class _MeetingPageState extends State<MeetingPage> {
                                                                                   );
                                                                                 }),
                                                                           ],
-                                                                        ),
+                                                                        ):Container(),
                                                                         SubtitleText(
                                                                           text:
                                                                               " | ",

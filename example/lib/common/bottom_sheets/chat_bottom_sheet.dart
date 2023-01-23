@@ -2,6 +2,7 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:collection/collection.dart';
+import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
@@ -14,6 +15,7 @@ import 'package:tuple/tuple.dart';
 //Project imports
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ChatBottomSheet extends StatefulWidget {
   @override
@@ -330,14 +332,30 @@ class _ChatBottomSheetState extends State<ChatBottomSheet> {
                                     SizedBox(
                                       width: MediaQuery.of(context).size.width *
                                           0.66,
-                                      child: Text(
-                                        sessionMetadata,
+                                      child: SelectableLinkify(
+                                        text: sessionMetadata,
+                                        onOpen: (link) async {
+                                          Uri url = Uri.parse(link.url);
+                                          if (await canLaunchUrl(url)) {
+                                            await launchUrl(url,
+                                                mode: LaunchMode
+                                                    .externalApplication);
+                                          }
+                                        },
+                                        options:
+                                            LinkifyOptions(humanize: false),
                                         style: GoogleFonts.inter(
-                                            fontWeight: FontWeight.w400,
+                                            fontSize: 12.0,
                                             color: themeSubHeadingColor,
                                             letterSpacing: 0.4,
-                                            height: 16 / 12,
-                                            fontSize: 12),
+                                            height: 16/12,
+                                            fontWeight: FontWeight.w400),
+                                        linkStyle: GoogleFonts.inter(
+                                            fontSize: 12.0,
+                                            color: hmsdefaultColor,
+                                            letterSpacing: 0.4,
+                                            height: 16/12,
+                                            fontWeight: FontWeight.w400),
                                       ),
                                     ),
                                   ],

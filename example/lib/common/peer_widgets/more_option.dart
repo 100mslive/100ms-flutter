@@ -28,7 +28,7 @@ class MoreOption extends StatelessWidget {
 
     return Positioned(
       bottom: 5,
-      right: 5,
+      right: 1,
       child: GestureDetector(
         onTap: () {
           var peerTrackNode = context.read<PeerTrackNode>();
