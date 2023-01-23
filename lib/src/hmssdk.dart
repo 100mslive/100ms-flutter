@@ -1288,23 +1288,39 @@ class HMSSDK {
 
   /// Start sharing in-app screen content (use this to capture the content inside your own app only)
   Future<HMSException?> startAppScreenShare() async {
-    var result =
-        await PlatformService.invokeMethod(PlatformMethod.startAppScreenShare);
-    if (result != null) {
-      return HMSException.fromMap(result["error"]);
+    if (Platform.isIOS) {
+      var result = await PlatformService.invokeMethod(
+          PlatformMethod.startAppScreenShare);
+      if (result != null) {
+        return HMSException.fromMap(result["error"]);
+      } else {
+        return null;
+      }
     } else {
-      return null;
+      return HMSException(
+          message: "startAppScreenShare is only available in iOS",
+          description: "startAppScreenShare is only available in iOS",
+          action: "",
+          isTerminal: false);
     }
   }
 
   /// Stop sharing in-app screen content
   Future<HMSException?> stopAppScreenShare() async {
-    var result =
-        await PlatformService.invokeMethod(PlatformMethod.stopAppScreenShare);
-    if (result != null) {
-      return HMSException.fromMap(result["error"]);
+    if (Platform.isIOS) {
+      var result =
+          await PlatformService.invokeMethod(PlatformMethod.stopAppScreenShare);
+      if (result != null) {
+        return HMSException.fromMap(result["error"]);
+      } else {
+        return null;
+      }
     } else {
-      return null;
+      return HMSException(
+          message: "stopAppScreenShare is only available in iOS",
+          description: "stopAppScreenShare is only available in iOS",
+          action: "",
+          isTerminal: false);
     }
   }
 
