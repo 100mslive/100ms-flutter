@@ -188,7 +188,7 @@ class HmssdkFlutterPlugin :
                 HMSRemoteVideoTrackAction.remoteVideoTrackActions(call, result, hmssdk!!)
             }
             "capture_snapshot" -> {
-                captureSnapshot(call,result)
+                captureSnapshot(call, result)
             }
             else -> {
                 result.notImplemented()
@@ -1051,11 +1051,11 @@ class HmssdkFlutterPlugin :
     }
 
     var hmsVideoViewResult: Result? = null
-    private fun captureSnapshot(call:MethodCall, result: Result){
+    private fun captureSnapshot(call: MethodCall, result: Result) {
         val trackId: String? = call.argument<String>("track_id")
-        if(trackId != null){
+        if (trackId != null) {
             hmsVideoViewResult = result
-            activity.sendBroadcast(Intent(trackId).putExtra("method_name","CAPTURE_SNAPSHOT"))
+            activity.sendBroadcast(Intent(trackId).putExtra("method_name", "CAPTURE_SNAPSHOT"))
         }
     }
 
@@ -1307,4 +1307,3 @@ class HmssdkFlutterPlugin :
         }
     }
 }
-

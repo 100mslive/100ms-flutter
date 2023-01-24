@@ -16,27 +16,25 @@ import live.hms.videoview.HMSVideoView
 import org.webrtc.RendererCommon
 import java.io.ByteArrayOutputStream
 
-
 class HMSVideoView(
     context: Context,
     setMirror: Boolean,
     scaleType: Int? = RendererCommon.ScalingType.SCALE_ASPECT_FIT.ordinal,
     private val track: HMSVideoTrack?,
-    disableAutoSimulcastLayerSelect: Boolean,
-) : FrameLayout(context, null){
+    disableAutoSimulcastLayerSelect: Boolean
+) : FrameLayout(context, null) {
 
     private val hmsVideoView: HMSVideoView
     private val broadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(contxt: Context?, intent: Intent?) {
-            if(intent?.action == track?.trackId){
-                when(intent?.extras?.getString("method_name")){
+            if (intent?.action == track?.trackId) {
+                when (intent?.extras?.getString("method_name")) {
                     "CAPTURE_SNAPSHOT" -> {
                         return captureSnapshot()
                     }
                 }
-            }
-            else{
-                Log.i("Receiver error","No receiver found for given action")
+            } else {
+                Log.i("Receiver error", "No receiver found for given action")
             }
         }
     }
@@ -53,25 +51,23 @@ class HMSVideoView(
         }
     }
 
-    private fun captureSnapshot(){
-        var byteArray : ByteArray?
-        hmsVideoView.captureBitmap({bitmap ->
-            if(bitmap != null){
+    private fun captureSnapshot() {
+        var byteArray: ByteArray?
+        hmsVideoView.captureBitmap({ bitmap ->
+            if (bitmap != null) {
                 val stream = ByteArrayOutputStream()
                 bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
                 byteArray = stream.toByteArray()
                 bitmap.recycle()
-                val data = Base64.encodeToString(byteArray,Base64.DEFAULT)
-                if(HmssdkFlutterPlugin.hmssdkFlutterPlugin != null){
-                    if(HmssdkFlutterPlugin.hmssdkFlutterPlugin?.hmsVideoViewResult != null){
+                val data = Base64.encodeToString(byteArray, Base64.DEFAULT)
+                if (HmssdkFlutterPlugin.hmssdkFlutterPlugin != null) {
+                    if (HmssdkFlutterPlugin.hmssdkFlutterPlugin?.hmsVideoViewResult != null) {
                         HmssdkFlutterPlugin.hmssdkFlutterPlugin?.hmsVideoViewResult?.success(data)
+                    } else {
+                        Log.i("Receiver error", "hmsVideoViewResult is null")
                     }
-                    else{
-                        Log.i("Receiver error","hmsVideoViewResult is null")
-                    }
-                }
-                else{
-                    Log.i("Receiver error","hmssdkFlutterPlugin is null")
+                } else {
+                    Log.i("Receiver error", "hmssdkFlutterPlugin is null")
                 }
             }
         })
@@ -87,7 +83,7 @@ class HMSVideoView(
         super.onAttachedToWindow()
         if (track != null) {
             hmsVideoView.addTrack(track)
-            context.registerReceiver(broadcastReceiver,IntentFilter(track.trackId))
+            context.registerReceiver(broadcastReceiver, IntentFilter(track.trackId))
         } else {
             Log.e("HMSVideoView Error", "track is null, cannot attach null track")
         }

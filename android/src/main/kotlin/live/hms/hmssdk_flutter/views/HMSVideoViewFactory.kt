@@ -1,7 +1,6 @@
 package live.hms.hmssdk_flutter.views
 
 import android.content.Context
-import android.util.Log
 import android.view.View
 import android.widget.FrameLayout
 import io.flutter.plugin.common.StandardMessageCodec
@@ -21,7 +20,7 @@ class HMSVideoViewWidget(
     private val setMirror: Boolean,
     private val scaleType: Int?,
     private val matchParent: Boolean? = true,
-    private val disableAutoSimulcastLayerSelect: Boolean,
+    private val disableAutoSimulcastLayerSelect: Boolean
 ) : PlatformView {
 
     private var hmsVideoView: HMSVideoView? = null

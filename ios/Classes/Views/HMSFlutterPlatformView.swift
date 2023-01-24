@@ -65,13 +65,33 @@ class HMSFlutterPlatformView: NSObject, FlutterPlatformView {
     }
 
     @objc func captureSnapshot(_ notification: Notification) {
-        let result: FlutterResult = notification.userInfo?["result"] as! FlutterResult
-        if let view = videoView, let image = view.captureSnapshot() {
-            let strBase64 = image.pngData()?.base64EncodedString()
-            result(strBase64)
-        } else {
-            result(nil)
+
+        guard let result = notification.userInfo?["result"] as? FlutterResult
+        else {
+            print(#function, " Result not found")
+            return
         }
 
+        guard let view = videoView
+        else {
+            print(#function, "Attached HMSVideoView not found")
+            result(nil)
+            return
+        }
+
+        guard let image = view.captureSnapshot()
+        else {
+            print(#function, "Could not capture snapshot of HMSVideoView")
+            result(nil)
+            return
+        }
+
+        guard let base64 = image.pngData()?.base64EncodedString() else {
+            print(#function, "Could not create base64 encoded string of captured snapshot")
+            result(nil)
+            return
+        }
+
+        result(base64)
     }
 }

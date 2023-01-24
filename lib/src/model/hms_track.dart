@@ -3,7 +3,7 @@
 // Project imports:
 
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-  
+
 ///100ms HMSTrack
 ///
 ///Parent of all tracks
@@ -54,5 +54,4 @@ class HMSTrack {
   String toString() {
     return 'HMSTrack{trackId: $trackId, kind: $kind, source: $source, trackDescription: $trackDescription,isMute: $isMute}';
   }
-
 }

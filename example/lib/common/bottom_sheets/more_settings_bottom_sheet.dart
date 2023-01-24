@@ -428,12 +428,12 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                                   if (urls != null) {
                                     _meetingStore.startRtmpOrRecording(
                                         meetingUrl: Constant.streamingUrl,
-                                        toRecord: data["toRecord"]??false,
+                                        toRecord: data["toRecord"] ?? false,
                                         rtmpUrls: urls);
-                                  } else if(data["toRecord"]??false){
+                                  } else if (data["toRecord"] ?? false) {
                                     _meetingStore.startRtmpOrRecording(
                                         meetingUrl: Constant.streamingUrl,
-                                        toRecord: data["toRecord"]??false,
+                                        toRecord: data["toRecord"] ?? false,
                                         rtmpUrls: null);
                                   }
                                 }
