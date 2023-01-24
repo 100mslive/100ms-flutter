@@ -199,6 +199,9 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         case "set_simulcast_layer", "get_layer", "get_layer_definition":
             HMSRemoteVideoTrackExtension.remoteVideoTrackActions(call, result, hmsSDK!)
 
+        case "capture_snapshot":
+            captureSnapshot(call, result)
+
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -862,6 +865,17 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             }
         }
         result(HMSErrorExtension.getError("Could not set isPlaybackAllowed for track in \(#function)"))
+    }
+
+    private func captureSnapshot(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+        let arguments = call.arguments as! [AnyHashable: Any]
+
+        guard let trackID = arguments["track_id"] as? String
+        else {
+            result(HMSErrorExtension.getError("Invalid arguments passed in \(#function)"))
+            return
+        }
+        NotificationCenter.default.post(name: NSNotification.Name(trackID), object: nil, userInfo: ["result": result])
     }
 
     // MARK: - 100ms SDK Delegate Callbacks

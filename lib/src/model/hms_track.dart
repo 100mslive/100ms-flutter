@@ -1,8 +1,9 @@
 ///A track represents either the audio or video that a peer is publishing.
 
 // Project imports:
-import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+  
 ///100ms HMSTrack
 ///
 ///Parent of all tracks
@@ -53,4 +54,5 @@ class HMSTrack {
   String toString() {
     return 'HMSTrack{trackId: $trackId, kind: $kind, source: $source, trackDescription: $trackDescription,isMute: $isMute}';
   }
+
 }

@@ -48,6 +48,7 @@ class HMSFlutterPlatformView: NSObject, FlutterPlatformView {
 
         if let track = videoTrack {
             videoView?.setVideoTrack(track)
+            NotificationCenter.default.addObserver(self, selector: #selector(captureSnapshot), name: NSNotification.Name(track.trackId), object: nil)
         } else {
             let errorMsg = "\(#function) Could not find video track to attach to Video View"
             print(errorMsg)
@@ -59,5 +60,18 @@ class HMSFlutterPlatformView: NSObject, FlutterPlatformView {
     deinit {
         videoView?.setVideoTrack(nil)
         videoView = nil
+        NotificationCenter.default
+          .removeObserver(self, name: NSNotification.Name(videoTrack?.trackId ?? ""), object: nil)
+    }
+
+    @objc func captureSnapshot(_ notification: Notification) {
+        let result: FlutterResult = notification.userInfo?["result"] as! FlutterResult
+        if let view = videoView, let image = view.captureSnapshot() {
+            let strBase64 = image.pngData()?.base64EncodedString()
+            result(strBase64)
+        } else {
+            result(nil)
+        }
+
     }
 }
