@@ -86,6 +86,7 @@ class Utilities {
     await Permission.camera.request();
     await Permission.microphone.request();
     await Permission.bluetoothConnect.request();
+    // manageExternalStorage permission is required to save Snapshot to device gallery.
     await Permission.manageExternalStorage.request();
 
     while ((await Permission.camera.isDenied)) {
@@ -97,6 +98,7 @@ class Utilities {
     while ((await Permission.bluetoothConnect.isDenied)) {
       await Permission.bluetoothConnect.request();
     }
+    // manageExternalStorage permission is required to save Snapshot to device gallery.
     while ((await Permission.manageExternalStorage.isDenied)) {
       await Permission.manageExternalStorage.request();
     }

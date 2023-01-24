@@ -198,7 +198,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
         case "set_simulcast_layer", "get_layer", "get_layer_definition":
             HMSRemoteVideoTrackExtension.remoteVideoTrackActions(call, result, hmsSDK!)
-            
+
         case "capture_snapshot":
             captureSnapshot(call, result)
 
@@ -866,8 +866,8 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         }
         result(HMSErrorExtension.getError("Could not set isPlaybackAllowed for track in \(#function)"))
     }
-    
-    private func captureSnapshot(_ call: FlutterMethodCall, _ result: @escaping FlutterResult){
+
+    private func captureSnapshot(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         let arguments = call.arguments as! [AnyHashable: Any]
 
         guard let trackID = arguments["track_id"] as? String

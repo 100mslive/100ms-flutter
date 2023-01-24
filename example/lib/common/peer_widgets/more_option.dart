@@ -108,6 +108,15 @@ class MoreOption extends StatelessWidget {
                               context: context,
                               builder: (_) {
                                 return AlertDialog(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12)),
+                                  actionsPadding: EdgeInsets.only(
+                                      left: 20, right: 20, bottom: 10),
+                                  backgroundColor: themeBottomSheetColor,
+                                  insetPadding: EdgeInsets.symmetric(
+                                      horizontal: 20, vertical: 8),
+                                  contentPadding: EdgeInsets.only(
+                                      top: 20, bottom: 15, left: 24, right: 24),
                                   title: Text(
                                       context.read<PeerTrackNode>().peer.name +
                                           "'s Snapshot"),
@@ -263,6 +272,15 @@ class MoreOption extends StatelessWidget {
                               context: context,
                               builder: (_) {
                                 return AlertDialog(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12)),
+                                  actionsPadding: EdgeInsets.only(
+                                      left: 20, right: 20, bottom: 10),
+                                  backgroundColor: themeBottomSheetColor,
+                                  insetPadding: EdgeInsets.symmetric(
+                                      horizontal: 20, vertical: 8),
+                                  contentPadding: EdgeInsets.only(
+                                      top: 20, bottom: 15, left: 24, right: 24),
                                   title: Text(
                                       context.read<PeerTrackNode>().peer.name +
                                           "'s  Snapshot"),

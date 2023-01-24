@@ -31,6 +31,7 @@ class HMSVideoTrack extends HMSTrack {
         : HMSRemoteVideoTrack.fromMap(map: map);
   }
 
+  ///[captureSnapshot] function used to capture a snapshot of the video stream of a local or remote peer's video.
   Future<Uint8List?> captureSnapshot() async {
     var result = await PlatformService.invokeMethod(
         PlatformMethod.captureSnapshot,
