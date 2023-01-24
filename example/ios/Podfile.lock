@@ -57,7 +57,7 @@ PODS:
   - firebase_core (2.4.1):
     - Firebase/CoreOnly (= 10.3.0)
     - Flutter
-  - firebase_crashlytics (3.0.10):
+  - firebase_crashlytics (3.0.11):
     - Firebase/Crashlytics (= 10.3.0)
     - firebase_core
     - Flutter
@@ -181,12 +181,12 @@ PODS:
     - GCDWebServer (~> 3.5)
     - PINCache (>= 3.0.1-beta.3)
   - HMSBroadcastExtensionSDK (0.0.7)
-  - HMSSDK (0.5.5):
+  - HMSSDK (0.6.2):
     - HMSWebRTC (= 1.0.5113)
   - hmssdk_flutter (1.3.0):
     - Flutter
     - HMSBroadcastExtensionSDK (= 0.0.7)
-    - HMSSDK (= 0.5.5)
+    - HMSSDK (= 0.6.2)
   - HMSWebRTC (1.0.5113)
   - image_gallery_saver (1.5.0):
     - Flutter
@@ -342,7 +342,7 @@ SPEC CHECKSUMS:
   Firebase: f92fc551ead69c94168d36c2b26188263860acd9
   firebase_analytics: 9f3a4cb560a59976b2c48707abae2d4cb94bcb3a
   firebase_core: bf59c32d2e53814f558efa20840c1902fa2fe461
-  firebase_crashlytics: 235f15b57f25c74e2c75a03a7fcb619695510857
+  firebase_crashlytics: b19405931669c882e0d08542e69ae9e86633c636
   firebase_dynamic_links: e5ca49679928f5d46e2db5168656975eae39d379
   firebase_performance: 7746e15bd685debbfcb5e862b2ec720ba8f13979
   FirebaseABTesting: ae3b32fe26e761fd54c68e37a632a0097b599c87
@@ -363,8 +363,8 @@ SPEC CHECKSUMS:
   GoogleUtilities: c2bdc4cf2ce786c4d2e6b3bcfd599a25ca78f06f
   HLSCachingReverseProxyServer: 59935e1e0244ad7f3375d75b5ef46e8eb26ab181
   HMSBroadcastExtensionSDK: d22df4b2c22843efe4a1779478889076db8eaabd
-  HMSSDK: 62863ccbaa0fd8ffc924a5d883c13e4bd6abea5c
-  hmssdk_flutter: ed74ae8992a293fe34cec652dc538199098ad076
+  HMSSDK: c995b000287512ae30cba17605f5dd0cec7cd994
+  hmssdk_flutter: 0b06e99ae9fd36a43777b37485096397e75d7091
   HMSWebRTC: 6bd851709766bf4b28fd89046a65654e86741aed
   image_gallery_saver: 259eab68fb271cfd57d599904f7acdc7832e7ef2
   MTBBarcodeScanner: f453b33c4b7dfe545d8c6484ed744d55671788cb
@@ -383,7 +383,7 @@ SPEC CHECKSUMS:
   SwiftyGif: 93a1cc87bf3a51916001cf8f3d63835fb64c819f
   Toast: 91b396c56ee72a5790816f40d3a94dd357abc196
   uni_links: d97da20c7701486ba192624d99bffaaffcfc298a
-  url_launcher_ios: 839c58cdb4279282219f5e248c3321761ff3c4de
+  url_launcher_ios: ae1517e5e344f5544fb090b079e11f399dfbe4d2
   wakelock: d0fc7c864128eac40eba1617cb5264d9c940b46f
 
 PODFILE CHECKSUM: 221b73efa3037ee6ba244e0d288118f24b41d294

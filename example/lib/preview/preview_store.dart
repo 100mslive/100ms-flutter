@@ -176,14 +176,6 @@ class PreviewStore extends ChangeNotifier
     hmsSDKInteractor.removePreviewListener(this);
   }
 
-  void stopCapturing() {
-    hmsSDKInteractor.stopCapturing();
-  }
-
-  void startCapturing() {
-    hmsSDKInteractor.startCapturing();
-  }
-
   void toggleCameraMuteState() {
     hmsSDKInteractor.toggleCameraMuteState();
     isVideoOn = !isVideoOn;

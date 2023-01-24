@@ -295,18 +295,6 @@ class MeetingStore extends ChangeNotifier
     return await _hmsSDKInteractor.isVideoMute(peer);
   }
 
-  Future<bool> startCapturing() async {
-    isVideoOn = true;
-    notifyListeners();
-    return await _hmsSDKInteractor.startCapturing();
-  }
-
-  void stopCapturing() {
-    isVideoOn = false;
-    notifyListeners();
-    _hmsSDKInteractor.stopCapturing();
-  }
-
   Future<void> isScreenShareActive() async {
     this.isScreenShareOn = await _hmsSDKInteractor.isScreenShareActive();
   }
