@@ -60,7 +60,6 @@ class HmssdkFlutterPlugin :
     var hmssdk: HMSSDK? = null
     private lateinit var hmsVideoFactory: HMSVideoViewFactory
     private var requestChange: HMSRoleChangeRequest? = null
-
     companion object {
         var hmssdkFlutterPlugin: HmssdkFlutterPlugin? = null
     }
@@ -187,6 +186,9 @@ class HmssdkFlutterPlugin :
             }
             "set_simulcast_layer", "get_layer", "get_layer_definition" -> {
                 HMSRemoteVideoTrackAction.remoteVideoTrackActions(call, result, hmssdk!!)
+            }
+            "capture_snapshot" -> {
+                captureSnapshot(call, result)
             }
             else -> {
                 result.notImplemented()
@@ -724,7 +726,6 @@ class HmssdkFlutterPlugin :
         }
 
         override fun onJoin(room: HMSRoom) {
-//            hasJoined = true
             hmssdk!!.addAudioObserver(hmsAudioListener)
             previewChannel?.setStreamHandler(null) ?: Log.e("Channel Error", "Preview channel not found")
             val args = HashMap<String, Any?>()
@@ -1047,6 +1048,15 @@ class HmssdkFlutterPlugin :
         val trackId: String? = call.argument<String>("track_id")
         val peer: HMSPeer? = getPeerById(peerId!!)
         result.success(HMSTrackExtension.toDictionary(peer?.getTrackById(trackId!!)))
+    }
+
+    var hmsVideoViewResult: Result? = null
+    private fun captureSnapshot(call: MethodCall, result: Result) {
+        val trackId: String? = call.argument<String>("track_id")
+        if (trackId != null) {
+            hmsVideoViewResult = result
+            activity.sendBroadcast(Intent(trackId).putExtra("method_name", "CAPTURE_SNAPSHOT"))
+        }
     }
 
     private fun setPlaybackAllowedForTrack(call: MethodCall, result: Result) {

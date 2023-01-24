@@ -300,13 +300,24 @@ class MeetingStore extends ChangeNotifier
   }
 
   void changeStatsVisible() {
-    if (!isStatsVisible) {
+    isStatsVisible = !isStatsVisible;
+    notifyListeners();
+  }
+
+  void attachStatsListener() {
+    if (isStatsVisible) {
+      return;
+    } else {
       _hmsSDKInteractor.addStatsListener(this);
+    }
+  }
+
+  void removeStatsListener() {
+    if (isStatsVisible) {
+      return;
     } else {
       _hmsSDKInteractor.removeStatsListener(this);
     }
-    isStatsVisible = !isStatsVisible;
-    notifyListeners();
   }
 
   void changeRoleOfPeer(

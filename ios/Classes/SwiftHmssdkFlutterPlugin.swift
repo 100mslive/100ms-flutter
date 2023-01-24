@@ -205,6 +205,9 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                         result(HMSErrorExtension.getError("iOS 15 or above is required"))
                         return }
             HMSPIPAction.pipAction(call, result, hmsSDK, self)
+            
+        case "capture_snapshot":
+            captureSnapshot(call, result)
 
         default:
             result(FlutterMethodNotImplemented)
@@ -874,6 +877,17 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             }
         }
         result(HMSErrorExtension.getError("Could not set isPlaybackAllowed for track in \(#function)"))
+    }
+
+    private func captureSnapshot(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+        let arguments = call.arguments as! [AnyHashable: Any]
+
+        guard let trackID = arguments["track_id"] as? String
+        else {
+            result(HMSErrorExtension.getError("Invalid arguments passed in \(#function)"))
+            return
+        }
+        NotificationCenter.default.post(name: NSNotification.Name(trackID), object: nil, userInfo: ["result": result])
     }
 
     // MARK: - 100ms SDK Delegate Callbacks

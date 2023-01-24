@@ -163,7 +163,8 @@ enum PlatformMethod {
   changeTextPIP,
   destroyPIP,
   toggleMicMuteState,
-  toggleCameraMuteState
+  toggleCameraMuteState,
+  captureSnapshot
 }
 
 extension PlatformMethodValues on PlatformMethod {
@@ -391,6 +392,8 @@ extension PlatformMethodValues on PlatformMethod {
         return "toggle_mic_mute_state";
       case PlatformMethod.toggleCameraMuteState:
         return "toggle_camera_mute_state";
+      case PlatformMethod.captureSnapshot:
+        return "capture_snapshot";
       default:
         return 'unknown';
     }
@@ -620,6 +623,8 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.toggleMicMuteState;
       case "toggle_camera_mute_state":
         return PlatformMethod.toggleCameraMuteState;
+      case "capture_snapshot":
+        return PlatformMethod.captureSnapshot;
       default:
         return PlatformMethod.unknown;
     }

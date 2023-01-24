@@ -21,7 +21,6 @@ class HMSVideoAction {
                     switchCamera(result, hmssdk)
                 }
 
-
                 "is_video_mute" -> {
                     result.success(isVideoMute(call, hmssdk))
                 }
