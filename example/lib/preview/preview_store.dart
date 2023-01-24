@@ -31,7 +31,9 @@ class PreviewStore extends ChangeNotifier
 
   bool isRecordingStarted = false;
 
-  bool isStreamingStarted = false;
+  bool isHLSStreamingStarted = false;
+
+  bool isRTMPStreamingStarted = false;
 
   List<HMSPeer> peers = [];
 
@@ -158,10 +160,10 @@ class PreviewStore extends ChangeNotifier
         break;
 
       case HMSRoomUpdate.rtmpStreamingStateUpdated:
-        isStreamingStarted = room.hmsRtmpStreamingState?.running ?? false;
+        isRTMPStreamingStarted = room.hmsRtmpStreamingState?.running ?? false;
         break;
       case HMSRoomUpdate.hlsStreamingStateUpdated:
-        isStreamingStarted = room.hmshlsStreamingState?.running ?? false;
+        isHLSStreamingStarted = room.hmshlsStreamingState?.running ?? false;
         break;
       case HMSRoomUpdate.roomPeerCountUpdated:
         peerCount = room.peerCount;

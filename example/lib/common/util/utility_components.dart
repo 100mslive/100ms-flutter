@@ -842,6 +842,13 @@ class UtilityComponents {
                                 "toRecord": isRecordingEnabled
                               })
                             }
+                          else if(isRecordingEnabled){
+                            Navigator.pop(
+                              context, {"url": "", "toRecord": isRecordingEnabled})
+                          }
+                          else{
+                            Utilities.showToast("Please enter RTMP URLs or enable recording")
+                          }
                         },
                         child: Padding(
                           padding: const EdgeInsets.symmetric(

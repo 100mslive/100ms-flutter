@@ -32,7 +32,7 @@ class MoreOption extends StatelessWidget {
 
     return Positioned(
       bottom: 5,
-      right: 5,
+      right: 1,
       child: GestureDetector(
         onTap: () {
           var peerTrackNode = context.read<PeerTrackNode>();
@@ -383,7 +383,7 @@ class MoreOption extends StatelessWidget {
           label: "fl_${context.read<PeerTrackNode>().peer.name}more_option",
           child: Padding(
             padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
-            child: Icon(Icons.more_vert),
+            child: Icon(Icons.more_horiz),
           ),
         ),
       ),
