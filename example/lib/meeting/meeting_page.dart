@@ -88,10 +88,10 @@ class _MeetingPageState extends State<MeetingPage> {
       _message += "HLS Recording ";
     }
     if (_recordingType["server"] ?? false) {
-      _message += "SFU Recording ";
+      _message += "Server Recording ";
     }
     if (_recordingType["browser"] ?? false) {
-      _message += "BEAM Recording ";
+      _message += "Browser Recording ";
     }
     return _message;
   }
@@ -101,7 +101,7 @@ class _MeetingPageState extends State<MeetingPage> {
     Map<String, bool> _streamingType =
         context.read<MeetingStore>().streamingType;
     if (_streamingType["hls"] ?? false) {
-      _message += " with HLS";  
+      _message += " with HLS";
     } else if (_streamingType["rtmp"] ?? false) {
       _message += " with RTMP";
     }
@@ -573,29 +573,32 @@ class _MeetingPageState extends State<MeetingPage> {
                                                                           MainAxisAlignment
                                                                               .spaceBetween,
                                                                       children: [
-                                                                        (roomState.item3["hls"]??false)?Row(
-                                                                          children: [
-                                                                            SvgPicture.asset(
-                                                                              "assets/icons/clock.svg",
-                                                                              color: themeSubHeadingColor,
-                                                                              fit: BoxFit.scaleDown,
-                                                                            ),
-                                                                            SizedBox(
-                                                                              width: 6,
-                                                                            ),
-                                                                            Selector<MeetingStore, HMSRoom?>(
-                                                                                selector: (_, meetingStore) => meetingStore.hmsRoom,
-                                                                                builder: (_, hmsRoom, __) {
-                                                                                  if (hmsRoom != null && hmsRoom.hmshlsStreamingState != null && hmsRoom.hmshlsStreamingState!.variants.length != 0 && hmsRoom.hmshlsStreamingState!.variants[0]!.startedAt != null) {
-                                                                                    return HMSStreamTimer(startedAt: hmsRoom.hmshlsStreamingState!.variants[0]!.startedAt!);
-                                                                                  }
-                                                                                  return SubtitleText(
-                                                                                    text: "00:00",
-                                                                                    textColor: themeSubHeadingColor,
-                                                                                  );
-                                                                                }),
-                                                                          ],
-                                                                        ):Container(),
+                                                                        (roomState.item3["hls"] ??
+                                                                                false)
+                                                                            ? Row(
+                                                                                children: [
+                                                                                  SvgPicture.asset(
+                                                                                    "assets/icons/clock.svg",
+                                                                                    color: themeSubHeadingColor,
+                                                                                    fit: BoxFit.scaleDown,
+                                                                                  ),
+                                                                                  SizedBox(
+                                                                                    width: 6,
+                                                                                  ),
+                                                                                  Selector<MeetingStore, HMSRoom?>(
+                                                                                      selector: (_, meetingStore) => meetingStore.hmsRoom,
+                                                                                      builder: (_, hmsRoom, __) {
+                                                                                        if (hmsRoom != null && hmsRoom.hmshlsStreamingState != null && hmsRoom.hmshlsStreamingState!.variants.length != 0 && hmsRoom.hmshlsStreamingState!.variants[0]!.startedAt != null) {
+                                                                                          return HMSStreamTimer(startedAt: hmsRoom.hmshlsStreamingState!.variants[0]!.startedAt!);
+                                                                                        }
+                                                                                        return SubtitleText(
+                                                                                          text: "00:00",
+                                                                                          textColor: themeSubHeadingColor,
+                                                                                        );
+                                                                                      }),
+                                                                                ],
+                                                                              )
+                                                                            : Container(),
                                                                         SubtitleText(
                                                                           text:
                                                                               " | ",
