@@ -1,5 +1,7 @@
 - Added support for PIP Mode on iOS in WebRTC Mode
 
+- Capture Capture Snapshot APIs for Video Views
+
 - Updated flow of SDK Interactor initialization from Preview
 
 - Added methods to toggle Audio & Video Mute status
@@ -12,6 +14,8 @@
 
 - Corrected showing of Live Streaming / Recording Status in App
 
+- Added new Stats for Nerds UI
+
 Flutter SDK: 1.3.0
-Android SDK: 2.5.6
-iOS SDK: 0.5.5
+Android SDK: 2.5.7
+iOS SDK: 0.6.2
