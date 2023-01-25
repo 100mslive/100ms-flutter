@@ -88,8 +88,6 @@ class MeetingStore extends ChangeNotifier
 
   List<HMSRole> roles = [];
 
-  late int highestSpeakerIndex = -1;
-
   List<HMSPeer> peers = [];
 
   List<HMSPeer> filteredPeers = [];
@@ -120,7 +118,6 @@ class MeetingStore extends ChangeNotifier
 
   bool isNewMessageReceived = false;
 
-  String? highestSpeaker;
   int firstTimeBuild = 0;
 
   String message = "";
