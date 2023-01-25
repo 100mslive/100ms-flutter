@@ -179,6 +179,8 @@ class MeetingStore extends ChangeNotifier
 
   bool showNotification = false;
 
+  HMSVideoTrack? currentPIPtrack;
+
   Future<bool> join(String user, String roomUrl) async {
     List<String?>? token =
         await RoomService().getToken(user: user, room: roomUrl);
@@ -1118,10 +1120,7 @@ class MeetingStore extends ChangeNotifier
             }
             isScreenShareActive();
             notifyListeners();
-            changePIPWindowTrackOnIOS(
-                track: peer.videoTrack,
-                alternativeText: peer.name,
-                ratio: [9, 16]);
+            changePIPWindowTextOnIOS(text: localPeer?.name, ratio: [9, 16]);
           }
         } else {
           int peerIndex = peerTracks.indexWhere(
@@ -1135,14 +1134,31 @@ class MeetingStore extends ChangeNotifier
             if (peerTracks[peerIndex].track == null &&
                 peerTracks[peerIndex].audioTrack == null) {
               peerTracks.removeAt(peerIndex);
+              if (currentPIPtrack == track) {
+                changePIPWindowTextOnIOS(text: localPeer?.name, ratio: [9, 16]);
+              }
               notifyListeners();
             }
           }
         }
         break;
       case HMSTrackUpdate.trackMuted:
+        if (currentPIPtrack == track &&
+            track.kind == HMSTrackKind.kHMSTrackKindVideo) {
+          changePIPWindowTrackOnIOS(
+              track: track as HMSVideoTrack,
+              alternativeText: peer.name,
+              ratio: [9, 16]);
+        }
         break;
       case HMSTrackUpdate.trackUnMuted:
+        if (currentPIPtrack == track &&
+            track.kind == HMSTrackKind.kHMSTrackKindVideo) {
+          changePIPWindowTrackOnIOS(
+              track: track as HMSVideoTrack,
+              alternativeText: peer.name,
+              ratio: [9, 16]);
+        }
         break;
       case HMSTrackUpdate.trackDescriptionChanged:
         break;
@@ -1357,6 +1373,7 @@ class MeetingStore extends ChangeNotifier
             aspectRatio: ratio,
             alternativeText: alternativeText,
             scaleType: ScaleType.SCALE_ASPECT_FILL);
+        currentPIPtrack = track;
       }
     }
   }
@@ -1367,6 +1384,7 @@ class MeetingStore extends ChangeNotifier
       isPipActive = await isPIPActive();
       if (isPipActive) {
         HMSIOSPIPController.changeText(text: text, aspectRatio: ratio);
+        currentPIPtrack = null;
       }
     }
   }
@@ -1716,7 +1734,16 @@ class MeetingStore extends ChangeNotifier
         lastVideoStatus = true;
       }
       if (screenShareCount == 0) {
-        changePIPWindowTextOnIOS(text: localPeer?.name, ratio: [9, 16]);
+        int peerIndex = peerTracks.indexWhere((element) =>
+            (!(element.track?.isMute ?? true) && !element.peer.isLocal));
+        if (peerIndex != -1) {
+          changePIPWindowTrackOnIOS(
+              track: peerTracks[peerIndex].track,
+              alternativeText: peerTracks[peerIndex].peer.name,
+              ratio: [9, 16]);
+        } else {
+          changePIPWindowTextOnIOS(text: localPeer?.name, ratio: [9, 16]);
+        }
       } else {
         int peerIndex = peerTracks.indexWhere((element) =>
             element.uid ==
