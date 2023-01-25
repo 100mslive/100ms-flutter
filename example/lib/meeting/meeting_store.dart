@@ -1131,13 +1131,14 @@ class MeetingStore extends ChangeNotifier
               peerTracks[peerIndex].audioTrack = null;
             } else if (track.kind == HMSTrackKind.kHMSTrackKindVideo) {
               peerTracks[peerIndex].track = null;
+              if (currentPIPtrack == track) {
+                changePIPWindowTextOnIOS(text: localPeer?.name, ratio: [9, 16]);
+              }
             }
             if (peerTracks[peerIndex].track == null &&
                 peerTracks[peerIndex].audioTrack == null) {
               peerTracks.removeAt(peerIndex);
-              if (currentPIPtrack == track) {
-                changePIPWindowTextOnIOS(text: localPeer?.name, ratio: [9, 16]);
-              }
+
               notifyListeners();
             }
           }
