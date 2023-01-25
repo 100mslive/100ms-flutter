@@ -147,11 +147,14 @@ class HMSPIPAction {
               let alternativeText = arguments["alternative_text"] as? String,
               let ratio = arguments["ratio"] as? [Int],
                 ratio.count == 2,
-              let scaleType = arguments["scale_type"] as? Int
+              let scaleType = arguments["scale_type"] as? Int,
+              let color = arguments["color"] as? [Int]
         else {
             result(HMSErrorExtension.getError("\(#function) Unable to find track ID, ratio, alternativeText or scaleType"))
             return
         }
+        let colour = Color(red: CGFloat(color[0])/255, green: CGFloat(color[1])/255, blue: CGFloat(color[2])/255)
+        model?.color = colour
         model?.scaleType = getViewContentMode(scaleType)
         model?.track = track
         model?.text = alternativeText
@@ -163,11 +166,14 @@ class HMSPIPAction {
 
         guard let text = arguments["text"] as? String,
               let ratio = arguments["ratio"] as? [Int],
-                ratio.count == 2
+                ratio.count == 2,
+              let color = arguments["color"] as? [Int]
         else {
             result(HMSErrorExtension.getError("\(#function) Unable to find ratio"))
             return
         }
+        let colour = Color(red: CGFloat(color[0])/255, green: CGFloat(color[1])/255, blue: CGFloat(color[2])/255)
+        model?.color = colour
         model?.track = nil
         model?.text = text
 

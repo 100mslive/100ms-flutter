@@ -521,7 +521,7 @@ class MeetingStore extends ChangeNotifier
     notifyListeners();
 
     if (Platform.isIOS && !(isHLSLink)) {
-      HMSIOSPIPController.setup(true, aspectRatio: [9, 16]);
+      HMSIOSPIPController.setup(autoEnterPip: true, aspectRatio: [9, 16]);
     }
 
     FlutterForegroundTask.startService(
@@ -1019,7 +1019,7 @@ class MeetingStore extends ChangeNotifier
           if (peer.role.name.contains("hls-")) {
             HMSIOSPIPController.destroy();
           } else {
-            HMSIOSPIPController.setup(true, aspectRatio: [9, 16]);
+            HMSIOSPIPController.setup(autoEnterPip: true, aspectRatio: [9, 16]);
           }
         }
 
