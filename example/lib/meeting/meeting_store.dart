@@ -699,7 +699,8 @@ class MeetingStore extends ChangeNotifier
       }
     });
     // Below code for change track and text in PIP mode iOS.
-    if (updateSpeakers.isNotEmpty && screenShareCount == 0) {
+    if (updateSpeakers.isNotEmpty &&
+        (screenShareCount == 0 || isScreenShareOn)) {
       if (updateSpeakers[0].peer.videoTrack != null) {
         changePIPWindowTrackOnIOS(
             track: updateSpeakers[0].peer.videoTrack,
@@ -1733,7 +1734,7 @@ class MeetingStore extends ChangeNotifier
         toggleCameraMuteState();
         lastVideoStatus = true;
       }
-      if (screenShareCount == 0) {
+      if (screenShareCount == 0 || isScreenShareOn) {
         int peerIndex = peerTracks.indexWhere((element) =>
             (!(element.track?.isMute ?? true) && !element.peer.isLocal));
         if (peerIndex != -1) {
