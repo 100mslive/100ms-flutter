@@ -1715,6 +1715,18 @@ class MeetingStore extends ChangeNotifier
         toggleCameraMuteState();
         lastVideoStatus = true;
       }
+      if (screenShareCount == 0) {
+        changePIPWindowTextOnIOS(text: localPeer?.name, ratio: [9, 16]);
+      } else {
+        int peerIndex = peerTracks.indexWhere((element) =>
+            element.uid ==
+            element.peer.peerId + (element.track?.trackId ?? ""));
+        if (peerIndex != -1)
+          changePIPWindowTrackOnIOS(
+              track: peerTracks[peerIndex].track,
+              alternativeText: peerTracks[peerIndex].peer.name,
+              ratio: [9, 16]);
+      }
     } else if (state == AppLifecycleState.inactive) {
       if (Platform.isAndroid && isPipAutoEnabled && !isPipActive) {
         isPipActive = true;
