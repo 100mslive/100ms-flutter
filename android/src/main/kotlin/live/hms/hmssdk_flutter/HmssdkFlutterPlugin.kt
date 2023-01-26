@@ -459,7 +459,7 @@ class HmssdkFlutterPlugin :
     }
 
     override fun onCancel(arguments: Any?) {
-        this.eventSink = null
+        print("cancel")
     }
 
     fun getPeerById(id: String): HMSPeer? {
