@@ -89,31 +89,31 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     }
 
     public func onCancel(withArguments arguments: Any?) -> FlutterError? {
-//        eventSink = nil
-//        previewSink = nil
-//        logsSink = nil
-//        rtcSink = nil
         return nil
     }
 
     public func detachFromEngine(for registrar: FlutterPluginRegistrar) {
         if meetingEventChannel != nil {
             meetingEventChannel!.setStreamHandler(nil)
+            eventSink = nil
         } else {
            print("meetingEventChannel not found", #function)
         }
         if previewEventChannel != nil {
             previewEventChannel!.setStreamHandler(nil)
+            previewSink = nil
         } else {
             print("previewEventChannel not found", #function)
         }
         if logsEventChannel != nil {
             logsEventChannel!.setStreamHandler(nil)
+            logsSink = nil
         } else {
             print("logsEventChannel not found", #function)
         }
         if rtcStatsEventChannel != nil {
             rtcStatsEventChannel!.setStreamHandler(nil)
+            rtcSink = nil
         } else {
             print("rtcStatsEventChannel not found", #function)
         }
