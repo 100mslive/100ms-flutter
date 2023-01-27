@@ -88,8 +88,6 @@ class MeetingStore extends ChangeNotifier
 
   List<HMSRole> roles = [];
 
-  late int highestSpeakerIndex = -1;
-
   List<HMSPeer> peers = [];
 
   List<HMSPeer> filteredPeers = [];
@@ -120,7 +118,6 @@ class MeetingStore extends ChangeNotifier
 
   bool isNewMessageReceived = false;
 
-  String? highestSpeaker;
   int firstTimeBuild = 0;
 
   String message = "";
@@ -691,6 +688,20 @@ class MeetingStore extends ChangeNotifier
         peerTracks[index].setAudioLevel(element.audioLevel);
       }
     });
+    if (isPipActive) {
+      if (updateSpeakers.isNotEmpty) {
+        int index = -1;
+        index = peerTracks.indexWhere((element) =>
+            element.uid == updateSpeakers[0].peer.peerId + "mainVideo");
+        if (index != -1) {
+          PeerTrackNode node = peerTracks[index];
+          peerTracks.removeAt(index);
+          peerTracks.insert(screenShareCount, node);
+        }
+      }
+      notifyListeners();
+      return;
+    }
     // if (updateSpeakers.isNotEmpty) {
     //   highestSpeaker = updateSpeakers[0].peer.name;
     // } else {
