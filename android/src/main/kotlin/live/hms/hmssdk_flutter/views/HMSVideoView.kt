@@ -45,6 +45,12 @@ class HMSVideoView(
             (context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater).inflate(R.layout.hms_video_view, this)
         if(view != null){
             hmsVideoView = view?.findViewById(R.id.hmsVideoView)
+            hmsVideoView?.setEnableHardwareScaler(false)
+            hmsVideoView?.setMirror(setMirror)
+            hmsVideoView?.disableAutoSimulcastLayerSelect(disableAutoSimulcastLayerSelect)
+            if ((scaleType ?: 0) <= RendererCommon.ScalingType.values().size) {
+                hmsVideoView?.setScalingType(RendererCommon.ScalingType.values()[scaleType ?: 0])
+            }
         }
         else{
             Log.i("HMSVideoView Error","HMSVideoView init error view is null")
@@ -94,12 +100,6 @@ class HMSVideoView(
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         if (track != null) {
-            hmsVideoView?.setEnableHardwareScaler(false)
-            hmsVideoView?.setMirror(setMirror)
-            hmsVideoView?.disableAutoSimulcastLayerSelect(disableAutoSimulcastLayerSelect)
-            if ((scaleType ?: 0) <= RendererCommon.ScalingType.values().size) {
-                hmsVideoView?.setScalingType(RendererCommon.ScalingType.values()[scaleType ?: 0])
-            }
             hmsVideoView?.addTrack(track)
             context.registerReceiver(broadcastReceiver, IntentFilter(track.trackId))
         } else {
