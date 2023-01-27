@@ -89,31 +89,31 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     }
 
     public func onCancel(withArguments arguments: Any?) -> FlutterError? {
-        eventSink = nil
-        previewSink = nil
-        logsSink = nil
-        rtcSink = nil
         return nil
     }
 
     public func detachFromEngine(for registrar: FlutterPluginRegistrar) {
         if meetingEventChannel != nil {
             meetingEventChannel!.setStreamHandler(nil)
+            eventSink = nil
         } else {
            print("meetingEventChannel not found", #function)
         }
         if previewEventChannel != nil {
             previewEventChannel!.setStreamHandler(nil)
+            previewSink = nil
         } else {
             print("previewEventChannel not found", #function)
         }
         if logsEventChannel != nil {
             logsEventChannel!.setStreamHandler(nil)
+            logsSink = nil
         } else {
             print("logsEventChannel not found", #function)
         }
         if rtcStatsEventChannel != nil {
             rtcStatsEventChannel!.setStreamHandler(nil)
+            rtcSink = nil
         } else {
             print("rtcStatsEventChannel not found", #function)
         }
@@ -892,16 +892,12 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                 "local_tracks": tracks
             ]
         ] as [String: Any]
-
+        previewEnded = false
         previewSink?(data)
     }
-
+    var previewEnded = false
     public func on(join room: HMSRoom) {
-        if previewEventChannel != nil {
-            previewEventChannel!.setStreamHandler(nil)
-        } else {
-            print("previewEventChannel not found", #function)
-        }
+        previewEnded = true
         let data = [
             "event_name": "on_join_room",
             "data": [
@@ -920,9 +916,11 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                 "update": HMSRoomExtension.getValueOf(update)
             ]
         ] as [String: Any]
-
-        previewSink?(data)
-        eventSink?(data)
+        if(previewEnded){
+            eventSink?(data)
+        }else{
+            previewSink?(data)
+        }
     }
 
     public func on(peer: HMSPeer, update: HMSPeerUpdate) {
@@ -937,8 +935,11 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             ]
         ] as [String: Any]
 
-        previewSink?(data)
-        eventSink?(data)
+        if(previewEnded){
+            eventSink?(data)
+        }else{
+            previewSink?(data)
+        }
     }
 
     public func on(track: HMSTrack, update: HMSTrackUpdate, for peer: HMSPeer) {
