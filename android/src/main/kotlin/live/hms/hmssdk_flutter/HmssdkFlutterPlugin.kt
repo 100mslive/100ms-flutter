@@ -445,6 +445,7 @@ class HmssdkFlutterPlugin :
     }
 
     private fun destroy(result: Result) {
+        hmssdk = null
     }
 
     override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
