@@ -11,11 +11,11 @@ class HMSIOSPIPController {
   ///
   /// **autoEnterPip** - Enable [autoEnterPip] will start pip mode automatically when app minimized. Default value is `true`
   ///
-  /// **aspectRatio** - Ratio for PIP window. For example: [16, 9], [9, 16] ,[1, 1]. Default value is `[16, 9]`
+  /// **aspectRatio** - Ratio for PIP window. List of int indicating ratio for PIP window as [width,height]. For example: [16, 9], [9, 16] ,[1, 1]. Default value is `[16, 9]`
   ///
   /// **scaleType** - To set the video scaling. scaleType can be one of the following: [SCALE_ASPECT_FIT, SCALE_ASPECT_FILL, SCALE_ASPECT_BALANCED]. Default value is `ScaleType.SCALE_ASPECT_FILL`
   ///
-  /// **backgroundColor** - To set the background colour when video is off thst colour will be visible in background of PIP window. Default value is `Colors.black`.
+  /// **backgroundColor** - To set the background colour when video is off that colour will be visible in background of PIP window. Default value is `Colors.black`.
   ///
   ///`Note: Use [changeVideoTrack] function to change track in PIP window. Default track is local peer video track if available.`
   ///
@@ -75,13 +75,13 @@ class HMSIOSPIPController {
   ///
   /// **track** - [HMSVideoTrack] need to be passed for changing PIP window track.
   ///
-  /// **aspectRatio** - Ratio for PIP window. For example: [16, 9], [9, 16] ,[1, 1]. Default value is `[16, 9]`.
+  /// **aspectRatio** - Ratio for PIP window.List of int indicating ratio for PIP window as [width,height]. For example: [16, 9], [9, 16] ,[1, 1]. Default value is `[16, 9]`.
   ///
-  /// **alternativeText** - Alternative text is a textual substitute if HMSVideoTrack is muted.
+  /// **alternativeText** - Alternative text is a textual substitute if HMSVideoTrack is muted.This is the text which you wish to display when video for peer is OFF while in PIP
   ///
   /// **scaleType** - To set the video scaling. scaleType can be one of the following: [SCALE_ASPECT_FIT, SCALE_ASPECT_FILL, SCALE_ASPECT_BALANCED]. Default value is `ScaleType.SCALE_ASPECT_FILL`
   ///
-  /// **backgroundColor** - To set the background colour when video is off thst colour will be visible in background of PIP window. Default value is `Colors.black`.
+  /// **backgroundColor** - To set the background colour when video is off that colour will be visible in background of PIP window. Default value is `Colors.black`.
   ///
   /// `Note: [setupPIP] is required to call before calling [changeTrackPIP].`
   ///
@@ -131,11 +131,11 @@ class HMSIOSPIPController {
   ///
   /// **text** - Text you want to show in PIP window. It will replace HMSVideoTrack if it playing in PIP window.
   ///
-  /// **aspectRatio** - Ratio for PIP window. For example: [16, 9], [9, 16] ,[1, 1]. Default value is `[16, 9]`.
+  /// **aspectRatio** - Ratio for PIP window.List of int indicating ratio for PIP window as [width,height]. For example: [16, 9], [9, 16] ,[1, 1]. Default value is `[16, 9]`.
   ///
   /// **scaleType** - To set the video scaling. scaleType can be one of the following: [SCALE_ASPECT_FIT, SCALE_ASPECT_FILL, SCALE_ASPECT_BALANCED]. Default value is `ScaleType.SCALE_ASPECT_FILL`
   ///
-  /// **backgroundColor** - To set the background colour when video is off thst colour will be visible in background of PIP window. Default value is `Colors.black`.
+  /// **backgroundColor** - To set the background colour when video is off that colour will be visible in background of PIP window. Default value is `Colors.black`.
   ///
   /// `Note: [setupPIP] is required to call before calling [changeTextPIP].`
   ///
