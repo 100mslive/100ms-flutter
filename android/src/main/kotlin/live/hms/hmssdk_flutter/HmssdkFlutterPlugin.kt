@@ -462,9 +462,7 @@ class HmssdkFlutterPlugin :
         }
     }
 
-    override fun onCancel(arguments: Any?) {
-        print("cancel")
-    }
+    override fun onCancel(arguments: Any?) {}
 
     fun getPeerById(id: String): HMSPeer? {
         if (id == "") return getLocalPeer()
