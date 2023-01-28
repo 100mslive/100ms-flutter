@@ -85,14 +85,15 @@ class _MeetingPageState extends State<MeetingPage> {
         context.read<MeetingStore>().recordingType;
 
     if (_recordingType["hls"] ?? false) {
-      _message += "HLS Recording ";
+      _message += "HLS ";
     }
     if (_recordingType["server"] ?? false) {
-      _message += "Server Recording ";
+      _message += "Server ";
     }
     if (_recordingType["browser"] ?? false) {
-      _message += "Browser Recording ";
+      _message += "Beam ";
     }
+    _message += "Recording";
     return _message;
   }
 
@@ -544,26 +545,36 @@ class _MeetingPageState extends State<MeetingPage> {
                                                                           .scaleDown,
                                                                     ),
                                                                   ),
-                                                                  Text(
-                                                                    (roomState.item1 &&
-                                                                            roomState.item2)
-                                                                        ? "Live & Recording"
-                                                                        : (roomState.item1)
-                                                                            ? streamingState()
-                                                                            : (roomState.item2)
-                                                                                ? recordingState()
-                                                                                : "",
-                                                                    semanticsLabel:
-                                                                        "fl_live_stream_running",
-                                                                    style: GoogleFonts.inter(
-                                                                        fontSize:
-                                                                            16,
-                                                                        color:
-                                                                            themeDefaultColor,
-                                                                        letterSpacing:
-                                                                            0.5,
-                                                                        fontWeight:
-                                                                            FontWeight.w600),
+                                                                  GestureDetector(
+                                                                    onTap: () {
+                                                                      if (!roomState
+                                                                              .item1 &&
+                                                                          roomState
+                                                                              .item2)
+                                                                        Utilities.showToast(
+                                                                            recordingState());
+                                                                    },
+                                                                    child: Text(
+                                                                      (roomState.item1 &&
+                                                                              roomState.item2)
+                                                                          ? "Live & Recording"
+                                                                          : (roomState.item1)
+                                                                              ? streamingState()
+                                                                              : (roomState.item2)
+                                                                                  ? "Recording"
+                                                                                  : "",
+                                                                      semanticsLabel:
+                                                                          "fl_live_stream_running",
+                                                                      style: GoogleFonts.inter(
+                                                                          fontSize:
+                                                                              16,
+                                                                          color:
+                                                                              themeDefaultColor,
+                                                                          letterSpacing:
+                                                                              0.5,
+                                                                          fontWeight:
+                                                                              FontWeight.w600),
+                                                                    ),
                                                                   ),
                                                                 ],
                                                               ),

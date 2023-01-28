@@ -357,6 +357,10 @@ class HmssdkFlutterPlugin :
             previewChannel?.setStreamHandler(null) ?: Log.e("Channel Error", "Preview channel not found")
             logsEventChannel?.setStreamHandler(null) ?: Log.e("Channel Error", "Logs event channel not found")
             rtcStatsChannel?.setStreamHandler(null) ?: Log.e("Channel Error", "RTC Stats channel not found")
+            eventSink = null
+            previewSink = null
+            rtcSink = null
+            logsSink = null
             hmssdkFlutterPlugin = null
         } else {
             Log.e("Plugin Error", "hmssdkFlutterPlugin is null in onDetachedFromEngine")
@@ -458,9 +462,7 @@ class HmssdkFlutterPlugin :
         }
     }
 
-    override fun onCancel(arguments: Any?) {
-        this.eventSink = null
-    }
+    override fun onCancel(arguments: Any?) {}
 
     fun getPeerById(id: String): HMSPeer? {
         if (id == "") return getLocalPeer()
@@ -727,7 +729,6 @@ class HmssdkFlutterPlugin :
 
         override fun onJoin(room: HMSRoom) {
             hmssdk!!.addAudioObserver(hmsAudioListener)
-            previewChannel?.setStreamHandler(null) ?: Log.e("Channel Error", "Preview channel not found")
             val args = HashMap<String, Any?>()
             args.put("event_name", "on_join_room")
 

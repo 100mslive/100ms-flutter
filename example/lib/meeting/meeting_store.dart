@@ -88,8 +88,6 @@ class MeetingStore extends ChangeNotifier
 
   List<HMSRole> roles = [];
 
-  late int highestSpeakerIndex = -1;
-
   List<HMSPeer> peers = [];
 
   List<HMSPeer> filteredPeers = [];
@@ -120,7 +118,6 @@ class MeetingStore extends ChangeNotifier
 
   bool isNewMessageReceived = false;
 
-  String? highestSpeaker;
   int firstTimeBuild = 0;
 
   String message = "";
@@ -698,16 +695,19 @@ class MeetingStore extends ChangeNotifier
         peerTracks[index].setAudioLevel(element.audioLevel);
       }
     });
+
     // Below code for change track and text in PIP mode iOS.
-    if (updateSpeakers.isNotEmpty &&
-        (screenShareCount == 0 || isScreenShareOn)) {
-      if (updateSpeakers[0].peer.videoTrack != null) {
+    if (updateSpeakers.isNotEmpty) {
+      if (Platform.isIOS && (screenShareCount == 0 || isScreenShareOn)) {
         changePIPWindowTrackOnIOS(
             track: updateSpeakers[0].peer.videoTrack,
             alternativeText: updateSpeakers[0].peer.name,
             ratio: [9, 16]);
+      } else if (Platform.isAndroid) {
+        changePIPWindowOnAndroid(updateSpeakers[0].peer.peerId + "mainVideo");
       }
     }
+
     // if (updateSpeakers.isNotEmpty) {
     //   highestSpeaker = updateSpeakers[0].peer.name;
     // } else {
@@ -1363,6 +1363,19 @@ class MeetingStore extends ChangeNotifier
     return isPipActive;
   }
 
+  void changePIPWindowOnAndroid(String uid) {
+    if (Platform.isAndroid && isPipActive) {
+      int index = -1;
+      index = peerTracks.indexWhere((element) => element.uid == uid);
+      if (index != -1) {
+        PeerTrackNode node = peerTracks[index];
+        peerTracks.removeAt(index);
+        peerTracks.insert(screenShareCount, node);
+      }
+      notifyListeners();
+    }
+  }
+
   void changePIPWindowTrackOnIOS(
       {HMSVideoTrack? track,
       required String alternativeText,
@@ -1386,7 +1399,10 @@ class MeetingStore extends ChangeNotifier
     if (Platform.isIOS && text != null) {
       isPipActive = await isPIPActive();
       if (isPipActive) {
-        HMSIOSPIPController.changeText(text: text, aspectRatio: ratio,backgroundColor: Utilities.getBackgroundColour(text));
+        HMSIOSPIPController.changeText(
+            text: text,
+            aspectRatio: ratio,
+            backgroundColor: Utilities.getBackgroundColour(text));
         currentPIPtrack = null;
       }
     }

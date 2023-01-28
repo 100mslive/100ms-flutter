@@ -71,7 +71,7 @@ class _HMSExampleAppState extends State<HMSExampleApp> {
           borderRadius: BorderRadius.circular(20),
         ),
         elevation: 5),
-    primaryTextTheme: TextTheme(bodyText1: TextStyle(color: themeSurfaceColor)),
+    primaryTextTheme: TextTheme(bodyLarge: TextStyle(color: themeSurfaceColor)),
     primaryColor: hmsdefaultColor,
     brightness: Brightness.light,
     scaffoldBackgroundColor: Colors.white,

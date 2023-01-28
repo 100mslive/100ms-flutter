@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:badges/badges.dart';
+import 'package:badges/badges.dart' as badge;
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -107,8 +107,9 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Badge(
-                                badgeColor: hmsdefaultColor,
+                              badge.Badge(
+                                badgeStyle: badge.BadgeStyle(
+                                    badgeColor: hmsdefaultColor),
                                 badgeContent: Text(context
                                     .read<MeetingStore>()
                                     .peers
