@@ -521,7 +521,7 @@ class MeetingStore extends ChangeNotifier
     notifyListeners();
 
     if (Platform.isIOS && !(isHLSLink)) {
-      HMSIOSPIPController.setup(true, aspectRatio: [9, 16]);
+      HMSIOSPIPController.setup(autoEnterPip: true, aspectRatio: [9, 16]);
     }
 
     FlutterForegroundTask.startService(
@@ -1019,7 +1019,7 @@ class MeetingStore extends ChangeNotifier
           if (peer.role.name.contains("hls-")) {
             HMSIOSPIPController.destroy();
           } else {
-            HMSIOSPIPController.setup(true, aspectRatio: [9, 16]);
+            HMSIOSPIPController.setup(autoEnterPip: true, aspectRatio: [9, 16]);
           }
         }
 
@@ -1374,7 +1374,8 @@ class MeetingStore extends ChangeNotifier
             track: track,
             aspectRatio: ratio,
             alternativeText: alternativeText,
-            scaleType: ScaleType.SCALE_ASPECT_FILL);
+            scaleType: ScaleType.SCALE_ASPECT_FILL,
+            backgroundColor: Utilities.getBackgroundColour(alternativeText));
         currentPIPtrack = track;
       }
     }
@@ -1385,7 +1386,7 @@ class MeetingStore extends ChangeNotifier
     if (Platform.isIOS && text != null) {
       isPipActive = await isPIPActive();
       if (isPipActive) {
-        HMSIOSPIPController.changeText(text: text, aspectRatio: ratio);
+        HMSIOSPIPController.changeText(text: text, aspectRatio: ratio,backgroundColor: Utilities.getBackgroundColour(text));
         currentPIPtrack = null;
       }
     }
