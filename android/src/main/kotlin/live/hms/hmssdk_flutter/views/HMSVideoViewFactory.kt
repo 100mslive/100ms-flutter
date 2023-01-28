@@ -26,7 +26,7 @@ class HMSVideoViewWidget(
 
     private var hmsVideoView: HMSVideoView? = null
 
-    init{
+    init {
         if (hmsVideoView == null) {
             hmsVideoView = HMSVideoView(context, setMirror, scaleType, track, disableAutoSimulcastLayerSelect)
         }
@@ -48,20 +48,18 @@ class HMSVideoViewWidget(
                 FrameLayout.LayoutParams.WRAP_CONTENT
             )
         }
-        if(view != null){
+        if (view != null) {
             view?.layoutParams = frameLayoutParams
-        }
-        else{
-            Log.i("HMSVideoView error","onFlutterViewAttached error view is null")
+        } else {
+            Log.i("HMSVideoView error", "onFlutterViewAttached error view is null")
         }
     }
 
     override fun dispose() {
-        if(hmsVideoView != null){
+        if (hmsVideoView != null) {
             hmsVideoView?.onDisposeCalled()
-        }
-        else{
-            Log.i("HMSVideoView error","onDisposeCalled error hmsVideoView is null")
+        } else {
+            Log.i("HMSVideoView error", "onDisposeCalled error hmsVideoView is null")
         }
         hmsVideoView = null
     }

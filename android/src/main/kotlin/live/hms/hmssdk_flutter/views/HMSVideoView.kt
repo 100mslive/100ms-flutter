@@ -26,7 +26,7 @@ class HMSVideoView(
 ) : FrameLayout(context, null) {
 
     private var hmsVideoView: HMSVideoView? = null
-    private var view:View? = null
+    private var view: View? = null
     private val broadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(contxt: Context?, intent: Intent?) {
             if (intent?.action == track?.trackId) {
@@ -43,7 +43,7 @@ class HMSVideoView(
     init {
         view =
             (context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater).inflate(R.layout.hms_video_view, this)
-        if(view != null){
+        if (view != null) {
             hmsVideoView = view?.findViewById(R.id.hmsVideoView)
             hmsVideoView?.setEnableHardwareScaler(false)
             hmsVideoView?.setMirror(setMirror)
@@ -51,15 +51,14 @@ class HMSVideoView(
             if ((scaleType ?: 0) <= RendererCommon.ScalingType.values().size) {
                 hmsVideoView?.setScalingType(RendererCommon.ScalingType.values()[scaleType ?: 0])
             }
-        }
-        else{
-            Log.i("HMSVideoView Error","HMSVideoView init error view is null")
+        } else {
+            Log.i("HMSVideoView Error", "HMSVideoView init error view is null")
         }
     }
 
     private fun captureSnapshot() {
         var byteArray: ByteArray?
-        if(hmsVideoView != null){
+        if (hmsVideoView != null) {
             hmsVideoView?.captureBitmap({ bitmap ->
                 if (bitmap != null) {
                     val stream = ByteArrayOutputStream()
@@ -78,18 +77,16 @@ class HMSVideoView(
                     }
                 }
             })
-        }
-        else{
+        } else {
             Log.i("Receiver error", "hmsVideoView is null")
         }
     }
 
     fun onDisposeCalled() {
-        if(hmsVideoView != null){
+        if (hmsVideoView != null) {
             hmsVideoView?.removeTrack()
-        }
-        else{
-            Log.i("HMSVideoView error","onDisposeCalled error hmsVideoView is null")
+        } else {
+            Log.i("HMSVideoView error", "onDisposeCalled error hmsVideoView is null")
         }
         this.removeView(view)
         view = null
@@ -109,11 +106,10 @@ class HMSVideoView(
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
-        if(hmsVideoView != null){
+        if (hmsVideoView != null) {
             hmsVideoView?.removeTrack()
-        }
-        else{
-            Log.i("HMSVideoView error","onDetachedFromWindow error hmsVideoView is null")
+        } else {
+            Log.i("HMSVideoView error", "onDetachedFromWindow error hmsVideoView is null")
         }
     }
 }

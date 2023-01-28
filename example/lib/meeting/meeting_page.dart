@@ -547,10 +547,12 @@ class _MeetingPageState extends State<MeetingPage> {
                                                                   ),
                                                                   GestureDetector(
                                                                     onTap: () {
-                                                                      if(!roomState.item1 && roomState.item2)
-                                                                      Utilities
-                                                                          .showToast(
-                                                                              recordingState());
+                                                                      if (!roomState
+                                                                              .item1 &&
+                                                                          roomState
+                                                                              .item2)
+                                                                        Utilities.showToast(
+                                                                            recordingState());
                                                                     },
                                                                     child: Text(
                                                                       (roomState.item1 &&

@@ -916,9 +916,9 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                 "update": HMSRoomExtension.getValueOf(update)
             ]
         ] as [String: Any]
-        if(previewEnded){
+        if previewEnded {
             eventSink?(data)
-        }else{
+        } else {
             previewSink?(data)
         }
     }
@@ -935,9 +935,9 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             ]
         ] as [String: Any]
 
-        if(previewEnded){
+        if previewEnded {
             eventSink?(data)
-        }else{
+        } else {
             previewSink?(data)
         }
     }
