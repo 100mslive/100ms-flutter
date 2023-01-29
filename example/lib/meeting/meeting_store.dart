@@ -696,13 +696,18 @@ class MeetingStore extends ChangeNotifier
       }
     });
 
-    // Below code for change track and text in PIP mode iOS.
+    // Below code for change track and text in PIP mode iOS and android.
     if (updateSpeakers.isNotEmpty) {
       if (Platform.isIOS && (screenShareCount == 0 || isScreenShareOn)) {
-        changePIPWindowTrackOnIOS(
-            track: updateSpeakers[0].peer.videoTrack,
-            alternativeText: updateSpeakers[0].peer.name,
-            ratio: [9, 16]);
+        if (updateSpeakers[0].peer.videoTrack != null) {
+          changePIPWindowTrackOnIOS(
+              track: updateSpeakers[0].peer.videoTrack,
+              alternativeText: updateSpeakers[0].peer.name,
+              ratio: [9, 16]);
+        } else {
+          changePIPWindowTextOnIOS(
+              text: updateSpeakers[0].peer.name, ratio: [9, 16]);
+        }
       } else if (Platform.isAndroid) {
         changePIPWindowOnAndroid(updateSpeakers[0].peer.peerId + "mainVideo");
       }
