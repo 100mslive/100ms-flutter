@@ -115,9 +115,12 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                                     .peers
                                     .length
                                     .toString()),
-                                child: SvgPicture.asset(
-                                  "assets/icons/participants.svg",
-                                  color: themeDefaultColor,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: SvgPicture.asset(
+                                    "assets/icons/participants.svg",
+                                    color: themeDefaultColor,
+                                  ),
                                 ),
                               ),
                               SizedBox(height: 10),
