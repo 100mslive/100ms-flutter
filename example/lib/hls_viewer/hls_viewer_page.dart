@@ -29,6 +29,38 @@ class HLSViewerPage extends StatefulWidget {
 }
 
 class _HLSViewerPageState extends State<HLSViewerPage> {
+  
+  String recordingState() {
+    String _message = "";
+
+    Map<String, bool> _recordingType =
+        context.read<MeetingStore>().recordingType;
+
+    if (_recordingType["hls"] ?? false) {
+      _message += "HLS ";
+    }
+    if (_recordingType["server"] ?? false) {
+      _message += "Server ";
+    }
+    if (_recordingType["browser"] ?? false) {
+      _message += "Beam ";
+    }
+    _message += "Recording";
+    return _message;
+  }
+
+  String streamingState() {
+    String _message = "Live";
+    Map<String, bool> _streamingType =
+        context.read<MeetingStore>().streamingType;
+    if (_streamingType["hls"] ?? false) {
+      _message += " with HLS";
+    } else if (_streamingType["rtmp"] ?? false) {
+      _message += " with RTMP";
+    }
+    return _message;
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -133,11 +165,34 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                     SizedBox(
                                       width: 10,
                                     ),
-                                    Selector<MeetingStore, bool>(
-                                        selector: (_, meetingStore) =>
-                                            meetingStore.hasHlsStarted,
-                                        builder: (_, hasHlsStarted, __) {
-                                          if (hasHlsStarted)
+                                    Selector<
+                                            MeetingStore,
+                                            Tuple4<
+                                                bool,
+                                                bool,
+                                                Map<String, bool>,
+                                                Map<String, bool>>>(
+                                        selector: (_, meetingStore) => Tuple4(
+                                            ((meetingStore.streamingType[
+                                                        "rtmp"] ??
+                                                    false) ||
+                                                (meetingStore.streamingType[
+                                                        "hls"] ??
+                                                    false)),
+                                            ((meetingStore.recordingType[
+                                                        "browser"] ??
+                                                    false) ||
+                                                (meetingStore.recordingType[
+                                                        "server"] ??
+                                                    false) ||
+                                                ((meetingStore
+                                                        .recordingType["hls"] ??
+                                                    false))),
+                                            meetingStore.streamingType,
+                                            meetingStore.recordingType),
+                                        builder: (_, roomState, __) {
+                                          if (roomState.item1 ||
+                                              roomState.item2)
                                             return Column(
                                               mainAxisAlignment:
                                                   MainAxisAlignment
@@ -157,106 +212,124 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                         fit: BoxFit.scaleDown,
                                                       ),
                                                     ),
-                                                    Text(
-                                                      "Live",
-                                                      style: GoogleFonts.inter(
-                                                          fontSize: 16,
-                                                          color:
-                                                              themeDefaultColor,
-                                                          letterSpacing: 0.5,
-                                                          fontWeight:
-                                                              FontWeight.w600),
+                                                    GestureDetector(
+                                                      onTap: () {
+                                                        if (!roomState.item1 &&
+                                                            roomState.item2)
+                                                          Utilities.showToast(
+                                                              recordingState());
+                                                      },
+                                                      child: Text(
+                                                        (roomState.item1 &&
+                                                                roomState.item2)
+                                                            ? "Live & Recording"
+                                                            : (roomState.item1)
+                                                                ? streamingState()
+                                                                : (roomState
+                                                                        .item2)
+                                                                    ? "Recording"
+                                                                    : "",
+                                                        semanticsLabel:
+                                                            "fl_live_stream_running",
+                                                        style: GoogleFonts.inter(
+                                                            fontSize: 16,
+                                                            color:
+                                                                themeDefaultColor,
+                                                            letterSpacing: 0.5,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w600),
+                                                      ),
                                                     ),
                                                   ],
                                                 ),
-                                                Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: [
-                                                    Row(
-                                                      children: [
-                                                        SvgPicture.asset(
-                                                          "assets/icons/clock.svg",
-                                                          color:
-                                                              themeSubHeadingColor,
-                                                          fit: BoxFit.scaleDown,
-                                                        ),
-                                                        SizedBox(
-                                                          width: 6,
-                                                        ),
-                                                        Selector<MeetingStore,
-                                                                HMSRoom?>(
-                                                            selector: (_,
-                                                                    meetingStore) =>
-                                                                meetingStore
-                                                                    .hmsRoom,
-                                                            builder: (_,
-                                                                hmsRoom, __) {
-                                                              if (hmsRoom !=
-                                                                      null &&
-                                                                  hmsRoom.hmshlsStreamingState !=
-                                                                      null &&
-                                                                  hmsRoom
-                                                                          .hmshlsStreamingState!
-                                                                          .variants
-                                                                          .length !=
-                                                                      0 &&
-                                                                  hmsRoom
-                                                                          .hmshlsStreamingState!
-                                                                          .variants[
-                                                                              0]!
-                                                                          .startedAt !=
-                                                                      null) {
-                                                                return HMSStreamTimer(
-                                                                    startedAt: hmsRoom
-                                                                        .hmshlsStreamingState!
-                                                                        .variants[
-                                                                            0]!
-                                                                        .startedAt!);
-                                                              }
-                                                              return SubtitleText(
-                                                                text: "00:00",
-                                                                textColor:
+                                                roomState.item1
+                                                    ? Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        children: [
+                                                          (roomState.item3[
+                                                                      "hls"] ??
+                                                                  false)
+                                                              ? Row(
+                                                                  children: [
+                                                                    SvgPicture
+                                                                        .asset(
+                                                                      "assets/icons/clock.svg",
+                                                                      color:
+                                                                          themeSubHeadingColor,
+                                                                      fit: BoxFit
+                                                                          .scaleDown,
+                                                                    ),
+                                                                    SizedBox(
+                                                                      width: 6,
+                                                                    ),
+                                                                    Selector<
+                                                                            MeetingStore,
+                                                                            HMSRoom?>(
+                                                                        selector: (_,
+                                                                                meetingStore) =>
+                                                                            meetingStore
+                                                                                .hmsRoom,
+                                                                        builder: (_,
+                                                                            hmsRoom,
+                                                                            __) {
+                                                                          if (hmsRoom != null &&
+                                                                              hmsRoom.hmshlsStreamingState != null &&
+                                                                              hmsRoom.hmshlsStreamingState!.variants.length != 0 &&
+                                                                              hmsRoom.hmshlsStreamingState!.variants[0]!.startedAt != null) {
+                                                                            return HMSStreamTimer(startedAt: hmsRoom.hmshlsStreamingState!.variants[0]!.startedAt!);
+                                                                          }
+                                                                          return SubtitleText(
+                                                                            text:
+                                                                                "00:00",
+                                                                            textColor:
+                                                                                themeSubHeadingColor,
+                                                                          );
+                                                                        }),
+                                                                  ],
+                                                                )
+                                                              : Container(),
+                                                          SubtitleText(
+                                                            text: " | ",
+                                                            textColor:
+                                                                dividerColor,
+                                                          ),
+                                                          Row(
+                                                            children: [
+                                                              SvgPicture.asset(
+                                                                "assets/icons/watching.svg",
+                                                                color:
                                                                     themeSubHeadingColor,
-                                                              );
-                                                            }),
-                                                      ],
-                                                    ),
-                                                    SubtitleText(
-                                                      text: " | ",
-                                                      textColor: dividerColor,
-                                                    ),
-                                                    Row(
-                                                      children: [
-                                                        SvgPicture.asset(
-                                                          "assets/icons/watching.svg",
-                                                          color:
-                                                              themeSubHeadingColor,
-                                                          fit: BoxFit.scaleDown,
-                                                        ),
-                                                        SizedBox(
-                                                          width: 6,
-                                                        ),
-                                                        Selector<MeetingStore,
-                                                                int>(
-                                                            selector:
-                                                                (_, meetingStore) =>
-                                                                    meetingStore
-                                                                        .peers
-                                                                        .length,
-                                                            builder: (_, length,
-                                                                __) {
-                                                              return SubtitleText(
-                                                                  text: length
-                                                                      .toString(),
-                                                                  textColor:
-                                                                      themeSubHeadingColor);
-                                                            })
-                                                      ],
-                                                    )
-                                                  ],
-                                                )
+                                                                fit: BoxFit
+                                                                    .scaleDown,
+                                                              ),
+                                                              SizedBox(
+                                                                width: 6,
+                                                              ),
+                                                              Selector<
+                                                                      MeetingStore,
+                                                                      int>(
+                                                                  selector: (_,
+                                                                          meetingStore) =>
+                                                                      meetingStore
+                                                                          .peers
+                                                                          .length,
+                                                                  builder: (_,
+                                                                      length,
+                                                                      __) {
+                                                                    return SubtitleText(
+                                                                        text: length
+                                                                            .toString(),
+                                                                        textColor:
+                                                                            themeSubHeadingColor);
+                                                                  })
+                                                            ],
+                                                          )
+                                                        ],
+                                                      )
+                                                    : Container()
                                               ],
                                             );
                                           return SizedBox();
@@ -265,35 +338,7 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                 ),
                                 Row(
                                   children: [
-                                    Selector<MeetingStore, bool>(
-                                        selector: (_, meetingStore) =>
-                                            meetingStore.isRaisedHand,
-                                        builder: (_, handRaised, __) {
-                                          return HMSEmbeddedButton(
-                                            onTap: () => {
-                                              context
-                                                  .read<MeetingStore>()
-                                                  .changeMetadata()
-                                            },
-                                            width: 40,
-                                            height: 40,
-                                            disabledBorderColor: borderColor,
-                                            offColor:
-                                                themeScreenBackgroundColor,
-                                            onColor: themeHintColor,
-                                            isActive: handRaised,
-                                            child: SvgPicture.asset(
-                                              "assets/icons/hand_outline.svg",
-                                              color: themeDefaultColor,
-                                              fit: BoxFit.scaleDown,
-                                              semanticsLabel:
-                                                  "hand_raise_button",
-                                            ),
-                                          );
-                                        }),
-                                    SizedBox(
-                                      width: 10,
-                                    ),
+                                    
                                     Selector<MeetingStore, bool>(
                                         selector: (_, meetingStore) =>
                                             meetingStore.isNewMessageReceived,
