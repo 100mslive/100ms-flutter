@@ -100,17 +100,18 @@ class _ViewerSettingsBottomSheetState extends State<ViewerSettingsBottomSheet> {
                                     context.read<MeetingStore>().peers.length <
                                             1000
                                         ? 5
-                                        :8)),
+                                        : 8)),
                             badgeContent: Text(context
-                                    .read<MeetingStore>()
-                                    .peers
-                                    .length
-                                    .toString()),
+                                .read<MeetingStore>()
+                                .peers
+                                .length
+                                .toString()),
                             child: Padding(
-                              padding: EdgeInsets.all((context.read<MeetingStore>().peers.length <
-                                            1000
-                                        ? 5
-                                        :10)),
+                              padding: EdgeInsets.all(
+                                  (context.read<MeetingStore>().peers.length <
+                                          1000
+                                      ? 5
+                                      : 10)),
                               child: SvgPicture.asset(
                                 "assets/icons/participants.svg",
                                 color: themeDefaultColor,
@@ -224,14 +225,18 @@ class _ViewerSettingsBottomSheetState extends State<ViewerSettingsBottomSheet> {
                   leading: SvgPicture.asset(
                     "assets/icons/hand_outline.svg",
                     fit: BoxFit.scaleDown,
-                    color: context.read<MeetingStore>().isRaisedHand?errorColor:themeDefaultColor,
+                    color: context.read<MeetingStore>().isRaisedHand
+                        ? errorColor
+                        : themeDefaultColor,
                   ),
                   title: Text(
                     "Raise Hand",
                     semanticsLabel: "hand_raise_button",
                     style: GoogleFonts.inter(
                         fontSize: 14,
-                        color: context.read<MeetingStore>().isRaisedHand?errorColor:themeDefaultColor,
+                        color: context.read<MeetingStore>().isRaisedHand
+                            ? errorColor
+                            : themeDefaultColor,
                         letterSpacing: 0.25,
                         fontWeight: FontWeight.w600),
                   )),

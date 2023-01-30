@@ -29,7 +29,6 @@ class HLSViewerPage extends StatefulWidget {
 }
 
 class _HLSViewerPageState extends State<HLSViewerPage> {
-  
   String recordingState() {
     String _message = "";
 
@@ -338,7 +337,6 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                 ),
                                 Row(
                                   children: [
-                                    
                                     Selector<MeetingStore, bool>(
                                         selector: (_, meetingStore) =>
                                             meetingStore.isNewMessageReceived,

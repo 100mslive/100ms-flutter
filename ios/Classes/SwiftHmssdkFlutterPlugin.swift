@@ -205,7 +205,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                         result(HMSErrorExtension.getError("iOS 15 or above is required"))
                         return }
             HMSPIPAction.pipAction(call, result, hmsSDK, self)
-            
+
         case "capture_snapshot":
             captureSnapshot(call, result)
 

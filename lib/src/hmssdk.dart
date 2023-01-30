@@ -1236,7 +1236,7 @@ class HMSSDK {
   ///
   ///**Parameters**:
   ///
-  ///**aspectRatio** - Ratio for PIP window,List of int indicating ratio for PIP window as [width,height] 
+  ///**aspectRatio** - Ratio for PIP window,List of int indicating ratio for PIP window as [width,height]
   ///
   ///**autoEnterPip** - Enable [autoEnterPip] will start pip mode automatically when app minimized.
   ///
