@@ -4,6 +4,7 @@ import HMSSDK
 import ReplayKit
 import AVKit
 import MediaPlayer
+import SwiftUI
 
 public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListener, FlutterStreamHandler, HMSPreviewListener, HMSLogger {
 
@@ -55,8 +56,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                 meetingEventChannel: FlutterEventChannel,
                 previewEventChannel: FlutterEventChannel,
                 logsEventChannel: FlutterEventChannel,
-                rtcStatsEventChannel: FlutterEventChannel
-    ) {
+                rtcStatsEventChannel: FlutterEventChannel) {
 
         self.channel = channel
         self.meetingEventChannel = meetingEventChannel
@@ -97,7 +97,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             meetingEventChannel!.setStreamHandler(nil)
             eventSink = nil
         } else {
-           print("meetingEventChannel not found", #function)
+            print("meetingEventChannel not found", #function)
         }
         if previewEventChannel != nil {
             previewEventChannel!.setStreamHandler(nil)
@@ -199,6 +199,13 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         case "set_simulcast_layer", "get_layer", "get_layer_definition":
             HMSRemoteVideoTrackExtension.remoteVideoTrackActions(call, result, hmsSDK!)
 
+        case "setup_pip", "start_pip", "stop_pip", "is_pip_available", "is_pip_active", "change_track_pip", "change_text_pip", "destroy_pip":
+            guard #available(iOS 15.0, *) else {
+                print(#function, HMSErrorExtension.getError("iOS 15 or above is required"))
+                        result(HMSErrorExtension.getError("iOS 15 or above is required"))
+                        return }
+            HMSPIPAction.pipAction(call, result, hmsSDK, self)
+            
         case "capture_snapshot":
             captureSnapshot(call, result)
 
@@ -534,6 +541,11 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             if let error = error {
                 result(HMSErrorExtension.toDictionary(error))
             } else {
+                if #available(iOS 15.0, *) {
+                    if HMSPIPAction.pipController != nil {
+                        HMSPIPAction.disposePIP(nil)
+                    }
+                }
                 result(nil)
             }
         }
@@ -803,7 +815,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         hmsSDK?.getSessionMetadata(completion: { metadata, _ in
             if let metadata = metadata {
                 let data = [
-                        "event_name": "session_metadata",
+                    "event_name": "session_metadata",
                     "data": [
                         "metadata": metadata
                     ]
@@ -1036,6 +1048,11 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             ]
         ] as [String: Any]
 
+        if #available(iOS 15.0, *) {
+            if HMSPIPAction.pipController != nil {
+                HMSPIPAction.disposePIP(nil)
+            }
+        }
         eventSink?(data)
     }
 

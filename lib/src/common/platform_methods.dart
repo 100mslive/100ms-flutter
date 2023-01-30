@@ -156,6 +156,12 @@ enum PlatformMethod {
   setSimulcastLayer,
   getLayer,
   getLayerDefinition,
+  setupPIP,
+  startPIP,
+  stopPIP,
+  changeTrackPIP,
+  changeTextPIP,
+  destroyPIP,
   toggleMicMuteState,
   toggleCameraMuteState,
   captureSnapshot
@@ -370,6 +376,18 @@ extension PlatformMethodValues on PlatformMethod {
         return "get_layer";
       case PlatformMethod.getLayerDefinition:
         return "get_layer_definition";
+      case PlatformMethod.setupPIP:
+        return "setup_pip";
+      case PlatformMethod.stopPIP:
+        return "stop_pip";
+      case PlatformMethod.startPIP:
+        return "start_pip";
+      case PlatformMethod.changeTrackPIP:
+        return "change_track_pip";
+      case PlatformMethod.changeTextPIP:
+        return "change_text_pip";
+      case PlatformMethod.destroyPIP:
+        return "destroy_pip";
       case PlatformMethod.toggleMicMuteState:
         return "toggle_mic_mute_state";
       case PlatformMethod.toggleCameraMuteState:
@@ -593,6 +611,14 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.getLayer;
       case "get_layer_definition":
         return PlatformMethod.getLayerDefinition;
+      case "setup_pip":
+        return PlatformMethod.setupPIP;
+      case "change_track_pip":
+        return PlatformMethod.changeTrackPIP;
+      case "change_text_pip":
+        return PlatformMethod.changeTextPIP;
+      case "destroy_pip":
+        return PlatformMethod.destroyPIP;
       case "toggle_mic_mute_state":
         return PlatformMethod.toggleMicMuteState;
       case "toggle_camera_mute_state":
