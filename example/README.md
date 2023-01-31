@@ -142,18 +142,18 @@ Single Tile Mode
 </tr>
 <tr>
 <td>
-<img src="https://user-images.githubusercontent.com/93931528/215849993-c8684aa6-1ef0-46cd-8f9e-93ad4ca2c0e4.gif" width="100" height="300"/>
+<img src="https://user-images.githubusercontent.com/93931528/215849993-c8684aa6-1ef0-46cd-8f9e-93ad4ca2c0e4.gif"  height="300"/>
 </td>
 <td>
-<img src="https://user-images.githubusercontent.com/93931528/215849243-80eacf1b-20b1-4983-8fad-9a6a96a7d92c.gif" width="100" height="300"/>
+<img src="https://user-images.githubusercontent.com/93931528/215849243-80eacf1b-20b1-4983-8fad-9a6a96a7d92c.gif" height="300"/>
 <td>
-<img src="https://user-images.githubusercontent.com/93931528/215849287-0448e279-1911-466a-bfef-aa381ab94916.gif" width="100" height="300"/>
+<img src="https://user-images.githubusercontent.com/93931528/215849287-0448e279-1911-466a-bfef-aa381ab94916.gif"  height="300"/>
 </td>
 <td>
-<img src="https://user-images.githubusercontent.com/93931528/215849614-3c8ba473-70ae-4038-9689-c1dbc64dd9b2.gif" width="100" height="300"/>
+<img src="https://user-images.githubusercontent.com/93931528/215849614-3c8ba473-70ae-4038-9689-c1dbc64dd9b2.gif"  height="300"/>
 </td>
 <td>
-<img src="https://user-images.githubusercontent.com/93931528/215849267-9433d88c-b345-4a98-834a-19e157051c82.gif" width="100" height="300"/>
+<img src="https://user-images.githubusercontent.com/93931528/215849267-9433d88c-b345-4a98-834a-19e157051c82.gif" height="300"/>
 </td>
 </tr>
 </table>
