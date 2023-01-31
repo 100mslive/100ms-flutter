@@ -80,7 +80,7 @@ class PeerTrackNode extends ChangeNotifier {
 ### Data flow overview
 
 <p align="center">
-<img src="https://github.com/100mslive/100ms-flutter/blob/main/example/assets/images/app-flow-diagram.png" title="app-flow" float=center height=300>
+<img src="https://user-images.githubusercontent.com/93931528/215852461-d9d711a4-0dad-45c7-94ce-ac3862963490.png" title="app-flow" float=center height=300>
 </p>
 
 ### How example app uses the updates from SDK and updates the UI efficiently without extra rebuilds
@@ -91,7 +91,7 @@ Let's see how we are handling the updates in an efficient manner to avoid extra 
 - Updates related to peer(PeerTrackNode class)
 
 <p align="center">
-<img src="https://github.com/100mslive/100ms-flutter/blob/main/example/assets/images/app-breakdown.png" title="app-flow" float=center height=300>
+<img src="https://user-images.githubusercontent.com/93931528/215852473-1976ff80-4e51-4398-ad68-e553b6dc2cf8.png" title="app-flow" float=center height=300>
 </p>
 
 ### Application settings and meeting modes
@@ -102,13 +102,13 @@ The example app offers some settings to configure the application. Some of them 
 - Mirror Camera(To set whether to mirror local camera)
 - Enable Stats(To enable webRTC stats)
 
-<img src="https://github.com/100mslive/100ms-flutter/blob/main/example/assets/images/app-settings.png" title="app-settings" float=center height=300>
+<img src="https://user-images.githubusercontent.com/93931528/215852661-a6bef755-8ea0-43b0-b7e5-384d0630c184.png" title="app-settings" float=center height=300>
 
 ---
 
 The example app offers various meeting modes which decide the tile orientation on the mobile screen.
 
-<img src="https://github.com/100mslive/100ms-flutter/blob/main/example/assets/images/meeting-mode.png" title="meeting-mode" height=300>
+<img src="https://user-images.githubusercontent.com/93931528/215852782-982a3a16-8a76-49a0-9224-a3b58e2f3996.png" title="meeting-mode" height=300>
 
 Let's look at each mode one by one
 
@@ -584,7 +584,7 @@ More info about audio share can be found [here](https://www.100ms.live/docs/flut
 Consider a scenario where Bluetooth earphones are connected to the phone but you want your friends sitting with you to also listen to the stream. So, you disconnect the Bluetooth and then the audio comes from an external speaker. Well gone are those days when you need to do this `HMSSDK` provides inbuilt methods to easily switch audio routing.
 
 <p align="center">
-<img src="https://github.com/100mslive/100ms-flutter/blob/main/example/assets/images/audio-device-setting.png" title="audio-device-setting" height=300>
+<img src="https://user-images.githubusercontent.com/93931528/215852939-395e4791-937d-4538-922f-8a5b8ed87f97.png" title="audio-device-setting" height=300>
 </p>
 
 `HMSSDK` has `switchAudioOutput` method to do so. It takes 
@@ -641,9 +641,9 @@ Let's take the seminar case again where someone has a question so how will the h
 Suppose you are in a meeting and someone's at the door unmuting and informing or using chat to inform seems a bit odd, HMSSDK's BRB(Be Right Back) comes to rescue.
 
 <p align="center">
-<img src="https://github.com/100mslive/100ms-flutter/blob/main/example/assets/images/hand-raise.png" title="hand-raise" height=300>
+<img src="https://user-images.githubusercontent.com/93931528/215853137-f3a530c8-9702-4cc5-a7af-3cd3f79924f3.png" title="hand-raise" height=300>
 &nbsp; &nbsp; &nbsp; &nbsp;
-<img src="https://github.com/100mslive/100ms-flutter/blob/main/example/assets/images/brb.png" title="brb" height=300>
+<img src="https://user-images.githubusercontent.com/93931528/215853073-f5595833-b89c-4836-80c6-1744c07651fd.png" title="brb" height=300>
 </p>
 
 
