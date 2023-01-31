@@ -1020,11 +1020,14 @@ class MeetingStore extends ChangeNotifier
         }
 
         // Setup or destroy PIP controller on role Based
-        if (peer.isLocal) {
-          if (peer.role.name.contains("hls-")) {
-            HMSIOSPIPController.destroy();
-          } else {
-            HMSIOSPIPController.setup(autoEnterPip: true, aspectRatio: [9, 16]);
+        if (Platform.isIOS) {
+          if (peer.isLocal) {
+            if (peer.role.name.contains("hls-")) {
+              HMSIOSPIPController.destroy();
+            } else {
+              HMSIOSPIPController.setup(
+                  autoEnterPip: true, aspectRatio: [9, 16]);
+            }
           }
         }
 
