@@ -591,14 +591,17 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     }
 
     private func acceptChangeRole(_ result: @escaping FlutterResult) {
-
-        hmsSDK?.accept(changeRole: roleChangeRequest!) { [weak self] _, error in
-            if let error = error {
-                result(HMSErrorExtension.toDictionary(error))
-            } else {
-                self?.roleChangeRequest = nil
-                result(nil)
+        if let request = roleChangeRequest {
+            hmsSDK?.accept(changeRole: request) { [weak self] _, error in
+                if let error = error {
+                    result(HMSErrorExtension.toDictionary(error))
+                } else {
+                    self?.roleChangeRequest = nil
+                    result(nil)
+                }
             }
+        }else {
+            result(HMSErrorExtension.getError("Role Change Request is Expired."))
         }
     }
 

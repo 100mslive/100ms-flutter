@@ -542,11 +542,23 @@ class HmssdkFlutterPlugin :
     }
 
     private fun acceptChangeRole(result: Result) {
-        hmssdk!!.acceptChangeRole(
-            this.requestChange!!,
-            hmsActionResultListener = HMSCommonAction.getActionListener(result)
-        )
-        requestChange = null
+        if(requestChange != null) {
+            hmssdk!!.acceptChangeRole(
+                this.requestChange!!,
+                hmsActionResultListener = HMSCommonAction.getActionListener(result)
+            )
+            requestChange = null
+        }else{
+            val hmsException = HMSException(
+                action = "Resend Role Change Request",
+                code = 6004,
+                description = "Role Change Request is Expired.",
+                message = "Role Change Request is Expired.",
+                name = "Role Change Request Error"
+            )
+            val args = HMSExceptionExtension.toDictionary(hmsException)
+            result.success(args)
+        }
     }
 
     var hmsAudioListener = object : HMSAudioListener {
