@@ -142,8 +142,8 @@ Single Tile Mode
 </tr>
 <tr>
 <td>
-<video width="300" height="200" autoplay="autoplay">
-<source src="https://user-images.githubusercontent.com/93931528/205587304-772a5dd6-ed64-4d9e-8bb5-4fc3eed83bea.mp4">
+<video src='https://user-images.githubusercontent.com/93931528/205587304-772a5dd6-ed64-4d9e-8bb5-4fc3eed83bea.mp4' width=180
+>
 </video>
 </td>
 <td>
