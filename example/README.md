@@ -142,7 +142,7 @@ Single Tile Mode
 </tr>
 <tr>
 <td>
-<img src="https://user-images.githubusercontent.com/93931528/215849993-c8684aa6-1ef0-46cd-8f9e-93ad4ca2c0e4.gif" />
+<img src="https://user-images.githubusercontent.com/93931528/215849993-c8684aa6-1ef0-46cd-8f9e-93ad4ca2c0e4.gif"  width="50" height="300"/>
 </td>
 <td>
 <video src='https://user-images.githubusercontent.com/93931528/215849243-80eacf1b-20b1-4983-8fad-9a6a96a7d92c.gif' width=50 height=300
