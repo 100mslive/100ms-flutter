@@ -142,7 +142,7 @@ Single Tile Mode
 </tr>
 <tr>
 <td>
-https://user-images.githubusercontent.com/93931528/205587304-772a5dd6-ed64-4d9e-8bb5-4fc3eed83bea.mp4
+<video src="https://user-images.githubusercontent.com/93931528/205587304-772a5dd6-ed64-4d9e-8bb5-4fc3eed83bea.mp4">
 </td>
 <td>
 <img src="https://github.com/100mslive/100ms-flutter/blob/main/example/assets/images/active-speaker-mode.gif" title="active-speaker-mode" height=300>
