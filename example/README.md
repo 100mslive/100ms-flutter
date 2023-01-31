@@ -147,16 +147,19 @@ Single Tile Mode
 </video>
 </td>
 <td>
-<img src="https://github.com/100mslive/100ms-flutter/blob/main/example/assets/images/active-speaker-mode.gif" title="active-speaker-mode" height=300>
+<video src='https://user-images.githubusercontent.com/93931528/215849243-80eacf1b-20b1-4983-8fad-9a6a96a7d92c.gif' width=50 height=300
+>
+<td>
+<video src='https://user-images.githubusercontent.com/93931528/215849287-0448e279-1911-466a-bfef-aa381ab94916.gif' width=50 height=300
+
 </td>
 <td>
-<img src="https://github.com/100mslive/100ms-flutter/blob/main/example/assets/images/hero-mode.gif" title="hero-mode" height=300>
+<video src='https://user-images.githubusercontent.com/93931528/215849614-3c8ba473-70ae-4038-9689-c1dbc64dd9b2.gif' width=50 height=300
+>
 </td>
 <td>
-<img src="https://github.com/100mslive/100ms-flutter/blob/main/example/assets/images/audio-mode.gif" title="audio-mode" height=300>
-</td>
-<td>
-<img src="https://github.com/100mslive/100ms-flutter/blob/main/example/assets/images/single-tile-mode.gif" title="single-tile-mode" height=300>
+<video src='https://user-images.githubusercontent.com/93931528/215849267-9433d88c-b345-4a98-834a-19e157051c82.gif' width=50 height=300
+>
 </td>
 </tr>
 </table>
