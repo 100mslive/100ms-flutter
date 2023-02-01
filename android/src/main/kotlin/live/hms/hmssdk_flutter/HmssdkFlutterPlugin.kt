@@ -542,13 +542,13 @@ class HmssdkFlutterPlugin :
     }
 
     private fun acceptChangeRole(result: Result) {
-        if(requestChange != null) {
+        if (requestChange != null) {
             hmssdk!!.acceptChangeRole(
                 this.requestChange!!,
                 hmsActionResultListener = HMSCommonAction.getActionListener(result)
             )
             requestChange = null
-        }else{
+        } else {
             val hmsException = HMSException(
                 action = "Resend Role Change Request",
                 code = 6004,
