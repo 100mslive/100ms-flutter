@@ -1733,7 +1733,7 @@ class MeetingStore extends ChangeNotifier
       if (Platform.isAndroid) {
         isPipActive = await HMSAndroidPIPController.isActive();
       } else if (Platform.isIOS) {
-        isPipActive = await HMSIOSPIPController.isActive();
+        isPipActive = false;
       }
       notifyListeners();
 
