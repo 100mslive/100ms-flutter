@@ -89,3 +89,4 @@ export 'src/model/hms_subscribe_degradation_params.dart';
 export 'src/model/hms_android_pip_controller.dart';
 export 'src/model/hms_ios_pip_controller.dart';
 export 'src/model/hms_ios_screenshare_config.dart';
+export 'src/ui/meeting/hms_video_player.dart';

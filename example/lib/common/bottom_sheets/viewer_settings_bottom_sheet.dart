@@ -148,9 +148,7 @@ class _ViewerSettingsBottomSheetState extends State<ViewerSettingsBottomSheet> {
                                   setAspectRatio: (double aspectRatio) {
                                     context
                                         .read<MeetingStore>()
-                                        .setPIPVideoController(true,
-                                            aspectRatio: aspectRatio);
-                                    Navigator.pop(context);
+                                        .changeHLSAspectRatio(aspectRatio);
                                   }));
                     },
                     child: Container(

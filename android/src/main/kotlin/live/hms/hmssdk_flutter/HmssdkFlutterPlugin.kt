@@ -22,6 +22,7 @@ import kotlinx.coroutines.launch
 import live.hms.hmssdk_flutter.methods.HMSPipAction
 import live.hms.hmssdk_flutter.methods.HMSRemoteVideoTrackAction
 import live.hms.hmssdk_flutter.methods.HMSSessionMetadataAction
+import live.hms.hmssdk_flutter.views.HMSVideoPlayerFactory
 import live.hms.hmssdk_flutter.views.HMSVideoViewFactory
 import live.hms.video.audio.HMSAudioManager.*
 import live.hms.video.connection.stats.*
@@ -59,6 +60,7 @@ class HmssdkFlutterPlugin :
     private lateinit var activity: Activity
     var hmssdk: HMSSDK? = null
     private lateinit var hmsVideoFactory: HMSVideoViewFactory
+    private lateinit var hmsVideoPlayerFactory: HMSVideoPlayerFactory
     private var requestChange: HMSRoleChangeRequest? = null
     companion object {
         var hmssdkFlutterPlugin: HmssdkFlutterPlugin? = null
@@ -89,6 +91,14 @@ class HmssdkFlutterPlugin :
                 "HMSVideoView",
                 hmsVideoFactory
             )
+
+            this.hmsVideoPlayerFactory = HMSVideoPlayerFactory()
+
+            flutterPluginBinding.platformViewRegistry.registerViewFactory(
+                "HMSVideoPlayer",
+                hmsVideoPlayerFactory
+            )
+
             hmssdkFlutterPlugin = this
         } else {
             Log.e("Plugin Warning", "hmssdkFlutterPlugin already exists in onAttachedToEngine")

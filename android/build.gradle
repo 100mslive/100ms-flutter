@@ -43,6 +43,7 @@ android {
 dependencies {
     implementation "live.100ms:android-sdk:${sdkVersions['android']}"
     implementation "live.100ms:video-view:${sdkVersions['android']}"
+    implementation 'com.google.android.exoplayer:exoplayer:2.18.2'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.0'
     implementation "org.jetbrains.kotlin:kotlin-script-runtime:1.5.0"
