@@ -20,24 +20,12 @@ class _PipViewState extends State<PipView> {
     return Scaffold(
       body: Container(
           child: Selector<MeetingStore,
-                  Tuple4<List<PeerTrackNode>, bool, int, int>>(
-              selector: (_, meetingStore) => Tuple4(
+                  Tuple2<List<PeerTrackNode>, bool>>(
+              selector: (_, meetingStore) => Tuple2(
                   meetingStore.peerTracks,
                   meetingStore.isHLSLink,
-                  meetingStore.screenShareCount,
-                  meetingStore.peerTracks.length),
+                  ),
               builder: (_, data, __) {
-                late int peerIndex;
-                if (!data.item2) {
-                  if (data.item4 != 1) {
-                    peerIndex = data.item1.indexWhere(
-                      (element) => (element.peer.isLocal == false ||
-                          element.track?.source != "REGULAR"),
-                    );
-                  } else {
-                    peerIndex = 0;
-                  }
-                }
                 return (data.item2)
                     ? Selector<MeetingStore, bool>(
                         selector: (_, meetingStore) =>
@@ -71,9 +59,11 @@ class _PipViewState extends State<PipView> {
                                   ),
                                 );
                         })
-                    : ChangeNotifierProvider.value(
-                        key: ValueKey(data.item1[peerIndex].uid + "video_view"),
-                        value: data.item1[peerIndex],
+                    : 
+                    data.item1.length > 0?
+                    ChangeNotifierProvider.value(
+                        key: ValueKey(data.item1[0].uid + "video_view"),
+                        value: data.item1[0],
                         child: Selector<PeerTrackNode,
                             Tuple2<HMSVideoTrack?, bool>>(
                           selector: (_, peerTrackNode) => Tuple2(
@@ -97,7 +87,7 @@ class _PipViewState extends State<PipView> {
                                     setMirror: false,
                                     matchParent: false);
                           },
-                        ));
+                        )):Container();
               })),
     );
   }

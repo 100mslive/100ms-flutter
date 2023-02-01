@@ -814,7 +814,9 @@ class HmssdkFlutterPlugin :
             val args = HashMap<String, Any?>()
             args.put("event_name", "on_removed_from_room")
             args.put("data", HMSRemovedFromRoomExtension.toDictionary(notification))
-
+            if(HMSPipAction.isPIPActive(activity)){
+                activity.moveTaskToBack(true)
+            }
             if (args["data"] != null) {
                 CoroutineScope(Dispatchers.Main).launch {
                     eventSink?.success(args)

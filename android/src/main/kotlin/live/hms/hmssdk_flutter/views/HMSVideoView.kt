@@ -36,7 +36,7 @@ class HMSVideoView(
                     }
                 }
             } else {
-                Log.i("Receiver error", "No receiver found for given action")
+                Log.e("Receiver error", "No receiver found for given action")
             }
         }
     }
@@ -52,7 +52,7 @@ class HMSVideoView(
                 hmsVideoView?.setScalingType(RendererCommon.ScalingType.values()[scaleType ?: 0])
             }
         } else {
-            Log.i("HMSVideoView Error", "HMSVideoView init error view is null")
+            Log.e("HMSVideoView Error", "HMSVideoView init error view is null")
         }
     }
 
@@ -70,15 +70,15 @@ class HMSVideoView(
                         if (HmssdkFlutterPlugin.hmssdkFlutterPlugin?.hmsVideoViewResult != null) {
                             HmssdkFlutterPlugin.hmssdkFlutterPlugin?.hmsVideoViewResult?.success(data)
                         } else {
-                            Log.i("Receiver error", "hmsVideoViewResult is null")
+                            Log.e("Receiver error", "hmsVideoViewResult is null")
                         }
                     } else {
-                        Log.i("Receiver error", "hmssdkFlutterPlugin is null")
+                        Log.e("Receiver error", "hmssdkFlutterPlugin is null")
                     }
                 }
             })
         } else {
-            Log.i("Receiver error", "hmsVideoView is null")
+            Log.e("Receiver error", "hmsVideoView is null")
         }
     }
 
@@ -86,7 +86,7 @@ class HMSVideoView(
         if (hmsVideoView != null) {
             hmsVideoView?.removeTrack()
         } else {
-            Log.i("HMSVideoView error", "onDisposeCalled error hmsVideoView is null")
+            Log.e("HMSVideoView error", "onDisposeCalled error hmsVideoView is null")
         }
         this.removeView(view)
         view = null
@@ -108,8 +108,15 @@ class HMSVideoView(
         super.onDetachedFromWindow()
         if (hmsVideoView != null) {
             hmsVideoView?.removeTrack()
+            hmsVideoView = null
         } else {
-            Log.i("HMSVideoView error", "onDetachedFromWindow error hmsVideoView is null")
+            Log.e("HMSVideoView error", "onDetachedFromWindow error hmsVideoView is null")
+        }
+        if(view != null){
+            this.removeView(view)
+            view = null
+        } else{
+            Log.e("HMSVideoView error", "onDetachedFromWindow error view is null")
         }
     }
 }
