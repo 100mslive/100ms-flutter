@@ -24,7 +24,12 @@ class HMSAudioDeviceAction {
 
     static private func getAudioDeviceList(_ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?) {
         var audioDevicesList = [String]()
-        let availableAudioOutputDevices = hmsSDK!.getAudioOutputDeviceList()
+        guard let availableAudioOutputDevices = hmsSDK?.getAudioOutputDeviceList()
+        else {
+            print(#function, "Could not find audio output devices list")
+            return result(audioDevicesList)
+        }
+        
         for device in availableAudioOutputDevices {
             audioDevicesList.append(getAudioDeviceName(device))
         }
