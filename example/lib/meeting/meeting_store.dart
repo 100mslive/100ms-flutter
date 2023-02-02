@@ -1730,10 +1730,12 @@ class MeetingStore extends ChangeNotifier
       return;
     }
     if (state == AppLifecycleState.resumed) {
-      if (isPipActive) {
+      if (Platform.isAndroid) {
+        isPipActive = await HMSAndroidPIPController.isActive();
+      } else if (Platform.isIOS) {
         isPipActive = false;
-        notifyListeners();
       }
+      notifyListeners();
 
       if (lastVideoStatus && !reconnecting) {
         toggleCameraMuteState();
