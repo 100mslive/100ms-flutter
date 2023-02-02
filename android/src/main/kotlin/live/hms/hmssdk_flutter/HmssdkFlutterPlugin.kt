@@ -60,7 +60,6 @@ class HmssdkFlutterPlugin :
     var hmssdk: HMSSDK? = null
     private lateinit var hmsVideoFactory: HMSVideoViewFactory
     private var requestChange: HMSRoleChangeRequest? = null
-
     companion object {
         var hmssdkFlutterPlugin: HmssdkFlutterPlugin? = null
     }
@@ -113,12 +112,12 @@ class HmssdkFlutterPlugin :
             }
 
             // MARK: Audio Helpers
-            "switch_audio", "is_audio_mute", "mute_room_audio_locally", "un_mute_room_audio_locally", "set_volume" -> {
+            "switch_audio", "is_audio_mute", "mute_room_audio_locally", "un_mute_room_audio_locally", "set_volume", "toggle_mic_mute_state" -> {
                 HMSAudioAction.audioActions(call, result, hmssdk!!)
             }
 
             // MARK: Video Helpers
-            "switch_video", "switch_camera", "start_capturing", "stop_capturing", "is_video_mute", "mute_room_video_locally", "un_mute_room_video_locally" -> {
+            "switch_video", "switch_camera", "is_video_mute", "mute_room_video_locally", "un_mute_room_video_locally", "toggle_camera_mute_state" -> {
                 HMSVideoAction.videoActions(call, result, hmssdk!!)
             }
 
@@ -187,6 +186,9 @@ class HmssdkFlutterPlugin :
             }
             "set_simulcast_layer", "get_layer", "get_layer_definition" -> {
                 HMSRemoteVideoTrackAction.remoteVideoTrackActions(call, result, hmssdk!!)
+            }
+            "capture_snapshot" -> {
+                captureSnapshot(call, result)
             }
             else -> {
                 result.notImplemented()
@@ -355,6 +357,10 @@ class HmssdkFlutterPlugin :
             previewChannel?.setStreamHandler(null) ?: Log.e("Channel Error", "Preview channel not found")
             logsEventChannel?.setStreamHandler(null) ?: Log.e("Channel Error", "Logs event channel not found")
             rtcStatsChannel?.setStreamHandler(null) ?: Log.e("Channel Error", "RTC Stats channel not found")
+            eventSink = null
+            previewSink = null
+            rtcSink = null
+            logsSink = null
             hmssdkFlutterPlugin = null
         } else {
             Log.e("Plugin Error", "hmssdkFlutterPlugin is null in onDetachedFromEngine")
@@ -456,9 +462,7 @@ class HmssdkFlutterPlugin :
         }
     }
 
-    override fun onCancel(arguments: Any?) {
-        this.eventSink = null
-    }
+    override fun onCancel(arguments: Any?) {}
 
     fun getPeerById(id: String): HMSPeer? {
         if (id == "") return getLocalPeer()
@@ -538,11 +542,23 @@ class HmssdkFlutterPlugin :
     }
 
     private fun acceptChangeRole(result: Result) {
-        hmssdk!!.acceptChangeRole(
-            this.requestChange!!,
-            hmsActionResultListener = HMSCommonAction.getActionListener(result)
-        )
-        requestChange = null
+        if (requestChange != null) {
+            hmssdk!!.acceptChangeRole(
+                this.requestChange!!,
+                hmsActionResultListener = HMSCommonAction.getActionListener(result)
+            )
+            requestChange = null
+        } else {
+            val hmsException = HMSException(
+                action = "Resend Role Change Request",
+                code = 6004,
+                description = "Role Change Request is Expired.",
+                message = "Role Change Request is Expired.",
+                name = "Role Change Request Error"
+            )
+            val args = HMSExceptionExtension.toDictionary(hmsException)
+            result.success(args)
+        }
     }
 
     var hmsAudioListener = object : HMSAudioListener {
@@ -675,7 +691,7 @@ class HmssdkFlutterPlugin :
             call.argument<HashMap<String, Any>?>("hms_log_settings")
 
         if (hmsLogSettingsMap != null) {
-            val maxDirSizeInBytes: Double = hmsLogSettingsMap!!["max_dir_size_in_bytes"] as Double
+            val maxDirSizeInBytes: Double = hmsLogSettingsMap["max_dir_size_in_bytes"] as Double
             val isLogStorageEnabled: Boolean = hmsLogSettingsMap["log_storage_enabled"] as Boolean
             val level: String = hmsLogSettingsMap["log_level"] as String
             val logSettings = HMSLogSettings.setLogSettings(maxDirSizeInBytes, isLogStorageEnabled, level)
@@ -724,9 +740,7 @@ class HmssdkFlutterPlugin :
         }
 
         override fun onJoin(room: HMSRoom) {
-//            hasJoined = true
             hmssdk!!.addAudioObserver(hmsAudioListener)
-            previewChannel?.setStreamHandler(null) ?: Log.e("Channel Error", "Preview channel not found")
             val args = HashMap<String, Any?>()
             args.put("event_name", "on_join_room")
 
@@ -1049,6 +1063,15 @@ class HmssdkFlutterPlugin :
         result.success(HMSTrackExtension.toDictionary(peer?.getTrackById(trackId!!)))
     }
 
+    var hmsVideoViewResult: Result? = null
+    private fun captureSnapshot(call: MethodCall, result: Result) {
+        val trackId: String? = call.argument<String>("track_id")
+        if (trackId != null) {
+            hmsVideoViewResult = result
+            activity.sendBroadcast(Intent(trackId).putExtra("method_name", "CAPTURE_SNAPSHOT"))
+        }
+    }
+
     private fun setPlaybackAllowedForTrack(call: MethodCall, result: Result) {
         val trackId = call.argument<String>("track_id")
         val isPlaybackAllowed: Boolean = call.argument<String>("is_playback_allowed") as Boolean
@@ -1091,12 +1114,12 @@ class HmssdkFlutterPlugin :
             hmsPeer: HMSPeer?
         ) {
             if (hmsPeer == null) {
-                Log.e("onRemoteVideoStats error", "Peer is null")
+                Log.e("RemoteVideoStats err", "Peer is null")
                 return
             }
 
             if (hmsTrack == null) {
-                Log.e("onRemoteVideoStats error", "Video Track is null")
+                Log.e("RemoteVideoStats err", "Video Track is null")
                 return
             }
 
@@ -1120,12 +1143,12 @@ class HmssdkFlutterPlugin :
             hmsPeer: HMSPeer?
         ) {
             if (hmsPeer == null) {
-                Log.e("onRemoteAudioStats error", "Peer is null")
+                Log.e("RemoteAudioStats err", "Peer is null")
                 return
             }
 
             if (hmsTrack == null) {
-                Log.e("onRemoteAudioStats error", "Video Track is null")
+                Log.e("RemoteAudioStats err", "Audio Track is null")
                 return
             }
 
@@ -1150,12 +1173,12 @@ class HmssdkFlutterPlugin :
             hmsPeer: HMSPeer?
         ) {
             if (hmsPeer == null) {
-                Log.e("onLocalVideoStats error", "Peer is null")
+                Log.e("LocalVideoStats err", "Peer is null")
                 return
             }
 
             if (hmsTrack == null) {
-                Log.e("onLocalVideoStats error", "Video Track is null")
+                Log.e("LocalVideoStats err", "Video Track is null")
                 return
             }
 
@@ -1180,12 +1203,12 @@ class HmssdkFlutterPlugin :
             hmsPeer: HMSPeer?
         ) {
             if (hmsPeer == null) {
-                Log.e("onLocalAudioStats error", "Peer is null")
+                Log.e("LocalAudioStats err", "Peer is null")
                 return
             }
 
             if (hmsTrack == null) {
-                Log.e("onLocalAudioStats error", "Video Track is null")
+                Log.e("LocalAudioStats err", "Audio Track is null")
                 return
             }
 

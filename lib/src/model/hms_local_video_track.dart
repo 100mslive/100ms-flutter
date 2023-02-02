@@ -22,14 +22,6 @@ class HMSLocalVideoTrack extends HMSVideoTrack {
           isMute: isMute,
         );
 
-  Future<void> startCapturing() async {
-    await PlatformService.invokeMethod(PlatformMethod.startCapturing);
-  }
-
-  Future<void> stopCapturing() async {
-    await PlatformService.invokeMethod(PlatformMethod.stopCapturing);
-  }
-
   Future<void> switchCamera() async {
     await PlatformService.invokeMethod(PlatformMethod.switchCamera);
   }

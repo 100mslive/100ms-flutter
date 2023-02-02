@@ -17,12 +17,6 @@ class HMSVideoAction {
         case "switch_camera":
             switchCamera(result, hmsSDK)
 
-        case "start_capturing":
-            startCapturing(result, hmsSDK)
-
-        case "stop_capturing":
-            stopCapturing(result, hmsSDK)
-
         case "is_video_mute":
             isVideoMute(call, result, hmsSDK)
 
@@ -32,35 +26,12 @@ class HMSVideoAction {
         case "un_mute_room_video_locally":
             toggleVideoMuteAll(false, result, hmsSDK)
 
+        case "toggle_camera_mute_state":
+            toggleCameraMuteState(result, hmsSDK)
+
         default:
             result(FlutterMethodNotImplemented)
         }
-    }
-
-    static private func startCapturing(_ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?) {
-        guard let peer = hmsSDK?.localPeer,
-              let track = peer.videoTrack as? HMSLocalVideoTrack
-        else {
-            result(false)
-            return
-        }
-
-        track.startCapturing()
-
-        result(true)
-    }
-
-    static private func stopCapturing(_ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?) {
-        guard let peer = hmsSDK?.localPeer,
-              let track = peer.videoTrack as? HMSLocalVideoTrack
-        else {
-            result(false)
-            return
-        }
-
-        track.stopCapturing()
-
-        result(true)
     }
 
     static private func switchCamera(_ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?) {
@@ -88,6 +59,19 @@ class HMSVideoAction {
         }
 
         video.setMute(shouldMute)
+
+        result(true)
+    }
+
+    static private func toggleCameraMuteState(_ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?) {
+
+            guard let peer = hmsSDK?.localPeer,
+              let video = peer.videoTrack as? HMSLocalVideoTrack else {
+            result(false)
+            return
+        }
+
+        video.setMute(!(video.isMute()))
 
         result(true)
     }

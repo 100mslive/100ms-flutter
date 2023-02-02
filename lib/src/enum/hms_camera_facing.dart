@@ -4,7 +4,6 @@ enum HMSCameraFacing { FRONT, BACK, unknown }
 extension HMSCameraFacingValues on HMSCameraFacing {
   static HMSCameraFacing getHMSCameraFacingFromName(String name) {
     switch (name) {
-
       ///front camera is being used
       case 'front':
         return HMSCameraFacing.FRONT;

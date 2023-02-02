@@ -61,3 +61,4 @@ Color themeBottomSheetColor = Color.fromRGBO(20, 23, 28, 1);
 Color hmsdefaultColor = Color.fromRGBO(36, 113, 237, 1);
 Color popupButtonBorderColor = Color.fromRGBO(107, 125, 153, 1);
 Color dialogcontentColor = Color.fromRGBO(145, 127, 129, 1);
+Color moreSettingsButtonColor = Color.fromRGBO(30, 35, 42, 1);

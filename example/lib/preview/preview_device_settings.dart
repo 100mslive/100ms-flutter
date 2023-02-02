@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:hmssdk_flutter_example/common/widgets/subtitle_text.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
-import 'package:hmssdk_flutter_example/hls-streaming/util/hls_subtitle_text.dart';
 import 'package:hmssdk_flutter_example/preview/preview_store.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
@@ -148,7 +148,7 @@ class _PreviewDeviceSettingsState extends State<PreviewDeviceSettings> {
                                         width: 10,
                                       ),
                                       Container(
-                                        child: HLSSubtitleText(
+                                        child: SubtitleText(
                                           text: device.name,
                                           textColor: themeDefaultColor,
                                         ),
@@ -178,7 +178,7 @@ class _PreviewDeviceSettingsState extends State<PreviewDeviceSettings> {
                       fit: BoxFit.scaleDown,
                       color: themeDefaultColor,
                     ),
-                    title: HLSSubtitleText(
+                    title: SubtitleText(
                       text: (context.read<PreviewStore>().isRoomMute
                           ? "Unmute Room"
                           : "Mute Room"),

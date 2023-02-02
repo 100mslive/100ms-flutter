@@ -1,19 +1,19 @@
 import 'dart:io';
 
-import 'package:badges/badges.dart';
+import 'package:badges/badges.dart' as badge;
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-import 'package:hmssdk_flutter_example/common/ui/organisms/embedded_button.dart';
-import 'package:hmssdk_flutter_example/common/ui/organisms/hms_button.dart';
+import 'package:hmssdk_flutter_example/common/widgets/hms_embedded_button.dart';
+import 'package:hmssdk_flutter_example/common/widgets/hms_button.dart';
+import 'package:hmssdk_flutter_example/common/widgets/title_text.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
-import 'package:hmssdk_flutter_example/hls-streaming/hls_screen_controller.dart';
-import 'package:hmssdk_flutter_example/data_store/meeting_store.dart';
-import 'package:hmssdk_flutter_example/hls-streaming/util/hls_title_text.dart';
+import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
+import 'package:hmssdk_flutter_example/home_screen/screen_controller.dart';
 import 'package:hmssdk_flutter_example/preview/preview_device_settings.dart';
 import 'package:hmssdk_flutter_example/preview/preview_participant_sheet.dart';
 import 'package:hmssdk_flutter_example/preview/preview_store.dart';
@@ -36,16 +36,13 @@ class _PreviewPageState extends State<PreviewPage> {
   late MeetingStore _meetingStore;
   @override
   void initState() {
-    MultiProvider(
-      providers: [ChangeNotifierProvider(create: (_) => PreviewStore())],
-    );
     super.initState();
     initPreview();
   }
 
   void setMeetingStore(PreviewStore _previewStore) {
     _meetingStore = MeetingStore(
-      hmsSDKInteractor: _previewStore.hmsSDKInteractor!,
+      hmsSDKInteractor: _previewStore.hmsSDKInteractor,
     );
   }
 
@@ -201,7 +198,7 @@ class _PreviewPageState extends State<PreviewPage> {
                                                 (route) => route.isFirst);
                                           },
                                           icon: Icon(Icons.arrow_back_ios)),
-                                      HLSTitleText(
+                                      TitleText(
                                           text: "Configure",
                                           textColor: themeDefaultColor),
                                     ],
@@ -210,7 +207,7 @@ class _PreviewPageState extends State<PreviewPage> {
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
-                                      EmbeddedButton(
+                                      HMSEmbeddedButton(
                                         height: 40,
                                         width: 40,
                                         onTap: () async => Platform.isAndroid
@@ -245,12 +242,14 @@ class _PreviewPageState extends State<PreviewPage> {
                                       SizedBox(
                                         width: 10,
                                       ),
-                                      Badge(
-                                        animationType: BadgeAnimationType.fade,
-                                        badgeColor: hmsdefaultColor,
+                                      badge.Badge(
+                                        badgeAnimation:
+                                            badge.BadgeAnimation.fade(),
+                                        badgeStyle: badge.BadgeStyle(
+                                            badgeColor: hmsdefaultColor),
                                         badgeContent: Text(
                                             "${_previewStore.peerCount.toString()}"),
-                                        child: EmbeddedButton(
+                                        child: HMSEmbeddedButton(
                                           height: 40,
                                           width: 40,
                                           onTap: () async =>
@@ -316,13 +315,12 @@ class _PreviewPageState extends State<PreviewPage> {
                                                       .publishSettings!
                                                       .allowed
                                                       .contains("audio"))
-                                                EmbeddedButton(
+                                                HMSEmbeddedButton(
                                                   height: 40,
                                                   width: 40,
                                                   onTap: () async =>
-                                                      _previewStore.switchAudio(
-                                                          isOn: _previewStore
-                                                              .isAudioOn),
+                                                      _previewStore
+                                                          .toggleMicMuteState(),
                                                   offColor: hmsWhiteColor,
                                                   onColor: themeHMSBorderColor,
                                                   isActive:
@@ -347,16 +345,14 @@ class _PreviewPageState extends State<PreviewPage> {
                                                   _previewStore.peer!.role
                                                       .publishSettings!.allowed
                                                       .contains("video"))
-                                                EmbeddedButton(
+                                                HMSEmbeddedButton(
                                                   height: 40,
                                                   width: 40,
                                                   onTap: () async => (_previewStore
                                                           .localTracks.isEmpty)
                                                       ? null
                                                       : _previewStore
-                                                          .switchVideo(
-                                                              isOn: _previewStore
-                                                                  .isVideoOn),
+                                                          .toggleCameraMuteState(),
                                                   offColor: hmsWhiteColor,
                                                   onColor: themeHMSBorderColor,
                                                   isActive:
@@ -384,7 +380,7 @@ class _PreviewPageState extends State<PreviewPage> {
                                                   _previewStore
                                                           .networkQuality !=
                                                       -1)
-                                                EmbeddedButton(
+                                                HMSEmbeddedButton(
                                                     height: 40,
                                                     width: 40,
                                                     onTap: () {
@@ -446,10 +442,9 @@ class _PreviewPageState extends State<PreviewPage> {
                                                 builder: (_) =>
                                                     ListenableProvider.value(
                                                       value: _meetingStore,
-                                                      child:
-                                                          HLSScreenController(
+                                                      child: ScreenController(
                                                         streamUrl: _previewStore
-                                                                .isStreamingStarted
+                                                                .isHLSStreamingStarted
                                                             ? _previewStore
                                                                 .room
                                                                 ?.hmshlsStreamingState
@@ -465,8 +460,6 @@ class _PreviewPageState extends State<PreviewPage> {
                                                                         .meeting
                                                                 ? false
                                                                 : true,
-                                                        isAudioOn: _previewStore
-                                                            .isAudioOn,
                                                         meetingLink:
                                                             widget.meetingLink,
                                                         localPeerNetworkQuality:

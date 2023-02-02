@@ -1,6 +1,7 @@
 package live.hms.hmssdk_flutter.views
 
 import android.content.Context
+import android.util.Log
 import android.view.View
 import android.widget.FrameLayout
 import io.flutter.plugin.common.StandardMessageCodec
@@ -16,20 +17,23 @@ class HMSVideoViewWidget(
     private val context: Context,
     id: Int,
     creationParams: Map<String?, Any?>?,
-    private val track: HMSVideoTrack?,
-    private val setMirror: Boolean,
-    private val scaleType: Int?,
+    track: HMSVideoTrack?,
+    setMirror: Boolean,
+    scaleType: Int?,
     private val matchParent: Boolean? = true,
-    private val disableAutoSimulcastLayerSelect: Boolean
+    disableAutoSimulcastLayerSelect: Boolean
 ) : PlatformView {
 
     private var hmsVideoView: HMSVideoView? = null
 
-    override fun getView(): View {
+    init {
         if (hmsVideoView == null) {
             hmsVideoView = HMSVideoView(context, setMirror, scaleType, track, disableAutoSimulcastLayerSelect)
         }
-        return hmsVideoView!!
+    }
+
+    override fun getView(): View? {
+        return hmsVideoView
     }
 
     override fun onFlutterViewAttached(flutterView: View) {
@@ -44,11 +48,19 @@ class HMSVideoViewWidget(
                 FrameLayout.LayoutParams.WRAP_CONTENT
             )
         }
-        view.layoutParams = frameLayoutParams
+        if (view != null) {
+            view?.layoutParams = frameLayoutParams
+        } else {
+            Log.i("HMSVideoView error", "onFlutterViewAttached error view is null")
+        }
     }
 
     override fun dispose() {
-        hmsVideoView?.onDisposeCalled()
+        if (hmsVideoView != null) {
+            hmsVideoView?.onDisposeCalled()
+        } else {
+            Log.i("HMSVideoView error", "onDisposeCalled error hmsVideoView is null")
+        }
         hmsVideoView = null
     }
 }

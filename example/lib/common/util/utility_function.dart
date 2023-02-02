@@ -4,7 +4,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-import 'package:hmssdk_flutter_example/common/constant.dart';
+import 'package:hmssdk_flutter_example/common/util/app_color.dart';
+import 'package:hmssdk_flutter_example/service/constant.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -46,11 +47,11 @@ class Utilities {
   }
 
   static List<Color> colors = [
-    Color(0xFFFAC919),
-    Color(0xFF00AE63),
-    Color(0xFF6554C0),
-    Color(0xFFF69133),
-    Color(0xFF8FF5FB)
+    Colors.amber,
+    hmsdefaultColor,
+    Colors.purple,
+    Colors.lightGreen,
+    Colors.redAccent
   ];
 
   static double getRatio(Size size, BuildContext context) {
@@ -86,6 +87,8 @@ class Utilities {
     await Permission.camera.request();
     await Permission.microphone.request();
     await Permission.bluetoothConnect.request();
+    // storage permission is required to save Snapshot to device gallery.
+    await Permission.storage.request();
 
     while ((await Permission.camera.isDenied)) {
       await Permission.camera.request();
@@ -95,6 +98,10 @@ class Utilities {
     }
     while ((await Permission.bluetoothConnect.isDenied)) {
       await Permission.bluetoothConnect.request();
+    }
+    // storage permission is required to save Snapshot to device gallery.
+    while ((await Permission.storage.isDenied)) {
+      await Permission.storage.request();
     }
     return true;
   }
