@@ -66,7 +66,7 @@ class Utilities {
   }
 
   static double getHLSRatio(Size size, BuildContext context) {
-    return (size.height) / (size.width);
+    return (size.height - 1) / (size.width);
   }
 
   static void setRTMPUrl(String roomUrl) {
