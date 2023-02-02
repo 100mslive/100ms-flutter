@@ -96,103 +96,111 @@ class HmssdkFlutterPlugin :
     }
 
     override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
-        when (call.method) {
-            "getPlatformVersion" -> {
-                result.success("Android ${Build.VERSION.RELEASE}")
+
+        if(hmssdk != null){
+            when (call.method) {
+                "getPlatformVersion" -> {
+                    result.success("Android ${Build.VERSION.RELEASE}")
+                }
+
+                // MARK: Build Actions
+                "build", "preview", "join", "leave", "destroy" -> {
+                    buildActions(call, result)
+                }
+
+                // MARK: Room Actions
+                "get_room", "get_local_peer", "get_remote_peers", "get_peers" -> {
+                    HMSRoomAction.roomActions(call, result, hmssdk!!)
+                }
+
+                // MARK: Audio Helpers
+                "switch_audio", "is_audio_mute", "mute_room_audio_locally", "un_mute_room_audio_locally", "set_volume", "toggle_mic_mute_state" -> {
+                    HMSAudioAction.audioActions(call, result, hmssdk!!)
+                }
+
+                // MARK: Video Helpers
+                "switch_video", "switch_camera", "is_video_mute", "mute_room_video_locally", "un_mute_room_video_locally", "toggle_camera_mute_state" -> {
+                    HMSVideoAction.videoActions(call, result, hmssdk!!)
+                }
+
+                // MARK: Messaging
+                "send_broadcast_message", "send_direct_message", "send_group_message" -> {
+                    HMSMessageAction.messageActions(call, result, hmssdk!!)
+                }
+
+                // MARK: Role based Actions
+                "get_roles", "change_role", "accept_change_role", "end_room", "remove_peer", "on_change_track_state_request", "change_track_state_for_role", "change_role_of_peers_with_roles", "change_role_of_peer" -> {
+                    roleActions(call, result)
+                }
+
+                // MARK: Peer Actions
+                "change_metadata", "change_name" -> {
+                    peerActions(call, result)
+                }
+
+                // MARK: Recording
+                "start_rtmp_or_recording", "stop_rtmp_and_recording" -> {
+                    HMSRecordingAction.recordingActions(call, result, hmssdk!!)
+                }
+
+                // MARK: HLS
+                "hls_start_streaming", "hls_stop_streaming" -> {
+                    HMSHLSAction.hlsActions(call, result, hmssdk!!)
+                }
+
+                // MARK: Logger
+                "start_hms_logger", "remove_hms_logger" -> {
+                    loggerActions(call, result)
+                }
+
+                // MARK: Screenshare
+                "start_screen_share", "stop_screen_share", "is_screen_share_active" -> {
+                    screenshareActions(call, result)
+                }
+
+                "get_track_by_id" -> {
+                    getTrackById(call, result)
+                }
+                "get_all_tracks" -> {
+                    getAllTracks(call, result)
+                }
+                "start_stats_listener", "remove_stats_listener" -> {
+                    statsListenerAction(call, result)
+                }
+                "get_audio_devices_list", "get_current_audio_device", "switch_audio_output" -> {
+                    HMSAudioDeviceAction.audioDeviceActions(call, result, hmssdk!!)
+                }
+                "start_audio_share", "stop_audio_share", "set_audio_mixing_mode" -> {
+                    audioShare(call, result)
+                }
+
+                "get_track_settings" -> {
+                    trackSettings(call, result)
+                }
+                "get_session_metadata", "set_session_metadata" -> {
+                    HMSSessionMetadataAction.sessionMetadataActions(call, result, hmssdk!!)
+                }
+                "set_playback_allowed_for_track" -> {
+                    setPlaybackAllowedForTrack(call, result)
+                }
+                "enter_pip_mode", "is_pip_active", "is_pip_available" -> {
+                    HMSPipAction.pipActions(call, result, this.activity)
+                }
+                "set_simulcast_layer", "get_layer", "get_layer_definition" -> {
+                    HMSRemoteVideoTrackAction.remoteVideoTrackActions(call, result, hmssdk!!)
+                }
+                "capture_snapshot" -> {
+                    captureSnapshot(call, result)
+                }
+                else -> {
+                    result.notImplemented()
+                }
             }
 
-            // MARK: Build Actions
-            "build", "preview", "join", "leave", "destroy" -> {
-                buildActions(call, result)
-            }
-
-            // MARK: Room Actions
-            "get_room", "get_local_peer", "get_remote_peers", "get_peers" -> {
-                HMSRoomAction.roomActions(call, result, hmssdk!!)
-            }
-
-            // MARK: Audio Helpers
-            "switch_audio", "is_audio_mute", "mute_room_audio_locally", "un_mute_room_audio_locally", "set_volume", "toggle_mic_mute_state" -> {
-                HMSAudioAction.audioActions(call, result, hmssdk!!)
-            }
-
-            // MARK: Video Helpers
-            "switch_video", "switch_camera", "is_video_mute", "mute_room_video_locally", "un_mute_room_video_locally", "toggle_camera_mute_state" -> {
-                HMSVideoAction.videoActions(call, result, hmssdk!!)
-            }
-
-            // MARK: Messaging
-            "send_broadcast_message", "send_direct_message", "send_group_message" -> {
-                HMSMessageAction.messageActions(call, result, hmssdk!!)
-            }
-
-            // MARK: Role based Actions
-            "get_roles", "change_role", "accept_change_role", "end_room", "remove_peer", "on_change_track_state_request", "change_track_state_for_role", "change_role_of_peers_with_roles", "change_role_of_peer" -> {
-                roleActions(call, result)
-            }
-
-            // MARK: Peer Actions
-            "change_metadata", "change_name" -> {
-                peerActions(call, result)
-            }
-
-            // MARK: Recording
-            "start_rtmp_or_recording", "stop_rtmp_and_recording" -> {
-                HMSRecordingAction.recordingActions(call, result, hmssdk!!)
-            }
-
-            // MARK: HLS
-            "hls_start_streaming", "hls_stop_streaming" -> {
-                HMSHLSAction.hlsActions(call, result, hmssdk!!)
-            }
-
-            // MARK: Logger
-            "start_hms_logger", "remove_hms_logger" -> {
-                loggerActions(call, result)
-            }
-
-            // MARK: Screenshare
-            "start_screen_share", "stop_screen_share", "is_screen_share_active" -> {
-                screenshareActions(call, result)
-            }
-
-            "get_track_by_id" -> {
-                getTrackById(call, result)
-            }
-            "get_all_tracks" -> {
-                getAllTracks(call, result)
-            }
-            "start_stats_listener", "remove_stats_listener" -> {
-                statsListenerAction(call, result)
-            }
-            "get_audio_devices_list", "get_current_audio_device", "switch_audio_output" -> {
-                HMSAudioDeviceAction.audioDeviceActions(call, result, hmssdk!!)
-            }
-            "start_audio_share", "stop_audio_share", "set_audio_mixing_mode" -> {
-                audioShare(call, result)
-            }
-
-            "get_track_settings" -> {
-                trackSettings(call, result)
-            }
-            "get_session_metadata", "set_session_metadata" -> {
-                HMSSessionMetadataAction.sessionMetadataActions(call, result, hmssdk!!)
-            }
-            "set_playback_allowed_for_track" -> {
-                setPlaybackAllowedForTrack(call, result)
-            }
-            "enter_pip_mode", "is_pip_active", "is_pip_available" -> {
-                HMSPipAction.pipActions(call, result, this.activity)
-            }
-            "set_simulcast_layer", "get_layer", "get_layer_definition" -> {
-                HMSRemoteVideoTrackAction.remoteVideoTrackActions(call, result, hmssdk!!)
-            }
-            "capture_snapshot" -> {
-                captureSnapshot(call, result)
-            }
-            else -> {
-                result.notImplemented()
-            }
+        }
+        else{
+            Log.e("HMSSDK Error","${call.method} error hmssdk is null")
+            return
         }
     }
 
@@ -383,37 +391,52 @@ class HmssdkFlutterPlugin :
 
     private fun join(call: MethodCall, result: Result) {
         val config = getConfig(call)
-
-        hmssdk!!.join(config, this.hmsUpdateListener)
-        hmssdk!!.setAudioDeviceChangeListener(audioDeviceChangeListener)
-        result.success(null)
+        if(hmssdk != null){
+            if(config != null){
+                hmssdk?.join(config, this.hmsUpdateListener)
+                hmssdk?.setAudioDeviceChangeListener(audioDeviceChangeListener)
+                result.success(null)
+            }
+            else{
+                Log.e("HMSConfig Error","join error config is null")
+            }
+        }
+        else{
+            Log.e("HMSSDK Error","join error hmssdk is null")
+        }
     }
 
     private fun getConfig(
         call: MethodCall
-    ): HMSConfig {
+    ): HMSConfig? {
         val userName = call.argument<String>("user_name")
         val authToken = call.argument<String>("auth_token")
         val metaData = call.argument<String>("meta_data") ?: ""
         val endPoint = call.argument<String>("end_point")
         val captureNetworkQualityInPreview = call.argument<Boolean>("capture_network_quality_in_preview") ?: false
 
-        if (endPoint != null && endPoint.isNotEmpty()) {
+        if(userName != null && authToken != null){
+            if (endPoint != null && endPoint.isNotEmpty()) {
+                return HMSConfig(
+                    userName = userName!!,
+                    authtoken = authToken!!,
+                    metadata = metaData,
+                    initEndpoint = endPoint.trim(),
+                    captureNetworkQualityInPreview = captureNetworkQualityInPreview
+                )
+            }
+
             return HMSConfig(
                 userName = userName!!,
                 authtoken = authToken!!,
                 metadata = metaData,
-                initEndpoint = endPoint.trim(),
                 captureNetworkQualityInPreview = captureNetworkQualityInPreview
             )
         }
-
-        return HMSConfig(
-            userName = userName!!,
-            authtoken = authToken!!,
-            metadata = metaData,
-            captureNetworkQualityInPreview = captureNetworkQualityInPreview
-        )
+        else{
+            Log.e("HMSConfig error","username or authtoken is null")
+            return null
+        }
     }
 
     private fun startHMSLogger(call: MethodCall) {
@@ -441,7 +464,12 @@ class HmssdkFlutterPlugin :
     }
 
     private fun leave(result: Result) {
-        hmssdk!!.leave(hmsActionResultListener = HMSCommonAction.getActionListener(result))
+        if(hmssdk != null){
+            hmssdk?.leave(hmsActionResultListener = HMSCommonAction.getActionListener(result))
+        }
+        else{
+            Log.e("HMSSDK Error","leave error hmssdk is null")
+        }
     }
 
     private fun destroy(result: Result) {
@@ -449,105 +477,178 @@ class HmssdkFlutterPlugin :
     }
 
     override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
-        val nameOfEventSink = (arguments as HashMap<String, Any>)["name"]
+        val nameOfEventSink = (arguments as HashMap<*, *>)["name"]
 
-        if (nameOfEventSink!! == "meeting") {
-            this.eventSink = events
-        } else if (nameOfEventSink == "preview") {
-            this.previewSink = events
-        } else if (nameOfEventSink == "logs") {
-            this.logsSink = events
-        } else if (nameOfEventSink == "rtc_stats") {
-            this.rtcSink = events
+        if(nameOfEventSink != null){
+            when (nameOfEventSink) {
+                "meeting" -> {
+                    this.eventSink = events
+                }
+                "preview" -> {
+                    this.previewSink = events
+                }
+                "logs" -> {
+                    this.logsSink = events
+                }
+                "rtc_stats" -> {
+                    this.rtcSink = events
+                }
+            }
+        }
+        else{
+            Log.e("Sink Error","onListen error nameOfEventSink is null")
         }
     }
 
     override fun onCancel(arguments: Any?) {}
 
-    fun getPeerById(id: String): HMSPeer? {
+    private fun getPeerById(id: String): HMSPeer? {
         if (id == "") return getLocalPeer()
-        val peers = hmssdk!!.getPeers()
-        peers.forEach {
-            if (it.peerID == id) return it
+        if(hmssdk != null){
+            val peers = hmssdk?.getPeers()
+            peers?.forEach {
+                if (it.peerID == id) return it
+            }
         }
-
+        else{
+            Log.e("HMSSDK Error","getPeerById error hmssdk is null")
+        }
         return null
     }
 
-    private fun getAllTracks(): ArrayList<HMSTrack> {
-        val room = hmssdk!!.getRoom()
-        val allTracks = ArrayList<HMSTrack>()
-        if (room != null) {
-            allTracks.addAll(HmsUtilities.getAllAudioTracks(room))
-            allTracks.addAll(HmsUtilities.getAllVideoTracks(room))
+    private fun getAllTracks(): ArrayList<HMSTrack>? {
+        return if(hmssdk != null){
+            val room = hmssdk?.getRoom()
+            val allTracks = ArrayList<HMSTrack>()
+            if (room != null) {
+                allTracks.addAll(HmsUtilities.getAllAudioTracks(room))
+                allTracks.addAll(HmsUtilities.getAllVideoTracks(room))
+            }
+            allTracks
+        } else{
+            Log.e("HMSSDK Error","getAllTracks error hmssdk is null")
+            null;
         }
-        return allTracks
     }
 
     private fun preview(call: MethodCall, result: Result) {
         val config = getConfig(call)
-
-        hmssdk!!.preview(config, this.hmsPreviewListener)
-        hmssdk!!.setAudioDeviceChangeListener(audioPreviewDeviceChangeListener)
-        result.success(null)
+        if(hmssdk != null){
+            if(config != null){
+                hmssdk?.preview(config, this.hmsPreviewListener)
+                hmssdk?.setAudioDeviceChangeListener(audioPreviewDeviceChangeListener)
+                result.success(null)
+            }
+            else{
+                Log.e("HMSConfig Error","preview error config is null")
+            }
+        }
+        else{
+            Log.e("HMSSDK Error","preview error hmssdk is null")
+        }
     }
 
-    fun getLocalPeer(): HMSLocalPeer? {
-        return hmssdk!!.getLocalPeer()
+    private fun getLocalPeer(): HMSLocalPeer? {
+        return if(hmssdk != null){
+            hmssdk?.getLocalPeer()
+        } else{
+            Log.e("HMSSDK Error","getLocalPeer error hmssdk is null")
+            null
+        }
     }
 
     private fun changeRole(call: MethodCall, result: Result) {
         val roleUWant = call.argument<String>("role_name")
         val peerId = call.argument<String>("peer_id")
         val forceChange = call.argument<Boolean>("force_change")
-        val roles = hmssdk!!.getRoles()
-        val roleToChangeTo: HMSRole = roles.first {
-            it.name == roleUWant
+        if(hmssdk != null){
+            val roles = hmssdk?.getRoles()
+            val roleToChangeTo: HMSRole? = roles?.first {
+                it.name == roleUWant
+            }
+            if(roleToChangeTo != null){
+                val peer: HMSPeer? = getPeerById(peerId?:"")
+                if(peer != null){
+                    hmssdk?.changeRole(
+                        peer,
+                        roleToChangeTo,
+                        forceChange ?: false,
+                        hmsActionResultListener = HMSCommonAction.getActionListener(result)
+                    )
+                }
+                else{
+                    Log.e("changeRole Error","changeRole error peer is null")
+                }
+            }
+            else{
+                Log.e("changeRole Error","changeRole error role not found")
+            }
         }
-        val peer = getPeerById(peerId!!) as HMSPeer
-        hmssdk!!.changeRole(
-            peer,
-            roleToChangeTo,
-            forceChange ?: false,
-            hmsActionResultListener = HMSCommonAction.getActionListener(result)
-        )
+        else{
+            Log.e("HMSSDK Error","changeRole error hmssdk is null")
+        }
     }
 
     private fun changeRoleOfPeer(call: MethodCall, result: Result) {
         val roleUWant = call.argument<String>("role_name")
         val peerId = call.argument<String>("peer_id")
         val forceChange = call.argument<Boolean>("force_change")
-        val roles = hmssdk!!.getRoles()
-        val roleToChangeTo: HMSRole = roles.first {
-            it.name == roleUWant
+        if(hmssdk != null) {
+            val roles = hmssdk?.getRoles()
+            val roleToChangeTo: HMSRole? = roles?.first {
+                it.name == roleUWant
+            }
+            if(roleToChangeTo != null) {
+                val peer: HMSPeer? = getPeerById(peerId?:"")
+                if(peer != null) {
+                    hmssdk!!.changeRoleOfPeer(
+                        peer,
+                        roleToChangeTo,
+                        forceChange ?: false,
+                        hmsActionResultListener = HMSCommonAction.getActionListener(result)
+                    )
+                }
+                else{
+                    Log.e("changeRole Error","changeRole error peer is null")
+                }
+            }
+            else{
+                Log.e("changeRole Error","changeRole error role not found")
+            }
         }
-        val peer = getPeerById(peerId!!) as HMSPeer
-        hmssdk!!.changeRoleOfPeer(
-            peer,
-            roleToChangeTo,
-            forceChange ?: false,
-            hmsActionResultListener = HMSCommonAction.getActionListener(result)
-        )
+        else{
+            Log.e("HMSSDK Error","changeRoleOfPeer error hmssdk is null")
+        }
     }
 
     private fun getRoles(result: Result) {
         val args = HashMap<String, Any?>()
-
         val roles = ArrayList<Any>()
-        hmssdk!!.getRoles().forEach {
-            roles.add(HMSRoleExtension.toDictionary(it)!!)
+
+        if(hmssdk!= null){
+            hmssdk?.getRoles()?.forEach {
+                roles.add(HMSRoleExtension.toDictionary(it)!!)
+            }
+            args["roles"] = roles
+            result.success(args)
         }
-        args["roles"] = roles
-        result.success(args)
+        else{
+            Log.e("HMSSDK Error","getRoles error hmssdk is null")
+        }
     }
 
     private fun acceptChangeRole(result: Result) {
         if (requestChange != null) {
-            hmssdk!!.acceptChangeRole(
-                this.requestChange!!,
-                hmsActionResultListener = HMSCommonAction.getActionListener(result)
-            )
-            requestChange = null
+            if(hmssdk != null){
+                hmssdk!!.acceptChangeRole(
+                    this.requestChange!!,
+                    hmsActionResultListener = HMSCommonAction.getActionListener(result)
+                )
+                requestChange = null
+            }
+            else{
+                Log.e("HMSSDK Error","acceptChangeRole error hmssdk is null")
+            }
         } else {
             val hmsException = HMSException(
                 action = "Resend Role Change Request",
@@ -574,7 +675,7 @@ class HmssdkFlutterPlugin :
                 speakers.forEach {
                     val hmsSpeakerMap = HMSSpeakerExtension.toDictionary(it)
                     if (hmsSpeakerMap != null) {
-                        speakersList.add(hmsSpeakerMap!!)
+                        speakersList.add(hmsSpeakerMap)
                     }
                 }
             }
@@ -597,29 +698,47 @@ class HmssdkFlutterPlugin :
 
         val tracks = getAllTracks()
 
-        val track = tracks.first {
+        val track = tracks?.first {
             it.trackId == trackId
         }
-
-        hmssdk!!.changeTrackState(
-            track,
-            mute!!,
-            hmsActionResultListener = HMSCommonAction.getActionListener(result)
-        )
+        if(track != null){
+            if(hmssdk != null){
+                hmssdk!!.changeTrackState(
+                    track,
+                    mute!!,
+                    hmsActionResultListener = HMSCommonAction.getActionListener(result)
+                )
+            }
+            else{
+                Log.e("HMSSDK Error","changeTrackState error hmssdk is null")
+            }
+        }
+        else{
+            Log.e("Track Error","changeTrackState error track is null")
+        }
     }
 
     private fun removePeer(call: MethodCall, result: Result) {
         val peerId = call.argument<String>("peer_id")
 
-        val peer = getPeerById(peerId!!) as HMSRemotePeer
+        val peer = getPeerById(peerId!!) as HMSRemotePeer?
 
         val reason = call.argument<String>("reason") ?: "Removed from room"
+        if(peer != null){
+            if(hmssdk != null){
+                hmssdk?.removePeerRequest(
+                    peer = peer,
+                    hmsActionResultListener = HMSCommonAction.getActionListener(result),
+                    reason = reason
+                )
+            }
+            else{
 
-        hmssdk!!.removePeerRequest(
-            peer = peer,
-            hmsActionResultListener = HMSCommonAction.getActionListener(result),
-            reason = reason
-        )
+            }
+        }
+        else{
+            Log.e("Peer Error","removePeer error peer is null")
+        }
     }
 
     private fun removeHMSLogger() {

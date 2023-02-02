@@ -51,7 +51,7 @@ class HMSVideoViewWidget(
         if (view != null) {
             view?.layoutParams = frameLayoutParams
         } else {
-            Log.i("HMSVideoView error", "onFlutterViewAttached error view is null")
+            Log.e("HMSVideoView error", "onFlutterViewAttached error view is null")
         }
     }
 
@@ -59,7 +59,7 @@ class HMSVideoViewWidget(
         if (hmsVideoView != null) {
             hmsVideoView?.onDisposeCalled()
         } else {
-            Log.i("HMSVideoView error", "onDisposeCalled error hmsVideoView is null")
+            Log.e("HMSVideoView error", "onDisposeCalled error hmsVideoView is null")
         }
         hmsVideoView = null
     }
@@ -69,14 +69,14 @@ class HMSVideoViewFactory(private val plugin: HmssdkFlutterPlugin) :
 
     PlatformViewFactory(StandardMessageCodec.INSTANCE) {
     override fun create(context: Context?, viewId: Int, args: Any?): PlatformView {
-        val creationParams = args as Map<String?, Any?>?
+        val creationParams = args as Map<String?, Any?>
 
-        val setMirror = args!!["set_mirror"] as? Boolean
-        val trackId = args!!["track_id"] as? String
+        val setMirror = args["set_mirror"] as? Boolean
+        val trackId = args["track_id"] as? String
 
-        val scaleType = args!!["scale_type"] as? Int
+        val scaleType = args["scale_type"] as? Int
 
-        val matchParent = args!!["match_parent"] as? Boolean
+        val matchParent = args["match_parent"] as? Boolean
 
         val room = plugin.hmssdk!!.getRoom()
 
@@ -94,7 +94,7 @@ class HMSVideoViewFactory(private val plugin: HmssdkFlutterPlugin) :
             args["data"] = HMSExceptionExtension.toDictionary(hmsException)
             plugin.onVideoViewError(args)
         }
-        val disableAutoSimulcastLayerSelect = args!!["disable_auto_simulcast_layer_select"] as? Boolean ?: false
+        val disableAutoSimulcastLayerSelect = args["disable_auto_simulcast_layer_select"] as? Boolean ?: false
 
         return HMSVideoViewWidget(requireNotNull(context), viewId, creationParams, track, setMirror!!, scaleType, matchParent, disableAutoSimulcastLayerSelect)
     }
