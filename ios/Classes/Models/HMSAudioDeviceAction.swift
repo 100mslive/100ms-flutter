@@ -29,7 +29,7 @@ class HMSAudioDeviceAction {
             print(#function, "Could not find audio output devices list")
             return result(audioDevicesList)
         }
-        
+
         for device in availableAudioOutputDevices {
             audioDevicesList.append(getAudioDeviceName(device))
         }
