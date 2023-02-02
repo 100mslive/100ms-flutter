@@ -61,8 +61,8 @@ class _HMSExampleAppState extends State<HMSExampleApp> {
           backgroundColor: themeBottomSheetColor, elevation: 5),
       brightness: Brightness.dark,
       primaryColor: Color.fromARGB(255, 13, 107, 184),
-      backgroundColor: Colors.black,
-      scaffoldBackgroundColor: Colors.black);
+      scaffoldBackgroundColor: Colors.black,
+      colorScheme: ColorScheme(background: Colors.black));
 
   ThemeData _lightTheme = ThemeData(
     bottomSheetTheme: BottomSheetThemeData(
@@ -75,8 +75,8 @@ class _HMSExampleAppState extends State<HMSExampleApp> {
     primaryColor: hmsdefaultColor,
     brightness: Brightness.light,
     scaffoldBackgroundColor: Colors.white,
-    backgroundColor: Colors.white,
     dividerColor: Colors.white54,
+    colorScheme: ColorScheme(background: Colors.white),
   );
 
   @override
