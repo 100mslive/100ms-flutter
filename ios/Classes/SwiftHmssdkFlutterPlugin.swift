@@ -44,7 +44,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         let videoViewFactory = HMSFlutterPlatformViewFactory(plugin: instance)
         registrar.register(videoViewFactory, withId: "HMSFlutterPlatformView")
         
-        let videoPlayerFactory = HMSFlutterVideoPlayerFactory()
+        let videoPlayerFactory = HMSFlutterVideoPlayerFactory(plugin: instance)
         registrar.register(videoPlayerFactory, withId: "HMSVideoPlayer")
 
         eventChannel.setStreamHandler(instance)
@@ -187,9 +187,10 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
         case "get_track_settings":
             trackSettingsAction(call, result)
-            break
+            
         case "play_audio_share", "stop_audio_share", "pause_audio_share", "resume_audio_share", "set_audio_share_volume", "audio_share_playing", "audio_share_current_time", "audio_share_duration":
             audioShareAction(call, result)
+            
         case "switch_audio_output", "get_audio_devices_list":
             HMSAudioDeviceAction.audioActions(call, result, hmsSDK)
 
@@ -211,6 +212,9 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
         case "capture_snapshot":
             captureSnapshot(call, result)
+        
+        // case "start_hls_stats","stop_hls_stats":
+        //     NotificationCenter.default.post(name: NSNotification.Name("HMSFlutterVideoPlayer"), object: nil, userInfo: ["method": call.method])
 
         default:
             result(FlutterMethodNotImplemented)
@@ -1224,4 +1228,11 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
         eventSink?(data)
     }
+    
+    // func sendVideoPlayerStats(_ data: [String: Any?]) {
+    //     let data = [
+    //         "event_name": "hls_player_stats",
+    //         "data": data
+    //     ] as [String: Any]
+    // }
 }
