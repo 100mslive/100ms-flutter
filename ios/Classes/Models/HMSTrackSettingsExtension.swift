@@ -9,6 +9,8 @@ import Foundation
 import HMSSDK
 
 class HMSTrackSettingsExtension {
+    static var virtualBackgroundPlugin: HMSVideoPlugin?
+
     static func toDictionary(_ hmssdk: HMSSDK, _ audioMixerSourceMap: [String: HMSAudioNode]?) -> [String: Any] {
 
         let hmsTrackSettings = hmssdk.trackSettings
@@ -81,6 +83,17 @@ class HMSTrackSettingsExtension {
         if let videoSettingsDict = settingsDict["video_track_setting"] as? [AnyHashable: Any] {
             if let cameraFacing = videoSettingsDict["camera_facing"] as? String,
                let initialMuteState = videoSettingsDict["track_initial_state"] as? String {
+                if #available(iOS 15.0, *), let virtualBackgroundMap = videoSettingsDict["virtual_background_plugin"] as? [AnyHashable: Any] {
+                    let backgroundImage = virtualBackgroundMap["background_image"] as? FlutterStandardTypedData
+                    let blurRadius = virtualBackgroundMap["blur_radius"] as! Int
+                    
+                    if let backgroundImage = backgroundImage?.data {
+                        virtualBackgroundPlugin = HMSVirtualBackgroundPlugin(backgroundImage: UIImage(data: backgroundImage), blurRadius: NSNumber(value: blurRadius))
+                    }else{
+                        virtualBackgroundPlugin = HMSVirtualBackgroundPlugin(backgroundImage: nil, blurRadius: NSNumber(value: blurRadius))
+                    }
+                }
+                
                 videoSettings = HMSVideoTrackSettings(codec: HMSCodec.VP8,
                                                       resolution: .init(width: 320, height: 180),
                                                       maxBitrate: 32,
@@ -89,8 +102,7 @@ class HMSTrackSettingsExtension {
                                                       simulcastSettings: nil,
                                                       trackDescription: "track_description",
                                                       initialMuteState: getinitialMuteState(from: initialMuteState),
-                                                      videoPlugins: nil)
-
+                                                      videoPlugins: virtualBackgroundPlugin != nil ? [virtualBackgroundPlugin!] : nil)
             }
         }
 
@@ -110,5 +122,25 @@ class HMSTrackSettingsExtension {
         }
         return HMSTrackMuteState.mute
     }
-
+    
+    static func activateVirtualBackground(){
+        if(virtualBackgroundPlugin != nil){
+            virtualBackgroundPlugin?.activate()
+        }
+    }
+    
+    static func deactivateVirtualBackground(){
+        if(virtualBackgroundPlugin != nil){
+            virtualBackgroundPlugin?.deactivate()
+        }
+    }
+    
+    static func changeVirtualBackground(_ dict: [AnyHashable: Any]){
+        if #available(iOS 15.0, *), virtualBackgroundPlugin != nil {
+            let backgroundImage = dict["background_image"] as? FlutterStandardTypedData
+            if let backgroundImage = backgroundImage{
+                (virtualBackgroundPlugin as? HMSVirtualBackgroundPlugin)?.backgroundImage = UIImage(data: backgroundImage.data)
+            }
+        }
+    }
 }

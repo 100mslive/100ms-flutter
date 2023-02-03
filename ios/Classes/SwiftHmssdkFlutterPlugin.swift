@@ -208,6 +208,9 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
         case "capture_snapshot":
             captureSnapshot(call, result)
+            
+        case "change_virtual_background_image","activate_virtual_background_image","deactivate_virtual_background_image":
+            virtualBackgroundAction(call, result)
 
         default:
             result(FlutterMethodNotImplemented)
@@ -891,6 +894,27 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             return
         }
         NotificationCenter.default.post(name: NSNotification.Name(trackID), object: nil, userInfo: ["result": result])
+    }
+    
+    // MARK: - Virtual Background
+    private func virtualBackgroundAction(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+        switch call.method {
+
+        case "change_virtual_background_image":
+            let arguments = call.arguments as? [AnyHashable: Any]
+            if let arguments = arguments {
+                HMSTrackSettingsExtension.changeVirtualBackground(arguments)
+            }
+
+        case "activate_virtual_background_image":
+            HMSTrackSettingsExtension.activateVirtualBackground()
+            
+        case "deactivate_virtual_background_image":
+            HMSTrackSettingsExtension.deactivateVirtualBackground()
+
+        default:
+            result(FlutterMethodNotImplemented)
+        }
     }
 
     // MARK: - 100ms SDK Delegate Callbacks

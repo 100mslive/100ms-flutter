@@ -41,7 +41,8 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
       {required bool joinWithMutedAudio,
       required bool joinWithMutedVideo,
       required bool isSoftwareDecoderDisabled,
-      required bool isAudioMixerDisabled}) async {
+      required bool isAudioMixerDisabled,
+      required bool isVirtualBackgroundEnable}) async {
     /// [iOSScreenshareConfig] of [HMSSDKInteractor] are optional values only required for implementing Screen & Audio Share on iOS. They are not required for Android.
     /// Remove [appGroup] & [preferredExtension] if your app does not implements Screen or Audio Share on iOS.
     /// [joinWithMutedAudio] & [joinWithMutedVideo] are required to set the initial audio/video state i.e what should be camera and mic
@@ -52,12 +53,20 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
         preferredExtension:
             "live.100ms.flutter.FlutterBroadcastUploadExtension");
 
+    HMSVirtualBackgroundPlugin? virtualBackgroundPlugin;
+    if (isVirtualBackgroundEnable) {
+      virtualBackgroundPlugin =
+          HMSVirtualBackgroundPlugin(backgroundImage: null, blurRadius: 20);
+    }
+
     _hmsSDKInteractor = HMSSDKInteractor(
         iOSScreenshareConfig: iOSScreenshareConfig,
         joinWithMutedAudio: joinWithMutedAudio,
         joinWithMutedVideo: joinWithMutedVideo,
         isSoftwareDecoderDisabled: isSoftwareDecoderDisabled,
-        isAudioMixerDisabled: isAudioMixerDisabled);
+        isAudioMixerDisabled: isAudioMixerDisabled,
+        isVirtualBackgroundEnable: isVirtualBackgroundEnable,
+        virtualBackgroundPlugin: virtualBackgroundPlugin);
     //build call should be a blocking call
     await _hmsSDKInteractor.build();
   }
@@ -85,12 +94,15 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
           await Utilities.getBoolData(key: 'software-decoder-disabled') ?? true;
       bool isAudioMixerDisabled =
           await Utilities.getBoolData(key: 'audio-mixer-disabled') ?? true;
+      bool isVirtualBackgroundEnable =
+          await Utilities.getBoolData(key: 'virtual-background-enable') ?? true;
       if (res) {
         await setHMSSDKInteractor(
             joinWithMutedAudio: joinWithMutedAudio,
             joinWithMutedVideo: joinWithMutedVideo,
             isSoftwareDecoderDisabled: isSoftwareDecoderDisabled,
-            isAudioMixerDisabled: isAudioMixerDisabled);
+            isAudioMixerDisabled: isAudioMixerDisabled,
+            isVirtualBackgroundEnable: isVirtualBackgroundEnable);
 
         if (!skipPreview) {
           _previewStore = PreviewStore(hmsSDKInteractor: _hmsSDKInteractor);

@@ -19,11 +19,14 @@ class HMSVideoTrackSetting {
   /// [forceSoftwareDecoder] property to use software decoder. By default it's set to false.(Android Only)
   final bool? forceSoftwareDecoder;
 
+  final HMSVirtualBackgroundPlugin? virtualBackgroundPlugin;
+
   HMSVideoTrackSetting(
       {this.cameraFacing = HMSCameraFacing.FRONT,
       this.disableAutoResize = false,
       this.trackInitialState = HMSTrackInitState.UNMUTED,
-      this.forceSoftwareDecoder = false});
+      this.forceSoftwareDecoder = false,
+      this.virtualBackgroundPlugin});
 
   factory HMSVideoTrackSetting.fromMap(Map map) {
     return HMSVideoTrackSetting(
@@ -36,7 +39,10 @@ class HMSVideoTrackSetting {
             : HMSTrackInitState.UNMUTED,
         forceSoftwareDecoder: map.containsKey('force_software_decoder')
             ? map['force_software_decoder']
-            : false);
+            : false,
+        virtualBackgroundPlugin: map.containsKey('virtual_background_plugin')
+            ? map['virtual_background_plugin']
+            : null);
   }
 
   Map<String, dynamic> toMap() {
@@ -48,7 +54,8 @@ class HMSVideoTrackSetting {
       'track_initial_state':
           HMSTrackInitStateValue.getValuefromHMSTrackInitState(
               trackInitialState),
-      'force_software_decoder': forceSoftwareDecoder ?? false
+      'force_software_decoder': forceSoftwareDecoder ?? false,
+      'virtual_background_plugin': virtualBackgroundPlugin?.toMap()
     };
   }
 }

@@ -645,6 +645,66 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                               letterSpacing: 0.25,
                               fontWeight: FontWeight.w600),
                         )),
+                  if (Platform.isIOS &&
+                      context.read<MeetingStore>().isVirtualBackgroundEnable)
+                    ListTile(
+                        horizontalTitleGap: 2,
+                        onTap: () async {
+                          Navigator.pop(context);
+                          if (context
+                              .read<MeetingStore>()
+                              .isVirtualBackgroundActive) {
+                            context
+                                .read<MeetingStore>()
+                                .deactivateVirtualBackground();
+                          } else {
+                            context
+                                .read<MeetingStore>()
+                                .activateVirtualBackground();
+                          }
+                        },
+                        contentPadding: EdgeInsets.zero,
+                        leading: SvgPicture.asset(
+                          "assets/icons/virtual_background.svg",
+                          fit: BoxFit.scaleDown,
+                          color: themeDefaultColor,
+                        ),
+                        title: Text(
+                          context.read<MeetingStore>().isVirtualBackgroundActive
+                              ? "Deactivate Virtual Background"
+                              : "Activate Virtual Background",
+                          semanticsLabel: "fl_virtual_background",
+                          style: GoogleFonts.inter(
+                              fontSize: 14,
+                              color: themeDefaultColor,
+                              letterSpacing: 0.25,
+                              fontWeight: FontWeight.w600),
+                        )),
+                  if (Platform.isIOS &&
+                      context.read<MeetingStore>().isVirtualBackgroundEnable)
+                    ListTile(
+                        horizontalTitleGap: 2,
+                        onTap: () async {
+                          Navigator.pop(context);
+                          context
+                              .read<MeetingStore>()
+                              .changeVirtualBackground();
+                        },
+                        contentPadding: EdgeInsets.zero,
+                        leading: SvgPicture.asset(
+                          "assets/icons/virtual_background.svg",
+                          fit: BoxFit.scaleDown,
+                          color: themeDefaultColor,
+                        ),
+                        title: Text(
+                          "Change Virtual Background",
+                          semanticsLabel: "fl_virtual_background",
+                          style: GoogleFonts.inter(
+                              fontSize: 14,
+                              color: themeDefaultColor,
+                              letterSpacing: 0.25,
+                              fontWeight: FontWeight.w600),
+                        )),
                   ListTile(
                       horizontalTitleGap: 2,
                       onTap: () async {

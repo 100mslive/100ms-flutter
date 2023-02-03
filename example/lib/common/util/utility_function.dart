@@ -219,32 +219,27 @@ class Utilities {
       {required bool isAudioMixerDisabled,
       required bool joinWithMutedVideo,
       required bool joinWithMutedAudio,
-      required bool isSoftwareDecoderDisabled}) {
-    return isAudioMixerDisabled
-        ? HMSTrackSetting(
-            audioTrackSetting: HMSAudioTrackSetting(
-                trackInitialState: joinWithMutedAudio
-                    ? HMSTrackInitState.MUTED
-                    : HMSTrackInitState.UNMUTED),
-            videoTrackSetting: HMSVideoTrackSetting(
-                trackInitialState: joinWithMutedVideo
-                    ? HMSTrackInitState.MUTED
-                    : HMSTrackInitState.UNMUTED,
-                forceSoftwareDecoder: isSoftwareDecoderDisabled))
-        : HMSTrackSetting(
-            audioTrackSetting: HMSAudioTrackSetting(
-                audioSource: HMSAudioMixerSource(node: [
-                  HMSAudioFilePlayerNode("audioFilePlayerNode"),
-                  HMSMicNode(),
-                  HMSScreenBroadcastAudioReceiverNode()
-                ]),
-                trackInitialState: joinWithMutedAudio
-                    ? HMSTrackInitState.MUTED
-                    : HMSTrackInitState.UNMUTED),
-            videoTrackSetting: HMSVideoTrackSetting(
-                trackInitialState: joinWithMutedVideo
-                    ? HMSTrackInitState.MUTED
-                    : HMSTrackInitState.UNMUTED,
-                forceSoftwareDecoder: isSoftwareDecoderDisabled));
+      required bool isSoftwareDecoderDisabled,
+      required bool isVirtualBackgroundEnable,
+      HMSVirtualBackgroundPlugin? virtualBackgroundPlugin}) {
+    return HMSTrackSetting(
+        audioTrackSetting: HMSAudioTrackSetting(
+            audioSource: isAudioMixerDisabled
+                ? null
+                : HMSAudioMixerSource(node: [
+                    HMSAudioFilePlayerNode("audioFilePlayerNode"),
+                    HMSMicNode(),
+                    HMSScreenBroadcastAudioReceiverNode()
+                  ]),
+            trackInitialState: joinWithMutedAudio
+                ? HMSTrackInitState.MUTED
+                : HMSTrackInitState.UNMUTED),
+        videoTrackSetting: HMSVideoTrackSetting(
+            trackInitialState: joinWithMutedVideo
+                ? HMSTrackInitState.MUTED
+                : HMSTrackInitState.UNMUTED,
+            forceSoftwareDecoder: isSoftwareDecoderDisabled,
+            virtualBackgroundPlugin:
+                isVirtualBackgroundEnable ? virtualBackgroundPlugin : null));
   }
 }

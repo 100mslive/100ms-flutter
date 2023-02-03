@@ -164,7 +164,10 @@ enum PlatformMethod {
   destroyPIP,
   toggleMicMuteState,
   toggleCameraMuteState,
-  captureSnapshot
+  captureSnapshot,
+  changeVirtualBackgroundImage,
+  activateVirtualBackgroundImage,
+  deactivateVirtualBackgroundImage,
 }
 
 extension PlatformMethodValues on PlatformMethod {
@@ -394,6 +397,12 @@ extension PlatformMethodValues on PlatformMethod {
         return "toggle_camera_mute_state";
       case PlatformMethod.captureSnapshot:
         return "capture_snapshot";
+      case PlatformMethod.changeVirtualBackgroundImage:
+        return "change_virtual_background_image";
+      case PlatformMethod.activateVirtualBackgroundImage:
+        return "activate_virtual_background_image";
+      case PlatformMethod.deactivateVirtualBackgroundImage:
+        return "deactivate_virtual_background_image";
       default:
         return 'unknown';
     }
@@ -625,6 +634,12 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.toggleCameraMuteState;
       case "capture_snapshot":
         return PlatformMethod.captureSnapshot;
+      case "change_virtual_background_image":
+        return PlatformMethod.changeVirtualBackgroundImage;
+      case "activate_virtual_background_image":
+        return PlatformMethod.activateVirtualBackgroundImage;
+      case "deactivate_virtual_background_image":
+        return PlatformMethod.deactivateVirtualBackgroundImage;
       default:
         return PlatformMethod.unknown;
     }

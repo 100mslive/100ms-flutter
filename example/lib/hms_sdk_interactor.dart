@@ -2,6 +2,7 @@
 
 //Project imports
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
@@ -17,10 +18,12 @@ class HMSSDKInteractor {
   /// state while room is joined. By default both audio and video are kept as unmute.
   HMSSDKInteractor(
       {HMSIOSScreenshareConfig? iOSScreenshareConfig,
+      HMSVirtualBackgroundPlugin? virtualBackgroundPlugin,
       bool joinWithMutedAudio = true,
       bool joinWithMutedVideo = true,
       bool isSoftwareDecoderDisabled = true,
-      bool isAudioMixerDisabled = true}) {
+      bool isAudioMixerDisabled = true,
+      bool isVirtualBackgroundEnable = true}) {
     HMSLogSettings hmsLogSettings = HMSLogSettings(
         maxDirSizeInBytes: 1000000,
         isLogStorageEnabled: true,
@@ -30,7 +33,9 @@ class HMSSDKInteractor {
         isAudioMixerDisabled: (Platform.isIOS && isAudioMixerDisabled),
         joinWithMutedVideo: joinWithMutedVideo,
         joinWithMutedAudio: joinWithMutedAudio,
-        isSoftwareDecoderDisabled: isSoftwareDecoderDisabled);
+        isSoftwareDecoderDisabled: isSoftwareDecoderDisabled,
+        isVirtualBackgroundEnable: isVirtualBackgroundEnable,
+        virtualBackgroundPlugin: virtualBackgroundPlugin);
 
     hmsSDK = HMSSDK(
         iOSScreenshareConfig: iOSScreenshareConfig,
@@ -350,5 +355,17 @@ class HMSSDKInteractor {
         toRole: toRole,
         ofRoles: ofRoles,
         hmsActionResultListener: hmsActionResultListener);
+  }
+
+  void changeVirtualBackground(Uint8List image) {
+    hmsSDK.changeVirtualBackgroundImage(image);
+  }
+
+  void activateVirtualBackground() {
+    hmsSDK.activateVirtualBackground();
+  }
+
+  void deactivateVirtualBackground() {
+    hmsSDK.deactivateVirtualBackground();
   }
 }

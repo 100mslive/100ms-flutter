@@ -12,6 +12,7 @@ import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_mode.dart';
 import 'package:hmssdk_flutter_example/model/rtc_stats.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:collection/collection.dart';
 
@@ -177,6 +178,10 @@ class MeetingStore extends ChangeNotifier
   bool showNotification = false;
 
   HMSVideoTrack? currentPIPtrack;
+
+  bool isVirtualBackgroundActive = false;
+
+  bool isVirtualBackgroundEnable = true;
 
   Future<bool> join(String user, String roomUrl) async {
     List<String?>? token =
@@ -423,6 +428,8 @@ class MeetingStore extends ChangeNotifier
     isStatsVisible = await Utilities.getBoolData(key: 'show-stats') ?? false;
     isAutoSimulcast =
         await Utilities.getBoolData(key: 'is-auto-simulcast') ?? true;
+    isVirtualBackgroundEnable =
+        await Utilities.getBoolData(key: 'virtual-background-enable') ?? true;
     if (isStatsVisible) {
       _hmsSDKInteractor.addStatsListener(this);
     }
@@ -1489,6 +1496,31 @@ class MeetingStore extends ChangeNotifier
       peerTracks.add(peerTrackNode);
     }
     notifyListeners();
+  }
+
+  void activateVirtualBackground() {
+    if (Platform.isIOS) {
+      _hmsSDKInteractor.activateVirtualBackground();
+      isVirtualBackgroundActive = true;
+    }
+  }
+
+  void deactivateVirtualBackground() {
+    if (Platform.isIOS) {
+      _hmsSDKInteractor.deactivateVirtualBackground();
+      isVirtualBackgroundActive = false;
+    }
+  }
+
+  void changeVirtualBackground() async {
+    if (Platform.isIOS) {
+      XFile? result =
+          await ImagePicker().pickImage(source: ImageSource.gallery);
+      if (result != null) {
+        final bytes = await result.readAsBytes();
+        _hmsSDKInteractor.changeVirtualBackground(bytes);
+      }
+    }
   }
 
 //Get onSuccess or onException callbacks for HMSActionResultListenerMethod

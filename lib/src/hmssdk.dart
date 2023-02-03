@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:hmssdk_flutter/src/manager/hms_sdk_manager.dart';
 import 'package:hmssdk_flutter/src/model/hms_session_metadata.dart';
@@ -1287,6 +1288,36 @@ class HMSSDK {
   /// Refer [Call stats guide here](https://www.100ms.live/docs/flutter/v2/features/call-stats)
   void removeStatsListener({required HMSStatsListener listener}) {
     PlatformService.removeRTCStatsListener(listener);
+  }
+
+  /// Change Virtual Background Image [iOS only]
+  ///
+  /// Refer [Virtual Background guide here]("")
+  changeVirtualBackgroundImage(Uint8List? image) {
+    if (Platform.isIOS) {
+      PlatformService.invokeMethod(PlatformMethod.changeVirtualBackgroundImage,
+          arguments: {"background_image": image});
+    }
+  }
+
+  /// Change Activate Background Image [iOS only]
+  ///
+  /// Refer [Virtual Background guide here]("")
+  activateVirtualBackground() {
+    if (Platform.isIOS) {
+      PlatformService.invokeMethod(
+          PlatformMethod.activateVirtualBackgroundImage);
+    }
+  }
+
+  /// Change Deactivate Background Image [iOS only]
+  ///
+  /// Refer [Virtual Background guide here]("")
+  deactivateVirtualBackground() {
+    if (Platform.isIOS) {
+      PlatformService.invokeMethod(
+          PlatformMethod.deactivateVirtualBackgroundImage);
+    }
   }
 
   /// To modify local peer's audio & video tracks settings use the [hmsTrackSetting]. Only required for advanced use cases.

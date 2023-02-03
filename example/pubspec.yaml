@@ -50,6 +50,7 @@ dependencies:
   flutter_linkify:
   flutter_foreground_task: ^3.10.0
   image_gallery_saver:
+  image_picker:
 
 dev_dependencies:
   flutter_test:
