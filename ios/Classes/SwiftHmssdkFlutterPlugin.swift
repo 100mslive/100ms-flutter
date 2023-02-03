@@ -208,8 +208,8 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
         case "capture_snapshot":
             captureSnapshot(call, result)
-            
-        case "change_virtual_background_image","activate_virtual_background_image","deactivate_virtual_background_image":
+
+        case "change_virtual_background_image", "activate_virtual_background_image", "deactivate_virtual_background_image":
             virtualBackgroundAction(call, result)
 
         default:
@@ -895,7 +895,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         }
         NotificationCenter.default.post(name: NSNotification.Name(trackID), object: nil, userInfo: ["result": result])
     }
-    
+
     // MARK: - Virtual Background
     private func virtualBackgroundAction(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         switch call.method {
@@ -908,7 +908,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
         case "activate_virtual_background_image":
             HMSTrackSettingsExtension.activateVirtualBackground()
-            
+
         case "deactivate_virtual_background_image":
             HMSTrackSettingsExtension.deactivateVirtualBackground()
 

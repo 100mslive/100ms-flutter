@@ -86,14 +86,14 @@ class HMSTrackSettingsExtension {
                 if #available(iOS 15.0, *), let virtualBackgroundMap = videoSettingsDict["virtual_background_plugin"] as? [AnyHashable: Any] {
                     let backgroundImage = virtualBackgroundMap["background_image"] as? FlutterStandardTypedData
                     let blurRadius = virtualBackgroundMap["blur_radius"] as! Int
-                    
+
                     if let backgroundImage = backgroundImage?.data {
                         virtualBackgroundPlugin = HMSVirtualBackgroundPlugin(backgroundImage: UIImage(data: backgroundImage), blurRadius: NSNumber(value: blurRadius))
-                    }else{
+                    } else {
                         virtualBackgroundPlugin = HMSVirtualBackgroundPlugin(backgroundImage: nil, blurRadius: NSNumber(value: blurRadius))
                     }
                 }
-                
+
                 videoSettings = HMSVideoTrackSettings(codec: HMSCodec.VP8,
                                                       resolution: .init(width: 320, height: 180),
                                                       maxBitrate: 32,
@@ -122,24 +122,26 @@ class HMSTrackSettingsExtension {
         }
         return HMSTrackMuteState.mute
     }
-    
-    static func activateVirtualBackground(){
-        if(virtualBackgroundPlugin != nil){
+
+    static func activateVirtualBackground() {
+        if virtualBackgroundPlugin != nil {
             virtualBackgroundPlugin?.activate()
         }
     }
-    
-    static func deactivateVirtualBackground(){
-        if(virtualBackgroundPlugin != nil){
+
+    static func deactivateVirtualBackground() {
+        if virtualBackgroundPlugin != nil {
             virtualBackgroundPlugin?.deactivate()
         }
     }
-    
-    static func changeVirtualBackground(_ dict: [AnyHashable: Any]){
+
+    static func changeVirtualBackground(_ dict: [AnyHashable: Any]) {
         if #available(iOS 15.0, *), virtualBackgroundPlugin != nil {
             let backgroundImage = dict["background_image"] as? FlutterStandardTypedData
-            if let backgroundImage = backgroundImage{
+            if let backgroundImage = backgroundImage {
                 (virtualBackgroundPlugin as? HMSVirtualBackgroundPlugin)?.backgroundImage = UIImage(data: backgroundImage.data)
+            } else {
+                (virtualBackgroundPlugin as? HMSVirtualBackgroundPlugin)?.backgroundImage = nil
             }
         }
     }
