@@ -57,12 +57,12 @@ class _HMSExampleAppState extends State<HMSExampleApp> {
       WidgetsBinding.instance.window.platformBrightness == Brightness.dark;
 
   ThemeData _darkTheme = ThemeData(
-      bottomSheetTheme: BottomSheetThemeData(
-          backgroundColor: themeBottomSheetColor, elevation: 5),
-      brightness: Brightness.dark,
-      primaryColor: Color.fromARGB(255, 13, 107, 184),
-      scaffoldBackgroundColor: Colors.black,
-      colorScheme: ColorScheme(background: Colors.black));
+    bottomSheetTheme: BottomSheetThemeData(
+        backgroundColor: themeBottomSheetColor, elevation: 5),
+    brightness: Brightness.dark,
+    primaryColor: Color.fromARGB(255, 13, 107, 184),
+    scaffoldBackgroundColor: Colors.black,
+  );
 
   ThemeData _lightTheme = ThemeData(
     bottomSheetTheme: BottomSheetThemeData(
@@ -76,7 +76,6 @@ class _HMSExampleAppState extends State<HMSExampleApp> {
     brightness: Brightness.light,
     scaffoldBackgroundColor: Colors.white,
     dividerColor: Colors.white54,
-    colorScheme: ColorScheme(background: Colors.white),
   );
 
   @override
