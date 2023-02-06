@@ -10,6 +10,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
+import live.hms.hmssdk_flutter.HMSErrorLogger
+import live.hms.hmssdk_flutter.HMSErrorLogger.Companion.logError
 import live.hms.hmssdk_flutter.HmssdkFlutterPlugin
 import live.hms.hmssdk_flutter.R
 import live.hms.video.media.tracks.HMSVideoTrack
@@ -36,7 +38,7 @@ class HMSVideoView(
                     }
                 }
             } else {
-                Log.i("Receiver error", "No receiver found for given action")
+                logError("HMSVideoView onReceive","No receiver found for given action","HMSVideoView Receiver error")
             }
         }
     }
@@ -52,7 +54,7 @@ class HMSVideoView(
                 hmsVideoView?.setScalingType(RendererCommon.ScalingType.values()[scaleType ?: 0])
             }
         } else {
-            Log.i("HMSVideoView Error", "HMSVideoView init error view is null")
+            logError("HMSVideoView init","view is null","HMSVideoView Error")
         }
     }
 
@@ -70,15 +72,15 @@ class HMSVideoView(
                         if (HmssdkFlutterPlugin.hmssdkFlutterPlugin?.hmsVideoViewResult != null) {
                             HmssdkFlutterPlugin.hmssdkFlutterPlugin?.hmsVideoViewResult?.success(data)
                         } else {
-                            Log.i("Receiver error", "hmsVideoViewResult is null")
+                            logError("HMSVideoView captureSnapshot","hmsVideoViewResult is null","Receiver error")
                         }
                     } else {
-                        Log.i("Receiver error", "hmssdkFlutterPlugin is null")
+                        logError("HMSVideoView captureSnapshot","hmssdkFlutterPlugin is null","Receiver error")
                     }
                 }
             })
         } else {
-            Log.i("Receiver error", "hmsVideoView is null")
+            logError("HMSVideoView captureSnapshot","hmsVideoView is null","Receiver error")
         }
     }
 
@@ -86,7 +88,7 @@ class HMSVideoView(
         if (hmsVideoView != null) {
             hmsVideoView?.removeTrack()
         } else {
-            Log.i("HMSVideoView error", "onDisposeCalled error hmsVideoView is null")
+            logError("HMSVideoView onDisposeCalled","hmsVideoView is null","HMSVideoView error")
         }
         this.removeView(view)
         view = null
@@ -100,7 +102,7 @@ class HMSVideoView(
             hmsVideoView?.addTrack(track)
             context.registerReceiver(broadcastReceiver, IntentFilter(track.trackId))
         } else {
-            Log.e("HMSVideoView Error", "onAttachedToWindow error track is null, cannot attach null track")
+            logError("HMSVideoView onAttachedToWindow","track is null, cannot attach null track","HMSVideoView error")
         }
     }
 
@@ -109,7 +111,7 @@ class HMSVideoView(
         if (hmsVideoView != null) {
             hmsVideoView?.removeTrack()
         } else {
-            Log.i("HMSVideoView error", "onDetachedFromWindow error hmsVideoView is null")
+            logError("HMSVideoView onDetachedFromWindow","hmsVideoView is null","HMSVideoView error")
         }
     }
 }

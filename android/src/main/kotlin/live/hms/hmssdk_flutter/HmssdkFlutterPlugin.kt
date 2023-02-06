@@ -19,6 +19,8 @@ import io.flutter.plugin.common.MethodChannel.Result
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import live.hms.hmssdk_flutter.HMSErrorLogger.Companion.logError
+import live.hms.hmssdk_flutter.HMSErrorLogger.Companion.returnError
 import live.hms.hmssdk_flutter.methods.HMSPipAction
 import live.hms.hmssdk_flutter.methods.HMSRemoteVideoTrackAction
 import live.hms.hmssdk_flutter.methods.HMSSessionMetadataAction
@@ -79,11 +81,11 @@ class HmssdkFlutterPlugin :
             this.rtcStatsChannel =
                 EventChannel(flutterPluginBinding.binaryMessenger, "rtc_event_channel")
 
-            this.meetingEventChannel?.setStreamHandler(this) ?: Log.e("Channel Error", "Meeting event channel not found")
-            this.channel?.setMethodCallHandler(this) ?: Log.e("Channel Error", "Event channel not found")
-            this.previewChannel?.setStreamHandler(this) ?: Log.e("Channel Error", "Preview channel not found")
-            this.logsEventChannel?.setStreamHandler(this) ?: Log.e("Channel Error", "Logs event channel not found")
-            this.rtcStatsChannel?.setStreamHandler(this) ?: Log.e("Channel Error", "RTC Stats channel not found")
+            this.meetingEventChannel?.setStreamHandler(this) ?: logError("onAttachedToEngine","Meeting event channel not found","Channel Error")
+            this.channel?.setMethodCallHandler(this) ?: logError("onAttachedToEngine","Event channel not found","Channel Error")
+            this.previewChannel?.setStreamHandler(this) ?: logError("onAttachedToEngine","Preview channel not found","Channel Error")
+            this.logsEventChannel?.setStreamHandler(this) ?: logError("onAttachedToEngine","Logs event channel not found","Channel Error")
+            this.rtcStatsChannel?.setStreamHandler(this) ?: logError("onAttachedToEngine","RTC Stats channel not found","Channel Error")
             this.hmsVideoFactory = HMSVideoViewFactory(this)
 
             flutterPluginBinding.platformViewRegistry.registerViewFactory(
@@ -92,13 +94,13 @@ class HmssdkFlutterPlugin :
             )
             hmssdkFlutterPlugin = this
         } else {
-            Log.e("Plugin Warning", "hmssdkFlutterPlugin already exists in onAttachedToEngine")
+            logError("onAttachedToEngine","hmssdkFlutterPlugin already exists in onAttachedToEngine","Plugin Warning")
         }
     }
 
     //All the methods from flutter side are routed here and are navigated to respective handlers
     override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
-        if(hmssdk != null){
+        if(hmssdk != null || call.method == "build"){
             when (call.method) {
                 "getPlatformVersion" -> {
                     result.success("Android ${Build.VERSION.RELEASE}")
@@ -200,7 +202,7 @@ class HmssdkFlutterPlugin :
 
         }
         else{
-            Log.e("HMSSDK Error","${call.method} error: hmssdk is null")
+            logError(call.method,"hmssdk is null","HMSSDK Error")
             return
         }
     }
@@ -312,7 +314,7 @@ class HmssdkFlutterPlugin :
                     result.success(hmssdk!!.isScreenShared())
                 }
                 else{
-                    Log.e("HMSSDK Error","screenshareActions error: hmssdk is null")
+                    logError("screenshareActions","hmssdk is null","HMSSDK Error")
                     result.success(false)
                 }
             }
@@ -338,7 +340,7 @@ class HmssdkFlutterPlugin :
             }
         }
         else{
-            Log.e("HMSSDK Error","statsListenerAction error: hmssdk is null")
+            logError("statsListenerAction","hmssdk is null","HMSSDK Error")
         }
     }
 
@@ -370,25 +372,25 @@ class HmssdkFlutterPlugin :
             }
         }
         else{
-            Log.e("HMSSDK Error","trackSettings error: hmssdk is null")
+            logError("trackSettings","hmssdk is null","HMSSDK Error")
         }
     }
 
     //Gets called when flutter plugin is removed from engine so setting the channels,sink to null
     override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
         if (hmssdkFlutterPlugin != null) {
-            channel?.setMethodCallHandler(null) ?: Log.e("Channel Error", "Event channel not found")
-            meetingEventChannel?.setStreamHandler(null) ?: Log.e("Channel Error", "Meeting event channel not found")
-            previewChannel?.setStreamHandler(null) ?: Log.e("Channel Error", "Preview channel not found")
-            logsEventChannel?.setStreamHandler(null) ?: Log.e("Channel Error", "Logs event channel not found")
-            rtcStatsChannel?.setStreamHandler(null) ?: Log.e("Channel Error", "RTC Stats channel not found")
+            channel?.setMethodCallHandler(null) ?: logError( "onDetachedFromEngine","Event channel not found","Channel Error")
+            meetingEventChannel?.setStreamHandler(null) ?:  logError("onDetachedFromEngine","Meeting event channel not found","Channel Error")
+            previewChannel?.setStreamHandler(null) ?: logError("onDetachedFromEngine","Preview channel not found","Channel Error")
+            logsEventChannel?.setStreamHandler(null) ?: logError("onDetachedFromEngine","Logs event channel not found","Channel Error")
+            rtcStatsChannel?.setStreamHandler(null) ?:  logError("onDetachedFromEngine","RTC Stats channel not found","Channel Error")
             eventSink = null
             previewSink = null
             rtcSink = null
             logsSink = null
             hmssdkFlutterPlugin = null
         } else {
-            Log.e("Plugin Error", "hmssdkFlutterPlugin is null in onDetachedFromEngine")
+            logError( "onDetachedFromEngine"," hmssdkFlutterPlugin is null in onDetachedFromEngine","Plugin Error")
         }
     }
 
@@ -416,11 +418,11 @@ class HmssdkFlutterPlugin :
                 result.success(null)
             }
             else{
-                Log.e("HMSConfig Error","join error: config is null")
+                logError("join","config is null","HMSConfig Error")
             }
         }
         else{
-            Log.e("HMSSDK Error","join error: hmssdk is null")
+            logError("join","hmssdk is null","HMSSDK Error")
         }
     }
 
@@ -491,7 +493,7 @@ class HmssdkFlutterPlugin :
             hmssdk!!.leave(hmsActionResultListener = HMSCommonAction.getActionListener(result))
         }
         else{
-            Log.e("HMSSDK Error","leave error: hmssdk is null")
+            logError("leave","hmssdk is null","HMSSDK Error")
         }
     }
 
@@ -520,11 +522,11 @@ class HmssdkFlutterPlugin :
                 }
             }
             else{
-                Log.e("Sink Error","onListen error: nameOfEventSink is null")
+                logError("onListen","nameOfEventSink is null","Sink Error")
             }
         }
         else{
-            Log.e("Arguments Error","onListen error: arguments does not contain key `name`")
+            logError("onListen","arguments does not contain key `name`","Arguments Error")
         }
     }
 
@@ -539,7 +541,7 @@ class HmssdkFlutterPlugin :
             }
         }
         else{
-            Log.e("HMSSDK Error","getPeerById error: hmssdk is null")
+            logError("getPeerById","hmssdk is null","HMSSDK Error")
         }
         return null
     }
@@ -554,11 +556,11 @@ class HmssdkFlutterPlugin :
                 allTracks.addAll(HmsUtilities.getAllVideoTracks(room))
             }
             else{
-             Log.e("Null Error","getAllTracks error: room is null")
+                logError("getAllTracks","room is null","Null Error")
             }
             allTracks
         } else{
-            Log.e("HMSSDK Error","getAllTracks error: hmssdk is null")
+            logError("getAllTracks","hmssdk is null","HMSSDK Error")
             null
         }
     }
@@ -573,11 +575,11 @@ class HmssdkFlutterPlugin :
                 result.success(null)
             }
             else{
-                Log.e("HMSConfig Error","preview error: config is null")
+                logError("preview","config is null","HMSConfig Error")
             }
         }
         else{
-            Log.e("HMSSDK Error","preview error: hmssdk is null")
+            logError("preview","hmssdk is null","HMSSDK Error")
         }
     }
 
@@ -585,7 +587,7 @@ class HmssdkFlutterPlugin :
         return if(hmssdk != null){
             hmssdk!!.getLocalPeer()
         } else{
-            Log.e("HMSSDK Error","getLocalPeer error: hmssdk is null")
+            logError("getLocalPeer","hmssdk is null","HMSSDK Error")
             null
         }
     }
@@ -612,15 +614,15 @@ class HmssdkFlutterPlugin :
                     )
                 }
                 else{
-                    Log.e("changeRole Error","changeRole error: peer is null")
+                    logError("changeRole","peer is null","changeRole Error")
                 }
             }
             catch (exception:Exception){
-                Log.e("Exception Occurred","${exception.message}")
+                logError("changeRole",exception.message?:"No message found","Exception Occurred")
             }
         }
         else{
-            Log.e("HMSSDK Error","changeRole error: hmssdk is null")
+            logError("changeRole","hmssdk is null","HMSSDK Error")
         }
     }
 
@@ -644,15 +646,15 @@ class HmssdkFlutterPlugin :
                         hmsActionResultListener = HMSCommonAction.getActionListener(result)
                     )
                 } else {
-                    Log.e("changeRole Error", "changeRole error: peer is null")
+                    logError("changeRoleOfPeer","peer is null","changeRoleOfPeer Error")
                 }
             }
             catch (exception:Exception){
-                Log.e("Exception Occurred","${exception.message}")
+                logError("changeRoleOfPeer",exception.message?:"No message found","Exception Occurred")
             }
         }
         else{
-            Log.e("HMSSDK Error","changeRoleOfPeer error: hmssdk is null")
+            logError("changeRoleOfPeer","hmssdk is null","HMSSDK Error")
         }
     }
 
@@ -668,7 +670,7 @@ class HmssdkFlutterPlugin :
             result.success(args)
         }
         else{
-            Log.e("HMSSDK Error","getRoles error: hmssdk is null")
+            logError("getRoles","hmssdk is null","HMSSDK Error")
         }
     }
 
@@ -683,7 +685,7 @@ class HmssdkFlutterPlugin :
                 requestChange = null
             }
             else{
-                Log.e("HMSSDK Error","acceptChangeRole error: hmssdk is null")
+                logError("acceptChangeRole","hmssdk is null","HMSSDK Error")
             }
         } else {
             val hmsException = HMSException(
@@ -747,15 +749,15 @@ class HmssdkFlutterPlugin :
                         hmsActionResultListener = HMSCommonAction.getActionListener(result)
                     )
                 } else {
-                    Log.e("HMSSDK Error", "changeTrackState error: hmssdk is null")
+                    logError("changeTrackState","hmssdk is null","HMSSDK Error")
                 }
             }
             else{
-                Log.e("Null error","changeTrackState error: mute is null")
+                logError("changeTrackState"," mute is null","Null error")
             }
         }
         catch (exception:Exception){
-            Log.e("Exception Occurred","${exception.message}")
+            logError("changeTrackState",exception.message?:"No message found","Exception Occurred")
         }
     }
 
@@ -775,11 +777,11 @@ class HmssdkFlutterPlugin :
                     )
                 }
                 else{
-                    Log.e("HMSSDK Error", "removePeer error: hmssdk is null")
+                    logError("removePeer","hmssdk is null","HMSSDK Error")
                 }
             }
             else{
-                Log.e("Peer Error","removePeer error: no peer found with $peerId")
+                logError("removePeer","No peer found with $peerId","Peer Error")
             }
         }
     }
@@ -799,7 +801,7 @@ class HmssdkFlutterPlugin :
             )
         }
         else{
-            Log.e("HMSSDK Error", "endRoom error: hmssdk is null")
+            logError("endRoom","hmssdk is null","HMSSDK Error")
         }
     }
 
@@ -825,11 +827,11 @@ class HmssdkFlutterPlugin :
                 )
             }
             else{
-                Log.e("Null error","changeTrackState error: mute is null")
+                logError("changeTrackStateForRole","mute is null","Null error")
             }
         }
         else{
-            Log.e("HMSSDK Error", "changeTrackStateForRole error: hmssdk is null")
+            logError("changeTrackStateForRole","hmssdk is null","HMSSDK Error")
         }
     }
 
@@ -854,15 +856,15 @@ class HmssdkFlutterPlugin :
                     )
                 }
                 else{
-                    Log.e("Null Error","changeRoleOfPeersWithRoles error: ofRoleString is null")
+                    logError("changeRoleOfPeersWithRoles","ofRoleString is null","Null error")
                 }
             }
             catch (exception:Exception){
-                Log.e("Exception Occurred","${exception.message}")
+                logError("changeRoleOfPeersWithRoles",exception.message?:"No message found","Exception Occurred")
             }
         }
         else{
-            Log.e("HMSSDK Error", "changeRoleOfPeersWithRoles error: hmssdk is null")
+            logError("changeRoleOfPeersWithRoles","hmssdk is null","HMSSDK Error")
         }
     }
 
@@ -919,7 +921,7 @@ class HmssdkFlutterPlugin :
                 )
             }
             else{
-                Log.e("HMSSDK Error", "changeMetadata error: hmssdk is null")
+                logError("changeMetadata","hmssdk is null","HMSSDK Error")
             }
         }
     }
@@ -966,7 +968,7 @@ class HmssdkFlutterPlugin :
                 }
             }
             else{
-                Log.e("HMSSDK Error", "onJoin error: hmssdk is null")
+                logError("onJoin","hmssdk is null","HMSSDK Error")
             }
         }
 
@@ -1168,7 +1170,7 @@ class HmssdkFlutterPlugin :
                 )
             }
             else{
-                Log.e("HMSSDK Error", "changeName error: hmssdk is null")
+                logError("changeName","hmssdk is null","HMSSDK Error")
             }
         }
     }
@@ -1217,7 +1219,7 @@ class HmssdkFlutterPlugin :
             )
         }
         else{
-            Log.e("HMSSDK Error", "requestScreenShare error: hmssdk is null")
+            logError("requestScreenShare","hmssdk is null","HMSSDK Error")
         }
     }
 
@@ -1226,7 +1228,7 @@ class HmssdkFlutterPlugin :
             hmssdk!!.stopScreenshare(HMSCommonAction.getActionListener(result))
         }
         else{
-            Log.e("HMSSDK Error", "stopScreenShare error: hmssdk is null")
+            logError("stopScreenShare","hmssdk is null","HMSSDK Error")
         }
     }
 
@@ -1267,7 +1269,7 @@ class HmssdkFlutterPlugin :
             )
         }
         else{
-            Log.e("HMSSDK Error", "requestAudioShare error: hmssdk is null")
+            logError("requestAudioShare","hmssdk is null","HMSSDK Error")
         }
     }
 
@@ -1276,7 +1278,7 @@ class HmssdkFlutterPlugin :
             hmssdk!!.stopAudioshare(HMSCommonAction.getActionListener(result))
         }
         else{
-            Log.e("HMSSDK Error", "stopAudioShare error: hmssdk is null")
+            logError("stopAudioShare","hmssdk is null","HMSSDK Error")
         }
     }
 
@@ -1289,7 +1291,7 @@ class HmssdkFlutterPlugin :
                 result.success(null)
             }
             else{
-                Log.e("HMSSDK Error", "setAudioMixingMode error: hmssdk is null")
+                logError("setAudioMixingMode","hmssdk is null","HMSSDK Error")
             }
         }
     }
@@ -1310,11 +1312,11 @@ class HmssdkFlutterPlugin :
                 result.success(args)
             }
             else{
-                Log.e("Null Error","getAllTracks error: No peer exists with peerId:$peerId")
+                logError("getAllTracks","No peer exists with peerId:$peerId","Null Error")
             }
         }
         else{
-            Log.e("Null Error","getAllTracks error: peerId is null")
+            logError("getAllTracks","peerId is null","Null Error")
         }
     }
 
@@ -1329,7 +1331,7 @@ class HmssdkFlutterPlugin :
                 result.success(HMSTrackExtension.toDictionary(peer.getTrackById(trackId as String)))
             }
             else{
-                Log.e("Null Error","getAllTracks error: No peer exists with peerId:$peerId")
+                logError("getTrackById","No peer exists with peerId:$peerId","Null Error")
             }
         }
     }
@@ -1374,7 +1376,7 @@ class HmssdkFlutterPlugin :
                 }
             }
             else{
-                Log.e("HMSSDK Error", "setPlaybackAllowedForTrack error: hmssdk is null")
+                logError("setPlaybackAllowedForTrack","hmssdk is null","HMSSDK Error")
             }
         }
 
@@ -1387,12 +1389,6 @@ class HmssdkFlutterPlugin :
         result.success(map)
     }
 
-    //Function to log if parameter passed to methods are null
-    private fun returnError(errorMessage:String):Unit?{
-        Log.e("Null Error",errorMessage)
-        return null
-    }
-
     private val hmsStatsListener = object : HMSStatsObserver {
 
         override fun onRemoteVideoStats(
@@ -1401,12 +1397,12 @@ class HmssdkFlutterPlugin :
             hmsPeer: HMSPeer?
         ) {
             if (hmsPeer == null) {
-                Log.e("RemoteVideoStats err", "Peer is null")
+                logError("RemoteVideoStats","Peer is null","Stats Error")
                 return
             }
 
             if (hmsTrack == null) {
-                Log.e("RemoteVideoStats err", "Video Track is null")
+                logError("RemoteVideoStats","Video Track is null","Stats Error")
                 return
             }
 
@@ -1430,12 +1426,12 @@ class HmssdkFlutterPlugin :
             hmsPeer: HMSPeer?
         ) {
             if (hmsPeer == null) {
-                Log.e("RemoteAudioStats err", "Peer is null")
+                logError("RemoteAudioStats","Peer is null","Stats Error")
                 return
             }
 
             if (hmsTrack == null) {
-                Log.e("RemoteAudioStats err", "Audio Track is null")
+                logError("RemoteAudioStats","Audio Track is null","Stats Error")
                 return
             }
 
@@ -1460,12 +1456,12 @@ class HmssdkFlutterPlugin :
             hmsPeer: HMSPeer?
         ) {
             if (hmsPeer == null) {
-                Log.e("LocalVideoStats err", "Peer is null")
+                logError("LocalVideoStats","Peer is null","Stats Error")
                 return
             }
 
             if (hmsTrack == null) {
-                Log.e("LocalVideoStats err", "Video Track is null")
+                logError("LocalVideoStats","Video Track is null","Stats Error")
                 return
             }
 
@@ -1490,12 +1486,12 @@ class HmssdkFlutterPlugin :
             hmsPeer: HMSPeer?
         ) {
             if (hmsPeer == null) {
-                Log.e("LocalAudioStats err", "Peer is null")
+                logError("LocalAudioStats","Peer is null","Stats Error")
                 return
             }
 
             if (hmsTrack == null) {
-                Log.e("LocalAudioStats err", "Audio Track is null")
+                logError("LocalAudioStats","Audio Track is null","Stats Error")
                 return
             }
 
@@ -1545,8 +1541,13 @@ class HmssdkFlutterPlugin :
             }
             if (p1 != null) {
                 val audioDevicesList = ArrayList<String>()
-                for (device in hmssdk!!.getAudioDevicesList()) {
-                    audioDevicesList.add(device.name)
+                if(hmssdk != null){
+                    for (device in hmssdk!!.getAudioDevicesList()) {
+                        audioDevicesList.add(device.name)
+                    }
+                }
+                else{
+                    logError("onAudioDeviceChanged","hmssdk is null","HMSSDK Error")
                 }
                 dict["available_audio_device"] = audioDevicesList
             }
@@ -1581,8 +1582,13 @@ class HmssdkFlutterPlugin :
             }
             if (p1 != null) {
                 val audioDevicesList = ArrayList<String>()
-                for (device in hmssdk!!.getAudioDevicesList()) {
-                    audioDevicesList.add(device.name)
+                if(hmssdk != null){
+                    for (device in hmssdk!!.getAudioDevicesList()) {
+                        audioDevicesList.add(device.name)
+                    }
+                }
+                else{
+                    logError("onAudioDeviceChanged","hmssdk is null","HMSSDK Error")
                 }
                 dict["available_audio_device"] = audioDevicesList
             }

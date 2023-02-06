@@ -20,7 +20,7 @@ class HMSLogsExtension {
             return map
         }
 
-        fun getValueOfHMSLog(level: HMSLogger.LogLevel?):String?{
+        private fun getValueOfHMSLog(level: HMSLogger.LogLevel?):String?{
             if(level==null)return null
 
             return when(level){

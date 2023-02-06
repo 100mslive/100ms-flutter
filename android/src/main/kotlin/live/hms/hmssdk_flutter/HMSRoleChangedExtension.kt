@@ -7,10 +7,10 @@ class HMSRoleChangedExtension {
         fun toDictionary(role:HMSRoleChangeRequest?):HashMap<String,Any>?{
             val args=HashMap<String,Any?>()
             if(role==null)return null
-            args.put("requested_by",HMSPeerExtension.toDictionary(role.requestedBy))
-            args.put("suggested_role",HMSRoleExtension.toDictionary(role.suggestedRole))
+            args["requested_by"] = HMSPeerExtension.toDictionary(role.requestedBy)
+            args["suggested_role"] = HMSRoleExtension.toDictionary(role.suggestedRole)
             val roleChanged=HashMap<String,Any>()
-            roleChanged.put("role_change_request",args)
+            roleChanged["role_change_request"] = args
             return roleChanged
         }
     }

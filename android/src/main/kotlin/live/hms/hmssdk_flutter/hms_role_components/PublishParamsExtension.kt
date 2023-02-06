@@ -10,7 +10,7 @@ class PublishParamsExtension {
             val args = HashMap<String, Any?>()
             if (publishParams == null)return null
 
-            publishParams.allowed?.let {
+            publishParams.allowed.let {
                 args["allowed"] = publishParams.allowed
             }
 
@@ -23,11 +23,11 @@ class PublishParamsExtension {
             }
 
             publishParams.screen?.let {
-                args.put("screen", VideoParamsExtension.toDictionary(publishParams?.screen!!))
+                args.put("screen", VideoParamsExtension.toDictionary(publishParams.screen!!))
             }
 
             publishParams.simulcast?.let {
-                args.put("simulcast", HMSSimulcastSettingsExtension.toDictionary(publishParams?.simulcast!!))
+                args.put("simulcast", HMSSimulcastSettingsExtension.toDictionary(publishParams.simulcast!!))
             }
 
             return args

@@ -2,6 +2,8 @@ package live.hms.hmssdk_flutter.methods
 
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
+import live.hms.hmssdk_flutter.HMSErrorLogger
+import live.hms.hmssdk_flutter.HMSErrorLogger.Companion.returnError
 import live.hms.hmssdk_flutter.HMSSimulcastLayerDefinitionExtension
 import live.hms.hmssdk_flutter.HMSSimulcastLayerExtension
 import live.hms.video.media.tracks.HMSRemoteVideoTrack
@@ -21,8 +23,8 @@ class HMSRemoteVideoTrackAction {
         }
 
         private fun setSimulcastLayer(call: MethodCall, result: MethodChannel.Result, hmssdk: HMSSDK) {
-            val trackId = call.argument<String>("track_id")
-            val simulcastLayer: String? = call.argument<String>("layer")
+            val trackId = call.argument<String>("track_id") ?: returnError("setSimulcastLayer error trackId is null")
+            val simulcastLayer = call.argument<String>("layer") ?: returnError("setSimulcastLayer error simulcastLayer is null")
 
             if (trackId == null || simulcastLayer == null) {
                 val map = HashMap<String, Map<String, String>>()
@@ -36,9 +38,9 @@ class HMSRemoteVideoTrackAction {
 
             val room = hmssdk.getRoom()
             if (room != null) {
-                val track: HMSRemoteVideoTrack? = HmsUtilities.getVideoTrack(trackId!!, room) as HMSRemoteVideoTrack?
+                val track: HMSRemoteVideoTrack? = HmsUtilities.getVideoTrack(trackId as String, room) as HMSRemoteVideoTrack?
                 if (track != null) {
-                    track.setLayer(HMSSimulcastLayerExtension.getLayerFromString(layer = simulcastLayer!!))
+                    track.setLayer(HMSSimulcastLayerExtension.getLayerFromString(layer = simulcastLayer as String))
                     result.success(null)
                 } else {
                     val map = HashMap<String, Map<String, String>>()
@@ -53,12 +55,13 @@ class HMSRemoteVideoTrackAction {
         }
 
         private fun getLayer(call: MethodCall, result: MethodChannel.Result, hmssdk: HMSSDK) {
-            val trackId = call.argument<String>("track_id")
+            val trackId = call.argument<String>("track_id") ?: returnError("getLayer error trackId is null")
             val room: HMSRoom? = hmssdk.getRoom()
             if (trackId == null || room == null) {
                 result.success(null)
+                return
             }
-            val track: HMSRemoteVideoTrack? = HmsUtilities.getVideoTrack(trackId!!, room!!) as HMSRemoteVideoTrack?
+            val track: HMSRemoteVideoTrack? = HmsUtilities.getVideoTrack(trackId as String, room) as HMSRemoteVideoTrack?
             if (track != null) {
                 result.success(HMSSimulcastLayerExtension.getStringFromLayer(track.getLayer()))
             }
@@ -66,15 +69,16 @@ class HMSRemoteVideoTrackAction {
         }
 
         private fun getLayerDefinition(call: MethodCall, result: MethodChannel.Result, hmssdk: HMSSDK) {
-            val trackId = call.argument<String>("track_id")
+            val trackId = call.argument<String>("track_id") ?: returnError("getLayerDefinition error trackId is null")
             val room: HMSRoom? = hmssdk.getRoom()
             if (trackId == null || room == null) {
                 result.success(null)
+                return
             }
-            val track: HMSRemoteVideoTrack? = HmsUtilities.getVideoTrack(trackId!!, room!!) as HMSRemoteVideoTrack?
+            val track: HMSRemoteVideoTrack? = HmsUtilities.getVideoTrack(trackId as String, room) as HMSRemoteVideoTrack?
             var hashMap = ArrayList<HashMap<String, Any?>>()
             if (track != null) {
-                track?.getLayerDefinition()?.forEach {
+                track.getLayerDefinition().forEach {
                     hashMap.add(HMSSimulcastLayerDefinitionExtension.toDictionary(it))
                 }
                 result.success(hashMap)

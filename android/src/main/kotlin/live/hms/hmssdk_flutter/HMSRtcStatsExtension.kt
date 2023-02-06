@@ -14,8 +14,8 @@ class HMSRtcStatsExtension {
 
         fun toDictionary(hmsRemoteVideoStats: HMSRemoteVideoStats, track: HMSTrack, peer: HMSPeer): HashMap<String, Any?> {
             val args = HashMap<String, Any?>()
-            args.put("peer", HMSPeerExtension.toDictionary(peer)!!)
-            args.put("track", HMSTrackExtension.toDictionary(track)!!)
+            args["peer"] = HMSPeerExtension.toDictionary(peer)!!
+            args["track"] = HMSTrackExtension.toDictionary(track)!!
 
             val hmsRemoteVideoStatsMap = HashMap<String, Any?>()
             hmsRemoteVideoStatsMap["bytes_received"] = hmsRemoteVideoStats.bytesReceived
@@ -26,14 +26,14 @@ class HMSRtcStatsExtension {
             hmsRemoteVideoStatsMap["frame_rate"] = hmsRemoteVideoStats.frameRate
             hmsRemoteVideoStatsMap["resolution"] = HMSVideoResolutionExtension.toDictionary(hmsRemoteVideoStats.resolution)
 
-            args.put("remote_video_stats", hmsRemoteVideoStatsMap)
+            args["remote_video_stats"] = hmsRemoteVideoStatsMap
             return args
         }
 
         fun toDictionary(hmsRemoteAudioStats: HMSRemoteAudioStats, track: HMSTrack, peer: HMSPeer): HashMap<String, Any?> {
             val args = HashMap<String, Any?>()
-            args.put("peer", HMSPeerExtension.toDictionary(peer)!!)
-            args.put("track", HMSTrackExtension.toDictionary(track)!!)
+            args["peer"] = HMSPeerExtension.toDictionary(peer)!!
+            args["track"] = HMSTrackExtension.toDictionary(track)!!
 
             val hmsRemoteAudioStatsMap = HashMap<String, Any?>()
             hmsRemoteAudioStatsMap["bytes_received"] = hmsRemoteAudioStats.bytesReceived
@@ -42,20 +42,20 @@ class HMSRtcStatsExtension {
             hmsRemoteAudioStatsMap["packets_lost"] = hmsRemoteAudioStats.packetsLost
             hmsRemoteAudioStatsMap["packets_received"] = hmsRemoteAudioStats.packetsReceived
 
-            args.put("remote_audio_stats", hmsRemoteAudioStatsMap)
+            args["remote_audio_stats"] = hmsRemoteAudioStatsMap
             return args
         }
 
         fun toDictionary(hmsLocalAudioStats: HMSLocalAudioStats, track: HMSTrack, peer: HMSPeer): HashMap<String, Any?> {
             val args = HashMap<String, Any?>()
-            args.put("peer", HMSPeerExtension.toDictionary(peer)!!)
-            args.put("track", HMSTrackExtension.toDictionary(track)!!)
+            args["peer"] = HMSPeerExtension.toDictionary(peer)!!
+            args["track"] = HMSTrackExtension.toDictionary(track)!!
 
             val hmsLocalAudioStatsMap = HashMap<String, Any?>()
             hmsLocalAudioStatsMap["bytes_received"] = hmsLocalAudioStats.bytesSent
             hmsLocalAudioStatsMap["bitrate"] = hmsLocalAudioStats.bitrate
             hmsLocalAudioStatsMap["round_trip_time"] = hmsLocalAudioStats.roundTripTime
-            args.put("local_audio_stats", hmsLocalAudioStatsMap)
+            args["local_audio_stats"] = hmsLocalAudioStatsMap
             return args
         }
 

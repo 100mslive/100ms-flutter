@@ -5,6 +5,7 @@ import io.flutter.plugin.common.MethodChannel.Result
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import live.hms.hmssdk_flutter.HMSErrorLogger.Companion.returnError
 import live.hms.video.error.HMSException
 import live.hms.video.media.settings.HMSRtmpVideoResolution
 import live.hms.video.sdk.HMSActionResultListener
@@ -27,23 +28,26 @@ class HMSRecordingAction {
         }
 
         private fun startRtmpOrRecording(call: MethodCall, result: Result,hmssdk:HMSSDK) {
-            val meetingUrl = call.argument<String>("meeting_url")
-            val toRecord = call.argument<Boolean>("to_record")
+            val meetingUrl = call.argument<String>("meeting_url") ?: returnError("startRtmpOrRecording error meetingUrl is null")
+            val toRecord = call.argument<Boolean>("to_record") ?: returnError("startRtmpOrRecording error toRecord is null")
             val listOfRtmpUrls: List<String> = call.argument<List<String>>("rtmp_urls") ?: listOf()
             val resolutionMap = call.argument<Map<String,Int>>("resolution")
-            val hmsRecordingConfig = if(resolutionMap!=null) {
-                val resolution = HMSRtmpVideoResolution(
-                    width = resolutionMap["width"]!!,
-                    height = resolutionMap["height"]!!
+
+            if(meetingUrl != null && toRecord != null){
+                val hmsRecordingConfig = if(resolutionMap!=null) {
+                    val resolution = HMSRtmpVideoResolution(
+                        width = resolutionMap["width"]!!,
+                        height = resolutionMap["height"]!!
+                    )
+                    HMSRecordingConfig(meetingUrl as String, listOfRtmpUrls, toRecord as Boolean,resolution)
+                }else{
+                    HMSRecordingConfig(meetingUrl as String, listOfRtmpUrls, toRecord as Boolean)
+                }
+                hmssdk.startRtmpOrRecording(
+                    hmsRecordingConfig,
+                    hmsActionResultListener = HMSCommonAction.getActionListener(result)
                 )
-                HMSRecordingConfig(meetingUrl!!, listOfRtmpUrls, toRecord!!,resolution)
-            }else{
-                HMSRecordingConfig(meetingUrl!!, listOfRtmpUrls, toRecord!!)
             }
-            hmssdk.startRtmpOrRecording(
-                hmsRecordingConfig,
-                hmsActionResultListener = HMSCommonAction.getActionListener(result)
-            )
         }
 
         private fun stopRtmpAndRecording(result: Result,hmssdk:HMSSDK) {

@@ -4,6 +4,8 @@ import io.flutter.plugin.common.MethodChannel.Result
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import live.hms.hmssdk_flutter.HMSErrorLogger.Companion.logError
+import live.hms.hmssdk_flutter.HMSErrorLogger.Companion.returnError
 import live.hms.video.media.tracks.*
 import live.hms.video.sdk.*
 import live.hms.video.sdk.models.*
@@ -44,14 +46,17 @@ class HMSVideoAction {
         }
 
         private fun switchVideo(call: MethodCall, result: Result, hmssdk: HMSSDK) {
-            val argsIsOn = call.argument<Boolean>("is_on")
-            val peer = hmssdk.getLocalPeer()
-            val videoTrack = peer?.videoTrack
-            if (videoTrack != null) {
-                videoTrack.setMute(argsIsOn ?: false)
-                result.success(true)
-            } else {
-                result.success(false)
+            val argsIsOn = call.argument<Boolean>("is_on") ?: returnError("switchVideo error argsIsOn is null")
+
+            if(argsIsOn != null){
+                val peer = hmssdk.getLocalPeer()
+                val videoTrack = peer?.videoTrack
+                if (videoTrack != null) {
+                    videoTrack.setMute(argsIsOn as Boolean)
+                    result.success(true)
+                } else {
+                    result.success(false)
+                }
             }
         }
 
@@ -75,12 +80,17 @@ class HMSVideoAction {
         }
 
         private fun isVideoMute(call: MethodCall, hmssdk: HMSSDK): Boolean {
-            val peerId = call.argument<String>("peer_id")
-            if (peerId == "null") {
-                return hmssdk.getLocalPeer()?.videoTrack?.isMute ?: true
+            val peerId = call.argument<String>("peer_id")?: returnError("isVideoMute error peerId is null")
+
+            if(peerId != null){
+                if (peerId == "null") {
+                    return hmssdk.getLocalPeer()?.videoTrack?.isMute ?: true
+                }
+                val peer = HMSCommonAction.getPeerById(peerId as String, hmssdk)
+                return peer?.videoTrack?.isMute ?: true
             }
-            val peer = HMSCommonAction.getPeerById(peerId!!, hmssdk)
-            return peer?.videoTrack?.isMute ?: true
+            //If peerId is null then we send the result as true
+            return true
         }
 
         private fun toggleVideoMuteAll(shouldMute: Boolean, result: Result, hmssdk: HMSSDK) {
@@ -93,6 +103,9 @@ class HMSVideoAction {
                     }
                 }
                 HMSCommonAction.getLocalPeer(hmssdk)!!.videoTrack?.setMute((shouldMute))
+            }
+            else{
+                logError("toggleVideoMuteAll","Room is null","Null Error")
             }
         }
     }

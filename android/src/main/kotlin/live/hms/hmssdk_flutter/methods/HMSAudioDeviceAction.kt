@@ -48,9 +48,9 @@ class HMSAudioDeviceAction {
         }
 
         private fun switchAudioOutput(call: MethodCall, result: Result,hmssdk:HMSSDK){
-            var argument:String? = call.argument<String>("audio_device_name")
+            var argument = call.argument<String>("audio_device_name")?:HMSErrorLogger.returnError("switchAudioOutput error argument is null")
             if(argument!=null){
-                var audioDevice:HMSAudioManager.AudioDevice = HMSAudioManager.AudioDevice.valueOf(argument)
+                var audioDevice:HMSAudioManager.AudioDevice = HMSAudioManager.AudioDevice.valueOf(argument as String)
                 hmssdk.switchAudioOutput(audioDevice)
             }
 

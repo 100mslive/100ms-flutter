@@ -8,7 +8,7 @@ import live.hms.video.utils.HMSLogger
 
 class HMSVideoTrackSettingsExtension {
     companion object{
-        fun toDictionary(hmsVideoTrackSettings: HMSVideoTrackSettings?):HashMap<String,Any>?{
+        fun toDictionary(hmsVideoTrackSettings: HMSVideoTrackSettings?):HashMap<String,Any>{
             val map = HashMap<String,Any>()
             map["camera_facing"] = getValueOfHMSCameraFacing(hmsVideoTrackSettings?.cameraFacing)!!
             map["disable_auto_resize"] = hmsVideoTrackSettings?.disableAutoResize!!

@@ -9,15 +9,15 @@ class HMSExceptionExtension {
         fun toDictionary(hmsException: HMSException?):HashMap<String,Any>?{
             val args=HashMap<String,Any>()
             if (hmsException==null)return null
-            args.put("action",hmsException.action)
-            args.put("code",hmsException.code)
-            args.put("description",hmsException.description)
-            args.put("name",hmsException.name)
-            args.put("message",hmsException.message)
-            args.put("isTerminal", hmsException.isTerminal)
+            args["action"] = hmsException.action
+            args["code"] = hmsException.code
+            args["description"] = hmsException.description
+            args["name"] = hmsException.name
+            args["message"] = hmsException.message
+            args["isTerminal"] = hmsException.isTerminal
 
             val errorArgs=HashMap<String,Any>()
-            errorArgs.put("error",args)
+            errorArgs["error"] = args
             return errorArgs
         }
     }

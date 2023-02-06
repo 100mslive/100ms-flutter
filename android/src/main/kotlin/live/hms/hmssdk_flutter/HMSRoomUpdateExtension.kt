@@ -1,6 +1,5 @@
 package live.hms.hmssdk_flutter
 
-import android.util.Log
 import live.hms.video.sdk.models.HMSRoom
 import live.hms.video.sdk.models.enums.HMSRoomUpdate
 
@@ -11,8 +10,8 @@ class HMSRoomUpdateExtension {
 
             if (room==null)return null
 
-            args.put("room", HMSRoomExtension.toDictionary(room)!!)
-            args.put("update", HMSRoomExtension.getValueofHMSRoomUpdate(update)!!)
+            args["room"] = HMSRoomExtension.toDictionary(room)!!
+            args["update"] = HMSRoomExtension.getValueOfHMSRoomUpdate(update)!!
             return args
         }
     }

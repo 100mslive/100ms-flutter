@@ -30,7 +30,7 @@ class HMSPeerExtension {
             return args
         }
 
-        fun getValueofHMSPeerUpdate(update: HMSPeerUpdate?): String? {
+        fun getValueOfHMSPeerUpdate(update: HMSPeerUpdate?): String? {
             if (update == null)return null
 
             return when (update) {

@@ -8,12 +8,12 @@ class HMSChangeTrackStateRequestExtension {
         fun toDictionary(hmsChangeTrackStateRequest: HMSChangeTrackStateRequest?):HashMap<String,Any?>?{
             val hashMap = HashMap<String,Any?>()
             if(hmsChangeTrackStateRequest==null)return null
-            hashMap.put("mute",hmsChangeTrackStateRequest.mute)
-            hashMap.put("requested_by",HMSPeerExtension.toDictionary(hmsChangeTrackStateRequest.requestedBy))
-            hashMap.put("track",HMSTrackExtension.toDictionary(hmsChangeTrackStateRequest.track))
+            hashMap["mute"] = hmsChangeTrackStateRequest.mute
+            hashMap["requested_by"] = HMSPeerExtension.toDictionary(hmsChangeTrackStateRequest.requestedBy)
+            hashMap["track"] = HMSTrackExtension.toDictionary(hmsChangeTrackStateRequest.track)
 
             val args=HashMap<String,Any?>()
-            args.put("track_change_request",hashMap)
+            args["track_change_request"] = hashMap
 
             return  args
         }

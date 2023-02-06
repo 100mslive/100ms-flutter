@@ -6,6 +6,7 @@ import live.hms.video.sdk.models.HMSHLSConfig
 import live.hms.video.sdk.models.HMSHLSMeetingURLVariant
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel.Result
+import live.hms.hmssdk_flutter.HMSErrorLogger.Companion.returnError
 import live.hms.video.sdk.models.HMSHlsRecordingConfig
 
 class HMSHLSAction {
@@ -35,7 +36,7 @@ class HMSHLSAction {
             var hlsConfig: HMSHLSConfig? = null
             if(meetingUrlVariantsList!=null) {
                 meetingUrlVariant = ArrayList()
-                meetingUrlVariantsList?.forEach {
+                (meetingUrlVariantsList as List<Map<String,String>>).forEach {
                     meetingUrlVariant.add(
                         HMSHLSMeetingURLVariant(
                             meetingUrl = it["meeting_url"]!!,
@@ -46,8 +47,8 @@ class HMSHLSAction {
             }
             if(recordingConfig!=null){
                 hmsHLSRecordingConfig = HMSHlsRecordingConfig(
-                    singleFilePerLayer = recordingConfig?.get("single_file_per_layer")!!,
-                    videoOnDemand = recordingConfig?.get("video_on_demand")!!
+                    singleFilePerLayer = (recordingConfig as Map<String,Boolean>)["single_file_per_layer"]!!,
+                    videoOnDemand = recordingConfig["video_on_demand"]!!
                 )
             }
             if(meetingUrlVariant!=null || hmsHLSRecordingConfig!=null) {
@@ -59,23 +60,24 @@ class HMSHLSAction {
 
         private fun stopHLSStreaming(call: MethodCall,result: Result,hmssdk:HMSSDK) {
             val meetingUrlVariantsList = call.argument<List<Map<String,String>>>("meeting_url_variants")
-
             val meetingUrlVariant1 : ArrayList<HMSHLSMeetingURLVariant> = ArrayList()
 
-            meetingUrlVariantsList?.forEach {
-                meetingUrlVariant1.add(
+            if(meetingUrlVariantsList != null){
+                (meetingUrlVariantsList as List<Map<String,String>>).forEach {
+                    meetingUrlVariant1.add(
                         HMSHLSMeetingURLVariant(
-                                meetingUrl = it["meeting_url"]!!,
-                                metadata = it["meta_data"]!!
+                            meetingUrl = it["meeting_url"]!!,
+                            metadata = it["meta_data"]!!
                         )
-                )
+                    )
+                }
+
+                var hlsConfig : HMSHLSConfig? = null
+                if(meetingUrlVariant1.isNotEmpty())
+                    hlsConfig = HMSHLSConfig(meetingUrlVariant1)
+
+                hmssdk.stopHLSStreaming(config = hlsConfig, hmsActionResultListener = HMSCommonAction.getActionListener(result))
             }
-
-            var hlsConfig : HMSHLSConfig? = null
-            if(meetingUrlVariant1.isNotEmpty())
-                hlsConfig = HMSHLSConfig(meetingUrlVariant1)
-
-            hmssdk.stopHLSStreaming(config = hlsConfig, hmsActionResultListener = HMSCommonAction.getActionListener(result))
         }
 
     }

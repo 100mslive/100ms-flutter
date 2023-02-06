@@ -7,18 +7,17 @@ import live.hms.video.sdk.models.role.VideoParams
 class VideoParamsExtension{
 
     companion object{
-        fun toDictionary(videoParams: VideoParams):HashMap<String,Any>?{
+        fun toDictionary(videoParams: VideoParams):HashMap<String,Any>{
             val args=HashMap<String,Any>()
-            if (videoParams==null || videoParams.codec==null)return null
-            args.put("bit_rate",videoParams.bitRate)
-            args.put("frame_rate",videoParams.frameRate)
-            args.put("width",videoParams.width)
-            args.put("height",videoParams.height)
-            args.put("codec", getValueOfHMSAudioCodec(videoParams.codec))
+            args["bit_rate"] = videoParams.bitRate
+            args["frame_rate"] = videoParams.frameRate
+            args["width"] = videoParams.width
+            args["height"] = videoParams.height
+            args["codec"] = getValueOfHMSAudioCodec(videoParams.codec)
             return args
         }
 
-        fun getValueOfHMSAudioCodec (codec: HMSVideoCodec):String{
+        private fun getValueOfHMSAudioCodec (codec: HMSVideoCodec):String{
             return when (codec) {
                 HMSVideoCodec.H264->
                     "h264"
@@ -31,7 +30,7 @@ class VideoParamsExtension{
             }
         }
 
-        fun getValueOfHMSAudioCodecFromString(codec: String?):HMSVideoCodec?{
+        private fun getValueOfHMSAudioCodecFromString(codec: String?):HMSVideoCodec?{
             return when (codec) {
                 "h264"->HMSVideoCodec.H264
 

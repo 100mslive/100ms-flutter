@@ -1,12 +1,12 @@
 package live.hms.hmssdk_flutter.views
 
 import android.content.Context
-import android.util.Log
 import android.view.View
 import android.widget.FrameLayout
 import io.flutter.plugin.common.StandardMessageCodec
 import io.flutter.plugin.platform.PlatformView
 import io.flutter.plugin.platform.PlatformViewFactory
+import live.hms.hmssdk_flutter.HMSErrorLogger.Companion.logError
 import live.hms.hmssdk_flutter.HMSExceptionExtension
 import live.hms.hmssdk_flutter.HmssdkFlutterPlugin
 import live.hms.video.error.HMSException
@@ -51,7 +51,7 @@ class HMSVideoViewWidget(
         if (view != null) {
             view?.layoutParams = frameLayoutParams
         } else {
-            Log.e("HMSVideoView error", "onFlutterViewAttached error view is null")
+            logError("HMSVideoView onFlutterViewAttached","view is null","HMSVideoView Error")
         }
     }
 
@@ -59,7 +59,7 @@ class HMSVideoViewWidget(
         if (hmsVideoView != null) {
             hmsVideoView?.onDisposeCalled()
         } else {
-            Log.e("HMSVideoView error", "onDisposeCalled error hmsVideoView is null")
+            logError("HMSVideoView onDisposeCalled","hmsVideoView is null","HMSVideoView Error")
         }
         hmsVideoView = null
     }
@@ -78,22 +78,33 @@ class HMSVideoViewFactory(private val plugin: HmssdkFlutterPlugin) :
 
         val matchParent = args["match_parent"] as? Boolean
 
-        val room = plugin.hmssdk!!.getRoom()
-
-        val track = HmsUtilities.getVideoTrack(trackId!!, room!!)
-        if (track == null) {
-            val args = HashMap<String, Any?>()
-            args["event_name"] = "on_error"
-            val hmsException = HMSException(
-                action = "Check the trackId for the track",
-                code = 6004,
-                description = "There is no track corresponding to the given trackId",
-                message = "Video track is null for corresponding trackId",
-                name = "HMSVideoView Error"
-            )
-            args["data"] = HMSExceptionExtension.toDictionary(hmsException)
-            plugin.onVideoViewError(args)
+        var track:HMSVideoTrack? = null
+        if(plugin.hmssdk != null){
+            val room = plugin.hmssdk!!.getRoom()
+            if(room != null){
+                track = HmsUtilities.getVideoTrack(trackId!!, room)
+                if (track == null) {
+                    val eventArgs = HashMap<String, Any?>()
+                    eventArgs["event_name"] = "on_error"
+                    val hmsException = HMSException(
+                        action = "Check the trackId for the track",
+                        code = 6004,
+                        description = "There is no track corresponding to the given trackId",
+                        message = "Video track is null for corresponding trackId",
+                        name = "HMSVideoView Error"
+                    )
+                    eventArgs["data"] = HMSExceptionExtension.toDictionary(hmsException)
+                    plugin.onVideoViewError(eventArgs)
+                }
+            }
+            else{
+                logError("HMSVideoView create","room is null","Null Error")
+            }
         }
+        else{
+            logError("HMSVideoView create","hmssdk is null","HMSSDK Error")
+        }
+
         val disableAutoSimulcastLayerSelect = args["disable_auto_simulcast_layer_select"] as? Boolean ?: false
 
         return HMSVideoViewWidget(requireNotNull(context), viewId, creationParams, track, setMirror!!, scaleType, matchParent, disableAutoSimulcastLayerSelect)

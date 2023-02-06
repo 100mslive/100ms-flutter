@@ -7,13 +7,12 @@ class AudioParamsExtension{
     companion object{
         fun toDictionary(audioParams: AudioParams):HashMap<String,Any>? {
             val args=HashMap<String,Any>()
-            if(audioParams==null || audioParams.codec==null)return null
-            args.put("bit_rate",audioParams.bitRate)
-            args.put("codec", getValueOfHMSAudioCodec(audioParams.codec))
+            args["bit_rate"] = audioParams.bitRate
+            args["codec"] = getValueOfHMSAudioCodec(audioParams.codec)
             return args
         }
 
-        fun getValueOfHMSAudioCodec (codec: HMSAudioCodec):String{
+        private fun getValueOfHMSAudioCodec (codec: HMSAudioCodec):String{
             return when (codec) {
                 HMSAudioCodec.OPUS->
                     "opus"
@@ -22,7 +21,7 @@ class AudioParamsExtension{
             }
         }
 
-        fun getValueOfHMSAudioCodecFromString (codec:String?):HMSAudioCodec?{
+        private fun getValueOfHMSAudioCodecFromString (codec:String?):HMSAudioCodec?{
             return when (codec) {
                 "opus"->
                     HMSAudioCodec.OPUS

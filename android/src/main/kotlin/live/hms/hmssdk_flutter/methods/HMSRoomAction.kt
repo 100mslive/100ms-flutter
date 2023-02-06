@@ -28,7 +28,7 @@ class HMSRoomAction {
             }
         }
         private fun getRoom(result: Result,hmssdk: HMSSDK) {
-            result.success(HMSRoomExtension.toDictionary(hmssdk?.getRoom()))
+            result.success(HMSRoomExtension.toDictionary(hmssdk.getRoom()))
         }
         private fun localPeer(result: Result,hmssdk: HMSSDK) {
             result.success(HMSPeerExtension.toDictionary(HMSCommonAction.getLocalPeer(hmssdk)))

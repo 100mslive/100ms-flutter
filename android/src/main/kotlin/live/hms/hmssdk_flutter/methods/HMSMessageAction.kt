@@ -6,6 +6,7 @@ import live.hms.video.error.HMSException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import live.hms.hmssdk_flutter.HMSErrorLogger.Companion.returnError
 import live.hms.video.sdk.models.HMSMessage
 
 class HMSMessageAction {
@@ -29,29 +30,34 @@ class HMSMessageAction {
 
 
         private fun sendBroadCastMessage(call: MethodCall, result: Result,hmssdk:HMSSDK) {
-            val message = call.argument<String>("message")
+            val message = call.argument<String>("message") ?: returnError("sendBroadCastMessage error message is null")
             val type = call.argument<String>("type") ?: "chat"
-            hmssdk?.sendBroadcastMessage(message!!, type, getMessageResultListener(result))
+            if(message != null){
+                hmssdk.sendBroadcastMessage(message as String, type, getMessageResultListener(result))
+            }
         }
 
         private fun sendGroupMessage(call: MethodCall, result: Result,hmssdk:HMSSDK) {
-            val message = call.argument<String>("message")
+            val message = call.argument<String>("message") ?: returnError("sendGroupMessage error message is null")
             val roles: List<String>? = call.argument<List<String>>("roles")
             val type = call.argument<String>("type") ?: "chat"
 
             val hmsRoles = hmssdk.getRoles().filter { roles?.contains(it.name)!! }
 
-            hmssdk?.sendGroupMessage(message!!, type, hmsRoles, getMessageResultListener(result))
+            hmssdk.sendGroupMessage(message as String, type, hmsRoles, getMessageResultListener(result))
         }
 
         private fun sendDirectMessage(call: MethodCall, result: Result,hmssdk:HMSSDK) {
-            val message = call.argument<String>("message")
-            val peerId = call.argument<String>("peer_id")
-
+            val message = call.argument<String>("message") ?: returnError("sendDirectMessage error message is null")
+            val peerId = call.argument<String>("peer_id") ?: returnError("sendDirectMessage error peerId is null")
             val type = call.argument<String>("type") ?: "chat"
-            val peer = HMSCommonAction.getPeerById(peerId!!,hmssdk)
-            hmssdk?.sendDirectMessage(message!!, type, peer!!, getMessageResultListener(result))
+
+            if(message != null && peerId != null){
+                val peer = HMSCommonAction.getPeerById(peerId as String,hmssdk)
+                hmssdk.sendDirectMessage(message as String, type, peer!!, getMessageResultListener(result))
+            }
         }
+
         private fun getMessageResultListener(result: Result) = object: HMSMessageResultListener {
             override fun onError(error: HMSException) {
                 val args = HashMap<String, Any?>()

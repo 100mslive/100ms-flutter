@@ -9,9 +9,9 @@ class HMSRoomExtension {
             val hashMap = HashMap<String, Any?>()
 
             if (room == null)return null
-            hashMap.put("id", room.roomId)
-            hashMap.put("name", room.name)
-            hashMap.put("meta_data", "")
+            hashMap["id"] = room.roomId
+            hashMap["name"] = room.name
+            hashMap["meta_data"] = ""
 
             val args = ArrayList<Any>()
             room.peerList.forEach {
@@ -30,7 +30,7 @@ class HMSRoomExtension {
             return hashMap
         }
 
-        fun getValueofHMSRoomUpdate(update: HMSRoomUpdate?): String? {
+        fun getValueOfHMSRoomUpdate(update: HMSRoomUpdate?): String? {
             if (update == null)return null
 
             return when (update) {
