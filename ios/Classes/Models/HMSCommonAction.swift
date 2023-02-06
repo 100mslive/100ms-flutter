@@ -9,8 +9,8 @@ import Foundation
 import HMSSDK
 
 class HMSCommonAction {
-    static internal func getPeer(by peerID: String, hmsSDK: HMSSDK?) -> HMSPeer? {
-        hmsSDK?.room?.peers.first { $0.peerID == peerID }
+    static internal func getPeer(by peerID: String, hmsSDK: HMSSDK) -> HMSPeer? {
+        hmsSDK.room?.peers.first { $0.peerID == peerID }
     }
 
 //    static func getError(message: String, description: String? = nil, params: [String: Any]) -> Error {
@@ -21,7 +21,7 @@ class HMSCommonAction {
 //                 params: params)
 //    }
 
-    static func getRole(by name: String, hmsSDK: HMSSDK?) -> HMSRole? {
-        hmsSDK?.roles.first { $0.name == name }
+    static func getRole(by name: String, hmsSDK: HMSSDK) -> HMSRole? {
+        hmsSDK.roles.first { $0.name == name }
     }
 }

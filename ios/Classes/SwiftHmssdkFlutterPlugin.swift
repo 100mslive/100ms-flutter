@@ -93,124 +93,133 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     }
 
     public func detachFromEngine(for registrar: FlutterPluginRegistrar) {
-        if meetingEventChannel != nil {
+        guard meetingEventChannel != nil else {
+            HMSErrorLogger.logError(#function,"meetingEventChannel not found","Channel Error")
+            return
+        }
             meetingEventChannel!.setStreamHandler(nil)
             eventSink = nil
-        } else {
-            print("meetingEventChannel not found", #function)
+        
+        guard previewEventChannel != nil else {
+            HMSErrorLogger.logError(#function,"previewEventChannel not found","Channel Error")
+            return
         }
-        if previewEventChannel != nil {
             previewEventChannel!.setStreamHandler(nil)
             previewSink = nil
-        } else {
-            print("previewEventChannel not found", #function)
+        
+        guard logsEventChannel != nil else {
+            HMSErrorLogger.logError(#function,"logsEventChannel not found","Channel Error")
+            return
         }
-        if logsEventChannel != nil {
             logsEventChannel!.setStreamHandler(nil)
             logsSink = nil
-        } else {
-            print("logsEventChannel not found", #function)
+        
+        guard rtcStatsEventChannel != nil else {
+            HMSErrorLogger.logError(#function,"rtcStatsEventChannel not found","Channel Error")
+            return
         }
-        if rtcStatsEventChannel != nil {
             rtcStatsEventChannel!.setStreamHandler(nil)
             rtcSink = nil
-        } else {
-            print("rtcStatsEventChannel not found", #function)
-        }
+        
     }
 
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
 
-        switch call.method {
-
-            // MARK: Room Actions
-
-        case "build", "preview", "join", "leave", "destroy":
-            buildActions(call, result)
-
-            // MARK: Room Actions
-
-        case "get_room", "get_local_peer", "get_remote_peers", "get_peers":
-            HMSRoomAction.roomActions(call, result, hmsSDK)
-
-            // MARK: - Audio Helpers
-
-        case "switch_audio", "is_audio_mute", "mute_room_audio_locally", "un_mute_room_audio_locally", "set_volume", "toggle_mic_mute_state":
-            HMSAudioAction.audioActions(call, result, hmsSDK)
-
-            // MARK: - Video Helpers
-
-        case "switch_video", "switch_camera", "is_video_mute", "mute_room_video_locally", "un_mute_room_video_locally", "toggle_camera_mute_state":
-            HMSVideoAction.videoActions(call, result, hmsSDK)
-
-            // MARK: - Messaging
-
-        case "send_broadcast_message", "send_direct_message", "send_group_message":
-            HMSMessageAction.messageActions(call, result, hmsSDK)
-
-            // MARK: - Role based Actions
-
-        case "get_roles", "change_role", "accept_change_role", "end_room", "remove_peer", "on_change_track_state_request", "change_track_state_for_role", "change_role_of_peers_with_roles", "change_role_of_peer":
-            roleActions(call, result)
-
-            // MARK: - Peer Action
-        case "change_metadata", "change_name":
-            peerActions(call, result)
-
-            // MARK: - RTMP
-
-        case "start_rtmp_or_recording", "stop_rtmp_and_recording":
-            HMSRecordingAction.recordingActions(call, result, hmsSDK)
-
-            // MARK: - HLS
-
-        case "hls_start_streaming", "hls_stop_streaming":
-            HMSHLSAction.hlsActions(call, result, hmsSDK)
-
-            // MARK: - Logging
-
-        case "start_hms_logger", "remove_hms_logger":
-            loggingActions(call, result)
-
-            // MARK: - Stats Listener
-
-        case "start_stats_listener", "remove_stats_listener":
-            statsListenerAction(call, result)
-
-            // MARK: - Screen Share
-
-        case "start_screen_share", "stop_screen_share", "is_screen_share_active":
-            screenShareActions(call, result)
-
-        case "get_track_settings":
-            trackSettingsAction(call, result)
-            break
-        case "play_audio_share", "stop_audio_share", "pause_audio_share", "resume_audio_share", "set_audio_share_volume", "audio_share_playing", "audio_share_current_time", "audio_share_duration":
-            audioShareAction(call, result)
-        case "switch_audio_output", "get_audio_devices_list":
-            HMSAudioDeviceAction.audioActions(call, result, hmsSDK)
-
-        case "get_session_metadata", "set_session_metadata":
-            sessionMetadataAction(call, result)
-
-        case "set_playback_allowed_for_track":
-            setPlaybackAllowedForTrack(call, result)
-
-        case "set_simulcast_layer", "get_layer", "get_layer_definition":
-            HMSRemoteVideoTrackExtension.remoteVideoTrackActions(call, result, hmsSDK!)
-
-        case "setup_pip", "start_pip", "stop_pip", "is_pip_available", "is_pip_active", "change_track_pip", "change_text_pip", "destroy_pip":
-            guard #available(iOS 15.0, *) else {
-                print(#function, HMSErrorExtension.getError("iOS 15 or above is required"))
-                        result(HMSErrorExtension.getError("iOS 15 or above is required"))
-                        return }
-            HMSPIPAction.pipAction(call, result, hmsSDK, self)
-
-        case "capture_snapshot":
-            captureSnapshot(call, result)
-
-        default:
-            result(FlutterMethodNotImplemented)
+        guard (hmsSDK != nil || call.method == "build")
+        else{
+            HMSErrorLogger.logError(call.method,"hmsSDK is null","HMSSDK Error")
+            return
+            }
+            switch call.method {
+                
+                // MARK: Room Actions
+                
+            case "build", "preview", "join", "leave", "destroy":
+                buildActions(call, result)
+                
+                // MARK: Room Actions
+                
+            case "get_room", "get_local_peer", "get_remote_peers", "get_peers":
+                HMSRoomAction.roomActions(call, result, hmsSDK!)
+                
+                // MARK: - Audio Helpers
+                
+            case "switch_audio", "is_audio_mute", "mute_room_audio_locally", "un_mute_room_audio_locally", "set_volume", "toggle_mic_mute_state":
+                HMSAudioAction.audioActions(call, result, hmsSDK!)
+                
+                // MARK: - Video Helpers
+                
+            case "switch_video", "switch_camera", "is_video_mute", "mute_room_video_locally", "un_mute_room_video_locally", "toggle_camera_mute_state":
+                HMSVideoAction.videoActions(call, result, hmsSDK!)
+                
+                // MARK: - Messaging
+                
+            case "send_broadcast_message", "send_direct_message", "send_group_message":
+                HMSMessageAction.messageActions(call, result, hmsSDK!)
+                
+                // MARK: - Role based Actions
+                
+            case "get_roles", "change_role", "accept_change_role", "end_room", "remove_peer", "on_change_track_state_request", "change_track_state_for_role", "change_role_of_peers_with_roles", "change_role_of_peer":
+                roleActions(call, result)
+                
+                // MARK: - Peer Action
+            case "change_metadata", "change_name":
+                peerActions(call, result)
+                
+                // MARK: - RTMP
+                
+            case "start_rtmp_or_recording", "stop_rtmp_and_recording":
+                HMSRecordingAction.recordingActions(call, result, hmsSDK!)
+                
+                // MARK: - HLS
+                
+            case "hls_start_streaming", "hls_stop_streaming":
+                HMSHLSAction.hlsActions(call, result, hmsSDK!)
+                
+                // MARK: - Logging
+                
+            case "start_hms_logger", "remove_hms_logger":
+                loggingActions(call, result)
+                
+                // MARK: - Stats Listener
+                
+            case "start_stats_listener", "remove_stats_listener":
+                statsListenerAction(call, result)
+                
+                // MARK: - Screen Share
+                
+            case "start_screen_share", "stop_screen_share", "is_screen_share_active":
+                screenShareActions(call, result)
+                
+            case "get_track_settings":
+                trackSettingsAction(call, result)
+                break
+            case "play_audio_share", "stop_audio_share", "pause_audio_share", "resume_audio_share", "set_audio_share_volume", "audio_share_playing", "audio_share_current_time", "audio_share_duration":
+                audioShareAction(call, result)
+            case "switch_audio_output", "get_audio_devices_list":
+                HMSAudioDeviceAction.audioActions(call, result, hmsSDK!)
+                
+            case "get_session_metadata", "set_session_metadata":
+                sessionMetadataAction(call, result)
+                
+            case "set_playback_allowed_for_track":
+                setPlaybackAllowedForTrack(call, result)
+                
+            case "set_simulcast_layer", "get_layer", "get_layer_definition":
+                HMSRemoteVideoTrackExtension.remoteVideoTrackActions(call, result, hmsSDK!)
+                
+            case "setup_pip", "start_pip", "stop_pip", "is_pip_available", "is_pip_active", "change_track_pip", "change_text_pip", "destroy_pip":
+                guard #available(iOS 15.0, *) else {
+                    print(#function, HMSErrorExtension.getError("iOS 15 or above is required"))
+                    result(HMSErrorExtension.getError("iOS 15 or above is required"))
+                    return }
+                HMSPIPAction.pipAction(call, result, hmsSDK!, self)
+                
+            case "capture_snapshot":
+                captureSnapshot(call, result)
+                
+            default:
+                result(FlutterMethodNotImplemented)
         }
     }
 
@@ -301,7 +310,6 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     }
 
     // MARK: - Stats Listener
-
     private func statsListenerAction(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         switch call.method {
 
@@ -321,6 +329,11 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     private func trackSettingsAction(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         switch call.method {
         case "get_track_settings":
+            guard hmsSDK != nil  else{
+                HMSErrorLogger.logError(#function,"hmssdk is null","HMSSDK Error")
+                result(HMSErrorExtension.getError("hmsSDK is null"))
+                return
+            }
             result(HMSTrackSettingsExtension.toDictionary(hmsSDK!, audioMixerSourceMap))
             break
         default:
@@ -449,14 +462,18 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             logLevel = getLogLevel(from: level)
             setLogger = true
         }
-        let dartSDKVersion = arguments["dart_sdk_version"] as! String
-        let hmsSDKVersion = arguments["hmssdk_version"] as! String
+        guard let dartSDKVersion = arguments["dart_sdk_version"] as? String,
+              let hmsSDKVersion = arguments["hmssdk_version"] as? String
+        else {
+            return HMSErrorLogger.returnError(errorMessage: "build error: null values for dartSDKVersion and hmsSDKVersion in \(#function)")
+        }
+        
         let framework = HMSFrameworkInfo(type: .flutter, version: dartSDKVersion, sdkVersion: hmsSDKVersion)
         audioMixerSourceMap = [:]
 
         hmsSDK = HMSSDK.build { [weak self] sdk in
             guard let self = self else {
-                print(#function, "Failed to build HMSSDK")
+                HMSErrorLogger.logError(#function, "Failed to build HMSSDK","HMSSDK Error")
                 result(false)
                 return
             }
@@ -468,7 +485,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                 if let appGroup = iOSScreenshareConfig["app_group"] {
                     sdk.appGroup = appGroup
                 } else {
-                    print(#function, "AppGroup Not found in iOSScreenshareConfig")
+                    HMSErrorLogger.logError(#function, "AppGroup Not found in iOSScreenshareConfig","iOSScreenshareConfig Error")
                     result(false)
                 }
             }
@@ -498,12 +515,19 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         let arguments = call.arguments as! [AnyHashable: Any]
 
         guard let config = getConfig(from: arguments) else {
+            HMSErrorLogger.logError(#function,"Could not join room, invalid parameters passed in \(#function)","Config Error")
             result(HMSErrorExtension.getError("Could not join room, invalid parameters passed in \(#function)"))
             return
         }
 
-        hmsSDK?.preview(config: config, delegate: self)
-
+        guard hmsSDK != nil
+        else{
+            HMSErrorLogger.logError(#function,"hmsSDK is null","HMSSDK Error")
+            result(HMSErrorExtension.getError("hmsSDK is null in \(#function)"))
+            return
+        }
+        
+        hmsSDK!.preview(config: config, delegate: self)
         result(nil)
     }
 
@@ -527,17 +551,29 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         let arguments = call.arguments as! [AnyHashable: Any]
 
         guard let config = getConfig(from: arguments) else {
+            HMSErrorLogger.logError(#function,"Could not join room, invalid parameters passed in \(#function)","Config Error")
             result(HMSErrorExtension.getError("Could not join room, invalid parameters passed in \(#function)"))
             return
         }
 
-        hmsSDK?.join(config: config, delegate: self)
-
+        guard hmsSDK != nil
+        else{
+            HMSErrorLogger.logError(#function,"hmsSDK is null","HMSSDK Error")
+            result(HMSErrorExtension.getError("hmsSDK is null in \(#function)"))
+            return
+        }
+        hmsSDK!.join(config: config, delegate: self)
         result(nil)
     }
 
     private func leave(_ result: @escaping FlutterResult) {
-        hmsSDK?.leave { _, error in
+        guard hmsSDK != nil
+        else{
+            HMSErrorLogger.logError(#function,"hmsSDK is null","HMSSDK Error")
+            result(HMSErrorExtension.getError("hmsSDK is null in \(#function)"))
+            return
+        }
+        hmsSDK!.leave { _, error in
             if let error = error {
                 result(HMSErrorExtension.toDictionary(error))
             } else {
@@ -561,8 +597,11 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
         var roles = [[String: Any]]()
 
-        hmsSDK?.roles.forEach { roles.append(HMSRoleExtension.toDictionary($0)) }
-
+        guard hmsSDK != nil else{
+            HMSErrorLogger.logError(#function,"hmsSDK is null","HMSSDK Error")
+            return
+        }
+        hmsSDK!.roles.forEach { roles.append(HMSRoleExtension.toDictionary($0)) }
         result(["roles": roles])
     }
 
@@ -570,29 +609,40 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
         let arguments = call.arguments as! [AnyHashable: Any]
 
+        guard hmsSDK != nil else{
+            HMSErrorLogger.logError(#function,"hmsSDK is null","HMSSDK Error")
+            result(HMSErrorExtension.getError("hmsSDK is null in \(#function)"))
+            return
+        }
         guard let peerID = arguments["peer_id"] as? String,
-              let peer = HMSCommonAction.getPeer(by: peerID, hmsSDK: hmsSDK),
+              let peer = HMSCommonAction.getPeer(by: peerID, hmsSDK: hmsSDK!),
               let roleString = arguments["role_name"] as? String,
-              let role = HMSCommonAction.getRole(by: roleString, hmsSDK: hmsSDK)
+              let role = HMSCommonAction.getRole(by: roleString, hmsSDK: hmsSDK!)
         else {
+            HMSErrorLogger.logError(#function,"Invalid parameters for change role","Parameters Error")
             result(HMSErrorExtension.getError("Invalid parameters for change role in \(#function)"))
             return
         }
 
         let force = arguments["force_change"] as? Bool ?? false
-
-        hmsSDK?.changeRole(for: peer, to: role, force: force) { _, error in
-            if let error = error {
-                result(HMSErrorExtension.toDictionary(error))
-            } else {
-                result(nil)
+            hmsSDK!.changeRole(for: peer, to: role, force: force) { _, error in
+                if let error = error {
+                    result(HMSErrorExtension.toDictionary(error))
+                } else {
+                    result(nil)
+                }
             }
-        }
     }
 
     private func acceptChangeRole(_ result: @escaping FlutterResult) {
         if let request = roleChangeRequest {
-            hmsSDK?.accept(changeRole: request) { [weak self] _, error in
+            
+                guard hmsSDK != nil else{
+                    HMSErrorLogger.logError(#function,"hmsSDK is null","HMSSDK Error")
+                    result(HMSErrorExtension.getError("HMSSDK is null in \(#function)"))
+                    return
+                }
+                hmsSDK!.accept(changeRole: request) { [weak self] _, error in
                 if let error = error {
                     result(HMSErrorExtension.toDictionary(error))
                 } else {
@@ -600,8 +650,6 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                     result(nil)
                 }
             }
-        } else {
-            result(HMSErrorExtension.getError("Role Change Request is Expired."))
         }
     }
 
@@ -612,21 +660,32 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         let lock = arguments["lock"] as? Bool ?? false
         let reason = arguments["reason"] as? String ?? "End room invoked"
 
-        hmsSDK?.endRoom(lock: lock, reason: reason) { _, error in
-            if let error = error {
-                result(HMSErrorExtension.toDictionary(error))
-            } else {
-                result(nil)
-            }
+        guard hmsSDK != nil else{
+            HMSErrorLogger.logError(#function,"hmsSDK is null","HMSSDK Error")
+            result(HMSErrorExtension.getError("HMSSDK is null in \(#function)"))
+            return
         }
+            hmsSDK!.endRoom(lock: lock, reason: reason) { _, error in
+                if let error = error {
+                    result(HMSErrorExtension.toDictionary(error))
+                } else {
+                    result(nil)
+                }
+            }
     }
 
     private func removePeer(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
 
         let arguments = call.arguments as! [AnyHashable: Any]
 
+        guard (hmsSDK != nil)
+        else{
+            HMSErrorLogger.logError(#function,"hmsSDK is null","HMSSDK Error")
+            result(HMSErrorExtension.getError("HMSSDK is null in \(#function)"))
+            return
+        }
         guard let peerID = arguments["peer_id"] as? String,
-              let peer = HMSCommonAction.getPeer(by: peerID, hmsSDK: hmsSDK)
+              let peer = HMSCommonAction.getPeer(by: peerID, hmsSDK: hmsSDK!)
         else {
             result(HMSErrorExtension.getError("Peer not found in \(#function)"))
             return
@@ -634,7 +693,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
         let reason = (arguments["reason"] as? String) ?? "Removed from room"
 
-        hmsSDK?.removePeer(peer, reason: reason) { _, error in
+        hmsSDK!.removePeer(peer, reason: reason) { _, error in
             if let error = error {
                 result(HMSErrorExtension.toDictionary(error))
             } else {
@@ -646,6 +705,11 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     private func changeTrackState(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         let arguments = call.arguments as! [AnyHashable: Any]
 
+        guard hmsSDK != nil else{
+            HMSErrorLogger.logError(#function,"hmsSDK is null","HMSSDK Error")
+            result(HMSErrorExtension.getError("HMSSDK is null in \(#function)"))
+            return
+        }
         guard let trackID = arguments["track_id"] as? String,
               let track = HMSUtilities.getTrack(for: trackID, in: hmsSDK!.room!)
         else {
@@ -655,7 +719,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
         let mute = arguments["mute"] as? Bool ?? false
 
-        hmsSDK?.changeTrackState(for: track, mute: mute) { _, error in
+        hmsSDK!.changeTrackState(for: track, mute: mute) { _, error in
             if let error = error {
                 result(HMSErrorExtension.toDictionary(error))
                 return
@@ -680,40 +744,52 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
         let source = arguments["source"] as? String
 
-        var roles: [HMSRole]?
-        if let rolesString = arguments["roles"] as? [String] {
-            roles = hmsSDK?.roles.filter { rolesString.contains($0.name) }
+        guard hmsSDK != nil else{
+            HMSErrorLogger.logError(#function,"hmsSDK is null","HMSSDK Error")
+            result(HMSErrorExtension.getError("HMSSDK is null in \(#function)"))
+            return
         }
-
-        hmsSDK?.changeTrackState(mute: mute, for: trackKind, source: source, roles: roles) { _, error in
-            if let error = error {
-                result(HMSErrorExtension.toDictionary(error))
-            } else {
-                result(nil)
+            var roles: [HMSRole]?
+            if let rolesString = arguments["roles"] as? [String] {
+                roles = hmsSDK!.roles.filter { rolesString.contains($0.name) }
             }
-        }
+
+            hmsSDK!.changeTrackState(mute: mute, for: trackKind, source: source, roles: roles) { _, error in
+                if let error = error {
+                    result(HMSErrorExtension.toDictionary(error))
+                } else {
+                    result(nil)
+                }
+            }
     }
 
     private func changeRoleOfPeersWithRoles(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         let arguments = call.arguments as! [AnyHashable: Any]
+        
+        guard hmsSDK != nil
+        else{
+            HMSErrorLogger.logError(#function,"hmsSDK is null","HMSSDK Error")
+            result(HMSErrorExtension.getError("HMSSDK is null in \(#function)"))
+            return
+        }
         guard let roleString = arguments["to_role"] as? String,
-              let role = HMSCommonAction.getRole(by: roleString, hmsSDK: hmsSDK) else {
+              let role = HMSCommonAction.getRole(by: roleString, hmsSDK: hmsSDK!) else {
             result(HMSErrorExtension.getError("Could not find role in \(#function)"))
             return
         }
 
-        var ofRoles = [HMSRole]()
-        if let ofRolesString = arguments["of_roles"] as? [String] {
-            ofRoles = hmsSDK?.roles.filter { ofRolesString.contains($0.name) } ?? []
-        }
-
-        hmsSDK?.changeRolesOfAllPeers(to: role, limitToRoles: ofRoles) { _, error in
-            if let error = error {
-                result(HMSErrorExtension.toDictionary(error))
-            } else {
-                result(nil)
+            var ofRoles = [HMSRole]()
+            if let ofRolesString = arguments["of_roles"] as? [String] {
+                ofRoles = hmsSDK!.roles.filter { ofRolesString.contains($0.name) }
             }
-        }
+
+            hmsSDK!.changeRolesOfAllPeers(to: role, limitToRoles: ofRoles) { _, error in
+                if let error = error {
+                    result(HMSErrorExtension.toDictionary(error))
+                } else {
+                    result(nil)
+                }
+            }
     }
 
     private var hasChangedMetadata = false
@@ -727,7 +803,13 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             return
         }
 
-        hmsSDK?.change(metadata: metadata) { [weak self] _, error in
+        guard hmsSDK != nil
+        else{
+            HMSErrorLogger.logError(#function,"hmsSDK is null","HMSSDK Error")
+            result(HMSErrorExtension.getError("HMSSDK is null in \(#function)"))
+            return
+        }
+        hmsSDK!.change(metadata: metadata) { [weak self] _, error in
             if let error = error {
                 result(HMSErrorExtension.toDictionary(error))
                 return
@@ -749,13 +831,19 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             return
         }
 
-        hmsSDK?.change(name: name) { _, error in
-            if let error = error {
-                result(HMSErrorExtension.toDictionary(error))
-            } else {
-                result(nil)
-            }
+        guard hmsSDK != nil
+        else{
+            HMSErrorLogger.logError(#function,"hmsSDK is null","HMSSDK Error")
+            result(HMSErrorExtension.getError("HMSSDK is null in \(#function)"))
+            return
         }
+            hmsSDK!.change(name: name) { _, error in
+                if let error = error {
+                    result(HMSErrorExtension.toDictionary(error))
+                } else {
+                    result(nil)
+                }
+            }
     }
 
     // MARK: - Logging
@@ -771,7 +859,12 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
         logLevel = getLogLevel(from: level)
 
-        hmsSDK?.logger = self
+        guard hmsSDK != nil
+        else{
+            HMSErrorLogger.logError(#function,"hmsSDK is null","HMSSDK Error")
+            return
+        }
+        hmsSDK!.logger = self
     }
 
     private func getLogLevel(from level: String) -> HMSLogLevel {
@@ -811,11 +904,21 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
     private func removeHMSLogger() {
         logLevel = .off
-        hmsSDK?.logger = nil
+        guard hmsSDK != nil else{
+            HMSErrorLogger.logError(#function,"hmsSDK is null","HMSSDK Error")
+            return
+        }
+        hmsSDK!.logger = nil
     }
 
     private func getSessionMetadata(_ result: @escaping FlutterResult) {
-        hmsSDK?.getSessionMetadata(completion: { metadata, _ in
+        guard hmsSDK != nil
+        else{
+            HMSErrorLogger.logError(#function,"hmsSDK is null","HMSSDK Error")
+            result(HMSErrorExtension.getError("HMSSDK is null in \(#function)"))
+            return
+        }
+        hmsSDK!.getSessionMetadata(completion: { metadata, _ in
             if let metadata = metadata {
                 let data = [
                     "event_name": "session_metadata",
@@ -839,15 +942,21 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             return
         }
 
-        hmsSDK?.setSessionMetadata(metadata, completion: { _, error in
-            if let error = error {
-                result(HMSErrorExtension.toDictionary(error))
-                return
-            } else {
-                result(nil)
-            }
+        guard hmsSDK != nil else{
+            HMSErrorLogger.logError(#function,"hmsSDK is null","HMSSDK Error")
+            result(HMSErrorExtension.getError("HMSSDK is null in \(#function)"))
+            return
         }
-        )
+            hmsSDK!.setSessionMetadata(metadata, completion: { _, error in
+                if let error = error {
+                    result(HMSErrorExtension.toDictionary(error))
+                    return
+                } else {
+                    result(nil)
+                }
+            }
+            )
+        
     }
 
     private func setPlaybackAllowedForTrack(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
@@ -861,7 +970,13 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             return
         }
 
-        let room = hmsSDK?.room
+        guard hmsSDK != nil
+        else{
+            HMSErrorLogger.logError(#function,"hmsSDK is null","HMSSDK Error")
+            result(HMSErrorExtension.getError("HMSSDK is null in \(#function)"))
+            return
+        }
+        let room = hmsSDK!.room
         if room != nil {
             if kind(from: trackKind) == HMSTrackKind.audio {
                 let audioTrack = HMSUtilities.getAudioTrack(for: trackID, in: room!) as HMSAudioTrack?
@@ -879,6 +994,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                 }
             }
         }
+        HMSErrorLogger.logError(#function,"Room is null","Null Error")
         result(HMSErrorExtension.getError("Could not set isPlaybackAllowed for track in \(#function)"))
     }
 
@@ -940,6 +1056,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
     public func on(peer: HMSPeer, update: HMSPeerUpdate) {
         guard peer.peerID != "" else {
+            HMSErrorLogger.logError("onPeerUpdate", "PeerID is empty","Null Error")
             return
         }
         let data = [
@@ -1151,6 +1268,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         guard let authToken = arguments["auth_token"] as? String,
               let userName = arguments["user_name"] as? String
         else {
+            HMSErrorLogger.returnError(errorMessage: "Parameters are null in \(#function)")
             return nil
         }
 
@@ -1200,6 +1318,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                             do {
                                 self.audioMixerSourceMap["screen_broadcast_audio_receiver_node"] = try sdk.screenBroadcastAudioReceiverNode()
                             } catch {
+                                HMSErrorLogger.logError(#function,error.localizedDescription,"Exception Occured")
                                 print(#function, HMSErrorExtension.toDictionary(error))
                                 result(false)
                             }

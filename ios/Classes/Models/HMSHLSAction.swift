@@ -9,7 +9,7 @@ import Foundation
 import HMSSDK
 
 class HMSHLSAction {
-    static func hlsActions(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?) {
+    static func hlsActions(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK) {
         switch call.method {
         case "hls_start_streaming":
             startHlsStreaming(call, result, hmsSDK)
@@ -21,7 +21,7 @@ class HMSHLSAction {
         }
     }
 
-    static private func startHlsStreaming(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?) {
+    static private func startHlsStreaming(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK) {
         let arguments = call.arguments as! [AnyHashable: Any]
         let meetingUrlVariantsList = arguments["meeting_url_variants"] as? [[String: String]]? ?? nil
         let recordingConfig = arguments["recording_config"] as? [String: Bool]? ?? nil
@@ -42,7 +42,7 @@ class HMSHLSAction {
         if meetingUrlVariant != nil || hmsHLSRecordingConfig != nil {
             hlsConfig = HMSHLSConfig(variants: meetingUrlVariant, recording: hmsHLSRecordingConfig)
         }
-        hmsSDK?.startHLSStreaming(config: hlsConfig) { _, error in
+        hmsSDK.startHLSStreaming(config: hlsConfig) { _, error in
             if let error = error {
                 result(HMSErrorExtension.toDictionary(error))
             } else {
@@ -51,10 +51,10 @@ class HMSHLSAction {
         }
     }
 
-    static private func stopHlsStreaming(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?) {
+    static private func stopHlsStreaming(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK) {
         let arguments = call.arguments as? [AnyHashable: Any]
         let config = getHLSConfig(from: arguments)
-        hmsSDK?.stopHLSStreaming(config: config) { _, error in
+        hmsSDK.stopHLSStreaming(config: config) { _, error in
             if let error = error {
                 result(HMSErrorExtension.toDictionary(error))
             } else {

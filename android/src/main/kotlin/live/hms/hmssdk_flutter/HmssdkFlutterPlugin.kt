@@ -81,11 +81,11 @@ class HmssdkFlutterPlugin :
             this.rtcStatsChannel =
                 EventChannel(flutterPluginBinding.binaryMessenger, "rtc_event_channel")
 
-            this.meetingEventChannel?.setStreamHandler(this) ?: logError("onAttachedToEngine","Meeting event channel not found","Channel Error")
-            this.channel?.setMethodCallHandler(this) ?: logError("onAttachedToEngine","Event channel not found","Channel Error")
-            this.previewChannel?.setStreamHandler(this) ?: logError("onAttachedToEngine","Preview channel not found","Channel Error")
-            this.logsEventChannel?.setStreamHandler(this) ?: logError("onAttachedToEngine","Logs event channel not found","Channel Error")
-            this.rtcStatsChannel?.setStreamHandler(this) ?: logError("onAttachedToEngine","RTC Stats channel not found","Channel Error")
+            this.meetingEventChannel?.setStreamHandler(this)
+            this.channel?.setMethodCallHandler(this)
+            this.previewChannel?.setStreamHandler(this)
+            this.logsEventChannel?.setStreamHandler(this)
+            this.rtcStatsChannel?.setStreamHandler(this)
             this.hmsVideoFactory = HMSVideoViewFactory(this)
 
             flutterPluginBinding.platformViewRegistry.registerViewFactory(
@@ -419,10 +419,12 @@ class HmssdkFlutterPlugin :
             }
             else{
                 logError("join","config is null","HMSConfig Error")
+                result.success(HMSExceptionExtension. getError("Could not join room, invalid parameters passed in getConfig","Please Check the config parameters"))
             }
         }
         else{
             logError("join","hmssdk is null","HMSSDK Error")
+            result.success(HMSExceptionExtension.getError("hmssdk is null in join","Please check hmssdk is initialized properly"))
         }
     }
 
@@ -491,9 +493,11 @@ class HmssdkFlutterPlugin :
     private fun leave(result: Result) {
         if(hmssdk != null){
             hmssdk!!.leave(hmsActionResultListener = HMSCommonAction.getActionListener(result))
+            result.success(null)
         }
         else{
             logError("leave","hmssdk is null","HMSSDK Error")
+            result.success(HMSExceptionExtension.getError("hmssdk is null in leave","Please check hmssdk is initialized properly"))
         }
     }
 
@@ -576,10 +580,12 @@ class HmssdkFlutterPlugin :
             }
             else{
                 logError("preview","config is null","HMSConfig Error")
+                result.success(HMSExceptionExtension.getError("Could not join room, invalid parameters passed in getConfig","Please Check the config parameters"))
             }
         }
         else{
             logError("preview","hmssdk is null","HMSSDK Error")
+            result.success(HMSExceptionExtension.getError("hmssdk is null in preview","Please check hmssdk is initialized properly"))
         }
     }
 

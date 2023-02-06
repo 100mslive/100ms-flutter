@@ -9,7 +9,7 @@ import Foundation
 import HMSSDK
 
 class HMSVideoAction {
-    static func videoActions(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?) {
+    static func videoActions(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK) {
         switch call.method {
         case "switch_video":
             switchVideo(call, result, hmsSDK)
@@ -34,8 +34,8 @@ class HMSVideoAction {
         }
     }
 
-    static private func switchCamera(_ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?) {
-        guard let peer = hmsSDK?.localPeer,
+    static private func switchCamera(_ result: @escaping FlutterResult, _ hmsSDK: HMSSDK) {
+        guard let peer = hmsSDK.localPeer,
               let videoTrack = peer.videoTrack as? HMSLocalVideoTrack
         else {
             result(HMSErrorExtension.getError("Local Peer not found in \(#function)"))
@@ -47,12 +47,12 @@ class HMSVideoAction {
         result(nil)
     }
 
-    static private func switchVideo(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?) {
+    static private func switchVideo(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK) {
 
         let arguments = call.arguments as! [AnyHashable: Any]
 
         guard let shouldMute = arguments["is_on"] as? Bool,
-              let peer = hmsSDK?.localPeer,
+              let peer = hmsSDK.localPeer,
               let video = peer.videoTrack as? HMSLocalVideoTrack else {
             result(false)
             return
@@ -63,9 +63,9 @@ class HMSVideoAction {
         result(true)
     }
 
-    static private func toggleCameraMuteState(_ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?) {
+    static private func toggleCameraMuteState(_ result: @escaping FlutterResult, _ hmsSDK: HMSSDK) {
 
-            guard let peer = hmsSDK?.localPeer,
+            guard let peer = hmsSDK.localPeer,
               let video = peer.videoTrack as? HMSLocalVideoTrack else {
             result(false)
             return
@@ -76,7 +76,7 @@ class HMSVideoAction {
         result(true)
     }
 
-    static private func isVideoMute(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?) {
+    static private func isVideoMute(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK) {
         let arguments = call.arguments as! [AnyHashable: Any]
 
         if let peerID = arguments["peer_id"] as? String, let peer = HMSCommonAction.getPeer(by: peerID, hmsSDK: hmsSDK) {
@@ -85,31 +85,34 @@ class HMSVideoAction {
                 return
             }
         } else {
-            if let peer = hmsSDK?.localPeer, let video = peer.videoTrack {
+            if let peer = hmsSDK.localPeer, let video = peer.videoTrack {
                 result(video.isMute())
                 return
             }
         }
-
         result(false)
     }
 
-    static private func toggleVideoMuteAll(_ shouldMute: Bool, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?) {
+    static private func toggleVideoMuteAll(_ shouldMute: Bool, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK) {
 
-        if let localPeer = hmsSDK?.localPeer {
+        if let localPeer = hmsSDK.localPeer {
             if let video = localPeer.videoTrack as? HMSLocalVideoTrack {
                 video.setMute(shouldMute)
             }
         }
 
-        let room = hmsSDK?.room
-        if room != nil {
+        let room = hmsSDK.room
+        guard room != nil
+        else{
+            HMSErrorLogger.logError(#function,"room is null","Null Error")
+            result(HMSErrorExtension.getError("room is null"))
+            return
+        }
             let videoTracks = HMSUtilities.getAllVideoTracks(in: room!) as [HMSVideoTrack]?
             videoTracks?.forEach { track in
                 if track is HMSRemoteVideoTrack {
                     (track as! HMSRemoteVideoTrack).setPlaybackAllowed(!shouldMute)
                 }
-            }
         }
         result(nil)
     }

@@ -7,7 +7,7 @@ class HMSErrorLogger {
     companion object{
 
         fun logError(methodName:String,error:String,errorType:String){
-            Log.e("FL_HMSSDK Error","$errorType: method -> $methodName, error -> $error")
+            Log.e("FL_HMSSDK Error","$errorType: { method -> $methodName, error -> $error }")
         }
 
         //Function to log if parameter passed to methods are null

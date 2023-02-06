@@ -10,7 +10,7 @@ import HMSSDK
 
 class HMSRecordingAction {
 
-    static func recordingActions(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?) {
+    static func recordingActions(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK) {
         switch call.method {
         case "start_rtmp_or_recording":
             startRtmpOrRecording(call, result, hmsSDK)
@@ -22,11 +22,12 @@ class HMSRecordingAction {
         }
     }
 
-    static private func startRtmpOrRecording(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?) {
+    static private func startRtmpOrRecording(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK) {
 
         let arguments = call.arguments as! [AnyHashable: Any]
 
         guard let record = arguments["to_record"] as? Bool else {
+            HMSErrorLogger.logError(#function,"record is null","Null Error")
             result(HMSErrorExtension.getError("Record bool not found in \(#function)"))
             return
         }
@@ -50,7 +51,7 @@ class HMSRecordingAction {
 
         let config = HMSRTMPConfig(meetingURL: meetingURL, rtmpURLs: rtmpURLs, record: record)
 
-        hmsSDK?.startRTMPOrRecording(config: config) { _, error in
+        hmsSDK.startRTMPOrRecording(config: config) { _, error in
             if let error = error {
                 result(HMSErrorExtension.toDictionary(error))
             } else {
@@ -59,8 +60,8 @@ class HMSRecordingAction {
         }
     }
 
-    static private func stopRtmpAndRecording(_ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?) {
-        hmsSDK?.stopRTMPAndRecording { _, error in
+    static private func stopRtmpAndRecording(_ result: @escaping FlutterResult, _ hmsSDK: HMSSDK) {
+        hmsSDK.stopRTMPAndRecording { _, error in
             if let error = error {
                 result(HMSErrorExtension.toDictionary(error))
             } else {

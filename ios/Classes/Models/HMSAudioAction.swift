@@ -9,7 +9,7 @@ import Foundation
 import HMSSDK
 
 class HMSAudioAction {
-    static func audioActions(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?) {
+    static func audioActions(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK) {
         switch call.method {
         case "switch_audio":
             switchAudio(call, result, hmsSDK)
@@ -34,11 +34,11 @@ class HMSAudioAction {
         }
     }
 
-    static private func switchAudio(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?) {
+    static private func switchAudio(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK) {
         let arguments = call.arguments as! [AnyHashable: Any]
 
         guard let shouldMute = arguments["is_on"] as? Bool,
-              let peer = hmsSDK?.localPeer,
+              let peer = hmsSDK.localPeer,
               let audio = peer.audioTrack as? HMSLocalAudioTrack else {
             result(false)
             return
@@ -49,9 +49,9 @@ class HMSAudioAction {
         result(true)
     }
 
-    static private func toggleMicMuteState(_ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?) {
+    static private func toggleMicMuteState(_ result: @escaping FlutterResult, _ hmsSDK: HMSSDK) {
 
-            guard let peer = hmsSDK?.localPeer,
+            guard let peer = hmsSDK.localPeer,
               let audio = peer.audioTrack as? HMSLocalAudioTrack else {
             result(false)
             return
@@ -62,16 +62,17 @@ class HMSAudioAction {
         result(true)
     }
 
-    static private func isAudioMute(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?) {
+    static private func isAudioMute(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK) {
         let arguments = call.arguments as! [AnyHashable: Any]
 
-        if let peerID = arguments["peer_id"] as? String, let peer = HMSCommonAction.getPeer(by: peerID, hmsSDK: hmsSDK) {
+        if let peerID = arguments["peer_id"] as? String,
+        let peer = HMSCommonAction.getPeer(by: peerID, hmsSDK: hmsSDK) {
             if let audio = peer.audioTrack {
                 result(audio.isMute())
                 return
             }
         } else {
-            if let peer = hmsSDK?.localPeer, let audio = peer.audioTrack {
+            if let peer = hmsSDK.localPeer, let audio = peer.audioTrack {
                 result(audio.isMute())
                 return
             }
@@ -80,9 +81,9 @@ class HMSAudioAction {
         result(false)
     }
 
-    static private func toggleAudioMuteAll(_ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?, shouldMute: Bool) {
+    static private func toggleAudioMuteAll(_ result: @escaping FlutterResult, _ hmsSDK: HMSSDK, shouldMute: Bool) {
 
-        let room = hmsSDK?.room
+        let room = hmsSDK.room
         if room != nil {
             let audioTracks = HMSUtilities.getAllAudioTracks(in: room!) as [HMSAudioTrack]?
 
@@ -95,12 +96,17 @@ class HMSAudioAction {
         result(nil)
     }
 
-    static private func setVolume(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?) {
+    static private func setVolume(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK) {
         let arguments = call.arguments as! [AnyHashable: Any]
 
+        guard hmsSDK.room != nil else{
+            HMSErrorLogger.logError(#function,"Room is null","Null Error")
+            result(HMSErrorExtension.getError("Room is Null"))
+            return
+        }
         guard let volume = arguments["volume"] as? Double,
               let trackID = arguments["track_id"] as? String,
-              let track = HMSUtilities.getTrack(for: trackID, in: hmsSDK!.room!)
+              let track = HMSUtilities.getTrack(for: trackID, in: hmsSDK.room!)
         else {
             result(HMSErrorExtension.getError("Invalid arguments passed in \(#function)"))
             return

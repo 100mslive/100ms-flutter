@@ -15,7 +15,7 @@ class HMSPIPAction {
     static var pipVideoCallViewController: UIViewController?
     static var pipController: AVPictureInPictureController?
     static var model: PiPModel?
-    static func pipAction(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?, _ swiftHmssdkFlutterPlugin: SwiftHmssdkFlutterPlugin) {
+    static func pipAction(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK, _ swiftHmssdkFlutterPlugin: SwiftHmssdkFlutterPlugin) {
         switch call.method {
         case "setup_pip":
             setupPIP(call, result, hmsSDK, swiftHmssdkFlutterPlugin)
@@ -46,7 +46,7 @@ class HMSPIPAction {
         }
     }
 
-    static func setupPIP(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?, _ swiftHmssdkFlutterPlugin: SwiftHmssdkFlutterPlugin) {
+    static func setupPIP(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK, _ swiftHmssdkFlutterPlugin: SwiftHmssdkFlutterPlugin) {
 
         guard AVPictureInPictureController.isPictureInPictureSupported() else {
             result(HMSErrorExtension.getError("\(#function) PIP is not supported"))
@@ -139,11 +139,11 @@ class HMSPIPAction {
         } else { result(false) }
     }
 
-    static func changeTrack(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?) {
+    static func changeTrack(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK) {
         let arguments = call.arguments as! [AnyHashable: Any]
 
         guard let trackID = arguments["track_id"] as? String,
-              let track = HMSUtilities.getVideoTrack(for: trackID, in: (hmsSDK?.room)!),
+              let track = HMSUtilities.getVideoTrack(for: trackID, in: (hmsSDK.room)!),
               let alternativeText = arguments["alternative_text"] as? String,
               let ratio = arguments["ratio"] as? [Int],
                 ratio.count == 2,
@@ -161,7 +161,7 @@ class HMSPIPAction {
         pipVideoCallViewController!.preferredContentSize = CGSize(width: ratio[1], height: ratio[0])
     }
 
-    static func changeText(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?) {
+    static func changeText(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK) {
         let arguments = call.arguments as! [AnyHashable: Any]
 
         guard let text = arguments["text"] as? String,

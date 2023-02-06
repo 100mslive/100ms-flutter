@@ -9,7 +9,7 @@ import Foundation
 import HMSSDK
 
 class HMSAudioDeviceAction {
-    static func audioActions(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?) {
+    static func audioActions(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK) {
         switch call.method {
         case "get_audio_devices_list":
             getAudioDeviceList(result, hmsSDK)
@@ -22,13 +22,9 @@ class HMSAudioDeviceAction {
         }
     }
 
-    static private func getAudioDeviceList(_ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?) {
+    static private func getAudioDeviceList(_ result: @escaping FlutterResult, _ hmsSDK: HMSSDK) {
         var audioDevicesList = [String]()
-        guard let availableAudioOutputDevices = hmsSDK?.getAudioOutputDeviceList()
-        else {
-            print(#function, "Could not find audio output devices list")
-            return result(audioDevicesList)
-        }
+        let availableAudioOutputDevices = hmsSDK.getAudioOutputDeviceList()
         
         for device in availableAudioOutputDevices {
             audioDevicesList.append(getAudioDeviceName(device))
@@ -36,7 +32,7 @@ class HMSAudioDeviceAction {
         result(audioDevicesList)
     }
 
-    static private func switchAudioOutput(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?) {
+    static private func switchAudioOutput(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK) {
         let arguments = call.arguments as! [AnyHashable: Any]
 
         guard let audioDeviceName = arguments["audio_device_name"] as? String
@@ -45,7 +41,7 @@ class HMSAudioDeviceAction {
             return
         }
         do {
-            try hmsSDK?.switchAudioOutput(to: getAudioDeviceName(audioDeviceName))
+            try hmsSDK.switchAudioOutput(to: getAudioDeviceName(audioDeviceName))
         } catch {
             result(HMSErrorExtension.getError("Unable to switch audio output"))
             return
