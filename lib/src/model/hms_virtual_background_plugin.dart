@@ -4,7 +4,7 @@ import 'dart:typed_data';
 /// Virtual Background plugin helps in customising one’s background that replacing the background with a static image or blurring the background.
 /// For More info visit [here]("").
 class HMSVirtualBackgroundPlugin {
-  Uint8List? backgroundImage;
+  Uint8List backgroundImage;
   int blurRadius;
 
   HMSVirtualBackgroundPlugin(
