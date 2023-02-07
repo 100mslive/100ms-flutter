@@ -44,6 +44,8 @@ class HMSFlutterVideoPlayer: NSObject, FlutterPlatformView {
     }
 
     deinit {
+        playerViewController?.player?.pause()
+        playerViewController?.player?.replaceCurrentItem(with: nil)
         player = nil
         playerViewController = nil
         // statMonitor = nil
